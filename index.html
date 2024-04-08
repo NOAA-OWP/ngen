@@ -142,10 +142,10 @@ How to test the software</h2>
 <p>To execute the full collection of automated C++ tests, run the <code>test_all</code> target in <b>CMake</b>, then execute the generated executable. Alternatively, replace <code>test_all</code> with <code>test_unit</code> or <code>test_integration</code> to run only those tests. For example: </p><pre class="fragment">cmake --build cmake-build-debug --target test_all -- -j 4
 ./cmake-build-debug/test/test_all
 </pre><p> Or, if the build system has not yet been properly generated: </p><pre class="fragment">git submodule update --init --recursive -- test/googletest
-cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -S .
+cmake -DCMAKE_BUILD_TYPE=Debug -DNGEN_WITH_TESTS:BOOL=ON -B cmake-build-debug -S .
 cmake --build cmake-build-debug --target test_all -- -j 4
 ./cmake-build-debug/test/test_all
-</pre><p> See the <a class="el" href="md_test_2_r_e_a_d_m_e.html">Testing ReadMe</a> file for a more thorough discussion of testing.</p>
+</pre><p> See the <a class="el" href="md_test_2_r_e_a_d_m_e.html">Testing ReadMe</a> file and <a href="https://github.com/NOAA-OWP/ngen/wiki/NGen-Tutorial">wiki/Quickstart</a> for a more thorough discussion of testing.</p>
 <h2><a class="anchor" id="autotoc_md10"></a>
 How to debug the software</h2>
 <p>This is all developed via <b>CMake</b>, so a specific setting must be active within the root <code>CMakeList.txt</code> file: </p><pre class="fragment">target_compile_options(ngen PUBLIC -g)
@@ -205,7 +205,7 @@ Credits and references</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Apr 8 2024 15:17:22 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 8 2024 22:27:13 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

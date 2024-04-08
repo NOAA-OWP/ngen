@@ -92,11 +92,11 @@ $(document).ready(function(){initNavTree('md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n
   <div class="headertitle"><div class="title">Realization Configuration</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md215"></a> TODO: Link to Doxygen build</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md218"></a> TODO: Link to Doxygen build</p>
 <p>A Realization Configuration needs to be in <a href="https://www.json.org/json-en.html">JSON format (JavaScript Object Notation)</a></p>
 <p>The Configuration is a key-value object and must contain these three first level object keys:</p><ul>
 <li><code>global</code><ul>
-<li>is a key-value object that must include an object key for <code>formulations</code> that defines the default formulation(s) and also an object key for <code>forcing</code> that defines the default forcing file name pattern and path for any catchment that is not defined in <code>catchments</code></li>
+<li>is a key-value object that must include an object key for <code>formulations</code> that defines the default formulation(s) and also an object key for <code>forcing</code> that defines the default forcing file name pattern, path, and provider for any catchment that is not defined in <code>catchments</code></li>
 <li>Note: <code>global</code> can be omitted only if every catchment is assigned a formulation</li>
 </ul>
 </li>
@@ -124,7 +124,7 @@ $(document).ready(function(){initNavTree('md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n
 </ul>
 </li>
 <li><code>forcing</code><ul>
-<li>key-value object with keys for <code>file_pattern</code> and <code>path</code> that define the default CSV file pattern and path for the input forcings relative to the executable directory</li>
+<li>key-value object with keys for <code>file_pattern</code> and <code>path</code> that define the default CSV file pattern and path for the input forcings relative to the executable directory. More recently, <code>ngen</code> developed the capability to handle forcing data in different formats. Thus, a <code>provider</code> value parameter can be used to explicitly define the format of the forcing data, such as NetCDF format, in the form "provider": "NetCDF".</li>
 </ul>
 </li>
 </ul>
@@ -233,7 +233,7 @@ $(document).ready(function(){initNavTree('md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Apr 8 2024 15:17:21 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 8 2024 22:27:11 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -49,19 +49,26 @@ FC=mpif90 ./compiler.sh
 
 The `compiler.sh` script will install the Python modules with `-e`. On macOS, you may need to re-install the modules in t-route's `src` directory directly after running `compiler.sh`.
 
+### Some tips on installation if you run into issues
+  * [On install mpi4py](https://github.com/Unidata/netcdf4-python/issues/1296)
+
+  * [On pip version](https://github.com/NOAA-OWP/t-route/issues/621)
+
+  * [On NetCDF version](https://github.com/NOAA-OWP/t-route/issues/705)
+
 [Additional documentation for configuration and dependencies of t-route](https://github.com/NOAA-OWP/t-route#configuration-and-dependencies).
  
 ## Using t-route with ngen
   * Create the build directory including the options to activate Python and Routing: 
 
-      * Activate Python flag with `-DNGEN_ACTIVATE_PYTHON:BOOL=ON`
+      * Activate Python flag with `-DNGEN_WITH_PYTHON:BOOL=ON`
 
-      * Activate Routing flag with `-DNGEN_ACTIVATE_ROUTING:BOOL=ON.`  
+      * Activate Routing flag with `-DNGEN_WITH_ROUTING:BOOL=ON.`  
 
       * An example create build directory command with the above two options activated:
 
     ```sh
-      cmake -B cmake_build -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DNGEN_ACTIVATE_ROUTING:BOOL=ON .
+      cmake -B cmake_build -DNGEN_WITH_PYTHON:BOOL=ON -DNGEN_WITH_ROUTING:BOOL=ON -DNGEN_WITH_TESTS:BOOL=ON .
     ```  
   
   * Unit tests for the Routing_Py_Adapter class can then be built and run from the main directory with the following two commands:

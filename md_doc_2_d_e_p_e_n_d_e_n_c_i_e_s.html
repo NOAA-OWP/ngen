@@ -103,7 +103,7 @@ Summary</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">C/C++ Compiler   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">see below   </td><td class="markdownTableBodyCenter"></td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">CMake   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">&gt;= <code>3.14</code>   </td><td class="markdownTableBodyCenter"></td></tr>
+<td class="markdownTableBodyNone">CMake   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">&gt;= <code>3.17</code>   </td><td class="markdownTableBodyCenter"></td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Boost (Headers Only)   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter"><code>1.79.0</code>   </td><td class="markdownTableBodyCenter">headers only library    </td></tr>
 <tr class="markdownTableRowOdd">
@@ -111,13 +111,17 @@ Summary</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a href="https://www.mpi-forum.org">MPI</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">No current implementation or version requirements   </td><td class="markdownTableBodyCenter">Required for <a class="el" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html">multi-process distributed execution</a>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Python 3 Libraries   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">&gt; <code>3.6.8</code>   </td><td class="markdownTableBodyCenter">Can be excluded.    </td></tr>
+<td class="markdownTableBodyNone">Python 3 Libraries   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">&gt;= <code>3.8.0</code>   </td><td class="markdownTableBodyCenter">Can be excluded.    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">pybind11   </td><td class="markdownTableBodyLeft">submodule   </td><td class="markdownTableBodyCenter"><code>v2.6.0</code>   </td><td class="markdownTableBodyCenter">Can be excluded.    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">dmod.subsetservice   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter"><code>&gt;= 0.3.0</code>   </td><td class="markdownTableBodyCenter">Only required to perform integrated <a href="DISTRIBUTED_PROCESSING.md#subdivided-hydrofabric">hydrofabric file subdividing</a> for distributed processing .    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">t-route   </td><td class="markdownTableBodyLeft">submodule   </td><td class="markdownTableBodyCenter">see below   </td><td class="markdownTableBodyCenter">Module required to enable channel-routing. Requires pybind11 to enable   </td></tr>
+<td class="markdownTableBodyNone">t-route   </td><td class="markdownTableBodyLeft">submodule   </td><td class="markdownTableBodyCenter">see below   </td><td class="markdownTableBodyCenter">Module required to enable channel-routing. Requires pybind11 to enable    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">NetCDF Libraries   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">&gt;= <code>4.7.4</code>   </td><td class="markdownTableBodyCenter">Enables NetCDF I/O support    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://www.sqlite.org/cintro.html">SQLite3</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">&gt; <code>3.7.17</code>   </td><td class="markdownTableBodyCenter">Enables GeoPackage reading support   </td></tr>
 </table>
 <h1><a class="anchor" id="autotoc_md125"></a>
 Details</h1>
@@ -252,13 +256,18 @@ Setup</h3>
 <p>See the <a href="PYTHON_ROUTING.md#installing-t-route">installing t-route section</a> for more details.</p>
 <p>Be sure to build ngen with Python and Routing support as discussed there, and if using a virtual environment, make sure it is activated when running ngen, e.g.:</p>
 <div class="fragment"><div class="line">source venv/bin/activate</div>
-</div><!-- fragment --> </div></div><!-- contents -->
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md158"></a>
+NetCDF Libraries</h2>
+<h3><a class="anchor" id="autotoc_md159"></a>
+Setup</h3>
+<p>First, check if your compute system already have a version that is up to date, usually in the sub-directories (include/ and lib64/) under /usr. If not, you will have to install your own version. For instructions on how to install netCDF, some randomly selected references are <a href="https://docs.unidata.ucar.edu/nug/current/getting_and_building_netcdf.html">here</a> and <a href="https://docs.geoserver.org/main/en/user/extensions/netcdf-out/nc4.html">here</a>. </p>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Apr 8 2024 15:17:21 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 8 2024 22:27:11 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

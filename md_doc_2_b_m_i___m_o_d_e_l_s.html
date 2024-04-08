@@ -354,7 +354,7 @@ BMI Models Written in C</h1>
 BMI C Model As Shared Library</h2>
 <p>For <b>C</b> models, the model must be packaged as a pre-compiled shared library. A CMake cache variables can be configured for controlling whether the framework functionality for working with BMI C libraries is activated. This is found in, or must be added to, the <em>CMakeCache.txt</em> file in the build system directory:</p>
 <ul>
-<li><code>BMI_C_LIB_ACTIVE</code><ul>
+<li><code>NGEN_WITH_BMI_C</code><ul>
 <li>type: <code>BOOL</code></li>
 <li>must be set to <code>ON</code> (or equivalent in CMake) for BMI C shared library functionality to be compiled and active</li>
 </ul>
@@ -377,8 +377,8 @@ BMI C Caveats</h2>
 </ul>
 <h3><a class="anchor" id="autotoc_md40"></a>
 BMI C Activate/Deactivation Required in CMake Build</h3>
-<p>BMI C functionality will not work (i.e., will not be compiled or executable) unless set to be active in the CMake build. This requires setting the <code>BMI_C_LIB_ACTIVE</code> CMake cache variable to <code>ON</code> or <code>TRUE</code> (or equivalent).</p>
-<p>Conversely, built executables (and perhaps certain build targets) may not function as expected if <code>BMI_C_LIB_ACTIVE</code> is <code>ON</code> but the configured shared library is not available.</p>
+<p>BMI C functionality will not work (i.e., will not be compiled or executable) unless set to be active in the CMake build. This requires setting the <code>NGEN_WITH_BMI_C</code> CMake cache variable to <code>ON</code>.</p>
+<p>Conversely, built executables (and perhaps certain build targets) may not function as expected if <code>NGEN_WITH_BMI_C</code> is <code>ON</code> but the configured shared library is not available.</p>
 <h3><a class="anchor" id="autotoc_md41"></a>
 Additional Bootstrapping Function Needed</h3>
 <p>BMI models written in <b>C</b> should implement an extra "registration" function in order to be compatible with NextGen. By default, this registration function is expected to be: </p><pre class="fragment">Bmi* register_bmi(Bmi *model);
@@ -487,7 +487,7 @@ BMI Models Written in Fortran</h1>
 </ul>
 <h2><a class="anchor" id="autotoc_md54"></a>
 Enabling Fortran Integration</h2>
-<p>To enable Fortran integration functionality, the CMake build system has to be <a href="BUILDS_AND_CMAKE.md#generating-a-build-system">generated</a> with the <code>NGEN_BMI_FORTRAN_ACTIVE</code> CMake variable set to <code>ON</code>.</p>
+<p>To enable Fortran integration functionality, the CMake build system has to be <a href="BUILDS_AND_CMAKE.md#generating-a-build-system">generated</a> with the <code>NGEN_WITH_BMI_FORTRAN</code> CMake variable set to <code>ON</code>.</p>
 <h2><a class="anchor" id="autotoc_md55"></a>
 ISO C Binding Middleware</h2>
 <p>Nextgen takes advantage of the Fortran <code>iso_c_binding</code> module to achieve interoperability with Fortran modules. In short, this works through use of an intermediate middleware module maintained within Nextgen. This module handles the (majority of the) binding through proxy functions that make use of the actual external BMI Fortran module. <br  />
@@ -698,7 +698,7 @@ Example Look-Back Config</h4>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Apr 8 2024 15:17:21 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 8 2024 22:27:11 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

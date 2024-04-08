@@ -92,7 +92,7 @@ $(document).ready(function(){initNavTree('md_doc_2_g_i_t___u_s_a_g_e.html',''); 
   <div class="headertitle"><div class="title">Git Strategy</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md170"></a></p><ul>
+<div class="textblock"><p><a class="anchor" id="autotoc_md172"></a></p><ul>
 <li>Branching Design</li>
 <li>Contributing<ul>
 <li>TLDR;</li>
@@ -108,7 +108,7 @@ $(document).ready(function(){initNavTree('md_doc_2_g_i_t___u_s_a_g_e.html',''); 
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md171"></a>
+<h1><a class="anchor" id="autotoc_md173"></a>
 Branching Design</h1>
 <ul>
 <li>Main <b>upstream</b> repo has only the single long-term branch called <b>master</b>; i.e., <code>upstream/master</code><ul>
@@ -117,14 +117,14 @@ Branching Design</h1>
 </li>
 <li>Interaction with <b>upstream</b> repo is done exclusively via pull requests (PRs) to <code>upstream/master</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md172"></a>
+<h1><a class="anchor" id="autotoc_md174"></a>
 Contributing</h1>
 <ul>
 <li>TLDR;</li>
 <li>Fork Consistency Requirements</li>
 <li>Fork Setup Suggestions</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md173"></a>
+<h2><a class="anchor" id="autotoc_md175"></a>
 Contributing TLDR;</h2>
 <p>To work with the repo and contribute changes, the basic process is as follows:</p>
 <ul>
@@ -134,10 +134,10 @@ Contributing TLDR;</h2>
 <li>In the local repo, push the changes you make to your Github fork</li>
 <li>Submit pull requests to <code>upstream/master</code> when you have changes ready to be added</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md174"></a>
+<h2><a class="anchor" id="autotoc_md176"></a>
 Fork Consistency Requirements</h2>
 <p>Within your own local repo and personal fork, you are mostly free to do whatever branching strategy works for you. However, branches used for PRs must have all new commits based on the current <code>HEAD</code> commit of the <code>upstream/master</code> branch, to ensure the repo history remains consistent. I.e., you need to make sure you rebase the branch with your changes before making a PR. How you go about this is up to you, but the following suggested setup will make that relatively easy.</p>
-<h2><a class="anchor" id="autotoc_md175"></a>
+<h2><a class="anchor" id="autotoc_md177"></a>
 Fork Setup Suggestions</h2>
 <p>After creating your fork in Github, clone your local repo from the fork. This should make your fork a remote for you local repo, typically named <b>origin</b>. Then, add the **upstream** as a second remote in your local repo.</p>
 <p>Have your own <code>master</code> branch, on your local clone and within your personal fork, just as a place to rebase changes from `upstream/master`. Do not do any development work or add any of your own changes directly. Just keep it as a "clean," current copy of the <code>upstream/master</code> branch. <br  />
@@ -145,7 +145,7 @@ Fork Setup Suggestions</h2>
 <p>Use separate branches for development work as you see fit. When preparing to make a PR, create a new branch just for that PR, making sure it is both up to date with <b>upstream</b> and has all the desired local changes. Wait to actually push it to your fork until that has been done and your are ready create the PR.</p>
 <p>A separate, "clean" local <code>master</code> should be easy to keep it in sync with <code>upstream/master</code>, which in turn will make it relatively easy to rebase local development branches whenever needed. This simplifies maintaining the base-commit consistency requirement for the branches you will use for pull requests.</p>
 <p>Clean up above mentioned PR branches regularly (i.e., once their changes get incorporated). You may also want to do this for the other development branches in your fork, or else you'll end up with branches having diverged histories that need to be fixed.</p>
-<h1><a class="anchor" id="autotoc_md176"></a>
+<h1><a class="anchor" id="autotoc_md178"></a>
 Keeping Forks Up to Date</h1>
 <ul>
 <li>Setting the upstream Remote</li>
@@ -153,14 +153,14 @@ Keeping Forks Up to Date</h1>
 <li>Rebasing Development Branches</li>
 <li>Fixing Diverging Development Branches</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md177"></a>
+<h2><a class="anchor" id="autotoc_md179"></a>
 Setting the &lt;strong&gt;upstream&lt;/strong&gt; Remote</h2>
 <p>To stay in sync with other separate changes added to <b>upstream</b>, you will typically need to add the main upstream repository as a Git <b>remote</b> on your local development machine. The standard convention, used here and elsewhere, is to name that remote <b>upstream</b>. Doing the addition will look something like: </p><pre class="fragment"># Add the remote 
 git remote add upstream https://github.com/NOAA-OWP/ngen.git
 
 # Verify
 git remote -v
-</pre> <h2><a class="anchor" id="autotoc_md178"></a>
+</pre> <h2><a class="anchor" id="autotoc_md180"></a>
 Getting Upstream Changes</h2>
 <p>When you want to check for or apply updates to your fork (and your local repo), locally check out your <code>master</code> branch and do fetch-and-rebase, which can be done with <code>pull</code> and the <code>--rebase</code> option: </p><pre class="fragment"># Checkout local master branch 
 git checkout master
@@ -170,13 +170,13 @@ git pull --rebase upstream master
 </pre><p> Then, make sure these get pushed to your fork. Assuming a typical setup where you have cloned from your fork, and you still have <code>master</code> checked out, that is just: </p><pre class="fragment"># Note the assumptions mentioned above that required for this syntax
 git push
 </pre><p> Depending on your individual setup, you may want to do this immediately (e.g., if your <code>master</code> branch is "clean", as discussed in the forking suggestions), or wait until your local <code>master</code> is in a state ready to push to your fork.</p>
-<h2><a class="anchor" id="autotoc_md179"></a>
+<h2><a class="anchor" id="autotoc_md181"></a>
 Rebasing Development Branches</h2>
 <p>When the steps in Getting Upstream Changes do bring in new commits that update <code>master</code>, you should rebase your other local branches. E.g., </p><pre class="fragment"># If using a development branch named 'dev'
 git checkout dev
 git rebase master
 </pre><p> Alternatively, you can do an interactive rebase. This will open up a text editor allowing you to rearrange, squash, omit, etc. your commits when you rebase your development branch onto the new state of <code>master</code>. </p><pre class="fragment">git rebase -i master
-</pre> <h2><a class="anchor" id="autotoc_md180"></a>
+</pre> <h2><a class="anchor" id="autotoc_md182"></a>
 Fixing Diverging Development Branches</h2>
 <p>If you have already pushed a local development branch to your fork, and then later need to rebase the branch, doing so will cause the history to diverge. If you are the only one using your fork, this is easy to fix by simply force-pushing your rebased local branch. </p><pre class="fragment"># To force-push to fix a divergent branch
 git push -f origin dev
@@ -187,7 +187,7 @@ git push -f origin dev
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Apr 8 2024 15:17:21 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 8 2024 22:27:11 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

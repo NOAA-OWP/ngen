@@ -26,7 +26,7 @@ When executed, the driver is provided a valid partitioning configuration file pa
 
 # Building the MPI-Enabled Nextgen Driver
 
-To enable distributed processing capabilities in the driver, the [CMake build must be generated](BUILDS_AND_CMAKE.md) with the `MPI_ACTIVE` variable set to `TRUE` or `ON`, and the necessary MPI libraries must be available to CMake.  Additionally, [certain features](#on-the-fly-generation) are only supported if `NGEN_ACTIVATE_PYTHON` is also `ON`.
+To enable distributed processing capabilities in the driver, the [CMake build must be generated](BUILDS_AND_CMAKE.md) with the `NGEN_WITH_MPI` variable set to `ON`, such as `NGEN_WITH_MPI:BOOL=ON` and the necessary MPI libraries must be available to CMake.  Additionally, [certain features](#on-the-fly-generation) are only supported if `NGEN_WITH_PYTHON` is also `ON`.
 
 Otherwise, if using the standard build process with CMake, the driver is built using the same commands.  It can be built either as part of the entire project or the `ngen` CMake target.  CMake manages the necessary adjustments to, e.g., the compiler used, etc. 
 
@@ -56,7 +56,7 @@ The name of an expected or generated subdivided hydrofabric file is based on two
 This will have a partition specific suffix but otherwise have the same name as the full hydrofabric files.  E.g., _catchment_data.geojson.0_ would be the subdivided hydrofabric file for _catchment_data.geojson_ specific to rank 0.  
 
 ### On-the-fly Generation
-Driver processes may, under certain conditions, be able to self-subdivide a hydrofabric and generate the files when necessary.  For this to be possible, the executable must have been built with Python support (via the CMake `NGEN_ACTIVATE_PYTHON` being set to `ON`), and the [required package](DEPENDENCIES.md#the-dmodsubsetservice-package) must be installed within the Python environment available to the driver processes.
+Driver processes may, under certain conditions, be able to self-subdivide a hydrofabric and generate the files when necessary.  For this to be possible, the executable must have been built with Python support (via the CMake `NGEN_WITH_PYTHON` being set to `ON`), and the [required package](DEPENDENCIES.md#the-dmodsubsetservice-package) must be installed within the Python environment available to the driver processes.
 
 ## Examples
 
@@ -66,7 +66,7 @@ Driver processes may, under certain conditions, be able to self-subdivide a hydr
 * the catchment and nexus hydrofabric files, realization config, and partition config have intuitive names and are located in the current working directory
 * all processes completely load the entire hydrofabric
 ```
-mpirun -n 4 cmake-build/ngen catchment_data.geojson "" nexus_data.geojson "" realization_config.json partition_config.json
+mpirun -n 4 cmake-build/ngen catchment_data.geojson "all" nexus_data.geojson "all" realization_config.json partition_config.json
 ```
 
 ### Example 2 - Subdivided Hydrofabric
@@ -75,7 +75,7 @@ mpirun -n 4 cmake-build/ngen catchment_data.geojson "" nexus_data.geojson "" rea
 * the catchment and nexus hydrofabric files, realization config, and partition config have intuitive names and are located in the current working directory
 * each process only load files for a subdivided portion of the hydrofabric that corresponds to a given process's partition
 ```
-mpirun -n 8 cmake-build/ngen catchment_data.geojson "" nexus_data.geojson "" realization_config.json partition_config.json --subdivided-hydrofabric
+mpirun -n 8 cmake-build/ngen catchment_data.geojson "all" nexus_data.geojson "all" realization_config.json partition_config.json --subdivided-hydrofabric
 ```
 
 # Partitioning Config Generator
