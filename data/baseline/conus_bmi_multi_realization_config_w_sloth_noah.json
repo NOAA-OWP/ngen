@@ -4,7 +4,7 @@
             {
                 "name": "bmi_multi",
                 "params": {
-                    "model_type_name": "bmi_multi_noahowp_cfe",
+                    "model_type_name": "bmi_multi_noahowp",
                     "forcing_file": "",
                     "init_config": "",
                     "allow_exceed_end_time": true,
@@ -27,22 +27,6 @@
 			    }
                         },
                         {
-                            "name": "bmi_c",
-                            "params": {
-                                "model_type_name": "bmi_c_pet",
-                                "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
-                                "forcing_file": "",
-                                "init_config": "./conus_config/PET_{{id}}.ini",
-                                "allow_exceed_end_time": true,
-                                "main_output_variable": "water_potential_evaporation_flux",
-                                "registration_function": "register_bmi_pet",
-                                "variables_names_map": {
-                                    "water_potential_evaporation_flux": "potential_evapotranspiration"
-                                },
-                                "uses_forcing_file": false
-                            }
-                        },
-                        {
                             "name": "bmi_fortran",
                             "params": {
                                 "model_type_name": "bmi_fortran_noahowp",
@@ -60,32 +44,6 @@
                                     "LWDN": "land_surface_radiation~incoming~longwave__energy_flux",
                                     "SOLDN": "land_surface_radiation~incoming~shortwave__energy_flux",
                                     "SFCPRS": "land_surface_air__pressure"
-                                },
-                                "uses_forcing_file": false
-                            }
-                        },
-                        {
-                            "name": "bmi_c",
-                            "params": {
-                                "model_type_name": "bmi_c_cfe",
-                                "library_file": "./extern/cfe/cmake_build/libcfebmi",
-                                "forcing_file": "",
-                                "init_config": "./conus_config/CFE_{{id}}.ini",
-                                "allow_exceed_end_time": true,
-                                "main_output_variable": "Q_OUT",
-                                "registration_function": "register_bmi_cfe",
-                                "variables_names_map": {
-                                    "water_potential_evaporation_flux": "ETRAN",
-                                    "atmosphere_air_water~vapor__relative_saturation": "SPFH_2maboveground",
-                                    "land_surface_air__temperature": "TMP_2maboveground",
-                                    "land_surface_wind__x_component_of_velocity": "UGRD_10maboveground",
-                                    "land_surface_wind__y_component_of_velocity": "VGRD_10maboveground",
-                                    "land_surface_radiation~incoming~longwave__energy_flux": "DLWRF_surface",
-                                    "land_surface_radiation~incoming~shortwave__energy_flux": "DSWRF_surface",
-                                    "land_surface_air__pressure": "PRES_surface",
-                                    "ice_fraction_schaake" : "sloth_ice_fraction_schaake",
-                                    "ice_fraction_xinanjiang" : "sloth_ice_fraction_xinanjiang",
-                                    "soil_moisture_profile" : "sloth_smp"
                                 },
                                 "uses_forcing_file": false
                             }
