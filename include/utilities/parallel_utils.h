@@ -23,6 +23,7 @@
 #include <mpi.h>
 #include <string>
 #include <set>
+#include <vector>
 #ifdef ACTIVATE_PYTHON
 #include "python/HydrofabricSubsetter.hpp"
 #endif // ACTIVATE_PYTHON
@@ -158,7 +159,7 @@ namespace parallel {
     void get_hosts_array(int mpi_rank, int mpi_num_procs, int *host_array) {
         const int ROOT_RANK = 0;
         // These are the lengths of the (trimmed) C-string representations of the hostname for each rank
-        int actualHostnameCStrLength[mpi_num_procs];
+        std::vector<int> actualHostnameCStrLength(mpi_num_procs);
         // Initialize to -1 to represent unknown
         for (int i = 0; i < mpi_num_procs; ++i) {
             actualHostnameCStrLength[i] = -1;
@@ -172,10 +173,10 @@ namespace parallel {
         actualHostnameCStrLength[mpi_rank] = std::strlen(myhostname);
 
         // First, gather the hostname string lengths
-        MPI_Gather(&actualHostnameCStrLength[mpi_rank], 1, MPI_INT, actualHostnameCStrLength, 1, MPI_INT, ROOT_RANK,
+        MPI_Gather(&actualHostnameCStrLength[mpi_rank], 1, MPI_INT, actualHostnameCStrLength.data(), 1, MPI_INT, ROOT_RANK,
                    MPI_COMM_WORLD);
         // Per-rank start offsets/displacements in our hostname strings gather buffer.
-        int recvDisplacements[mpi_num_procs];
+        std::vector<int> recvDisplacements(mpi_num_procs);
         int totalLength = 0;
         for (int i = 0; i < mpi_num_procs; ++i) {
             // Displace each rank's string by the sum of the length of the previous rank strings
@@ -188,8 +189,8 @@ namespace parallel {
         }
         // Now we can create our buffer array and gather the hostname strings into it
         char hostnames[totalLength];
-        MPI_Gatherv(myhostname, actualHostnameCStrLength[mpi_rank], MPI_CHAR, hostnames, actualHostnameCStrLength,
-                    recvDisplacements, MPI_CHAR, ROOT_RANK, MPI_COMM_WORLD);
+        MPI_Gatherv(myhostname, actualHostnameCStrLength[mpi_rank], MPI_CHAR, hostnames, actualHostnameCStrLength.data(),
+                    recvDisplacements.data(), MPI_CHAR, ROOT_RANK, MPI_COMM_WORLD);
 
         if (mpi_rank == ROOT_RANK) {
             host_array[0] = 0;
@@ -240,7 +241,7 @@ namespace parallel {
      */
     bool mpi_send_text_file(const char *fileName, const int mpi_rank, const int destRank) {
         int bufSize = 4096;
-        char buf[bufSize];
+        std::vector<char> buf(bufSize);
         int code;
         // How much has been transferred so far
         int totalNumTransferred = 0;
@@ -267,12 +268,12 @@ namespace parallel {
         }
         int continueCode = 1;
         // Then while there is more of the file to read and send, read the next batch and ...
-        while (fgets(buf, bufSize, file) != NULL) {
+        while (fgets(buf.data(), bufSize, file) != NULL) {
             // Indicate we are ready to continue sending data
             MPI_Send(&continueCode, 1, MPI_INT, destRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD);
 
             // Send this batch
-            MPI_Send(buf, bufSize, MPI_CHAR, destRank, NGEN_MPI_DATA_TAG, MPI_COMM_WORLD);
+            MPI_Send(buf.data(), bufSize, MPI_CHAR, destRank, NGEN_MPI_DATA_TAG, MPI_COMM_WORLD);
 
             // Then get back a code, which will be -1 if bad and need to exit and otherwise good
             MPI_Recv(&code, 1, MPI_INT, destRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -329,7 +330,7 @@ namespace parallel {
 
         // How much has been transferred so far
         int totalNumTransferred = 0;
-        char buf[bufSize];
+        std::vector<char> buf(bufSize);
 
         int continueCode;
 
@@ -339,9 +340,9 @@ namespace parallel {
             if (continueCode <= 0)
                 break;
 
-            MPI_Recv(buf, bufSize, MPI_CHAR, srcRank, NGEN_MPI_DATA_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(buf.data(), bufSize, MPI_CHAR, srcRank, NGEN_MPI_DATA_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-            writeCode = fputs(buf, file);
+            writeCode = fputs(buf.data(), file);
             MPI_Send(&writeCode, 1, MPI_INT, srcRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD);
 
             if (writeCode < 0) {
@@ -522,12 +523,12 @@ namespace parallel {
         // But if the subdividing went fine ...
         else {
             // ... figure out what ranks are on hosts with each other by getting an id for host of each rank
-            int hostIdForRank[mpi_num_procs];
-            get_hosts_array(mpi_rank, mpi_num_procs, hostIdForRank);
+            std::vector<int> hostIdForRank(mpi_num_procs);
+            get_hosts_array(mpi_rank, mpi_num_procs, hostIdForRank.data());
 
             // ... then (when necessary) transferring files around
             return distribute_subdivided_hydrofabric_files(catchmentDataFile, nexusDataFile, 0, mpi_rank,
-                                                           mpi_num_procs, hostIdForRank, true, true);
+                                                           mpi_num_procs, hostIdForRank.data(), true, true);
 
         }
         #endif // ACTIVATE_PYTHON
