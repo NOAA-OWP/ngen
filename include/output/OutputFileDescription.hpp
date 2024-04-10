@@ -1,4 +1,5 @@
 #ifndef __OUTPUT_FILE_DESCRIPTION_H__
+#define __OUTPUT_FILE_DESCRIPTION_H__
 
 #include <string>
 #include <vector>
