@@ -85,7 +85,7 @@ namespace realization {
                 */
 
                 // try to get the json node
-                auto layers_json_array = tree.get_child_optional("layers");
+                auto layers_json_array = config_ptree.get_child_optional("layers");
                 //Create the default surface layer
                 config::Layer layer;
                 // layer description struct
@@ -258,7 +258,7 @@ namespace realization {
                         throw std::runtime_error("ERROR: No formulations defined for "+catchment_config.first+".");
                       }
                       // Parse catchment-specific model_params
-                      auto catchment_feature = fabric->get_feature(catchment_index);
+                      auto catchment_feature = catchment_json->get_feature(catchment_index);
                       catchment_formulation.formulation.link_external(catchment_feature);
                       this->add_formulation(
                         this->construct_formulation_from_config(

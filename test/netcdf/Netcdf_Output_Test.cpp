@@ -105,7 +105,7 @@ TEST_F(NetcdfOuputTest, TestNetcdfWrite) {
     dimension_discription.push_back(data_output::NetcdfDimensionDiscription("id",1000));
 
     variable_discription.push_back(data_output::NetcdfVariableDiscription("version", "string"));
-    variable_discription.push_back(data_output::NetcdfVariableDiscription("x", "float:","x"));
+    variable_discription.push_back(data_output::NetcdfVariableDiscription("x", "float","x"));
     variable_discription.push_back(data_output::NetcdfVariableDiscription("y", "float", "y"));
     variable_discription.push_back(data_output::NetcdfVariableDiscription("output1", "float", std::vector<std::string>{"time","x","y"}));
     variable_discription.push_back(data_output::NetcdfVariableDiscription("output2", "float", std::vector<std::string>{"time","id"}));
