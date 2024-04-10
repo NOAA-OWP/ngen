@@ -13,8 +13,8 @@ namespace data_output
     {
         public:
 
-        std::vector<data_output::NetcdfDimensionDiscription> dimensions;
-        std::vector<data_output::NetcdfVariableDiscription> variables;
+        std::vector<NetcdfDimensionDiscription> dimensions;
+        std::vector<NetcdfVariableDiscription> variables;
     };
 
     struct CSVFileInfo
