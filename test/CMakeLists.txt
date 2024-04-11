@@ -162,6 +162,7 @@ ngen_add_test(
     test_realization_config
     OBJECTS
         realizations/Formulation_Manager_Test.cpp
+        utils/MPIRank.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
@@ -249,6 +250,7 @@ ngen_add_test(
     test_multilayer
     OBJECTS
         core/multilayer/MultiLayerParserTest.cpp
+        utils/MPIRank.cpp
     LIBRARIES
         NGen::core
         NGen::geojson
@@ -438,6 +440,7 @@ ngen_add_test(
     OBJECTS
         netcdf/Netcdf_Output_Test.cpp
         netcdf/Netcdf_Output_Integration_Test.cpp
+        utils/MPIRank.cpp
     LIBRARIES
         NGen::core
         NGen::core_nexus
@@ -473,6 +476,7 @@ ngen_add_test(
         utils/mdframe_netcdf_Test.cpp
         utils/mdframe_csv_Test.cpp
         utils/logging_Test.cpp
+        utils/MPIRank.cpp
     LIBRARIES
         gmock
         NGen::core

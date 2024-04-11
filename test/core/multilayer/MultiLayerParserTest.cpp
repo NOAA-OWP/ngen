@@ -3,6 +3,8 @@
 #include "FileChecker.h"
 #include <Formulation_Manager.hpp>
 
+extern int mpi_rank;
+
 class MultiLayerParserTest : public ::testing::Test {
 
     static std::string find_file(std::vector<std::string> dir_opts, const std::string& basename) {

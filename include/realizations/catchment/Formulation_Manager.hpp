@@ -23,6 +23,8 @@
 #include "output/NetcdfOutputWriter.hpp"
 #include "output/OutputFileDescription.hpp"
 
+extern int mpi_rank;
+
 namespace realization {
 
     class Formulation_Manager {
@@ -123,98 +125,97 @@ namespace realization {
                 }
 
                 #ifdef NETCDF_ACTIVE
-                // try to get the json node
-                auto outputs_container = config_ptree.get_child_optional("outputs");
 
-                //Check to see if custom outputs have been defined
-                if (outputs_container) 
+                if (mpi_rank == 0)
                 {
-                    for (std::pair<std::string, boost::property_tree::ptree> outputs_pair : *outputs_container)
+                    // try to get the json node
+                    auto outputs_container = config_ptree.get_child_optional("outputs");
+
+                    //Check to see if custom outputs have been defined
+                    if (outputs_container) 
                     {
-                        std::vector<data_output::NetcdfDimensionDiscription> output_dimensions;
-                        std::vector<data_output::NetcdfVariableDiscription> output_variables;
-                        std::vector< std::string > dimension_names;
-                        data_output::FileOutputType type;
-                        std::string output_file_path;
-                        
-                        auto& output_json_array = outputs_pair.second;
-                        for (std::pair<std::string, boost::property_tree::ptree> output_pair : output_json_array) 
+                        for (std::pair<std::string, boost::property_tree::ptree> outputs_pair : *outputs_container)
                         {
-                            if ( output_pair.first == "name" )
+                            std::vector<data_output::NetcdfDimensionDiscription> output_dimensions;
+                            std::vector<data_output::NetcdfVariableDiscription> output_variables;
+                            std::vector< std::string > dimension_names;
+                            data_output::FileOutputType type;
+                            std::string output_file_path;
+                            
+                            auto& output_json_array = outputs_pair.second;
+                            for (std::pair<std::string, boost::property_tree::ptree> output_pair : output_json_array) 
                             {
-                                output_file_path = output_pair.second.get<std::string>("");
-                            }
-                            else if (output_pair.first == "type")
-                            {
-                                std::string string_type = output_pair.second.get<std::string>("");
-                                if (string_type == "NetCDF4" )
+                                if ( output_pair.first == "name" )
                                 {
-                                    type = data_output::NetCDF4;
+                                    output_file_path = output_pair.second.get<std::string>("");
                                 }
-                                else if (string_type == "CSV" )
+                                else if (output_pair.first == "type")
                                 {
-                                    
-                                }
-                            }
-                            else if (boost::to_lower_copy(output_pair.first) == "dimensions" )
-                            {
-                                for( const std::pair<std::string, boost::property_tree::ptree>& dimension_pair : output_pair.second )
-                                {
-                                    data_output::NetcdfDimensionDiscription nc_dim_des(
-                                        dimension_pair.first, 
-                                        dimension_pair.second.get<int>("size"));
-
-                                        output_dimensions.push_back(nc_dim_des);
-                                        dimension_names.push_back(dimension_pair.first);
-                                }
-                            }
-                            else if (boost::to_lower_copy(output_pair.first) == "variables" )
-                            {
-                                auto variables_array = output_pair.second.get_child_optional("dimension");
-                                if ( variables_array )
-                                {
-                                    for ( const std::pair<std::string, boost::property_tree::ptree>& variable_pair : *variables_array )
+                                    std::string string_type = output_pair.second.get<std::string>("");
+                                    if (string_type == "NetCDF4" )
                                     {
-                                        std::string dimensions_str = variable_pair.second.get<std::string>("variables");
-                                        std::vector<std::string> dimensions_list;
-
-                                        data_output::NetcdfVariableDiscription nc_var_des(
-                                            variable_pair.first,
-                                            variable_pair.second.get<std::string>("type"),
-                                            dimensions_list);
-
-                                        output_variables.push_back(nc_var_des);
-                                    }  
+                                        type = data_output::NetCDF4;
+                                    }
+                                    else if (string_type == "CSV" )
+                                    {
+                                        
+                                    }
                                 }
-                            } 
+                                else if (boost::to_lower_copy(output_pair.first) == "dimensions" )
+                                {
+                                    for( const std::pair<std::string, boost::property_tree::ptree>& dimension_pair : output_pair.second )
+                                    {
+                                        data_output::NetcdfDimensionDiscription nc_dim_des(
+                                            dimension_pair.first, 
+                                            dimension_pair.second.get<int>("size"));
 
-                            output_files.push_back(data_output::OutputFileDescription()); 
-                            output_files.back().file_name = output_file_path;
-                            output_files.back().file_type = type;
-                            switch ( type )
-                            {
-                                case data_output::NetCDF4:
+                                            output_dimensions.push_back(nc_dim_des);
+                                            dimension_names.push_back(dimension_pair.first);
+                                    }
+                                }
+                                else if (boost::to_lower_copy(output_pair.first) == "variables" )
+                                {
+                                    auto variables_array = output_pair.second.get_child_optional("dimension");
+                                    if ( variables_array )
+                                    {
+                                        for ( const std::pair<std::string, boost::property_tree::ptree>& variable_pair : *variables_array )
+                                        {
+                                            std::string dimensions_str = variable_pair.second.get<std::string>("variables");
+                                            std::vector<std::string> dimensions_list;
 
-                                output_files.back().nc_info.dimensions = output_dimensions;
-                                output_files.back().nc_info.variables = output_variables;
+                                            data_output::NetcdfVariableDiscription nc_var_des(
+                                                variable_pair.first,
+                                                variable_pair.second.get<std::string>("type"),
+                                                dimensions_list);
 
-                                break;
+                                            output_variables.push_back(nc_var_des);
+                                        }  
+                                    }
+                                } 
 
-                                case data_output::CSV:
+                                output_files.push_back(data_output::OutputFileDescription()); 
+                                output_files.back().file_name = output_file_path;
+                                output_files.back().file_type = type;
+                                switch ( type )
+                                {
+                                    case data_output::NetCDF4:
 
-                                ;
+                                    output_files.back().nc_info.dimensions = output_dimensions;
+                                    output_files.back().nc_info.variables = output_variables;
+                                    break;
 
-                                break;
+                                    case data_output::CSV:
+
+                                    ;
+                                    break;
+                                }
                             }
                         }
-
-
                     }
-
-                }
-                else // setup default output of streamflow from nexus nodes
-                {
-                    // default file setup will be in main
+                    else // setup default output of streamflow from nexus nodes
+                    {
+                        // default file setup will be in main
+                    }
                 }
 
                 #endif // NETCDF_ACTIVE
