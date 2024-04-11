@@ -122,7 +122,7 @@ namespace realization {
                     }
                 }
 
-                //TODO use the set of layer providers as input for catchments to lookup from
+                #ifdef NETCDF_ACTIVE
                 // try to get the json node
                 auto outputs_container = config_ptree.get_child_optional("outputs");
 
@@ -214,8 +214,10 @@ namespace realization {
                 }
                 else // setup default output of streamflow from nexus nodes
                 {
-
+                    // default file setup will be in main
                 }
+
+                #endif // NETCDF_ACTIVE
 
                 /**
                  * Read routing configurations from configuration file
