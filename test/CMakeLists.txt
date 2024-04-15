@@ -168,6 +168,14 @@ ngen_add_test(
         testbmicppmodel
 )
 
+ngen_add_test(
+    test_gridselector
+    OBJECTS
+        forcing/GridDataSelector_Test.cpp
+    LIBRARIES
+        NGen::forcing
+)
+
 ########################## Series Unit Tests
 ngen_add_test(
     test_mdarray
