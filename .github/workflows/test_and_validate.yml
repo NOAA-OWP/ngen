@@ -166,8 +166,6 @@ jobs:
           targets: "test_bmi_c"
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
           bmi_c: 'ON'
-          #Is this required for this test???
-          use_python: 'ON'
 
       - name: run_bmi_c_tests
         run: |
