@@ -186,14 +186,14 @@ runs:
             . .venv/bin/activate
             [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
             cmake -B ${{ inputs.build-dir }} \
-              -DBMI_C_LIB_ACTIVE:BOOL=${{ inputs.bmi_c }} \
-              -DNGEN_ACTIVATE_PYTHON:BOOL=${{ inputs.use_python }} \
-              -DUDUNITS_ACTIVE:BOOL=${{ inputs.use_udunits }} \
-              -DBMI_FORTRAN_ACTIVE:BOOL=${{ inputs.bmi_fortran }} \
-              -DNGEN_ACTIVATE_ROUTING:BOOL=${{ inputs.use_troute }} \
-              -DNETCDF_ACTIVE:BOOL=${{ inputs.use_netcdf }} \
+              -DNGEN_WITH_BMI_C:BOOL=${{ inputs.bmi_c }} \
+              -DNGEN_WITH_PYTHON:BOOL=${{ inputs.use_python }} \
+              -DNGEN_WITH_UDUNITS:BOOL=${{ inputs.use_udunits }} \
+              -DNGEN_WITH_BMI_FORTRAN:BOOL=${{ inputs.bmi_fortran }} \
+              -DNGEN_WITH_ROUTING:BOOL=${{ inputs.use_troute }} \
+              -DNGEN_WITH_NETCDF:BOOL=${{ inputs.use_netcdf }} \
               -DNGEN_WITH_SQLITE:BOOL=${{ inputs.use_sqlite }} \
-              -DMPI_ACTIVE:BOOL=${{ inputs.use_mpi }} -S .
+              -DNGEN_WITH_MPI:BOOL=${{ inputs.use_mpi }} -S .
             echo "build-dir=$(echo ${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
           shell: bash
 
