@@ -54,7 +54,7 @@
             }
         ],
         "forcing": {
-            "path": "./NextGen_forcing_2016010100.nc",
+            "path": "./forcing/NextGen_forcing_2016010100.nc",
             "provider": "NetCDF"
         }
     },
