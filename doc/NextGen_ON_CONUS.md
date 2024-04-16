@@ -6,8 +6,8 @@ This documentation provides instructions on all neccessary steps and components 
 * [Download the Codes](#doenload-the-codes)
 * [Setting Up the Environment](#setting-up-the-environment)
 * [Build the Executable](#build-the-executable)
-* [Generate Partition For Parallel Computation](#generate-partition-for-parallel-computation)
 * [CONUS Hydrofabric](#CONUS-hydrofabric)
+* [Generate Partition For Parallel Computation](#generate-partition-for-parallel-computation)
 * [Prepare the Input Data](#prepare-the-input-data)
 * [Build the Realization Configurations](#build-the-realization-configurations)
 * [Run Computations with submodules](#run-computations-with-submodules)
@@ -102,6 +102,12 @@ Suppose the above script is named `build_mpi`, execute the following command to 
 
 This will build an executable in the `cmake_build_mpi` directory named `ngen` and another named `partitionGenerator` as well as all the unit tests in the `cmake_build_mpi/test`.
 
+# CONUS Hydrofabric
+
+The CONUS hydrofabric is downloaded from [here](https://www.lynker-spatial.com/#v20.1/). The file name under the list is `conus.gpkg`. It is cautioned that since the data there are evolving and newer version may be available in the future. When using a newer version, be mindful that the corresponding initial configuration file generation and validation for all submodules at CONUS scale are necessary, which may be a non-trivial process due to the shear size of the spatial scale.
+
+As the file is fairly large, it is worth some consideration to store it in a proper place, then simply build a symbolic link in the `ngen` home directory, thus named `./hydrofabric/conus.gpkg`. Note the easiest way to create the symbolic link is to `makedir hydrofabric` and then create the full path.
+
 # Generate Partition For Parallel Computation
 
 For parallel computation using MPI on hydrofabric, a [partition generate tool](Distributed_Processing.md) is used to partition the hydrofabric features ids into a number of partitions equal to the number of MPI processing CPU cores. To generate the partition file, run the following command:
@@ -111,12 +117,6 @@ For parallel computation using MPI on hydrofabric, a [partition generate tool](D
 ```
 
 In the command above, `conus.gpkg` is the NextGen hydrofabric version 2.01 for CONUS, `partition_config_32.json` is the partition file that contains all features ids and their interconnected network information. The number `32` is intended number of processing cores for running parallel build `ngen` using MPI. The last two empty strings, as indicated by `''`, indicate there is no subsetting, i.e., we intend to run the whole CONUS hydrofabric.
-
-# CONUS Hydrofabric
-
-The CONUS hydrofabric is downloaded from [here](https://www.lynker-spatial.com/#v20.1/). The file name under the list is `conus.gpkg`. It is cautioned that since the data there are evolving and newer version may be available in the future. When using a newer version, be mindful that the corresponding initial configuration file generation and validation for all submodules at CONUS scale are necessary, which may be a non-trivial process due to the shear size of the spatial scale.
-
-As the file is fairly large, it is worth some consideration to store it in a proper place, then simply build a symbolic link in the `ngen` home directory, thus named `./hydrofabric/conus.gpkg`. Note the easiest way to create the symbolic link is to `makedir hydrofabric` and then create the full path.
 
 # Prepare the Input Data
 
