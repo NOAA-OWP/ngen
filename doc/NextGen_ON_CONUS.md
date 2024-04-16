@@ -3,7 +3,7 @@
 This documentation provides instructions on all neccessary steps and components to run NextGen jobs at CONUS scale. Considering the computations large scale, we focus only on running parallel jobs using MPI.
 
 * [Summary](#summary)
-* [Download the Codes](#doenload-the-codes]
+* [Download the Codes](#doenload-the-codes)
 * [Setting Up the Environment](#setting-up-the-environment)
 * [Build the Executable](#build-the-executable)
 * [Generate Partition For Parallel Computation](#generate-partition-for-parallel-computation)
@@ -116,11 +116,11 @@ In the command above, `conus.gpkg` is the NextGen hydrofabric version 2.01 for C
 
 The CONUS hydrofabric is downloaded from [here](https://www.lynker-spatial.com/#v20.1/). The file name under the list is `conus.gpkg`. It is cautioned that since the data there are evolving and newer version may be available in the future. When using a newer version, be mindful that the corresponding initial configuration file generation and validation for all submodules at CONUS scale are necessary, which may be a non-trivial process due to the shear size of the spatial scale.
 
-As the file is fairly large, it is worth some consideration to store it in a proper place, then simply build a symbolic link in the `ngen` home directory, thus named `./hydrofabric/conus.gpkg`.
+As the file is fairly large, it is worth some consideration to store it in a proper place, then simply build a symbolic link in the `ngen` home directory, thus named `./hydrofabric/conus.gpkg`. Note the easiest way to create the symbolic link is to `makedir hydrofabric` and then create the full path.
 
 # Prepare the Input Data
 
-Input data include the forcing data and initial parameter data for various submodules. These depend on what best suit the user need. For our case, as of this documentation, beside forcing data, which can be accessed at `./NextGen_forcing_2016010100.nc` using the symbolic scheme, we also generated initial input data for various submodules `noah-owp-modular`, `PET`, `CFE`, `SoilMoistureProfiles (SMP)`, `SoilFreezeThaw (SFT)`. The first three are located in `./conus_config/`, the SMP initial configus are located in `./conus_smp_configs/` and the SFT initial configs are located in `./conus_sft_configs/`.
+Input data include the forcing data and initial parameter data for various submodules. These depend on what best suit the user need. For our case, as of this documentation, beside forcing data, which can be accessed at `./forcing/NextGen_forcing_2016010100.nc` using the symbolic link scheme, we also generated initial input data for various submodules `noah-owp-modular`, `PET`, `CFE`, `SoilMoistureProfiles (SMP)`, `SoilFreezeThaw (SFT)`. The first three are located in `./conus_config/`, the SMP initial configus are located in `./conus_smp_configs/` and the SFT initial configs are located in `./conus_sft_configs/`.
 
 For code used to generate the initial config files for the various modules, the interested users are directed to this [web location](https://github.com/NOAA-OWP/ngen-cal/tree/master/python/ngen_config_gen). 
 
