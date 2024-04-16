@@ -1,11 +1,11 @@
 # NextGen on CONUS
 
-This documentation provides instructions on all neccessary steps and components to run NextGen jobs at CONUS scale. Considering the computations large scale, we focus only on running parallel jobs using MPI
+This documentation provides instructions on all neccessary steps and components to run NextGen jobs at CONUS scale. Considering the computations large scale, we focus only on running parallel jobs using MPI.
 
 * [Summary](#summary)
 * [Download the Codes](#doenload-the-codes]
 * [Setting Up the Environment](#setting-up-the-environment)
-* [Building the Executable](#building-the-executable)
+* [Build the Executable](#build-the-executable)
 * [Generate Partition For Parallel Computation](#generate-partition-for-parallel-computation)
 * [CONUS Hydrofabric](#CONUS-hydrofabric)
 * [Prepare the Input Data](#prepare-the-input-data)
@@ -35,7 +35,7 @@ For setting up the build and computation environment, we refer the users to our 
 
 You are most likely need to use Python. For that we recommend setting up a virtual environment. For details, see [PYTHON_ROUTING.md](PYTHON_ROUTING.md). After setting up the Python virtual environment and activating it, you may need install additional python modules depending what `ngen submodules` you want to run.
 
-#Building the Executable
+# Build the Executable
 
 After setting up the environment variables, we need first build the necessay dynamically linked librares. Although `ngen` has capability for automated building of submodule libraries, we build them explicitly so that users have a better understanding. For simplicity, we display the content a script which we name it `build_libs`.
 
@@ -102,7 +102,7 @@ Suppose the above script is named `build_mpi`, execute the following command to 
 
 This will build an executable in the `cmake_build_mpi` directory named `ngen` and another named `partitionGenerator` as well as all the unit tests in the `cmake_build_mpi/test`.
 
-#Generate Partition For Parallel Computation
+# Generate Partition For Parallel Computation
 
 For parallel computation using MPI on hydrofabric, a [partition generate tool](Distributed_Processing.md) is used to partition the hydrofabric features ids into a number of partitions equal to the number of MPI processing CPU cores. To generate the partition file, run the following command:
 
@@ -112,13 +112,13 @@ For parallel computation using MPI on hydrofabric, a [partition generate tool](D
 
 In the command above, `conus.gpkg` is the NextGen hydrofabric version 2.01 for CONUS, `partition_config_32.json` is the partition file that contains all features ids and their interconnected network information. The number `32` is intended number of processing cores for running parallel build `ngen` using MPI. The last two empty strings, as indicated by `''`, indicate there is no subsetting, i.e., we intend to run the whole CONUS hydrofabric.
 
-#CONUS Hydrofabric
+# CONUS Hydrofabric
 
 The CONUS hydrofabric is downloaded from [here](https://www.lynker-spatial.com/#v20.1/). The file name under the list is `conus.gpkg`. It is cautioned that since the data there are evolving and newer version may be available in the future. When using a newer version, be mindful that the corresponding initial configuration file generation and validation for all submodules at CONUS scale are necessary, which may be a non-trivial process due to the shear size of the spatial scale.
 
 As the file is fairly large, it is worth some consideration to store it in a proper place, then simply build a symbolic link in the `ngen` home directory, thus named `./hydrofabric/conus.gpkg`.
 
-#Prepare the Input Data
+# Prepare the Input Data
 
 Input data include the forcing data and initial parameter data for various submodules. These depend on what best suit the user need. For our case, as of this documentation, beside forcing data, which can be accessed at `./NextGen_forcing_2016010100.nc` using the symbolic scheme, we also generated initial input data for various submodules `noah-owp-modular`, `PET`, `CFE`, `SoilMoistureProfiles (SMP)`, `SoilFreezeThaw (SFT)`. The first three are located in `./conus_config/`, the SMP initial configus are located in `./conus_smp_configs/` and the SFT initial configs are located in `./conus_sft_configs/`.
 
@@ -126,7 +126,7 @@ For code used to generate the initial config files for the various modules, the 
 
 The users are warned that since the simulated region is large, some of the initial config parameters values for some catchments may be unsuitable and cause the `ngen` execution to stop due to errors. Usually, in such cases, either `ngen` or the submodule itself may provide some hint as to the catchment ids or the location of the code that caused the error. Users may follow these hints to figure out as to which initial input parameter or parameters are initialized with inappropriate values. In the case of SFT, an initial value of `smcmax=1.0` would be too large. In the case of SMP, an initial value of `b=0.01` would be too small, for example.
 
-#Build the Realization Configurations
+# Build the Realization Configurations
 
 The realization configuration file in `Json` format contains high level information to run a `ngen` simulation, such as interconnected submodules, paths to forcing file, shared libraries, initialization parameters, duration of simulation, I/O variables, etc. We have built the realization configurations for several commonly used submodules which are located in `data/baseline/`. These are built by adding one submodule at a time, test run for 10 days simulation time. The successive submodules used are:
 ```
@@ -139,7 +139,7 @@ sloth+noah-owp-modular+pet+smp+sft (conus_bmi_multi_realization_config_w_sloth_n
 sloth+noah-owp-modular+pet+smp+sft+cfe (conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json)
 ```
 
-#Run Computations with Submodules
+# Run Computations with Submodules
 
 With all preparation steps completed, we are now ready to run computations. We use MPI as our parallel processing application with 32 cores as an example. Users are free to choose whatever number cores they want, just make sure you will need to have the appropriate corresponding partition json file for the number of cores used. The command line for running a MPI job is as sollows:
 
@@ -164,10 +164,10 @@ where `ngen` is the executable we build in the [Building the Executable](#Buildi
 
 Be aware that the above commands will generate over a million output files associated with catchment and nexus ids so if you issue a `ls` command in `ngen` directory, it will be significantly slower than usual to list all the file names. The exact time will depend on the computer you are working on.
 
-#Run Computation with Topmodel
+# Run Computation with Topmodel
 
 To be added
 
-#Run Computation with Routing
+# Run Computation with Routing
 
 To be added
