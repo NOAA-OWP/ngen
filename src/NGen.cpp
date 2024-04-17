@@ -506,6 +506,10 @@ int main(int argc, char *argv[]) {
 
     #ifdef NGEN_WITH_NETCDF
     // make netcdf output objects for layers
+
+    unsigned long num_catchments = std::distance(features.catchments().begin(), features.catchments().end() ); // TODO calculate this during parsing
+    unsigned long num_nexuses = std::distance(features.nexuses().begin(), features.nexuses().end() ); // TODO calculate this during parsing
+
     for ( std::shared_ptr<ngen::Layer>& layer : layers )
     {
         std::vector<data_output::NetcdfDimensionDiscription> dimension_discription;
@@ -518,30 +522,36 @@ int main(int argc, char *argv[]) {
         {
             case ngen::LayerClass::kSurfaceLayer:
 
-            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id"));
+            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
 
 
             break;
 
             case ngen::LayerClass::kDomainLayer:
+            {
+              std::shared_ptr<ngen::DomainLayer> domain_layer = std::dynamic_pointer_cast<ngen::DomainLayer,ngen::Layer>(layer);
+
+              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("x"));
+              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("y"));
+            }
 
             break;
 
             case ngen::LayerClass::kCatchmentLayer:
 
-            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id"));
+            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
 
             break;
 
             case ngen::LayerClass::kNexusLayer:
 
-            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("nexus-id"));
+            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("nexus-id",num_nexuses));
 
             break;
 
             case ngen::LayerClass::kLayer:
 
-            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id"));
+            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
 
             break;
 

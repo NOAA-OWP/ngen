@@ -93,9 +93,9 @@ namespace ngen
          * @return vector of output variable names
         */
 
-        virtual std::vector<std::string>&& get_output_variable_names() 
+        virtual std::vector<std::string get_output_variable_names() 
         { 
-            return std::move(std::vector<std::string>());
+            return std::vector<std::string>();
         }
 
         /***
