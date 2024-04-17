@@ -80,6 +80,13 @@ namespace ngen
     
         }
 
+        /**
+        * @brief Get a class id for this layer object
+        * 
+        * @return int
+        */
+        int class_id() { return LayerClass::kDomainLayer; }
+
         private:
         std::shared_ptr<realization::Catchment_Formulation> formulation;
     };
