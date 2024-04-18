@@ -53,11 +53,6 @@ namespace realization {
              */
             virtual double get_response(time_step_t t_index, time_step_t d_delta_s) = 0;
 
-            // TODO: look at adding another overloaded function that uses instance members to get the index and delta
-
-            // The neccessity of this function is in question
-            virtual void add_time(time_t t, double n){};
-
             std::string get_id() const {
                 return this->id;
             }
