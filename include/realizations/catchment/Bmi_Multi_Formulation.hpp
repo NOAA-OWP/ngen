@@ -531,12 +531,6 @@ namespace realization {
          */
         void create_multi_formulation(geojson::PropertyMap properties, bool needs_param_validation);
 
-        template<class T>
-        double get_module_var_value_as_double(const std::string &var_name, std::shared_ptr<Bmi_Formulation> mod) {
-            std::shared_ptr<T> module = std::static_pointer_cast<T>(mod);
-            return module->get_var_value_as_double(var_name);
-        }
-
         /**
          * Get value for some BMI model variable.
          *
