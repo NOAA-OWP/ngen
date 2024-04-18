@@ -577,8 +577,7 @@ namespace realization {
             }
             // Otherwise, we have a provider, and we can cast it based on the documented assumptions
             try {
-                std::shared_ptr <data_access::GenericDataProvider> nested_module =
-                        std::dynamic_pointer_cast<data_access::GenericDataProvider>(data_provider_iter->second);
+                auto const& nested_module = data_provider_iter->second;
                 long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
                 auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"1");
                 //TODO: After merge PR#405, try re-adding support for index
