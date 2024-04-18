@@ -5,7 +5,7 @@
  - run_bmi_unit_test.py: This is a file that runs each BMI unit test to make sure that the BMI is complete and functioning as expected.
  - config.yml: This is a configuration file that the BMI reads to set inital_time (initial value of current_model_time) and time_step_seconds (time_step_size).
  - environment.yml: Environment file with the required Python libraries needed to run the model with BMI. Create the environment with this command: `conda env create -f environment.yml`, then activate it with `conda activate bmi_test`
- - requirments.txt: This file is used to install needed packages into system or venv directories using the command 'pip install -r requirements.txt'
+ - requirements.txt: This file is used to install needed packages into system or venv directories using the command 'pip install -r requirements.txt'
 
 # About
 This is an implementation of a Python-based model that fulfills the Python language BMI interface and can be used in the Framework. It is intended to serve as a control for testing purposes, freeing the framework from dependency on any real-world model in order to test BMI related functionality.
