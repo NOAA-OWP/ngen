@@ -388,27 +388,8 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
             }
         }
     }
-    // With the module index, we can also pick the type
-    if (module_types[index] == "bmi_c++") {
-        return get_module_var_value_as_double<Bmi_Cpp_Formulation>(get_bmi_main_output_var(), modules[index]);
-    }
-    #ifdef NGEN_BMI_C_LIB_ACTIVE
-    if (module_types[index] == "bmi_c") {
-        return get_module_var_value_as_double<Bmi_C_Formulation>(get_bmi_main_output_var(), modules[index]);
-    }
-    #endif // NGEN_BMI_C_LIB_ACTIVE
-    #ifdef NGEN_BMI_FORTRAN_ACTIVE
-    if (module_types[index] == "bmi_fortran") {
-        return get_module_var_value_as_double<Bmi_Fortran_Formulation>(get_bmi_main_output_var(), modules[index]);
-    }
-    #endif // NGEN_BMI_FORTRAN_ACTIVE
-    #ifdef ACTIVATE_PYTHON
-    if (module_types[index] == "bmi_python") {
-        return get_module_var_value_as_double<Bmi_Py_Formulation>(get_bmi_main_output_var(), modules[index]);
-    }
-    #endif // ACTIVATE_PYTHON
-    throw std::runtime_error(get_formulation_type() + " unimplemented type " + module_types[index] +
-                        " in get_response for main return value");
+
+    return modules[index]->get_var_value_as_double(get_bmi_main_output_var());
 }
 
 bool Bmi_Multi_Formulation::is_bmi_input_variable(const std::string &var_name) {
