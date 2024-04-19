@@ -1,6 +1,6 @@
 # NextGen on CONUS
 
-This documentation provides instructions on all neccessary steps and components to run NextGen jobs at CONUS scale. Considering the computations large scale, we focus only on running parallel jobs using MPI.
+This documentation provides instructions on all neccessary steps and components to run NextGen jobs at CONUS scale. Considering the computation's large scale, we focus only on running parallel jobs using MPI.
 
 * [Summary](#summary)
 * [Download the Codes](#doenload-the-codes)
@@ -33,11 +33,11 @@ Then we need all the submodule codes. So run the command below:
 
 For setting up the build and computation environment, we refer the users to our documentation chapter [DEPENDENCIES.md](DEPENDENCIES.md) for details. Basically, you will need to have access to C/C++ compiler, MPI, Boost, NetCDF, Cmake, SQLite3. Some of them may already be on your system. Otherwise, you have to install your own version. There are also some required software packages that come with `ngen` as submodules, such as `Udunits libraries`, `pybind11`, and `iso_c_fortran_bmi`. 
 
-You are most likely need to use Python. For that we recommend setting up a virtual environment. For details, see [PYTHON_ROUTING.md](PYTHON_ROUTING.md). After setting up the Python virtual environment and activating it, you may need install additional python modules depending what `ngen submodules` you want to run.
+You most likely need to use Python. For that we recommend setting up a virtual environment. For details, see [PYTHON_ROUTING.md](PYTHON_ROUTING.md). After setting up the Python virtual environment and activating it, you may need install additional python modules depending on what `ngen` submodules you want to run.
 
 # Build the Executable
 
-After setting up the environment variables, we need first build the necessay dynamically linked librares. Although `ngen` has capability for automated building of submodule libraries, we build them explicitly so that users have a better understanding. For simplicity, we display the content a script which we name it `build_libs`.
+After setting up the environment variables, we need to first build the necessary dynamically linked libraries. Although `ngen` has the capability for automated building of submodule libraries, we build them explicitly so that users have a better understanding. For simplicity, we display the content a script which we name it `build_libs`.
 
 ```
 cmake -B extern/sloth/cmake_build -S extern/sloth && \
@@ -72,7 +72,7 @@ Then, with the Python virtual environment activated, we can build the MPI execut
 
 ```
 cmake -S . -B cmake_build_mpi -DCMAKE_C_COMPILER=/local/lib/bin/mpicc -DCMAKE_CXX_COMPILER=/local/lib/bin/mpicxx \
--DBOOST_ROOT=/home/shengting.cui/usr/boost_1_79_0/ \
+    -DBOOST_ROOT=<path-to-Boost-ROOT-Dir> \
     -DNetCDF_ROOT=<path-to-NetCDF-ROOT-dir> \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DNGEN_IS_MAIN_PROJECT=ON \
@@ -104,9 +104,9 @@ This will build an executable in the `cmake_build_mpi` directory named `ngen` an
 
 # CONUS Hydrofabric
 
-The CONUS hydrofabric is downloaded from [here](https://www.lynker-spatial.com/#v20.1/). The file name under the list is `conus.gpkg`. It is cautioned that since the data there are evolving and newer version may be available in the future. When using a newer version, be mindful that the corresponding initial configuration file generation and validation for all submodules at CONUS scale are necessary, which may be a non-trivial process due to the shear size of the spatial scale.
+The CONUS hydrofabric is downloaded from [here](https://www.lynker-spatial.com/#v20.1/). The file name under the list is `conus.gpkg`. Note that since the data there is continually evolving, a newer version may be available in the future. When using a newer version, be mindful that the corresponding initial configuration file generation and validation for all submodules at CONUS scale is necessary, which may be a non-trivial process due to the sheer size of the spatial scale.
 
-As the file is fairly large, it is worth some consideration to store it in a proper place, then simply build a symbolic link in the `ngen` home directory, thus named `./hydrofabric/conus.gpkg`. Note the easiest way to create the symbolic link is to `makedir hydrofabric` and then create the full path.
+As the file is fairly large, it is worth some consideration to store it in a proper place, then simply build a symbolic link in the `ngen` home directory, thus named `./hydrofabric/conus.gpkg`. Note the easiest way to create the symbolic link is to create a `hydrofabric` directory and then create a link to that directory.
 
 # Generate Partition For Parallel Computation
 
@@ -120,7 +120,7 @@ In the command above, `conus.gpkg` is the NextGen hydrofabric version 2.01 for C
 
 # Prepare the Input Data
 
-Input data include the forcing data and initial parameter data for various submodules. These depend on what best suit the user need. For our case, as of this documentation, beside forcing data, which can be accessed at `./forcing/NextGen_forcing_2016010100.nc` using the symbolic link scheme, we also generated initial input data for various submodules `noah-owp-modular`, `PET`, `CFE`, `SoilMoistureProfiles (SMP)`, `SoilFreezeThaw (SFT)`. The first three are located in `./conus_config/`, the SMP initial configus are located in `./conus_smp_configs/` and the SFT initial configs are located in `./conus_sft_configs/`.
+Input data includes the forcing data and initial parameter data for various submodules. These depend on what best suits the user's need. For our case, as of this documentation, beside forcing data, which can be accessed at `./forcing/NextGen_forcing_2016010100.nc` using the symbolic link scheme, we also generated initial input data for various submodules `noah-owp-modular`, `PET`, `CFE`, `SoilMoistureProfiles (SMP)`, `SoilFreezeThaw (SFT)`. The first three are located in `./conus_config/`, the SMP initial configs are located in `./conus_smp_configs/` and the SFT initial configs are located in `./conus_sft_configs/`.
 
 For code used to generate the initial config files for the various modules, the interested users are directed to this [web location](https://github.com/NOAA-OWP/ngen-cal/tree/master/python/ngen_config_gen). 
 
@@ -128,7 +128,8 @@ The users are warned that since the simulated region is large, some of the initi
 
 # Build the Realization Configurations
 
-The realization configuration file in `Json` format contains high level information to run a `ngen` simulation, such as interconnected submodules, paths to forcing file, shared libraries, initialization parameters, duration of simulation, I/O variables, etc. We have built the realization configurations for several commonly used submodules which are located in `data/baseline/`. These are built by adding one submodule at a time, test run for 10 days simulation time. The successive submodules used are:
+The realization configuration file, in JSON format, contains high level information to run a `ngen` simulation, such as interconnected submodules, paths to forcing file, shared libraries, initialization parameters, duration of simulation, I/O variables, etc. We have built the realization configurations for several commonly used submodules which are located in `data/baseline/`. These are built by adding one submodule at a time, performing a test run for a 10 day simulation. The successive submodules used are:
+
 ```
 sloth (conus_bmi_multi_realization_config_w_sloth.json)
 sloth+noah-owp-modular (conus_bmi_multi_realization_config_w_sloth_noah.json)
@@ -141,28 +142,28 @@ sloth+noah-owp-modular+pet+smp+sft+cfe (conus_bmi_multi_realization_config_w_slo
 
 # Run Computations with Submodules
 
-With all preparation steps completed, we are now ready to run computations. We use MPI as our parallel processing application with 32 cores as an example. Users are free to choose whatever number cores they want, just make sure you will need to have the appropriate corresponding partition json file for the number of cores used. The command line for running a MPI job is as sollows:
+With all preparation steps completed, we are now ready to run computations. We use MPI as our parallel processing application with 32 cores as an example. Users are free to choose whatever number cores they want, just make sure you will need to have the appropriate corresponding partition JSON file for the number of cores used. The command line for running a MPI job is as follows:
 
 For a simple example run and quick turn around, you can run:
 
 ```
-run -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth.json conus_partition_32.json
+mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth.json conus_partition_32.json
 ```
 
 For a more substantial example simulation, you can run:
 
 ```
-run -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah.json conus_partition_32.json
+mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah.json conus_partition_32.json
 ```
 
-For an example taken into account more realistic contributions, you can try:
+For an example taking into account more realistic contributions, you can try:
 ```
-run -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json conus_partition_32.json
+mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json conus_partition_32.json
 ```
 
 where `ngen` is the executable we build in the [Building the Executable](#Building the Executable) section. All other terms have been discussed above in details. With the current existing realization config files, the above jobs run 10 days simulation time on CONUS scale.
 
-Be aware that the above commands will generate over a million output files associated with catchment and nexus ids so if you issue a `ls` command in `ngen` directory, it will be significantly slower than usual to list all the file names. The exact time will depend on the computer you are working on.
+Be aware that the above commands will generate over a million output files associated with catchment and nexus ids. In the realization config file, we have specified a directory `./output_dir/` to store these files. So if you `cd` to `./output_dir` and issue a `ls` command, it will be significantly slower than usual to list all the file names.
 
 # Run Computation with Topmodel
 
