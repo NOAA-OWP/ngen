@@ -367,7 +367,7 @@ TEST_F(JSONProperty_Test, test_as_vector_mixed_list_0a){
     for(auto const num : test_list_natural){
         properties.push_back(geojson::JSONProperty("", num));
     }
-    for(auto const str : test_list_str){
+    for(auto const& str : test_list_str){
         properties.push_back(geojson::JSONProperty("", str));
     }
     geojson::JSONProperty mixed_property("mixed_list", properties);
