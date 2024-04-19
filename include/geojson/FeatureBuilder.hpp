@@ -195,7 +195,7 @@ namespace geojson {
     }
 
     static geometry build_geometry(boost::property_tree::ptree &tree) {
-        std::string type = std::move(tree.get<std::string>("type"));
+        std::string type = tree.get<std::string>("type");
 
         if (type == "Point") {
             
