@@ -429,14 +429,14 @@ int main(int argc, char* argv[])
     if (boost::algorithm::ends_with(catchmentDataFile, "gpkg"))
     {
         #ifdef NGEN_WITH_SQLITE3
-        catchment_collection = std::move( ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids) );
+        catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
         #else
         throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
         #endif
     }
     else
     {
-        catchment_collection = std::move( geojson::read(catchmentDataFile, catchment_subset_ids) );
+        catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
     }
     int num_catchments = catchment_collection->get_size();
     std::cout<<"Partitioning "<<num_catchments<<" catchments into "<<num_partitions<<" partitions."<<std::endl;
@@ -461,14 +461,14 @@ int main(int argc, char* argv[])
     if (boost::algorithm::ends_with(nexusDataFile, "gpkg")) 
     {
       #ifdef NGEN_WITH_SQLITE3
-      global_nexus_collection = std::move( ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids) );
+      global_nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
       #else
       throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
       #endif
     } 
     else 
     {
-      global_nexus_collection = std::move( geojson::read(nexusDataFile, nexus_subset_ids) );
+      global_nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
     }
 
     //Now read the collection of catchments, iterate it and add them to the nexus collection

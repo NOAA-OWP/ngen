@@ -283,11 +283,11 @@ namespace geojson {
             }
             else if (child.first == "properties") {
                 for (auto& property : child.second) {
-                    properties.emplace(property.first, std::move(JSONProperty(property.first, property.second)));
+                    properties.emplace(property.first, JSONProperty(property.first, property.second));
                 }
             }
             else {
-                foreign_members.emplace(child.first, std::move(JSONProperty(child.first, child.second)));
+                foreign_members.emplace(child.first, JSONProperty(child.first, child.second));
             }
         }
 
@@ -425,7 +425,7 @@ namespace geojson {
                 }
             }
             else {
-                foreign_members.emplace(child.first, std::move(JSONProperty(child.first, child.second)));
+                foreign_members.emplace(child.first, JSONProperty(child.first, child.second));
                 
             }
             
