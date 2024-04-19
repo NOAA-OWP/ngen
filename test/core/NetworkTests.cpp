@@ -167,7 +167,7 @@ TEST_P(Network_Test1, TestNetworkHeadwaterIndex)
   for(auto it = begin; it != end; ++it)
   {
     std::string id =  n.get_id(*it);
-    ASSERT_TRUE( id  ==  "cat-0" | id ==  "cat-1");
+    ASSERT_TRUE( id  ==  "cat-0" || id ==  "cat-1");
   }
 }
 
