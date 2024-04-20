@@ -248,7 +248,8 @@ namespace models {
                     return "long long";
                 } else if (py_type_name == "longlong" && item_size == sizeof(long long)) {
                     return "long long"; //numpy type
-                } else if (py_type_name == "float" && item_size == sizeof(float)) {
+                } else if ( (py_type_name == "float" || py_type_name == "float32" || py_type_name == "np.float32" ||
+                           py_type_name == "numpy.float32") && item_size == sizeof(float)) {
                     return "float";
                 } else if ((py_type_name == "float" || py_type_name == "float64" || py_type_name == "np.float64" ||
                             py_type_name == "numpy.float64") && item_size == sizeof(double)) {
