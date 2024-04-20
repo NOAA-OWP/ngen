@@ -41,6 +41,9 @@ namespace models {
              * BMI ``GetTimeUnits`` function. This function retrieves (and interprets) its model's units and
              * return an appropriate factor for converting its internal time values to equivalent representations
              * within the model, and vice versa. This function complies with the BMI get_time_units standard
+             * 
+             * @throws runtime_error  If the delegated BMI functions to query time throw an exception, the
+             *                        exception is caught and wrapped in a runtime_error
              */
             double get_time_convert_factor();
 
