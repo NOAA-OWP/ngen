@@ -37,7 +37,19 @@ Bmi_Adapter::~Bmi_Adapter() = default;
 
 double Bmi_Adapter::get_time_convert_factor() {
     double value             = 1.0;
-    std::string input_units  = GetTimeUnits();
+    std::string input_units("-");
+    try{
+        input_units  = GetTimeUnits();
+    }
+    catch(std::exception &e){
+        //Re-throwing any exception as a runtime_error so we don't lose
+        //the error context/message.  We will lose the original exception type, though
+        //When a python exception is raised from the py adapter subclass, the
+        //pybind exception is lost and all we see is a generic "uncaught exception"
+        //with no context.  This way we at least get the error message wrapped in
+        //a runtime error.
+        throw std::runtime_error(e.what());
+    }
     std::string output_units = "s";
     return UnitsHelper::get_converted_value(input_units, value, output_units);
 }
