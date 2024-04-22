@@ -163,7 +163,7 @@ mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/co
 
 where `ngen` is the executable we build in the [Building the Executable](#Building the Executable) section. All other terms have been discussed above in details. With the current existing realization config files, the above jobs run 10 days simulation time on CONUS scale.
 
-Be aware that the above commands will generate over a million output files associated with catchment and nexus ids. In the realization config file, we have specified a directory `./output_dir/` to store these files. So if you `cd` to `./output_dir` and issue a `ls` command, it will be significantly slower than usual to list all the file names.
+Be aware that the above commands will generate over a million output files associated with catchment and nexus ids. In the realization config files used above, we have specified a directory `./output_dir/` to store these files. If you `cd` to `./output_dir` and issue a `ls` command, it will be significantly slower than usual to list all the file names. You can choose a different output file directory name than `./output_dir/` by modifying the directory name in the realization configuration file if you prefer. Note that you need to create the output file directory before running the executable.
 
 # Run Computation with Topmodel
 
