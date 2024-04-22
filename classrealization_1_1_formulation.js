@@ -3,7 +3,6 @@ var classrealization_1_1_formulation =
     [ "time_step_t", "classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c", null ],
     [ "Formulation", "classrealization_1_1_formulation.html#a3a5a0e33ca89dac2153a988eecc1d4c2", null ],
     [ "~Formulation", "classrealization_1_1_formulation.html#a2a5e659ff09f6851836bd3a249edd7cc", null ],
-    [ "add_time", "classrealization_1_1_formulation.html#a248b562be5dc9a21e7afbc014de15114", null ],
     [ "create_formulation", "classrealization_1_1_formulation.html#a6b495fa685dcea07f2b5ca9c41aa76fc", null ],
     [ "create_formulation", "classrealization_1_1_formulation.html#a2cec813cc10759bfb854d0ab0367ebd1", null ],
     [ "get_formulation_type", "classrealization_1_1_formulation.html#a2e9d4749500d3f5ea434d77861b03990", null ],

@@ -3,7 +3,6 @@ var classrealization_1_1_bmi___module___formulation =
     [ "time_step_t", "classrealization_1_1_bmi___module___formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c", null ],
     [ "Bmi_Module_Formulation", "classrealization_1_1_bmi___module___formulation.html#a0d0a4a7d1392c8a2f705dfad175be7c4", null ],
     [ "~Bmi_Module_Formulation", "classrealization_1_1_bmi___module___formulation.html#af4f6d7edfdca22867e9982ce5577978b", null ],
-    [ "add_time", "classrealization_1_1_bmi___module___formulation.html#a248b562be5dc9a21e7afbc014de15114", null ],
     [ "config_pattern_substitution", "classrealization_1_1_bmi___module___formulation.html#a17f32257b65c7930f8b3570ab43fd58c", null ],
     [ "construct_model", "classrealization_1_1_bmi___module___formulation.html#a87b70a39f69a823f26f752f6e53c3363", null ],
     [ "convert_model_time", "classrealization_1_1_bmi___module___formulation.html#a71539f348de57ae368bfd8bdcd6ef1d5", null ],

@@ -166,10 +166,19 @@ Variable Types and Sizes</h2>
 <li><code>get_var_itemsize</code> result <b>must</b> match the size of the data type in the compiler used to build ngen</li>
 </ul>
 </li>
-<li>Python<ul>
+<li><p class="startli">Python</p><ul>
 <li><code>int</code>, <code>long</code>, <code>long long</code>, <code>int64</code>, <code>longlong</code>, <code>float</code>, <code>float64</code>, <code>long double</code></li>
-<li>also accepts <code>numpy.float64</code> and <code>np.float64</code> but this usage is discouraged! Please use the non-namespaced names above.</li>
+<li>also accepts the following numpy types<ul>
+<li><code>numpy.float64</code> and <code>np.float64</code> for double precision floats</li>
+<li><code>numpy.float32</code>, <code>np.float32</code>, <code>numpy.single</code>, and <code>np.single</code> for single precision floats</li>
 </ul>
+</li>
+</ul>
+<p class="startli">Use of these namespaced types should be limited to variables that are implemented as numpy arrays in the model, as the data type is part of the of the array metadata. E.g. </p><div class="fragment"><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div>
+<div class="line">variable = np.ndarray((1,1), dtype=np.single)</div>
+<div class="line">print(variable.dtype)</div>
+</div><!-- fragment --><p> will produce &lsquo;dtype('float32&rsquo;)`.</p>
+<p class="startli">For variables where the dtype is not directly accessed from the numpy meta data, this usage is discouraged! Please use the non-namespaced names above.</p>
 </li>
 </ul>
 <h1><a class="anchor" id="autotoc_md74"></a>
@@ -344,7 +353,7 @@ Grid sizing parameters</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Apr 8 2024 22:27:11 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 22 2024 18:02:23 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

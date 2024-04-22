@@ -2,7 +2,6 @@ var classrealization_1_1_bmi___cpp___formulation =
 [
     [ "time_step_t", "classrealization_1_1_bmi___cpp___formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c", null ],
     [ "Bmi_Cpp_Formulation", "classrealization_1_1_bmi___cpp___formulation.html#ac236d280681cc9a31053f505a562d087", null ],
-    [ "add_time", "classrealization_1_1_bmi___cpp___formulation.html#a248b562be5dc9a21e7afbc014de15114", null ],
     [ "config_pattern_substitution", "classrealization_1_1_bmi___cpp___formulation.html#a17f32257b65c7930f8b3570ab43fd58c", null ],
     [ "construct_model", "classrealization_1_1_bmi___cpp___formulation.html#a6b4dbeb33e8d3c85ad89d7555dfeb9b3", null ],
     [ "convert_model_time", "classrealization_1_1_bmi___cpp___formulation.html#a8e4d6e260deafd604a15865db0cc5a46", null ],

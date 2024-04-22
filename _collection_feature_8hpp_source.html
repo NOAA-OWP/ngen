@@ -142,7 +142,7 @@ $(document).ready(function(){initNavTree('_collection_feature_8hpp_source.html',
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                    <span class="keywordflow">return</span> boost::get&lt;coordinate_t&gt;(this-&gt;geometry_collection[index]);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                }</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                <span class="keywordflow">catch</span> (boost::bad_get exception) {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                <span class="keywordflow">catch</span> (boost::bad_get &amp;exception) {</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                    std::string template_name = <span class="stringliteral">&quot;Point&quot;</span>;</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                    std::string expected_name = <a class="code hl_function" href="namespacegeojson.html#ab0d9763d1e5c2779a05a0b98dac3581c">get_geometry_type</a>(this-&gt;geometry_collection[index]);</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Asked for &quot;</span> &lt;&lt; template_name &lt;&lt; <span class="stringliteral">&quot;, but only &quot;</span> &lt;&lt; expected_name &lt;&lt; <span class="stringliteral">&quot; is valid&quot;</span> &lt;&lt; std::endl;</div>
@@ -160,7 +160,7 @@ $(document).ready(function(){initNavTree('_collection_feature_8hpp_source.html',
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                        <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                            point_geometries.push_back(&amp;boost::get&lt;coordinate_t&gt;(<a class="code hl_typedef" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">geometry</a>));</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                        }</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                        <span class="keywordflow">catch</span> (boost::bad_get exception) {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                        <span class="keywordflow">catch</span> (boost::bad_get &amp;exception) {</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                            std::string template_name = <span class="stringliteral">&quot;Point&quot;</span>;</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                            std::string expected_name = <a class="code hl_function" href="namespacegeojson.html#ab0d9763d1e5c2779a05a0b98dac3581c">get_geometry_type</a>(<a class="code hl_typedef" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">geometry</a>);</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                            std::cerr &lt;&lt; <span class="stringliteral">&quot;Asked for &quot;</span> &lt;&lt; template_name &lt;&lt; <span class="stringliteral">&quot;, but only &quot;</span> &lt;&lt; expected_name &lt;&lt; <span class="stringliteral">&quot; is valid&quot;</span> &lt;&lt; std::endl;</div>
@@ -178,7 +178,7 @@ $(document).ready(function(){initNavTree('_collection_feature_8hpp_source.html',
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                    <span class="keywordflow">return</span> boost::get&lt;linestring_t&gt;(this-&gt;geometry_collection[index]);</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                }</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                <span class="keywordflow">catch</span> (boost::bad_get exception) {</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                <span class="keywordflow">catch</span> (boost::bad_get &amp;exception) {</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                    std::string template_name = <span class="stringliteral">&quot;LineString&quot;</span>;</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                    std::string expected_name = <a class="code hl_function" href="namespacegeojson.html#ab0d9763d1e5c2779a05a0b98dac3581c">get_geometry_type</a>(this-&gt;geometry_collection[index]);</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Asked for &quot;</span> &lt;&lt; template_name &lt;&lt; <span class="stringliteral">&quot;, but only &quot;</span> &lt;&lt; expected_name &lt;&lt; <span class="stringliteral">&quot; is valid&quot;</span> &lt;&lt; std::endl;</div>
@@ -196,7 +196,7 @@ $(document).ready(function(){initNavTree('_collection_feature_8hpp_source.html',
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                        <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                            linestring_geometries.push_back(&amp;boost::get&lt;linestring_t&gt;(<a class="code hl_typedef" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">geometry</a>));</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                        }</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                        <span class="keywordflow">catch</span> (boost::bad_get exception) {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                        <span class="keywordflow">catch</span> (boost::bad_get &amp;exception) {</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                            std::string template_name = <span class="stringliteral">&quot;LineString&quot;</span>;</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                            std::string expected_name = <a class="code hl_function" href="namespacegeojson.html#ab0d9763d1e5c2779a05a0b98dac3581c">get_geometry_type</a>(<a class="code hl_typedef" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">geometry</a>);</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                            std::cerr &lt;&lt; <span class="stringliteral">&quot;Asked for &quot;</span> &lt;&lt; template_name &lt;&lt; <span class="stringliteral">&quot;, but only &quot;</span> &lt;&lt; expected_name &lt;&lt; <span class="stringliteral">&quot; is valid&quot;</span> &lt;&lt; std::endl;</div>
@@ -214,7 +214,7 @@ $(document).ready(function(){initNavTree('_collection_feature_8hpp_source.html',
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                    <span class="keywordflow">return</span> boost::get&lt;polygon_t&gt;(this-&gt;geometry_collection[index]);</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                }</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                <span class="keywordflow">catch</span> (boost::bad_get exception) {</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                <span class="keywordflow">catch</span> (boost::bad_get &amp;exception) {</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                    std::string template_name = <span class="stringliteral">&quot;Polygon&quot;</span>;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                    std::string expected_name = <a class="code hl_function" href="namespacegeojson.html#ab0d9763d1e5c2779a05a0b98dac3581c">get_geometry_type</a>(this-&gt;geometry_collection[index]);</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Asked for &quot;</span> &lt;&lt; template_name &lt;&lt; <span class="stringliteral">&quot;, but only &quot;</span> &lt;&lt; expected_name &lt;&lt; <span class="stringliteral">&quot; is valid&quot;</span> &lt;&lt; std::endl;</div>
@@ -232,7 +232,7 @@ $(document).ready(function(){initNavTree('_collection_feature_8hpp_source.html',
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                        <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                            polygon_geometries.push_back(&amp;boost::get&lt;polygon_t&gt;(<a class="code hl_typedef" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">geometry</a>));</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                        }</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                        <span class="keywordflow">catch</span> (boost::bad_get exception) {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                        <span class="keywordflow">catch</span> (boost::bad_get &amp;exception) {</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                            std::string template_name = <span class="stringliteral">&quot;Polygon&quot;</span>;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                            std::string expected_name = <a class="code hl_function" href="namespacegeojson.html#ab0d9763d1e5c2779a05a0b98dac3581c">get_geometry_type</a>(<a class="code hl_typedef" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">geometry</a>);</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                            std::cerr &lt;&lt; <span class="stringliteral">&quot;Asked for &quot;</span> &lt;&lt; template_name &lt;&lt; <span class="stringliteral">&quot;, but only &quot;</span> &lt;&lt; expected_name &lt;&lt; <span class="stringliteral">&quot; is valid&quot;</span> &lt;&lt; std::endl;</div>
@@ -250,7 +250,7 @@ $(document).ready(function(){initNavTree('_collection_feature_8hpp_source.html',
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                    <span class="keywordflow">return</span> boost::get&lt;multipoint_t&gt;(this-&gt;geometry_collection[index]);</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                }</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                <span class="keywordflow">catch</span> (boost::bad_get exception) {</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                <span class="keywordflow">catch</span> (boost::bad_get &amp;exception) {</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                    std::string template_name = <span class="stringliteral">&quot;MultiPoint&quot;</span>;</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                    std::string expected_name = <a class="code hl_function" href="namespacegeojson.html#ab0d9763d1e5c2779a05a0b98dac3581c">get_geometry_type</a>(this-&gt;geometry_collection[index]);</div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Asked for &quot;</span> &lt;&lt; template_name &lt;&lt; <span class="stringliteral">&quot;, but only &quot;</span> &lt;&lt; expected_name &lt;&lt; <span class="stringliteral">&quot; is valid&quot;</span> &lt;&lt; std::endl;</div>
@@ -278,7 +278,7 @@ $(document).ready(function(){initNavTree('_collection_feature_8hpp_source.html',
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                    <span class="keywordflow">return</span> boost::get&lt;multilinestring_t&gt;(this-&gt;geometry_collection[index]);</div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                }</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                <span class="keywordflow">catch</span> (boost::bad_get exception) {</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                <span class="keywordflow">catch</span> (boost::bad_get &amp;exception) {</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                    std::string template_name = <span class="stringliteral">&quot;MultiLineString&quot;</span>;</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                    std::string expected_name = <a class="code hl_function" href="namespacegeojson.html#ab0d9763d1e5c2779a05a0b98dac3581c">get_geometry_type</a>(this-&gt;geometry_collection[index]);</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Asked for &quot;</span> &lt;&lt; template_name &lt;&lt; <span class="stringliteral">&quot;, but only &quot;</span> &lt;&lt; expected_name &lt;&lt; <span class="stringliteral">&quot; is valid&quot;</span> &lt;&lt; std::endl;</div>
@@ -306,7 +306,7 @@ $(document).ready(function(){initNavTree('_collection_feature_8hpp_source.html',
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                    <span class="keywordflow">return</span> boost::get&lt;multipolygon_t&gt;(this-&gt;geometry_collection[index]);</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                }</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                <span class="keywordflow">catch</span> (boost::bad_get exception) {</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                <span class="keywordflow">catch</span> (boost::bad_get &amp;exception) {</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                    std::string template_name = <span class="stringliteral">&quot;MultiPolygon&quot;</span>;</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                    std::string expected_name = <a class="code hl_function" href="namespacegeojson.html#ab0d9763d1e5c2779a05a0b98dac3581c">get_geometry_type</a>(this-&gt;geometry_collection[index]);</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Asked for &quot;</span> &lt;&lt; template_name &lt;&lt; <span class="stringliteral">&quot;, but only &quot;</span> &lt;&lt; expected_name &lt;&lt; <span class="stringliteral">&quot; is valid&quot;</span> &lt;&lt; std::endl;</div>
@@ -393,7 +393,7 @@ $(document).ready(function(){initNavTree('_collection_feature_8hpp_source.html',
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_23df12f7bc050f2b7f4a461242b2c584.html">geojson</a></li><li class="navelem"><a class="el" href="dir_f5322e06f39c724b7bf83af77f742c45.html">features</a></li><li class="navelem"><b>CollectionFeature.hpp</b></li>
-    <li class="footer">Generated on Mon Apr 8 2024 22:27:11 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 22 2024 18:02:23 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -580,7 +580,7 @@ $(document).ready(function(){initNavTree('_feature_base_8hpp_source.html',''); i
 <div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>                <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>                    <span class="keywordflow">return</span> boost::get&lt;T&gt;(this-&gt;<a class="code hl_variable" href="classgeojson_1_1_feature_base.html#aaba97b89c01dfd529c5eca61517107c7">geom</a>);</div>
 <div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>                }</div>
-<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>                <span class="keywordflow">catch</span> (boost::bad_get exception) {</div>
+<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>                <span class="keywordflow">catch</span> (boost::bad_get &amp;exception) {</div>
 <div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>                    std::string template_name = boost::typeindex::type_id&lt;T&gt;().pretty_name();</div>
 <div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>                    std::string expected_name = <a class="code hl_function" href="namespacegeojson.html#ab0d9763d1e5c2779a05a0b98dac3581c">get_geometry_type</a>(this-&gt;<a class="code hl_variable" href="classgeojson_1_1_feature_base.html#aaba97b89c01dfd529c5eca61517107c7">geom</a>);</div>
 <div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Asked for &quot;</span> &lt;&lt; template_name &lt;&lt; <span class="stringliteral">&quot;, but only &quot;</span> &lt;&lt; expected_name &lt;&lt; <span class="stringliteral">&quot; is valid&quot;</span> &lt;&lt; std::endl;</div>
@@ -601,7 +601,7 @@ $(document).ready(function(){initNavTree('_feature_base_8hpp_source.html',''); i
 <div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>                <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>                    <span class="keywordflow">return</span> boost::get&lt;T&gt;(this-&gt;<a class="code hl_variable" href="classgeojson_1_1_feature_base.html#a9cbe59eecb42e6cedb3ee7b12cddedc2">geometry_collection</a>[index]);</div>
 <div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>                }</div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>                <span class="keywordflow">catch</span> (boost::bad_get exception) {</div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>                <span class="keywordflow">catch</span> (boost::bad_get &amp;exception) {</div>
 <div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>                    std::string template_name = boost::typeindex::type_id&lt;T&gt;().pretty_name();</div>
 <div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>                    std::string expected_name = <a class="code hl_function" href="namespacegeojson.html#ab0d9763d1e5c2779a05a0b98dac3581c">get_geometry_type</a>(this-&gt;<a class="code hl_variable" href="classgeojson_1_1_feature_base.html#a9cbe59eecb42e6cedb3ee7b12cddedc2">geometry_collection</a>[index]);</div>
 <div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Asked for &quot;</span> &lt;&lt; template_name &lt;&lt; <span class="stringliteral">&quot;, but only &quot;</span> &lt;&lt; expected_name &lt;&lt; <span class="stringliteral">&quot; is valid&quot;</span> &lt;&lt; std::endl;</div>
@@ -883,7 +883,7 @@ $(document).ready(function(){initNavTree('_feature_base_8hpp_source.html',''); i
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_23df12f7bc050f2b7f4a461242b2c584.html">geojson</a></li><li class="navelem"><a class="el" href="dir_f5322e06f39c724b7bf83af77f742c45.html">features</a></li><li class="navelem"><b>FeatureBase.hpp</b></li>
-    <li class="footer">Generated on Mon Apr 8 2024 22:27:11 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 22 2024 18:02:23 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

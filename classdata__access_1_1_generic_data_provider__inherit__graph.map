@@ -18,8 +18,8 @@
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="502,2487,501,3161,496,3161,496,2487"/>
 <area shape="rect" id="Node000010" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="620,1578,808,3111"/>
 <area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="717,1526,717,1578,711,1578,711,1526"/>
-<area shape="rect" id="Node000013" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="833,1916,1035,2773"/>
-<area shape="poly" id="edge12_Node000009_Node000013" title=" " alt="" coords="811,1525,822,1577,853,1746,881,1916,875,1917,848,1747,817,1579,806,1526"/>
+<area shape="rect" id="Node000013" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="833,1933,1035,2756"/>
+<area shape="poly" id="edge12_Node000009_Node000013" title=" " alt="" coords="811,1525,822,1577,855,1755,883,1933,878,1934,849,1756,817,1579,806,1526"/>
 <area shape="rect" id="Node000011" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="625,3211,803,3491"/>
 <area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="717,3126,717,3211,711,3211,711,3126"/>
 <area shape="rect" id="Node000012" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="827,3211,1006,3491"/>
