@@ -107,7 +107,7 @@ struct GridDataSelector {
         SelectorConfig config,
         const GridSpecification& grid,
         const geojson::polygon_t& polygon
-    ) noexcept
+    )
         : config_(std::move(config))
     {
         static constexpr auto epsilon = 1e-7;
@@ -117,14 +117,13 @@ struct GridDataSelector {
         const auto xdiff = static_cast<double>(grid.columns) / (grid.extent.xmax - grid.extent.xmin);
         const auto bbox = bounding_box_(polygon);
 
-        std::cout << "Polygon: ";
         for (const auto& p : polygon.outer()) {
-            std::cout << "(" << p.get<0>() << ' ' << p.get<1>() << ") ";
             const auto x_index = position_(p.get<0>(), grid.extent.xmin, grid.extent.xmax, grid.columns);
             const auto y_index = position_(p.get<1>(), grid.extent.ymin, grid.extent.ymax, grid.rows);
             const auto set_pair = boundary.emplace(x_index, y_index, 0, NAN);
         }
-        std::cout << '\n';
+
+        throw std::runtime_error{"Boundary-constructor not implemented"};
     }
 
     /**
