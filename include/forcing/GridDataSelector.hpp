@@ -89,7 +89,23 @@ struct GridDataSelector {
         SelectorConfig config,
         const GridSpecification& grid,
         boost::span<const geojson::coordinate_t> points
-    ) noexcept;
+    ) noexcept
+      : config_(std::move(config))
+    {
+        // Using a std::set since points may be close enough that they are within
+        // the same grid cell. This ensures that each cell is uniquely indexed.
+        std::set<Cell> cells;
+        for (const auto& point : points) {
+            cells.emplace(
+                /*x=*/position_(point.get<0>(), grid.extent.xmin, grid.extent.xmax, grid.columns),
+                /*y=*/position_(point.get<1>(), grid.extent.ymin, grid.extent.ymax, grid.rows),
+                /*z=*/0,
+                /*value=*/NAN
+            );
+        }
+
+        cells_.assign(cells.begin(), cells.end());
+    }
 
     /**
      * Boundary-based constructor
