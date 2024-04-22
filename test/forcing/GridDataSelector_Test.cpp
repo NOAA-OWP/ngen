@@ -10,15 +10,17 @@
 struct TestGridDataProvider
   : public data_access::DataProvider<Cell, GridDataSelector>
 {
-    TestGridDataProvider()
+    explicit TestGridDataProvider(GridSpecification spec)
+      : cols_(spec.columns)
+      , rows_(spec.rows)
+      , spec_(spec)
     {
-        values_.reserve(cols_ * rows_);
-        for (size_t i = 0; i < rows_; ++i) {
-            for (size_t j = 0; j < cols_; ++j) {
-                values_[j + (i * cols_)] = static_cast<double>(i + j);
-            }
-        }
+        initialize_();
     }
+
+    TestGridDataProvider()
+      : TestGridDataProvider(GridSpecification{10, 10, {0, 10, 0, 10}})
+    {}
 
     boost::span<const std::string> get_available_variable_names() override
     { return { &variable_, 1 }; }
@@ -69,28 +71,44 @@ struct TestGridDataProvider
         return result;
     }
 
+    static const SelectorConfig default_selector;
+
   private:
+
+    void initialize_() noexcept {
+        values_.reserve(cols_ * rows_);
+        for (size_t i = 0; i < rows_; ++i) {
+            for (size_t j = 0; j < cols_; ++j) {
+                values_[j + (i * cols_)] = static_cast<double>(i + j);
+            }
+        }
+    }
+
     static const std::string variable_;
-    size_t cols_ = 10;
-    size_t rows_ = 10;
+    size_t cols_;
+    size_t rows_;
+    GridSpecification spec_;
     std::vector<double> values_;
 };
 
 const std::string TestGridDataProvider::variable_ = "variable";
+const SelectorConfig TestGridDataProvider::default_selector = {
+    0, // init_time
+    3599, // duration
+    "variable", // variable
+    "m", // units
+};
 
 // x is column
 // y is row
 inline Cell make_cell_xy(std::uint64_t x, std::uint64_t y)
 { return { x, y, static_cast<uint64_t>(-1), NAN}; }
 
-TEST(GridDataSelectorTest, Example) {
+TEST(GridDataSelectorTest, CellSelection) {
     TestGridDataProvider provider{};
     GridDataSelector selector{
-        "variable",             // variable
-        0,                      // init_time
-        3599,                   // duration
-        "m",                    // units
-        {{                      // cells
+        TestGridDataProvider::default_selector,
+        {{ // cells
             make_cell_xy(0, 0),
             make_cell_xy(5, 2),
             make_cell_xy(9, 9)
@@ -112,4 +130,34 @@ TEST(GridDataSelectorTest, Example) {
     expect_cell(/*index=*/ 0, /*x=*/ 0, /*y=*/ 0);
     expect_cell(/*index=*/ 1, /*x=*/ 5, /*y=*/ 2);
     expect_cell(/*index=*/ 2, /*x=*/ 9, /*y=*/ 9);
+}
+
+TEST(GridDataSelectorTest, ExtentSelection) {
+
+    GridSpecification grid_spec {
+        10, // rows 
+        10, // cols
+        {20, 30, 20, 30}
+    };
+
+    TestGridDataProvider provider{grid_spec};
+
+    // Only take the upper-right 25 cells.
+    GridDataSelector selector{
+        TestGridDataProvider::default_selector,
+        grid_spec,
+        { 25, 30, 25, 30}
+    };
+
+    const auto cells = provider.get_values(selector, data_access::ReSampleMethod::SUM);
+    ASSERT_GT(cells.size(), 0);
+    EXPECT_EQ(cells.size(), 25);
+
+    for (const auto& cell : cells) {
+        std::cout << "Cell: (" << cell.x << ", " << cell.y << "): " << cell.value << '\n';
+        EXPECT_LE(cell.x, 10);
+        EXPECT_GE(cell.x, 0);
+        EXPECT_LE(cell.y, 10);
+        EXPECT_GE(cell.y, 0);
+    }
 }
