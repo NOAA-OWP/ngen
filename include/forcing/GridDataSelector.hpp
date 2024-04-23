@@ -15,12 +15,6 @@ struct Cell {
     double value;
 };
 
-struct LessXY {
-    bool operator()(Cell a, Cell b) const noexcept {
-        return a.x < b.x && a.y < b.y;
-    }
-};
-
 struct Extent {
     double xmin;
     double xmax;
@@ -119,28 +113,28 @@ struct GridDataSelector {
      *
      * @todo Sweep line or ray casting to get polygon grid cells
      */
-    GridDataSelector(
-        SelectorConfig config,
-        const GridSpecification& grid,
-        const geojson::polygon_t& polygon
-    )
-        : config_(std::move(config))
-    {
-        static constexpr auto epsilon = 1e-7;
-
-        std::set<Cell, LessXY> boundary;
-        const auto ydiff = static_cast<double>(grid.rows) / (grid.extent.ymax - grid.extent.ymin);
-        const auto xdiff = static_cast<double>(grid.columns) / (grid.extent.xmax - grid.extent.xmin);
-        const auto bbox = bounding_box_(polygon);
-
-        for (const auto& p : polygon.outer()) {
-            const auto x_index = position_(p.get<0>(), grid.extent.xmin, grid.extent.xmax, grid.columns);
-            const auto y_index = position_(p.get<1>(), grid.extent.ymin, grid.extent.ymax, grid.rows);
-            const auto set_pair = boundary.emplace(x_index, y_index, 0, NAN);
-        }
-
-        throw std::runtime_error{"Boundary-constructor not implemented"};
-    }
+    // GridDataSelector(
+    //     SelectorConfig config,
+    //     const GridSpecification& grid,
+    //     const geojson::polygon_t& polygon
+    // )
+    //     : config_(std::move(config))
+    // {
+    //     static constexpr auto epsilon = 1e-7;
+    // 
+    //     std::set<Cell> boundary;
+    //     const auto ydiff = static_cast<double>(grid.rows) / (grid.extent.ymax - grid.extent.ymin);
+    //     const auto xdiff = static_cast<double>(grid.columns) / (grid.extent.xmax - grid.extent.xmin);
+    //     const auto bbox = bounding_box_(polygon);
+    // 
+    //     for (const auto& p : polygon.outer()) {
+    //         const auto x_index = position_(p.get<0>(), grid.extent.xmin, grid.extent.xmax, grid.columns);
+    //         const auto y_index = position_(p.get<1>(), grid.extent.ymin, grid.extent.ymax, grid.rows);
+    //         const auto set_pair = boundary.emplace(x_index, y_index, 0, NAN);
+    //     }
+    // 
+    //     throw std::runtime_error{"Boundary-constructor not implemented"};
+    // }
 
     /**
      * Extent-based constructor

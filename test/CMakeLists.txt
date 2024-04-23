@@ -174,6 +174,7 @@ ngen_add_test(
         forcing/GridDataSelector_Test.cpp
     LIBRARIES
         NGen::forcing
+        NGen::geojson
 )
 
 ########################## Series Unit Tests
@@ -445,6 +446,7 @@ ngen_add_test(
         forcing/CsvPerFeatureForcingProvider_Test.cpp
         forcing/OptionalWrappedDataProvider_Test.cpp
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
+        forcing/GridDataSelector_Test.cpp
         core/mediator/UnitsHelper_Tests.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/NetworkTests.cpp
