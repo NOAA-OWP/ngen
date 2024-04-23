@@ -3,10 +3,10 @@
 This documentation provides instructions on all neccessary steps and components to run NextGen jobs at CONUS scale. Considering the computation's large scale, we focus only on running parallel jobs using MPI.
 
 * [Summary](#summary)
-* [Download the Codes](#doenload-the-codes)
+* [Download the Codes](#download-the-codes)
 * [Setting Up the Environment](#setting-up-the-environment)
 * [Build the Executable](#build-the-executable)
-* [CONUS Hydrofabric](#CONUS-hydrofabric)
+* [CONUS Hydrofabric](#conus-hydrofabric)
 * [Generate Partition For Parallel Computation](#generate-partition-for-parallel-computation)
 * [Prepare the Input Data](#prepare-the-input-data)
 * [Build the Realization Configurations](#build-the-realization-configurations)
