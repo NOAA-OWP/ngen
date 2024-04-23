@@ -9,10 +9,15 @@
 #include <geojson/JSONGeometry.hpp>
 
 struct Cell {
-    std::uint64_t x;
-    std::uint64_t y;
-    std::uint64_t z;
-    double value;
+    std::uint64_t x = 0;
+    std::uint64_t y = 0;
+    std::uint64_t z = 0;
+    double    value = NAN;
+
+    friend inline bool operator<(const Cell& a, const Cell& b) {
+        // TODO: Not really meaningful
+        return a.x < b.x || a.y < b.y || a.z < b.z;
+    }
 };
 
 struct Extent {
@@ -90,12 +95,12 @@ struct GridDataSelector {
         // the same grid cell. This ensures that each cell is uniquely indexed.
         std::set<Cell> cells;
         for (const auto& point : points) {
-            cells.emplace(
+            cells.emplace(Cell{
                 /*x=*/position_(point.get<0>(), grid.extent.xmin, grid.extent.xmax, grid.columns),
                 /*y=*/position_(point.get<1>(), grid.extent.ymin, grid.extent.ymax, grid.rows),
-                /*z=*/0,
+                /*z=*/0UL,
                 /*value=*/NAN
-            );
+            });
         }
 
         cells_.assign(cells.begin(), cells.end());
@@ -154,12 +159,12 @@ struct GridDataSelector {
         const auto col_max = position_(extent.xmax, grid.extent.xmin, grid.extent.xmax, grid.columns);
         const auto row_min = position_(extent.ymin, grid.extent.ymin, grid.extent.ymax, grid.rows);
         const auto row_max = position_(extent.ymax, grid.extent.ymin, grid.extent.ymax, grid.rows);
-        const auto ncells  = (row_max - row_min + 1) * (col_max - col_min + 1);
+        const auto ncells  = (row_max - row_min) * (col_max - col_min);
 
         cells_.reserve(ncells);
-        for (auto row = row_min; row <= row_max; row++) {
-            for (auto col = col_min; col <= col_max; col++) {
-                cells_.emplace_back(/*x=*/col, /*y=*/row, /*z=*/0, /*value=*/NAN);
+        for (auto row = row_min; row < row_max; row++) {
+            for (auto col = col_min; col < col_max; col++) {
+                cells_.emplace_back(Cell{/*x=*/col, /*y=*/row, /*z=*/0UL, /*value=*/NAN});
             }
         }
     }
