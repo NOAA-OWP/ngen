@@ -173,8 +173,8 @@ runs:
         - name: Setup macOS Default Compiler Includes
           if: runner.os == 'macOS'
           run: |
-            echo "C_INCLUDE_PATH=/usr/local/include" >> $GITHUB_ENV
-            echo "CPLUS_INCLUDE_PATH=/usr/local/include" >> $GITHUB_ENV
+            echo "C_INCLUDE_PATH=$(brew --prefix)/include" >> $GITHUB_ENV
+            echo "CPLUS_INCLUDE_PATH=$(brew --prefix)/include" >> $GITHUB_ENV
           shell: bash
 
         - name: Cmake Initialization
