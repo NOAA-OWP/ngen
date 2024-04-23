@@ -154,7 +154,6 @@ TEST(GridDataSelectorTest, ExtentSelection) {
     EXPECT_EQ(cells.size(), 25);
 
     for (const auto& cell : cells) {
-        std::cout << "Cell: (" << cell.x << ", " << cell.y << "): " << cell.value << '\n';
         EXPECT_LE(cell.x, 10);
         EXPECT_GE(cell.x, 0);
         EXPECT_LE(cell.y, 10);
