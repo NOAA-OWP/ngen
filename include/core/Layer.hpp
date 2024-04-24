@@ -93,11 +93,6 @@ namespace ngen
          * @return vector of output variable names
         */
 
-        virtual std::vector<std::string get_output_variable_names() 
-        { 
-            return std::vector<std::string>();
-        }
-
         /***
          * @brief Return the next timestep that will be processed by this layer in epoch time units
         */

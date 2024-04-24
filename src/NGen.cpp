@@ -504,7 +504,7 @@ int main(int argc, char *argv[]) {
     auto time_done_init = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
 
-    #ifdef NGEN_WITH_NETCDF
+    #ifdef NETCDF_ACTIVE
     // make netcdf output objects for layers
 
     unsigned long num_catchments = std::distance(features.catchments().begin(), features.catchments().end() ); // TODO calculate this during parsing

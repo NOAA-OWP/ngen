@@ -12,11 +12,19 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/algorithm/string.hpp>
 
+#ifdef NETCDF_ACTIVE
+#include "OutputInterface.hpp"
+#endif
+
 #define DEFAULT_FORMULATION_OUTPUT_DELIMITER ","
 
 namespace realization {
 
+    #ifdef NETCDF_ACTIVE
+    class Formulation : public OutputInterface {
+    #else
     class Formulation {
+    #endif
         public:
             typedef long time_step_t;
 

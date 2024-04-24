@@ -52,14 +52,6 @@ namespace ngen
          * @return vector of output variable names
         */
 
-        virtual std::vector<std::string>&& get_output_variable_names() 
-        { 
-            std::vector<std::string> output_variables;
-
-
-            return std::move(output_variables);
-        }
-
         /***
          * @brief Run one simulation timestep for this model associated with the domain
          * 
