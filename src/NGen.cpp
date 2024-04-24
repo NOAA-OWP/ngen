@@ -153,7 +153,7 @@ int main(int argc, char *argv[]) {
         } // if (mpi_rank == 0)
 
         #if NGEN_WITH_MPI
-        MPI_Finalize();
+        PMPI_Finalize();
         #endif
 
         exit(1);
@@ -605,7 +605,7 @@ int main(int argc, char *argv[]) {
     }
 
 #ifdef NGEN_MPI_ACTIVE
-    MPI_Finalize();
+    PMPI_Finalize();
 #endif
 
     return 0;

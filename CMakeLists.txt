@@ -330,6 +330,11 @@ add_subdirectory("src/forcing")
 add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
 add_subdirectory("src/utilities/logging")
+add_subdirectory("src/utilities/mpi")
+
+if(NGEN_WITH_MPI)
+    target_link_libraries(ngen PUBLIC NGen::MPI_Detour)
+endif()
 
 target_link_libraries(ngen
     PUBLIC
