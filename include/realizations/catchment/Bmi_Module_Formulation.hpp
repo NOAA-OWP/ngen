@@ -214,6 +214,7 @@ namespace realization {
         const std::vector<std::string> get_bmi_input_variables() override;
         const std::vector<std::string> get_bmi_output_variables() override;
 
+        
         //begin OutputInterface
         /**
          * @brief Return a list of string containing the name of all valid output variables
@@ -249,7 +250,7 @@ namespace realization {
          * @brief Return the Z size of the indicated grid
         */
         double get_grid_z(const int grid) override;  
-        //end OutputInterface
+        //end OutputInterfac
 
     protected:
 

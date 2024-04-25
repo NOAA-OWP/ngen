@@ -444,3 +444,142 @@ bool Bmi_Multi_Formulation::is_time_step_beyond_end_time(time_step_t t_index) {
     // TODO: implement
     return false;
 }
+
+// start of OutputInterface
+/**
+ * @brief Return a list of string containing the name of all valid output variables
+*/
+std::vector<std::string> Bmi_Multi_Formulation::get_output_variable_names()
+{
+    std::vector< std::string > output_vars;
+
+    for( auto& module : modules )
+    {
+        auto vars = module->get_bmi_output_variables();
+
+        output_vars.insert(output_vars.end(), vars.begin(), vars.end());
+    }
+
+    return output_vars;
+}
+
+/**
+ * @brief Return a size of the indicated output variable, or a negative value for an invalid name
+*/
+long Bmi_Multi_Formulation::get_output_size(std::string var_name)
+{
+    for( auto& module : modules )
+    {
+        try
+        {
+            return module->get_output_size(var_name);
+        }
+        catch(...)
+        {
+            continue;
+        }
+    }
+    
+    return 0;
+}   
+
+/**
+ * @brief Return a pointer to the current value of an output variable, or NULL for an invalid name
+*/
+std::vector<uint8_t> Bmi_Multi_Formulation::get_output_value(std::string var_name)
+{
+    for( auto& module : modules )
+    {
+        try
+        {
+            return module->get_output_value(var_name);
+        }
+        catch(...)
+        {
+            continue;
+        }
+    }
+    
+    return std::vector<uint8_t>();
+}
+
+/**
+ * @brief Return the type of an output variable as a sting, or "invalid" for an invalid name
+*/
+std::string Bmi_Multi_Formulation::get_output_type(std::string var_name)
+{
+    for( auto& module : modules )
+    {
+        try
+        {
+            return module->get_output_type(var_name);
+        }
+        catch(...)
+        {
+            continue;
+        }
+    }
+    
+    return 0;
+}     
+
+/**
+ * @brief Return the X size of the indicated grid
+*/
+double Bmi_Multi_Formulation::get_grid_x(const int grid)
+{
+    for( auto& module : modules )
+    {
+        try
+        {
+            return module->get_grid_x(grid);
+        }
+        catch(...)
+        {
+            continue;
+        }
+    }
+    
+    return 0;
+}    
+
+/**
+ * @brief Return the Y size of the indicated grid
+*/
+double Bmi_Multi_Formulation::get_grid_y(const int grid)
+{
+    for( auto& module : modules )
+    {
+        try
+        {
+            return module->get_grid_y(grid);
+        }
+        catch(...)
+        {
+            continue;
+        }
+    }
+    
+    return 0;
+}  
+
+/**
+ * @brief Return the Z size of the indicated grid
+*/
+double Bmi_Multi_Formulation::get_grid_z(const int grid)
+{
+    for( auto& module : modules )
+    {
+        try
+        {
+            return module->get_grid_z(grid);
+        }
+        catch(...)
+        {
+            continue;
+        }
+    }
+    
+    return 0;
+}
+// end of OutputInterface
