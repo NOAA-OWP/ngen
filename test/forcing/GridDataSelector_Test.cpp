@@ -11,9 +11,7 @@ struct TestGridDataProvider
   : public data_access::DataProvider<Cell, GridDataSelector>
 {
     explicit TestGridDataProvider(GridSpecification spec)
-      : cols_(spec.columns)
-      , rows_(spec.rows)
-      , spec_(spec)
+      : spec_(spec)
     {
         initialize_();
     }
@@ -57,15 +55,15 @@ struct TestGridDataProvider
         std::vector<Cell> result{scells.begin(), scells.end()};
         
         for (auto& cell : result) {
-            if (cell.x < 0 || cell.x >= cols_) {
-                throw std::out_of_range{"Column " + std::to_string(cell.x) + " out of range of " + std::to_string(cols_)};
+            if (cell.x < 0 || cell.x >= spec_.columns) {
+                throw std::out_of_range{"Column " + std::to_string(cell.x) + " out of range of " + std::to_string(spec_.columns)};
             }
 
-            if (cell.y < 0 || cell.y >= rows_) {
-                throw std::out_of_range{"Row " + std::to_string(cell.y) + " out of range of " + std::to_string(rows_)};
+            if (cell.y < 0 || cell.y >= spec_.rows) {
+                throw std::out_of_range{"Row " + std::to_string(cell.y) + " out of range of " + std::to_string(spec_.rows)};
             }
 
-            cell.value = values_[cell.x + (cell.y * cols_)];
+            cell.value = values_[cell.x + (cell.y * spec_.columns)];
         }
 
         return result;
@@ -76,17 +74,15 @@ struct TestGridDataProvider
   private:
 
     void initialize_() noexcept {
-        values_.reserve(cols_ * rows_);
-        for (size_t i = 0; i < rows_; ++i) {
-            for (size_t j = 0; j < cols_; ++j) {
-                values_[j + (i * cols_)] = static_cast<double>(i + j);
+        values_.reserve(spec_.columns * spec_.rows);
+        for (size_t i = 0; i < spec_.rows; ++i) {
+            for (size_t j = 0; j < spec_.columns; ++j) {
+                values_[j + (i * spec_.columns)] = static_cast<double>(i + j);
             }
         }
     }
 
     static const std::string variable_;
-    size_t cols_;
-    size_t rows_;
     GridSpecification spec_;
     std::vector<double> values_;
 };
