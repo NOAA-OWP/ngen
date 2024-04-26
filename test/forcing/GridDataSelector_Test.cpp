@@ -102,7 +102,7 @@ const SelectorConfig TestGridDataProvider::default_selector = {
 inline Cell make_cell_xy(std::uint64_t x, std::uint64_t y)
 { return { x, y, static_cast<uint64_t>(-1), NAN}; }
 
-inline geojson::coordinate_t make_point(double x, double y)
+inline constexpr geojson::coordinate_t make_point(double x, double y)
 { return { x, y }; }
 
 // Tests for individual cell selection, providing the exact cells
@@ -180,7 +180,7 @@ TEST(GridDataSelectorTest, PointSelection) {
 
     TestGridDataProvider provider{grid_spec};
 
-    const auto coordinates = {
+    constexpr std::array<const geojson::coordinate_t, 2> coordinates = {
         make_point(-87.8, 33.01), // 0, 0
         make_point(-87.4, 33.31) // 5, 5
     };
