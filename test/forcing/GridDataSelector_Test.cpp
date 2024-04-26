@@ -74,10 +74,10 @@ struct TestGridDataProvider
   private:
 
     void initialize_() noexcept {
-        values_.reserve(spec_.columns * spec_.rows);
+        values_.resize(spec_.columns * spec_.rows);
         for (size_t i = 0; i < spec_.rows; ++i) {
             for (size_t j = 0; j < spec_.columns; ++j) {
-                values_[j + (i * spec_.columns)] = static_cast<double>(i + j);
+                values_.at(j + (i * spec_.columns)) = static_cast<double>(i + j);
             }
         }
     }
