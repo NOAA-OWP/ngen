@@ -1,3 +1,4 @@
+#include "JSONGeometry.hpp"
 #include <gtest/gtest.h>
 
 #include <cmath>
@@ -5,8 +6,8 @@
 #include <forcing/DataProvider.hpp>
 #include <forcing/GridDataSelector.hpp>
 
-// A fake grid data provider containing a 10x10 uniform grid
-// with x/y indices in [0, 10). Temporal domain is [0, 1 hour).
+// A fake grid data provider containing a NxM uniform grid.
+// Temporal domain is [0, 1 hour).
 struct TestGridDataProvider
   : public data_access::DataProvider<Cell, GridDataSelector>
 {
@@ -16,6 +17,7 @@ struct TestGridDataProvider
         initialize_();
     }
 
+    //! Default constructor, defaults to a 10x10 grid with extent [0, 10] in both x and y dimensions. 
     TestGridDataProvider()
       : TestGridDataProvider(GridSpecification{10, 10, {0, 10, 0, 10}})
     {}
@@ -100,6 +102,13 @@ const SelectorConfig TestGridDataProvider::default_selector = {
 inline Cell make_cell_xy(std::uint64_t x, std::uint64_t y)
 { return { x, y, static_cast<uint64_t>(-1), NAN}; }
 
+inline geojson::coordinate_t make_point(double x, double y)
+{ return { x, y }; }
+
+// Tests for individual cell selection, providing the exact cells
+// we want to pull from the gridded data provider. Checks that
+// the number of cells returned matches the number of requests,
+// and that the indices and values are as expected.
 TEST(GridDataSelectorTest, CellSelection) {
     TestGridDataProvider provider{};
     GridDataSelector selector{
@@ -128,6 +137,8 @@ TEST(GridDataSelectorTest, CellSelection) {
     expect_cell(/*index=*/ 2, /*x=*/ 9, /*y=*/ 9);
 }
 
+// Tests for extent-based selection using a bounding box
+// for a subset of the overarching grid.
 TEST(GridDataSelectorTest, ExtentSelection) {
 
     GridSpecification grid_spec {
@@ -155,4 +166,35 @@ TEST(GridDataSelectorTest, ExtentSelection) {
         EXPECT_LE(cell.y, 10);
         EXPECT_GE(cell.y, 0);
     }
+}
+
+// Tests for point-based selection using a geographic
+// extent around a real-world location.
+TEST(GridDataSelectorTest, PointSelection) {
+    GridSpecification grid_spec {
+        10,
+        10,
+        // Extent around Tuscaloosa county
+        {-87.84068, -87.06574, 33.00338, 33.60983}
+    };
+
+    TestGridDataProvider provider{grid_spec};
+
+    const auto coordinates = {
+        make_point(-87.8, 33.01), // 0, 0
+        make_point(-87.4, 33.31) // 5, 5
+    };
+
+    GridDataSelector selector{
+        TestGridDataProvider::default_selector,
+        grid_spec,
+        coordinates
+    };
+
+    const auto cells = provider.get_values(selector, data_access::ReSampleMethod::SUM);
+    ASSERT_EQ(cells.size(), 2);
+    EXPECT_EQ(cells[0].x, 0);
+    EXPECT_EQ(cells[0].y, 0);
+    EXPECT_EQ(cells[1].x, 5);
+    EXPECT_EQ(cells[1].y, 5);
 }
