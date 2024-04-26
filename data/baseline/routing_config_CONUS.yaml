@@ -1,0 +1,79 @@
+#--------------------------------------------------------------------------------
+log_parameters:
+  #----------
+  showtiming: True
+  log_level : DEBUG
+#--------------------------------------------------------------------------------
+network_topology_parameters:
+  #----------
+  supernetwork_parameters:
+    #----------
+    network_type: HYFeaturesNetwork 
+    geo_file_path: ./hydrofabric/conus.gpkg
+    columns: 
+      key: 'id'
+      downstream: 'toid'
+      dx : 'length_m'
+      n : 'n'
+      ncc : 'nCC'
+      s0 : 'So'
+      bw : 'BtmWdth'
+      waterbody : 'rl_NHDWaterbodyComID'
+      gages : 'rl_gages'
+      tw : 'TopWdth'
+      twcc : 'TopWdthCC'
+      musk : 'MusK'
+      musx : 'MusX'
+      cs : 'ChSlp'
+      alt: 'alt'
+      mainstem: 'mainstem'
+    #duplicate_wb_segments: None
+  waterbody_parameters:
+      #----------
+      break_network_at_waterbodies: False 
+#--------------------------------------------------------------------------------
+compute_parameters:
+  #----------
+  parallel_compute_method: by-subnetwork-jit-clustered #serial 
+  compute_kernel         : V02-structured
+  assume_short_ts        : True
+  subnetwork_target_size : 10000
+  cpu_pool               : 36
+  restart_parameters:
+    #----------
+    start_datetime: "2016-01-01_00:00:00"
+  forcing_parameters:
+    #----------
+    qts_subdivisions            : 12
+    dt                          : 300 # [sec]
+    qlat_input_folder           : ./output_dir/
+    qlat_file_pattern_filter    : "nex-*"
+    binary_nexus_file_folder    : #./ #NOTE: If memory issues arise while preprocessing forcing data, use this to create hourly binary files for forcing data.
+    nts                         : 2880 #288 for 1day
+    max_loop_size               : 240 # [hr]  
+  data_assimilation_parameters:
+    #----------
+    usgs_timeslices_folder   : ./usgs_TimeSlice/
+    usace_timeslices_folder  : #usace_TimeSlice/
+    timeslice_lookback_hours : #48 
+    qc_threshold             : #1
+    streamflow_da:
+      #----------
+      streamflow_nudging: False
+    reservoir_da:
+      #----------
+      reservoir_persistence_da:
+        #----------
+        reservoir_persistence_usgs : False
+        reservoir_persistence_usace: False
+      reservoir_rfc_da:
+        #----------
+        reservoir_rfc_forecasts: False
+#--------------------------------------------------------------------------------
+output_parameters:
+  #----------
+  stream_output : 
+    stream_output_directory: ./stream_output_dir/
+    stream_output_time: 1 #[hr]
+    stream_output_type: '.nc' #please select only between netcdf '.nc' or '.csv' or '.pkl'
+    stream_output_internal_frequency: 60 #[min] it should be order of 5 minutes. For instance if you want to output every hour put 60 
