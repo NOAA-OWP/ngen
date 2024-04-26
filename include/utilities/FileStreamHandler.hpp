@@ -14,7 +14,13 @@ namespace utils
                 stream->open(path, std::ios::trunc);
                 output_stream = stream;
             }
-            virtual ~FileStreamHandler(){}
+
+            virtual ~FileStreamHandler() override {
+                auto tmp = std::static_pointer_cast<std::ofstream>(output_stream);
+                if(tmp){
+                    tmp->close();
+                }
+            }
     };
 
 }

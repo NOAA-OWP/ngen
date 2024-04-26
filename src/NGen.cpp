@@ -557,6 +557,17 @@ int main(int argc, char *argv[]) {
 
     } //done time
 
+  //Close down any file handles we have
+  for(auto& f : nexus_outfiles){
+    f.second.close();
+  }
+  //std::cout<<"Clearning manger with "<<manager.use_count()<<" references\n";
+  //Need to release all formulation references, those stored in hy_features object and the
+  //references used by the formulation manager
+  //this will ensure all formulation destructors are called and resources released.
+  features.release_formulations();
+  manager->clear();
+
 #if NGEN_MPI_ACTIVE
     MPI_Barrier(MPI_COMM_WORLD);
 #endif

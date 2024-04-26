@@ -191,6 +191,11 @@ namespace hy_features {
         }
 
         /**
+         * Release formulations
+        */
+        void release_formulations();
+
+        /**
          * @brief Destroy the hy features object
          * 
          */
