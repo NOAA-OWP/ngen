@@ -186,12 +186,14 @@ struct ForcingsEngine
     clock_type::time_point                       time_end_{};
     clock_type::duration                         time_step_{};
     size_type                                    time_current_index_{};
-    std::vector<std::string>                     var_outputs_{};
-    std::vector<int>                             var_divides_{};
+
+    //! Ouput variable names
+    std::vector<std::string> var_outputs_{};
+
+    //! Available divide IDs
+    std::vector<int> var_divides_{};
 
     /**
-     * Flat value cache vector.
-     * 
      * Values are stored indexed on (2, divide_id, variable),
      * such that the structure can be visualized as:
      *
