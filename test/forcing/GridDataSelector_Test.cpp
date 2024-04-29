@@ -157,8 +157,7 @@ TEST(GridDataSelectorTest, ExtentSelection) {
     };
 
     const auto cells = provider.get_values(selector, data_access::ReSampleMethod::SUM);
-    ASSERT_GT(cells.size(), 0);
-    EXPECT_EQ(cells.size(), 25);
+    ASSERT_EQ(cells.size(), 25);
 
     for (const auto& cell : cells) {
         EXPECT_LE(cell.x, 10);
