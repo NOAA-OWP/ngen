@@ -92,36 +92,36 @@ $(document).ready(function(){initNavTree('md_test_2_r_e_a_d_m_e.html',''); initR
   <div class="headertitle"><div class="title">Testing</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md237"></a></p><ul>
+<div class="textblock"><p><a class="anchor" id="autotoc_md249"></a></p><ul>
 <li>Testing Frameworks</li>
 <li>Executing Automated Tests</li>
 <li>Creating New Automated Tests</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md238"></a>
+<h1><a class="anchor" id="autotoc_md250"></a>
 Testing Frameworks</h1>
 <ul>
 <li>Google Test</li>
 </ul>
 <p>Note: At present (<code>0.1.0</code>), there are no testing frameworks incorporated for automatically testing non-C++ code. These may be added in the future.</p>
-<h2><a class="anchor" id="autotoc_md239"></a>
+<h2><a class="anchor" id="autotoc_md251"></a>
 &lt;strong&gt;Google Test&lt;/strong&gt;</h2>
 <p>The project uses the <b>Google Test</b> framework for automated C++ tests. Its source code and documentation can be found <a href="https://github.com/google/googletest">here</a>. It is included as a <a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules">Git Submodule</a>, so the submodule must be initialized locally, a step not automatically performed by default when cloning the repo. <br  />
 </p>
 <p>Initializing can be done by running the following command from the project root: </p><pre class="fragment">git submodule update --init --recursive -- test/googletest
 </pre><p> Additionally, this command can be re-run to sync the local submodule working tree with the state expected upstream. I.e., if this project gets updated to utilize a new version of <b>Google Test</b>, the command above can be run again locally to make sure the local copy also gets moved to that version.</p>
 <p>See the <code>git help submodule</code> command for more information.</p>
-<h3><a class="anchor" id="autotoc_md240"></a>
+<h3><a class="anchor" id="autotoc_md252"></a>
 (Re)generating CMake Project Buildsystem</h3>
 <p>The CMake buildsystem will need to either be generated or regenerated after the submodule is initialized. <br  />
 </p>
 <p>Regenerating just requires an initial step of removing the/an existing CMake build directory (frequently something like <code>cmake-build-debug/</code> in the project root).</p>
 <p>If/once the desired build directory does not exist, use an appropriate CMake command to generate the buildsystem (see <a href="https://github.com/NOAA-OWP/ngen/wiki/NGen-Tutorial">wiki/Quickstart</a>) for more detailed description. E.g.: </p><pre class="fragment">cmake -DCMAKE_BUILD_TYPE=Debug -DNGEN_WITH_TESTS:BOOL=ON -B cmake-build-debug -S .
-</pre> <h1><a class="anchor" id="autotoc_md241"></a>
+</pre> <h1><a class="anchor" id="autotoc_md253"></a>
 Executing Automated Tests</h1>
 <ul>
 <li>C++ Tests</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md242"></a>
+<h2><a class="anchor" id="autotoc_md254"></a>
 C++ Tests</h2>
 <p>The basic process for executing a group of C++ tests is:</p>
 <ul>
@@ -131,7 +131,7 @@ C++ Tests</h2>
 </li>
 <li>execute the generated tests file</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md243"></a>
+<h3><a class="anchor" id="autotoc_md255"></a>
 Test Targets and Executables</h3>
 <p>There are several CMake testing executables/targets configured in <a href="./CMakeLists.txt">/test/CMakeLists.txt</a>, discussed in the section on adding tests to CMake builds. The primary ones, corresponding to important collections of tests, are:</p>
 <ul>
@@ -144,7 +144,7 @@ Test Targets and Executables</h3>
 </pre><p> This produces an executable test file <code>cmake-build-dir/test/test_unit</code>, which can then be used to run the configured collection of tests: </p><pre class="fragment">./cmake-build-dir/test/test_unit
 </pre><p> It is also possible to add the <code>--gtest_filter=</code> flag followed by a colon-delimited series of tests' <em>full names</em>. <b>Google Test</b> defines the <em>full name</em> of a test as: </p><pre class="fragment">test_suite_name.test_name
 </pre><p> For example: </p><pre class="fragment">./cmake-build-dir/test/test_unit --gtest_filter=HymodKernelTest.TestCalcET0:HymodKernelTest.TestRun0
-</pre> <h1><a class="anchor" id="autotoc_md244"></a>
+</pre> <h1><a class="anchor" id="autotoc_md256"></a>
 Creating New Automated Tests</h1>
 <p>Automated testing design and infrastructure for this project are somewhat fluid while this project is in its early stages. The only strict rules are (as of <code>0.1.0</code>):</p>
 <ul>
@@ -153,7 +153,7 @@ Creating New Automated Tests</h1>
 <li>test code should be placed under the <a href="../test">/test/</a> directory</li>
 </ul>
 <p>However, there are a few rules of thumb discussed below to consider as the process matures in its early stages.</p>
-<h2><a class="anchor" id="autotoc_md245"></a>
+<h2><a class="anchor" id="autotoc_md257"></a>
 Adding Tests to CMake Builds</h2>
 <p>Tests should be added to the CMake build using <a href="./CMakeLists.txt">/test/CMakeLists.txt</a>. Within that file, there are several test targets that are already defined, using either the <code>add_automated_test()</code> or <code>add_automated_test_w_mock()</code> macro. In particular:</p>
 <ul>
@@ -165,7 +165,7 @@ Adding Tests to CMake Builds</h2>
 </p>
 <p>Existing target configurations must be updated with the test file for any newly added tests, assuming the file is not already configured. <br  />
 </p>
-<h2><a class="anchor" id="autotoc_md246"></a>
+<h2><a class="anchor" id="autotoc_md258"></a>
 Test Creation Rules of Thumb</h2>
 <p>There are few additional rules of thumb to keep in mind when creating new tests. These are not set in stone yet; rather, they seem like good practices, but feedback is still needed on how useful they are and if there are any situations where they are lacking.</p>
 <ul>
@@ -175,14 +175,14 @@ Test Creation Rules of Thumb</h2>
 <li>Use analogous paths</li>
 <li>Keep unit test assertions to a minimum</li>
 </ul>
-<h4><a class="anchor" id="autotoc_md247"></a>
+<h4><a class="anchor" id="autotoc_md259"></a>
 Test Work Before Push or PR</h4>
 <p>Make sure existing tests related to a change are still applicable and still pass before distributing the change (i.e., pushing, making a pull request, etc.). Add new tests as needed for changes not covered by existing tests.</p>
 <p>If new tests are needed, but creating them is not immediately feasible, create one or more tickets/issues for adding such tests in the future.</p>
-<h4><a class="anchor" id="autotoc_md248"></a>
+<h4><a class="anchor" id="autotoc_md260"></a>
 Separate Test Types in Separate Files</h4>
 <p>Keep unit tests, integration tests, etc., in separate files dedicated to that type of test. This is helpful for several reasons, including isolating which overall group of tests get run.</p>
-<h4><a class="anchor" id="autotoc_md249"></a>
+<h4><a class="anchor" id="autotoc_md261"></a>
 Use Analogous Names</h4>
 <p>To help give clarity to what relates to what, use analogous names for associated test items. This should be the source code item's name(*), with either a standard prefix or suffix added.</p>
 <ul>
@@ -208,10 +208,10 @@ Use Analogous Names</h4>
 <li>Underscores are not allowed in identifiers that become part of a test's <b>full name</b> by <b>Google Test</b>, which will be based on the <b>test fixture</b> name (when one is used) and the test's name; thus, for fixture classes and test functions, the applicable bases should be converted.</li>
 </ul>
 <p>** The intent of an additional suffix on test name would be to differentiate a case such as two very similar tests, like two that have exactly the same logic but operate on two different example input cases.</p>
-<h4><a class="anchor" id="autotoc_md250"></a>
+<h4><a class="anchor" id="autotoc_md262"></a>
 Use Analogous Paths</h4>
 <p>To help with finding associated test code files, mirror the directory structure under <code>test/</code> of the path to the associated source file. E.g., functions defined in <code>models/hymod/include/Hymod.h</code> should have unit tests in <code>test/models/hymod/include/HymodTest.cpp</code>.</p>
-<h4><a class="anchor" id="autotoc_md251"></a>
+<h4><a class="anchor" id="autotoc_md263"></a>
 Keep Unit Test Assertions to a Minimum</h4>
 <p>For unit tests, try to keep the number of assertions (and perhaps comparisons in general) to a minimum, to help isolate individual aspect of behavior being tested. </p>
 </div></div><!-- contents -->
@@ -220,7 +220,7 @@ Keep Unit Test Assertions to a Minimum</h4>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Apr 23 2024 19:32:26 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Tue Apr 30 2024 14:52:05 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
