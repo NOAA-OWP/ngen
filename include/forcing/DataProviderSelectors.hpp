@@ -3,12 +3,6 @@
 
 #include <string>
 
-/**  
- * @brief This class is intended to be the virtual base for all data selectors used with the 
- * DataProvider API
- * 
- */
-
 class CatchmentAggrDataSelector
 {
     public:
@@ -120,74 +114,5 @@ class CatchmentAggrDataSelector
     std::string output_units; //!< required units for the result to be return in
     std::string id_str; //< the catchment to access data for
 };
-
-
-#if !defined(__APPLE__) && !defined(__llvm__) && defined(__GNUC__) && __GNUC__ < 8
-// Enable a workaround for old GCC versions (but not Clang or Apple's fake-GCC that's actually Clang)
-#define NGEN_SELECTOR_CAST
-#endif
-
-/**
- * @brief This a data selector intended for use with CSV data
- * 
- */
-
-class CSVDataSelector : public CatchmentAggrDataSelector
-{
-    public:
-
-    CSVDataSelector(std::string var, time_t start, long dur, std::string units) : 
-        CatchmentAggrDataSelector(std::string(), var, start, dur, units)
-    {}
-
-    #if defined(NGEN_SELECTOR_CAST)
-    operator const CatchmentAggrDataSelector&() const { return *this; }
-    #endif
-
-    private:
-};
-
-class BMIDataSelector : public CatchmentAggrDataSelector
-{
-    public:
-
-    BMIDataSelector(std::string var, time_t start, long dur, std::string units) : 
-        CatchmentAggrDataSelector(std::string(), var, start, dur, units)
-    {}
-
-    #if defined(NGEN_SELECTOR_CAST)
-    operator const CatchmentAggrDataSelector&() const { return *this; }
-    #endif
-
-    private:
-};
-
-#ifdef NETCDF_ACTIVE
-/**
- * @brief This is the data selector intended for use with netcdf providers
- * 
- */
-
-class NetCDFDataSelector : public CatchmentAggrDataSelector
-{
-    public:
-
-    NetCDFDataSelector(std::string id) : CatchmentAggrDataSelector(id,std::string(),0,0,std::string()) {}
-    NetCDFDataSelector(const char* id) : CatchmentAggrDataSelector(std::string(id),std::string(),0,0,std::string()) {}
-    NetCDFDataSelector(std::string id, std::string var, time_t start, long dur, std::string units) :
-        CatchmentAggrDataSelector(id, var, start, dur, units)
-    {
-        
-    }
-
-    #if defined(NGEN_SELECTOR_CAST)
-    operator const CatchmentAggrDataSelector&() const { return *this; }
-    #endif
-
-    private: 
-};
-#endif // NETCDF_ACTIVE
-
-#undef NGEN_SELECTOR_CAST
 
 #endif
