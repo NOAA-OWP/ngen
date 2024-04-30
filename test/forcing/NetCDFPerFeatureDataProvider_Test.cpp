@@ -89,7 +89,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
     //std::cout << "Checking values in catchment "<<ids[0]<<" at time "<<start_time<<" with duration "<<duration<<"..."<<std::endl;
 
     // read exactly one time step correctly aligned
-    double val1 = nc_provider->get_value(NetCDFDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration, "K"), data_access::MEAN);
+    double val1 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration, "K"), data_access::MEAN);
 
     //double tol = 0.00000612;
     double tol = 0.00002;
@@ -97,18 +97,18 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
     EXPECT_NEAR(val1, 285.8, tol);
 
     // read 1/2 of a time step correctly aligned
-    double val2 = nc_provider->get_value(NetCDFDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration / 2, "K"), data_access::MEAN);
+    double val2 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration / 2, "K"), data_access::MEAN);
 
     EXPECT_NEAR(val2, 285.8, tol);
 
     // read 4 time steps correctly aligned
-    double val3 = nc_provider->get_value(NetCDFDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration * 4, "K"), data_access::MEAN);
+    double val3 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration * 4, "K"), data_access::MEAN);
 
     EXPECT_NEAR(val3, 284.95, tol);
 
     // read exactly one time step correctly aligned but with a incorrect variable
     EXPECT_THROW(
-        double val4 = nc_provider->get_value(NetCDFDataSelector(ids[0], "T3D", start_time, duration, "K"), data_access::MEAN);, 
+        double val4 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], "T3D", start_time, duration, "K"), data_access::MEAN);, 
         std::runtime_error);
     
 }
