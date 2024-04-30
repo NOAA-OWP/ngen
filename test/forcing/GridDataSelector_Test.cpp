@@ -1,4 +1,3 @@
-#include "JSONGeometry.hpp"
 #include <gtest/gtest.h>
 
 #include <cmath>
@@ -19,7 +18,7 @@ struct TestGridDataProvider
 
     //! Default constructor, defaults to a 10x10 grid with extent [0, 10] in both x and y dimensions. 
     TestGridDataProvider()
-      : TestGridDataProvider(GridSpecification{10, 10, {0, 10, 0, 10}})
+      : TestGridDataProvider(GridSpecification{10, 10, box_t{{0, 0},{10, 10}}})
     {}
 
     boost::span<const std::string> get_available_variable_names() override
@@ -144,7 +143,7 @@ TEST(GridDataSelectorTest, ExtentSelection) {
     GridSpecification grid_spec {
         10, // rows 
         10, // cols
-        {20, 30, 20, 30}
+        /*extent=*/box_t{{20, 20}, {30, 30}}
     };
 
     TestGridDataProvider provider{grid_spec};
@@ -153,7 +152,7 @@ TEST(GridDataSelectorTest, ExtentSelection) {
     GridDataSelector selector{
         TestGridDataProvider::default_selector,
         grid_spec,
-        { 25, 30, 25, 30}
+        box_t{{25, 25}, {30, 30}}
     };
 
     const auto cells = provider.get_values(selector, data_access::ReSampleMethod::SUM);
@@ -174,7 +173,7 @@ TEST(GridDataSelectorTest, PointSelection) {
         10,
         10,
         // Extent around Tuscaloosa county
-        {-87.84068, -87.06574, 33.00338, 33.60983}
+        box_t{{-87.84068, 33.00338}, {-87.06574, 33.60983}}
     };
 
     TestGridDataProvider provider{grid_spec};
