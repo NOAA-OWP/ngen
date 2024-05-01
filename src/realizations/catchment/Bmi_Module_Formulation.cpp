@@ -650,4 +650,74 @@ namespace realization {
                 get_bmi_model()->SetValue(var_name, value_ptr.get());
             }
         }
+
+        // start of OutputInterface
+                /**
+         * @brief Return a list of string containing the name of all valid output variables
+        */
+        std::vector<std::string> Bmi_Module_Formulation::get_output_variable_names()
+        {
+            return get_bmi_model()->GetOutputVarNames();
+        }
+
+        /**
+         * @brief Return a size of the indicated output variable, or a negative value for an invalid name
+        */
+        long Bmi_Module_Formulation::get_output_size(std::string var_name)
+        {
+            return get_bmi_model()->GetVarNbytes(var_name);
+        }   
+
+        /**
+         * @brief Return a pointer to the current value of an output variable, or NULL for an invalid name
+        */
+        std::vector<uint8_t> Bmi_Module_Formulation::get_output_value(std::string var_name)
+        {
+            long size_in_bytes = get_bmi_model()->GetVarNbytes(var_name);
+
+            std::vector<uint8_t> bytes(size_in_bytes);
+
+            get_bmi_model()->GetValue(var_name, &bytes[0]);
+
+            return bytes;
+        }
+
+        /**
+         * @brief Return the type of an output variable as a sting, or "invalid" for an invalid name
+        */
+        std::string Bmi_Module_Formulation::get_output_type(std::string var_name)
+        {
+            return get_bmi_model()->GetVarType(var_name);
+        }     
+    
+        /**
+         * @brief Return the X size of the indicated grid
+        */
+        double Bmi_Module_Formulation::get_grid_x(const int grid)
+        {
+            double rval;
+            get_bmi_model()->GetGridX(grid, &rval);
+            return rval;
+        }    
+    
+        /**
+         * @brief Return the Y size of the indicated grid
+        */
+        double Bmi_Module_Formulation::get_grid_y(const int grid)
+        {
+            double rval;
+            get_bmi_model()->GetGridY(grid, &rval);
+            return rval;
+        }  
+    
+        /**
+         * @brief Return the Z size of the indicated grid
+        */
+        double Bmi_Module_Formulation::get_grid_z(const int grid)
+        {
+            double rval;
+            get_bmi_model()->GetGridZ(grid, &rval);
+            return rval;
+        }
+        // end of OutputInterface
 }

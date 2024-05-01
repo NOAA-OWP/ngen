@@ -11,6 +11,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/algorithm/string.hpp>
 #include <FeatureBuilder.hpp>
 #include "features/Features.hpp"
 #include "Formulation_Constructors.hpp"
@@ -19,6 +20,10 @@
 #include "realizations/config/routing.hpp"
 #include "realizations/config/config.hpp"
 #include "realizations/config/layer.hpp"
+#include "output/NetcdfOutputWriter.hpp"
+#include "output/OutputFileDescription.hpp"
+
+extern int mpi_rank;
 
 namespace realization {
 
@@ -32,17 +37,17 @@ namespace realization {
             Formulation_Manager(std::stringstream &data) {
                 boost::property_tree::ptree loaded_tree;
                 boost::property_tree::json_parser::read_json(data, loaded_tree);
-                this->tree = loaded_tree;
+                this->config_ptree = loaded_tree;
             }
 
             Formulation_Manager(const std::string &file_path) {
                 boost::property_tree::ptree loaded_tree;
                 boost::property_tree::json_parser::read_json(file_path, loaded_tree);
-                this->tree = loaded_tree;
+                this->config_ptree = loaded_tree;
             }
 
             Formulation_Manager(boost::property_tree::ptree &loaded_tree) {
-                this->tree = loaded_tree;
+                this->config_ptree = loaded_tree;
             }
 
             virtual ~Formulation_Manager(){
@@ -51,17 +56,21 @@ namespace realization {
 #endif
             };
 
-            virtual void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
+            virtual void read(geojson::GeoJSON catchment_json, utils::StreamHandler output_stream) {
                 //TODO seperate the parsing of configuration options like time
                 //and routing and other non feature specific tasks from this main function
                 //which has to iterate the entire hydrofabric.
-                auto possible_global_config = tree.get_child_optional("global");
+                auto possible_global_config = config_ptree.get_child_optional("global");
 
                 if (possible_global_config) {
                     global_config = realization::config::Config(*possible_global_config);
                 }
 
-                auto possible_simulation_time = tree.get_child_optional("time");
+                /**
+                 * Read simulation time from configuration file
+                 * /// \todo TODO: Separate input_interval from output_interval
+                 */            
+                auto possible_simulation_time = config_ptree.get_child_optional("time");
 
                 if (!possible_simulation_time) {
                     throw std::runtime_error("ERROR: No simulation time period defined.");
@@ -78,7 +87,7 @@ namespace realization {
                 */
 
                 // try to get the json node
-                auto layers_json_array = tree.get_child_optional("layers");
+                auto layers_json_array = config_ptree.get_child_optional("layers");
                 //Create the default surface layer
                 config::Layer layer;
                 // layer description struct
@@ -115,12 +124,101 @@ namespace realization {
                     }
                 }
 
-                //TODO use the set of layer providers as input for catchments to lookup from
+                #ifdef NETCDF_ACTIVE
+                // try to get the json node
+                auto outputs_container = config_ptree.get_child_optional("outputs");
+
+                //Check to see if custom outputs have been defined
+                if (outputs_container) 
+                {
+                    for (std::pair<std::string, boost::property_tree::ptree> outputs_pair : *outputs_container)
+                    {
+                        std::vector<data_output::NetcdfDimensionDiscription> output_dimensions;
+                        std::vector<data_output::NetcdfVariableDiscription> output_variables;
+                        std::vector< std::string > dimension_names;
+                        data_output::FileOutputType type;
+                        std::string output_file_path;
+                        
+                        auto& output_json_array = outputs_pair.second;
+                        for (std::pair<std::string, boost::property_tree::ptree> output_pair : output_json_array) 
+                        {
+                            if ( output_pair.first == "name" )
+                            {
+                                output_file_path = output_pair.second.get<std::string>("");
+                            }
+                            else if (output_pair.first == "type")
+                            {
+                                std::string string_type = output_pair.second.get<std::string>("");
+                                if (string_type == "NetCDF4" )
+                                {
+                                    type = data_output::NetCDF4;
+                                }
+                                else if (string_type == "CSV" )
+                                {
+                                    
+                                }
+                            }
+                            else if (boost::to_lower_copy(output_pair.first) == "dimensions" )
+                            {
+                                for( const std::pair<std::string, boost::property_tree::ptree>& dimension_pair : output_pair.second )
+                                {
+                                    data_output::NetcdfDimensionDiscription nc_dim_des(
+                                        dimension_pair.first, 
+                                        dimension_pair.second.get<int>("size"));
+
+                                        output_dimensions.push_back(nc_dim_des);
+                                        dimension_names.push_back(dimension_pair.first);
+                                }
+                            }
+                            else if (boost::to_lower_copy(output_pair.first) == "variables" )
+                            {
+                                auto variables_array = output_pair.second.get_child_optional("dimension");
+                                if ( variables_array )
+                                {
+                                    for ( const std::pair<std::string, boost::property_tree::ptree>& variable_pair : *variables_array )
+                                    {
+                                        std::string dimensions_str = variable_pair.second.get<std::string>("variables");
+                                        std::vector<std::string> dimensions_list;
+
+                                        data_output::NetcdfVariableDiscription nc_var_des(
+                                            variable_pair.first,
+                                            variable_pair.second.get<std::string>("type"),
+                                            dimensions_list);
+
+                                        output_variables.push_back(nc_var_des);
+                                    }  
+                                }
+                            } 
+
+                            output_files.push_back(data_output::OutputFileDescription()); 
+                            output_files.back().file_name = output_file_path;
+                            output_files.back().file_type = type;
+                            switch ( type )
+                            {
+                                case data_output::NetCDF4:
+
+                                output_files.back().nc_info.dimensions = output_dimensions;
+                                output_files.back().nc_info.variables = output_variables;
+                                break;
+
+                                case data_output::CSV:
+
+                                ;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else // setup default output of streamflow from nexus nodes
+                {
+                    // default file setup will be in main
+                }
+                #endif // NETCDF_ACTIVE
 
                 /**
                  * Read routing configurations from configuration file
                  */      
-                auto possible_routing_configs = tree.get_child_optional("routing");
+                auto possible_routing_configs = config_ptree.get_child_optional("routing");
                 
                 if (possible_routing_configs) {
                     //Since it is possible to build NGEN without routing support, if we see it in the config
@@ -138,11 +236,11 @@ namespace realization {
                 /**
                  * Read catchment configurations from configuration file
                  */      
-                auto possible_catchment_configs = tree.get_child_optional("catchments");
+                auto possible_catchment_configs = config_ptree.get_child_optional("catchments");
 
                 if (possible_catchment_configs) {
                     for (std::pair<std::string, boost::property_tree::ptree> catchment_config : *possible_catchment_configs) {
-                      int catchment_index = fabric->find(catchment_config.first);
+                      int catchment_index = catchment_json->find(catchment_config.first);
                       if( catchment_index == -1 )
                       {
                           #ifndef NGEN_QUIET
@@ -158,7 +256,7 @@ namespace realization {
                         throw std::runtime_error("ERROR: No formulations defined for "+catchment_config.first+".");
                       }
                       // Parse catchment-specific model_params
-                      auto catchment_feature = fabric->get_feature(catchment_index);
+                      auto catchment_feature = catchment_json->get_feature(catchment_index);
                       catchment_formulation.formulation.link_external(catchment_feature);
                       this->add_formulation(
                         this->construct_formulation_from_config(
@@ -175,7 +273,7 @@ namespace realization {
 
                 }//end if possible_catchment_configs
 
-                for (geojson::Feature location : *fabric) {
+                for (geojson::Feature location : *catchment_json) {
                     if (not this->contains(location->get_id())) {
                         std::shared_ptr<Catchment_Formulation> missing_formulation = this->construct_missing_formulation(
                           location, output_stream, simulation_time_config);
@@ -260,7 +358,7 @@ namespace realization {
              * @return std::string of the output root directory
              */
             std::string get_output_root() const noexcept {
-                const auto output_root = this->tree.get_optional<std::string>("output_root");
+                const auto output_root = this->config_ptree.get_optional<std::string>("output_root");
                 if (output_root != boost::none && *output_root != "") {
                     // Check if the path ends with a trailing slash,
                     // otherwise add it.
@@ -608,7 +706,7 @@ namespace realization {
                 model_params.swap(attr);
             }
 
-            boost::property_tree::ptree tree;
+            boost::property_tree::ptree config_ptree;
 
             realization::config::Config global_config;
 
@@ -622,6 +720,8 @@ namespace realization {
             bool using_routing = false;
 
             ngen::LayerDataStorage layer_storage;
+
+            std::vector<data_output::OutputFileDescription> output_files;
     };
 }
 #endif // NGEN_FORMULATION_MANAGER_H

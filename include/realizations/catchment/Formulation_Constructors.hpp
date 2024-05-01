@@ -63,7 +63,7 @@ namespace realization {
     }
 
     static std::string get_formulation_key(const boost::property_tree::ptree &tree) {
-        /*for (auto &node : tree) {
+        /*for (auto &node : config_ptree) {
             if (formulation_exists(node.first)) {
                 return node.first;
             }

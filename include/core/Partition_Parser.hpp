@@ -25,24 +25,24 @@
 class Partitions_Parser {
 
     public:
-        //Constructor that takes an input json file path and points to the root of the tree in json file
+        //Constructor that takes an input json file path and points to the root of the config_ptree in json file
         Partitions_Parser(const std::string &file_path) {
             boost::property_tree::ptree loaded_tree;
             boost::property_tree::json_parser::read_json(file_path, loaded_tree);
             std::cout << "file read success" << std::endl;
-            this->tree = loaded_tree;
+            this->config_ptree = loaded_tree;
             std::cout << "file_path: " << file_path << std::endl;
         };
 
-        Partitions_Parser(const boost::property_tree::ptree tree){
-            this->tree = tree;
+        Partitions_Parser(const boost::property_tree::ptree config_ptree){
+            this->config_ptree = config_ptree;
         }
 
         virtual ~Partitions_Parser(){};
 
         //The function that parses the json file and build a unordered set and vector of structs for each line in the json list
         void parse_partition_file() {
-            std::cout << "\nroot_tree: " << tree.size() << std::endl;
+            std::cout << "\nroot_tree: " << config_ptree.size() << std::endl;
 
             //Declare two partition_data type structs
             PartitionData part_data;
@@ -55,7 +55,7 @@ class Partitions_Parser {
             PartitionData::Tuple tmp_tuple;
             std::vector<PartitionData::Tuple> remote_conn_vec;
             int part_counter = 0;
-            for(auto &partition: tree.get_child("partitions"))  {
+            for(auto &partition: config_ptree.get_child("partitions"))  {
                 //Get partition id
                 std::string part_id = (partition.second).get<std::string>("id");
 
@@ -85,7 +85,7 @@ class Partitions_Parser {
 
                 if( part.at("remote-connections").get_type() == geojson::PropertyType::List ) 
                 {
-                    //It is valid to have no remote connections, but the backend property tree parser
+                    //It is valid to have no remote connections, but the backend property config_ptree parser
                     //can't represent empty lists/objects, so it turns into an empty string (which is iterable)
                     //so we check to ensure the remote connections are a list type (not string) before we attempt
                     //to process the remote-connections.  If they are empty, this step gets skipped entirely.
@@ -179,7 +179,7 @@ class Partitions_Parser {
         std::vector<std::tuple<int, std::string, std::string> > remote_connections;
         std::tuple<int, std::string, std::string> remote_tuple;
 
-        boost::property_tree::ptree tree;
+        boost::property_tree::ptree config_ptree;
 };
 
 #endif // NGEN_MPI_ACTIVE

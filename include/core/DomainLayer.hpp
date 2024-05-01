@@ -46,6 +46,12 @@ namespace ngen
             formulation->write_output("Time Step,""Time,"+formulation->get_output_header_line(",")+"\n");
         }
 
+        /**
+         * @brief Get a list of output variables names for this layer
+         * 
+         * @return vector of output variable names
+        */
+
         /***
          * @brief Run one simulation timestep for this model associated with the domain
          * 
@@ -79,6 +85,13 @@ namespace ngen
             }
     
         }
+
+        /**
+        * @brief Get a class id for this layer object
+        * 
+        * @return int
+        */
+        int class_id() { return LayerClass::kDomainLayer; }
 
         private:
         std::shared_ptr<realization::Catchment_Formulation> formulation;

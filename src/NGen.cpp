@@ -504,6 +504,68 @@ int main(int argc, char *argv[]) {
     auto time_done_init = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
 
+    #ifdef NETCDF_ACTIVE
+    // make netcdf output objects for layers
+
+    unsigned long num_catchments = std::distance(features.catchments().begin(), features.catchments().end() ); // TODO calculate this during parsing
+    unsigned long num_nexuses = std::distance(features.nexuses().begin(), features.nexuses().end() ); // TODO calculate this during parsing
+
+    for ( std::shared_ptr<ngen::Layer>& layer : layers )
+    {
+        std::vector<data_output::NetcdfDimensionDiscription> dimension_discription;
+        std::vector<data_output::NetcdfVariableDiscription> variable_discription;
+
+        dimension_discription.push_back(data_output::NetcdfDimensionDiscription("time"));
+        
+        int layer_class_id = layer->class_id();
+        switch(layer_class_id)
+        {
+            case ngen::LayerClass::kSurfaceLayer:
+
+            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
+
+
+            break;
+
+            case ngen::LayerClass::kDomainLayer:
+            {
+              std::shared_ptr<ngen::DomainLayer> domain_layer = std::dynamic_pointer_cast<ngen::DomainLayer,ngen::Layer>(layer);
+
+              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("x"));
+              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("y"));
+            }
+
+            break;
+
+            case ngen::LayerClass::kCatchmentLayer:
+
+            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
+
+            break;
+
+            case ngen::LayerClass::kNexusLayer:
+
+            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("nexus-id",num_nexuses));
+
+            break;
+
+            case ngen::LayerClass::kLayer:
+
+            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
+
+            break;
+
+            default:
+
+            std::stringstream ss;
+            ss << "Unexepected Layer class encountered with id " << layer_class_id << "\n";
+            throw std::runtime_error(ss.str().c_str());
+
+            break;
+        }
+    }
+    #endif
+
     //Now loop some time, iterate catchments, do stuff for total number of output times
     auto num_times = manager->Simulation_Time_Object->get_total_output_times();
     for( int count = 0; count < num_times; count++) 

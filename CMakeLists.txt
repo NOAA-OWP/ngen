@@ -330,6 +330,7 @@ add_subdirectory("src/forcing")
 add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
 add_subdirectory("src/utilities/logging")
+add_subdirectory("src/output")
 
 target_link_libraries(ngen
     PUBLIC
@@ -342,6 +343,7 @@ target_link_libraries(ngen
         NGen::forcing
         NGen::core_mediator
         NGen::logging
+        NGen::output
 )
 
 if(NGEN_WITH_SQLITE)

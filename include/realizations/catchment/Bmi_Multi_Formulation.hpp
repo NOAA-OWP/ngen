@@ -41,6 +41,44 @@ namespace realization {
                 : Bmi_Formulation(std::move(id), forcing_provider, output_stream) { };
 
         virtual ~Bmi_Multi_Formulation() {};
+        
+        //begin OutputInterface
+        /**
+         * @brief Return a list of string containing the name of all valid output variables
+        */
+        std::vector<std::string> get_output_variable_names() override;
+
+        /**
+         * @brief Return a size of the indicated output variable, or a negative value for an invalid name
+        */
+        long get_output_size(std::string var_name) override;    
+
+        /**
+         * @brief Return a pointer to the current value of an output variable, or NULL for an invalid name
+        */
+        std::vector<uint8_t> get_output_value(std::string var_name) override;
+
+        /**
+         * @brief Return the type of an output variable as a sting, or "invalid" for an invalid name
+        */
+        std::string get_output_type(std::string var_name) override;       
+    
+        /**
+         * @brief Return the X size of the indicated grid
+        */
+        double get_grid_x(const int grid) override;     
+    
+        /**
+         * @brief Return the Y size of the indicated grid
+        */
+        double get_grid_y(const int grid) override;  
+    
+        /**
+         * @brief Return the Z size of the indicated grid
+        */
+        double get_grid_z(const int grid) override;  
+        //end OutputInterface
+
 
         /**
          * Convert a time value from the model to an epoch time in seconds.
@@ -796,6 +834,7 @@ namespace realization {
         friend class ::Bmi_Cpp_Multi_Array_Test;
 
     };
+    
 }
 
 #endif //NGEN_BMI_MULTI_FORMULATION_HPP

@@ -1,0 +1,1 @@
+int mpi_rank = 0;

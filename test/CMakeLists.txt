@@ -162,12 +162,14 @@ ngen_add_test(
     test_realization_config
     OBJECTS
         realizations/Formulation_Manager_Test.cpp
+        utils/MPIRank.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
+        NGen::output
     DEPENDS
         testbmicppmodel
 )
@@ -248,12 +250,14 @@ ngen_add_test(
     test_multilayer
     OBJECTS
         core/multilayer/MultiLayerParserTest.cpp
+        utils/MPIRank.cpp
     LIBRARIES
         NGen::core
         NGen::geojson
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
+        NGen::output
     REQUIRES
         NGEN_WITH_NETCDF
         NGEN_WITH_BMI_FORTRAN
@@ -430,6 +434,24 @@ ngen_add_test(
     REQUIRES
         NGEN_WITH_NETCDF
 )
+
+ngen_add_test(
+    test_netcdf_output
+    OBJECTS
+        netcdf/Netcdf_Output_Test.cpp
+        netcdf/Netcdf_Output_Integration_Test.cpp
+        utils/MPIRank.cpp
+    LIBRARIES
+        NGen::core
+        NGen::core_nexus
+        NGen::core_mediator
+        NGen::forcing
+        NGen::geojson
+        NGen::realizations_catchment
+        NGen::output      
+    REQUIRES
+        NGEN_WITH_NETCDF
+)
 #endif()
 
 ########################## Primary Combined Unit Test Target
@@ -454,6 +476,7 @@ ngen_add_test(
         utils/mdframe_netcdf_Test.cpp
         utils/mdframe_csv_Test.cpp
         utils/logging_Test.cpp
+        utils/MPIRank.cpp
     LIBRARIES
         gmock
         NGen::core
@@ -466,6 +489,7 @@ ngen_add_test(
         NGen::mdframe
         NGen::logging
         NGen::ngen_bmi
+        NGen::output
         testbmicppmodel
 )
 

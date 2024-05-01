@@ -3,9 +3,7 @@
 #include "FileChecker.h"
 #include <Formulation_Manager.hpp>
 
-extern int mpi_rank;
-
-class MultiLayerParserTest : public ::testing::Test {
+class NetcdfOutputParserTest : public ::testing::Test {
 
     static std::string find_file(std::vector<std::string> dir_opts, const std::string& basename) {
         std::vector<std::string> file_opts(dir_opts.size());
@@ -24,14 +22,14 @@ class MultiLayerParserTest : public ::testing::Test {
             "../../test/"
         };
 
-        MultiLayerParserTest()
+        NetcdfOutputParserTest()
         {
             nexus_data_path = find_file(path_options, "./data/nexus_data.geojson");
-            catchment_data_path = find_file(path_options, "./data/catchment_data_multilayer.geojson");
-            realization_config_path = find_file(path_options, "./data/example_multilayer_realization_config.json");
+            catchment_data_path = find_file(path_options, "./data/catchment_data.geojson");
+            realization_config_path = find_file(path_options, "./data/example_ncout_realization_config.json");
         }
 
-        ~MultiLayerParserTest() override {
+        ~NetcdfOutputParserTest() override {
 
         }
 
@@ -63,14 +61,14 @@ class MultiLayerParserTest : public ::testing::Test {
 
 };
 
-TEST_F(MultiLayerParserTest, TestInit0)
+TEST_F(NetcdfOutputParserTest, TestInit0)
 {
     manager = std::make_shared<realization::Formulation_Manager>(realization_config_path.c_str());
 
     ASSERT_TRUE(true);
 }
 
-TEST_F(MultiLayerParserTest, TestRead0)
+TEST_F(NetcdfOutputParserTest, TestRead0)
 {
     manager = std::make_shared<realization::Formulation_Manager>(realization_config_path.c_str());
     manager->read(catchment_collection, utils::getStdOut());

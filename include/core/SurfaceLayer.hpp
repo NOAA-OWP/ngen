@@ -30,6 +30,13 @@ namespace ngen
         */
         void update_models() override;
 
+        /**
+        * @brief Get a class id for this layer object
+        * 
+        * @return int
+        */
+        int class_id() { return LayerClass::kSurfaceLayer; }
+
         private:
 
         std::vector<std::string> nexus_ids;

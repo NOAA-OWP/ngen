@@ -13,6 +13,22 @@
 
 namespace ngen
 {
+    
+    /**
+     * @brief an enumeration of the types of layer classes
+     */
+
+    enum LayerClass
+    {
+        kLayer = 1,
+        kSurfaceLayer = 2,
+        kDomainLayer = 3,
+        kCatchmentLayer = 4,
+        kNexusLayer = 5,
+        kRoutingLayer = 6,
+        kOverlayLayer = 7
+    };
+
 
     class Layer
     {    
@@ -63,6 +79,19 @@ namespace ngen
         }
 
         virtual ~Layer() {}
+
+        /**
+        * @brief Get a class id for this layer object
+        * 
+        * @return int
+        */
+        virtual int class_id() { return LayerClass::kLayer; }
+
+        /**
+         * @brief Get a list of output variables names for this layer
+         * 
+         * @return vector of output variable names
+        */
 
         /***
          * @brief Return the next timestep that will be processed by this layer in epoch time units
