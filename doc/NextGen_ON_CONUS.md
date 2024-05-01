@@ -166,16 +166,17 @@ Be aware that the above commands will generate over a million output files assoc
 
 # Resource Usage
 
-The following table lists the CPU wall clock ime used for various realization configurations running 10 day simulation time. Note that the `Initialization Time` may potentially be affected by system loads at the time of job start.
-| Realization | Number of CPUs | Initialization Time (s) | Computation Time (s) |
-| ------------- | :-----: | :--------: | :--------: |
-| conus_bmi_multi_realization_config_w_sloth.json | 32 | 2618.6 | 737.4 |
-| conus_bmi_multi_realization_config_w_sloth_noah.json | 32 | 1360.1 | 2143.9 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet.json | 32 | 12236.7 | 2118.6 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe.json | 32 | 1214.9 | 4069.2 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp.json | 32 | 1453.4 | 3087.0 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft.json | 32 | 3245.7 | 3808.1 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json | 32 | 1354.7 | 5283.1 |
+The following table lists the CPU wall clock ime used for various realization configurations running 10 day simulation time. The timing values reported in the table are from single run, not from average. Note in particular that the `Initialization Time` may be significantly affected by system loads at the time of job start.
+
+| Realization | Number of CPUs | Initialization Time (s) | Computation Time (s) | Total Time (s) |
+| ------------- | :-----: | :--------: | :--------: | :--------: |
+| conus_bmi_multi_realization_config_w_sloth.json | 32 | 2618.6 | 737.4 | 3356.0 |
+| conus_bmi_multi_realization_config_w_sloth_noah.json | 32 | 1360.1 | 2143.9 | 3504.0 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet.json | 32 | 3204.0 | 2106.5 | 5310.5 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe.json | 32 | 1214.9 | 4069.2 | 5284.1 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp.json | 32 | 1453.4 | 3087.0 | 4540.4 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft.json | 32 | 3245.7 | 3808.1 | 7053.8 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json | 32 | 1354.7 | 5283.1 | 6637.8 |
 
 The abreviation used for submodule names in the table:
 * noah - noah-owp-modular
@@ -232,11 +233,12 @@ mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/co
 If your run is successful, you should see the directory `stream_output_dir` populated with output files in NetCDF format with each file corresponding to each hour between 2016-01-01 to 2016-01-10.
 
 In the following table, we display the CPU timing information for a few realizations that we tested:
-| Realization | Number of CPUs | Initialization Time (s) | Ngen Computation Time (s) | Routing Computation Time (s) |
-| ------------- | :-----: | :--------: | :--------: | :--------: |
-| conus_bmi_multi_realization_config_w_sloth_noah_trt.json | 32 | 958.1 | 2288.4 | 3694.1 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_trt.json | 32 | 1069.8 | 4606.3 | 4474.1 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe_trt.json | 32 | 2142.0 | 5632.4 | 4510.3 |
+
+| Realization | Number of CPUs | Initialization Time (s) | Ngen Computation Time (s) | Routing Computation Time (s) | Total Time (s) |
+| ------------- | :-----: | :--------: | :--------: | :--------: | :--------: |
+| conus_bmi_multi_realization_config_w_sloth_noah_trt.json | 32 | 958.1 | 2288.4 | 3694.1 | 6940.6 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_trt.json | 32 | 1069.8 | 4606.3 | 4474.1 | 10150.2 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe_trt.json | 32 | 2142.0 | 5632.4 | 4510.3 | 12284.7 |
 
 * trt - abrevitation for t-route
 * For all other abreviations, see [Resource Usage](#resource-usage).
