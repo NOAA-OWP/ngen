@@ -395,18 +395,6 @@
         <topic label="MAX_VAR_NAME" href="namespacebmi.html#aa9da18fdf23479e14be4ab65196dde77"/>
       </topic>
       <topic label="data_access" href="namespacedata__access.html">
-        <topic label="AsyncDataProvider" href="classdata__access_1_1_async_data_provider.html">
-          <topic label="get_available_variable_names" href="classdata__access_1_1_async_data_provider.html#a13ffb91d8fdba4a13ef440f7621d9cfe"/>
-          <topic label="get_data_start_time" href="classdata__access_1_1_async_data_provider.html#a9a5503cb5da0b2bf8fe25d0500bf33c4"/>
-          <topic label="get_data_stop_time" href="classdata__access_1_1_async_data_provider.html#af598b54c03163287adc56400b3e9bdfe"/>
-          <topic label="get_ts_index_for_time" href="classdata__access_1_1_async_data_provider.html#acca503f7d24367b8a3298a2c10e5d75f"/>
-          <topic label="get_value" href="classdata__access_1_1_async_data_provider.html#a2409247d93cc63d0626e623c3a024f1b"/>
-          <topic label="get_values" href="classdata__access_1_1_async_data_provider.html#adcd588f997aa5ec185744d36e801054a"/>
-          <topic label="is_property_sum_over_time_step" href="classdata__access_1_1_async_data_provider.html#a8254f58e64499bb4ae799ab120fd0934"/>
-          <topic label="record_duration" href="classdata__access_1_1_async_data_provider.html#a558af5fd091e84283470af3ca74d24d8"/>
-          <topic label="request_value" href="classdata__access_1_1_async_data_provider.html#a31d15fd72f35c01c67c790f33f8aa2c1"/>
-          <topic label="value_ready" href="classdata__access_1_1_async_data_provider.html#a07a18c0c6876bd02685a78efea74365f"/>
-        </topic>
         <topic label="DataProvider" href="classdata__access_1_1_data_provider.html">
           <topic label="~DataProvider" href="classdata__access_1_1_data_provider.html#a78cbffa63282f92cec20f13ef3067436"/>
           <topic label="get_available_variable_names" href="classdata__access_1_1_data_provider.html#a13ffb91d8fdba4a13ef440f7621d9cfe"/>
@@ -2792,18 +2780,6 @@
         </topic>
       </topic>
       <topic label="data_access" href="namespacedata__access.html">
-        <topic label="AsyncDataProvider" href="classdata__access_1_1_async_data_provider.html">
-          <topic label="get_available_variable_names" href="classdata__access_1_1_async_data_provider.html#a13ffb91d8fdba4a13ef440f7621d9cfe"/>
-          <topic label="get_data_start_time" href="classdata__access_1_1_async_data_provider.html#a9a5503cb5da0b2bf8fe25d0500bf33c4"/>
-          <topic label="get_data_stop_time" href="classdata__access_1_1_async_data_provider.html#af598b54c03163287adc56400b3e9bdfe"/>
-          <topic label="get_ts_index_for_time" href="classdata__access_1_1_async_data_provider.html#acca503f7d24367b8a3298a2c10e5d75f"/>
-          <topic label="get_value" href="classdata__access_1_1_async_data_provider.html#a2409247d93cc63d0626e623c3a024f1b"/>
-          <topic label="get_values" href="classdata__access_1_1_async_data_provider.html#adcd588f997aa5ec185744d36e801054a"/>
-          <topic label="is_property_sum_over_time_step" href="classdata__access_1_1_async_data_provider.html#a8254f58e64499bb4ae799ab120fd0934"/>
-          <topic label="record_duration" href="classdata__access_1_1_async_data_provider.html#a558af5fd091e84283470af3ca74d24d8"/>
-          <topic label="request_value" href="classdata__access_1_1_async_data_provider.html#a31d15fd72f35c01c67c790f33f8aa2c1"/>
-          <topic label="value_ready" href="classdata__access_1_1_async_data_provider.html#a07a18c0c6876bd02685a78efea74365f"/>
-        </topic>
         <topic label="DataProvider" href="classdata__access_1_1_data_provider.html">
           <topic label="~DataProvider" href="classdata__access_1_1_data_provider.html#a78cbffa63282f92cec20f13ef3067436"/>
           <topic label="get_available_variable_names" href="classdata__access_1_1_data_provider.html#a13ffb91d8fdba4a13ef440f7621d9cfe"/>
@@ -5001,24 +4977,6 @@
         <topic label="update" href="struct_bmi.html#aa40ea98c2c8769c801a8b225d687f907"/>
         <topic label="update_until" href="struct_bmi.html#a192e680b533ced45941b163932514014"/>
       </topic>
-      <topic label="BMIDataSelector" href="class_b_m_i_data_selector.html">
-        <topic label="BMIDataSelector" href="class_b_m_i_data_selector.html#a69be092238617eb9a3a33a5a03e15801"/>
-        <topic label="get_duration_secs" href="class_b_m_i_data_selector.html#a482e1fb8dbb5ac966ef5de3f0c5a8d70"/>
-        <topic label="get_id" href="class_b_m_i_data_selector.html#a41332c82f34171277723f17b801518bd"/>
-        <topic label="get_init_time" href="class_b_m_i_data_selector.html#abe6340bf863bada7b0d753ebe60228bd"/>
-        <topic label="get_output_units" href="class_b_m_i_data_selector.html#a92a56297b4fe7ad8c374f8808a5579f9"/>
-        <topic label="get_variable_name" href="class_b_m_i_data_selector.html#a1dd6a5bb4ab1e701463359d34d4d6738"/>
-        <topic label="set_duration_secs" href="class_b_m_i_data_selector.html#ac2cb7c098699553e00ab893f26fafbcc"/>
-        <topic label="set_id" href="class_b_m_i_data_selector.html#ac1382175edeea8eeae746b7d80f8c271"/>
-        <topic label="set_init_time" href="class_b_m_i_data_selector.html#aad9e7ae1030d5dec90a6afcd5266944a"/>
-        <topic label="set_output_units" href="class_b_m_i_data_selector.html#af17d0cae591e84e1b82e106eef81e83b"/>
-        <topic label="set_variable_name" href="class_b_m_i_data_selector.html#a3ad1a0113af54c9546413fafcdc867c7"/>
-        <topic label="duration_s" href="class_b_m_i_data_selector.html#a2631de54b21cbad73b26e432a22516bc"/>
-        <topic label="id_str" href="class_b_m_i_data_selector.html#acd95faea04f1aac23ac8f370d52b1d59"/>
-        <topic label="init_time" href="class_b_m_i_data_selector.html#a6cd3d9be96032de2d13baf6ff2bd3357"/>
-        <topic label="output_units" href="class_b_m_i_data_selector.html#a78bb6eabd1d62510e6d8e8c02f4dd0e1"/>
-        <topic label="variable_name" href="class_b_m_i_data_selector.html#aa5bbd7b096b14050c1b0725edd8e0bd6"/>
-      </topic>
       <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html">
         <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html#a64ee5a1268ff3a9f6bf0c1834a73a4c0"/>
         <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html#a1c5fc95760b3ac68b63726f940e52c4a"/>
@@ -5040,24 +4998,6 @@
       </topic>
       <topic label="completed_time_step" href="structcompleted__time__step.html">
         <topic label="what" href="structcompleted__time__step.html#aaf647dee637eab397abc27b17a7c8c55"/>
-      </topic>
-      <topic label="CSVDataSelector" href="class_c_s_v_data_selector.html">
-        <topic label="CSVDataSelector" href="class_c_s_v_data_selector.html#ada51067c6874dbf0fb145c8ebe56b38f"/>
-        <topic label="get_duration_secs" href="class_c_s_v_data_selector.html#a482e1fb8dbb5ac966ef5de3f0c5a8d70"/>
-        <topic label="get_id" href="class_c_s_v_data_selector.html#a41332c82f34171277723f17b801518bd"/>
-        <topic label="get_init_time" href="class_c_s_v_data_selector.html#abe6340bf863bada7b0d753ebe60228bd"/>
-        <topic label="get_output_units" href="class_c_s_v_data_selector.html#a92a56297b4fe7ad8c374f8808a5579f9"/>
-        <topic label="get_variable_name" href="class_c_s_v_data_selector.html#a1dd6a5bb4ab1e701463359d34d4d6738"/>
-        <topic label="set_duration_secs" href="class_c_s_v_data_selector.html#ac2cb7c098699553e00ab893f26fafbcc"/>
-        <topic label="set_id" href="class_c_s_v_data_selector.html#ac1382175edeea8eeae746b7d80f8c271"/>
-        <topic label="set_init_time" href="class_c_s_v_data_selector.html#aad9e7ae1030d5dec90a6afcd5266944a"/>
-        <topic label="set_output_units" href="class_c_s_v_data_selector.html#af17d0cae591e84e1b82e106eef81e83b"/>
-        <topic label="set_variable_name" href="class_c_s_v_data_selector.html#a3ad1a0113af54c9546413fafcdc867c7"/>
-        <topic label="duration_s" href="class_c_s_v_data_selector.html#a2631de54b21cbad73b26e432a22516bc"/>
-        <topic label="id_str" href="class_c_s_v_data_selector.html#acd95faea04f1aac23ac8f370d52b1d59"/>
-        <topic label="init_time" href="class_c_s_v_data_selector.html#a6cd3d9be96032de2d13baf6ff2bd3357"/>
-        <topic label="output_units" href="class_c_s_v_data_selector.html#a78bb6eabd1d62510e6d8e8c02f4dd0e1"/>
-        <topic label="variable_name" href="class_c_s_v_data_selector.html#aa5bbd7b096b14050c1b0725edd8e0bd6"/>
       </topic>
       <topic label="CsvPerFeatureForcingProvider" href="class_csv_per_feature_forcing_provider.html">
         <topic label="time_type" href="class_csv_per_feature_forcing_provider.html#aa40e6c7ba39854c2a69c2656376c95f0"/>
@@ -5650,14 +5590,9 @@
         <topic label="ngen::detail::visitors::to_string_visitor" href="structngen_1_1detail_1_1visitors_1_1to__string__visitor.html"/>
         <topic label="ngen::geopackage::wkb::wgs84" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html"/>
       </topic>
-      <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html">
-        <topic label="BMIDataSelector" href="class_b_m_i_data_selector.html"/>
-        <topic label="CSVDataSelector" href="class_c_s_v_data_selector.html"/>
-      </topic>
+      <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html"/>
       <topic label="CSVReader" href="class_c_s_v_reader.html"/>
-      <topic label="data_access::DataProvider&lt; data_type, selection_type &gt;" href="classdata__access_1_1_data_provider.html">
-        <topic label="data_access::AsyncDataProvider&lt; data_type, selection_type &gt;" href="classdata__access_1_1_async_data_provider.html"/>
-      </topic>
+      <topic label="data_access::DataProvider&lt; data_type, selection_type &gt;" href="classdata__access_1_1_data_provider.html"/>
       <topic label="data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;" href="classdata__access_1_1_data_provider.html">
         <topic label="data_access::GenericDataProvider" href="classdata__access_1_1_generic_data_provider.html">
           <topic label="CsvPerFeatureForcingProvider" href="class_csv_per_feature_forcing_provider.html"/>

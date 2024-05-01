@@ -30,14 +30,9 @@ var hierarchy =
       [ "ngen::detail::visitors::to_string_visitor", "structngen_1_1detail_1_1visitors_1_1to__string__visitor.html", null ],
       [ "ngen::geopackage::wkb::wgs84", "structngen_1_1geopackage_1_1wkb_1_1wgs84.html", null ]
     ] ],
-    [ "CatchmentAggrDataSelector", "class_catchment_aggr_data_selector.html", [
-      [ "BMIDataSelector", "class_b_m_i_data_selector.html", null ],
-      [ "CSVDataSelector", "class_c_s_v_data_selector.html", null ]
-    ] ],
+    [ "CatchmentAggrDataSelector", "class_catchment_aggr_data_selector.html", null ],
     [ "CSVReader", "class_c_s_v_reader.html", null ],
-    [ "data_access::DataProvider< data_type, selection_type >", "classdata__access_1_1_data_provider.html", [
-      [ "data_access::AsyncDataProvider< data_type, selection_type >", "classdata__access_1_1_async_data_provider.html", null ]
-    ] ],
+    [ "data_access::DataProvider< data_type, selection_type >", "classdata__access_1_1_data_provider.html", null ],
     [ "data_access::DataProvider< double, CatchmentAggrDataSelector >", "classdata__access_1_1_data_provider.html", [
       [ "data_access::GenericDataProvider", "classdata__access_1_1_generic_data_provider.html", [
         [ "CsvPerFeatureForcingProvider", "class_csv_per_feature_forcing_provider.html", null ],
