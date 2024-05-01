@@ -512,7 +512,8 @@ std::string Bmi_Multi_Formulation::get_output_type(std::string var_name)
     {
         try
         {
-            return module->get_output_type(var_name);
+            std::string mapped_name = module->get_config_mapped_variable_name(var_name);
+            return module->get_output_type(mapped_name);
         }
         catch(...)
         {
