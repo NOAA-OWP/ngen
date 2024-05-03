@@ -1,7 +1,7 @@
 #ifndef NGEN_BMI_FORTRAN_ADAPTER_HPP
 #define NGEN_BMI_FORTRAN_ADAPTER_HPP
 
-#ifdef NGEN_BMI_FORTRAN_ACTIVE
+#ifdef NGEN_WITH_BMI_FORTRAN
 
 #include "AbstractCLibBmiAdapter.hpp"
 #include "Bmi_Fortran_Common.h"
@@ -813,6 +813,6 @@ namespace models {
     }
 }
 
-#endif // NGEN_BMI_FORTRAN_ACTIVE
+#endif // NGEN_WITH_BMI_FORTRAN
 
 #endif //NGEN_BMI_FORTRAN_ADAPTER_HPP

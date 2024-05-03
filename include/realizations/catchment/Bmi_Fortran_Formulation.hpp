@@ -1,7 +1,7 @@
 #ifndef NGEN_BMI_FORTRAN_FORMULATION_HPP
 #define NGEN_BMI_FORTRAN_FORMULATION_HPP
 
-#ifdef NGEN_BMI_FORTRAN_ACTIVE
+#ifdef NGEN_WITH_BMI_FORTRAN
 
 #include "Bmi_Module_Formulation.hpp"
 #include "Bmi_Fortran_Adapter.hpp"
@@ -92,6 +92,6 @@ namespace realization {
 
 }
 
-#endif // NGEN_BMI_FORTRAN_ACTIVE
+#endif // NGEN_WITH_BMI_FORTRAN
 
 #endif //NGEN_BMI_FORTRAN_FORMULATION_HPP
