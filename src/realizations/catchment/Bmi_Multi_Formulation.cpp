@@ -1,3 +1,5 @@
+#include <NGenConfig.h>
+
 #include "Bmi_Multi_Formulation.hpp"
 #include "Formulation_Constructors.hpp"
 #include "Bmi_Formulation.hpp"
