@@ -1,6 +1,8 @@
 #ifndef NGEN_BMI_FORTRAN_COMMON_H
 #define NGEN_BMI_FORTRAN_COMMON_H
 
+#include <NGenConfig.h>
+
 #ifdef NGEN_WITH_BMI_FORTRAN
 
 /**

@@ -1,3 +1,5 @@
+#include <NGenConfig.h>
+
 #ifdef NGEN_WITH_BMI_FORTRAN
 #include "bmi/Bmi_Fortran_Adapter.hpp"
 
