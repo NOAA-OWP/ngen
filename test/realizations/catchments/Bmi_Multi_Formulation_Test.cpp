@@ -1,6 +1,8 @@
 #ifndef NGEN_BMI_MULTI_FORMULATION_TEST_CPP
 #define NGEN_BMI_MULTI_FORMULATION_TEST_CPP
 
+#include <NGenConfig.h>
+
 // Don't bother with the rest if none of these are active (although what are we really doing here, then?)
 #if NGEN_NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || ACTIVATE_PYTHON
 

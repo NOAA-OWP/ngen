@@ -1,3 +1,5 @@
+#include <NGenConfig.h>
+
 #include "Formulation.hpp"
 #include <JSONProperty.hpp>
 #include <exception>
