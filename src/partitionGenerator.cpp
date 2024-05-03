@@ -1,3 +1,5 @@
+#include <NGenConfig.h>
+
 #include <network.hpp>
 #include <FileChecker.h>
 #include <boost/lexical_cast.hpp>
@@ -13,7 +15,7 @@
 #include <unordered_set>
 #include <tuple>
 
-#ifdef NGEN_WITH_SQLITE3
+#if NGEN_WITH_SQLITE3
 #include <geopackage.hpp>
 #endif
 
@@ -428,7 +430,7 @@ int main(int argc, char* argv[])
     geojson::GeoJSON catchment_collection;
     if (boost::algorithm::ends_with(catchmentDataFile, "gpkg"))
     {
-        #ifdef NGEN_WITH_SQLITE3
+        #if NGEN_WITH_SQLITE3
         catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
         #else
         throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
@@ -460,7 +462,7 @@ int main(int argc, char* argv[])
     geojson::GeoJSON global_nexus_collection;
     if (boost::algorithm::ends_with(nexusDataFile, "gpkg")) 
     {
-      #ifdef NGEN_WITH_SQLITE3
+      #if NGEN_WITH_SQLITE3
       global_nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
       #else
       throw std::runtime_error("SQLite3 support required to read GeoPackage files.");

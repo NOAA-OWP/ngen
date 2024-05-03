@@ -10,7 +10,7 @@
 #include <Catchment_Formulation.hpp>
 #include <HY_Features.hpp>
 
-#ifdef NGEN_WITH_SQLITE3
+#if NGEN_WITH_SQLITE3
 #include <geopackage.hpp>
 #endif
 
@@ -209,10 +209,10 @@ int main(int argc, char *argv[]) {
         #ifdef NETCDF_ACTIVE
         std::cout<<"  NetCDF lumped forcing enabled"<<std::endl;
         #endif
-        #ifdef NGEN_WITH_BMI_FORTRAN
+        #if NGEN_WITH_BMI_FORTRAN
         std::cout<<"  Fortran BMI enabled"<<std::endl;
         #endif
-        #ifdef NGEN_WITH_BMI_C
+        #if NGEN_WITH_BMI_C
         std::cout<<"  C BMI enabled"<<std::endl;
         #endif
         #ifdef ACTIVATE_PYTHON
@@ -361,7 +361,7 @@ int main(int argc, char *argv[]) {
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
     geojson::GeoJSON nexus_collection;
     if (boost::algorithm::ends_with(nexusDataFile, "gpkg")) {
-      #ifdef NGEN_WITH_SQLITE3
+      #if NGEN_WITH_SQLITE3
       nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
       #else
       throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
@@ -374,7 +374,7 @@ int main(int argc, char *argv[]) {
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
     geojson::GeoJSON catchment_collection;
     if (boost::algorithm::ends_with(catchmentDataFile, "gpkg")) {
-      #ifdef NGEN_WITH_SQLITE3
+      #if NGEN_WITH_SQLITE3
       catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
       #else
       throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
