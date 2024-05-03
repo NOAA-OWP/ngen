@@ -2,7 +2,7 @@
 #define NGEN_BMI_MULTI_FORMULATION_TEST_CPP
 
 // Don't bother with the rest if none of these are active (although what are we really doing here, then?)
-#if NGEN_NGEN_WITH_BMI_C || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
+#if NGEN_NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || ACTIVATE_PYTHON
 
 #include "all.h"
 #include "Bmi_Testing_Util.hpp"
@@ -467,18 +467,18 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI C functionality active" SOURCE_LOC);
     #endif // NGEN_NGEN_WITH_BMI_C
 
-    #ifndef NGEN_BMI_FORTRAN_ACTIVE
+    #ifndef NGEN_WITH_BMI_FORTRAN
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI Fortran functionality active" SOURCE_LOC);
-    #endif // NGEN_BMI_FORTRAN_ACTIVE
+    #endif // NGEN_WITH_BMI_FORTRAN
 
 
     initializeTestExample(0, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_C_TYPE)}, {});
 
     /* ********************************** Second example scenario ********************************** */
 
-    #ifndef NGEN_BMI_FORTRAN_ACTIVE
+    #ifndef NGEN_WITH_BMI_FORTRAN
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Fortran functionality active" SOURCE_LOC);
-    #endif // NGEN_BMI_FORTRAN_ACTIVE
+    #endif // NGEN_WITH_BMI_FORTRAN
 
     #ifndef ACTIVATE_PYTHON
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Python functionality active" SOURCE_LOC);
@@ -719,7 +719,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
 /* Note that a runtime check in SetUp() prevents this from executing when it can't, but
    this needs to be here to prevent compile-time errors if either of these flags is not
    enabled. */
-#if ACTIVATE_PYTHON && NGEN_BMI_FORTRAN_ACTIVE
+#if ACTIVATE_PYTHON && NGEN_WITH_BMI_FORTRAN
 
         int ex_index = 3;
 
@@ -740,7 +740,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
             }
         }
 
-#endif // ACTIVATE_PYTHON && NGEN_BMI_FORTRAN_ACTIVE
+#endif // ACTIVATE_PYTHON && NGEN_WITH_BMI_FORTRAN
 
     }
 
@@ -859,11 +859,11 @@ TEST_F(Bmi_Multi_Formulation_Test, GetIdAndCatchmentId) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
     ASSERT_EQ(formulation.get_id(), "cat-27");
     ASSERT_EQ(get_friend_catchment_id(formulation), "cat-27");
-    #ifdef NGEN_BMI_FORTRAN_ACTIVE
+    #ifdef NGEN_WITH_BMI_FORTRAN
     ASSERT_EQ(get_friend_nested_catchment_id<Bmi_Fortran_Formulation>(formulation, 0), "cat-27");
     #endif
     //ASSERT_EQ(formulation.get_catchment_id(), "id");
 }
-#endif // NGEN_NGEN_WITH_BMI_C || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
+#endif // NGEN_NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_MULTI_FORMULATION_TEST_CPP

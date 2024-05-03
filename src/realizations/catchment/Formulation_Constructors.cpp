@@ -32,9 +32,9 @@ namespace realization {
 #ifdef NGEN_NGEN_WITH_BMI_C
         {"bmi_c", create_formulation_constructor<Bmi_C_Formulation>()},
 #endif // NGEN_NGEN_WITH_BMI_C
-#ifdef NGEN_BMI_FORTRAN_ACTIVE
+#ifdef NGEN_WITH_BMI_FORTRAN
         {"bmi_fortran", create_formulation_constructor<Bmi_Fortran_Formulation>()},
-#endif // NGEN_BMI_FORTRAN_ACTIVE
+#endif // NGEN_WITH_BMI_FORTRAN
         {"bmi_multi", create_formulation_constructor<Bmi_Multi_Formulation>()},
 #ifdef ACTIVATE_PYTHON
         {"bmi_python", create_formulation_constructor<Bmi_Py_Formulation>()},

@@ -65,11 +65,11 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         }
         if (type_name == "bmi_fortran") {
 
-            #ifdef NGEN_BMI_FORTRAN_ACTIVE
+            #ifdef NGEN_WITH_BMI_FORTRAN
             module = init_nested_module<Bmi_Fortran_Formulation>(i, identifier, formulation_config.at("params").get_values());
-            #else // NGEN_BMI_FORTRAN_ACTIVE
+            #else
             inactive_type_requested = true;
-            #endif // NGEN_BMI_FORTRAN_ACTIVE
+            #endif
         }
         if (type_name == "bmi_python") {
             #ifdef ACTIVATE_PYTHON
