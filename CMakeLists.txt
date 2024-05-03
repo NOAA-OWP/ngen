@@ -216,8 +216,6 @@ endif()
 # -----------------------------------------------------------------------------
 # Handle several steps for BMI C library logic and dependencies, at top level, if functionality is turned on
 if(NGEN_WITH_BMI_C)
-    add_compile_definitions(NGEN_BMI_C_LIB_ACTIVE)
-
     if(NGEN_WITH_EXTERN_TOPMODEL)
         add_external_subdirectory(
             SOURCE     "${NGEN_EXT_DIR}/topmodel"
