@@ -465,11 +465,11 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     setupExampleDataCollections();
 
     /* ********************************** First example scenario (Fortran / C) ********************************** */
-    #ifndef NGEN_WITH_BMI_C
+    #if !NGEN_WITH_BMI_C
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI C functionality active" SOURCE_LOC);
     #endif // NGEN_WITH_BMI_C
 
-    #ifndef NGEN_WITH_BMI_FORTRAN
+    #if !NGEN_WITH_BMI_FORTRAN
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI Fortran functionality active" SOURCE_LOC);
     #endif // NGEN_WITH_BMI_FORTRAN
 
@@ -478,7 +478,7 @@ void Bmi_Multi_Formulation_Test::SetUp() {
 
     /* ********************************** Second example scenario ********************************** */
 
-    #ifndef NGEN_WITH_BMI_FORTRAN
+    #if !NGEN_WITH_BMI_FORTRAN
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Fortran functionality active" SOURCE_LOC);
     #endif // NGEN_WITH_BMI_FORTRAN
 
@@ -861,7 +861,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetIdAndCatchmentId) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
     ASSERT_EQ(formulation.get_id(), "cat-27");
     ASSERT_EQ(get_friend_catchment_id(formulation), "cat-27");
-    #ifdef NGEN_WITH_BMI_FORTRAN
+    #if NGEN_WITH_BMI_FORTRAN
     ASSERT_EQ(get_friend_nested_catchment_id<Bmi_Fortran_Formulation>(formulation, 0), "cat-27");
     #endif
     //ASSERT_EQ(formulation.get_catchment_id(), "id");
