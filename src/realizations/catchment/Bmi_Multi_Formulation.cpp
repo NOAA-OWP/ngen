@@ -59,7 +59,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             module = init_nested_module<Bmi_Cpp_Formulation>(i, identifier, formulation_config.at("params").get_values());
         }
         if (type_name == "bmi_c") {
-            #ifdef NGEN_WITH_BMI_C
+            #if NGEN_WITH_BMI_C
             module = init_nested_module<Bmi_C_Formulation>(i, identifier, formulation_config.at("params").get_values());
             #else
             inactive_type_requested = true;
