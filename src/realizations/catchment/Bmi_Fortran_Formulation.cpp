@@ -1,6 +1,6 @@
 #include <NGenConfig.h>
 
-#ifdef NGEN_WITH_BMI_FORTRAN
+#if NGEN_WITH_BMI_FORTRAN
 
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Constants.h"

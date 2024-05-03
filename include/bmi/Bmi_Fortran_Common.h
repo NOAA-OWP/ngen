@@ -3,7 +3,7 @@
 
 #include <NGenConfig.h>
 
-#ifdef NGEN_WITH_BMI_FORTRAN
+#if NGEN_WITH_BMI_FORTRAN
 
 /**
  * The extern free functions from the Nextgen common Fortran static library for integrating with Fortran BMI modules.

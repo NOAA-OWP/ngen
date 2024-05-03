@@ -3,7 +3,7 @@
 
 #include <NGenConfig.h>
 
-#ifdef NGEN_WITH_BMI_FORTRAN
+#if NGEN_WITH_BMI_FORTRAN
 
 #include "AbstractCLibBmiAdapter.hpp"
 #include "Bmi_Fortran_Common.h"
