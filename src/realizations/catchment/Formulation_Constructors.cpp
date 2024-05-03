@@ -33,7 +33,7 @@ namespace realization {
         {"bmi_c++", create_formulation_constructor<Bmi_Cpp_Formulation>()},
 #if NGEN_WITH_BMI_C
         {"bmi_c", create_formulation_constructor<Bmi_C_Formulation>()},
-#endif // NGEN_NGEN_WITH_BMI_C
+#endif // NGEN_WITH_BMI_C
 #if NGEN_WITH_BMI_FORTRAN
         {"bmi_fortran", create_formulation_constructor<Bmi_Fortran_Formulation>()},
 #endif // NGEN_WITH_BMI_FORTRAN

@@ -465,9 +465,9 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     setupExampleDataCollections();
 
     /* ********************************** First example scenario (Fortran / C) ********************************** */
-    #ifndef NGEN_NGEN_WITH_BMI_C
+    #ifndef NGEN_WITH_BMI_C
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI C functionality active" SOURCE_LOC);
-    #endif // NGEN_NGEN_WITH_BMI_C
+    #endif // NGEN_WITH_BMI_C
 
     #ifndef NGEN_WITH_BMI_FORTRAN
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI Fortran functionality active" SOURCE_LOC);
@@ -866,6 +866,6 @@ TEST_F(Bmi_Multi_Formulation_Test, GetIdAndCatchmentId) {
     #endif
     //ASSERT_EQ(formulation.get_catchment_id(), "id");
 }
-#endif // NGEN_NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || ACTIVATE_PYTHON
+#endif // NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_MULTI_FORMULATION_TEST_CPP
