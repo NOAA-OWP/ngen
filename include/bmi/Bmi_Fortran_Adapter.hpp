@@ -1,6 +1,8 @@
 #ifndef NGEN_BMI_FORTRAN_ADAPTER_HPP
 #define NGEN_BMI_FORTRAN_ADAPTER_HPP
 
+#include <NGenConfig.h>
+
 #ifdef NGEN_WITH_BMI_FORTRAN
 
 #include "AbstractCLibBmiAdapter.hpp"
