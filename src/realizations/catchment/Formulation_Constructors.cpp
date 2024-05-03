@@ -29,9 +29,9 @@ namespace realization {
 
     std::map<std::string, constructor> formulations = {
         {"bmi_c++", create_formulation_constructor<Bmi_Cpp_Formulation>()},
-#ifdef NGEN_BMI_C_LIB_ACTIVE
+#ifdef NGEN_NGEN_WITH_BMI_C
         {"bmi_c", create_formulation_constructor<Bmi_C_Formulation>()},
-#endif // NGEN_BMI_C_LIB_ACTIVE
+#endif // NGEN_NGEN_WITH_BMI_C
 #ifdef NGEN_BMI_FORTRAN_ACTIVE
         {"bmi_fortran", create_formulation_constructor<Bmi_Fortran_Formulation>()},
 #endif // NGEN_BMI_FORTRAN_ACTIVE

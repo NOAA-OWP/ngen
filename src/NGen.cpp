@@ -212,7 +212,7 @@ int main(int argc, char *argv[]) {
         #ifdef NGEN_BMI_FORTRAN_ACTIVE
         std::cout<<"  Fortran BMI enabled"<<std::endl;
         #endif
-        #ifdef NGEN_C_LIB_ACTIVE
+        #ifdef NGEN_WITH_BMI_C
         std::cout<<"  C BMI enabled"<<std::endl;
         #endif
         #ifdef ACTIVATE_PYTHON

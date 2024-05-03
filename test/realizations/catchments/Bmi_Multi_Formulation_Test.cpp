@@ -2,7 +2,7 @@
 #define NGEN_BMI_MULTI_FORMULATION_TEST_CPP
 
 // Don't bother with the rest if none of these are active (although what are we really doing here, then?)
-#if NGEN_BMI_C_LIB_ACTIVE || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
+#if NGEN_NGEN_WITH_BMI_C || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
 
 #include "all.h"
 #include "Bmi_Testing_Util.hpp"
@@ -463,9 +463,9 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     setupExampleDataCollections();
 
     /* ********************************** First example scenario (Fortran / C) ********************************** */
-    #ifndef NGEN_BMI_C_LIB_ACTIVE
+    #ifndef NGEN_NGEN_WITH_BMI_C
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI C functionality active" SOURCE_LOC);
-    #endif // NGEN_BMI_C_LIB_ACTIVE
+    #endif // NGEN_NGEN_WITH_BMI_C
 
     #ifndef NGEN_BMI_FORTRAN_ACTIVE
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI Fortran functionality active" SOURCE_LOC);
@@ -864,6 +864,6 @@ TEST_F(Bmi_Multi_Formulation_Test, GetIdAndCatchmentId) {
     #endif
     //ASSERT_EQ(formulation.get_catchment_id(), "id");
 }
-#endif // NGEN_BMI_C_LIB_ACTIVE || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
+#endif // NGEN_NGEN_WITH_BMI_C || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_MULTI_FORMULATION_TEST_CPP

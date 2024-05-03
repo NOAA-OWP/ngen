@@ -57,11 +57,11 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             module = init_nested_module<Bmi_Cpp_Formulation>(i, identifier, formulation_config.at("params").get_values());
         }
         if (type_name == "bmi_c") {
-            #ifdef NGEN_BMI_C_LIB_ACTIVE
+            #ifdef NGEN_NGEN_WITH_BMI_C
             module = init_nested_module<Bmi_C_Formulation>(i, identifier, formulation_config.at("params").get_values());
-            #else  // NGEN_BMI_C_LIB_ACTIVE
+            #else
             inactive_type_requested = true;
-            #endif // NGEN_BMI_C_LIB_ACTIVE
+            #endif
         }
         if (type_name == "bmi_fortran") {
 
