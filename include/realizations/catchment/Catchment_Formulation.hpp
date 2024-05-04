@@ -7,6 +7,8 @@
 #include <HY_CatchmentArea.hpp>
 #include "GenericDataProvider.hpp"
 
+#define DEFAULT_FORMULATION_OUTPUT_DELIMITER ","
+
 namespace realization {
 
     class Catchment_Formulation : public Formulation, public HY_CatchmentArea {
@@ -70,6 +72,26 @@ namespace realization {
             virtual std::string get_output_header_line(std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER) {
                 return "Total Discharge";
             }
+
+            /**
+             * Get a formatted line of output values for the given time step as a delimited string.
+             *
+             * This method is useful for preparing calculated data in a representation useful for output files, such as
+             * CSV files.
+             *
+             * The resulting string will contain calculated values for applicable output variables for the particular
+             * formulation, as determined for the given time step.  However, the string will not contain any
+             * representation of the time step itself.
+             *
+             * An empty string is returned if the time step value is not in the range of valid time steps for which there
+             * are calculated values for all variables.
+             *
+             * @param timestep The time step for which data is desired.
+             * @param delimiter The value delimiter for the string.
+             * @return A delimited string with all the output variable values for the given time step.
+             */
+            virtual std::string get_output_line_for_timestep(int timestep,
+                                                             std::string delimiter = DEFAULT_FORMULATION_OUTPUT_DELIMITER) = 0;
 
             /**
              * Execute the backing model formulation for the given time step, where it is of the specified size, and
