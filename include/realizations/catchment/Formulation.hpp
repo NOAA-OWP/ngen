@@ -48,7 +48,7 @@ namespace realization {
 
             virtual const std::vector<std::string>& get_required_parameters() = 0;
 
-            virtual geojson::PropertyMap interpret_parameters(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) {
+            geojson::PropertyMap interpret_parameters(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) {
                 geojson::PropertyMap options;
 
                 for (auto &formulation_parameter : config) {
@@ -68,7 +68,7 @@ namespace realization {
                 return options;
             }
 
-            virtual void validate_parameters(geojson::PropertyMap options) {
+            void validate_parameters(geojson::PropertyMap options) {
                 std::vector<std::string> missing_parameters;
                 std::vector<std::string> required_parameters = get_required_parameters();
 
