@@ -47,10 +47,6 @@ std::string Bmi_Fortran_Formulation::get_formulation_type() {
     return "bmi_fortran";
 }
 
-double Bmi_Fortran_Formulation::get_var_value_as_double(const std::string &var_name) {
-    return get_var_value_as_double(0, var_name);
-}
-
 double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const std::string &var_name) {
     auto model = std::dynamic_pointer_cast<models::bmi::Bmi_Fortran_Adapter>(get_bmi_model());
 

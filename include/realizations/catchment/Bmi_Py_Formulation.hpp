@@ -41,9 +41,8 @@ namespace realization {
 
         time_t convert_model_time(const double &model_time) override;
 
-        double get_var_value_as_double(const std::string &var_name) override;
-
         double get_var_value_as_double(const int &index, const std::string &var_name) override;
+        using Bmi_Formulation::get_var_value_as_double;
 
         /**
          * Test whether backing model has run BMI ``Initialize``.

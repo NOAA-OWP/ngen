@@ -69,18 +69,6 @@ namespace realization {
         }
 
         /**
-         * Get value for some BMI model variable.
-         *
-         * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
-         * is actual a single, scalar value.  Thus, it returns what is at index 0 of the array reference.
-         *
-         * @param index
-         * @param var_name
-         * @return
-         */
-        double get_var_value_as_double(const std::string& var_name) override;
-
-        /**
          * Get value for some BMI model variable at a specific index.
          *
          * Function gets the value for a provided variable, returned from the backing model as an array, and returns the
@@ -99,6 +87,7 @@ namespace realization {
          * @return
          */
         double get_var_value_as_double(const int& index, const std::string& var_name) override;
+        using Bmi_Formulation::get_var_value_as_double;
 
         /**
          * Test whether backing model has run BMI ``Initialize``.
