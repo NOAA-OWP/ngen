@@ -765,7 +765,7 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
 
     double dt = 3600.0;
 
-    for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation : manager) {
+    for (std::pair<std::string, std::shared_ptr<realization::Catchment_Formulation>> formulation : manager) {
         if (calculated_results.count(formulation.first) == 0) {
             calculated_results.emplace(formulation.first, std::map<long, double>());
         }
@@ -857,7 +857,7 @@ TEST_F(Formulation_Manager_Test, forcing_provider_specification) {
 
     std::vector<double> actual_results(expected_results.size());
 
-    for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation : manager) {
+    for (std::pair<std::string, std::shared_ptr<realization::Catchment_Formulation>> formulation : manager) {
         formulation.second->get_response(0, 3600);
     }
 
