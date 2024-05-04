@@ -67,7 +67,7 @@ namespace realization {
              *
              * @return An appropriate header line for this type.
              */
-            std::string get_output_header_line(std::string delimiter) override {
+            virtual std::string get_output_header_line(std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER) {
                 return "Total Discharge";
             }
 
