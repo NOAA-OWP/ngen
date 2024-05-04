@@ -302,21 +302,8 @@ namespace realization {
         /** The degree of precision in output values when converting to text. */
         int output_precision;
 
-        std::vector<std::string> OPTIONAL_PARAMETERS = {
-                BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,
-                BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,
-                BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
-                BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS,
-                BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END,
-                BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP,
-                BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE
-        };
-        std::vector<std::string> REQUIRED_PARAMETERS = {
-                BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
-                BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR,
-                BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE,
-                BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS
-        };
+        const static std::vector<std::string> OPTIONAL_PARAMETERS;
+        const static std::vector<std::string> REQUIRED_PARAMETERS;
 
         // Unit test access
         friend class ::Bmi_Formulation_Test;
