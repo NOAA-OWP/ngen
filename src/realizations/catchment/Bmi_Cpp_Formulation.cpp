@@ -45,10 +45,6 @@ std::shared_ptr<Bmi_Adapter> Bmi_Cpp_Formulation::construct_model(const geojson:
                     output);
 }
 
-double Bmi_Cpp_Formulation::get_var_value_as_double(const std::string& var_name) {
-    return get_var_value_as_double(0, var_name);
-}
-
 double Bmi_Cpp_Formulation::get_var_value_as_double(const int& index, const std::string& var_name) {
     // TODO: consider different way of handling (and how to document) cases like long double or unsigned long long that
     //  don't fit or might convert inappropriately

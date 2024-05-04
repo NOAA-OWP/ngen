@@ -46,9 +46,8 @@ namespace realization {
             return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));
         }
 
-        double get_var_value_as_double(const std::string &var_name) override;
-
         double get_var_value_as_double(const int &index, const std::string &var_name) override;
+        using Bmi_Formulation::get_var_value_as_double;
 
         friend class Bmi_Multi_Formulation;
 

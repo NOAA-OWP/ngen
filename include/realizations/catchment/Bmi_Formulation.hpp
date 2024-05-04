@@ -225,7 +225,7 @@ namespace realization {
          * @param var_name
          * @return
          */
-        virtual double get_var_value_as_double(const std::string& var_name) = 0;
+        double get_var_value_as_double(const std::string& var_name);
 
         /**
          * Get value for some BMI model variable at a specific index.

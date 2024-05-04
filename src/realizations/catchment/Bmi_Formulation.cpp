@@ -2,6 +2,10 @@
 
 namespace realization
 {
+    double Bmi_Formulation::get_var_value_as_double(const std::string& var_name) {
+        return this->get_var_value_as_double(0, var_name);
+    }
+
     const std::vector<std::string> Bmi_Formulation::OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,
                 BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,

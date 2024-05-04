@@ -532,20 +532,6 @@ namespace realization {
         void create_multi_formulation(geojson::PropertyMap properties, bool needs_param_validation);
 
         /**
-         * Get value for some BMI model variable.
-         *
-         * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
-         * is actual a single, scalar value.  Thus, it returns what is at index 0 of the array reference.
-         *
-         * @param index
-         * @param var_name
-         * @return
-         */
-        double get_var_value_as_double(const std::string &var_name) override {
-            return get_var_value_as_double(0, var_name);
-        }
-
-        /**
          * Get value for some BMI model variable at a specific index.
          *
          * Function gets the value for a provided variable, retrieving the variable array from the backing model of the
@@ -590,6 +576,7 @@ namespace realization {
                 // TODO: look at adjusting defs to move this function up in class hierarchy (or at least add TODO there)
             }
         }
+        using Bmi_Formulation::get_var_value_as_double;
 
         /**
          * Initialize the deferred associations with the providers in @ref deferredProviders.
