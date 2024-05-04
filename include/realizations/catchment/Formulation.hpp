@@ -39,20 +39,6 @@ namespace realization {
 
             // TODO: a convenience method for getting the actual time of calculated time steps (at least the last)
 
-            /**
-             * Execute the backing model formulation for the given time step, where it is of the specified size, and
-             * return the response output.
-             *
-             * Any inputs and additional parameters must be made available as instance members.
-             *
-             * Types should clearly document the details of their particular response output.
-             *
-             * @param t_index The index of the time step for which to run model calculations.
-             * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
-             * @return The response output of the model for this time step.
-             */
-            virtual double get_response(time_step_t t_index, time_step_t d_delta_s) = 0;
-
             std::string get_id() const {
                 return this->id;
             }

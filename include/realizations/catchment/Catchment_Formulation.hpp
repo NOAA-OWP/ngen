@@ -80,10 +80,10 @@ namespace realization {
              * Types should clearly document the details of their particular response output.
              *
              * @param t_index The index of the time step for which to run model calculations.
-             * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
+             * @param t_delta The duration, in seconds, of the time step for which to run model calculations.
              * @return The response output of the model for this time step.
              */
-            double get_response(time_step_t t_index, time_step_t t_delta) override = 0;
+            virtual double get_response(time_step_t t_index, time_step_t t_delta) override = 0;
 
             const std::vector<std::string>& get_required_parameters() override = 0;
 
