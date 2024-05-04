@@ -49,46 +49,6 @@ std::string Bmi_Py_Formulation::get_formulation_type() {
     return "bmi_py";
 }
 
-double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
-    if (get_bmi_model() == nullptr) {
-        throw std::runtime_error("Trying to process response of improperly created BMI Python formulation.");
-    }
-    if (t_index < 0) {
-        throw std::invalid_argument("Getting response of negative time step in BMI Python formulation is not allowed.");
-    }
-    // Use (next_time_step_index - 1) so that second call with current time step index still works
-    if (t_index < (next_time_step_index - 1)) {
-        // TODO: consider whether we should (optionally) store and return historic values
-        throw std::invalid_argument("Getting response of previous time step in BMI Python formulation is not allowed.");
-    }
-
-    // The time step delta size, expressed in the units internally used by the model
-    double t_delta_model_units = get_bmi_model()->convert_seconds_to_model_time((double)t_delta);
-    if (next_time_step_index <= t_index) {
-        double model_time = get_bmi_model()->GetCurrentTime();
-        // Also, before running, make sure this doesn't cause a problem with model end_time
-        if (!get_allow_model_exceed_end_time()) {
-            int total_time_steps_to_process = abs((int)t_index - next_time_step_index) + 1;
-            if (get_bmi_model()->GetEndTime() < (model_time + (t_delta_model_units * total_time_steps_to_process))) {
-                throw std::invalid_argument("Cannot process BMI Python formulation to get response of future time step "
-                                            "that exceeds model end time.");
-            }
-        }
-    }
-
-    while (next_time_step_index <= t_index) {
-        double model_initial_time = get_bmi_model()->GetCurrentTime();
-        set_model_inputs_prior_to_update(model_initial_time, t_delta);
-        if (t_delta_model_units == get_bmi_model()->GetTimeStep())
-            get_bmi_model()->Update();
-        else
-            get_bmi_model()->UpdateUntil(model_initial_time + t_delta_model_units);
-        // TODO: again, consider whether we should store any historic response, ts_delta, or other var values
-        next_time_step_index++;
-    }
-    return get_var_value_as_double( get_bmi_main_output_var());
-}
-
 double Bmi_Py_Formulation::get_var_value_as_double(const std::string &var_name) {
     return get_var_value_as_double(0, var_name);
 }

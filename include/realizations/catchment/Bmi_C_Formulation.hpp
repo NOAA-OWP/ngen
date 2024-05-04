@@ -18,42 +18,6 @@ namespace realization {
 
         std::string get_formulation_type() override;
 
-        /**
-         * Get the model response for a time step.
-         *
-         * Get the model response for the provided time step, executing the backing model formulation one or more times
-         * as needed.
-         *
-         * Function assumes the backing model has been fully initialized an that any additional input values have been
-         * applied.
-         *
-         * The function throws an error if the index of a previously processed time step is supplied, except if it is
-         * the last processed time step.  In that case, the appropriate value is returned as described below, but
-         * without executing any model update.
-         *
-         * Assuming updating to the implied time is valid for the model, the function executes one or more model updates
-         * to process future time steps for the necessary indexes.  Multiple time steps updates occur when the given
-         * future time step index is not the next time step index to be processed.  Regardless, all processed time steps
-         * have the size supplied in `t_delta`.
-         *
-         * However, it is possible to provide `t_index` and `t_delta` values that would result in the aggregate updates
-         * taking the model's time beyond its `end_time` value.  In such cases, if the formulation config indicates this
-         * model is not allow to exceed its set `end_time`, the function does not update the model and throws an error.
-         *
-         * The function will return the value of the primary output variable (see `get_bmi_main_output_var()`) for the
-         * given time step after the model has been updated to that point. The type returned will always be a `double`,
-         * with other numeric types being cast if necessary.
-         *
-         * The BMI spec requires for variable values to be passed to/from models via as arrays.  This function
-         * essentially  treats the variable array reference as if it were just a raw pointer and returns the `0`-th
-         * array value.
-         *
-         * @param t_index The index of the time step for which to run model calculations.
-         * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
-         * @return The total discharge of the model for the given time step.
-         */
-        double get_response(time_step_t t_index, time_step_t t_delta) override;
-
         bool is_bmi_input_variable(const std::string &var_name) override;
 
         bool is_bmi_output_variable(const std::string &var_name) override;
