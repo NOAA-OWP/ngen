@@ -191,31 +191,31 @@ To be added
 
 # Run Computation with Routing
 
-To run computation on CONUS with routing, we need to build the executable with routing option turned on. This can be done using the build script displayed in the [Build the Executable](#build-the-executable) and set `-DNGEN_WITH_ROUTING:BOOL=ON`. Make sure that Python is also on, and you can run the script to build the `ngen` executable.
+To run computation on CONUS with routing, we need to build the executable with the routing option turned on. This can be done using the build script displayed in the [Build the Executable](#build-the-executable) section, and ensure both `-DNGEN_WITH_PYTHON:BOOL=ON` and `-DNGEN_WITH_ROUTING:BOOL=ON` are enabled. Then, you can run the script to build the `ngen` executable.
 
-You also need to build the `t-route` submodule. First, as the automatically downloaded `t-route` is out of date, to get the latest version, you need to remove the old `t-route` and run `git clone https://github.com/NOAA-OWP/t-route` in the `extern` directory. For building `t-route` in general, we refer user to the documentation [PYTHON_ROUTING.md](PYTHON_ROUTING.md) for essential details. We just want to add some additional discussion here to make the process easier. Note that there are more than one ways to build the `t-route`. Do `cd t-route`, then run:
+You also need to build the `t-route` submodule. First, as the vendored `t-route` submodule is out of date, to get the latest version, you need to remove the old `t-route` and run `git clone https://github.com/NOAA-OWP/t-route` in the `extern` directory. For building `t-route` in general, we refer to the documentation [PYTHON_ROUTING.md](PYTHON_ROUTING.md) for essential details. We just want to add some additional discussion here to make the process easier. Note that there is more than one way to build `t-route`. Do `cd t-route`, then run:
 
 ```
 FC=mpif90 NETCDFINC=<path-to-netcdf-include-directory> ./compiler.sh
 ```
 
-This will let you to use the NetCDF library that you want to build `t-route`. Alternatively, you can edit the `compiler.sh` file, note these comment lines in the script:
+This will let you use the NetCDF library that you want to build `t-route`. Alternatively, you can edit the `compiler.sh` file, note these comment lines in the script:
 
 ```
 #if you have custom dynamic library paths, uncomment below and export them
 #export LD_LIBRARY_PATHS=<paths>:$LD_LIBRARY_PATHS
 ```
 
-You can uncomment the second line above and that put your NetCDF library in the path. In addition, change this line:
+You can uncomment the second line above and put your NetCDF library in the path. In addition, change this line:
 
 ```
-    export NETCDFINC=/usr/include/openmpi-x86_64/
+export NETCDFINC=/usr/include/openmpi-x86_64/
 ```
 
 to the path to your NetCDF include directory, i.e.
 
 ```
-    export NETCDFINC=<path to your NetCDF include directory>
+export NETCDFINC=<path to your NetCDF include directory>
 ```
 
 Then, run the command:
@@ -224,7 +224,7 @@ Then, run the command:
 FC=mpif90 ./compiler.sh
 ```
 
-After successfully building the `t-route`, you can run `ngen` with routing. Note that we have several realization configuration files and the `routing_config_CONUS.yaml` file for running `ngen` with routing. The realization configuration file and `routing_config_CONUS.yaml` specify where the input and output files are. For routing, we assume the existence of a `stream_output_dir` directory for writing output files. You need to do `mkdir stream_output_dir` before running `ngen`. With that, we can run an example with the command:
+After successfully building `t-route`, you can run `ngen` with routing. Note that we have several realization configuration files and the `routing_config_CONUS.yaml` file for running `ngen` with routing. The realization configuration file and `routing_config_CONUS.yaml` specify where the input and output files are. For routing, we assume the existence of a `stream_output_dir` directory for writing output files. You need to do `mkdir stream_output_dir` before running `ngen`. With that, we can run an example with the command:
 
 ```
 mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_trt.json conus_partition_32.json
@@ -240,5 +240,5 @@ In the following table, we display the CPU timing information for a few realizat
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_trt.json | 32 | 1069.8 | 4606.3 | 4474.1 | 10150.2 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe_trt.json | 32 | 2142.0 | 5632.4 | 4510.3 | 12284.7 |
 
-* trt - abrevitation for t-route
-* For all other abreviations, see [Resource Usage](#resource-usage).
+* trt - abbreviation for t-route
+* For all other abbreviations, see [Resource Usage](#resource-usage).
