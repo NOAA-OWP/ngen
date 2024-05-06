@@ -272,11 +272,6 @@ if(NGEN_WITH_PYTHON)
 endif()
 
 # -----------------------------------------------------------------------------
-if(NGEN_WITH_ROUTING)
-    add_compile_definitions(NGEN_ROUTING_ACTIVE)
-endif()
-
-# -----------------------------------------------------------------------------
 if(NGEN_QUIET)
     set(UDUNITS_QUIET true)
     add_compile_definitions(NGEN_QUIET)
