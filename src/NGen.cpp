@@ -41,7 +41,7 @@ bool is_subdivided_hydrofabric_wanted = false;
 // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
 int mpi_rank = 0;
 
-#ifdef NGEN_MPI_ACTIVE
+#if NGEN_WITH_MPI
 
 #ifndef MPI_HF_SUB_CLI_FLAG
 #define MPI_HF_SUB_CLI_FLAG "--subdivided-hydrofabric"
@@ -56,7 +56,7 @@ int mpi_rank = 0;
 
 std::string PARTITION_PATH = "";
 int mpi_num_procs;
-#endif // NGEN_MPI_ACTIVE
+#endif // NGEN_WITH_MPI
 
 #include <Layer.hpp>
 #include <SurfaceLayer.hpp>
@@ -203,7 +203,7 @@ int main(int argc, char *argv[]) {
           << ngen_VERSION_MAJOR << "."
           << ngen_VERSION_MINOR << "."
           << ngen_VERSION_PATCH << std::endl;
-        #ifdef NGEN_MPI_ACTIVE
+        #if NGEN_WITH_MPI
         std::cout<<"  Parallel build"<<std::endl;
         #endif
         #ifdef NETCDF_ACTIVE
@@ -251,7 +251,7 @@ int main(int argc, char *argv[]) {
         nexusDataFile = argv[3];
         REALIZATION_CONFIG_PATH = argv[5];
 
-        #ifdef NGEN_MPI_ACTIVE
+        #if NGEN_WITH_MPI
 
         // Initalize MPI
         MPI_Init(NULL, NULL);
@@ -275,13 +275,13 @@ int main(int argc, char *argv[]) {
                 exit(-1);
             }
         }
-        #endif // NGEN_MPI_ACTIVE
+        #endif // NGEN_WITH_MPI
 
         #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
         std::string pid_file_name = "./.ngen_pid";
-        #ifdef NGEN_MPI_ACTIVE
+        #if NGEN_WITH_MPI
         pid_file_name += "." + std::to_string(mpi_rank);
-        #endif // NGEN_MPI_ACTIVE
+        #endif // NGEN_WITH_MPI
         ofstream outfile;
         outfile.open(pid_file_name, ios::out | ios::trunc );
         outfile << getpid();
@@ -297,7 +297,7 @@ int main(int argc, char *argv[]) {
                 !utils::FileChecker::file_is_readable(nexusDataFile, "Nexus data") ||
                 !utils::FileChecker::file_is_readable(REALIZATION_CONFIG_PATH, "Realization config");
 
-        #ifdef NGEN_MPI_ACTIVE
+        #if NGEN_WITH_MPI
         if (!PARTITION_PATH.empty()) {
             error = error || !utils::FileChecker::file_is_readable(PARTITION_PATH, "Partition config");
         }
@@ -318,7 +318,7 @@ int main(int argc, char *argv[]) {
                 error = true;
             }
         }
-        #endif // NGEN_MPI_ACTIVE
+        #endif // NGEN_WITH_MPI
 
         if(error) exit(-1);
 
@@ -338,7 +338,7 @@ int main(int argc, char *argv[]) {
     //Read the collection of nexus
     std::cout << "Building Nexus collection" << std::endl;
     
-    #ifdef NGEN_MPI_ACTIVE
+    #if NGEN_WITH_MPI
     PartitionData local_data;
     if (mpi_num_procs > 1) {
         Partitions_Parser partition_parser(PARTITION_PATH);
@@ -356,7 +356,7 @@ int main(int argc, char *argv[]) {
         nexus_subset_ids = std::vector<std::string>(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
         catchment_subset_ids = std::vector<std::string>(local_data.catchment_ids.begin(), local_data.catchment_ids.end());
     }
-    #endif // NGEN_MPI_ACTIVE
+    #endif // NGEN_WITH_MPI
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
     geojson::GeoJSON nexus_collection;
@@ -416,7 +416,7 @@ int main(int argc, char *argv[]) {
     std::string link_key = "toid";
     nexus_collection->link_features_from_property(nullptr, &link_key);
 
-    #ifdef NGEN_MPI_ACTIVE
+    #if NGEN_WITH_MPI
     //mpirun with one processor without partition file
     if (mpi_num_procs == 1) {
         Partition_One partition_one;
@@ -437,7 +437,7 @@ int main(int argc, char *argv[]) {
 
     //Still hacking nexus output for the moment
     for(const auto& id : features.nexuses()) {
-        #ifdef NGEN_MPI_ACTIVE
+        #if NGEN_WITH_MPI
         if (mpi_num_procs > 1) {
             if (!features.is_remote_sender_nexus(id)) {
                 nexus_outfiles[id].open(manager->get_output_root() + id + "_output.csv", std::ios::trunc);
@@ -557,7 +557,7 @@ int main(int argc, char *argv[]) {
 
     } //done time
 
-#if NGEN_MPI_ACTIVE
+#if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
@@ -569,7 +569,7 @@ int main(int argc, char *argv[]) {
     auto time_done_simulation = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_simulation = time_done_simulation - time_done_init;
 
-#ifdef NGEN_MPI_ACTIVE
+#if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
@@ -604,7 +604,7 @@ int main(int argc, char *argv[]) {
                   << std::endl;
     }
 
-#ifdef NGEN_MPI_ACTIVE
+#if NGEN_WITH_MPI
     MPI_Finalize();
 #endif
 

@@ -1,11 +1,13 @@
 #ifndef __NGEN_LAYER__
 #define __NGEN_LAYER__
 
+#include <NGenConfig.h>
+
 #include "LayerData.hpp"
 #include "Simulation_Time.hpp"
 #include "State_Exception.hpp"
 
-#ifdef NGEN_MPI_ACTIVE
+#if NGEN_WITH_MPI
 #include "HY_Features_MPI.hpp"
 #else
 #include "HY_Features.hpp"
@@ -18,7 +20,7 @@ namespace ngen
     {    
         public:
 
-        #ifdef NGEN_MPI_ACTIVE
+        #if NGEN_WITH_MPI
             using feature_type = hy_features::HY_Features_MPI;
         #else
             using feature_type = hy_features::HY_Features;

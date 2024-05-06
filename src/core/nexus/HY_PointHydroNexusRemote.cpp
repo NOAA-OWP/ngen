@@ -2,7 +2,7 @@
 #include "Constants.h"
 
 
-#ifdef NGEN_MPI_ACTIVE
+#if NGEN_WITH_MPI
 
 #include <HY_Features_Ids.hpp>
 #include <chrono>
@@ -281,4 +281,4 @@ int HY_PointHydroNexusRemote::get_world_rank()
    return world_rank;
 }
 
-#endif // NGEN_MPI_ACTIVE
+#endif // NGEN_WITH_MPI

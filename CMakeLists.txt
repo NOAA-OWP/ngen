@@ -139,7 +139,6 @@ endif()
 # If MPI support is enabled, set the C++ compiler to "mpicxx"
 if(NGEN_WITH_MPI)
     find_package(MPI REQUIRED)
-    add_compile_definitions(NGEN_MPI_ACTIVE)
 endif()
 
 # -----------------------------------------------------------------------------

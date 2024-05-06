@@ -1,7 +1,9 @@
 #ifndef HY_FEATURES_MPI_H
 #define HY_FEATURES_MPI_H
+
 //Only need this unit when using MPI.  It won't compile without other MPI dependent code.
-#ifdef NGEN_MPI_ACTIVE
+#include <NGenConfig.h>
+#if NGEN_WITH_MPI
 
 #include <unordered_map>
 #include <set>
@@ -94,5 +96,5 @@ namespace hy_features {
 
     };
 } 
-#endif //NGEN_MPI_ACTIVE
+#endif //NGEN_WITH_MPI
 #endif //HY_FEATURES_MPI_H
