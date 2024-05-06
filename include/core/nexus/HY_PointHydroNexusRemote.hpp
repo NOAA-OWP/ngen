@@ -1,7 +1,8 @@
 #ifndef HY_POINTHDRONEXUSREMOTE_H
 #define HY_POINTHDRONEXUSREMOTE_H
 
-#ifdef NGEN_MPI_ACTIVE
+#include <NGenConfig.h>
+#if NGEN_WITH_MPI
 
 #include <HY_PointHydroNexus.hpp>
 #include <HY_Features_Ids.hpp>
@@ -161,5 +162,5 @@ namespace std
 	}
 }
 
-#endif // NGEN_MPI_ACTIVE
+#endif // NGEN_WITH_MPI
 #endif // HY_POINTHYDRONEXUSREMOTEDOWNSTREAM_H

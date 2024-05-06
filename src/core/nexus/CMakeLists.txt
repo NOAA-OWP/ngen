@@ -16,6 +16,7 @@ target_include_directories(core_nexus PUBLIC
 
 target_link_libraries(core_nexus PUBLIC
         Boost::boost                # Headers-only Boost
+        NGen::config_header
         )
 
 if(NGEN_WITH_MPI)

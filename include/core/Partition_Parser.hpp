@@ -1,10 +1,6 @@
 #ifndef PARTITION_PARSER_H
 #define PARTITION_PARSER_H
 
-#ifdef NGEN_MPI_ACTIVE
-
-//#include <mpi.h>
-
 #include <memory>
 #include <sstream>
 #include <tuple>
@@ -182,5 +178,4 @@ class Partitions_Parser {
         boost::property_tree::ptree tree;
 };
 
-#endif // NGEN_MPI_ACTIVE
 #endif // PARTITION_PARSER_H

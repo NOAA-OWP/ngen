@@ -1,7 +1,8 @@
 #ifndef NGEN_PARALLEL_UTILS_H
 #define NGEN_PARALLEL_UTILS_H
 
-#ifdef NGEN_MPI_ACTIVE
+#include <NGenConfig.h>
+#if NGEN_WITH_MPI
 
 #ifndef MPI_HF_SUB_CODE_GOOD
 #define MPI_HF_SUB_CODE_GOOD 0
@@ -535,6 +536,6 @@ namespace parallel {
     }
 }
 
-#endif // NGEN_MPI_ACTIVE
+#endif // NGEN_WITH_MPI
 
 #endif //NGEN_PARALLEL_UTILS_H
