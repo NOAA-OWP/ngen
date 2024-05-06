@@ -1,6 +1,8 @@
 #ifndef NGEN_FORMULATION_MANAGER_H
 #define NGEN_FORMULATION_MANAGER_H
 
+#include <NGenConfig.h>
+
 #include <memory>
 #include <sstream>
 #include <tuple>
@@ -125,14 +127,14 @@ namespace realization {
                 if (possible_routing_configs) {
                     //Since it is possible to build NGEN without routing support, if we see it in the config
                     //but it isn't enabled in the build, we should at least put up a warning
-                #ifdef NGEN_ROUTING_ACTIVE
+                #if NGEN_WITH_ROUTING
                     this->routing_config = (config::Routing(*possible_routing_configs)).params;
                     using_routing = true;
                 #else
                     using_routing = false;
                     std::cerr<<"WARNING: Formulation Manager found routing configuration"
                              <<", but routing support isn't enabled. No routing will occur."<<std::endl;
-                #endif //NGEN_ROUTING_ACTIVE
+                #endif //NGEN_WITH_ROUTING
                  }
 
                 /**

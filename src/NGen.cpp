@@ -29,9 +29,9 @@
 #include "python/InterpreterUtil.hpp"
 #endif // ACTIVATE_PYTHON
     
-#ifdef NGEN_ROUTING_ACTIVE
+#if NGEN_WITH_ROUTING
 #include "routing/Routing_Py_Adapter.hpp"
-#endif // NGEN_ROUTING_ACTIVE
+#endif // NGEN_WITH_ROUTING
 
 std::string catchmentDataFile = "";
 std::string nexusDataFile = "";
@@ -219,7 +219,7 @@ int main(int argc, char *argv[]) {
         std::cout<<"  Python active"<<std::endl;
         std::cout<<"    Embedded interpreter version: "<<PY_MAJOR_VERSION<<"."<<PY_MINOR_VERSION<<"."<<PY_MICRO_VERSION<<std::endl;
         #endif
-        #ifdef NGEN_ROUTING_ACTIVE
+        #if NGEN_WITH_ROUTING
         std::cout<<"  Routing active"<<std::endl;
         #endif
         #ifdef ACTIVATE_PYTHON
@@ -398,7 +398,7 @@ int main(int argc, char *argv[]) {
 
     //TODO refactor manager->read so certain configs can be queried before the entire
     //realization collection is created
-    #ifdef NGEN_ROUTING_ACTIVE
+    #if NGEN_WITH_ROUTING
     std::unique_ptr<routing_py_adapter::Routing_Py_Adapter> router;
     if( mpi_rank == 0 )
     { // Run t-route from single process
@@ -411,7 +411,7 @@ int main(int argc, char *argv[]) {
       std::cout<<"Not Using Routing"<<std::endl;
     }
     }
-    #endif //NGEN_ROUTING_ACTIVE
+    #endif //NGEN_WITH_ROUTING
     std::cout<<"Building Feature Index" <<std::endl;;
     std::string link_key = "toid";
     nexus_collection->link_features_from_property(nullptr, &link_key);
@@ -573,7 +573,7 @@ int main(int argc, char *argv[]) {
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
-#ifdef NGEN_ROUTING_ACTIVE
+#if NGEN_WITH_ROUTING
     if (mpi_rank == 0)
     { // Run t-route from single process
         if(manager->get_using_routing()) {
@@ -598,7 +598,7 @@ int main(int argc, char *argv[]) {
         std::cout << "NGen top-level timings:"
                   << "\n\tNGen::init: " << time_elapsed_init.count()
                   << "\n\tNGen::simulation: " << time_elapsed_simulation.count()
-#ifdef NGEN_ROUTING_ACTIVE
+#if NGEN_WITH_ROUTING
                   << "\n\tNGen::routing: " << time_elapsed_routing.count()
 #endif
                   << std::endl;
