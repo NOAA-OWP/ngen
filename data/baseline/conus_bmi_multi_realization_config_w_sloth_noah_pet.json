@@ -32,7 +32,7 @@
                                 "model_type_name": "bmi_fortran_noahowp",
                                 "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi",
                                 "forcing_file": "",
-                                "init_config": "./data/bmi/fortran/noah-owp-modular-init-{{id}}.namelist.input",
+                                "init_config": "./conus_config/NoahOWP_{{id}}.namelist",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "QINSUR",
                                 "variables_names_map": {
