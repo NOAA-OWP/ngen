@@ -20,6 +20,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/range/algorithm/sort.hpp>
 
+#define WRITE_PID_FILE_FOR_GDB_SERVER
 #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
 #include <unistd.h>
 #endif // WRITE_PID_FILE_FOR_GDB_SERVER
@@ -278,18 +279,47 @@ int main(int argc, char *argv[]) {
         #endif // NGEN_MPI_ACTIVE
 
         #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
+        // Do some extra work if wanting to debug with GDB server, starting with writing the current PID to a file
         std::string pid_file_name = "./.ngen_pid";
+        std::string debugger_connect_wait_file = "./.ngen_gdb.wait";
         #ifdef NGEN_MPI_ACTIVE
+        // Make sure the PID file name is rank-specific if MPI is active
         pid_file_name += "." + std::to_string(mpi_rank);
         #endif // NGEN_MPI_ACTIVE
         ofstream outfile;
         outfile.open(pid_file_name, ios::out | ios::trunc );
         outfile << getpid();
         outfile.close();
+
+        // First wait for procs to be attached to gdbserver; expect PID file to be removed once its proc is attached.
         int total_time = 0;
+        int gdbserver_attach_max_wait = 5;
         while (utils::FileChecker::file_is_readable(pid_file_name) && total_time < 180) {
-            total_time += 30;
-            sleep(30);
+            total_time += gdbserver_attach_max_wait;
+            sleep(gdbserver_attach_max_wait);
+        }
+        // Now prep for and perform a wait while remote gdb debug connections are made from dev machine to gdbserver.
+        int remote_gdb_connections_max_wait = 120;
+        // Start by creating a sentinel file.
+        #ifdef NGEN_MPI_ACTIVE
+        // Since sentinel file write is only needed once per host, use rank-based delay to try to avoid extra writes.
+        // This is simpler than a lock, but not guaranteed to avoid duplicate writes (this isn't really a problem).
+        sleep((mpi_rank % 2 + mpi_rank % 3) * 2);
+        #endif // NGEN_MPI_ACTIVE
+        // Now create the sentinel file, assuming it isn't already there
+        if (!utils::FileChecker::file_is_readable(debugger_connect_wait_file)) {
+            outfile.open(debugger_connect_wait_file, ios::out | ios::trunc );
+            outfile << remote_gdb_connections_max_wait;
+            outfile.close();
+        }
+        #ifdef NGEN_MPI_ACTIVE
+        // Do make sure all writing of a wait file is done before proceeding
+        MPI_Barrier(MPI_COMM_WORLD);
+        #endif // NGEN_MPI_ACTIVE
+        // Now start post-gdbserver-has-attached wait (i.e., to give time for developer debug connections to be opened) until the local wait file is gone,  we reach the post_wait timeout
+        for (int i = 0; i < remote_gdb_connections_max_wait; ++i) {
+            if (!utils::FileChecker::file_is_readable(debugger_connect_wait_file)) { break; }
+            sleep(1);
         }
         #endif // WRITE_PID_FILE_FOR_GDB_SERVER
 

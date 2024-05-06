@@ -1,0 +1,5 @@
+cmake-*/
+cmake_*/
+**/cmake_*/
+./docker/dev_debug_ubuntu.Dockerfile
+./data/forcing
