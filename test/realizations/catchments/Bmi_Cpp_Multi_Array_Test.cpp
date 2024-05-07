@@ -47,7 +47,7 @@ protected:
     static double get_friend_nested_var_value(const Bmi_Multi_Formulation& formulation, const int mod_index,
                                          const std::string& var_name) {
         std::shared_ptr<N> nested = std::static_pointer_cast<N>(formulation.modules[mod_index]);
-        return nested->get_var_value_as_double(var_name);
+        return nested->get_var_value_as_double(0, var_name);
     }
 
     template <class N, class M>

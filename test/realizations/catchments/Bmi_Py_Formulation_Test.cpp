@@ -79,7 +79,7 @@ protected:
     }
 
     static double get_friend_var_value_as_double(Bmi_Py_Formulation& formulation, const std::string& var_name) {
-        return formulation.get_var_value_as_double(var_name);
+        return formulation.get_var_value_as_double(0, var_name);
     }
 
     static time_t parse_forcing_time(const std::string& date_time_str) {

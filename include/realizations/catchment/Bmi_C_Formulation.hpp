@@ -87,7 +87,6 @@ namespace realization {
          * @return
          */
         double get_var_value_as_double(const int& index, const std::string& var_name) override;
-        using Bmi_Formulation::get_var_value_as_double;
 
         /**
          * Test whether backing model has run BMI ``Initialize``.
