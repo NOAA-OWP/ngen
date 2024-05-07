@@ -195,8 +195,6 @@ if(NGEN_WITH_NETCDF)
         set(NetCDF_CXX_LIBRARY "${PROJECT_BINARY_DIR}/extern-libs/netcdf-cxx4/libnetcdf-cxx4.a")
         target_link_libraries(NetCDF INTERFACE netcdf-cxx4)
     endif()
-
-    add_compile_definitions(NETCDF_ACTIVE)
 endif()
 
 if(NGEN_WITH_EXTERN_SLOTH)

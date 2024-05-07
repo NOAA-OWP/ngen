@@ -15,6 +15,7 @@ target_include_directories(forcing PUBLIC
 
 target_link_libraries(forcing PUBLIC
         Boost::boost                # Headers-only Boost
+        NGen::config_header
         Threads::Threads
 )
 

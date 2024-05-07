@@ -206,7 +206,7 @@ int main(int argc, char *argv[]) {
         #if NGEN_WITH_MPI
         std::cout<<"  Parallel build"<<std::endl;
         #endif
-        #ifdef NETCDF_ACTIVE
+        #if NGEN_WITH_NETCDF
         std::cout<<"  NetCDF lumped forcing enabled"<<std::endl;
         #endif
         #if NGEN_WITH_BMI_FORTRAN
