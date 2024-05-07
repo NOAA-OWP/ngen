@@ -51,7 +51,7 @@ namespace realization {
     public:
 
         /**
-         * Minimal constructor for objects initialize using the Formulation_Manager and subsequent calls to
+         * Minimal constructor for objects initialized using the Formulation_Manager and subsequent calls to
          * ``create_formulation``.
          *
          * @param id
