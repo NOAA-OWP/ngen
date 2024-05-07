@@ -1,7 +1,5 @@
 #ifdef NGEN_BMI_PY_TESTS_ACTIVE
 
-#ifdef ACTIVATE_PYTHON
-
 #include "gtest/gtest.h"
 #include <vector>
 #include <exception>
@@ -1291,7 +1289,5 @@ TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridNodesPerFace_0_a) {
     */
     ASSERT_TRUE(false);
 }
-
-#endif // ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_PY_TESTS_ACTIVE

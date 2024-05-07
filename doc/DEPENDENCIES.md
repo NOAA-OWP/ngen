@@ -142,7 +142,7 @@ Further, the Python environment must have NumPy and a few other libraries instal
 
 It is possible to run the build, build artifacts, etc. in a way that excludes Python-related functionality, thereby relieving this as a dependency.  This may be useful in runtime environments that will not interact with a Python external model, and/or installing Python is prohibitively difficult.
 
-To do this, set either the `NGEN_ACTIVATE_PYTHON` environment variable to `false` or include the `-DNGEN_ACTIVATE_PYTHON:BOOL=false` option when running the `cmake` build on the command line to generate the build system.
+To do this, set either the `NGEN_WITH_PYTHON` environment variable to `false` or include the `-DNGEN_WITH_PYTHON:BOOL=false` option when running the `cmake` build on the command line to generate the build system.
 
 ### Setup
 

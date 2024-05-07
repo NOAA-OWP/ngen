@@ -1,7 +1,9 @@
 #ifndef NGEN_INTERPRETERUTIL_HPP
 #define NGEN_INTERPRETERUTIL_HPP
 
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
 
 #include <cstdlib>
 #include <map>
@@ -340,6 +342,6 @@ namespace utils {
     }
 }
 
-#endif // ACTIVATE_PYTHON
+#endif // NGEN_WITH_PYTHON
 
 #endif // NGEN_INTERPRETERUTIL_HPP

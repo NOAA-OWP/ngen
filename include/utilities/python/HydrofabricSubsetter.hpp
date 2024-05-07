@@ -1,7 +1,9 @@
 #ifndef NGEN_HYDROFABRICSUBSETTER_HPP
 #define NGEN_HYDROFABRICSUBSETTER_HPP
 
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
 
 #include <pybind11/embed.h>
 #include "InterpreterUtil.hpp"
@@ -36,7 +38,7 @@ namespace utils {
                     throw std::runtime_error(
                             "Cannot subdivided hydrofabric files: base nexus file " + nexusDataFile + " does not exist");
                 }
-                #ifdef ACTIVATE_PYTHON
+                #if NGEN_WITH_PYTHON
                 py::object Cli_Class = InterpreterUtil::getPyModule("dmod.subsetservice").attr("Cli");
                 py::object crosswalk_arg;
                 if (crosswalkDataFile.empty()) {
@@ -64,7 +66,7 @@ namespace utils {
                                  const std::string &partitionsConfigFile)
                     : HydrofabricSubsetter(catchmentDataFile, nexusDataFile, "", partitionsConfigFile) { }
 
-            #ifdef ACTIVATE_PYTHON
+            #if NGEN_WITH_PYTHON
             /**
              * Copy constructor.
              *
@@ -113,14 +115,14 @@ namespace utils {
                 return result;
             }
 
-            #endif // ACTIVATE_PYTHON
+            #endif // NGEN_WITH_PYTHON
 
         private:
             std::string catchmentDataFile;
             std::string crosswalkDataFile;
             std::string nexusDataFile;
             std::string partitionsConfigFile;
-            #ifdef ACTIVATE_PYTHON
+            #if NGEN_WITH_PYTHON
             py::object py_cli;
             #endif
 
@@ -128,6 +130,6 @@ namespace utils {
     }
 }
 
-#endif // ACTIVATE_PYTHON
+#endif // NGEN_WITH_PYTHON
 
 #endif //NGEN_HYDROFABRICSUBSETTER_HPP

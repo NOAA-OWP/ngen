@@ -24,10 +24,10 @@
 #include <unistd.h>
 #endif // WRITE_PID_FILE_FOR_GDB_SERVER
 
-#ifdef ACTIVATE_PYTHON
+#if NGEN_WITH_PYTHON
 #include <pybind11/embed.h>
 #include "python/InterpreterUtil.hpp"
-#endif // ACTIVATE_PYTHON
+#endif // NGEN_WITH_PYTHON
     
 #if NGEN_WITH_ROUTING
 #include "routing/Routing_Py_Adapter.hpp"
@@ -166,14 +166,14 @@ int main(int argc, char *argv[]) {
               << ngen_VERSION_PATCH << std::endl;
     std::ios::sync_with_stdio(false);
 
-    #ifdef ACTIVATE_PYTHON
+    #if NGEN_WITH_PYTHON
     // Start Python interpreter via the manager singleton
     // Need to bind to a variable so that the underlying reference count
     // is incremented, this essentially becomes the global reference to keep
     // the interpreter alive till the end of `main`
     auto _interp = utils::ngenPy::InterpreterUtil::getInstance();
     //utils::ngenPy::InterpreterUtil::getInstance();
-    #endif // ACTIVATE_PYTHON
+    #endif // NGEN_WITH_PYTHON
 
     //Pull a few "options" form the cli input, this is a temporary solution to CLI parsing!
     //Use "positional args"
@@ -215,14 +215,14 @@ int main(int argc, char *argv[]) {
         #if NGEN_WITH_BMI_C
         std::cout<<"  C BMI enabled"<<std::endl;
         #endif
-        #ifdef ACTIVATE_PYTHON
+        #if NGEN_WITH_PYTHON
         std::cout<<"  Python active"<<std::endl;
         std::cout<<"    Embedded interpreter version: "<<PY_MAJOR_VERSION<<"."<<PY_MINOR_VERSION<<"."<<PY_MICRO_VERSION<<std::endl;
         #endif
         #if NGEN_WITH_ROUTING
         std::cout<<"  Routing active"<<std::endl;
         #endif
-        #ifdef ACTIVATE_PYTHON
+        #if NGEN_WITH_PYTHON
         std::cout<<std::endl<<"Python Environment Info:"<<std::endl;
         std::cout<<"  VIRTUAL_ENV environment variable: "<<(std::getenv("VIRTUAL_ENV") == nullptr ? "(not set)" : std::getenv("VIRTUAL_ENV"))<<std::endl;
         std::cout<<"  Discovered venv: "<<_interp->getDiscoveredVenvPath()<<std::endl;

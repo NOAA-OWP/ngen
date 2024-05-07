@@ -1,4 +1,6 @@
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
 
 #include "python/InterpreterUtil.hpp"
 

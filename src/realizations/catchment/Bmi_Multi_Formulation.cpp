@@ -74,11 +74,11 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             #endif
         }
         if (type_name == "bmi_python") {
-            #ifdef ACTIVATE_PYTHON
+            #if NGEN_WITH_PYTHON
             module = init_nested_module<Bmi_Py_Formulation>(i, identifier, formulation_config.at("params").get_values());
-            #else // ACTIVATE_PYTHON
+            #else // NGEN_WITH_PYTHON
             inactive_type_requested = true;
-            #endif // ACTIVATE_PYTHON
+            #endif // NGEN_WITH_PYTHON
         }
         if (inactive_type_requested) {
             throw std::runtime_error(
