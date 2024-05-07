@@ -1,7 +1,5 @@
 #ifdef NGEN_BMI_PY_TESTS_ACTIVE
 
-#ifdef ACTIVATE_PYTHON
-
 #include "gtest/gtest.h"
 #include <boost/date_time.hpp>
 #include <boost/property_tree/ptree.hpp>
@@ -457,7 +455,5 @@ TEST_F(Bmi_Py_Formulation_Test, get_var_value_as_double_0_a) {
 
     ASSERT_EQ(value, retrieved);
 }
-
-#endif // ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_PY_TESTS_ACTIVE

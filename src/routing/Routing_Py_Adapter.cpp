@@ -1,4 +1,6 @@
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
 
 #include <exception>
 #include <utility>
@@ -64,4 +66,4 @@ void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time)
 }
 
 
-#endif //ACTIVATE_PYTHON
+#endif //NGEN_WITH_PYTHON

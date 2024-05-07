@@ -25,9 +25,9 @@
 #include <string>
 #include <set>
 #include <vector>
-#ifdef ACTIVATE_PYTHON
+#if NGEN_WITH_PYTHON
 #include "python/HydrofabricSubsetter.hpp"
-#endif // ACTIVATE_PYTHON
+#endif // NGEN_WITH_PYTHON
 
 namespace parallel {
 
@@ -476,7 +476,7 @@ namespace parallel {
         // Start with a value of true
         bool isGood = true;
 
-        #ifndef ACTIVATE_PYTHON
+        #if !NGEN_WITH_PYTHON
         // We can't be good to proceed with this, because Python is not active
         isGood = false;
         std::cerr << "Driver is unable to perform required hydrofabric subdividing when Python integration is not active." << std::endl;
@@ -486,7 +486,7 @@ namespace parallel {
         if (!mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, "initializing hydrofabric subdivider")) {
             return false;
         }
-        #else // i.e., #ifdef ACTIVATE_PYTHON
+        #else // i.e., #if NGEN_WITH_PYTHON
         // Have rank 0 handle the generation task for all files/partitions
         std::unique_ptr<utils::ngenPy::HydrofabricSubsetter> subdivider;
         // Have rank 0 handle the generation task for all files/partitions
@@ -532,7 +532,7 @@ namespace parallel {
                                                            mpi_num_procs, hostIdForRank.data(), true, true);
 
         }
-        #endif // ACTIVATE_PYTHON
+        #endif // NGEN_WITH_PYTHON
     }
 }
 

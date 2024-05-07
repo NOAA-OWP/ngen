@@ -1,4 +1,6 @@
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
 
 #include <exception>
 #include <utility>
@@ -226,4 +228,4 @@ void Bmi_Py_Adapter::UpdateUntil(double time) {
     bmi_model->attr("update_until")(time);
 }
 
-#endif //ACTIVATE_PYTHON
+#endif //NGEN_WITH_PYTHON

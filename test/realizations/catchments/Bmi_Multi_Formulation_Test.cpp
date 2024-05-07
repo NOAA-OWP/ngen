@@ -4,7 +4,7 @@
 #include <NGenConfig.h>
 
 // Don't bother with the rest if none of these are active (although what are we really doing here, then?)
-#if NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || ACTIVATE_PYTHON
+#if NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || NGEN_WITH_PYTHON
 
 #include "all.h"
 #include "Bmi_Testing_Util.hpp"
@@ -20,16 +20,16 @@
 #include "ConfigurationException.hpp"
 #include "FileChecker.h"
 
-#ifdef ACTIVATE_PYTHON
+#if NGEN_WITH_PYTHON
 #include "python/InterpreterUtil.hpp"
 using namespace utils::ngenPy;
-#endif // ACTIVATE_PYTHON
+#endif // NGEN_WITH_PYTHON
 
 using namespace realization;
 
 class Bmi_Multi_Formulation_Test : public ::testing::Test {
 private:
-#ifdef ACTIVATE_PYTHON
+#if NGEN_WITH_PYTHON
     static std::shared_ptr<InterpreterUtil> interperter;
 #endif
 protected:
@@ -437,17 +437,17 @@ private:
 
 };
 //Make sure the interperter is instansiated and lives throught the test class
-#ifdef ACTIVATE_PYTHON
+#if NGEN_WITH_PYTHON
 std::shared_ptr<InterpreterUtil> Bmi_Multi_Formulation_Test::interperter = InterpreterUtil::getInstance();
 #endif
 
 void Bmi_Multi_Formulation_Test::SetUpTestSuite() {
-    #ifdef ACTIVATE_PYTHON
+    #if NGEN_WITH_PYTHON
     std::string module_directory = "./extern/";
 
     // Add the extern dir with our test lib to Python system path
     InterpreterUtil::addToPyPath(module_directory);
-    #endif // ACTIVATE_PYTHON
+    #endif // NGEN_WITH_PYTHON
 }
 
 void Bmi_Multi_Formulation_Test::TearDown() {
@@ -482,9 +482,9 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Fortran functionality active" SOURCE_LOC);
     #endif // NGEN_WITH_BMI_FORTRAN
 
-    #ifndef ACTIVATE_PYTHON
+    #if !NGEN_WITH_PYTHON
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Python functionality active" SOURCE_LOC);
-    #endif // ACTIVATE_PYTHON
+    #endif // NGEN_WITH_PYTHON
     //This example is used to get getting output, but since we aren't initialize the test model grid just yet, need to specifiy only the variables to ask for
     //to avoid an index error if we try to get the grid data without properly intializing the grid
     //TODO This didn't seem to work: GetOutputLineForTimestep_1_a and GetOutputLineForTimestep_1_b both still try to query GRID_VAR output even though these were set
@@ -721,7 +721,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
 /* Note that a runtime check in SetUp() prevents this from executing when it can't, but
    this needs to be here to prevent compile-time errors if either of these flags is not
    enabled. */
-#if ACTIVATE_PYTHON && NGEN_WITH_BMI_FORTRAN
+#if NGEN_WITH_PYTHON && NGEN_WITH_BMI_FORTRAN
 
         int ex_index = 3;
 
@@ -742,7 +742,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
             }
         }
 
-#endif // ACTIVATE_PYTHON && NGEN_WITH_BMI_FORTRAN
+#endif // NGEN_WITH_PYTHON && NGEN_WITH_BMI_FORTRAN
 
     }
 
@@ -783,7 +783,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_0_b) {
 TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
 /* Note that a runtime check in SetUp() prevents this from executing when it can't, but
    this needs to be here to prevent compile-time errors if this flag is not enabled. */
-#if ACTIVATE_PYTHON
+#if NGEN_WITH_PYTHON
     int ex_index = 1;
 
     Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
@@ -801,7 +801,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.
     ASSERT_EQ(output, "0.000000,200620.000000,1.000000,2.000000,3.000000");
-#endif // ACTIVATE_PYTHON
+#endif // NGEN_WITH_PYTHON
 }
 
 /**
@@ -810,7 +810,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
 TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
 /* Note that a runtime check in SetUp() prevents this from executing when it can't, but
    this needs to be here to prevent compile-time errors if this flag is not enabled. */
-#if ACTIVATE_PYTHON
+#if NGEN_WITH_PYTHON
     int ex_index = 1;
 
     Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
@@ -831,7 +831,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.
     ASSERT_EQ(output, "0.000001,199280.000000,543.000000,2.000001,3.000001");
-#endif // ACTIVATE_PYTHON
+#endif // NGEN_WITH_PYTHON
 }
 
 /**
@@ -866,6 +866,6 @@ TEST_F(Bmi_Multi_Formulation_Test, GetIdAndCatchmentId) {
     #endif
     //ASSERT_EQ(formulation.get_catchment_id(), "id");
 }
-#endif // NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || ACTIVATE_PYTHON
+#endif // NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || NGEN_WITH_PYTHON
 
 #endif // NGEN_BMI_MULTI_FORMULATION_TEST_CPP

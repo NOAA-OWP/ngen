@@ -262,7 +262,6 @@ endif()
 
 # -----------------------------------------------------------------------------
 if(NGEN_WITH_PYTHON)
-    add_compile_definitions(ACTIVATE_PYTHON=true)
     find_package(Python 3.6.8 REQUIRED COMPONENTS Interpreter Development NumPy)
     set(PYTHON_EXECUTABLE ${Python_EXECUTABLE}) # Case-sensitive difference
     add_subdirectory(extern/pybind11 pybind11)

@@ -38,8 +38,8 @@ namespace realization {
         {"bmi_fortran", create_formulation_constructor<Bmi_Fortran_Formulation>()},
 #endif // NGEN_WITH_BMI_FORTRAN
         {"bmi_multi", create_formulation_constructor<Bmi_Multi_Formulation>()},
-#ifdef ACTIVATE_PYTHON
+#if NGEN_WITH_PYTHON
         {"bmi_python", create_formulation_constructor<Bmi_Py_Formulation>()},
-#endif // ACTIVATE_PYTHON
+#endif // NGEN_WITH_PYTHON
     };
 }

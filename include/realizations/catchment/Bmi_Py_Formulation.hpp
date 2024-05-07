@@ -1,7 +1,9 @@
 #ifndef NGEN_BMI_PY_FORMULATION_H
 #define NGEN_BMI_PY_FORMULATION_H
 
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
 
 #include <memory>
 #include <string>
@@ -101,6 +103,6 @@ namespace realization {
 
 }
 
-#endif //ACTIVATE_PYTHON
+#endif //NGEN_WITH_PYTHON
 
 #endif //NGEN_BMI_PY_FORMULATION_H

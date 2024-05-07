@@ -1,7 +1,9 @@
 #ifndef NGEN_BMI_PY_ADAPTER_H
 #define NGEN_BMI_PY_ADAPTER_H
 
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
 
 #include <cstring>
 #include <exception>
@@ -788,6 +790,6 @@ namespace models {
     }
 }
 
-#endif //ACTIVATE_PYTHON
+#endif //NGEN_WITH_PYTHON
 
 #endif //NGEN_BMI_PY_ADAPTER_H

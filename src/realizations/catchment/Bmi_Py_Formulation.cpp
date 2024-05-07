@@ -1,4 +1,6 @@
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
 
 #include "Bmi_Py_Formulation.hpp"
 
@@ -158,4 +160,4 @@ bool Bmi_Py_Formulation::is_model_initialized() {
     return get_bmi_model()->is_model_initialized();
 }
 
-#endif //ACTIVATE_PYTHON
+#endif //NGEN_WITH_PYTHON
