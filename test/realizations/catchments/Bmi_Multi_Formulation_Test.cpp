@@ -30,7 +30,7 @@ using namespace realization;
 class Bmi_Multi_Formulation_Test : public ::testing::Test {
 private:
 #if NGEN_WITH_PYTHON
-    static std::shared_ptr<InterpreterUtil> interperter;
+    static std::shared_ptr<InterpreterUtil> interpreter;
 #endif
 protected:
 
@@ -436,9 +436,9 @@ private:
 
 
 };
-//Make sure the interperter is instansiated and lives throught the test class
+//Make sure the interpreter is instansiated and lives throught the test class
 #if NGEN_WITH_PYTHON
-std::shared_ptr<InterpreterUtil> Bmi_Multi_Formulation_Test::interperter = InterpreterUtil::getInstance();
+std::shared_ptr<InterpreterUtil> Bmi_Multi_Formulation_Test::interpreter = InterpreterUtil::getInstance();
 #endif
 
 void Bmi_Multi_Formulation_Test::SetUpTestSuite() {
