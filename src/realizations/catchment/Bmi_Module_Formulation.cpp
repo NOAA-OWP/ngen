@@ -32,7 +32,7 @@ namespace realization {
             std::string output_str;
 
             for (const std::string& name : get_output_variable_names()) {
-                output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_value_as_double(name));
+                output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_value_as_double(0, name));
             }
             return output_str;
         }
@@ -75,7 +75,7 @@ namespace realization {
                 // TODO: again, consider whether we should store any historic response, ts_delta, or other var values
                 next_time_step_index++;
             }
-            return get_var_value_as_double( get_bmi_main_output_var());
+            return get_var_value_as_double(0, get_bmi_main_output_var());
         }
 
         time_t Bmi_Module_Formulation::get_variable_time_begin(const std::string &variable_name) {
@@ -201,7 +201,7 @@ namespace realization {
             if( !bmi_var_name.empty() )
             {
                 //Get forcing value from BMI variable
-                double value = get_var_value_as_double(bmi_var_name);
+                double value = get_var_value_as_double(0, bmi_var_name);
 
                 // Convert units
                 std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);

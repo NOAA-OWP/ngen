@@ -72,7 +72,7 @@ protected:
     }
 
     static double get_friend_var_value_as_double(Bmi_Fortran_Formulation& formulation, const std::string& var_name) {
-        return formulation.get_var_value_as_double(var_name);
+        return formulation.get_var_value_as_double(0, var_name);
     }
 
     static std::string get_friend_output_header_line(Bmi_Fortran_Formulation& formulation, std::string delim) {

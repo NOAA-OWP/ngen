@@ -576,7 +576,6 @@ namespace realization {
                 // TODO: look at adjusting defs to move this function up in class hierarchy (or at least add TODO there)
             }
         }
-        using Bmi_Formulation::get_var_value_as_double;
 
         /**
          * Initialize the deferred associations with the providers in @ref deferredProviders.
