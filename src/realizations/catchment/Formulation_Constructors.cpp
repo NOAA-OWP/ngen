@@ -17,7 +17,7 @@
 #include <GenericDataProvider.hpp>
 #include "CsvPerFeatureForcingProvider.hpp"
 #include "NullForcingProvider.hpp"
-#ifdef NETCDF_ACTIVE
+#if NGEN_WITH_NETCDF
     #include "NetCDFPerFeatureDataProvider.hpp"
 #endif
 

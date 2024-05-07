@@ -1,6 +1,8 @@
 #ifndef NGEN_FORMULATION_CONSTRUCTORS_H
 #define NGEN_FORMULATION_CONSTRUCTORS_H
 
+#include <NGenConfig.h>
+
 #include "Formulation.hpp"
 #include <JSONProperty.hpp>
 #include <exception>
@@ -13,7 +15,7 @@
 #include <GenericDataProvider.hpp>
 #include "CsvPerFeatureForcingProvider.hpp"
 #include "NullForcingProvider.hpp"
-#ifdef NETCDF_ACTIVE
+#if NGEN_WITH_NETCDF
     #include "NetCDFPerFeatureDataProvider.hpp"
 #endif
 
@@ -45,7 +47,7 @@ namespace realization {
         if (forcing_config.provider == "CsvPerFeature" || forcing_config.provider == ""){
             fp = std::make_shared<CsvPerFeatureForcingProvider>(forcing_config);
         }
-#ifdef NETCDF_ACTIVE
+#if NGEN_WITH_NETCDF
         else if (forcing_config.provider == "NetCDF"){
             fp = data_access::NetCDFPerFeatureDataProvider::get_shared_provider(forcing_config.path, forcing_config.simulation_start_t, forcing_config.simulation_end_t, output_stream);
         }

@@ -1,4 +1,6 @@
-#ifdef NETCDF_ACTIVE
+#include <NGenConfig.h>
+
+#if NGEN_WITH_NETCDF
 #include <vector>
 #include "gtest/gtest.h"
 #include "NetCDFPerFeatureDataProvider.hpp"

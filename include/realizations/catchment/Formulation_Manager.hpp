@@ -48,7 +48,7 @@ namespace realization {
             }
 
             virtual ~Formulation_Manager(){
-#ifdef NETCDF_ACTIVE
+#if NGEN_WITH_NETCDF
                 data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
 #endif
             };

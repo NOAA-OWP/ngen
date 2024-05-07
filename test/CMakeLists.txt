@@ -57,10 +57,6 @@ if(NGEN_WITH_ROUTING)
     add_compile_definitions(ROUTING_PYBIND_TESTS_ACTIVE)
 endif()
 
-if(NGEN_WITH_NETCDF)
-    add_compile_definitions(NETCDF_ACTIVE)
-endif()
-
 # =============================================================================
 
 add_executable(test_all)
@@ -415,7 +411,6 @@ ngen_add_test(
 )
 
 ########################### Netcdf Forcing Tests
-#if(NETCDF_ACTIVE)
 ngen_add_test(
     test_netcdf_forcing
     OBJECTS
@@ -430,7 +425,6 @@ ngen_add_test(
     REQUIRES
         NGEN_WITH_NETCDF
 )
-#endif()
 
 ########################## Primary Combined Unit Test Target
 ngen_add_test(
