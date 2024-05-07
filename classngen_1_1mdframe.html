@@ -159,6 +159,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ade3c60063140451b4b609319ed52fa23" id="r_ade3c60063140451b4b609319ed52fa23"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classngen_1_1mdframe.html#ade3c60063140451b4b609319ed52fa23">to_csv</a> (const std::string &amp;path, bool header=true) const</td></tr>
 <tr class="memdesc:ade3c60063140451b4b609319ed52fa23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write this mdframe to a CSV file.  <br /></td></tr>
 <tr class="separator:ade3c60063140451b4b609319ed52fa23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5937e85231da22f6fa6d8502601c1ed4" id="r_a5937e85231da22f6fa6d8502601c1ed4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classngen_1_1mdframe.html#a5937e85231da22f6fa6d8502601c1ed4">to_netcdf</a> (const std::string &amp;path) const</td></tr>
+<tr class="memdesc:a5937e85231da22f6fa6d8502601c1ed4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write this mdframe to a NetCDF file.  <br /></td></tr>
+<tr class="separator:a5937e85231da22f6fa6d8502601c1ed4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -773,6 +776,32 @@ false if the variables does <b>not</b> exist in this mdframe. </dd></dl>
 
 </div>
 </div>
+<a id="a5937e85231da22f6fa6d8502601c1ed4" name="a5937e85231da22f6fa6d8502601c1ed4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5937e85231da22f6fa6d8502601c1ed4">&#9670;&#160;</a></span>to_netcdf()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ngen::mdframe::to_netcdf </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write this mdframe to a NetCDF file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>File path to the output NetCDF </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="ac164cdeb2a28669afa33ad1af2beeea5" name="ac164cdeb2a28669afa33ad1af2beeea5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac164cdeb2a28669afa33ad1af2beeea5">&#9670;&#160;</a></span>m_dimensions</h2>
@@ -825,6 +854,7 @@ false if the variables does <b>not</b> exist in this mdframe. </dd></dl>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/utilities/mdframe/<a class="el" href="mdframe_2mdframe_8hpp_source.html">mdframe.hpp</a></li>
 <li>src/utilities/mdframe/<b>handler_csv.cpp</b></li>
+<li>src/utilities/mdframe/<b>handler_netcdf.cpp</b></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -832,7 +862,7 @@ false if the variables does <b>not</b> exist in this mdframe. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacengen.html">ngen</a></li><li class="navelem"><a class="el" href="classngen_1_1mdframe.html">mdframe</a></li>
-    <li class="footer">Generated on Wed May 1 2024 16:19:17 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Tue May 7 2024 20:22:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

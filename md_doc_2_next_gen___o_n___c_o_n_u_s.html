@@ -92,7 +92,7 @@ $(document).ready(function(){initNavTree('md_doc_2_next_gen___o_n___c_o_n_u_s.ht
   <div class="headertitle"><div class="title">NextGen on CONUS</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md191"></a> This documentation provides instructions on all neccessary steps and components to run NextGen jobs at CONUS scale. Considering the computation's large scale, we focus only on running parallel jobs using MPI.</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md187"></a> This documentation provides instructions on all neccessary steps and components to run NextGen jobs at CONUS scale. Considering the computation's large scale, we focus only on running parallel jobs using MPI.</p>
 <ul>
 <li>Summary</li>
 <li>Download the Codes</li>
@@ -106,20 +106,20 @@ $(document).ready(function(){initNavTree('md_doc_2_next_gen___o_n___c_o_n_u_s.ht
 <li>Run Computation with Topmodel</li>
 <li>Run Computation with Routing</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md192"></a>
+<h1><a class="anchor" id="autotoc_md188"></a>
 Summary</h1>
 <p>This is a tutorial-like documentation. We provide suficient details in the hope that by following this document step by step, you can run NextGen computations from simple to sophisticated realization that models simple test examples to realistic cases. Throughout this document, we assume a Linux operating system environment.</p>
-<h1><a class="anchor" id="autotoc_md193"></a>
+<h1><a class="anchor" id="autotoc_md189"></a>
 Download the Codes</h1>
 <p>To download the <code>ngen</code> source code, run the following commands:</p>
 <p><code>git clone <a href="https://github.com/NOAA-OWP/ngen.git">https://github.com/NOAA-OWP/ngen.git</a></code> <code>cd ngen</code></p>
 <p>Then we need all the submodule codes. So run the command below:</p>
 <p><code>git submodule update --init --recursive</code></p>
-<h1><a class="anchor" id="autotoc_md194"></a>
+<h1><a class="anchor" id="autotoc_md190"></a>
 Setting up the Environment</h1>
 <p>For setting up the build and computation environment, we refer the users to our documentation chapter <a class="el" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html">DEPENDENCIES.md</a> for details. Basically, you will need to have access to C/C++ compiler, MPI, Boost, NetCDF, Cmake, SQLite3. Some of them may already be on your system. Otherwise, you have to install your own version. There are also some required software packages that come with <code>ngen</code> as submodules, such as <code>Udunits libraries</code>, <code>pybind11</code>, and <code>iso_c_fortran_bmi</code>.</p>
 <p>You most likely need to use Python. For that we recommend setting up a virtual environment. For details, see <a class="el" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html">PYTHON_ROUTING.md</a>. After setting up the Python virtual environment and activating it, you may need install additional python modules depending on what <code>ngen</code> submodules you want to run.</p>
-<h1><a class="anchor" id="autotoc_md195"></a>
+<h1><a class="anchor" id="autotoc_md191"></a>
 Build the Executable</h1>
 <p>After setting up the environment variables, we need to first build the necessary dynamically linked libraries. Although <code>ngen</code> has the capability for automated building of submodule libraries, we build them explicitly so that users have a better understanding. For simplicity, we display the content a script which we name it <code>build_libs</code>.</p>
 <div class="fragment"><div class="line">cmake -B extern/sloth/cmake_build -S extern/sloth &amp;&amp; \</div>
@@ -169,21 +169,21 @@ Build the Executable</h1>
 <p>Suppose the above script is named <code>build_mpi</code>, execute the following command to build:</p>
 <p><code>source build_mpi</code></p>
 <p>This will build an executable in the <code>cmake_build_mpi</code> directory named <code>ngen</code> and another named <code>partitionGenerator</code> as well as all the unit tests in the <code>cmake_build_mpi/test</code>.</p>
-<h1><a class="anchor" id="autotoc_md196"></a>
+<h1><a class="anchor" id="autotoc_md192"></a>
 CONUS Hydrofabric</h1>
 <p>The CONUS hydrofabric is downloaded from <a href="https://www.lynker-spatial.com/#v20.1/">here</a>. The file name under the list is <code>conus.gpkg</code>. Note that since the data there is continually evolving, a newer version may be available in the future. When using a newer version, be mindful that the corresponding initial configuration file generation and validation for all submodules at CONUS scale is necessary, which may be a non-trivial process due to the sheer size of the spatial scale.</p>
 <p>As the file is fairly large, it is worth some consideration to store it in a proper place, then simply build a symbolic link in the <code>ngen</code> home directory, thus named <code>./hydrofabric/conus.gpkg</code>. Note the easiest way to create the symbolic link is to create a <code>hydrofabric</code> directory and then create a link to that directory.</p>
-<h1><a class="anchor" id="autotoc_md197"></a>
+<h1><a class="anchor" id="autotoc_md193"></a>
 Generate Partition For Parallel Computation</h1>
 <p>For parallel computation using MPI on hydrofabric, a partition generate tool is used to partition the hydrofabric features ids into a number of partitions equal to the number of MPI processing CPU cores. To generate the partition file, run the following command:</p>
 <div class="fragment"><div class="line">./cmake-build_mpi/partitionGenerator ./hydrofabric/conus.gpkg ./hydrofabric/conus.gpkg ./partition_config_32.json 32 &#39;&#39; &#39;&#39;</div>
 </div><!-- fragment --><p>In the command above, <code>conus.gpkg</code> is the NextGen hydrofabric version 2.01 for CONUS, <code>partition_config_32.json</code> is the partition file that contains all features ids and their interconnected network information. The number <code>32</code> is intended number of processing cores for running parallel build <code>ngen</code> using MPI. The last two empty strings, as indicated by &lsquo;&rsquo;'`, indicate there is no subsetting, i.e., we intend to run the whole CONUS hydrofabric.</p>
-<h1><a class="anchor" id="autotoc_md198"></a>
+<h1><a class="anchor" id="autotoc_md194"></a>
 Prepare the Input Data</h1>
 <p>Input data includes the forcing data and initial parameter data for various submodules. These depend on what best suits the user's need. For our case, as of this documentation, beside forcing data, which can be accessed at <code>./forcing/NextGen_forcing_2016010100.nc</code> using the symbolic link scheme, we also generated initial input data for various submodules <code>noah-owp-modular</code>, <code>PET</code>, <code>CFE</code>, <code>SoilMoistureProfiles (SMP)</code>, <code>SoilFreezeThaw (SFT)</code>. The first three are located in <code>./conus_config/</code>, the SMP initial configs are located in <code>./conus_smp_configs/</code> and the SFT initial configs are located in <code>./conus_sft_configs/</code>.</p>
 <p>For code used to generate the initial config files for the various modules, the interested users are directed to this <a href="https://github.com/NOAA-OWP/ngen-cal/tree/master/python/ngen_config_gen">web location</a>.</p>
 <p>The users are warned that since the simulated region is large, some of the initial config parameters values for some catchments may be unsuitable and cause the <code>ngen</code> execution to stop due to errors. Usually, in such cases, either <code>ngen</code> or the submodule itself may provide some hint as to the catchment ids or the location of the code that caused the error. Users may follow these hints to figure out as to which initial input parameter or parameters are initialized with inappropriate values. In the case of SFT, an initial value of <code>smcmax=1.0</code> would be too large. In the case of SMP, an initial value of <code>b=0.01</code> would be too small, for example.</p>
-<h1><a class="anchor" id="autotoc_md199"></a>
+<h1><a class="anchor" id="autotoc_md195"></a>
 Build the Realization Configurations</h1>
 <p>The realization configuration file, in JSON format, contains high level information to run a <code>ngen</code> simulation, such as interconnected submodules, paths to forcing file, shared libraries, initialization parameters, duration of simulation, I/O variables, etc. We have built the realization configurations for several commonly used submodules which are located in <code>data/baseline/</code>. These are built by adding one submodule at a time, performing a test run for a 10 day simulation. The successive submodules used are:</p>
 <div class="fragment"><div class="line">sloth (conus_bmi_multi_realization_config_w_sloth.json)</div>
@@ -193,7 +193,7 @@ Build the Realization Configurations</h1>
 <div class="line">sloth+noah-owp-modular+pet+smp (conus_bmi_multi_realization_config_w_sloth_noah_pet_smp.json)</div>
 <div class="line">sloth+noah-owp-modular+pet+smp+sft (conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft.json)</div>
 <div class="line">sloth+noah-owp-modular+pet+smp+sft+cfe (conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json)</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md200"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md196"></a>
 Run Computations with Submodules</h1>
 <p>With all preparation steps completed, we are now ready to run computations. We use MPI as our parallel processing application with 32 cores as an example. Users are free to choose whatever number cores they want, just make sure you will need to have the appropriate corresponding partition JSON file for the number of cores used. The command line for running a MPI job is as follows:</p>
 <p>For a simple example run and quick turn around, you can run:</p>
@@ -203,10 +203,10 @@ Run Computations with Submodules</h1>
 </div><!-- fragment --><p>For an example taking into account more realistic contributions, you can try: </p><div class="fragment"><div class="line">mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg &#39;&#39; ./hydrofabric/conus.gpkg &#39;&#39; data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json conus_partition_32.json</div>
 </div><!-- fragment --><p>where <code>ngen</code> is the executable we build in the Building the Executable section. All other terms have been discussed above in details. With the current existing realization config files, the above jobs run 10 days simulation time on CONUS scale.</p>
 <p>Be aware that the above commands will generate over a million output files associated with catchment and nexus ids. In the realization config files used above, we have specified a directory <code>./output_dir/</code> to store these files. If you <code>cd</code> to <code>./output_dir</code> and issue a <code>ls</code> command, it will be significantly slower than usual to list all the file names. You can choose a different output file directory name than <code>./output_dir/</code> by modifying the directory name in the realization configuration file if you prefer. Note that you need to create the output file directory before running the executable.</p>
-<h1><a class="anchor" id="autotoc_md201"></a>
+<h1><a class="anchor" id="autotoc_md197"></a>
 Run Computation with Topmodel</h1>
 <p>To be added</p>
-<h1><a class="anchor" id="autotoc_md202"></a>
+<h1><a class="anchor" id="autotoc_md198"></a>
 Run Computation with Routing</h1>
 <p>To be added </p>
 </div></div><!-- contents -->
@@ -215,7 +215,7 @@ Run Computation with Routing</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed May 1 2024 16:19:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Tue May 7 2024 20:22:15 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

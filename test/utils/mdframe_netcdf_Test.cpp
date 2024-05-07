@@ -1,6 +1,8 @@
+#include <NGenConfig.h>
+
 #include "gtest/gtest.h"
 
-#if NETCDF_ACTIVE
+#if NGEN_WITH_NETCDF
 #include <netcdf>
 #endif
 
@@ -36,7 +38,7 @@ class mdframe_netcdf_Test : public ::testing::Test
 // TODO: Convert to test fixture for setup/teardown members.
 TEST_F(mdframe_netcdf_Test, io_netcdf)
 {
-#if !NETCDF_ACTIVE
+#if !NGEN_WITH_NETCDF
     GTEST_SKIP() << "NetCDF is not available";
 #else
 

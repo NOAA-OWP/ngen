@@ -1,7 +1,7 @@
 <map id="ngen::mdframe" name="ngen::mdframe">
-<area shape="rect" id="Node000001" title="A multi&#45;dimensional, tagged data frame." alt="" coords="94,1350,213,1615"/>
+<area shape="rect" id="Node000001" title="A multi&#45;dimensional, tagged data frame." alt="" coords="94,1350,213,1635"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="56,626,205,721"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,721,131,921,136,1183,144,1333,139,1334,130,1183,126,922,127,721"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,721,131,921,136,1183,144,1333,138,1334,130,1183,126,922,127,721"/>
 <area shape="rect" id="Node000003" href="$structngen_1_1detail_1_1dimension.html" title="Dimension Key." alt="" coords="455,263,598,548"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="457,541,445,551,426,562,407,567,374,568,339,567,299,575,253,595,210,619,208,615,251,590,297,570,339,562,374,563,407,562,424,557,443,546,454,537"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="407,634,527,714"/>
@@ -20,7 +20,7 @@
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="145,185,123,225,102,293,89,357,84,356,97,292,118,223,140,182"/>
 <area shape="rect" id="Node000013" title=" " alt="" coords="179,366,304,446"/>
 <area shape="poly" id="edge16_Node000013_Node000007" title=" " alt="" coords="166,196,224,349,219,351,161,198"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="286,1288,224,1380,220,1377,281,1285"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="287,1288,224,1386,220,1383,282,1285"/>
 <area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="405,1081,341,1194,337,1191,400,1079"/>
 <area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="469,713,469,767,464,767,464,713"/>
 <area shape="rect" id="Node000011" title=" " alt="" coords="329,373,431,438"/>

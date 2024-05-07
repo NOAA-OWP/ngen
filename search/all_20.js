@@ -46,6 +46,7 @@ var searchData=
   ['_7enexus_5fmanager_43',['~Nexus_Manager',['../classnexus_1_1_nexus___manager.html#a1a4c6caeb232db5742533f8b7c93a2d9',1,'nexus::Nexus_Manager']]],
   ['_7enexus_5fremote_5ftest_44',['~Nexus_Remote_Test',['../class_nexus___remote___test.html#a022b70071c3a3871db87f6cb7a45615c',1,'Nexus_Remote_Test']]],
   ['_7enexus_5ftest_45',['~Nexus_Test',['../class_nexus___test.html#ab052527da35d97d184f6cd5a476efd36',1,'Nexus_Test']]],
-  ['_7estreamhandler_46',['~StreamHandler',['../classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354',1,'utils::StreamHandler']]],
-  ['_7eunitshelper_5ftest_47',['~UnitsHelper_Test',['../class_units_helper___test.html#ac342c365275e4173691ab84e9b76b5a5',1,'UnitsHelper_Test']]]
+  ['_7epartitions_5fparser_46',['~Partitions_Parser',['../class_partitions___parser.html#a31cd926a275c0d00b45b14d076231234',1,'Partitions_Parser']]],
+  ['_7estreamhandler_47',['~StreamHandler',['../classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354',1,'utils::StreamHandler']]],
+  ['_7eunitshelper_5ftest_48',['~UnitsHelper_Test',['../class_units_helper___test.html#ac342c365275e4173691ab84e9b76b5a5',1,'UnitsHelper_Test']]]
 ];

@@ -7,7 +7,7 @@ var searchData=
   ['catchment_5fdata_4',['catchment_data',['../classngen_1_1_layer.html#a5689db4f3999584bea58d99aa9ff8b15',1,'ngen::Layer']]],
   ['catchment_5fdata_5fpath_5',['catchment_data_path',['../class_multi_layer_parser_test.html#a2bf4076015e6c95f57f0b1259a7288b3',1,'MultiLayerParserTest']]],
   ['catchment_5fid_6',['catchment_id',['../class_csv_per_feature_forcing_provider.html#ab132ab280175f5c23349e3bbb41cdeec',1,'CsvPerFeatureForcingProvider']]],
-  ['catchment_5fids_7',['catchment_ids',['../struct_partition_data.html#aa3afc6bc9ece49dd9c25c502b5720a94',1,'PartitionData']]],
+  ['catchment_5fids_7',['catchment_ids',['../struct_partition_data.html#aa3afc6bc9ece49dd9c25c502b5720a94',1,'PartitionData::catchment_ids'],['../class_partitions___parser.html#a83284ac74ac5813cba05b0dada2d3003',1,'Partitions_Parser::catchment_ids']]],
   ['catchments_8',['catchments',['../class_network___test.html#a8fffb927a17d6c6b6a3730aaf0bb8e36',1,'Network_Test']]],
   ['coastal_9',['coastal',['../namespacehy__features_1_1identifiers.html#aa41df7d5d5d4baffe215700861885dc9',1,'hy_features::identifiers']]],
   ['complete_5fjson_5ffile_10',['complete_json_file',['../class_nexus___test.html#a141e0165625e2647bbe2af0a005ac59a',1,'Nexus_Test']]],

@@ -18,6 +18,7 @@ var classngen_1_1mdframe =
     [ "has_variable", "classngen_1_1mdframe.html#a5325430ba075edd56a7d833e5be45ad1", null ],
     [ "operator[]", "classngen_1_1mdframe.html#a2bfacbe7fd8dcbb8319b2431d03de743", null ],
     [ "to_csv", "classngen_1_1mdframe.html#ade3c60063140451b4b609319ed52fa23", null ],
+    [ "to_netcdf", "classngen_1_1mdframe.html#a5937e85231da22f6fa6d8502601c1ed4", null ],
     [ "m_dimensions", "classngen_1_1mdframe.html#ac164cdeb2a28669afa33ad1af2beeea5", null ],
     [ "m_variables", "classngen_1_1mdframe.html#a791692f9692232df311ad1bf01f797f3", null ]
 ];

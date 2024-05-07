@@ -210,7 +210,7 @@ Python 3 Libraries</h2>
 <h4><a class="anchor" id="autotoc_md146"></a>
 Overriding Python Dependency</h4>
 <p>It is possible to run the build, build artifacts, etc. in a way that excludes Python-related functionality, thereby relieving this as a dependency. This may be useful in runtime environments that will not interact with a Python external model, and/or installing Python is prohibitively difficult.</p>
-<p>To do this, set either the <code>NGEN_ACTIVATE_PYTHON</code> environment variable to <code>false</code> or include the <code>-DNGEN_ACTIVATE_PYTHON:BOOL=false</code> option when running the <code>cmake</code> build on the command line to generate the build system.</p>
+<p>To do this, set either the <code>NGEN_WITH_PYTHON</code> environment variable to <code>false</code> or include the <code>-DNGEN_WITH_PYTHON:BOOL=false</code> option when running the <code>cmake</code> build on the command line to generate the build system.</p>
 <h3><a class="anchor" id="autotoc_md147"></a>
 Setup</h3>
 <p>The first step is to make sure Python is installed. NGen's CMake will use its <a href="https://cmake.org/cmake/help/v3.19/module/FindPython.html#module:FindPython">FindPython</a> functionality to locate the Python installation.</p>
@@ -267,7 +267,7 @@ Setup</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed May 1 2024 16:19:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Tue May 7 2024 20:22:15 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

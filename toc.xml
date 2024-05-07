@@ -239,103 +239,97 @@
   <topic label="Definitions" href="md_doc_2glossary.html">
     <topic label="References" href="md_doc_2glossary.html#autotoc_md184"/>
   </topic>
-  <topic label="LSTM Model" href="md_doc_2_l_s_t_m___m_o_d_e_l.html">
-    <topic label="Summary" href="md_doc_2_l_s_t_m___m_o_d_e_l.html#autotoc_md186"/>
-    <topic label="Formulation Config" href="md_doc_2_l_s_t_m___m_o_d_e_l.html#autotoc_md187">
-      <topic label="Required Parameters" href="md_doc_2_l_s_t_m___m_o_d_e_l.html#autotoc_md188"/>
-    </topic>
-  </topic>
   <topic label="MPI Remote Nexus" href="md_doc_2_m_p_i___r_e_m_o_t_e___n_e_x_u_s.html">
-    <topic label="Summary" href="md_doc_2_m_p_i___r_e_m_o_t_e___n_e_x_u_s.html#autotoc_md190"/>
+    <topic label="Summary" href="md_doc_2_m_p_i___r_e_m_o_t_e___n_e_x_u_s.html#autotoc_md186"/>
   </topic>
   <topic label="NextGen on CONUS" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html">
-    <topic label="Summary" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md192"/>
-    <topic label="Download the Codes" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md193"/>
-    <topic label="Setting up the Environment" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md194"/>
-    <topic label="Build the Executable" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md195"/>
-    <topic label="CONUS Hydrofabric" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md196"/>
-    <topic label="Generate Partition For Parallel Computation" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md197"/>
-    <topic label="Prepare the Input Data" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md198"/>
-    <topic label="Build the Realization Configurations" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md199"/>
-    <topic label="Run Computations with Submodules" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md200"/>
-    <topic label="Run Computation with Topmodel" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md201"/>
-    <topic label="Run Computation with Routing" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md202"/>
+    <topic label="Summary" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md188"/>
+    <topic label="Download the Codes" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md189"/>
+    <topic label="Setting up the Environment" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md190"/>
+    <topic label="Build the Executable" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md191"/>
+    <topic label="CONUS Hydrofabric" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md192"/>
+    <topic label="Generate Partition For Parallel Computation" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md193"/>
+    <topic label="Prepare the Input Data" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md194"/>
+    <topic label="Build the Realization Configurations" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md195"/>
+    <topic label="Run Computations with Submodules" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md196"/>
+    <topic label="Run Computation with Topmodel" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md197"/>
+    <topic label="Run Computation with Routing" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md198"/>
   </topic>
   <topic label="Precision guidelines for validation of NGEN code translation and upgrades" href="md_doc_2_precision___guidelines__for___ngen___code___validation.html"/>
   <topic label="Standards for Programming" href="md_doc_2programming__standards.html">
-    <topic label="Source Documentation" href="md_doc_2programming__standards.html#autotoc_md205"/>
-    <topic label="Naming" href="md_doc_2programming__standards.html#autotoc_md206">
-        <topic label="Bad Variable Names:" href="md_doc_2programming__standards.html#autotoc_md207"/>
-        <topic label="General Guidelines" href="md_doc_2programming__standards.html#autotoc_md208"/>
+    <topic label="Source Documentation" href="md_doc_2programming__standards.html#autotoc_md201"/>
+    <topic label="Naming" href="md_doc_2programming__standards.html#autotoc_md202">
+        <topic label="Bad Variable Names:" href="md_doc_2programming__standards.html#autotoc_md203"/>
+        <topic label="General Guidelines" href="md_doc_2programming__standards.html#autotoc_md204"/>
     </topic>
-    <topic label="Other" href="md_doc_2programming__standards.html#autotoc_md209">
-      <topic label="Headers" href="md_doc_2programming__standards.html#autotoc_md210"/>
-      <topic label="Spaces vs Tabs" href="md_doc_2programming__standards.html#autotoc_md211"/>
-      <topic label="Braces" href="md_doc_2programming__standards.html#autotoc_md212"/>
-      <topic label="Line Width" href="md_doc_2programming__standards.html#autotoc_md213"/>
+    <topic label="Other" href="md_doc_2programming__standards.html#autotoc_md205">
+      <topic label="Headers" href="md_doc_2programming__standards.html#autotoc_md206"/>
+      <topic label="Spaces vs Tabs" href="md_doc_2programming__standards.html#autotoc_md207"/>
+      <topic label="Braces" href="md_doc_2programming__standards.html#autotoc_md208"/>
+      <topic label="Line Width" href="md_doc_2programming__standards.html#autotoc_md209"/>
     </topic>
   </topic>
   <topic label="Python Routing" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html">
-    <topic label="Summary" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md215"/>
-    <topic label="Setup Virtual Environment" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md216"/>
-    <topic label="Install t-route" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md217"/>
-    <topic label="Installation Caveats" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md218">
-      <topic label="Compilers and Libraries" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md219"/>
-      <topic label="Default installation is in development mode (impacts macOS)" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md220"/>
-      <topic label="Some tips on installation if you run into issues" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md221"/>
+    <topic label="Summary" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md211"/>
+    <topic label="Setup Virtual Environment" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md212"/>
+    <topic label="Install t-route" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md213"/>
+    <topic label="Installation Caveats" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md214">
+      <topic label="Compilers and Libraries" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md215"/>
+      <topic label="Default installation is in development mode (impacts macOS)" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md216"/>
+      <topic label="Some tips on installation if you run into issues" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md217"/>
     </topic>
-    <topic label="Using t-route with ngen" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md222">
-      <topic label="Realization Config" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md223"/>
-      <topic label="Routing Config" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md224"/>
-      <topic label="Configuration considerations for t-route with ngen" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md225"/>
+    <topic label="Using t-route with ngen" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md218">
+      <topic label="Realization Config" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md219"/>
+      <topic label="Routing Config" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md220"/>
+      <topic label="Configuration considerations for t-route with ngen" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md221"/>
     </topic>
-    <topic label="Running t-route separately with ngen output" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md226"/>
-    <topic label="Known issues" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md227">
-      <topic label="Cleanup of &lt;tt&gt;*.parquet&lt;/tt&gt; files required" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md228"/>
-      <topic label="Bug in multiprocessing on macOS" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md229"/>
+    <topic label="Running t-route separately with ngen output" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md222"/>
+    <topic label="Known issues" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md223">
+      <topic label="Cleanup of &lt;tt&gt;*.parquet&lt;/tt&gt; files required" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md224"/>
+      <topic label="Bug in multiprocessing on macOS" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md225"/>
     </topic>
   </topic>
   <topic label="Realization Configuration" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html"/>
   <topic label="&lt;a href=&quot;https://docs.opengeospatial.org/is/14-111r6/14-111r6.html&quot; &gt;HY_Features&lt;/a&gt;" href="md_doc_2references.html">
-    <topic label="&lt;a href=&quot;https://bmi-spec.readthedocs.io/en/latest/&quot; &gt;BMI&lt;/a&gt;" href="md_doc_2references.html#autotoc_md232"/>
-    <topic label="Formulations" href="md_doc_2references.html#autotoc_md233"/>
-    <topic label="HYMOD" href="md_doc_2references.html#autotoc_md234"/>
-    <topic label="T-shirt" href="md_doc_2references.html#autotoc_md235"/>
-    <topic label="GIUH" href="md_doc_2references.html#autotoc_md236">
-      <topic label="Modeling References" href="md_doc_2references.html#autotoc_md237"/>
+    <topic label="&lt;a href=&quot;https://bmi-spec.readthedocs.io/en/latest/&quot; &gt;BMI&lt;/a&gt;" href="md_doc_2references.html#autotoc_md228"/>
+    <topic label="Formulations" href="md_doc_2references.html#autotoc_md229"/>
+    <topic label="HYMOD" href="md_doc_2references.html#autotoc_md230"/>
+    <topic label="T-shirt" href="md_doc_2references.html#autotoc_md231"/>
+    <topic label="GIUH" href="md_doc_2references.html#autotoc_md232">
+      <topic label="Modeling References" href="md_doc_2references.html#autotoc_md233"/>
     </topic>
   </topic>
   <topic label="Installation instructions" href="md__i_n_s_t_a_l_l.html">
-    <topic label="Building and running with docker:" href="md__i_n_s_t_a_l_l.html#autotoc_md240"/>
-    <topic label="Building manually:" href="md__i_n_s_t_a_l_l.html#autotoc_md241"/>
+    <topic label="Building and running with docker:" href="md__i_n_s_t_a_l_l.html#autotoc_md236"/>
+    <topic label="Building manually:" href="md__i_n_s_t_a_l_l.html#autotoc_md237"/>
   </topic>
   <topic label="Guidance on how to contribute" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html">
-    <topic label="Using the issue tracker" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md244"/>
-    <topic label="Changing the code-base" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md245"/>
+    <topic label="Using the issue tracker" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md240"/>
+    <topic label="Changing the code-base" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md241"/>
   </topic>
   <topic label="Disclaimer" href="md__t_e_r_m_s.html">
-      <topic label="Other Information" href="md__t_e_r_m_s.html#autotoc_md247"/>
-    <topic label="Exceptions" href="md__t_e_r_m_s.html#autotoc_md248"/>
+      <topic label="Other Information" href="md__t_e_r_m_s.html#autotoc_md243"/>
+    <topic label="Exceptions" href="md__t_e_r_m_s.html#autotoc_md244"/>
   </topic>
   <topic label="Testing" href="md_test_2_r_e_a_d_m_e.html">
-    <topic label="Testing Frameworks" href="md_test_2_r_e_a_d_m_e.html#autotoc_md250">
-      <topic label="&lt;strong&gt;Google Test&lt;/strong&gt;" href="md_test_2_r_e_a_d_m_e.html#autotoc_md251">
-        <topic label="(Re)generating CMake Project Buildsystem" href="md_test_2_r_e_a_d_m_e.html#autotoc_md252"/>
+    <topic label="Testing Frameworks" href="md_test_2_r_e_a_d_m_e.html#autotoc_md246">
+      <topic label="&lt;strong&gt;Google Test&lt;/strong&gt;" href="md_test_2_r_e_a_d_m_e.html#autotoc_md247">
+        <topic label="(Re)generating CMake Project Buildsystem" href="md_test_2_r_e_a_d_m_e.html#autotoc_md248"/>
       </topic>
     </topic>
-    <topic label="Executing Automated Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md253">
-      <topic label="C++ Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md254">
-        <topic label="Test Targets and Executables" href="md_test_2_r_e_a_d_m_e.html#autotoc_md255"/>
+    <topic label="Executing Automated Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md249">
+      <topic label="C++ Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md250">
+        <topic label="Test Targets and Executables" href="md_test_2_r_e_a_d_m_e.html#autotoc_md251"/>
       </topic>
     </topic>
-    <topic label="Creating New Automated Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md256">
-      <topic label="Adding Tests to CMake Builds" href="md_test_2_r_e_a_d_m_e.html#autotoc_md257"/>
-      <topic label="Test Creation Rules of Thumb" href="md_test_2_r_e_a_d_m_e.html#autotoc_md258">
-          <topic label="Test Work Before Push or PR" href="md_test_2_r_e_a_d_m_e.html#autotoc_md259"/>
-          <topic label="Separate Test Types in Separate Files" href="md_test_2_r_e_a_d_m_e.html#autotoc_md260"/>
-          <topic label="Use Analogous Names" href="md_test_2_r_e_a_d_m_e.html#autotoc_md261"/>
-          <topic label="Use Analogous Paths" href="md_test_2_r_e_a_d_m_e.html#autotoc_md262"/>
-          <topic label="Keep Unit Test Assertions to a Minimum" href="md_test_2_r_e_a_d_m_e.html#autotoc_md263"/>
+    <topic label="Creating New Automated Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md252">
+      <topic label="Adding Tests to CMake Builds" href="md_test_2_r_e_a_d_m_e.html#autotoc_md253"/>
+      <topic label="Test Creation Rules of Thumb" href="md_test_2_r_e_a_d_m_e.html#autotoc_md254">
+          <topic label="Test Work Before Push or PR" href="md_test_2_r_e_a_d_m_e.html#autotoc_md255"/>
+          <topic label="Separate Test Types in Separate Files" href="md_test_2_r_e_a_d_m_e.html#autotoc_md256"/>
+          <topic label="Use Analogous Names" href="md_test_2_r_e_a_d_m_e.html#autotoc_md257"/>
+          <topic label="Use Analogous Paths" href="md_test_2_r_e_a_d_m_e.html#autotoc_md258"/>
+          <topic label="Keep Unit Test Assertions to a Minimum" href="md_test_2_r_e_a_d_m_e.html#autotoc_md259"/>
       </topic>
     </topic>
   </topic>
@@ -2032,6 +2026,7 @@
           <topic label="has_variable" href="classngen_1_1mdframe.html#a5325430ba075edd56a7d833e5be45ad1"/>
           <topic label="operator[]" href="classngen_1_1mdframe.html#a2bfacbe7fd8dcbb8319b2431d03de743"/>
           <topic label="to_csv" href="classngen_1_1mdframe.html#ade3c60063140451b4b609319ed52fa23"/>
+          <topic label="to_netcdf" href="classngen_1_1mdframe.html#a5937e85231da22f6fa6d8502601c1ed4"/>
           <topic label="m_dimensions" href="classngen_1_1mdframe.html#ac164cdeb2a28669afa33ad1af2beeea5"/>
           <topic label="m_variables" href="classngen_1_1mdframe.html#a791692f9692232df311ad1bf01f797f3"/>
         </topic>
@@ -4248,6 +4243,7 @@
           <topic label="has_variable" href="classngen_1_1mdframe.html#a5325430ba075edd56a7d833e5be45ad1"/>
           <topic label="operator[]" href="classngen_1_1mdframe.html#a2bfacbe7fd8dcbb8319b2431d03de743"/>
           <topic label="to_csv" href="classngen_1_1mdframe.html#ade3c60063140451b4b609319ed52fa23"/>
+          <topic label="to_netcdf" href="classngen_1_1mdframe.html#a5937e85231da22f6fa6d8502601c1ed4"/>
           <topic label="m_dimensions" href="classngen_1_1mdframe.html#ac164cdeb2a28669afa33ad1af2beeea5"/>
           <topic label="m_variables" href="classngen_1_1mdframe.html#a791692f9692232df311ad1bf01f797f3"/>
         </topic>
@@ -5418,6 +5414,21 @@
         <topic label="nexus_ids" href="struct_partition_data.html#ace7481bdd629019f1f88b883932e69c9"/>
         <topic label="remote_connections" href="struct_partition_data.html#ab6b6b1f8ce6428004510e2ed6512ec9a"/>
       </topic>
+      <topic label="Partitions_Parser" href="class_partitions___parser.html">
+        <topic label="Partitions_Parser" href="class_partitions___parser.html#a499e4585ca462c14892b788bf2da10f9"/>
+        <topic label="Partitions_Parser" href="class_partitions___parser.html#ae7a44cd17e24bc06fec1aec7bc49f233"/>
+        <topic label="~Partitions_Parser" href="class_partitions___parser.html#a31cd926a275c0d00b45b14d076231234"/>
+        <topic label="get_mpi_rank" href="class_partitions___parser.html#a772bbf34bdcb23c6156981080e87f9f1"/>
+        <topic label="get_partition_struct" href="class_partitions___parser.html#a72cddafaad8fa12aa5a5a344d8dcc0c7"/>
+        <topic label="parse_partition_file" href="class_partitions___parser.html#a1667ab474aa0daa3530a42f31d89da45"/>
+        <topic label="catchment_ids" href="class_partitions___parser.html#a83284ac74ac5813cba05b0dada2d3003"/>
+        <topic label="mpi_world_rank" href="class_partitions___parser.html#a08d58c929fc40cc52b9a8337a6f9a9d2"/>
+        <topic label="nexus_ids" href="class_partitions___parser.html#a6a46163b60b747bae3140e7a0725012b"/>
+        <topic label="partition_ranks" href="class_partitions___parser.html#a77192e7019935a3740a6d275b3912ad7"/>
+        <topic label="remote_connections" href="class_partitions___parser.html#af72e01eb6a3d712e2d8e5ccd9e94de87"/>
+        <topic label="remote_tuple" href="class_partitions___parser.html#aa37cfde3d5f16a122f81a9f44cf7e491"/>
+        <topic label="tree" href="class_partitions___parser.html#aa8a46b738112a567324898164372cce9"/>
+      </topic>
       <topic label="request_from_empty_nexus" href="structrequest__from__empty__nexus.html">
         <topic label="what" href="structrequest__from__empty__nexus.html#abca7c44aaf8b4582bc5067d53930011d"/>
       </topic>
@@ -5688,6 +5699,7 @@
       <topic label="ngen::traits::type_list&lt; Ts &gt;" href="structngen_1_1traits_1_1type__list.html"/>
       <topic label="Partition_One" href="class_partition___one.html"/>
       <topic label="PartitionData" href="struct_partition_data.html"/>
+      <topic label="Partitions_Parser" href="class_partitions___parser.html"/>
       <topic label="realization::config::Config" href="structrealization_1_1config_1_1_config.html"/>
       <topic label="realization::config::Forcing" href="structrealization_1_1config_1_1_forcing.html"/>
       <topic label="realization::config::Formulation" href="structrealization_1_1config_1_1_formulation.html"/>
