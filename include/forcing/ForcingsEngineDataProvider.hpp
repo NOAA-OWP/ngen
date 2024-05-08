@@ -80,6 +80,11 @@ struct ForcingsEngineDataProvider
         return (epoch - time_begin_) / time_step_;
     }
 
+    // Temporary (?) function to clear out instances of this type.
+    static void finalize_all() {
+        instances_.clear();
+    }
+
     /* Remaining virtual member functions from DataProvider must be implemented
        by derived classes. */
 
@@ -115,11 +120,6 @@ struct ForcingsEngineDataProvider
     template<typename Callable>
     static ForcingsEngineDataProvider* set_instance(const std::string& init, Callable&& f)
     {
-        std::unique_ptr<ForcingsEngineDataProvider> tmp = nullptr;
-        if (instances_[init] != nullptr) {
-            tmp = std::move(instances_[init]);
-        }
-      
         instances_[init] = f(init);
         return instances_[init].get();
     }

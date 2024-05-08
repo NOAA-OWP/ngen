@@ -32,6 +32,8 @@ Provider::ForcingsEngineLumpedDataProvider(
   : BaseProvider(init, time_begin_seconds, time_end_seconds)
 {
 
+    // Check that CAT-ID is an available output name, otherwise we most likely aren't
+    // running the correct configuration of the forcings engine for this class.
     const auto outputs = this->get_available_variable_names();
     if (std::find(outputs.begin(), outputs.end(), "CAT-ID") == outputs.end()) {
         throw std::runtime_error{
@@ -40,12 +42,14 @@ Provider::ForcingsEngineLumpedDataProvider(
         };
     }
 
+    // Initialize the value cache
     const auto id_dim   = static_cast<std::size_t>(bmi_->GetVarNbytes("CAT-ID") / bmi_->GetVarItemsize("CAT-ID"));
     const auto var_dim  = get_available_variable_names().size();
 
     bmi_->Update();
     this->increment_time();
     
+    // Copy CAT-ID values into instance vector
     const auto* ptr = static_cast<int*>(bmi_->GetValuePtr("CAT-ID"));
     var_divides_ = std::vector<int>(ptr, ptr + id_dim);
     var_cache_ = decltype(var_cache_){{ 2, id_dim, var_dim }};
@@ -190,7 +194,7 @@ double Provider::get_value(
 {
     const auto start = clock_type::from_time_t(selector.get_init_time());
     const auto end = std::chrono::seconds{selector.get_duration_secs()} + start;
-    const auto step  = std::chrono::seconds{this->record_duration()};
+    const auto step = std::chrono::seconds{this->record_duration()};
     const std::string id = selector.get_id();
     const std::string var = selector.get_variable_name();
 
@@ -231,6 +235,7 @@ std::vector<double> Provider::get_values(
     const std::string var = selector.get_variable_name();
 
     std::vector<double> values;
+    values.reserve((end - start) / step);
     for (auto current_time = start; current_time < end; current_time += step) {
         values.push_back(this->at(id, var));
     }

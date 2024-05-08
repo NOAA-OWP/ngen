@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "ForcingsEngineDataProvider.hpp"
 #include "NGenConfig.h"
 #if NGEN_WITH_MPI
 #include <mpi.h>
@@ -7,7 +8,7 @@
 
 #include "AorcForcing.hpp"
 #include "DataProvider.hpp"
-#include "ForcingsEngineDataProvider.hpp"
+#include "ForcingsEngineLumpedDataProvider.hpp"
 #include "utilities/python/InterpreterUtil.hpp"
 
 #include <boost/range/combine.hpp>
@@ -25,7 +26,7 @@ class ForcingsEngineDataProviderTest : public testing::Test
     // Compile-time data
     static constexpr const char* config_file = "extern/ngen-forcing/NextGen_Forcings_Engine_BMI/NextGen_Forcings_Engine/config.yml";
     static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_;
-    static data_access::ForcingsEngineDataProvider         provider;
+    static data_access::ForcingsEngineLumpedDataProvider*   provider;
     static mpi_info                                        mpi;
     forcing_params                                         params;
 
@@ -47,14 +48,18 @@ class ForcingsEngineDataProviderTest : public testing::Test
         #endif
 
         ForcingsEngineDataProviderTest::gil_ = utils::ngenPy::InterpreterUtil::getInstance();
-        ForcingsEngineDataProviderTest::provider = { config_file, "2024-01-17 01:00:00", "2024-01-17 06:00:00" };
+        ForcingsEngineDataProviderTest::provider = data_access::ForcingsEngineLumpedDataProvider{
+            config_file,
+            "2024-01-17 01:00:00",
+            "2024-01-17 06:00:00"
+        };
 
-        data_access::ForcingsEngine::check_runtime_requirements();
+        data_access::assert_forcings_engine_requirements();
     }
 
     static void TearDownTestSuite()
     {
-        data_access::ForcingsEngine::finalize_all();
+        data_access::ForcingsEngineLumpedDataProvider::finalize_all();
         gil_.reset();
 
         #if NGEN_WITH_MPI
@@ -64,23 +69,19 @@ class ForcingsEngineDataProviderTest : public testing::Test
 };
 
 std::shared_ptr<utils::ngenPy::InterpreterUtil> ForcingsEngineDataProviderTest::gil_{};
-data_access::ForcingsEngineDataProvider ForcingsEngineDataProviderTest::provider{};
+data_access::ForcingsEngineLumpedDataProvider* ForcingsEngineDataProviderTest::provider{};
 mpi_info ForcingsEngineDataProviderTest::mpi{};
 
 TEST_F(ForcingsEngineDataProviderTest, Engine)
 {
     std::cout << "Getting instance\n";
-    auto& inst = data_access::ForcingsEngine::instance(
-        config_file,
-        provider.get_data_start_time(),
-        provider.get_data_stop_time()
-    );
+    data_access::ForcingsEngineLumpedDataProvider inst{config_file, 0, 3600};
     std::cout << "Got instance\n";
 
     EXPECT_EQ(inst.variable_index("U2D_ELEMENT"), 0);
     EXPECT_EQ(inst.variable_index("Q2D_ELEMENT"), 5);
     EXPECT_EQ(inst.divide_index("cat-1015786"), 13868);
-    EXPECT_EQ(inst.time_step(), std::chrono::seconds{3600});
+    EXPECT_EQ(inst.record_duration(), 3600);
 }
 
 // Tests that the forcings engine data provider correctly indexes epochs
