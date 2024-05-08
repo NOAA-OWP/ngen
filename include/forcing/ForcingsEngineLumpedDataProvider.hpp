@@ -31,16 +31,6 @@ struct ForcingsEngineLumpedDataProvider
 
     std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
-  private:
-
-    /**
-     * @brief Update to next timestep.
-     * 
-     * @return true
-     * @return false 
-     */
-    bool next();
-
     /**
      * @brief Get the index in `CAT-ID` for a given divide in the instance cache.
      * @note The `CAT-ID` output variable uses integer values instead of strings.
@@ -57,6 +47,16 @@ struct ForcingsEngineLumpedDataProvider
      * @return size_type 
      */
     std::size_t variable_index(const std::string& variable) noexcept;
+
+  private:
+
+    /**
+     * @brief Update to next timestep.
+     * 
+     * @return true
+     * @return false 
+     */
+    bool next();
 
     /**
      * @brief Get a forcing value from the instance
