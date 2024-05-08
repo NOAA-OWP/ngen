@@ -16,32 +16,13 @@ namespace data_access {
  */
 void assert_forcings_engine_requirements();
 
-template<typename data_type, typename selection_type>
+template<typename DataType, typename SelectionType>
 struct ForcingsEngineDataProvider
-  : public DataProvider<data_type, selection_type>
+  : public DataProvider<DataType, SelectionType>
 {
+    using data_type = DataType;
+    using selection_type = SelectionType;
     using clock_type = std::chrono::system_clock;
-
-    ForcingsEngineDataProvider(
-      const std::string& init,
-      std::size_t time_begin_seconds,
-      std::size_t time_end_seconds
-    )
-      : time_begin_(std::chrono::seconds{time_begin_seconds})
-      , time_end_(std::chrono::seconds{time_end_seconds})
-    {
-        bmi_ = std::make_unique<models::bmi::Bmi_Py_Adapter>(
-            "ForcingsEngine",
-            init,
-            "NextGen_Forcings_Engine.BMIForcingsEngine",
-            /*allow_exceed_end=*/true,
-            /*has_fixed_time_step=*/true,
-            utils::getStdOut()
-        );
-
-        time_step_ = std::chrono::seconds{static_cast<int64_t>(bmi_->GetTimeStep())};
-        var_output_names_ = bmi_->GetOutputVarNames();
-    }
 
     ~ForcingsEngineDataProvider() = default;
 
@@ -92,7 +73,59 @@ struct ForcingsEngineDataProvider
     
     std::vector<double> get_values(const selection_type& selector, data_access::ReSampleMethod m) override = 0;
 
+
+    /* Friend functions */
+    static ForcingsEngineDataProvider* instance(
+        const std::string& init,
+        std::size_t time_begin,
+        std::size_t time_end
+    )
+    {
+        auto& inst = instances_.at(init);
+        if (inst != nullptr) {
+            assert(inst->time_begin_ == clock_type::time_point{std::chrono::seconds{time_begin}});
+            assert(inst->time_end_ == clock_type::time_point{std::chrono::seconds{time_end}});
+        }
+
+        return inst.get();
+    }
+
   protected:
+
+    // TODO: It may make more sense to have time_begin_seconds and time_end_seconds coalesced into
+    //       a single argument: `clock_type::duration time_duration`, since the forcings engine
+    //       manages time via a duration rather than time points. !! Need to double check
+    ForcingsEngineDataProvider(
+      const std::string& init,
+      std::size_t time_begin_seconds,
+      std::size_t time_end_seconds
+    )
+      : time_begin_(std::chrono::seconds{time_begin_seconds})
+      , time_end_(std::chrono::seconds{time_end_seconds})
+    {
+        bmi_ = std::make_unique<models::bmi::Bmi_Py_Adapter>(
+            "ForcingsEngine",
+            init,
+            "NextGen_Forcings_Engine.BMIForcingsEngine",
+            /*allow_exceed_end=*/true,
+            /*has_fixed_time_step=*/true,
+            utils::getStdOut()
+        );
+
+        time_step_ = std::chrono::seconds{static_cast<int64_t>(bmi_->GetTimeStep())};
+        var_output_names_ = bmi_->GetOutputVarNames();
+    }
+
+    static ForcingsEngineDataProvider* set_instance(
+        const std::string& init,
+        std::unique_ptr<ForcingsEngineDataProvider>&& instance
+    )
+    {
+          using std::swap;
+          swap(instances_[init], instance);
+          return instances_[init].get();
+    };
+
     //! Instance map
     //! @note this map will exist for each of the 
     //!       3 instance types (lumped, gridded, mesh).
@@ -100,29 +133,6 @@ struct ForcingsEngineDataProvider
         std::string,
         std::unique_ptr<ForcingsEngineDataProvider>
     > instances_;
-
-    static ForcingsEngineDataProvider* get_instance(
-      const std::string& init,
-      std::size_t time_begin,
-      std::size_t time_end
-    )
-    {
-        std::unique_ptr<ForcingsEngineDataProvider>& inst = instances_.at(init);
-
-        if (inst != nullptr) {
-          assert(inst->time_begin_ == clock_type::time_point{std::chrono::seconds{time_begin}});
-          assert(inst->time_end_ == clock_type::time_point{std::chrono::seconds{time_begin}});
-        }
-
-        return inst.get();
-    }
-
-    template<typename Callable>
-    static ForcingsEngineDataProvider* set_instance(const std::string& init, Callable&& f)
-    {
-        instances_[init] = f(init);
-        return instances_[init].get();
-    }
 
     // TODO: this, or just push the scope on time members up?
     void increment_time()
