@@ -160,9 +160,9 @@ TEST(GridDataSelectorTest, ExtentSelection) {
 
     for (const auto& cell : cells) {
         EXPECT_LE(cell.x, 10);
-        EXPECT_GE(cell.x, 0);
+        EXPECT_GE(cell.x, 5);
         EXPECT_LE(cell.y, 10);
-        EXPECT_GE(cell.y, 0);
+        EXPECT_GE(cell.y, 5);
     }
 }
 
@@ -196,3 +196,6 @@ TEST(GridDataSelectorTest, PointSelection) {
     EXPECT_EQ(cells[1].x, 5);
     EXPECT_EQ(cells[1].y, 5);
 }
+
+// TODO: Add boundary/polygon constructor test
+// TEST(GridDataSelectorTest, PolygonSelection)
