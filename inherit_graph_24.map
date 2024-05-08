@@ -1,31 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_network___test.html" title=" " alt="" coords="32,55,135,80"/>
-<area shape="rect" id="Node000001" href="$class_network___test1.html" title=" " alt="" coords="251,5,361,31"/>
-<area shape="poly" id="edge66_Node000000_Node000001" title=" " alt="" coords="150,50,250,28,251,33,151,55"/>
-<area shape="rect" id="Node000003" href="$class_network___test2.html" title=" " alt="" coords="251,55,361,80"/>
-<area shape="poly" id="edge67_Node000000_Node000003" title=" " alt="" coords="151,65,250,65,250,70,151,70"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="37,301,130,327"/>
-<area shape="poly" id="edge73_Node000004_Node000003" title=" " alt="" coords="90,286,105,242,129,189,163,135,184,111,208,89,228,78,250,71,251,76,230,83,211,94,188,114,168,138,134,192,110,244,95,288"/>
-<area shape="rect" id="Node000005" href="$class_feature_collection___test.html" title=" " alt="" coords="228,104,384,130"/>
-<area shape="poly" id="edge68_Node000004_Node000005" title=" " alt="" coords="94,286,112,252,137,212,169,172,208,139,229,128,231,133,211,143,173,176,142,215,117,255,99,289"/>
-<area shape="rect" id="Node000006" href="$class_feature___test.html" title=" " alt="" coords="257,153,355,179"/>
-<area shape="poly" id="edge69_Node000004_Node000006" title=" " alt="" coords="101,287,146,237,176,210,208,188,232,177,256,171,257,176,233,183,211,192,179,214,150,240,105,291"/>
-<area shape="rect" id="Node000007" href="$class_j_s_o_n_geometry___test.html" title=" " alt="" coords="233,203,379,228"/>
-<area shape="poly" id="edge70_Node000004_Node000007" title=" " alt="" coords="114,290,158,263,209,237,240,226,242,231,211,242,161,267,117,294"/>
-<area shape="rect" id="Node000008" href="$class_j_s_o_n_property___test.html" title=" " alt="" coords="237,252,375,278"/>
-<area shape="poly" id="edge71_Node000004_Node000008" title=" " alt="" coords="144,298,244,276,245,281,145,303"/>
-<area shape="rect" id="Node000009" href="$class_multi_layer_parser_test.html" title=" " alt="" coords="233,301,379,327"/>
-<area shape="poly" id="edge72_Node000004_Node000009" title=" " alt="" coords="145,312,233,312,233,317,145,317"/>
-<area shape="rect" id="Node000010" href="$class_nexus___remote___test.html" title=" " alt="" coords="234,351,378,376"/>
-<area shape="poly" id="edge74_Node000004_Node000010" title=" " alt="" coords="145,325,245,347,244,353,144,330"/>
-<area shape="rect" id="Node000011" href="$class_nexus___test.html" title=" " alt="" coords="260,400,352,426"/>
-<area shape="poly" id="edge75_Node000004_Node000011" title=" " alt="" coords="117,334,161,361,211,386,261,402,259,407,209,391,158,366,114,338"/>
-<area shape="rect" id="Node000012" href="$class_reservoir_kernel_test.html" title=" " alt="" coords="236,449,376,475"/>
-<area shape="poly" id="edge76_Node000004_Node000012" title=" " alt="" coords="105,338,150,388,179,414,211,436,237,447,235,452,208,441,176,418,146,392,101,341"/>
-<area shape="rect" id="Node000013" href="$class_reservoir_timeless_kernel_test.html" title=" " alt="" coords="210,499,402,524"/>
-<area shape="poly" id="edge77_Node000004_Node000013" title=" " alt="" coords="99,340,117,373,142,413,173,452,211,485,231,496,229,500,208,490,169,456,137,416,112,376,94,342"/>
-<area shape="rect" id="Node000014" href="$class_units_helper___test.html" title=" " alt="" coords="244,548,368,574"/>
-<area shape="poly" id="edge78_Node000004_Node000014" title=" " alt="" coords="95,341,110,384,134,437,168,490,188,514,211,535,245,551,243,556,208,539,184,518,163,493,129,439,105,386,90,343"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,162,31"/>
-<area shape="poly" id="edge79_Node000002_Node000001" title=" " alt="" coords="177,16,250,16,250,21,177,21"/>
+<area shape="rect" id="Node000000" href="$class_h_y___hydro_feature.html" title=" " alt="" coords="5,55,131,80"/>
+<area shape="rect" id="Node000001" href="$class_h_y___catchment.html" title=" " alt="" coords="179,55,289,80"/>
+<area shape="poly" id="edge61_Node000000_Node000001" title=" " alt="" coords="146,65,178,65,178,70,146,70"/>
+<area shape="rect" id="Node000002" href="$class_h_y___catchment_aggregate.html" title=" " alt="" coords="337,5,506,31"/>
+<area shape="poly" id="edge62_Node000001_Node000002" title=" " alt="" coords="300,48,369,29,370,34,301,53"/>
+<area shape="rect" id="Node000003" href="$class_h_y___dendritic_catchment.html" title=" " alt="" coords="341,55,502,80"/>
+<area shape="poly" id="edge63_Node000001_Node000003" title=" " alt="" coords="304,65,340,65,340,70,304,70"/>
+<area shape="rect" id="Node000004" href="$class_h_y___interior_catchment.html" title=" " alt="" coords="347,104,497,130"/>
+<area shape="poly" id="edge64_Node000001_Node000004" title=" " alt="" coords="301,82,370,101,369,106,300,87"/>
 </map>

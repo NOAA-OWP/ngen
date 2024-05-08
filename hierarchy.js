@@ -30,7 +30,9 @@ var hierarchy =
       [ "ngen::detail::visitors::to_string_visitor", "structngen_1_1detail_1_1visitors_1_1to__string__visitor.html", null ],
       [ "ngen::geopackage::wkb::wgs84", "structngen_1_1geopackage_1_1wkb_1_1wgs84.html", null ]
     ] ],
+    [ "BoundingBox", "struct_bounding_box.html", null ],
     [ "CatchmentAggrDataSelector", "class_catchment_aggr_data_selector.html", null ],
+    [ "Cell", "struct_cell.html", null ],
     [ "CSVReader", "class_c_s_v_reader.html", null ],
     [ "data_access::DataProvider< data_type, selection_type >", "classdata__access_1_1_data_provider.html", null ],
     [ "data_access::DataProvider< double, CatchmentAggrDataSelector >", "classdata__access_1_1_data_provider.html", [
@@ -79,6 +81,8 @@ var hierarchy =
       [ "HY_HydroNetwork", "class_h_y___hydro_network.html", null ],
       [ "hy_features::hydrolocation::HY_HydroLocation", "classhy__features_1_1hydrolocation_1_1_h_y___hydro_location.html", null ]
     ] ],
+    [ "GridDataSelector", "struct_grid_data_selector.html", null ],
+    [ "GridSpecification", "struct_grid_specification.html", null ],
     [ "HY_CatchmentRealization", "class_h_y___catchment_realization.html", [
       [ "HY_CartographicRealization", "class_h_y___cartographic_realization.html", null ],
       [ "HY_CatchmentArea", "class_h_y___catchment_area.html", null ],
@@ -140,6 +144,7 @@ var hierarchy =
     ] ],
     [ "realization::Formulation_Manager", "classrealization_1_1_formulation___manager.html", null ],
     [ "routing_params", "structrouting__params.html", null ],
+    [ "SelectorConfig", "struct_selector_config.html", null ],
     [ "Simulation_Time", "class_simulation___time.html", null ],
     [ "simulation_time_params", "structsimulation__time__params.html", null ],
     [ "std::exception", null, [

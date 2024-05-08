@@ -4973,6 +4973,15 @@
         <topic label="update" href="struct_bmi.html#aa40ea98c2c8769c801a8b225d687f907"/>
         <topic label="update_until" href="struct_bmi.html#a192e680b533ced45941b163932514014"/>
       </topic>
+      <topic label="BoundingBox" href="struct_bounding_box.html">
+        <topic label="BoundingBox" href="struct_bounding_box.html#a157a38901663c7f49e30fa65badfe338"/>
+        <topic label="as_polygon" href="struct_bounding_box.html#a80625067f526d874eaf7424e111cd8bc"/>
+        <topic label="xmax" href="struct_bounding_box.html#a45953c8f84dc0d336b002a4dbc7f4582"/>
+        <topic label="xmin" href="struct_bounding_box.html#a1481210f4eafe09e887181343912935b"/>
+        <topic label="ymax" href="struct_bounding_box.html#a789e5fb0de17e4688b087bd26e3c5d3f"/>
+        <topic label="ymin" href="struct_bounding_box.html#ac96ae0f2c290875ed25258b44f89eaa7"/>
+        <topic label="box_" href="struct_bounding_box.html#a3150fe3908698646e688fccf407ed0e5"/>
+      </topic>
       <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html">
         <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html#a64ee5a1268ff3a9f6bf0c1834a73a4c0"/>
         <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html#a1c5fc95760b3ac68b63726f940e52c4a"/>
@@ -4991,6 +5000,13 @@
         <topic label="init_time" href="class_catchment_aggr_data_selector.html#a6cd3d9be96032de2d13baf6ff2bd3357"/>
         <topic label="output_units" href="class_catchment_aggr_data_selector.html#a78bb6eabd1d62510e6d8e8c02f4dd0e1"/>
         <topic label="variable_name" href="class_catchment_aggr_data_selector.html#aa5bbd7b096b14050c1b0725edd8e0bd6"/>
+      </topic>
+      <topic label="Cell" href="struct_cell.html">
+        <topic label="operator&lt;" href="struct_cell.html#a806702419cf870afa8d425fa8a63ea8a"/>
+        <topic label="value" href="struct_cell.html#ad1ebe210c1b31d91821b351ed5c3bcc3"/>
+        <topic label="x" href="struct_cell.html#a80b0e63d8ad346cdd2ea64daf564a3e1"/>
+        <topic label="y" href="struct_cell.html#a9d7fd347f281ac74d66f1ac60ff1a3eb"/>
+        <topic label="z" href="struct_cell.html#a2974a860766aec3e1032d81c2667cbeb"/>
       </topic>
       <topic label="completed_time_step" href="structcompleted__time__step.html">
         <topic label="what" href="structcompleted__time__step.html#aaf647dee637eab397abc27b17a7c8c55"/>
@@ -5059,6 +5075,32 @@
       <topic label="GM_Object" href="class_g_m___object.html">
         <topic label="GM_Object" href="class_g_m___object.html#a0dae1c5826639cd1f522bc8922708955"/>
         <topic label="~GM_Object" href="class_g_m___object.html#acc804f9a54642784739abdc82d515d11"/>
+      </topic>
+      <topic label="GridDataSelector" href="struct_grid_data_selector.html">
+        <topic label="GridDataSelector" href="struct_grid_data_selector.html#a9a4461c054cb296816b8911a2c641a38"/>
+        <topic label="GridDataSelector" href="struct_grid_data_selector.html#ad72a6cca644c1f62a9a9a9bf550becf6"/>
+        <topic label="GridDataSelector" href="struct_grid_data_selector.html#a83ec1df37a0217afef8388bb8199079a"/>
+        <topic label="GridDataSelector" href="struct_grid_data_selector.html#a1e196bc751019aa7c36455519e10601b"/>
+        <topic label="GridDataSelector" href="struct_grid_data_selector.html#a9a3eec85da6b184ec7fe1694da5ce48e"/>
+        <topic label="~GridDataSelector" href="struct_grid_data_selector.html#ae08b218bb235955417417fbf9113f158"/>
+        <topic label="cells" href="struct_grid_data_selector.html#a46c2489003da0efeb5fe89464cc7be54"/>
+        <topic label="cells" href="struct_grid_data_selector.html#af865fce922cb858cdeaa5a13fd505097"/>
+        <topic label="duration" href="struct_grid_data_selector.html#ab9cc4e79c263c240d7d2b0e91841cc15"/>
+        <topic label="duration" href="struct_grid_data_selector.html#a3a4c07aa84c0cb3b7a0d6ace31e3175c"/>
+        <topic label="initial_time" href="struct_grid_data_selector.html#a98d0d685093c261bebe4fbf24a9b2d5c"/>
+        <topic label="initial_time" href="struct_grid_data_selector.html#a9c6861fb0cb2435bb26e548b6cfce48e"/>
+        <topic label="position_" href="struct_grid_data_selector.html#afb5faddcd49d0936cdb323ba658548e3"/>
+        <topic label="units" href="struct_grid_data_selector.html#a4bd05638701d7aa24f2e1f519fcb521e"/>
+        <topic label="units" href="struct_grid_data_selector.html#a9bd3e5c7153ecbfc5bc1e5bbe3c69589"/>
+        <topic label="variable" href="struct_grid_data_selector.html#a30df271368bb91bd5692ba83374d7335"/>
+        <topic label="variable" href="struct_grid_data_selector.html#ac941947d2f8fed1ad6c4da008cba36bc"/>
+        <topic label="cells_" href="struct_grid_data_selector.html#a2296116f6edeca6a90358251ba43ca04"/>
+        <topic label="config_" href="struct_grid_data_selector.html#ad05ef6f47a33f18ef784855479a68ba6"/>
+      </topic>
+      <topic label="GridSpecification" href="struct_grid_specification.html">
+        <topic label="columns" href="struct_grid_specification.html#aed680933d95fa7ae53d0ae15fbdee6e3"/>
+        <topic label="extent" href="struct_grid_specification.html#ac8686c7f57fc0dd02e893cb168fe88cd"/>
+        <topic label="rows" href="struct_grid_specification.html#a18670258d3e0e624f7bbc4d12fa04dfe"/>
       </topic>
       <topic label="HY_CartographicRealization" href="class_h_y___cartographic_realization.html">
         <topic label="HY_CartographicRealization" href="class_h_y___cartographic_realization.html#afdd6e3514fc40ad9162f02c456bf45b8"/>
@@ -5513,6 +5555,12 @@
         <topic label="routing_params" href="structrouting__params.html#ad7665d897b5fea34e7a928db23a4c1f3"/>
         <topic label="t_route_config_file_with_path" href="structrouting__params.html#ab8b3e8f2fc74ca5193fd305d711b3b18"/>
       </topic>
+      <topic label="SelectorConfig" href="struct_selector_config.html">
+        <topic label="duration_seconds" href="struct_selector_config.html#aeb2685b94cfe0c596067f0e41e04fca0"/>
+        <topic label="init_time" href="struct_selector_config.html#a6430c7570d2f3d020644ed6e21554d42"/>
+        <topic label="variable_name" href="struct_selector_config.html#a3bee33144aeb242bc5f5de932c53feb0"/>
+        <topic label="variable_units" href="struct_selector_config.html#a5356a02dad76fed50aa0b601d8a201ac"/>
+      </topic>
       <topic label="Simulation_Time" href="class_simulation___time.html">
         <topic label="Simulation_Time" href="class_simulation___time.html#a1b29c199f0fd9e0995f369c40fd7aaa0"/>
         <topic label="Simulation_Time" href="class_simulation___time.html#a08bb9078f55a6aa12cf040dba5fe03f0"/>
@@ -5601,7 +5649,9 @@
         <topic label="ngen::detail::visitors::to_string_visitor" href="structngen_1_1detail_1_1visitors_1_1to__string__visitor.html"/>
         <topic label="ngen::geopackage::wkb::wgs84" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html"/>
       </topic>
+      <topic label="BoundingBox" href="struct_bounding_box.html"/>
       <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html"/>
+      <topic label="Cell" href="struct_cell.html"/>
       <topic label="CSVReader" href="class_c_s_v_reader.html"/>
       <topic label="data_access::DataProvider&lt; data_type, selection_type &gt;" href="classdata__access_1_1_data_provider.html"/>
       <topic label="data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;" href="classdata__access_1_1_data_provider.html">
@@ -5650,6 +5700,8 @@
         <topic label="HY_HydroNetwork" href="class_h_y___hydro_network.html"/>
         <topic label="hy_features::hydrolocation::HY_HydroLocation" href="classhy__features_1_1hydrolocation_1_1_h_y___hydro_location.html"/>
       </topic>
+      <topic label="GridDataSelector" href="struct_grid_data_selector.html"/>
+      <topic label="GridSpecification" href="struct_grid_specification.html"/>
       <topic label="HY_CatchmentRealization" href="class_h_y___catchment_realization.html">
         <topic label="HY_CartographicRealization" href="class_h_y___cartographic_realization.html"/>
         <topic label="HY_CatchmentArea" href="class_h_y___catchment_area.html"/>
@@ -5711,6 +5763,7 @@
       </topic>
       <topic label="realization::Formulation_Manager" href="classrealization_1_1_formulation___manager.html"/>
       <topic label="routing_params" href="structrouting__params.html"/>
+      <topic label="SelectorConfig" href="struct_selector_config.html"/>
       <topic label="Simulation_Time" href="class_simulation___time.html"/>
       <topic label="simulation_time_params" href="structsimulation__time__params.html"/>
       <topic label="std::exception">
@@ -5775,6 +5828,9 @@
         <topic label="u" href="functions_u.html"/>
         <topic label="v" href="functions_v.html"/>
         <topic label="w" href="functions_w.html"/>
+        <topic label="x" href="functions_x.html"/>
+        <topic label="y" href="functions_y.html"/>
+        <topic label="z" href="functions_z.html"/>
         <topic label="~" href="functions_~.html"/>
       </topic>
       <topic label="Functions" href="functions_func.html">
@@ -5801,6 +5857,8 @@
         <topic label="u" href="functions_func_u.html"/>
         <topic label="v" href="functions_func_v.html"/>
         <topic label="w" href="functions_func_w.html"/>
+        <topic label="x" href="functions_func_x.html"/>
+        <topic label="y" href="functions_func_y.html"/>
         <topic label="~" href="functions_func_~.html"/>
       </topic>
       <topic label="Variables" href="functions_vars.html">
@@ -5826,6 +5884,9 @@
         <topic label="u" href="functions_vars_u.html"/>
         <topic label="v" href="functions_vars_v.html"/>
         <topic label="w" href="functions_vars_w.html"/>
+        <topic label="x" href="functions_vars_x.html"/>
+        <topic label="y" href="functions_vars_y.html"/>
+        <topic label="z" href="functions_vars_z.html"/>
       </topic>
       <topic label="Typedefs" href="functions_type.html"/>
       <topic label="Enumerator" href="functions_eval.html"/>

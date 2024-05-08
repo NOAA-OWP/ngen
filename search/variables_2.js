@@ -17,5 +17,6 @@ var searchData=
   ['bmi_5fusing_5fforcing_5ffile_14',['bmi_using_forcing_file',['../classrealization_1_1_bmi___module___formulation.html#a7bd539d35c6266c631e04d103d427a9e',1,'realization::Bmi_Module_Formulation']]],
   ['bmi_5fvar_5fnames_5fmap_15',['bmi_var_names_map',['../classrealization_1_1_bmi___module___formulation.html#a1a20278de5cf4688c31c4ffff1e97f74',1,'realization::Bmi_Module_Formulation']]],
   ['bounding_5fbox_16',['bounding_box',['../classgeojson_1_1_feature_collection.html#a1670256b5f383cbb26306bd96e7d1bd2',1,'geojson::FeatureCollection::bounding_box'],['../classgeojson_1_1_feature_base.html#a77d7f52df0473ed087c9a72a7c66fce9',1,'geojson::FeatureBase::bounding_box']]],
-  ['bounds_17',['bounds',['../class_h_y___catchment_area.html#aaebc4992c38cb5db68e859e0487ad929',1,'HY_CatchmentArea']]]
+  ['bounds_17',['bounds',['../class_h_y___catchment_area.html#aaebc4992c38cb5db68e859e0487ad929',1,'HY_CatchmentArea']]],
+  ['box_5f_18',['box_',['../struct_bounding_box.html#a3150fe3908698646e688fccf407ed0e5',1,'BoundingBox']]]
 ];

@@ -20,12 +20,13 @@ var searchData=
   ['as_5flist_17',['as_list',['../classgeojson_1_1_j_s_o_n_property.html#a4e95480bc0ecde8028f0a68a11245617',1,'geojson::JSONProperty']]],
   ['as_5fnatural_5fnumber_18',['as_natural_number',['../classgeojson_1_1_j_s_o_n_property.html#a99b488b0681f98286fe65be25f5cba06',1,'geojson::JSONProperty']]],
   ['as_5fnatural_5fvector_19',['as_natural_vector',['../classgeojson_1_1_j_s_o_n_property.html#a6793486f38f4330e6f780b956e7122be',1,'geojson::JSONProperty']]],
-  ['as_5freal_5fnumber_20',['as_real_number',['../classgeojson_1_1_j_s_o_n_property.html#abd96e16e7da59f6d4e98fd3abf375224',1,'geojson::JSONProperty']]],
-  ['as_5freal_5fvector_21',['as_real_vector',['../classgeojson_1_1_j_s_o_n_property.html#acf89f58eb4a1cdc915c2851f809d8156',1,'geojson::JSONProperty']]],
-  ['as_5fstring_22',['as_string',['../classgeojson_1_1_j_s_o_n_property.html#a512af06cb32ed665a57a80129c84ec9b',1,'geojson::JSONProperty']]],
-  ['as_5fstring_5fvector_23',['as_string_vector',['../classgeojson_1_1_j_s_o_n_property.html#abc3fb5015f523acf462755a444896534',1,'geojson::JSONProperty']]],
-  ['as_5fvector_24',['as_vector',['../classgeojson_1_1_j_s_o_n_property.html#a6ac4f78b1b7e87658600a4acf1b864d4',1,'geojson::JSONProperty']]],
-  ['assign_5fneighbors_25',['assign_neighbors',['../classgeojson_1_1_feature_base.html#a3ff99f3984c2097aedd6207a8f1eb5f8',1,'geojson::FeatureBase']]],
-  ['asvectorvisitor_26',['AsVectorVisitor',['../structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#a5799c960bad5171fede3d518204093b9',1,'geojson::JSONProperty::AsVectorVisitor']]],
-  ['at_27',['at',['../classgeojson_1_1_j_s_o_n_property.html#a4a62d9dc46a292bff3c4fd134f5469a7',1,'geojson::JSONProperty::at()'],['../classngen_1_1mdarray.html#a2253388edd9a8771cc4e60d1b664b3bf',1,'ngen::mdarray::at(const boost::span&lt; const size_type &gt; n)'],['../classngen_1_1mdarray.html#a685a94c25fa6cd06b6c15ae1b328dd83',1,'ngen::mdarray::at(const boost::span&lt; const size_type &gt; n) const'],['../structngen_1_1detail_1_1variable.html#a546b312f40ee218eca56e235bad55870',1,'ngen::detail::variable::at(const boost::span&lt; const size_type &gt; index)'],['../structngen_1_1detail_1_1variable.html#a097931905f70d5a3d290613297621810',1,'ngen::detail::variable::at(boost::span&lt; const size_type &gt; index)']]]
+  ['as_5fpolygon_20',['as_polygon',['../struct_bounding_box.html#a80625067f526d874eaf7424e111cd8bc',1,'BoundingBox']]],
+  ['as_5freal_5fnumber_21',['as_real_number',['../classgeojson_1_1_j_s_o_n_property.html#abd96e16e7da59f6d4e98fd3abf375224',1,'geojson::JSONProperty']]],
+  ['as_5freal_5fvector_22',['as_real_vector',['../classgeojson_1_1_j_s_o_n_property.html#acf89f58eb4a1cdc915c2851f809d8156',1,'geojson::JSONProperty']]],
+  ['as_5fstring_23',['as_string',['../classgeojson_1_1_j_s_o_n_property.html#a512af06cb32ed665a57a80129c84ec9b',1,'geojson::JSONProperty']]],
+  ['as_5fstring_5fvector_24',['as_string_vector',['../classgeojson_1_1_j_s_o_n_property.html#abc3fb5015f523acf462755a444896534',1,'geojson::JSONProperty']]],
+  ['as_5fvector_25',['as_vector',['../classgeojson_1_1_j_s_o_n_property.html#a6ac4f78b1b7e87658600a4acf1b864d4',1,'geojson::JSONProperty']]],
+  ['assign_5fneighbors_26',['assign_neighbors',['../classgeojson_1_1_feature_base.html#a3ff99f3984c2097aedd6207a8f1eb5f8',1,'geojson::FeatureBase']]],
+  ['asvectorvisitor_27',['AsVectorVisitor',['../structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#a5799c960bad5171fede3d518204093b9',1,'geojson::JSONProperty::AsVectorVisitor']]],
+  ['at_28',['at',['../classgeojson_1_1_j_s_o_n_property.html#a4a62d9dc46a292bff3c4fd134f5469a7',1,'geojson::JSONProperty::at()'],['../classngen_1_1mdarray.html#a2253388edd9a8771cc4e60d1b664b3bf',1,'ngen::mdarray::at(const boost::span&lt; const size_type &gt; n)'],['../classngen_1_1mdarray.html#a685a94c25fa6cd06b6c15ae1b328dd83',1,'ngen::mdarray::at(const boost::span&lt; const size_type &gt; n) const'],['../structngen_1_1detail_1_1variable.html#a546b312f40ee218eca56e235bad55870',1,'ngen::detail::variable::at(const boost::span&lt; const size_type &gt; index)'],['../structngen_1_1detail_1_1variable.html#a097931905f70d5a3d290613297621810',1,'ngen::detail::variable::at(boost::span&lt; const size_type &gt; index)']]]
 ];

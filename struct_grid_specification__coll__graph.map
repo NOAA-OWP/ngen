@@ -1,0 +1,5 @@
+<map id="GridSpecification" name="GridSpecification">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,234,116,319"/>
+<area shape="rect" id="Node000002" href="$struct_bounding_box.html" title=" " alt="" coords="7,5,115,171"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,170,63,217,58,217,58,170"/>
+</map>
