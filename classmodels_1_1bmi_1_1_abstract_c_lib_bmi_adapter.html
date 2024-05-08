@@ -922,7 +922,13 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Determine backing model's time units and return an appropriate conversion factor. </p>
-<p>A backing BMI model may use arbitrary units for time, but it will expose what those units are via the BMI <code>GetTimeUnits</code> function. This function retrieves (and interprets) its model's units and return an appropriate factor for converting its internal time values to equivalent representations within the model, and vice versa. This function complies with the BMI get_time_units standard </p>
+<p>A backing BMI model may use arbitrary units for time, but it will expose what those units are via the BMI <code>GetTimeUnits</code> function. This function retrieves (and interprets) its model's units and return an appropriate factor for converting its internal time values to equivalent representations within the model, and vice versa. This function complies with the BMI get_time_units standard</p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">runtime_error</td><td>If the delegated BMI functions to query time throw an exception, the exception is caught and wrapped in a runtime_error </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="reference">References <a class="el" href="class_units_helper.html#a0e2dd4070640d0c0425da6aa0828cedd">UnitsHelper::get_converted_value()</a>, and <a class="el" href="classbmi_1_1_bmi.html#a2132b18abc07635c6c1e9cdfe7e186ce">bmi::Bmi::GetTimeUnits()</a>.</p>
 
@@ -2750,7 +2756,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacemodels.html">models</a></li><li class="navelem"><a class="el" href="namespacemodels_1_1bmi.html">bmi</a></li><li class="navelem"><a class="el" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">AbstractCLibBmiAdapter</a></li>
-    <li class="footer">Generated on Wed May 8 2024 14:44:45 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed May 8 2024 14:51:12 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
