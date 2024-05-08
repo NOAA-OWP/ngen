@@ -59,14 +59,23 @@ Provider::ForcingsEngineLumpedDataProvider(
     this->increment_time(); // TODO: why???
 }
 
-Provider::ForcingsEngineLumpedDataProvider(
+BaseProvider* Provider::lumped_instance(
     const std::string& init,
     const std::string& time_begin,
     const std::string& time_end,
     const std::string& time_fmt
 )
-  : Provider(init, parse_time(time_begin, time_fmt), parse_time(time_end, time_fmt))
-{}
+{
+    auto time_begin_epoch = static_cast<size_t>(parse_time(time_begin, time_fmt));
+    auto time_end_epoch = static_cast<size_t>(parse_time(time_end, time_fmt));
+
+
+    auto provider = std::unique_ptr<ForcingsEngineLumpedDataProvider>{
+        new Provider{init, time_begin_epoch, time_end_epoch}
+    };
+
+    return set_instance(init, std::move(provider));
+}
 
 std::size_t Provider::divide_index(const std::string& divide_id) noexcept
 {

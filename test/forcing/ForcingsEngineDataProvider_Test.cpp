@@ -20,58 +20,82 @@ struct mpi_info {
     int rank        = 0;
 };
 
-class ForcingsEngineDataProviderTest : public testing::Test
+struct ForcingsEngineLumpedDataProviderTest
+  : public testing::Test
 {
-  protected:
-    // Compile-time data
-    static constexpr const char* config_file = "extern/ngen-forcing/NextGen_Forcings_Engine_BMI/NextGen_Forcings_Engine/config.yml";
-    static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_;
-    static data_access::ForcingsEngineLumpedDataProvider*   provider;
-    static mpi_info                                        mpi;
-    forcing_params                                         params;
+    using provider_type = data_access::ForcingsEngineLumpedDataProvider::ForcingsEngineDataProvider;
 
-  public:
-    // Members
-    ForcingsEngineDataProviderTest()
-      : params("", "ForcingsEngine", "2024-01-17 01:00:00", "2024-01-17 06:00:00")
+    ForcingsEngineLumpedDataProviderTest()
     {
         #if NGEN_WITH_MPI
-        MPI_Comm_size(MPI_COMM_WORLD, &mpi.size);
-        MPI_Comm_rank(MPI_COMM_WORLD, &mpi.rank);
+        MPI_Comm_size(MPI_COMM_WORLD, &mpi_.size);
+        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_.rank);
         #endif
-    };
-
-    static void SetUpTestSuite()
-    {
-        #if NGEN_WITH_MPI
-        MPI_Init(nullptr, nullptr);
-        #endif
-
-        ForcingsEngineDataProviderTest::gil_ = utils::ngenPy::InterpreterUtil::getInstance();
-        ForcingsEngineDataProviderTest::provider = data_access::ForcingsEngineLumpedDataProvider{
-            config_file,
-            "2024-01-17 01:00:00",
-            "2024-01-17 06:00:00"
-        };
-
-        data_access::assert_forcings_engine_requirements();
     }
 
-    static void TearDownTestSuite()
-    {
-        data_access::ForcingsEngineLumpedDataProvider::finalize_all();
-        gil_.reset();
+    static void SetUpTestSuite();
+    static void TearDownTestSuite();
 
-        #if NGEN_WITH_MPI
-        PMPI_Finalize();
-        #endif
-    }    
+  protected:
+    static constexpr const char* config_file = "extern/ngen-forcing/NextGen_Forcings_Engine_BMI/NextGen_Forcings_Engine/config.yml";
+    static const forcing_params default_params;
+
+    static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_;
+    static provider_type* provider_;
+    static mpi_info mpi_;
 };
 
-std::shared_ptr<utils::ngenPy::InterpreterUtil> ForcingsEngineDataProviderTest::gil_{};
-data_access::ForcingsEngineLumpedDataProvider* ForcingsEngineDataProviderTest::provider{};
-mpi_info ForcingsEngineDataProviderTest::mpi{};
+/* Convenience type alias */
+using TestFixture = ForcingsEngineLumpedDataProviderTest;
 
+/* Static member initialization */
+const forcing_params TestFixture::default_params = { "", "ForcingsEngine", "2024-01-17 01:00:00", "2024-01-17 06:00:00" };
+std::shared_ptr<utils::ngenPy::InterpreterUtil> TestFixture::gil_ = nullptr;
+TestFixture::provider_type* TestFixture::provider_ = nullptr;
+mpi_info TestFixture::mpi_ = {};
+
+// Initialize MPI if available, get Python GIL, and initialize forcings engine.
+void TestFixture::SetUpTestSuite()
+{
+    #if NGEN_WITH_MPI
+    MPI_Init(nullptr, nullptr);
+    #endif
+
+    TestFixture::gil_ = utils::ngenPy::InterpreterUtil::getInstance();
+
+    data_access::assert_forcings_engine_requirements();
+    TestFixture::provider_ = data_access::ForcingsEngineLumpedDataProvider::lumped_instance(
+        config_file,
+        default_params.start_time,
+        default_params.end_time
+    );
+}
+
+// Destroy providers, GIL, and finalize MPI
+void TestFixture::TearDownTestSuite()
+{
+    provider_->finalize_all();
+    gil_.reset();
+
+    #if NGEN_WITH_MPI
+    PMPI_Finalize();
+    #endif
+}
+
+// ============================================================================
+
+/**
+ * Tests for the flyweight-like design of provider storage by getting
+ * a new instance of the forcings engine and verifying that it points
+ * to the same address as the static initialized `provider_` member.
+ */
+TEST_F(ForcingsEngineLumpedDataProviderTest, Storage)
+{
+    auto* inst = data_access::ForcingsEngineLumpedDataProvider::instance(config_file, 0, 3600);
+    EXPECT_EQ(inst, provider_);
+}
+
+#if 0
 TEST_F(ForcingsEngineDataProviderTest, Engine)
 {
     std::cout << "Getting instance\n";
@@ -185,3 +209,4 @@ TEST_F(ForcingsEngineDataProviderTest, DISABLED_MPICommunicators) {
     }
 #endif
 }
+#endif

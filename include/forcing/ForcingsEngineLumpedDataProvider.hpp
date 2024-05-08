@@ -12,19 +12,6 @@ struct ForcingsEngineLumpedDataProvider
 {
     static constexpr auto bad_index = static_cast<std::size_t>(-1);
 
-    ForcingsEngineLumpedDataProvider(
-        const std::string& init,
-        std::size_t time_begin_seconds,
-        std::size_t time_end_seconds
-    );
-
-    ForcingsEngineLumpedDataProvider(
-        const std::string& init,
-        const std::string& time_start,
-        const std::string& time_end,
-        const std::string& time_fmt = "%Y-%m-%d %H:%M:%S"
-    );
-
     ~ForcingsEngineLumpedDataProvider() override = default;
 
     double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
@@ -48,7 +35,19 @@ struct ForcingsEngineLumpedDataProvider
      */
     std::size_t variable_index(const std::string& variable) noexcept;
 
+    static ForcingsEngineDataProvider* lumped_instance(
+        const std::string& init,
+        const std::string& time_start,
+        const std::string& time_end,
+        const std::string& time_fmt = "%Y-%m-%d %H:%M:%S"
+    );
+
   private:
+    ForcingsEngineLumpedDataProvider(
+        const std::string& init,
+        std::size_t time_begin_seconds,
+        std::size_t time_end_seconds
+    );
 
     /**
      * @brief Update to next timestep.
