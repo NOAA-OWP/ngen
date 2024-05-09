@@ -90,9 +90,9 @@ struct ForcingsEngineLumpedDataProvider
      */
     void update_value_storage_();
 
-
-    //! Available divide IDs
-    std::vector<int> var_divides_{};
+    //! Divide index map
+    //!     (Divide ID) -> (Divide ID Array Index)
+    std::unordered_map<int, int> var_divides_{};
 
     /**
      * Values are stored indexed on (2, divide_id, variable),

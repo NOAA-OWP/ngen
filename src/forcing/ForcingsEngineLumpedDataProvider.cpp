@@ -51,7 +51,11 @@ Provider::ForcingsEngineLumpedDataProvider(
     
     // Copy CAT-ID values into instance vector
     const auto* ptr = static_cast<int*>(bmi_->GetValuePtr("CAT-ID"));
-    var_divides_ = std::vector<int>(ptr, ptr + id_dim);
+    for (int i = 0; i < id_dim; ++i) {
+        const auto divide_id = ptr[i];
+        var_divides_[divide_id] = i;
+    }
+
     var_cache_ = decltype(var_cache_){{ 2, id_dim, var_dim }};
 
     // Cache initial iteration
@@ -85,13 +89,13 @@ std::size_t Provider::divide_index(const std::string& divide_id) noexcept
                            : &divide_id[id_sep + 1];
     const int   id_int   = std::atoi(id_split);
 
-    const auto pos = std::find(var_divides_.begin(), var_divides_.end(), id_int);
+    auto pos = var_divides_.find(id_int);
     if (pos == var_divides_.end()) {
         return bad_index;
     }
 
     // implicit cast to unsigned
-    return std::distance(var_divides_.begin(), pos);
+    return pos->second;
 }
 
 std::size_t Provider::variable_index(const std::string& variable) noexcept
