@@ -121,8 +121,7 @@ struct ForcingsEngineDataProvider
         std::unique_ptr<ForcingsEngineDataProvider>&& instance
     )
     {
-          using std::swap;
-          swap(instances_[init], instance);
+          instances_[init] = std::move(instance);
           return instances_[init].get();
     };
 
