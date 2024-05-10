@@ -604,6 +604,10 @@ int main(int argc, char *argv[]) {
                   << std::endl;
     }
 
+#if NGEN_WITH_NETCDF
+  manager->close_nc_file();
+#endif
+
 #if NGEN_WITH_MPI
     MPI_Finalize();
 #endif

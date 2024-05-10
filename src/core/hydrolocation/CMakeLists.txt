@@ -15,4 +15,5 @@ target_include_directories(core_hydrolocation PUBLIC
 
 target_link_libraries(core_hydrolocation PUBLIC
         Boost::boost                # Headers-only Boost
+        NGen::config_header
         )

@@ -264,6 +264,11 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
 
 NetCDFPerFeatureDataProvider::~NetCDFPerFeatureDataProvider() = default;
 
+std::shared_ptr<netCDF::NcFile> NetCDFPerFeatureDataProvider::get_nc_file()
+{
+    return nc_file;
+}
+
 boost::span<const std::string> NetCDFPerFeatureDataProvider::get_available_variable_names()
 {
     return variable_names;

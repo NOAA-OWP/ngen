@@ -38,6 +38,11 @@ class HY_CatchmentRealization
      */
     virtual double get_response(time_step_t t_index, time_step_t t_delta) = 0;
 
+    std::shared_ptr<data_access::GenericDataProvider> get_forcing()
+    {
+        return forcing;
+    }
+
     protected:
 
     std::shared_ptr<HY_Catchment> realized_catchment;
