@@ -1,8 +1,6 @@
 #include "ForcingsEngineLumpedDataProvider.hpp"
 #include <bmi/Bmi_Py_Adapter.hpp>
 
-#include <iomanip> // std::get_time
-
 namespace data_access {
 
 using BaseProvider = ForcingsEngineDataProvider<double, CatchmentAggrDataSelector>;
@@ -11,18 +9,6 @@ using Provider = ForcingsEngineLumpedDataProvider;
 //! Lumped Forcings Engine instances storage
 template<>
 std::unordered_map<std::string, std::unique_ptr<BaseProvider>> BaseProvider::instances_{};
-
-//! Parse time string from format.
-//! Utility function for ForcingsEngineLumpedDataProvider constructor.
-time_t parse_time(const std::string& time, const std::string& fmt)
-{
-    std::tm tm_ = {};
-    std::stringstream tmstr{time};
-    tmstr >> std::get_time(&tm_, fmt.c_str());
-
-    // Note: `timegm` is available for Linux and BSD (aka macOS) via time.h, but not Windows.
-    return timegm(&tm_);
-}
 
 Provider::ForcingsEngineLumpedDataProvider(
     const std::string& init,
@@ -34,13 +20,14 @@ Provider::ForcingsEngineLumpedDataProvider(
 
     // Check that CAT-ID is an available output name, otherwise we most likely aren't
     // running the correct configuration of the forcings engine for this class.
-    const auto outputs = this->get_available_variable_names();
-    if (std::find(outputs.begin(), outputs.end(), "CAT-ID") == outputs.end()) {
+    const auto cat_id_pos = std::find(var_output_names_.begin(), var_output_names_.end(), "CAT-ID");
+    if (cat_id_pos == var_output_names_.end()) {
         throw std::runtime_error{
             "Failed to initialize ForcingsEngineLumpedDataProvider: `CAT-ID` is not an output variable of the forcings engine."
             " Is it running with `GRID_TYPE` set to 'hydrofabric'?"
         };
     }
+    var_output_names_.erase(cat_id_pos);
 
     // Initialize the value cache
     const auto id_dim   = static_cast<std::size_t>(bmi_->GetVarNbytes("CAT-ID") / bmi_->GetVarItemsize("CAT-ID"));
@@ -50,17 +37,21 @@ Provider::ForcingsEngineLumpedDataProvider(
     this->increment_time();
     
     // Copy CAT-ID values into instance vector
-    const auto* ptr = static_cast<int*>(bmi_->GetValuePtr("CAT-ID"));
+    const auto cat_id = boost::span<const int>(
+        static_cast<const int*>(bmi_->GetValuePtr("CAT-ID")),
+        id_dim
+    );
+
+    var_divides_.reserve(id_dim);
     for (int i = 0; i < id_dim; ++i) {
-        const auto divide_id = ptr[i];
-        var_divides_[divide_id] = i;
+        var_divides_[cat_id[i]] = i;
     }
 
     var_cache_ = decltype(var_cache_){{ 2, id_dim, var_dim }};
 
     // Cache initial iteration
     update_value_storage_();
-    this->increment_time(); // TODO: why???
+    // this->increment_time(); // TODO: why???
 }
 
 BaseProvider* Provider::lumped_instance(

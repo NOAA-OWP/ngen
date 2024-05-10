@@ -39,7 +39,7 @@ struct ForcingsEngineLumpedDataProvider
         const std::string& init,
         const std::string& time_start,
         const std::string& time_end,
-        const std::string& time_fmt = "%Y-%m-%d %H:%M:%S"
+        const std::string& time_fmt = default_time_format
     );
 
   private:
