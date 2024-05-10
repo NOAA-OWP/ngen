@@ -153,9 +153,7 @@ jobs:
       - name: Checkout Forcings Engine
         uses: actions/checkout@v4
         with:
-          # TODO: replace once merged, https://github.com/NOAA-OWP/ngen-forcing/pull/9
-          # repository: NOAA-OWP/ngen-forcing
-          repository: jduckerOWP/ngen-forcing
+          repository: NOAA-OWP/ngen-forcing
           ref: master
           path: extern/ngen-forcing
           clean: false
