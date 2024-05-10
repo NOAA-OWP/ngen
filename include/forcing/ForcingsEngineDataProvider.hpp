@@ -113,6 +113,9 @@ struct ForcingsEngineDataProvider
       : time_begin_(std::chrono::seconds{time_begin_seconds})
       , time_end_(std::chrono::seconds{time_end_seconds})
     {
+
+        assert_forcings_engine_requirements();
+
         bmi_ = std::make_unique<models::bmi::Bmi_Py_Adapter>(
             "ForcingsEngine",
             init,
