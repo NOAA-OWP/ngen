@@ -52,9 +52,6 @@ var annotated_dup =
       [ "preorder_visitor", "structnetwork_1_1preorder__visitor.html", "structnetwork_1_1preorder__visitor" ],
       [ "VertexProperty", "structnetwork_1_1_vertex_property.html", "structnetwork_1_1_vertex_property" ]
     ] ],
-    [ "nexus", "namespacenexus.html", [
-      [ "Nexus_Manager", "classnexus_1_1_nexus___manager.html", "classnexus_1_1_nexus___manager" ]
-    ] ],
     [ "ngen", "namespacengen.html", [
       [ "detail", "namespacengen_1_1detail.html", [
         [ "visitors", "namespacengen_1_1detail_1_1visitors.html", [

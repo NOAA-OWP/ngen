@@ -43,12 +43,11 @@ var classrealization_1_1_bmi___multi___formulation =
     [ "get_value", "classrealization_1_1_bmi___multi___formulation.html#afeffb2218b1c297653d88afe685d7abf", null ],
     [ "get_values", "classrealization_1_1_bmi___multi___formulation.html#a31836fab0684d4102fb8c534a4d5cad8", null ],
     [ "get_var_value_as_double", "classrealization_1_1_bmi___multi___formulation.html#a7d4f42d90cd209e598af952058ed5f23", null ],
-    [ "get_var_value_as_double", "classrealization_1_1_bmi___multi___formulation.html#a0c3a48f526450134e54affd1a3d40243", null ],
     [ "get_variable_time_begin", "classrealization_1_1_bmi___multi___formulation.html#adf368c5f1754437e1c7142c99ed8239d", null ],
     [ "get_variable_time_end", "classrealization_1_1_bmi___multi___formulation.html#a415c08aba34f778c019b996a940bbc9a", null ],
     [ "init_deferred_associations", "classrealization_1_1_bmi___multi___formulation.html#a624c5166a6e42c6d1aafde6883a20388", null ],
     [ "init_nested_module", "classrealization_1_1_bmi___multi___formulation.html#a093bf43259686df1abbe02087619583e", null ],
-    [ "interpret_parameters", "classrealization_1_1_bmi___multi___formulation.html#a65f97b5efe05e786f59d9f5fd1b10209", null ],
+    [ "interpret_parameters", "classrealization_1_1_bmi___multi___formulation.html#a8a8be619f96c81aa7bf60644b03bed38", null ],
     [ "is_bmi_input_variable", "classrealization_1_1_bmi___multi___formulation.html#a05e7fdfd5f3bcfd09a995fe72f5fc1e4", null ],
     [ "is_bmi_model_time_step_fixed", "classrealization_1_1_bmi___multi___formulation.html#a8ff40396fbb1443543d9ead367e61617", null ],
     [ "is_bmi_output_variable", "classrealization_1_1_bmi___multi___formulation.html#a69664da3a40d37db5c03631665e2c9e2", null ],
@@ -66,7 +65,7 @@ var classrealization_1_1_bmi___multi___formulation =
     [ "set_output_stream", "classrealization_1_1_bmi___multi___formulation.html#a9d02de255937deb8f6169ef20f5a07d6", null ],
     [ "set_output_variable_names", "classrealization_1_1_bmi___multi___formulation.html#ac85ef69c4b2de5a261230469cd0f3985", null ],
     [ "setup_nested_deferred_provider", "classrealization_1_1_bmi___multi___formulation.html#a9655e6ecf71894c5302da1883ea8ce77", null ],
-    [ "validate_parameters", "classrealization_1_1_bmi___multi___formulation.html#aceabe9927b36dce61f338919f2af4c1f", null ],
+    [ "validate_parameters", "classrealization_1_1_bmi___multi___formulation.html#a3ed78c910127ec5115d71fcfe4d47896", null ],
     [ "write_output", "classrealization_1_1_bmi___multi___formulation.html#aa989be0629ecaa29a2410f7588404ff9", null ],
     [ "::Bmi_Cpp_Multi_Array_Test", "classrealization_1_1_bmi___multi___formulation.html#a8f4a9414884c1afc6682f8464a19b080", null ],
     [ "available_forcings", "classrealization_1_1_bmi___multi___formulation.html#aa4a7afd0056334dde2a3ad6185a8b26c", null ],
@@ -87,7 +86,7 @@ var classrealization_1_1_bmi___multi___formulation =
     [ "module_variable_maps", "classrealization_1_1_bmi___multi___formulation.html#a9f72d1b2887273f405171535928ebf29", null ],
     [ "modules", "classrealization_1_1_bmi___multi___formulation.html#a125ff769345d1bc4f004bde256c86686", null ],
     [ "next_time_step_index", "classrealization_1_1_bmi___multi___formulation.html#a196e75e8ddd4a4a4dcde69ef6afe76b4", null ],
-    [ "OPTIONAL_PARAMETERS", "classrealization_1_1_bmi___multi___formulation.html#a64a1aede44084c581c07a48e86ab2c17", null ],
+    [ "OPTIONAL_PARAMETERS", "classrealization_1_1_bmi___multi___formulation.html#a94223bc01cc68d6930fde8128e1f7a75", null ],
     [ "output", "classrealization_1_1_bmi___multi___formulation.html#a55857dc16551760ff59487991fc525fe", null ],
     [ "output_header_fields", "classrealization_1_1_bmi___multi___formulation.html#abfae59b61178df50d71b4d505a31488a", null ],
     [ "output_precision", "classrealization_1_1_bmi___multi___formulation.html#a8ff42a69cf6c735578692c37e20a584c", null ],
@@ -95,5 +94,5 @@ var classrealization_1_1_bmi___multi___formulation =
     [ "output_variable_names", "classrealization_1_1_bmi___multi___formulation.html#a566505f80702c117ef23688ce6892a51", null ],
     [ "primary_module_index", "classrealization_1_1_bmi___multi___formulation.html#abe3de83fc22850cf3af8ff046616b446", null ],
     [ "realized_catchment", "classrealization_1_1_bmi___multi___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1", null ],
-    [ "REQUIRED_PARAMETERS", "classrealization_1_1_bmi___multi___formulation.html#aed28897a6715168f5e173e3b29debf8f", null ]
+    [ "REQUIRED_PARAMETERS", "classrealization_1_1_bmi___multi___formulation.html#a960ae659c1c2c228243e1ffbf6d6508c", null ]
 ];

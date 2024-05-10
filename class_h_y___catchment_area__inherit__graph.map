@@ -1,19 +1,19 @@
 <map id="HY_CatchmentArea" name="HY_CatchmentArea">
 <area shape="rect" id="Node000001" title=" " alt="" coords="228,259,383,424"/>
-<area shape="rect" id="Node000004" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="212,472,399,752"/>
+<area shape="rect" id="Node000004" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="212,472,399,787"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="308,439,308,472,303,472,303,439"/>
 <area shape="rect" id="Node000002" href="$class_h_y___catchment_realization.html" title=" " alt="" coords="125,5,315,211"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="265,224,278,258,273,260,260,226"/>
 <area shape="rect" id="Node000003" href="$class_g_m___object.html" title=" " alt="" coords="340,65,444,151"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="374,166,338,260,333,258,369,164"/>
-<area shape="rect" id="Node000005" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="211,800,399,1493"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="308,767,308,800,303,800,303,767"/>
-<area shape="rect" id="Node000006" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="102,1541,290,3075"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="274,1508,271,1542,266,1541,269,1508"/>
-<area shape="rect" id="Node000009" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="315,1897,517,2719"/>
-<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="342,1508,380,1897,374,1897,337,1508"/>
-<area shape="rect" id="Node000007" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="5,3123,184,3403"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="116,3090,112,3123,107,3123,110,3089"/>
-<area shape="rect" id="Node000008" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="208,3123,387,3403"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="282,3089,285,3123,280,3123,276,3090"/>
+<area shape="rect" id="Node000005" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="211,835,399,1528"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="308,802,308,835,303,835,303,802"/>
+<area shape="rect" id="Node000006" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="102,1576,290,2975"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="272,1543,269,1577,263,1576,267,1543"/>
+<area shape="rect" id="Node000009" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="315,1874,517,2677"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="345,1543,378,1874,373,1875,339,1543"/>
+<area shape="rect" id="Node000007" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="5,3023,184,3263"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="115,2990,111,3023,106,3023,110,2989"/>
+<area shape="rect" id="Node000008" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="208,3023,387,3263"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="282,2989,286,3023,281,3023,277,2990"/>
 </map>

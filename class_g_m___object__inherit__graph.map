@@ -10,16 +10,16 @@
 <area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="703,101,730,137,782,225,777,228,726,140,699,104"/>
 <area shape="rect" id="Node000012" href="$classhy__features_1_1hydrolocation_1_1_h_y___hydro_location.html" title=" " alt="" coords="913,139,1074,459"/>
 <area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="723,58,766,69,814,85,860,108,903,137,915,147,911,151,900,141,858,112,812,90,765,74,722,63"/>
-<area shape="rect" id="Node000003" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="212,507,399,787"/>
+<area shape="rect" id="Node000003" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="212,507,399,821"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="308,396,308,507,303,507,303,396"/>
-<area shape="rect" id="Node000004" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="211,835,399,1528"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="308,802,308,835,303,835,303,802"/>
-<area shape="rect" id="Node000005" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="102,1576,290,3109"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="274,1543,271,1577,266,1576,269,1543"/>
-<area shape="rect" id="Node000008" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="315,1931,517,2754"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="342,1543,380,1931,374,1932,337,1543"/>
-<area shape="rect" id="Node000006" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="5,3157,184,3437"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="116,3124,112,3158,107,3157,110,3124"/>
-<area shape="rect" id="Node000007" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="208,3157,387,3437"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="282,3124,285,3157,280,3158,276,3124"/>
+<area shape="rect" id="Node000004" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="211,869,399,1563"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="308,836,308,870,303,870,303,836"/>
+<area shape="rect" id="Node000005" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="102,1611,290,3009"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="272,1578,269,1611,263,1611,267,1577"/>
+<area shape="rect" id="Node000008" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="315,1909,517,2711"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="345,1577,378,1909,373,1909,339,1578"/>
+<area shape="rect" id="Node000006" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="5,3057,184,3297"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="115,3025,111,3058,106,3057,110,3024"/>
+<area shape="rect" id="Node000007" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="208,3057,387,3297"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="282,3024,286,3057,281,3058,277,3025"/>
 </map>

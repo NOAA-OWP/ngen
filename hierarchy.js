@@ -109,7 +109,6 @@ var hierarchy =
       [ "Network_Test1", "class_network___test1.html", null ],
       [ "Network_Test2", "class_network___test2.html", null ]
     ] ],
-    [ "nexus::Nexus_Manager", "classnexus_1_1_nexus___manager.html", null ],
     [ "ngen::detail::dimension", "structngen_1_1detail_1_1dimension.html", null ],
     [ "ngen::detail::dimension::hash", "structngen_1_1detail_1_1dimension_1_1hash.html", null ],
     [ "ngen::detail::variable< SupportedTypes >", "structngen_1_1detail_1_1variable.html", null ],

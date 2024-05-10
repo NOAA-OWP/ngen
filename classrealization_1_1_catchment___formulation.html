@@ -128,12 +128,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0ef879abdc4b2e6a9ecc8b2d5bf2bafb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae20086b1dc436b0a42f149b3d9de1009" id="r_ae20086b1dc436b0a42f149b3d9de1009"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#ae20086b1dc436b0a42f149b3d9de1009">Catchment_Formulation</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>)</td></tr>
 <tr class="separator:ae20086b1dc436b0a42f149b3d9de1009"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12fad75c2e47f5da298e022429243199" id="r_a12fad75c2e47f5da298e022429243199"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a12fad75c2e47f5da298e022429243199">get_output_header_line</a> (std::string delimiter) override</td></tr>
-<tr class="memdesc:a12fad75c2e47f5da298e022429243199"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a header line appropriate for a file made up of entries from this type's implementation of <code>get_output_line_for_timestep</code>.  <br /></td></tr>
-<tr class="separator:a12fad75c2e47f5da298e022429243199"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf21a61a7da1e87a200d8391cb3e33ce" id="r_adf21a61a7da1e87a200d8391cb3e33ce"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce">get_response</a> (<a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a> t_index, <a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a> t_delta) override=0</td></tr>
-<tr class="memdesc:adf21a61a7da1e87a200d8391cb3e33ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the backing model formulation for the given time step, where it is of the specified size, and return the response output.  <br /></td></tr>
-<tr class="separator:adf21a61a7da1e87a200d8391cb3e33ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac89b330794f34a743c9d3c3d48af41a9" id="r_ac89b330794f34a743c9d3c3d48af41a9"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#ac89b330794f34a743c9d3c3d48af41a9">get_output_header_line</a> (std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER)</td></tr>
+<tr class="memdesc:ac89b330794f34a743c9d3c3d48af41a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a header line appropriate for a file made up of entries from this type's implementation of <code>get_output_line_for_timestep</code>.  <br /></td></tr>
+<tr class="separator:ac89b330794f34a743c9d3c3d48af41a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af841ea78bf8db37c4d4a43724eea8e28" id="r_af841ea78bf8db37c4d4a43724eea8e28"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#af841ea78bf8db37c4d4a43724eea8e28">get_output_line_for_timestep</a> (int timestep, std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER)=0</td></tr>
+<tr class="memdesc:af841ea78bf8db37c4d4a43724eea8e28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a formatted line of output values for the given time step as a delimited string.  <br /></td></tr>
+<tr class="separator:af841ea78bf8db37c4d4a43724eea8e28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab84b1e0762cab86130d88317d0e2cfc1" id="r_ab84b1e0762cab86130d88317d0e2cfc1"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#ab84b1e0762cab86130d88317d0e2cfc1">get_response</a> (<a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a> t_index, <a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a> t_delta) override=0</td></tr>
+<tr class="memdesc:ab84b1e0762cab86130d88317d0e2cfc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the backing model formulation for the given time step, where it is of the specified size, and return the response output.  <br /></td></tr>
+<tr class="separator:ab84b1e0762cab86130d88317d0e2cfc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc0a972f62254d7b807ab5f871209b9f" id="r_adc0a972f62254d7b807ab5f871209b9f"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#adc0a972f62254d7b807ab5f871209b9f">get_required_parameters</a> () override=0</td></tr>
 <tr class="separator:adc0a972f62254d7b807ab5f871209b9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fb8ec9b08820c29d88627ee9781d579" id="r_a4fb8ec9b08820c29d88627ee9781d579"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a4fb8ec9b08820c29d88627ee9781d579">create_formulation</a> (boost::property_tree::ptree &amp;config, <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> *global=nullptr) override=0</td></tr>
@@ -146,9 +149,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2e9d4749500d3f5ea434d77861b03990"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02267e0cc9fec2e1d883f55c2c12b39d" id="r_a02267e0cc9fec2e1d883f55c2c12b39d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d">get_id</a> () const</td></tr>
 <tr class="separator:a02267e0cc9fec2e1d883f55c2c12b39d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adea6ed82d2fa734d87415d34b9c599bd" id="r_adea6ed82d2fa734d87415d34b9c599bd"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#adea6ed82d2fa734d87415d34b9c599bd">get_output_line_for_timestep</a> (int timestep, std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER)=0</td></tr>
-<tr class="memdesc:adea6ed82d2fa734d87415d34b9c599bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a formatted line of output values for the given time step as a delimited string.  <br /></td></tr>
-<tr class="separator:adea6ed82d2fa734d87415d34b9c599bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d02de255937deb8f6169ef20f5a07d6" id="r_a9d02de255937deb8f6169ef20f5a07d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_area.html#a9d02de255937deb8f6169ef20f5a07d6">set_output_stream</a> (std::string file_path)</td></tr>
 <tr class="separator:a9d02de255937deb8f6169ef20f5a07d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa989be0629ecaa29a2410f7588404ff9" id="r_aa989be0629ecaa29a2410f7588404ff9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_area.html#aa989be0629ecaa29a2410f7588404ff9">write_output</a> (std::string out)</td></tr>
@@ -166,10 +166,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a633b7407d447f77910476c0315c8beb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cce2b5b18eaa0ed7e0df10db57da144" id="r_a2cce2b5b18eaa0ed7e0df10db57da144"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144">set_catchment_id</a> (std::string <a class="el" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b">cat_id</a>) override</td></tr>
 <tr class="separator:a2cce2b5b18eaa0ed7e0df10db57da144"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65f97b5efe05e786f59d9f5fd1b10209" id="r_a65f97b5efe05e786f59d9f5fd1b10209"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209">interpret_parameters</a> (boost::property_tree::ptree &amp;config, <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> *global=nullptr)</td></tr>
-<tr class="separator:a65f97b5efe05e786f59d9f5fd1b10209"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aceabe9927b36dce61f338919f2af4c1f" id="r_aceabe9927b36dce61f338919f2af4c1f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">validate_parameters</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> options)</td></tr>
-<tr class="separator:aceabe9927b36dce61f338919f2af4c1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a8be619f96c81aa7bf60644b03bed38" id="r_a8a8be619f96c81aa7bf60644b03bed38"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a8a8be619f96c81aa7bf60644b03bed38">interpret_parameters</a> (boost::property_tree::ptree &amp;config, <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> *global=nullptr)</td></tr>
+<tr class="separator:a8a8be619f96c81aa7bf60644b03bed38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ed78c910127ec5115d71fcfe4d47896" id="r_a3ed78c910127ec5115d71fcfe4d47896"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a3ed78c910127ec5115d71fcfe4d47896">validate_parameters</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> options)</td></tr>
+<tr class="separator:a3ed78c910127ec5115d71fcfe4d47896"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -503,7 +503,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classrealization_1_1_bmi___c___formulation.html#adf1873c11226bdff7098f16b717b9183">realization::Bmi_C_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ac2a7b72c41763e7ef89c5454752d0566">realization::Bmi_Cpp_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#adbe82ffeec39c35a9b2c3ba5ab0a8f6d">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e5990e1c4616de029d7ad7691c2b7c7">realization::Bmi_Module_Formulation::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9265b07222e97669c28fc24454ad7350">realization::Bmi_Module_Formulation::get_values()</a>, and <a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">realization::Formulation::validate_parameters()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0108d3ee83f95ad2eb0733a237078e89">realization::Bmi_Module_Formulation::get_response()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e5990e1c4616de029d7ad7691c2b7c7">realization::Bmi_Module_Formulation::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9265b07222e97669c28fc24454ad7350">realization::Bmi_Module_Formulation::get_values()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a3ed78c910127ec5115d71fcfe4d47896">realization::Formulation::validate_parameters()</a>.</p>
 
 </div>
 </div>
@@ -534,8 +534,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a12fad75c2e47f5da298e022429243199" name="a12fad75c2e47f5da298e022429243199"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12fad75c2e47f5da298e022429243199">&#9670;&#160;</a></span>get_output_header_line()</h2>
+<a id="ac89b330794f34a743c9d3c3d48af41a9" name="ac89b330794f34a743c9d3c3d48af41a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac89b330794f34a743c9d3c3d48af41a9">&#9670;&#160;</a></span>get_output_header_line()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -544,16 +544,16 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string realization::Catchment_Formulation::get_output_header_line </td>
+          <td class="memname">virtual std::string realization::Catchment_Formulation::get_output_header_line </td>
           <td>(</td>
           <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>delimiter</em></td><td>)</td>
+          <td class="paramname"><em>delimiter</em> = <code>DEFAULT_FORMULATION_OUTPUT_DELIMITER</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -563,12 +563,12 @@ Private Attributes</h2></td></tr>
 <p>A default implementation is provided for inheritors of this type, which includes only "Total Discharge."</p>
 <dl class="section return"><dt>Returns</dt><dd>An appropriate header line for this type. </dd></dl>
 
-<p>Implements <a class="el" href="classrealization_1_1_formulation.html#a17b9945a1362e204c78f0126c6354327">realization::Formulation</a>.</p>
+<p>Reimplemented in <a class="el" href="classrealization_1_1_bmi___formulation.html#a9877fa87726acb99303a7231ac5395d8">realization::Bmi_Formulation</a>.</p>
 
 </div>
 </div>
-<a id="adea6ed82d2fa734d87415d34b9c599bd" name="adea6ed82d2fa734d87415d34b9c599bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adea6ed82d2fa734d87415d34b9c599bd">&#9670;&#160;</a></span>get_output_line_for_timestep()</h2>
+<a id="af841ea78bf8db37c4d4a43724eea8e28" name="af841ea78bf8db37c4d4a43724eea8e28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af841ea78bf8db37c4d4a43724eea8e28">&#9670;&#160;</a></span>get_output_line_for_timestep()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -577,7 +577,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::string realization::Formulation::get_output_line_for_timestep </td>
+          <td class="memname">virtual std::string realization::Catchment_Formulation::get_output_line_for_timestep </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>timestep</em>, </td>
@@ -596,7 +596,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -647,8 +647,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="adf21a61a7da1e87a200d8391cb3e33ce" name="adf21a61a7da1e87a200d8391cb3e33ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf21a61a7da1e87a200d8391cb3e33ce">&#9670;&#160;</a></span>get_response()</h2>
+<a id="ab84b1e0762cab86130d88317d0e2cfc1" name="ab84b1e0762cab86130d88317d0e2cfc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab84b1e0762cab86130d88317d0e2cfc1">&#9670;&#160;</a></span>get_response()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -657,7 +657,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double realization::Catchment_Formulation::get_response </td>
+          <td class="memname">virtual double realization::Catchment_Formulation::get_response </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a>&#160;</td>
           <td class="paramname"><em>t_index</em>, </td>
@@ -687,20 +687,20 @@ Private Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">t_index</td><td>The index of the time step for which to run model calculations. </td></tr>
-    <tr><td class="paramname">d_delta_s</td><td>The duration, in seconds, of the time step for which to run model calculations. </td></tr>
+    <tr><td class="paramname">t_delta</td><td>The duration, in seconds, of the time step for which to run model calculations. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The response output of the model for this time step. </dd></dl>
 
-<p>Implements <a class="el" href="classrealization_1_1_formulation.html#ae70ca928c70b08b08c4bfc982ed8e3ca">realization::Formulation</a>.</p>
+<p>Implements <a class="el" href="class_h_y___catchment_realization.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b">HY_CatchmentRealization</a>.</p>
 
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ad21457d65986b77870b896e541264286">realization::Bmi_C_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a890e75339ae7d0debdaf802b40457402">realization::Bmi_Cpp_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a0b66d3f5f51b4b414e08965e15d7bff7">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0108d3ee83f95ad2eb0733a237078e89">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a0b66d3f5f51b4b414e08965e15d7bff7">realization::Bmi_Multi_Formulation</a>.</p>
 
 </div>
 </div>
-<a id="a65f97b5efe05e786f59d9f5fd1b10209" name="a65f97b5efe05e786f59d9f5fd1b10209"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a65f97b5efe05e786f59d9f5fd1b10209">&#9670;&#160;</a></span>interpret_parameters()</h2>
+<a id="a8a8be619f96c81aa7bf60644b03bed38" name="a8a8be619f96c81aa7bf60644b03bed38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a8be619f96c81aa7bf60644b03bed38">&#9670;&#160;</a></span>interpret_parameters()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -709,7 +709,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> realization::Formulation::interpret_parameters </td>
+          <td class="memname"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> realization::Formulation::interpret_parameters </td>
           <td>(</td>
           <td class="paramtype">boost::property_tree::ptree &amp;&#160;</td>
           <td class="paramname"><em>config</em>, </td>
@@ -728,12 +728,12 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">realization::Formulation::validate_parameters()</a>.</p>
+<p class="reference">References <a class="el" href="classrealization_1_1_formulation.html#a3ed78c910127ec5115d71fcfe4d47896">realization::Formulation::validate_parameters()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a3e910719332db1e221c4ef4dd3bb9eb1">realization::Bmi_Module_Formulation::create_formulation()</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#acb4534a0030f794320625be0313fe825">realization::Bmi_Multi_Formulation::create_formulation()</a>.</p>
 
@@ -799,8 +799,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aceabe9927b36dce61f338919f2af4c1f" name="aceabe9927b36dce61f338919f2af4c1f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aceabe9927b36dce61f338919f2af4c1f">&#9670;&#160;</a></span>validate_parameters()</h2>
+<a id="a3ed78c910127ec5115d71fcfe4d47896" name="a3ed78c910127ec5115d71fcfe4d47896"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ed78c910127ec5115d71fcfe4d47896">&#9670;&#160;</a></span>validate_parameters()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -809,7 +809,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void realization::Formulation::validate_parameters </td>
+          <td class="memname">void realization::Formulation::validate_parameters </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a>&#160;</td>
           <td class="paramname"><em>options</em></td><td>)</td>
@@ -818,14 +818,14 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="classrealization_1_1_formulation.html#a2e9d4749500d3f5ea434d77861b03990">realization::Formulation::get_formulation_type()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a12e690d066ac42ccafeae5b2b708cf21">realization::Formulation::get_required_parameters()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7c62e8f7f7db1d06cfef28ee66554def">realization::Bmi_Module_Formulation::inner_create_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209">realization::Formulation::interpret_parameters()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7c62e8f7f7db1d06cfef28ee66554def">realization::Bmi_Module_Formulation::inner_create_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a8a8be619f96c81aa7bf60644b03bed38">realization::Formulation::interpret_parameters()</a>.</p>
 
 </div>
 </div>
@@ -1029,7 +1029,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a></li>
-    <li class="footer">Generated on Fri May 10 2024 14:48:39 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 10 2024 15:15:06 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
