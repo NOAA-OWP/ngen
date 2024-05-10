@@ -9,6 +9,15 @@
 
 namespace data_access {
 
+static constexpr auto forcings_engine_python_module = "NextGen_Forcings_Engine";
+static constexpr auto forcings_engine_python_class  = "NWMv3_Forcing_Engine_BMI_model";
+static constexpr auto forcings_engine_python_classpath = "NextGen_Forcings_Engine.NWMv3_Forcing_Engine_BMI_model";
+static constexpr auto default_time_format = "%Y-%m-%d %H:%M:%S";
+
+//! Parse time string from format.
+//! Utility function for ForcingsEngineLumpedDataProvider constructor.
+time_t parse_time(const std::string& time, const std::string& fmt);
+
 /**
  * Check that requirements for running the forcings engine
  * are available at runtime. If requirements are not available,
@@ -43,7 +52,7 @@ struct ForcingsEngineDataProvider
 
     long record_duration() override
     {
-        return time_step_.count();
+        return std::chrono::duration_cast<std::chrono::seconds>(time_step_).count();
     }
 
     size_t get_ts_index_for_time(const time_t& epoch_time) override
@@ -77,14 +86,15 @@ struct ForcingsEngineDataProvider
     /* Friend functions */
     static ForcingsEngineDataProvider* instance(
         const std::string& init,
-        std::size_t time_begin,
-        std::size_t time_end
+        const std::string& time_begin,
+        const std::string& time_end,
+        const std::string& time_fmt = default_time_format
     )
     {
         auto& inst = instances_.at(init);
         if (inst != nullptr) {
-            assert(inst->time_begin_ == clock_type::time_point{std::chrono::seconds{time_begin}});
-            assert(inst->time_end_ == clock_type::time_point{std::chrono::seconds{time_end}});
+            assert(inst->time_begin_.time_since_epoch() == std::chrono::seconds{parse_time(time_begin, time_fmt)});
+            assert(inst->time_end_.time_since_epoch() == std::chrono::seconds{parse_time(time_end, time_fmt)});
         }
 
         return inst.get();
@@ -106,7 +116,7 @@ struct ForcingsEngineDataProvider
         bmi_ = std::make_unique<models::bmi::Bmi_Py_Adapter>(
             "ForcingsEngine",
             init,
-            "NextGen_Forcings_Engine.BMIForcingsEngine",
+            forcings_engine_python_classpath,
             /*allow_exceed_end=*/true,
             /*has_fixed_time_step=*/true,
             utils::getStdOut()
@@ -142,6 +152,9 @@ struct ForcingsEngineDataProvider
     //! Forcings Engine instance
     std::unique_ptr<models::bmi::Bmi_Py_Adapter> bmi_ = nullptr;
 
+    //! Output variable names
+    std::vector<std::string> var_output_names_{};
+
   private:
     //! Initialization config file path
     std::string init_;
@@ -150,9 +163,6 @@ struct ForcingsEngineDataProvider
     clock_type::time_point time_end_{};
     clock_type::duration   time_step_{};
     std::size_t            time_current_index_{};
-
-    //! Output variable names
-    std::vector<std::string> var_output_names_{};
 };
 
 } // namespace data_access

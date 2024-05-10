@@ -1,14 +1,26 @@
 #include <forcing/ForcingsEngineDataProvider.hpp>
 #include <utilities/python/InterpreterUtil.hpp>
 
+#include <iomanip> // std::get_time
+
+time_t data_access::parse_time(const std::string& time, const std::string& fmt)
+{
+    std::tm tm_ = {};
+    std::stringstream tmstr{time};
+    tmstr >> std::get_time(&tm_, fmt.c_str());
+
+    // Note: `timegm` is available for Linux and BSD (aka macOS) via time.h, but not Windows.
+    return timegm(&tm_);
+}
+
 void data_access::assert_forcings_engine_requirements()
 {
     // Check that the python module is installed.
     {
         auto interpreter_ = utils::ngenPy::InterpreterUtil::getInstance();
         try {
-            auto mod = interpreter_->getModule("NextGen_Forcings_Engine");
-            auto cls = mod.attr("BMIForcingsEngine").cast<py::object>();
+            auto mod = interpreter_->getModule(forcings_engine_python_module);
+            auto cls = mod.attr(forcings_engine_python_class).cast<py::object>();
         } catch(std::exception& e) {
             throw std::runtime_error{
                 "Failed to initialize ForcingsEngine: ForcingsEngine python module is not installed or is not properly configured. (" + std::string{e.what()} + ")"
