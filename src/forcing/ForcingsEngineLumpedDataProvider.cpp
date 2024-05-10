@@ -216,7 +216,7 @@ double Provider::get_value(
 
         if (m == ReSampleMethod::MEAN) {
             const auto time_step_seconds = step.count();
-            const auto time_duration = std::chrono::duration_cast<std::chrono::seconds>(current_time.time_since_epoch()).count();
+            const auto time_duration = std::chrono::duration_cast<std::chrono::seconds>(current_time - start).count();
             const auto num_time_steps = time_duration / time_step_seconds;
             acc /= num_time_steps;
         }
