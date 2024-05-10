@@ -103,6 +103,7 @@ $(document).ready(function(){initNavTree('md_doc_2_next_gen___o_n___c_o_n_u_s.ht
 <li>Prepare the Input Data</li>
 <li>Build the Realization Configurations</li>
 <li>Run Computations with submodules</li>
+<li>Resource Usage</li>
 <li>Run Computation with Topmodel</li>
 <li>Run Computation with Routing</li>
 </ul>
@@ -171,17 +172,16 @@ Build the Executable</h1>
 <p>This will build an executable in the <code>cmake_build_mpi</code> directory named <code>ngen</code> and another named <code>partitionGenerator</code> as well as all the unit tests in the <code>cmake_build_mpi/test</code>.</p>
 <h1><a class="anchor" id="autotoc_md192"></a>
 CONUS Hydrofabric</h1>
-<p>The CONUS hydrofabric is downloaded from <a href="https://www.lynker-spatial.com/#v20.1/">here</a>. The file name under the list is <code>conus.gpkg</code>. Note that since the data there is continually evolving, a newer version may be available in the future. When using a newer version, be mindful that the corresponding initial configuration file generation and validation for all submodules at CONUS scale is necessary, which may be a non-trivial process due to the sheer size of the spatial scale.</p>
+<p>The CONUS hydrofabric is downloaded from <a href="https://www.lynker-spatial.com/#hydrofabric/v20.1/">here</a>. The file name under the list is <code>conus.gpkg</code>. Note that since the data there is continually evolving, a newer version may be available in the future. When using a newer version, be mindful that the corresponding initial configuration file generation and validation for all submodules at CONUS scale is necessary, which may be a non-trivial process due to the sheer size of the spatial scale.</p>
 <p>As the file is fairly large, it is worth some consideration to store it in a proper place, then simply build a symbolic link in the <code>ngen</code> home directory, thus named <code>./hydrofabric/conus.gpkg</code>. Note the easiest way to create the symbolic link is to create a <code>hydrofabric</code> directory and then create a link to that directory.</p>
 <h1><a class="anchor" id="autotoc_md193"></a>
 Generate Partition For Parallel Computation</h1>
-<p>For parallel computation using MPI on hydrofabric, a partition generate tool is used to partition the hydrofabric features ids into a number of partitions equal to the number of MPI processing CPU cores. To generate the partition file, run the following command:</p>
+<p>For parallel computation using MPI on hydrofabric, a <a href="DISTRIBUTED_PROCESSING.md#partitioning-config-generator">partition generate tool</a> is used to partition the hydrofabric features ids into a number of partitions equal to the number of MPI processing CPU cores. To generate the partition file, run the following command:</p>
 <div class="fragment"><div class="line">./cmake-build_mpi/partitionGenerator ./hydrofabric/conus.gpkg ./hydrofabric/conus.gpkg ./partition_config_32.json 32 &#39;&#39; &#39;&#39;</div>
 </div><!-- fragment --><p>In the command above, <code>conus.gpkg</code> is the NextGen hydrofabric version 2.01 for CONUS, <code>partition_config_32.json</code> is the partition file that contains all features ids and their interconnected network information. The number <code>32</code> is intended number of processing cores for running parallel build <code>ngen</code> using MPI. The last two empty strings, as indicated by &lsquo;&rsquo;'`, indicate there is no subsetting, i.e., we intend to run the whole CONUS hydrofabric.</p>
 <h1><a class="anchor" id="autotoc_md194"></a>
 Prepare the Input Data</h1>
-<p>Input data includes the forcing data and initial parameter data for various submodules. These depend on what best suits the user's need. For our case, as of this documentation, beside forcing data, which can be accessed at <code>./forcing/NextGen_forcing_2016010100.nc</code> using the symbolic link scheme, we also generated initial input data for various submodules <code>noah-owp-modular</code>, <code>PET</code>, <code>CFE</code>, <code>SoilMoistureProfiles (SMP)</code>, <code>SoilFreezeThaw (SFT)</code>. The first three are located in <code>./conus_config/</code>, the SMP initial configs are located in <code>./conus_smp_configs/</code> and the SFT initial configs are located in <code>./conus_sft_configs/</code>.</p>
-<p>For code used to generate the initial config files for the various modules, the interested users are directed to this <a href="https://github.com/NOAA-OWP/ngen-cal/tree/master/python/ngen_config_gen">web location</a>.</p>
+<p>Input data includes the forcing data and initial parameter data for various submodules. These depend on what best suits the user's need. For our case, as of this documentation, beside forcing data, which can be accessed at <code>./forcing/NextGen_forcing_2016010100.nc</code> using the symbolic link scheme, we also generated initial input data for various submodules <code>noah-owp-modular</code>, <code>PET</code>, <code>CFE</code>, <code>SoilMoistureProfiles (SMP)</code>, <code>SoilFreezeThaw (SFT)</code>. The first three are located in <code>./conus_config/</code>, the SMP initial configs are located in <code>./conus_smp_configs/</code> and the SFT initial configs are located in <code>./conus_sft_configs/</code>. For code used to generate the initial config files for the various modules, the interested users are directed to this <a href="https://github.com/NOAA-OWP/ngen-cal/tree/master/python/ngen_config_gen">web location</a>.</p>
 <p>The users are warned that since the simulated region is large, some of the initial config parameters values for some catchments may be unsuitable and cause the <code>ngen</code> execution to stop due to errors. Usually, in such cases, either <code>ngen</code> or the submodule itself may provide some hint as to the catchment ids or the location of the code that caused the error. Users may follow these hints to figure out as to which initial input parameter or parameters are initialized with inappropriate values. In the case of SFT, an initial value of <code>smcmax=1.0</code> would be too large. In the case of SMP, an initial value of <code>b=0.01</code> would be too small, for example.</p>
 <h1><a class="anchor" id="autotoc_md195"></a>
 Build the Realization Configurations</h1>
@@ -204,18 +204,75 @@ Run Computations with Submodules</h1>
 </div><!-- fragment --><p>where <code>ngen</code> is the executable we build in the Building the Executable section. All other terms have been discussed above in details. With the current existing realization config files, the above jobs run 10 days simulation time on CONUS scale.</p>
 <p>Be aware that the above commands will generate over a million output files associated with catchment and nexus ids. In the realization config files used above, we have specified a directory <code>./output_dir/</code> to store these files. If you <code>cd</code> to <code>./output_dir</code> and issue a <code>ls</code> command, it will be significantly slower than usual to list all the file names. You can choose a different output file directory name than <code>./output_dir/</code> by modifying the directory name in the realization configuration file if you prefer. Note that you need to create the output file directory before running the executable.</p>
 <h1><a class="anchor" id="autotoc_md197"></a>
+Resource Usage</h1>
+<p>The following table lists the CPU wall clock ime used for various realization configurations running 10 day simulation time. The timing values reported in the table are from single run, not from average. Note in particular that the <code>Initialization Time</code> may be significantly affected by system loads at the time of job start.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Realization   </th><th class="markdownTableHeadCenter">Number of CPUs   </th><th class="markdownTableHeadCenter">Initialization Time (s)   </th><th class="markdownTableHeadCenter">Computation Time (s)   </th><th class="markdownTableHeadCenter">Total Time (s)    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">conus_bmi_multi_realization_config_w_sloth.json   </td><td class="markdownTableBodyCenter">32   </td><td class="markdownTableBodyCenter">2618.6   </td><td class="markdownTableBodyCenter">737.4   </td><td class="markdownTableBodyCenter">3356.0    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">conus_bmi_multi_realization_config_w_sloth_noah.json   </td><td class="markdownTableBodyCenter">32   </td><td class="markdownTableBodyCenter">1360.1   </td><td class="markdownTableBodyCenter">2143.9   </td><td class="markdownTableBodyCenter">3504.0    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">conus_bmi_multi_realization_config_w_sloth_noah_pet.json   </td><td class="markdownTableBodyCenter">32   </td><td class="markdownTableBodyCenter">3204.0   </td><td class="markdownTableBodyCenter">2106.5   </td><td class="markdownTableBodyCenter">5310.5    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe.json   </td><td class="markdownTableBodyCenter">32   </td><td class="markdownTableBodyCenter">1214.9   </td><td class="markdownTableBodyCenter">4069.2   </td><td class="markdownTableBodyCenter">5284.1    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">conus_bmi_multi_realization_config_w_sloth_noah_pet_smp.json   </td><td class="markdownTableBodyCenter">32   </td><td class="markdownTableBodyCenter">1453.4   </td><td class="markdownTableBodyCenter">3087.0   </td><td class="markdownTableBodyCenter">4540.4    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft.json   </td><td class="markdownTableBodyCenter">32   </td><td class="markdownTableBodyCenter">3245.7   </td><td class="markdownTableBodyCenter">3808.1   </td><td class="markdownTableBodyCenter">7053.8    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json   </td><td class="markdownTableBodyCenter">32   </td><td class="markdownTableBodyCenter">1354.7   </td><td class="markdownTableBodyCenter">5283.1   </td><td class="markdownTableBodyCenter">6637.8   </td></tr>
+</table>
+<p>The abreviation used for submodule names in the table:</p><ul>
+<li>noah - noah-owp-modular</li>
+<li>pet - potential evapotranspiration</li>
+<li>cfe - Conceptual functional equivalence</li>
+<li>smp - SoilMoistureProfiles</li>
+<li>sft - SoilFreezeThaw</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md198"></a>
 Run Computation with Topmodel</h1>
 <p>To be added</p>
-<h1><a class="anchor" id="autotoc_md198"></a>
+<h1><a class="anchor" id="autotoc_md199"></a>
 Run Computation with Routing</h1>
-<p>To be added </p>
+<p>To run computation on CONUS with routing, we need to build the executable with the routing option turned on. This can be done using the build script displayed in the Build the Executable section, and ensure both <code>-DNGEN_WITH_PYTHON:BOOL=ON</code> and <code>-DNGEN_WITH_ROUTING:BOOL=ON</code> are enabled. Then, you can run the script to build the <code>ngen</code> executable.</p>
+<p>You also need to build the <code>t-route</code> submodule. First, as the vendored <code>t-route</code> submodule is out of date, to get the latest version, you need to remove the old <code>t-route</code> and run <code>git clone <a href="https://github.com/NOAA-OWP/t-route">https://github.com/NOAA-OWP/t-route</a></code> in the <code>extern</code> directory. For building <code>t-route</code> in general, we refer to the documentation <a class="el" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html">PYTHON_ROUTING.md</a> for essential details. We just want to add some additional discussion here to make the process easier. Note that there is more than one way to build <code>t-route</code>. Do <code>cd t-route</code>, then run:</p>
+<div class="fragment"><div class="line">FC=mpif90 NETCDFINC=&lt;path-to-netcdf-include-directory&gt; ./compiler.sh</div>
+</div><!-- fragment --><p>This will let you use the NetCDF library that you want to build <code>t-route</code>. Alternatively, you can edit the <code>compiler.sh</code> file, note these comment lines in the script:</p>
+<div class="fragment"><div class="line">#if you have custom dynamic library paths, uncomment below and export them</div>
+<div class="line">#export LD_LIBRARY_PATHS=&lt;paths&gt;:$LD_LIBRARY_PATHS</div>
+</div><!-- fragment --><p>You can uncomment the second line above and put your NetCDF library in the path. In addition, change this line:</p>
+<div class="fragment"><div class="line">export NETCDFINC=/usr/include/openmpi-x86_64/</div>
+</div><!-- fragment --><p>to the path to your NetCDF include directory, i.e.</p>
+<div class="fragment"><div class="line">export NETCDFINC=&lt;path to your NetCDF include directory&gt;</div>
+</div><!-- fragment --><p>Then, run the command:</p>
+<div class="fragment"><div class="line">FC=mpif90 ./compiler.sh</div>
+</div><!-- fragment --><p>After successfully building <code>t-route</code>, you can run <code>ngen</code> with routing. Note that we have several realization configuration files and the <code>routing_config_CONUS.yaml</code> file for running <code>ngen</code> with routing. The realization configuration file and <code>routing_config_CONUS.yaml</code> specify where the input and output files are. For routing, we assume the existence of a <code>stream_output_dir</code> directory for writing output files. You need to do <code>mkdir stream_output_dir</code> before running <code>ngen</code>. With that, we can run an example with the command:</p>
+<div class="fragment"><div class="line">mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg &#39;&#39; ./hydrofabric/conus.gpkg &#39;&#39; data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_trt.json conus_partition_32.json</div>
+</div><!-- fragment --><p>If your run is successful, you should see the directory <code>stream_output_dir</code> populated with output files in NetCDF format with each file corresponding to each hour between 2016-01-01 to 2016-01-10.</p>
+<p>In the following table, we display the CPU timing information for a few realizations that we tested:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Realization   </th><th class="markdownTableHeadCenter">Number of CPUs   </th><th class="markdownTableHeadCenter">Initialization Time (s)   </th><th class="markdownTableHeadCenter">Ngen Computation Time (s)   </th><th class="markdownTableHeadCenter">Routing Computation Time (s)   </th><th class="markdownTableHeadCenter">Total Time (s)    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">conus_bmi_multi_realization_config_w_sloth_noah_trt.json   </td><td class="markdownTableBodyCenter">32   </td><td class="markdownTableBodyCenter">958.1   </td><td class="markdownTableBodyCenter">2288.4   </td><td class="markdownTableBodyCenter">3694.1   </td><td class="markdownTableBodyCenter">6940.6    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_trt.json   </td><td class="markdownTableBodyCenter">32   </td><td class="markdownTableBodyCenter">1069.8   </td><td class="markdownTableBodyCenter">4606.3   </td><td class="markdownTableBodyCenter">4474.1   </td><td class="markdownTableBodyCenter">10150.2    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe_trt.json   </td><td class="markdownTableBodyCenter">32   </td><td class="markdownTableBodyCenter">2142.0   </td><td class="markdownTableBodyCenter">5632.4   </td><td class="markdownTableBodyCenter">4510.3   </td><td class="markdownTableBodyCenter">12284.7   </td></tr>
+</table>
+<ul>
+<li>trt - abbreviation for t-route</li>
+<li>For all other abbreviations, see Resource Usage. </li>
+</ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed May 8 2024 14:51:11 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 10 2024 14:48:38 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

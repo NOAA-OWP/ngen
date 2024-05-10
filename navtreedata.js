@@ -266,75 +266,76 @@ var NAVTREE =
       [ "Prepare the Input Data", "md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md194", null ],
       [ "Build the Realization Configurations", "md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md195", null ],
       [ "Run Computations with Submodules", "md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md196", null ],
-      [ "Run Computation with Topmodel", "md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md197", null ],
-      [ "Run Computation with Routing", "md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md198", null ]
+      [ "Resource Usage", "md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md197", null ],
+      [ "Run Computation with Topmodel", "md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md198", null ],
+      [ "Run Computation with Routing", "md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md199", null ]
     ] ],
     [ "Precision guidelines for validation of NGEN code translation and upgrades", "md_doc_2_precision___guidelines__for___ngen___code___validation.html", null ],
     [ "Standards for Programming", "md_doc_2programming__standards.html", [
-      [ "Source Documentation", "md_doc_2programming__standards.html#autotoc_md201", null ],
-      [ "Naming", "md_doc_2programming__standards.html#autotoc_md202", null ],
-      [ "Other", "md_doc_2programming__standards.html#autotoc_md205", [
-        [ "Headers", "md_doc_2programming__standards.html#autotoc_md206", null ],
-        [ "Spaces vs Tabs", "md_doc_2programming__standards.html#autotoc_md207", null ],
-        [ "Braces", "md_doc_2programming__standards.html#autotoc_md208", null ],
-        [ "Line Width", "md_doc_2programming__standards.html#autotoc_md209", null ]
+      [ "Source Documentation", "md_doc_2programming__standards.html#autotoc_md202", null ],
+      [ "Naming", "md_doc_2programming__standards.html#autotoc_md203", null ],
+      [ "Other", "md_doc_2programming__standards.html#autotoc_md206", [
+        [ "Headers", "md_doc_2programming__standards.html#autotoc_md207", null ],
+        [ "Spaces vs Tabs", "md_doc_2programming__standards.html#autotoc_md208", null ],
+        [ "Braces", "md_doc_2programming__standards.html#autotoc_md209", null ],
+        [ "Line Width", "md_doc_2programming__standards.html#autotoc_md210", null ]
       ] ]
     ] ],
     [ "Python Routing", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html", [
-      [ "Summary", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md211", null ],
-      [ "Setup Virtual Environment", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md212", null ],
-      [ "Install t-route", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md213", null ],
-      [ "Installation Caveats", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md214", [
-        [ "Compilers and Libraries", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md215", null ],
-        [ "Default installation is in development mode (impacts macOS)", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md216", null ],
-        [ "Some tips on installation if you run into issues", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md217", null ]
+      [ "Summary", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md212", null ],
+      [ "Setup Virtual Environment", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md213", null ],
+      [ "Install t-route", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md214", null ],
+      [ "Installation Caveats", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md215", [
+        [ "Compilers and Libraries", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md216", null ],
+        [ "Default installation is in development mode (impacts macOS)", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md217", null ],
+        [ "Some tips on installation if you run into issues", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md218", null ]
       ] ],
-      [ "Using t-route with ngen", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md218", [
-        [ "Realization Config", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md219", null ],
-        [ "Routing Config", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md220", null ],
-        [ "Configuration considerations for t-route with ngen", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md221", null ]
+      [ "Using t-route with ngen", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md219", [
+        [ "Realization Config", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md220", null ],
+        [ "Routing Config", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md221", null ],
+        [ "Configuration considerations for t-route with ngen", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md222", null ]
       ] ],
-      [ "Running t-route separately with ngen output", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md222", null ],
-      [ "Known issues", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md223", [
-        [ "Cleanup of <tt>*.parquet</tt> files required", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md224", null ],
-        [ "Bug in multiprocessing on macOS", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md225", null ]
+      [ "Running t-route separately with ngen output", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md223", null ],
+      [ "Known issues", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md224", [
+        [ "Cleanup of <tt>*.parquet</tt> files required", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md225", null ],
+        [ "Bug in multiprocessing on macOS", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md226", null ]
       ] ]
     ] ],
     [ "Realization Configuration", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html", null ],
     [ "<a href=\"https://docs.opengeospatial.org/is/14-111r6/14-111r6.html\" >HY_Features</a>", "md_doc_2references.html", [
-      [ "<a href=\"https://bmi-spec.readthedocs.io/en/latest/\" >BMI</a>", "md_doc_2references.html#autotoc_md228", null ],
-      [ "Formulations", "md_doc_2references.html#autotoc_md229", null ],
-      [ "HYMOD", "md_doc_2references.html#autotoc_md230", null ],
-      [ "T-shirt", "md_doc_2references.html#autotoc_md231", null ],
-      [ "GIUH", "md_doc_2references.html#autotoc_md232", [
-        [ "Modeling References", "md_doc_2references.html#autotoc_md233", null ]
+      [ "<a href=\"https://bmi-spec.readthedocs.io/en/latest/\" >BMI</a>", "md_doc_2references.html#autotoc_md229", null ],
+      [ "Formulations", "md_doc_2references.html#autotoc_md230", null ],
+      [ "HYMOD", "md_doc_2references.html#autotoc_md231", null ],
+      [ "T-shirt", "md_doc_2references.html#autotoc_md232", null ],
+      [ "GIUH", "md_doc_2references.html#autotoc_md233", [
+        [ "Modeling References", "md_doc_2references.html#autotoc_md234", null ]
       ] ]
     ] ],
     [ "Installation instructions", "md__i_n_s_t_a_l_l.html", [
-      [ "Building and running with docker:", "md__i_n_s_t_a_l_l.html#autotoc_md236", null ],
-      [ "Building manually:", "md__i_n_s_t_a_l_l.html#autotoc_md237", null ]
+      [ "Building and running with docker:", "md__i_n_s_t_a_l_l.html#autotoc_md237", null ],
+      [ "Building manually:", "md__i_n_s_t_a_l_l.html#autotoc_md238", null ]
     ] ],
     [ "Guidance on how to contribute", "md__c_o_n_t_r_i_b_u_t_i_n_g.html", [
-      [ "Using the issue tracker", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md240", null ],
-      [ "Changing the code-base", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md241", null ]
+      [ "Using the issue tracker", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md241", null ],
+      [ "Changing the code-base", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md242", null ]
     ] ],
     [ "Disclaimer", "md__t_e_r_m_s.html", [
-      [ "Exceptions", "md__t_e_r_m_s.html#autotoc_md244", null ]
+      [ "Exceptions", "md__t_e_r_m_s.html#autotoc_md245", null ]
     ] ],
     [ "Testing", "md_test_2_r_e_a_d_m_e.html", [
-      [ "Testing Frameworks", "md_test_2_r_e_a_d_m_e.html#autotoc_md246", [
-        [ "<strong>Google Test</strong>", "md_test_2_r_e_a_d_m_e.html#autotoc_md247", [
-          [ "(Re)generating CMake Project Buildsystem", "md_test_2_r_e_a_d_m_e.html#autotoc_md248", null ]
+      [ "Testing Frameworks", "md_test_2_r_e_a_d_m_e.html#autotoc_md247", [
+        [ "<strong>Google Test</strong>", "md_test_2_r_e_a_d_m_e.html#autotoc_md248", [
+          [ "(Re)generating CMake Project Buildsystem", "md_test_2_r_e_a_d_m_e.html#autotoc_md249", null ]
         ] ]
       ] ],
-      [ "Executing Automated Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md249", [
-        [ "C++ Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md250", [
-          [ "Test Targets and Executables", "md_test_2_r_e_a_d_m_e.html#autotoc_md251", null ]
+      [ "Executing Automated Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md250", [
+        [ "C++ Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md251", [
+          [ "Test Targets and Executables", "md_test_2_r_e_a_d_m_e.html#autotoc_md252", null ]
         ] ]
       ] ],
-      [ "Creating New Automated Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md252", [
-        [ "Adding Tests to CMake Builds", "md_test_2_r_e_a_d_m_e.html#autotoc_md253", null ],
-        [ "Test Creation Rules of Thumb", "md_test_2_r_e_a_d_m_e.html#autotoc_md254", null ]
+      [ "Creating New Automated Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md253", [
+        [ "Adding Tests to CMake Builds", "md_test_2_r_e_a_d_m_e.html#autotoc_md254", null ],
+        [ "Test Creation Rules of Thumb", "md_test_2_r_e_a_d_m_e.html#autotoc_md255", null ]
       ] ]
     ] ],
     [ "Todo List", "todo.html", null ],
@@ -387,9 +388,9 @@ var NAVTREEINDEX =
 "classrealization_1_1_bmi___multi___formulation.html#afeffb2218b1c297653d88afe685d7abf",
 "functions_func_p.html",
 "md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md196",
-"namespacerealization.html#ac5a3c0c1080741658e77e7468b9b35dc",
-"structngen_1_1detail_1_1variable.html#a37902b2b20a7a88966c4884145ea14d3",
-"structrealization_1_1config_1_1_forcing.html#a393e96a8db52ddc1840b9f9341739290"
+"namespacerealization.html#ab9e82c6743f665511634e0825d3c4be7",
+"structngen_1_1detail_1_1variable.html#a2fc7bd4973e1559bc8177688ee5377e7",
+"structrealization_1_1config_1_1_forcing.html#a13bc79d9ebaeced7519910cb6ba33156"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
