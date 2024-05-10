@@ -30,6 +30,8 @@ namespace data_access
         public:
 
         virtual ~DataProvider() = default;
+        // To be called at shutdown, before destruction
+        virtual void finalize() { }
 
         /** Return the variables that are accessable by this data provider */
 
