@@ -173,13 +173,15 @@ double Provider::at(
     bool      previous
 )
 {
+
     if (divide_idx == bad_index || variable_idx == bad_index) {
         const auto shape = var_cache_.shape();
         const auto shape_str = std::to_string(shape[0]) + ", " +
                                std::to_string(shape[1]) + ", " +
                                std::to_string(shape[2]);
 
-        const auto index_str = (divide_idx == bad_index ? "?" : std::to_string(divide_idx)) + ", " +
+        const auto index_str = (previous ? "1" : "0") + std::string{", "} +
+                               (divide_idx == bad_index ? "?" : std::to_string(divide_idx)) + ", " +
                                (variable_idx == bad_index ? "?" : std::to_string(variable_idx));
 
         throw std::out_of_range{
@@ -196,11 +198,13 @@ double Provider::get_value(
     ReSampleMethod m
 )
 {
-    const auto start = clock_type::from_time_t(selector.get_init_time());
-    const auto end = std::chrono::seconds{selector.get_duration_secs()} + start;
-    const auto step = std::chrono::seconds{this->record_duration()};
-    const std::string id = selector.get_id();
-    const std::string var = selector.get_variable_name();
+    const auto start        = clock_type::from_time_t(selector.get_init_time());
+    const auto end          = std::chrono::seconds{selector.get_duration_secs()} + start;
+    const auto step         = std::chrono::seconds{this->record_duration()};
+    const std::string id    = selector.get_id();
+    const std::string var   = selector.get_variable_name();
+    const auto divide_index = this->divide_index(id);
+    const auto var_index    = this->variable_index(var);
 
     if (m == ReSampleMethod::SUM || m == ReSampleMethod::MEAN) {
         double acc = 0.0;
@@ -210,7 +214,7 @@ double Provider::get_value(
                 break;
             }
 
-            acc += this->at(id, var);
+            acc += this->at(divide_index, var_index);
             current_time += step;
         }
 
@@ -232,16 +236,19 @@ std::vector<double> Provider::get_values(
     ReSampleMethod m
 )
 {
-    const auto start = clock_type::from_time_t(selector.get_init_time());
-    const auto end   = std::chrono::seconds{selector.get_duration_secs()} + start;
-    const auto step  = std::chrono::seconds{this->record_duration()};
-    const std::string id = selector.get_id();
-    const std::string var = selector.get_variable_name();
+    const auto start        = clock_type::from_time_t(selector.get_init_time());
+    const auto end          = std::chrono::seconds{selector.get_duration_secs()} + start;
+    const auto step         = std::chrono::seconds{this->record_duration()};
+    const std::string id    = selector.get_id();
+    const std::string var   = selector.get_variable_name();
+    const auto divide_index = this->divide_index(id);
+    const auto var_index    = this->variable_index(var);
 
     std::vector<double> values;
     values.reserve((end - start) / step);
     for (auto current_time = start; current_time < end; current_time += step) {
-        values.push_back(this->at(id, var));
+        values.push_back(this->at(divide_index, var_index));
+        this->next();
     }
 
     return values;
