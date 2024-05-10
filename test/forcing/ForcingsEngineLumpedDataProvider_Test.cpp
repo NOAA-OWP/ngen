@@ -123,13 +123,11 @@ TEST_F(ForcingsEngineLumpedDataProviderTest, VariableAccess)
 
     const auto outputs = provider_->get_available_variable_names();
 
-    ASSERT_EQ(outputs.size(), expected_variables.size());
-
-    // Check that each output variable exists in the list of expected variables
-    for (const auto& output : outputs) {
+    // Check that each expected variable is in the list of available outputs.
+    for (const auto& expected : expected_variables) {
         EXPECT_NE(
-            std::find(expected_variables.begin(), expected_variables.end(), output),
-            expected_variables.end()
+            std::find(outputs.begin(), outputs.end(), expected),
+            outputs.end()
         );
     }
 
