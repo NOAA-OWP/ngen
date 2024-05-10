@@ -246,6 +246,20 @@ namespace realization {
                     return "";
             }
 
+#if NGEN_WITH_NETCDF
+        void close_nc_file()
+        {
+            for (auto const& fmap: formulations)
+            {
+                if (fmap.second->get_forcing()->get_nc_file() != nullptr) {
+                    fmap.second->get_forcing()->get_nc_file()->close();
+                } else {
+                    continue;
+                }
+            }
+        }
+#endif
+
             /**
              * @brief Get the formatted output root
              *
