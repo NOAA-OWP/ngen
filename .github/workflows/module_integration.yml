@@ -145,6 +145,7 @@ jobs:
       CXX: mpic++
       FC: gfortran
       F90: gfortran
+      ESMF_VERSION: "8.6.0"
 
     steps:
       - name: Checkout NGen
@@ -169,16 +170,25 @@ jobs:
           spack install netcdf-c +parallel-netcdf
           spack install netcdf-fortran
           spack install parallelio +pnetcdf +ncint
-          spack install esmf@8.5.0 +pnetcdf
+          spack install esmf@${{ env.ESMF_VERSION }} +pnetcdf
       
       - name: Install ESMPy
         run: |
-          git clone -b v8.5.0 --depth 1 https://github.com/esmf-org/esmf /tmp/esmf
+          . .venv/bin/activate
+          git clone -b v${{ env.ESMF_VERSION }} --depth 1 https://github.com/esmf-org/esmf /tmp/esmf
           pushd /tmp/esmf/src/addon/esmpy
           spack load esmf
           python3 -m pip install .
           popd
           rm -r /tmp/esmf
+
+      - name: Install Forcings Engine
+        run: |
+          . .venv/bin/activate
+          pushd extern/ngen-forcing
+          spack load esmf
+          python3 -m pip install .
+          popd
       
       # TODO: Store in Git or Pull? They are large files
       # - name: Extract Forcing GRIBs
@@ -193,6 +203,7 @@ jobs:
 
       - name: Run Test
         run: |
+          . .venv/bin/activate
           spack load esmf
           mpirun -np 2 ./cmake_build/test/test_forcings_engine
         timeout-minutes: 10
