@@ -42,9 +42,19 @@ Provider::ForcingsEngineLumpedDataProvider(
         id_dim
     );
 
+    // temporary map to ensure uniqueness
+    std::unordered_map<int, int> uniq;
+    uniq.reserve(id_dim);
     var_divides_.reserve(id_dim);
     for (int i = 0; i < id_dim; ++i) {
-        var_divides_[cat_id[i]] = i;
+        const auto id = cat_id[i];
+    
+        uniq[id]++;
+        if (uniq[id] > 1) {
+            throw std::runtime_error{"Non-unique catchment ID found in lumped forcings engine domain: cat-" + std::to_string(id)};
+        }
+
+        var_divides_[id] = i;
     }
 
     var_cache_ = decltype(var_cache_){{ 2, id_dim, var_dim }};
