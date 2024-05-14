@@ -51,7 +51,7 @@ Provider::ForcingsEngineLumpedDataProvider(
     
         uniq[id]++;
         if (uniq[id] > 1) {
-            throw std::runtime_error{"Non-unique catchment ID found in lumped forcings engine domain: cat-" + std::to_string(id)};
+            throw std::runtime_error{"Non-unique catchment ID found in lumped forcings engine domain: " + std::to_string(id)};
         }
 
         var_divides_[id] = i;
