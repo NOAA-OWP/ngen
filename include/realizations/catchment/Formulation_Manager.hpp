@@ -240,6 +240,11 @@ namespace realization {
                     return "";
             }
 
+            /**
+             * Release any resources that should not be held as the run is shutting down
+             *
+             * In particular, this should be called before MPI_Finalize()
+             */
             void finalize() {
                 for (auto const& fmap: formulations) {
                     fmap.second->finalize();

@@ -30,7 +30,12 @@ namespace data_access
         public:
 
         virtual ~DataProvider() = default;
-        // To be called at shutdown, before destruction
+
+        /**
+         * Release any resources that should not be held as the run is shutting down
+         *
+         * In particular, this should be called before MPI_Finalize()
+         */
         virtual void finalize() { }
 
         /** Return the variables that are accessable by this data provider */
