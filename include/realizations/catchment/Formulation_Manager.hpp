@@ -249,6 +249,9 @@ namespace realization {
                 for (auto const& fmap: formulations) {
                     fmap.second->finalize();
                 }
+                for (auto const& fmap: domain_formulations) {
+                    fmap.second->finalize();
+                }
 
 #if NGEN_WITH_NETCDF
                 data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
