@@ -43,8 +43,10 @@ class HY_CatchmentRealization
      */
     void finalize()
     {
-        forcing->finalize();
-        forcing = nullptr;
+        if (forcing) {
+            forcing->finalize();
+            forcing = nullptr;
+        }
     }
 
     protected:
