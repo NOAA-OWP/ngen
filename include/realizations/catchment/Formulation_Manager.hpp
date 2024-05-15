@@ -45,11 +45,7 @@ namespace realization {
                 this->tree = loaded_tree;
             }
 
-            virtual ~Formulation_Manager(){
-#if NGEN_WITH_NETCDF
-                data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
-#endif
-            };
+            ~Formulation_Manager() = default;
 
             virtual void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
                 //TODO seperate the parsing of configuration options like time
@@ -248,6 +244,10 @@ namespace realization {
                 for (auto const& fmap: formulations) {
                     fmap.second->finalize();
                 }
+
+#if NGEN_WITH_NETCDF
+                data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
+#endif
             }
 
             /**
