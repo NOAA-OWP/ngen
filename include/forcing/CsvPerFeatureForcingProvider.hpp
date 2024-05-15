@@ -415,9 +415,6 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
     int day_of_year;
     std::string forcing_file_name;
 
-    std::shared_ptr<time_type> start_date_time;
-    std::shared_ptr<time_type> end_date_time;
-
     time_t start_date_time_epoch;
     time_t end_date_time_epoch;
     time_t current_date_time_epoch;
