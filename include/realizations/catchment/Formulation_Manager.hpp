@@ -25,8 +25,6 @@
 namespace realization {
 
     class Formulation_Manager {
-        typedef std::tuple<std::string, std::string> dual_keys;
-
         public:
 
             std::shared_ptr<Simulation_Time> Simulation_Time_Object;
