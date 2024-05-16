@@ -12,7 +12,7 @@ using namespace pybind11::literals;
 Bmi_Py_Formulation::Bmi_Py_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream)
 : Bmi_Module_Formulation(id, std::move(forcing), output_stream) { }
 
-shared_ptr<Bmi_Adapter> Bmi_Py_Formulation::construct_model(const geojson::PropertyMap &properties) {
+std::shared_ptr<Bmi_Adapter> Bmi_Py_Formulation::construct_model(const geojson::PropertyMap &properties) {
     auto python_type_name_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME);
     if (python_type_name_iter == properties.end()) {
         throw std::runtime_error("BMI Python formulation requires Python model class type, but none given in config");
