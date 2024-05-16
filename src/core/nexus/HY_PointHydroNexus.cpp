@@ -54,7 +54,7 @@ double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_st
 
     if ( percent_flow > 100.0)
     {
-        // no downstream may ever recieve more than 100% of flows
+        // no downstream may ever receive more than 100% of flows
 
         BOOST_THROW_EXCEPTION(invalid_downstream_request());
     }

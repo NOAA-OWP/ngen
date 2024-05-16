@@ -35,7 +35,7 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         virtual ~HY_PointHydroNexusRemote();
 
         /** get the request percentage of downstream flow through this nexus at timestep t. If the indicated catchment is not local a async send will be
-            created. Will attempt to process all async recieves currently queued before processing flows*/
+            created. Will attempt to process all async receives currently queued before processing flows*/
         double get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow);
 
         /** add flow to this nexus for timestep t. If the indicated catchment is not local an async receive will be started*/
@@ -96,7 +96,7 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
             MPI_Request mpi_request;
         };
 
-        std::list<async_request> stored_recieves;
+        std::list<async_request> stored_receives;
         std::list<async_request> stored_sends;
 
         std::string nexus_prefix = "cat-";
