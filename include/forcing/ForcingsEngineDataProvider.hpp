@@ -78,9 +78,9 @@ struct ForcingsEngineDataProvider
     /* Remaining virtual member functions from DataProvider must be implemented
        by derived classes. */
 
-    double get_value(const selection_type& selector, data_access::ReSampleMethod m) override = 0;
+    data_type get_value(const selection_type& selector, data_access::ReSampleMethod m) override = 0;
     
-    std::vector<double> get_values(const selection_type& selector, data_access::ReSampleMethod m) override = 0;
+    std::vector<data_type> get_values(const selection_type& selector, data_access::ReSampleMethod m) override = 0;
 
 
     /* Friend functions */
