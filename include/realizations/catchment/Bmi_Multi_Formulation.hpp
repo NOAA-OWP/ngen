@@ -205,8 +205,8 @@ namespace realization {
          * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
          */
         const std::string &get_config_mapped_variable_name(const std::string &output_var_name,
-                                                      const shared_ptr<Bmi_Formulation>& out_module,
-                                                      const shared_ptr<Bmi_Formulation>& in_module);
+                                                           const std::shared_ptr<Bmi_Formulation>& out_module,
+                                                           const std::shared_ptr<Bmi_Formulation>& in_module);
 
         const std::string &get_forcing_file_path() const override;
 

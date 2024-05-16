@@ -6,8 +6,6 @@
 #include <AorcForcing.hpp>
 #include "GenericDataProvider.hpp"
 
-using std::shared_ptr;
-
 //Forward Declarations
 class HY_Catchment;
 
@@ -42,7 +40,7 @@ class HY_CatchmentRealization
 
     protected:
 
-    shared_ptr<HY_Catchment> realized_catchment;
+    std::shared_ptr<HY_Catchment> realized_catchment;
 
     virtual std::string get_catchment_id() = 0;
 

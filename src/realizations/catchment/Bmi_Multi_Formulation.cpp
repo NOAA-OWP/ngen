@@ -268,8 +268,8 @@ const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const 
  * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
  */
 const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const std::string &output_var_name,
-                                                                     const shared_ptr<Bmi_Formulation>& out_module,
-                                                                     const shared_ptr<Bmi_Formulation>& in_module)
+                                                                     const std::shared_ptr<Bmi_Formulation>& out_module,
+                                                                     const std::shared_ptr<Bmi_Formulation>& in_module)
 {
     if (!out_module->is_bmi_output_variable(output_var_name))
         return output_var_name;

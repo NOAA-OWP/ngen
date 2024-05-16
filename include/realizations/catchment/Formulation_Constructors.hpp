@@ -20,7 +20,7 @@
 #endif
 
 namespace realization {
-    using constructor = std::shared_ptr<Catchment_Formulation> (*)(std::string, shared_ptr<data_access::GenericDataProvider>, utils::StreamHandler);
+    using constructor = std::shared_ptr<Catchment_Formulation> (*)(std::string, std::shared_ptr<data_access::GenericDataProvider>, utils::StreamHandler);
 
     extern std::map<std::string, constructor> formulations;
 
