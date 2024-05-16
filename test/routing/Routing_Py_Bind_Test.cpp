@@ -12,7 +12,7 @@ namespace py = pybind11;
 
 class RoutingPyBindTest : public ::testing::Test {
 private:
-  static std::shared_ptr<utils::ngenPy::InterpreterUtil> interperter;
+  static std::shared_ptr<utils::ngenPy::InterpreterUtil> interpreter;
 
 protected:
 
@@ -24,8 +24,8 @@ protected:
 
     }
 };
-//Make sure the interperter is instansiated and lives throught the test class
-std::shared_ptr<utils::ngenPy::InterpreterUtil> RoutingPyBindTest::interperter = utils::ngenPy::InterpreterUtil::getInstance();
+//Make sure the interpreter is instansiated and lives throught the test class
+std::shared_ptr<utils::ngenPy::InterpreterUtil> RoutingPyBindTest::interpreter = utils::ngenPy::InterpreterUtil::getInstance();
 
 TEST_F(RoutingPyBindTest, TestRoutingPyBind)
 {
