@@ -101,6 +101,6 @@ var classrealization_1_1_bmi___module___formulation =
     [ "output_precision", "classrealization_1_1_bmi___module___formulation.html#a8ff42a69cf6c735578692c37e20a584c", null ],
     [ "output_text_stream", "classrealization_1_1_bmi___module___formulation.html#a0dd771991a46889d4bc299f8c13cb5e3", null ],
     [ "output_variable_names", "classrealization_1_1_bmi___module___formulation.html#a566505f80702c117ef23688ce6892a51", null ],
-    [ "realized_catchment", "classrealization_1_1_bmi___module___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1", null ],
+    [ "realized_catchment", "classrealization_1_1_bmi___module___formulation.html#aa92f9bd07b2cdf99ce74367fd7988b1c", null ],
     [ "REQUIRED_PARAMETERS", "classrealization_1_1_bmi___module___formulation.html#a23add24bf83ce887364b65ec89408bd5", null ]
 ];

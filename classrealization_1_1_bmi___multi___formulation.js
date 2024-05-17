@@ -21,7 +21,7 @@ var classrealization_1_1_bmi___multi___formulation =
     [ "get_catchment_id", "classrealization_1_1_bmi___multi___formulation.html#a633b7407d447f77910476c0315c8beb6", null ],
     [ "get_config_mapped_variable_name", "classrealization_1_1_bmi___multi___formulation.html#a2201730bcbf925fb3db85ea340e81fc8", null ],
     [ "get_config_mapped_variable_name", "classrealization_1_1_bmi___multi___formulation.html#a61de10f612f7271d988f4f8481f578e8", null ],
-    [ "get_config_mapped_variable_name", "classrealization_1_1_bmi___multi___formulation.html#a8f24e64c459e52de8fd9d16c27bc9cd4", null ],
+    [ "get_config_mapped_variable_name", "classrealization_1_1_bmi___multi___formulation.html#a55cc612e1f31671e2af4a7d236e3bc26", null ],
     [ "get_data_start_time", "classrealization_1_1_bmi___multi___formulation.html#ad3b2f3f6294014fde8f6a10b5d3058f8", null ],
     [ "get_data_stop_time", "classrealization_1_1_bmi___multi___formulation.html#a4b3db6bb593b3d3261ac5ed2f35684b3", null ],
     [ "get_forcing_file_path", "classrealization_1_1_bmi___multi___formulation.html#a70b112dda668c7a508940898200b1471", null ],
@@ -93,6 +93,6 @@ var classrealization_1_1_bmi___multi___formulation =
     [ "output_text_stream", "classrealization_1_1_bmi___multi___formulation.html#a0dd771991a46889d4bc299f8c13cb5e3", null ],
     [ "output_variable_names", "classrealization_1_1_bmi___multi___formulation.html#a566505f80702c117ef23688ce6892a51", null ],
     [ "primary_module_index", "classrealization_1_1_bmi___multi___formulation.html#abe3de83fc22850cf3af8ff046616b446", null ],
-    [ "realized_catchment", "classrealization_1_1_bmi___multi___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1", null ],
+    [ "realized_catchment", "classrealization_1_1_bmi___multi___formulation.html#aa92f9bd07b2cdf99ce74367fd7988b1c", null ],
     [ "REQUIRED_PARAMETERS", "classrealization_1_1_bmi___multi___formulation.html#a960ae659c1c2c228243e1ffbf6d6508c", null ]
 ];

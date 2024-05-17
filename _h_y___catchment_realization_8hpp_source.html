@@ -105,57 +105,55 @@ $(document).ready(function(){initNavTree('_h_y___catchment_realization_8hpp_sour
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;AorcForcing.hpp&gt;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;GenericDataProvider.hpp&quot;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">using </span>std::shared_ptr;</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">//Forward Declarations</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">class </span><a class="code hl_class" href="class_h_y___catchment.html">HY_Catchment</a>;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">//This is the base base for CatchmentRealizations</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">typedef</span> <span class="keywordtype">long</span> time_step_t;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">//TODO template&lt;forcing&gt;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">//TODO template&lt;et_datatype&gt;</span></div>
-<div class="foldopen" id="foldopen00018" data-start="{" data-end="};">
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html">   18</a></span><span class="keyword">class </span><a class="code hl_class" href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>{</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="comment">//TODO remove the default constructor? leaving temporarily to satisfy non-used realizations</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <a class="code hl_function" href="class_h_y___catchment_realization.html#ac2d1d736823ecf80c1b2599c241ab501">HY_CatchmentRealization</a>();</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <a class="code hl_function" href="class_h_y___catchment_realization.html#ac2d1d736823ecf80c1b2599c241ab501">HY_CatchmentRealization</a>(std::shared_ptr&lt;data_access::GenericDataProvider&gt; <a class="code hl_variable" href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">forcing</a>);</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="comment">//HY_CatchmentRealization(forcing_params forcing_config);</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">//Forward Declarations</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">class </span><a class="code hl_class" href="class_h_y___catchment.html">HY_Catchment</a>;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">//This is the base base for CatchmentRealizations</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">typedef</span> <span class="keywordtype">long</span> time_step_t;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">//TODO template&lt;forcing&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">//TODO template&lt;et_datatype&gt;</span></div>
+<div class="foldopen" id="foldopen00016" data-start="{" data-end="};">
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html">   16</a></span><span class="keyword">class </span><a class="code hl_class" href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>{</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="comment">//TODO remove the default constructor? leaving temporarily to satisfy non-used realizations</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <a class="code hl_function" href="class_h_y___catchment_realization.html#ac2d1d736823ecf80c1b2599c241ab501">HY_CatchmentRealization</a>();</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <a class="code hl_function" href="class_h_y___catchment_realization.html#ac2d1d736823ecf80c1b2599c241ab501">HY_CatchmentRealization</a>(std::shared_ptr&lt;data_access::GenericDataProvider&gt; <a class="code hl_variable" href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">forcing</a>);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="comment">//HY_CatchmentRealization(forcing_params forcing_config);</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">virtual</span> <a class="code hl_function" href="class_h_y___catchment_realization.html#acc0ef9fc124cd73d76b407ab8fbf98ef">~HY_CatchmentRealization</a>();</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">virtual</span> <a class="code hl_function" href="class_h_y___catchment_realization.html#acc0ef9fc124cd73d76b407ab8fbf98ef">~HY_CatchmentRealization</a>();</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b">   41</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">double</span> <a class="code hl_function" href="class_h_y___catchment_realization.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b">get_response</a>(time_step_t t_index, time_step_t t_delta) = 0;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b">   39</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">double</span> <a class="code hl_function" href="class_h_y___catchment_realization.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b">get_response</a>(time_step_t t_index, time_step_t t_delta) = 0;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">protected</span>:</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#aa92f9bd07b2cdf99ce74367fd7988b1c">   43</a></span>    std::shared_ptr&lt;HY_Catchment&gt; <a class="code hl_variable" href="class_h_y___catchment_realization.html#aa92f9bd07b2cdf99ce74367fd7988b1c">realized_catchment</a>;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a7c6de72bd8ebf427d71aacca7baa23c1">   45</a></span>    shared_ptr&lt;HY_Catchment&gt; <a class="code hl_variable" href="class_h_y___catchment_realization.html#a7c6de72bd8ebf427d71aacca7baa23c1">realized_catchment</a>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#afffc8690df116d936a4d8c1026a9f491">   45</a></span>    <span class="keyword">virtual</span> std::string <a class="code hl_function" href="class_h_y___catchment_realization.html#afffc8690df116d936a4d8c1026a9f491">get_catchment_id</a>() = 0;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#afffc8690df116d936a4d8c1026a9f491">   47</a></span>    <span class="keyword">virtual</span> std::string <a class="code hl_function" href="class_h_y___catchment_realization.html#afffc8690df116d936a4d8c1026a9f491">get_catchment_id</a>() = 0;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a86a05a47bfa53a6feb4ef14e117b1928">   47</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_h_y___catchment_realization.html#a86a05a47bfa53a6feb4ef14e117b1928">set_catchment_id</a>(std::string cat_id) = 0;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a86a05a47bfa53a6feb4ef14e117b1928">   49</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_h_y___catchment_realization.html#a86a05a47bfa53a6feb4ef14e117b1928">set_catchment_id</a>(std::string cat_id) = 0;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">   49</a></span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <a class="code hl_variable" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">id_number</a>;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">   51</a></span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <a class="code hl_variable" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">id_number</a>;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">   54</a></span>    std::shared_ptr&lt;data_access::GenericDataProvider&gt; <a class="code hl_variable" href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">forcing</a>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">   52</a></span>    std::shared_ptr&lt;data_access::GenericDataProvider&gt; <a class="code hl_variable" href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">forcing</a>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>};</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>};</div>
 </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#endif </span><span class="comment">// HY_CATCHMENTREALIZATION_H</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#endif </span><span class="comment">// HY_CATCHMENTREALIZATION_H</span></div>
 <div class="ttc" id="aclass_h_y___catchment_html"><div class="ttname"><a href="class_h_y___catchment.html">HY_Catchment</a></div><div class="ttdef"><b>Definition</b> HY_Catchment.hpp:14</div></div>
-<div class="ttc" id="aclass_h_y___catchment_realization_html"><div class="ttname"><a href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a></div><div class="ttdef"><b>Definition</b> HY_CatchmentRealization.hpp:19</div></div>
-<div class="ttc" id="aclass_h_y___catchment_realization_html_a2010f61d0e7141bb48230923592de215"><div class="ttname"><a href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">HY_CatchmentRealization::forcing</a></div><div class="ttdeci">std::shared_ptr&lt; data_access::GenericDataProvider &gt; forcing</div><div class="ttdef"><b>Definition</b> HY_CatchmentRealization.hpp:54</div></div>
+<div class="ttc" id="aclass_h_y___catchment_realization_html"><div class="ttname"><a href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a></div><div class="ttdef"><b>Definition</b> HY_CatchmentRealization.hpp:17</div></div>
+<div class="ttc" id="aclass_h_y___catchment_realization_html_a2010f61d0e7141bb48230923592de215"><div class="ttname"><a href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">HY_CatchmentRealization::forcing</a></div><div class="ttdeci">std::shared_ptr&lt; data_access::GenericDataProvider &gt; forcing</div><div class="ttdef"><b>Definition</b> HY_CatchmentRealization.hpp:52</div></div>
 <div class="ttc" id="aclass_h_y___catchment_realization_html_a49bea88ba02bc8dc4e9ebbc6fb12c67b"><div class="ttname"><a href="class_h_y___catchment_realization.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b">HY_CatchmentRealization::get_response</a></div><div class="ttdeci">virtual double get_response(time_step_t t_index, time_step_t t_delta)=0</div><div class="ttdoc">Execute the backing model formulation for the given time step, where it is of the specified size,...</div></div>
-<div class="ttc" id="aclass_h_y___catchment_realization_html_a7c6de72bd8ebf427d71aacca7baa23c1"><div class="ttname"><a href="class_h_y___catchment_realization.html#a7c6de72bd8ebf427d71aacca7baa23c1">HY_CatchmentRealization::realized_catchment</a></div><div class="ttdeci">shared_ptr&lt; HY_Catchment &gt; realized_catchment</div><div class="ttdef"><b>Definition</b> HY_CatchmentRealization.hpp:45</div></div>
 <div class="ttc" id="aclass_h_y___catchment_realization_html_a86a05a47bfa53a6feb4ef14e117b1928"><div class="ttname"><a href="class_h_y___catchment_realization.html#a86a05a47bfa53a6feb4ef14e117b1928">HY_CatchmentRealization::set_catchment_id</a></div><div class="ttdeci">virtual void set_catchment_id(std::string cat_id)=0</div></div>
+<div class="ttc" id="aclass_h_y___catchment_realization_html_aa92f9bd07b2cdf99ce74367fd7988b1c"><div class="ttname"><a href="class_h_y___catchment_realization.html#aa92f9bd07b2cdf99ce74367fd7988b1c">HY_CatchmentRealization::realized_catchment</a></div><div class="ttdeci">std::shared_ptr&lt; HY_Catchment &gt; realized_catchment</div><div class="ttdef"><b>Definition</b> HY_CatchmentRealization.hpp:43</div></div>
 <div class="ttc" id="aclass_h_y___catchment_realization_html_ac2d1d736823ecf80c1b2599c241ab501"><div class="ttname"><a href="class_h_y___catchment_realization.html#ac2d1d736823ecf80c1b2599c241ab501">HY_CatchmentRealization::HY_CatchmentRealization</a></div><div class="ttdeci">HY_CatchmentRealization()</div><div class="ttdef"><b>Definition</b> HY_CatchmentRealization.cpp:3</div></div>
 <div class="ttc" id="aclass_h_y___catchment_realization_html_acc0ef9fc124cd73d76b407ab8fbf98ef"><div class="ttname"><a href="class_h_y___catchment_realization.html#acc0ef9fc124cd73d76b407ab8fbf98ef">HY_CatchmentRealization::~HY_CatchmentRealization</a></div><div class="ttdeci">virtual ~HY_CatchmentRealization()</div><div class="ttdef"><b>Definition</b> HY_CatchmentRealization.cpp:10</div></div>
-<div class="ttc" id="aclass_h_y___catchment_realization_html_af996a3e50eaf51c63865f1fdbe4f8661"><div class="ttname"><a href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">HY_CatchmentRealization::id_number</a></div><div class="ttdeci">unsigned long id_number</div><div class="ttdef"><b>Definition</b> HY_CatchmentRealization.hpp:51</div></div>
+<div class="ttc" id="aclass_h_y___catchment_realization_html_af996a3e50eaf51c63865f1fdbe4f8661"><div class="ttname"><a href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">HY_CatchmentRealization::id_number</a></div><div class="ttdeci">unsigned long id_number</div><div class="ttdef"><b>Definition</b> HY_CatchmentRealization.hpp:49</div></div>
 <div class="ttc" id="aclass_h_y___catchment_realization_html_afffc8690df116d936a4d8c1026a9f491"><div class="ttname"><a href="class_h_y___catchment_realization.html#afffc8690df116d936a4d8c1026a9f491">HY_CatchmentRealization::get_catchment_id</a></div><div class="ttdeci">virtual std::string get_catchment_id()=0</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -163,7 +161,7 @@ $(document).ready(function(){initNavTree('_h_y___catchment_realization_8hpp_sour
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_3d69f64eaf81436fe2b22361382717e5.html">core</a></li><li class="navelem"><a class="el" href="dir_5bea9f390e7a432a1b79aa466fef89f5.html">catchment</a></li><li class="navelem"><b>HY_CatchmentRealization.hpp</b></li>
-    <li class="footer">Generated on Thu May 16 2024 17:54:15 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 17 2024 01:49:13 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
