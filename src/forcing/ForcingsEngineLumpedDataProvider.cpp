@@ -57,7 +57,7 @@ Provider::ForcingsEngineLumpedDataProvider(
         var_divides_[id] = i;
     }
 
-    var_cache_ = decltype(var_cache_){{ 2, id_dim, var_dim }};
+    var_cache_ = decltype(var_cache_){{ id_dim, var_dim }};
 
     // Cache initial iteration
     update_value_storage_();
@@ -140,18 +140,14 @@ void Provider::update_value_storage_()
         };
 
         for (std::size_t di = 0; di < size; di++) {
-            // Move 0 time (current) to 1 (previous), and set the
-            // current values from var_span
-            var_cache_.at({{1, di, vi}}) = var_cache_.at({{0, di, vi}});
-            var_cache_.at({{0, di, vi}}) = var_span[di];
+            var_cache_.at({{di, vi}}) = var_span[di];
         }
     }
 }
 
 double Provider::at(
     const std::string& divide_id,
-    const std::string& variable,
-    bool               previous
+    const std::string& variable
 )
 {
     const auto d_idx = divide_index(divide_id);
@@ -174,13 +170,12 @@ double Provider::at(
         };
     }
 
-    return at(d_idx, v_idx, previous);
+    return at(d_idx, v_idx);
 }
 
 double Provider::at(
     std::size_t divide_idx,
-    std::size_t variable_idx,
-    bool      previous
+    std::size_t variable_idx
 )
 {
 
@@ -190,8 +185,7 @@ double Provider::at(
                                std::to_string(shape[1]) + ", " +
                                std::to_string(shape[2]);
 
-        const auto index_str = (previous ? "1" : "0") + std::string{", "} +
-                               (divide_idx == bad_index ? "?" : std::to_string(divide_idx)) + ", " +
+        const auto index_str = (divide_idx == bad_index ? "?" : std::to_string(divide_idx)) + ", " +
                                (variable_idx == bad_index ? "?" : std::to_string(variable_idx));
 
         throw std::out_of_range{
@@ -200,7 +194,7 @@ double Provider::at(
         };
     }
     
-    return var_cache_.at({{previous ? 1U : 0U, divide_idx, variable_idx}});
+    return var_cache_.at({{divide_idx, variable_idx}});
 }
 
 double Provider::get_value(
