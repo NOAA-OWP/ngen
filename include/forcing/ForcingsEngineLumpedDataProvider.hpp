@@ -62,13 +62,11 @@ struct ForcingsEngineLumpedDataProvider
      * 
      * @param divide_id Divide ID to index at
      * @param variable Forcings variable to get
-     * @param previous If true, return the previous timestep values.
      * @return double 
      */
     double at(
         const std::string& divide_id,
-        const std::string& variable,
-        bool previous = false
+        const std::string& variable
     );
 
     /**
@@ -76,13 +74,11 @@ struct ForcingsEngineLumpedDataProvider
      * 
      * @param divide_index Divide index
      * @param variable_index Variable index
-     * @param previous If true, return the previous timestep values.
      * @return double 
      */
     double at(
         std::size_t divide_idx,
-        std::size_t variable_idx,
-        bool previous = false
+        std::size_t variable_idx
     );
 
     /**
@@ -95,7 +91,7 @@ struct ForcingsEngineLumpedDataProvider
     std::unordered_map<int, int> var_divides_{};
 
     /**
-     * Values are stored indexed on (2, divide_id, variable),
+     * Values are stored indexed on (divide_id, variable),
      * such that the structure can be visualized as:
      *
      *   Divide ID : || D0       | D1       || D0  ...
@@ -103,7 +99,7 @@ struct ForcingsEngineLumpedDataProvider
      *   Value     : ||  9 11 31 |  3  4  5 || 10  ...
      *
      * Some notes for future reference:
-     * - Time complexity to update is approximately O(2*V*D) = O(V*D),
+     * - Time complexity to update is approximately O(V*D),
      *   where V is the number of variables and D is the number of divides.
      *   In general, D will dominate and, V will be some small constant amount.
      */
