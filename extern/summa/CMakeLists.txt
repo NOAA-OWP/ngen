@@ -76,7 +76,6 @@ if (USE_NEXTGEN)
     endif()
     add_compile_definitions(NGEN_ACTIVE BMI_ACTIVE NGEN_FORCING_ACTIVE
                             NGEN_OUTPUT_ACTIVE)
-
     add_subdirectory(../iso_c_fortran_bmi ${CMAKE_BINARY_DIR}/iso_c_bmi)
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../../cmake/")
     set( CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran)
@@ -201,7 +200,6 @@ target_compile_options(SUMMA_NOAHMP PRIVATE ${FLAGS_NOAH})
 # Build SUMMA_COMM Object
 add_library(SUMMA_COMM OBJECT ${COMM_ALL})
 target_compile_options(SUMMA_COMM PRIVATE ${FLAGS_ALL})
-# target_include_directories(SUMMA_COMM PRIVATE ${INCLUDES})
 target_link_libraries(SUMMA_COMM PUBLIC SUMMA_NOAHMP ${EXT_TARGETS}) # added flags to the link step
 
 # For NextGen, build SUMMA Shared Library and add the outside BMI libraries
@@ -212,8 +210,8 @@ if(USE_NEXTGEN)
         add_library(summabmi SHARED ${SUMMA_ALL})
     endif()
     target_compile_options(summabmi PRIVATE ${FLAGS_ALL})
+	target_link_libraries(summabmi PUBLIC ${EXT_TARGETS} iso_c_bmi SUMMA_NOAHMP SUMMA_COMM)
 
-    target_link_libraries(summabmi PUBLIC iso_c_bmi)
     set_target_properties(summabmi PROPERTIES VERSION ${PROJECT_VERSION})
     include(GNUInstallDirs)
 
@@ -223,33 +221,32 @@ if(USE_NEXTGEN)
     configure_file(summabmi.pc.in summabmi.pc @ONLY)
     install(FILES ${CMAKE_BINARY_DIR}/summabmi.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
 
-endif()
+else()
+	add_library(summa SHARED ${SUMMA_ALL})
+	target_compile_options(summa PRIVATE ${FLAGS_ALL})
+	target_link_libraries(summa PUBLIC ${EXT_TARGETS} SUMMA_NOAHMP SUMMA_COMM)
 
+	# For Actors, build SUMMA Shared Library add the actors libraries and add the executable
+	if(USE_ACTORS)
+	    add_executable(${EXEC_NAME} ${MAIN_SUMMA} ${ACTORS_GLOBAL}
+	                   ${FILE_ACCESS_ACTOR} ${JOB_ACTOR} ${GRU_ACTOR} ${HRU_ACTOR}
+	                   ${SYS_INIT} ${SUMMA_CLIENT} ${SUMMA_SERVER})
 
-add_library(summa SHARED ${SUMMA_ALL})
-target_compile_options(summa PRIVATE ${FLAGS_ALL})
-target_link_libraries(summa PUBLIC ${EXT_TARGETS} SUMMA_NOAHMP SUMMA_COMM)
+	    set_property(TARGET ${EXEC_NAME} PROPERTY LINKER_LANGUAGE Fortran)
+	    target_compile_options(${EXEC_NAME} PUBLIC ${FLAGS_CXX})
+	    target_include_directories(${EXEC_NAME} PUBLIC
+	                               ${PARENT_DIR}/includes/global
+	                               ${PARENT_DIR}/includes/summa_actor
+	                               ${PARENT_DIR}/includes/job_actor
+	                               ${PARENT_DIR}/includes/file_access_actor
+	                               ${PARENT_DIR}/includes/gru_actor
+	                               ${PARENT_DIR}/includes/hru_actor)
+	    target_link_libraries( ${EXEC_NAME} ${EXT_TARGETS} summa)
 
-# For Actors, build SUMMA Shared Library add the actors libraries and add the executable
-if(USE_ACTORS)
-    add_executable(${EXEC_NAME} ${MAIN_SUMMA} ${ACTORS_GLOBAL}
-                   ${FILE_ACCESS_ACTOR} ${JOB_ACTOR} ${GRU_ACTOR} ${HRU_ACTOR}
-                   ${SYS_INIT} ${SUMMA_CLIENT} ${SUMMA_SERVER})
-
-    set_property(TARGET ${EXEC_NAME} PROPERTY LINKER_LANGUAGE Fortran)
-    target_compile_options(${EXEC_NAME} PUBLIC ${FLAGS_CXX})
-    target_include_directories(${EXEC_NAME} PUBLIC
-                               ${PARENT_DIR}/includes/global
-                               ${PARENT_DIR}/includes/summa_actor
-                               ${PARENT_DIR}/includes/job_actor
-                               ${PARENT_DIR}/includes/file_access_actor
-                               ${PARENT_DIR}/includes/gru_actor
-                               ${PARENT_DIR}/includes/hru_actor)
-    target_link_libraries( ${EXEC_NAME} ${EXT_TARGETS} summa)
-
-# For other cases, build SUMMA Shared Library and add the executable
-elseif(NOT USE_NEXTGEN)
-    add_executable(${EXEC_NAME} ${MAIN_SUMMA})
-    set_property(TARGET ${EXEC_NAME} PROPERTY LINKER_LANGUAGE Fortran)
-    target_link_libraries(${EXEC_NAME} summa ${EXT_TARGETS}) # added flags to the link step
+	# For other cases, build SUMMA Shared Library and add the executable
+	else()
+    	add_executable(${EXEC_NAME} ${MAIN_SUMMA})
+    	set_property(TARGET ${EXEC_NAME} PROPERTY LINKER_LANGUAGE Fortran)
+    	target_link_libraries(${EXEC_NAME} summa ${EXT_TARGETS}) # added flags to the link step
+	endif()
 endif()
