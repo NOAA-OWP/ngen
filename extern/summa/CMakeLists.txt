@@ -1,104 +1,105 @@
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
-enable_language(C Fortran)
-set (CMAKE_Fortran_COMPILER $ENV{FC})  #for NexGen need, works for others
-#set (CMAKE_Fortran_COMPILER gfortran) # for others may work
+cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
+project(summa VERSION 4.0.0 LANGUAGES Fortran C CXX)
 
-
-#=========================================================================================
-# When compiling Summa each configuration can be compiled in a Cluster or Debug mode,
-# which is set by the CMAKE_BUILD_TYPES variables. The default is BE, release mode no
-# cluster no Sundials no Actors no NexGen which runs the code with BE based off Numerical
-# Recipes only.
-# Note, Sundials, NexGen, and Actors will all require extra libraries to be downloaded
-# and compiled. Currently, NexGen cannot work with Actors.
-# If you install Sundials, you can compile Summa with Sundials, which allows you to run
-# Summa with a solver of BE based off Numerical Recipes, Kinsol, or IDA. The solver choice
-# is then set in the code decisions file.
-# Other options include how to drive the code, NexGen (with BMI) or Actors (without BMI)
-# framework or no extra framework (without BMI).
-# If you change the build type, you will need to delete the CMakeCache.txt file and
-# rerun cmake.
-#=========================================================================================
-
-# Set default configuration type to Release
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE BE)
+if(DEFINED ENV{FC})
+    set (CMAKE_Fortran_COMPILER $ENV{FC})  #for NexGen need, works for others
+else()
+    set (CMAKE_Fortran_COMPILER gfortran)
 endif()
+
+#=========================================================================================
+# SUMMA can be compiled with debug flags by specifiying -DCMAKE_BUILD_TYPE=Debug
+#
+# There are multiple options for building SUMMA, including using the
+# Sundials suite of solvers, the C++ Actor framework, and the NexGen framework.
+# The options are set by specifying -DOPTION=ON when running cmake.
+# For example to compile SUMMA with Sundials, use
+# cmake -B ../cmake_build -S ../. -DUSE_SUNDIALS=ON
+# cmake --build ../cmake_build --target all -j
+#
+# To compile SUMMA with Actors, see the Summa-Actors repo:
+# https://github.com/uofs-simlab/Summa-Actors
+#=========================================================================================
 
 # Add options for build type
-set(CMAKE_CONFIGURATION_TYPES BE BE_Debug BE_Cluster BE_Cluster_Debug
-                              BE_NexGen BE_NexGen_Debug BE_NexGen_Cluster BE_NexGen_Cluster_Debug
-                              BE_Actors BE_Actors_Debug BE_Actors_Cluster BE_Actors_Cluster_Debug
-                              Sundials Sundials_Debug Sundials_Cluster Sundials_Cluster_Debug
-                              Sundials_NexGen Sundials_NexGen_Debug Sundials_NexGen_Cluster Sundials_NexGen_Cluster_Debug
-                              Sundials_Actors Sundials_Actors_Debug Sundials_Actors_Cluster Sundials_Actors_Cluster_Debug)
+set(CMAKE_CONFIGURATION_TYPES Release Debug)
 message("\nSelected Bulid Type: ${CMAKE_BUILD_TYPE}\n")
 
-# Give executable names to be backwards compatible with old versions
-if(CMAKE_BUILD_TYPE MATCHES Sundials)
+
+# Options: Enable each with cmake -DOPTION=ON
+option(USE_SUNDIALS "Use IDA solver from sundilas suite" OFF)
+option(USE_ACTORS "Use Actors Framework" OFF)
+option(USE_NEXGEN "Use NexGen Framework" OFF)
+set(EXT_TARGETS) # list of external targets to link to
+
+# Set Default Executable Name
+set(EXEC_NAME summa.exe)
+# Set top-level directory
+set(F_MASTER "${CMAKE_CURRENT_SOURCE_DIR}/..")
+set(PARENT_DIR "${F_MASTER}")
+set(EXEC_DIR "${F_MASTER}/bin")
+
+# Handle optional external libraries
+if (USE_SUNDIALS)
+    message("ENABLING SUNDIALS")
+    find_package(SUNDIALS REQUIRED)
+    list(APPEND EXT_TARGETS SUNDIALS::fida_mod_shared
+                            SUNDIALS::fkinsol_mod_shared)
     add_compile_definitions(SUNDIALS_ACTIVE)
     set(EXEC_NAME summa_sundials.exe)
-elseif(CMAKE_BUILD_TYPE MATCHES BE)
-    set(EXEC_NAME summa.exe)
-endif()
-if(CMAKE_BUILD_TYPE MATCHES Actors)
-    set(EXEC_NAME summa_actors)
 endif()
 
-if(CMAKE_BUILD_TYPE MATCHES NexGen)
-    message("\nUsing NexGen Framework, should have been installed previously")
-    add_compile_definitions(NGEN_ACTIVE BMI_ACTIVE NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE)
+if (USE_ACTORS)
+    message("ENABLING ACTORS")
+    find_package(CAF 0.18.3 QUIET) # Cluster has 0.18.3, but we can use 0.18.6
+    if(NOT CAF_FOUND)
+        find_package(CAF 0.18.6 REQUIRED)
+    endif()
+    list(APPEND EXT_TARGETS CAF::core CAF::io)
+    add_compile_definitions(ACTORS_ACTIVE V4_ACTIVE)
 
-    project(summabmi VERSION 1.0.0 DESCRIPTION "Summa-Sundials-BE BMI Module Shared Library")
+    include(FortranCInterface)
+    FortranCInterface_VERIFY(CXX)
 
-    # NexGen needs to have CMakeLists one directory above summa submodule GIT,
-    #    at ${NexGen GIT directory}/extern/summa
-    set(F_MASTER ./summa/) # directory of summa source code
-    set(PARENT_DIR ${F_MASTER}) # directory of summa source code
+    set(PARENT_DIR "${F_MASTER}/..")
+    set(EXEC_DIR "${PARENT_DIR}/../bin")
+    set(EXEC_NAME summa_actors.exe)
+endif()
 
-    # Get the iso_c_fortran binding module to build as part of this build
+if (USE_NEXTGEN)
+    message("ENABLING NEXGEN")
+    if (USE_ACTORS)
+        message(FATAL_ERROR "NexGen incompatible with Summa-Actors")
+    endif()
+    add_compile_definitions(NGEN_ACTIVE BMI_ACTIVE NGEN_FORCING_ACTIVE
+                            NGEN_OUTPUT_ACTIVE)
+
     add_subdirectory(../iso_c_fortran_bmi ${CMAKE_BINARY_DIR}/iso_c_bmi)
-
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../../cmake/")
     set( CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran)
-
-    #### Add variables for individual libraries that are used within the *.pc.in files
     set(SUMMA_LIB_NAME_CMAKE summabmi)
     set(SUMMA_LIB_DESC_CMAKE "Summa-Sundials BMI Module Shared Library")
-
-else()
-    set(F_MASTER ../../) # directory of summa source code
-
-    if(CMAKE_BUILD_TYPE MATCHES Actors)
-        message("\nUsing Actors Framework, should have been installed previously")
-        add_compile_definitions(ACTORS_ACTIVE)
-        add_compile_definitions(V4_ACTIVE)
-        project(summaactors DESCRIPTION "Summa-Sundials-BE Actors")
-
-        include(FortranCInterface)
-        FortranCInterface_VERIFY(CXX)
-
-        # CMakeLists in ${summa-actors GIT directory}/build/summa/build/cmake
-        set(PARENT_DIR ${F_MASTER}../../) # directory of summa actors source code
-        set(EXEC_DIR ${PARENT_DIR}/bin)
-
-    else()
-        project(summa DESCRIPTION "Summa-Sundials-BE")
-
-        # CMakeLists in ${summa-actors GIT directory}/build/cmake
-        set(PARENT_DIR ${F_MASTER}) # directory of summa source code
-        set(EXEC_DIR ${F_MASTER}/bin)
-
-    endif()
-
-    # set the output directory for executables
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${EXEC_DIR})
-
 endif()
+
+get_filename_component(F_MASTER "${F_MASTER}" REALPATH)
+get_filename_component(PARENT_DIR "${PARENT_DIR}" REALPATH)
+get_filename_component(EXEC_DIR "${EXEC_DIR}" REALPATH)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${EXEC_DIR})
 
 #=========================================================================================
 # SET THE PATHS TO THE LIBRARIES AND INCLUDE FILES
 #=========================================================================================
+
+# NetCDF is found with a custom FindNetCDF.cmake file
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
+LIST(APPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/cmake/")
+find_package(NetCDF REQUIRED)
+list(APPEND EXT_TARGETS NetCDF::NetCDF)
+
+# OpenBLAS
+set(BLA_VENDOR OpenBLAS) # MKL
+find_package(OpenBLAS REQUIRED)
+list(APPEND EXT_TARGETS OpenBLAS::OpenBLAS)
 
 # Set compiler flags
 set(FLAGS_OPT $ENV{FLAGS_OPT}) # get optional user-specified flags from environment variables
@@ -106,123 +107,14 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
     message("\nSetting Debug Options")
     add_compile_definitions(DEBUG)
     set(FLAGS_NOAH -g -O0 -fbacktrace -fbounds-check -ffree-form -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors ${FLAGS_OPT})
-    set(FLAGS_ALL  -g -O0 -fbacktrace -fbounds-check -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors -cpp ${FLAGS_OPT})
-    set(FLAGS_CXX  -g -O0 -fbacktrace -fbounds-check -Wfatal-errors -std=c++17 ${FLAGS_OPT})
+    set(FLAGS_ALL -g -O0 -fbacktrace -fbounds-check -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors -cpp ${FLAGS_OPT})
+    set(FLAGS_CXX -g -O0 -fbounds-check -Wfatal-errors -std=c++17 ${FLAGS_OPT})
 else()
     message("\nSetting Release Options")
     set(FLAGS_NOAH -O3 -ffree-form -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors ${FLAGS_OPT})
     set(FLAGS_ALL  -O3 -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors -cpp ${FLAGS_OPT})
     set(FLAGS_CXX  -O3 -Wfatal-errors -std=c++17 ${FLAGS_OPT})
 endif()
-
-# Find Sundials if exists, add path here if FATAL_ERROR "Did not find Sundials directory"
-if(CMAKE_BUILD_TYPE MATCHES Sundials)
-    set(DIR_SUNDIALS "")
-    foreach(dir IN ITEMS
-        "${F_MASTER}../sundials/instdir"
-        "${PARENT_DIR}../sundials/instdir"
-        "${F_MASTER}../../SummaSundials/sundials/instdir"
-        "${PARENT_DIR}../../SummaSundials/sundials/instdir"
-        $ENV{SUNDIALS_PATH}
-        "../../../../SummaSundials/sundials/instdir") #look in same head directory as summa or up to another installation
-        if(EXISTS ${dir})
-            set(DIR_SUNDIALS ${dir})
-            message("\nFound Sundials directory at ${DIR_SUNDIALS}")
-            break()
-        endif()
-    endforeach()
-    if(NOT DIR_SUNDIALS)
-        message(FATAL_ERROR "Did not find Sundials directory, edit CMakeLists.txt to add path")
-    endif()
-endif()
-
-# Set libraries for all builds
-if(CMAKE_BUILD_TYPE MATCHES Cluster)
-    message("\nBuilding for cluster")
-
-    # MKL needs BLA_VENDOR set with cmake
-    set(BLA_VENDOR OpenBLAS)
-
-    # Packages that are required
-    find_package(LAPACK REQUIRED)
-
-    # Set include directories
-    set(INCLUDES $ENV{EBROOTNETCDFMINFORTRAN}/include ${netCDF_INCLUDES} ${LAPACK_INCLUDES})
-    set(LIBRARIES SUMMA_NOAHMP ${netCDF_LIBRARIES} ${LAPACK_LIBRARIES} -lnetcdff -lopenblas)
-
-    if(CMAKE_BUILD_TYPE MATCHES Sundials)
-        link_directories(${DIR_SUNDIALS}/lib64)
-        set(CMAKE_BUILD_RPATH "${DIR_SUNDIALS}/lib64")
-        set(INC_SUNDIALS ${DIR_SUNDIALS}/include ${DIR_SUNDIALS}/fortran)
-    endif()
-
-    if(CMAKE_BUILD_TYPE MATCHES Actors)
-        find_package(CAF REQUIRED)
-        set(INC_ACTORS ${CAF_INCLUDES} ${PARENT_DIR}/build/includes/global ${PARENT_DIR}/build/includes/summa_actor ${PARENT_DIR}/build/includes/job_actor ${PARENT_DIR}/build/includes/file_access_actor ${PARENT_DIR}/build/includes/hru_actor)
-        set(LIB_ACTORS ${CAF_LIBRARIES} -lcaf_core -lcaf_io)
-    endif()
-
-else()
-    message("\nBuilding for personal computer")
-
-    # Set Links and Libraries using Environment Variables
-    set(LINK_DIRS $ENV{LINK_DIRS})         # set link directories from environment variable
-    set(INCLUDES_DIRS $ENV{INCLUDES_DIRS}) # set directories for INCLUDES from environment variable
-    set(LIBRARY_LINKS $ENV{LIBRARY_LINKS}) # set list of library links from environment variable
-    link_directories(${LINK_DIRS})
-    set(INCLUDES ${INCLUDES_DIRS})
-    set(LIBRARIES SUMMA_NOAHMP ${LIBRARY_LINKS})
-
-    if(CMAKE_BUILD_TYPE MATCHES Sundials)
-        link_directories(${DIR_SUNDIALS}/lib)
-        set(CMAKE_BUILD_RPATH "${DIR_SUNDIALS}/lib")
-        set(INC_SUNDIALS ${DIR_SUNDIALS}/include ${DIR_SUNDIALS}/fortran)
-    endif()
-
-    # If using on personal computer need to link directory-- not working on Mac right now to compile with Actors
-    if(CMAKE_BUILD_TYPE MATCHES Actors)
-        set(DIR_ACTORS "")
-        foreach(dir IN ITEMS
-            "${F_MASTER}../actor-framework/install"
-            "${PARENT_DIR}../actor-framework/install"
-            "${F_MASTER}../../SummaActors/actor-framework/install"
-            "${PARENT_DIR}../../SummaActors/actor-framework/install"
-            $ENV{ACTOR_FRAMEWORK_PATH}
-            "../../../../SummaActors/actor-framework/install") #look in same head directory as summa or up to another installation
-            if(EXISTS ${dir})
-                set(DIR_ACTORS ${dir})
-                message("\nFound Actors directory at ${DIR_ACTORS}")
-                break()
-            endif()
-        endforeach()
-        if(NOT DIR_ACTORS)
-            message(FATAL_ERROR "Did not find Actors directory, edit CMakeLists.txt to add path")
-        endif()
-        link_directories(${DIR_ACTORS}/lib)
-        set(INC_ACTORS ${DIR_ACTORS}/include
-                       ${PARENT_DIR}/build/includes/global
-                       ${PARENT_DIR}/build/includes/summa_actor
-                       ${PARENT_DIR}/build/includes/job_actor
-                       ${PARENT_DIR}/build/includes/file_access_actor
-                       ${PARENT_DIR}/build/includes/hru_actor)
-        set(LIB_ACTORS ${DIR_ACTORS}/lib -lcaf_core -lcaf_io)
-    endif()
-
-endif()
-
-
-if(CMAKE_BUILD_TYPE MATCHES Sundials)
-    message("\nUsing SUNDIALS libraries for IDA and Kinsol, should have been installed previously")
-    set(LIB_SUNDIALS -lsundials_fida_mod -lsundials_fnvecmanyvector_mod -lsundials_fnvecserial_mod -lsundials_fsunlinsoldense_mod -lsundials_fsunmatrixdense_mod -lsundials_fkinsol_mod -lsundials_fsunnonlinsolnewton_mod)
-elseif(CMAKE_BUILD_TYPE MATCHES BE)
-    message("\nUsing Backward Euler based off free versions of Numerical Recipes only")
-else()
-    message("\nValid build types are: ${CMAKE_CONFIGURATION_TYPES}")
-    message(FATAL_ERROR "\nUnknown build type: ${CMAKE_BUILD_TYPE}")
-endif()
-
-message("\nBuilding SUMMA\n")
-
 
 #=========================================================================================
 # COMPILE PART 1: Define directory paths
@@ -237,263 +129,49 @@ set(NETCDF_DIR ${F_MASTER}/build/source/netcdf)
 set(NOAHMP_DIR ${F_MASTER}/build/source/noah-mp)
 
 # Define Actors specific directories
-set(ACTORS_DIR ${PARENT_DIR}/build/source/actors)
+set(ACTORS_DIR      ${PARENT_DIR}/source)
+set(SYS_INIT_DIR    ${ACTORS_DIR}/system_initialization)
 set(FILE_ACCESS_DIR ${ACTORS_DIR}/file_access_actor)
 set(JOB_ACTOR_DIR   ${ACTORS_DIR}/job_actor)
+set(GRU_ACTOR_DIR   ${ACTORS_DIR}/gru_actor)
 set(HRU_ACTOR_DIR   ${ACTORS_DIR}/hru_actor)
 
-if(CMAKE_BUILD_TYPE MATCHES Actors)
-    # Define directories for source files that might be replaced by actors (identical if not using actors)
-    set(SUB_ENGINE_DIR ${FILE_ACCESS_DIR})
-else()
-    set(SUB_ENGINE_DIR ${PARENT_DIR}/build/source/engine)
-endif()
 #=========================================================================================
 # COMPILE PART 2: Assemble all of the SUMMA sub-routines
 #=========================================================================================
 
-# NOAHMP modules
-set(NOAHMP
-    ${NOAHMP_DIR}/module_model_constants.F
-    ${NOAHMP_DIR}/module_sf_noahutl.F
-    ${NOAHMP_DIR}/module_sf_noahlsm.F
-    ${NOAHMP_DIR}/module_sf_noahmplsm.F)
-
-# Free versions of numerical recipes utilities for NOAH-MP modules
-set(NRUTIL
-    ${ENGINE_DIR}/f2008funcs.f90
-    ${ENGINE_DIR}/nr_utility.f90
-    ${ENGINE_DIR}/nrtype.f90)
-
-# Free versions of numerical recipes procedures for SUMMA modules
-set(NRPROC
-    ${ENGINE_DIR}/expIntegral.f90
-    ${ENGINE_DIR}/spline_int.f90
-    ${ENGINE_DIR}/hyp_2F1.f90)
-
-# Hook-up modules
-set(HOOKUP
-    ${HOOKUP_DIR}/ascii_util.f90
-    ${HOOKUP_DIR}/summaFileManager.f90)
-
-# Data modules
-set(DATAMS
-    ${DSHARE_DIR}/data_types.f90
-    ${DSHARE_DIR}/flxMapping.f90
-    ${DSHARE_DIR}/get_ixname.f90
-    ${DSHARE_DIR}/globalData.f90
-    ${DSHARE_DIR}/multiconst.f90
-    ${DSHARE_DIR}/outpt_stat.f90
-    ${DSHARE_DIR}/popMetadat.f90
-    ${DSHARE_DIR}/var_lookup.f90)
-set(DATAMS_SUNDIALS
-    ${DSHARE_DIR}/type4ida.f90
-    ${DSHARE_DIR}/type4kinsol.f90)
-set(DATAMS_ACTORS
-    ${ACTORS_DIR}/global/actor_data_types.f90)
-
-# Utility modules
-set(UTILMS
-    ${ENGINE_DIR}/matrixOper.f90
-    ${ENGINE_DIR}/mDecisions.f90
-    ${ENGINE_DIR}/snow_utils.f90
-    ${ENGINE_DIR}/soil_utils.f90
-    ${ENGINE_DIR}/time_utils.f90
-    ${ENGINE_DIR}/updatState.f90)
-set(UTILMS_SUNDIALS
-    ${ENGINE_DIR}/soil_utilsAddPrime.f90
-    ${ENGINE_DIR}/updatStateWithPrime.f90)
-
-# NetCDF routines
-set(NETCDF
-    ${NETCDF_DIR}/def_output.f90
-    ${NETCDF_DIR}/modelwrite.f90
-    ${NETCDF_DIR}/netcdf_util.f90
-    ${NETCDF_DIR}/read_icond.f90)
-
-# Preliminary modules
-set(PRELIM
-    ${ENGINE_DIR}/allocspace.f90
-    ${ENGINE_DIR}/check_icond.f90
-    ${ENGINE_DIR}/checkStruc.f90
-    ${ENGINE_DIR}/childStruc.f90
-    ${ENGINE_DIR}/conv_funcs.f90
-    ${SUB_ENGINE_DIR}/ffile_info.f90
-    ${ENGINE_DIR}/read_pinit.f90
-    ${ENGINE_DIR}/read_attrb.f90
-    ${ENGINE_DIR}/paramCheck.f90
-    ${ENGINE_DIR}/pOverwrite.f90
-    ${ENGINE_DIR}/sunGeomtry.f90
-    ${ENGINE_DIR}/read_param.f90)
-
-# Model run support modules
-set(MODRUN
-    ${ENGINE_DIR}/canopySnow.f90
-    ${ENGINE_DIR}/derivforce.f90
-    ${ENGINE_DIR}/enthalpyTemp.f90
-    ${ENGINE_DIR}/getVectorz.f90
-    ${ENGINE_DIR}/indexState.f90
-    ${ENGINE_DIR}/layerMerge.f90
-    ${ENGINE_DIR}/layerDivide.f90
-    ${ENGINE_DIR}/qTimeDelay.f90
-    ${ENGINE_DIR}/snowAlbedo.f90
-    ${ENGINE_DIR}/snwCompact.f90
-    ${ENGINE_DIR}/tempAdjust.f90
-    ${ENGINE_DIR}/updateVars.f90
-    ${ENGINE_DIR}/var_derive.f90
-    ${ENGINE_DIR}/volicePack.f90)
-set(MODRUN_NOT_ACTORS
-    ${ENGINE_DIR}/read_force.f90)
-set(MODRUN_SUNDIALS
-    ${ENGINE_DIR}/tol4ida.f90
-    ${ENGINE_DIR}/updateVarsWithPrime.f90)
-
-# Solver main modules
-set(SOLVER
-    ${ENGINE_DIR}/bigAquifer.f90
-    ${ENGINE_DIR}/computFlux.f90
-    ${ENGINE_DIR}/computHeatCap.f90
-    ${ENGINE_DIR}/computJacob.f90
-    ${ENGINE_DIR}/computResid.f90
-    ${ENGINE_DIR}/computSnowDepth.f90
-    ${ENGINE_DIR}/computThermConduct.f90
-    ${ENGINE_DIR}/coupled_em.f90
-    ${ENGINE_DIR}/diagn_evar.f90
-    ${ENGINE_DIR}/eval8summa.f90
-    ${ENGINE_DIR}/groundwatr.f90
-    ${ENGINE_DIR}/opSplittin.f90
-    ${ENGINE_DIR}/snowLiqFlx.f90
-    ${ENGINE_DIR}/soilLiqFlx.f90
-    ${ENGINE_DIR}/ssdNrgFlux.f90
-    ${ENGINE_DIR}/stomResist.f90
-    ${ENGINE_DIR}/summaSolve4numrec.f90
-    ${ENGINE_DIR}/systemSolv.f90
-    ${ENGINE_DIR}/varSubstep.f90
-    ${ENGINE_DIR}/vegLiqFlux.f90
-    ${ENGINE_DIR}/vegNrgFlux.f90
-    ${ENGINE_DIR}/vegPhenlgy.f90
-    ${ENGINE_DIR}/vegSWavRad.f90)
-set(SOLVER_NOT_ACTORS
-    ${ENGINE_DIR}/run_oneGRU.f90
-    ${ENGINE_DIR}/run_oneHRU.f90)
-set(SOLVER_SUNDIALS
-    ${ENGINE_DIR}/computJacobWithPrime.f90
-    ${ENGINE_DIR}/computResidWithPrime.f90
-    ${ENGINE_DIR}/eval8summaWithPrime.f90
-    ${ENGINE_DIR}/summaSolve4ida.f90
-    ${ENGINE_DIR}/summaSolve4kinsol.f90)
-
-# Driver support modules
-set(DRIVER
-    ${DRIVER_DIR}/summa_alarms.f90
-    ${DRIVER_DIR}/summa_globalData.f90)
-set(DRIVER_NOT_ACTORS
-    ${DRIVER_DIR}/summa_util.f90
-    ${DRIVER_DIR}/summa_type.f90
-    ${DRIVER_DIR}/summa_defineOutput.f90
-    ${DRIVER_DIR}/summa_init.f90
-    ${DRIVER_DIR}/summa_forcing.f90
-    ${DRIVER_DIR}/summa_modelRun.f90
-    ${DRIVER_DIR}/summa_restart.f90
-    ${DRIVER_DIR}/summa_setup.f90
-    ${DRIVER_DIR}/summa_writeOutput.f90)
-set(DRIVER_NEXGEN
-    ${DRIVER_DIR}/summa_bmi.f90)
-
-# Actors interface modules
-set(INTERFACE
-    ${ACTORS_DIR}/global/cppwrap_auxiliary.f90
-    ${ACTORS_DIR}/global/cppwrap_datatypes.f90
-    ${ACTORS_DIR}/global/cppwrap_metadata.f90)
-set(FILE_ACCESS_INTERFACE
-    ${FILE_ACCESS_DIR}/cppwrap_fileAccess.f90
-    ${FILE_ACCESS_DIR}/output_structure.f90
-    ${FILE_ACCESS_DIR}/read_force.f90
-    ${FILE_ACCESS_DIR}/fileAccess_writeOutput.f90)
-set(JOB_INTERFACE
-    ${JOB_ACTOR_DIR}/job_actor.f90)
-set(HRU_INTERFACE
-    ${HRU_ACTOR_DIR}/hru_init.f90
-    ${HRU_ACTOR_DIR}/hru_read.f90
-    ${HRU_ACTOR_DIR}/hru_modelRun.f90
-    ${HRU_ACTOR_DIR}/hru_writeOutput.f90)
-
-# Actors actual actor modules
-set(ACTORS_GLOBAL
-    ${ACTORS_DIR}/global/auxiliary.cpp
-    ${ACTORS_DIR}/global/global.cpp
-    ${ACTORS_DIR}/global/message_atoms.cpp
-    ${ACTORS_DIR}/global/settings_functions.cpp
-    ${ACTORS_DIR}/global/timing_info.cpp)
-set(SUMMA_ACTOR
-    ${ACTORS_DIR}/summa_actor/batch.cpp
-    ${ACTORS_DIR}/summa_actor/batch_container.cpp
-    ${ACTORS_DIR}/summa_actor/client.cpp
-    ${ACTORS_DIR}/summa_actor/client_container.cpp
-    ${ACTORS_DIR}/summa_actor/summa_actor.cpp
-    ${ACTORS_DIR}/summa_actor/summa_backup_server.cpp
-    ${ACTORS_DIR}/summa_actor/summa_client.cpp
-    ${ACTORS_DIR}/summa_actor/summa_server.cpp)
-set(FILE_ACCESS_ACTOR
-    ${ACTORS_DIR}/file_access_actor/file_access_actor.cpp
-    ${ACTORS_DIR}/file_access_actor/forcing_file_info.cpp
-    ${ACTORS_DIR}/file_access_actor/output_container.cpp)
-set(JOB_ACTOR
-    ${ACTORS_DIR}/job_actor/GRU.cpp
-    ${ACTORS_DIR}/job_actor/job_actor.cpp)
-set(HRU_ACTOR
-    ${ACTORS_DIR}/hru_actor/hru_actor.cpp)
+# SUMMA Source Files are defined in the CMakeLists.txt file in the subdirectory
+add_subdirectory(${F_MASTER}/build/source/)
 
 
 #=========================================================================================
 # COMPILE PART 3: Collect the subroutines into build groups depending on build type
 #=========================================================================================
 
-set(COMM_ALL
-    ${NRPROC}
-    ${HOOKUP}
-    ${DATAMS}
-    ${UTILMS})
-if(CMAKE_BUILD_TYPE MATCHES Actors)
+set(COMM_ALL ${NRPROC} ${HOOKUP} ${DATAMS} ${UTILMS})
+
+set(SUMMA_ALL ${NETCDF} ${PRELIM} ${MODRUN} ${SOLVER} ${DRIVER})
+
+if (USE_ACTORS)
     set(COMM_ALL ${COMM_ALL} ${DATAMS_ACTORS} ${INTERFACE})
-endif()
-if(CMAKE_BUILD_TYPE MATCHES Sundials)
-    set(COMM_ALL ${COMM_ALL} ${DATAMS_SUNDIALS} ${UTILMS_SUNDIALS})
-endif()
-
-set(SUMMA_ALL
-    ${NETCDF}
-    ${PRELIM}
-    ${MODRUN}
-    ${SOLVER}
-    ${DRIVER})
-
-if(CMAKE_BUILD_TYPE MATCHES Actors)
-    set(SUMMA_ALL ${SUMMA_ALL}
-                  ${FILE_ACCESS_INTERFACE}
-                  ${JOB_INTERFACE}
-                  ${HRU_INTERFACE})
+    set(SUMMA_ALL ${SUMMA_ALL} ${SYS_INIT_INTERFACE} ${FILE_ACCESS_INTERFACE}
+                  ${JOB_INTERFACE} ${GRU_INTERFACE} ${HRU_INTERFACE})
+    set(MAIN_SUMMA ${ACTORS_DIR}/main.cpp)
 else()
-    set(SUMMA_ALL ${SUMMA_ALL}
-        ${PRELIM_NOT_ACTORS}
-        ${MODRUN_NOT_ACTORS}
-        ${SOLVER_NOT_ACTORS}
-        ${DRIVER_NOT_ACTORS})
-endif()
-if(CMAKE_BUILD_TYPE MATCHES NexGen)
-    set(SUMMA_ALL ${SUMMA_ALL}
-        ${DRIVER_NEXGEN})
-endif()
-if(CMAKE_BUILD_TYPE MATCHES Sundials)
-    set(SUMMA_ALL ${SUMMA_ALL}
-        ${MODRUN_SUNDIALS}
-        ${SOLVER_SUNDIALS})
+    set(SUMMA_ALL ${SUMMA_ALL} ${PRELIM_NOT_ACTORS} ${MODRUN_NOT_ACTORS}
+                  ${SOLVER_NOT_ACTORS} ${DRIVER_NOT_ACTORS})
+    set(MAIN_SUMMA ${DRIVER_DIR}/summa_driver.f90)
 endif()
 
-# Run program files
-set(MAIN_ACTOR ${ACTORS_DIR}/main.cpp)
-#set(MAIN_BMI  ${DRIVER_DIR}/summa_driver4bmi.f90) # do not need a driver in NexGen so do not use
-set(MAIN_SUMMA ${DRIVER_DIR}/summa_driver.f90)
+if (USE_NEXGEN)
+    set(SUMMA_ALL ${SUMMA_ALL} ${DRIVER_NEXGEN})
+endif()
+
+if (USE_SUNDIALS)
+    set(COMM_ALL ${COMM_ALL} ${DATAMS_SUNDIALS} ${UTILMS_SUNDIALS})
+    set(SUMMA_ALL ${SUMMA_ALL} ${MODRUN_SUNDIALS} ${SOLVER_SUNDIALS})
+endif()
+
 
 # Define version number, not working correctly
 set(VERSIONFILE     ${DRIVER_DIR}/summaversion.inc)
@@ -520,11 +198,11 @@ target_compile_options(SUMMA_NOAHMP PRIVATE ${FLAGS_NOAH})
 # Build SUMMA_COMM Object
 add_library(SUMMA_COMM OBJECT ${COMM_ALL})
 target_compile_options(SUMMA_COMM PRIVATE ${FLAGS_ALL})
-target_include_directories(SUMMA_COMM PRIVATE ${INCLUDES})
-target_link_libraries(SUMMA_COMM PUBLIC SUMMA_NOAHMP ${FLAGS_ALL}) # added flags to the link step
+# target_include_directories(SUMMA_COMM PRIVATE ${INCLUDES})
+target_link_libraries(SUMMA_COMM PUBLIC SUMMA_NOAHMP ${EXT_TARGETS}) # added flags to the link step
 
 # For NexGen, build SUMMA Shared Library and add the outside BMI libraries
-if(CMAKE_BUILD_TYPE MATCHES NexGen)
+if(USE_NEXTGEN)
     if(WIN32)
         add_library(summabmi ${SUMMA_ALL})
     else()
@@ -532,13 +210,6 @@ if(CMAKE_BUILD_TYPE MATCHES NexGen)
     endif()
     target_compile_options(summabmi PRIVATE ${FLAGS_ALL})
 
-    if(CMAKE_BUILD_TYPE MATCHES Sundials)
-        target_include_directories(summabmi PUBLIC ${INCLUDES} ${INC_SUNDIALS})
-        target_link_libraries(summabmi PUBLIC ${LIBRARIES} ${LIB_SUNDIALS} SUMMA_NOAHMP SUMMA_COMM)
-    else()
-        target_include_directories(summabmi PUBLIC ${INCLUDES})
-        target_link_libraries(summabmi PUBLIC ${LIBRARIES} SUMMA_NOAHMP SUMMA_COMM)
-    endif()
     target_link_libraries(summabmi PUBLIC iso_c_bmi)
     set_target_properties(summabmi PROPERTIES VERSION ${PROJECT_VERSION})
     include(GNUInstallDirs)
@@ -549,46 +220,33 @@ if(CMAKE_BUILD_TYPE MATCHES NexGen)
     configure_file(summabmi.pc.in summabmi.pc @ONLY)
     install(FILES ${CMAKE_BINARY_DIR}/summabmi.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
 
+endif()
+
+
+add_library(summa SHARED ${SUMMA_ALL})
+target_compile_options(summa PRIVATE ${FLAGS_ALL})
+target_link_libraries(summa PUBLIC ${EXT_TARGETS} SUMMA_NOAHMP SUMMA_COMM)
+
 # For Actors, build SUMMA Shared Library add the actors libraries and add the executable
-elseif(CMAKE_BUILD_TYPE MATCHES Actors)
-    add_library(summaactors SHARED ${SUMMA_ALL})
-    target_compile_options(summaactors PRIVATE ${FLAGS_ALL})
+if(USE_ACTORS)
+    add_executable(${EXEC_NAME} ${MAIN_SUMMA} ${ACTORS_GLOBAL}
+                   ${FILE_ACCESS_ACTOR} ${JOB_ACTOR} ${GRU_ACTOR} ${HRU_ACTOR}
+                   ${SYS_INIT} ${SUMMA_CLIENT} ${SUMMA_SERVER})
 
-    if(CMAKE_BUILD_TYPE MATCHES Sundials)
-        target_include_directories(summaactors PUBLIC ${INCLUDES} ${INC_SUNDIALS})
-        target_link_libraries(summaactors PUBLIC ${LIBRARIES} ${LIB_SUNDIALS} SUMMA_NOAHMP SUMMA_COMM)
-    else()
-        target_include_directories(summaactors PUBLIC ${INCLUDES})
-        target_link_libraries(summaactors PUBLIC ${LIBRARIES} SUMMA_NOAHMP SUMMA_COMM)
-    endif()
-
-    add_executable(${EXEC_NAME} ${MAIN_ACTOR}
-        ${ACTORS_GLOBAL}
-        ${FILE_ACCESS_ACTOR}
-        ${JOB_ACTOR}
-        ${HRU_ACTOR}
-        ${SUMMA_ACTOR}
-        ${SUMMA_CLIENT}
-        ${SUMMA_SERVER})
     set_property(TARGET ${EXEC_NAME} PROPERTY LINKER_LANGUAGE Fortran)
     target_compile_options(${EXEC_NAME} PUBLIC ${FLAGS_CXX})
-    target_include_directories(${EXEC_NAME} PUBLIC ${INC_ACTORS})
-    target_link_libraries( ${EXEC_NAME} ${LIB_ACTORS} summaactors)
+    target_include_directories(${EXEC_NAME} PUBLIC
+                               ${PARENT_DIR}/includes/global
+                               ${PARENT_DIR}/includes/summa_actor
+                               ${PARENT_DIR}/includes/job_actor
+                               ${PARENT_DIR}/includes/file_access_actor
+                               ${PARENT_DIR}/includes/gru_actor
+                               ${PARENT_DIR}/includes/hru_actor)
+    target_link_libraries( ${EXEC_NAME} ${EXT_TARGETS} summa)
 
 # For other cases, build SUMMA Shared Library and add the executable
-else()
-    add_library(summa SHARED ${SUMMA_ALL})
-    target_compile_options(summa PRIVATE ${FLAGS_ALL})
-
-    if(CMAKE_BUILD_TYPE MATCHES Sundials)
-        target_include_directories(summa PUBLIC ${INCLUDES} ${INC_SUNDIALS})
-        target_link_libraries(summa PUBLIC ${LIBRARIES} ${LIB_SUNDIALS} SUMMA_NOAHMP SUMMA_COMM)
-    else()
-        target_include_directories(summa PUBLIC ${INCLUDES})
-	target_link_libraries(summa PUBLIC ${LIBRARIES} SUMMA_NOAHMP SUMMA_COMM ${FLAGS_ALL}) # added flags to the link step
-    endif()
-
+elseif(NOT USE_NEXTGEN)
     add_executable(${EXEC_NAME} ${MAIN_SUMMA})
     set_property(TARGET ${EXEC_NAME} PROPERTY LINKER_LANGUAGE Fortran)
-    target_link_libraries(${EXEC_NAME} summa ${FLAGS_ALL}) # added flags to the link step
+    target_link_libraries(${EXEC_NAME} summa ${EXT_TARGETS}) # added flags to the link step
 endif()
