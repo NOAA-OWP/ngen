@@ -1,20 +1,25 @@
 #ifndef NGEN_BMI_PY_ADAPTER_H
 #define NGEN_BMI_PY_ADAPTER_H
 
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
 
 #include <cstring>
 #include <exception>
 #include <memory>
 #include <string>
+
 #include "pybind11/pybind11.h"
 #include "pybind11/pytypes.h"
 #include "pybind11/numpy.h"
-#include "JSONProperty.hpp"
-#include "StreamHandler.hpp"
-#include "boost/algorithm/string.hpp"
+
+#include "boost/algorithm/string/join.hpp"
+
 #include "Bmi_Adapter.hpp"
-#include "python/InterpreterUtil.hpp"
+
+#include "utilities/StreamHandler.hpp"
+#include "utilities/python/InterpreterUtil.hpp"
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Py_Adapter_Test;
@@ -30,7 +35,7 @@ namespace models {
          * An adapter class to serve as a C++ interface to the aspects of external models written in the Python
          * language that implement the BMI.
          */
-        class Bmi_Py_Adapter : public Bmi_Adapter {
+        class Bmi_Py_Adapter final : public Bmi_Adapter {
 
         public:
 
@@ -43,6 +48,10 @@ namespace models {
 
             Bmi_Py_Adapter(Bmi_Py_Adapter const&) = delete;
             Bmi_Py_Adapter(Bmi_Py_Adapter&&) = delete;
+
+            ~Bmi_Py_Adapter() override {
+                Finalize();
+            }
 
             /**
              * Copy the given BMI variable's values from the backing numpy array to a C++ array.
@@ -241,7 +250,8 @@ namespace models {
                     return "long long";
                 } else if (py_type_name == "longlong" && item_size == sizeof(long long)) {
                     return "long long"; //numpy type
-                } else if (py_type_name == "float" && item_size == sizeof(float)) {
+                } else if ( (py_type_name == "float" || py_type_name == "float32" || py_type_name == "np.float32" ||
+                           py_type_name == "numpy.float32" || py_type_name == "np.single" ||  py_type_name == "numpy.single") && item_size == sizeof(float)) {
                     return "float";
                 } else if ((py_type_name == "float" || py_type_name == "float64" || py_type_name == "np.float64" ||
                             py_type_name == "numpy.float64") && item_size == sizeof(double)) {
@@ -506,7 +516,7 @@ namespace models {
              *
              * @return Whether the backing model has been initialized yet.
              */
-            inline bool is_model_initialized() {
+            inline bool is_model_initialized() override {
                 return model_initialized;
             }
 
@@ -780,6 +790,6 @@ namespace models {
     }
 }
 
-#endif //ACTIVATE_PYTHON
+#endif //NGEN_WITH_PYTHON
 
 #endif //NGEN_BMI_PY_ADAPTER_H

@@ -1,4 +1,6 @@
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
 
 #include <exception>
 #include <utility>
@@ -9,10 +11,10 @@ using namespace routing_py_adapter;
 
 Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_config_file_with_path):
   t_route_config_path(t_route_config_file_with_path){
-  //hold a reference to the interpreter, ensures an interperter exists as long as the reference is held
-  interperter = utils::ngenPy::InterpreterUtil::getInstance();
+  //hold a reference to the interpreter, ensures an interpreter exists as long as the reference is held
+  interpreter = utils::ngenPy::InterpreterUtil::getInstance();
   //Import ngen_main.  Will throw error if module isn't available
-  //in the embedded interperters PYTHON_PATH
+  //in the embedded interpreters PYTHON_PATH
   try {
     this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("ngen_routing.ngen_main");
     std::cout<<"WARN: Legacy t-route module detected; use of this version is deprecated!"<<std::endl;
@@ -32,7 +34,7 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_config_file_with_path
 void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time,
                           const std::vector<double> &flow_vector){
   throw "Routing_Py_Adapter::route overload with flow_vector unimplemented.";
-};
+}
 
 void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time)
 {
@@ -64,4 +66,4 @@ void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time)
 }
 
 
-#endif //ACTIVATE_PYTHON
+#endif //NGEN_WITH_PYTHON

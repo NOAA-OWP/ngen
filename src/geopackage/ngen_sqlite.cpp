@@ -14,7 +14,7 @@ sqlite_error::sqlite_error(const std::string& origin_func, int code, const std::
     origin_func + " returned code " + std::to_string(code)
         + " (msg: " + sqlite3_errstr(code) + ")"
         + (extra.empty() ? "" : " " + extra)
-  ){};
+  ){}
 
 const auto sqlite_not_started_error = sqlite_error{
     "sqlite iteration is has not started, get() is not callable "
@@ -41,7 +41,7 @@ database::iterator::iterator(stmt_t&& stmt)
     }
 
     restart();
-};
+}
 
 auto database::iterator::ptr_() const noexcept -> sqlite3_stmt*
 {

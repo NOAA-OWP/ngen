@@ -51,7 +51,7 @@ namespace realization {
     public:
 
         /**
-         * Minimal constructor for objects initialize using the Formulation_Manager and subsequent calls to
+         * Minimal constructor for objects initialized using the Formulation_Manager and subsequent calls to
          * ``create_formulation``.
          *
          * @param id
@@ -216,18 +216,6 @@ namespace realization {
         }
 
         /**
-         * Get value for some BMI model variable.
-         *
-         * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
-         * is actually a single, scalar value.  Thus, it returns what is at index 0 of the array reference.
-         *
-         * @param index
-         * @param var_name
-         * @return
-         */
-        virtual double get_var_value_as_double(const std::string& var_name) = 0;
-
-        /**
          * Get value for some BMI model variable at a specific index.
          *
          * Function gets the value for a provided variable, returned from the backing model as an array, and returns the
@@ -302,21 +290,8 @@ namespace realization {
         /** The degree of precision in output values when converting to text. */
         int output_precision;
 
-        std::vector<std::string> OPTIONAL_PARAMETERS = {
-                BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,
-                BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,
-                BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
-                BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS,
-                BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END,
-                BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP,
-                BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE
-        };
-        std::vector<std::string> REQUIRED_PARAMETERS = {
-                BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
-                BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR,
-                BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE,
-                BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS
-        };
+        const static std::vector<std::string> OPTIONAL_PARAMETERS;
+        const static std::vector<std::string> REQUIRED_PARAMETERS;
 
         // Unit test access
         friend class ::Bmi_Formulation_Test;

@@ -57,10 +57,6 @@ if(NGEN_WITH_ROUTING)
     add_compile_definitions(ROUTING_PYBIND_TESTS_ACTIVE)
 endif()
 
-if(NGEN_WITH_NETCDF)
-    add_compile_definitions(NETCDF_ACTIVE)
-endif()
-
 # =============================================================================
 
 add_executable(test_all)
@@ -172,6 +168,15 @@ ngen_add_test(
         testbmicppmodel
 )
 
+ngen_add_test(
+    test_gridselector
+    OBJECTS
+        forcing/GridDataSelector_Test.cpp
+    LIBRARIES
+        NGen::forcing
+        NGen::geojson
+)
+
 ########################## Series Unit Tests
 ngen_add_test(
     test_mdarray
@@ -229,6 +234,20 @@ ngen_add_test(
     #   NGEN_WITH_MPI
 )
 
+########################## Partition_One Tests
+ngen_add_test(
+    test_partition_one
+    OBJECTS
+        utils/Partition_One_Test.cpp
+    LIBRARIES
+        gmock
+        NGen::core
+        NGen::geojson
+        NGen::geopackage
+    REQUIRES
+        NGEN_WITH_SQLITE
+)
+
 ########################## MultiLayer Tests
 ngen_add_test(
     test_multilayer
@@ -242,6 +261,7 @@ ngen_add_test(
         NGen::forcing
     REQUIRES
         NGEN_WITH_NETCDF
+        NGEN_WITH_BMI_FORTRAN
 )
 
 
@@ -400,7 +420,6 @@ ngen_add_test(
 )
 
 ########################### Netcdf Forcing Tests
-#if(NETCDF_ACTIVE)
 ngen_add_test(
     test_netcdf_forcing
     OBJECTS
@@ -415,7 +434,6 @@ ngen_add_test(
     REQUIRES
         NGEN_WITH_NETCDF
 )
-#endif()
 
 ########################## Primary Combined Unit Test Target
 ngen_add_test(
@@ -428,6 +446,7 @@ ngen_add_test(
         forcing/CsvPerFeatureForcingProvider_Test.cpp
         forcing/OptionalWrappedDataProvider_Test.cpp
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
+        forcing/GridDataSelector_Test.cpp
         core/mediator/UnitsHelper_Tests.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/NetworkTests.cpp
@@ -452,7 +471,6 @@ ngen_add_test(
         NGen::logging
         NGen::ngen_bmi
         testbmicppmodel
-        
 )
 
 # Discover for test_all

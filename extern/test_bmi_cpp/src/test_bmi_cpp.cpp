@@ -396,7 +396,9 @@ void TestBmiCpp::read_init_config(std::string config_file)
 
   for (size_t i = 0; i < config_line_count; i++) {
     char *param_key, *param_value;
-    fgets(config_line.data(), max_config_line_length + 1, fp);
+    char* ret = fgets(config_line.data(), max_config_line_length + 1, fp);
+    if (ret == nullptr)
+        throw std::runtime_error("Error or EOF when reading '" + config_file + "'");
 
     char* config_line_ptr = config_line.data();
     config_line_ptr = strsep(&config_line_ptr, "\n");

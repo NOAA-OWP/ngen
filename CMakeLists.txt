@@ -139,7 +139,6 @@ endif()
 # If MPI support is enabled, set the C++ compiler to "mpicxx"
 if(NGEN_WITH_MPI)
     find_package(MPI REQUIRED)
-    add_compile_definitions(NGEN_MPI_ACTIVE)
 endif()
 
 # -----------------------------------------------------------------------------
@@ -177,13 +176,25 @@ endif()
 if(NGEN_WITH_UDUNITS)
     find_package(UDUNITS2 REQUIRED)
     add_compile_definitions(NGEN_WITH_UDUNITS)
-    get_target_property(_SUMMARY_UDUNITS_INCLUDE libudunits2 INTERFACE_INCLUDE_DIRECTORIES)
 endif()
 
 # -----------------------------------------------------------------------------
 if(NGEN_WITH_NETCDF)
-    find_package(NetCDF REQUIRED COMPONENTS CXX)
-    add_compile_definitions(NETCDF_ACTIVE)
+    find_package(NetCDF COMPONENTS CXX)
+
+    if(NOT NetCDF_CXX_FOUND)
+        find_package(NetCDF REQUIRED)
+        message(INFO " Using internal copy of netcdf-cxx4")
+        add_external_subdirectory(
+            SOURCE "${NGEN_EXT_DIR}/netcdf-cxx4"
+            OUTPUT "${PROJECT_BINARY_DIR}/extern-libs/netcdf-cxx4"
+            GIT_UPDATE "${NGEN_EXT_DIR}/netcdf-cxx4/netcdf-cxx4"
+	    IMPORTS netcdf-cxx4
+        )
+        set(NetCDF_CXX_INCLUDE_DIR "${NGEN_EXT_DIR}/netcdf-cxx4/netcdf-cxx4/cxx4")
+        set(NetCDF_CXX_LIBRARY "${PROJECT_BINARY_DIR}/extern-libs/netcdf-cxx4/libnetcdf-cxx4.a")
+        target_link_libraries(NetCDF INTERFACE netcdf-cxx4)
+    endif()
 endif()
 
 if(NGEN_WITH_EXTERN_SLOTH)
@@ -202,8 +213,6 @@ endif()
 # -----------------------------------------------------------------------------
 # Handle several steps for BMI C library logic and dependencies, at top level, if functionality is turned on
 if(NGEN_WITH_BMI_C)
-    add_compile_definitions(NGEN_BMI_C_LIB_ACTIVE)
-
     if(NGEN_WITH_EXTERN_TOPMODEL)
         add_external_subdirectory(
             SOURCE     "${NGEN_EXT_DIR}/topmodel"
@@ -235,8 +244,6 @@ endif()
 # -----------------------------------------------------------------------------
 # Configure whether Fortran BMI functionality is active
 if(NGEN_WITH_BMI_FORTRAN)
-    add_compile_definitions(NGEN_BMI_FORTRAN_ACTIVE)
-
     add_external_subdirectory(
         SOURCE  "${NGEN_EXT_DIR}/iso_c_fortran_bmi"
         OUTPUT  "${NGEN_EXT_DIR}/iso_c_fortran_bmi/cmake_build"
@@ -255,15 +262,9 @@ endif()
 
 # -----------------------------------------------------------------------------
 if(NGEN_WITH_PYTHON)
-    add_compile_definitions(ACTIVATE_PYTHON=true)
     find_package(Python 3.6.8 REQUIRED COMPONENTS Interpreter Development NumPy)
     set(PYTHON_EXECUTABLE ${Python_EXECUTABLE}) # Case-sensitive difference
     add_subdirectory(extern/pybind11 pybind11)
-endif()
-
-# -----------------------------------------------------------------------------
-if(NGEN_WITH_ROUTING)
-    add_compile_definitions(NGEN_ROUTING_ACTIVE)
 endif()
 
 # -----------------------------------------------------------------------------
@@ -457,7 +458,7 @@ ngen_dependent_multiline_message(NGEN_WITH_SQLITE
 ngen_dependent_multiline_message(NGEN_WITH_UDUNITS
 "  UDUNITS2:"
 "    Library: ${UDUNITS2_LIBRARY}"
-"    Include: ${_SUMMARY_UDUNITS_INCLUDE}")
+"    Include: ${UDUNITS2_INCLUDE_DIR}")
 ngen_dependent_multiline_message(NGEN_WITH_BMI_FORTRAN
 "  Fortran:"
 "    BMI_FORTRAN_ISO_C_LIB_PATH: ${BMI_FORTRAN_ISO_C_LIB_PATH}"

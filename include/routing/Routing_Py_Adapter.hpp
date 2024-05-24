@@ -1,7 +1,9 @@
 #ifndef NGEN_ROUTING_PY_ADAPTER_H
 #define NGEN_ROUTING_PY_ADAPTER_H
 
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
 
 #include <exception>
 #include <memory>
@@ -59,9 +61,9 @@ namespace routing_py_adapter {
          * Currently, these parameters are ignored and are read instead from the yaml configuration
          * file contained in #t_route_config_path
          * 
-         * NOTE this funtion uses a pybind11 embedded interperter to load the t-route namespace package
-         * ngen-main and then executes the routing in the python interperter.  
-         * It is assumed that the ngen-main module is available in the interperters PYTHON_PATH.
+         * NOTE this funtion uses a pybind11 embedded interpreter to load the t-route namespace package
+         * ngen-main and then executes the routing in the python interpreter.
+         * It is assumed that the ngen-main module is available in the interpreters PYTHON_PATH.
          * If the module cannot be found, then a ModuleNotFoundError will be thrown.
          * Similarly, ngen-main depends on severl other python modules.  If any of these are not in the
          * environments PYTHON_PATH, errors will occur.
@@ -108,12 +110,12 @@ namespace routing_py_adapter {
     private:
 
 
-        /** Handle to the interperter util.
+        /** Handle to the interpreter util.
          * 
          * Order is important, must be constructed before anything depending on it
          * and destructed after all dependent members.
         */
-        std::shared_ptr<utils::ngenPy::InterpreterUtil> interperter;
+        std::shared_ptr<utils::ngenPy::InterpreterUtil> interpreter;
 
         /** A binding to the Python numpy package/module. */
         py::object np;
@@ -128,6 +130,6 @@ namespace routing_py_adapter {
 }
 
 
-#endif //ACTIVATE_PYTHON
+#endif //NGEN_WITH_PYTHON
 
 #endif //NGEN_ROUTING_PY_ADAPTER_H

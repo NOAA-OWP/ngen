@@ -1,7 +1,5 @@
 #ifdef NGEN_BMI_PY_TESTS_ACTIVE
 
-#ifdef ACTIVATE_PYTHON
-
 #include "gtest/gtest.h"
 #include <boost/date_time.hpp>
 #include <boost/property_tree/ptree.hpp>
@@ -13,6 +11,7 @@
 #include "Bmi_Py_Formulation.hpp"
 #include "python/InterpreterUtil.hpp"
 #include <CsvPerFeatureForcingProvider.hpp>
+#include "utilities/FileChecker.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
@@ -35,7 +34,7 @@ typedef struct py_formulation_example_scenario {
 
 class Bmi_Py_Formulation_Test : public ::testing::Test {
 private:
-    static std::shared_ptr<InterpreterUtil> interperter;
+    static std::shared_ptr<InterpreterUtil> interpreter;
 protected:
     
     py::object Path;
@@ -52,7 +51,7 @@ protected:
     }
 
     static std::shared_ptr<models::bmi::Bmi_Py_Adapter> get_friend_bmi_model(Bmi_Py_Formulation& formulation) {
-        return formulation.get_bmi_model();
+        return std::dynamic_pointer_cast<models::bmi::Bmi_Py_Adapter>(formulation.get_bmi_model());
     }
 
     static time_t get_friend_bmi_model_start_time_forcing_offset_s(Bmi_Py_Formulation& formulation) {
@@ -80,7 +79,7 @@ protected:
     }
 
     static double get_friend_var_value_as_double(Bmi_Py_Formulation& formulation, const std::string& var_name) {
-        return formulation.get_var_value_as_double(var_name);
+        return formulation.get_var_value_as_double(0, var_name);
     }
 
     static time_t parse_forcing_time(const std::string& date_time_str) {
@@ -169,8 +168,8 @@ protected:
                                    const std::vector<std::string> &file_basenames);
 
 };
-//Make sure the interperter is instansiated and lives throught the test class
-std::shared_ptr<InterpreterUtil> Bmi_Py_Formulation_Test::interperter = InterpreterUtil::getInstance();
+//Make sure the interpreter is instansiated and lives throught the test class
+std::shared_ptr<InterpreterUtil> Bmi_Py_Formulation_Test::interpreter = InterpreterUtil::getInstance();
 
 void Bmi_Py_Formulation_Test::SetUp() {
     Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
@@ -456,7 +455,5 @@ TEST_F(Bmi_Py_Formulation_Test, get_var_value_as_double_0_a) {
 
     ASSERT_EQ(value, retrieved);
 }
-
-#endif // ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_PY_TESTS_ACTIVE

@@ -215,12 +215,12 @@ namespace geojson {
                     for (auto &property : property_tree) {
                         if (property.first.empty()) {
                             type = PropertyType::List;
-                            value_list.push_back(std::move(JSONProperty(value_key, property.second)));
+                            value_list.push_back(JSONProperty(value_key, property.second));
                             data = List(& value_list );
                         }
                         else {
                             type = PropertyType::Object;
-                            values.emplace(property.first, std::move(JSONProperty(property.first, property.second)));
+                            values.emplace(property.first, JSONProperty(property.first, property.second));
                             data = Object( & values );
                         }
                     }

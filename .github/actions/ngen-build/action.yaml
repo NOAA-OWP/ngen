@@ -86,7 +86,6 @@ runs:
               echo "LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH" >> $GITHUB_ENV
               echo "LDFLAGS=-L/usr/local/lib" >> $GITHUB_ENV
               echo "LIB=$LD_LIBRARY_PATH" >> $GITHUB_ENV
-              echo "INCLUDE=/usr/local/include" >> $GITHUB_ENV
               echo "NETCDF=/usr/local" >> $GITHUB_ENV
             fi
           shell: bash
@@ -109,7 +108,7 @@ runs:
 
         - name: Cache Boost Dependency
           id: cache-boost-dep
-          uses: actions/cache@v3
+          uses: actions/cache@v4
           with:
             path: boost_1_79_0
             key: unix-boost-dep
@@ -171,23 +170,30 @@ runs:
           run: echo "FC=gfortran-13" >> $GITHUB_ENV
           shell: bash
 
+        - name: Setup macOS Default Compiler Includes
+          if: runner.os == 'macOS'
+          run: |
+            echo "C_INCLUDE_PATH=$(brew --prefix)/include" >> $GITHUB_ENV
+            echo "CPLUS_INCLUDE_PATH=$(brew --prefix)/include" >> $GITHUB_ENV
+          shell: bash
+
         - name: Cmake Initialization
           id: cmake_init
           run: |
             export BOOST_ROOT="$(pwd)/boost_1_79_0"
-            export CFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer"
-            export CXXFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -pedantic-errors"
+            export CFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -Werror"
+            export CXXFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct"
             . .venv/bin/activate
             [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
             cmake -B ${{ inputs.build-dir }} \
-              -DBMI_C_LIB_ACTIVE:BOOL=${{ inputs.bmi_c }} \
-              -DNGEN_ACTIVATE_PYTHON:BOOL=${{ inputs.use_python }} \
-              -DUDUNITS_ACTIVE:BOOL=${{ inputs.use_udunits }} \
-              -DBMI_FORTRAN_ACTIVE:BOOL=${{ inputs.bmi_fortran }} \
-              -DNGEN_ACTIVATE_ROUTING:BOOL=${{ inputs.use_troute }} \
-              -DNETCDF_ACTIVE:BOOL=${{ inputs.use_netcdf }} \
+              -DNGEN_WITH_BMI_C:BOOL=${{ inputs.bmi_c }} \
+              -DNGEN_WITH_PYTHON:BOOL=${{ inputs.use_python }} \
+              -DNGEN_WITH_UDUNITS:BOOL=${{ inputs.use_udunits }} \
+              -DNGEN_WITH_BMI_FORTRAN:BOOL=${{ inputs.bmi_fortran }} \
+              -DNGEN_WITH_ROUTING:BOOL=${{ inputs.use_troute }} \
+              -DNGEN_WITH_NETCDF:BOOL=${{ inputs.use_netcdf }} \
               -DNGEN_WITH_SQLITE:BOOL=${{ inputs.use_sqlite }} \
-              -DMPI_ACTIVE:BOOL=${{ inputs.use_mpi }} -S .
+              -DNGEN_WITH_MPI:BOOL=${{ inputs.use_mpi }} -S .
             echo "build-dir=$(echo ${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
           shell: bash
 

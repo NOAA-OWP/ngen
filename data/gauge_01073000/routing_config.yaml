@@ -8,7 +8,7 @@ network_topology_parameters:
     #----------
     supernetwork_parameters:
         #----------
-        geo_file_type: HYFeaturesNetwork 
+        network_type: HYFeaturesNetwork 
         geo_file_path: data/gauge_01073000/gauge_01073000.gpkg 
         mask_file_path: # domain/unit_test_noRS/coastal_subset.txt
         synthetic_wb_segments:
@@ -16,13 +16,28 @@ network_topology_parameters:
             #- 4800004
             #- 4800006
             #- 4800007
+        columns: 
+            key: 'id'
+            downstream: 'toid'
+            dx : 'length_m'
+            n : 'n'
+            ncc : 'nCC'
+            s0 : 'So'
+            bw : 'BtmWdth'
+            waterbody : 'rl_NHDWaterbodyComID'
+            gages : 'rl_gages'
+            tw : 'TopWdth'
+            twcc : 'TopWdthCC'
+            musk : 'MusK'
+            musx : 'MusX'
+            cs : 'ChSlp'
+            alt: 'alt'
     waterbody_parameters:
         #----------
         break_network_at_waterbodies: False 
         level_pool:
             #----------
-            level_pool_waterbody_parameter_file_path: data/gauge_01073000/gauge_01073000.gpkg 
-            reservoir_parameter_file                : data/gauge_01073000/gauge_01073000.gpkg
+            level_pool_waterbody_parameter_file_path: data/gauge_01073000/gauge_01073000.gpkg
         #rfc:
             #----------
             #reservoir_parameter_file                : domain/reservoir_index_AnA.nc
@@ -60,9 +75,7 @@ compute_parameters:
         dt                          : 300 # [sec]
         qlat_input_folder           : ./ 
         qlat_file_pattern_filter    : "nex-*"
-        nexus_input_folder          : ./ 
-        nexus_file_pattern_filter   : "nex-*" #OR "*NEXOUT.parquet" OR "nex-*"
-        binary_nexus_file_folder    : ./ # this is required if nexus_file_pattern_filter="nex-*"
+        binary_nexus_file_folder    : ./ # this is required if qlat_file_pattern_filter="nex-*"
         #coastal_boundary_input_file : channel_forcing/schout_1.nc  
         nts                         : 8640 #288 for 1day
         max_loop_size               : 720 # [hr]  
@@ -81,11 +94,15 @@ compute_parameters:
     #        crosswalk_segID_field         : # 'link'
     #        wrf_hydro_lastobs_file        :                
     #        lastobs_output_folder         : lastobs/
-    #    reservoir_da:
-    #        #----------
-    #        reservoir_persistence_usgs  : False
-    #        reservoir_persistence_usace : False
-    #        gage_lakeID_crosswalk_file  : # domain/reservoir_index_AnA.nc
+        reservoir_da:
+            #----------
+            reservoir_persistence_da:
+                #----------
+                reservoir_persistence_usgs  : False
+                reservoir_persistence_usace : False
+            reservoir_rfc_da:
+                #----------
+                reservoir_rfc_forecasts: False
 #--------------------------------------------------------------------------------
 output_parameters:
     #----------

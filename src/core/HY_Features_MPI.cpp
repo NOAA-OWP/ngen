@@ -1,7 +1,7 @@
 #include <HY_Features_MPI.hpp>
 #include <HY_PointHydroNexusRemote.hpp>
 
-#ifdef NGEN_MPI_ACTIVE
+#if NGEN_WITH_MPI
 
 using namespace hy_features;
 
@@ -85,4 +85,4 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
         }
       }	
 }
-#endif //NGEN_MPI_ACTIVE
+#endif //NGEN_WITH_MPI

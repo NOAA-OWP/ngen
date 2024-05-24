@@ -3,10 +3,12 @@
 
 #include <memory>
 #include <string>
-#include "AbstractCLibBmiAdapter.hpp"
+
 #include "bmi.hpp"
-#include "JSONProperty.hpp"
-#include "StreamHandler.hpp"
+#include "AbstractCLibBmiAdapter.hpp"
+#include "utilities/StreamHandler.hpp"
+#include "utilities/ExternalIntegrationException.hpp"
+
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Cpp_Adapter_Test;
@@ -24,7 +26,7 @@ namespace models {
          * loaded dynamically from libraries. This is less important than e.g. @see Bmi_C_Adapter but still provides
          * some useful generalized functionality.
          */
-        class Bmi_Cpp_Adapter : public AbstractCLibBmiAdapter  {
+        class Bmi_Cpp_Adapter final : public AbstractCLibBmiAdapter  {
 
         public:
 
@@ -112,7 +114,7 @@ namespace models {
              *
              * Note that this calls the `Finalize()` function for cleaning up this object and its backing BMI model.
              */
-            virtual ~Bmi_Cpp_Adapter() {
+            ~Bmi_Cpp_Adapter() override {
                 finalizeForCppAdapter();
             }
 
@@ -291,7 +293,7 @@ namespace models {
              *
              * @return Whether the backing model has been initialized yet.
              */
-            bool is_model_initialized();
+            bool is_model_initialized() override;
 
             void SetValue(std::string name, void *src) override;
 

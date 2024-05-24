@@ -71,7 +71,7 @@ def process_sublist(data : dict, lock: Lock, num: int):
         #load the csv data
         print("Process ", num, " reading file", csv_file)
         
-        df = pd.read_csv(join(input_path,csv_file), parse_dates={"Time": [0]}, na_values=["   nan"])
+        df = pd.read_csv(join(input_path,csv_file), parse_dates=[0], na_values=["   nan"])
 
         if first:
             ds = create_partial_netcdf(netcdf_path + "." + str(num), num_inputs, df.columns)

@@ -1,4 +1,6 @@
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
 
 #include "Bmi_Py_Formulation.hpp"
 
@@ -8,9 +10,9 @@ using namespace models::bmi;
 using namespace pybind11::literals;
 
 Bmi_Py_Formulation::Bmi_Py_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream)
-: Bmi_Module_Formulation<models::bmi::Bmi_Py_Adapter>(id, std::move(forcing), output_stream) { }
+: Bmi_Module_Formulation(id, std::move(forcing), output_stream) { }
 
-shared_ptr<Bmi_Py_Adapter> Bmi_Py_Formulation::construct_model(const geojson::PropertyMap &properties) {
+std::shared_ptr<Bmi_Adapter> Bmi_Py_Formulation::construct_model(const geojson::PropertyMap &properties) {
     auto python_type_name_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME);
     if (python_type_name_iter == properties.end()) {
         throw std::runtime_error("BMI Python formulation requires Python model class type, but none given in config");
@@ -47,78 +49,11 @@ std::string Bmi_Py_Formulation::get_formulation_type() {
     return "bmi_py";
 }
 
-std::string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
-    // TODO: something must be added to store values if more than the current time step is wanted
-    // TODO: if such a thing is added, it should probably be configurable to turn it off
-    if (timestep != (next_time_step_index - 1)) {
-        throw std::invalid_argument("Only current time step valid when getting output for BMI Python formulation");
-    }
-
-    // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
-    // Clear anything currently in there
-    output_text_stream->str(std::string());
-
-    const std::vector<std::string> &output_var_names = get_output_variable_names();
-    // This probably should never happen, but just to be safe ...
-    if (output_var_names.empty()) { return ""; }
-
-    // Do the first separately, without the leading comma
-    *output_text_stream << get_var_value_as_double(output_var_names[0]);
-
-    // Do the rest with a leading comma
-    for (int i = 1; i < output_var_names.size(); ++i) {
-        *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
-    }
-    return output_text_stream->str();
-}
-
-double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
-    if (get_bmi_model() == nullptr) {
-        throw std::runtime_error("Trying to process response of improperly created BMI Python formulation.");
-    }
-    if (t_index < 0) {
-        throw std::invalid_argument("Getting response of negative time step in BMI Python formulation is not allowed.");
-    }
-    // Use (next_time_step_index - 1) so that second call with current time step index still works
-    if (t_index < (next_time_step_index - 1)) {
-        // TODO: consider whether we should (optionally) store and return historic values
-        throw std::invalid_argument("Getting response of previous time step in BMI Python formulation is not allowed.");
-    }
-
-    // The time step delta size, expressed in the units internally used by the model
-    double t_delta_model_units = get_bmi_model()->convert_seconds_to_model_time((double)t_delta);
-    if (next_time_step_index <= t_index) {
-        double model_time = get_bmi_model()->GetCurrentTime();
-        // Also, before running, make sure this doesn't cause a problem with model end_time
-        if (!get_allow_model_exceed_end_time()) {
-            int total_time_steps_to_process = abs((int)t_index - next_time_step_index) + 1;
-            if (get_bmi_model()->GetEndTime() < (model_time + (t_delta_model_units * total_time_steps_to_process))) {
-                throw std::invalid_argument("Cannot process BMI Python formulation to get response of future time step "
-                                            "that exceeds model end time.");
-            }
-        }
-    }
-
-    while (next_time_step_index <= t_index) {
-        double model_initial_time = get_bmi_model()->GetCurrentTime();
-        set_model_inputs_prior_to_update(model_initial_time, t_delta);
-        if (t_delta_model_units == get_bmi_model()->GetTimeStep())
-            get_bmi_model()->Update();
-        else
-            get_bmi_model()->UpdateUntil(model_initial_time + t_delta_model_units);
-        // TODO: again, consider whether we should store any historic response, ts_delta, or other var values
-        next_time_step_index++;
-    }
-    return get_var_value_as_double( get_bmi_main_output_var());
-}
-
-double Bmi_Py_Formulation::get_var_value_as_double(const std::string &var_name) {
-    return get_var_value_as_double(0, var_name);
-}
-
 double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const std::string &var_name) {
-    std::string val_type = get_bmi_model()->GetVarType(var_name);
-    size_t val_item_size = (size_t)get_bmi_model()->GetVarItemsize(var_name);
+    auto model = std::dynamic_pointer_cast<models::bmi::Bmi_Py_Adapter>(get_bmi_model());
+
+    std::string val_type = model->GetVarType(var_name);
+    size_t val_item_size = (size_t)model->GetVarItemsize(var_name);
 
     //void *dest;
     int indices[1];
@@ -127,38 +62,38 @@ double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const std::
     // The available types and how they are handled here should match what is in SetValueAtIndices
     if (val_type == "int" && val_item_size == sizeof(short)) {
         short dest;
-        get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+        model->get_value_at_indices(var_name, &dest, indices, 1, false);
         return (double)dest;
     }
     if (val_type == "int" && val_item_size == sizeof(int)) {
         int dest;
-        get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+        model->get_value_at_indices(var_name, &dest, indices, 1, false);
         return (double)dest;
     }
     if (val_type == "int" && val_item_size == sizeof(long)) {
         long dest;
-        get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+        model->get_value_at_indices(var_name, &dest, indices, 1, false);
         return (double)dest;
     }
     if (val_type == "int" && val_item_size == sizeof(long long)) {
         long long dest;
-        get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+        model->get_value_at_indices(var_name, &dest, indices, 1, false);
         return (double)dest;
     }
     if (val_type == "float" || val_type == "float16" || val_type == "float32" || val_type == "float64") {
         if (val_item_size == sizeof(float)) {
             float dest;
-            get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+            model->get_value_at_indices(var_name, &dest, indices, 1, false);
             return (double) dest;
         }
         if (val_item_size == sizeof(double)) {
             double dest;
-            get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+            model->get_value_at_indices(var_name, &dest, indices, 1, false);
             return dest;
         }
         if (val_item_size == sizeof(long double)) {
             long double dest;
-            get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+            model->get_value_at_indices(var_name, &dest, indices, 1, false);
             return (double) dest;
         }
     }
@@ -181,4 +116,4 @@ bool Bmi_Py_Formulation::is_model_initialized() {
     return get_bmi_model()->is_model_initialized();
 }
 
-#endif //ACTIVATE_PYTHON
+#endif //NGEN_WITH_PYTHON

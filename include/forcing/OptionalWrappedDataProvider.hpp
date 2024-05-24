@@ -259,8 +259,13 @@ namespace data_access {
         /**
          * Get whether the instance is initialized such that it can handle requests to provide data.
          *
-         * For this type, this is true if either the wrapped provider member has been set, or if there are default
-         * values set up for all outputs that must be provided.
+         * For this type, return whether the instance is ready to provide data.  The primary satisfying condition is
+         * when the wrapped provider member has been set, as determined by @ref isWrappedProviderSet.  Secondarily,
+         * "readiness" is also satisfied if there are default values set up for all outputs that must be provided.
+         *
+         * Note that the primary condition is subject only to the result of @ref isWrappedProviderSet, which for this
+         * type (and generally) does not reflect the readiness state of the inner, wrapped provider. This effectively
+         * assumes it is ready prior to or immediately upon being set.
          *
          * @return Whether the instance is initialized such that it can handle requests to provide data.
         */

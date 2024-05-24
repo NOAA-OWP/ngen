@@ -1,7 +1,8 @@
 #ifndef HY_POINTHDRONEXUSREMOTE_H
 #define HY_POINTHDRONEXUSREMOTE_H
 
-#ifdef NGEN_MPI_ACTIVE
+#include <NGenConfig.h>
+#if NGEN_WITH_MPI
 
 #include <HY_PointHydroNexus.hpp>
 #include <HY_Features_Ids.hpp>
@@ -11,9 +12,9 @@
 #include <unordered_map>
 #include <string>
 #include <list>
+#include <exception>
 
-
-/** This class representa a point nexus that can have both upstream and downstream connections to catments that are
+/** This class represents a point nexus that can have both upstream and downstream connections to catchments that are
 *   in seperate MPI processes.
 *
 *   When attempting to add upstream flows from a remote catchment a MPI_Irecv call will be generated
@@ -34,7 +35,7 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         virtual ~HY_PointHydroNexusRemote();
 
         /** get the request percentage of downstream flow through this nexus at timestep t. If the indicated catchment is not local a async send will be
-            created. Will attempt to process all async recieves currently queued before processing flows*/
+            created. Will attempt to process all async receives currently queued before processing flows*/
         double get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow);
 
         /** add flow to this nexus for timestep t. If the indicated catchment is not local an async receive will be started*/
@@ -95,7 +96,7 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
             MPI_Request mpi_request;
         };
 
-        std::list<async_request> stored_recieves;
+        std::list<async_request> stored_receives;
         std::list<async_request> stored_sends;
 
         std::string nexus_prefix = "cat-";
@@ -157,8 +158,9 @@ namespace std
 			return std::string("sender_receiver");
 			break;
 		}
+		throw std::runtime_error("Unhandled value of communication_type");
 	}
 }
 
-#endif // NGEN_MPI_ACTIVE
+#endif // NGEN_WITH_MPI
 #endif // HY_POINTHYDRONEXUSREMOTEDOWNSTREAM_H

@@ -1,7 +1,7 @@
 #include "SurfaceLayer.hpp"
 
 /***
- * @breif Run one simulation timestep for each model in this layer, then gather catchment output
+ * @brief Run one simulation timestep for each model in this layer, then gather catchment output
 */
 
 void ngen::SurfaceLayer::update_models()
@@ -17,7 +17,7 @@ void ngen::SurfaceLayer::update_models()
     {
         std::string current_timestamp = simulation_time.get_timestamp(current_time_index);
         
-        #ifdef NGEN_MPI_ACTIVE
+        #if NGEN_WITH_MPI
         if (!features.is_remote_sender_nexus(id)) { //Ensures only one side of the dual sided remote nexus actually doing this...
         #endif
 
@@ -41,7 +41,7 @@ void ngen::SurfaceLayer::update_models()
         nexus_outfiles[id] << current_time_index << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
         }
 
-        #ifdef NGEN_MPI_ACTIVE
+        #if NGEN_WITH_MPI
         }
         #endif
         //std::cout<<"\tNexus "<<id<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;

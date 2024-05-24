@@ -1,7 +1,5 @@
 #ifdef NGEN_BMI_PY_TESTS_ACTIVE
 
-#ifdef ACTIVATE_PYTHON
-
 #include "gtest/gtest.h"
 #include <vector>
 #include <exception>
@@ -11,6 +9,8 @@
 namespace py = pybind11;
 
 #include "Bmi_Py_Adapter.hpp"
+
+#include "utilities/FileChecker.h"
 
 using namespace models::bmi;
 using namespace utils::ngenPy;
@@ -27,7 +27,7 @@ typedef struct example_scenario {
 
 class Bmi_Py_Adapter_Test : public ::testing::Test {
 private:
-    static std::shared_ptr<InterpreterUtil> interperter;
+    static std::shared_ptr<InterpreterUtil> interpreter;
 protected:
 
     static std::shared_ptr<py::object> friend_get_raw_model(Bmi_Py_Adapter *adapter) {
@@ -116,8 +116,8 @@ protected:
     int expected_var_nbytes = 8; //type double
 
 };
-//Make sure the interperter is instansiated and lives throught the test class
-std::shared_ptr<InterpreterUtil> Bmi_Py_Adapter_Test::interperter = InterpreterUtil::getInstance();
+//Make sure the interpreter is instansiated and lives throught the test class
+std::shared_ptr<InterpreterUtil> Bmi_Py_Adapter_Test::interpreter = InterpreterUtil::getInstance();
 py::object Bmi_Py_Adapter_Test::Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
 
 void Bmi_Py_Adapter_Test::SetUp() {
@@ -1289,7 +1289,5 @@ TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridNodesPerFace_0_a) {
     */
     ASSERT_TRUE(false);
 }
-
-#endif // ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_PY_TESTS_ACTIVE

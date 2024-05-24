@@ -1,10 +1,13 @@
 #ifndef __NGEN_LAYER__
 #define __NGEN_LAYER__
 
+#include <NGenConfig.h>
+
 #include "LayerData.hpp"
 #include "Simulation_Time.hpp"
+#include "State_Exception.hpp"
 
-#ifdef NGEN_MPI_ACTIVE
+#if NGEN_WITH_MPI
 #include "HY_Features_MPI.hpp"
 #else
 #include "HY_Features.hpp"
@@ -17,7 +20,7 @@ namespace ngen
     {    
         public:
 
-        #ifdef NGEN_MPI_ACTIVE
+        #if NGEN_WITH_MPI
             using feature_type = hy_features::HY_Features_MPI;
         #else
             using feature_type = hy_features::HY_Features;
@@ -35,6 +38,27 @@ namespace ngen
             simulation_time(s_t),
             features(f),
             catchment_data(cd),
+            output_time_index(idx)
+        {
+
+        }
+
+        /**
+         * @brief Construct a minimum layer object
+         * 
+         * @param desc 
+         * @param s_t 
+         * @param f 
+         * @param idx 
+         */
+        Layer(
+                const LayerDescription& desc, 
+                const Simulation_Time& s_t, 
+                feature_type& f,
+                long idx) :
+            description(desc),
+            simulation_time(s_t),
+            features(f),
             output_time_index(idx)
         {
 
@@ -92,7 +116,17 @@ namespace ngen
                 auto r = features.catchment_at(id);
                 //TODO redesign to avoid this cast
                 auto r_c = std::dynamic_pointer_cast<realization::Catchment_Formulation>(r);
-                double response = r_c->get_response(output_time_index, simulation_time.get_output_interval_seconds());
+                double response(0.0);
+                try{
+                    response = r_c->get_response(output_time_index, simulation_time.get_output_interval_seconds());
+                }
+                catch(models::external::State_Exception& e){
+                    std::string msg = e.what();
+                    msg = msg+" at timestep "+std::to_string(output_time_index)
+                             +" ("+current_timestamp+")"
+                             +" at feature id "+id;
+                    throw models::external::State_Exception(msg);
+                }
                 std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
                                     r_c->get_output_line_for_timestep(output_time_index)+"\n";
                 r_c->write_output(output);
@@ -138,9 +172,12 @@ namespace ngen
         protected:
 
         const LayerDescription description;
+        //TODO is this really required at the top level?
+        //See "minimum" constructor above used for DomainLayer impl...
         const std::vector<std::string> processing_units;
         Simulation_Time simulation_time;
         feature_type& features;
+        //TODO is this really required at the top level? or can this be moved to SurfaceLayer?
         const geojson::GeoJSON catchment_data;
         long output_time_index;       
 

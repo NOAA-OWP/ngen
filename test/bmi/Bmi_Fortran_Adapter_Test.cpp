@@ -874,7 +874,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridNodesPerFace_0_a) {
 
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
-    int* nodes_per_face;
+    int* nodes_per_face = nullptr;
     EXPECT_THROW(adapter->GetGridNodesPerFace(grd, nodes_per_face), std::runtime_error);
     // int size = adapter->GetGridFaceCount(grd);
     // nodes_per_face = new int [size];
@@ -894,7 +894,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridEdgeNodes_0_a) {
 
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
-    int* edge_nodes;
+    int* edge_nodes = nullptr;
     EXPECT_THROW(adapter->GetGridEdgeNodes(grd, edge_nodes), std::runtime_error);
     // int size = 2*adapter->GetGridEdgeCount(grd);
     // edge_nodes = new int [size];
@@ -914,7 +914,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridFaceEdges_0_a) {
 
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
-    int* face_edges;
+    int* face_edges = nullptr;
     EXPECT_THROW(adapter->GetGridFaceEdges(grd, face_edges), std::runtime_error);
     // int num_faces = adapter->GetGridFaceCount(grd);
     // int * nodes_per_face = new int [num_faces];
@@ -942,7 +942,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridFaceNodes_0_a) {
 
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
-    int* face_nodes;
+    int* face_nodes = nullptr;
     EXPECT_THROW(adapter->GetGridFaceNodes(grd, face_nodes), std::runtime_error);
     // int num_faces = adapter->GetGridFaceCount(grd);
     // int * nodes_per_face = new int [num_faces];

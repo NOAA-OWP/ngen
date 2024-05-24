@@ -9,6 +9,7 @@
 #include "GenericDataProvider.hpp"
 #include "OptionalWrappedDataProvider.hpp"
 #include "ConfigurationException.hpp"
+#include "ExternalIntegrationException.hpp"
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"
@@ -204,8 +205,8 @@ namespace realization {
          * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
          */
         const std::string &get_config_mapped_variable_name(const std::string &output_var_name,
-                                                      const shared_ptr<Bmi_Formulation>& out_module,
-                                                      const shared_ptr<Bmi_Formulation>& in_module);
+                                                           const std::shared_ptr<Bmi_Formulation>& out_module,
+                                                           const std::shared_ptr<Bmi_Formulation>& in_module);
 
         const std::string &get_forcing_file_path() const override;
 
@@ -530,26 +531,6 @@ namespace realization {
          */
         void create_multi_formulation(geojson::PropertyMap properties, bool needs_param_validation);
 
-        template<class T>
-        double get_module_var_value_as_double(const std::string &var_name, std::shared_ptr<Bmi_Formulation> mod) {
-            std::shared_ptr<T> module = std::static_pointer_cast<T>(mod);
-            return module->get_var_value_as_double(var_name);
-        }
-
-        /**
-         * Get value for some BMI model variable.
-         *
-         * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
-         * is actual a single, scalar value.  Thus, it returns what is at index 0 of the array reference.
-         *
-         * @param index
-         * @param var_name
-         * @return
-         */
-        double get_var_value_as_double(const std::string &var_name) override {
-            return get_var_value_as_double(0, var_name);
-        }
-
         /**
          * Get value for some BMI model variable at a specific index.
          *
@@ -582,8 +563,7 @@ namespace realization {
             }
             // Otherwise, we have a provider, and we can cast it based on the documented assumptions
             try {
-                std::shared_ptr <data_access::GenericDataProvider> nested_module =
-                        std::dynamic_pointer_cast<data_access::GenericDataProvider>(data_provider_iter->second);
+                auto const& nested_module = data_provider_iter->second;
                 long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
                 auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"1");
                 //TODO: After merge PR#405, try re-adding support for index

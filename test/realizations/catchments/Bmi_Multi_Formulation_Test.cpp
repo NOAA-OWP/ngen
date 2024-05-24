@@ -1,8 +1,10 @@
 #ifndef NGEN_BMI_MULTI_FORMULATION_TEST_CPP
 #define NGEN_BMI_MULTI_FORMULATION_TEST_CPP
 
+#include <NGenConfig.h>
+
 // Don't bother with the rest if none of these are active (although what are we really doing here, then?)
-#if NGEN_BMI_C_LIB_ACTIVE || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
+#if NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || NGEN_WITH_PYTHON
 
 #include "all.h"
 #include "Bmi_Testing_Util.hpp"
@@ -18,17 +20,17 @@
 #include "ConfigurationException.hpp"
 #include "FileChecker.h"
 
-#ifdef ACTIVATE_PYTHON
+#if NGEN_WITH_PYTHON
 #include "python/InterpreterUtil.hpp"
 using namespace utils::ngenPy;
-#endif // ACTIVATE_PYTHON
+#endif // NGEN_WITH_PYTHON
 
 using namespace realization;
 
 class Bmi_Multi_Formulation_Test : public ::testing::Test {
 private:
-#ifdef ACTIVATE_PYTHON
-    static std::shared_ptr<InterpreterUtil> interperter;
+#if NGEN_WITH_PYTHON
+    static std::shared_ptr<InterpreterUtil> interpreter;
 #endif
 protected:
 
@@ -64,7 +66,7 @@ protected:
     static double get_friend_nested_var_value(const Bmi_Multi_Formulation& formulation, const int mod_index,
                                          const std::string& var_name) {
         std::shared_ptr<N> nested = std::static_pointer_cast<N>(formulation.modules[mod_index]);
-        return nested->get_var_value_as_double(var_name);
+        return nested->get_var_value_as_double(0, var_name);
     }
 
     static std::string get_friend_catchment_id(Bmi_Multi_Formulation& formulation){
@@ -90,7 +92,7 @@ protected:
 
     template<class M, class N>
     static std::shared_ptr<N> get_friend_bmi_adapter(const Bmi_Multi_Formulation& formulation, const int mod_index) {
-        std::shared_ptr<N> nested = std::static_pointer_cast<M>(formulation.modules[mod_index])->get_bmi_model();
+        std::shared_ptr<N> nested = std::dynamic_pointer_cast<N>(std::static_pointer_cast<M>(formulation.modules[mod_index])->get_bmi_model());
         return nested;
     }
 
@@ -119,7 +121,7 @@ protected:
 
     /*
     static double get_friend_var_value_as_double(Bmi_Multi_Formulation& formulation, const string& var_name) {
-        return formulation.get_var_value_as_double(var_name);
+        return formulation.get_var_value_as_double(0, var_name);
     }
 
     static time_t parse_forcing_time(const std::string& date_time_str) {
@@ -434,18 +436,18 @@ private:
 
 
 };
-//Make sure the interperter is instansiated and lives throught the test class
-#ifdef ACTIVATE_PYTHON
-std::shared_ptr<InterpreterUtil> Bmi_Multi_Formulation_Test::interperter = InterpreterUtil::getInstance();
+//Make sure the interpreter is instansiated and lives throught the test class
+#if NGEN_WITH_PYTHON
+std::shared_ptr<InterpreterUtil> Bmi_Multi_Formulation_Test::interpreter = InterpreterUtil::getInstance();
 #endif
 
 void Bmi_Multi_Formulation_Test::SetUpTestSuite() {
-    #ifdef ACTIVATE_PYTHON
+    #if NGEN_WITH_PYTHON
     std::string module_directory = "./extern/";
 
     // Add the extern dir with our test lib to Python system path
     InterpreterUtil::addToPyPath(module_directory);
-    #endif // ACTIVATE_PYTHON
+    #endif // NGEN_WITH_PYTHON
 }
 
 void Bmi_Multi_Formulation_Test::TearDown() {
@@ -463,26 +465,26 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     setupExampleDataCollections();
 
     /* ********************************** First example scenario (Fortran / C) ********************************** */
-    #ifndef NGEN_BMI_C_LIB_ACTIVE
+    #if !NGEN_WITH_BMI_C
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI C functionality active" SOURCE_LOC);
-    #endif // NGEN_BMI_C_LIB_ACTIVE
+    #endif // NGEN_WITH_BMI_C
 
-    #ifndef NGEN_BMI_FORTRAN_ACTIVE
+    #if !NGEN_WITH_BMI_FORTRAN
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI Fortran functionality active" SOURCE_LOC);
-    #endif // NGEN_BMI_FORTRAN_ACTIVE
+    #endif // NGEN_WITH_BMI_FORTRAN
 
 
     initializeTestExample(0, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_C_TYPE)}, {});
 
     /* ********************************** Second example scenario ********************************** */
 
-    #ifndef NGEN_BMI_FORTRAN_ACTIVE
+    #if !NGEN_WITH_BMI_FORTRAN
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Fortran functionality active" SOURCE_LOC);
-    #endif // NGEN_BMI_FORTRAN_ACTIVE
+    #endif // NGEN_WITH_BMI_FORTRAN
 
-    #ifndef ACTIVATE_PYTHON
+    #if !NGEN_WITH_PYTHON
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Python functionality active" SOURCE_LOC);
-    #endif // ACTIVATE_PYTHON
+    #endif // NGEN_WITH_PYTHON
     //This example is used to get getting output, but since we aren't initialize the test model grid just yet, need to specifiy only the variables to ask for
     //to avoid an index error if we try to get the grid data without properly intializing the grid
     //TODO This didn't seem to work: GetOutputLineForTimestep_1_a and GetOutputLineForTimestep_1_b both still try to query GRID_VAR output even though these were set
@@ -719,7 +721,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
 /* Note that a runtime check in SetUp() prevents this from executing when it can't, but
    this needs to be here to prevent compile-time errors if either of these flags is not
    enabled. */
-#if ACTIVATE_PYTHON && NGEN_BMI_FORTRAN_ACTIVE
+#if NGEN_WITH_PYTHON && NGEN_WITH_BMI_FORTRAN
 
         int ex_index = 3;
 
@@ -740,7 +742,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
             }
         }
 
-#endif // ACTIVATE_PYTHON && NGEN_BMI_FORTRAN_ACTIVE
+#endif // NGEN_WITH_PYTHON && NGEN_WITH_BMI_FORTRAN
 
     }
 
@@ -782,7 +784,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_0_b) {
 TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
 /* Note that a runtime check in SetUp() prevents this from executing when it can't, but
    this needs to be here to prevent compile-time errors if this flag is not enabled. */
-#if ACTIVATE_PYTHON
+#if NGEN_WITH_PYTHON
     int ex_index = 1;
 
     Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
@@ -800,7 +802,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.
     ASSERT_EQ(output, "0.000000,200620.000000,1.000000,2.000000,3.000000");
-#endif // ACTIVATE_PYTHON
+#endif // NGEN_WITH_PYTHON
 }
 
 /**
@@ -809,7 +811,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
 TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
 /* Note that a runtime check in SetUp() prevents this from executing when it can't, but
    this needs to be here to prevent compile-time errors if this flag is not enabled. */
-#if ACTIVATE_PYTHON
+#if NGEN_WITH_PYTHON
     int ex_index = 1;
 
     Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
@@ -830,7 +832,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.
     ASSERT_EQ(output, "0.000001,199280.000000,543.000000,2.000001,3.000001");
-#endif // ACTIVATE_PYTHON
+#endif // NGEN_WITH_PYTHON
 }
 #endif
 /**
@@ -860,11 +862,11 @@ TEST_F(Bmi_Multi_Formulation_Test, GetIdAndCatchmentId) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
     ASSERT_EQ(formulation.get_id(), "cat-27");
     ASSERT_EQ(get_friend_catchment_id(formulation), "cat-27");
-    #ifdef NGEN_BMI_FORTRAN_ACTIVE
+    #if NGEN_WITH_BMI_FORTRAN
     ASSERT_EQ(get_friend_nested_catchment_id<Bmi_Fortran_Formulation>(formulation, 0), "cat-27");
     #endif
     //ASSERT_EQ(formulation.get_catchment_id(), "id");
 }
-#endif // NGEN_BMI_C_LIB_ACTIVE || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
+#endif // NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || NGEN_WITH_PYTHON
 
 #endif // NGEN_BMI_MULTI_FORMULATION_TEST_CPP

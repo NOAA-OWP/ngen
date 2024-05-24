@@ -9,8 +9,6 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-//This way we can test the parser, since this doesn't have an explicit MPI dependency
-#define NGEN_MPI_ACTIVE
 #include "core/Partition_Parser.hpp"
 #include "FileChecker.h"
 
@@ -167,5 +165,3 @@ TEST_F(PartitionsParserTest, partition_struct_test) {
     ASSERT_THAT(p.catchment_ids, testing::ElementsAre("cat-27"));
     ASSERT_THAT(p.nexus_ids, testing::ElementsAre("nex-26"));
 }
-
-#undef NGEN_MPI_ACTIVE

@@ -1,4 +1,6 @@
-#ifdef NETCDF_ACTIVE
+#include <NGenConfig.h>
+
+#if NGEN_WITH_NETCDF
 #include "NetCDFPerFeatureDataProvider.hpp"
 
 #include <netcdf>
@@ -120,7 +122,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     });
 
     // correct string release
-    ids.freeString(num_ids,&string_buffers[0]);
+    nc_free_string(num_ids,&string_buffers[0]);
 
     // now get the size of the time dimension
     auto num_times = nc_file->getDim("time").getSize();

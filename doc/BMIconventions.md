@@ -81,7 +81,19 @@ Since the [BMI Documentation] simply states that, "Use of native language type n
     * `get_var_itemsize` result **must** match the size of the data type in the compiler used to build ngen
 * Python
     * `int`, `long`, `long long`, `int64`, `longlong`, `float`, `float64`, `long double`
-    * also accepts `numpy.float64` and `np.float64` but this usage is discouraged! Please use the non-namespaced names above.
+    * also accepts the following numpy types
+        - `numpy.float64` and `np.float64` for double precision floats
+        - `numpy.float32`, `np.float32`, `numpy.single`, and `np.single` for single precision floats
+    
+    Use of these namespaced types should be limited to variables that are implemented as numpy arrays in the model, as the data type is part of the of the array metadata.  E.g.
+    ```python
+        import numpy as np
+        variable = np.ndarray((1,1), dtype=np.single)
+        print(variable.dtype)
+    ```
+    will produce `dtype('float32')`.
+
+    For variables where the dtype is not directly accessed from the numpy meta data, this usage is discouraged! Please use the non-namespaced names above.
 
 # Input and output published variables
 

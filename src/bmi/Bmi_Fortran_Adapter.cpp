@@ -1,5 +1,7 @@
-#ifdef NGEN_BMI_FORTRAN_ACTIVE
-#include "Bmi_Fortran_Adapter.hpp"
+#include <NGenConfig.h>
+
+#if NGEN_WITH_BMI_FORTRAN
+#include "bmi/Bmi_Fortran_Adapter.hpp"
 
 using namespace models::bmi;
 
@@ -280,4 +282,4 @@ void Bmi_Fortran_Adapter::GetGridNodesPerFace(int grid, int *nodes_per_face) {
     }
 }
 
-#endif // NGEN_BMI_FORTRAN_ACTIVE
+#endif // NGEN_WITH_BMI_FORTRAN

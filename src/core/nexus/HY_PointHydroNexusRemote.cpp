@@ -2,7 +2,7 @@
 #include "Constants.h"
 
 
-#ifdef NGEN_MPI_ACTIVE
+#if NGEN_WITH_MPI
 
 #include <HY_Features_Ids.hpp>
 #include <chrono>
@@ -99,7 +99,7 @@ HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
     int mpi_finalized;
     MPI_Finalized(&mpi_finalized);
 
-    while ( (stored_recieves.size() > 0 || stored_sends.size() > 0) && !mpi_finalized )
+    while ( (stored_receives.size() > 0 || stored_sends.size() > 0) && !mpi_finalized )
     {
         //std::cerr << "Neuxs with rank " << id << " has pending communications\n";
 
@@ -134,28 +134,28 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
     	{
        		int status;
 
-       		stored_recieves.resize(stored_recieves.size() + 1);
-       		stored_recieves.back().buffer = std::make_shared<time_step_and_flow_t>();
+                stored_receives.resize(stored_receives.size() + 1);
+                stored_receives.back().buffer = std::make_shared<time_step_and_flow_t>();
 
        		int tag = extract(id);
 
        		//Receive downstream_flow from Upstream Remote Nexus to this Downstream Remote Nexus
        		status = MPI_Irecv(
-          		stored_recieves.back().buffer.get(),
+                        stored_receives.back().buffer.get(),
           		1,
           		time_step_and_flow_type,
           		rank,
           		tag,
           		MPI_COMM_WORLD,
-          		&stored_recieves.back().mpi_request);
+                        &stored_receives.back().mpi_request);
 
        		MPI_Handle_Error(status); 
        		
-       		//std::cerr << "Creating recieve with target_rank=" << rank << " on tag=" << tag << "\n";  	
+                //std::cerr << "Creating receive with target_rank=" << rank << " on tag=" << tag << "\n";
     	}
     	
-    	//std::cerr << "Waiting on recieves\n";
-    	while ( stored_recieves.size() > 0 )
+        //std::cerr << "Waiting on receives\n";
+        while ( stored_receives.size() > 0 )
     	{
     		process_communications();
     		std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -231,7 +231,7 @@ void HY_PointHydroNexusRemote::process_communications()
     int flag;                                      // boolean value for if a request has completed
     MPI_Status status;                              // status of the completed request
 
-    for ( auto i = stored_recieves.begin(); i != stored_recieves.end(); )
+    for ( auto i = stored_receives.begin(); i != stored_receives.end(); )
     {
         MPI_Handle_Error( MPI_Test(&i->mpi_request, &flag, &status) );
 
@@ -243,9 +243,9 @@ void HY_PointHydroNexusRemote::process_communications()
             double flow = i->buffer->flow;
 
             // remove this object from the vector
-            i = stored_recieves.erase(i);
+            i = stored_receives.erase(i);
 
-            // add the recieved flow
+            // add the received flow
             HY_PointHydroNexus::add_upstream_flow(flow, contributing_id, time_step);
         }
         else
@@ -281,4 +281,4 @@ int HY_PointHydroNexusRemote::get_world_rank()
    return world_rank;
 }
 
-#endif // NGEN_MPI_ACTIVE
+#endif // NGEN_WITH_MPI

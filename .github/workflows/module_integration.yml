@@ -22,7 +22,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-22.04, macos-12]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -43,11 +43,13 @@ jobs:
       - name: Run surfacebmi plus cfebmi
         run: |
           inputfile='data/example_bmi_multi_realization_config.json'
+          ./cmake_build/ngen || true
           ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" $inputfile
 
       - name: Run surfacebmi, cfebmi and petbmi
         run: |
           inputfile='data/example_bmi_multi_realization_config_w_noah_pet_cfe.json'
+          ./cmake_build/ngen || true
           ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" $inputfile
 
 # Run t-route/pybind integration test
@@ -55,7 +57,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest] # [ubuntu-latest, macos-latest] #TODO: Fix #505
+        os: [ubuntu-22.04] # [ubuntu-latest, macos-12] #TODO: Fix #505
       fail-fast: false
     runs-on: ${{ matrix.os }}
 

@@ -1,9 +1,16 @@
+#include <NGenConfig.h>
+
 #include "Bmi_Multi_Formulation.hpp"
 #include "Formulation_Constructors.hpp"
 #include "Bmi_Formulation.hpp"
 #include <iostream>
 #include "Bmi_Py_Formulation.hpp"
 #include <WrappedDataProvider.hpp>
+
+#include "Bmi_Cpp_Formulation.hpp"
+#include "Bmi_C_Formulation.hpp"
+#include "Bmi_Fortran_Formulation.hpp"
+#include "Bmi_Py_Formulation.hpp"
 
 using namespace realization;
 
@@ -52,26 +59,26 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             module = init_nested_module<Bmi_Cpp_Formulation>(i, identifier, formulation_config.at("params").get_values());
         }
         if (type_name == "bmi_c") {
-            #ifdef NGEN_BMI_C_LIB_ACTIVE
+            #if NGEN_WITH_BMI_C
             module = init_nested_module<Bmi_C_Formulation>(i, identifier, formulation_config.at("params").get_values());
-            #else  // NGEN_BMI_C_LIB_ACTIVE
+            #else
             inactive_type_requested = true;
-            #endif // NGEN_BMI_C_LIB_ACTIVE
+            #endif
         }
         if (type_name == "bmi_fortran") {
 
-            #ifdef NGEN_BMI_FORTRAN_ACTIVE
+            #if NGEN_WITH_BMI_FORTRAN
             module = init_nested_module<Bmi_Fortran_Formulation>(i, identifier, formulation_config.at("params").get_values());
-            #else // NGEN_BMI_FORTRAN_ACTIVE
+            #else
             inactive_type_requested = true;
-            #endif // NGEN_BMI_FORTRAN_ACTIVE
+            #endif
         }
         if (type_name == "bmi_python") {
-            #ifdef ACTIVATE_PYTHON
+            #if NGEN_WITH_PYTHON
             module = init_nested_module<Bmi_Py_Formulation>(i, identifier, formulation_config.at("params").get_values());
-            #else // ACTIVATE_PYTHON
+            #else // NGEN_WITH_PYTHON
             inactive_type_requested = true;
-            #endif // ACTIVATE_PYTHON
+            #endif // NGEN_WITH_PYTHON
         }
         if (inactive_type_requested) {
             throw std::runtime_error(
@@ -261,8 +268,8 @@ const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const 
  * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
  */
 const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const std::string &output_var_name,
-                                                                     const shared_ptr<Bmi_Formulation>& out_module,
-                                                                     const shared_ptr<Bmi_Formulation>& in_module)
+                                                                     const std::shared_ptr<Bmi_Formulation>& out_module,
+                                                                     const std::shared_ptr<Bmi_Formulation>& in_module)
 {
     if (!out_module->is_bmi_output_variable(output_var_name))
         return output_var_name;
@@ -306,11 +313,11 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
         if (output_var_names.empty()) { return ""; }
 
         // Do the first separately, without the leading comma
-        *output_text_stream << get_var_value_as_double(output_var_names[0]);
+        *output_text_stream << get_var_value_as_double(0, output_var_names[0]);
 
         // Do the rest with a leading comma
         for (int i = 1; i < output_var_names.size(); ++i) {
-            *output_text_stream << delimiter << get_var_value_as_double(output_var_names[i]);
+            *output_text_stream << delimiter << get_var_value_as_double(0, output_var_names[i]);
         }
         return output_text_stream->str();
     }
@@ -383,27 +390,8 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
             }
         }
     }
-    // With the module index, we can also pick the type
-    if (module_types[index] == "bmi_c++") {
-        return get_module_var_value_as_double<Bmi_Cpp_Formulation>(get_bmi_main_output_var(), modules[index]);
-    }
-    #ifdef NGEN_BMI_C_LIB_ACTIVE
-    if (module_types[index] == "bmi_c") {
-        return get_module_var_value_as_double<Bmi_C_Formulation>(get_bmi_main_output_var(), modules[index]);
-    }
-    #endif // NGEN_BMI_C_LIB_ACTIVE
-    #ifdef NGEN_BMI_FORTRAN_ACTIVE
-    if (module_types[index] == "bmi_fortran") {
-        return get_module_var_value_as_double<Bmi_Fortran_Formulation>(get_bmi_main_output_var(), modules[index]);
-    }
-    #endif // NGEN_BMI_FORTRAN_ACTIVE
-    #ifdef ACTIVATE_PYTHON
-    if (module_types[index] == "bmi_python") {
-        return get_module_var_value_as_double<Bmi_Py_Formulation>(get_bmi_main_output_var(), modules[index]);
-    }
-    #endif // ACTIVATE_PYTHON
-    throw std::runtime_error(get_formulation_type() + " unimplemented type " + module_types[index] +
-                        " in get_response for main return value");
+
+    return modules[index]->get_var_value_as_double(0, get_bmi_main_output_var());
 }
 
 bool Bmi_Multi_Formulation::is_bmi_input_variable(const std::string &var_name) {

@@ -6,7 +6,7 @@ using ModelCreator = bmi::Bmi* (*)();
 using ModelDestoryer = void (*)(bmi::Bmi*);
 
 Bmi_Cpp_Formulation::Bmi_Cpp_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
-    : Bmi_Module_Formulation<models::bmi::Bmi_Cpp_Adapter>(id, forcing_provider, output_stream) { }
+    : Bmi_Module_Formulation(id, forcing_provider, output_stream) { }
 
 std::string Bmi_Cpp_Formulation::get_formulation_type() {
     return "bmi_c++";
@@ -18,7 +18,7 @@ std::string Bmi_Cpp_Formulation::get_formulation_type() {
  * @param properties Configuration properties for the formulation.
  * @return A shared pointer to a newly constructed model adapter object.
  */
-std::shared_ptr<Bmi_Cpp_Adapter> Bmi_Cpp_Formulation::construct_model(const geojson::PropertyMap& properties) {
+std::shared_ptr<Bmi_Adapter> Bmi_Cpp_Formulation::construct_model(const geojson::PropertyMap& properties) {
     auto json_prop_itr = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE);
     if (json_prop_itr == properties.end()) {
         throw std::runtime_error("BMI C++ formulation requires path to library file, but none provided in config");
@@ -45,137 +45,45 @@ std::shared_ptr<Bmi_Cpp_Adapter> Bmi_Cpp_Formulation::construct_model(const geoj
                     output);
 }
 
-std::string Bmi_Cpp_Formulation::get_output_header_line(std::string delimiter) {
-    return boost::algorithm::join(get_output_header_fields(), delimiter);
-}
-
-std::string Bmi_Cpp_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
-    // TODO: something must be added to store values if more than the current time step is wanted
-    // TODO: if such a thing is added, it should probably be configurable to turn it off
-    if (timestep != (next_time_step_index - 1)) {
-        throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
-    }
-    std::string output_str;
-
-    for (const std::string& name : get_output_variable_names()) {
-        output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_value_as_double(name));
-    }
-    return output_str;
-}
-
-/**
- * Get the model response for a time step.
- *
- * Get the model response for the provided time step, executing the backing model formulation one or more times as
- * needed.
- *
- * Function assumes the backing model has been fully initialized and that any additional input values have been applied.
- *
- * The function throws an error if the index of a previously processed time step is supplied, except if it is the last
- * processed time step.  In that case, the appropriate value is returned as described below, but without executing any
- * model update.
- *
- * Assuming updating to the implied time is valid for the model, the function executes one or more model updates to
- * process future time steps for the necessary indexes.  Multiple time steps updates occur when the given future time
- * step index is not the next time step index to be processed.  Regardless, all processed time steps have the size
- * supplied in `t_delta`.
- *
- * However, it is possible to provide `t_index` and `t_delta` values that would result in the aggregate updates taking
- * the model's time beyond its `end_time` value.  In such cases, if the formulation config indicates this model is
- * not allow to exceed its set `end_time`, the function does not update the model and throws an error.
- *
- * The function will return the value of the primary output variable (see `get_bmi_main_output_var()`) for the given
- * time step after the model has been updated to that point. The type returned will always be a `double`, with other
- * numeric types being cast if necessary.
- *
- * The BMI spec requires for variable values to be passed to/from models via as arrays.  This function essentially
- * treats the variable array reference as if it were just a raw pointer and returns the `0`-th array value.
- *
- * @param t_index The index of the time step for which to run model calculations.
- * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
- * @return The total discharge of the model for the given time step.
- */
-double Bmi_Cpp_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
-    if (get_bmi_model() == nullptr) {
-        throw std::runtime_error("Trying to process response of improperly created BMI C++ formulation.");
-    }
-    if (t_index < 0) {
-        throw std::invalid_argument("Getting response of negative time step in BMI C++ formulation is not allowed.");
-    }
-    // Use (next_time_step_index - 1) so that second call with current time step index still works
-    if (t_index < (next_time_step_index - 1)) {
-        // TODO: consider whether we should (optionally) store and return historic values
-        throw std::invalid_argument("Getting response of previous time step in BMI C++ formulation is not allowed.");
-    }
-
-    // The time step delta size, expressed in the units internally used by the model
-    double t_delta_model_units;
-    if (next_time_step_index <= t_index) {
-        t_delta_model_units = get_bmi_model()->convert_seconds_to_model_time((double)t_delta);
-        double model_time = get_bmi_model()->GetCurrentTime();
-        // Also, before running, make sure this doesn't cause a problem with model end_time
-        if (!get_allow_model_exceed_end_time()) {
-            int total_time_steps_to_process = abs((int)t_index - next_time_step_index) + 1;
-            if (get_bmi_model()->GetEndTime() < (model_time + (t_delta_model_units * total_time_steps_to_process))) {
-                throw std::invalid_argument("Cannot process BMI C++ formulation to get response of future time step "
-                                            "that exceeds model end time.");
-            }
-        }
-    }
-
-    while (next_time_step_index <= t_index) {
-        double model_initial_time = get_bmi_model()->GetCurrentTime();
-        set_model_inputs_prior_to_update(model_initial_time, t_delta);
-        if (t_delta_model_units == get_bmi_model()->GetTimeStep())
-            get_bmi_model()->Update();
-        else
-            get_bmi_model()->UpdateUntil(model_initial_time + t_delta_model_units);
-        // TODO: again, consider whether we should store any historic response, ts_delta, or other var values
-        next_time_step_index++;
-    }
-    return get_var_value_as_double( get_bmi_main_output_var());
-}
-
-double Bmi_Cpp_Formulation::get_var_value_as_double(const std::string& var_name) {
-    return get_var_value_as_double(0, var_name);
-}
-
 double Bmi_Cpp_Formulation::get_var_value_as_double(const int& index, const std::string& var_name) {
     // TODO: consider different way of handling (and how to document) cases like long double or unsigned long long that
     //  don't fit or might convert inappropriately
-    std::string type = get_bmi_model()->GetVarType(var_name);
+
+    auto model = std::dynamic_pointer_cast<Bmi_Cpp_Adapter>(get_bmi_model());
+
+    std::string type = model->GetVarType(var_name);
     if (type == "long double")
-        return (double) (get_bmi_model()->GetValuePtr<long double>(var_name))[index];
+        return (double) (model->GetValuePtr<long double>(var_name))[index];
 
     if (type == "double")
-        return (double) (get_bmi_model()->GetValuePtr<double>(var_name))[index];
+        return (double) (model->GetValuePtr<double>(var_name))[index];
 
     if (type == "float")
-        return (double) (get_bmi_model()->GetValuePtr<float>(var_name))[index];
+        return (double) (model->GetValuePtr<float>(var_name))[index];
 
     if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int")
-        return (double) (get_bmi_model()->GetValuePtr<short>(var_name))[index];
+        return (double) (model->GetValuePtr<short>(var_name))[index];
 
     if (type == "unsigned short" || type == "unsigned short int")
-        return (double) (get_bmi_model()->GetValuePtr<unsigned short>(var_name))[index];
+        return (double) (model->GetValuePtr<unsigned short>(var_name))[index];
 
     if (type == "int" || type == "signed" || type == "signed int")
-        return (double) (get_bmi_model()->GetValuePtr<int>(var_name))[index];
+        return (double) (model->GetValuePtr<int>(var_name))[index];
 
     if (type == "unsigned" || type == "unsigned int")
-        return (double) (get_bmi_model()->GetValuePtr<unsigned int>(var_name))[index];
+        return (double) (model->GetValuePtr<unsigned int>(var_name))[index];
 
     if (type == "long" || type == "long int" || type == "signed long" || type == "signed long int")
-        return (double) (get_bmi_model()->GetValuePtr<long>(var_name))[index];
+        return (double) (model->GetValuePtr<long>(var_name))[index];
 
     if (type == "unsigned long" || type == "unsigned long int")
-        return (double) (get_bmi_model()->GetValuePtr<unsigned long>(var_name))[index];
+        return (double) (model->GetValuePtr<unsigned long>(var_name))[index];
 
     if (type == "long long" || type == "long long int" || type == "signed long long" || type == "signed long long int")
-        return (double) (get_bmi_model()->GetValuePtr<long long>(var_name))[index];
+        return (double) (model->GetValuePtr<long long>(var_name))[index];
 
     if (type == "unsigned long long" || type == "unsigned long long int")
-        return (double) (get_bmi_model()->GetValuePtr<unsigned long long>(var_name))[index];
+        return (double) (model->GetValuePtr<unsigned long long>(var_name))[index];
 
     throw std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
                              " as double: no logic for converting variable type " + type);

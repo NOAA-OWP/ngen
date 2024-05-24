@@ -40,7 +40,13 @@
 	path = extern/sloth
 	url = https://github.com/noaa-owp/SLoTH
 	branch = latest
+<<<<<<< HEAD
 [submodule "extern/summa"]
 	path = extern/summa/summa
 	url = https://github.com/ashleymedin/summa.git
 	branch = develop
+=======
+[submodule "extern/netcdf-cxx4"]
+	path = extern/netcdf-cxx4/netcdf-cxx4
+	url = https://github.com/Unidata/netcdf-cxx4/
+>>>>>>> upstream/master

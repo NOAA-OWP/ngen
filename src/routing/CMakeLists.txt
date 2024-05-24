@@ -9,7 +9,10 @@ target_include_directories(routing PUBLIC
         ${PROJECT_SOURCE_DIR}/include/utilities
         )
         
-target_link_libraries(routing PUBLIC pybind11::embed)
+target_link_libraries(routing PUBLIC
+                              pybind11::embed
+                              NGen::config_header
+                              )
 
 
 #target_link_libraries(realizations_catchment PUBLIC

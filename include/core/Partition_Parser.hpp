@@ -1,10 +1,6 @@
 #ifndef PARTITION_PARSER_H
 #define PARTITION_PARSER_H
 
-#ifdef NGEN_MPI_ACTIVE
-
-//#include <mpi.h>
-
 #include <memory>
 #include <sstream>
 #include <tuple>
@@ -20,18 +16,7 @@
 #include "features/Features.hpp"
 #include <FeatureCollection.hpp>
 #include "JSONProperty.hpp"
-
-using Tuple = std::tuple<int, std::string, std::string, std::string>;
-
-//This struct is moved from private section to here so that the unit test function can access it
-struct PartitionData
-{
-    int mpi_world_rank;
-    std::unordered_set<std::string> catchment_ids;
-    std::unordered_set<std::string> nexus_ids;
-    std::vector<Tuple> remote_connections;
-};
-
+#include "Partition_Data.hpp"
 
 class Partitions_Parser {
 
@@ -63,8 +48,8 @@ class Partitions_Parser {
             std::string remote_nex_id;
             std::string remote_cat_id;
             std::string direction;
-            Tuple tmp_tuple;
-            std::vector<Tuple> remote_conn_vec;
+            PartitionData::Tuple tmp_tuple;
+            std::vector<PartitionData::Tuple> remote_conn_vec;
             int part_counter = 0;
             for(auto &partition: tree.get_child("partitions"))  {
                 //Get partition id
@@ -193,5 +178,4 @@ class Partitions_Parser {
         boost::property_tree::ptree tree;
 };
 
-#endif // NGEN_MPI_ACTIVE
 #endif // PARTITION_PARSER_H

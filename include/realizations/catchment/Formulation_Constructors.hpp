@@ -1,6 +1,8 @@
 #ifndef NGEN_FORMULATION_CONSTRUCTORS_H
 #define NGEN_FORMULATION_CONSTRUCTORS_H
 
+#include <NGenConfig.h>
+
 #include "Formulation.hpp"
 #include <JSONProperty.hpp>
 #include <exception>
@@ -9,41 +11,26 @@
 #include <boost/optional.hpp>
 
 // Formulations
-#include "Bmi_Cpp_Formulation.hpp"
-#include "Bmi_C_Formulation.hpp"
-#include "Bmi_Fortran_Formulation.hpp"
-#include "Bmi_Multi_Formulation.hpp"
-#include "Bmi_Py_Formulation.hpp"
+#include "Bmi_Formulation.hpp"
 #include <GenericDataProvider.hpp>
 #include "CsvPerFeatureForcingProvider.hpp"
 #include "NullForcingProvider.hpp"
-#ifdef NETCDF_ACTIVE
+#if NGEN_WITH_NETCDF
     #include "NetCDFPerFeatureDataProvider.hpp"
 #endif
 
 namespace realization {
-    typedef std::shared_ptr<Catchment_Formulation> (*constructor)(std::string, shared_ptr<data_access::GenericDataProvider>, utils::StreamHandler);
+    using constructor = std::shared_ptr<Catchment_Formulation> (*)(std::string, std::shared_ptr<data_access::GenericDataProvider>, utils::StreamHandler);
 
-    template<class T>
-    static constructor create_formulation_constructor() {
-        return [](std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream) -> std::shared_ptr<Catchment_Formulation>{
-            return std::make_shared<T>(id, forcing_provider, output_stream);
-        };
-    };
+    extern std::map<std::string, constructor> formulations;
 
-    static std::map<std::string, constructor> formulations = {
-        {"bmi_c++", create_formulation_constructor<Bmi_Cpp_Formulation>()},
-#ifdef NGEN_BMI_C_LIB_ACTIVE
-        {"bmi_c", create_formulation_constructor<Bmi_C_Formulation>()},
-#endif // NGEN_BMI_C_LIB_ACTIVE
-#ifdef NGEN_BMI_FORTRAN_ACTIVE
-        {"bmi_fortran", create_formulation_constructor<Bmi_Fortran_Formulation>()},
-#endif // NGEN_BMI_FORTRAN_ACTIVE
-        {"bmi_multi", create_formulation_constructor<Bmi_Multi_Formulation>()},
-#ifdef ACTIVATE_PYTHON
-        {"bmi_python", create_formulation_constructor<Bmi_Py_Formulation>()},
-#endif // ACTIVATE_PYTHON
-    };
+    static std::string valid_formulation_keys(){
+        std::string keys = "";
+        for(const auto& kv : formulations){
+            keys.append(kv.first+" ");
+        }
+        return keys;
+    }
 
     static bool formulation_exists(std::string formulation_type) {
         return formulations.count(formulation_type) > 0;
@@ -60,7 +47,7 @@ namespace realization {
         if (forcing_config.provider == "CsvPerFeature" || forcing_config.provider == ""){
             fp = std::make_shared<CsvPerFeatureForcingProvider>(forcing_config);
         }
-#ifdef NETCDF_ACTIVE
+#if NGEN_WITH_NETCDF
         else if (forcing_config.provider == "NetCDF"){
             fp = data_access::NetCDFPerFeatureDataProvider::get_shared_provider(forcing_config.path, forcing_config.simulation_start_t, forcing_config.simulation_end_t, output_stream);
         }
@@ -75,7 +62,7 @@ namespace realization {
                     "\", provider: \"" + forcing_config.provider + "\"");
         }
         return formulation_constructor(identifier, fp, output_stream);
-    };
+    }
 
     static std::string get_formulation_key(const boost::property_tree::ptree &tree) {
         /*for (auto &node : tree) {

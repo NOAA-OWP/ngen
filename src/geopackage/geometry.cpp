@@ -31,7 +31,7 @@ geojson::geometry ngen::geopackage::build_geometry(
     const bg::srs::transformation<> prj{epsg, ngen::srs::epsg::get(ngen::srs::epsg::wgs84)};
     wkb::wgs84 pvisitor{srs_id, prj};
     
-    if (indicator > 0 & indicator < 5) {
+    if (indicator > 0 && indicator < 5) {
         // not an empty envelope
 
         double min_x = 0, max_x = 0, min_y = 0, max_y = 0;

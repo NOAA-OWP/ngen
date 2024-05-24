@@ -48,7 +48,7 @@ protected:
     }
 
     static std::shared_ptr<models::bmi::Bmi_Cpp_Adapter> get_friend_bmi_model(Bmi_Cpp_Formulation& formulation) {
-        return formulation.get_bmi_model();
+        return std::dynamic_pointer_cast<models::bmi::Bmi_Cpp_Adapter>(formulation.get_bmi_model());
     }
 
     static time_t get_friend_bmi_model_start_time_forcing_offset_s(Bmi_Cpp_Formulation& formulation) {
@@ -72,7 +72,7 @@ protected:
     }
 
     static double get_friend_var_value_as_double(Bmi_Cpp_Formulation& formulation, const std::string& var_name) {
-        return formulation.get_var_value_as_double(var_name);
+        return formulation.get_var_value_as_double(0, var_name);
     }
 
     static time_t parse_forcing_time(const std::string& date_time_str) {

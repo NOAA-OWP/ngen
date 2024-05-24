@@ -1,11 +1,15 @@
 #ifndef NGEN_BMI_FORTRAN_ADAPTER_HPP
 #define NGEN_BMI_FORTRAN_ADAPTER_HPP
 
-#ifdef NGEN_BMI_FORTRAN_ACTIVE
+#include <NGenConfig.h>
+
+#if NGEN_WITH_BMI_FORTRAN
 
 #include "AbstractCLibBmiAdapter.hpp"
 #include "Bmi_Fortran_Common.h"
 #include "bmi.h"
+#include "State_Exception.hpp"
+#include "utilities/ExternalIntegrationException.hpp"
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Fortran_Adapter_Test;
@@ -21,7 +25,7 @@ namespace models {
          * An adapter class to serve as a C++ interface to the essential aspects of external models written in the
          * Fortran language that implement the BMI.
          */
-        class Bmi_Fortran_Adapter : public AbstractCLibBmiAdapter {
+        class Bmi_Fortran_Adapter final : public AbstractCLibBmiAdapter {
 
         public:
 
@@ -338,7 +342,7 @@ namespace models {
              *
              * @return Whether the backing model has been initialized yet.
              */
-            bool is_model_initialized();
+            bool is_model_initialized() override;
 
             void SetValue(std::string name, void *src) override;
 
@@ -811,6 +815,6 @@ namespace models {
     }
 }
 
-#endif // NGEN_BMI_FORTRAN_ACTIVE
+#endif // NGEN_WITH_BMI_FORTRAN
 
 #endif //NGEN_BMI_FORTRAN_ADAPTER_HPP

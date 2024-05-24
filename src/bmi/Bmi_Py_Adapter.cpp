@@ -1,9 +1,11 @@
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
 
 #include <exception>
 #include <utility>
-#include "pybind11/numpy.h"
-#include "Bmi_Py_Adapter.hpp"
+
+#include "bmi/Bmi_Py_Adapter.hpp"
 
 using namespace models::bmi;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
@@ -226,4 +228,4 @@ void Bmi_Py_Adapter::UpdateUntil(double time) {
     bmi_model->attr("update_until")(time);
 }
 
-#endif //ACTIVATE_PYTHON
+#endif //NGEN_WITH_PYTHON
