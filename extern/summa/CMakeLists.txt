@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
 project(summa VERSION 4.0.0 LANGUAGES Fortran C CXX)
 
 if(DEFINED ENV{FC})
-    set (CMAKE_Fortran_COMPILER $ENV{FC})  #for NexGen need, works for others
+    set (CMAKE_Fortran_COMPILER $ENV{FC})  #for NextGen need, works for others
 else()
     set (CMAKE_Fortran_COMPILER gfortran)
 endif()
@@ -11,7 +11,7 @@ endif()
 # SUMMA can be compiled with debug flags by specifiying -DCMAKE_BUILD_TYPE=Debug
 #
 # There are multiple options for building SUMMA, including using the
-# Sundials suite of solvers, the C++ Actor framework, and the NexGen framework.
+# Sundials suite of solvers, the C++ Actor framework, and the NextGen framework.
 # The options are set by specifying -DOPTION=ON when running cmake.
 # For example to compile SUMMA with Sundials, use
 # cmake -B ../cmake_build -S ../. -DUSE_SUNDIALS=ON
@@ -23,19 +23,22 @@ endif()
 
 # Add options for build type
 set(CMAKE_CONFIGURATION_TYPES Release Debug)
-message("\nSelected Bulid Type: ${CMAKE_BUILD_TYPE}\n")
-
 
 # Options: Enable each with cmake -DOPTION=ON
-option(USE_SUNDIALS "Use IDA solver from sundilas suite" OFF)
+option(USE_SUNDIALS "Use IDA solver from SUNDIALS suite" OFF)
 option(USE_ACTORS "Use Actors Framework" OFF)
-option(USE_NEXGEN "Use NexGen Framework" OFF)
+option(USE_NEXTGEN "Use NextGen Framework" OFF)
 set(EXT_TARGETS) # list of external targets to link to
 
 # Set Default Executable Name
 set(EXEC_NAME summa.exe)
 # Set top-level directory
-set(F_MASTER "${CMAKE_CURRENT_SOURCE_DIR}/..")
+if (USE_NEXTGEN)
+    set(F_MASTER "${CMAKE_CURRENT_SOURCE_DIR}/summa")
+else()
+    set(F_MASTER "${CMAKE_CURRENT_SOURCE_DIR}/..")
+endif()
+
 set(PARENT_DIR "${F_MASTER}")
 set(EXEC_DIR "${F_MASTER}/bin")
 
@@ -67,9 +70,9 @@ if (USE_ACTORS)
 endif()
 
 if (USE_NEXTGEN)
-    message("ENABLING NEXGEN")
+    message("ENABLING NEXTGEN")
     if (USE_ACTORS)
-        message(FATAL_ERROR "NexGen incompatible with Summa-Actors")
+        message(FATAL_ERROR "NextGen incompatible with Summa-Actors")
     endif()
     add_compile_definitions(NGEN_ACTIVE BMI_ACTIVE NGEN_FORCING_ACTIVE
                             NGEN_OUTPUT_ACTIVE)
@@ -104,13 +107,13 @@ list(APPEND EXT_TARGETS OpenBLAS::OpenBLAS)
 # Set compiler flags
 set(FLAGS_OPT $ENV{FLAGS_OPT}) # get optional user-specified flags from environment variables
 if(CMAKE_BUILD_TYPE MATCHES Debug)
-    message("\nSetting Debug Options")
+    message("\nSetting SUMMA Debug Options")
     add_compile_definitions(DEBUG)
     set(FLAGS_NOAH -g -O0 -fbacktrace -fbounds-check -ffree-form -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors ${FLAGS_OPT})
     set(FLAGS_ALL -g -O0 -fbacktrace -fbounds-check -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors -cpp ${FLAGS_OPT})
     set(FLAGS_CXX -g -O0 -fbounds-check -Wfatal-errors -std=c++17 ${FLAGS_OPT})
 else()
-    message("\nSetting Release Options")
+    message("\nSetting SUMMA Release Options")
     set(FLAGS_NOAH -O3 -ffree-form -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors ${FLAGS_OPT})
     set(FLAGS_ALL  -O3 -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors -cpp ${FLAGS_OPT})
     set(FLAGS_CXX  -O3 -Wfatal-errors -std=c++17 ${FLAGS_OPT})
@@ -163,8 +166,8 @@ else()
     set(MAIN_SUMMA ${DRIVER_DIR}/summa_driver.f90)
 endif()
 
-if (USE_NEXGEN)
-    set(SUMMA_ALL ${SUMMA_ALL} ${DRIVER_NEXGEN})
+if (USE_NEXTGEN)
+    set(SUMMA_ALL ${SUMMA_ALL} ${DRIVER_NEXTGEN})
 endif()
 
 if (USE_SUNDIALS)
@@ -201,7 +204,7 @@ target_compile_options(SUMMA_COMM PRIVATE ${FLAGS_ALL})
 # target_include_directories(SUMMA_COMM PRIVATE ${INCLUDES})
 target_link_libraries(SUMMA_COMM PUBLIC SUMMA_NOAHMP ${EXT_TARGETS}) # added flags to the link step
 
-# For NexGen, build SUMMA Shared Library and add the outside BMI libraries
+# For NextGen, build SUMMA Shared Library and add the outside BMI libraries
 if(USE_NEXTGEN)
     if(WIN32)
         add_library(summabmi ${SUMMA_ALL})
