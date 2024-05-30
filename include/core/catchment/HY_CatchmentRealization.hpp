@@ -18,9 +18,6 @@ class HY_CatchmentRealization
     public:
     //TODO remove the default constructor? leaving temporarily to satisfy non-used realizations
     HY_CatchmentRealization();
-    HY_CatchmentRealization(std::shared_ptr<data_access::GenericDataProvider> forcing);
-    
-    //HY_CatchmentRealization(forcing_params forcing_config);
 
     virtual ~HY_CatchmentRealization();
 
@@ -38,17 +35,6 @@ class HY_CatchmentRealization
      */
     virtual double get_response(time_step_t t_index, time_step_t t_delta) = 0;
 
-    /**
-     * Release resources of the given forcing provider
-     */
-    void finalize()
-    {
-        if (forcing) {
-            forcing->finalize();
-            forcing = nullptr;
-        }
-    }
-
     protected:
 
     std::shared_ptr<HY_Catchment> realized_catchment;
@@ -58,12 +44,6 @@ class HY_CatchmentRealization
     virtual void set_catchment_id(std::string cat_id) = 0;
 
     unsigned long id_number;
-
-  protected:
-    std::shared_ptr<data_access::GenericDataProvider> forcing;
-
-  private:
-
 };
 
 #endif // HY_CATCHMENTREALIZATION_H
