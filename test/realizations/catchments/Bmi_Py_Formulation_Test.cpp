@@ -62,16 +62,8 @@ protected:
     //    return formulation.forcing.get_value_for_param_name(param_name);
     //}
 
-    static std::string get_friend_forcing_file_path(const Bmi_Py_Formulation& formulation) {
-        return formulation.get_forcing_file_path();
-    }
-
     static time_t get_friend_forcing_start_time(Bmi_Py_Formulation& formulation) {
         return formulation.forcing->get_data_start_time();
-    }
-
-    static bool get_friend_is_bmi_using_forcing_file(const Bmi_Py_Formulation& formulation) {
-        return formulation.is_bmi_using_forcing_file();
     }
 
     static std::string get_friend_model_type_name(Bmi_Py_Formulation& formulation) {
@@ -250,7 +242,6 @@ void Bmi_Py_Formulation_Test::generate_realization_config(int ex_idx) {
               "            \"bmi_python\": {"
               "                \"model_type_name\": \"" + examples[ex_idx].module_name + "\","
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME + "\": \"" + examples[ex_idx].module_name + "\","
-              "                \"forcing_file\": \"" + examples[ex_idx].forcing_params->path + "\","
               "                \"init_config\": \"" + examples[ex_idx].bmi_init_config + "\","
               "                \"main_output_variable\": \"" + examples[ex_idx].main_output_variable + "\","
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
@@ -356,10 +347,8 @@ TEST_F(Bmi_Py_Formulation_Test, Initialize_0_a) {
     int ex_index = 0;
 
     ASSERT_EQ(get_friend_model_type_name(*examples[ex_index].formulation), examples[ex_index].module_name);
-    ASSERT_EQ(get_friend_forcing_file_path(*examples[ex_index].formulation), examples[ex_index].forcing_params->path);
     ASSERT_EQ(get_friend_bmi_init_config(*examples[ex_index].formulation), examples[ex_index].bmi_init_config);
     ASSERT_EQ(get_friend_bmi_main_output_var(*examples[ex_index].formulation), examples[ex_index].main_output_variable);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(*examples[ex_index].formulation), examples[ex_index].uses_forcing_file);
 }
 
 /**

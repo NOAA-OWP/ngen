@@ -55,16 +55,8 @@ protected:
         return formulation.get_bmi_model_start_time_forcing_offset_s();
     }
 
-    static std::string get_friend_forcing_file_path(const Bmi_Fortran_Formulation& formulation) {
-        return formulation.get_forcing_file_path();
-    }
-
     static time_t get_friend_forcing_start_time(Bmi_Fortran_Formulation& formulation) {
         return formulation.forcing->get_data_start_time();
-    }
-
-    static bool get_friend_is_bmi_using_forcing_file(const Bmi_Fortran_Formulation& formulation) {
-        return formulation.is_bmi_using_forcing_file();
     }
 
     static std::string get_friend_model_type_name(Bmi_Fortran_Formulation& formulation) {
@@ -201,7 +193,6 @@ void Bmi_Fortran_Formulation_Test::SetUp() {
                          "            \"bmi_fortran\": {"
                          "                \"model_type_name\": \"" + model_type_name[i] + "\","
                          "                \"library_file\": \"" + lib_file[i] + "\","
-                         "                \"forcing_file\": \"" + forcing_file[i] + "\","
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
@@ -243,10 +234,8 @@ TEST_F(Bmi_Fortran_Formulation_Test, Initialize_0_a) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     ASSERT_EQ(get_friend_model_type_name(formulation), model_type_name[ex_index]);
-    ASSERT_EQ(get_friend_forcing_file_path(formulation), forcing_file[ex_index]);
     ASSERT_EQ(get_friend_bmi_init_config(formulation), init_config[ex_index]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variable[ex_index]);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
 /** Test to make sure we can initialize multiple model instances with dynamic loading. */

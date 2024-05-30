@@ -6,26 +6,26 @@
 
 using namespace models::bmi;
 
-Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string forcing_file_path,
+Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path,
                              bool allow_exceed_end, bool has_fixed_time_step,
                              std::string creator_func, std::string destroyer_func,
                              utils::StreamHandler output)
-        : Bmi_Cpp_Adapter(type_name, std::move(library_file_path), "", std::move(forcing_file_path),
+        : Bmi_Cpp_Adapter(type_name, std::move(library_file_path), "",
                         allow_exceed_end, has_fixed_time_step, creator_func, destroyer_func, output) { }
 
 Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string bmi_init_config,
-                             std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
+                             bool allow_exceed_end, bool has_fixed_time_step,
                              std::string creator_func, std::string destroyer_func,
                              utils::StreamHandler output)
         : Bmi_Cpp_Adapter(type_name, std::move(library_file_path), std::move(bmi_init_config),
-                        std::move(forcing_file_path), allow_exceed_end, has_fixed_time_step,
+                        allow_exceed_end, has_fixed_time_step,
                         std::move(creator_func), std::move(destroyer_func), output, true) { }
 
 Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string bmi_init_config,
-                             std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
+                             bool allow_exceed_end, bool has_fixed_time_step,
                              std::string creator_func, std::string destroyer_func,
                              utils::StreamHandler output, bool do_initialization)
-                             : AbstractCLibBmiAdapter(type_name, library_file_path, std::move(bmi_init_config), std::move(forcing_file_path), allow_exceed_end,
+                             : AbstractCLibBmiAdapter(type_name, library_file_path, std::move(bmi_init_config), allow_exceed_end,
                              has_fixed_time_step, creator_func, output),
                              model_create_fname(std::move(creator_func)),
                              model_destroy_fname(std::move(destroyer_func))
@@ -67,9 +67,7 @@ Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &adapter) :
                                                                adapter.bmi_model_has_fixed_time_step),
                                                        bmi_model_time_convert_factor(
                                                                adapter.bmi_model_time_convert_factor),
-                                                       bmi_model_uses_forcing_file(adapter.bmi_model_uses_forcing_file),
                                                        bmi_registration_function(adapter.bmi_registration_function),
-                                                       forcing_file_path(adapter.forcing_file_path),
                                                        init_exception_msg(adapter.init_exception_msg),
                                                        input_var_names(adapter.input_var_names),
                                                        model_initialized(adapter.model_initialized),
