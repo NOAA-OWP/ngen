@@ -132,8 +132,14 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
     } // END RAII
 #endif // NGEN_WITH_PYTHON // -------------------------------------------------
 
-
 } // ngen::exec_info::runtime_summary
+
+
+#ifdef NGEN_WITH_NETCDF
+#include <utilities/netcdf/NetcdfOutputWriterUtils.hpp>
+
+std::unordered_map<std::string, std::shared_ptr<data_output::NetcdfOutputWriter> > netcdf_writers;
+#endif
 
 int main(int argc, char *argv[]) {
 
@@ -510,10 +516,10 @@ int main(int argc, char *argv[]) {
     unsigned long num_catchments = std::distance(features.catchments().begin(), features.catchments().end() ); // TODO calculate this during parsing
     unsigned long num_nexuses = std::distance(features.nexuses().begin(), features.nexuses().end() ); // TODO calculate this during parsing
 
-    for ( std::shared_ptr<ngen::Layer>& layer : layers )
+    for ( std::shared_ptr<ngen::Layer> layer : layers )
     {
-        std::vector<data_output::NetcdfDimensionDiscription> dimension_discription;
-        std::vector<data_output::NetcdfVariableDiscription> variable_discription;
+        dimension_discription_vec dimension_discription;
+        variable_discription_vec variable_discription;
 
         dimension_discription.push_back(data_output::NetcdfDimensionDiscription("time"));
         
@@ -524,6 +530,7 @@ int main(int argc, char *argv[]) {
 
             dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
 
+            add_variables_for_layer(variable_discription,layer);
 
             break;
 
@@ -533,6 +540,8 @@ int main(int argc, char *argv[]) {
 
               dimension_discription.push_back(data_output::NetcdfDimensionDiscription("x"));
               dimension_discription.push_back(data_output::NetcdfDimensionDiscription("y"));
+
+              add_variables_for_layer(variable_discription, layer);
             }
 
             break;
@@ -541,17 +550,23 @@ int main(int argc, char *argv[]) {
 
             dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
 
+            add_variables_for_layer(variable_discription, layer);
+
             break;
 
             case ngen::LayerClass::kNexusLayer:
 
             dimension_discription.push_back(data_output::NetcdfDimensionDiscription("nexus-id",num_nexuses));
 
+            add_variables_for_layer(variable_discription, layer);
+
             break;
 
             case ngen::LayerClass::kLayer:
 
             dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
+
+            add_variables_for_layer(variable_discription, layer);
 
             break;
 
@@ -563,6 +578,12 @@ int main(int argc, char *argv[]) {
 
             break;
         }
+
+        netcdf_writers[layer->get_name()] = std::make_shared<data_output::NetcdfOutputWriter>("layer-"+ layer->get_name() + ".nc",
+            dimension_discription,
+            variable_discription);
+
+
     }
     #endif
 

@@ -125,6 +125,21 @@ namespace ngen
         */
         const std::string& get_time_step_units() const { return this->description.time_step_units; }
 
+        /**
+         * @brief Return the contained ids for this layer
+        */
+
+        const std::vector<std::string>& get_contents() { return processing_units; }
+
+        /**
+         * @brief Return the Formulation for an id
+        */
+
+        std::shared_ptr<HY_CatchmentRealization> get_realization(const std::string& id)
+        {
+            return features.catchment_at(id);
+        }
+
         /***
          * @brief Run one simulation timestep for each model in this layer
         */

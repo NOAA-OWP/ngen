@@ -1,0 +1,3 @@
+add_library(netcdf_utils NetcdfOutputWriterUtils.cpp)
+add_library(NGen::netcdf_utils ALIAS netcdf_utils)
+target_include_directories(netcdf_utils PUBLIC ${PROJECT_SOURCE_DIR}/include/utilities)

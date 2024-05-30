@@ -198,6 +198,7 @@ if(NGEN_WITH_NETCDF)
     endif()
 
     add_compile_definitions(NETCDF_ACTIVE)
+    add_compile_definitions(NGEN_WITH_NETCDF)
 endif()
 
 if(NGEN_WITH_EXTERN_SLOTH)
@@ -354,6 +355,11 @@ endif()
 if(NGEN_WITH_ROUTING)
     add_subdirectory("src/routing")
     target_link_libraries(ngen PUBLIC NGen::routing)
+endif()
+
+if(NGEN_WITH_NETCDF)
+    add_subdirectory("src/utilities/netcdf")
+    target_link_libraries(ngen PUBLIC NGen::netcdf_utils)
 endif()
 
 add_executable(partitionGenerator src/partitionGenerator.cpp)
