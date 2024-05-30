@@ -1,16 +1,16 @@
 var classrealization_1_1_formulation___manager =
 [
-    [ "dual_keys", "classrealization_1_1_formulation___manager.html#a9dda2c8475cf8e4ade81b0a34f6c889f", null ],
     [ "Formulation_Manager", "classrealization_1_1_formulation___manager.html#a999424a470ead9efe66ab5989929eb8e", null ],
     [ "Formulation_Manager", "classrealization_1_1_formulation___manager.html#a0a0de93305e075b3a2ee775a6c74963a", null ],
     [ "Formulation_Manager", "classrealization_1_1_formulation___manager.html#a58bf2c51c335e14480dbcd42e4ca8d7c", null ],
-    [ "~Formulation_Manager", "classrealization_1_1_formulation___manager.html#ae7753b416b56cdef7d55d8ba8290c6ff", null ],
+    [ "~Formulation_Manager", "classrealization_1_1_formulation___manager.html#afbb8fd26cb697649d9d4a71bd79c8c86", null ],
     [ "add_formulation", "classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94", null ],
     [ "begin", "classrealization_1_1_formulation___manager.html#a98d50446a65386a5bd0295e6bde56512", null ],
     [ "construct_formulation_from_config", "classrealization_1_1_formulation___manager.html#a4f21958f41bb6ef3dfe4fc82ac9c192d", null ],
     [ "construct_missing_formulation", "classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823", null ],
     [ "contains", "classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b", null ],
     [ "end", "classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd", null ],
+    [ "finalize", "classrealization_1_1_formulation___manager.html#a868f5aa6db72a5871e6a93ef000e5f6e", null ],
     [ "get_domain_formulation", "classrealization_1_1_formulation___manager.html#a612d70ddbe4cb9347254dfe0c0f335ad", null ],
     [ "get_forcing_params", "classrealization_1_1_formulation___manager.html#a2ba4cf155d0e4ddfc9e37b6b377deed1", null ],
     [ "get_formulation", "classrealization_1_1_formulation___manager.html#ab3188606a0077deba49fe03e0ae76c43", null ],

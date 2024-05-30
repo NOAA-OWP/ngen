@@ -94,7 +94,6 @@ $(document).ready(function(){initNavTree('classrealization_1_1_formulation___man
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
-<a href="#pri-types">Private Types</a> &#124;
 <a href="classrealization_1_1_formulation___manager-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">realization::Formulation_Manager Class Reference</div></div>
 </div><!--header-->
@@ -117,8 +116,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0a0de93305e075b3a2ee775a6c74963a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58bf2c51c335e14480dbcd42e4ca8d7c" id="r_a58bf2c51c335e14480dbcd42e4ca8d7c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a58bf2c51c335e14480dbcd42e4ca8d7c">Formulation_Manager</a> (boost::property_tree::ptree &amp;loaded_tree)</td></tr>
 <tr class="separator:a58bf2c51c335e14480dbcd42e4ca8d7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7753b416b56cdef7d55d8ba8290c6ff" id="r_ae7753b416b56cdef7d55d8ba8290c6ff"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#ae7753b416b56cdef7d55d8ba8290c6ff">~Formulation_Manager</a> ()</td></tr>
-<tr class="separator:ae7753b416b56cdef7d55d8ba8290c6ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbb8fd26cb697649d9d4a71bd79c8c86" id="r_afbb8fd26cb697649d9d4a71bd79c8c86"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#afbb8fd26cb697649d9d4a71bd79c8c86">~Formulation_Manager</a> ()=default</td></tr>
+<tr class="separator:afbb8fd26cb697649d9d4a71bd79c8c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab2168aff25e065967c382a2b6cef41a" id="r_aab2168aff25e065967c382a2b6cef41a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read</a> (<a class="el" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">geojson::GeoJSON</a> fabric, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
 <tr class="separator:aab2168aff25e065967c382a2b6cef41a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca754e4a64a79f0b86c0fa7a472aab94" id="r_aca754e4a64a79f0b86c0fa7a472aab94"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94">add_formulation</a> (std::shared_ptr&lt; <a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a> &gt; formulation)</td></tr>
@@ -143,6 +142,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a599aadb9ffea1e8c28cbd010b3160bd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af98f0237deac6fe02782231b5ba41ea7" id="r_af98f0237deac6fe02782231b5ba41ea7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7">get_t_route_config_file_with_path</a> ()</td></tr>
 <tr class="separator:af98f0237deac6fe02782231b5ba41ea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a868f5aa6db72a5871e6a93ef000e5f6e" id="r_a868f5aa6db72a5871e6a93ef000e5f6e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a868f5aa6db72a5871e6a93ef000e5f6e">finalize</a> ()</td></tr>
+<tr class="memdesc:a868f5aa6db72a5871e6a93ef000e5f6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources that should not be held as the run is shutting down.  <br /></td></tr>
+<tr class="separator:a868f5aa6db72a5871e6a93ef000e5f6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a2bb05d7eb2e2a815a05e0c049597bd" id="r_a1a2bb05d7eb2e2a815a05e0c049597bd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a1a2bb05d7eb2e2a815a05e0c049597bd">get_output_root</a> () const noexcept</td></tr>
 <tr class="memdesc:a1a2bb05d7eb2e2a815a05e0c049597bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the formatted output root.  <br /></td></tr>
 <tr class="separator:a1a2bb05d7eb2e2a815a05e0c049597bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -186,35 +188,7 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a0b8bde7896ea9bba31e130cd14ecbf7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b50baa59826712652d559531463eefe" id="r_a0b50baa59826712652d559531463eefe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classngen_1_1_layer_data_storage.html">ngen::LayerDataStorage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe">layer_storage</a></td></tr>
 <tr class="separator:a0b50baa59826712652d559531463eefe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-types" name="pri-types"></a>
-Private Types</h2></td></tr>
-<tr class="memitem:a9dda2c8475cf8e4ade81b0a34f6c889f" id="r_a9dda2c8475cf8e4ade81b0a34f6c889f"><td class="memItemLeft" align="right" valign="top">typedef std::tuple&lt; std::string, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a9dda2c8475cf8e4ade81b0a34f6c889f">dual_keys</a></td></tr>
-<tr class="separator:a9dda2c8475cf8e4ade81b0a34f6c889f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="a9dda2c8475cf8e4ade81b0a34f6c889f" name="a9dda2c8475cf8e4ade81b0a34f6c889f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9dda2c8475cf8e4ade81b0a34f6c889f">&#9670;&#160;</a></span>dual_keys</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef std::tuple&lt;std::string, std::string&gt; <a class="el" href="classrealization_1_1_formulation___manager.html#a9dda2c8475cf8e4ade81b0a34f6c889f">realization::Formulation_Manager::dual_keys</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a999424a470ead9efe66ab5989929eb8e" name="a999424a470ead9efe66ab5989929eb8e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a999424a470ead9efe66ab5989929eb8e">&#9670;&#160;</a></span>Formulation_Manager() <span class="overload">[1/3]</span></h2>
@@ -300,8 +274,8 @@ Private Types</h2></td></tr>
 
 </div>
 </div>
-<a id="ae7753b416b56cdef7d55d8ba8290c6ff" name="ae7753b416b56cdef7d55d8ba8290c6ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7753b416b56cdef7d55d8ba8290c6ff">&#9670;&#160;</a></span>~Formulation_Manager()</h2>
+<a id="afbb8fd26cb697649d9d4a71bd79c8c86" name="afbb8fd26cb697649d9d4a71bd79c8c86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbb8fd26cb697649d9d4a71bd79c8c86">&#9670;&#160;</a></span>~Formulation_Manager()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -310,7 +284,7 @@ Private Types</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual realization::Formulation_Manager::~Formulation_Manager </td>
+          <td class="memname">realization::Formulation_Manager::~Formulation_Manager </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -318,7 +292,7 @@ Private Types</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -535,6 +509,36 @@ Private Types</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d">formulations</a>.</p>
+
+</div>
+</div>
+<a id="a868f5aa6db72a5871e6a93ef000e5f6e" name="a868f5aa6db72a5871e6a93ef000e5f6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a868f5aa6db72a5871e6a93ef000e5f6e">&#9670;&#160;</a></span>finalize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::Formulation_Manager::finalize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Release any resources that should not be held as the run is shutting down. </p>
+<p>In particular, this should be called before MPI_Finalize() </p>
+
+<p class="reference">References <a class="el" href="classrealization_1_1_formulation___manager.html#a5dde983c552aa9515e962b251c030187">domain_formulations</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d">formulations</a>.</p>
 
 </div>
 </div>
@@ -1006,7 +1010,7 @@ Private Types</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a612d70ddbe4cb9347254dfe0c0f335ad">get_domain_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a60aa290c47417f057c9db3ea7f5e2fa9">has_domain_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a868f5aa6db72a5871e6a93ef000e5f6e">finalize()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a612d70ddbe4cb9347254dfe0c0f335ad">get_domain_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a60aa290c47417f057c9db3ea7f5e2fa9">has_domain_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
 
 </div>
 </div>
@@ -1030,7 +1034,7 @@ Private Types</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94">add_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a98d50446a65386a5bd0295e6bde56512">begin()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b">contains()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd">end()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ab3188606a0077deba49fe03e0ae76c43">get_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a3d0b2db8f821d4b05502a04fa3f01870">get_size()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#ae4048912588864e785ebefab84faa9cc">is_empty()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94">add_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a98d50446a65386a5bd0295e6bde56512">begin()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b">contains()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd">end()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a868f5aa6db72a5871e6a93ef000e5f6e">finalize()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ab3188606a0077deba49fe03e0ae76c43">get_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a3d0b2db8f821d4b05502a04fa3f01870">get_size()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#ae4048912588864e785ebefab84faa9cc">is_empty()</a>.</p>
 
 </div>
 </div>
@@ -1179,7 +1183,7 @@ Private Types</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_formulation___manager.html">Formulation_Manager</a></li>
-    <li class="footer">Generated on Mon May 20 2024 23:17:17 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu May 30 2024 17:39:32 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

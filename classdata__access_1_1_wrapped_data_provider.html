@@ -127,6 +127,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac01eb144dcf47402685738b033cb29e7" id="r_ac01eb144dcf47402685738b033cb29e7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_wrapped_data_provider.html#ac01eb144dcf47402685738b033cb29e7">WrappedDataProvider</a> (<a class="el" href="classdata__access_1_1_wrapped_data_provider.html">WrappedDataProvider</a> &amp;&amp;provider_to_move)</td></tr>
 <tr class="memdesc:ac01eb144dcf47402685738b033cb29e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move constructor.  <br /></td></tr>
 <tr class="separator:ac01eb144dcf47402685738b033cb29e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad2d7cdeac16334c1477a65b46c77b4a" id="r_aad2d7cdeac16334c1477a65b46c77b4a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_wrapped_data_provider.html#aad2d7cdeac16334c1477a65b46c77b4a">finalize</a> () override</td></tr>
+<tr class="memdesc:aad2d7cdeac16334c1477a65b46c77b4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources that should not be held as the run is shutting down.  <br /></td></tr>
+<tr class="separator:aad2d7cdeac16334c1477a65b46c77b4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb5c4e6fe21de5d77ae3f1544454b021" id="r_afb5c4e6fe21de5d77ae3f1544454b021"><td class="memItemLeft" align="right" valign="top">boost::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_wrapped_data_provider.html#afb5c4e6fe21de5d77ae3f1544454b021">get_available_variable_names</a> () override</td></tr>
 <tr class="memdesc:afb5c4e6fe21de5d77ae3f1544454b021"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the available variable names object.  <br /></td></tr>
 <tr class="separator:afb5c4e6fe21de5d77ae3f1544454b021"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -265,6 +268,36 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="aad2d7cdeac16334c1477a65b46c77b4a" name="aad2d7cdeac16334c1477a65b46c77b4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad2d7cdeac16334c1477a65b46c77b4a">&#9670;&#160;</a></span>finalize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void data_access::WrappedDataProvider::finalize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Release any resources that should not be held as the run is shutting down. </p>
+<p>In particular, this should be called before MPI_Finalize() </p>
+
+<p>Reimplemented from <a class="el" href="classdata__access_1_1_data_provider.html#acb736869524034e5758702e16291e518">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+
+</div>
+</div>
 <a id="afb5c4e6fe21de5d77ae3f1544454b021" name="afb5c4e6fe21de5d77ae3f1544454b021"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afb5c4e6fe21de5d77ae3f1544454b021">&#9670;&#160;</a></span>get_available_variable_names()</h2>
 
@@ -632,7 +665,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacedata__access.html">data_access</a></li><li class="navelem"><a class="el" href="classdata__access_1_1_wrapped_data_provider.html">WrappedDataProvider</a></li>
-    <li class="footer">Generated on Mon May 20 2024 23:17:17 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu May 30 2024 17:39:32 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -142,6 +142,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5d4c52b6952dd7d209dbfe936f22ce38" id="r_a5d4c52b6952dd7d209dbfe936f22ce38"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">setWrappedProvider</a> (<a class="el" href="classdata__access_1_1_generic_data_provider.html">GenericDataProvider</a> *provider)</td></tr>
 <tr class="memdesc:a5d4c52b6952dd7d209dbfe936f22ce38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the wrapped provider, if the given arg is valid for doing so.  <br /></td></tr>
 <tr class="separator:a5d4c52b6952dd7d209dbfe936f22ce38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad2d7cdeac16334c1477a65b46c77b4a" id="r_aad2d7cdeac16334c1477a65b46c77b4a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_wrapped_data_provider.html#aad2d7cdeac16334c1477a65b46c77b4a">finalize</a> () override</td></tr>
+<tr class="memdesc:aad2d7cdeac16334c1477a65b46c77b4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources that should not be held as the run is shutting down.  <br /></td></tr>
+<tr class="separator:aad2d7cdeac16334c1477a65b46c77b4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a514718777605106e5d18a6fe8af862b4" id="r_a514718777605106e5d18a6fe8af862b4"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a514718777605106e5d18a6fe8af862b4">get_data_start_time</a> () override</td></tr>
 <tr class="memdesc:a514718777605106e5d18a6fe8af862b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.  <br /></td></tr>
 <tr class="separator:a514718777605106e5d18a6fe8af862b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -289,6 +292,36 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="aad2d7cdeac16334c1477a65b46c77b4a" name="aad2d7cdeac16334c1477a65b46c77b4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad2d7cdeac16334c1477a65b46c77b4a">&#9670;&#160;</a></span>finalize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void data_access::WrappedDataProvider::finalize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Release any resources that should not be held as the run is shutting down. </p>
+<p>In particular, this should be called before MPI_Finalize() </p>
+
+<p>Reimplemented from <a class="el" href="classdata__access_1_1_data_provider.html#acb736869524034e5758702e16291e518">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+
+</div>
+</div>
 <a id="afcff64ec3112c42b80be024fbc923164" name="afcff64ec3112c42b80be024fbc923164"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afcff64ec3112c42b80be024fbc923164">&#9670;&#160;</a></span>get_available_variable_names()</h2>
 
@@ -853,7 +886,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacedata__access.html">data_access</a></li><li class="navelem"><a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html">DeferredWrappedProvider</a></li>
-    <li class="footer">Generated on Mon May 20 2024 23:17:17 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu May 30 2024 17:39:31 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

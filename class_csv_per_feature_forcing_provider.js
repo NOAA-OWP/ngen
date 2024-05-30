@@ -3,6 +3,7 @@ var class_csv_per_feature_forcing_provider =
     [ "time_type", "class_csv_per_feature_forcing_provider.html#aa40e6c7ba39854c2a69c2656376c95f0", null ],
     [ "CsvPerFeatureForcingProvider", "class_csv_per_feature_forcing_provider.html#a7034f120d89f39c83b61903669c2e435", null ],
     [ "check_forcing_vector_index_bounds", "class_csv_per_feature_forcing_provider.html#a64d117949c5c1b9cfed33017ed388119", null ],
+    [ "finalize", "class_csv_per_feature_forcing_provider.html#acb736869524034e5758702e16291e518", null ],
     [ "get_available_variable_names", "class_csv_per_feature_forcing_provider.html#adc16fbddbb172454efb9cf28a21260ef", null ],
     [ "get_data_start_time", "class_csv_per_feature_forcing_provider.html#ad96c3f70785165d98d3a3f13e5256e6c", null ],
     [ "get_data_stop_time", "class_csv_per_feature_forcing_provider.html#a88f3732ea7088e8f2b582302f7b2fee6", null ],
@@ -20,7 +21,6 @@ var class_csv_per_feature_forcing_provider =
     [ "catchment_id", "class_csv_per_feature_forcing_provider.html#ab132ab280175f5c23349e3bbb41cdeec", null ],
     [ "current_date_time_epoch", "class_csv_per_feature_forcing_provider.html#a5fee10512c1561e3b7c60f01572e9674", null ],
     [ "day_of_year", "class_csv_per_feature_forcing_provider.html#a16f72552b7f19627926b74b825656dad", null ],
-    [ "end_date_time", "class_csv_per_feature_forcing_provider.html#a76c232bcf148fe17978a444c512b9d28", null ],
     [ "end_date_time_epoch", "class_csv_per_feature_forcing_provider.html#a9fc3d0f5e03c05b0cc86e5bb2fc5d360", null ],
     [ "forcing_file_name", "class_csv_per_feature_forcing_provider.html#abc2be97ff352731a2aa357ac2900e553", null ],
     [ "forcing_vector_index", "class_csv_per_feature_forcing_provider.html#acfb5ed21bfe4923f45f236bf44b223b2", null ],
@@ -28,7 +28,6 @@ var class_csv_per_feature_forcing_provider =
     [ "latitude", "class_csv_per_feature_forcing_provider.html#a8b594b1a6eef1cc337f190dcdcdd1ca1", null ],
     [ "longitude", "class_csv_per_feature_forcing_provider.html#ac884269b16a45322c1b089fb29288012", null ],
     [ "precipitation_rate_meters_per_second", "class_csv_per_feature_forcing_provider.html#af8798cff63230e821e713f45a180d673", null ],
-    [ "start_date_time", "class_csv_per_feature_forcing_provider.html#a4cf683ca8ca137c887860a401a0bfe0a", null ],
     [ "start_date_time_epoch", "class_csv_per_feature_forcing_provider.html#a54ce6043ebf56cc336cf551feddf268d", null ],
     [ "time_epoch_vector", "class_csv_per_feature_forcing_provider.html#a3aefecbbd2b05bab705c9e24a3cf036d", null ]
 ];

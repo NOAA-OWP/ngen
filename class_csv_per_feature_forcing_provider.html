@@ -154,6 +154,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adc16fbddbb172454efb9cf28a21260ef" id="r_adc16fbddbb172454efb9cf28a21260ef"><td class="memItemLeft" align="right" valign="top">boost::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_csv_per_feature_forcing_provider.html#adc16fbddbb172454efb9cf28a21260ef">get_available_variable_names</a> () override</td></tr>
 <tr class="memdesc:adc16fbddbb172454efb9cf28a21260ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the variables that are accessable by this data provider.  <br /></td></tr>
 <tr class="separator:adc16fbddbb172454efb9cf28a21260ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb736869524034e5758702e16291e518" id="r_acb736869524034e5758702e16291e518"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#acb736869524034e5758702e16291e518">finalize</a> ()</td></tr>
+<tr class="memdesc:acb736869524034e5758702e16291e518"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources that should not be held as the run is shutting down.  <br /></td></tr>
+<tr class="separator:acb736869524034e5758702e16291e518"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -193,10 +196,6 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a16f72552b7f19627926b74b825656dad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc2be97ff352731a2aa357ac2900e553" id="r_abc2be97ff352731a2aa357ac2900e553"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_csv_per_feature_forcing_provider.html#abc2be97ff352731a2aa357ac2900e553">forcing_file_name</a></td></tr>
 <tr class="separator:abc2be97ff352731a2aa357ac2900e553"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cf683ca8ca137c887860a401a0bfe0a" id="r_a4cf683ca8ca137c887860a401a0bfe0a"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_csv_per_feature_forcing_provider.html#aa40e6c7ba39854c2a69c2656376c95f0">time_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_csv_per_feature_forcing_provider.html#a4cf683ca8ca137c887860a401a0bfe0a">start_date_time</a></td></tr>
-<tr class="separator:a4cf683ca8ca137c887860a401a0bfe0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76c232bcf148fe17978a444c512b9d28" id="r_a76c232bcf148fe17978a444c512b9d28"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_csv_per_feature_forcing_provider.html#aa40e6c7ba39854c2a69c2656376c95f0">time_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_csv_per_feature_forcing_provider.html#a76c232bcf148fe17978a444c512b9d28">end_date_time</a></td></tr>
-<tr class="separator:a76c232bcf148fe17978a444c512b9d28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54ce6043ebf56cc336cf551feddf268d" id="r_a54ce6043ebf56cc336cf551feddf268d"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_csv_per_feature_forcing_provider.html#a54ce6043ebf56cc336cf551feddf268d">start_date_time_epoch</a></td></tr>
 <tr class="separator:a54ce6043ebf56cc336cf551feddf268d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fc3d0f5e03c05b0cc86e5bb2fc5d360" id="r_a9fc3d0f5e03c05b0cc86e5bb2fc5d360"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_csv_per_feature_forcing_provider.html#a9fc3d0f5e03c05b0cc86e5bb2fc5d360">end_date_time_epoch</a></td></tr>
@@ -280,6 +279,36 @@ Private Attributes</h2></td></tr>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>: Return appropriate warning </dd></dl>
 
 <p class="reference">References <a class="el" href="class_csv_per_feature_forcing_provider.html#acfb5ed21bfe4923f45f236bf44b223b2">forcing_vector_index</a>, and <a class="el" href="class_csv_per_feature_forcing_provider.html#a3aefecbbd2b05bab705c9e24a3cf036d">time_epoch_vector</a>.</p>
+
+</div>
+</div>
+<a id="acb736869524034e5758702e16291e518" name="acb736869524034e5758702e16291e518"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb736869524034e5758702e16291e518">&#9670;&#160;</a></span>finalize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; double , <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &gt;::finalize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Release any resources that should not be held as the run is shutting down. </p>
+<p>In particular, this should be called before MPI_Finalize() </p>
+
+<p>Reimplemented in <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#aad2d7cdeac16334c1477a65b46c77b4a">data_access::WrappedDataProvider</a>.</p>
 
 </div>
 </div>
@@ -883,28 +912,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a76c232bcf148fe17978a444c512b9d28" name="a76c232bcf148fe17978a444c512b9d28"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76c232bcf148fe17978a444c512b9d28">&#9670;&#160;</a></span>end_date_time</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="class_csv_per_feature_forcing_provider.html#aa40e6c7ba39854c2a69c2656376c95f0">time_type</a>&gt; CsvPerFeatureForcingProvider::end_date_time</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a9fc3d0f5e03c05b0cc86e5bb2fc5d360" name="a9fc3d0f5e03c05b0cc86e5bb2fc5d360"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9fc3d0f5e03c05b0cc86e5bb2fc5d360">&#9670;&#160;</a></span>end_date_time_epoch</h2>
 
@@ -1067,28 +1074,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a4cf683ca8ca137c887860a401a0bfe0a" name="a4cf683ca8ca137c887860a401a0bfe0a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4cf683ca8ca137c887860a401a0bfe0a">&#9670;&#160;</a></span>start_date_time</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="class_csv_per_feature_forcing_provider.html#aa40e6c7ba39854c2a69c2656376c95f0">time_type</a>&gt; CsvPerFeatureForcingProvider::start_date_time</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a54ce6043ebf56cc336cf551feddf268d" name="a54ce6043ebf56cc336cf551feddf268d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a54ce6043ebf56cc336cf551feddf268d">&#9670;&#160;</a></span>start_date_time_epoch</h2>
 
@@ -1147,7 +1132,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_csv_per_feature_forcing_provider.html">CsvPerFeatureForcingProvider</a></li>
-    <li class="footer">Generated on Mon May 20 2024 23:17:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu May 30 2024 17:39:31 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

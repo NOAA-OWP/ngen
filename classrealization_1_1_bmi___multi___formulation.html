@@ -262,6 +262,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2be85c1e7a58273fc0267c9e99ca38fc" id="r_a2be85c1e7a58273fc0267c9e99ca38fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a2be85c1e7a58273fc0267c9e99ca38fc">set_output_precision</a> (int precision)</td></tr>
 <tr class="memdesc:a2be85c1e7a58273fc0267c9e99ca38fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the precision of output values when converted to text.  <br /></td></tr>
 <tr class="separator:a2be85c1e7a58273fc0267c9e99ca38fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92b6ca5352dd98640d7c320f7c6c3333" id="r_a92b6ca5352dd98640d7c320f7c6c3333"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a92b6ca5352dd98640d7c320f7c6c3333">finalize</a> ()</td></tr>
+<tr class="memdesc:a92b6ca5352dd98640d7c320f7c6c3333"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release resources of the given forcing provider.  <br /></td></tr>
+<tr class="separator:a92b6ca5352dd98640d7c320f7c6c3333"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb736869524034e5758702e16291e518" id="r_acb736869524034e5758702e16291e518"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#acb736869524034e5758702e16291e518">finalize</a> ()</td></tr>
+<tr class="memdesc:acb736869524034e5758702e16291e518"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources that should not be held as the run is shutting down.  <br /></td></tr>
+<tr class="separator:acb736869524034e5758702e16291e518"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02267e0cc9fec2e1d883f55c2c12b39d" id="r_a02267e0cc9fec2e1d883f55c2c12b39d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d">get_id</a> () const</td></tr>
 <tr class="separator:a02267e0cc9fec2e1d883f55c2c12b39d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d02de255937deb8f6169ef20f5a07d6" id="r_a9d02de255937deb8f6169ef20f5a07d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_area.html#a9d02de255937deb8f6169ef20f5a07d6">set_output_stream</a> (std::string file_path)</td></tr>
@@ -319,6 +325,8 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a0dd771991a46889d4bc299f8c13cb5e3" id="r_a0dd771991a46889d4bc299f8c13cb5e3"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; std::ostringstream &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a0dd771991a46889d4bc299f8c13cb5e3">output_text_stream</a></td></tr>
 <tr class="memdesc:a0dd771991a46889d4bc299f8c13cb5e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object to help with converting numeric output values to text.  <br /></td></tr>
 <tr class="separator:a0dd771991a46889d4bc299f8c13cb5e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a202e3be992fa8c73f74819b44bff14b6" id="r_a202e3be992fa8c73f74819b44bff14b6"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">forcing</a></td></tr>
+<tr class="separator:a202e3be992fa8c73f74819b44bff14b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bfec24b0d57240e7ada2493a781db6d" id="r_a8bfec24b0d57240e7ada2493a781db6d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a></td></tr>
 <tr class="separator:a8bfec24b0d57240e7ada2493a781db6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaebc4992c38cb5db68e859e0487ad929" id="r_aaebc4992c38cb5db68e859e0487ad929"><td class="memItemLeft" align="right" valign="top">polygon_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_area.html#aaebc4992c38cb5db68e859e0487ad929">bounds</a></td></tr>
@@ -329,8 +337,6 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:aa92f9bd07b2cdf99ce74367fd7988b1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af996a3e50eaf51c63865f1fdbe4f8661" id="r_af996a3e50eaf51c63865f1fdbe4f8661"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">id_number</a></td></tr>
 <tr class="separator:af996a3e50eaf51c63865f1fdbe4f8661"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2010f61d0e7141bb48230923592de215" id="r_a2010f61d0e7141bb48230923592de215"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">forcing</a></td></tr>
-<tr class="separator:a2010f61d0e7141bb48230923592de215"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -832,9 +838,68 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#abd96e16e7da59f6d4e98fd3abf375224">geojson::JSONProperty::as_real_number()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a512af06cb32ed665a57a80129c84ec9b">geojson::JSONProperty::as_string()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a4a62d9dc46a292bff3c4fd134f5469a7">geojson::JSONProperty::at()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ab0bbecfcd6d7a94cf448450da6600a41">availableData</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a5663cca69cb8f68f38899a031a19fc43">check_output_var_names()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#aeced5793d29fdac7e6cc53ff1cc0a1e0">default_output_values</a>, <a class="el" href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">HY_CatchmentRealization::forcing</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a633b7407d447f77910476c0315c8beb6">realization::Catchment_Formulation::get_catchment_id()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#adbe82ffeec39c35a9b2c3ba5ab0a8f6d">get_formulation_type()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ac58942d917922a1bad80b1cd70e7196c">realization::Bmi_Formulation::get_output_variable_names()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a624c5166a6e42c6d1aafde6883a20388">init_deferred_associations()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a2b3b0cb7670a2ab18107ec428ac06fa2">is_out_vars_from_last_mod</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a6f3245df4fa219eb275a0d9dcc0e722f">module_types</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a9f72d1b2887273f405171535928ebf29">module_variable_maps</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a125ff769345d1bc4f004bde256c86686">modules</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#abe3de83fc22850cf3af8ff046616b446">primary_module_index</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a27b7e453211087d4c2a24d7f33860300">realization::Bmi_Formulation::set_bmi_main_output_var()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a3a59e65e398af534a189f5de2bda67f2">realization::Bmi_Formulation::set_model_type_name()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ae520479adedf30609de4068bc389bd41">realization::Bmi_Formulation::set_output_header_fields()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a2be85c1e7a58273fc0267c9e99ca38fc">realization::Bmi_Formulation::set_output_precision()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ac85ef69c4b2de5a261230469cd0f3985">realization::Bmi_Formulation::set_output_variable_names()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a3ed78c910127ec5115d71fcfe4d47896">realization::Formulation::validate_parameters()</a>.</p>
+<p class="reference">References <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#abd96e16e7da59f6d4e98fd3abf375224">geojson::JSONProperty::as_real_number()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a512af06cb32ed665a57a80129c84ec9b">geojson::JSONProperty::as_string()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a4a62d9dc46a292bff3c4fd134f5469a7">geojson::JSONProperty::at()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ab0bbecfcd6d7a94cf448450da6600a41">availableData</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a5663cca69cb8f68f38899a031a19fc43">check_output_var_names()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#aeced5793d29fdac7e6cc53ff1cc0a1e0">default_output_values</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">realization::Catchment_Formulation::forcing</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a633b7407d447f77910476c0315c8beb6">realization::Catchment_Formulation::get_catchment_id()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#adbe82ffeec39c35a9b2c3ba5ab0a8f6d">get_formulation_type()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ac58942d917922a1bad80b1cd70e7196c">realization::Bmi_Formulation::get_output_variable_names()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a624c5166a6e42c6d1aafde6883a20388">init_deferred_associations()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a2b3b0cb7670a2ab18107ec428ac06fa2">is_out_vars_from_last_mod</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a6f3245df4fa219eb275a0d9dcc0e722f">module_types</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a9f72d1b2887273f405171535928ebf29">module_variable_maps</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a125ff769345d1bc4f004bde256c86686">modules</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#abe3de83fc22850cf3af8ff046616b446">primary_module_index</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a27b7e453211087d4c2a24d7f33860300">realization::Bmi_Formulation::set_bmi_main_output_var()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a3a59e65e398af534a189f5de2bda67f2">realization::Bmi_Formulation::set_model_type_name()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ae520479adedf30609de4068bc389bd41">realization::Bmi_Formulation::set_output_header_fields()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a2be85c1e7a58273fc0267c9e99ca38fc">realization::Bmi_Formulation::set_output_precision()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ac85ef69c4b2de5a261230469cd0f3985">realization::Bmi_Formulation::set_output_variable_names()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a3ed78c910127ec5115d71fcfe4d47896">realization::Formulation::validate_parameters()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#acb4534a0030f794320625be0313fe825">create_formulation()</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a87607c1c2b438943c8be0a566e1c59d5">create_formulation()</a>.</p>
+
+</div>
+</div>
+<a id="acb736869524034e5758702e16291e518" name="acb736869524034e5758702e16291e518"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb736869524034e5758702e16291e518">&#9670;&#160;</a></span>finalize() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; double , <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &gt;::finalize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Release any resources that should not be held as the run is shutting down. </p>
+<p>In particular, this should be called before MPI_Finalize() </p>
+
+<p>Reimplemented in <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#aad2d7cdeac16334c1477a65b46c77b4a">data_access::WrappedDataProvider</a>.</p>
+
+</div>
+</div>
+<a id="a92b6ca5352dd98640d7c320f7c6c3333" name="a92b6ca5352dd98640d7c320f7c6c3333"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92b6ca5352dd98640d7c320f7c6c3333">&#9670;&#160;</a></span>finalize() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::Catchment_Formulation::finalize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Release resources of the given forcing provider. </p>
+
+<p class="reference">References <a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">realization::Catchment_Formulation::forcing</a>.</p>
 
 </div>
 </div>
@@ -2045,7 +2110,7 @@ get_config_mapped_variable_name(string, shared_ptr, shared_ptr)</dd></dl>
 <p>This is part of the ForcingProvider interface. This interface must be implemented for items of this type to be usable as "forcing" providers for situations when some other object needs to receive as an input (i.e., one of its forcings) a data property output from this object.</p>
 <dl class="section return"><dt>Returns</dt><dd>The inclusive beginning of the period of time over which this instance can provide this data. </dd></dl>
 
-<p class="reference">References <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ab0bbecfcd6d7a94cf448450da6600a41">availableData</a>, <a class="el" href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">HY_CatchmentRealization::forcing</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#adbe82ffeec39c35a9b2c3ba5ab0a8f6d">get_formulation_type()</a>.</p>
+<p class="reference">References <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ab0bbecfcd6d7a94cf448450da6600a41">availableData</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">realization::Catchment_Formulation::forcing</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#adbe82ffeec39c35a9b2c3ba5ab0a8f6d">get_formulation_type()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad3b2f3f6294014fde8f6a10b5d3058f8">get_data_start_time()</a>.</p>
 
@@ -2079,7 +2144,7 @@ get_config_mapped_variable_name(string, shared_ptr, shared_ptr)</dd></dl>
 <p>This is part of the ForcingProvider interface. This interface must be implemented for items of this type to be usable as "forcing" providers for situations when some other object needs to receive as an input (i.e., one of its forcings) a data property output from this object.</p>
 <dl class="section return"><dt>Returns</dt><dd>The exclusive ending of the period of time over which this instance can provide this data. </dd></dl>
 
-<p class="reference">References <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ab0bbecfcd6d7a94cf448450da6600a41">availableData</a>, <a class="el" href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">HY_CatchmentRealization::forcing</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#adbe82ffeec39c35a9b2c3ba5ab0a8f6d">get_formulation_type()</a>.</p>
+<p class="reference">References <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ab0bbecfcd6d7a94cf448450da6600a41">availableData</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">realization::Catchment_Formulation::forcing</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#adbe82ffeec39c35a9b2c3ba5ab0a8f6d">get_formulation_type()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a4b3db6bb593b3d3261ac5ed2f35684b3">get_data_stop_time()</a>.</p>
 
@@ -3139,8 +3204,8 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="a2010f61d0e7141bb48230923592de215" name="a2010f61d0e7141bb48230923592de215"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2010f61d0e7141bb48230923592de215">&#9670;&#160;</a></span>forcing</h2>
+<a id="a202e3be992fa8c73f74819b44bff14b6" name="a202e3be992fa8c73f74819b44bff14b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a202e3be992fa8c73f74819b44bff14b6">&#9670;&#160;</a></span>forcing</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3149,7 +3214,7 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a>&gt; HY_CatchmentRealization::forcing</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a>&gt; realization::Catchment_Formulation::forcing</td>
         </tr>
       </table>
   </td>
@@ -3159,7 +3224,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aaeaf8ef8b36e7c5690ca8134a5cd8065">realization::Bmi_Module_Formulation::determine_model_time_offset()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#adf368c5f1754437e1c7142c99ed8239d">get_variable_time_begin()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a415c08aba34f778c019b996a940bbc9a">get_variable_time_end()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aef30be5d6ae1ef746a5717c1f2badc77">realization::Bmi_Module_Formulation::set_model_inputs_prior_to_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aaeaf8ef8b36e7c5690ca8134a5cd8065">realization::Bmi_Module_Formulation::determine_model_time_offset()</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a92b6ca5352dd98640d7c320f7c6c3333">realization::Catchment_Formulation::finalize()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#adf368c5f1754437e1c7142c99ed8239d">get_variable_time_begin()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a415c08aba34f778c019b996a940bbc9a">get_variable_time_end()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aef30be5d6ae1ef746a5717c1f2badc77">realization::Bmi_Module_Formulation::set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -3608,7 +3673,7 @@ template&lt;class T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___multi___formulation.html">Bmi_Multi_Formulation</a></li>
-    <li class="footer">Generated on Mon May 20 2024 23:17:17 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu May 30 2024 17:39:32 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

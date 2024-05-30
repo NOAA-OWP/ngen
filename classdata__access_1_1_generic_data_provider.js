@@ -1,5 +1,6 @@
 var classdata__access_1_1_generic_data_provider =
 [
+    [ "finalize", "classdata__access_1_1_generic_data_provider.html#acb736869524034e5758702e16291e518", null ],
     [ "get_available_variable_names", "classdata__access_1_1_generic_data_provider.html#a13ffb91d8fdba4a13ef440f7621d9cfe", null ],
     [ "get_data_start_time", "classdata__access_1_1_generic_data_provider.html#a9a5503cb5da0b2bf8fe25d0500bf33c4", null ],
     [ "get_data_stop_time", "classdata__access_1_1_generic_data_provider.html#af598b54c03163287adc56400b3e9bdfe", null ],

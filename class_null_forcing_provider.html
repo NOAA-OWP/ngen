@@ -142,6 +142,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4487421e46fcf87995144873402a2d57" id="r_a4487421e46fcf87995144873402a2d57"><td class="memItemLeft" align="right" valign="top">boost::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_null_forcing_provider.html#a4487421e46fcf87995144873402a2d57">get_available_variable_names</a> () override</td></tr>
 <tr class="memdesc:a4487421e46fcf87995144873402a2d57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the variables that are accessable by this data provider.  <br /></td></tr>
 <tr class="separator:a4487421e46fcf87995144873402a2d57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb736869524034e5758702e16291e518" id="r_acb736869524034e5758702e16291e518"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#acb736869524034e5758702e16291e518">finalize</a> ()</td></tr>
+<tr class="memdesc:acb736869524034e5758702e16291e518"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources that should not be held as the run is shutting down.  <br /></td></tr>
+<tr class="separator:acb736869524034e5758702e16291e518"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Forcing class that returns no variables to the simulation&ndash;use this e.g. </p>
@@ -173,6 +176,36 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="acb736869524034e5758702e16291e518" name="acb736869524034e5758702e16291e518"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb736869524034e5758702e16291e518">&#9670;&#160;</a></span>finalize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; double , <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &gt;::finalize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Release any resources that should not be held as the run is shutting down. </p>
+<p>In particular, this should be called before MPI_Finalize() </p>
+
+<p>Reimplemented in <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#aad2d7cdeac16334c1477a65b46c77b4a">data_access::WrappedDataProvider</a>.</p>
+
+</div>
+</div>
 <a id="a4487421e46fcf87995144873402a2d57" name="a4487421e46fcf87995144873402a2d57"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4487421e46fcf87995144873402a2d57">&#9670;&#160;</a></span>get_available_variable_names()</h2>
 
@@ -483,7 +516,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_null_forcing_provider.html">NullForcingProvider</a></li>
-    <li class="footer">Generated on Mon May 20 2024 23:17:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu May 30 2024 17:39:31 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

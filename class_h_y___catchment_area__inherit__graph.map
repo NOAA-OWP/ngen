@@ -1,11 +1,11 @@
 <map id="HY_CatchmentArea" name="HY_CatchmentArea">
-<area shape="rect" id="Node000001" title=" " alt="" coords="228,259,383,424"/>
-<area shape="rect" id="Node000004" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="212,472,399,787"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="308,439,308,472,303,472,303,439"/>
-<area shape="rect" id="Node000002" href="$class_h_y___catchment_realization.html" title=" " alt="" coords="125,5,315,211"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="265,224,278,258,273,260,260,226"/>
-<area shape="rect" id="Node000003" href="$class_g_m___object.html" title=" " alt="" coords="340,65,444,151"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="374,166,338,260,333,258,369,164"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="228,219,383,384"/>
+<area shape="rect" id="Node000004" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="212,432,399,787"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="308,399,308,432,303,432,303,399"/>
+<area shape="rect" id="Node000002" href="$class_h_y___catchment_realization.html" title=" " alt="" coords="125,5,315,171"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="261,183,275,218,270,220,256,185"/>
+<area shape="rect" id="Node000003" href="$class_g_m___object.html" title=" " alt="" coords="340,45,444,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="372,145,341,220,336,218,367,143"/>
 <area shape="rect" id="Node000005" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="211,835,399,1528"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="308,802,308,835,303,835,303,802"/>
 <area shape="rect" id="Node000006" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="102,1576,290,2975"/>

@@ -3,6 +3,7 @@ var classdata__access_1_1_deferred_wrapped_provider =
     [ "DeferredWrappedProvider", "classdata__access_1_1_deferred_wrapped_provider.html#ad2501a6ce8d2bac77612ac430c442e0b", null ],
     [ "DeferredWrappedProvider", "classdata__access_1_1_deferred_wrapped_provider.html#aecd5330adeaea2f93d4572028da78697", null ],
     [ "DeferredWrappedProvider", "classdata__access_1_1_deferred_wrapped_provider.html#a6dbd4de7f3c3b4ebb6c720192715e670", null ],
+    [ "finalize", "classdata__access_1_1_deferred_wrapped_provider.html#aad2d7cdeac16334c1477a65b46c77b4a", null ],
     [ "get_available_variable_names", "classdata__access_1_1_deferred_wrapped_provider.html#afcff64ec3112c42b80be024fbc923164", null ],
     [ "get_data_start_time", "classdata__access_1_1_deferred_wrapped_provider.html#a514718777605106e5d18a6fe8af862b4", null ],
     [ "get_data_stop_time", "classdata__access_1_1_deferred_wrapped_provider.html#a770a1a269bc8a34ee0e76c558b32ad3c", null ],
