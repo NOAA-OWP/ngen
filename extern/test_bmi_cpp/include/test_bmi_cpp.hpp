@@ -41,62 +41,62 @@ class TestBmiCpp : public bmi::Bmi {
             set_usage(input_array, output_array, model_params);
         };
 
-        virtual void Initialize(std::string config_file);
-        virtual void Update();
-        virtual void UpdateUntil(double time);
-        virtual void Finalize();
+        virtual void Initialize(std::string config_file) override;
+        virtual void Update() override;
+        virtual void UpdateUntil(double time) override;
+        virtual void Finalize() override;
 
         // Model information functions.
-        virtual std::string GetComponentName();
-        virtual int GetInputItemCount();
-        virtual int GetOutputItemCount();
-        virtual std::vector<std::string> GetInputVarNames();
-        virtual std::vector<std::string> GetOutputVarNames();
+        virtual std::string GetComponentName() override;
+        virtual int GetInputItemCount() override;
+        virtual int GetOutputItemCount() override;
+        virtual std::vector<std::string> GetInputVarNames() override;
+        virtual std::vector<std::string> GetOutputVarNames() override;
 
         // Variable information functions
-        virtual int GetVarGrid(std::string name);
-        virtual std::string GetVarType(std::string name);
-        virtual std::string GetVarUnits(std::string name);
-        virtual int GetVarItemsize(std::string name);
-        virtual int GetVarNbytes(std::string name);
-        virtual std::string GetVarLocation(std::string name);
+        virtual int GetVarGrid(std::string name) override;
+        virtual std::string GetVarType(std::string name) override;
+        virtual std::string GetVarUnits(std::string name) override;
+        virtual int GetVarItemsize(std::string name) override;
+        virtual int GetVarNbytes(std::string name) override;
+        virtual std::string GetVarLocation(std::string name) override;
 
-        virtual double GetCurrentTime();
-        virtual double GetStartTime();
-        virtual double GetEndTime();
-        virtual std::string GetTimeUnits();
-        virtual double GetTimeStep();
+        virtual double GetCurrentTime() override;
+        virtual double GetStartTime() override;
+        virtual double GetEndTime() override;
+        virtual std::string GetTimeUnits() override;
+        virtual double GetTimeStep() override;
 
         // Variable getters
-        virtual void GetValue(std::string name, void *dest);
-        virtual void *GetValuePtr(std::string name);
-        virtual void GetValueAtIndices(std::string name, void *dest, int *inds, int count);
+        virtual void GetValue(std::string name, void *dest) override;
+        virtual void *GetValuePtr(std::string name) override;
+        virtual void GetValueAtIndices(std::string name, void *dest, int *inds, int count) override;
 
         // Variable setters
-        virtual void SetValue(std::string name, void *src);
-        virtual void SetValueAtIndices(std::string name, int *inds, int count, void *src);
+        virtual void SetValue(std::string name, void *src) override;
+        virtual void SetValueAtIndices(std::string name, int *inds, int count, void *src) override;
 
         // Grid information functions
-        virtual int GetGridRank(const int grid);
-        virtual int GetGridSize(const int grid);
-        virtual std::string GetGridType(const int grid);
+        virtual int GetGridRank(const int grid) override;
+        virtual int GetGridSize(const int grid) override;
+        virtual std::string GetGridType(const int grid) override;
 
-        virtual void GetGridShape(const int grid, int *shape);
-        virtual void GetGridSpacing(const int grid, double *spacing);
-        virtual void GetGridOrigin(const int grid, double *origin);
+        virtual void GetGridShape(const int grid, int *shape) override;
+        virtual void GetGridSpacing(const int grid, double *spacing) override;
+        virtual void GetGridOrigin(const int grid, double *origin) override;
 
-        virtual void GetGridX(int grid, double *x);
-        virtual void GetGridY(const int grid, double *y);
-        virtual void GetGridZ(const int grid, double *z);
+        virtual void GetGridX(int grid, double *x) override;
+        virtual void GetGridY(const int grid, double *y) override;
+        virtual void GetGridZ(const int grid, double *z) override;
 
-        virtual int GetGridNodeCount(const int grid);
-        virtual int GetGridEdgeCount(const int grid);
-        virtual int GetGridFaceCount(const int grid);
+        virtual int GetGridNodeCount(const int grid) override;
+        virtual int GetGridEdgeCount(const int grid) override;
+        virtual int GetGridFaceCount(const int grid) override;
 
-        virtual void GetGridEdgeNodes(const int grid, int *edge_nodes);
-        virtual void GetGridFaceEdges(const int grid, int *face_edges);
-        virtual void GetGridFaceNodes(const int grid, int *face_nodes);
-        virtual void GetGridNodesPerFace(const int grid, int *nodes_per_face);
+        virtual void GetGridEdgeNodes(const int grid, int *edge_nodes) override;
+        virtual void GetGridFaceEdges(const int grid, int *face_edges) override;
+        virtual void GetGridFaceNodes(const int grid, int *face_nodes) override;
+        virtual void GetGridNodesPerFace(const int grid, int *nodes_per_face) override;
 
 
 
