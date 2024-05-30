@@ -246,11 +246,25 @@ namespace realization {
              * In particular, this should be called before MPI_Finalize()
              */
             void finalize() {
+                // The calls in these loops would be staticly
+                // dispatched matching the qualification given,
+                // because formulations::value_type ==
+                // Catchment_Formulation. That does not inherit from
+                // DataProvider, with its virtual member function of
+                // the same name.
+                //
+                // If any formulation class needs to customize this
+                // behavior through this becoming a virtual dispatch,
+                // take care. Bmi_Multi_Formulation was a concern, but
+                // does not currently need to because none of its
+                // constituent formulations points to any forcing
+                // object other than the enclosing
+                // Bmi_Multi_Formulation instance itself.
                 for (auto const& fmap: formulations) {
-                    fmap.second->finalize();
+                    fmap.second->HY_CatchmentRealization::finalize();
                 }
                 for (auto const& fmap: domain_formulations) {
-                    fmap.second->finalize();
+                    fmap.second->HY_CatchmentRealization::finalize();
                 }
 
 #if NGEN_WITH_NETCDF
