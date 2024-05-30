@@ -24,7 +24,7 @@ namespace external {
         ExternalIntegrationException(ExternalIntegrationException &&exception) noexcept
         : ExternalIntegrationException(std::move(exception.what_message)) {}
 
-        virtual char const *what() const noexcept {
+        char const *what() const noexcept override {
             return what_message.c_str();
         }
 
