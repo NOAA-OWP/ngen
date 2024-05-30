@@ -65,7 +65,7 @@ void TestFixture::SetUpTestSuite()
     data_access::assert_forcings_engine_requirements();
 
     // Create a lumped forcings engine instance
-    TestFixture::provider_ = data_access::ForcingsEngineLumpedDataProvider::lumped_instance(
+    TestFixture::provider_ = data_access::ForcingsEngineLumpedDataProvider::make_lumped_instance(
         config_file,
         default_params.start_time,
         default_params.end_time

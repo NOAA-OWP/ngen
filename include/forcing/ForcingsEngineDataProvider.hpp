@@ -100,6 +100,24 @@ struct ForcingsEngineDataProvider
         return inst.get();
     }
 
+    template<typename Derived>
+    static ForcingsEngineDataProvider* make_instance(
+        const std::string& init,
+        const std::string& time_begin,
+        const std::string& time_end,
+        const std::string& time_fmt = default_time_format
+    )
+    {
+        auto time_begin_epoch = static_cast<size_t>(parse_time(time_begin, time_fmt));
+        auto time_end_epoch = static_cast<size_t>(parse_time(time_end, time_fmt));
+
+        auto provider = std::unique_ptr<Derived>{
+            new Derived{init, time_begin_epoch, time_end_epoch}
+        };
+
+        return set_instance(init, std::move(provider));
+    }
+
   protected:
 
     // TODO: It may make more sense to have time_begin_seconds and time_end_seconds coalesced into

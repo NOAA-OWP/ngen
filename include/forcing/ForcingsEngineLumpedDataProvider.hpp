@@ -35,12 +35,14 @@ struct ForcingsEngineLumpedDataProvider
      */
     std::size_t variable_index(const std::string& variable) noexcept;
 
-    static ForcingsEngineDataProvider* lumped_instance(
+    static ForcingsEngineDataProvider* make_lumped_instance(
         const std::string& init,
         const std::string& time_start,
         const std::string& time_end,
         const std::string& time_fmt = default_time_format
-    );
+    ) {
+        return make_instance<ForcingsEngineLumpedDataProvider>(init, time_start, time_end, time_fmt);
+    }
 
   private:
     ForcingsEngineLumpedDataProvider(

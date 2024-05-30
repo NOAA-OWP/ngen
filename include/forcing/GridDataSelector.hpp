@@ -25,6 +25,8 @@ using box_t = boost::geometry::model::box<geojson::coordinate_t>;
 
 struct BoundingBox
 {
+    BoundingBox() = default;
+
     BoundingBox(box_t box)
       : box_(std::move(box))
     {}
