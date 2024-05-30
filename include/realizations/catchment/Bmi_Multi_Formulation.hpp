@@ -42,21 +42,6 @@ namespace realization {
 
         virtual ~Bmi_Multi_Formulation() {};
 
-        void finalize() override {
-            /*
-            // No need to call the contained modules' finalize()
-            // methods, since they all point to `this` as their
-            // forcing provider. This choice may need to be revisited
-            // if finalize() starts gaining other responsibilities.
-
-            for (auto& mod : modules) {
-                mod->HY_CatchmentRealization::finalize();
-            }
-            */
-
-            this->HY_CatchmentRealization::finalize();
-        }
-
         /**
          * Convert a time value from the model to an epoch time in seconds.
          *
