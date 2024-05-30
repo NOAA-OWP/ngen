@@ -289,10 +289,6 @@ namespace realization {
             return bmi_model;
         }
 
-        const std::string& Bmi_Module_Formulation::get_forcing_file_path() const {
-            return forcing_file_path;
-        }
-
         const time_t& Bmi_Module_Formulation::get_bmi_model_start_time_forcing_offset_s() {
             return bmi_model_start_time_forcing_offset_s;
         }
@@ -305,15 +301,18 @@ namespace realization {
             set_bmi_init_config(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG).as_string());
             set_bmi_main_output_var(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR).as_string());
             set_model_type_name(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE).as_string());
-            set_bmi_using_forcing_file(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS).as_boolean());
 
             // Then optional ...
 
-            // Note that this must be present if bmi_using_forcing_file is true
-            if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE) != properties.end())
-                set_forcing_file_path(properties.at(BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE).as_string());
-            else if (is_bmi_using_forcing_file())
-                throw std::runtime_error("Can't create BMI formulation: using_forcing_file true but no file path set");
+            auto uses_forcings_it = properties.find(BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS);
+            if (uses_forcings_it != properties.end() && uses_forcings_it->second.as_boolean()) {
+                throw std::runtime_error("The '" BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS "' parameter was removed and cannot be set");
+            }
+
+            auto forcing_file_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE);
+            if (forcing_file_it != properties.end() && forcing_file_it->second.as_string() != "") {
+                throw std::runtime_error("The '" BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE "' parameter was removed and cannot be set " + forcing_file_it->second.as_string());
+            }
 
             if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END) != properties.end()) {
                 set_allow_model_exceed_end_time(
@@ -556,10 +555,6 @@ namespace realization {
             return bmi_model_time_step_fixed;
         }
 
-        bool Bmi_Module_Formulation::is_bmi_using_forcing_file() const {
-            return bmi_using_forcing_file;
-        }
-
         bool Bmi_Module_Formulation::is_model_initialized() {
             return model_initialized;
         }
@@ -581,14 +576,6 @@ namespace realization {
 
         void Bmi_Module_Formulation::set_bmi_model_time_step_fixed(bool is_fix_time_step) {
             bmi_model_time_step_fixed = is_fix_time_step;
-        }
-
-        void Bmi_Module_Formulation::set_bmi_using_forcing_file(bool uses_forcing_file) {
-            bmi_using_forcing_file = uses_forcing_file;
-        }
-
-        void Bmi_Module_Formulation::set_forcing_file_path(const std::string &forcing_path) {
-            forcing_file_path = forcing_path;
         }
 
         void Bmi_Module_Formulation::set_model_initialized(bool is_initialized) {

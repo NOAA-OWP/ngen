@@ -100,19 +100,11 @@ protected:
         return formulation.get_bmi_model_start_time_forcing_offset_s();
     }
 
-    static std::string get_friend_forcing_file_path(const Bmi_Multi_Formulation& formulation) {
-        return formulation.get_forcing_file_path();
-    }
-
     /*
     static time_t get_friend_forcing_start_time(Bmi_Multi_Formulation& formulation) {
         return formulation.forcing->get_forcing_output_time_begin("");
     }
     */
-
-    static bool get_friend_is_bmi_using_forcing_file(const Bmi_Multi_Formulation& formulation) {
-        return formulation.is_bmi_using_forcing_file();
-    }
 
     static std::string get_friend_nested_module_model_type_name(Bmi_Multi_Formulation& formulation,
                                                                 const int nested_index) {
@@ -514,7 +506,6 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_0_a) {
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 0), nested_module_main_output_variables[ex_index][0]);
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 1), nested_module_main_output_variables[ex_index][1]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
 /** Test to make sure the model config from example 0 initializes no deferred providers. */
@@ -539,7 +530,6 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_1_a) {
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 0), nested_module_main_output_variables[ex_index][0]);
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 1), nested_module_main_output_variables[ex_index][1]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
 /** Test to make sure the model config from example 1 initializes no deferred providers. */
@@ -571,7 +561,6 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_a) {
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 0), nested_module_main_output_variables[ex_index][0]);
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 1), nested_module_main_output_variables[ex_index][1]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
 /** Test to make sure the model config from example 3 initializes expected number of deferred providers. */

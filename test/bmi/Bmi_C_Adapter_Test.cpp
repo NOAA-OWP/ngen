@@ -55,7 +55,6 @@ protected:
 
     std::string config_file_name_0;
     std::string lib_file_name_0;
-    std::string forcing_file_name_0;
     std::string bmi_module_type_name_0;
     std::unique_ptr<Bmi_C_Adapter> adapter;
 
@@ -81,9 +80,6 @@ void Bmi_C_Adapter_Test::SetUp() {
     std::string config_basename_0 = "test_bmi_c_config_0.txt";
     config_file_name_0 = file_search(config_path_options, config_basename_0);
 
-    std::vector<std::string> forcing_dir_opts = {"./data/forcing/", "../data/forcing/", "../../data/forcing/"};
-    forcing_file_name_0 = file_search(forcing_dir_opts, "cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv");
-
     std::vector<std::string> lib_dir_opts = {
             "./extern/test_bmi_c/cmake_build/",
             "../extern/test_bmi_c/cmake_build/",
@@ -92,7 +88,7 @@ void Bmi_C_Adapter_Test::SetUp() {
     lib_file_name_0 = file_search(lib_dir_opts, BMI_TEST_C_LOCAL_LIB_NAME);
     bmi_module_type_name_0 = "test_bmi_c";
     adapter = std::make_unique<Bmi_C_Adapter>(bmi_module_type_name_0, lib_file_name_0, config_file_name_0, 
-                                              forcing_file_name_0, false, true, REGISTRATION_FUNC,
+                                              false, true, REGISTRATION_FUNC,
                                               utils::StreamHandler());
 }
 

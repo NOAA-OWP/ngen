@@ -308,8 +308,6 @@ namespace realization {
          */
         std::shared_ptr<models::bmi::Bmi_Adapter> get_bmi_model();
 
-        const std::string &get_forcing_file_path() const override;
-
         const time_t &get_bmi_model_start_time_forcing_offset_s() override;
 
         /**
@@ -346,13 +344,6 @@ namespace realization {
         bool is_bmi_model_time_step_fixed() override;
 
         /**
-         * Whether the backing model uses/reads the forcing file directly for getting input data.
-         *
-         * @return Whether the backing model uses/reads the forcing file directly for getting input data.
-         */
-        bool is_bmi_using_forcing_file() const override;
-
-        /**
          * Test whether the backing model object has been initialize using the BMI standard ``Initialize`` function.
          *
          * @return Whether backing model object has been initialize using the BMI standard ``Initialize`` function.
@@ -373,15 +364,6 @@ namespace realization {
         void set_bmi_model_start_time_forcing_offset_s(const time_t &offset_s);
 
         void set_bmi_model_time_step_fixed(bool is_fix_time_step);
-
-        /**
-         * Set whether the backing model uses/reads the forcing file directly for getting input data.
-         *
-         * @param uses_forcing_file Whether the backing model uses/reads forcing file directly for getting input data.
-         */
-        void set_bmi_using_forcing_file(bool uses_forcing_file);
-
-        void set_forcing_file_path(const std::string &forcing_path);
 
         /**
          * Set whether the backing model object has been initialize using the BMI standard ``Initialize`` function.
@@ -455,12 +437,10 @@ namespace realization {
         time_t bmi_model_start_time_forcing_offset_s;
         /** A configured mapping of BMI model variable names to standard names for use inside the framework. */
         std::map<std::string, std::string> bmi_var_names_map;
-        /** Whether the backing model uses/reads the forcing file directly for getting input data. */
-        bool bmi_using_forcing_file;
-        std::string forcing_file_path;
         bool model_initialized = false;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
+                BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS
                 BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,
                 BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
@@ -474,7 +454,6 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
                 BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR,
                 BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE,
-                BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS
         };
 
     };
@@ -498,9 +477,7 @@ namespace realization {
         // Required parameters first
         set_bmi_init_config(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG).as_string());
         set_bmi_main_output_var(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR).as_string());
-        set_forcing_file_path(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__FORCING_FILE).as_string());
         set_model_type_name(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE).as_string());
-        set_bmi_using_forcing_file(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS).as_boolean());
 
         // Then optional ...
 

@@ -129,8 +129,6 @@ namespace realization {
          */
         virtual const double get_model_end_time() = 0;
 
-        virtual const std::string &get_forcing_file_path() const = 0;
-
         /**
          * Get the name of the specific type of the backing model object.
          *
@@ -188,13 +186,6 @@ namespace realization {
         virtual bool is_bmi_model_time_step_fixed() = 0;
 
         virtual bool is_bmi_output_variable(const std::string &var_name) = 0;
-
-        /**
-         * Whether the backing model uses/reads the forcing file directly for getting input data.
-         *
-         * @return Whether the backing model uses/reads the forcing file directly for getting input data.
-         */
-        virtual bool is_bmi_using_forcing_file() const = 0;
 
         /**
          * Test whether the backing model has been initialize using the BMI standard ``Initialize`` function.

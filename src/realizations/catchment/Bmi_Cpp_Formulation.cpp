@@ -37,7 +37,6 @@ std::shared_ptr<Bmi_Adapter> Bmi_Cpp_Formulation::construct_model(const geojson:
                     get_model_type_name(),
                     lib_file,
                     get_bmi_init_config(),
-                    (is_bmi_using_forcing_file() ? get_forcing_file_path() : ""),
                     get_allow_model_exceed_end_time(),
                     is_bmi_model_time_step_fixed(),
                     model_create_fname,

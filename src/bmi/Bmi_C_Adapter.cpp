@@ -10,17 +10,15 @@ using namespace models::bmi;
  *
  * @param type_name The name of the backing BMI module/model type.
  * @param library_file_path The string path to the shared library file for external module.
- * @param forcing_file_path The string path for the forcing file the module should use, empty if it does not
- *                          use one directly.
  * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
  * @param has_fixed_time_step Whether the model has a fixed time step size.
  * @param registration_func The name for the @see bmi_registration_function.
  * @param output The output stream handler.
  */
-Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string forcing_file_path,
+Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_file_path,
                              bool allow_exceed_end, bool has_fixed_time_step,
                              const std::string& registration_func, utils::StreamHandler output)
-        : Bmi_C_Adapter(type_name, std::move(library_file_path), "", std::move(forcing_file_path),
+        : Bmi_C_Adapter(type_name, std::move(library_file_path), "",
                         allow_exceed_end, has_fixed_time_step, registration_func, output) { }
 
 /**
@@ -29,18 +27,16 @@ Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_f
  * @param type_name The name of the backing BMI module/model type.
  * @param library_file_path The string path to the shared library file for external module.
  * @param bmi_init_config The string path to the BMI initialization config file for the module.
- * @param forcing_file_path The string path for the forcing file the module should use, empty if it does not
- *                          use one directly.
  * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
  * @param has_fixed_time_step Whether the model has a fixed time step size.
  * @param registration_func The name for the @see bmi_registration_function.
  * @param output The output stream handler.
  */
 Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
-                             std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
+                             bool allow_exceed_end, bool has_fixed_time_step,
                              std::string registration_func, utils::StreamHandler output)
         : Bmi_C_Adapter(type_name, std::move(library_file_path), std::move(bmi_init_config),
-                        std::move(forcing_file_path), allow_exceed_end, has_fixed_time_step,
+                        allow_exceed_end, has_fixed_time_step,
                         std::move(registration_func), output, true) { }
 
 /**
@@ -57,8 +53,6 @@ Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_f
  * @param type_name The name of the backing BMI module/model type.
  * @param library_file_path The string path to the shared library file for external module.
  * @param bmi_init_config The string path to the BMI initialization config file for the module.
- * @param forcing_file_path The string path for the forcing file the module should use, empty if it does not
- *                          use one directly.
  * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
  * @param has_fixed_time_step Whether the model has a fixed time step size.
  * @param registration_func The name for the @see bmi_registration_function.
@@ -66,9 +60,9 @@ Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_f
  * @param do_initialization Whether initialization should be performed during construction or deferred.
  */
 Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
-                             std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
+                             bool allow_exceed_end, bool has_fixed_time_step,
                              std::string registration_func, utils::StreamHandler output, bool do_initialization)
-                             : AbstractCLibBmiAdapter(type_name, library_file_path, std::move(bmi_init_config), std::move(forcing_file_path), allow_exceed_end,
+                             : AbstractCLibBmiAdapter(type_name, library_file_path, std::move(bmi_init_config), allow_exceed_end,
                              has_fixed_time_step, registration_func, output)
 {
     if (do_initialization) {
@@ -115,9 +109,7 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &adapter) : model_name(adapter.model_
                                                                adapter.bmi_model_has_fixed_time_step),
                                                        bmi_model_time_convert_factor(
                                                                adapter.bmi_model_time_convert_factor),
-                                                       bmi_model_uses_forcing_file(adapter.bmi_model_uses_forcing_file),
                                                        bmi_registration_function(adapter.bmi_registration_function),
-                                                       forcing_file_path(adapter.forcing_file_path),
                                                        init_exception_msg(adapter.init_exception_msg),
                                                        input_var_names(adapter.input_var_names),
                                                        model_initialized(adapter.model_initialized),
