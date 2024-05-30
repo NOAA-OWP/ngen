@@ -14,11 +14,14 @@ namespace realization {
     class Catchment_Formulation : public Formulation, public HY_CatchmentArea {
         public:
             Catchment_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream)
-                : Formulation(id), HY_CatchmentArea(forcing, output_stream) { 
+                : Formulation(id)
+                , HY_CatchmentArea(output_stream)
+                , forcing(forcing)
+        {
                     // Assume the catchment ID is equal to or embedded in the formulation `id`
                     size_t idx = id.find(".");
                     set_catchment_id( idx == std::string::npos ? id : id.substr(0, idx) );
-                };
+        }
 
             Catchment_Formulation(std::string id) : Formulation(id){
                     // Assume the catchment ID is equal to or embedded in the formulation `id`
@@ -113,6 +116,17 @@ namespace realization {
             void create_formulation(geojson::PropertyMap properties) override = 0;
             virtual ~Catchment_Formulation(){};
 
+        /**
+         * Release resources of the given forcing provider
+         */
+        void finalize()
+        {
+            if (forcing) {
+                forcing->finalize();
+                forcing = nullptr;
+            }
+        }
+
     protected:
         std::string get_catchment_id() override {
             return this->cat_id;
@@ -121,6 +135,8 @@ namespace realization {
         void set_catchment_id(std::string cat_id) override {
             this->cat_id = cat_id;
         }
+
+        std::shared_ptr<data_access::GenericDataProvider> forcing;
 
     private:
         std::string cat_id;
