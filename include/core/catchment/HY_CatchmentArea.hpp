@@ -15,7 +15,7 @@ class HY_CatchmentArea : public HY_CatchmentRealization, public GM_Object
     public:
 
     HY_CatchmentArea();
-    HY_CatchmentArea(std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream);
+    HY_CatchmentArea(utils::StreamHandler output_stream);
     //HY_CatchmentArea(forcing_params forcing_config, utils::StreamHandler output_stream); //TODO not sure I like this pattern
     void set_output_stream(std::string file_path){output = utils::FileStreamHandler(file_path.c_str());}
     void write_output(std::string out){ output<<out; }

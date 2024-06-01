@@ -31,6 +31,13 @@ namespace data_access
 
         virtual ~DataProvider() = default;
 
+        /**
+         * Release any resources that should not be held as the run is shutting down
+         *
+         * In particular, this should be called before MPI_Finalize()
+         */
+        virtual void finalize() { }
+
         /** Return the variables that are accessable by this data provider */
 
         virtual boost::span<const std::string> get_available_variable_names() = 0;

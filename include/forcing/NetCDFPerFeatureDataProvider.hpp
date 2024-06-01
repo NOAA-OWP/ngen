@@ -69,6 +69,8 @@ namespace data_access
         // for every file that uses this class
         ~NetCDFPerFeatureDataProvider();
 
+        void finalize() override;
+
         /** Return the variables that are accessable by this data provider */
         boost::span<const std::string> get_available_variable_names() override;
 

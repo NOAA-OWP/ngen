@@ -45,6 +45,14 @@ namespace data_access {
             provider_to_move.wrapped_provider = nullptr;
         }
 
+        void finalize() override {
+            /*
+              Do nothing here. This relies on an assumption that the
+              owner of `wrapped_provider` has or will call finalize()
+              on it.
+            */
+        }
+
         /**
          * @brief Get the available variable names object
          * 
