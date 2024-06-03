@@ -49,7 +49,7 @@ var classgeojson_1_1_point_feature =
     [ "set", "classgeojson_1_1_point_feature.html#a817b67e59c22efa08d99d8148a6854af", null ],
     [ "set", "classgeojson_1_1_point_feature.html#acc8d00c3e71a16f5bf350169b161c019", null ],
     [ "set_id", "classgeojson_1_1_point_feature.html#aad1d7ad22e5f98d384d1654daa2f4796", null ],
-    [ "visit", "classgeojson_1_1_point_feature.html#aff267fca7b513036a662225695538ba1", null ],
+    [ "visit", "classgeojson_1_1_point_feature.html#afca2f45a98cce104be4488404f3a58d4", null ],
     [ "bounding_box", "classgeojson_1_1_point_feature.html#a77d7f52df0473ed087c9a72a7c66fce9", null ],
     [ "destination", "classgeojson_1_1_point_feature.html#ae3da4d699f37811a450985f094b45bf8", null ],
     [ "foreign_members", "classgeojson_1_1_point_feature.html#a876adde9550a49d9976878efa777c6b4", null ],

@@ -21,7 +21,7 @@ var searchData=
   ['add_5fnexus_18',['add_nexus',['../class_network___test.html#a01ae65a6bc8bf5e064bcbe1083b5ec36',1,'Network_Test']]],
   ['add_5forigination_5ffeature_19',['add_origination_feature',['../classgeojson_1_1_feature_base.html#a29b6852ed6a7359d1e844de4faa9f170',1,'geojson::FeatureBase']]],
   ['add_5fto_5fsummed_5fnexus_20',['add_to_summed_nexus',['../structadd__to__summed__nexus.html',1,'']]],
-  ['add_5fupstream_5fflow_21',['add_upstream_flow',['../class_h_y___hydro_nexus.html#a25198c16baaea6478cd7b83de78e6fea',1,'HY_HydroNexus::add_upstream_flow()'],['../class_h_y___point_hydro_nexus.html#a3582f14abc7e68e9aa35a01a70609ac9',1,'HY_PointHydroNexus::add_upstream_flow()']]],
+  ['add_5fupstream_5fflow_21',['add_upstream_flow',['../class_h_y___hydro_nexus.html#a25198c16baaea6478cd7b83de78e6fea',1,'HY_HydroNexus::add_upstream_flow()'],['../class_h_y___point_hydro_nexus.html#aa0ff1744cae31cdc7b321b268cb0559e',1,'HY_PointHydroNexus::add_upstream_flow()']]],
   ['add_5fvariable_22',['add_variable',['../classngen_1_1mdframe.html#a983002f0d17009e0329a00426795fc34',1,'ngen::mdframe']]],
   ['added_23',['Added',['../md__c_h_a_n_g_e_l_o_g.html#autotoc_md19',1,'']]],
   ['adding_20new_20subdirectories_24',['Adding New Subdirectories',['../md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md122',1,'']]],

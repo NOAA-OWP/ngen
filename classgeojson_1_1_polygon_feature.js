@@ -48,7 +48,7 @@ var classgeojson_1_1_polygon_feature =
     [ "set", "classgeojson_1_1_polygon_feature.html#a817b67e59c22efa08d99d8148a6854af", null ],
     [ "set", "classgeojson_1_1_polygon_feature.html#acc8d00c3e71a16f5bf350169b161c019", null ],
     [ "set_id", "classgeojson_1_1_polygon_feature.html#aad1d7ad22e5f98d384d1654daa2f4796", null ],
-    [ "visit", "classgeojson_1_1_polygon_feature.html#a18f3153350fa48aae42f3b302473e2c6", null ],
+    [ "visit", "classgeojson_1_1_polygon_feature.html#ab26dae7b6f76c24f0b64d4bb1bfdd19a", null ],
     [ "bounding_box", "classgeojson_1_1_polygon_feature.html#a77d7f52df0473ed087c9a72a7c66fce9", null ],
     [ "destination", "classgeojson_1_1_polygon_feature.html#ae3da4d699f37811a450985f094b45bf8", null ],
     [ "foreign_members", "classgeojson_1_1_polygon_feature.html#a876adde9550a49d9976878efa777c6b4", null ],

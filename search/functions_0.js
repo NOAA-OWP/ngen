@@ -10,7 +10,7 @@ var searchData=
   ['add_5fneighbor_5ffeature_7',['add_neighbor_feature',['../classgeojson_1_1_feature_base.html#adfb6ba4107e752620dcb9a04aeb4a158',1,'geojson::FeatureBase']]],
   ['add_5fnexus_8',['add_nexus',['../class_network___test.html#a01ae65a6bc8bf5e064bcbe1083b5ec36',1,'Network_Test']]],
   ['add_5forigination_5ffeature_9',['add_origination_feature',['../classgeojson_1_1_feature_base.html#a29b6852ed6a7359d1e844de4faa9f170',1,'geojson::FeatureBase']]],
-  ['add_5fupstream_5fflow_10',['add_upstream_flow',['../class_h_y___hydro_nexus.html#a25198c16baaea6478cd7b83de78e6fea',1,'HY_HydroNexus::add_upstream_flow()'],['../class_h_y___point_hydro_nexus.html#a3582f14abc7e68e9aa35a01a70609ac9',1,'HY_PointHydroNexus::add_upstream_flow()']]],
+  ['add_5fupstream_5fflow_10',['add_upstream_flow',['../class_h_y___hydro_nexus.html#a25198c16baaea6478cd7b83de78e6fea',1,'HY_HydroNexus::add_upstream_flow()'],['../class_h_y___point_hydro_nexus.html#aa0ff1744cae31cdc7b321b268cb0559e',1,'HY_PointHydroNexus::add_upstream_flow()']]],
   ['add_5fvariable_11',['add_variable',['../classngen_1_1mdframe.html#a983002f0d17009e0329a00426795fc34',1,'ngen::mdframe']]],
   ['advance_5ftimestep_12',['advance_timestep',['../class_simulation___time.html#a642130d5225e58078097a954aae2a236',1,'Simulation_Time']]],
   ['apply_13',['apply',['../structngen_1_1detail_1_1dimension_1_1hash.html#a313af7cb5f96ffebe84869b78c8ada28',1,'ngen::detail::dimension::hash::apply()'],['../structngen_1_1detail_1_1variable_1_1hash.html#a1058a05b54b14b858078ac173173d726',1,'ngen::detail::variable::hash::apply()']]],

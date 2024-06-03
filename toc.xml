@@ -495,7 +495,7 @@
           <topic label="ExternalIntegrationException" href="classexternal_1_1_external_integration_exception.html#aefb1e1b1a477f579a1b3b689d207ac61"/>
           <topic label="ExternalIntegrationException" href="classexternal_1_1_external_integration_exception.html#a78fc5aea0ff7853717b0360cfd0061ca"/>
           <topic label="ExternalIntegrationException" href="classexternal_1_1_external_integration_exception.html#a4dc956e29a512e3cc474007830065bba"/>
-          <topic label="what" href="classexternal_1_1_external_integration_exception.html#a49e83f3aa256042ce8b8ac9e62854b17"/>
+          <topic label="what" href="classexternal_1_1_external_integration_exception.html#abffd9acb0527cb33a9e56ca291401d64"/>
           <topic label="what_message" href="classexternal_1_1_external_integration_exception.html#ad44fbc91317bb26b9db07f929a6af14d"/>
         </topic>
       </topic>
@@ -565,7 +565,7 @@
           <topic label="set" href="classgeojson_1_1_collection_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_collection_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_collection_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_collection_feature.html#aded4a4a4758055de303019759b52be8d"/>
+          <topic label="visit" href="classgeojson_1_1_collection_feature.html#a73fbfffd228851000ceb117620a575c8"/>
           <topic label="bounding_box" href="classgeojson_1_1_collection_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_collection_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_collection_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -788,7 +788,7 @@
           <topic label="set" href="classgeojson_1_1_line_string_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_line_string_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_line_string_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_line_string_feature.html#ac4b88135f267923be6058b083f089402"/>
+          <topic label="visit" href="classgeojson_1_1_line_string_feature.html#a2bcfdd75a29a09b293ec577f16a1f6c1"/>
           <topic label="bounding_box" href="classgeojson_1_1_line_string_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_line_string_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_line_string_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -858,7 +858,7 @@
           <topic label="set" href="classgeojson_1_1_multi_line_string_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_multi_line_string_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_multi_line_string_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_multi_line_string_feature.html#aa1d54a7bafc2a729592e80fbf67d5a28"/>
+          <topic label="visit" href="classgeojson_1_1_multi_line_string_feature.html#a6092eeaf6cfe3f74c80ed6a91b1cb27b"/>
           <topic label="bounding_box" href="classgeojson_1_1_multi_line_string_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_multi_line_string_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_multi_line_string_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -920,7 +920,7 @@
           <topic label="set" href="classgeojson_1_1_multi_point_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_multi_point_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_multi_point_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_multi_point_feature.html#ac50824b5bfd8769715fb614840c0c66e"/>
+          <topic label="visit" href="classgeojson_1_1_multi_point_feature.html#ad7286b17288125a246d22b4ee78d447a"/>
           <topic label="bounding_box" href="classgeojson_1_1_multi_point_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_multi_point_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_multi_point_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -982,7 +982,7 @@
           <topic label="set" href="classgeojson_1_1_multi_polygon_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_multi_polygon_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_multi_polygon_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_multi_polygon_feature.html#a87d65a2ea3727c1cb4dc571b96c8bc45"/>
+          <topic label="visit" href="classgeojson_1_1_multi_polygon_feature.html#a695c6ac4879d1b47fecdaef5f672a218"/>
           <topic label="bounding_box" href="classgeojson_1_1_multi_polygon_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_multi_polygon_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_multi_polygon_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -1050,7 +1050,7 @@
           <topic label="set" href="classgeojson_1_1_point_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_point_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_point_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_point_feature.html#aff267fca7b513036a662225695538ba1"/>
+          <topic label="visit" href="classgeojson_1_1_point_feature.html#afca2f45a98cce104be4488404f3a58d4"/>
           <topic label="bounding_box" href="classgeojson_1_1_point_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_point_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_point_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -1111,7 +1111,7 @@
           <topic label="set" href="classgeojson_1_1_polygon_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_polygon_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_polygon_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_polygon_feature.html#a18f3153350fa48aae42f3b302473e2c6"/>
+          <topic label="visit" href="classgeojson_1_1_polygon_feature.html#ab26dae7b6f76c24f0b64d4bb1bfdd19a"/>
           <topic label="bounding_box" href="classgeojson_1_1_polygon_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_polygon_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_polygon_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -1644,7 +1644,7 @@
             <topic label="State_Exception" href="classmodels_1_1external_1_1_state___exception.html#aaab81e9e73e09d2ab8867b80c85231bc"/>
             <topic label="State_Exception" href="classmodels_1_1external_1_1_state___exception.html#a0cc356472c4875dee1860a906f3ce74e"/>
             <topic label="State_Exception" href="classmodels_1_1external_1_1_state___exception.html#a87ad1994408f7ea4b982c766d29dcfce"/>
-            <topic label="what" href="classmodels_1_1external_1_1_state___exception.html#a7deb1601e1636d95171575ba62337fb9"/>
+            <topic label="what" href="classmodels_1_1external_1_1_state___exception.html#a499127c21c967df24bff1a8fc0a8c450"/>
             <topic label="what_message" href="classmodels_1_1external_1_1_state___exception.html#aea796d64857b68a17e9d4636725558dd"/>
           </topic>
         </topic>
@@ -2610,7 +2610,7 @@
           <topic label="ConfigurationException" href="classrealization_1_1_configuration_exception.html#a4b570439de1bfb04a11ef5a08e75b05e"/>
           <topic label="ConfigurationException" href="classrealization_1_1_configuration_exception.html#a0088f4fff9b545d3ed712f8b6f8a3389"/>
           <topic label="ConfigurationException" href="classrealization_1_1_configuration_exception.html#ac6eaa536d9cae6b7cde20542ddef11d8"/>
-          <topic label="what" href="classrealization_1_1_configuration_exception.html#a50eb4bdbf77dbf1120c6a237fd2e9e1e"/>
+          <topic label="what" href="classrealization_1_1_configuration_exception.html#a4f84f38dd3b4e815958b64b615155410"/>
           <topic label="what_message" href="classrealization_1_1_configuration_exception.html#a27bcbee434a3d4e75c793c71fd9df74a"/>
         </topic>
         <topic label="Formulation" href="classrealization_1_1_formulation.html">
@@ -2866,7 +2866,7 @@
           <topic label="ExternalIntegrationException" href="classexternal_1_1_external_integration_exception.html#aefb1e1b1a477f579a1b3b689d207ac61"/>
           <topic label="ExternalIntegrationException" href="classexternal_1_1_external_integration_exception.html#a78fc5aea0ff7853717b0360cfd0061ca"/>
           <topic label="ExternalIntegrationException" href="classexternal_1_1_external_integration_exception.html#a4dc956e29a512e3cc474007830065bba"/>
-          <topic label="what" href="classexternal_1_1_external_integration_exception.html#a49e83f3aa256042ce8b8ac9e62854b17"/>
+          <topic label="what" href="classexternal_1_1_external_integration_exception.html#abffd9acb0527cb33a9e56ca291401d64"/>
           <topic label="what_message" href="classexternal_1_1_external_integration_exception.html#ad44fbc91317bb26b9db07f929a6af14d"/>
         </topic>
       </topic>
@@ -2936,7 +2936,7 @@
           <topic label="set" href="classgeojson_1_1_collection_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_collection_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_collection_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_collection_feature.html#aded4a4a4758055de303019759b52be8d"/>
+          <topic label="visit" href="classgeojson_1_1_collection_feature.html#a73fbfffd228851000ceb117620a575c8"/>
           <topic label="bounding_box" href="classgeojson_1_1_collection_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_collection_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_collection_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -3159,7 +3159,7 @@
           <topic label="set" href="classgeojson_1_1_line_string_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_line_string_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_line_string_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_line_string_feature.html#ac4b88135f267923be6058b083f089402"/>
+          <topic label="visit" href="classgeojson_1_1_line_string_feature.html#a2bcfdd75a29a09b293ec577f16a1f6c1"/>
           <topic label="bounding_box" href="classgeojson_1_1_line_string_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_line_string_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_line_string_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -3229,7 +3229,7 @@
           <topic label="set" href="classgeojson_1_1_multi_line_string_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_multi_line_string_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_multi_line_string_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_multi_line_string_feature.html#aa1d54a7bafc2a729592e80fbf67d5a28"/>
+          <topic label="visit" href="classgeojson_1_1_multi_line_string_feature.html#a6092eeaf6cfe3f74c80ed6a91b1cb27b"/>
           <topic label="bounding_box" href="classgeojson_1_1_multi_line_string_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_multi_line_string_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_multi_line_string_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -3291,7 +3291,7 @@
           <topic label="set" href="classgeojson_1_1_multi_point_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_multi_point_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_multi_point_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_multi_point_feature.html#ac50824b5bfd8769715fb614840c0c66e"/>
+          <topic label="visit" href="classgeojson_1_1_multi_point_feature.html#ad7286b17288125a246d22b4ee78d447a"/>
           <topic label="bounding_box" href="classgeojson_1_1_multi_point_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_multi_point_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_multi_point_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -3353,7 +3353,7 @@
           <topic label="set" href="classgeojson_1_1_multi_polygon_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_multi_polygon_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_multi_polygon_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_multi_polygon_feature.html#a87d65a2ea3727c1cb4dc571b96c8bc45"/>
+          <topic label="visit" href="classgeojson_1_1_multi_polygon_feature.html#a695c6ac4879d1b47fecdaef5f672a218"/>
           <topic label="bounding_box" href="classgeojson_1_1_multi_polygon_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_multi_polygon_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_multi_polygon_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -3421,7 +3421,7 @@
           <topic label="set" href="classgeojson_1_1_point_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_point_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_point_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_point_feature.html#aff267fca7b513036a662225695538ba1"/>
+          <topic label="visit" href="classgeojson_1_1_point_feature.html#afca2f45a98cce104be4488404f3a58d4"/>
           <topic label="bounding_box" href="classgeojson_1_1_point_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_point_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_point_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -3482,7 +3482,7 @@
           <topic label="set" href="classgeojson_1_1_polygon_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
           <topic label="set" href="classgeojson_1_1_polygon_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
           <topic label="set_id" href="classgeojson_1_1_polygon_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
-          <topic label="visit" href="classgeojson_1_1_polygon_feature.html#a18f3153350fa48aae42f3b302473e2c6"/>
+          <topic label="visit" href="classgeojson_1_1_polygon_feature.html#ab26dae7b6f76c24f0b64d4bb1bfdd19a"/>
           <topic label="bounding_box" href="classgeojson_1_1_polygon_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
           <topic label="destination" href="classgeojson_1_1_polygon_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
           <topic label="foreign_members" href="classgeojson_1_1_polygon_feature.html#a876adde9550a49d9976878efa777c6b4"/>
@@ -3891,7 +3891,7 @@
             <topic label="State_Exception" href="classmodels_1_1external_1_1_state___exception.html#aaab81e9e73e09d2ab8867b80c85231bc"/>
             <topic label="State_Exception" href="classmodels_1_1external_1_1_state___exception.html#a0cc356472c4875dee1860a906f3ce74e"/>
             <topic label="State_Exception" href="classmodels_1_1external_1_1_state___exception.html#a87ad1994408f7ea4b982c766d29dcfce"/>
-            <topic label="what" href="classmodels_1_1external_1_1_state___exception.html#a7deb1601e1636d95171575ba62337fb9"/>
+            <topic label="what" href="classmodels_1_1external_1_1_state___exception.html#a499127c21c967df24bff1a8fc0a8c450"/>
             <topic label="what_message" href="classmodels_1_1external_1_1_state___exception.html#aea796d64857b68a17e9d4636725558dd"/>
           </topic>
         </topic>
@@ -4816,7 +4816,7 @@
           <topic label="ConfigurationException" href="classrealization_1_1_configuration_exception.html#a4b570439de1bfb04a11ef5a08e75b05e"/>
           <topic label="ConfigurationException" href="classrealization_1_1_configuration_exception.html#a0088f4fff9b545d3ed712f8b6f8a3389"/>
           <topic label="ConfigurationException" href="classrealization_1_1_configuration_exception.html#ac6eaa536d9cae6b7cde20542ddef11d8"/>
-          <topic label="what" href="classrealization_1_1_configuration_exception.html#a50eb4bdbf77dbf1120c6a237fd2e9e1e"/>
+          <topic label="what" href="classrealization_1_1_configuration_exception.html#a4f84f38dd3b4e815958b64b615155410"/>
           <topic label="what_message" href="classrealization_1_1_configuration_exception.html#a27bcbee434a3d4e75c793c71fd9df74a"/>
         </topic>
         <topic label="Formulation" href="classrealization_1_1_formulation.html">
@@ -4902,7 +4902,7 @@
         </topic>
       </topic>
       <topic label="add_to_summed_nexus" href="structadd__to__summed__nexus.html">
-        <topic label="what" href="structadd__to__summed__nexus.html#afe08be634aa055fa72e4b7e1454aa8e1"/>
+        <topic label="what" href="structadd__to__summed__nexus.html#aab7a2b449e5b6b67ae4000a001f18645"/>
       </topic>
       <topic label="AORC_data" href="struct_a_o_r_c__data.html">
         <topic label="APCP_surface_kg_per_meters_squared" href="struct_a_o_r_c__data.html#afe55907c1902e4dd8c47655ab4d1ba7c"/>
@@ -4994,7 +4994,7 @@
         <topic label="z" href="struct_cell.html#a2974a860766aec3e1032d81c2667cbeb"/>
       </topic>
       <topic label="completed_time_step" href="structcompleted__time__step.html">
-        <topic label="what" href="structcompleted__time__step.html#aaf647dee637eab397abc27b17a7c8c55"/>
+        <topic label="what" href="structcompleted__time__step.html#a420acf7da8196c68ef9ebcf358a3fd41"/>
       </topic>
       <topic label="CsvPerFeatureForcingProvider" href="class_csv_per_feature_forcing_provider.html">
         <topic label="time_type" href="class_csv_per_feature_forcing_provider.html#aa40e6c7ba39854c2a69c2656376c95f0"/>
@@ -5304,14 +5304,14 @@
         <topic label="HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html#a511775a49116a52db653731866f98b54"/>
         <topic label="HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html#a94216b672307de3a748daa0cbbdd8cbe"/>
         <topic label="~HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html#a4a61dc18ee9c6004925880e43dc23c3c"/>
-        <topic label="add_upstream_flow" href="class_h_y___point_hydro_nexus.html#a3582f14abc7e68e9aa35a01a70609ac9"/>
+        <topic label="add_upstream_flow" href="class_h_y___point_hydro_nexus.html#aa0ff1744cae31cdc7b321b268cb0559e"/>
         <topic label="get_contributing_catchments" href="class_h_y___point_hydro_nexus.html#ad53f7029ca66d92c353430671166fc8b"/>
-        <topic label="get_downstream_flow" href="class_h_y___point_hydro_nexus.html#afa2d0caa7e461973609494edd195023a"/>
-        <topic label="get_flow_units" href="class_h_y___point_hydro_nexus.html#a162c1183486d8f0a25c58e553dbd5b4f"/>
+        <topic label="get_downstream_flow" href="class_h_y___point_hydro_nexus.html#a7b53a517431a8650460629c8bfd495a3"/>
+        <topic label="get_flow_units" href="class_h_y___point_hydro_nexus.html#aca6acbf4da06c35b49440ec8f82446f8"/>
         <topic label="get_id" href="class_h_y___point_hydro_nexus.html#a910b13cb52202cc5be3aa8ae9bd75e60"/>
         <topic label="get_receiving_catchments" href="class_h_y___point_hydro_nexus.html#afcd4c4b517599cb265da2cfeb2610c9d"/>
-        <topic label="inspect_downstream_requests" href="class_h_y___point_hydro_nexus.html#a00095d1f1fbf37f9a76566a15d4b3b14"/>
-        <topic label="inspect_upstream_flows" href="class_h_y___point_hydro_nexus.html#a98aa3249e4ebf30abad05c1ee1385f19"/>
+        <topic label="inspect_downstream_requests" href="class_h_y___point_hydro_nexus.html#a2f1b019a2c6ac675c634b2dac29dfc6a"/>
+        <topic label="inspect_upstream_flows" href="class_h_y___point_hydro_nexus.html#a53f4ff06a7930ca78ce38a07b1b083b8"/>
         <topic label="set_mintime" href="class_h_y___point_hydro_nexus.html#acf43bf521f2c7d4e9175cec3dc8eff2c"/>
         <topic label="completed" href="class_h_y___point_hydro_nexus.html#a7a1b78a8c1bbbdcf9670b8eb14d2d53e"/>
         <topic label="contributing_catchments" href="class_h_y___point_hydro_nexus.html#ac9f670d94708c8987cff99e8bae94728"/>
@@ -5326,10 +5326,10 @@
         <topic label="upstream_flows" href="class_h_y___point_hydro_nexus.html#a3540aaa4a8d10ce03e5f8a6a7cdd8a2d"/>
       </topic>
       <topic label="invalid_downstream_request" href="structinvalid__downstream__request.html">
-        <topic label="what" href="structinvalid__downstream__request.html#a132dd5df7d9127fd48be878f5deabc99"/>
+        <topic label="what" href="structinvalid__downstream__request.html#a533914440d6899d74964e3c21fa19082"/>
       </topic>
       <topic label="invalid_time_step" href="structinvalid__time__step.html">
-        <topic label="what" href="structinvalid__time__step.html#a8bb7ec732ab29f1c8d3f3b1866d1a05d"/>
+        <topic label="what" href="structinvalid__time__step.html#ac3b9074b7890f9537f7dffe1c94fc11a"/>
       </topic>
       <topic label="JSONGeometry_Test" href="class_j_s_o_n_geometry___test.html">
         <topic label="JSONGeometry_Test" href="class_j_s_o_n_geometry___test.html#a2e1ef71129004f45c51e989305522a3b"/>
@@ -5385,7 +5385,7 @@
         <topic label="add_catchment" href="class_network___test2.html#a88d1baab2d7da420517593cc636db429"/>
         <topic label="add_nexus" href="class_network___test2.html#a01ae65a6bc8bf5e064bcbe1083b5ec36"/>
         <topic label="get_fabric" href="class_network___test2.html#a43ffd08d5c3ac6807b20a801b9ef4ea6"/>
-        <topic label="SetUp" href="class_network___test2.html#a3b668af1834d074fe98389a7a98d48e3"/>
+        <topic label="SetUp" href="class_network___test2.html#a325baaef1f1cc4a32dce76542ab3c089"/>
         <topic label="catchments" href="class_network___test2.html#a8fffb927a17d6c6b6a3730aaf0bb8e36"/>
         <topic label="link_key" href="class_network___test2.html#ae02d327028f826a5e29bff896ec30232"/>
         <topic label="n" href="class_network___test2.html#a470fa2e04fd1239f0932f52c7e6439d5"/>
@@ -5450,7 +5450,7 @@
         <topic label="tree" href="class_partitions___parser.html#aa8a46b738112a567324898164372cce9"/>
       </topic>
       <topic label="request_from_empty_nexus" href="structrequest__from__empty__nexus.html">
-        <topic label="what" href="structrequest__from__empty__nexus.html#abca7c44aaf8b4582bc5067d53930011d"/>
+        <topic label="what" href="structrequest__from__empty__nexus.html#a5e3bb421f6d94856d4ee53a390a1ba6c"/>
       </topic>
       <topic label="ReservoirKernelTest" href="class_reservoir_kernel_test.html">
         <topic label="SetUp" href="class_reservoir_kernel_test.html#ad0204b493db40f034fc41e054c96f425"/>
@@ -5585,13 +5585,13 @@
       </topic>
       <topic label="Visitor" href="class_visitor.html">
         <topic label="get" href="class_visitor.html#a4f075bc5c429e201ee31d7f1161d6c57"/>
-        <topic label="visit" href="class_visitor.html#ad7bc9770abc999696cbeb804db217a17"/>
-        <topic label="visit" href="class_visitor.html#a4e7649bb28d212ebda972a70bc09c962"/>
-        <topic label="visit" href="class_visitor.html#a851f9484781d40ce0d5f8b481de8cde5"/>
-        <topic label="visit" href="class_visitor.html#a170de71af8d7dc2559d137d7617b6756"/>
-        <topic label="visit" href="class_visitor.html#a9256543857db80f057e19f15408cb5a0"/>
-        <topic label="visit" href="class_visitor.html#a3191ab0bb12d2c1774c13da30257bc30"/>
-        <topic label="visit" href="class_visitor.html#a5ae031f532b8857a9a18142e45f618a0"/>
+        <topic label="visit" href="class_visitor.html#a17082dc5632ed40293f3b589348fb426"/>
+        <topic label="visit" href="class_visitor.html#ae06789445c0a1d5ba94d4dcfdcac7636"/>
+        <topic label="visit" href="class_visitor.html#a47acac126f18a81d0a673c50b970e8e2"/>
+        <topic label="visit" href="class_visitor.html#a2268e4f625d9ace11b788d3cfd82af73"/>
+        <topic label="visit" href="class_visitor.html#aa66fcfb48a820890361bbd02a49a5d99"/>
+        <topic label="visit" href="class_visitor.html#a2e9a7089d5714c299733c3a4483e495f"/>
+        <topic label="visit" href="class_visitor.html#ab663b5600c24cf1a5892ec6efb08efcd"/>
         <topic label="types" href="class_visitor.html#a3eb2cd9d4d15c13b69c011e8df28d03b"/>
       </topic>
     </topic>
