@@ -58,7 +58,7 @@ namespace geojson {
             /**
              * Runs a visitor function on this feature
              */
-            void visit(FeatureVisitor& visitor) {
+            void visit(FeatureVisitor& visitor) override {
                 visitor.visit(this);
             }
     };

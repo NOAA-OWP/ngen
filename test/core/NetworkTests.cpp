@@ -133,7 +133,7 @@ public:
 class Network_Test2 : public Network_Test, public ::testing::Test{
 public:
   Network_Test2(){}
-  void SetUp(){
+  void SetUp() override {
     this->add_catchment("cat-0", "nex-0");
     this->add_catchment("cat-1", "nex-0");
     this->add_nexus("nex-0", "cat-2");
