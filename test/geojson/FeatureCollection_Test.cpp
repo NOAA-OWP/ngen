@@ -27,31 +27,31 @@ class FeatureCollection_Test : public ::testing::Test {
 
 class Visitor : public geojson::FeatureVisitor {
     public:
-        void visit(geojson::PointFeature *feature) {
+        void visit(geojson::PointFeature *feature) override {
             this->types.push_back("PointFeature");
         }
 
-        void visit(geojson::LineStringFeature *feature) {
+        void visit(geojson::LineStringFeature *feature) override {
             this->types.push_back("LineStringFeature");
         }
 
-        void visit(geojson::PolygonFeature *feature) {
+        void visit(geojson::PolygonFeature *feature) override {
             this->types.push_back("PolygonFeature");
         }
 
-        void visit(geojson::MultiPointFeature *feature) {
+        void visit(geojson::MultiPointFeature *feature) override {
             this->types.push_back("MultiPointFeature");
         }
 
-        void visit(geojson::MultiLineStringFeature *feature) {
+        void visit(geojson::MultiLineStringFeature *feature) override {
             this->types.push_back("MultiLineStringFeature");
         }
 
-        void visit(geojson::MultiPolygonFeature *feature) {
+        void visit(geojson::MultiPolygonFeature *feature) override {
             this->types.push_back("MultiPolygonFeature");
         }
 
-        void visit(geojson::CollectionFeature *feature) {
+        void visit(geojson::CollectionFeature *feature) override {
             this->types.push_back("CollectionFeature");
         }
 

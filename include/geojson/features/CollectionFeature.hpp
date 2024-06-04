@@ -209,7 +209,7 @@ namespace geojson {
                 return this->geometry_collection.cend();
             }
 
-            void visit(FeatureVisitor& visitor) {
+            void visit(FeatureVisitor& visitor) override {
                 visitor.visit(this);
             }
     };

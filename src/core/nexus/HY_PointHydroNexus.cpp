@@ -6,27 +6,27 @@ typedef boost::error_info<struct tag_errmsg, std::string> errmsg_info;
 
 struct invalid_downstream_request : public boost::exception, public std::exception
 {
-  const char *what() const noexcept { return "All downstream catchments can not request more than 100% of flux in total"; }
+  const char *what() const noexcept override { return "All downstream catchments can not request more than 100% of flux in total"; }
 };
 
 struct add_to_summed_nexus : public boost::exception, public std::exception
 {
-  const char *what() const noexcept { return "Can not add water to a summed point nexus"; }
+  const char *what() const noexcept override { return "Can not add water to a summed point nexus"; }
 };
 
 struct request_from_empty_nexus : public boost::exception, public std::exception
 {
-  const char *what() const noexcept { return "Can not release water from an empty nexus"; }
+  const char *what() const noexcept override { return "Can not release water from an empty nexus"; }
 };
 
 struct completed_time_step : public boost::exception, public std::exception
 {
-  const char *what() const noexcept { return "Can not operate on a completed time step"; }
+  const char *what() const noexcept override { return "Can not operate on a completed time step"; }
 };
 
 struct invalid_time_step : public boost::exception, public std::exception
 {
-  const char *what() const noexcept { return "Time step before minimum time step requested"; }
+  const char *what() const noexcept override { return "Time step before minimum time step requested"; }
 };
 
 HY_PointHydroNexus::HY_PointHydroNexus(std::string nexus_id, Catchments receiving_catchments) : HY_HydroNexus( nexus_id, receiving_catchments), upstream_flows()

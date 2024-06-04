@@ -36,10 +36,10 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
 
         /** get the request percentage of downstream flow through this nexus at timestep t. If the indicated catchment is not local a async send will be
             created. Will attempt to process all async receives currently queued before processing flows*/
-        double get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow);
+        double get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow) override;
 
         /** add flow to this nexus for timestep t. If the indicated catchment is not local an async receive will be started*/
-        void add_upstream_flow(double val, std::string catchment_id, time_step_t t);
+        void add_upstream_flow(double val, std::string catchment_id, time_step_t t) override;
 
         /** extract a numeric id from the catchment id for use as a mpi tag */
         static long extract(std::string s) {  return std::stoi( s.substr( s.find(hy_features::identifiers::seperator)+1 ) ); }
