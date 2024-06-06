@@ -62,6 +62,8 @@ int mpi_num_procs;
 #include <SurfaceLayer.hpp>
 #include <DomainLayer.hpp>
 
+#include "logging_utils.h"
+
 std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
 void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
@@ -526,14 +528,15 @@ int main(int argc, char *argv[]) {
         int layer_class_id = layer->class_id();
         switch(layer_class_id)
         {
+            // setup variables and description for surface layers
             case ngen::LayerClass::kSurfaceLayer:
-
-            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
-
-            add_variables_for_layer(variable_discription,layer);
-
+            {
+              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
+              add_variables_for_layer(variable_discription,layer);
+            }
             break;
 
+            // setup variables and description for domain layers
             case ngen::LayerClass::kDomainLayer:
             {
               std::shared_ptr<ngen::DomainLayer> domain_layer = std::dynamic_pointer_cast<ngen::DomainLayer,ngen::Layer>(layer);
@@ -542,50 +545,57 @@ int main(int argc, char *argv[]) {
               dimension_discription.push_back(data_output::NetcdfDimensionDiscription("y"));
 
               add_variables_for_layer(variable_discription, layer);
+            
             }
-
             break;
 
+            // setup variables and description for catchment layers
             case ngen::LayerClass::kCatchmentLayer:
-
-            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
-
-            add_variables_for_layer(variable_discription, layer);
-
+            {
+              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
+              add_variables_for_layer(variable_discription, layer);
+            }
             break;
 
+            // setup variables and description for nexus layers
             case ngen::LayerClass::kNexusLayer:
-
-            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("nexus-id",num_nexuses));
-
-            add_variables_for_layer(variable_discription, layer);
-
+            {
+              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("nexus-id",num_nexuses));
+              add_variables_for_layer(variable_discription, layer);
+            }
             break;
 
+            // setup variables and description for surface layers
             case ngen::LayerClass::kLayer:
+            {
+              // basicly layer should probably never be reached so log warning
+              logging::warning("Layer of class gen::LayerClass::kLayer encountered this is a base class not intended for direct use\n");
 
-            dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
-
-            add_variables_for_layer(variable_discription, layer);
-
+              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
+              add_variables_for_layer(variable_discription, layer);
+            }
             break;
 
             default:
-
-            std::stringstream ss;
-            ss << "Unexepected Layer class encountered with id " << layer_class_id << "\n";
-            throw std::runtime_error(ss.str().c_str());
-
+            {
+              std::stringstream ss;
+              ss << "Unexepected Layer class encountered with id " << layer_class_id << "\n";
+              throw std::runtime_error(ss.str().c_str());
+            }
             break;
         }
 
-        netcdf_writers[layer->get_name()] = std::make_shared<data_output::NetcdfOutputWriter>("layer-"+ layer->get_name() + ".nc",
+        // create the netcdf file for each layer
+        netcdf_writers[layer->get_name()] = std::make_shared<data_output::NetcdfOutputWriter>(
+          "layer-"+ layer->get_name() + ".nc",
             dimension_discription,
             variable_discription);
 
 
     }
     #endif
+
+    std::shared_ptr<data_output::OutputWriter> writer;
 
     //Now loop some time, iterate catchments, do stuff for total number of output times
     auto num_times = manager->Simulation_Time_Object->get_total_output_times();
@@ -618,7 +628,10 @@ int main(int argc, char *argv[]) {
           if ( layer_next_time <= next_time && layer_next_time <=  prev_layer_time)
           {
             if(count%100==0) std::cout<<"Updating layer: "<<layer->get_name()<<"\n";
-            layer->update_models(); //assume update_models() calls time->advance_timestep()
+            #if NEGN_WITH_NETCDF
+            writer = netcdf_writers[layer->get_name()];
+            #endif
+            layer->update_models(writer); //assume update_models() calls time->advance_timestep()
             prev_layer_time = layer_next_time;
           }
           else

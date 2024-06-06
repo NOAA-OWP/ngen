@@ -4,11 +4,13 @@
  * @breif Run one simulation timestep for each model in this layer, then gather catchment output
 */
 
-void ngen::SurfaceLayer::update_models()
+
+void ngen::SurfaceLayer::update_models(std::shared_ptr<data_output::OutputWriter> writer)
 {
     long current_time_index = output_time_index;
     
-    Layer::update_models();
+    Layer::update_models(writer);
+
 
     //At this point, could make an internal routing pass, extracting flows from nexuses and routing
     //across the flowpath to the next nexus.

@@ -18,6 +18,7 @@ target_include_directories(netcdf_utils PUBLIC ${PROJECT_SOURCE_DIR}/include/cor
 target_include_directories(netcdf_utils PUBLIC ${PROJECT_SOURCE_DIR}/include/forcing)
 
 target_include_directories(netcdf_utils PUBLIC ${PROJECT_SOURCE_DIR}/include/geojson)
+target_include_directories(netcdf_utils PUBLIC ${PROJECT_SOURCE_DIR}/include/output)
 
 target_include_directories(netcdf_utils PUBLIC ${PROJECT_SOURCE_DIR}/include/realizations/catchment)
 

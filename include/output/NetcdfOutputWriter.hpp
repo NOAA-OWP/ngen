@@ -22,6 +22,8 @@
 
 #include <netcdf>
 
+#include "OutputWriter.hpp"
+
 
 using namespace netCDF;
 using namespace netCDF::exceptions;
@@ -74,7 +76,7 @@ namespace data_output
      * to be used for a offset vector.
      */
 
-    class NetcdfOutputWriterOffset
+    class NetcdfOutputWriterOffset : public OutputWriter
     {
         public:
 

@@ -62,7 +62,7 @@ namespace ngen
          * Any required connection to other components, e.g. providing inputs to a catchment feature,
          * is not yet implemented in this class.
         */
-        void update_models() override{
+        void update_models(std::shared_ptr<data_output::OutputWriter> writer) override{
             std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
             try{
                 formulation->get_response(output_time_index, simulation_time.get_output_interval_seconds());

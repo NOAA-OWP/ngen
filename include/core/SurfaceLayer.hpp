@@ -28,7 +28,8 @@ namespace ngen
         /***
          * @brief Run one simulation timestep for each model in this layer
         */
-        void update_models() override;
+
+        void update_models(std::shared_ptr<data_output::OutputWriter> writer) override;
 
         /**
         * @brief Get a class id for this layer object
