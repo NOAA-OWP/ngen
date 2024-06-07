@@ -1,15 +1,15 @@
 <map id="Visitor" name="Visitor">
-<area shape="rect" id="Node000001" title=" " alt="" coords="71,525,127,730"/>
-<area shape="rect" id="Node000002" href="$classgeojson_1_1_feature_visitor.html" title="An abstract class used to operate on the children of FeatureBase." alt="" coords="5,277,151,462"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,477,94,525,88,525,84,477"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="175,337,325,402"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="234,403,138,566,134,563,230,400"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="71,545,127,750"/>
+<area shape="rect" id="Node000002" href="$classgeojson_1_1_feature_visitor.html" title="An abstract class used to operate on the children of FeatureBase." alt="" coords="5,277,151,482"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,497,94,545,89,546,85,497"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="175,347,325,412"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="235,413,138,583,133,581,230,410"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="158,148,227,214"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="205,213,238,320,233,321,200,214"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="204,213,239,330,234,332,199,214"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="135,5,250,85"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="195,100,195,148,190,148,190,100"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="252,148,355,214"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="293,229,262,338,256,336,288,227"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="293,229,261,348,256,346,288,227"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="293,13,314,78"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="306,78,306,132,301,132,301,78"/>
 </map>

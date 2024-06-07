@@ -682,6 +682,7 @@
           <topic label="foreign_members" href="classgeojson_1_1_feature_collection.html#a0a043eece644e590f908b545b7143f9e"/>
         </topic>
         <topic label="FeatureVisitor" href="classgeojson_1_1_feature_visitor.html">
+          <topic label="~FeatureVisitor" href="classgeojson_1_1_feature_visitor.html#affcd3500821e34568facfb4524446de1"/>
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a1ef52b16030fbd59249a80d31afba9af"/>
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a6139d8bb40ec1a47f8d9e83d475e00ce"/>
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a4ff4262c46b2ea403d7a3e3293c92bc1"/>
@@ -2631,26 +2632,26 @@
           <topic label="Formulation_Manager" href="classrealization_1_1_formulation___manager.html#a0a0de93305e075b3a2ee775a6c74963a"/>
           <topic label="Formulation_Manager" href="classrealization_1_1_formulation___manager.html#a58bf2c51c335e14480dbcd42e4ca8d7c"/>
           <topic label="~Formulation_Manager" href="classrealization_1_1_formulation___manager.html#afbb8fd26cb697649d9d4a71bd79c8c86"/>
-          <topic label="add_formulation" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94"/>
-          <topic label="begin" href="classrealization_1_1_formulation___manager.html#a98d50446a65386a5bd0295e6bde56512"/>
+          <topic label="add_formulation" href="classrealization_1_1_formulation___manager.html#a3868b41241493dd336e5e124c4d436ad"/>
+          <topic label="begin" href="classrealization_1_1_formulation___manager.html#abcc1668bbbdcdb541a0bfb0f6a70faf4"/>
           <topic label="construct_formulation_from_config" href="classrealization_1_1_formulation___manager.html#a4f21958f41bb6ef3dfe4fc82ac9c192d"/>
           <topic label="construct_missing_formulation" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823"/>
-          <topic label="contains" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b"/>
-          <topic label="end" href="classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd"/>
+          <topic label="contains" href="classrealization_1_1_formulation___manager.html#abe1de5766287584a045e3bb7cbee0ba2"/>
+          <topic label="end" href="classrealization_1_1_formulation___manager.html#a6a88df7abd663f3072425abffb6501ef"/>
           <topic label="finalize" href="classrealization_1_1_formulation___manager.html#a868f5aa6db72a5871e6a93ef000e5f6e"/>
-          <topic label="get_domain_formulation" href="classrealization_1_1_formulation___manager.html#a612d70ddbe4cb9347254dfe0c0f335ad"/>
+          <topic label="get_domain_formulation" href="classrealization_1_1_formulation___manager.html#a2cccad09b8389007daae3fe127fc8203"/>
           <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#a2ba4cf155d0e4ddfc9e37b6b377deed1"/>
-          <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#ab3188606a0077deba49fe03e0ae76c43"/>
+          <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#a8e2580a925c904f3d5ef7534672ad791"/>
           <topic label="get_layer_metadata" href="classrealization_1_1_formulation___manager.html#ad0fc7e9108d8cd74963053d33986a6ce"/>
           <topic label="get_output_root" href="classrealization_1_1_formulation___manager.html#a1a2bb05d7eb2e2a815a05e0c049597bd"/>
-          <topic label="get_size" href="classrealization_1_1_formulation___manager.html#a3d0b2db8f821d4b05502a04fa3f01870"/>
+          <topic label="get_size" href="classrealization_1_1_formulation___manager.html#af7b39dce1ec8cdf19f89364344564aec"/>
           <topic label="get_t_route_config_file_with_path" href="classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7"/>
           <topic label="get_using_routing" href="classrealization_1_1_formulation___manager.html#a599aadb9ffea1e8c28cbd010b3160bd7"/>
-          <topic label="has_domain_formulation" href="classrealization_1_1_formulation___manager.html#a60aa290c47417f057c9db3ea7f5e2fa9"/>
-          <topic label="is_empty" href="classrealization_1_1_formulation___manager.html#ae4048912588864e785ebefab84faa9cc"/>
+          <topic label="has_domain_formulation" href="classrealization_1_1_formulation___manager.html#aa9cf446b14425ae88c81a493fadcec8a"/>
+          <topic label="is_empty" href="classrealization_1_1_formulation___manager.html#a7ff3d02eee65fbe7b7b0c41cbf5868d8"/>
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f"/>
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1"/>
-          <topic label="read" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a"/>
+          <topic label="read" href="classrealization_1_1_formulation___manager.html#a1c0de7b0d1ec26ec9ed6177c4413b6f3"/>
           <topic label="domain_formulations" href="classrealization_1_1_formulation___manager.html#a5dde983c552aa9515e962b251c030187"/>
           <topic label="formulations" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d"/>
           <topic label="global_config" href="classrealization_1_1_formulation___manager.html#a158bc03a7f3200c6246f067b45af5546"/>
@@ -3053,6 +3054,7 @@
           <topic label="foreign_members" href="classgeojson_1_1_feature_collection.html#a0a043eece644e590f908b545b7143f9e"/>
         </topic>
         <topic label="FeatureVisitor" href="classgeojson_1_1_feature_visitor.html">
+          <topic label="~FeatureVisitor" href="classgeojson_1_1_feature_visitor.html#affcd3500821e34568facfb4524446de1"/>
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a1ef52b16030fbd59249a80d31afba9af"/>
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a6139d8bb40ec1a47f8d9e83d475e00ce"/>
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a4ff4262c46b2ea403d7a3e3293c92bc1"/>
@@ -4837,26 +4839,26 @@
           <topic label="Formulation_Manager" href="classrealization_1_1_formulation___manager.html#a0a0de93305e075b3a2ee775a6c74963a"/>
           <topic label="Formulation_Manager" href="classrealization_1_1_formulation___manager.html#a58bf2c51c335e14480dbcd42e4ca8d7c"/>
           <topic label="~Formulation_Manager" href="classrealization_1_1_formulation___manager.html#afbb8fd26cb697649d9d4a71bd79c8c86"/>
-          <topic label="add_formulation" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94"/>
-          <topic label="begin" href="classrealization_1_1_formulation___manager.html#a98d50446a65386a5bd0295e6bde56512"/>
+          <topic label="add_formulation" href="classrealization_1_1_formulation___manager.html#a3868b41241493dd336e5e124c4d436ad"/>
+          <topic label="begin" href="classrealization_1_1_formulation___manager.html#abcc1668bbbdcdb541a0bfb0f6a70faf4"/>
           <topic label="construct_formulation_from_config" href="classrealization_1_1_formulation___manager.html#a4f21958f41bb6ef3dfe4fc82ac9c192d"/>
           <topic label="construct_missing_formulation" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823"/>
-          <topic label="contains" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b"/>
-          <topic label="end" href="classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd"/>
+          <topic label="contains" href="classrealization_1_1_formulation___manager.html#abe1de5766287584a045e3bb7cbee0ba2"/>
+          <topic label="end" href="classrealization_1_1_formulation___manager.html#a6a88df7abd663f3072425abffb6501ef"/>
           <topic label="finalize" href="classrealization_1_1_formulation___manager.html#a868f5aa6db72a5871e6a93ef000e5f6e"/>
-          <topic label="get_domain_formulation" href="classrealization_1_1_formulation___manager.html#a612d70ddbe4cb9347254dfe0c0f335ad"/>
+          <topic label="get_domain_formulation" href="classrealization_1_1_formulation___manager.html#a2cccad09b8389007daae3fe127fc8203"/>
           <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#a2ba4cf155d0e4ddfc9e37b6b377deed1"/>
-          <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#ab3188606a0077deba49fe03e0ae76c43"/>
+          <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#a8e2580a925c904f3d5ef7534672ad791"/>
           <topic label="get_layer_metadata" href="classrealization_1_1_formulation___manager.html#ad0fc7e9108d8cd74963053d33986a6ce"/>
           <topic label="get_output_root" href="classrealization_1_1_formulation___manager.html#a1a2bb05d7eb2e2a815a05e0c049597bd"/>
-          <topic label="get_size" href="classrealization_1_1_formulation___manager.html#a3d0b2db8f821d4b05502a04fa3f01870"/>
+          <topic label="get_size" href="classrealization_1_1_formulation___manager.html#af7b39dce1ec8cdf19f89364344564aec"/>
           <topic label="get_t_route_config_file_with_path" href="classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7"/>
           <topic label="get_using_routing" href="classrealization_1_1_formulation___manager.html#a599aadb9ffea1e8c28cbd010b3160bd7"/>
-          <topic label="has_domain_formulation" href="classrealization_1_1_formulation___manager.html#a60aa290c47417f057c9db3ea7f5e2fa9"/>
-          <topic label="is_empty" href="classrealization_1_1_formulation___manager.html#ae4048912588864e785ebefab84faa9cc"/>
+          <topic label="has_domain_formulation" href="classrealization_1_1_formulation___manager.html#aa9cf446b14425ae88c81a493fadcec8a"/>
+          <topic label="is_empty" href="classrealization_1_1_formulation___manager.html#a7ff3d02eee65fbe7b7b0c41cbf5868d8"/>
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f"/>
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1"/>
-          <topic label="read" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a"/>
+          <topic label="read" href="classrealization_1_1_formulation___manager.html#a1c0de7b0d1ec26ec9ed6177c4413b6f3"/>
           <topic label="domain_formulations" href="classrealization_1_1_formulation___manager.html#a5dde983c552aa9515e962b251c030187"/>
           <topic label="formulations" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d"/>
           <topic label="global_config" href="classrealization_1_1_formulation___manager.html#a158bc03a7f3200c6246f067b45af5546"/>

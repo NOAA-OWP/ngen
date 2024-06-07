@@ -6,7 +6,7 @@ var searchData=
   ['add_5fdimension_3',['add_dimension',['../classngen_1_1mdframe.html#ae0b2679d585e1714ed899960b943f566',1,'ngen::mdframe::add_dimension(const std::string &amp;name)'],['../classngen_1_1mdframe.html#a9845bc637ce0a75b6e61c2ec75d94e04',1,'ngen::mdframe::add_dimension(const std::string &amp;name, std::size_t size)']]],
   ['add_5ffeature_4',['add_feature',['../classgeojson_1_1_feature_collection.html#a94257e07bb9115a6231d13672c92eb06',1,'geojson::FeatureCollection']]],
   ['add_5ffeature_5fid_5',['add_feature_id',['../classgeojson_1_1_feature_collection.html#af81a82e4bc6a7f9293c6c64759d60245',1,'geojson::FeatureCollection']]],
-  ['add_5fformulation_6',['add_formulation',['../classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94',1,'realization::Formulation_Manager']]],
+  ['add_5fformulation_6',['add_formulation',['../classrealization_1_1_formulation___manager.html#a3868b41241493dd336e5e124c4d436ad',1,'realization::Formulation_Manager']]],
   ['add_5fneighbor_5ffeature_7',['add_neighbor_feature',['../classgeojson_1_1_feature_base.html#adfb6ba4107e752620dcb9a04aeb4a158',1,'geojson::FeatureBase']]],
   ['add_5fnexus_8',['add_nexus',['../class_network___test.html#a01ae65a6bc8bf5e064bcbe1083b5ec36',1,'Network_Test']]],
   ['add_5forigination_5ffeature_9',['add_origination_feature',['../classgeojson_1_1_feature_base.html#a29b6852ed6a7359d1e844de4faa9f170',1,'geojson::FeatureBase']]],

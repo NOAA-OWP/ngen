@@ -1,5 +1,6 @@
 var classgeojson_1_1_feature_visitor =
 [
+    [ "~FeatureVisitor", "classgeojson_1_1_feature_visitor.html#affcd3500821e34568facfb4524446de1", null ],
     [ "visit", "classgeojson_1_1_feature_visitor.html#a1ef52b16030fbd59249a80d31afba9af", null ],
     [ "visit", "classgeojson_1_1_feature_visitor.html#a6139d8bb40ec1a47f8d9e83d475e00ce", null ],
     [ "visit", "classgeojson_1_1_feature_visitor.html#a4ff4262c46b2ea403d7a3e3293c92bc1", null ],
