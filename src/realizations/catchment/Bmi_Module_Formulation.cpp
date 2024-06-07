@@ -304,9 +304,9 @@ namespace realization {
 
             // Then optional ...
 
-            auto uses_forcings_it = properties.find(BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS);
+            auto uses_forcings_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS);
             if (uses_forcings_it != properties.end() && uses_forcings_it->second.as_boolean()) {
-                throw std::runtime_error("The '" BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS "' parameter was removed and cannot be set");
+                throw std::runtime_error("The '" BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS "' parameter was removed and cannot be set");
             }
 
             auto forcing_file_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE);

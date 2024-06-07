@@ -440,7 +440,7 @@ namespace realization {
         bool model_initialized = false;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
-                BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS
+                BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS
                 BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,
                 BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
