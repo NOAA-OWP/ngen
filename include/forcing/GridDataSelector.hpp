@@ -31,6 +31,11 @@ struct BoundingBox
       : box_(std::move(box))
     {}
 
+    template<typename Geometry>
+    BoundingBox(const Geometry& geom)
+      : box_(boost::geometry::return_envelope<box_t>(geom))
+    {}
+
     double xmin() const noexcept
     {
         return box_.min_corner().get<0>();
@@ -56,6 +61,10 @@ struct BoundingBox
         geojson::polygon_t poly;
         poly.outer() = { view.begin(), view.end() };
         return poly;
+    }
+
+    const box_t& as_box() const noexcept {
+        return box_;
     }
 
   private:
@@ -155,7 +164,7 @@ struct GridDataSelector {
         const auto ydiff = static_cast<double>(grid.rows) / (ymax - ymin);
         const auto xdiff = static_cast<double>(grid.columns) / (xmax - xmin);
     
-        const auto bbox = BoundingBox{ boost::geometry::return_envelope<box_t>(polygon) };
+        const BoundingBox bbox = { polygon };
         for (double row = bbox.ymin(); row < bbox.ymax() - ydiff; row += ydiff) {
             for (double col = bbox.xmin(); col < bbox.xmax() - xdiff; row += xdiff) {
                 const box_t cell_box = {

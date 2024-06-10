@@ -35,7 +35,7 @@ struct ForcingsEngineLumpedDataProvider
      */
     std::size_t variable_index(const std::string& variable) noexcept;
 
-    static ForcingsEngineDataProvider* make_lumped_instance(
+    static std::unique_ptr<ForcingsEngineDataProvider> make_lumped_instance(
         const std::string& init,
         const std::string& time_start,
         const std::string& time_end,
@@ -50,14 +50,6 @@ struct ForcingsEngineLumpedDataProvider
         std::size_t time_begin_seconds,
         std::size_t time_end_seconds
     );
-
-    /**
-     * @brief Update to next timestep.
-     * 
-     * @return true
-     * @return false 
-     */
-    bool next();
 
     /**
      * @brief Get a forcing value from the instance

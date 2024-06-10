@@ -14,6 +14,26 @@ static constexpr auto forcings_engine_python_class  = "NWMv3_Forcing_Engine_BMI_
 static constexpr auto forcings_engine_python_classpath = "NextGen_Forcings_Engine.NWMv3_Forcing_Engine_BMI_model";
 static constexpr auto default_time_format = "%Y-%m-%d %H:%M:%S";
 
+namespace detail {
+
+struct ForcingsEngineStorage {
+    using key_type   = std::string;
+    using bmi_type   = models::bmi::Bmi_Py_Adapter;
+    using value_type = std::shared_ptr<bmi_type>;
+    
+    value_type get(const key_type& key);
+    void       set(const key_type& key, value_type value);
+    void       clear();
+
+  private:
+    //! Instance map of underlying BMI models.
+    std::unordered_map<key_type, value_type> data_;
+};
+
+static ForcingsEngineStorage forcings_engine_instances{};
+
+} // namespace detail
+
 //! Parse time string from format.
 //! Utility function for ForcingsEngineLumpedDataProvider constructor.
 time_t parse_time(const std::string& time, const std::string& fmt);
@@ -70,11 +90,6 @@ struct ForcingsEngineDataProvider
         return (epoch - time_begin_) / time_step_;
     }
 
-    // Temporary (?) function to clear out instances of this type.
-    static void finalize_all() {
-        instances_.clear();
-    }
-
     /* Remaining virtual member functions from DataProvider must be implemented
        by derived classes. */
 
@@ -82,44 +97,7 @@ struct ForcingsEngineDataProvider
     
     std::vector<data_type> get_values(const selection_type& selector, data_access::ReSampleMethod m) override = 0;
 
-
-    /* Friend functions */
-    static ForcingsEngineDataProvider* instance(
-        const std::string& init,
-        const std::string& time_begin,
-        const std::string& time_end,
-        const std::string& time_fmt = default_time_format
-    )
-    {
-        auto& inst = instances_.at(init);
-        if (inst != nullptr) {
-            assert(inst->time_begin_.time_since_epoch() == std::chrono::seconds{parse_time(time_begin, time_fmt)});
-            assert(inst->time_end_.time_since_epoch() == std::chrono::seconds{parse_time(time_end, time_fmt)});
-        }
-
-        return inst.get();
-    }
-
-    template<typename Derived>
-    static ForcingsEngineDataProvider* make_instance(
-        const std::string& init,
-        const std::string& time_begin,
-        const std::string& time_end,
-        const std::string& time_fmt = default_time_format
-    )
-    {
-        auto time_begin_epoch = static_cast<size_t>(parse_time(time_begin, time_fmt));
-        auto time_end_epoch = static_cast<size_t>(parse_time(time_end, time_fmt));
-
-        auto provider = std::unique_ptr<Derived>{
-            new Derived{init, time_begin_epoch, time_end_epoch}
-        };
-
-        return set_instance(init, std::move(provider));
-    }
-
   protected:
-
     // TODO: It may make more sense to have time_begin_seconds and time_end_seconds coalesced into
     //       a single argument: `clock_type::duration time_duration`, since the forcings engine
     //       manages time via a duration rather than time points. !! Need to double check
@@ -134,44 +112,47 @@ struct ForcingsEngineDataProvider
 
         assert_forcings_engine_requirements();
 
-        bmi_ = std::make_unique<models::bmi::Bmi_Py_Adapter>(
-            "ForcingsEngine",
-            init,
-            forcings_engine_python_classpath,
-            /*allow_exceed_end=*/true,
-            /*has_fixed_time_step=*/true,
-            utils::getStdOut()
-        );
+        bmi_ = detail::forcings_engine_instances.get(init);
+        if (bmi_ == nullptr) {
+            bmi_ = std::make_shared<models::bmi::Bmi_Py_Adapter>(
+                "ForcingsEngine",
+                init,
+                forcings_engine_python_classpath,
+                /*allow_exceed_end=*/true,
+                /*has_fixed_time_step=*/true,
+                utils::getStdOut()
+            );
+        
+            detail::forcings_engine_instances.set(init, bmi_);
+        }
 
         time_step_ = std::chrono::seconds{static_cast<int64_t>(bmi_->GetTimeStep())};
+        time_current_index_ = std::chrono::seconds{static_cast<int64_t>(bmi_->GetCurrentTime())} / time_step_;
         var_output_names_ = bmi_->GetOutputVarNames();
     }
 
-    static ForcingsEngineDataProvider* set_instance(
+    template<typename Derived>
+    static std::unique_ptr<ForcingsEngineDataProvider> make_instance(
         const std::string& init,
-        std::unique_ptr<ForcingsEngineDataProvider>&& instance
+        const std::string& time_begin,
+        const std::string& time_end,
+        const std::string& time_fmt = default_time_format
     )
     {
-          instances_[init] = std::move(instance);
-          return instances_[init].get();
-    };
+        auto time_begin_epoch = parse_time(time_begin, time_fmt);
+        auto time_end_epoch = parse_time(time_end, time_fmt);
+        return std::unique_ptr<Derived>{
+            new Derived{init, time_begin_epoch, time_end_epoch}
+        };
+    }
 
-    //! Instance map
-    //! @note this map will exist for each of the 
-    //!       3 instance types (lumped, gridded, mesh).
-    static std::unordered_map<
-        std::string,
-        std::unique_ptr<ForcingsEngineDataProvider>
-    > instances_;
-
-    // TODO: this, or just push the scope on time members up?
-    void increment_time()
-    {
+    void next() {
+        bmi_->Update();
         time_current_index_++;
     }
 
     //! Forcings Engine instance
-    std::unique_ptr<models::bmi::Bmi_Py_Adapter> bmi_ = nullptr;
+    std::shared_ptr<models::bmi::Bmi_Py_Adapter> bmi_ = nullptr;
 
     //! Output variable names
     std::vector<std::string> var_output_names_{};

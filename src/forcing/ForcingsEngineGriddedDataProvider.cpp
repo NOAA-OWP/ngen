@@ -7,10 +7,6 @@ namespace data_access {
 using BaseProvider = ForcingsEngineDataProvider<Cell, GridDataSelector>;
 using Provider = ForcingsEngineGriddedDataProvider;
 
-//! Gridded Forcings Engine instances storage
-template<>
-std::unordered_map<std::string, std::unique_ptr<BaseProvider>> BaseProvider::instances_{};
-
 Provider::ForcingsEngineGriddedDataProvider(
     const std::string& init,
     std::size_t time_begin_seconds,

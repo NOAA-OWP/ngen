@@ -6,10 +6,6 @@ namespace data_access {
 using BaseProvider = ForcingsEngineDataProvider<double, CatchmentAggrDataSelector>;
 using Provider = ForcingsEngineLumpedDataProvider;
 
-//! Lumped Forcings Engine instances storage
-template<>
-std::unordered_map<std::string, std::unique_ptr<BaseProvider>> BaseProvider::instances_{};
-
 Provider::ForcingsEngineLumpedDataProvider(
     const std::string& init,
     std::size_t time_begin_seconds,
@@ -17,6 +13,8 @@ Provider::ForcingsEngineLumpedDataProvider(
 )
   : BaseProvider(init, time_begin_seconds, time_end_seconds)
 {
+    const auto current_time = bmi_->GetCurrentTime();
+    const auto time_step = bmi_->GetTimeStep();
 
     // Check that CAT-ID is an available output name, otherwise we most likely aren't
     // running the correct configuration of the forcings engine for this class.
@@ -29,12 +27,12 @@ Provider::ForcingsEngineLumpedDataProvider(
     }
     var_output_names_.erase(cat_id_pos);
 
-    // Initialize the value cache
     const auto id_dim   = static_cast<std::size_t>(bmi_->GetVarNbytes("CAT-ID") / bmi_->GetVarItemsize("CAT-ID"));
     const auto var_dim  = get_available_variable_names().size();
 
-    bmi_->Update();
-    this->increment_time();
+    if (current_time <= time_step) {
+        next();
+    }
     
     // Copy CAT-ID values into instance vector
     const auto cat_id = boost::span<const int>(
@@ -42,19 +40,24 @@ Provider::ForcingsEngineLumpedDataProvider(
         id_dim
     );
 
-    // temporary map to ensure uniqueness
-    std::unordered_map<int, int> uniq;
-    uniq.reserve(id_dim);
     var_divides_.reserve(id_dim);
     for (int i = 0; i < id_dim; ++i) {
         const auto id = cat_id[i];
-    
-        uniq[id]++;
-        if (uniq[id] > 1) {
-            throw std::runtime_error{"Non-unique catchment ID found in lumped forcings engine domain: " + std::to_string(id)};
-        }
-
         var_divides_[id] = i;
+    }
+
+    if (current_time <= time_step) {
+        // temporary map to ensure uniqueness
+        // note: if this instance is not starting from the
+        // beginning, then this uniqueness check was already
+        // performed.
+        std::unordered_map<int, int> uniq;
+        for (const auto id : cat_id) {
+            if (uniq[id] > 0) {
+                throw std::runtime_error{"Non-unique catchment ID found in lumped forcings engine domain: " + std::to_string(id)};
+            }
+            uniq[id]++;
+        }
     }
 
     var_cache_ = decltype(var_cache_){{ id_dim, var_dim }};
@@ -99,14 +102,6 @@ std::size_t Provider::variable_index(const std::string& variable) noexcept
 
     // implicit cast to unsigned
     return std::distance(vars.begin(), pos);
-}
-
-bool Provider::next()
-{
-    bmi_->Update();
-    this->increment_time();
-    this->update_value_storage_();
-    return true;
 }
 
 void Provider::update_value_storage_()
@@ -195,10 +190,8 @@ double Provider::get_value(
         double acc = 0.0;
         auto current_time = start;
         while (current_time < end) {
-            if (!this->next()) {
-                break;
-            }
-
+            this->next();
+            this->update_value_storage_();
             acc += this->at(divide_index, var_index);
             current_time += step;
         }
@@ -234,6 +227,7 @@ std::vector<double> Provider::get_values(
     for (auto current_time = start; current_time < end; current_time += step) {
         values.push_back(this->at(divide_index, var_index));
         this->next();
+        this->update_value_storage_();
     }
 
     return values;

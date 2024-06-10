@@ -16,7 +16,7 @@ struct ForcingsEngineGriddedDataProvider
 
     std::vector<Cell> get_values(const GridDataSelector& selector, data_access::ReSampleMethod m) override;
 
-    static ForcingsEngineDataProvider* make_gridded_instance(
+    static std::unique_ptr<ForcingsEngineDataProvider> make_gridded_instance(
         const std::string& init,
         const std::string& time_start,
         const std::string& time_end,
