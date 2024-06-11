@@ -163,36 +163,36 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="223.75" y="-917" font-family="Helvetica,sans-Serif" font-size="10.00">bmi::Bmi</text>
 <text text-anchor="start" x="241" y="-902" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
 <text text-anchor="start" x="189" y="-887" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-887" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
+<text text-anchor="start" x="199" y="-887" font-family="Helvetica,sans-Serif" font-size="10.00">~Bmi()</text>
 <text text-anchor="start" x="189" y="-872" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-872" font-family="Helvetica,sans-Serif" font-size="10.00">Update()</text>
+<text text-anchor="start" x="199" y="-872" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
 <text text-anchor="start" x="189" y="-857" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-857" font-family="Helvetica,sans-Serif" font-size="10.00">UpdateUntil()</text>
+<text text-anchor="start" x="199" y="-857" font-family="Helvetica,sans-Serif" font-size="10.00">Update()</text>
 <text text-anchor="start" x="189" y="-842" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-842" font-family="Helvetica,sans-Serif" font-size="10.00">Finalize()</text>
+<text text-anchor="start" x="199" y="-842" font-family="Helvetica,sans-Serif" font-size="10.00">UpdateUntil()</text>
 <text text-anchor="start" x="189" y="-827" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-827" font-family="Helvetica,sans-Serif" font-size="10.00">GetComponentName()</text>
+<text text-anchor="start" x="199" y="-827" font-family="Helvetica,sans-Serif" font-size="10.00">Finalize()</text>
 <text text-anchor="start" x="189" y="-812" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-812" font-family="Helvetica,sans-Serif" font-size="10.00">GetInputItemCount()</text>
+<text text-anchor="start" x="199" y="-812" font-family="Helvetica,sans-Serif" font-size="10.00">GetComponentName()</text>
 <text text-anchor="start" x="189" y="-797" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-797" font-family="Helvetica,sans-Serif" font-size="10.00">GetOutputItemCount()</text>
+<text text-anchor="start" x="199" y="-797" font-family="Helvetica,sans-Serif" font-size="10.00">GetInputItemCount()</text>
 <text text-anchor="start" x="189" y="-782" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-782" font-family="Helvetica,sans-Serif" font-size="10.00">GetInputVarNames()</text>
+<text text-anchor="start" x="199" y="-782" font-family="Helvetica,sans-Serif" font-size="10.00">GetOutputItemCount()</text>
 <text text-anchor="start" x="189" y="-767" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-767" font-family="Helvetica,sans-Serif" font-size="10.00">GetOutputVarNames()</text>
+<text text-anchor="start" x="199" y="-767" font-family="Helvetica,sans-Serif" font-size="10.00">GetInputVarNames()</text>
 <text text-anchor="start" x="189" y="-752" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-752" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarGrid()</text>
+<text text-anchor="start" x="199" y="-752" font-family="Helvetica,sans-Serif" font-size="10.00">GetOutputVarNames()</text>
 <text text-anchor="start" x="189" y="-737" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-737" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarType()</text>
+<text text-anchor="start" x="199" y="-737" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarGrid()</text>
 <text text-anchor="start" x="189" y="-722" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-722" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarUnits()</text>
+<text text-anchor="start" x="199" y="-722" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarType()</text>
 <text text-anchor="start" x="189" y="-707" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-707" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarItemsize()</text>
+<text text-anchor="start" x="199" y="-707" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarUnits()</text>
 <text text-anchor="start" x="189" y="-692" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-692" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarNbytes()</text>
+<text text-anchor="start" x="199" y="-692" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarItemsize()</text>
 <text text-anchor="start" x="189" y="-677" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="199" y="-677" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarLocation()</text>
-<text text-anchor="start" x="199" y="-662" font-family="Helvetica,sans-Serif" font-size="10.00">and 26 more...</text>
+<text text-anchor="start" x="199" y="-677" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarNbytes()</text>
+<text text-anchor="start" x="199" y="-662" font-family="Helvetica,sans-Serif" font-size="10.00">and 27 more...</text>
 <polygon fill="#666666" stroke="#666666" points="185,-913.5 185,-913.5 300,-913.5 300,-913.5 185,-913.5"/>
 <polygon fill="#666666" stroke="#666666" points="185,-898.5 185,-898.5 300,-898.5 300,-898.5 185,-898.5"/>
 <polygon fill="none" stroke="#666666" points="185,-656.5 185,-930.5 300,-930.5 300,-656.5 185,-656.5"/>

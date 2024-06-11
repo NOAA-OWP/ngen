@@ -1,5 +1,6 @@
 var classbmi_1_1_bmi =
 [
+    [ "~Bmi", "classbmi_1_1_bmi.html#a00f64e1b8841c7a259de3aa8713597db", null ],
     [ "Finalize", "classbmi_1_1_bmi.html#a50ba4a7a721969d53c269298a1e607a7", null ],
     [ "GetComponentName", "classbmi_1_1_bmi.html#a260433746fad7ef67ace7daf4927ccf8", null ],
     [ "GetCurrentTime", "classbmi_1_1_bmi.html#acbbbbfa690e6adb9eb348aa0ecd03e69", null ],

@@ -1744,36 +1744,36 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="1339.75" y="-2644.75" font-family="Helvetica,sans-Serif" font-size="10.00">bmi::Bmi</text>
 <text text-anchor="start" x="1357" y="-2629.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
 <text text-anchor="start" x="1305" y="-2614.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2614.75" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
+<text text-anchor="start" x="1315" y="-2614.75" font-family="Helvetica,sans-Serif" font-size="10.00">~Bmi()</text>
 <text text-anchor="start" x="1305" y="-2599.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2599.75" font-family="Helvetica,sans-Serif" font-size="10.00">Update()</text>
+<text text-anchor="start" x="1315" y="-2599.75" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
 <text text-anchor="start" x="1305" y="-2584.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2584.75" font-family="Helvetica,sans-Serif" font-size="10.00">UpdateUntil()</text>
+<text text-anchor="start" x="1315" y="-2584.75" font-family="Helvetica,sans-Serif" font-size="10.00">Update()</text>
 <text text-anchor="start" x="1305" y="-2569.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2569.75" font-family="Helvetica,sans-Serif" font-size="10.00">Finalize()</text>
+<text text-anchor="start" x="1315" y="-2569.75" font-family="Helvetica,sans-Serif" font-size="10.00">UpdateUntil()</text>
 <text text-anchor="start" x="1305" y="-2554.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2554.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetComponentName()</text>
+<text text-anchor="start" x="1315" y="-2554.75" font-family="Helvetica,sans-Serif" font-size="10.00">Finalize()</text>
 <text text-anchor="start" x="1305" y="-2539.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2539.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetInputItemCount()</text>
+<text text-anchor="start" x="1315" y="-2539.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetComponentName()</text>
 <text text-anchor="start" x="1305" y="-2524.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2524.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetOutputItemCount()</text>
+<text text-anchor="start" x="1315" y="-2524.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetInputItemCount()</text>
 <text text-anchor="start" x="1305" y="-2509.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2509.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetInputVarNames()</text>
+<text text-anchor="start" x="1315" y="-2509.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetOutputItemCount()</text>
 <text text-anchor="start" x="1305" y="-2494.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2494.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetOutputVarNames()</text>
+<text text-anchor="start" x="1315" y="-2494.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetInputVarNames()</text>
 <text text-anchor="start" x="1305" y="-2479.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2479.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarGrid()</text>
+<text text-anchor="start" x="1315" y="-2479.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetOutputVarNames()</text>
 <text text-anchor="start" x="1305" y="-2464.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2464.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarType()</text>
+<text text-anchor="start" x="1315" y="-2464.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarGrid()</text>
 <text text-anchor="start" x="1305" y="-2449.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2449.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarUnits()</text>
+<text text-anchor="start" x="1315" y="-2449.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarType()</text>
 <text text-anchor="start" x="1305" y="-2434.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2434.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarItemsize()</text>
+<text text-anchor="start" x="1315" y="-2434.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarUnits()</text>
 <text text-anchor="start" x="1305" y="-2419.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2419.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarNbytes()</text>
+<text text-anchor="start" x="1315" y="-2419.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarItemsize()</text>
 <text text-anchor="start" x="1305" y="-2404.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1315" y="-2404.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarLocation()</text>
-<text text-anchor="start" x="1315" y="-2389.75" font-family="Helvetica,sans-Serif" font-size="10.00">and 26 more...</text>
+<text text-anchor="start" x="1315" y="-2404.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetVarNbytes()</text>
+<text text-anchor="start" x="1315" y="-2389.75" font-family="Helvetica,sans-Serif" font-size="10.00">and 27 more...</text>
 <polygon fill="#666666" stroke="#666666" points="1301,-2641.25 1301,-2641.25 1416,-2641.25 1416,-2641.25 1301,-2641.25"/>
 <polygon fill="#666666" stroke="#666666" points="1301,-2626.25 1301,-2626.25 1416,-2626.25 1416,-2626.25 1301,-2626.25"/>
 <polygon fill="none" stroke="#666666" points="1301,-2384.25 1301,-2658.25 1416,-2658.25 1416,-2384.25 1301,-2384.25"/>
