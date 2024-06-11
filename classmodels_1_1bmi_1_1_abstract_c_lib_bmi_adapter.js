@@ -1,6 +1,6 @@
 var classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter =
 [
-    [ "AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#afac72323e2bdf05953f6858ea068972c", null ],
+    [ "AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ab1734eb5601836df0d0195c0a0d1fa76", null ],
     [ "~AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2acdb60b764e84ddcb0426a5aa4c82e6", null ],
     [ "construct_and_init_backing_model", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aaf11585e4e3852fa9391ad5966af22d2", null ],
     [ "convert_model_time_to_seconds", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6efbfd9ff146bbe3b3c1a82d243f8266", null ],
@@ -64,10 +64,8 @@ var classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter =
     [ "bmi_model_has_fixed_time_step", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a97a27219b39d6de5a061e6ea0780711c", null ],
     [ "bmi_model_time_convert_factor", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a21ac56d555a07e58fccbef9dc2d867c9", null ],
     [ "bmi_model_time_step_size", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#abd1717cf52bec5736e39575af54eea2f", null ],
-    [ "bmi_model_uses_forcing_file", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a384ff24215e8acfb0744c46cac56183e", null ],
     [ "bmi_registration_function", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad9c8e724b1cbb9fff6ec68dc1410ca8b", null ],
     [ "dyn_lib_handle", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2bb1cba086a935b90f356f29def46d54", null ],
-    [ "forcing_file_path", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ae6d1be4a39ef76547004c3392b95f3e4", null ],
     [ "init_exception_msg", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2698bc13d9ced362e18cb8cf0dab82d7", null ],
     [ "input_var_names", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a21e6426f0db58661e3548ba2e9b93058", null ],
     [ "model_initialized", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a120a9a8212a5bd857bf119dc90268306", null ],

@@ -157,8 +157,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aec8618aad576db5f22c9a430249b7210" id="r_aec8618aad576db5f22c9a430249b7210"><td class="memItemLeft" align="right" valign="top">virtual const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#aec8618aad576db5f22c9a430249b7210">get_model_end_time</a> ()=0</td></tr>
 <tr class="memdesc:aec8618aad576db5f22c9a430249b7210"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the end time for the backing BMI model in its native format and units.  <br /></td></tr>
 <tr class="separator:aec8618aad576db5f22c9a430249b7210"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95d9af0b9a7bfc5caf8ae0f617be7536" id="r_a95d9af0b9a7bfc5caf8ae0f617be7536"><td class="memItemLeft" align="right" valign="top">virtual const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a95d9af0b9a7bfc5caf8ae0f617be7536">get_forcing_file_path</a> () const =0</td></tr>
-<tr class="separator:a95d9af0b9a7bfc5caf8ae0f617be7536"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c1b8eb13fa7fba0e3d8fd00370ddcc2" id="r_a4c1b8eb13fa7fba0e3d8fd00370ddcc2"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a4c1b8eb13fa7fba0e3d8fd00370ddcc2">get_model_type_name</a> ()</td></tr>
 <tr class="memdesc:a4c1b8eb13fa7fba0e3d8fd00370ddcc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the name of the specific type of the backing model object.  <br /></td></tr>
 <tr class="separator:a4c1b8eb13fa7fba0e3d8fd00370ddcc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -180,9 +178,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9d83489e654b1aecfc84d7c08396fa28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10008fdef8c2a67cf11f883441ca90f3" id="r_a10008fdef8c2a67cf11f883441ca90f3"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a10008fdef8c2a67cf11f883441ca90f3">is_bmi_output_variable</a> (const std::string &amp;var_name)=0</td></tr>
 <tr class="separator:a10008fdef8c2a67cf11f883441ca90f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62c987fab9e8ad745f1088abd04ab4b9" id="r_a62c987fab9e8ad745f1088abd04ab4b9"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a62c987fab9e8ad745f1088abd04ab4b9">is_bmi_using_forcing_file</a> () const =0</td></tr>
-<tr class="memdesc:a62c987fab9e8ad745f1088abd04ab4b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the backing model uses/reads the forcing file directly for getting input data.  <br /></td></tr>
-<tr class="separator:a62c987fab9e8ad745f1088abd04ab4b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa4dcba7e78f634ad0475bf1e3f3a697" id="r_aaa4dcba7e78f634ad0475bf1e3f3a697"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#aaa4dcba7e78f634ad0475bf1e3f3a697">is_model_initialized</a> ()=0</td></tr>
 <tr class="memdesc:aaa4dcba7e78f634ad0475bf1e3f3a697"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether the backing model has been initialize using the BMI standard <code>Initialize</code> function.  <br /></td></tr>
 <tr class="separator:aaa4dcba7e78f634ad0475bf1e3f3a697"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -955,33 +950,6 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a95d9af0b9a7bfc5caf8ae0f617be7536" name="a95d9af0b9a7bfc5caf8ae0f617be7536"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95d9af0b9a7bfc5caf8ae0f617be7536">&#9670;&#160;</a></span>get_forcing_file_path()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual const std::string &amp; realization::Bmi_Formulation::get_forcing_file_path </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad2b6cfa0d883119c538dab65392eab7c">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a70b112dda668c7a508940898200b1471">realization::Bmi_Multi_Formulation</a>.</p>
-
-</div>
-</div>
 <a id="a2e9d4749500d3f5ea434d77861b03990" name="a2e9d4749500d3f5ea434d77861b03990"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2e9d4749500d3f5ea434d77861b03990">&#9670;&#160;</a></span>get_formulation_type()</h2>
 
@@ -1728,36 +1696,6 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a62c987fab9e8ad745f1088abd04ab4b9" name="a62c987fab9e8ad745f1088abd04ab4b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a62c987fab9e8ad745f1088abd04ab4b9">&#9670;&#160;</a></span>is_bmi_using_forcing_file()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool realization::Bmi_Formulation::is_bmi_using_forcing_file </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Whether the backing model uses/reads the forcing file directly for getting input data. </p>
-<dl class="section return"><dt>Returns</dt><dd>Whether the backing model uses/reads the forcing file directly for getting input data. </dd></dl>
-
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a06bd8d371f4ce2f4206d48b682beab59">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a4cdad4c937f0f546da35c69815c95abe">realization::Bmi_Multi_Formulation</a>.</p>
-
-</div>
-</div>
 <a id="aaa4dcba7e78f634ad0475bf1e3f3a697" name="aaa4dcba7e78f634ad0475bf1e3f3a697"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaa4dcba7e78f634ad0475bf1e3f3a697">&#9670;&#160;</a></span>is_model_initialized()</h2>
 
@@ -2368,6 +2306,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">                BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS</div>
 <div class="line">                BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,</div>
 <div class="line">                BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,</div>
 <div class="line">                BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,</div>
@@ -2552,7 +2491,6 @@ Friends</h2></td></tr>
 <div class="line">                BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,</div>
 <div class="line">                BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR,</div>
 <div class="line">                BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE,</div>
-<div class="line">                BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS</div>
 <div class="line">        }</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___formulation.html#aaa8372e60eb6bd0ac453a3633cda00c2">get_required_parameters()</a>.</p>
@@ -2569,7 +2507,7 @@ Friends</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___formulation.html">Bmi_Formulation</a></li>
-    <li class="footer">Generated on Tue Jun 11 2024 18:29:11 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Tue Jun 11 2024 23:43:59 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -1,8 +1,8 @@
 var classmodels_1_1bmi_1_1_bmi___cpp___adapter =
 [
-    [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ac396fed0fb99b146a4cfae136ef661db", null ],
-    [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afab5abf080fb6a52edc0ac7ee3fbb4be", null ],
-    [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1d12e828bab29517b53cd06cb7226237", null ],
+    [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a07240d54f2924e9b436ad12c60219620", null ],
+    [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a5de7c6f479c32499109aeebbfe630249", null ],
+    [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aae4f704dd1a65d6bd98f3305647ee3e8", null ],
     [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a9b0058de857cb24365c4d2a8a2fd09a2", null ],
     [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a5ad0335860170d44de17c6567a7efa66", null ],
     [ "~Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a064c762f01d72e93819ddda43a045241", null ],
@@ -78,10 +78,8 @@ var classmodels_1_1bmi_1_1_bmi___cpp___adapter =
     [ "bmi_model_has_fixed_time_step", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a97a27219b39d6de5a061e6ea0780711c", null ],
     [ "bmi_model_time_convert_factor", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a21ac56d555a07e58fccbef9dc2d867c9", null ],
     [ "bmi_model_time_step_size", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#abd1717cf52bec5736e39575af54eea2f", null ],
-    [ "bmi_model_uses_forcing_file", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a384ff24215e8acfb0744c46cac56183e", null ],
     [ "bmi_registration_function", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ad9c8e724b1cbb9fff6ec68dc1410ca8b", null ],
     [ "dyn_lib_handle", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2bb1cba086a935b90f356f29def46d54", null ],
-    [ "forcing_file_path", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ae6d1be4a39ef76547004c3392b95f3e4", null ],
     [ "init_exception_msg", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2698bc13d9ced362e18cb8cf0dab82d7", null ],
     [ "input_var_names", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a21e6426f0db58661e3548ba2e9b93058", null ],
     [ "model_create_fname", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a74326d07e1041116764a994d9a03dd63", null ],

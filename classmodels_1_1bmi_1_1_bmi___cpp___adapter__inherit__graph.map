@@ -1,9 +1,9 @@
 <map id="models::bmi::Bmi_Cpp_Adapter" name="models::bmi::Bmi_Cpp_Adapter">
-<area shape="rect" id="Node000001" title="A thin wrapper class to provide convenience functions around raw BMI models written in C++,..." alt="" coords="11,1463,190,2081"/>
-<area shape="rect" id="Node000002" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="9,1120,192,1415"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,1430,103,1463,98,1463,98,1430"/>
-<area shape="rect" id="Node000003" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="5,419,196,1072"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="103,1087,103,1120,98,1120,98,1087"/>
-<area shape="rect" id="Node000004" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="24,5,177,371"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="103,386,103,419,98,419,98,386"/>
+<area shape="rect" id="Node000001" title="A thin wrapper class to provide convenience functions around raw BMI models written in C++,..." alt="" coords="7,1423,186,2041"/>
+<area shape="rect" id="Node000002" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="5,1080,188,1375"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,1390,99,1423,94,1423,94,1390"/>
+<area shape="rect" id="Node000003" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="7,419,187,1032"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,1047,99,1080,94,1080,94,1047"/>
+<area shape="rect" id="Node000004" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="20,5,173,371"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="99,386,99,419,94,419,94,386"/>
 </map>
