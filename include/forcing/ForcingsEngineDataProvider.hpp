@@ -16,14 +16,25 @@ static constexpr auto default_time_format = "%Y-%m-%d %H:%M:%S";
 
 namespace detail {
 
+//! Storage for Forcings Engine-specific BMI instances.
 struct ForcingsEngineStorage {
     using key_type   = std::string;
     using bmi_type   = models::bmi::Bmi_Py_Adapter;
     using value_type = std::shared_ptr<bmi_type>;
     
-    value_type get(const key_type& key);
-    void       set(const key_type& key, value_type value);
-    void       clear();
+    value_type get(const key_type& key)
+    {
+        auto pos = data_.find(key);
+        if (pos == data_.end()) {
+          return nullptr;
+        }
+        
+        return pos->second;
+    }
+
+    void set(const key_type& key, value_type value) { data_[key] = value; }
+
+    void clear() { data_.clear(); }
 
   private:
     //! Instance map of underlying BMI models.
@@ -90,6 +101,11 @@ struct ForcingsEngineDataProvider
         return (epoch - time_begin_) / time_step_;
     }
 
+    std::shared_ptr<models::bmi::Bmi_Py_Adapter> model() noexcept
+    {
+        return bmi_;
+    }
+
     /* Remaining virtual member functions from DataProvider must be implemented
        by derived classes. */
 
@@ -149,6 +165,15 @@ struct ForcingsEngineDataProvider
     void next() {
         bmi_->Update();
         time_current_index_++;
+    }
+
+    void next(double time) {
+      const auto start = bmi_->GetCurrentTime();
+      bmi_->UpdateUntil(time);
+      const auto end = bmi_->GetCurrentTime();
+      time_current_index_ += static_cast<int64_t>(
+        (end - start) / bmi_->GetTimeStep()
+      );
     }
 
     //! Forcings Engine instance

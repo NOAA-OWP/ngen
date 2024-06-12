@@ -10,13 +10,17 @@ namespace data_access {
 struct ForcingsEngineLumpedDataProvider
   : public ForcingsEngineDataProvider<double, CatchmentAggrDataSelector>
 {
+    using data_type = data_type;
+    using selection_type = selection_type;
+    using base_type = ForcingsEngineDataProvider<data_type, selection_type>;
+
     static constexpr auto bad_index = static_cast<std::size_t>(-1);
 
     ~ForcingsEngineLumpedDataProvider() override = default;
 
-    double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
+    data_type get_value(const selection_type& selector, data_access::ReSampleMethod m) override;
 
-    std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
+    std::vector<data_type> get_values(const selection_type& selector, data_access::ReSampleMethod m) override;
 
     /**
      * @brief Get the index in `CAT-ID` for a given divide in the instance cache.
@@ -45,10 +49,12 @@ struct ForcingsEngineLumpedDataProvider
     }
 
   private:
+    friend base_type;
+
     ForcingsEngineLumpedDataProvider(
         const std::string& init,
-        std::size_t time_begin_seconds,
-        std::size_t time_end_seconds
+        std::time_t time_begin_seconds,
+        std::time_t time_end_seconds
     );
 
     /**

@@ -4,13 +4,13 @@
 
 namespace data_access {
 
-using BaseProvider = ForcingsEngineDataProvider<Cell, GridDataSelector>;
 using Provider = ForcingsEngineGriddedDataProvider;
+using BaseProvider = Provider::base_type;
 
 Provider::ForcingsEngineGriddedDataProvider(
     const std::string& init,
-    std::size_t time_begin_seconds,
-    std::size_t time_end_seconds
+    std::time_t time_begin_seconds,
+    std::time_t time_end_seconds
 )
   : BaseProvider(init, time_begin_seconds, time_end_seconds)
 {
@@ -47,6 +47,11 @@ Provider::ForcingsEngineGriddedDataProvider(
 
 Cell Provider::get_value(const GridDataSelector& selector, data_access::ReSampleMethod m)
 {
+    throw std::runtime_error{"ForcingsEngineGriddedDataProvider::get_value() is not implemented"};
+}
+
+std::vector<Cell> Provider::get_values(const GridDataSelector& selector, data_access::ReSampleMethod m)
+{
     if (m != ReSampleMethod::SUM && m != ReSampleMethod::MEAN) {
         throw std::runtime_error{"Given ReSampleMethod " + std::to_string(m) + " not implemented."};
     }
@@ -54,33 +59,32 @@ Cell Provider::get_value(const GridDataSelector& selector, data_access::ReSample
     const auto start = clock_type::from_time_t(selector.initial_time());
     const auto end = std::chrono::seconds{selector.duration()} + start;
     const auto step = std::chrono::seconds{record_duration()};
-
-    auto cell = selector.cells()[0]; // FIXME: bad semantics, 
     
+    std::vector<Cell> cells = { selector.cells().begin(), selector.cells().end() };
     for (auto current = start; current < end; current += step) {
-        bmi_->UpdateUntil(current.time_since_epoch().count());
-
+        this->next(current.time_since_epoch().count());
+        
         boost::span<double> values{
             static_cast<double*>(bmi_->GetValuePtr(selector.variable())),
             var_grid_.rows * var_grid_.columns
         };
 
-        cell.value += values[cell.x + cell.y * var_grid_.rows];
+        for (auto& cell : cells) {
+            cell.value += values[cell.x + cell.y * var_grid_.rows];
+        }
     }
 
     if (m == ReSampleMethod::MEAN) {
         const auto time_step_seconds = step.count();
         const auto time_duration = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
         const auto num_time_steps = time_duration / time_step_seconds;
-        cell.value /= num_time_steps;
+
+        for (auto& cell : cells) {
+            cell.value /= num_time_steps;
+        }
     }
 
-    return cell;
-}
-
-std::vector<Cell> Provider::get_values(const GridDataSelector& selector, data_access::ReSampleMethod m)
-{
-    
+    return cells;
 }
 
 

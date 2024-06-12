@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "ForcingsEngineDataProvider.hpp"
 #include "ForcingsEngineLumpedDataProvider.hpp"
 
 #include "NGenConfig.h"
@@ -40,7 +41,7 @@ struct ForcingsEngineLumpedDataProviderTest
     static const forcing_params default_params;
 
     static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_;
-    static provider_type* provider_;
+    static std::unique_ptr<provider_type> provider_;
     static mpi_info mpi_;
 };
 
@@ -50,7 +51,7 @@ using TestFixture = ForcingsEngineLumpedDataProviderTest;
 /* Static member initialization */
 const forcing_params TestFixture::default_params = { "", "ForcingsEngine", "2024-01-17 01:00:00", "2024-01-17 06:00:00" };
 std::shared_ptr<utils::ngenPy::InterpreterUtil> TestFixture::gil_ = nullptr;
-TestFixture::provider_type* TestFixture::provider_ = nullptr;
+std::unique_ptr<TestFixture::provider_type> TestFixture::provider_ = nullptr;
 mpi_info TestFixture::mpi_ = {};
 
 // Initialize MPI if available, get Python GIL, and initialize forcings engine.
@@ -75,7 +76,7 @@ void TestFixture::SetUpTestSuite()
 // Destroy providers, GIL, and finalize MPI
 void TestFixture::TearDownTestSuite()
 {
-    provider_->finalize_all();
+    data_access::detail::forcings_engine_instances.clear();
     gil_.reset();
 
     #if NGEN_WITH_MPI
@@ -92,11 +93,12 @@ void TestFixture::TearDownTestSuite()
  */
 TEST_F(ForcingsEngineLumpedDataProviderTest, Storage)
 {
-    auto* inst_a = data_access::ForcingsEngineLumpedDataProvider::instance(config_file, default_params.start_time, default_params.end_time);
-    ASSERT_EQ(inst_a, provider_);
+    auto inst_a = data_access::ForcingsEngineLumpedDataProvider::make_lumped_instance(config_file, default_params.start_time, default_params.end_time);
+    ASSERT_EQ(inst_a->model(), provider_->model());
+    
 
-    auto* inst_b = data_access::ForcingsEngineLumpedDataProvider::instance(config_file, default_params.start_time, default_params.end_time);
-    ASSERT_EQ(inst_a, inst_b);
+    auto inst_b = data_access::ForcingsEngineLumpedDataProvider::make_lumped_instance(config_file, default_params.start_time, default_params.end_time);
+    ASSERT_EQ(inst_a->model(), inst_b->model());
 }
 
 TEST_F(ForcingsEngineLumpedDataProviderTest, Timing)

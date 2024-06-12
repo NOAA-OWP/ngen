@@ -10,11 +10,15 @@ namespace data_access {
 struct ForcingsEngineGriddedDataProvider
   : public ForcingsEngineDataProvider<Cell, GridDataSelector>
 {
+    using data_type = data_type;
+    using selection_type = selection_type;
+    using base_type = ForcingsEngineDataProvider<data_type, selection_type>;
+
     ~ForcingsEngineGriddedDataProvider() override = default;
 
-    Cell get_value(const GridDataSelector& selector, data_access::ReSampleMethod m) override;
+    data_type get_value(const selection_type& selector, data_access::ReSampleMethod m) override;
 
-    std::vector<Cell> get_values(const GridDataSelector& selector, data_access::ReSampleMethod m) override;
+    std::vector<data_type> get_values(const selection_type& selector, data_access::ReSampleMethod m) override;
 
     static std::unique_ptr<ForcingsEngineDataProvider> make_gridded_instance(
         const std::string& init,
@@ -27,10 +31,12 @@ struct ForcingsEngineGriddedDataProvider
     }
 
   private:
+    friend base_type;
+
     ForcingsEngineGriddedDataProvider(
         const std::string& init,
-        std::size_t time_begin_seconds,
-        std::size_t time_end_seconds
+        std::time_t time_begin_seconds,
+        std::time_t time_end_seconds
     );
 
     int var_grid_id_{};

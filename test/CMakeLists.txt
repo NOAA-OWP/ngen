@@ -439,6 +439,7 @@ ngen_add_test(
     test_forcings_engine
     OBJECTS
         forcing/ForcingsEngineLumpedDataProvider_Test.cpp
+        forcing/ForcingsEngineGriddedDataProvider_Test.cpp
     LIBRARIES
         NGen::forcing
     REQUIRES

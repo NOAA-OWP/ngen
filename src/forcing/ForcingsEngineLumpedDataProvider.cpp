@@ -8,8 +8,8 @@ using Provider = ForcingsEngineLumpedDataProvider;
 
 Provider::ForcingsEngineLumpedDataProvider(
     const std::string& init,
-    std::size_t time_begin_seconds,
-    std::size_t time_end_seconds
+    std::time_t time_begin_seconds,
+    std::time_t time_end_seconds
 )
   : BaseProvider(init, time_begin_seconds, time_end_seconds)
 {
