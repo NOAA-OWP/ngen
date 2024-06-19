@@ -14,19 +14,19 @@ class HY_PointHydroNexus : public HY_HydroNexus
         virtual ~HY_PointHydroNexus();
 
         /** get the request percentage of downstream flow through this nexus at timestep t. */
-        double get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow);
+        double get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow) override;
 
         /** add flow to this nexus for timestep t. */
-        void add_upstream_flow(double val, std::string catchment_id, time_step_t t);
+        void add_upstream_flow(double val, std::string catchment_id, time_step_t t) override;
 
         /** inspect a nexus to see what flows are recorded at a time step. */
-        std::pair<double, int> inspect_upstream_flows(time_step_t t);
+        std::pair<double, int> inspect_upstream_flows(time_step_t t) override;
 
         /** inspect a nexus to see what requests are recorded at a time step. */
-        virtual std::pair<double, int> inspect_downstream_requests(time_step_t t);
+        virtual std::pair<double, int> inspect_downstream_requests(time_step_t t) override;
 
         /** get the units that flows are represented in. */
-        std::string get_flow_units();
+        std::string get_flow_units() override;
 
         void set_mintime(time_step_t);
 

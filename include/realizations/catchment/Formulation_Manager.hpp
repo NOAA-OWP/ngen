@@ -25,8 +25,6 @@
 namespace realization {
 
     class Formulation_Manager {
-        typedef std::tuple<std::string, std::string> dual_keys;
-
         public:
 
             std::shared_ptr<Simulation_Time> Simulation_Time_Object;
@@ -47,13 +45,9 @@ namespace realization {
                 this->tree = loaded_tree;
             }
 
-            virtual ~Formulation_Manager(){
-#if NGEN_WITH_NETCDF
-                data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
-#endif
-            };
+            ~Formulation_Manager() = default;
 
-            virtual void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
+            void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
                 //TODO seperate the parsing of configuration options like time
                 //and routing and other non feature specific tasks from this main function
                 //which has to iterate the entire hydrofabric.
@@ -186,46 +180,46 @@ namespace realization {
                 }
             }
 
-            virtual void add_formulation(std::shared_ptr<Catchment_Formulation> formulation) {
+            void add_formulation(std::shared_ptr<Catchment_Formulation> formulation) {
                 this->formulations.emplace(formulation->get_id(), formulation);
             }
 
-            virtual std::shared_ptr<Catchment_Formulation> get_formulation(std::string id) const {
+            std::shared_ptr<Catchment_Formulation> get_formulation(std::string id) const {
                 // TODO: Implement on-the-fly formulation creation using global parameters
                 return this->formulations.at(id);
             }
 
-            virtual std::shared_ptr<Catchment_Formulation> get_domain_formulation(long id) const {
+            std::shared_ptr<Catchment_Formulation> get_domain_formulation(long id) const {
                 return this->domain_formulations.at(id);
             }
 
-            virtual bool has_domain_formulation(int id) const {
+            bool has_domain_formulation(int id) const {
                 return this->domain_formulations.count( id ) > 0;
             }
 
-            virtual bool contains(std::string identifier) const {
+            bool contains(std::string identifier) const {
                 return this->formulations.count(identifier) > 0;
             }
 
             /**
              * @return The number of elements within the collection
              */
-            virtual int get_size() {
+            int get_size() {
                 return this->formulations.size();
             }
 
             /**
              * @return Whether or not the collection is empty
              */
-            virtual bool is_empty() {
+            bool is_empty() {
                 return this->formulations.empty();
             }
 
-            virtual typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator begin() const {
+            typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator begin() const {
                 return this->formulations.cbegin();
             }
 
-            virtual typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator end() const {
+            typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator end() const {
                 return this->formulations.cend();
             }
 
@@ -244,6 +238,36 @@ namespace realization {
                     return this->routing_config->t_route_config_file_with_path;
                 else
                     return "";
+            }
+
+            /**
+             * Release any resources that should not be held as the run is shutting down
+             *
+             * In particular, this should be called before MPI_Finalize()
+             */
+            void finalize() {
+                // The calls in these loops are staticly dispatched to
+                // Catchment_Formulation::finalize(). That does not
+                // inherit from DataProvider, with its virtual member
+                // function of the same name.
+                //
+                // If any formulation class needs to customize this
+                // behavior through this becoming a virtual dispatch,
+                // take care. Bmi_Multi_Formulation was a concern, but
+                // does not currently need to because none of its
+                // constituent formulations points to any forcing
+                // object other than the enclosing
+                // Bmi_Multi_Formulation instance itself.
+                for (auto const& fmap: formulations) {
+                    fmap.second->finalize();
+                }
+                for (auto const& fmap: domain_formulations) {
+                    fmap.second->finalize();
+                }
+
+#if NGEN_WITH_NETCDF
+                data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
+#endif
             }
 
             /**

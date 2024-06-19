@@ -604,6 +604,8 @@ int main(int argc, char *argv[]) {
                   << std::endl;
     }
 
+  manager->finalize();
+
 #if NGEN_WITH_MPI
     MPI_Finalize();
 #endif

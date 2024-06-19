@@ -14,9 +14,9 @@
 #define BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG "init_config"
 #define BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR "main_output_variable"
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE "model_type_name"
-#define BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS "uses_forcing_file"
 
 // Then the optional
+#define BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS "uses_forcing_file"
 #define BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE "forcing_file"
 #define BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "variables_names_map"
 // TODO: change this (and output_header_fields) to something like output_file_variables to distinguish from BMI output variables
@@ -129,8 +129,6 @@ namespace realization {
          */
         virtual const double get_model_end_time() = 0;
 
-        virtual const std::string &get_forcing_file_path() const = 0;
-
         /**
          * Get the name of the specific type of the backing model object.
          *
@@ -188,13 +186,6 @@ namespace realization {
         virtual bool is_bmi_model_time_step_fixed() = 0;
 
         virtual bool is_bmi_output_variable(const std::string &var_name) = 0;
-
-        /**
-         * Whether the backing model uses/reads the forcing file directly for getting input data.
-         *
-         * @return Whether the backing model uses/reads the forcing file directly for getting input data.
-         */
-        virtual bool is_bmi_using_forcing_file() const = 0;
 
         /**
          * Test whether the backing model has been initialize using the BMI standard ``Initialize`` function.

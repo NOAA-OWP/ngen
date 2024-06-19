@@ -12,7 +12,6 @@ AbstractCLibBmiAdapter::AbstractCLibBmiAdapter(
     const std::string& type_name,
     std::string library_file_path,
     std::string bmi_init_config,
-    std::string forcing_file_path,
     bool allow_exceed_end,
     bool has_fixed_time_step,
     std::string registration_func,
@@ -21,7 +20,6 @@ AbstractCLibBmiAdapter::AbstractCLibBmiAdapter(
     : Bmi_Adapter(
           type_name,
           std::move(bmi_init_config),
-          std::move(forcing_file_path),
           allow_exceed_end,
           has_fixed_time_step,
           output

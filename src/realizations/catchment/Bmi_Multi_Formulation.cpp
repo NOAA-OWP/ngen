@@ -286,11 +286,6 @@ const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const 
     return output_var_name;
 }
 
-// TODO: remove from this level - it belongs (perhaps) as part of the ForcingProvider interface, but is general to it
-const std::string &Bmi_Multi_Formulation::get_forcing_file_path() const {
-    return modules[0]->get_forcing_file_path();
-}
-
 std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
     // TODO: have to do some figuring out to make sure this isn't ambiguous (i.e., same output var name from two modules)
     // TODO: need to verify that output variable names are valid, or else warn and return default
@@ -405,11 +400,6 @@ bool Bmi_Multi_Formulation::is_bmi_model_time_step_fixed() {
 
 bool Bmi_Multi_Formulation::is_bmi_output_variable(const std::string &var_name) {
     return modules.back()->is_bmi_output_variable(var_name);
-}
-
-bool Bmi_Multi_Formulation::is_bmi_using_forcing_file() const {
-    return std::any_of(modules.cbegin(), modules.cend(),
-                       [](const std::shared_ptr<Bmi_Formulation>& m) { return m->is_bmi_using_forcing_file(); });
 }
 
 bool Bmi_Multi_Formulation::is_model_initialized() {

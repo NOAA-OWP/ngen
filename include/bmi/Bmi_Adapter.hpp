@@ -19,7 +19,7 @@ namespace models {
         class Bmi_Adapter : public ::bmi::Bmi {
         public:
 
-            Bmi_Adapter(std::string model_name, std::string bmi_init_config, std::string forcing_file_path, bool allow_exceed_end,
+            Bmi_Adapter(std::string model_name, std::string bmi_init_config, bool allow_exceed_end,
                         bool has_fixed_time_step, utils::StreamHandler output);
 
             Bmi_Adapter(Bmi_Adapter const&) = delete;
@@ -156,9 +156,6 @@ namespace models {
             double bmi_model_time_convert_factor;
             /** Pointer to stored time step size value of backing model, if it is fixed and has been retrieved. */
             std::shared_ptr<double> bmi_model_time_step_size = nullptr;
-            /** Whether this particular model implementation directly reads input data from the forcing file. */
-            bool bmi_model_uses_forcing_file;
-            std::string forcing_file_path;
             /** Message from an exception (if encountered) on the first attempt to initialize the backing model. */
             std::string init_exception_msg;
             /** Pointer to collection of input variable names for backing model, used by ``GetInputVarNames()``. */

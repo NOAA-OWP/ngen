@@ -208,8 +208,6 @@ namespace realization {
                                                            const std::shared_ptr<Bmi_Formulation>& out_module,
                                                            const std::shared_ptr<Bmi_Formulation>& in_module);
 
-        const std::string &get_forcing_file_path() const override;
-
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
          *
@@ -424,8 +422,6 @@ namespace realization {
         bool is_bmi_model_time_step_fixed() override;
 
         bool is_bmi_output_variable(const std::string &var_name) override;
-
-        bool is_bmi_using_forcing_file() const override;
 
         /**
          * Test whether all backing models have been initialize using the BMI standard ``Initialize`` function.
