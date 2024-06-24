@@ -16,6 +16,12 @@ struct ForcingsEngineLumpedDataProvider
 
     static constexpr auto bad_index = static_cast<std::size_t>(-1);
 
+    ForcingsEngineLumpedDataProvider(
+        const std::string& init,
+        std::size_t time_begin_seconds,
+        std::size_t time_end_seconds
+    );
+
     ~ForcingsEngineLumpedDataProvider() override = default;
 
     data_type get_value(const selection_type& selector, data_access::ReSampleMethod m) override;
@@ -25,44 +31,27 @@ struct ForcingsEngineLumpedDataProvider
     /**
      * @brief Get the index in `CAT-ID` for a given divide in the instance cache.
      * @note The `CAT-ID` output variable uses integer values instead of strings.
-     * 
+     *
      * @param divide_id A hydrofabric divide ID, i.e. "cat-*"
-     * @return size_type 
+     * @return size_type
      */
     std::size_t divide_index(const std::string& divide_id) noexcept;
 
     /**
      * @brief Get the index of a variable in the instance cache.
-     * 
-     * @param variable 
-     * @return size_type 
+     *
+     * @param variable
+     * @return size_type
      */
     std::size_t variable_index(const std::string& variable) noexcept;
 
-    static std::unique_ptr<ForcingsEngineDataProvider> make_lumped_instance(
-        const std::string& init,
-        const std::string& time_start,
-        const std::string& time_end,
-        const std::string& time_fmt = default_time_format
-    ) {
-        return make_instance<ForcingsEngineLumpedDataProvider>(init, time_start, time_end, time_fmt);
-    }
-
   private:
-    friend base_type;
-
-    ForcingsEngineLumpedDataProvider(
-        const std::string& init,
-        std::time_t time_begin_seconds,
-        std::time_t time_end_seconds
-    );
-
     /**
      * @brief Get a forcing value from the instance
-     * 
+     *
      * @param divide_id Divide ID to index at
      * @param variable Forcings variable to get
-     * @return double 
+     * @return double
      */
     double at(
         const std::string& divide_id,
@@ -71,10 +60,10 @@ struct ForcingsEngineLumpedDataProvider
 
     /**
      * @brief Get a forcing value from the instance
-     * 
+     *
      * @param divide_index Divide index
      * @param variable_index Variable index
-     * @return double 
+     * @return double
      */
     double at(
         std::size_t divide_idx,

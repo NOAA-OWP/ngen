@@ -14,37 +14,6 @@ static constexpr auto forcings_engine_python_class  = "NWMv3_Forcing_Engine_BMI_
 static constexpr auto forcings_engine_python_classpath = "NextGen_Forcings_Engine.NWMv3_Forcing_Engine_BMI_model";
 static constexpr auto default_time_format = "%Y-%m-%d %H:%M:%S";
 
-namespace detail {
-
-//! Storage for Forcings Engine-specific BMI instances.
-struct ForcingsEngineStorage {
-    using key_type   = std::string;
-    using bmi_type   = models::bmi::Bmi_Py_Adapter;
-    using value_type = std::shared_ptr<bmi_type>;
-    
-    value_type get(const key_type& key)
-    {
-        auto pos = data_.find(key);
-        if (pos == data_.end()) {
-          return nullptr;
-        }
-        
-        return pos->second;
-    }
-
-    void set(const key_type& key, value_type value) { data_[key] = value; }
-
-    void clear() { data_.clear(); }
-
-  private:
-    //! Instance map of underlying BMI models.
-    std::unordered_map<key_type, value_type> data_;
-};
-
-static ForcingsEngineStorage forcings_engine_instances{};
-
-} // namespace detail
-
 //! Parse time string from format.
 //! Utility function for ForcingsEngineLumpedDataProvider constructor.
 time_t parse_time(const std::string& time, const std::string& fmt);
@@ -56,6 +25,43 @@ time_t parse_time(const std::string& time, const std::string& fmt);
  */
 void assert_forcings_engine_requirements();
 
+namespace detail {
+
+//! Storage for Forcings Engine-specific BMI instances.
+struct ForcingsEngineStorage {
+    using key_type   = std::string;
+    using bmi_type   = models::bmi::Bmi_Py_Adapter;
+    using value_type = std::shared_ptr<bmi_type>;
+
+    value_type get(const key_type& key)
+    {
+        auto pos = data_.find(key);
+        if (pos == data_.end()) {
+          return nullptr;
+        }
+
+        return pos->second;
+    }
+
+    void set(const key_type& key, value_type value)
+    {
+        data_[key] = value;
+    }
+
+    void clear()
+    {
+        data_.clear();
+    }
+
+  private:
+    //! Instance map of underlying BMI models.
+    std::unordered_map<key_type, value_type> data_;
+};
+
+static ForcingsEngineStorage forcings_engine_instances{};
+
+} // namespace detail
+
 template<typename DataType, typename SelectionType>
 struct ForcingsEngineDataProvider
   : public DataProvider<DataType, SelectionType>
@@ -64,7 +70,7 @@ struct ForcingsEngineDataProvider
     using selection_type = SelectionType;
     using clock_type = std::chrono::system_clock;
 
-    ~ForcingsEngineDataProvider() = default;
+    ~ForcingsEngineDataProvider() override = default;
 
     boost::span<const std::string> get_available_variable_names() override
     {
@@ -75,7 +81,7 @@ struct ForcingsEngineDataProvider
     {
         return clock_type::to_time_t(time_begin_);
     }
-  
+
     long get_data_stop_time() override
     {
         return clock_type::to_time_t(time_end_);
@@ -109,65 +115,50 @@ struct ForcingsEngineDataProvider
     /* Remaining virtual member functions from DataProvider must be implemented
        by derived classes. */
 
-    data_type get_value(const selection_type& selector, data_access::ReSampleMethod m) override = 0;
-    
-    std::vector<data_type> get_values(const selection_type& selector, data_access::ReSampleMethod m) override = 0;
+    data_type get_value(
+      const selection_type& selector,
+      data_access::ReSampleMethod m
+    ) override = 0;
+
+    std::vector<data_type> get_values(
+      const selection_type& selector,
+      data_access::ReSampleMethod m
+    ) override = 0;
 
   protected:
-    // TODO: It may make more sense to have time_begin_seconds and time_end_seconds coalesced into
-    //       a single argument: `clock_type::duration time_duration`, since the forcings engine
-    //       manages time via a duration rather than time points. !! Need to double check
     ForcingsEngineDataProvider(
-      const std::string& init,
-      std::size_t time_begin_seconds,
-      std::size_t time_end_seconds
+        std::string init,
+        std::size_t time_begin_seconds,
+        std::size_t time_end_seconds
     )
       : time_begin_(std::chrono::seconds{time_begin_seconds})
       , time_end_(std::chrono::seconds{time_end_seconds})
+      , bmi_(detail::forcings_engine_instances.get(init))
+      , time_step_(std::chrono::seconds{static_cast<int64_t>(bmi_->GetTimeStep())})
+      , time_current_index_(std::chrono::seconds{static_cast<int64_t>(bmi_->GetCurrentTime())} / time_step_)
+      , var_output_names_(bmi_->GetOutputVarNames())
+    {}
+
+    /**
+     * Update the Forcings Engine instance to the next timestep.
+     */
+    void next()
     {
-
-        assert_forcings_engine_requirements();
-
-        bmi_ = detail::forcings_engine_instances.get(init);
-        if (bmi_ == nullptr) {
-            bmi_ = std::make_shared<models::bmi::Bmi_Py_Adapter>(
-                "ForcingsEngine",
-                init,
-                forcings_engine_python_classpath,
-                /*allow_exceed_end=*/true,
-                /*has_fixed_time_step=*/true,
-                utils::getStdOut()
-            );
-        
-            detail::forcings_engine_instances.set(init, bmi_);
-        }
-
-        time_step_ = std::chrono::seconds{static_cast<int64_t>(bmi_->GetTimeStep())};
-        time_current_index_ = std::chrono::seconds{static_cast<int64_t>(bmi_->GetCurrentTime())} / time_step_;
-        var_output_names_ = bmi_->GetOutputVarNames();
-    }
-
-    template<typename Derived>
-    static std::unique_ptr<ForcingsEngineDataProvider> make_instance(
-        const std::string& init,
-        const std::string& time_begin,
-        const std::string& time_end,
-        const std::string& time_fmt = default_time_format
-    )
-    {
-        auto time_begin_epoch = parse_time(time_begin, time_fmt);
-        auto time_end_epoch = parse_time(time_end, time_fmt);
-        return std::unique_ptr<Derived>{
-            new Derived{init, time_begin_epoch, time_end_epoch}
-        };
-    }
-
-    void next() {
         bmi_->Update();
         time_current_index_++;
     }
 
-    void next(double time) {
+    /**
+     * Update the Forcings Engine instance to the next timestep
+     * before `time`.
+     *
+     * @param time Time in seconds to update to.
+     *             i.e. A value of 14401 will update
+     *                  the instance to the 5th time index,
+     *                  since 3600 * 4 = 14400 but 14400 < 14401.
+     */
+    void next(double time)
+    {
       const auto start = bmi_->GetCurrentTime();
       bmi_->UpdateUntil(time);
       const auto end = bmi_->GetCurrentTime();
@@ -191,5 +182,60 @@ struct ForcingsEngineDataProvider
     clock_type::duration   time_step_{};
     std::size_t            time_current_index_{};
 };
+
+
+// Forcings Engine factory function
+template<
+  typename Tp,
+  typename... Args,
+  std::enable_if_t<
+    std::is_base_of<
+      ForcingsEngineDataProvider<
+        typename Tp::data_type,
+        typename Tp::selection_type
+      >,
+      Tp
+    >::value,
+    bool
+  > = true
+>
+std::unique_ptr<typename Tp::base_type> make_forcings_engine(
+  const std::string& init,
+  const std::string& time_begin,
+  const std::string& time_end,
+  const std::string& time_fmt = default_time_format,
+  Args&&...          args
+)
+{
+    // Ensure python and other requirements are met to use
+    // the python forcings engine.
+    // TODO: Move this to a place where it only runs once,
+    //       possibly in NGen.cpp?
+    assert_forcings_engine_requirements();
+
+    // Get or create a BMI instance based on the init config path
+    auto instance = detail::forcings_engine_instances.get(init);
+    if (instance == nullptr) {
+        instance = std::make_shared<models::bmi::Bmi_Py_Adapter>(
+            "ForcingsEngine",
+            init,
+            forcings_engine_python_classpath,
+            /*allow_exceed_end=*/true,
+            /*has_fixed_time_step=*/true,
+            utils::getStdOut()
+        );
+
+        detail::forcings_engine_instances.set(init, instance);
+    }
+
+    // Create the derived instance
+    return std::make_unique<Tp>(
+        init,
+        parse_time(time_begin, time_fmt),
+        parse_time(time_end, time_fmt),
+        std::forward<Args>(args)...
+    );
+}
+
 
 } // namespace data_access

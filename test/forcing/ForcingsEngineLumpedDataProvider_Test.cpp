@@ -66,7 +66,7 @@ void TestFixture::SetUpTestSuite()
     data_access::assert_forcings_engine_requirements();
 
     // Create a lumped forcings engine instance
-    TestFixture::provider_ = data_access::ForcingsEngineLumpedDataProvider::make_lumped_instance(
+    TestFixture::provider_ = data_access::make_forcings_engine<data_access::ForcingsEngineLumpedDataProvider>(
         config_file,
         default_params.start_time,
         default_params.end_time
@@ -93,11 +93,11 @@ void TestFixture::TearDownTestSuite()
  */
 TEST_F(ForcingsEngineLumpedDataProviderTest, Storage)
 {
-    auto inst_a = data_access::ForcingsEngineLumpedDataProvider::make_lumped_instance(config_file, default_params.start_time, default_params.end_time);
+    auto inst_a = data_access::make_forcings_engine<data_access::ForcingsEngineLumpedDataProvider>(config_file, default_params.start_time, default_params.end_time);
     ASSERT_EQ(inst_a->model(), provider_->model());
     
 
-    auto inst_b = data_access::ForcingsEngineLumpedDataProvider::make_lumped_instance(config_file, default_params.start_time, default_params.end_time);
+    auto inst_b = data_access::make_forcings_engine<data_access::ForcingsEngineLumpedDataProvider>(config_file, default_params.start_time, default_params.end_time);
     ASSERT_EQ(inst_a->model(), inst_b->model());
 }
 

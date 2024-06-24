@@ -59,7 +59,7 @@ void TestFixture::SetUpTestSuite()
 
     data_access::assert_forcings_engine_requirements();
 
-    TestFixture::provider_ = data_access::ForcingsEngineGriddedDataProvider::make_gridded_instance(
+    TestFixture::provider_ = data_access::make_forcings_engine<data_access::ForcingsEngineGriddedDataProvider>(
       config_file,
       default_params.start_time,
       default_params.end_time
@@ -83,10 +83,10 @@ void TestFixture::TearDownTestSuite()
  */
 TEST_F(ForcingsEngineGriddedDataProviderTest, Storage)
 {
-    auto inst_a = data_access::ForcingsEngineGriddedDataProvider::make_gridded_instance(config_file, default_params.start_time, default_params.end_time);
+    auto inst_a = data_access::make_forcings_engine<data_access::ForcingsEngineGriddedDataProvider>(config_file, default_params.start_time, default_params.end_time);
     ASSERT_EQ(inst_a->model(), provider_->model());
 
-    auto inst_b = data_access::ForcingsEngineGriddedDataProvider::make_gridded_instance(config_file, default_params.start_time, default_params.end_time);
+    auto inst_b = data_access::make_forcings_engine<data_access::ForcingsEngineGriddedDataProvider>(config_file, default_params.start_time, default_params.end_time);
     ASSERT_EQ(inst_a->model(), inst_b->model());
 }
 
@@ -113,6 +113,7 @@ TEST_F(ForcingsEngineGriddedDataProviderTest, VariableAccess)
     }
 
     // const auto selector = GridDataSelector{
+    //     SelectorConfig{provider_->get_data_start_time(), 3600, "LWDOWN", "seconds"},
     //     
     // }
 }
