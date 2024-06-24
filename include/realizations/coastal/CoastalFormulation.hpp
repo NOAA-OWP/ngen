@@ -42,7 +42,7 @@ protected:
 
     size_t selected_points_count(const selection_type& selector)
     {
-        auto* points = boost::get<std::vector<int>>(selector.points);
+        auto* points = boost::get<std::vector<int>>(&selector.points);
         size_t size = points ? points->size() : this->mesh_size(selector.variable_name);
         return size;
     }
