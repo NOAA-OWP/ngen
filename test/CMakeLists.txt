@@ -134,6 +134,21 @@ endfunction()
 
 ########################## Individual tests ##########################
 
+########################## Coastal Formulation Tests
+ngen_add_test(
+    test_coastal
+    OBJECTS
+        coastal/SchismFormulation_Test.cpp
+    LIBRARIES
+        NGen::core
+        NGen::realizations_catchment
+        NGen::core_mediator
+        NGen::forcing
+        NGen::ngen_bmi
+    REQUIRES
+        NGEN_WITH_BMI_FORTRAN
+)
+
 ########################## GeoJSON Unit Tests
 ngen_add_test(
     test_geojson

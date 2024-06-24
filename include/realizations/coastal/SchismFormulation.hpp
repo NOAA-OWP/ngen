@@ -1,7 +1,7 @@
 #pragma once
 
 #include <realizations/coastal/CoastalFormulation.hpp>
-#include <bmi/Bmi_Adapter.hpp>
+#include <bmi/Bmi_Fortran_Adapter.hpp>
 #include <memory>
 
 class SchismFormulation : public CoastalFormulation
@@ -25,8 +25,8 @@ public:
     long record_duration() override;
     size_t get_ts_index_for_time(const time_t &epoch_time) override;
 
-    data_type get_value(const selection_type& selector, ReSampleMethod m) override;
-    std::vector<data_type> get_values(const selection_type& selector, ReSampleMethod m) override;
+    data_type get_value(const selection_type& selector, data_access::ReSampleMethod m) override;
+    std::vector<data_type> get_values(const selection_type& selector, data_access::ReSampleMethod m) override;
 
     // Implementation of CoastalFormulation
     void initialize() override;
@@ -36,7 +36,7 @@ public:
     void get_values(const selection_type& selector, boost::span<double> data) override;
 
 private:
-    std::unique_ptr<Bmi_Fortran_Adapter> bmi_;
+    std::unique_ptr<models::bmi::Bmi_Fortran_Adapter> bmi_;
 
     // TODO: Some of these maybe should be members of
     // CoastalFormulation
