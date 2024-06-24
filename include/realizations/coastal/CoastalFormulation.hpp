@@ -16,18 +16,18 @@ public:
     virtual ~CoastalFormulation() = default;
 
     std::string get_id() const {
-        return this->id;
+        return this->id_;
     }
 
     virtual void initialize() = 0;
     virtual void finalize() = 0;
     virtual void update() = 0;
-    
+
     // The interface that DataProvider really should have
     virtual void get_values(const selection_type& selector, boost::span<double> data) = 0;
 
     // And an implementation of the usual version using it
-    std::vector<data_type> get_values(const selection_type& selector, ReSampleMethod) override
+    std::vector<data_type> get_values(const selection_type& selector, data_access::ReSampleMethod) override
     {
         std::vector<data_type> output(selected_points_count(selector));
         get_values(selector, output);
@@ -42,7 +42,7 @@ protected:
 
     size_t selected_points_count(const selection_type& selector)
     {
-        auto* points = get<std::vector<int>>(selector.points);
+        auto* points = boost::get<std::vector<int>>(selector.points);
         size_t size = points ? points->size() : this->mesh_size(selector.variable_name);
         return size;
     }
