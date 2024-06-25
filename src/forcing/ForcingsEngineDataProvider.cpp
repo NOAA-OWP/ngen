@@ -1,6 +1,7 @@
 #include <forcing/ForcingsEngineDataProvider.hpp>
 #include <utilities/python/InterpreterUtil.hpp>
 
+#include <ctime> // timegm
 #include <iomanip> // std::get_time
 
 namespace data_access {
@@ -15,7 +16,7 @@ time_t parse_time(const std::string& time, const std::string& fmt)
     std::stringstream tmstr{time};
     tmstr >> std::get_time(&tm_, fmt.c_str());
 
-    // Note: `timegm` is available for Linux and BSD (aka macOS) via time.h, but not Windows.
+    // Note: `timegm` is available for Linux and macOS via time.h, but not Windows.
     return timegm(&tm_);
 }
 
