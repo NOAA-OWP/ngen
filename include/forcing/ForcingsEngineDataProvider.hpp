@@ -144,11 +144,31 @@ struct ForcingsEngineDataProvider
     )
       : time_begin_(std::chrono::seconds{time_begin_seconds})
       , time_end_(std::chrono::seconds{time_end_seconds})
-      , bmi_(storage_type::instances.get(init))
-      , time_step_(std::chrono::seconds{static_cast<int64_t>(bmi_->GetTimeStep())})
-      , time_current_index_(std::chrono::seconds{static_cast<int64_t>(bmi_->GetCurrentTime())} / time_step_)
-      , var_output_names_(bmi_->GetOutputVarNames())
-    {}
+    {
+        // Get a forcings engine instance if it exists for this initialization file
+        auto bmi_ = storage_type::instances.get(init);
+
+        // If it doesn't exist, create it and assign it to the storage map
+        if (bmi_ == nullptr) {
+            // Outside of this branch, this->bmi_ != nullptr after this
+            bmi_ = std::make_shared<models::bmi::Bmi_Py_Adapter>(
+                "ForcingsEngine",
+                init,
+                forcings_engine_python_classpath,
+                /*allow_exceed_end=*/true,
+                /*has_fixed_time_step=*/true,
+                utils::getStdOut()
+            );
+
+            storage_type::instances.set(init, bmi_);
+        }
+
+        // Now, initialize the BMI dependent instance members
+        // NOTE: using std::lround instead of static_cast will prevent potential UB
+        time_step_ = std::chrono::seconds{std::lround(bmi_->GetTimeStep())};
+        time_current_index_ = (std::chrono::seconds{std::lround(bmi_->GetCurrentTime())} / time_step_); // resolves to long
+        var_output_names_ = bmi_->GetOutputVarNames();
+    }
 
     
     //! Update the Forcings Engine instance to the next timestep.
@@ -165,12 +185,11 @@ struct ForcingsEngineDataProvider
     //!                  since 3600 * 4 = 14400 but 14400 < 14401.
     void next(double time)
     {
-      const auto start = bmi_->GetCurrentTime();
-      bmi_->UpdateUntil(time);
-      const auto end = bmi_->GetCurrentTime();
-      time_current_index_ += static_cast<int64_t>(
-        (end - start) / bmi_->GetTimeStep()
-      );
+        const auto start = bmi_->GetCurrentTime();
+        bmi_->UpdateUntil(time);
+        const auto end = bmi_->GetCurrentTime();
+        const auto diff = end - start;
+        time_current_index_ += std::chrono::seconds{std::lround(diff)} / time_step_;
     }
 
     //! Forcings Engine instance
@@ -188,71 +207,5 @@ struct ForcingsEngineDataProvider
     clock_type::duration   time_step_{};
     std::size_t            time_current_index_{};
 };
-
-
-//! Forcings Engine factory constructor function
-//! @param init File path to instance initialization file.
-//! @param time_begin Beginning time of simulation in timestamp form.
-//! @param time_end End time of simulation in timestamp form.
-//! @param time_fmt Parse format for timestamp strings.
-//! @param args Additional arguments passed to derived constructor.
-//! @tparam Tp Derived Forcings Engine Type.
-//! @tparam Args Additional argument types passed to derived constructor.
-//! @note This function requires that @c Tp must derive from
-//!       type @c ForcingsEngineDataProvider<Tp::data_type, Tp::selection_type>.
-template<
-  typename Tp,
-  typename... Args,
-  std::enable_if_t<
-    std::is_base_of<
-      ForcingsEngineDataProvider<
-        typename Tp::data_type,
-        typename Tp::selection_type
-      >,
-      Tp
-    >::value,
-    bool
-  > = true
->
-std::unique_ptr<typename Tp::base_type> make_forcings_engine(
-  const std::string& init,
-  const std::string& time_begin,
-  const std::string& time_end,
-  const std::string& time_fmt = default_time_format,
-  Args&&...          args
-)
-{
-    using storage_type = detail::ForcingsEngineStorage;
-
-    // Ensure python and other requirements are met to use
-    // the python forcings engine.
-    // TODO: Move this to a place where it only runs once,
-    //       possibly in NGen.cpp?
-    detail::assert_forcings_engine_requirements();
-
-    // Get or create a BMI instance based on the init config path
-    auto instance = storage_type::instances.get(init);
-    if (instance == nullptr) {
-        instance = std::make_shared<models::bmi::Bmi_Py_Adapter>(
-            "ForcingsEngine",
-            init,
-            forcings_engine_python_classpath,
-            /*allow_exceed_end=*/true,
-            /*has_fixed_time_step=*/true,
-            utils::getStdOut()
-        );
-
-        storage_type::instances.set(init, instance);
-    }
-
-    // Create the derived instance
-    return std::make_unique<Tp>(
-        init,
-        detail::parse_time(time_begin, time_fmt),
-        detail::parse_time(time_end, time_fmt),
-        std::forward<Args>(args)...
-    );
-}
-
 
 } // namespace data_access
