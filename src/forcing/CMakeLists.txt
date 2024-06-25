@@ -1,7 +1,6 @@
-include(${PROJECT_SOURCE_DIR}/cmake/dynamic_sourced_library.cmake)
-dynamic_sourced_cxx_library(forcing "${CMAKE_CURRENT_SOURCE_DIR}")
-
+add_library(forcing)
 add_library(NGen::forcing ALIAS forcing)
+
 
 find_package(Threads REQUIRED)
 
@@ -14,12 +13,17 @@ target_include_directories(forcing PUBLIC
         )
 
 target_link_libraries(forcing PUBLIC
+        NGen::config_header
+        NGen::core
         Boost::boost                # Headers-only Boost
         NGen::config_header
         Threads::Threads
 )
 
+target_sources(forcing PRIVATE "${CMAKE_CURRENT_LIST_DIR}/NullForcingProvider.cpp")
+
 if(NGEN_WITH_NETCDF)
+    target_sources(forcing PRIVATE "${CMAKE_CURRENT_LIST_DIR}/NetCDFPerFeatureDataProvider.cpp")
     target_link_libraries(forcing PUBLIC NetCDF)
 endif()
 
