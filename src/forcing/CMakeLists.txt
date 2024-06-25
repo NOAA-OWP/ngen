@@ -27,4 +27,12 @@ if(NGEN_WITH_NETCDF)
     target_link_libraries(forcing PUBLIC NetCDF)
 endif()
 
+if(NGEN_WITH_PYTHON)
+    target_sources(forcing
+      PRIVATE
+        "${CMAKE_CURRENT_LIST_DIR}/ForcingsEngineDataProvider.cpp"
+    )
+    target_link_libraries(forcing PUBLIC pybind11::embed NGen::ngen_bmi)
+endif()
+
 #target_compile_options(forcing PUBLIC -std=c++14 -Wall)
