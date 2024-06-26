@@ -9,8 +9,8 @@
 #include <functional>
 #include <dirent.h>
 #include <sys/stat.h>
-#include <regex>
 
+#include <boost/regex.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <FeatureBuilder.hpp>
@@ -410,7 +410,7 @@ namespace realization {
                 }
 
                 // Create a regular expression used to identify proper file names
-                std::regex pattern(filepattern);
+                boost::regex pattern(filepattern);
 
                 // A stream providing the functions necessary for evaluating a directory:
                 //    https://www.gnu.org/software/libc/manual/html_node/Opening-a-Directory.html#Opening-a-Directory
@@ -463,7 +463,7 @@ namespace realization {
                 if (directory != nullptr) {
                     bool match;
                     while ((entry = readdir(directory))) {
-                        match = std::regex_match(entry->d_name, pattern);
+                        match = boost::regex_match(entry->d_name, pattern);
                         if( match ) {
                             // If the entry is a regular file or symlink AND the name matches the pattern, 
                             //    we can consider this ready to be interpretted as valid forcing data (even if it isn't)
