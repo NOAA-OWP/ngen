@@ -7,8 +7,6 @@
 #include "bmi.hpp"
 
 #include "core/mediator/UnitsHelper.hpp"
-#include "utilities/StreamHandler.hpp"
-
 
 namespace models {
     namespace bmi {

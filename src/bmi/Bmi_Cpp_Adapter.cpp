@@ -2,7 +2,7 @@
 
 #include <exception>
 #include <utility>
-
+#include <iostream>
 
 using namespace models::bmi;
 
