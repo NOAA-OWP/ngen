@@ -144,8 +144,6 @@ namespace models {
             std::string get_model_name();
 
         protected:
-            /** Whether model ``Update`` calls are allowed and handled in some way by the backing model. */
-            bool allow_model_exceed_end_time = false;
             /** Path (as a string) to the BMI config file for initializing the backing model (empty if none). */
             std::string bmi_init_config;
             /** Whether this particular model has a time step size that cannot be changed internally or externally. */
