@@ -40,7 +40,7 @@ namespace models {
         public:
 
             Bmi_Py_Adapter(const std::string &type_name, std::string bmi_init_config, const std::string &bmi_python_type,
-                           bool allow_exceed_end, bool has_fixed_time_step);
+                           bool has_fixed_time_step);
 
             Bmi_Py_Adapter(Bmi_Py_Adapter const&) = delete;
             Bmi_Py_Adapter(Bmi_Py_Adapter&&) = delete;

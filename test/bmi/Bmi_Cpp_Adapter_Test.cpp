@@ -80,7 +80,7 @@ void Bmi_Cpp_Adapter_Test::SetUp() {
     bmi_module_type_name_0 = "test_bmi_cpp";
     try {
         adapter = std::make_unique<Bmi_Cpp_Adapter>(bmi_module_type_name_0, lib_file_name_0, config_file_name_0, 
-                                                false, true, CREATOR_FUNC, DESTROYER_FUNC);
+                                                true, CREATOR_FUNC, DESTROYER_FUNC);
     }
     catch (const std::exception &e) {
         std::clog << e.what() << std::endl;

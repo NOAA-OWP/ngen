@@ -9,7 +9,6 @@ namespace bmi {
 Bmi_Adapter::Bmi_Adapter(
     std::string model_name,
     std::string bmi_init_config,
-    bool allow_exceed_end,
     bool has_fixed_time_step
 )
     : model_name(std::move(model_name))
