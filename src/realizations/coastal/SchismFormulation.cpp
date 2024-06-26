@@ -17,7 +17,7 @@ SchismFormulation::SchismFormulation(
 {
     bmi_ = std::make_unique<models::bmi::Bmi_Fortran_Adapter>
         (
-         "schism_formulation"
+         "schism_coastal_formulation"
          , library_path
          , init_config_path
          , true // allow_model_exceed_end_time
