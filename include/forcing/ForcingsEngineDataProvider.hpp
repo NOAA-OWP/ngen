@@ -34,12 +34,21 @@ void assert_forcings_engine_requirements();
 
 //! Storage for Forcings Engine-specific BMI instances.
 struct ForcingsEngineStorage {
-    using key_type   = std::string;
-    using bmi_type   = models::bmi::Bmi_Py_Adapter;
+    //! Key type for Forcings Engine storage, storing file paths to initialization files.
+    using key_type = std::string;
+
+    //! BMI adapter type used by the Python-based Forcings Engine.
+    using bmi_type = models::bmi::Bmi_Py_Adapter;
+
+    //! Value type stored, shared pointer to BMI adapter.
     using value_type = std::shared_ptr<bmi_type>;
 
     static ForcingsEngineStorage instances;
 
+    //! Get a Forcings Engine instance.
+    //! @param key Initialization file path for Forcings Engine instance.
+    //! @return Shared pointer to a Forcings Engine BMI instance, or @c nullptr if it has not
+    //!         been created yet.
     value_type get(const key_type& key)
     {
         auto pos = data_.find(key);
@@ -50,11 +59,17 @@ struct ForcingsEngineStorage {
         return pos->second;
     }
 
+    //! Associate a Forcings Engine instance to a file path.
+    //! @param key Initiailiation file path for Forcings Engine instance.
+    //! @param value Shared pointer to a Forcings Engine BMI instance.
     void set(const key_type& key, value_type value)
     {
         data_[key] = value;
     }
 
+    //! Clear all references to Forcings Engine instances.
+    //! @note This will not necessarily destroy the Forcings Engine instances. Since they
+    //!       are reference counted, it will only decrement their instance by one.
     void clear()
     {
         data_.clear();
@@ -137,6 +152,10 @@ struct ForcingsEngineDataProvider
   protected:
     using storage_type = detail::ForcingsEngineStorage;
 
+    //! Forcings Engine Data Provider Constructor
+    //!
+    //! @note Derived implementations should delegate to this constructor
+    //!       to acquire a shared forcings engine instance.
     ForcingsEngineDataProvider(
         std::string init,
         std::size_t time_begin_seconds,
@@ -146,7 +165,7 @@ struct ForcingsEngineDataProvider
       , time_end_(std::chrono::seconds{time_end_seconds})
     {
         // Get a forcings engine instance if it exists for this initialization file
-        auto bmi_ = storage_type::instances.get(init);
+        bmi_ = storage_type::instances.get(init);
 
         // If it doesn't exist, create it and assign it to the storage map
         if (bmi_ == nullptr) {
@@ -166,30 +185,7 @@ struct ForcingsEngineDataProvider
         // Now, initialize the BMI dependent instance members
         // NOTE: using std::lround instead of static_cast will prevent potential UB
         time_step_ = std::chrono::seconds{std::lround(bmi_->GetTimeStep())};
-        time_current_index_ = (std::chrono::seconds{std::lround(bmi_->GetCurrentTime())} / time_step_); // resolves to long
         var_output_names_ = bmi_->GetOutputVarNames();
-    }
-
-    
-    //! Update the Forcings Engine instance to the next timestep.
-    void next()
-    {
-        bmi_->Update();
-        time_current_index_++;
-    }
-
-    //! Update the Forcings Engine instance to the next timestep before `time`.
-    //! @param time Time in seconds to update to.
-    //!             i.e. A value of 14401 will update
-    //!                  the instance to the 5th time index,
-    //!                  since 3600 * 4 = 14400 but 14400 < 14401.
-    void next(double time)
-    {
-        const auto start = bmi_->GetCurrentTime();
-        bmi_->UpdateUntil(time);
-        const auto end = bmi_->GetCurrentTime();
-        const auto diff = end - start;
-        time_current_index_ += std::chrono::seconds{std::lround(diff)} / time_step_;
     }
 
     //! Forcings Engine instance
@@ -202,10 +198,14 @@ struct ForcingsEngineDataProvider
     //! Initialization config file path
     std::string init_;
 
+    //! Calendar time for simulation beginning
     clock_type::time_point time_begin_{};
+
+    //! Calendar time for simulation end
     clock_type::time_point time_end_{};
-    clock_type::duration   time_step_{};
-    std::size_t            time_current_index_{};
+
+    //! Duration of a single simulation tick
+    clock_type::duration time_step_{};
 };
 
 } // namespace data_access
