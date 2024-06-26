@@ -183,6 +183,16 @@ ngen_add_test(
         NGen::geojson
 )
 
+ngen_add_test(
+    test_forcings_engine
+    OBJECTS
+        forcing/ForcingsEngineDataProvider_Test.cpp
+    LIBRARIES
+        NGen::forcing
+    REQUIRES
+        NGEN_WITH_PYTHON
+)
+
 ########################## Series Unit Tests
 ngen_add_test(
     test_mdarray
