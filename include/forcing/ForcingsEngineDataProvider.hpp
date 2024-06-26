@@ -1,12 +1,15 @@
 #pragma once
 
-#include <memory>
-#include <unordered_map>
+#include <cmath>
 #include <chrono>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 #include "DataProvider.hpp"
 #include "bmi/Bmi_Py_Adapter.hpp"
-#include "utilities/StreamHandler.hpp"
 
 namespace data_access {
 
@@ -158,7 +161,7 @@ struct ForcingsEngineDataProvider
     //! @note Derived implementations should delegate to this constructor
     //!       to acquire a shared forcings engine instance.
     ForcingsEngineDataProvider(
-        std::string init,
+        const std::string& init,
         std::size_t time_begin_seconds,
         std::size_t time_end_seconds
     )
