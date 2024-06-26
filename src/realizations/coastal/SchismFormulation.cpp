@@ -20,7 +20,6 @@ SchismFormulation::SchismFormulation(
          "schism_coastal_formulation"
          , library_path
          , init_config_path
-         , true // allow_model_exceed_end_time
          , true // model_time_step_fixed
          , schism_registration_function
          );
