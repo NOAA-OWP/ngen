@@ -176,8 +176,7 @@ struct ForcingsEngineDataProvider
                 init,
                 forcings_engine_python_classpath,
                 /*allow_exceed_end=*/true,
-                /*has_fixed_time_step=*/true,
-                utils::getStdOut()
+                /*has_fixed_time_step=*/true
             );
 
             storage_type::instances.set(init, bmi_);
