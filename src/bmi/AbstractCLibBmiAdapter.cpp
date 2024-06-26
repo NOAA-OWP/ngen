@@ -2,6 +2,7 @@
 
 #include "utilities/FileChecker.h"
 #include "utilities/ExternalIntegrationException.hpp"
+#include "utilities/logging_utils.h"
 
 #include <dlfcn.h>
 
@@ -42,10 +43,8 @@ void AbstractCLibBmiAdapter::dynamic_library_load() {
         throw std::runtime_error(this->init_exception_msg);
     }
     if (dyn_lib_handle != nullptr) {
-        this->output.put(
-            "WARNING: ignoring attempt to reload dynamic shared library '" + bmi_lib_file +
-            "' for " + this->model_name
-        );
+        std::string message = "AbstractCLibBmiAdapter::dynamic_library_load: ignoring attempt to reload dynamic shared library '" + bmi_lib_file + "' for " + this->model_name;
+        logging::warning(message.c_str());
         return;
     }
     if (!utils::FileChecker::file_is_readable(bmi_lib_file)) {
