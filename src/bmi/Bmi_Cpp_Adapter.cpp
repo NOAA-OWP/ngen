@@ -8,25 +8,23 @@ using namespace models::bmi;
 
 Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path,
                              bool allow_exceed_end, bool has_fixed_time_step,
-                             std::string creator_func, std::string destroyer_func,
-                             utils::StreamHandler output)
+                             std::string creator_func, std::string destroyer_func)
         : Bmi_Cpp_Adapter(type_name, std::move(library_file_path), "",
-                        allow_exceed_end, has_fixed_time_step, creator_func, destroyer_func, output) { }
+                        allow_exceed_end, has_fixed_time_step, creator_func, destroyer_func) { }
 
 Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string bmi_init_config,
                              bool allow_exceed_end, bool has_fixed_time_step,
-                             std::string creator_func, std::string destroyer_func,
-                             utils::StreamHandler output)
+                             std::string creator_func, std::string destroyer_func)
         : Bmi_Cpp_Adapter(type_name, std::move(library_file_path), std::move(bmi_init_config),
                         allow_exceed_end, has_fixed_time_step,
-                        std::move(creator_func), std::move(destroyer_func), output, true) { }
+                        std::move(creator_func), std::move(destroyer_func), true) { }
 
 Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string bmi_init_config,
                              bool allow_exceed_end, bool has_fixed_time_step,
                              std::string creator_func, std::string destroyer_func,
-                             utils::StreamHandler output, bool do_initialization)
+                             bool do_initialization)
                              : AbstractCLibBmiAdapter(type_name, library_file_path, std::move(bmi_init_config), allow_exceed_end,
-                             has_fixed_time_step, creator_func, output),
+                             has_fixed_time_step, creator_func),
                              model_create_fname(std::move(creator_func)),
                              model_destroy_fname(std::move(destroyer_func))
                              //TODO: We are passing creator_func as registration_func because AbstractCLibBmiAdapter expects it to exist, but are not using it the same way...may be okay but we may want to generalize that assumption out!

@@ -20,7 +20,7 @@ namespace models {
         public:
 
             Bmi_Adapter(std::string model_name, std::string bmi_init_config, bool allow_exceed_end,
-                        bool has_fixed_time_step, utils::StreamHandler output);
+                        bool has_fixed_time_step);
 
             Bmi_Adapter(Bmi_Adapter const&) = delete;
             Bmi_Adapter(Bmi_Adapter &&) = delete;

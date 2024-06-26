@@ -88,8 +88,7 @@ void Bmi_C_Adapter_Test::SetUp() {
     lib_file_name_0 = file_search(lib_dir_opts, BMI_TEST_C_LOCAL_LIB_NAME);
     bmi_module_type_name_0 = "test_bmi_c";
     adapter = std::make_unique<Bmi_C_Adapter>(bmi_module_type_name_0, lib_file_name_0, config_file_name_0, 
-                                              false, true, REGISTRATION_FUNC,
-                                              utils::StreamHandler());
+                                              false, true, REGISTRATION_FUNC);
 }
 
 void Bmi_C_Adapter_Test::TearDown() {

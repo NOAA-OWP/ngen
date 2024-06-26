@@ -38,8 +38,7 @@ std::shared_ptr<Bmi_Adapter> Bmi_Fortran_Formulation::construct_model(const geoj
             get_bmi_init_config(),
             get_allow_model_exceed_end_time(),
             is_bmi_model_time_step_fixed(),
-            reg_func,
-            output);
+            reg_func);
 }
 
 std::string Bmi_Fortran_Formulation::get_formulation_type() {

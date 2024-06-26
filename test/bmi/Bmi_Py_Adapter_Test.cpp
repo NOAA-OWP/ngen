@@ -138,8 +138,7 @@ void Bmi_Py_Adapter_Test::SetUp() {
                 + std::to_string(i) + ".yml";
 
         examples[i].adapter = std::make_shared<Bmi_Py_Adapter>(examples[i].module_name, examples[i].bmi_init_config,
-                                                               examples[i].module_name, false, true,
-                                                               utils::StreamHandler());
+                                                               examples[i].module_name, false, true);
     }
 }
 
