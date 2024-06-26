@@ -1,5 +1,7 @@
 #pragma once
 
+#include <NGenConfig.h>
+
 #include <realizations/coastal/CoastalFormulation.hpp>
 #include <bmi/Bmi_Fortran_Adapter.hpp>
 #include <memory>
@@ -9,7 +11,8 @@ class SchismFormulation : public CoastalFormulation
 public:
     using MeshPointsDataProvider = data_access::DataProvider<double, MeshPointsSelector>;
     SchismFormulation(
-                      std::string id
+                      std::string const& id
+                      , std::string const& init_config_path
                       , std::shared_ptr<MeshPointsDataProvider> met_forcings
                       , std::shared_ptr<MeshPointsDataProvider> offshore_boundary
                       , std::shared_ptr<MeshPointsDataProvider> inflow_boundary
