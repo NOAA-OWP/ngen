@@ -6,6 +6,7 @@
 
 #include "DataProvider.hpp"
 #include "bmi/Bmi_Py_Adapter.hpp"
+#include "utilities/StreamHandler.hpp"
 
 namespace data_access {
 
