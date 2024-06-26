@@ -9,6 +9,7 @@
 #include <exception>
 #include <memory>
 #include <string>
+#include <iostream>
 
 #include "pybind11/pybind11.h"
 #include "pybind11/pytypes.h"
