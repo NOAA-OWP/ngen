@@ -463,8 +463,7 @@ namespace realization {
                 if (directory != nullptr) {
                     bool match;
                     while ((entry = readdir(directory))) {
-                        match = boost::regex_match(entry->d_name, pattern);
-                        if( match ) {
+                        if (filepattern == entry->d_name || boost::regex_match(entry->d_name, pattern)) {
                             // If the entry is a regular file or symlink AND the name matches the pattern, 
                             //    we can consider this ready to be interpretted as valid forcing data (even if it isn't)
                             #ifdef _DIRENT_HAVE_D_TYPE
