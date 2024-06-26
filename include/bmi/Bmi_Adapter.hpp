@@ -163,7 +163,6 @@ namespace models {
             /** Whether the backing model has been initialized yet, which is always initially ``false``. */
             bool model_initialized = false;
             std::string model_name;
-            utils::StreamHandler output;
             /** Pointer to collection of output variable names for backing model, used by ``GetOutputVarNames()``. */
             std::shared_ptr<std::vector<std::string>> output_var_names;
 
