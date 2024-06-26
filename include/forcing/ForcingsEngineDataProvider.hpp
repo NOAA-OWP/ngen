@@ -60,7 +60,7 @@ struct ForcingsEngineStorage {
     }
 
     //! Associate a Forcings Engine instance to a file path.
-    //! @param key Initiailiation file path for Forcings Engine instance.
+    //! @param key Initialization file path for Forcings Engine instance.
     //! @param value Shared pointer to a Forcings Engine BMI instance.
     void set(const key_type& key, value_type value)
     {
