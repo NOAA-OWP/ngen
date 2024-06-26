@@ -69,7 +69,8 @@ target_include_directories(test_all PRIVATE ${CMAKE_CURRENT_LIST_DIR}/bmi)
 #[==[
 ngen_add_test(<test name> OBJECTS <source>...
                           LIBRARIES <library>...
-                          [REQUIRES <varname>...])
+                          [REQUIRES <varname>...]
+                          [DEPENDS <dependency>...])
 
 Adds an executable test (i.e. a target) called <test name>.
 
@@ -83,6 +84,11 @@ Adds an executable test (i.e. a target) called <test name>.
     Variable names that this test's creation is dependent on.
     If a given variable is not defined or is FALSE/OFF/etc. then
     the corresponding <test name> target is not created.
+
+`DEPENDS`
+    Additional targets that a test executable depends on. For each
+    dependent target given, add_dependencies(<test name> <dependency>...)
+    is called.
 #]==]
 function(ngen_add_test TESTNAME)
     set(multiValueArgs OBJECTS LIBRARIES REQUIRES DEPENDS)
