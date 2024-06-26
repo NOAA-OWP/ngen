@@ -40,8 +40,7 @@ std::shared_ptr<Bmi_Adapter> Bmi_Cpp_Formulation::construct_model(const geojson:
                     get_allow_model_exceed_end_time(),
                     is_bmi_model_time_step_fixed(),
                     model_create_fname,
-                    model_destroy_fname,
-                    output);
+                    model_destroy_fname);
 }
 
 double Bmi_Cpp_Formulation::get_var_value_as_double(const int& index, const std::string& var_name) {

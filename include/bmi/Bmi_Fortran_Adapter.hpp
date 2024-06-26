@@ -31,21 +31,20 @@ namespace models {
 
             explicit Bmi_Fortran_Adapter(const std::string &type_name, std::string library_file_path,
                                          bool allow_exceed_end, bool has_fixed_time_step,
-                                         const std::string &registration_func, utils::StreamHandler output)
+                                         const std::string &registration_func)
                     : Bmi_Fortran_Adapter(type_name, library_file_path, "", allow_exceed_end,
                                           has_fixed_time_step,
-                                          registration_func, output) {}
+                                          registration_func) {}
 
             Bmi_Fortran_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                                 bool allow_exceed_end, bool has_fixed_time_step,
-                                std::string registration_func,
-                                utils::StreamHandler output) : AbstractCLibBmiAdapter(type_name,
+                                std::string registration_func) : AbstractCLibBmiAdapter(type_name,
                                                                                       library_file_path,
                                                                                       bmi_init_config,
                                                                                       allow_exceed_end,
                                                                                       has_fixed_time_step,
-                                                                                      registration_func,
-                                                                                      output) {
+                                                                                      registration_func
+                                                                                      ) {
                 try {
                     construct_and_init_backing_model_for_fortran();
                     // Make sure this is set to 'true' after this function call finishes

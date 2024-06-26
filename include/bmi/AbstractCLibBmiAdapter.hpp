@@ -21,8 +21,7 @@ namespace models {
              * @param output The output stream handler.
              */
             AbstractCLibBmiAdapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
-                                   bool allow_exceed_end, bool has_fixed_time_step, std::string registration_func,
-                                   utils::StreamHandler output);
+                                   bool allow_exceed_end, bool has_fixed_time_step, std::string registration_func);
 
             /**
              * Class destructor.

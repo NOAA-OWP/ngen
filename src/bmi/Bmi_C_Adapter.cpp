@@ -13,13 +13,12 @@ using namespace models::bmi;
  * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
  * @param has_fixed_time_step Whether the model has a fixed time step size.
  * @param registration_func The name for the @see bmi_registration_function.
- * @param output The output stream handler.
  */
 Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_file_path,
                              bool allow_exceed_end, bool has_fixed_time_step,
-                             const std::string& registration_func, utils::StreamHandler output)
+                             const std::string& registration_func)
         : Bmi_C_Adapter(type_name, std::move(library_file_path), "",
-                        allow_exceed_end, has_fixed_time_step, registration_func, output) { }
+                        allow_exceed_end, has_fixed_time_step, registration_func) { }
 
 /**
  * Main public constructor.
@@ -30,14 +29,13 @@ Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_f
  * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
  * @param has_fixed_time_step Whether the model has a fixed time step size.
  * @param registration_func The name for the @see bmi_registration_function.
- * @param output The output stream handler.
  */
 Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                              bool allow_exceed_end, bool has_fixed_time_step,
-                             std::string registration_func, utils::StreamHandler output)
+                             std::string registration_func)
         : Bmi_C_Adapter(type_name, std::move(library_file_path), std::move(bmi_init_config),
                         allow_exceed_end, has_fixed_time_step,
-                        std::move(registration_func), output, true) { }
+                        std::move(registration_func), true) { }
 
 /**
  * Protected constructor that allows control over whether initialization steps are done during construction.
@@ -56,14 +54,13 @@ Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_f
  * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
  * @param has_fixed_time_step Whether the model has a fixed time step size.
  * @param registration_func The name for the @see bmi_registration_function.
- * @param output The output stream handler.
  * @param do_initialization Whether initialization should be performed during construction or deferred.
  */
 Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                              bool allow_exceed_end, bool has_fixed_time_step,
-                             std::string registration_func, utils::StreamHandler output, bool do_initialization)
+                             std::string registration_func, bool do_initialization)
                              : AbstractCLibBmiAdapter(type_name, library_file_path, std::move(bmi_init_config), allow_exceed_end,
-                             has_fixed_time_step, registration_func, output)
+                             has_fixed_time_step, registration_func)
 {
     if (do_initialization) {
         try {

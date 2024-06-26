@@ -7,7 +7,6 @@
 #include "bmi.h"
 #include "AbstractCLibBmiAdapter.hpp"
 #include "State_Exception.hpp"
-#include "utilities/StreamHandler.hpp"
 #include "utilities/ExternalIntegrationException.hpp"
 
 
@@ -35,11 +34,10 @@ namespace models {
              * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
              * @param has_fixed_time_step Whether the model has a fixed time step size.
              * @param registration_func The name for the @see bmi_registration_function.
-             * @param output The output stream handler.
              */
             explicit Bmi_C_Adapter(const std::string &type_name, std::string library_file_path,
                                    bool allow_exceed_end, bool has_fixed_time_step,
-                                   const std::string& registration_func, utils::StreamHandler output);
+                                   const std::string& registration_func);
 
             /**
              * Main public constructor.
@@ -50,11 +48,10 @@ namespace models {
              * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
              * @param has_fixed_time_step Whether the model has a fixed time step size.
              * @param registration_func The name for the @see bmi_registration_function.
-             * @param output The output stream handler.
              */
             Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                           bool allow_exceed_end, bool has_fixed_time_step,
-                          std::string registration_func, utils::StreamHandler output);
+                          std::string registration_func);
 
         protected:
 
@@ -75,12 +72,11 @@ namespace models {
              * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
              * @param has_fixed_time_step Whether the model has a fixed time step size.
              * @param registration_func The name for the @see bmi_registration_function.
-             * @param output The output stream handler.
              * @param do_initialization Whether initialization should be performed during construction or deferred.
              */
             Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                           bool allow_exceed_end, bool has_fixed_time_step,
-                          std::string registration_func, utils::StreamHandler output, bool do_initialization);
+                          std::string registration_func, bool do_initialization);
 
         public:
 

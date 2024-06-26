@@ -29,8 +29,7 @@ std::shared_ptr<Bmi_Adapter> Bmi_Py_Formulation::construct_model(const geojson::
                     get_bmi_init_config(),
                     python_type_name,
                     get_allow_model_exceed_end_time(),
-                    is_bmi_model_time_step_fixed(),
-                    output);
+                    is_bmi_model_time_step_fixed());
 }
 
 time_t realization::Bmi_Py_Formulation::convert_model_time(const double &model_time) {
