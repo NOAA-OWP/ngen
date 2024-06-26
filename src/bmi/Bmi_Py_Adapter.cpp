@@ -4,6 +4,7 @@
 
 #include <exception>
 #include <utility>
+#include <iostream>
 
 #include "bmi/Bmi_Py_Adapter.hpp"
 

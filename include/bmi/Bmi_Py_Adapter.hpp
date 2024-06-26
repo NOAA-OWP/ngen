@@ -18,7 +18,6 @@
 
 #include "Bmi_Adapter.hpp"
 
-#include "utilities/StreamHandler.hpp"
 #include "utilities/python/InterpreterUtil.hpp"
 
 // Forward declaration to provide access to protected items in testing
