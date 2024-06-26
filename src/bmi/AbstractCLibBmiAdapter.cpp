@@ -13,14 +13,12 @@ AbstractCLibBmiAdapter::AbstractCLibBmiAdapter(
     const std::string& type_name,
     std::string library_file_path,
     std::string bmi_init_config,
-    bool allow_exceed_end,
     bool has_fixed_time_step,
     std::string registration_func
 )
     : Bmi_Adapter(
           type_name,
           std::move(bmi_init_config),
-          allow_exceed_end,
           has_fixed_time_step
       )
     , bmi_lib_file(std::move(library_file_path))

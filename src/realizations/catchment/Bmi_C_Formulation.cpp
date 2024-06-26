@@ -28,7 +28,6 @@ std::shared_ptr<Bmi_Adapter> Bmi_C_Formulation::construct_model(const geojson::P
                     get_model_type_name(),
                     lib_file,
                     get_bmi_init_config(),
-                    get_allow_model_exceed_end_time(),
                     is_bmi_model_time_step_fixed(),
                     reg_func);
 }

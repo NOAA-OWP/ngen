@@ -30,18 +30,17 @@ namespace models {
         public:
 
             explicit Bmi_Fortran_Adapter(const std::string &type_name, std::string library_file_path,
-                                         bool allow_exceed_end, bool has_fixed_time_step,
+                                         bool has_fixed_time_step,
                                          const std::string &registration_func)
-                    : Bmi_Fortran_Adapter(type_name, library_file_path, "", allow_exceed_end,
+                    : Bmi_Fortran_Adapter(type_name, library_file_path, "",
                                           has_fixed_time_step,
                                           registration_func) {}
 
             Bmi_Fortran_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
-                                bool allow_exceed_end, bool has_fixed_time_step,
+                                bool has_fixed_time_step,
                                 std::string registration_func) : AbstractCLibBmiAdapter(type_name,
                                                                                       library_file_path,
                                                                                       bmi_init_config,
-                                                                                      allow_exceed_end,
                                                                                       has_fixed_time_step,
                                                                                       registration_func
                                                                                       ) {

@@ -34,13 +34,12 @@ namespace models {
              *
              * @param type_name The name of the backing BMI module/model type.
              * @param library_file_path The string path to the shared library file for external module.
-             * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
              * @param has_fixed_time_step Whether the model has a fixed time step size.
              * @param creator_func The name for the @see creator_function .
              * @param destoryer_func The name for the @see destroyer_function .
              */
             explicit Bmi_Cpp_Adapter(const std::string &type_name, std::string library_file_path,
-                                   bool allow_exceed_end, bool has_fixed_time_step,
+                                   bool has_fixed_time_step,
                                    std::string creator_func, std::string destroyer_func);
 
             /**
@@ -49,13 +48,12 @@ namespace models {
              * @param type_name The name of the backing BMI module/model type.
              * @param library_file_path The string path to the shared library file for external module.
              * @param bmi_init_config The string path to the BMI initialization config file for the module.
-             * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
              * @param has_fixed_time_step Whether the model has a fixed time step size.
              * @param creator_func The name for the @see creator_function .
              * @param destoryer_func The name for the @see destroyer_function .
              */
             Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string bmi_init_config,
-                          bool allow_exceed_end, bool has_fixed_time_step,
+                          bool has_fixed_time_step,
                           std::string creator_func, std::string destroyer_func);
 
         protected:
@@ -74,14 +72,13 @@ namespace models {
              * @param type_name The name of the backing BMI module/model type.
              * @param library_file_path The string path to the shared library file for external module.
              * @param bmi_init_config The string path to the BMI initialization config file for the module.
-             * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
              * @param has_fixed_time_step Whether the model has a fixed time step size.
              * @param creator_func The name for the @see creator_function .
              * @param destoryer_func The name for the @see destroyer_function .
              * @param do_initialization Whether initialization should be performed during construction or deferred.
              */
             Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string bmi_init_config,
-                          bool allow_exceed_end, bool has_fixed_time_step,
+                          bool has_fixed_time_step,
                           std::string creator_func, std::string destroyer_func,
                           bool do_initialization);
 
