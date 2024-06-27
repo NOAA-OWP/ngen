@@ -178,7 +178,6 @@ struct ForcingsEngineDataProvider
                 "ForcingsEngine",
                 init,
                 forcings_engine_python_classpath,
-                /*allow_exceed_end=*/true,
                 /*has_fixed_time_step=*/true
             );
 
