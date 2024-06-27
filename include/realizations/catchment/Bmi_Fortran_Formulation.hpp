@@ -6,15 +6,12 @@
 #if NGEN_WITH_BMI_FORTRAN
 
 #include "Bmi_Module_Formulation.hpp"
-#include "Bmi_Fortran_Adapter.hpp"
 #include <GenericDataProvider.hpp>
 
 // TODO: consider merging this somewhere with the C value in that formulation header
 #define BMI_FORTRAN_DEFAULT_REGISTRATION_FUNC "register_bmi"
 
 class Bmi_Fortran_Formulation_Test;
-
-using namespace models::bmi;
 
 namespace realization {
 
@@ -40,7 +37,7 @@ namespace realization {
          * @param properties Configuration properties for the formulation.
          * @return A shared pointer to a newly constructed model adapter object.
          */
-        std::shared_ptr<Bmi_Adapter> construct_model(const geojson::PropertyMap& properties) override;
+        std::shared_ptr<models::bmi::Bmi_Adapter> construct_model(const geojson::PropertyMap& properties) override;
 
         time_t convert_model_time(const double &model_time) override {
             return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));
