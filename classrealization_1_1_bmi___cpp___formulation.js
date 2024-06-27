@@ -68,7 +68,6 @@ var classrealization_1_1_bmi___cpp___formulation =
     [ "write_output", "classrealization_1_1_bmi___cpp___formulation.html#aa989be0629ecaa29a2410f7588404ff9", null ],
     [ "::Bmi_Cpp_Formulation_Test", "classrealization_1_1_bmi___cpp___formulation.html#a1efc460f907baec4e2b1d59639c14d9b", null ],
     [ "::Bmi_Formulation_Test", "classrealization_1_1_bmi___cpp___formulation.html#a04abbbee1836c2cdfbe44fd9ebb136a4", null ],
-    [ "Bmi_Multi_Formulation", "classrealization_1_1_bmi___cpp___formulation.html#a272943c5e7e6e9dbd7a648a220df263c", null ],
     [ "allow_model_exceed_end_time", "classrealization_1_1_bmi___cpp___formulation.html#af4e9c77709218359bd00ef4bfb8b863c", null ],
     [ "available_forcings", "classrealization_1_1_bmi___cpp___formulation.html#a5c9d1261dbbaf14773579ca59d0d0a69", null ],
     [ "bmi_init_config", "classrealization_1_1_bmi___cpp___formulation.html#a1f79424f52607974a649761eec144acf", null ],

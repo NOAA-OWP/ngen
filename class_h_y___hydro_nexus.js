@@ -1,7 +1,7 @@
 var class_h_y___hydro_nexus =
 [
     [ "Catchments", "class_h_y___hydro_nexus.html#a6efba8fb752f9b96fa2f9464dbcb1a22", null ],
-    [ "HydroLocation", "class_h_y___hydro_nexus.html#a69406ee5d134f20ffc1f470489987b97", null ],
+    [ "HydroLocation", "class_h_y___hydro_nexus.html#af784a1137455889c42b583636f81e7b5", null ],
     [ "time_step_t", "class_h_y___hydro_nexus.html#aeaab4f70efb4f3bba130414296374c9b", null ],
     [ "HY_HydroNexus", "class_h_y___hydro_nexus.html#a800b5a623c58b25098c9ec666e90bdb2", null ],
     [ "HY_HydroNexus", "class_h_y___hydro_nexus.html#a11dc68437650f47aad75eadc071b51e5", null ],

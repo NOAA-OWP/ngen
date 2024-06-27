@@ -2145,7 +2145,6 @@
           <topic label="::Bmi_C_Formulation_Test" href="classrealization_1_1_bmi___c___formulation.html#ab629620cdc1831773640b662bc1615b5"/>
           <topic label="::Bmi_C_Pet_IT" href="classrealization_1_1_bmi___c___formulation.html#a3914d5635678eb8adfe56cedb9a5e255"/>
           <topic label="::Bmi_Formulation_Test" href="classrealization_1_1_bmi___c___formulation.html#a04abbbee1836c2cdfbe44fd9ebb136a4"/>
-          <topic label="Bmi_Multi_Formulation" href="classrealization_1_1_bmi___c___formulation.html#a272943c5e7e6e9dbd7a648a220df263c"/>
           <topic label="allow_model_exceed_end_time" href="classrealization_1_1_bmi___c___formulation.html#af4e9c77709218359bd00ef4bfb8b863c"/>
           <topic label="available_forcings" href="classrealization_1_1_bmi___c___formulation.html#a5c9d1261dbbaf14773579ca59d0d0a69"/>
           <topic label="bmi_init_config" href="classrealization_1_1_bmi___c___formulation.html#a1f79424f52607974a649761eec144acf"/>
@@ -2243,7 +2242,6 @@
           <topic label="write_output" href="classrealization_1_1_bmi___cpp___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="::Bmi_Cpp_Formulation_Test" href="classrealization_1_1_bmi___cpp___formulation.html#a1efc460f907baec4e2b1d59639c14d9b"/>
           <topic label="::Bmi_Formulation_Test" href="classrealization_1_1_bmi___cpp___formulation.html#a04abbbee1836c2cdfbe44fd9ebb136a4"/>
-          <topic label="Bmi_Multi_Formulation" href="classrealization_1_1_bmi___cpp___formulation.html#a272943c5e7e6e9dbd7a648a220df263c"/>
           <topic label="allow_model_exceed_end_time" href="classrealization_1_1_bmi___cpp___formulation.html#af4e9c77709218359bd00ef4bfb8b863c"/>
           <topic label="available_forcings" href="classrealization_1_1_bmi___cpp___formulation.html#a5c9d1261dbbaf14773579ca59d0d0a69"/>
           <topic label="bmi_init_config" href="classrealization_1_1_bmi___cpp___formulation.html#a1f79424f52607974a649761eec144acf"/>
@@ -4315,7 +4313,6 @@
           <topic label="::Bmi_C_Formulation_Test" href="classrealization_1_1_bmi___c___formulation.html#ab629620cdc1831773640b662bc1615b5"/>
           <topic label="::Bmi_C_Pet_IT" href="classrealization_1_1_bmi___c___formulation.html#a3914d5635678eb8adfe56cedb9a5e255"/>
           <topic label="::Bmi_Formulation_Test" href="classrealization_1_1_bmi___c___formulation.html#a04abbbee1836c2cdfbe44fd9ebb136a4"/>
-          <topic label="Bmi_Multi_Formulation" href="classrealization_1_1_bmi___c___formulation.html#a272943c5e7e6e9dbd7a648a220df263c"/>
           <topic label="allow_model_exceed_end_time" href="classrealization_1_1_bmi___c___formulation.html#af4e9c77709218359bd00ef4bfb8b863c"/>
           <topic label="available_forcings" href="classrealization_1_1_bmi___c___formulation.html#a5c9d1261dbbaf14773579ca59d0d0a69"/>
           <topic label="bmi_init_config" href="classrealization_1_1_bmi___c___formulation.html#a1f79424f52607974a649761eec144acf"/>
@@ -4413,7 +4410,6 @@
           <topic label="write_output" href="classrealization_1_1_bmi___cpp___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="::Bmi_Cpp_Formulation_Test" href="classrealization_1_1_bmi___cpp___formulation.html#a1efc460f907baec4e2b1d59639c14d9b"/>
           <topic label="::Bmi_Formulation_Test" href="classrealization_1_1_bmi___cpp___formulation.html#a04abbbee1836c2cdfbe44fd9ebb136a4"/>
-          <topic label="Bmi_Multi_Formulation" href="classrealization_1_1_bmi___cpp___formulation.html#a272943c5e7e6e9dbd7a648a220df263c"/>
           <topic label="allow_model_exceed_end_time" href="classrealization_1_1_bmi___cpp___formulation.html#af4e9c77709218359bd00ef4bfb8b863c"/>
           <topic label="available_forcings" href="classrealization_1_1_bmi___cpp___formulation.html#a5c9d1261dbbaf14773579ca59d0d0a69"/>
           <topic label="bmi_init_config" href="classrealization_1_1_bmi___cpp___formulation.html#a1f79424f52607974a649761eec144acf"/>
@@ -5175,7 +5171,7 @@
       </topic>
       <topic label="HY_HydroNexus" href="class_h_y___hydro_nexus.html">
         <topic label="Catchments" href="class_h_y___hydro_nexus.html#a6efba8fb752f9b96fa2f9464dbcb1a22"/>
-        <topic label="HydroLocation" href="class_h_y___hydro_nexus.html#a69406ee5d134f20ffc1f470489987b97"/>
+        <topic label="HydroLocation" href="class_h_y___hydro_nexus.html#af784a1137455889c42b583636f81e7b5"/>
         <topic label="time_step_t" href="class_h_y___hydro_nexus.html#aeaab4f70efb4f3bba130414296374c9b"/>
         <topic label="HY_HydroNexus" href="class_h_y___hydro_nexus.html#a800b5a623c58b25098c9ec666e90bdb2"/>
         <topic label="HY_HydroNexus" href="class_h_y___hydro_nexus.html#a11dc68437650f47aad75eadc071b51e5"/>
@@ -5227,7 +5223,7 @@
         <topic label="Catchments" href="class_h_y___point_hydro_nexus.html#a6efba8fb752f9b96fa2f9464dbcb1a22"/>
         <topic label="flow_vector" href="class_h_y___point_hydro_nexus.html#a8f4799a3db9e01b4f560cf3ab263d205"/>
         <topic label="flows" href="class_h_y___point_hydro_nexus.html#aecf7824106e67c5f2ee16402da16b461"/>
-        <topic label="HydroLocation" href="class_h_y___point_hydro_nexus.html#a69406ee5d134f20ffc1f470489987b97"/>
+        <topic label="HydroLocation" href="class_h_y___point_hydro_nexus.html#af784a1137455889c42b583636f81e7b5"/>
         <topic label="time_step_t" href="class_h_y___point_hydro_nexus.html#aeaab4f70efb4f3bba130414296374c9b"/>
         <topic label="HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html#a511775a49116a52db653731866f98b54"/>
         <topic label="HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html#a94216b672307de3a748daa0cbbdd8cbe"/>

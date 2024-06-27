@@ -1,9 +1,5 @@
 var NAVTREEINDEX17 =
 {
-"md_doc_2_b_m_i___m_o_d_e_l_s.html":[3],
-"md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md29":[3,0],
-"md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md30":[3,1],
-"md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md31":[3,1,0],
 "md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md33":[3,1,1],
 "md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md34":[3,1,2],
 "md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md35":[3,2],
@@ -249,5 +245,9 @@ var NAVTREEINDEX17 =
 "namespacegeojson.html#a560f48c9d84b094ce7add6f590230edc":[22,0,3,35],
 "namespacegeojson.html#a5c02053ab14ac924a8e8ce067149e084":[22,0,3,52],
 "namespacegeojson.html#a5c82b2a9948b6f057381bf16e197bde4":[22,0,3,33],
-"namespacegeojson.html#a5da2bcd4b8b0e11f7de4508d134ef244":[22,0,3,34]
+"namespacegeojson.html#a5da2bcd4b8b0e11f7de4508d134ef244":[22,0,3,34],
+"namespacegeojson.html#a5fa652fcd4985537f8f9060c77d55b3d":[22,0,3,44],
+"namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f":[22,0,3,18],
+"namespacegeojson.html#a6b7d00cc3524777c2b32a45d21035dbc":[22,0,3,47],
+"namespacegeojson.html#a6c56f04132a1174ba51a89356713e209":[22,0,3,31]
 };

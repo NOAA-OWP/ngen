@@ -3,7 +3,7 @@ var class_h_y___point_hydro_nexus =
     [ "Catchments", "class_h_y___point_hydro_nexus.html#a6efba8fb752f9b96fa2f9464dbcb1a22", null ],
     [ "flow_vector", "class_h_y___point_hydro_nexus.html#a8f4799a3db9e01b4f560cf3ab263d205", null ],
     [ "flows", "class_h_y___point_hydro_nexus.html#aecf7824106e67c5f2ee16402da16b461", null ],
-    [ "HydroLocation", "class_h_y___point_hydro_nexus.html#a69406ee5d134f20ffc1f470489987b97", null ],
+    [ "HydroLocation", "class_h_y___point_hydro_nexus.html#af784a1137455889c42b583636f81e7b5", null ],
     [ "time_step_t", "class_h_y___point_hydro_nexus.html#aeaab4f70efb4f3bba130414296374c9b", null ],
     [ "HY_PointHydroNexus", "class_h_y___point_hydro_nexus.html#a511775a49116a52db653731866f98b54", null ],
     [ "HY_PointHydroNexus", "class_h_y___point_hydro_nexus.html#a94216b672307de3a748daa0cbbdd8cbe", null ],
