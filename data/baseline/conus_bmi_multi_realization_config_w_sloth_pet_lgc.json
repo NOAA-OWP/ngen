@@ -4,7 +4,7 @@
             {
                 "name": "bmi_multi",
                 "params": {
-                    "model_type_name": "bmi_multi_noahowp_lgc",
+                    "model_type_name": "bmi_multi_pet_lgc",
                     "forcing_file": "",
                     "init_config": "",
                     "allow_exceed_end_time": true,
