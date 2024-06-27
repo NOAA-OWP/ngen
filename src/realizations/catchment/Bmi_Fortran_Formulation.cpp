@@ -3,6 +3,7 @@
 #if NGEN_WITH_BMI_FORTRAN
 
 #include "Bmi_Fortran_Formulation.hpp"
+#include "Bmi_Fortran_Adapter.hpp"
 #include "Constants.h"
 
 using namespace realization;
