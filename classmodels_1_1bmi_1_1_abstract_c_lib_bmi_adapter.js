@@ -1,6 +1,6 @@
 var classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter =
 [
-    [ "AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6c9374641fc3b882fc4a8261f25d3b78", null ],
+    [ "AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad6ea3fcd5981c704fe75093a440f844e", null ],
     [ "~AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2acdb60b764e84ddcb0426a5aa4c82e6", null ],
     [ "construct_and_init_backing_model", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aaf11585e4e3852fa9391ad5966af22d2", null ],
     [ "convert_model_time_to_seconds", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6efbfd9ff146bbe3b3c1a82d243f8266", null ],
@@ -58,7 +58,6 @@ var classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter =
     [ "SetValueAtIndices", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a3cecd50be90621a3d47cc811258c5f75", null ],
     [ "Update", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a0ecdb1dd0c0545908d7debb56e2c10aa", null ],
     [ "UpdateUntil", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6bead8b75c803a2fd51f4df6f6f91627", null ],
-    [ "allow_model_exceed_end_time", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aa7eaecf4ba4b88781f8829e06e81b6b3", null ],
     [ "bmi_init_config", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a32725cc98663e54694c90c8740e8e5dd", null ],
     [ "bmi_lib_file", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a636d45e305f013644fd8435a464a341d", null ],
     [ "bmi_model_has_fixed_time_step", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a97a27219b39d6de5a061e6ea0780711c", null ],

@@ -1,8 +1,8 @@
 var classmodels_1_1bmi_1_1_bmi___c___adapter =
 [
-    [ "Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a02a05ab08b18e8f42b709965343460da", null ],
-    [ "Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a39cc2e9a928c798d2b46dfaac637f8e9", null ],
-    [ "Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a8ed6f6d95cd97c54bbb40b7f51e46acf", null ],
+    [ "Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a93ccdc26da3f486ef41dea9700cfc4e3", null ],
+    [ "Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#aaf6a35b8f508864484935a3addb50a87", null ],
+    [ "Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a92ff36d069934e715fd73ec1120ec084", null ],
     [ "Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a19aa6564ec665e160079276598d046fa", null ],
     [ "Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#ad535354b96c22665567b45954f4ed31b", null ],
     [ "~Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae95f8ff61965fa0129c09365cf7e05dc", null ],
@@ -75,7 +75,6 @@ var classmodels_1_1bmi_1_1_bmi___c___adapter =
     [ "Update", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a1064e72bf0bc0d35e9d1b8a9c062c438", null ],
     [ "UpdateUntil", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#ab2e846514c4e36f6095b2ba84ec28c63", null ],
     [ "::Bmi_C_Adapter_Test", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a891996798cd3c8a51e8148fd1f306fc2", null ],
-    [ "allow_model_exceed_end_time", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#aa7eaecf4ba4b88781f8829e06e81b6b3", null ],
     [ "bmi_init_config", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a32725cc98663e54694c90c8740e8e5dd", null ],
     [ "bmi_lib_file", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a636d45e305f013644fd8435a464a341d", null ],
     [ "bmi_model", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a1fa6c71c6683a4f49957206d078b2435", null ],

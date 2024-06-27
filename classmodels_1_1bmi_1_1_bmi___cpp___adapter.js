@@ -1,8 +1,8 @@
 var classmodels_1_1bmi_1_1_bmi___cpp___adapter =
 [
-    [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a060b5433e50fcc1b4c55441afd67274e", null ],
-    [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2dfe27bb40fff98922a275a1995c8f58", null ],
-    [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ac162b46da12c12f4ce70de2d0088c269", null ],
+    [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ab829d4c49549341c5d7ba64e6fd4a4b6", null ],
+    [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a9a519a2f03a99b2d20ce5d80c20dfccc", null ],
+    [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ae390cf845f5dbe0fdb7a3de5f1b5d766", null ],
     [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a9b0058de857cb24365c4d2a8a2fd09a2", null ],
     [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a5ad0335860170d44de17c6567a7efa66", null ],
     [ "~Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a064c762f01d72e93819ddda43a045241", null ],
@@ -71,7 +71,6 @@ var classmodels_1_1bmi_1_1_bmi___cpp___adapter =
     [ "Update", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ae33b5178cf37132e8c0186977612f74b", null ],
     [ "UpdateUntil", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a89ed729aade1ec00e5aee9f587168ea6", null ],
     [ "::Bmi_Cpp_Adapter_Test", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a59f2bbbb7077059c32eb241016e536a5", null ],
-    [ "allow_model_exceed_end_time", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aa7eaecf4ba4b88781f8829e06e81b6b3", null ],
     [ "bmi_init_config", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a32725cc98663e54694c90c8740e8e5dd", null ],
     [ "bmi_lib_file", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a636d45e305f013644fd8435a464a341d", null ],
     [ "bmi_model", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ab816605158ae58a39b799531f8100ee3", null ],
