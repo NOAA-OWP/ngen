@@ -441,6 +441,17 @@ ngen_add_test(
         NGEN_WITH_NETCDF
 )
 
+ngen_add_test(
+    test_forcings_engine
+    OBJECTS
+        forcing/ForcingsEngineLumpedDataProvider_Test.cpp
+        forcing/ForcingsEngineGriddedDataProvider_Test.cpp
+    LIBRARIES
+        NGen::forcing
+    REQUIRES
+        NGEN_WITH_PYTHON
+)
+
 ########################## Primary Combined Unit Test Target
 ngen_add_test(
     test_unit

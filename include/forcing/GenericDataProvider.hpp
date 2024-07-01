@@ -6,12 +6,7 @@
 
 namespace data_access
 {
-    class GenericDataProvider : public DataProvider<double, CatchmentAggrDataSelector>
-    {
-        public:
-
-        private:
-    };
+    using GenericDataProvider = DataProvider<double, CatchmentAggrDataSelector>;
 }
 
 #endif
