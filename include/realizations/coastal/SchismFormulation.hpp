@@ -45,7 +45,7 @@ private:
     // CoastalFormulation
 
     // TODO: We really want something that we can ask for
-    // area-averaged RAINRATE over elements, but we're going to makde
+    // area-averaged RAINRATE over elements, but we're going to make
     // do with point values at the element centroids
     std::shared_ptr<data_access::DataProvider<double, MeshPointsSelector>> meteorological_forcings_provider_;
     std::shared_ptr<data_access::DataProvider<double, MeshPointsSelector>> offshore_boundary_provider_;
