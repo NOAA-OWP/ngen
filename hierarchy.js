@@ -34,23 +34,20 @@ var hierarchy =
     [ "CatchmentAggrDataSelector", "class_catchment_aggr_data_selector.html", null ],
     [ "Cell", "struct_cell.html", null ],
     [ "CSVReader", "class_c_s_v_reader.html", null ],
-    [ "data_access::DataProvider< data_type, selection_type >", "classdata__access_1_1_data_provider.html", null ],
-    [ "data_access::DataProvider< double, CatchmentAggrDataSelector >", "classdata__access_1_1_data_provider.html", [
-      [ "data_access::GenericDataProvider", "classdata__access_1_1_generic_data_provider.html", [
-        [ "CsvPerFeatureForcingProvider", "class_csv_per_feature_forcing_provider.html", null ],
-        [ "NullForcingProvider", "class_null_forcing_provider.html", null ],
-        [ "data_access::WrappedDataProvider", "classdata__access_1_1_wrapped_data_provider.html", [
-          [ "data_access::DeferredWrappedProvider", "classdata__access_1_1_deferred_wrapped_provider.html", [
-            [ "data_access::OptionalWrappedDataProvider", "classdata__access_1_1_optional_wrapped_data_provider.html", null ]
-          ] ]
-        ] ],
-        [ "realization::Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", [
-          [ "realization::Bmi_Module_Formulation", "classrealization_1_1_bmi___module___formulation.html", [
-            [ "realization::Bmi_C_Formulation", "classrealization_1_1_bmi___c___formulation.html", null ],
-            [ "realization::Bmi_Cpp_Formulation", "classrealization_1_1_bmi___cpp___formulation.html", null ]
-          ] ],
-          [ "realization::Bmi_Multi_Formulation", "classrealization_1_1_bmi___multi___formulation.html", null ]
+    [ "data_access::DataProvider< data_type, selection_type >", "classdata__access_1_1_data_provider.html", [
+      [ "CsvPerFeatureForcingProvider", "class_csv_per_feature_forcing_provider.html", null ],
+      [ "NullForcingProvider", "class_null_forcing_provider.html", null ],
+      [ "data_access::WrappedDataProvider", "classdata__access_1_1_wrapped_data_provider.html", [
+        [ "data_access::DeferredWrappedProvider", "classdata__access_1_1_deferred_wrapped_provider.html", [
+          [ "data_access::OptionalWrappedDataProvider", "classdata__access_1_1_optional_wrapped_data_provider.html", null ]
         ] ]
+      ] ],
+      [ "realization::Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", [
+        [ "realization::Bmi_Module_Formulation", "classrealization_1_1_bmi___module___formulation.html", [
+          [ "realization::Bmi_C_Formulation", "classrealization_1_1_bmi___c___formulation.html", null ],
+          [ "realization::Bmi_Cpp_Formulation", "classrealization_1_1_bmi___cpp___formulation.html", null ]
+        ] ],
+        [ "realization::Bmi_Multi_Formulation", "classrealization_1_1_bmi___multi___formulation.html", null ]
       ] ]
     ] ],
     [ "forcing_params", "structforcing__params.html", null ],

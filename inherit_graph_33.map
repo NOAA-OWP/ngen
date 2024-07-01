@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structngen_1_1geopackage_1_1wkb.html" title="A recursive WKB reader." alt="" coords="5,5,161,31"/>
+<area shape="rect" id="Node000000" href="$classngen_1_1_layer.html" title=" " alt="" coords="5,31,93,56"/>
+<area shape="rect" id="Node000001" href="$classngen_1_1_domain_layer.html" title=" " alt="" coords="141,5,273,31"/>
+<area shape="poly" id="edge79_Node000000_Node000001" title=" " alt="" coords="108,31,140,26,141,31,109,37"/>
+<area shape="rect" id="Node000002" href="$classngen_1_1_surface_layer.html" title=" " alt="" coords="141,55,273,80"/>
+<area shape="poly" id="edge80_Node000000_Node000002" title=" " alt="" coords="108,50,141,55,140,60,108,55"/>
 </map>

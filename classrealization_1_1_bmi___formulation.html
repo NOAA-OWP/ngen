@@ -129,7 +129,7 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad23e2ac461a34855b320e2c81cc1e2f6" id="r_ad23e2ac461a34855b320e2c81cc1e2f6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#ad23e2ac461a34855b320e2c81cc1e2f6">Bmi_Formulation</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, std::shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt; <a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">forcing</a>, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
+<tr class="memitem:ad23e2ac461a34855b320e2c81cc1e2f6" id="r_ad23e2ac461a34855b320e2c81cc1e2f6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#ad23e2ac461a34855b320e2c81cc1e2f6">Bmi_Formulation</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, std::shared_ptr&lt; <a class="el" href="namespacedata__access.html#a77172f93a7ac996d03c43baab852ea2e">data_access::GenericDataProvider</a> &gt; <a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">forcing</a>, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
 <tr class="memdesc:ad23e2ac461a34855b320e2c81cc1e2f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimal constructor for objects initialized using the <a class="el" href="classrealization_1_1_formulation___manager.html">Formulation_Manager</a> and subsequent calls to <code>create_formulation</code>.  <br /></td></tr>
 <tr class="separator:ad23e2ac461a34855b320e2c81cc1e2f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af04ef53959ce9c63da57f1f767740401" id="r_af04ef53959ce9c63da57f1f767740401"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#af04ef53959ce9c63da57f1f767740401">~Bmi_Formulation</a> ()</td></tr>
@@ -226,10 +226,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acca503f7d24367b8a3298a2c10e5d75f" id="r_acca503f7d24367b8a3298a2c10e5d75f"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#acca503f7d24367b8a3298a2c10e5d75f">get_ts_index_for_time</a> (const time_t &amp;epoch_time)=0</td></tr>
 <tr class="memdesc:acca503f7d24367b8a3298a2c10e5d75f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the index of the data time step that contains the given point in time.  <br /></td></tr>
 <tr class="separator:acca503f7d24367b8a3298a2c10e5d75f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2409247d93cc63d0626e623c3a024f1b" id="r_a2409247d93cc63d0626e623c3a024f1b"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a2409247d93cc63d0626e623c3a024f1b">get_value</a> (const <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a> &amp;selector, ReSampleMethod m=SUM)=0</td></tr>
+<tr class="memitem:a2409247d93cc63d0626e623c3a024f1b" id="r_a2409247d93cc63d0626e623c3a024f1b"><td class="memItemLeft" align="right" valign="top">virtual data_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a2409247d93cc63d0626e623c3a024f1b">get_value</a> (const selection_type &amp;selector, ReSampleMethod m=SUM)=0</td></tr>
 <tr class="memdesc:a2409247d93cc63d0626e623c3a024f1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of a forcing property for an arbitrary time period, converting units if needed.  <br /></td></tr>
 <tr class="separator:a2409247d93cc63d0626e623c3a024f1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adcd588f997aa5ec185744d36e801054a" id="r_adcd588f997aa5ec185744d36e801054a"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#adcd588f997aa5ec185744d36e801054a">get_values</a> (const <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a> &amp;selector, ReSampleMethod m=SUM)=0</td></tr>
+<tr class="memitem:adcd588f997aa5ec185744d36e801054a" id="r_adcd588f997aa5ec185744d36e801054a"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; data_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#adcd588f997aa5ec185744d36e801054a">get_values</a> (const selection_type &amp;selector, ReSampleMethod m=SUM)=0</td></tr>
 <tr class="memdesc:adcd588f997aa5ec185744d36e801054a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the values of a forcing property for an arbitrary time period, converting units if needed.  <br /></td></tr>
 <tr class="separator:adcd588f997aa5ec185744d36e801054a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8254f58e64499bb4ae799ab120fd0934" id="r_a8254f58e64499bb4ae799ab120fd0934"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a8254f58e64499bb4ae799ab120fd0934">is_property_sum_over_time_step</a> (const std::string &amp;name)</td></tr>
@@ -269,7 +269,7 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a0dd771991a46889d4bc299f8c13cb5e3" id="r_a0dd771991a46889d4bc299f8c13cb5e3"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; std::ostringstream &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a0dd771991a46889d4bc299f8c13cb5e3">output_text_stream</a></td></tr>
 <tr class="memdesc:a0dd771991a46889d4bc299f8c13cb5e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object to help with converting numeric output values to text.  <br /></td></tr>
 <tr class="separator:a0dd771991a46889d4bc299f8c13cb5e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a202e3be992fa8c73f74819b44bff14b6" id="r_a202e3be992fa8c73f74819b44bff14b6"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">forcing</a></td></tr>
+<tr class="memitem:a202e3be992fa8c73f74819b44bff14b6" id="r_a202e3be992fa8c73f74819b44bff14b6"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="namespacedata__access.html#a77172f93a7ac996d03c43baab852ea2e">data_access::GenericDataProvider</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">forcing</a></td></tr>
 <tr class="separator:a202e3be992fa8c73f74819b44bff14b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bfec24b0d57240e7ada2493a781db6d" id="r_a8bfec24b0d57240e7ada2493a781db6d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a></td></tr>
 <tr class="separator:a8bfec24b0d57240e7ada2493a781db6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -358,7 +358,7 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="namespacedata__access.html#a77172f93a7ac996d03c43baab852ea2e">data_access::GenericDataProvider</a> &gt;&#160;</td>
           <td class="paramname"><em>forcing</em>, </td>
         </tr>
         <tr>
@@ -599,12 +599,14 @@ Friends</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class data_type , class selection_type &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; double , <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &gt;::finalize </td>
+          <td class="memname">virtual void <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::finalize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -690,12 +692,14 @@ Friends</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class data_type , class selection_type &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual boost::span&lt; const std::string &gt; <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; double , <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &gt;::get_available_variable_names </td>
+          <td class="memname">virtual boost::span&lt; const std::string &gt; <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::get_available_variable_names </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -711,6 +715,8 @@ Friends</h2></td></tr>
 <p>Return the variables that are accessable by this data provider. </p>
 
 <p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#adc16fbddbb172454efb9cf28a21260ef">CsvPerFeatureForcingProvider</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#afcff64ec3112c42b80be024fbc923164">data_access::DeferredWrappedProvider</a>, <a class="el" href="class_null_forcing_provider.html#a4487421e46fcf87995144873402a2d57">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#afb5c4e6fe21de5d77ae3f1544454b021">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a429f502f46df36e8b55ce8a04cc047ab">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad4f1533db60844045d4a969f363f129a">realization::Bmi_Multi_Formulation</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#afb5c4e6fe21de5d77ae3f1544454b021">data_access::WrappedDataProvider::get_available_variable_names()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a6cf15bf9b7178b41092a726e262ee194">data_access::OptionalWrappedDataProvider::isSuppliedByProvider()</a>, and <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">data_access::DeferredWrappedProvider::setWrappedProvider()</a>.</p>
 
 </div>
 </div>
@@ -897,12 +903,14 @@ Friends</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class data_type , class selection_type &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual long <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; double , <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &gt;::get_data_start_time </td>
+          <td class="memname">virtual long <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::get_data_start_time </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -919,6 +927,8 @@ Friends</h2></td></tr>
 
 <p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#ad96c3f70785165d98d3a3f13e5256e6c">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a25565dbc5856f7f79858c7b0e641659e">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a514718777605106e5d18a6fe8af862b4">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a97e28f1d83470d84e93e025eb38ae3e5">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad3b2f3f6294014fde8f6a10b5d3058f8">realization::Bmi_Multi_Formulation</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a514718777605106e5d18a6fe8af862b4">data_access::WrappedDataProvider::get_data_start_time()</a>.</p>
+
 </div>
 </div>
 <a id="af598b54c03163287adc56400b3e9bdfe" name="af598b54c03163287adc56400b3e9bdfe"></a>
@@ -926,12 +936,14 @@ Friends</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class data_type , class selection_type &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual long <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; double , <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &gt;::get_data_stop_time </td>
+          <td class="memname">virtual long <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::get_data_stop_time </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -947,6 +959,8 @@ Friends</h2></td></tr>
 <p>Return the last valid time for which data from the requested variable can be requested. </p>
 
 <p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a88f3732ea7088e8f2b582302f7b2fee6">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a7f50953a40f8d1c4911b91d35e52efda">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a770a1a269bc8a34ee0e76c558b32ad3c">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e595e34a205b611cd7fa925b9b0388a">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a4b3db6bb593b3d3261ac5ed2f35684b3">realization::Bmi_Multi_Formulation</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a770a1a269bc8a34ee0e76c558b32ad3c">data_access::WrappedDataProvider::get_data_stop_time()</a>.</p>
 
 </div>
 </div>
@@ -1363,12 +1377,14 @@ Friends</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class data_type , class selection_type &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual size_t <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; double , <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &gt;::get_ts_index_for_time </td>
+          <td class="memname">virtual size_t <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::get_ts_index_for_time </td>
           <td>(</td>
           <td class="paramtype">const time_t &amp;&#160;</td>
           <td class="paramname"><em>epoch_time</em></td><td>)</td>
@@ -1400,6 +1416,8 @@ Friends</h2></td></tr>
 
 <p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#ad1f87f13f0bc6c5d616158d90eac9fc3">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a6fe63dfccf5fc86d2d4f730df4a806ab">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a3a490ff322f48cbc9199cf277ad5aa25">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a01146ed38f90fe77485c9de48857c2bf">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad07b6aa1c71e7e3f1381adf1ec65d835">realization::Bmi_Multi_Formulation</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a3a490ff322f48cbc9199cf277ad5aa25">data_access::WrappedDataProvider::get_ts_index_for_time()</a>.</p>
+
 </div>
 </div>
 <a id="a2409247d93cc63d0626e623c3a024f1b" name="a2409247d93cc63d0626e623c3a024f1b"></a>
@@ -1407,21 +1425,23 @@ Friends</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class data_type , class selection_type &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual double  <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; double , <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &gt;::get_value </td>
+          <td class="memname">virtual data_type <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::get_value </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &amp;&#160;</td>
+          <td class="paramtype">const selection_type &amp;&#160;</td>
           <td class="paramname"><em>selector</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9">ReSampleMethod</a>&#160;</td>
-          <td class="paramname"><em>m</em> = <code>SUM</code>&#160;</td>
+          <td class="paramname"><em>m</em> = <code><a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a52f32bc197123b0d24b5291d60af3186">SUM</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1453,7 +1473,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a7c0b7ab4bb62990ef33e4bc6c5d9d1b7">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a28350a9c2d92fd90578212ce3f8574c8">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#aedc8d5253a79ce0b4f79edf5a23a85e2">data_access::OptionalWrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e5990e1c4616de029d7ad7691c2b7c7">realization::Bmi_Module_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#afeffb2218b1c297653d88afe685d7abf">realization::Bmi_Multi_Formulation</a>, and <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a428b42c9cdf72b63c2a0ac23b0bba4d4">data_access::WrappedDataProvider</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#aedc8d5253a79ce0b4f79edf5a23a85e2">data_access::OptionalWrappedDataProvider::get_value()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a428b42c9cdf72b63c2a0ac23b0bba4d4">data_access::WrappedDataProvider::get_value()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aef30be5d6ae1ef746a5717c1f2badc77">realization::Bmi_Module_Formulation::set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -1462,21 +1482,23 @@ Friends</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class data_type , class selection_type &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::vector&lt; double  &gt; <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; double , <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &gt;::get_values </td>
+          <td class="memname">virtual std::vector&lt; data_type &gt; <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::get_values </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &amp;&#160;</td>
+          <td class="paramtype">const selection_type &amp;&#160;</td>
           <td class="paramname"><em>selector</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9">ReSampleMethod</a>&#160;</td>
-          <td class="paramname"><em>m</em> = <code>SUM</code>&#160;</td>
+          <td class="paramname"><em>m</em> = <code><a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a52f32bc197123b0d24b5291d60af3186">SUM</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1511,7 +1533,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a14b41560f41e9aea01c604136ea5a55f">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a86b93fe9449bcbe7c321952308217fca">NullForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a31836fab0684d4102fb8c534a4d5cad8">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9265b07222e97669c28fc24454ad7350">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a37c23079f7163f992ea90fd156a6b4d7">data_access::WrappedDataProvider</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a37c23079f7163f992ea90fd156a6b4d7">data_access::WrappedDataProvider::get_values()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aef30be5d6ae1ef746a5717c1f2badc77">realization::Bmi_Module_Formulation::set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -1731,12 +1753,14 @@ Friends</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class data_type , class selection_type &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; double , <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &gt;::is_property_sum_over_time_step </td>
+          <td class="memname">virtual bool <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::is_property_sum_over_time_step </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
@@ -1752,6 +1776,8 @@ Friends</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#af480a5b863976ab4f62d22b125dfa854">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a9350efc0423d384f5b5207f9fa46d2f8">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#ad9d424c2ab04077e4d82892ae17628ea">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a6466ba79a7e52d00b505b6a615ec7ed7">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a889959d2f251c42fa59c40d8a859b24a">realization::Bmi_Multi_Formulation</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#ad9d424c2ab04077e4d82892ae17628ea">data_access::WrappedDataProvider::is_property_sum_over_time_step()</a>.</p>
+
 </div>
 </div>
 <a id="a558af5fd091e84283470af3ca74d24d8" name="a558af5fd091e84283470af3ca74d24d8"></a>
@@ -1759,12 +1785,14 @@ Friends</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class data_type , class selection_type &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual long <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; double , <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &gt;::record_duration </td>
+          <td class="memname">virtual long <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::record_duration </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1780,6 +1808,8 @@ Friends</h2></td></tr>
 <p>Return the stride in the time dimension. </p>
 
 <p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a81b126f38311fe27d45ba14fb694270b">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#ace80c5c208f3bb23005126f011c5ecf9">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a9804e6089735525808ea17b385dec117">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a6cfb6345fbaaad87ca3100d30ed188a7">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a7b8ee244748b42fa4740f37ad5d14cc7">realization::Bmi_Multi_Formulation</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a9804e6089735525808ea17b385dec117">data_access::WrappedDataProvider::record_duration()</a>.</p>
 
 </div>
 </div>
@@ -2202,7 +2232,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a>&gt; realization::Catchment_Formulation::forcing</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="namespacedata__access.html#a77172f93a7ac996d03c43baab852ea2e">data_access::GenericDataProvider</a>&gt; realization::Catchment_Formulation::forcing</td>
         </tr>
       </table>
   </td>
@@ -2507,7 +2537,7 @@ Friends</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___formulation.html">Bmi_Formulation</a></li>
-    <li class="footer">Generated on Thu Jun 27 2024 18:06:22 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Jul 1 2024 15:12:39 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

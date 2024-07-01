@@ -1,3 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classhy__features_1_1hydrolocation_1_1_h_y___indirect_position.html" title=" " alt="" coords="5,5,176,46"/>
+<area shape="rect" id="Node000000" href="$class_h_y___hydro_feature.html" title=" " alt="" coords="5,55,131,80"/>
+<area shape="rect" id="Node000001" href="$class_h_y___catchment.html" title=" " alt="" coords="179,55,289,80"/>
+<area shape="poly" id="edge60_Node000000_Node000001" title=" " alt="" coords="146,65,178,65,178,70,146,70"/>
+<area shape="rect" id="Node000002" href="$class_h_y___catchment_aggregate.html" title=" " alt="" coords="337,5,506,31"/>
+<area shape="poly" id="edge61_Node000001_Node000002" title=" " alt="" coords="300,48,369,29,370,34,301,53"/>
+<area shape="rect" id="Node000003" href="$class_h_y___dendritic_catchment.html" title=" " alt="" coords="341,55,502,80"/>
+<area shape="poly" id="edge62_Node000001_Node000003" title=" " alt="" coords="304,65,340,65,340,70,304,70"/>
+<area shape="rect" id="Node000004" href="$class_h_y___interior_catchment.html" title=" " alt="" coords="347,104,497,130"/>
+<area shape="poly" id="edge63_Node000001_Node000004" title=" " alt="" coords="301,82,370,101,369,106,300,87"/>
 </map>

@@ -7,7 +7,9 @@ var class_null_forcing_provider =
     [ "get_data_stop_time", "class_null_forcing_provider.html#a7f50953a40f8d1c4911b91d35e52efda", null ],
     [ "get_ts_index_for_time", "class_null_forcing_provider.html#a6fe63dfccf5fc86d2d4f730df4a806ab", null ],
     [ "get_value", "class_null_forcing_provider.html#a28350a9c2d92fd90578212ce3f8574c8", null ],
-    [ "get_values", "class_null_forcing_provider.html#a86b93fe9449bcbe7c321952308217fca", null ],
+    [ "get_value", "class_null_forcing_provider.html#a2409247d93cc63d0626e623c3a024f1b", null ],
+    [ "get_values", "class_null_forcing_provider.html#a718b56c2628ca8254b4f9342f990d79a", null ],
+    [ "get_values", "class_null_forcing_provider.html#adcd588f997aa5ec185744d36e801054a", null ],
     [ "is_property_sum_over_time_step", "class_null_forcing_provider.html#a9350efc0423d384f5b5207f9fa46d2f8", null ],
     [ "record_duration", "class_null_forcing_provider.html#ace80c5c208f3bb23005126f011c5ecf9", null ]
 ];

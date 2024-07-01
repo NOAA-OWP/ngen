@@ -128,7 +128,7 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0d0a4a7d1392c8a2f705dfad175be7c4" id="r_a0d0a4a7d1392c8a2f705dfad175be7c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0d0a4a7d1392c8a2f705dfad175be7c4">Bmi_Module_Formulation</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, std::shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt; forcing_provider, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
+<tr class="memitem:a0d0a4a7d1392c8a2f705dfad175be7c4" id="r_a0d0a4a7d1392c8a2f705dfad175be7c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0d0a4a7d1392c8a2f705dfad175be7c4">Bmi_Module_Formulation</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, std::shared_ptr&lt; <a class="el" href="namespacedata__access.html#a77172f93a7ac996d03c43baab852ea2e">data_access::GenericDataProvider</a> &gt; forcing_provider, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
 <tr class="memdesc:a0d0a4a7d1392c8a2f705dfad175be7c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimal constructor for objects initialize using the <a class="el" href="classrealization_1_1_formulation___manager.html">Formulation_Manager</a> and subsequent calls to <code>create_formulation</code>.  <br /></td></tr>
 <tr class="separator:a0d0a4a7d1392c8a2f705dfad175be7c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4f6d7edfdca22867e9982ce5577978b" id="r_af4f6d7edfdca22867e9982ce5577978b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#af4f6d7edfdca22867e9982ce5577978b">~Bmi_Module_Formulation</a> () override=default</td></tr>
@@ -226,6 +226,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9d02de255937deb8f6169ef20f5a07d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa989be0629ecaa29a2410f7588404ff9" id="r_aa989be0629ecaa29a2410f7588404ff9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_area.html#aa989be0629ecaa29a2410f7588404ff9">write_output</a> (std::string out)</td></tr>
 <tr class="separator:aa989be0629ecaa29a2410f7588404ff9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2409247d93cc63d0626e623c3a024f1b" id="r_a2409247d93cc63d0626e623c3a024f1b"><td class="memItemLeft" align="right" valign="top">virtual data_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a2409247d93cc63d0626e623c3a024f1b">get_value</a> (const selection_type &amp;selector, ReSampleMethod m=SUM)=0</td></tr>
+<tr class="memdesc:a2409247d93cc63d0626e623c3a024f1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of a forcing property for an arbitrary time period, converting units if needed.  <br /></td></tr>
+<tr class="separator:a2409247d93cc63d0626e623c3a024f1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcd588f997aa5ec185744d36e801054a" id="r_adcd588f997aa5ec185744d36e801054a"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; data_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#adcd588f997aa5ec185744d36e801054a">get_values</a> (const selection_type &amp;selector, ReSampleMethod m=SUM)=0</td></tr>
+<tr class="memdesc:adcd588f997aa5ec185744d36e801054a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the values of a forcing property for an arbitrary time period, converting units if needed.  <br /></td></tr>
+<tr class="separator:adcd588f997aa5ec185744d36e801054a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -312,7 +318,7 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a52d338c09822dd8aa4a1cd595da132ea" id="r_a52d338c09822dd8aa4a1cd595da132ea"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a52d338c09822dd8aa4a1cd595da132ea">last_model_response_start_time</a> = 0</td></tr>
 <tr class="memdesc:a52d338c09822dd8aa4a1cd595da132ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">The epoch time of the model at the beginning of its last update.  <br /></td></tr>
 <tr class="separator:a52d338c09822dd8aa4a1cd595da132ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a812a84926c7dbc5da20dd459c24e004a" id="r_a812a84926c7dbc5da20dd459c24e004a"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a812a84926c7dbc5da20dd459c24e004a">input_forcing_providers</a></td></tr>
+<tr class="memitem:a812a84926c7dbc5da20dd459c24e004a" id="r_a812a84926c7dbc5da20dd459c24e004a"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::shared_ptr&lt; <a class="el" href="namespacedata__access.html#a77172f93a7ac996d03c43baab852ea2e">data_access::GenericDataProvider</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a812a84926c7dbc5da20dd459c24e004a">input_forcing_providers</a></td></tr>
 <tr class="separator:a812a84926c7dbc5da20dd459c24e004a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bc0ba27e103c821f269a1f56dc906a5" id="r_a6bc0ba27e103c821f269a1f56dc906a5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a6bc0ba27e103c821f269a1f56dc906a5">next_time_step_index</a> = 0</td></tr>
 <tr class="memdesc:a6bc0ba27e103c821f269a1f56dc906a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Index value (0-based) of the time step that will be processed by the next update of the model.  <br /></td></tr>
@@ -320,7 +326,7 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a0dd771991a46889d4bc299f8c13cb5e3" id="r_a0dd771991a46889d4bc299f8c13cb5e3"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; std::ostringstream &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a0dd771991a46889d4bc299f8c13cb5e3">output_text_stream</a></td></tr>
 <tr class="memdesc:a0dd771991a46889d4bc299f8c13cb5e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object to help with converting numeric output values to text.  <br /></td></tr>
 <tr class="separator:a0dd771991a46889d4bc299f8c13cb5e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a202e3be992fa8c73f74819b44bff14b6" id="r_a202e3be992fa8c73f74819b44bff14b6"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">forcing</a></td></tr>
+<tr class="memitem:a202e3be992fa8c73f74819b44bff14b6" id="r_a202e3be992fa8c73f74819b44bff14b6"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="namespacedata__access.html#a77172f93a7ac996d03c43baab852ea2e">data_access::GenericDataProvider</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">forcing</a></td></tr>
 <tr class="separator:a202e3be992fa8c73f74819b44bff14b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bfec24b0d57240e7ada2493a781db6d" id="r_a8bfec24b0d57240e7ada2493a781db6d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a></td></tr>
 <tr class="separator:a8bfec24b0d57240e7ada2493a781db6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -435,7 +441,7 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="namespacedata__access.html#a77172f93a7ac996d03c43baab852ea2e">data_access::GenericDataProvider</a> &gt;&#160;</td>
           <td class="paramname"><em>forcing_provider</em>, </td>
         </tr>
         <tr>
@@ -746,12 +752,14 @@ Friends</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class data_type , class selection_type &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; double , <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>  &gt;::finalize </td>
+          <td class="memname">virtual void <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::finalize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -865,7 +873,7 @@ Friends</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>The collection of forcing output property names this instance can provide. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd>ForcingProvider </dd></dl>
 
-<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a13ffb91d8fdba4a13ef440f7621d9cfe">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a13ffb91d8fdba4a13ef440f7621d9cfe">data_access::DataProvider&lt; data_type, selection_type &gt;</a>.</p>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5c9d1261dbbaf14773579ca59d0d0a69">available_forcings</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a1a20278de5cf4688c31c4ffff1e97f74">bmi_var_names_map</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#acebac670059dec776623642295b94952">get_bmi_model()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a4cc5389d72ac35f78ee7c3bedeb5bcc8">is_model_initialized()</a>.</p>
 
@@ -1206,7 +1214,7 @@ Friends</h2></td></tr>
 <p>This is part of the DataProvider interface. This interface must be implemented for items of this type to be usable as "forcing" providers for situations when some other object needs to receive as an input (i.e., one of its forcings) a data property output from this object.</p>
 <dl class="section return"><dt>Returns</dt><dd>The inclusive beginning of the period of time over which this instance can provide this data. </dd></dl>
 
-<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a9a5503cb5da0b2bf8fe25d0500bf33c4">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a9a5503cb5da0b2bf8fe25d0500bf33c4">data_access::DataProvider&lt; data_type, selection_type &gt;</a>.</p>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#acebac670059dec776623642295b94952">get_bmi_model()</a>.</p>
 
@@ -1237,7 +1245,7 @@ Friends</h2></td></tr>
 
 <p>Return the last valid time for which data from the requested variable can be requested. </p>
 
-<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#af598b54c03163287adc56400b3e9bdfe">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#af598b54c03163287adc56400b3e9bdfe">data_access::DataProvider&lt; data_type, selection_type &gt;</a>.</p>
 
 </div>
 </div>
@@ -1700,12 +1708,12 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#acca503f7d24367b8a3298a2c10e5d75f">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#acca503f7d24367b8a3298a2c10e5d75f">data_access::DataProvider&lt; data_type, selection_type &gt;</a>.</p>
 
 </div>
 </div>
 <a id="a9e5990e1c4616de029d7ad7691c2b7c7" name="a9e5990e1c4616de029d7ad7691c2b7c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e5990e1c4616de029d7ad7691c2b7c7">&#9670;&#160;</a></span>get_value()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e5990e1c4616de029d7ad7691c2b7c7">&#9670;&#160;</a></span>get_value() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1733,7 +1741,7 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1759,14 +1767,69 @@ Friends</h2></td></tr>
 </dl>
 <dl class="section see"><dt>See also</dt><dd>ForcingProvider::get_value </dd></dl>
 
-<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a2409247d93cc63d0626e623c3a024f1b">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
-
 <p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a429f502f46df36e8b55ce8a04cc047ab">get_available_variable_names()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#acebac670059dec776623642295b94952">get_bmi_model()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0347db4a6af7292fd6a3c3242dd36b29">get_bmi_output_var_name()</a>, <a class="el" href="class_units_helper.html#a0e2dd4070640d0c0425da6aa0828cedd">UnitsHelper::get_converted_value()</a>, <a class="el" href="class_catchment_aggr_data_selector.html#a482e1fb8dbb5ac966ef5de3f0c5a8d70">CatchmentAggrDataSelector::get_duration_secs()</a>, <a class="el" href="classrealization_1_1_formulation.html#a2e9d4749500d3f5ea434d77861b03990">realization::Formulation::get_formulation_type()</a>, <a class="el" href="class_catchment_aggr_data_selector.html#abe6340bf863bada7b0d753ebe60228bd">CatchmentAggrDataSelector::get_init_time()</a>, <a class="el" href="class_catchment_aggr_data_selector.html#a92a56297b4fe7ad8c374f8808a5579f9">CatchmentAggrDataSelector::get_output_units()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#acddd464aa09db2fd381a8c12b7d1e5f7">realization::Bmi_Formulation::get_var_value_as_double()</a>, and <a class="el" href="class_catchment_aggr_data_selector.html#a1dd6a5bb4ab1e701463359d34d4d6738">CatchmentAggrDataSelector::get_variable_name()</a>.</p>
 
 </div>
 </div>
+<a id="a2409247d93cc63d0626e623c3a024f1b" name="a2409247d93cc63d0626e623c3a024f1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2409247d93cc63d0626e623c3a024f1b">&#9670;&#160;</a></span>get_value() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class data_type , class selection_type &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual data_type <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::get_value </td>
+          <td>(</td>
+          <td class="paramtype">const selection_type &amp;&#160;</td>
+          <td class="paramname"><em>selector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9">ReSampleMethod</a>&#160;</td>
+          <td class="paramname"><em>m</em> = <code><a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a52f32bc197123b0d24b5291d60af3186">SUM</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the value of a forcing property for an arbitrary time period, converting units if needed. </p>
+<p>An std::out_of_range exception should be thrown if the data for the time period is not available.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">selector</td><td>Data required to establish what subset of the stored data should be accessed </td></tr>
+    <tr><td class="paramname">m</td><td>How data is to be resampled if there is a mismatch in data alignment or repeat rate </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The value of the forcing property for the described time period, with units converted if needed. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::out_of_range</td><td>If data for the time period is not available. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#aedc8d5253a79ce0b4f79edf5a23a85e2">data_access::OptionalWrappedDataProvider::get_value()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a428b42c9cdf72b63c2a0ac23b0bba4d4">data_access::WrappedDataProvider::get_value()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aef30be5d6ae1ef746a5717c1f2badc77">set_model_inputs_prior_to_update()</a>.</p>
+
+</div>
+</div>
 <a id="a9265b07222e97669c28fc24454ad7350" name="a9265b07222e97669c28fc24454ad7350"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9265b07222e97669c28fc24454ad7350">&#9670;&#160;</a></span>get_values()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9265b07222e97669c28fc24454ad7350">&#9670;&#160;</a></span>get_values() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1794,7 +1857,7 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1818,9 +1881,67 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#adcd588f997aa5ec185744d36e801054a">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
-
 <p class="reference">References <a class="el" href="class_units_helper.html#a60789bcaf4c43a12ff3be963454eafca">UnitsHelper::convert_values()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a429f502f46df36e8b55ce8a04cc047ab">get_available_variable_names()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#acebac670059dec776623642295b94952">get_bmi_model()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0347db4a6af7292fd6a3c3242dd36b29">get_bmi_output_var_name()</a>, <a class="el" href="class_catchment_aggr_data_selector.html#a482e1fb8dbb5ac966ef5de3f0c5a8d70">CatchmentAggrDataSelector::get_duration_secs()</a>, <a class="el" href="classrealization_1_1_formulation.html#a2e9d4749500d3f5ea434d77861b03990">realization::Formulation::get_formulation_type()</a>, <a class="el" href="class_catchment_aggr_data_selector.html#abe6340bf863bada7b0d753ebe60228bd">CatchmentAggrDataSelector::get_init_time()</a>, <a class="el" href="class_catchment_aggr_data_selector.html#a92a56297b4fe7ad8c374f8808a5579f9">CatchmentAggrDataSelector::get_output_units()</a>, <a class="el" href="class_catchment_aggr_data_selector.html#a1dd6a5bb4ab1e701463359d34d4d6738">CatchmentAggrDataSelector::get_variable_name()</a>, and <a class="el" href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8">logging::warning()</a>.</p>
+
+</div>
+</div>
+<a id="adcd588f997aa5ec185744d36e801054a" name="adcd588f997aa5ec185744d36e801054a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcd588f997aa5ec185744d36e801054a">&#9670;&#160;</a></span>get_values() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class data_type , class selection_type &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::vector&lt; data_type &gt; <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::get_values </td>
+          <td>(</td>
+          <td class="paramtype">const selection_type &amp;&#160;</td>
+          <td class="paramname"><em>selector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9">ReSampleMethod</a>&#160;</td>
+          <td class="paramname"><em>m</em> = <code><a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a52f32bc197123b0d24b5291d60af3186">SUM</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the values of a forcing property for an arbitrary time period, converting units if needed. </p>
+<p>An std::out_of_range exception should be thrown if the data for the time period is not available.</p>
+<p>If a provider doesn't implement this function, then by default, get_values will be a simple proxy to <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e5990e1c4616de029d7ad7691c2b7c7">get_value</a> with the result wrapped in a std::vector&lt;double&gt;</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">output_name</td><td>The name of the forcing property of interest. </td></tr>
+    <tr><td class="paramname">init_time_epoch</td><td>The epoch time (in seconds) of the start of the time period. </td></tr>
+    <tr><td class="paramname">duration_seconds</td><td>The length of the time period, in seconds. </td></tr>
+    <tr><td class="paramname">output_units</td><td>The expected units of the desired output value. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;double&gt; The vector of values of the forcing property for the described time period, with units converted if needed. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::out_of_range</td><td>If data for the time period is not available. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a37c23079f7163f992ea90fd156a6b4d7">data_access::WrappedDataProvider::get_values()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aef30be5d6ae1ef746a5717c1f2badc77">set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -2156,7 +2277,7 @@ Friends</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Whether the property's value is an aggregate sum, which is always <code>true</code> for this type. </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classdata__access_1_1_data_provider.html#a8254f58e64499bb4ae799ab120fd0934">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+<p>Reimplemented from <a class="el" href="classdata__access_1_1_data_provider.html#a8254f58e64499bb4ae799ab120fd0934">data_access::DataProvider&lt; data_type, selection_type &gt;</a>.</p>
 
 </div>
 </div>
@@ -2185,7 +2306,7 @@ Friends</h2></td></tr>
 
 <p>Return the stride in the time dimension. </p>
 
-<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a558af5fd091e84283470af3ca74d24d8">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a558af5fd091e84283470af3ca74d24d8">data_access::DataProvider&lt; data_type, selection_type &gt;</a>.</p>
 
 </div>
 </div>
@@ -3151,7 +3272,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a>&gt; realization::Catchment_Formulation::forcing</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="namespacedata__access.html#a77172f93a7ac996d03c43baab852ea2e">data_access::GenericDataProvider</a>&gt; realization::Catchment_Formulation::forcing</td>
         </tr>
       </table>
   </td>
@@ -3221,7 +3342,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt;std::string, std::shared_ptr&lt;<a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a>&gt; &gt; realization::Bmi_Module_Formulation::input_forcing_providers</td>
+          <td class="memname">std::map&lt;std::string, std::shared_ptr&lt;<a class="el" href="namespacedata__access.html#a77172f93a7ac996d03c43baab852ea2e">data_access::GenericDataProvider</a>&gt; &gt; realization::Bmi_Module_Formulation::input_forcing_providers</td>
         </tr>
       </table>
   </td>
@@ -3582,7 +3703,7 @@ Friends</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___module___formulation.html">Bmi_Module_Formulation</a></li>
-    <li class="footer">Generated on Thu Jun 27 2024 18:06:22 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Jul 1 2024 15:12:39 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

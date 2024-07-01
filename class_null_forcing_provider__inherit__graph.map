@@ -1,9 +1,5 @@
 <map id="NullForcingProvider" name="NullForcingProvider">
-<area shape="rect" id="Node000001" title="Forcing class that returns no variables to the simulation–use this e.g." alt="" coords="49,841,207,1095"/>
-<area shape="rect" id="Node000002" href="$classdata__access_1_1_generic_data_provider.html" title=" " alt="" coords="45,711,211,791"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,806,131,841,125,841,125,806"/>
-<area shape="rect" id="Node000003" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,373,251,662"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="131,677,131,711,125,711,125,677"/>
-<area shape="rect" id="Node000004" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="37,5,219,295"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="131,310,131,373,125,373,125,310"/>
+<area shape="rect" id="Node000001" title="Forcing class that returns no variables to the simulation–use this e.g." alt="" coords="9,343,167,597"/>
+<area shape="rect" id="Node000002" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,5,171,295"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,310,91,343,85,343,85,310"/>
 </map>

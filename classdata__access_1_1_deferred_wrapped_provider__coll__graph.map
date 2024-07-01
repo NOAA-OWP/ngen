@@ -1,23 +1,20 @@
 <map id="data_access::DeferredWrappedProvider" name="data_access::DeferredWrappedProvider">
-<area shape="rect" id="Node000001" title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps." alt="" coords="197,1260,390,1495"/>
-<area shape="rect" id="Node000002" href="$classdata__access_1_1_wrapped_data_provider.html" title="Simple implementation that basically wraps another instance." alt="" coords="75,868,245,1197"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="231,1210,251,1259,246,1261,227,1212"/>
-<area shape="rect" id="Node000003" href="$classdata__access_1_1_generic_data_provider.html" title=" " alt="" coords="45,725,211,805"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="136,820,139,844,142,868,136,869,133,844,131,820"/>
-<area shape="poly" id="edge5_Node000002_Node000003" title=" " alt="" coords="135,805,141,851,136,852,130,805"/>
-<area shape="rect" id="Node000004" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,373,251,662"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="131,677,131,725,125,725,125,677"/>
-<area shape="rect" id="Node000005" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="37,5,219,295"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="131,310,131,373,125,373,125,310"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="398,1000,549,1065"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="459,1066,365,1247,360,1244,455,1064"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="317,732,387,798"/>
-<area shape="poly" id="edge11_Node000001_Node000007" title=" " alt="" coords="336,799,319,832,307,869,290,965,282,1064,281,1159,284,1244,279,1244,276,1159,277,1064,285,965,302,867,314,830,331,796"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="369,796,454,983,450,986,364,798"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="295,477,409,557"/>
-<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="355,572,355,733,349,733,349,572"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="422,732,525,798"/>
-<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="476,812,476,1000,471,1000,471,812"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="463,485,484,550"/>
-<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="476,550,476,716,471,716,471,550"/>
+<area shape="rect" id="Node000001" title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps." alt="" coords="315,893,508,1128"/>
+<area shape="rect" id="Node000002" href="$classdata__access_1_1_wrapped_data_provider.html" title="Simple implementation that basically wraps another instance." alt="" coords="193,501,363,830"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="349,843,369,892,364,894,345,845"/>
+<area shape="rect" id="Node000003" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,156,164,430"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="165,442,195,500,190,502,160,444"/>
+<area shape="rect" id="Node000004" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="189,148,370,438"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="281,437,281,484,276,484,276,437"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="516,633,667,698"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="577,699,483,879,478,877,573,696"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="434,260,503,326"/>
+<area shape="poly" id="edge9_Node000001_Node000006" title=" " alt="" coords="462,326,442,405,425,501,416,599,411,698,410,877,404,877,406,698,411,598,420,500,437,404,457,325"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="480,325,525,476,575,616,570,618,519,478,475,326"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="411,5,526,85"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="471,100,471,261,466,261,466,100"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="540,260,643,326"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="594,340,594,633,589,633,589,340"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="581,13,602,78"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="594,78,594,244,589,244,589,78"/>
 </map>
