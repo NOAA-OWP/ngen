@@ -21,13 +21,16 @@ namespace data_access
             BACK_FILL
     };
 
-    template <class data_type, class selection_type> class DataProvider
+    template <class DataType, class SelectionType> class DataProvider
     {
         /** This class provides a generic interface to data services
         *
         */
 
         public:
+
+        using data_type = DataType;
+        using selection_type = SelectionType;
 
         virtual ~DataProvider() = default;
 
