@@ -34,7 +34,7 @@ Provider::ForcingsEngineLumpedDataProvider(
     if (cat_id_pos == var_output_names_.end()) {
         throw std::runtime_error{
             "Failed to initialize ForcingsEngineLumpedDataProvider: `CAT-ID` is not an output variable of the forcings engine."
-            " Is it running with `GRID_TYPE` set to 'hydrofabric'?"
+            " Does " + init + " have `GRID_TYPE` set to 'hydrofabric'?"
         };
     }
     var_output_names_.erase(cat_id_pos);
@@ -79,7 +79,10 @@ std::string Provider::ensure_variable(std::string name)
         return element_name;
     }
 
-    throw std::runtime_error{"ForcingsEngineLumpedDataProvider: neither variable `" + name + "` nor `" + element_name + "` exist"};
+    throw std::runtime_error{
+        "ForcingsEngineLumpedDataProvider: neither variable `" + name + "` nor `" + element_name + "` exist."
+        " Make sure " + this->init_ + " has `GRID_TYPE` set to 'hydrofabric'."
+    };
 }
 
 Provider::data_type Provider::get_value(

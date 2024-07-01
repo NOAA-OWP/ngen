@@ -209,7 +209,6 @@ struct ForcingsEngineDataProvider
     //! Duration of a single simulation tick
     clock_type::duration time_step_{};
 
-  private:
     //! Initialization config file path
     std::string init_;
 };

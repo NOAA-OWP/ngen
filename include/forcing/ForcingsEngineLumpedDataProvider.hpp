@@ -12,8 +12,6 @@ namespace data_access {
 struct ForcingsEngineLumpedDataProvider final :
   public ForcingsEngineDataProvider<double, CatchmentAggrDataSelector>
 {
-    using data_type      = double;
-    using selection_type = CatchmentAggrDataSelector;
     using base_type = ForcingsEngineDataProvider<data_type, selection_type>;
 
     ~ForcingsEngineLumpedDataProvider() override = default;
