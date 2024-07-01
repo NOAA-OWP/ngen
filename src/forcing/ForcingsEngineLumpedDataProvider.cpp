@@ -89,7 +89,7 @@ Provider::data_type Provider::get_value(
 {
     assert(divide_id_ == convert_divide_id_stoi(selector.get_id()));
 
-    auto variable = ensure_variable(std::move(selector.get_variable_name()));
+    auto variable = ensure_variable(selector.get_variable_name());
 
     if (m == ReSampleMethod::SUM || m == ReSampleMethod::MEAN) {
         double acc = 0.0;
@@ -118,12 +118,12 @@ Provider::data_type Provider::get_value(
 
 std::vector<Provider::data_type> Provider::get_values(
     const Provider::selection_type& selector,
-    data_access::ReSampleMethod m
+    data_access::ReSampleMethod /* unused */
 )
 {
     assert(divide_id_ == convert_divide_id_stoi(selector.get_id()));
 
-    auto variable = ensure_variable(std::move(selector.get_variable_name()));
+    auto variable = ensure_variable(selector.get_variable_name());
 
     const auto start = clock_type::from_time_t(selector.get_init_time());
     assert(start >= time_begin_);
