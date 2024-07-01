@@ -1,5 +1,9 @@
 #pragma once
 
+#include <NGenConfig.h>
+
+#if NGEN_WITH_PYTHON
+
 #include <cmath>
 #include <chrono>
 #include <memory>
@@ -211,3 +215,5 @@ struct ForcingsEngineDataProvider
 };
 
 } // namespace data_access
+
+#endif // NGEN_WITH_PYTHON
