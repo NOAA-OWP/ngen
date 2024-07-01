@@ -1,0 +1,3 @@
+gfs/**/*.grib2
+scratch/*
+!scratch/.keep
