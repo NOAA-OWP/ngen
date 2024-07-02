@@ -21,7 +21,6 @@
                                 "uses_forcing_file": false,
                                 "model_params": {
                                     "soil_moisture_wetting_fronts(1,double,1,node)": 0.0,
-                                    "soil_thickness_layered(1,double,1,node)": 0.0,
                                     "soil_depth_wetting_fronts(1,double,1,node)": 0.0,
                                     "num_wetting_fronts(1,int,1,node)": 1.0,
                                     "Qb_topmodel(1,double,1,node)": 0.0,
