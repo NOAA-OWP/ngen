@@ -200,10 +200,6 @@ struct ForcingsEngineDataProvider
     //! Output variable names
     std::vector<std::string> var_output_names_{};
 
-  private:
-    //! Initialization config file path
-    std::string init_;
-
     //! Calendar time for simulation beginning
     clock_type::time_point time_begin_{};
 
@@ -212,6 +208,9 @@ struct ForcingsEngineDataProvider
 
     //! Duration of a single simulation tick
     clock_type::duration time_step_{};
+
+    //! Initialization config file path
+    std::string init_;
 };
 
 } // namespace data_access
