@@ -40,18 +40,18 @@ namespace data_access
 
         /** Return the variables that are accessable by this data provider */
 
-        virtual boost::span<const std::string> get_available_variable_names() const noexcept = 0;
+        virtual boost::span<const std::string> get_available_variable_names() const = 0;
 
         /** Return the first valid time for which data from the request variable  can be requested */
 
-        virtual long get_data_start_time() const noexcept = 0;
+        virtual long get_data_start_time() const = 0;
 
         /** Return the last valid time for which data from the requested variable can be requested */
 
-        virtual long get_data_stop_time() const noexcept = 0;
+        virtual long get_data_stop_time() const = 0;
 
         /** Return the stride in the time dimension */
-        virtual long record_duration() const noexcept = 0;
+        virtual long record_duration() const = 0;
 
         /**
          * Get the index of the data time step that contains the given point in time.
@@ -93,7 +93,7 @@ namespace data_access
          */
         virtual std::vector<data_type> get_values(const selection_type& selector, ReSampleMethod m=SUM) = 0;
 
-        virtual bool is_property_sum_over_time_step(const std::string& name) {return false; }
+        virtual bool is_property_sum_over_time_step(const std::string& name) const {return false; }
 
         private:
     };
