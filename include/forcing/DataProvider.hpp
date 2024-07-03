@@ -40,18 +40,18 @@ namespace data_access
 
         /** Return the variables that are accessable by this data provider */
 
-        virtual boost::span<const std::string> get_available_variable_names() = 0;
+        virtual boost::span<const std::string> get_available_variable_names() const noexcept = 0;
 
         /** Return the first valid time for which data from the request variable  can be requested */
 
-        virtual long get_data_start_time() = 0;
+        virtual long get_data_start_time() const noexcept = 0;
 
         /** Return the last valid time for which data from the requested variable can be requested */
 
-        virtual long get_data_stop_time() = 0;
+        virtual long get_data_stop_time() const noexcept = 0;
 
         /** Return the stride in the time dimension */
-        virtual long record_duration() = 0;
+        virtual long record_duration() const noexcept = 0;
 
         /**
          * Get the index of the data time step that contains the given point in time.
@@ -62,7 +62,7 @@ namespace data_access
          * @return The index of the forcing time step that contains the given point in time.
          * @throws std::out_of_range If the given point is not in any time step.
          */
-        virtual size_t get_ts_index_for_time(const time_t &epoch_time) = 0;
+        virtual size_t get_ts_index_for_time(const time_t &epoch_time) const = 0;
 
         /**
          * Get the value of a forcing property for an arbitrary time period, converting units if needed.
