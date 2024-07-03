@@ -39,7 +39,7 @@ class HY_CatchmentRealization
 
     std::shared_ptr<HY_Catchment> realized_catchment;
 
-    virtual std::string get_catchment_id() = 0;
+    virtual std::string get_catchment_id() const = 0;
 
     virtual void set_catchment_id(std::string cat_id) = 0;
 
