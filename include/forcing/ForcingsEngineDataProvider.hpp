@@ -194,6 +194,27 @@ struct ForcingsEngineDataProvider
         var_output_names_ = bmi_->GetOutputVarNames();
     }
 
+    std::string ensure_variable(std::string name, const std::string& suffix = "_ELEMENT") const
+    {
+        // TODO: use get_available_var_names() once const
+        auto vars = boost::span<const std::string>{var_output_names_};
+
+        if (std::find(vars.begin(), vars.end(), name) != vars.end()) {
+          return name;
+        }
+
+        auto suffixed_name = std::move(name) + suffix;
+        if (std::find(vars.begin(), vars.end(), suffixed_name) != vars.end()) {
+          return suffixed_name;
+        }
+
+        throw std::runtime_error{
+          "ForcingsEngineDataProvider: neither variable `"
+          + suffixed_name.substr(0, suffixed_name.size() - suffix.size())
+          + "` nor `" + suffixed_name + "` exist."
+        };
+    }
+
     //! Forcings Engine instance
     std::shared_ptr<models::bmi::Bmi_Py_Adapter> bmi_ = nullptr;
 
