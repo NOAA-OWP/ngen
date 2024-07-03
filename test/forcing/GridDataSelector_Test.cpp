@@ -21,19 +21,19 @@ struct TestGridDataProvider
       : TestGridDataProvider(GridSpecification{10, 10, box_t{{0, 0},{10, 10}}})
     {}
 
-    boost::span<const std::string> get_available_variable_names() override
+    boost::span<const std::string> get_available_variable_names() const override
     { return { &variable_, 1 }; }
 
-    long get_data_start_time() override
+    long get_data_start_time() const override
     { return 0; }
 
-    long get_data_stop_time() override
+    long get_data_stop_time() const override
     { return get_data_start_time() + record_duration(); }
 
-    long record_duration() override
+    long record_duration() const override
     { return 3600; }
 
-    size_t get_ts_index_for_time(const time_t& epoch_time) override
+    size_t get_ts_index_for_time(const time_t& epoch_time) const override
     { return -1; }
 
     Cell get_value(const GridDataSelector& selector, data_access::ReSampleMethod method) override

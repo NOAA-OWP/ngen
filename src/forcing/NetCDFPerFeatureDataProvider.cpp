@@ -272,7 +272,7 @@ void NetCDFPerFeatureDataProvider::finalize()
     nc_file = nullptr;
 }
 
-boost::span<const std::string> NetCDFPerFeatureDataProvider::get_available_variable_names() const noexcept
+boost::span<const std::string> NetCDFPerFeatureDataProvider::get_available_variable_names() const
 {
     return variable_names;
 }
@@ -283,7 +283,7 @@ const std::vector<std::string>& NetCDFPerFeatureDataProvider::get_ids() const
 }
 
 /** Return the first valid time for which data from the request variable  can be requested */
-long NetCDFPerFeatureDataProvider::get_data_start_time() const noexcept
+long NetCDFPerFeatureDataProvider::get_data_start_time() const
 {
     //return start_time;
     //FIXME: Matching behavior from CsvPerFeatureForcingProvider, but both are probably wrong!
@@ -291,14 +291,14 @@ long NetCDFPerFeatureDataProvider::get_data_start_time() const noexcept
 }
 
 /** Return the last valid time for which data from the requested variable can be requested */
-long NetCDFPerFeatureDataProvider::get_data_stop_time() const noexcept
+long NetCDFPerFeatureDataProvider::get_data_stop_time() const
 {
     //return stop_time;
     //FIXME: Matching behavior from CsvPerFeatureForcingProvider, but both are probably wrong!
     return sim_end_date_time_epoch; // return end_time + sim_to_data_time_offset;
 }
 
-long NetCDFPerFeatureDataProvider::record_duration() const noexcept
+long NetCDFPerFeatureDataProvider::record_duration() const
 {
     return time_stride;
 }

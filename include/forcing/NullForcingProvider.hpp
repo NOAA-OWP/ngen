@@ -16,11 +16,11 @@ class NullForcingProvider : public data_access::GenericDataProvider
 
     // BEGIN DataProvider interface methods
 
-    long get_data_start_time() const noexcept override;
+    long get_data_start_time() const override;
 
-    long get_data_stop_time() const noexcept override;
+    long get_data_stop_time() const override;
 
-    long record_duration() const noexcept override;
+    long record_duration() const override;
 
     size_t get_ts_index_for_time(const time_t &epoch_time) const override;
 
@@ -28,9 +28,9 @@ class NullForcingProvider : public data_access::GenericDataProvider
 
     std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
-    inline bool is_property_sum_over_time_step(const std::string& name) override;
+    inline bool is_property_sum_over_time_step(const std::string& name) const override;
 
-    boost::span<const std::string> get_available_variable_names() const noexcept override;
+    boost::span<const std::string> get_available_variable_names() const override;
 };
 
 #endif // NGEN_NULLFORCING_H

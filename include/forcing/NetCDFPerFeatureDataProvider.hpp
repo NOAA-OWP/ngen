@@ -72,18 +72,18 @@ namespace data_access
         void finalize() override;
 
         /** Return the variables that are accessable by this data provider */
-        boost::span<const std::string> get_available_variable_names() const noexcept override;
+        boost::span<const std::string> get_available_variable_names() const override;
 
         /** return a list of ids in the current file */
         const std::vector<std::string>& get_ids() const;
 
         /** Return the first valid time for which data from the request variable  can be requested */
-        long get_data_start_time() const noexcept override;
+        long get_data_start_time() const override;
 
         /** Return the last valid time for which data from the requested variable can be requested */
-        long get_data_stop_time() const noexcept override;
+        long get_data_stop_time() const override;
 
-        long record_duration() const noexcept override;
+        long record_duration() const override;
 
         /**
          * Get the index of the data time step that contains the given point in time.
