@@ -104,22 +104,22 @@ struct ForcingsEngineDataProvider
 
     ~ForcingsEngineDataProvider() override = default;
 
-    boost::span<const std::string> get_available_variable_names() const noexcept override
+    boost::span<const std::string> get_available_variable_names() const override
     {
         return var_output_names_;
     }
 
-    long get_data_start_time() const noexcept override
+    long get_data_start_time() const override
     {
         return clock_type::to_time_t(time_begin_);
     }
 
-    long get_data_stop_time() const noexcept override
+    long get_data_stop_time() const override
     {
         return clock_type::to_time_t(time_end_);
     }
 
-    long record_duration() const noexcept override
+    long record_duration() const override
     {
         return std::chrono::duration_cast<std::chrono::seconds>(time_step_).count();
     }
