@@ -46,7 +46,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      *
      * @return The inclusive beginning of the period of time over which this instance can provide this data.
      */
-    long get_data_start_time() const noexcept override {
+    long get_data_start_time() const override {
         //FIXME: Trace this back and you will find that it is the simulation start time, not having anything to do with the forcing at all.
         // Apparently this "worked", but at a minimum the description above is false.
         return start_date_time_epoch;
@@ -57,7 +57,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      *
      * @return The exclusive ending of the period of time over which this instance can provide this data.
      */
-    long get_data_stop_time() const noexcept override {
+    long get_data_stop_time() const override {
         return end_date_time_epoch;
     }
 
@@ -66,7 +66,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      *
      * @return The duration of one record of this forcing source
      */
-    long record_duration() const noexcept override {
+    long record_duration() const override {
         return time_epoch_vector[1] - time_epoch_vector[0];
     }
 
@@ -190,7 +190,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      * @param name The name of the forcing param for which the current value is desired.
      * @return Whether the param's value is an aggregate sum.
      */
-    inline bool is_param_sum_over_time_step(const std::string& name) {
+    inline bool is_param_sum_over_time_step(const std::string& name) const {
         if (name == CSDMS_STD_NAME_RAIN_VOLUME_FLUX) {
             return true;
         }
@@ -218,11 +218,11 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      * @param name The name of the forcing property for which the current value is desired.
      * @return Whether the property's value is an aggregate sum.
      */
-    inline bool is_property_sum_over_time_step(const std::string& name) override {
+    inline bool is_property_sum_over_time_step(const std::string& name) const override {
         return is_param_sum_over_time_step(name);
     }
 
-    boost::span<const std::string> get_available_variable_names() const noexcept override {
+    boost::span<const std::string> get_available_variable_names() const override {
         return available_forcings;
     }
 
