@@ -16,11 +16,11 @@ namespace realization {
 
         Bmi_C_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream);
 
-        std::string get_formulation_type() override;
+        std::string get_formulation_type() const override;
 
-        bool is_bmi_input_variable(const std::string &var_name) override;
+        bool is_bmi_input_variable(const std::string &var_name) const override;
 
-        bool is_bmi_output_variable(const std::string &var_name) override;
+        bool is_bmi_output_variable(const std::string &var_name) const override;
 
     protected:
 
@@ -36,7 +36,7 @@ namespace realization {
          */
         std::shared_ptr<models::bmi::Bmi_Adapter> construct_model(const geojson::PropertyMap& properties) override;
 
-        time_t convert_model_time(const double &model_time) override {
+        time_t convert_model_time(const double &model_time) const override {
             return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));
         }
 
@@ -98,7 +98,7 @@ namespace realization {
          *
          * @return Whether backing model object has been initialize using the BMI standard ``Initialize`` function.
          */
-        bool is_model_initialized() override;
+        bool is_model_initialized() const override;
 
         // Unit test access
         friend class ::Bmi_Formulation_Test;

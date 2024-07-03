@@ -56,7 +56,7 @@ namespace realization {
          * @param model_time The time value in a model's representation that is to be converted.
          * @return The equivalent epoch time.
          */
-        time_t convert_model_time(const double &model_time) override {
+        time_t convert_model_time(const double &model_time) const override {
             return convert_model_time(model_time, get_index_for_primary_module());
         }
 
@@ -73,7 +73,7 @@ namespace realization {
          * @param model_time The time value in a model's representation that is to be converted.
          * @return The equivalent epoch time.
          */
-        inline time_t convert_model_time(const double &model_time, int module_index) {
+        inline time_t convert_model_time(const double &model_time, int module_index) const {
             return modules[module_index]->convert_model_time(model_time);
         }
 
@@ -117,7 +117,7 @@ namespace realization {
          * @return The collection of forcing output property names this instance can provide.
          * @see ForcingProvider
          */
-        boost::span <const std::string> get_available_variable_names() override;
+        boost::span <const std::string> get_available_variable_names() const override;
 
         /**
         * Get the input variables of 
@@ -125,18 +125,18 @@ namespace realization {
         *
         * @return The input variables of the first nested BMI model.
         */
-        const std::vector<std::string> get_bmi_input_variables() override {
+        const std::vector<std::string> get_bmi_input_variables() const override {
             return modules[0]->get_bmi_input_variables();
         }
 
-        const time_t &get_bmi_model_start_time_forcing_offset_s() override;
+        const time_t &get_bmi_model_start_time_forcing_offset_s() const override;
 
         /**
          * Get the output variables of the last nested BMI model.
          *
          * @return The output variables of the last nested BMI model.
          */
-        const std::vector<std::string> get_bmi_output_variables() override {
+        const std::vector<std::string> get_bmi_output_variables() const override {
             return modules.back()->get_bmi_output_variables();
         }
 
@@ -160,7 +160,7 @@ namespace realization {
          * @see get_config_mapped_variable_name(string, bool, bool)
          * @see get_config_mapped_variable_name(string, shared_ptr, shared_ptr)
          */
-        const std::string &get_config_mapped_variable_name(const std::string &model_var_name) override;
+        const std::string &get_config_mapped_variable_name(const std::string &model_var_name) const override;
 
         /**
          * When possible, translate a variable name for the first or last BMI model to an internally recognized name.
@@ -178,7 +178,7 @@ namespace realization {
          * @param check_last Whether an output variable mapping for the last module should sought.
          * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
          */
-        const std::string &get_config_mapped_variable_name(const std::string &model_var_name, bool check_first, bool check_last);
+        const std::string &get_config_mapped_variable_name(const std::string &model_var_name, bool check_first, bool check_last) const;
 
         /**
          * When possible, translate the name of an output variable for one BMI model to an input variable for another.
@@ -206,7 +206,7 @@ namespace realization {
          */
         const std::string &get_config_mapped_variable_name(const std::string &output_var_name,
                                                            const std::shared_ptr<Bmi_Formulation>& out_module,
-                                                           const std::shared_ptr<Bmi_Formulation>& in_module);
+                                                           const std::shared_ptr<Bmi_Formulation>& in_module) const;
 
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
@@ -219,7 +219,7 @@ namespace realization {
          */
 
 
-        long get_data_start_time() override
+        long get_data_start_time() const override
         {
             return get_variable_time_begin("");
         }
@@ -234,7 +234,7 @@ namespace realization {
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
 
-        time_t get_variable_time_begin(const std::string &variable_name) {
+        time_t get_variable_time_begin(const std::string &variable_name) const {
             std::string var_name = variable_name;
             // when unspecified, assume all data is available for the same range.
             // If no var_name, use forcing ...
@@ -245,7 +245,7 @@ namespace realization {
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
                 throw std::runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
             }
-            return availableData[var_name]->get_data_start_time();
+            return availableData.at(var_name)->get_data_start_time();
         }
 
         /**
@@ -258,7 +258,7 @@ namespace realization {
          * @return The exclusive ending of the period of time over which this instance can provide this data.
          */
 
-        long get_data_stop_time() override
+        long get_data_stop_time() const override
         {
             return get_variable_time_end("");
         }
@@ -273,7 +273,7 @@ namespace realization {
          * @return The exclusive ending of the period of time over which this instance can provide this data.
          */
         //time_t get_forcing_output_time_end(const std::string &forcing_name) {
-        time_t get_variable_time_end(const std::string &variable_name) {
+        time_t get_variable_time_end(const std::string &variable_name) const {
             // when unspecified, assume all data is available for the same range.
             // If no var_name, use forcing ...
             std::string var_name = variable_name;
@@ -284,18 +284,18 @@ namespace realization {
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
                 throw std::runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
             }
-            return availableData[var_name]->get_data_stop_time();
+            return availableData.at(var_name)->get_data_stop_time();
         }
 
-        long record_duration() override
+        long record_duration() const override
         {
             std::string var_name;
-            for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
+            for(auto iter = availableData.begin(); iter != availableData.end(); ++iter)
             {
                 var_name = iter->first;
                 //TODO: Find a probably more performant way than trial and exception here.
                 try {
-                    time_t rv = availableData[var_name]->record_duration();
+                    time_t rv = availableData.at(var_name)->record_duration();
                     return rv;
                 }
                 catch (...){
@@ -308,10 +308,10 @@ namespace realization {
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
                 throw std::runtime_error(get_formulation_type() + " cannot get output record duration for unknown \"" + var_name + "\"");
             }
-            return availableData[var_name]->record_duration();
+            return availableData.at(var_name)->record_duration();
         }
 
-        std::string get_formulation_type() override {
+        std::string get_formulation_type() const override {
             return "bmi_multi";
         }
 
@@ -320,7 +320,7 @@ namespace realization {
          *
          * @return The current time for the primary nested BMI model in its native format and units.
          */
-        const double get_model_current_time() override {
+        const double get_model_current_time() const override {
             return modules[get_index_for_primary_module()]->get_model_current_time();
         }
 
@@ -329,7 +329,7 @@ namespace realization {
          *
          * @return The end time for the primary nested BMI model in its native format and units.
          */
-        const double get_model_end_time() override {
+        const double get_model_end_time() const override {
             return modules[get_index_for_primary_module()]->get_model_end_time();
         }
 
@@ -359,7 +359,7 @@ namespace realization {
          * @return The index of the forcing time step that contains the given point in time.
          * @throws std::out_of_range If the given point is not in any time step.
          */
-        size_t get_ts_index_for_time(const time_t &epoch_time) override {
+        size_t get_ts_index_for_time(const time_t &epoch_time) const override {
             // TODO: come back and implement if actually necessary for this type; for now don't use
             throw std::runtime_error("Bmi_Multi_Formulation does not yet implement get_ts_index_for_time");
         }
@@ -412,23 +412,23 @@ namespace realization {
             return availableData[output_name]->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
         }
 
-        bool is_bmi_input_variable(const std::string &var_name) override;
+        bool is_bmi_input_variable(const std::string &var_name) const override;
 
         /**
          * Test whether all backing models have fixed time step size.
          *
          * @return Whether all backing models has fixed time step size.
          */
-        bool is_bmi_model_time_step_fixed() override;
+        bool is_bmi_model_time_step_fixed() const override;
 
-        bool is_bmi_output_variable(const std::string &var_name) override;
+        bool is_bmi_output_variable(const std::string &var_name) const override;
 
         /**
          * Test whether all backing models have been initialize using the BMI standard ``Initialize`` function.
          *
          * @return Whether all backing models have been initialize using the BMI standard ``Initialize`` function.
          */
-        bool is_model_initialized() override;
+        bool is_model_initialized() const override;
 
         /**
          * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
@@ -448,12 +448,12 @@ namespace realization {
          * @param name The name of the forcing property for which the current value is desired.
          * @return Whether the property's value is an aggregate sum.
          */
-        bool is_property_sum_over_time_step(const std::string &name) override {
+        bool is_property_sum_over_time_step(const std::string &name) const override {
             if (availableData.empty() || availableData.find(name) == availableData.end()) {
                 throw std::runtime_error(
                         get_formulation_type() + " cannot get whether unknown property " + name + " is summation");
             }
-            return availableData[name]->is_property_sum_over_time_step(name);
+            return availableData.at(name)->is_property_sum_over_time_step(name);
         }
 
         /**
@@ -469,7 +469,7 @@ namespace realization {
          *
          * @return The index of the primary module.
          */
-        inline int get_index_for_primary_module() {
+        inline int get_index_for_primary_module() const {
             return primary_module_index;
         }
 

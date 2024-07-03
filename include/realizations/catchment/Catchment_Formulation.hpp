@@ -72,7 +72,7 @@ namespace realization {
              *
              * @return An appropriate header line for this type.
              */
-            virtual std::string get_output_header_line(std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER) {
+            virtual std::string get_output_header_line(std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER) const {
                 return "Total Discharge";
             }
 
@@ -110,7 +110,7 @@ namespace realization {
              */
             virtual double get_response(time_step_t t_index, time_step_t t_delta) override = 0;
 
-            const std::vector<std::string>& get_required_parameters() override = 0;
+            const std::vector<std::string>& get_required_parameters() const override = 0;
 
             void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override = 0;
             void create_formulation(geojson::PropertyMap properties) override = 0;
@@ -128,7 +128,7 @@ namespace realization {
         }
 
     protected:
-        std::string get_catchment_id() override {
+        std::string get_catchment_id() const override {
             return this->cat_id;
         }
 
