@@ -46,7 +46,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      *
      * @return The inclusive beginning of the period of time over which this instance can provide this data.
      */
-    long get_data_start_time() override {
+    long get_data_start_time() const noexcept override {
         //FIXME: Trace this back and you will find that it is the simulation start time, not having anything to do with the forcing at all.
         // Apparently this "worked", but at a minimum the description above is false.
         return start_date_time_epoch;
@@ -57,7 +57,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      *
      * @return The exclusive ending of the period of time over which this instance can provide this data.
      */
-    long get_data_stop_time() override {
+    long get_data_stop_time() const noexcept override {
         return end_date_time_epoch;
     }
 
@@ -66,7 +66,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      *
      * @return The duration of one record of this forcing source
      */
-    long record_duration() override {
+    long record_duration() const noexcept override {
         return time_epoch_vector[1] - time_epoch_vector[0];
     }
 
@@ -79,7 +79,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      * @return The index of the forcing time step that contains the given point in time.
      * @throws std::out_of_range If the given point is not in any time step.
      */
-    size_t get_ts_index_for_time(const time_t &epoch_time) override {
+    size_t get_ts_index_for_time(const time_t &epoch_time) const override {
         if (epoch_time < start_date_time_epoch) {
             throw std::out_of_range("Forcing had bad pre-start time for index query: " + std::to_string(epoch_time));
         }
@@ -222,7 +222,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         return is_param_sum_over_time_step(name);
     }
 
-    boost::span<const std::string> get_available_variable_names() override {
+    boost::span<const std::string> get_available_variable_names() const noexcept override {
         return available_forcings;
     }
 

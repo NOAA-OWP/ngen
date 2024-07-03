@@ -7,20 +7,20 @@
 
 NullForcingProvider::NullForcingProvider() = default;
 
-long NullForcingProvider::get_data_start_time()
+long NullForcingProvider::get_data_start_time() const noexcept
 {
     return 0;
 }
 
-long NullForcingProvider::get_data_stop_time() {
+long NullForcingProvider::get_data_stop_time() const noexcept {
     return std::numeric_limits<long>::max();
 }
 
-long NullForcingProvider::record_duration() {
+long NullForcingProvider::record_duration() const noexcept {
     return 1;
 }
 
-size_t NullForcingProvider::get_ts_index_for_time(const time_t &epoch_time) {
+size_t NullForcingProvider::get_ts_index_for_time(const time_t &epoch_time) const {
     return 0;
 }
 
@@ -38,6 +38,6 @@ inline bool NullForcingProvider::is_property_sum_over_time_step(const std::strin
     throw std::runtime_error("Got request for variable " + name + " but no such variable is provided by NullForcingProvider." + SOURCE_LOC);
 }
 
-boost::span<const std::string> NullForcingProvider::get_available_variable_names() {
+boost::span<const std::string> NullForcingProvider::get_available_variable_names() const noexcept {
     return {};
 }
