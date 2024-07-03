@@ -78,7 +78,7 @@ namespace realization {
          * @param model_time
          * @return
          */
-        virtual time_t convert_model_time(const double &model_time) = 0;
+        virtual time_t convert_model_time(const double &model_time) const = 0;
 
         /**
          * Get whether a model may perform updates beyond its ``end_time``.
@@ -97,15 +97,15 @@ namespace realization {
          */
         virtual const bool &get_allow_model_exceed_end_time() const = 0;
 
-        virtual const std::vector<std::string> get_bmi_input_variables() = 0;
+        virtual const std::vector<std::string> get_bmi_input_variables() const = 0;
 
         const std::string &get_bmi_main_output_var() const {
             return bmi_main_output_var;
         }
 
-        virtual const time_t &get_bmi_model_start_time_forcing_offset_s() = 0;
+        virtual const time_t &get_bmi_model_start_time_forcing_offset_s() const = 0;
 
-        virtual const std::vector<std::string> get_bmi_output_variables() = 0;
+        virtual const std::vector<std::string> get_bmi_output_variables() const = 0;
 
         /**
          * When possible, translate a variable name for a BMI model to an internally recognized name.
@@ -113,28 +113,28 @@ namespace realization {
          * @param model_var_name The BMI variable name to translate so its purpose is recognized internally.
          * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
          */
-        virtual const std::string &get_config_mapped_variable_name(const std::string &model_var_name) = 0;
+        virtual const std::string &get_config_mapped_variable_name(const std::string &model_var_name) const = 0;
 
         /**
          * Get the current time for the backing BMI model in its native format and units.
          *
          * @return The current time for the backing BMI model in its native format and units.
          */
-        virtual const double get_model_current_time() = 0;
+        virtual const double get_model_current_time() const = 0;
 
         /**
          * Get the end time for the backing BMI model in its native format and units.
          *
          * @return The end time for the backing BMI model in its native format and units.
          */
-        virtual const double get_model_end_time() = 0;
+        virtual const double get_model_end_time() const = 0;
 
         /**
          * Get the name of the specific type of the backing model object.
          *
          * @return The name of the backing model object's type.
          */
-        std::string get_model_type_name() {
+        std::string get_model_type_name() const {
             return model_type_name;
         }
 
@@ -155,7 +155,7 @@ namespace realization {
          *
          * @return An appropriate header line for this type.
          */
-        std::string get_output_header_line(std::string delimiter) override {
+        std::string get_output_header_line(std::string delimiter) const override {
             return boost::algorithm::join(get_output_header_fields(), delimiter);
         }
 
@@ -172,27 +172,27 @@ namespace realization {
             return output_variable_names;
         }
 
-        const std::vector<std::string> &get_required_parameters() override {
+        const std::vector<std::string> &get_required_parameters() const override {
             return REQUIRED_PARAMETERS;
         }
 
-        virtual bool is_bmi_input_variable(const std::string &var_name) = 0;
+        virtual bool is_bmi_input_variable(const std::string &var_name) const = 0;
 
         /**
          * Test whether backing model has fixed time step size.
          *
          * @return Whether backing model has fixed time step size.
          */
-        virtual bool is_bmi_model_time_step_fixed() = 0;
+        virtual bool is_bmi_model_time_step_fixed() const = 0;
 
-        virtual bool is_bmi_output_variable(const std::string &var_name) = 0;
+        virtual bool is_bmi_output_variable(const std::string &var_name) const = 0;
 
         /**
          * Test whether the backing model has been initialize using the BMI standard ``Initialize`` function.
          *
          * @return Whether backing model has been initialize using the BMI standard ``Initialize`` function.
          */
-        virtual bool is_model_initialized() = 0;
+        virtual bool is_model_initialized() const = 0;
 
         /**
          * Set the precision of output values when converted to text.

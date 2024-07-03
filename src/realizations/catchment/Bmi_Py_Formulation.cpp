@@ -31,19 +31,19 @@ std::shared_ptr<Bmi_Adapter> Bmi_Py_Formulation::construct_model(const geojson::
                     is_bmi_model_time_step_fixed());
 }
 
-time_t realization::Bmi_Py_Formulation::convert_model_time(const double &model_time) {
+time_t realization::Bmi_Py_Formulation::convert_model_time(const double &model_time) const {
     return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));
 }
 
-const std::vector<std::string> Bmi_Py_Formulation::get_bmi_input_variables() {
+const std::vector<std::string> Bmi_Py_Formulation::get_bmi_input_variables() const {
     return get_bmi_model()->GetInputVarNames();
 }
 
-const std::vector<std::string> Bmi_Py_Formulation::get_bmi_output_variables() {
+const std::vector<std::string> Bmi_Py_Formulation::get_bmi_output_variables() const {
     return get_bmi_model()->GetOutputVarNames();
 }
 
-std::string Bmi_Py_Formulation::get_formulation_type() {
+std::string Bmi_Py_Formulation::get_formulation_type() const {
     return "bmi_py";
 }
 
@@ -100,17 +100,17 @@ double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const std::
     " as double: no logic for converting variable type " + val_type);
 }
 
-bool Bmi_Py_Formulation::is_bmi_input_variable(const std::string &var_name) {
+bool Bmi_Py_Formulation::is_bmi_input_variable(const std::string &var_name) const {
     const std::vector<std::string> names = get_bmi_model()->GetInputVarNames();
     return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
 }
 
-bool Bmi_Py_Formulation::is_bmi_output_variable(const std::string &var_name) {
+bool Bmi_Py_Formulation::is_bmi_output_variable(const std::string &var_name) const {
     const std::vector<std::string> names = get_bmi_model()->GetOutputVarNames();
     return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
 }
 
-bool Bmi_Py_Formulation::is_model_initialized() {
+bool Bmi_Py_Formulation::is_model_initialized() const {
     return get_bmi_model()->is_model_initialized();
 }
 
