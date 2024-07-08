@@ -1,10 +1,10 @@
 #include <realizations/coastal/SchismFormulation.hpp>
 
-const static auto library_path = "/path/to/built/libpschism.so";
-const static auto schism_registration_function = "schism_registration_function";
+const static auto s_schism_registration_function = "schism_registration_function";
 
 SchismFormulation::SchismFormulation(
                                      std::string const& id
+                                     , std::string const& library_path
                                      , std::string const& init_config_path
                                      , std::shared_ptr<MeshPointsDataProvider> met_forcings
                                      , std::shared_ptr<MeshPointsDataProvider> offshore_boundary
@@ -21,6 +21,6 @@ SchismFormulation::SchismFormulation(
          , library_path
          , init_config_path
          , true // model_time_step_fixed
-         , schism_registration_function
+         , s_schism_registration_function
          );
 }
