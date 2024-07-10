@@ -177,9 +177,9 @@ The following table lists the CPU wall clock time used for various realization c
 | conus_bmi_multi_realization_config_w_sloth_noah.json | 32 | 1360.1 | 2143.9 | 3504.0 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet.json | 32 | 3204.0 | 2106.5 | 5310.5 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe.json | 32 | 1214.9 | 4069.2 | 5284.1 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp.json | 32 | 1453.4 | 3087.0 | 4540.4 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft.json | 32 | 3245.7 | 3808.1 | 7053.8 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json | 32 | 1354.7 | 5283.1 | 6637.8 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp.json | 32 |  |  |  |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft.json | 32 | 2242.6 | 6976.0 | 9218.6 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json | 32 | 6827.9 | 5022.0 | 11849.9 |
 
 The abbreviation used for submodule names in the table:
 * noah - noah-owp-modular
@@ -221,7 +221,7 @@ The wall clock timing in our tests for various realization configurations runnin
 
 # Run Computation with LASAM
 
-Running Lumped Arid/Semi-arid Model (LASAM) is similar to running CFE and Topmodel model. The build process is the same as described above in the [Build the Executable](#build-the-executable) using the same build script. In the realization configuration file, you will need to replace the part for CFE or Topmodel submodule with the one for [LASAM](https://github.com/NOAA-OWP/LGAR-C) submodule. For the initial configuration and parameters, for the computation results reported here, we have used the same one for all catchments on CONUS for testing purpose. The initial configuration is a work in progress and when the more realstic initial configuration becomes available, we will repeat the calculations and update the results. 
+Running Lumped Arid/Semi-arid Model (LASAM) is similar to running CFE and Topmodel model. The build process is the same as described above in the [Build the Executable](#build-the-executable) using the same build script. In the realization configuration file, you will need to replace the part for CFE or Topmodel submodule with the one for [LASAM](https://github.com/NOAA-OWP/LGAR-C) submodule. For the initial configuration and parameters, for the computation results reported here, we have used the same one for all catchments on CONUS for testing purpose. The initial configuration is a work in progress and when the more realstic initial configuration becomes available, we will repeat the calculations and update the results. It is noted that different initial condition file for LASAM, `config_layered.txt`, is used for SMP from CFE, where an equivalent of `config_conceptual.txt (SoilMoistureProfile_{{id}}.ini` is used. This is reflected in the realization configuration files.
 
 To run one of the example realization configs, you can execute the following command:
 
@@ -245,8 +245,6 @@ The wall clock timing in our tests for various realization configurations runnin
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc.json | 32 | 3198.3 | 16129.1 | 19327.4 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_lgc.json | 32 | 1209.0 | 7461.5 | 8670.5 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_lgc.json | 32 | 1092.1 | 9163.8 | 10255.9 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc_trt.json | 32 | 8452.8 | 10284.4 | 18737.2 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_lgc_trt.json | 32 | 7139.5 | 8416.9 | 15556.4 |
 
 * lgc - abbreviation for LGAR-C, which is the name of the submodule for LASAM
 * For all other abbreviations, see [Resource Usage](#resource-usage)
@@ -294,13 +292,17 @@ mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/co
 
 If your run is successful, you should see the directory `stream_output_dir` populated with output files in NetCDF format with each file corresponding to each hour between 2016-01-01 to 2016-01-10.
 
-In the following table, we display the CPU timing information for a few realizations that we tested:
+In the following table, we display the CPU timing information for a few representative realizations that we tested:
 
 | Realization | Number of CPUs | Initialization Time (s) | Ngen Computation Time (s) | Routing Computation Time (s) | Total Time (s) |
 | ------------- | :-----: | :--------: | :--------: | :--------: | :--------: |
 | conus_bmi_multi_realization_config_w_sloth_noah_trt.json | 32 | 958.1 | 2288.4 | 3694.1 | 6940.6 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_trt.json | 32 | 1069.8 | 4606.3 | 4474.1 | 10150.2 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe_trt.json | 32 | 2142.0 | 5632.4 | 4510.3 | 12284.7 |
-
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe_trt.json | 32 |  |  |  |  |
+| conus_bmi_multi_realization_config_w_noah_topm_trt.json | 32 | 5411.8 | 9186.5 | 3780.9 | 18299.2 |
+| conus_bmi_multi_realization_config_w_noah_pet_topm_trt.json | 32 | 6810.9 | 5760.9 | 4922.4 | 17494.2 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_topm_trt.json | 32 | 9165.2 | 5201.3 | 3739.1 | 18105.6 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc_trt.json | 32 | 8452.8 | 10284.4 | 3125.1 | 21862.3 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_lgc_trt.json | 32 | 7139.5 | 8416.9 | 3109.2 | 18665.6 |
 * trt - abbreviation for t-route
 * For all other abbreviations, see [Resource Usage](#resource-usage)
