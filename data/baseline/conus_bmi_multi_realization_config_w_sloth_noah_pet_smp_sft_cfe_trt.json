@@ -21,17 +21,13 @@
                                 "uses_forcing_file": false,
                                 "model_params": {
                                     "soil_moisture_wetting_fronts(1,double,1,node)": 0.0,
-                                    "soil_thickness_layered(1,double,1,node)": 0.0,
                                     "soil_depth_wetting_fronts(1,double,1,node)": 0.0,
                                     "num_wetting_fronts(1,int,1,node)": 1.0,
                                     "Qb_topmodel(1,double,1,node)": 0.0,
                                     "Qv_topmodel(1,double,1,node)": 0.0,
                                     "global_deficit(1,double,1,node)": 0.0,
                                     "sloth_SOIL_STORAGE(1,double,m,node)": 0.8,
-                                    "sloth_SOIL_STORAGE_CHANGE(1,double,m,node)": -0.000472,
-                                    "sloth_ice_fraction_schaake(1,double,m,node)": 0.0,
-                                    "sloth_ice_fraction_xinanjiang(1,double,1,node)": 0.0,
-                                    "sloth_smp(1,double,1,node)": 0.1
+                                    "sloth_SOIL_STORAGE_CHANGE(1,double,m,node)": -0.000472
                                 }
 			    }
                         },
@@ -114,10 +110,7 @@
                                 "registration_function": "register_bmi_cfe",
                                 "variables_names_map": {
                                     "water_potential_evaporation_flux": "potential_evapotranspiration",
-                                    "atmosphere_water__liquid_equivalent_precipitation_rate": "QINSUR",
-                                    "ice_fraction_schaake" : "sloth_ice_fraction_schaake",
-                                    "ice_fraction_xinanjiang" : "sloth_ice_fraction_xinanjiang",
-                                    "soil_moisture_profile" : "sloth_smp"
+                                    "atmosphere_water__liquid_equivalent_precipitation_rate": "QINSUR"
                                 },
                                 "uses_forcing_file": false
                             }
