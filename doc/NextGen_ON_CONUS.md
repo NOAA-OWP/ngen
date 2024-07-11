@@ -177,7 +177,7 @@ The following table lists the CPU wall clock time used for various realization c
 | conus_bmi_multi_realization_config_w_sloth_noah.json | 32 | 1360.1 | 2143.9 | 3504.0 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet.json | 32 | 3204.0 | 2106.5 | 5310.5 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe.json | 32 | 1214.9 | 4069.2 | 5284.1 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp.json | 32 |  |  |  |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp.json | 32 | 4871.0 | 5988.4 | 10859.4 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft.json | 32 | 2242.6 | 6976.0 | 9218.6 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json | 32 | 6827.9 | 5022.0 | 11849.9 |
 
@@ -284,6 +284,14 @@ Then, run the command:
 FC=mpif90 ./compiler.sh
 ```
 
+In the event that compilation results does not complete and throws a Cython compile error, rerun with a non-editable flag:
+
+```
+FC=mpif90 ./compiler.sh no-e
+```
+
+Users are referred to t-route githup repo `readme.md` for details.
+
 After successfully building `t-route`, you can run `ngen` with routing. Note that we have several realization configuration files and the `routing_config_CONUS.yaml` file for running `ngen` with routing. The realization configuration file and `routing_config_CONUS.yaml` specify where the input and output files are. For routing, we assume the existence of a `stream_output_dir` directory in the project directory for writing output files. You need to do `mkdir stream_output_dir` before running `ngen`. With that, we can run an example with the command:
 
 ```
@@ -298,7 +306,7 @@ In the following table, we display the CPU timing information for a few represen
 | ------------- | :-----: | :--------: | :--------: | :--------: | :--------: |
 | conus_bmi_multi_realization_config_w_sloth_noah_trt.json | 32 | 958.1 | 2288.4 | 3694.1 | 6940.6 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_trt.json | 32 | 1069.8 | 4606.3 | 4474.1 | 10150.2 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe_trt.json | 32 |  |  |  |  |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe_trt.json | 32 | 9257.9 | 4211.5 | 4012.4 | 17481.8 |
 | conus_bmi_multi_realization_config_w_noah_topm_trt.json | 32 | 5411.8 | 9186.5 | 3780.9 | 18299.2 |
 | conus_bmi_multi_realization_config_w_noah_pet_topm_trt.json | 32 | 6810.9 | 5760.9 | 4922.4 | 17494.2 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_topm_trt.json | 32 | 9165.2 | 5201.3 | 3739.1 | 18105.6 |
