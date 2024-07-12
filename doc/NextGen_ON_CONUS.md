@@ -242,7 +242,7 @@ The wall clock timing in our tests for various realization configurations runnin
 | conus_bmi_multi_realization_config_w_sloth_lgc.json | 32 | 728.7 | 5670.2 | 6398.9 |
 | conus_bmi_multi_realization_config_w_sloth_noah_lgc.json | 32 | 1160.9 | 10055.6 | 11216.5 |
 | conus_bmi_multi_realization_config_w_sloth_pet_lgc.json | 32 | 1060.8 | 6018.8 | 7079.6 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc.json | 32 | 3198.3 | 16129.1 | 19327.4 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc.json | 32 | 3512.1 | 7606.0 | 11118.1 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_lgc.json | 32 | 1209.0 | 7461.5 | 8670.5 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_lgc.json | 32 | 1092.1 | 9163.8 | 10255.9 |
 
@@ -284,13 +284,14 @@ Then, run the command:
 FC=mpif90 ./compiler.sh
 ```
 
-In the event that compilation results does not complete and throws a Cython compile error, rerun with a non-editable flag:
+> [!WARNING]
+> In the event that compilation does not complete and throws a Cython compile error, rerun with a non-editable flag:
 
 ```
 FC=mpif90 ./compiler.sh no-e
 ```
 
-Users are referred to t-route githup repo `readme.md` for details.
+Users are referred to [t-route](https://github.com/NOAA-OWP/t-route) github repo `readme.md` for details.
 
 After successfully building `t-route`, you can run `ngen` with routing. Note that we have several realization configuration files and the `routing_config_CONUS.yaml` file for running `ngen` with routing. The realization configuration file and `routing_config_CONUS.yaml` specify where the input and output files are. For routing, we assume the existence of a `stream_output_dir` directory in the project directory for writing output files. You need to do `mkdir stream_output_dir` before running `ngen`. With that, we can run an example with the command:
 
