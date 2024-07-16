@@ -55,6 +55,10 @@ namespace realization {
         else if (forcing_config.provider == "NullForcingProvider"){
             fp = std::make_shared<NullForcingProvider>();
         }
+        else if (forcing_config.provider == "ForcingEngine"){
+            // fp = std::make_shared<ForcingsEngineDataProvider>();
+            throw std::runtime_error{"`ForcingEngine` data provider not implemented yet"};
+        }
         else { // Some unknown string in the provider field?
             throw std::runtime_error(
                     "Invalid formulation forcing provider configuration! identifier: \"" + identifier +
