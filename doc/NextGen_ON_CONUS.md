@@ -25,9 +25,10 @@ This is a tutorial-like documentation. We provide suficient details in the hope 
 To download the `ngen` source code, run the following commands:
 
 `git clone https://github.com/NOAA-OWP/ngen.git`
-`cd ngen`
 
-Then we need all the submodule codes. So run the command below:
+then `cd ngen`
+
+We also need all the submodule codes. So run the command below:
 
 `git submodule update --init --recursive`
 
@@ -58,7 +59,7 @@ cmake -B extern/SoilFreezeThaw/SoilFreezeThaw/cmake_build -S extern/SoilFreezeTh
 cmake --build extern/SoilFreezeThaw/SoilFreezeThaw/cmake_build --target sftbmi -- -j 2 && \
 cmake -B extern/SoilMoistureProfiles/SoilMoistureProfiles/cmake_build -S extern/SoilMoistureProfiles/SoilMoistureProfiles -DNGEN=ON && \
 cmake --build extern/SoilMoistureProfiles/SoilMoistureProfiles/cmake_build --target smpbmi -- -j 2 && \
-cmake -B extern/LGAR-C/cmake_build -S extern/LGAR-C/ -DNGEN=ON \
+cmake -B extern/LGAR-C/cmake_build -S extern/LGAR-C/ -DNGEN=ON && \
 make -C extern/LGAR-C/cmake_build/
 ```
 
@@ -98,6 +99,8 @@ cmake --build cmake_build_mpi --target all -j 8
 
 For the meaning of each option in the script, see `ngen/wiki` [build](https://github.com/NOAA-OWP/ngen/wiki/Building) page.
 
+Also note that in the above script, we have set `NGEN_WITH_ROUTING:BOOL=OFF`. If you need to run `Routing`, you need to set that to `ON`.
+
 Suppose the above script is named `build_mpi`, execute the following command to build:
 
 `source build_mpi`
@@ -118,11 +121,11 @@ For parallel computation using MPI on hydrofabric, a [partition generate tool](D
 ./cmake-build_mpi/partitionGenerator ./hydrofabric/conus.gpkg ./hydrofabric/conus.gpkg ./partition_config_32.json 32 '' ''
 ```
 
-In the command above, `conus.gpkg` is the NextGen hydrofabric version 2.01 for CONUS, `partition_config_32.json` is the partition file that contains all features ids and their interconnected network information. The number `32` is the intended number of processing cores for running parallel build `ngen` executable using MPI. The last two empty strings, as indicated by `''`, indicate there is no subsetting, i.e., we intend to run the whole CONUS hydrofabric.
+In the command above, `conus.gpkg` is the NextGen hydrofabric version 2.01 for CONUS, `partition_config_32.json` is the partition file that contains all features ids and their interconnected network information. The number `32` is the intended number of processing cores for running parallel build `ngen` executable using MPI. You can choose a different number appropriate for your system and computation need. The last two empty strings, as indicated by `''`, indicate there is no subsetting, i.e., we intend to run the whole CONUS hydrofabric.
 
 # Prepare the Input Data
 
-Input data include the forcing data and initial parameter data for various submodules. These depend on what best suits the user's need. For our case, as of this documentation, beside forcing data, which can be accessed at `./forcing/NextGen_forcing_2016010100.nc` using the symbolic link scheme, we also generated initial input data for various submodules: `noah-owp-modular`, `PET`, `CFE`, `SoilMoistureProfiles (SMP)`, `SoilFreezeThaw (SFT)`. The first three are located in `./conus_config/`, the SMP initial configs are located in `./conus_smp_configs/` and the SFT initial configs are located in `./conus_sft_configs/`.
+Input data include the forcing data and initial parameter data for various submodules. These depend on what best suits the user's need. For our case, as of this documentation, beside forcing data, which can be accessed at `./forcing/NextGen_forcing_2016010100.nc` using the symbolic link scheme, we also generated initial input data for various submodules: `noah-owp-modular`, `PET`, `CFE`, `SoilMoistureProfiles (SMP)`, `SoilFreezeThaw (SFT)`, and LASAM, or LGAR-C (lgc). The first three are located in `./conus_config/`, the SMP initial configs are located in `./conus_smp_configs/` and the SFT initial configs are located in `./conus_sft_configs/`. For LASAM model coupled with SMP, a different initial configuration is needed for SMP, which is named 'config_layered.txt' in config directory of SMP. For testing purpose, we used the smae initial configure file for all catchments.
 
 For code used to generate the initial config files for the various modules, the interested users are directed to this [web location](https://github.com/NOAA-OWP/ngen-cal/tree/master/python/ngen_config_gen). 
 
@@ -130,7 +133,7 @@ The users are warned that since the simulated region is large, some of the initi
 
 # Build the Realization Configurations
 
-The realization configuration file, in JSON format, contains high level information to run a `ngen` simulation, such as inter-coupled submodules, paths to forcing file, shared libraries, initialization parameters, duration of simulation, I/O variables, etc. We have built the realization configurations for several commonly used submodules which are located in `data/baseline/`. These are built by adding one submodule at a time, performing a test run for a 10 day simulation. The successive submodules used at the initial stage are:
+The realization configuration file, in JSON format, contains high level information to run a `ngen` simulation, such as inter-coupled submodules, paths to forcing file, shared libraries, initialization parameters, duration of simulation, I/O variables, etc. We have built the realization configurations for several commonly used submodules which are located in `data/baseline/`. These are built by adding one submodule at a time, performing a test run for a 10 day simulation. The successive submodules used for CFE model are:
 
 ```
 sloth (conus_bmi_multi_realization_config_w_sloth.json)
@@ -158,14 +161,14 @@ For a more substantial example simulation, you can run:
 mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah.json conus_partition_32.json
 ```
 
-For an example taking into account more realistic contributions, you can try:
+For an example taking into account more realistic conditions, you can try:
 ```
 mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json conus_partition_32.json
 ```
 
 where `ngen` is the executable we built in the [Building the Executable](#build-the-executable) section. All other terms have been discussed above in details. With the current existing realization config files, the above jobs run 10 day simulation time on CONUS scale.
 
-Be aware that the above commands will generate over a million output files associated with catchment and nexus ids. In the realization config files used above, we have specified an `output_root` file directory named `./output_dir/` to store these files. If you `cd` to `./output_dir` and issue a `ls` command, it will be significantly slower than usual to list all the file names. You can choose a different `output_root` file directory name than `./output_dir/` by modifying the directory name in the realization configuration file if you prefer. Note that you need to create the output file directory before running the executable.
+Be ware that the above commands will generate over a million output files associated with catchment and nexus ids. In the realization config files used above, we have specified an `output_root` file directory named `./output_dir/` to store these files. If you `cd` to `./output_dir` and issue a `ls` command, it will be significantly slower than usual to list all the file names. You can choose a different `output_root` file directory name than `./output_dir/` by modifying the directory name in the realization configuration file if you prefer. Note that you need to create the output file directory before running the executable.
 
 # Resource Usage
 
@@ -203,8 +206,6 @@ For a more complex example, you can run:
 ```
 mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_topm.json conus_partition_32.json
 ```
-
-The outputs are specified in the `topmod_cat-id.run` file for each `cat-id`.
 
 The wall clock timing in our tests for various realization configurations running 10 day simulation are tabulated as follows. Note that the timing values are from a single run, no averaging was attempted.
 
