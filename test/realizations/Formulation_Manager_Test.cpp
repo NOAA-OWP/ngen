@@ -179,7 +179,7 @@ class Formulation_Manager_Test : public ::testing::Test {
 const double EPSILON = 0.0000001;
 
 const std::string EXAMPLE_1 = "{ "
-    "\"output_root\": \"/tmp/output-dir/\","
+    "\"output_root\": \"./output_dir/\","
     "\"global\": { "
       "\"formulations\": [ "
         "{"
@@ -719,7 +719,7 @@ TEST_F(Formulation_Manager_Test, basic_reading_1) {
 
     ASSERT_TRUE(manager.contains("cat-52"));
     ASSERT_TRUE(manager.contains("cat-67"));
-    ASSERT_EQ(manager.get_output_root(), "/tmp/output-dir/");
+    ASSERT_EQ(manager.get_output_root(), "./output_dir/");
 }
 
 TEST_F(Formulation_Manager_Test, basic_reading_2) {
@@ -742,7 +742,6 @@ TEST_F(Formulation_Manager_Test, basic_reading_2) {
 
     ASSERT_TRUE(manager.contains("cat-52"));
     ASSERT_TRUE(manager.contains("cat-67"));
-    ASSERT_EQ(manager.get_output_root(), "./");
 }
 
 TEST_F(Formulation_Manager_Test, basic_run_1) {

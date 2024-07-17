@@ -10,6 +10,8 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <regex>
+#include <sys/stat.h>
+#include <string>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -271,7 +273,9 @@ namespace realization {
             }
 
             /**
-             * @brief Get the formatted output root
+             * @brief Get the formatted output root: check the existence of the output_root directory defined
+             * in realization. If true, return the directory name. Otherwise, throw a runtime error and 
+             * request the user to create that directory
              *
              * @code{.cpp}
              * // Example config:
@@ -285,17 +289,20 @@ namespace realization {
              * 
              * @return std::string of the output root directory
              */
-            std::string get_output_root() const noexcept {
+            std::string get_output_root() const {
                 const auto output_root = this->tree.get_optional<std::string>("output_root");
-                if (output_root != boost::none && *output_root != "") {
-                    // Check if the path ends with a trailing slash,
-                    // otherwise add it.
-                    return output_root->back() == '/'
-                           ? *output_root
-                           : *output_root + "/";
-                }
+                const std::string str = *output_root;
+                const char* dir = str.c_str();
 
-                return "./";
+                //use C++ system function to check if there is a dir match that defined in realization
+                struct stat sb;
+                if (stat(dir, &sb) == 0)
+                    return dir;
+                else {
+                    throw std::runtime_error("output_root directory does not exist, please create one matching that in realization");
+                }
+ 
+                return dir;
             }
 
             /**
