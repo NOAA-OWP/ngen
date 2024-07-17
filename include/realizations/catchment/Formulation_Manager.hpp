@@ -296,7 +296,7 @@ namespace realization {
 
                 //use C++ system function to check if there is a dir match that defined in realization
                 struct stat sb;
-                if (stat(dir, &sb) == 0)
+                if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode))
                     return dir;
                 else {
                     throw std::runtime_error("output_root directory does not exist, please create one matching that in realization");
