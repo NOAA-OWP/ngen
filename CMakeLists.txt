@@ -263,6 +263,9 @@ endif()
 # -----------------------------------------------------------------------------
 if(NGEN_WITH_PYTHON)
     find_package(Python 3.6.8 REQUIRED COMPONENTS Interpreter Development NumPy)
+    if(${Python_NumPy_VERSION} VERSION_GREATER_EQUAL 2)
+        message(FATAL_ERROR "Found numpy version \"${Python_NumPy_VERSION}\"; numpy>=2.0.0 is not currently supported")
+    endif()
     set(PYTHON_EXECUTABLE ${Python_EXECUTABLE}) # Case-sensitive difference
     add_subdirectory(extern/pybind11 pybind11)
 endif()
