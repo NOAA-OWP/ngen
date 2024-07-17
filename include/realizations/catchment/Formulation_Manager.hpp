@@ -24,6 +24,8 @@
 #include "realizations/config/config.hpp"
 #include "realizations/config/layer.hpp"
 
+#include<iostream>
+
 namespace realization {
 
     class Formulation_Manager {
@@ -291,7 +293,15 @@ namespace realization {
              */
             std::string get_output_root() const {
                 const auto output_root = this->tree.get_optional<std::string>("output_root");
-                const std::string str = *output_root;
+                std::string str;
+                if (output_root != boost::none && *output_root != "") {
+                    // Check if the path ends with a trailing slash,
+                    // otherwise add it.
+                    str = output_root->back() == '/'
+                           ? *output_root
+                           : *output_root + "/";
+                }
+
                 const char* dir = str.c_str();
 
                 //use C++ system function to check if there is a dir match that defined in realization
