@@ -147,6 +147,13 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
 
     // check if a requested output variable name is valid, if not, stop the execution
     check_output_var_names();
+
+    // initialize available_forcings from nested modules
+    for (const nested_module_ptr &module: modules) {
+        for (const std::string &out_var_name: module->get_bmi_output_variables()) {
+            available_forcings.push_back(module->get_config_mapped_variable_name(out_var_name));
+        }
+    }
 }
 
 /**
