@@ -295,27 +295,28 @@ namespace realization {
              */
             std::string get_output_root() const {
                 const auto output_root = this->tree.get_optional<std::string>("output_root");
-                std::string str;
                 if (output_root != boost::none && *output_root != "") {
                     // Check if the path ends with a trailing slash,
                     // otherwise add it.
-                    str = output_root->back() == '/'
+                    std::string str = output_root->back() == '/'
                            ? *output_root
                            : *output_root + "/";
-                }
 
-                const char* dir = str.c_str();
+                    const char* dir = str.c_str();
 
-                //use C++ system function to check if there is a dir match that defined in realization
-                struct stat sb;
-                if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode))
-                    return dir;
-                else {
-                    //throw std::runtime_error("output_root directory does not exist, please create one matching that in realization");
-                    mkdir(dir, 0755);      
+                    //use C++ system function to check if there is a dir match that defined in realization
+                    struct stat sb;
+                    if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode))
+                        return dir;
+                    else {
+                        //throw std::runtime_error("output_root directory does not exist, please create one matching that in realization");
+                        mkdir(dir, 0755);      
+                        return dir;
+                    }
                 }
  
-                return dir;
+                //for case where there is no output_root in the realization file
+                return "./";
             }
 
             /**
