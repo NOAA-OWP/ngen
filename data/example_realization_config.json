@@ -1,0 +1,103 @@
+{
+    "global": {
+      "formulations": [
+        {
+          "name": "bmi_c++",
+          "params": {
+            "model_type_name": "test_bmi_cpp",
+            "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+            "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
+            "main_output_variable": "OUTPUT_VAR_2",
+            "variables_names_map" : {
+              "INPUT_VAR_2": "TMP_2maboveground",
+              "INPUT_VAR_1": "precip_rate"
+            },
+            "create_function": "bmi_model_create",
+            "destroy_function": "bmi_model_destroy",
+            "uses_forcing_file": false
+          }
+        }
+      ],
+      "forcing": {
+          "file_pattern": ".*{{id}}.*.csv",
+          "path": "./data/forcing/"
+      }
+    },
+    "time": {
+        "start_time": "2015-12-01 00:00:00",
+        "end_time": "2015-12-30 23:00:00",
+        "output_interval": 3600
+    },
+    "output_root": "./output_dir/",
+    "catchments": {
+        "cat-27": {
+          "formulations": [
+            {
+              "name": "bmi_c++",
+              "params": {
+                "model_type_name": "test_bmi_cpp",
+                "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+                "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
+                "main_output_variable": "OUTPUT_VAR_2",
+                "variables_names_map" : {
+                  "INPUT_VAR_2": "TMP_2maboveground",
+                  "INPUT_VAR_1": "precip_rate"
+                },
+                "create_function": "bmi_model_create",
+                "destroy_function": "bmi_model_destroy",
+                "uses_forcing_file": false
+              }
+            }
+          ],
+          "forcing": {
+              "path": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+          }
+        },
+        "cat-52": {
+          "formulations": [
+            {
+              "name": "bmi_c++",
+              "params": {
+                "model_type_name": "test_bmi_cpp",
+                "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+                "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
+                "main_output_variable": "OUTPUT_VAR_2",
+                "variables_names_map" : {
+                  "INPUT_VAR_2": "TMP_2maboveground",
+                  "INPUT_VAR_1": "precip_rate"
+                },
+                "create_function": "bmi_model_create",
+                "destroy_function": "bmi_model_destroy",
+                "uses_forcing_file": false
+              }
+            }
+          ],
+          "forcing": {
+              "path": "./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+          }
+        },
+        "cat-67": {
+          "formulations": [
+            {
+              "name": "bmi_c++",
+              "params": {
+                "model_type_name": "test_bmi_cpp",
+                "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+                "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
+                "main_output_variable": "OUTPUT_VAR_2",
+                "variables_names_map" : {
+                  "INPUT_VAR_2": "TMP_2maboveground",
+                  "INPUT_VAR_1": "precip_rate"
+                },
+                "create_function": "bmi_model_create",
+                "destroy_function": "bmi_model_destroy",
+                "uses_forcing_file": false
+              }
+            }
+          ],
+          "forcing": {
+              "path": "./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+          }
+        }
+    }
+}
