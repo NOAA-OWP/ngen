@@ -9,6 +9,7 @@
 #include <functional>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <errno.h>
 #include <regex>
 #include <sys/types.h>
 #include <unistd.h>
@@ -306,11 +307,12 @@ namespace realization {
                     if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode))
                         return dir;
                     else {
+                        errno = 0;
                         int result = mkdir(dir, 0755);      
                         if (result == 0)
                             return dir;
                         else
-                            throw std::runtime_error("mkdir " + std::string(dir) + " failed, please create " + std::string(dir));
+                            throw std::runtime_error("failed to create directory '" + str + "': " + strerror(errno));
                     }
                 }
  
