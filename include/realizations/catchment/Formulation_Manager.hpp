@@ -11,7 +11,6 @@
 #include <sys/stat.h>
 #include <regex>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <unistd.h>
 #include <string>
 
@@ -25,8 +24,6 @@
 #include "realizations/config/routing.hpp"
 #include "realizations/config/config.hpp"
 #include "realizations/config/layer.hpp"
-
-#include<iostream>
 
 namespace realization {
 
@@ -278,8 +275,8 @@ namespace realization {
 
             /**
              * @brief Get the formatted output root: check the existence of the output_root directory defined
-             * in realization. If true, return the directory name. Otherwise, throw a runtime error and 
-             * request the user to create that directory
+             * in realization. If true, return the directory name. Otherwise, try to create the directory
+             * or throw an error on failure.
              *
              * @code{.cpp}
              * // Example config:
@@ -309,9 +306,11 @@ namespace realization {
                     if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode))
                         return dir;
                     else {
-                        //throw std::runtime_error("output_root directory does not exist, please create one matching that in realization");
-                        mkdir(dir, 0755);      
-                        return dir;
+                        int result = mkdir(dir, 0755);      
+                        if (result == 0)
+                            return dir;
+                        else
+                            throw std::runtime_error("mkdir " + std::string(dir) + " failed, please create " + std::string(dir));
                     }
                 }
  
