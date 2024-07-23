@@ -312,7 +312,7 @@ namespace realization {
                         if (result == 0)
                             return dir;
                         else
-                            throw std::runtime_error("failed to create directory '" + str + "': " + strerror(errno));
+                            throw std::runtime_error("failed to create directory '" + str + "': " + std::strerror(errno));
                     }
                 }
  
