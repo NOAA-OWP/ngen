@@ -304,13 +304,13 @@ namespace realization {
 
                     //use C++ system function to check if there is a dir match that defined in realization
                     struct stat sb;
-                    if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode))
-                        return dir;
-                    else {
+                    if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode)) {
+                        return str;
+                    } else {
                         errno = 0;
                         int result = mkdir(dir, 0755);      
                         if (result == 0)
-                            return dir;
+                            return str;
                         else
                             throw std::runtime_error("failed to create directory '" + str + "': " + std::strerror(errno));
                     }
