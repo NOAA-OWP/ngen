@@ -120,29 +120,29 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acb736869524034e5758702e16291e518" id="r_acb736869524034e5758702e16291e518"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#acb736869524034e5758702e16291e518">finalize</a> ()</td></tr>
 <tr class="memdesc:acb736869524034e5758702e16291e518"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources that should not be held as the run is shutting down.  <br /></td></tr>
 <tr class="separator:acb736869524034e5758702e16291e518"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13ffb91d8fdba4a13ef440f7621d9cfe" id="r_a13ffb91d8fdba4a13ef440f7621d9cfe"><td class="memItemLeft" align="right" valign="top">virtual boost::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a13ffb91d8fdba4a13ef440f7621d9cfe">get_available_variable_names</a> ()=0</td></tr>
-<tr class="memdesc:a13ffb91d8fdba4a13ef440f7621d9cfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the variables that are accessable by this data provider.  <br /></td></tr>
-<tr class="separator:a13ffb91d8fdba4a13ef440f7621d9cfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a5503cb5da0b2bf8fe25d0500bf33c4" id="r_a9a5503cb5da0b2bf8fe25d0500bf33c4"><td class="memItemLeft" align="right" valign="top">virtual long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a9a5503cb5da0b2bf8fe25d0500bf33c4">get_data_start_time</a> ()=0</td></tr>
-<tr class="memdesc:a9a5503cb5da0b2bf8fe25d0500bf33c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the first valid time for which data from the request variable can be requested.  <br /></td></tr>
-<tr class="separator:a9a5503cb5da0b2bf8fe25d0500bf33c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af598b54c03163287adc56400b3e9bdfe" id="r_af598b54c03163287adc56400b3e9bdfe"><td class="memItemLeft" align="right" valign="top">virtual long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#af598b54c03163287adc56400b3e9bdfe">get_data_stop_time</a> ()=0</td></tr>
-<tr class="memdesc:af598b54c03163287adc56400b3e9bdfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the last valid time for which data from the requested variable can be requested.  <br /></td></tr>
-<tr class="separator:af598b54c03163287adc56400b3e9bdfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a558af5fd091e84283470af3ca74d24d8" id="r_a558af5fd091e84283470af3ca74d24d8"><td class="memItemLeft" align="right" valign="top">virtual long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a558af5fd091e84283470af3ca74d24d8">record_duration</a> ()=0</td></tr>
-<tr class="memdesc:a558af5fd091e84283470af3ca74d24d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the stride in the time dimension.  <br /></td></tr>
-<tr class="separator:a558af5fd091e84283470af3ca74d24d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acca503f7d24367b8a3298a2c10e5d75f" id="r_acca503f7d24367b8a3298a2c10e5d75f"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#acca503f7d24367b8a3298a2c10e5d75f">get_ts_index_for_time</a> (const time_t &amp;epoch_time)=0</td></tr>
-<tr class="memdesc:acca503f7d24367b8a3298a2c10e5d75f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the index of the data time step that contains the given point in time.  <br /></td></tr>
-<tr class="separator:acca503f7d24367b8a3298a2c10e5d75f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01c19fb0cdad48cb21ad5c918deda0a8" id="r_a01c19fb0cdad48cb21ad5c918deda0a8"><td class="memItemLeft" align="right" valign="top">virtual boost::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a01c19fb0cdad48cb21ad5c918deda0a8">get_available_variable_names</a> () const =0</td></tr>
+<tr class="memdesc:a01c19fb0cdad48cb21ad5c918deda0a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the variables that are accessable by this data provider.  <br /></td></tr>
+<tr class="separator:a01c19fb0cdad48cb21ad5c918deda0a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bf42f887c7ef8dd237605aa34f7f48f" id="r_a2bf42f887c7ef8dd237605aa34f7f48f"><td class="memItemLeft" align="right" valign="top">virtual long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a2bf42f887c7ef8dd237605aa34f7f48f">get_data_start_time</a> () const =0</td></tr>
+<tr class="memdesc:a2bf42f887c7ef8dd237605aa34f7f48f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the first valid time for which data from the request variable can be requested.  <br /></td></tr>
+<tr class="separator:a2bf42f887c7ef8dd237605aa34f7f48f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bc456044a3b9090f6d233806e9730b2" id="r_a1bc456044a3b9090f6d233806e9730b2"><td class="memItemLeft" align="right" valign="top">virtual long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a1bc456044a3b9090f6d233806e9730b2">get_data_stop_time</a> () const =0</td></tr>
+<tr class="memdesc:a1bc456044a3b9090f6d233806e9730b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the last valid time for which data from the requested variable can be requested.  <br /></td></tr>
+<tr class="separator:a1bc456044a3b9090f6d233806e9730b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93ec49cd161412dd466fbaa9f2e305de" id="r_a93ec49cd161412dd466fbaa9f2e305de"><td class="memItemLeft" align="right" valign="top">virtual long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a93ec49cd161412dd466fbaa9f2e305de">record_duration</a> () const =0</td></tr>
+<tr class="memdesc:a93ec49cd161412dd466fbaa9f2e305de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the stride in the time dimension.  <br /></td></tr>
+<tr class="separator:a93ec49cd161412dd466fbaa9f2e305de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1c21af46b7e29e28c3b3ee7e39d7e5d" id="r_aa1c21af46b7e29e28c3b3ee7e39d7e5d"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#aa1c21af46b7e29e28c3b3ee7e39d7e5d">get_ts_index_for_time</a> (const time_t &amp;epoch_time) const =0</td></tr>
+<tr class="memdesc:aa1c21af46b7e29e28c3b3ee7e39d7e5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the index of the data time step that contains the given point in time.  <br /></td></tr>
+<tr class="separator:aa1c21af46b7e29e28c3b3ee7e39d7e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2409247d93cc63d0626e623c3a024f1b" id="r_a2409247d93cc63d0626e623c3a024f1b"><td class="memItemLeft" align="right" valign="top">virtual data_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a2409247d93cc63d0626e623c3a024f1b">get_value</a> (const selection_type &amp;selector, <a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9">ReSampleMethod</a> m=<a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a52f32bc197123b0d24b5291d60af3186">SUM</a>)=0</td></tr>
 <tr class="memdesc:a2409247d93cc63d0626e623c3a024f1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of a forcing property for an arbitrary time period, converting units if needed.  <br /></td></tr>
 <tr class="separator:a2409247d93cc63d0626e623c3a024f1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcd588f997aa5ec185744d36e801054a" id="r_adcd588f997aa5ec185744d36e801054a"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; data_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#adcd588f997aa5ec185744d36e801054a">get_values</a> (const selection_type &amp;selector, <a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9">ReSampleMethod</a> m=<a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a52f32bc197123b0d24b5291d60af3186">SUM</a>)=0</td></tr>
 <tr class="memdesc:adcd588f997aa5ec185744d36e801054a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the values of a forcing property for an arbitrary time period, converting units if needed.  <br /></td></tr>
 <tr class="separator:adcd588f997aa5ec185744d36e801054a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8254f58e64499bb4ae799ab120fd0934" id="r_a8254f58e64499bb4ae799ab120fd0934"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a8254f58e64499bb4ae799ab120fd0934">is_property_sum_over_time_step</a> (const std::string &amp;name)</td></tr>
-<tr class="separator:a8254f58e64499bb4ae799ab120fd0934"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60ee39e4f333c703564313607e2656cf" id="r_a60ee39e4f333c703564313607e2656cf"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a60ee39e4f333c703564313607e2656cf">is_property_sum_over_time_step</a> (const std::string &amp;name) const</td></tr>
+<tr class="separator:a60ee39e4f333c703564313607e2656cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a78cbffa63282f92cec20f13ef3067436" name="a78cbffa63282f92cec20f13ef3067436"></a>
@@ -207,8 +207,8 @@ template&lt;class data_type , class selection_type &gt; </div>
 
 </div>
 </div>
-<a id="a13ffb91d8fdba4a13ef440f7621d9cfe" name="a13ffb91d8fdba4a13ef440f7621d9cfe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13ffb91d8fdba4a13ef440f7621d9cfe">&#9670;&#160;</a></span>get_available_variable_names()</h2>
+<a id="a01c19fb0cdad48cb21ad5c918deda0a8" name="a01c19fb0cdad48cb21ad5c918deda0a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01c19fb0cdad48cb21ad5c918deda0a8">&#9670;&#160;</a></span>get_available_variable_names()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -222,7 +222,7 @@ template&lt;class data_type , class selection_type &gt; </div>
           <td class="memname">virtual boost::span&lt; const std::string &gt; <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::get_available_variable_names </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -234,14 +234,14 @@ template&lt;class data_type , class selection_type &gt; </div>
 
 <p>Return the variables that are accessable by this data provider. </p>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#adc16fbddbb172454efb9cf28a21260ef">CsvPerFeatureForcingProvider</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#afcff64ec3112c42b80be024fbc923164">data_access::DeferredWrappedProvider</a>, <a class="el" href="class_null_forcing_provider.html#a4487421e46fcf87995144873402a2d57">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#afb5c4e6fe21de5d77ae3f1544454b021">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a429f502f46df36e8b55ce8a04cc047ab">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad4f1533db60844045d4a969f363f129a">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a316b1339766f9c2e125b38b2e78f1d91">CsvPerFeatureForcingProvider</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a68e1e0acaf5b411acebabc5f9d74dda8">data_access::DeferredWrappedProvider</a>, <a class="el" href="class_null_forcing_provider.html#a445340d3a782ccf23030baf09e731032">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a0bb75ab402babe5c9b9bf490a1c327f6">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a3ea2f6ea46e2b71188aec7c6c2da4cc9">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a3fb18c76fede4a9ed3f0e2e0a88e87c8">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#afb5c4e6fe21de5d77ae3f1544454b021">data_access::WrappedDataProvider::get_available_variable_names()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a6cf15bf9b7178b41092a726e262ee194">data_access::OptionalWrappedDataProvider::isSuppliedByProvider()</a>, and <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">data_access::DeferredWrappedProvider::setWrappedProvider()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a0bb75ab402babe5c9b9bf490a1c327f6">data_access::WrappedDataProvider::get_available_variable_names()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a6cf15bf9b7178b41092a726e262ee194">data_access::OptionalWrappedDataProvider::isSuppliedByProvider()</a>, and <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">data_access::DeferredWrappedProvider::setWrappedProvider()</a>.</p>
 
 </div>
 </div>
-<a id="a9a5503cb5da0b2bf8fe25d0500bf33c4" name="a9a5503cb5da0b2bf8fe25d0500bf33c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a5503cb5da0b2bf8fe25d0500bf33c4">&#9670;&#160;</a></span>get_data_start_time()</h2>
+<a id="a2bf42f887c7ef8dd237605aa34f7f48f" name="a2bf42f887c7ef8dd237605aa34f7f48f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bf42f887c7ef8dd237605aa34f7f48f">&#9670;&#160;</a></span>get_data_start_time()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -255,7 +255,7 @@ template&lt;class data_type , class selection_type &gt; </div>
           <td class="memname">virtual long <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::get_data_start_time </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -267,14 +267,14 @@ template&lt;class data_type , class selection_type &gt; </div>
 
 <p>Return the first valid time for which data from the request variable can be requested. </p>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#ad96c3f70785165d98d3a3f13e5256e6c">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a25565dbc5856f7f79858c7b0e641659e">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a514718777605106e5d18a6fe8af862b4">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a97e28f1d83470d84e93e025eb38ae3e5">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad3b2f3f6294014fde8f6a10b5d3058f8">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a7f651a0e0cc0d0513729bd6f697c1e58">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#af1886f5b162417aa407ef9c8598d5eb8">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a6a0da21044edf6e3d2afc046382f9a56">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a61f695665f81fc947e6e982753ad9263">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#aba27a457bf235d626d8343a696d3b877">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a514718777605106e5d18a6fe8af862b4">data_access::WrappedDataProvider::get_data_start_time()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a6a0da21044edf6e3d2afc046382f9a56">data_access::WrappedDataProvider::get_data_start_time()</a>.</p>
 
 </div>
 </div>
-<a id="af598b54c03163287adc56400b3e9bdfe" name="af598b54c03163287adc56400b3e9bdfe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af598b54c03163287adc56400b3e9bdfe">&#9670;&#160;</a></span>get_data_stop_time()</h2>
+<a id="a1bc456044a3b9090f6d233806e9730b2" name="a1bc456044a3b9090f6d233806e9730b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bc456044a3b9090f6d233806e9730b2">&#9670;&#160;</a></span>get_data_stop_time()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -288,7 +288,7 @@ template&lt;class data_type , class selection_type &gt; </div>
           <td class="memname">virtual long <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::get_data_stop_time </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -300,14 +300,14 @@ template&lt;class data_type , class selection_type &gt; </div>
 
 <p>Return the last valid time for which data from the requested variable can be requested. </p>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a88f3732ea7088e8f2b582302f7b2fee6">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a7f50953a40f8d1c4911b91d35e52efda">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a770a1a269bc8a34ee0e76c558b32ad3c">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e595e34a205b611cd7fa925b9b0388a">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a4b3db6bb593b3d3261ac5ed2f35684b3">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#ac10b84b90a27969bef8e216b3e1f2af6">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a34913b61df772cef0f229c3d4c48258f">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a27e648f5905e23ae0aa2c5a32d0c26b3">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a3dcd8438c3c2236f69030ce4e6d2bad2">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#af14671305a6a428f5148c22c6c2d2829">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a770a1a269bc8a34ee0e76c558b32ad3c">data_access::WrappedDataProvider::get_data_stop_time()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a27e648f5905e23ae0aa2c5a32d0c26b3">data_access::WrappedDataProvider::get_data_stop_time()</a>.</p>
 
 </div>
 </div>
-<a id="acca503f7d24367b8a3298a2c10e5d75f" name="acca503f7d24367b8a3298a2c10e5d75f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acca503f7d24367b8a3298a2c10e5d75f">&#9670;&#160;</a></span>get_ts_index_for_time()</h2>
+<a id="aa1c21af46b7e29e28c3b3ee7e39d7e5d" name="aa1c21af46b7e29e28c3b3ee7e39d7e5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1c21af46b7e29e28c3b3ee7e39d7e5d">&#9670;&#160;</a></span>get_ts_index_for_time()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -322,7 +322,7 @@ template&lt;class data_type , class selection_type &gt; </div>
           <td>(</td>
           <td class="paramtype">const time_t &amp;&#160;</td>
           <td class="paramname"><em>epoch_time</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -348,9 +348,9 @@ template&lt;class data_type , class selection_type &gt; </div>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#ad1f87f13f0bc6c5d616158d90eac9fc3">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a6fe63dfccf5fc86d2d4f730df4a806ab">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a3a490ff322f48cbc9199cf277ad5aa25">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a01146ed38f90fe77485c9de48857c2bf">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad07b6aa1c71e7e3f1381adf1ec65d835">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a65d67ebf68866b04d37262a0b065a265">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a3342a83fa27295d9fb6b99d6c2337c44">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a262de984f51ed9ce1ae01aacd8e627f9">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a99eadd99f537b2e936b7096d26da95ed">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#afb7133bfaf638f66b1d6d2c5c7fc4fb2">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a3a490ff322f48cbc9199cf277ad5aa25">data_access::WrappedDataProvider::get_ts_index_for_time()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a262de984f51ed9ce1ae01aacd8e627f9">data_access::WrappedDataProvider::get_ts_index_for_time()</a>.</p>
 
 </div>
 </div>
@@ -471,8 +471,8 @@ template&lt;class data_type , class selection_type &gt; </div>
 
 </div>
 </div>
-<a id="a8254f58e64499bb4ae799ab120fd0934" name="a8254f58e64499bb4ae799ab120fd0934"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8254f58e64499bb4ae799ab120fd0934">&#9670;&#160;</a></span>is_property_sum_over_time_step()</h2>
+<a id="a60ee39e4f333c703564313607e2656cf" name="a60ee39e4f333c703564313607e2656cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60ee39e4f333c703564313607e2656cf">&#9670;&#160;</a></span>is_property_sum_over_time_step()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -487,7 +487,7 @@ template&lt;class data_type , class selection_type &gt; </div>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -497,14 +497,14 @@ template&lt;class data_type , class selection_type &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#af480a5b863976ab4f62d22b125dfa854">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a9350efc0423d384f5b5207f9fa46d2f8">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#ad9d424c2ab04077e4d82892ae17628ea">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a6466ba79a7e52d00b505b6a615ec7ed7">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a889959d2f251c42fa59c40d8a859b24a">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Reimplemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#aabc331ce607e4c657ba373838f42306c">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a81c5ceb57e252903c6cace6d6037081d">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#adf879825a0767a5c54602063857b716a">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab8284264e52ed3f1cb548d18096fc5a6">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a4a16accdcc10025d63dfc78e6d7448c5">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#ad9d424c2ab04077e4d82892ae17628ea">data_access::WrappedDataProvider::is_property_sum_over_time_step()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#adf879825a0767a5c54602063857b716a">data_access::WrappedDataProvider::is_property_sum_over_time_step()</a>.</p>
 
 </div>
 </div>
-<a id="a558af5fd091e84283470af3ca74d24d8" name="a558af5fd091e84283470af3ca74d24d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a558af5fd091e84283470af3ca74d24d8">&#9670;&#160;</a></span>record_duration()</h2>
+<a id="a93ec49cd161412dd466fbaa9f2e305de" name="a93ec49cd161412dd466fbaa9f2e305de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93ec49cd161412dd466fbaa9f2e305de">&#9670;&#160;</a></span>record_duration()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -518,7 +518,7 @@ template&lt;class data_type , class selection_type &gt; </div>
           <td class="memname">virtual long <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::record_duration </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -530,9 +530,9 @@ template&lt;class data_type , class selection_type &gt; </div>
 
 <p>Return the stride in the time dimension. </p>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a81b126f38311fe27d45ba14fb694270b">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#ace80c5c208f3bb23005126f011c5ecf9">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a9804e6089735525808ea17b385dec117">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a6cfb6345fbaaad87ca3100d30ed188a7">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a7b8ee244748b42fa4740f37ad5d14cc7">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a1de01b7566e52907ed4ce2499612ac58">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#ac9d07aac59da9cb20960ae7e83f12a43">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#abba07c3753377a18bdb0684308b602a1">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5a0e912850dc034851ff3d0bc2ea9360">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a90c0d772ad67de3b57fbd228c9d3f37f">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a9804e6089735525808ea17b385dec117">data_access::WrappedDataProvider::record_duration()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#abba07c3753377a18bdb0684308b602a1">data_access::WrappedDataProvider::record_duration()</a>.</p>
 
 </div>
 </div>
@@ -545,7 +545,7 @@ template&lt;class data_type , class selection_type &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacedata__access.html">data_access</a></li><li class="navelem"><a class="el" href="classdata__access_1_1_data_provider.html">DataProvider</a></li>
-    <li class="footer">Generated on Wed Jul 17 2024 20:14:32 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed Jul 24 2024 19:03:22 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

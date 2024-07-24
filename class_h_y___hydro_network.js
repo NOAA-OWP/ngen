@@ -2,7 +2,7 @@ var class_h_y___hydro_network =
 [
     [ "HY_HydroNetwork", "class_h_y___hydro_network.html#a7fa1db37af63dbc3baf5f7f4196d0459", null ],
     [ "~HY_HydroNetwork", "class_h_y___hydro_network.html#aa9c5e19e06aec7748830d23570acb66f", null ],
-    [ "get_catchment_id", "class_h_y___hydro_network.html#afffc8690df116d936a4d8c1026a9f491", null ],
+    [ "get_catchment_id", "class_h_y___hydro_network.html#a3423d3533d1ad6c3696aee26664ee63e", null ],
     [ "get_response", "class_h_y___hydro_network.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b", null ],
     [ "set_catchment_id", "class_h_y___hydro_network.html#a86a05a47bfa53a6feb4ef14e117b1928", null ],
     [ "flow_paths", "class_h_y___hydro_network.html#a0cee7b7035fe0779850a867da885cb17", null ],
