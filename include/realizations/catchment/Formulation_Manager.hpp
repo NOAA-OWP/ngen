@@ -9,7 +9,7 @@
 #include <functional>
 #include <dirent.h>
 #include <sys/stat.h>
-#include <errno.h>
+#include <cerrno>
 #include <regex>
 #include <sys/types.h>
 #include <unistd.h>
