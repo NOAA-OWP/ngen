@@ -7,38 +7,38 @@
 	url = https://github.com/pybind/pybind11
 [submodule "extern/t-route"]
 	path = extern/t-route
-	url = https://github.com/noaa-owp/t-route.git
+	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/t-route.git
   branch = ngen
 [submodule "extern/cfe/cfe"]
 	path = extern/cfe/cfe
-	url = https://github.com/NOAA-OWP/cfe.git
+	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/cfe.git
 	branch = master
 [submodule "extern/topmodel/topmodel"]
 	path = extern/topmodel/topmodel
-	url = https://github.com/NOAA-OWP/topmodel.git
+	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/topmodel.git
 	branch = master
 [submodule "extern/noah-owp-modular/noah-owp-modular"]
 	path = extern/noah-owp-modular/noah-owp-modular
-	url = https://github.com/NOAA-OWP/noah-owp-modular
+	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/noah-owp-modular
 	branch = main
 [submodule "extern/bmi-cxx"]
 	path = extern/bmi-cxx
-	url = https://github.com/csdms/bmi-cxx.git
+	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/bmi-cxx.git
 [submodule "extern/evapotranspiration/evapotranspiration"]
 	path = extern/evapotranspiration/evapotranspiration
-	url = https://github.com/NOAA-OWP/evapotranspiration.git
+	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/evapotranspiration.git
         branch = master
 [submodule "extern/SoilFreezeThaw/SoilFreezeThaw"]
 	path = extern/SoilFreezeThaw/SoilFreezeThaw
-	url = https://github.com/NOAA-OWP/SoilFreezeThaw
+	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/SoilFreezeThaw
         branch = master
 [submodule "extern/SoilMoistureProfiles/SoilMoistureProfiles"]
 	path = extern/SoilMoistureProfiles/SoilMoistureProfiles
-	url = https://github.com/NOAA-OWP/SoilMoistureProfiles
+	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/SoilMoistureProfiles
 	branch = main
 [submodule "extern/sloth"]
 	path = extern/sloth
-	url = https://github.com/noaa-owp/SLoTH
+	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/SLoTH
 	branch = latest
 [submodule "extern/netcdf-cxx4"]
 	path = extern/netcdf-cxx4/netcdf-cxx4
