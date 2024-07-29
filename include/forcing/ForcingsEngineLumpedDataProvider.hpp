@@ -33,8 +33,10 @@ struct ForcingsEngineLumpedDataProvider final :
         data_access::ReSampleMethod m
     ) override;
 
+    //! Get this provider's Divide ID.
     std::size_t divide() const noexcept;
 
+    //! Get this provider's Divide ID index within the Forcings Engine.
     std::size_t divide_index() const noexcept;
 
   private:
