@@ -37,9 +37,6 @@ struct ForcingsEngineLumpedDataProvider final :
 
     std::size_t divide_index() const noexcept;
 
-    // TODO: const correctness needs to be added upstream in the class hierarchy
-    std::string ensure_variable(std::string name);
-
   private:
     std::size_t divide_id_;
     std::size_t divide_idx_;

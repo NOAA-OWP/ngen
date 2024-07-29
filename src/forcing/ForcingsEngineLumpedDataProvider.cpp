@@ -66,25 +66,6 @@ std::size_t Provider::divide_index() const noexcept
     return divide_idx_;
 }
 
-std::string Provider::ensure_variable(std::string name)
-{
-    auto variable_names = get_available_variable_names();
-
-    if (std::find(variable_names.begin(), variable_names.end(), name) != variable_names.end()) {
-        return name;
-    }
-
-    auto element_name = name + "_ELEMENT";
-    if (std::find(variable_names.begin(), variable_names.end(), element_name) != variable_names.end()) {
-        return element_name;
-    }
-
-    throw std::runtime_error{
-        "ForcingsEngineLumpedDataProvider: neither variable `" + name + "` nor `" + element_name + "` exist."
-        " Make sure " + this->init_ + " has `GRID_TYPE` set to 'hydrofabric'."
-    };
-}
-
 Provider::data_type Provider::get_value(
     const Provider::selection_type& selector,
     data_access::ReSampleMethod m
