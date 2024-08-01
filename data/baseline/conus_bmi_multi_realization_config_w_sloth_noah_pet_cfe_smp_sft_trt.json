@@ -1,0 +1,137 @@
+{
+    "global": {
+        "formulations": [
+            {
+                "name": "bmi_multi",
+                "params": {
+                    "model_type_name": "bmi_multi_noahowp_cfe",
+                    "forcing_file": "",
+                    "init_config": "",
+                    "allow_exceed_end_time": true,
+                    "main_output_variable": "Q_OUT",
+                    "modules": [
+			{
+			    "name": "bmi_c++",
+			    "params": {
+                                "model_type_name": "bmi_c++_sloth",
+                                "library_file": "./extern/sloth/cmake_build/libslothmodel",
+                                "init_config": "/dev/null",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "z",
+                                "uses_forcing_file": false,
+                                "model_params": {
+                                    "soil_moisture_wetting_fronts(1,double,1,node)": 0.0,
+                                    "soil_depth_wetting_fronts(1,double,1,node)": 0.0,
+                                    "num_wetting_fronts(1,int,1,node)": 1.0,
+                                    "Qb_topmodel(1,double,1,node)": 0.0,
+                                    "Qv_topmodel(1,double,1,node)": 0.0,
+                                    "global_deficit(1,double,1,node)": 0.0,
+                                    "sloth_SOIL_STORAGE(1,double,m,node)": 0.8,
+                                    "sloth_SOIL_STORAGE_CHANGE(1,double,m,node)": -0.000472
+                                }
+			    }
+                        },
+                        {
+                            "name": "bmi_fortran",
+                            "params": {
+                                "model_type_name": "bmi_fortran_noahowp",
+                                "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi",
+                                "forcing_file": "",
+                                "init_config": "./conus_config/NoahOWP_{{id}}.namelist",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "QINSUR",
+                                "variables_names_map": {
+                                    "PRCPNONC": "atmosphere_water__liquid_equivalent_precipitation_rate",
+                                    "Q2": "atmosphere_air_water~vapor__relative_saturation",
+                                    "SFCTMP": "land_surface_air__temperature",
+                                    "UU": "land_surface_wind__x_component_of_velocity",
+                                    "VV": "land_surface_wind__y_component_of_velocity",
+                                    "LWDN": "land_surface_radiation~incoming~longwave__energy_flux",
+                                    "SOLDN": "land_surface_radiation~incoming~shortwave__energy_flux",
+                                    "SFCPRS": "land_surface_air__pressure"
+                                },
+                                "uses_forcing_file": false
+                            }
+                        },
+                        {
+                            "name": "bmi_c",
+                            "params": {
+                                "model_type_name": "bmi_c_pet",
+                                "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
+                                "forcing_file": "",
+                                "init_config": "./conus_config/PET_{{id}}.ini",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "water_potential_evaporation_flux",
+                                "registration_function": "register_bmi_pet",
+                                "variables_names_map": {
+                                    "water_potential_evaporation_flux": "potential_evapotranspiration"
+                                },
+                                "uses_forcing_file": false
+                            }
+                        },
+                        {
+                            "name": "bmi_c",
+                            "params": {
+                                "model_type_name": "bmi_c_cfe",
+                                "library_file": "./extern/cfe/cmake_build/libcfebmi",
+                                "forcing_file": "",
+                                "init_config": "./conus_config/CFE_{{id}}.ini",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "Q_OUT",
+                                "registration_function": "register_bmi_cfe",
+                                "variables_names_map": {
+                                    "water_potential_evaporation_flux": "potential_evapotranspiration",
+                                    "atmosphere_water__liquid_equivalent_precipitation_rate": "QINSUR"
+                                },
+                                "uses_forcing_file": false
+                            }
+                        },
+                        {
+                            "name": "bmi_c++",
+                            "params": {
+                                "model_type_name": "bmi_smp",
+                                "library_file": "./extern/SoilMoistureProfiles/SoilMoistureProfiles/cmake_build/libsmpbmi",
+                                "init_config": "./conus_smp_configs/SoilMoistureProfile_{{id}}.ini",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "soil_water_table",
+                                "variables_names_map" : {
+                                    "soil_storage" : "sloth_SOIL_STORAGE",
+                                    "soil_storage_change" : "sloth_SOIL_STORAGE_CHANGE"
+                                },
+                                "uses_forcing_file": false
+                            }
+                        },
+                        {
+                            "name": "bmi_c++",
+                            "params": {
+                                "model_type_name": "bmi_sft",
+                                "library_file": "./extern/SoilFreezeThaw/SoilFreezeThaw/cmake_build/libsftbmi",
+                                "init_config": "./conus_sft_configs/SoilFreezeThaw_{{id}}.ini",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "num_cells",
+                                "variables_names_map" : {
+                                    "ground_temperature" : "TGS"
+                                },
+                                "uses_forcing_file": false
+                            }
+                        }
+                    ],
+                    "uses_forcing_file": false
+                }
+            }
+        ],
+        "forcing": {
+            "path": "./forcing/NextGen_forcing_2016010100.nc",
+            "provider": "NetCDF"
+        }
+    },
+    "time": {
+        "start_time": "2016-01-01 00:00:00",
+        "end_time": "2016-01-10 23:00:00",
+        "output_interval": 3600
+    },
+    "output_root": "./output_dir/",
+    "routing": {
+        "t_route_config_file_with_path": "./data/baseline/routing_config_CONUS.yaml"
+    }
+}
