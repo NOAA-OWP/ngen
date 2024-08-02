@@ -133,7 +133,7 @@ The users are warned that since the simulated region is large, some of the initi
 
 # Build the Realization Configurations
 
-The realization configuration file, in JSON format, contains high level information to run a `ngen` simulation, such as inter-coupled submodules, paths to forcing file, shared libraries, initialization parameters, duration of simulation, I/O variables, etc. We have built the realization configurations for several commonly used submodules which are located in `data/baseline/`. These are built by adding one submodule at a time, performing a test run for a 10 day simulation. The successive submodules used for CFE model are:
+The realization configuration file, in JSON format, contains high level information to run a `ngen` simulation, such as inter-coupled submodules, paths to forcing file, shared libraries, initialization parameters, duration of simulation, I/O variables, etc. We have built the realization configurations for several commonly used submodules which are located in `data/baseline/`. These are built by adding one submodule at a time (except the last one which used an alternative ordering of the submodules for comparison), performing a test run for a 10 day simulation. The successive submodules used for CFE model are:
 
 ```
 sloth (conus_bmi_multi_realization_config_w_sloth.json)
@@ -143,6 +143,7 @@ sloth+noah-owp-modular+pet+cfe (conus_bmi_multi_realization_config_w_sloth_noah_
 sloth+noah-owp-modular+pet+smp (conus_bmi_multi_realization_config_w_sloth_noah_pet_smp.json)
 sloth+noah-owp-modular+pet+smp+sft (conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft.json)
 sloth+noah-owp-modular+pet+smp+sft+cfe (conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json)
+sloth+noah-owp-modular+pet+cfe+smp+sft (conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_smp_sft.json)
 ```
 
 # Run Computations with Submodules
@@ -183,6 +184,7 @@ The following table lists the CPU wall clock time used for various realization c
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp.json | 32 | 4871.0 | 5988.4 | 10859.4 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft.json | 32 | 2242.6 | 6976.0 | 9218.6 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json | 32 | 6827.9 | 5022.0 | 11849.9 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_smp_sft.json | 32 | 2257.4 | 16000.5 | 18257.9 |
 
 The abbreviation used for submodule names in the table:
 * noah - noah-owp-modular
@@ -216,6 +218,7 @@ The wall clock timing in our tests for various realization configurations runnin
 | conus_bmi_multi_realization_config_w_noah_pet_topm.json | 32 | 4019.4 | 6565.8 | 10585.2 |
 | conus_bmi_multi_realization_config_w_pet_noah_topm.json | 32 | 4053.8 | 5449.9 | 9503.7 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_topm.json | 32 | 7329.4 | 7308.6 | 14638.0 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_topm_smp_sft.json | 32 | 3960.9 | 17410.0 | 21370.9 |
 
 * topm - abbreviation for Topmodel
 * For all other abbreviations, see [Resource Usage](#resource-usage)
@@ -246,6 +249,7 @@ The wall clock timing in our tests for various realization configurations runnin
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc.json | 32 | 3512.1 | 7606.0 | 11118.1 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_lgc.json | 32 | 1209.0 | 7461.5 | 8670.5 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_lgc.json | 32 | 1092.1 | 9163.8 | 10255.9 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc_smp_sft.json | 32 | 10752.1 | 34590.5 | 45342.6 |
 
 * lgc - abbreviation for LGAR-C, which is the name of the submodule for LASAM
 * For all other abbreviations, see [Resource Usage](#resource-usage)
@@ -314,5 +318,8 @@ In the following table, we display the CPU timing information for a few represen
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_topm_trt.json | 32 | 9165.2 | 5201.3 | 3739.1 | 18105.6 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc_trt.json | 32 | 8452.8 | 10284.4 | 3125.1 | 21862.3 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_lgc_trt.json | 32 | 7139.5 | 8416.9 | 3109.2 | 18665.6 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_smp_sft_trt.json | 32 | 10064.3 | 29039.3 | 4430.1 | 43533.7 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_topm_smp_sft_trt.json | 32 | 10808.9 | 5034.1 | 5723.6 | 21566.6 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc_smp_sft_trt.json | 32 | 5156.8 | 13211.8 | 4320.8 | 22689.4 |
 * trt - abbreviation for t-route
 * For all other abbreviations, see [Resource Usage](#resource-usage)
