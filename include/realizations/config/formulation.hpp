@@ -1,6 +1,7 @@
 #ifndef NGEN_REALIZATION_CONFIG_FORMULATION_H
 #define NGEN_REALIZATION_CONFIG_FORMULATION_H
 
+#include <NGenConfig.h>
 #include <boost/property_tree/ptree.hpp>
 #include <string>
 
@@ -39,7 +40,7 @@ namespace realization{
      * 
      * @param tree property tree to build Formulation from
      */
-    Formulation(const boost::property_tree::ptree& tree){
+    Formulation(const boost::property_tree::ptree& tree, int mpi_rank){
         type = tree.get<std::string>("name");
         for (std::pair<std::string, boost::property_tree::ptree> setting : tree.get_child("params")) {
             //Construct the geoJSON PropertyMap from each key, value pair in  "params"
@@ -51,11 +52,16 @@ namespace realization{
         if(type=="bmi_multi"){
             for(auto& module : tree.get_child("params.modules")){
                 //Create the nested formulations in order of definition
-                nested.push_back(Formulation(module.second));
+                nested.push_back(Formulation(module.second, mpi_rank));
             }
+        #if NGEN_WITH_MPI
+        if (mpi_rank == 0) {
             geojson::JSONProperty::print_property(parameters.at("modules"));
         }
-        
+        #else
+            geojson::JSONProperty::print_property(parameters.at("modules"));
+        #endif
+        }
     }
 
     /**

@@ -713,7 +713,8 @@ TEST_F(Formulation_Manager_Test, basic_reading_1) {
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(this->fabric, catchment_output);
+    int mpi_rank = 0;
+    manager.read(this->fabric, catchment_output, mpi_rank);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -736,7 +737,8 @@ TEST_F(Formulation_Manager_Test, basic_reading_2) {
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(this->fabric, catchment_output);
+    int mpi_rank = 0;
+    manager.read(this->fabric, catchment_output, mpi_rank);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -757,7 +759,8 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(this->fabric, catchment_output);
+    int mpi_rank = 0;
+    manager.read(this->fabric, catchment_output, mpi_rank);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -791,7 +794,8 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
     realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
 
     this->add_feature("cat-67");
-    manager.read(this->fabric, catchment_output);
+    int mpi_rank = 0;
+    manager.read(this->fabric, catchment_output, mpi_rank);
 
     ASSERT_EQ(manager.get_size(), 1);
     ASSERT_TRUE(manager.contains("cat-67"));
@@ -828,7 +832,8 @@ TEST_F(Formulation_Manager_Test, read_extra) {
     ASSERT_TRUE(manager.is_empty());
     
     this->add_feature("cat-67");
-    manager.read(this->fabric, catchment_output);
+    int mpi_rank = 0;
+    manager.read(this->fabric, catchment_output, mpi_rank);
 
     ASSERT_EQ(manager.get_size(), 1);
     ASSERT_TRUE(manager.contains("cat-67"));
@@ -846,7 +851,8 @@ TEST_F(Formulation_Manager_Test, forcing_provider_specification) {
 
     this->add_feature("cat-67");
     this->add_feature("cat-27115");
-    manager.read(this->fabric, catchment_output);
+    int mpi_rank = 0;
+    manager.read(this->fabric, catchment_output, mpi_rank);
 
     ASSERT_EQ(manager.get_size(), 2);
     ASSERT_TRUE(manager.contains("cat-67"));
@@ -942,7 +948,8 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
       { "e",           geojson::JSONProperty{"e",           2.71828 } }
     });
 
-    manager.read(this->fabric, catchment_output);
+    int mpi_rank = 0;
+    manager.read(this->fabric, catchment_output, mpi_rank);
 
     ASSERT_EQ(manager.get_size(), 3);
     check_formulation_values(manager, "cat-67",    { 1.70352, 10.0 });
@@ -960,7 +967,7 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
       { "val",           geojson::JSONProperty{"val",       7.41722 } }
     });
 
-    manager.read(this->fabric, catchment_output);
+    manager.read(this->fabric, catchment_output, mpi_rank);
 
     check_formulation_values(manager, "cat-67", { 7.41722, 9231 });
 }

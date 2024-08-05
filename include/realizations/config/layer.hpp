@@ -27,7 +27,7 @@ namespace realization{
      * 
      * @param tree 
      */
-    Layer(const boost::property_tree::ptree& tree):formulation(tree){
+    Layer(const boost::property_tree::ptree& tree, int mpi_rank):formulation(tree, mpi_rank){
         std::vector<std::string> missing_keys;
         auto name = tree.get_optional<std::string>("name");
         if(!name) missing_keys.push_back("name");

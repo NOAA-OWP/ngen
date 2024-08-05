@@ -394,7 +394,7 @@ int main(int argc, char *argv[]) {
     nexus_collection->update_ids("id");
     std::cout<<"Initializing formulations" << std::endl;
     std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
-    manager->read(catchment_collection, utils::getStdOut());
+    manager->read(catchment_collection, utils::getStdOut(), mpi_rank);
 
     //TODO refactor manager->read so certain configs can be queried before the entire
     //realization collection is created
