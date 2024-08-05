@@ -26,7 +26,7 @@ namespace realization{
          * 
          * @param tree 
          */
-        Config(const boost::property_tree::ptree& tree){
+        Config(const boost::property_tree::ptree& tree, int mpi_rank){
         
             auto possible_forcing = tree.get_child_optional("forcing");
 
@@ -36,7 +36,7 @@ namespace realization{
             //get first empty key under formulations (corresponds to first json array element)
             auto possible_formulation_tree = tree.get_child_optional("formulations..");
             if(possible_formulation_tree){
-                formulation = Formulation(*possible_formulation_tree);
+                formulation = Formulation(*possible_formulation_tree, mpi_rank);
             }
         }
 
