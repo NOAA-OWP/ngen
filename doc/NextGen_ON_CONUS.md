@@ -249,7 +249,7 @@ The wall clock timing in our tests for various realization configurations runnin
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc.json | 32 | 3512.1 | 7606.0 | 11118.1 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_lgc.json | 32 | 1209.0 | 7461.5 | 8670.5 |
 | conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_lgc.json | 32 | 1092.1 | 9163.8 | 10255.9 |
-| conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc_smp_sft.json | 32 | 10752.1 | 34590.5 | 45342.6 |
+| conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc_smp_sft.json | 32 | 1738.8 | 9153.6 | 10892.4 |
 
 * lgc - abbreviation for LGAR-C, which is the name of the submodule for LASAM
 * For all other abbreviations, see [Resource Usage](#resource-usage)
