@@ -70,9 +70,8 @@ TEST_F(MultiLayerParserTest, TestInit0)
 
 TEST_F(MultiLayerParserTest, TestRead0)
 {
-    int mpi_rank = 0;
     manager = std::make_shared<realization::Formulation_Manager>(realization_config_path.c_str());
-    manager->read(catchment_collection, utils::getStdOut(), mpi_rank);
+    manager->read(catchment_collection, utils::getStdOut());
 
     ASSERT_TRUE(true);
 }

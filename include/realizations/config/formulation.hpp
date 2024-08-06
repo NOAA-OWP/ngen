@@ -7,6 +7,10 @@
 
 #include "JSONProperty.hpp"
 
+#if NGEN_WITH_MPI
+#include <mpi.h>
+#endif
+
 namespace realization{
   namespace config{
 
@@ -40,7 +44,7 @@ namespace realization{
      * 
      * @param tree property tree to build Formulation from
      */
-    Formulation(const boost::property_tree::ptree& tree, int mpi_rank){
+    Formulation(const boost::property_tree::ptree& tree){
         type = tree.get<std::string>("name");
         for (std::pair<std::string, boost::property_tree::ptree> setting : tree.get_child("params")) {
             //Construct the geoJSON PropertyMap from each key, value pair in  "params"
@@ -52,16 +56,18 @@ namespace realization{
         if(type=="bmi_multi"){
             for(auto& module : tree.get_child("params.modules")){
                 //Create the nested formulations in order of definition
-                nested.push_back(Formulation(module.second, mpi_rank));
+                nested.push_back(Formulation(module.second));
             }
+        // If running MPI job, output with only one processor
         #if NGEN_WITH_MPI
-        if (mpi_rank == 0) {
-            geojson::JSONProperty::print_property(parameters.at("modules"));
-        }
-        #else
-            geojson::JSONProperty::print_property(parameters.at("modules"));
+        int mpi_rank;
+        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+        if (mpi_rank == 0)
         #endif
+        {
+            geojson::JSONProperty::print_property(parameters.at("modules"));
         }
+      }
     }
 
     /**
