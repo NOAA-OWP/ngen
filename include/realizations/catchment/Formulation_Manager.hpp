@@ -51,14 +51,14 @@ namespace realization {
 
             ~Formulation_Manager() = default;
 
-            void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream, int mpi_rank) {
+            void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
                 //TODO seperate the parsing of configuration options like time
                 //and routing and other non feature specific tasks from this main function
                 //which has to iterate the entire hydrofabric.
                 auto possible_global_config = tree.get_child_optional("global");
 
                 if (possible_global_config) {
-                    global_config = realization::config::Config(*possible_global_config, mpi_rank);
+                    global_config = realization::config::Config(*possible_global_config);
                 }
 
                 auto possible_simulation_time = tree.get_child_optional("time");
@@ -91,7 +91,7 @@ namespace realization {
                     
                     for (std::pair<std::string, boost::property_tree::ptree> layer_config : *layers_json_array) 
                     {
-                        layer = config::Layer(layer_config.second, mpi_rank);
+                        layer = config::Layer(layer_config.second);
                         layer_desc = layer.get_descriptor();
 
                         // add the layer to storage
@@ -152,7 +152,7 @@ namespace realization {
                           #endif
                           continue;
                       }
-                      realization::config::Config catchment_formulation(catchment_config.second, mpi_rank);
+                      realization::config::Config catchment_formulation(catchment_config.second);
 
                       if(!catchment_formulation.has_formulation()){
                         throw std::runtime_error("ERROR: No formulations defined for "+catchment_config.first+".");
