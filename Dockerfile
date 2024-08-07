@@ -222,7 +222,9 @@ RUN set -eux; \
 WORKDIR /ngen-app/ngen/
 RUN set -eux; \
     cmake -B cmake_build -S . \
-        -DNGEN_WITH_MPI=ON \
+## FIXME: figure out why running with MPI enabled throws errors
+##      and re-enable it.
+        -DNGEN_WITH_MPI=OFF \
         -DNGEN_WITH_NETCDF=ON \
         -DNGEN_WITH_SQLITE=ON \
         -DNGEN_WITH_UDUNITS=ON \
