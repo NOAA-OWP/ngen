@@ -20,7 +20,7 @@ SchismFormulation::SchismFormulation(
          "schism_coastal_formulation"
          , library_path
          , init_config_path
-         , true // model_time_step_fixed
+         , /* model_time_step_fixed = */ true
          , s_schism_registration_function
          );
 }
