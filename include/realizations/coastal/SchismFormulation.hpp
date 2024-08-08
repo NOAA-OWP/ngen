@@ -12,6 +12,7 @@ public:
     using MeshPointsDataProvider = data_access::DataProvider<double, MeshPointsSelector>;
     SchismFormulation(
                       std::string const& id
+                      , std::string const& library_path
                       , std::string const& init_config_path
                       , std::shared_ptr<MeshPointsDataProvider> met_forcings
                       , std::shared_ptr<MeshPointsDataProvider> offshore_boundary
