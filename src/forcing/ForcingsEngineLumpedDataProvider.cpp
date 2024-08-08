@@ -1,4 +1,5 @@
 #include "DataProvider.hpp"
+#include <chrono>
 #include <forcing/ForcingsEngineLumpedDataProvider.hpp>
 
 namespace data_access {
@@ -84,7 +85,9 @@ Provider::data_type Provider::get_value(
         assert(end <= time_end_);
 
         auto current = start;
-        for (; current < end; current += time_step_, bmi_->UpdateUntil((current - start).count())) {
+        while (current < end) {
+            current += time_step_;
+            bmi_->UpdateUntil(std::chrono::duration_cast<std::chrono::seconds>(current - start).count());
             acc += *static_cast<double*>(bmi_->GetValuePtr(variable));
         }
 
@@ -116,10 +119,11 @@ std::vector<Provider::data_type> Provider::get_values(
     assert(end <= time_end_);
 
     std::vector<double> values;
-    for (auto current = start; current < end; current += time_step_, bmi_->UpdateUntil((current - start).count())) {
-        values.push_back(
-            *static_cast<double*>(bmi_->GetValuePtr(variable))
-        );
+    auto current = start;
+    while (current < end) {
+        current += time_step_;
+        bmi_->UpdateUntil(std::chrono::duration_cast<std::chrono::seconds>(current - start).count());
+        values.push_back(*static_cast<double*>(bmi_->GetValuePtr(variable)));
     }
 
     return values;
