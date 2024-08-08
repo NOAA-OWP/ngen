@@ -41,5 +41,16 @@ void SchismFormulation::finalize()
 
 void SchismFormulation::update()
 {
+    // Meteorological forcings
+    // RAINRATE - precipitation
+    // SFCPRS - surface atmospheric pressure
+    // SPFH2m - specific humidity at 2m
+    // TMP2m - temperature at 2m
+    // UU10m, VV10m - wind velocity components at 10m
+
+    // ETA2_bnd - water surface elevation at the boundaries
+    // Q_bnd - flows at boundaries
+
+
     bmi_->Update();
 }
