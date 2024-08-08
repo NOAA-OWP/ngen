@@ -1,3 +1,5 @@
+#include "DataProviderSelectors.hpp"
+#include "ForcingsEngineDataProvider.hpp"
 #include <gtest/gtest.h>
 
 #include <NGenConfig.h>
@@ -19,12 +21,14 @@ struct ForcingsEngineLumpedDataProviderTest
     ForcingsEngineLumpedDataProviderTest()
     {
         #if NGEN_WITH_MPI
-        MPI_Comm_size(MPI_COMM_WORLD, &mpi.size());
-        MPI_Comm_rank(MPI_COMM_WORLD, &mpi.rank);
+        MPI_Comm_size(MPI_COMM_WORLD, &mpi_.size);
+        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_.rank);
         #endif
     }
 
-    static constexpr const char* config_file = "data/forcing/forcings-engine/config.yml";
+    static constexpr const char* config_file = "data/forcing/forcings-engine/config_aorc.yml";
+    static const std::time_t time_start;
+    static const std::time_t time_end;
     static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_;
     static std::unique_ptr<provider_type> provider_;
 
@@ -37,6 +41,9 @@ struct ForcingsEngineLumpedDataProviderTest
 using TestFixture = ForcingsEngineLumpedDataProviderTest;
 
 constexpr const char* TestFixture::config_file;
+const std::time_t TestFixture::time_start = data_access::detail::parse_time("2024-01-17 01:00:00");
+const std::time_t TestFixture::time_end = TestFixture::time_start + 3600;
+
 std::shared_ptr<utils::ngenPy::InterpreterUtil> TestFixture::gil_ = nullptr;
 std::unique_ptr<TestFixture::provider_type> TestFixture::provider_ = nullptr;
 
@@ -52,9 +59,9 @@ void TestFixture::SetUpTestSuite()
 
     TestFixture::provider_ = std::make_unique<data_access::ForcingsEngineLumpedDataProvider>(
         /*init=*/TestFixture::config_file,
-        /*time_begin_seconds=*/0,
-        /*time_end_seconds=*/3600,
-        /*divide_id=*/"cat-1015786"
+        /*time_begin_seconds=*/TestFixture::time_start,
+        /*time_end_seconds=*/TestFixture::time_end,
+        /*divide_id=*/"cat-11223"
     );
 }
 
@@ -77,9 +84,9 @@ TEST_F(ForcingsEngineLumpedDataProviderTest, Storage)
 {
     auto new_inst = std::make_unique<data_access::ForcingsEngineLumpedDataProvider>(
         /*init=*/TestFixture::config_file,
-        /*time_begin_seconds=*/0,
-        /*time_end_seconds=*/3600,
-        /*divide_id=*/"cat-1"
+        /*time_begin_seconds=*/TestFixture::time_start,
+        /*time_end_seconds=*/TestFixture::time_end,
+        /*divide_id=*/"cat-11371"
     );
 
     ASSERT_EQ(new_inst->model(), provider_->model());
@@ -108,7 +115,7 @@ TEST_F(ForcingsEngineLumpedDataProviderTest, VariableAccess)
         );
     }
 
-    const auto selector = CatchmentAggrDataSelector{"cat-1015786", "LWDOWN", 0, 3600, "seconds"};
+    const auto selector = CatchmentAggrDataSelector{"cat-11223", "LWDOWN", time_start, 3600, "seconds"};
     const auto result   = provider_->get_values(selector, data_access::ReSampleMethod::SUM);
 
     ASSERT_GT(result.size(), 0);
