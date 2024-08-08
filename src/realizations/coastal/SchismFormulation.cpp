@@ -24,3 +24,18 @@ SchismFormulation::SchismFormulation(
          , s_schism_registration_function
          );
 }
+
+void SchismFormulation::initialize()
+{
+    bmi_->Initialize();
+}
+
+void SchismFormulation::finalize()
+{
+    bmi_->Finalize();
+}
+
+void SchismFormulation::update()
+{
+    bmi_->Update();
+}
