@@ -32,6 +32,10 @@ void SchismFormulation::initialize()
 
 void SchismFormulation::finalize()
 {
+    meteorological_forcings_provider_->finalize();
+    offshore_boundary_provider_->finalize();
+    inflows_boundary_provider_->finalize();
+
     bmi_->Finalize();
 }
 
