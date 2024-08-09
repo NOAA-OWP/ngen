@@ -1,5 +1,3 @@
-#include "DataProviderSelectors.hpp"
-#include "ForcingsEngineDataProvider.hpp"
 #include <gtest/gtest.h>
 
 #include <NGenConfig.h>
@@ -41,8 +39,8 @@ struct ForcingsEngineLumpedDataProviderTest
 using TestFixture = ForcingsEngineLumpedDataProviderTest;
 
 constexpr const char* TestFixture::config_file;
-const std::time_t TestFixture::time_start = data_access::detail::parse_time("2024-01-17 01:00:00");
-const std::time_t TestFixture::time_end = TestFixture::time_start + 3600;
+const std::time_t TestFixture::time_start = data_access::detail::parse_time("2023-01-17 01:00:00");
+const std::time_t TestFixture::time_end = TestFixture::time_start + 3600 + 3600;
 
 std::shared_ptr<utils::ngenPy::InterpreterUtil> TestFixture::gil_ = nullptr;
 std::unique_ptr<TestFixture::provider_type> TestFixture::provider_ = nullptr;
@@ -78,7 +76,8 @@ void TestFixture::TearDownTestSuite()
 /**
  * Tests for the flyweight-like design of provider storage by getting
  * a new instance of the forcings engine and verifying that it points
- * to the same address as the static initialized `provider_` member.
+ * to the same address as the static initialized `provider_` memberm
+ * based on matching `init`, and shared over distinct `divide_id`.
  */
 TEST_F(ForcingsEngineLumpedDataProviderTest, Storage)
 {
@@ -94,6 +93,9 @@ TEST_F(ForcingsEngineLumpedDataProviderTest, Storage)
 
 TEST_F(ForcingsEngineLumpedDataProviderTest, VariableAccess)
 {
+    ASSERT_EQ(provider_->divide(), 11223UL);
+    ASSERT_EQ(provider_->divide_index(), 0);
+
     constexpr std::array<const char*, 8> expected_variables = {
         "U2D_ELEMENT",
         "V2D_ELEMENT",
@@ -115,11 +117,12 @@ TEST_F(ForcingsEngineLumpedDataProviderTest, VariableAccess)
         );
     }
 
-    const auto selector = CatchmentAggrDataSelector{"cat-11223", "LWDOWN", time_start, 3600, "seconds"};
-    const auto result   = provider_->get_values(selector, data_access::ReSampleMethod::SUM);
+    auto selector = CatchmentAggrDataSelector{"cat-11223", "PSFC", time_start, 3600, "seconds"};
+    auto result   = provider_->get_value(selector, data_access::ReSampleMethod::SUM);
+    EXPECT_NEAR(result, 99580.52, 1e-2);
 
-    ASSERT_GT(result.size(), 0);
-    for (const auto& r : result) {
-        EXPECT_NEAR(r, 164.45626831054688, 1e6);
-    }
+    selector = CatchmentAggrDataSelector{"cat-11223", "LWDOWN", time_start + 3600, 3600, "seconds"};
+    auto result2 = provider_->get_values(selector, data_access::ReSampleMethod::SUM);
+    ASSERT_GT(result2.size(), 0);
+    EXPECT_NEAR(result2[0], 0, 1e-6);
 }

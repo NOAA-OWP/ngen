@@ -54,6 +54,8 @@ Provider::ForcingsEngineLumpedDataProvider(
     if (divide_id_pos == cat_id_span.end()) {
         // throw std::runtime_error{"Unable to find divide ID `" + divide_id + "` in given Forcings Engine domain"};
         divide_idx_ = static_cast<std::size_t>(-1);
+    } else {
+        divide_idx_ = std::distance(cat_id_span.begin(), divide_id_pos);
     }
 }
 
@@ -87,8 +89,8 @@ Provider::data_type Provider::get_value(
         auto current = start;
         while (current < end) {
             current += time_step_;
-            bmi_->UpdateUntil(std::chrono::duration_cast<std::chrono::seconds>(current - start).count());
-            acc += *static_cast<double*>(bmi_->GetValuePtr(variable));
+            bmi_->UpdateUntil(std::chrono::duration_cast<std::chrono::seconds>(current - time_begin_).count());
+            acc += static_cast<double*>(bmi_->GetValuePtr(variable))[divide_idx_];
         }
 
         if (m == ReSampleMethod::MEAN) {
@@ -122,8 +124,8 @@ std::vector<Provider::data_type> Provider::get_values(
     auto current = start;
     while (current < end) {
         current += time_step_;
-        bmi_->UpdateUntil(std::chrono::duration_cast<std::chrono::seconds>(current - start).count());
-        values.push_back(*static_cast<double*>(bmi_->GetValuePtr(variable)));
+        bmi_->UpdateUntil(std::chrono::duration_cast<std::chrono::seconds>(current - time_begin_).count());
+        values.push_back(static_cast<double*>(bmi_->GetValuePtr(variable))[divide_idx_]);
     }
 
     return values;
