@@ -80,7 +80,7 @@ void TestFixture::TearDownTestSuite()
 /**
  * Tests for the flyweight-like design of provider storage by getting
  * a new instance of the forcings engine and verifying that it points
- * to the same address as the static initialized `provider_` memberm
+ * to the same address as the static initialized `provider_` member,
  * based on matching `init`, and shared over distinct `divide_id`.
  */
 TEST_F(ForcingsEngineLumpedDataProviderTest, Storage)
