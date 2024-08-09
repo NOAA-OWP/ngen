@@ -33,7 +33,7 @@ namespace detail {
 
 //! Parse time string from format.
 //! Utility function for ForcingsEngineLumpedDataProvider constructor.
-time_t parse_time(const std::string& time, const std::string& fmt);
+time_t parse_time(const std::string& time, const std::string& fmt = default_time_format);
 
 //! Check that requirements for running the forcings engine
 //! are available at runtime. If requirements are not available,
