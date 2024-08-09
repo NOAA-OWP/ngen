@@ -9,7 +9,7 @@ InputMandatory: [1]
 OutputFrequency: 60
 SubOutputHour: 0
 SubOutFreq: 0
-ScratchDir: "data/forcing/forcings-engine/scratch"
+ScratchDir: "@FORCINGS_ENGINE_SCRATCH_DIR@"
 Output: 1
 compressOutput: 0
 floatOutput: 0
@@ -47,7 +47,7 @@ ShortwaveDownscaling: [0]
 PressureDownscaling: [0]
 PrecipDownscaling: [0]
 HumidityDownscaling: [0]
-DownscalingParamDirs: ["data/forcing/forcings-engine/scratch"]
+DownscalingParamDirs: ["@FORCINGS_ENGINE_SCRATCH_DIR@"]
 SuppPcp: []
 SuppPcpForcingTypes: ''
 SuppPcpDirectories: ''

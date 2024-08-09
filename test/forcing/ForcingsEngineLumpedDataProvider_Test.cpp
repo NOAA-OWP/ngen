@@ -1,5 +1,9 @@
 #include <gtest/gtest.h>
 
+#ifndef NGEN_LUMPED_CONFIG_PATH
+#error "Lumped config file path not defined! Set `-DNGEN_LUMPED_CONFIG_PATH`"
+#endif
+
 #include <NGenConfig.h>
 #if NGEN_WITH_MPI
 #include <mpi.h>
@@ -24,7 +28,7 @@ struct ForcingsEngineLumpedDataProviderTest
         #endif
     }
 
-    static constexpr const char* config_file = "data/forcing/forcings-engine/config_aorc.yml";
+    static constexpr const char* config_file = NGEN_LUMPED_CONFIG_PATH;
     static const std::time_t time_start;
     static const std::time_t time_end;
     static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_;
