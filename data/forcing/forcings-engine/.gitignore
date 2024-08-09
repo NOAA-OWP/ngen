@@ -1,8 +1,0 @@
-gfs/**/*.grib2
-
-# Temp directory used by the forcings engine instances
-scratch/*
-!scratch/.keep
-
-# Cropped GRIB files
-!gfs/gfs.20240117/00/atmos/gfs.t00z.sfluxgrbf*.grib2

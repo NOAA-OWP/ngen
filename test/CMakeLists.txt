@@ -194,6 +194,18 @@ ngen_add_test(
         NGEN_WITH_PYTHON
 )
 
+if(TARGET test_forcings_engine)
+    set(FORCINGS_ENGINE_SCRATCH_DIR "${CMAKE_CURRENT_BINARY_DIR}/forcings_engine_scratch")
+    file(MAKE_DIRECTORY "${FORCINGS_ENGINE_SCRATCH_DIR}")
+    configure_file(
+        "${CMAKE_CURRENT_LIST_DIR}/../data/forcing/forcings-engine/config_aorc.yml.in" # Input
+        "${CMAKE_CURRENT_BINARY_DIR}/config_aorc.yml"
+    )
+    target_compile_definitions(test_forcings_engine
+      PUBLIC
+        -DNGEN_LUMPED_CONFIG_PATH="${CMAKE_CURRENT_BINARY_DIR}/config_aorc.yml")
+endif()
+
 ########################## Series Unit Tests
 ngen_add_test(
     test_mdarray
