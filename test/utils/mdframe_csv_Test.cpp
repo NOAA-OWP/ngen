@@ -110,5 +110,5 @@ TEST_F(mdframe_csv_Test, io_csv)
     std::stringstream buffer;
     buffer << csv.rdbuf();
     csv.close();
-    ASSERT_EQ(buffer.str(), "v,y,x\n1.000000,1,1\n2.000000,1,2\n2.000000,2,1\n4.000000,2,2\n");
+    ASSERT_EQ(buffer.str(), "v,x,y\n1.000000,1,1\n2.000000,2,1\n2.000000,1,2\n4.000000,2,2\n");
 }
