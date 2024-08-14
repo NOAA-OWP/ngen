@@ -14,6 +14,9 @@ namespace ngen
         //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
         if(output_time_index%100 == 0) std::cout<<"Running timestep " << output_time_index <<std::endl;
         std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
+
+        std::size_t buffer_size = processing_units.size();
+    
         for(const auto& id : processing_units) 
         {
             int sub_time = output_time_index;
@@ -62,6 +65,29 @@ namespace ngen
                 /*std::cerr << "Add water to nexus ID = " << nexus->get_id() << " from catchment ID = " << id << " value = "
                             << response << ", ID = " << id << ", time-index = " << output_time_index << std::endl; */
                 break;
+            }
+
+            // TODO extract variables by BMI
+
+            // retrieve a pointer to realization 
+            auto fm = layer->get_realization(id);
+
+            // cast the pointer to a bmi type
+            auto bmi_f = std::dynamic_pointer_cast<realization::Bmi_Formulation>(fm);
+
+            try
+            {
+            // get the variable names associated with this realization
+            auto names = bmi_f->get_output_variable_names();
+
+            for( auto name : names )
+            {
+            }
+            
+            }
+            catch (std::exception e)
+            {
+                throw(e);
             }
             
         } //done catchments   

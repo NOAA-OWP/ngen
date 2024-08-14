@@ -159,7 +159,12 @@ namespace ngen
         feature_type& features;
         //TODO is this really required at the top level? or can this be moved to SurfaceLayer?
         const geojson::GeoJSON catchment_data;
-        long output_time_index;       
+        long output_time_index;   
+
+        std::unordered_map<std::string, std::vector<double> >double_buffers;
+        std::unordered_map<std::string, std::vector<float> >float_buffers;
+        std::unordered_map<std::string, std::vector<int> int_buffers;
+           
 
     };
 }
