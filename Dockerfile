@@ -55,6 +55,10 @@ SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10"]
 ## FIXME: replace openmpi with Intel MPI libraries ##
 ENV PATH="${PATH}:/usr/lib64/openmpi/bin/"
 
+# Fix OpenMPI support within container
+ENV PSM3_HAL=loopback
+ENV PSM3_DEVICES=self
+
 RUN set -eux; \
 	\
 	curl --location --output python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz"; \
@@ -225,7 +229,7 @@ RUN set -eux; \
     cmake -B cmake_build -S . \
 ## FIXME: figure out why running with MPI enabled throws errors
 ##      and re-enable it.
-        -DNGEN_WITH_MPI=OFF \
+        -DNGEN_WITH_MPI=ON \
         -DNGEN_WITH_NETCDF=ON \
         -DNGEN_WITH_SQLITE=ON \
         -DNGEN_WITH_UDUNITS=ON \
