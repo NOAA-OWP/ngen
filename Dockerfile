@@ -41,6 +41,7 @@ RUN set -eux; \
 ## FIXME: replace openmpi with Intel MPI libraries ##
         openmpi openmpi-devel \
         openssl openssl-devel \
+        rsync \
         sqlite sqlite-devel \
         tk tk-devel \
         uuid uuid-devel \ 
@@ -254,9 +255,16 @@ RUN set -eux; \
     cmake -B extern/SoilFreezeThaw/cmake_build -S extern/SoilFreezeThaw/SoilFreezeThaw/ -DNGEN=ON ; \
     cmake --build extern/SoilFreezeThaw/cmake_build/
 
+RUN set -eux; \
+    mkdir --parents /ngencerf/data/ngen-run-logs/ ; \
+    mkdir --parents /ngen-app/bin/ ; \
+    mv run-ngen.sh /ngen-app/bin/ ; \
+    chmod +x /ngen-app/bin/run-ngen.sh
+
 
 WORKDIR /
 SHELL ["/bin/bash", "-c"]
 
-ENTRYPOINT [ "/bin/bash" ] 
+ENTRYPOINT [ "/ngen-app/bin/run-ngen.sh" ] 
+CMD [ "--info" ]
 
