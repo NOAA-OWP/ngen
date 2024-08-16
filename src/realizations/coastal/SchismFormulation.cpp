@@ -1,3 +1,7 @@
+#include <NGenConfig.h>
+
+#if NGEN_WITH_BMI_FORTRAN
+
 #include <realizations/coastal/SchismFormulation.hpp>
 
 const static auto s_schism_registration_function = "schism_registration_function";
@@ -54,3 +58,5 @@ void SchismFormulation::update()
 
     bmi_->Update();
 }
+
+#endif // NGEN_WITH_BMI_FORTRAN
