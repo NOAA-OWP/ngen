@@ -201,9 +201,10 @@ if(TARGET test_forcings_engine)
         "${CMAKE_CURRENT_LIST_DIR}/../data/forcing/forcings-engine/config_aorc.yml.in" # Input
         "${CMAKE_CURRENT_BINARY_DIR}/config_aorc.yml"
     )
-    target_compile_definitions(test_forcings_engine
-      PUBLIC
-        -DNGEN_LUMPED_CONFIG_PATH="${CMAKE_CURRENT_BINARY_DIR}/config_aorc.yml")
+
+    # Use global add instead of target add so that both `test_forcings_engine` and `test_all`
+    # receive this compile definition.
+    add_compile_definitions(NGEN_LUMPED_CONFIG_PATH="${CMAKE_CURRENT_BINARY_DIR}/config_aorc.yml")
 endif()
 
 ########################## Series Unit Tests
