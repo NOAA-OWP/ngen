@@ -50,6 +50,9 @@ private:
     std::map<std::string, std::string> input_variable_type_;
     std::map<std::string, size_t> input_variable_count_;
 
+    time_t current_time_;
+    std::chrono::seconds time_step_length_;
+
     // TODO: Some of these maybe should be members of
     // CoastalFormulation
 
