@@ -40,6 +40,8 @@ SchismFormulation::SchismFormulation(
          , s_schism_registration_function
          );
 
+    bmi_->Initialize(init_config_path);
+
     auto const& input_vars = bmi_->GetInputVarNames();
 
     for (auto const& name : input_vars) {
