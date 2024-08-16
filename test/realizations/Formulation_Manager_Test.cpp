@@ -954,13 +954,24 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
     this->fabric->remove_feature_by_id("cat-27115");
 
     manager = realization::Formulation_Manager(stream_b);
-    
+   
+    //Test that two hydrofabric features, using global formulation (EXAMPLE_5_b)
+    //end up with unique hydrofabric parameters in the formulations after they
+    //are created and linked to the attributes.  Uses the same parameter name with
+    //different values.
+ 
     add_and_check_feature("cat-67", geojson::PropertyMap{
       { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 9231 } },
       { "val",           geojson::JSONProperty{"val",       7.41722 } }
     });
-
+    
+    add_and_check_feature("cat-27", geojson::PropertyMap{
+      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 18 } },
+      { "val",          geojson::JSONProperty{"val", 3} }
+    });
+    
     manager.read(this->fabric, catchment_output);
-
+    
+    check_formulation_values(manager, "cat-27",    { 3.00000, 18.0 });
     check_formulation_values(manager, "cat-67", { 7.41722, 9231 });
 }
