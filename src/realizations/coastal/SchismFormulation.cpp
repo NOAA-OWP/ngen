@@ -39,8 +39,11 @@ SchismFormulation::SchismFormulation(
          , /* model_time_step_fixed = */ true
          , s_schism_registration_function
          );
+}
 
-    bmi_->Initialize(init_config_path);
+void SchismFormulation::initialize()
+{
+    bmi_->Initialize();
 
     auto const& input_vars = bmi_->GetInputVarNames();
 
@@ -60,11 +63,6 @@ SchismFormulation::SchismFormulation(
         }
         input_variable_count_[name] = nbytes / itemsize;
     }
-}
-
-void SchismFormulation::initialize()
-{
-    bmi_->Initialize();
 }
 
 void SchismFormulation::finalize()
