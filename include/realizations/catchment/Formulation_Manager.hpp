@@ -385,9 +385,11 @@ namespace realization {
                 //because they will eventually be used by someone, someday, looking at configurations
                 //being turned into concrecte formulations...
                 // geojson::JSONProperty::print_property(global_config.formulation.parameters.at("modules"));
-                global_config.formulation.link_external(feature);
-                // geojson::JSONProperty::print_property(global_config.formulation.parameters.at("modules"));
-                missing_formulation->create_formulation(global_config.formulation.parameters);
+
+                //Make a copy of the global configuration so parameters don't clash when linking to external data
+                auto formulation =  realization::config::Formulation(global_config.formulation);
+                formulation.link_external(feature);
+                missing_formulation->create_formulation(formulation.parameters);
 
                 return missing_formulation;
             }
