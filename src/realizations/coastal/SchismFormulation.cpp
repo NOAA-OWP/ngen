@@ -6,6 +6,18 @@
 
 const static auto s_schism_registration_function = "schism_registration_function";
 
+std::set<std::string> SchismFormulation::expected_input_variable_names_ =
+    {
+        "RAINRATE",
+        "SFCPRS",
+        "SPHF2m",
+        "TMP2m",
+        "UU10m",
+        "VV10m",
+        "ETA2_bnd",
+        "Q_bnd"
+    };
+
 SchismFormulation::SchismFormulation(
                                      std::string const& id
                                      , std::string const& library_path
@@ -27,6 +39,25 @@ SchismFormulation::SchismFormulation(
          , /* model_time_step_fixed = */ true
          , s_schism_registration_function
          );
+
+    auto const& input_vars = bmi_->GetInputVarNames();
+
+    for (auto const& name : input_vars) {
+        if (expected_input_variable_names_.find(name) == expected_input_variable_names_.end()) {
+            throw std::runtime_error("SCHISM instance requests unexpected input variable '" + name + "'");
+        }
+
+        input_variable_units_[name] = bmi_->GetVarUnits(name);
+        input_variable_type_[name] = bmi_->GetVarType(name);
+
+        auto nbytes = bmi_->GetVarNbytes(name);
+        auto itemsize = bmi_->GetVarItemsize(name);
+        if (nbytes % itemsize != 0) {
+            throw std::runtime_error("For SCHISM input variable '" + name + "', itemsize " + std::to_string(itemsize) +
+                                     " does not evenly divide nbytes " + std::to_string(nbytes));
+        }
+        input_variable_count_[name] = nbytes / itemsize;
+    }
 }
 
 void SchismFormulation::initialize()

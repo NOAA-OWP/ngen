@@ -7,6 +7,7 @@
 #include <realizations/coastal/CoastalFormulation.hpp>
 #include <bmi/Bmi_Fortran_Adapter.hpp>
 #include <memory>
+#include <set>
 
 class SchismFormulation : public CoastalFormulation
 {
@@ -43,6 +44,11 @@ public:
 
 private:
     std::unique_ptr<models::bmi::Bmi_Fortran_Adapter> bmi_;
+
+    static std::set<std::string> expected_input_variable_names_;
+    std::map<std::string, std::string> input_variable_units_;
+    std::map<std::string, std::string> input_variable_type_;
+    std::map<std::string, size_t> input_variable_count_;
 
     // TODO: Some of these maybe should be members of
     // CoastalFormulation
