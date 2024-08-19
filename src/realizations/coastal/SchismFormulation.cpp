@@ -4,7 +4,7 @@
 
 #include <realizations/coastal/SchismFormulation.hpp>
 
-const static auto s_schism_registration_function = "schism_registration_function";
+const static auto s_schism_registration_function = "register_bmi";
 
 std::set<std::string> SchismFormulation::expected_input_variable_names_ =
     {
