@@ -94,7 +94,7 @@ struct ForcingsEngineGriddedDataProvider final :
         data_access::ReSampleMethod m
     ) override;
 
-    const GridMask& mask();
+    const GridMask& mask() const noexcept;
 
   private:
     int               var_grid_id_;

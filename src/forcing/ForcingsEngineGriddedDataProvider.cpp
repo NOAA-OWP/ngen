@@ -140,4 +140,9 @@ std::vector<Provider::data_type> Provider::get_values(
     return values;
 }
 
+const GridMask& Provider::mask() const noexcept
+{
+    return var_grid_mask_;
+}
+
 } // namespace data_access
