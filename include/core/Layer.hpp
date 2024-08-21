@@ -163,7 +163,8 @@ namespace ngen
 
         std::unordered_map<std::string, std::vector<double> >double_buffers;
         std::unordered_map<std::string, std::vector<float> >float_buffers;
-        std::unordered_map<std::string, std::vector<int> int_buffers;
+        std::unordered_map<std::string, std::vector<int> > int_buffers;
+        std::unordered_map<std::string, std::vector<long> > long_buffers;
            
 
     };

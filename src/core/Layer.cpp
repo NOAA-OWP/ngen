@@ -1,5 +1,9 @@
 #include "Layer.hpp"
 
+#include "OutputInterface.hpp"
+#include <boost/algorithm/string.hpp>
+#include "bmi.hpp"
+
 namespace ngen
 {
     /***
@@ -16,6 +20,7 @@ namespace ngen
         std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
 
         std::size_t buffer_size = processing_units.size();
+        std::size_t pos = 0;
     
         for(const auto& id : processing_units) 
         {
@@ -70,20 +75,71 @@ namespace ngen
             // TODO extract variables by BMI
 
             // retrieve a pointer to realization 
-            auto fm = layer->get_realization(id);
+            auto fm = get_realization(id);
 
             // cast the pointer to a bmi type
-            auto bmi_f = std::dynamic_pointer_cast<realization::Bmi_Formulation>(fm);
+            auto bmi_f = std::dynamic_pointer_cast<::bmi::Bmi>(fm);
 
             try
             {
-            // get the variable names associated with this realization
-            auto names = bmi_f->get_output_variable_names();
+                // get the variable names associated with this realization
+                auto names = bmi_f->GetOutputVarNames();
 
-            for( auto name : names )
-            {
-                
-            }
+                /* For each output variable check to see if buffer exists
+                 * If no buffer exists create one
+                 * Then add the current output value in the position*/
+
+                for( auto name : names )
+                {
+                    std::string var_type = bmi_f->GetVarType(name);
+                    boost::algorithm::to_lower(var_type);
+
+                    if (var_type == "double" || var_type == "float64" || var_type == "real64")
+                    {
+                        auto item_ptr= double_buffers.find(name);
+                        if ( item_ptr == double_buffers.end() )
+                        {
+                            double_buffers[name].resize(buffer_size);
+                        }
+
+                        bmi_f->GetValue(name, &double_buffers[name][pos++]);
+                        
+                    }
+                    else if (var_type == "float" || var_type == "float32" || var_type == "real32" ||var_type == "real" )
+                    {
+                        auto item_ptr= float_buffers.find(name);
+                        if ( item_ptr == float_buffers.end() )
+                        {
+                            float_buffers[name].resize(buffer_size);
+                        }
+
+                        bmi_f->GetValue(name, &float_buffers[name][pos++]);                      
+                    }
+                    else if ( var_type == "long" || var_type == "int64"|| var_type == "long int")
+                    {
+                        auto item_ptr= long_buffers.find(name);
+                        if ( item_ptr == long_buffers.end() )
+                        {
+                            long_buffers[name].resize(buffer_size);
+                        }
+
+                        bmi_f->GetValue(name, &long_buffers[name][pos++]);  
+                    }
+                    else if (var_type == "int" || var_type == "int32")
+                    {
+                        auto item_ptr= int_buffers.find(name);
+                        if ( item_ptr == int_buffers.end() )
+                        {
+                            int_buffers[name].resize(buffer_size);
+                        }
+
+                        bmi_f->GetValue(name, &int_buffers[name][pos++]); 
+                    }
+                    else if (var_type == "string")
+                    {
+                        /* TODO can not preallocate strings because they will be variable size*/
+                    }
+                }
 
             }
             catch (std::exception e)
