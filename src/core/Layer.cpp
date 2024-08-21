@@ -138,6 +138,15 @@ namespace ngen
                     else if (var_type == "string")
                     {
                         /* TODO can not preallocate strings because they will be variable size*/
+                        auto item_ptr= string_buffers.find(name);
+                        if ( item_ptr == string_buffers.end() )
+                        {
+                            string_buffers[name].resize(buffer_size);
+                        }
+
+                        string_buffers[name][pos].resize( bmi_f->GetVarNbytes(name) );
+
+                        bmi_f->GetValue(name, &string_buffers[name][pos++][0]);
                     }
                 }
 
