@@ -2,6 +2,13 @@ find_package(Git QUIET)
 
 if(EXISTS "${NGEN_ROOT_DIR}/.git")
     set(NGEN_HAS_GIT_DIR ON)
+
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
+        WORKING_DIRECTORY ${NGEN_ROOT_DIR}
+        OUTPUT_VARIABLE NGEN_GIT_COMMIT
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
 else()
     set(NGEN_HAS_GIT_DIR OFF)
 endif()
