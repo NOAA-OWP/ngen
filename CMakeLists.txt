@@ -31,6 +31,7 @@ list(APPEND CMAKE_MODULE_PATH "${NGEN_MOD_DIR}")
 #   (1) finds Git package
 #   (2) Sets ${NGEN_HAS_GIT_DIR} to ON/OFF if ${NGEN_ROOT_DIR}/.git exists
 #   (3) Function `git_update_submodule` which updates a given submodule
+#   (4) Sets ${NGEN_GIT_COMMIT} to the current commit hash if available
 include(GitUpdateSubmodules)
 
 # NGen CMake module for automating external subdirectory builds (i.e. testbmicpp)
@@ -406,7 +407,10 @@ ngen_multiline_message(
 "  C Compiler: ${CMAKE_C_COMPILER}"
 "  C Flags: ${CMAKE_C_FLAGS}"
 "  CXX Compiler: ${CMAKE_CXX_COMPILER}"
-"  CXX Flags: ${CMAKE_CXX_FLAGS}"
+"  CXX Flags: ${CMAKE_CXX_FLAGS}")
+ngen_dependent_multiline_message(NGEN_HAS_GIT_DIR
+"  Git Commit ID: ${NGEN_GIT_COMMIT}")
+ngen_multiline_message(
 "  Flags:"
 "    NGEN_WITH_MPI: ${NGEN_WITH_MPI}"
 "    NGEN_WITH_NETCDF: ${NGEN_WITH_NETCDF}"
