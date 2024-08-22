@@ -46,7 +46,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 282;
+var viewWidth = 280;
 var viewHeight = 519;
 var sectionId = 'dynsection-1';
 </script>
@@ -58,39 +58,39 @@ var sectionId = 'dynsection-1';
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title="Simple implementation that basically wraps another instance.">
-<polygon fill="#999999" stroke="none" points="196.5,-247 68.5,-247 68.5,0 196.5,0 196.5,-247"/>
-<text text-anchor="start" x="73.25" y="-233.5" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::WrappedData</text>
-<text text-anchor="start" x="114.5" y="-222.25" font-family="Helvetica,sans-Serif" font-size="10.00">Provider</text>
-<text text-anchor="start" x="131" y="-207.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="74.5" y="-192.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="86.5" y="-192.5" font-family="Helvetica,sans-Serif" font-size="10.00">WrappedDataProvider()</text>
-<text text-anchor="start" x="74.5" y="-177.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="86.5" y="-177.5" font-family="Helvetica,sans-Serif" font-size="10.00">WrappedDataProvider()</text>
-<text text-anchor="start" x="74.5" y="-162.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="86.5" y="-162.5" font-family="Helvetica,sans-Serif" font-size="10.00">WrappedDataProvider()</text>
-<text text-anchor="start" x="74.5" y="-147.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="86.5" y="-147.5" font-family="Helvetica,sans-Serif" font-size="10.00">finalize()</text>
-<text text-anchor="start" x="74.5" y="-132.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="86.5" y="-132.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
-<text text-anchor="start" x="86.5" y="-121.25" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="start" x="74.5" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="86.5" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_start_time()</text>
-<text text-anchor="start" x="74.5" y="-91.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="86.5" y="-91.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_stop_time()</text>
-<text text-anchor="start" x="74.5" y="-76.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="86.5" y="-76.5" font-family="Helvetica,sans-Serif" font-size="10.00">record_duration()</text>
-<text text-anchor="start" x="74.5" y="-61.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="86.5" y="-61.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_ts_index_for_time()</text>
-<text text-anchor="start" x="74.5" y="-46.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="86.5" y="-46.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_value()</text>
-<text text-anchor="start" x="74.5" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="86.5" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_values()</text>
-<text text-anchor="start" x="74.5" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="86.5" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00">is_property_sum_over</text>
-<text text-anchor="start" x="86.5" y="-5.25" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
-<polygon fill="#666666" stroke="#666666" points="68.5,-219 68.5,-219 196.5,-219 196.5,-219 68.5,-219"/>
-<polygon fill="#666666" stroke="#666666" points="68.5,-204 68.5,-204 196.5,-204 196.5,-204 68.5,-204"/>
-<polygon fill="none" stroke="#666666" points="68.5,0 68.5,-247 196.5,-247 196.5,0 68.5,0"/>
+<polygon fill="#999999" stroke="none" points="195.5,-247 67.5,-247 67.5,0 195.5,0 195.5,-247"/>
+<text text-anchor="start" x="72.25" y="-233.5" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::WrappedData</text>
+<text text-anchor="start" x="113.5" y="-222.25" font-family="Helvetica,sans-Serif" font-size="10.00">Provider</text>
+<text text-anchor="start" x="130" y="-207.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="73.5" y="-192.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="85.5" y="-192.5" font-family="Helvetica,sans-Serif" font-size="10.00">WrappedDataProvider()</text>
+<text text-anchor="start" x="73.5" y="-177.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="85.5" y="-177.5" font-family="Helvetica,sans-Serif" font-size="10.00">WrappedDataProvider()</text>
+<text text-anchor="start" x="73.5" y="-162.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="85.5" y="-162.5" font-family="Helvetica,sans-Serif" font-size="10.00">WrappedDataProvider()</text>
+<text text-anchor="start" x="73.5" y="-147.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="85.5" y="-147.5" font-family="Helvetica,sans-Serif" font-size="10.00">finalize()</text>
+<text text-anchor="start" x="73.5" y="-132.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="85.5" y="-132.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
+<text text-anchor="start" x="85.5" y="-121.25" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<text text-anchor="start" x="73.5" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="85.5" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_start_time()</text>
+<text text-anchor="start" x="73.5" y="-91.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="85.5" y="-91.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_stop_time()</text>
+<text text-anchor="start" x="73.5" y="-76.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="85.5" y="-76.5" font-family="Helvetica,sans-Serif" font-size="10.00">record_duration()</text>
+<text text-anchor="start" x="73.5" y="-61.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="85.5" y="-61.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_ts_index_for_time()</text>
+<text text-anchor="start" x="73.5" y="-46.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="85.5" y="-46.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_value()</text>
+<text text-anchor="start" x="73.5" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="85.5" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_values()</text>
+<text text-anchor="start" x="73.5" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="85.5" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00">is_property_sum_over</text>
+<text text-anchor="start" x="85.5" y="-5.25" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
+<polygon fill="#666666" stroke="#666666" points="67.5,-219 67.5,-219 195.5,-219 195.5,-219 67.5,-219"/>
+<polygon fill="#666666" stroke="#666666" points="67.5,-204 67.5,-204 195.5,-204 195.5,-204 67.5,-204"/>
+<polygon fill="none" stroke="#666666" points="67.5,0 67.5,-247 195.5,-247 195.5,0 67.5,0"/>
 </a>
 </g>
 </g>
@@ -133,8 +133,8 @@ var sectionId = 'dynsection-1';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node2&#45;&gt;Node1</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M89.18,-289.03C92.84,-275.14 96.59,-260.89 100.28,-246.86"/>
-<polygon fill="none" stroke="#63b8ff" points="85.82,-288.06 86.65,-298.62 92.58,-289.84 85.82,-288.06"/>
+<path fill="none" stroke="#63b8ff" d="M88.77,-289.03C92.38,-275.14 96.08,-260.89 99.72,-246.86"/>
+<polygon fill="none" stroke="#63b8ff" points="85.41,-288.06 86.28,-298.62 92.18,-289.82 85.41,-288.06"/>
 </a>
 </g>
 </g>
@@ -142,35 +142,35 @@ var sectionId = 'dynsection-1';
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="classdata__access_1_1_data_provider.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="none" points="273.5,-511.25 137.5,-511.25 137.5,-294.25 273.5,-294.25 273.5,-511.25"/>
-<text text-anchor="start" x="142.5" y="-497.75" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::DataProvider</text>
-<text text-anchor="start" x="142.5" y="-486.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; data_type, selection_type &gt;</text>
-<text text-anchor="start" x="204" y="-471.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="145.5" y="-456.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-456.75" font-family="Helvetica,sans-Serif" font-size="10.00">~DataProvider()</text>
-<text text-anchor="start" x="145.5" y="-441.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-441.75" font-family="Helvetica,sans-Serif" font-size="10.00">finalize()</text>
-<text text-anchor="start" x="145.5" y="-426.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-426.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
-<text text-anchor="start" x="159.5" y="-415.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="start" x="145.5" y="-400.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-400.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_start_time()</text>
-<text text-anchor="start" x="145.5" y="-385.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-385.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_stop_time()</text>
-<text text-anchor="start" x="145.5" y="-370.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-370.75" font-family="Helvetica,sans-Serif" font-size="10.00">record_duration()</text>
-<text text-anchor="start" x="145.5" y="-355.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-355.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_ts_index_for_time()</text>
-<text text-anchor="start" x="145.5" y="-340.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-340.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_value()</text>
-<text text-anchor="start" x="145.5" y="-325.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-325.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_values()</text>
-<text text-anchor="start" x="145.5" y="-310.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-310.75" font-family="Helvetica,sans-Serif" font-size="10.00">is_property_sum_over</text>
-<text text-anchor="start" x="159.5" y="-299.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
-<polygon fill="#666666" stroke="#666666" points="137.5,-483.25 137.5,-483.25 273.5,-483.25 273.5,-483.25 137.5,-483.25"/>
-<polygon fill="#666666" stroke="#666666" points="137.5,-468.25 137.5,-468.25 273.5,-468.25 273.5,-468.25 137.5,-468.25"/>
-<polygon fill="none" stroke="#666666" points="137.5,-294.25 137.5,-511.25 273.5,-511.25 273.5,-294.25 137.5,-294.25"/>
+<polygon fill="white" stroke="none" points="271.5,-511.25 137.5,-511.25 137.5,-294.25 271.5,-294.25 271.5,-511.25"/>
+<text text-anchor="start" x="142.25" y="-497.75" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::DataProvider</text>
+<text text-anchor="start" x="142.25" y="-486.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; DataType, SelectionType &gt;</text>
+<text text-anchor="start" x="203" y="-471.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="145" y="-456.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-456.75" font-family="Helvetica,sans-Serif" font-size="10.00">~DataProvider()</text>
+<text text-anchor="start" x="145" y="-441.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-441.75" font-family="Helvetica,sans-Serif" font-size="10.00">finalize()</text>
+<text text-anchor="start" x="145" y="-426.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-426.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
+<text text-anchor="start" x="158.5" y="-415.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<text text-anchor="start" x="145" y="-400.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-400.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_start_time()</text>
+<text text-anchor="start" x="145" y="-385.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-385.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_stop_time()</text>
+<text text-anchor="start" x="145" y="-370.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-370.75" font-family="Helvetica,sans-Serif" font-size="10.00">record_duration()</text>
+<text text-anchor="start" x="145" y="-355.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-355.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_ts_index_for_time()</text>
+<text text-anchor="start" x="145" y="-340.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-340.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_value()</text>
+<text text-anchor="start" x="145" y="-325.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-325.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_values()</text>
+<text text-anchor="start" x="145" y="-310.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-310.75" font-family="Helvetica,sans-Serif" font-size="10.00">is_property_sum_over</text>
+<text text-anchor="start" x="158.5" y="-299.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
+<polygon fill="#666666" stroke="#666666" points="137.5,-483.25 137.5,-483.25 271.5,-483.25 271.5,-483.25 137.5,-483.25"/>
+<polygon fill="#666666" stroke="#666666" points="137.5,-468.25 137.5,-468.25 271.5,-468.25 271.5,-468.25 137.5,-468.25"/>
+<polygon fill="none" stroke="#666666" points="137.5,-294.25 137.5,-511.25 271.5,-511.25 271.5,-294.25 137.5,-294.25"/>
 </a>
 </g>
 </g>
@@ -178,11 +178,11 @@ var sectionId = 'dynsection-1';
 <g id="edge2_Node000001_Node000003" class="edge">
 <title>Node3&#45;&gt;Node1</title>
 <g id="a_edge2_Node000001_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M177.28,-294.56C174.21,-282.91 171.06,-270.95 167.92,-259.03"/>
-<polygon fill="none" stroke="#63b8ff" points="167.94,-259.11 162.55,-254.33 164.89,-247.51 170.28,-252.29 167.94,-259.11"/>
+<path fill="none" stroke="#63b8ff" d="M176.28,-294.56C173.21,-282.91 170.06,-270.95 166.92,-259.03"/>
+<polygon fill="none" stroke="#63b8ff" points="166.94,-259.11 161.55,-254.33 163.89,-247.51 169.28,-252.29 166.94,-259.11"/>
 </a>
 </g>
-<text text-anchor="middle" x="213.5" y="-266.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #wrapped_provider</text>
+<text text-anchor="middle" x="212.5" y="-266.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #wrapped_provider</text>
 </g>
 </g>
 </svg>

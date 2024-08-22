@@ -714,7 +714,7 @@ var sectionId = 'dynsection-1';
 <g id="edge7_Node000006_Node000007" class="edge">
 <title>Node7&#45;&gt;Node6</title>
 <g id="a_edge7_Node000006_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="orange" d="M490.83,-3518.03C477.57,-3510.9 464.77,-3501.12 457.16,-3488 440.19,-3458.71 416.56,-3481.2 479.41,-3342.5 523.24,-3245.77 538.96,-3213.13 628.16,-3155.5 655.51,-3137.84 671.44,-3154.57 699.16,-3137.5 844.02,-3048.29 798.38,-2925.34 950.16,-2848.5 993.92,-2826.34 1121.58,-2837.26 1170.16,-2830.5 1190.71,-2827.64 1213.06,-2823.5 1232.79,-2819.49"/>
+<path fill="none" stroke="orange" d="M490.83,-3518.03C477.57,-3510.9 464.77,-3501.12 457.16,-3488 440.19,-3458.71 416.56,-3481.2 479.41,-3342.5 523.24,-3245.77 539.16,-3213.43 628.16,-3155.5 654.72,-3138.21 670.2,-3154.16 697.16,-3137.5 842.39,-3047.77 797.71,-2925.31 950.16,-2848.5 993.97,-2826.43 1121.58,-2837.26 1170.16,-2830.5 1190.71,-2827.64 1213.06,-2823.5 1232.79,-2819.49"/>
 <polygon fill="orange" stroke="orange" points="489.09,-3521.08 499.61,-3522.32 492.16,-3514.79 489.09,-3521.08"/>
 </a>
 </g>
@@ -1942,35 +1942,35 @@ var sectionId = 'dynsection-1';
 <g id="Node000060" class="node">
 <title>Node60</title>
 <g id="a_Node000060"><a xlink:href="classdata__access_1_1_data_provider.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="none" points="690.16,-3101.5 554.16,-3101.5 554.16,-2884.5 690.16,-2884.5 690.16,-3101.5"/>
-<text text-anchor="start" x="559.16" y="-3088" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::DataProvider</text>
-<text text-anchor="start" x="559.16" y="-3076.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; data_type, selection_type &gt;</text>
-<text text-anchor="start" x="620.66" y="-3062" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="562.16" y="-3047" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="576.16" y="-3047" font-family="Helvetica,sans-Serif" font-size="10.00">~DataProvider()</text>
-<text text-anchor="start" x="562.16" y="-3032" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="576.16" y="-3032" font-family="Helvetica,sans-Serif" font-size="10.00">finalize()</text>
-<text text-anchor="start" x="562.16" y="-3017" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="576.16" y="-3017" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
-<text text-anchor="start" x="576.16" y="-3005.75" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="start" x="562.16" y="-2991" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="576.16" y="-2991" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_start_time()</text>
-<text text-anchor="start" x="562.16" y="-2976" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="576.16" y="-2976" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_stop_time()</text>
-<text text-anchor="start" x="562.16" y="-2961" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="576.16" y="-2961" font-family="Helvetica,sans-Serif" font-size="10.00">record_duration()</text>
-<text text-anchor="start" x="562.16" y="-2946" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="576.16" y="-2946" font-family="Helvetica,sans-Serif" font-size="10.00">get_ts_index_for_time()</text>
-<text text-anchor="start" x="562.16" y="-2931" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="576.16" y="-2931" font-family="Helvetica,sans-Serif" font-size="10.00">get_value()</text>
-<text text-anchor="start" x="562.16" y="-2916" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="576.16" y="-2916" font-family="Helvetica,sans-Serif" font-size="10.00">get_values()</text>
-<text text-anchor="start" x="562.16" y="-2901" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="576.16" y="-2901" font-family="Helvetica,sans-Serif" font-size="10.00">is_property_sum_over</text>
-<text text-anchor="start" x="576.16" y="-2889.75" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
-<polygon fill="#666666" stroke="#666666" points="554.16,-3073.5 554.16,-3073.5 690.16,-3073.5 690.16,-3073.5 554.16,-3073.5"/>
-<polygon fill="#666666" stroke="#666666" points="554.16,-3058.5 554.16,-3058.5 690.16,-3058.5 690.16,-3058.5 554.16,-3058.5"/>
-<polygon fill="none" stroke="#666666" points="554.16,-2884.5 554.16,-3101.5 690.16,-3101.5 690.16,-2884.5 554.16,-2884.5"/>
+<polygon fill="white" stroke="none" points="688.16,-3101.5 554.16,-3101.5 554.16,-2884.5 688.16,-2884.5 688.16,-3101.5"/>
+<text text-anchor="start" x="558.91" y="-3088" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::DataProvider</text>
+<text text-anchor="start" x="558.91" y="-3076.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; DataType, SelectionType &gt;</text>
+<text text-anchor="start" x="619.66" y="-3062" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="561.66" y="-3047" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="575.16" y="-3047" font-family="Helvetica,sans-Serif" font-size="10.00">~DataProvider()</text>
+<text text-anchor="start" x="561.66" y="-3032" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="575.16" y="-3032" font-family="Helvetica,sans-Serif" font-size="10.00">finalize()</text>
+<text text-anchor="start" x="561.66" y="-3017" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="575.16" y="-3017" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
+<text text-anchor="start" x="575.16" y="-3005.75" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<text text-anchor="start" x="561.66" y="-2991" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="575.16" y="-2991" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_start_time()</text>
+<text text-anchor="start" x="561.66" y="-2976" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="575.16" y="-2976" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_stop_time()</text>
+<text text-anchor="start" x="561.66" y="-2961" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="575.16" y="-2961" font-family="Helvetica,sans-Serif" font-size="10.00">record_duration()</text>
+<text text-anchor="start" x="561.66" y="-2946" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="575.16" y="-2946" font-family="Helvetica,sans-Serif" font-size="10.00">get_ts_index_for_time()</text>
+<text text-anchor="start" x="561.66" y="-2931" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="575.16" y="-2931" font-family="Helvetica,sans-Serif" font-size="10.00">get_value()</text>
+<text text-anchor="start" x="561.66" y="-2916" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="575.16" y="-2916" font-family="Helvetica,sans-Serif" font-size="10.00">get_values()</text>
+<text text-anchor="start" x="561.66" y="-2901" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="575.16" y="-2901" font-family="Helvetica,sans-Serif" font-size="10.00">is_property_sum_over</text>
+<text text-anchor="start" x="575.16" y="-2889.75" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
+<polygon fill="#666666" stroke="#666666" points="554.16,-3073.5 554.16,-3073.5 688.16,-3073.5 688.16,-3073.5 554.16,-3073.5"/>
+<polygon fill="#666666" stroke="#666666" points="554.16,-3058.5 554.16,-3058.5 688.16,-3058.5 688.16,-3058.5 554.16,-3058.5"/>
+<polygon fill="none" stroke="#666666" points="554.16,-2884.5 554.16,-3101.5 688.16,-3101.5 688.16,-2884.5 554.16,-2884.5"/>
 </a>
 </g>
 </g>
@@ -1978,7 +1978,7 @@ var sectionId = 'dynsection-1';
 <g id="edge74_Node000059_Node000060" class="edge">
 <title>Node60&#45;&gt;Node59</title>
 <g id="a_edge74_Node000059_Node000060"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M667.7,-2884.7C677.82,-2870.63 689.89,-2857.86 704.16,-2848.5 765.48,-2808.29 807,-2870.95 868.16,-2830.5 888.99,-2816.72 879.89,-2800.86 895.66,-2781.5 899.78,-2776.44 904.43,-2771.47 909.26,-2766.73"/>
+<path fill="none" stroke="#63b8ff" d="M665.94,-2884.7C675.96,-2870.63 687.95,-2857.86 702.16,-2848.5 764.13,-2807.68 806.24,-2871.4 868.16,-2830.5 889,-2816.74 879.89,-2800.86 895.66,-2781.5 899.78,-2776.44 904.43,-2771.47 909.26,-2766.73"/>
 <polygon fill="none" stroke="#63b8ff" points="909.27,-2766.73 910.93,-2759.71 918.05,-2758.55 916.39,-2765.56 909.27,-2766.73"/>
 </a>
 </g>

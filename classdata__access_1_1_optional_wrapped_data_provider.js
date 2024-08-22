@@ -1,5 +1,7 @@
 var classdata__access_1_1_optional_wrapped_data_provider =
 [
+    [ "data_type", "classdata__access_1_1_optional_wrapped_data_provider.html#a0d14bbf2549386ef2baefc87248ae3ad", null ],
+    [ "selection_type", "classdata__access_1_1_optional_wrapped_data_provider.html#ab0b1614239c57ead01efc4f45bf7d719", null ],
     [ "OptionalWrappedDataProvider", "classdata__access_1_1_optional_wrapped_data_provider.html#ad9c6a4ac2224043c6187e62f37a0e6eb", null ],
     [ "OptionalWrappedDataProvider", "classdata__access_1_1_optional_wrapped_data_provider.html#a6cf7f077aa1795f8be73a968066d1c37", null ],
     [ "OptionalWrappedDataProvider", "classdata__access_1_1_optional_wrapped_data_provider.html#a3bc3982b5edd693a9953ef5d6e62bcfd", null ],
@@ -13,9 +15,9 @@ var classdata__access_1_1_optional_wrapped_data_provider =
     [ "get_data_stop_time", "classdata__access_1_1_optional_wrapped_data_provider.html#a27e648f5905e23ae0aa2c5a32d0c26b3", null ],
     [ "get_ts_index_for_time", "classdata__access_1_1_optional_wrapped_data_provider.html#a262de984f51ed9ce1ae01aacd8e627f9", null ],
     [ "get_value", "classdata__access_1_1_optional_wrapped_data_provider.html#aedc8d5253a79ce0b4f79edf5a23a85e2", null ],
-    [ "get_value", "classdata__access_1_1_optional_wrapped_data_provider.html#a2409247d93cc63d0626e623c3a024f1b", null ],
+    [ "get_value", "classdata__access_1_1_optional_wrapped_data_provider.html#a8c55fdbb6c7878bbea0d05ab2aaa8b39", null ],
     [ "get_values", "classdata__access_1_1_optional_wrapped_data_provider.html#a37c23079f7163f992ea90fd156a6b4d7", null ],
-    [ "get_values", "classdata__access_1_1_optional_wrapped_data_provider.html#adcd588f997aa5ec185744d36e801054a", null ],
+    [ "get_values", "classdata__access_1_1_optional_wrapped_data_provider.html#a4ced90182c881aa0c597083ab619724d", null ],
     [ "getSetMessage", "classdata__access_1_1_optional_wrapped_data_provider.html#ad6957ea55e727fe23583683c577bfa10", null ],
     [ "is_property_sum_over_time_step", "classdata__access_1_1_optional_wrapped_data_provider.html#adf879825a0767a5c54602063857b716a", null ],
     [ "isDefaultOverride", "classdata__access_1_1_optional_wrapped_data_provider.html#a8c10bda0a27acbe6dc8e7492bb21ad76", null ],

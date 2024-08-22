@@ -34,7 +34,7 @@ var hierarchy =
     [ "CatchmentAggrDataSelector", "class_catchment_aggr_data_selector.html", null ],
     [ "Cell", "struct_cell.html", null ],
     [ "CSVReader", "class_c_s_v_reader.html", null ],
-    [ "data_access::DataProvider< data_type, selection_type >", "classdata__access_1_1_data_provider.html", [
+    [ "data_access::DataProvider< DataType, SelectionType >", "classdata__access_1_1_data_provider.html", [
       [ "CsvPerFeatureForcingProvider", "class_csv_per_feature_forcing_provider.html", null ],
       [ "NullForcingProvider", "class_null_forcing_provider.html", null ],
       [ "data_access::WrappedDataProvider", "classdata__access_1_1_wrapped_data_provider.html", [

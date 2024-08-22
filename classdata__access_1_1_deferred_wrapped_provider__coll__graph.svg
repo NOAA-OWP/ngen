@@ -46,7 +46,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 508;
+var viewWidth = 507;
 var viewHeight = 850;
 var sectionId = 'dynsection-1';
 </script>
@@ -58,30 +58,30 @@ var sectionId = 'dynsection-1';
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps.">
-<polygon fill="#999999" stroke="none" points="377,-176 232,-176 232,0 377,0 377,-176"/>
-<text text-anchor="start" x="237" y="-162.5" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::DeferredWrapped</text>
-<text text-anchor="start" x="286.5" y="-151.25" font-family="Helvetica,sans-Serif" font-size="10.00">Provider</text>
-<text text-anchor="start" x="303" y="-136.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="238.5" y="-121.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="251" y="-121.5" font-family="Helvetica,sans-Serif" font-size="10.00">DeferredWrappedProvider()</text>
-<text text-anchor="start" x="238.5" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="251" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">DeferredWrappedProvider()</text>
-<text text-anchor="start" x="238.5" y="-91.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="251" y="-91.5" font-family="Helvetica,sans-Serif" font-size="10.00">DeferredWrappedProvider()</text>
-<text text-anchor="start" x="238.5" y="-76.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="251" y="-76.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
-<text text-anchor="start" x="251" y="-65.25" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="start" x="238.5" y="-50.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="251" y="-50.5" font-family="Helvetica,sans-Serif" font-size="10.00">getSetMessage()</text>
-<text text-anchor="start" x="238.5" y="-35.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="251" y="-35.5" font-family="Helvetica,sans-Serif" font-size="10.00">isReadyToProvideData()</text>
-<text text-anchor="start" x="238.5" y="-20.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="251" y="-20.5" font-family="Helvetica,sans-Serif" font-size="10.00">isWrappedProviderSet()</text>
-<text text-anchor="start" x="238.5" y="-5.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="251" y="-5.5" font-family="Helvetica,sans-Serif" font-size="10.00">setWrappedProvider()</text>
-<polygon fill="#666666" stroke="#666666" points="232,-148 232,-148 377,-148 377,-148 232,-148"/>
-<polygon fill="#666666" stroke="#666666" points="232,-133 232,-133 377,-133 377,-133 232,-133"/>
-<polygon fill="none" stroke="#666666" points="232,0 232,-176 377,-176 377,0 232,0"/>
+<polygon fill="#999999" stroke="none" points="376,-176 231,-176 231,0 376,0 376,-176"/>
+<text text-anchor="start" x="236" y="-162.5" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::DeferredWrapped</text>
+<text text-anchor="start" x="285.5" y="-151.25" font-family="Helvetica,sans-Serif" font-size="10.00">Provider</text>
+<text text-anchor="start" x="302" y="-136.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="237.5" y="-121.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="250" y="-121.5" font-family="Helvetica,sans-Serif" font-size="10.00">DeferredWrappedProvider()</text>
+<text text-anchor="start" x="237.5" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="250" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">DeferredWrappedProvider()</text>
+<text text-anchor="start" x="237.5" y="-91.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="250" y="-91.5" font-family="Helvetica,sans-Serif" font-size="10.00">DeferredWrappedProvider()</text>
+<text text-anchor="start" x="237.5" y="-76.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="250" y="-76.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
+<text text-anchor="start" x="250" y="-65.25" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<text text-anchor="start" x="237.5" y="-50.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="250" y="-50.5" font-family="Helvetica,sans-Serif" font-size="10.00">getSetMessage()</text>
+<text text-anchor="start" x="237.5" y="-35.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="250" y="-35.5" font-family="Helvetica,sans-Serif" font-size="10.00">isReadyToProvideData()</text>
+<text text-anchor="start" x="237.5" y="-20.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="250" y="-20.5" font-family="Helvetica,sans-Serif" font-size="10.00">isWrappedProviderSet()</text>
+<text text-anchor="start" x="237.5" y="-5.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="250" y="-5.5" font-family="Helvetica,sans-Serif" font-size="10.00">setWrappedProvider()</text>
+<polygon fill="#666666" stroke="#666666" points="231,-148 231,-148 376,-148 376,-148 231,-148"/>
+<polygon fill="#666666" stroke="#666666" points="231,-133 231,-133 376,-133 376,-133 231,-133"/>
+<polygon fill="none" stroke="#666666" points="231,0 231,-176 376,-176 376,0 231,0"/>
 </a>
 </g>
 </g>
@@ -89,39 +89,39 @@ var sectionId = 'dynsection-1';
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="classdata__access_1_1_wrapped_data_provider.html" target="_top" xlink:title="Simple implementation that basically wraps another instance.">
-<polygon fill="white" stroke="none" points="268.5,-470.25 140.5,-470.25 140.5,-223.25 268.5,-223.25 268.5,-470.25"/>
-<text text-anchor="start" x="145.25" y="-456.75" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::WrappedData</text>
-<text text-anchor="start" x="186.5" y="-445.5" font-family="Helvetica,sans-Serif" font-size="10.00">Provider</text>
-<text text-anchor="start" x="203" y="-430.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="146.5" y="-415.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="158.5" y="-415.75" font-family="Helvetica,sans-Serif" font-size="10.00">WrappedDataProvider()</text>
-<text text-anchor="start" x="146.5" y="-400.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="158.5" y="-400.75" font-family="Helvetica,sans-Serif" font-size="10.00">WrappedDataProvider()</text>
-<text text-anchor="start" x="146.5" y="-385.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="158.5" y="-385.75" font-family="Helvetica,sans-Serif" font-size="10.00">WrappedDataProvider()</text>
-<text text-anchor="start" x="146.5" y="-370.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="158.5" y="-370.75" font-family="Helvetica,sans-Serif" font-size="10.00">finalize()</text>
-<text text-anchor="start" x="146.5" y="-355.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="158.5" y="-355.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
-<text text-anchor="start" x="158.5" y="-344.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="start" x="146.5" y="-329.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="158.5" y="-329.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_start_time()</text>
-<text text-anchor="start" x="146.5" y="-314.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="158.5" y="-314.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_stop_time()</text>
-<text text-anchor="start" x="146.5" y="-299.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="158.5" y="-299.75" font-family="Helvetica,sans-Serif" font-size="10.00">record_duration()</text>
-<text text-anchor="start" x="146.5" y="-284.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="158.5" y="-284.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_ts_index_for_time()</text>
-<text text-anchor="start" x="146.5" y="-269.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="158.5" y="-269.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_value()</text>
-<text text-anchor="start" x="146.5" y="-254.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="158.5" y="-254.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_values()</text>
-<text text-anchor="start" x="146.5" y="-239.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="158.5" y="-239.75" font-family="Helvetica,sans-Serif" font-size="10.00">is_property_sum_over</text>
-<text text-anchor="start" x="158.5" y="-228.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
-<polygon fill="#666666" stroke="#666666" points="140.5,-442.25 140.5,-442.25 268.5,-442.25 268.5,-442.25 140.5,-442.25"/>
-<polygon fill="#666666" stroke="#666666" points="140.5,-427.25 140.5,-427.25 268.5,-427.25 268.5,-427.25 140.5,-427.25"/>
-<polygon fill="none" stroke="#666666" points="140.5,-223.25 140.5,-470.25 268.5,-470.25 268.5,-223.25 140.5,-223.25"/>
+<polygon fill="white" stroke="none" points="267.5,-470.25 139.5,-470.25 139.5,-223.25 267.5,-223.25 267.5,-470.25"/>
+<text text-anchor="start" x="144.25" y="-456.75" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::WrappedData</text>
+<text text-anchor="start" x="185.5" y="-445.5" font-family="Helvetica,sans-Serif" font-size="10.00">Provider</text>
+<text text-anchor="start" x="202" y="-430.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="145.5" y="-415.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157.5" y="-415.75" font-family="Helvetica,sans-Serif" font-size="10.00">WrappedDataProvider()</text>
+<text text-anchor="start" x="145.5" y="-400.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157.5" y="-400.75" font-family="Helvetica,sans-Serif" font-size="10.00">WrappedDataProvider()</text>
+<text text-anchor="start" x="145.5" y="-385.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157.5" y="-385.75" font-family="Helvetica,sans-Serif" font-size="10.00">WrappedDataProvider()</text>
+<text text-anchor="start" x="145.5" y="-370.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157.5" y="-370.75" font-family="Helvetica,sans-Serif" font-size="10.00">finalize()</text>
+<text text-anchor="start" x="145.5" y="-355.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157.5" y="-355.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
+<text text-anchor="start" x="157.5" y="-344.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<text text-anchor="start" x="145.5" y="-329.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157.5" y="-329.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_start_time()</text>
+<text text-anchor="start" x="145.5" y="-314.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157.5" y="-314.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_stop_time()</text>
+<text text-anchor="start" x="145.5" y="-299.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157.5" y="-299.75" font-family="Helvetica,sans-Serif" font-size="10.00">record_duration()</text>
+<text text-anchor="start" x="145.5" y="-284.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157.5" y="-284.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_ts_index_for_time()</text>
+<text text-anchor="start" x="145.5" y="-269.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157.5" y="-269.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_value()</text>
+<text text-anchor="start" x="145.5" y="-254.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157.5" y="-254.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_values()</text>
+<text text-anchor="start" x="145.5" y="-239.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157.5" y="-239.75" font-family="Helvetica,sans-Serif" font-size="10.00">is_property_sum_over</text>
+<text text-anchor="start" x="157.5" y="-228.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
+<polygon fill="#666666" stroke="#666666" points="139.5,-442.25 139.5,-442.25 267.5,-442.25 267.5,-442.25 139.5,-442.25"/>
+<polygon fill="#666666" stroke="#666666" points="139.5,-427.25 139.5,-427.25 267.5,-427.25 267.5,-427.25 139.5,-427.25"/>
+<polygon fill="none" stroke="#666666" points="139.5,-223.25 139.5,-470.25 267.5,-470.25 267.5,-223.25 139.5,-223.25"/>
 </a>
 </g>
 </g>
@@ -129,8 +129,8 @@ var sectionId = 'dynsection-1';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node2&#45;&gt;Node1</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M256.25,-212.87C261.13,-200.36 265.98,-187.9 270.63,-175.97"/>
-<polygon fill="none" stroke="#63b8ff" points="253.07,-211.39 252.71,-221.98 259.6,-213.93 253.07,-211.39"/>
+<path fill="none" stroke="#63b8ff" d="M255.25,-212.87C260.13,-200.36 264.98,-187.9 269.63,-175.97"/>
+<polygon fill="none" stroke="#63b8ff" points="252.07,-211.39 251.71,-221.98 258.6,-213.93 252.07,-211.39"/>
 </a>
 </g>
 </g>
@@ -173,8 +173,8 @@ var sectionId = 'dynsection-1';
 <g id="edge2_Node000002_Node000003" class="edge">
 <title>Node3&#45;&gt;Node2</title>
 <g id="a_edge2_Node000002_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M117.8,-513.52C125.27,-499.24 132.95,-484.56 140.51,-470.11"/>
-<polygon fill="none" stroke="#63b8ff" points="114.9,-511.51 113.37,-522 121.11,-514.76 114.9,-511.51"/>
+<path fill="none" stroke="#63b8ff" d="M117.4,-513.52C124.82,-499.24 132.44,-484.56 139.95,-470.11"/>
+<polygon fill="none" stroke="#63b8ff" points="114.5,-511.51 113,-521.99 120.72,-514.73 114.5,-511.51"/>
 </a>
 </g>
 </g>
@@ -182,35 +182,35 @@ var sectionId = 'dynsection-1';
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="classdata__access_1_1_data_provider.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="none" points="273.5,-734.5 137.5,-734.5 137.5,-517.5 273.5,-517.5 273.5,-734.5"/>
-<text text-anchor="start" x="142.5" y="-721" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::DataProvider</text>
-<text text-anchor="start" x="142.5" y="-709.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; data_type, selection_type &gt;</text>
-<text text-anchor="start" x="204" y="-695" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="145.5" y="-680" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-680" font-family="Helvetica,sans-Serif" font-size="10.00">~DataProvider()</text>
-<text text-anchor="start" x="145.5" y="-665" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-665" font-family="Helvetica,sans-Serif" font-size="10.00">finalize()</text>
-<text text-anchor="start" x="145.5" y="-650" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-650" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
-<text text-anchor="start" x="159.5" y="-638.75" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="start" x="145.5" y="-624" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-624" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_start_time()</text>
-<text text-anchor="start" x="145.5" y="-609" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-609" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_stop_time()</text>
-<text text-anchor="start" x="145.5" y="-594" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-594" font-family="Helvetica,sans-Serif" font-size="10.00">record_duration()</text>
-<text text-anchor="start" x="145.5" y="-579" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-579" font-family="Helvetica,sans-Serif" font-size="10.00">get_ts_index_for_time()</text>
-<text text-anchor="start" x="145.5" y="-564" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-564" font-family="Helvetica,sans-Serif" font-size="10.00">get_value()</text>
-<text text-anchor="start" x="145.5" y="-549" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-549" font-family="Helvetica,sans-Serif" font-size="10.00">get_values()</text>
-<text text-anchor="start" x="145.5" y="-534" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="159.5" y="-534" font-family="Helvetica,sans-Serif" font-size="10.00">is_property_sum_over</text>
-<text text-anchor="start" x="159.5" y="-522.75" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
-<polygon fill="#666666" stroke="#666666" points="137.5,-706.5 137.5,-706.5 273.5,-706.5 273.5,-706.5 137.5,-706.5"/>
-<polygon fill="#666666" stroke="#666666" points="137.5,-691.5 137.5,-691.5 273.5,-691.5 273.5,-691.5 137.5,-691.5"/>
-<polygon fill="none" stroke="#666666" points="137.5,-517.5 137.5,-734.5 273.5,-734.5 273.5,-517.5 137.5,-517.5"/>
+<polygon fill="white" stroke="none" points="271.5,-734.5 137.5,-734.5 137.5,-517.5 271.5,-517.5 271.5,-734.5"/>
+<text text-anchor="start" x="142.25" y="-721" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::DataProvider</text>
+<text text-anchor="start" x="142.25" y="-709.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; DataType, SelectionType &gt;</text>
+<text text-anchor="start" x="203" y="-695" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="145" y="-680" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-680" font-family="Helvetica,sans-Serif" font-size="10.00">~DataProvider()</text>
+<text text-anchor="start" x="145" y="-665" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-665" font-family="Helvetica,sans-Serif" font-size="10.00">finalize()</text>
+<text text-anchor="start" x="145" y="-650" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-650" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
+<text text-anchor="start" x="158.5" y="-638.75" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<text text-anchor="start" x="145" y="-624" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-624" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_start_time()</text>
+<text text-anchor="start" x="145" y="-609" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-609" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_stop_time()</text>
+<text text-anchor="start" x="145" y="-594" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-594" font-family="Helvetica,sans-Serif" font-size="10.00">record_duration()</text>
+<text text-anchor="start" x="145" y="-579" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-579" font-family="Helvetica,sans-Serif" font-size="10.00">get_ts_index_for_time()</text>
+<text text-anchor="start" x="145" y="-564" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-564" font-family="Helvetica,sans-Serif" font-size="10.00">get_value()</text>
+<text text-anchor="start" x="145" y="-549" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-549" font-family="Helvetica,sans-Serif" font-size="10.00">get_values()</text>
+<text text-anchor="start" x="145" y="-534" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="158.5" y="-534" font-family="Helvetica,sans-Serif" font-size="10.00">is_property_sum_over</text>
+<text text-anchor="start" x="158.5" y="-522.75" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
+<polygon fill="#666666" stroke="#666666" points="137.5,-706.5 137.5,-706.5 271.5,-706.5 271.5,-706.5 137.5,-706.5"/>
+<polygon fill="#666666" stroke="#666666" points="137.5,-691.5 137.5,-691.5 271.5,-691.5 271.5,-691.5 137.5,-691.5"/>
+<polygon fill="none" stroke="#666666" points="137.5,-517.5 137.5,-734.5 271.5,-734.5 271.5,-517.5 137.5,-517.5"/>
 </a>
 </g>
 </g>
@@ -218,23 +218,23 @@ var sectionId = 'dynsection-1';
 <g id="edge3_Node000002_Node000004" class="edge">
 <title>Node4&#45;&gt;Node2</title>
 <g id="a_edge3_Node000002_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M205.11,-517.81C205.07,-506.28 205.03,-494.45 204.99,-482.65"/>
-<polygon fill="none" stroke="#63b8ff" points="204.99,-482.79 200.97,-476.8 204.94,-470.79 208.97,-476.77 204.99,-482.79"/>
+<path fill="none" stroke="#63b8ff" d="M204.11,-517.81C204.07,-506.28 204.03,-494.45 203.99,-482.65"/>
+<polygon fill="none" stroke="#63b8ff" points="203.99,-482.79 199.97,-476.8 203.94,-470.79 207.97,-476.77 203.99,-482.79"/>
 </a>
 </g>
-<text text-anchor="middle" x="247.5" y="-490" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #wrapped_provider</text>
+<text text-anchor="middle" x="246.5" y="-490" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #wrapped_provider</text>
 </g>
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
 <g id="a_Node000005"><a xlink:title=" ">
-<polygon fill="white" stroke="none" points="496,-371.25 383,-371.25 383,-322.25 496,-322.25 496,-371.25"/>
-<text text-anchor="start" x="387.75" y="-357.75" font-family="Helvetica,sans-Serif" font-size="10.00">std::vector&lt; std::string &gt;</text>
-<text text-anchor="start" x="438" y="-342.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="438" y="-327.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<polygon fill="#666666" stroke="#666666" points="383,-354.25 383,-354.25 496,-354.25 496,-354.25 383,-354.25"/>
-<polygon fill="#666666" stroke="#666666" points="383,-339.25 383,-339.25 496,-339.25 496,-339.25 383,-339.25"/>
-<polygon fill="none" stroke="#666666" points="383,-322.25 383,-371.25 496,-371.25 496,-322.25 383,-322.25"/>
+<polygon fill="white" stroke="none" points="495,-371.25 382,-371.25 382,-322.25 495,-322.25 495,-371.25"/>
+<text text-anchor="start" x="386.75" y="-357.75" font-family="Helvetica,sans-Serif" font-size="10.00">std::vector&lt; std::string &gt;</text>
+<text text-anchor="start" x="437" y="-342.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="437" y="-327.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<polygon fill="#666666" stroke="#666666" points="382,-354.25 382,-354.25 495,-354.25 495,-354.25 382,-354.25"/>
+<polygon fill="#666666" stroke="#666666" points="382,-339.25 382,-339.25 495,-339.25 495,-339.25 382,-339.25"/>
+<polygon fill="none" stroke="#666666" points="382,-322.25 382,-371.25 495,-371.25 495,-322.25 382,-322.25"/>
 </a>
 </g>
 </g>
@@ -242,23 +242,23 @@ var sectionId = 'dynsection-1';
 <g id="edge4_Node000001_Node000005" class="edge">
 <title>Node5&#45;&gt;Node1</title>
 <g id="a_edge4_Node000001_Node000005"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M427.28,-322.51C411.23,-291.99 382.05,-236.5 356.17,-187.26"/>
-<polygon fill="none" stroke="#63b8ff" points="356.19,-187.31 349.86,-183.86 350.6,-176.68 356.94,-180.13 356.19,-187.31"/>
+<path fill="none" stroke="#63b8ff" d="M426.28,-322.51C410.23,-291.99 381.05,-236.5 355.17,-187.26"/>
+<polygon fill="none" stroke="#63b8ff" points="355.19,-187.31 348.86,-183.86 349.6,-176.68 355.94,-180.13 355.19,-187.31"/>
 </a>
 </g>
-<text text-anchor="middle" x="403.88" y="-195.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #providedOutputs</text>
+<text text-anchor="middle" x="402.88" y="-195.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #providedOutputs</text>
 </g>
 <!-- Node6 -->
 <g id="Node000006" class="node">
 <title>Node6</title>
 <g id="a_Node000006"><a xlink:title=" ">
-<polygon fill="white" stroke="none" points="373.5,-650.5 321.5,-650.5 321.5,-601.5 373.5,-601.5 373.5,-650.5"/>
-<text text-anchor="start" x="326.5" y="-637" font-family="Helvetica,sans-Serif" font-size="10.00">std::string</text>
-<text text-anchor="start" x="346" y="-622" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="346" y="-607" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<polygon fill="#666666" stroke="#666666" points="321.5,-633.5 321.5,-633.5 373.5,-633.5 373.5,-633.5 321.5,-633.5"/>
-<polygon fill="#666666" stroke="#666666" points="321.5,-618.5 321.5,-618.5 373.5,-618.5 373.5,-618.5 321.5,-618.5"/>
-<polygon fill="none" stroke="#666666" points="321.5,-601.5 321.5,-650.5 373.5,-650.5 373.5,-601.5 321.5,-601.5"/>
+<polygon fill="white" stroke="none" points="372.5,-650.5 320.5,-650.5 320.5,-601.5 372.5,-601.5 372.5,-650.5"/>
+<text text-anchor="start" x="325.5" y="-637" font-family="Helvetica,sans-Serif" font-size="10.00">std::string</text>
+<text text-anchor="start" x="345" y="-622" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="345" y="-607" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<polygon fill="#666666" stroke="#666666" points="320.5,-633.5 320.5,-633.5 372.5,-633.5 372.5,-633.5 320.5,-633.5"/>
+<polygon fill="#666666" stroke="#666666" points="320.5,-618.5 320.5,-618.5 372.5,-618.5 372.5,-618.5 320.5,-618.5"/>
+<polygon fill="none" stroke="#666666" points="320.5,-601.5 320.5,-650.5 372.5,-650.5 372.5,-601.5 320.5,-601.5"/>
 </a>
 </g>
 </g>
@@ -266,34 +266,34 @@ var sectionId = 'dynsection-1';
 <g id="edge9_Node000001_Node000006" class="edge">
 <title>Node6&#45;&gt;Node1</title>
 <g id="a_edge9_Node000001_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M340.73,-601.66C332.36,-571.58 318.51,-517.54 312.75,-470.25 301.14,-375 300.03,-265.41 301.26,-188.24"/>
-<polygon fill="none" stroke="#63b8ff" points="301.25,-188.56 297.36,-182.49 301.47,-176.56 305.36,-182.63 301.25,-188.56"/>
+<path fill="none" stroke="#63b8ff" d="M339.73,-601.66C331.36,-571.58 317.51,-517.54 311.75,-470.25 300.14,-375 299.03,-265.41 300.26,-188.24"/>
+<polygon fill="none" stroke="#63b8ff" points="300.25,-188.56 296.36,-182.49 300.47,-176.56 304.36,-182.63 300.25,-188.56"/>
 </a>
 </g>
-<text text-anchor="middle" x="343.88" y="-342.88" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #setMessage</text>
+<text text-anchor="middle" x="342.88" y="-342.88" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #setMessage</text>
 </g>
 <!-- Node6&#45;&gt;Node5 -->
 <g id="edge5_Node000005_Node000006" class="edge">
 <title>Node6&#45;&gt;Node5</title>
 <g id="a_edge5_Node000005_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M353.8,-601.62C361.3,-574.27 374.45,-527.7 387.5,-488.25 399.47,-452.06 414.78,-411.26 425.68,-382.99"/>
-<polygon fill="none" stroke="#63b8ff" points="425.69,-382.97 424.12,-375.93 430.02,-371.78 431.58,-378.82 425.69,-382.97"/>
+<path fill="none" stroke="#63b8ff" d="M352.8,-601.62C360.3,-574.27 373.45,-527.7 386.5,-488.25 398.47,-452.06 413.78,-411.26 424.68,-382.99"/>
+<polygon fill="none" stroke="#63b8ff" points="424.69,-382.97 423.12,-375.93 429.02,-371.78 430.58,-378.82 424.69,-382.97"/>
 </a>
 </g>
-<text text-anchor="middle" x="411.5" y="-490" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> +elements</text>
+<text text-anchor="middle" x="410.5" y="-490" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> +elements</text>
 </g>
 <!-- Node7 -->
 <g id="Node000007" class="node">
 <title>Node7</title>
 <g id="a_Node000007"><a xlink:title=" ">
-<polygon fill="white" stroke="none" points="390.5,-841.75 304.5,-841.75 304.5,-781.75 390.5,-781.75 390.5,-841.75"/>
-<text text-anchor="start" x="309.25" y="-828.25" font-family="Helvetica,sans-Serif" font-size="10.00">std::basic_string&lt;</text>
-<text text-anchor="start" x="332.12" y="-817" font-family="Helvetica,sans-Serif" font-size="10.00"> Char &gt;</text>
-<text text-anchor="start" x="346" y="-802.25" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="346" y="-787.25" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<polygon fill="#666666" stroke="#666666" points="304.5,-813.75 304.5,-813.75 390.5,-813.75 390.5,-813.75 304.5,-813.75"/>
-<polygon fill="#666666" stroke="#666666" points="304.5,-798.75 304.5,-798.75 390.5,-798.75 390.5,-798.75 304.5,-798.75"/>
-<polygon fill="none" stroke="#666666" points="304.5,-781.75 304.5,-841.75 390.5,-841.75 390.5,-781.75 304.5,-781.75"/>
+<polygon fill="white" stroke="none" points="389.5,-841.75 303.5,-841.75 303.5,-781.75 389.5,-781.75 389.5,-841.75"/>
+<text text-anchor="start" x="308.25" y="-828.25" font-family="Helvetica,sans-Serif" font-size="10.00">std::basic_string&lt;</text>
+<text text-anchor="start" x="331.12" y="-817" font-family="Helvetica,sans-Serif" font-size="10.00"> Char &gt;</text>
+<text text-anchor="start" x="345" y="-802.25" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="345" y="-787.25" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<polygon fill="#666666" stroke="#666666" points="303.5,-813.75 303.5,-813.75 389.5,-813.75 389.5,-813.75 303.5,-813.75"/>
+<polygon fill="#666666" stroke="#666666" points="303.5,-798.75 303.5,-798.75 389.5,-798.75 389.5,-798.75 303.5,-798.75"/>
+<polygon fill="none" stroke="#666666" points="303.5,-781.75 303.5,-841.75 389.5,-841.75 389.5,-781.75 303.5,-781.75"/>
 </a>
 </g>
 </g>
@@ -301,8 +301,8 @@ var sectionId = 'dynsection-1';
 <g id="edge6_Node000006_Node000007" class="edge">
 <title>Node7&#45;&gt;Node6</title>
 <g id="a_edge6_Node000006_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M347.5,-770.71C347.5,-733.88 347.5,-680.54 347.5,-650.27"/>
-<polygon fill="none" stroke="#63b8ff" points="344,-770.53 347.5,-780.53 351,-770.53 344,-770.53"/>
+<path fill="none" stroke="#63b8ff" d="M346.5,-770.71C346.5,-733.88 346.5,-680.54 346.5,-650.27"/>
+<polygon fill="none" stroke="#63b8ff" points="343,-770.53 346.5,-780.53 350,-770.53 343,-770.53"/>
 </a>
 </g>
 </g>
@@ -310,13 +310,13 @@ var sectionId = 'dynsection-1';
 <g id="Node000008" class="node">
 <title>Node8</title>
 <g id="a_Node000008"><a xlink:title=" ">
-<polygon fill="white" stroke="none" points="478,-650.5 401,-650.5 401,-601.5 478,-601.5 478,-650.5"/>
-<text text-anchor="start" x="405.75" y="-637" font-family="Helvetica,sans-Serif" font-size="10.00">std::vector&lt; T &gt;</text>
-<text text-anchor="start" x="438" y="-622" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="438" y="-607" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<polygon fill="#666666" stroke="#666666" points="401,-633.5 401,-633.5 478,-633.5 478,-633.5 401,-633.5"/>
-<polygon fill="#666666" stroke="#666666" points="401,-618.5 401,-618.5 478,-618.5 478,-618.5 401,-618.5"/>
-<polygon fill="none" stroke="#666666" points="401,-601.5 401,-650.5 478,-650.5 478,-601.5 401,-601.5"/>
+<polygon fill="white" stroke="none" points="477,-650.5 400,-650.5 400,-601.5 477,-601.5 477,-650.5"/>
+<text text-anchor="start" x="404.75" y="-637" font-family="Helvetica,sans-Serif" font-size="10.00">std::vector&lt; T &gt;</text>
+<text text-anchor="start" x="437" y="-622" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="437" y="-607" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<polygon fill="#666666" stroke="#666666" points="400,-633.5 400,-633.5 477,-633.5 477,-633.5 400,-633.5"/>
+<polygon fill="#666666" stroke="#666666" points="400,-618.5 400,-618.5 477,-618.5 477,-618.5 400,-618.5"/>
+<polygon fill="none" stroke="#666666" points="400,-601.5 400,-650.5 477,-650.5 477,-601.5 400,-601.5"/>
 </a>
 </g>
 </g>
@@ -324,23 +324,23 @@ var sectionId = 'dynsection-1';
 <g id="edge7_Node000005_Node000008" class="edge">
 <title>Node8&#45;&gt;Node5</title>
 <g id="a_edge7_Node000005_Node000008"><a xlink:title=" ">
-<path fill="none" stroke="orange" d="M439.5,-590.5C439.5,-533.2 439.5,-419.88 439.5,-371.04"/>
-<polygon fill="orange" stroke="orange" points="436,-590.33 439.5,-600.33 443,-590.33 436,-590.33"/>
+<path fill="none" stroke="orange" d="M438.5,-590.5C438.5,-533.2 438.5,-419.88 438.5,-371.04"/>
+<polygon fill="orange" stroke="orange" points="435,-590.33 438.5,-600.33 442,-590.33 435,-590.33"/>
 </a>
 </g>
-<text text-anchor="middle" x="469.88" y="-490" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; std::string &gt;</text>
+<text text-anchor="middle" x="468.88" y="-490" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; std::string &gt;</text>
 </g>
 <!-- Node9 -->
 <g id="Node000009" class="node">
 <title>Node9</title>
 <g id="a_Node000009"><a xlink:title=" ">
-<polygon fill="white" stroke="none" points="447.5,-836.25 431.5,-836.25 431.5,-787.25 447.5,-787.25 447.5,-836.25"/>
-<text text-anchor="start" x="436.5" y="-822.75" font-family="Helvetica,sans-Serif" font-size="10.00">T</text>
-<text text-anchor="start" x="438" y="-807.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="438" y="-792.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<polygon fill="#666666" stroke="#666666" points="431.5,-819.25 431.5,-819.25 447.5,-819.25 447.5,-819.25 431.5,-819.25"/>
-<polygon fill="#666666" stroke="#666666" points="431.5,-804.25 431.5,-804.25 447.5,-804.25 447.5,-804.25 431.5,-804.25"/>
-<polygon fill="none" stroke="#666666" points="431.5,-787.25 431.5,-836.25 447.5,-836.25 447.5,-787.25 431.5,-787.25"/>
+<polygon fill="white" stroke="none" points="446.5,-836.25 430.5,-836.25 430.5,-787.25 446.5,-787.25 446.5,-836.25"/>
+<text text-anchor="start" x="435.5" y="-822.75" font-family="Helvetica,sans-Serif" font-size="10.00">T</text>
+<text text-anchor="start" x="437" y="-807.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="437" y="-792.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<polygon fill="#666666" stroke="#666666" points="430.5,-819.25 430.5,-819.25 446.5,-819.25 446.5,-819.25 430.5,-819.25"/>
+<polygon fill="#666666" stroke="#666666" points="430.5,-804.25 430.5,-804.25 446.5,-804.25 446.5,-804.25 430.5,-804.25"/>
+<polygon fill="none" stroke="#666666" points="430.5,-787.25 430.5,-836.25 446.5,-836.25 446.5,-787.25 430.5,-787.25"/>
 </a>
 </g>
 </g>
@@ -348,11 +348,11 @@ var sectionId = 'dynsection-1';
 <g id="edge8_Node000008_Node000009" class="edge">
 <title>Node9&#45;&gt;Node8</title>
 <g id="a_edge8_Node000008_Node000009"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M439.5,-787.48C439.5,-756.08 439.5,-699.86 439.5,-663"/>
-<polygon fill="none" stroke="#63b8ff" points="439.5,-663.27 435.5,-657.27 439.5,-651.27 443.5,-657.27 439.5,-663.27"/>
+<path fill="none" stroke="#63b8ff" d="M438.5,-787.48C438.5,-756.08 438.5,-699.86 438.5,-663"/>
+<polygon fill="none" stroke="#63b8ff" points="438.5,-663.27 434.5,-657.27 438.5,-651.27 442.5,-657.27 438.5,-663.27"/>
 </a>
 </g>
-<text text-anchor="middle" x="463.5" y="-754.25" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> +elements</text>
+<text text-anchor="middle" x="462.5" y="-754.25" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> +elements</text>
 </g>
 </g>
 </svg>

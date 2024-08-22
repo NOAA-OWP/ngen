@@ -1,5 +1,7 @@
 var classrealization_1_1_bmi___module___formulation =
 [
+    [ "data_type", "classrealization_1_1_bmi___module___formulation.html#a0d14bbf2549386ef2baefc87248ae3ad", null ],
+    [ "selection_type", "classrealization_1_1_bmi___module___formulation.html#ab0b1614239c57ead01efc4f45bf7d719", null ],
     [ "time_step_t", "classrealization_1_1_bmi___module___formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c", null ],
     [ "Bmi_Module_Formulation", "classrealization_1_1_bmi___module___formulation.html#a0d0a4a7d1392c8a2f705dfad175be7c4", null ],
     [ "~Bmi_Module_Formulation", "classrealization_1_1_bmi___module___formulation.html#af4f6d7edfdca22867e9982ce5577978b", null ],
@@ -9,7 +11,7 @@ var classrealization_1_1_bmi___module___formulation =
     [ "create_formulation", "classrealization_1_1_bmi___module___formulation.html#a3e910719332db1e221c4ef4dd3bb9eb1", null ],
     [ "create_formulation", "classrealization_1_1_bmi___module___formulation.html#a4dde9b0d6fa6a805262060becece9e52", null ],
     [ "determine_model_time_offset", "classrealization_1_1_bmi___module___formulation.html#aaeaf8ef8b36e7c5690ca8134a5cd8065", null ],
-    [ "finalize", "classrealization_1_1_bmi___module___formulation.html#acb736869524034e5758702e16291e518", null ],
+    [ "finalize", "classrealization_1_1_bmi___module___formulation.html#af783d34fb272298f8c8f9673b1ea891e", null ],
     [ "finalize", "classrealization_1_1_bmi___module___formulation.html#a92b6ca5352dd98640d7c320f7c6c3333", null ],
     [ "get_allow_model_exceed_end_time", "classrealization_1_1_bmi___module___formulation.html#aba113ffb035d65c338a2a8187cdddf88", null ],
     [ "get_available_variable_names", "classrealization_1_1_bmi___module___formulation.html#a3ea2f6ea46e2b71188aec7c6c2da4cc9", null ],
@@ -38,9 +40,9 @@ var classrealization_1_1_bmi___module___formulation =
     [ "get_response", "classrealization_1_1_bmi___module___formulation.html#a0108d3ee83f95ad2eb0733a237078e89", null ],
     [ "get_ts_index_for_time", "classrealization_1_1_bmi___module___formulation.html#a99eadd99f537b2e936b7096d26da95ed", null ],
     [ "get_value", "classrealization_1_1_bmi___module___formulation.html#a9e5990e1c4616de029d7ad7691c2b7c7", null ],
-    [ "get_value", "classrealization_1_1_bmi___module___formulation.html#a2409247d93cc63d0626e623c3a024f1b", null ],
+    [ "get_value", "classrealization_1_1_bmi___module___formulation.html#a8c55fdbb6c7878bbea0d05ab2aaa8b39", null ],
     [ "get_values", "classrealization_1_1_bmi___module___formulation.html#a9265b07222e97669c28fc24454ad7350", null ],
-    [ "get_values", "classrealization_1_1_bmi___module___formulation.html#adcd588f997aa5ec185744d36e801054a", null ],
+    [ "get_values", "classrealization_1_1_bmi___module___formulation.html#a4ced90182c881aa0c597083ab619724d", null ],
     [ "get_var_value_as_double", "classrealization_1_1_bmi___module___formulation.html#acddd464aa09db2fd381a8c12b7d1e5f7", null ],
     [ "get_variable_time_begin", "classrealization_1_1_bmi___module___formulation.html#a0f20616c646a363ca555a16c68dad71a", null ],
     [ "inner_create_formulation", "classrealization_1_1_bmi___module___formulation.html#a7c62e8f7f7db1d06cfef28ee66554def", null ],

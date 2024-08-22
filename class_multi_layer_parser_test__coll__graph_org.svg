@@ -882,8 +882,8 @@
 <g id="edge14_Node000012_Node000009" class="edge">
 <title>Node9&#45;&gt;Node12</title>
 <g id="a_edge14_Node000012_Node000009"><a xlink:title=" ">
-<path fill="none" stroke="orange" d="M482.16,-2229.03C498.98,-2189.36 532.87,-2125.58 585.5,-2097.5 670.31,-2052.25 1365.24,-2123.91 1450.5,-2079.5 1533.01,-2036.52 1493.63,-1957.36 1574,-1910.5 1633.72,-1875.68 1665.08,-1920.02 1728.5,-1892.5 1745.48,-1885.13 1761.5,-1872.38 1774.1,-1860.44"/>
-<polygon fill="orange" stroke="orange" points="478.98,-2227.55 478.43,-2238.13 485.46,-2230.2 478.98,-2227.55"/>
+<path fill="none" stroke="orange" d="M482.54,-2229.02C499.82,-2189.32 534.46,-2125.53 587.5,-2097.5 672.3,-2052.69 1365.44,-2123.81 1450.5,-2079.5 1533,-2036.52 1493.63,-1957.36 1574,-1910.5 1633.72,-1875.68 1665.08,-1920.02 1728.5,-1892.5 1745.48,-1885.13 1761.5,-1872.38 1774.1,-1860.44"/>
+<polygon fill="orange" stroke="orange" points="479.36,-2227.55 478.71,-2238.13 485.81,-2230.26 479.36,-2227.55"/>
 </a>
 </g>
 <text text-anchor="middle" x="1619.25" y="-1991.12" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; Simulation_Time &gt;</text>
@@ -935,8 +935,8 @@
 <g id="edge55_Node000029_Node000009" class="edge">
 <title>Node9&#45;&gt;Node29</title>
 <g id="a_edge55_Node000029_Node000009"><a xlink:title=" ">
-<path fill="none" stroke="orange" d="M482.65,-2229.35C499.86,-2190.28 534.05,-2127.37 585.5,-2097.5 622.94,-2075.76 748.19,-2109.41 779.5,-2079.5 806.92,-2053.31 794.96,-1947.55 803,-1910.5 806.64,-1893.72 812.03,-1875.31 816.73,-1860.49"/>
-<polygon fill="orange" stroke="orange" points="479.53,-2227.73 478.83,-2238.3 485.97,-2230.47 479.53,-2227.73"/>
+<path fill="none" stroke="orange" d="M483.04,-2229.35C500.72,-2190.27 535.65,-2127.36 587.5,-2097.5 624.64,-2076.12 748.53,-2109.12 779.5,-2079.5 806.9,-2053.29 794.96,-1947.55 803,-1910.5 806.64,-1893.72 812.03,-1875.31 816.73,-1860.49"/>
+<polygon fill="orange" stroke="orange" points="479.92,-2227.74 479.12,-2238.3 486.34,-2230.55 479.92,-2227.74"/>
 </a>
 </g>
 <text text-anchor="middle" x="846.25" y="-1991.12" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; HY_Catchment &gt;</text>
@@ -961,8 +961,8 @@
 <g id="edge47_Node000032_Node000009" class="edge">
 <title>Node9&#45;&gt;Node32</title>
 <g id="a_edge47_Node000032_Node000009"><a xlink:title=" ">
-<path fill="none" stroke="orange" d="M482.34,-2229.38C499.35,-2190.04 533.42,-2126.59 585.5,-2097.5 614.94,-2081.05 864.77,-2103.47 888.5,-2079.5 949.4,-2018 851.88,-1756.6 907.75,-1690.5 931.77,-1662.09 965.23,-1700.7 989.5,-1672.5 1023.44,-1633.08 1016.27,-1471.57 1011.74,-1405.19"/>
-<polygon fill="orange" stroke="orange" points="479.2,-2227.81 478.58,-2238.39 485.66,-2230.51 479.2,-2227.81"/>
+<path fill="none" stroke="orange" d="M482.73,-2229.36C500.19,-2190.01 535.01,-2126.56 587.5,-2097.5 616.81,-2081.27 864.93,-2103.31 888.5,-2079.5 949.38,-2017.99 851.88,-1756.6 907.75,-1690.5 931.77,-1662.09 965.23,-1700.7 989.5,-1672.5 1023.44,-1633.08 1016.27,-1471.57 1011.74,-1405.19"/>
+<polygon fill="orange" stroke="orange" points="479.59,-2227.81 478.86,-2238.38 486.02,-2230.57 479.59,-2227.81"/>
 </a>
 </g>
 <text text-anchor="middle" x="974.88" y="-1716.62" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; HY_CatchmentRealization &gt;</text>
@@ -987,8 +987,8 @@
 <g id="edge62_Node000037_Node000009" class="edge">
 <title>Node9&#45;&gt;Node37</title>
 <g id="a_edge62_Node000037_Node000009"><a xlink:title=" ">
-<path fill="none" stroke="orange" d="M492.19,-2230.34C515.48,-2196.88 552.82,-2143.43 585.5,-2097.5 591.22,-2089.46 594.94,-2088.71 598.5,-2079.5 625.74,-2009 591.48,-1981.46 617.5,-1910.5 624.1,-1892.51 635.6,-1874.61 646.2,-1860.4"/>
-<polygon fill="orange" stroke="orange" points="489.43,-2228.18 486.59,-2238.39 495.17,-2232.18 489.43,-2228.18"/>
+<path fill="none" stroke="orange" d="M492.98,-2230.49C529.31,-2180.07 595.31,-2087.92 598.5,-2079.5 625.29,-2008.82 591.48,-1981.46 617.5,-1910.5 624.1,-1892.51 635.6,-1874.61 646.2,-1860.4"/>
+<polygon fill="orange" stroke="orange" points="490.25,-2228.3 487.24,-2238.45 495.93,-2232.39 490.25,-2228.3"/>
 </a>
 </g>
 <text text-anchor="middle" x="653.5" y="-1991.12" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; std::ostream &gt;</text>
@@ -1779,35 +1779,35 @@
 <g id="Node000043" class="node">
 <title>Node43</title>
 <g id="a_Node000043"><a xlink:href="classdata__access_1_1_data_provider.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="none" points="730.5,-2372.5 594.5,-2372.5 594.5,-2155.5 730.5,-2155.5 730.5,-2372.5"/>
-<text text-anchor="start" x="599.5" y="-2359" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::DataProvider</text>
-<text text-anchor="start" x="599.5" y="-2347.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; data_type, selection_type &gt;</text>
-<text text-anchor="start" x="661" y="-2333" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="602.5" y="-2318" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="616.5" y="-2318" font-family="Helvetica,sans-Serif" font-size="10.00">~DataProvider()</text>
-<text text-anchor="start" x="602.5" y="-2303" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="616.5" y="-2303" font-family="Helvetica,sans-Serif" font-size="10.00">finalize()</text>
-<text text-anchor="start" x="602.5" y="-2288" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="616.5" y="-2288" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
-<text text-anchor="start" x="616.5" y="-2276.75" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="start" x="602.5" y="-2262" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="616.5" y="-2262" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_start_time()</text>
-<text text-anchor="start" x="602.5" y="-2247" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="616.5" y="-2247" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_stop_time()</text>
-<text text-anchor="start" x="602.5" y="-2232" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="616.5" y="-2232" font-family="Helvetica,sans-Serif" font-size="10.00">record_duration()</text>
-<text text-anchor="start" x="602.5" y="-2217" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="616.5" y="-2217" font-family="Helvetica,sans-Serif" font-size="10.00">get_ts_index_for_time()</text>
-<text text-anchor="start" x="602.5" y="-2202" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="616.5" y="-2202" font-family="Helvetica,sans-Serif" font-size="10.00">get_value()</text>
-<text text-anchor="start" x="602.5" y="-2187" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="616.5" y="-2187" font-family="Helvetica,sans-Serif" font-size="10.00">get_values()</text>
-<text text-anchor="start" x="602.5" y="-2172" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="616.5" y="-2172" font-family="Helvetica,sans-Serif" font-size="10.00">is_property_sum_over</text>
-<text text-anchor="start" x="616.5" y="-2160.75" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
-<polygon fill="#666666" stroke="#666666" points="594.5,-2344.5 594.5,-2344.5 730.5,-2344.5 730.5,-2344.5 594.5,-2344.5"/>
-<polygon fill="#666666" stroke="#666666" points="594.5,-2329.5 594.5,-2329.5 730.5,-2329.5 730.5,-2329.5 594.5,-2329.5"/>
-<polygon fill="none" stroke="#666666" points="594.5,-2155.5 594.5,-2372.5 730.5,-2372.5 730.5,-2155.5 594.5,-2155.5"/>
+<polygon fill="white" stroke="none" points="730.5,-2372.5 596.5,-2372.5 596.5,-2155.5 730.5,-2155.5 730.5,-2372.5"/>
+<text text-anchor="start" x="601.25" y="-2359" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::DataProvider</text>
+<text text-anchor="start" x="601.25" y="-2347.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; DataType, SelectionType &gt;</text>
+<text text-anchor="start" x="662" y="-2333" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="604" y="-2318" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="617.5" y="-2318" font-family="Helvetica,sans-Serif" font-size="10.00">~DataProvider()</text>
+<text text-anchor="start" x="604" y="-2303" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="617.5" y="-2303" font-family="Helvetica,sans-Serif" font-size="10.00">finalize()</text>
+<text text-anchor="start" x="604" y="-2288" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="617.5" y="-2288" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
+<text text-anchor="start" x="617.5" y="-2276.75" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<text text-anchor="start" x="604" y="-2262" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="617.5" y="-2262" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_start_time()</text>
+<text text-anchor="start" x="604" y="-2247" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="617.5" y="-2247" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_stop_time()</text>
+<text text-anchor="start" x="604" y="-2232" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="617.5" y="-2232" font-family="Helvetica,sans-Serif" font-size="10.00">record_duration()</text>
+<text text-anchor="start" x="604" y="-2217" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="617.5" y="-2217" font-family="Helvetica,sans-Serif" font-size="10.00">get_ts_index_for_time()</text>
+<text text-anchor="start" x="604" y="-2202" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="617.5" y="-2202" font-family="Helvetica,sans-Serif" font-size="10.00">get_value()</text>
+<text text-anchor="start" x="604" y="-2187" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="617.5" y="-2187" font-family="Helvetica,sans-Serif" font-size="10.00">get_values()</text>
+<text text-anchor="start" x="604" y="-2172" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="617.5" y="-2172" font-family="Helvetica,sans-Serif" font-size="10.00">is_property_sum_over</text>
+<text text-anchor="start" x="617.5" y="-2160.75" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
+<polygon fill="#666666" stroke="#666666" points="596.5,-2344.5 596.5,-2344.5 730.5,-2344.5 730.5,-2344.5 596.5,-2344.5"/>
+<polygon fill="#666666" stroke="#666666" points="596.5,-2329.5 596.5,-2329.5 730.5,-2329.5 730.5,-2329.5 596.5,-2329.5"/>
+<polygon fill="none" stroke="#666666" points="596.5,-2155.5 596.5,-2372.5 730.5,-2372.5 730.5,-2155.5 596.5,-2155.5"/>
 </a>
 </g>
 </g>
@@ -1815,11 +1815,11 @@
 <g id="edge65_Node000042_Node000043" class="edge">
 <title>Node43&#45;&gt;Node42</title>
 <g id="a_edge65_Node000042_Node000043"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M687.77,-2155.55C706.05,-2065.94 722.86,-1947.2 693.5,-1910.5 670.73,-1882.04 645.76,-1909.45 613.5,-1892.5 602,-1886.46 591,-1877.9 581.39,-1869.09"/>
+<path fill="none" stroke="#63b8ff" d="M688.42,-2155.55C706.4,-2065.93 722.85,-1947.19 693.5,-1910.5 670.73,-1882.04 645.76,-1909.45 613.5,-1892.5 602,-1886.46 591,-1877.9 581.39,-1869.09"/>
 <polygon fill="none" stroke="#63b8ff" points="581.56,-1869.25 574.46,-1867.96 572.93,-1860.92 580.02,-1862.21 581.56,-1869.25"/>
 </a>
 </g>
-<text text-anchor="middle" x="719.25" y="-1991.12" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> +ptr</text>
+<text text-anchor="middle" x="720.25" y="-1991.12" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> +ptr</text>
 </g>
 <!-- Node44&#45;&gt;Node11 -->
 <g id="edge70_Node000011_Node000044" class="edge">

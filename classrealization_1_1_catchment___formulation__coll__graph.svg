@@ -46,7 +46,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 930;
+var viewWidth = 929;
 var viewHeight = 1503;
 var sectionId = 'dynsection-1';
 </script>
@@ -732,13 +732,13 @@ var sectionId = 'dynsection-1';
 <g id="Node000019" class="node">
 <title>Node19</title>
 <g id="a_Node000019"><a xlink:title=" ">
-<polygon fill="white" stroke="none" points="727,-927.25 664,-927.25 664,-878.25 727,-878.25 727,-927.25"/>
-<text text-anchor="start" x="668.88" y="-913.75" font-family="Helvetica,sans-Serif" font-size="10.00">std::ostream</text>
-<text text-anchor="start" x="694" y="-898.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="694" y="-883.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<polygon fill="#666666" stroke="#666666" points="664,-910.25 664,-910.25 727,-910.25 727,-910.25 664,-910.25"/>
-<polygon fill="#666666" stroke="#666666" points="664,-895.25 664,-895.25 727,-895.25 727,-895.25 664,-895.25"/>
-<polygon fill="none" stroke="#666666" points="664,-878.25 664,-927.25 727,-927.25 727,-878.25 664,-878.25"/>
+<polygon fill="white" stroke="none" points="728,-927.25 665,-927.25 665,-878.25 728,-878.25 728,-927.25"/>
+<text text-anchor="start" x="669.88" y="-913.75" font-family="Helvetica,sans-Serif" font-size="10.00">std::ostream</text>
+<text text-anchor="start" x="695" y="-898.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="695" y="-883.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<polygon fill="#666666" stroke="#666666" points="665,-910.25 665,-910.25 728,-910.25 728,-910.25 665,-910.25"/>
+<polygon fill="#666666" stroke="#666666" points="665,-895.25 665,-895.25 728,-895.25 728,-895.25 665,-895.25"/>
+<polygon fill="none" stroke="#666666" points="665,-878.25 665,-927.25 728,-927.25 728,-878.25 665,-878.25"/>
 </a>
 </g>
 </g>
@@ -746,8 +746,8 @@ var sectionId = 'dynsection-1';
 <g id="edge25_Node000018_Node000019" class="edge">
 <title>Node19&#45;&gt;Node18</title>
 <g id="a_edge25_Node000018_Node000019"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M689.83,-878.39C681.28,-847.1 662.59,-791.14 630.5,-753.5 625.98,-748.19 620.71,-743.27 615.1,-738.77"/>
-<polygon fill="none" stroke="#63b8ff" points="615.13,-738.79 607.93,-738.44 605.48,-731.65 612.68,-732 615.13,-738.79"/>
+<path fill="none" stroke="#63b8ff" d="M690.65,-878.39C681.87,-847.1 662.78,-791.14 630.5,-753.5 625.96,-748.21 620.68,-743.29 615.07,-738.79"/>
+<polygon fill="none" stroke="#63b8ff" points="615.1,-738.81 607.9,-738.47 605.44,-731.68 612.65,-732.03 615.1,-738.81"/>
 </a>
 </g>
 <text text-anchor="middle" x="648.25" y="-755.25" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> +ptr</text>
@@ -771,8 +771,8 @@ var sectionId = 'dynsection-1';
 <g id="edge26_Node000019_Node000020" class="edge">
 <title>Node20&#45;&gt;Node19</title>
 <g id="a_edge26_Node000019_Node000020"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M802.18,-1218.84C790.52,-1174.86 770.44,-1102.2 749.5,-1040.75 735.65,-1000.09 716.72,-953.8 705.35,-926.77"/>
-<polygon fill="none" stroke="#63b8ff" points="798.78,-1219.67 804.71,-1228.45 805.55,-1217.89 798.78,-1219.67"/>
+<path fill="none" stroke="#63b8ff" d="M802.1,-1218.87C790.38,-1174.9 770.24,-1102.26 749.5,-1040.75 735.81,-1000.15 717.26,-953.84 706.13,-926.79"/>
+<polygon fill="none" stroke="#63b8ff" points="798.7,-1219.7 804.65,-1228.47 805.47,-1217.91 798.7,-1219.7"/>
 </a>
 </g>
 </g>
@@ -836,35 +836,35 @@ var sectionId = 'dynsection-1';
 <g id="Node000024" class="node">
 <title>Node24</title>
 <g id="a_Node000024"><a xlink:href="classdata__access_1_1_data_provider.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="none" points="921.5,-1011.25 785.5,-1011.25 785.5,-794.25 921.5,-794.25 921.5,-1011.25"/>
-<text text-anchor="start" x="790.5" y="-997.75" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::DataProvider</text>
-<text text-anchor="start" x="790.5" y="-986.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; data_type, selection_type &gt;</text>
+<polygon fill="white" stroke="none" points="920.5,-1011.25 786.5,-1011.25 786.5,-794.25 920.5,-794.25 920.5,-1011.25"/>
+<text text-anchor="start" x="791.25" y="-997.75" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::DataProvider</text>
+<text text-anchor="start" x="791.25" y="-986.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; DataType, SelectionType &gt;</text>
 <text text-anchor="start" x="852" y="-971.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="793.5" y="-956.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="794" y="-956.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="807.5" y="-956.75" font-family="Helvetica,sans-Serif" font-size="10.00">~DataProvider()</text>
-<text text-anchor="start" x="793.5" y="-941.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="794" y="-941.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="807.5" y="-941.75" font-family="Helvetica,sans-Serif" font-size="10.00">finalize()</text>
-<text text-anchor="start" x="793.5" y="-926.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="794" y="-926.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="807.5" y="-926.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_available_variable</text>
 <text text-anchor="start" x="807.5" y="-915.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="start" x="793.5" y="-900.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="794" y="-900.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="807.5" y="-900.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_start_time()</text>
-<text text-anchor="start" x="793.5" y="-885.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="794" y="-885.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="807.5" y="-885.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_data_stop_time()</text>
-<text text-anchor="start" x="793.5" y="-870.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="794" y="-870.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="807.5" y="-870.75" font-family="Helvetica,sans-Serif" font-size="10.00">record_duration()</text>
-<text text-anchor="start" x="793.5" y="-855.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="794" y="-855.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="807.5" y="-855.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_ts_index_for_time()</text>
-<text text-anchor="start" x="793.5" y="-840.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="794" y="-840.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="807.5" y="-840.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_value()</text>
-<text text-anchor="start" x="793.5" y="-825.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="794" y="-825.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="807.5" y="-825.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_values()</text>
-<text text-anchor="start" x="793.5" y="-810.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="794" y="-810.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="807.5" y="-810.75" font-family="Helvetica,sans-Serif" font-size="10.00">is_property_sum_over</text>
 <text text-anchor="start" x="807.5" y="-799.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
-<polygon fill="#666666" stroke="#666666" points="785.5,-983.25 785.5,-983.25 921.5,-983.25 921.5,-983.25 785.5,-983.25"/>
-<polygon fill="#666666" stroke="#666666" points="785.5,-968.25 785.5,-968.25 921.5,-968.25 921.5,-968.25 785.5,-968.25"/>
-<polygon fill="none" stroke="#666666" points="785.5,-794.25 785.5,-1011.25 921.5,-1011.25 921.5,-794.25 785.5,-794.25"/>
+<polygon fill="#666666" stroke="#666666" points="786.5,-983.25 786.5,-983.25 920.5,-983.25 920.5,-983.25 786.5,-983.25"/>
+<polygon fill="#666666" stroke="#666666" points="786.5,-968.25 786.5,-968.25 920.5,-968.25 920.5,-968.25 786.5,-968.25"/>
+<polygon fill="none" stroke="#666666" points="786.5,-794.25 786.5,-1011.25 920.5,-1011.25 920.5,-794.25 786.5,-794.25"/>
 </a>
 </g>
 </g>

@@ -94,6 +94,7 @@ $(document).ready(function(){initNavTree('namespacedata__access.html',''); initR
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">data_access Namespace Reference</div></div>
 </div><!--header-->
@@ -122,6 +123,10 @@ Classes</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:a77172f93a7ac996d03c43baab852ea2e" id="r_a77172f93a7ac996d03c43baab852ea2e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedata__access.html#a77172f93a7ac996d03c43baab852ea2e">GenericDataProvider</a> = <a class="el" href="classdata__access_1_1_data_provider.html">DataProvider</a>&lt; double, <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a> &gt;</td></tr>
 <tr class="separator:a77172f93a7ac996d03c43baab852ea2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdf1e18fc0cce2096da216e8c9062b04" id="r_acdf1e18fc0cce2096da216e8c9062b04"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedata__access.html#acdf1e18fc0cce2096da216e8c9062b04">Provider</a> = ForcingsEngineLumpedDataProvider</td></tr>
+<tr class="separator:acdf1e18fc0cce2096da216e8c9062b04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03ca01610b07ed79db21a22f83a34ce9" id="r_a03ca01610b07ed79db21a22f83a34ce9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedata__access.html#a03ca01610b07ed79db21a22f83a34ce9">BaseProvider</a> = Provider::base_type</td></tr>
+<tr class="separator:a03ca01610b07ed79db21a22f83a34ce9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -138,12 +143,31 @@ Enumerations</h2></td></tr>
 <tr class="memdesc:a46435cb3579215dfdfffedc7833e43f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">An abstraction for classes that provides access to data.  <a href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9">More...</a><br /></td></tr>
 <tr class="separator:a46435cb3579215dfdfffedc7833e43f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ad7fe206f5ee0cecbe3416ba7e80801ea" id="r_ad7fe206f5ee0cecbe3416ba7e80801ea"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedata__access.html#ad7fe206f5ee0cecbe3416ba7e80801ea">convert_divide_id_stoi</a> (const std::string &amp;divide_id)</td></tr>
+<tr class="separator:ad7fe206f5ee0cecbe3416ba7e80801ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a2dcd647363ddb5cc6803f9d94bd12151" id="r_a2dcd647363ddb5cc6803f9d94bd12151"><td class="memItemLeft" align="right" valign="top">const std::map&lt; std::string, std::tuple&lt; std::string, std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedata__access.html#a2dcd647363ddb5cc6803f9d94bd12151">WellKnownFields</a></td></tr>
 <tr class="separator:a2dcd647363ddb5cc6803f9d94bd12151"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
+<a id="a03ca01610b07ed79db21a22f83a34ce9" name="a03ca01610b07ed79db21a22f83a34ce9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03ca01610b07ed79db21a22f83a34ce9">&#9670;&#160;</a></span>BaseProvider</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacedata__access.html#a03ca01610b07ed79db21a22f83a34ce9">data_access::BaseProvider</a> = typedef Provider::base_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a77172f93a7ac996d03c43baab852ea2e" name="a77172f93a7ac996d03c43baab852ea2e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a77172f93a7ac996d03c43baab852ea2e">&#9670;&#160;</a></span>GenericDataProvider</h2>
 
@@ -152,6 +176,20 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="namespacedata__access.html#a77172f93a7ac996d03c43baab852ea2e">data_access::GenericDataProvider</a> = typedef <a class="el" href="classdata__access_1_1_data_provider.html">DataProvider</a>&lt;double, <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acdf1e18fc0cce2096da216e8c9062b04" name="acdf1e18fc0cce2096da216e8c9062b04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdf1e18fc0cce2096da216e8c9062b04">&#9670;&#160;</a></span>Provider</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacedata__access.html#acdf1e18fc0cce2096da216e8c9062b04">data_access::Provider</a> = typedef ForcingsEngineLumpedDataProvider</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -179,6 +217,25 @@ Variables</h2></td></tr>
 <tr><td class="fieldname"><a id="a46435cb3579215dfdfffedc7833e43f9a23479be6dbd2f550bf03811d78647a68" name="a46435cb3579215dfdfffedc7833e43f9a23479be6dbd2f550bf03811d78647a68"></a>FRONT_FILL&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a46435cb3579215dfdfffedc7833e43f9a64524e829f0c293446b973b486de4681" name="a46435cb3579215dfdfffedc7833e43f9a64524e829f0c293446b973b486de4681"></a>BACK_FILL&#160;</td><td class="fielddoc"></td></tr>
 </table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ad7fe206f5ee0cecbe3416ba7e80801ea" name="ad7fe206f5ee0cecbe3416ba7e80801ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7fe206f5ee0cecbe3416ba7e80801ea">&#9670;&#160;</a></span>convert_divide_id_stoi()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t data_access::convert_divide_id_stoi </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>divide_id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -224,7 +281,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacedata__access.html">data_access</a></li>
-    <li class="footer">Generated on Wed Aug 7 2024 18:35:33 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Aug 22 2024 17:14:17 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
