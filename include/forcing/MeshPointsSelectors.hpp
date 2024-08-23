@@ -4,7 +4,8 @@
 #include <string>
 #include <boost/variant.hpp>
 
-struct AllPoints {} all_points;
+struct AllPoints {};
+static AllPoints all_points;
 
 struct MeshPointsSelector
 {
