@@ -11,6 +11,10 @@
 #include "State_Exception.hpp"
 #include "utilities/ExternalIntegrationException.hpp"
 
+#if NGEN_WITH_MPI
+#include <mpi.h>
+#endif // NGEN_WITH_MPI
+
 // Forward declaration to provide access to protected items in testing
 class Bmi_Fortran_Adapter_Test;
 
@@ -75,6 +79,46 @@ namespace models {
                     throw e;
                 }
             }
+
+#if NGEN_WITH_MPI
+            // Special case constructor for formulation modules that
+            // implement the NGen BMI MPI protocol, in which the MPI
+            // Communicator is set through SetValue() between
+            // construction and Initialize()
+            Bmi_Fortran_Adapter(const std::string &type_name,
+                                std::string library_file_path,
+                                std::string bmi_init_config,
+                                bool has_fixed_time_step,
+                                std::string registration_func,
+                                MPI_Comm comm)
+                : AbstractCLibBmiAdapter(type_name,
+                                         library_file_path,
+                                         bmi_init_config,
+                                         has_fixed_time_step,
+                                         registration_func
+                                         )
+            {
+                try {
+                    bmi_model = std::make_unique<Bmi_Fortran_Handle_Wrapper>(Bmi_Fortran_Handle_Wrapper());
+                    dynamic_library_load();
+                    execModuleRegistration();
+
+                    MPI_Fint comm_fortran = MPI_Comm_c2f(comm);
+                    inner_set_value_int("bmi_mpi_comm_handle", &comm_fortran);
+
+                    int init_result = initialize(&bmi_model->handle, bmi_init_config.c_str());
+                    if (init_result != BMI_SUCCESS) {
+                        init_exception_msg = "Failure when attempting to initialize " + model_name;
+                        throw models::external::State_Exception(init_exception_msg);
+                    }
+                    model_initialized = true;
+                }
+                catch (...) {
+                    model_initialized = true;
+                    throw;
+                }
+            }
+#endif // NGEN_WITH_MPI
 
             Bmi_Fortran_Adapter(Bmi_Fortran_Adapter const&) = delete;
             Bmi_Fortran_Adapter(Bmi_Fortran_Adapter&&) = delete;
