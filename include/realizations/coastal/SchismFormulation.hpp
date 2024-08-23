@@ -2,7 +2,7 @@
 
 #include <NGenConfig.h>
 
-#if NGEN_WITH_BMI_FORTRAN
+#if NGEN_WITH_BMI_FORTRAN && NGEN_WITH_MPI
 
 #include <realizations/coastal/CoastalFormulation.hpp>
 #include <bmi/Bmi_Fortran_Adapter.hpp>
@@ -64,4 +64,4 @@ private:
     std::shared_ptr<data_access::DataProvider<double, MeshPointsSelector>> inflows_boundary_provider_;
 };
 
-#endif // NGEN_WITH_BMI_FORTRAN
+#endif // NGEN_WITH_BMI_FORTRAN && NGEN_WITH_MPI

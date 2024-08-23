@@ -1,6 +1,6 @@
 #include <NGenConfig.h>
 
-#if NGEN_WITH_BMI_FORTRAN
+#if NGEN_WITH_BMI_FORTRAN && NGEN_WITH_MPI
 
 #include <realizations/coastal/SchismFormulation.hpp>
 
@@ -90,4 +90,4 @@ void SchismFormulation::update()
     bmi_->Update();
 }
 
-#endif // NGEN_WITH_BMI_FORTRAN
+#endif // NGEN_WITH_BMI_FORTRAN && NGEN_WITH_MPI
