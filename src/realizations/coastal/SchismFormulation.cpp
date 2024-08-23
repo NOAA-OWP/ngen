@@ -3,6 +3,7 @@
 #if NGEN_WITH_BMI_FORTRAN && NGEN_WITH_MPI
 
 #include <realizations/coastal/SchismFormulation.hpp>
+#include <mpi.h>
 
 const static auto s_schism_registration_function = "register_bmi";
 
@@ -38,6 +39,7 @@ SchismFormulation::SchismFormulation(
          , init_config_path
          , /* model_time_step_fixed = */ true
          , s_schism_registration_function
+         , MPI_COMM_WORLD
          );
 }
 
@@ -45,8 +47,6 @@ SchismFormulation::~SchismFormulation() = default;
 
 void SchismFormulation::initialize()
 {
-    bmi_->Initialize();
-
     auto const& input_vars = bmi_->GetInputVarNames();
 
     for (auto const& name : input_vars) {
