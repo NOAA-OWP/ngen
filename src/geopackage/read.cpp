@@ -86,7 +86,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
 
     #ifndef NGEN_QUIET
     // output debug info on what is read exactly
-    logging.debug(("Reading " << std::to_string(layer_feature_count) + " features from layer " + layer + " using ID column `" + id_column + "`").c_str());
+    logging.debug((std::string("Reading ") + std::to_string(layer_feature_count) + " features from layer " + layer + " using ID column `" + id_column + "`").c_str());
     if (!ids.empty()) {
         logging::formatting((std::string(" (id subset:")).c_str());
         for (auto& id : ids) {
