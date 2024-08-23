@@ -429,7 +429,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     catch (const std::runtime_error& e)
     {
         #ifndef UDUNITS_QUIET
-        logging::warning(("WARN: Unit conversion unsuccessful - Returning unconverted value! (\""+e.what()+"\")\n").c_str());
+        logging::warning((std::string("WARN: Unit conversion unsuccessful - Returning unconverted value! (\"")+e.what()+"\")\n").c_str());
         #endif
         return rvalue;
     }
