@@ -10,7 +10,7 @@ std::set<std::string> SchismFormulation::expected_input_variable_names_ =
     {
         "RAINRATE",
         "SFCPRS",
-        "SPHF2m",
+        "SPFH2m",
         "TMP2m",
         "UU10m",
         "VV10m",
