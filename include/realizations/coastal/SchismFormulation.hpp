@@ -9,7 +9,7 @@
 #include <memory>
 #include <set>
 
-class SchismFormulation : public CoastalFormulation
+class SchismFormulation final : public CoastalFormulation
 {
 public:
     using MeshPointsDataProvider = data_access::DataProvider<double, MeshPointsSelector>;
@@ -33,7 +33,6 @@ public:
     size_t get_ts_index_for_time(const time_t &epoch_time) const override;
 
     data_type get_value(const selection_type& selector, data_access::ReSampleMethod m) override;
-    std::vector<data_type> get_values(const selection_type& selector, data_access::ReSampleMethod m) override;
 
     // Implementation of CoastalFormulation
     void initialize() override;
@@ -41,6 +40,9 @@ public:
     void update() override;
 
     void get_values(const selection_type& selector, boost::span<double> data) override;
+
+protected:
+    size_t mesh_size(std::string const& variable_name) override;
 
 private:
     std::unique_ptr<models::bmi::Bmi_Fortran_Adapter> bmi_;

@@ -41,6 +41,8 @@ SchismFormulation::SchismFormulation(
          );
 }
 
+SchismFormulation::~SchismFormulation() = default;
+
 void SchismFormulation::initialize()
 {
     bmi_->Initialize();
@@ -83,11 +85,61 @@ void SchismFormulation::update()
     // TMP2m - temperature at 2m
     // UU10m, VV10m - wind velocity components at 10m
 
+    //auto rain_points = MeshPointsSelector{"RAINRATE", current_time_, time_step_length_, input_variable_units_["RAINRATE"], all_points};
+
     // ETA2_bnd - water surface elevation at the boundaries
     // Q_bnd - flows at boundaries
 
 
     bmi_->Update();
 }
+
+boost::span<const std::string> SchismFormulation::get_available_variable_names() const
+{
+    throw std::runtime_error(__func__);
+    return {};
+}
+
+long SchismFormulation::get_data_start_time() const
+{
+    throw std::runtime_error(__func__);
+    return 0;
+}
+
+long SchismFormulation::get_data_stop_time() const
+{
+    throw std::runtime_error(__func__);
+    return 0;
+}
+
+long SchismFormulation::record_duration() const
+{
+    throw std::runtime_error(__func__);
+    return 0;
+}
+
+size_t SchismFormulation::get_ts_index_for_time(const time_t &epoch_time) const
+{
+    throw std::runtime_error(__func__);
+    return 0;
+}
+
+SchismFormulation::data_type SchismFormulation::get_value(const selection_type& selector, data_access::ReSampleMethod m)
+{
+    throw std::runtime_error(__func__);
+    return 0.0;
+}
+
+void SchismFormulation::get_values(const selection_type& selector, boost::span<double> data)
+{
+    throw std::runtime_error(__func__);
+}
+
+size_t SchismFormulation::mesh_size(std::string const& variable_name)
+{
+    throw std::runtime_error(__func__);
+    return 0;
+}
+
 
 #endif // NGEN_WITH_BMI_FORTRAN && NGEN_WITH_MPI
