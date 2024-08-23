@@ -1,5 +1,6 @@
 #include <HY_Features.hpp>
 #include <HY_PointHydroNexus.hpp>
+#include "utilities/logging_utils.h"
 
 using namespace hy_features;
 
@@ -63,8 +64,7 @@ HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_M
         }
         else
         {
-          std::cerr<<"HY_Features::HY_Features unknown feature identifier type "<<feat_type<<" for feature id."<<feat_id
-                   <<" Skipping feature"<<std::endl;
+          logging::warning(("WARN: HY_Features::HY_Features unknown feature identifier type "+feat_type+" for feature id."+feat_id+" Skipping feature\n").c_str());
         }
       }
 

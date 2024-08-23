@@ -1,4 +1,5 @@
 #include "SurfaceLayer.hpp"
+#include "utilities/logging_utils.h"
 
 /***
  * @brief Run one simulation timestep for each model in this layer, then gather catchment output
@@ -34,7 +35,7 @@ void ngen::SurfaceLayer::update_models()
             cat_id = "terminal";
         }
 
-        //std::cerr << "Requesting water from nexus, id = " << id << " at time = " <<current_time_index << ",  percent = 100, destination = " << cat_id << std::endl;
+        //logging::warning(("Requesting water from nexus, id = " + id + " at time = " + std::to_string(current_time_index) + ",  percent = 100, destination = " + cat_id + "\n").c_str());
         double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, current_time_index, 100.0);
         
         if(nexus_outfiles[id].is_open()) {
@@ -44,7 +45,8 @@ void ngen::SurfaceLayer::update_models()
         #if NGEN_WITH_MPI
         }
         #endif
-        //std::cout<<"\tNexus "<<id<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
+        //contribution_at_t out of scope unless for serial build
+        //logging::info(("\tNexus "+id+" has "+std::to_string(contribution_at_t)+" m^3/s"+"\n").c_str());
 
         //Note: Use below if developing in-memory transfer of nexus flows to routing
         //If using below, then another single time vector would be needed to hold the timestamp

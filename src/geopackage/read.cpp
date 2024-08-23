@@ -1,4 +1,5 @@
 #include "geopackage.hpp"
+#include "logging_utils.h"
 
 #include <numeric>
 #include <regex>
@@ -57,7 +58,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
         catch (const std::exception& e){
             #ifndef NGEN_QUIET
             // output debug info on what is read exactly
-            std::cout << "WARN: Using legacy ID column \"id\" in layer " << layer << " is DEPRECATED and may stop working at any time." << std::endl;
+            logging::warning(("WARN: Using legacy ID column \"id\" in layer " + layer + " is DEPRECATED and may stop working at any time.\n").c_str()) ;
             #endif
         }
     }
@@ -85,15 +86,15 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
 
     #ifndef NGEN_QUIET
     // output debug info on what is read exactly
-    std::cout << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"<< id_column << "`";
+    logging.debug(("Reading " << std::to_string(layer_feature_count) + " features from layer " + layer + " using ID column `" + id_column + "`").c_str());
     if (!ids.empty()) {
-        std::cout << " (id subset:";
+        logging::formatting((std::string(" (id subset:")).c_str());
         for (auto& id : ids) {
-            std::cout << " " << id;
+            logging::formatting((" " + id).c_str());
         }
-        std::cout << ")";
+        logging::formatting((std::string(")")).c_str());
     }
-    std::cout << std::endl;
+    logging::formatting((std::string("\n")).c_str());
     #endif
 
     // Get layer feature metadata (geometry column name + type)

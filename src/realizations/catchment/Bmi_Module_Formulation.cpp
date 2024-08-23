@@ -203,7 +203,7 @@ namespace realization {
                 }
                 catch (const std::runtime_error& e){
                     #ifndef UDUNITS_QUIET
-                    std::cerr<<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
+                    logging::warning(("WARN: Unit conversion unsuccessful - Returning unconverted value! (\""+e.what()+"\")"+"\n").c_str());
                     #endif
                     return value;
                 }
@@ -661,7 +661,7 @@ namespace realization {
                     if(values.size() == 1){
                         //FIXME this isn't generic broadcasting, but works for scalar implementations
                         #ifndef NGEN_QUIET
-                        std::cerr << "WARN: broadcasting variable '" << var_name << "' from scalar to expected array\n";
+                        logging::warning(("WARN: broadcasting variable '"+var_name+"' from scalar to expected array\n").c_str());
                         #endif
                         values.resize(numItems, values[0]);
                     } else if (values.size() != numItems) {

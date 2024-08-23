@@ -1,6 +1,6 @@
 #include "HY_PointHydroNexusRemote.hpp"
 #include "Constants.h"
-
+#include "logging_utils.h"
 
 #if NGEN_WITH_MPI
 
@@ -101,7 +101,7 @@ HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
 
     while ( (stored_receives.size() > 0 || stored_sends.size() > 0) && !mpi_finalized )
     {
-        //std::cerr << "Neuxs with rank " << id << " has pending communications\n";
+        //logging::error(("Neuxs with rank " + id + " has pending communications\n").c_str());
 
         process_communications();
 
@@ -151,10 +151,10 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
 
        		MPI_Handle_Error(status); 
        		
-                //std::cerr << "Creating receive with target_rank=" << rank << " on tag=" << tag << "\n";
+                //logging::info(("Creating receive with target_rank=" + std::to_string(rank) + " on tag=" + std::to_string(tag) + "\n").c_str());
     	}
     	
-        //std::cerr << "Waiting on receives\n";
+        //logging::info((std::string("Waiting on receives\n")).c_str());
         while ( stored_receives.size() > 0 )
     	{
     		process_communications();
@@ -214,8 +214,7 @@ void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchme
 		        MPI_COMM_WORLD,
 		        &stored_sends.back().mpi_request);
 		        
-		    //std::cerr << "Creating send with target_rank=" << *downstream_ranks.begin() << " on tag=" << tag << "\n";	
-		        
+                    //logging::info(("Creating send with target_rank=" + std::to_string(*downstream_ranks.begin()) + " on tag=" + std::to_string(tag) + "\n").c_str());
 		    
 		    while ( stored_sends.size() > 0 )
 		    {

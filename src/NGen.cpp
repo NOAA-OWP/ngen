@@ -16,6 +16,7 @@
 
 #include "NGenConfig.h"
 
+#include "utilities/logging_utils.h"
 #include <FileChecker.h>
 #include <boost/algorithm/string.hpp>
 #include <boost/range/algorithm/sort.hpp>
@@ -348,10 +349,10 @@ int main(int argc, char *argv[]) {
         std::vector<PartitionData> &partitions = partition_parser.partition_ranks;
         local_data = std::move(partitions[mpi_rank]);
         if (!nexus_subset_ids.empty()) {
-            std::cerr << "Warning: CLI provided nexus subset will be ignored when using partition config";
+            logging::critical((std::string("Warning: CLI provided nexus subset will be ignored when using partition config \n")).c_str());
         }
         if (!catchment_subset_ids.empty()) {
-            std::cerr << "Warning: CLI provided catchment subset will be ignored when using partition config";
+            logging::critical((std::string("Warning: CLI provided catchment subset will be ignored when using partition config \n")).c_str());
         }
         nexus_subset_ids = std::vector<std::string>(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
         catchment_subset_ids = std::vector<std::string>(local_data.catchment_ids.begin(), local_data.catchment_ids.end());

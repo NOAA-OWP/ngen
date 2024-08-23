@@ -13,6 +13,7 @@
 #include <network.hpp>
 #include <Formulation_Manager.hpp>
 #include <Partition_Parser.hpp>
+#include "logging_utils.h"
 
 namespace hy_features {
 
@@ -68,16 +69,16 @@ namespace hy_features {
             for(const auto& id : catchments()) {
                 auto downstream = network.get_destination_ids(id);
                 if(downstream.size() > 1) {
-                    std::cerr << "Catchment " << id << " has more than one downstream connection." << std::endl;
-                    std::cerr << "Downstreams are: ";
+                    logging::error((std::string("Catchment ") + id + " has more than one downstream connection.\n").c_str());
+                    logging::error((std::string("Downstreams are: ")).c_str());
                     for(const auto& id : downstream){
-                        std::cerr <<id<<" ";
+                        logging::formatting((id+std::string(" ")).c_str());
                     }
-                    std::cerr << std::endl;
+                    logging::formatting((std::string("\n")).c_str());
                     assert( false );
                 }
                 else if (downstream.size() == 0) {
-                    std::cerr << "Catchment " << id << " has 0 downstream connections, must have 1." << std::endl;
+                    logging::error((std::string("Catchment ") + id + " has 0 downstream connections, must have 1.\n").c_str());
                     assert( false );
                 }
             }

@@ -4,6 +4,7 @@
 #include "JSONGeometry.hpp"
 #include "JSONProperty.hpp"
 #include "FeatureVisitor.hpp"
+#include "logging_utils.h"
 
 #include <memory>
 #include <ostream>
@@ -530,7 +531,7 @@ namespace geojson {
                 catch (boost::bad_get &exception) {
                     std::string template_name = boost::typeindex::type_id<T>().pretty_name();
                     std::string expected_name = get_geometry_type(this->geom);
-                    std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                    logging::error((std::string("Asked for ") + template_name + ", but only " + expected_name + " is valid\n").c_str());
                     throw;
                 }
             }
@@ -547,7 +548,7 @@ namespace geojson {
                 catch (boost::bad_get &exception) {
                     std::string template_name = boost::typeindex::type_id<T>().pretty_name();
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
-                    std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                    logging::error((std::string("Asked for ") + template_name + ", but only " + expected_name + " is valid\n").c_str());
                     throw;
                 }
             }

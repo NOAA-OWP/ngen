@@ -9,6 +9,7 @@
 #include <network.hpp>
 #include <Formulation_Manager.hpp>
 #include <HY_Features_Ids.hpp>
+#include "utilities/logging_utils.h"
 
 namespace hy_features {
 
@@ -173,21 +174,21 @@ namespace hy_features {
               auto downstream = network.get_destination_ids(id);
               if(downstream.size() > 1)
               {
-                std::cerr << "Catchment " << id << " has more than one downstream connection." << std::endl;
-                std::cerr << "Downstreams are: ";
+                logging::error(("Catchment " + id + " has more than one downstream connection.\n").c_str());
+                logging::error((std::string("Downstreams are: ")).c_str());
                 for(const auto& id : downstream){
-                  std::cerr <<id<<" ";
+                  logging::formatting((id+" ").c_str());
                 }
-                std::cerr << std::endl;
+                logging::formatting((std::string("\n")).c_str());
                 assert( false );
               }
               else if (downstream.size() == 0)
               {
-                std::cerr << "Catchment " << id << " has 0 downstream connections, must have 1." << std::endl;
+                logging::error(("Catchment " + id + " has 0 downstream connections, must have 1.\n").c_str());
                 assert( false );
               }
           }
-          std::cout<<"Catchment topology is dendritic."<<std::endl;
+          logging::critical((std::string("Catchment topology is dendritic.\n")).c_str());
         }
 
         /**

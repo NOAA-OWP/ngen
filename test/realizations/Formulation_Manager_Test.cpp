@@ -165,7 +165,7 @@ class Formulation_Manager_Test : public ::testing::Test {
           }
           std::string right_path = utils::FileChecker::find_first_readable(v);
           if(right_path != forcing_paths[i]){
-            std::cerr<<"Replacing "<<forcing_paths[i]<<" with "<<right_path<<std::endl;
+            logging::critical((std::string("Replacing ") + forcing_paths[i] + " with " + right_path + "\n").c_str());
             boost::replace_all(json, forcing_paths[i] , right_path);
           }
         }
