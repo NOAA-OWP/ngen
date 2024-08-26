@@ -64,14 +64,7 @@ void SchismFormulation::initialize()
 
         input_variable_units_[name] = bmi_->GetVarUnits(name);
         input_variable_type_[name] = bmi_->GetVarType(name);
-
-        auto nbytes = bmi_->GetVarNbytes(name);
-        auto itemsize = bmi_->GetVarItemsize(name);
-        if (nbytes % itemsize != 0) {
-            throw std::runtime_error("For SCHISM input variable '" + name + "', itemsize " + std::to_string(itemsize) +
-                                     " does not evenly divide nbytes " + std::to_string(nbytes));
-        }
-        input_variable_count_[name] = nbytes / itemsize;
+        input_variable_count_[name] = mesh_size(name);
     }
 }
 
@@ -144,8 +137,13 @@ void SchismFormulation::get_values(const selection_type& selector, boost::span<d
 
 size_t SchismFormulation::mesh_size(std::string const& variable_name)
 {
-    throw std::runtime_error(__func__);
-    return 0;
+    auto nbytes = bmi_->GetVarNbytes(variable_name);
+    auto itemsize = bmi_->GetVarItemsize(variable_name);
+    if (nbytes % itemsize != 0) {
+        throw std::runtime_error("For SCHISM input variable '" + variable_name + "', itemsize " + std::to_string(itemsize) +
+                                 " does not evenly divide nbytes " + std::to_string(nbytes));
+    }
+    return nbytes / itemsize;
 }
 
 
