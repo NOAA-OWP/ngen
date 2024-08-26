@@ -55,7 +55,7 @@ private:
 
     static std::vector<std::string> exported_output_variable_names_;
 
-    time_t current_time_;
+    std::chrono::time_point<std::chrono::steady_clock> current_time_;
     std::chrono::seconds time_step_length_;
 
     // TODO: Some of these maybe should be members of
