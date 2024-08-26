@@ -9,13 +9,23 @@ const static auto s_schism_registration_function = "register_bmi";
 
 std::set<std::string> SchismFormulation::expected_input_variable_names_ =
     {
+        /* Meteorological Forcings */
+        // RAINRATE - precipitation
         "RAINRATE",
+        // SFCPRS - surface atmospheric pressure
         "SFCPRS",
+        // SPFH2m - specific humidity at 2m
         "SPFH2m",
+        // TMP2m - temperature at 2m
         "TMP2m",
+        // UU10m, VV10m - wind velocity components at 10m
         "UU10m",
         "VV10m",
+
+        /* Input Boundary Conditions */
+        // ETA2_bnd - water surface elevation at the boundaries
         "ETA2_bnd",
+        // Q_bnd - flows at boundaries
         "Q_bnd"
     };
 
@@ -79,7 +89,6 @@ void SchismFormulation::finalize()
 
 void SchismFormulation::update()
 {
-    // Meteorological forcings
     // RAINRATE - precipitation
     // SFCPRS - surface atmospheric pressure
     // SPFH2m - specific humidity at 2m
