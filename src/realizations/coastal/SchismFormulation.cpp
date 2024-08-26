@@ -132,7 +132,7 @@ SchismFormulation::data_type SchismFormulation::get_value(const selection_type& 
 
 void SchismFormulation::get_values(const selection_type& selector, boost::span<double> data)
 {
-    throw std::runtime_error(__func__);
+    bmi_->GetValue(selector.variable_name, data.data());
 }
 
 size_t SchismFormulation::mesh_size(std::string const& variable_name)
