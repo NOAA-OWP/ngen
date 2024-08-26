@@ -7,7 +7,7 @@
 #include <realizations/coastal/CoastalFormulation.hpp>
 #include <bmi/Bmi_Fortran_Adapter.hpp>
 #include <memory>
-#include <set>
+#include <map>
 #include <vector>
 
 class SchismFormulation final : public CoastalFormulation
@@ -48,7 +48,8 @@ protected:
 private:
     std::unique_ptr<models::bmi::Bmi_Fortran_Adapter> bmi_;
 
-    static std::set<std::string> expected_input_variable_names_;
+    enum ForcingSelector { METEO, OFFSHORE, INFLOW };
+    static std::map<std::string, ForcingSelector> expected_input_variables_;
     std::map<std::string, std::string> input_variable_units_;
     std::map<std::string, std::string> input_variable_type_;
     std::map<std::string, size_t> input_variable_count_;
@@ -64,9 +65,13 @@ private:
     // TODO: We really want something that we can ask for
     // area-averaged RAINRATE over elements, but we're going to make
     // do with point values at the element centroids
-    std::shared_ptr<data_access::DataProvider<double, MeshPointsSelector>> meteorological_forcings_provider_;
-    std::shared_ptr<data_access::DataProvider<double, MeshPointsSelector>> offshore_boundary_provider_;
-    std::shared_ptr<data_access::DataProvider<double, MeshPointsSelector>> inflows_boundary_provider_;
+
+    using ProviderType = data_access::DataProvider<double, MeshPointsSelector>;
+    std::shared_ptr<ProviderType> meteorological_forcings_provider_;
+    std::shared_ptr<ProviderType> offshore_boundary_provider_;
+    std::shared_ptr<ProviderType> inflows_boundary_provider_;
+
+    void set_inputs();
 };
 
 #endif // NGEN_WITH_BMI_FORTRAN && NGEN_WITH_MPI

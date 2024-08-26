@@ -7,26 +7,28 @@
 
 const static auto s_schism_registration_function = "register_bmi";
 
-std::set<std::string> SchismFormulation::expected_input_variable_names_ =
+
+
+std::map<std::string, SchismFormulation::ForcingSelector> SchismFormulation::expected_input_variables_ =
     {
         /* Meteorological Forcings */
         // RAINRATE - precipitation
-        "RAINRATE",
+        {"RAINRATE", SchismFormulation::METEO},
         // SFCPRS - surface atmospheric pressure
-        "SFCPRS",
+        {"SFCPRS", SchismFormulation::METEO},
         // SPFH2m - specific humidity at 2m
-        "SPFH2m",
+        {"SPFH2m", SchismFormulation::METEO},
         // TMP2m - temperature at 2m
-        "TMP2m",
+        {"TMP2m", SchismFormulation::METEO},
         // UU10m, VV10m - wind velocity components at 10m
-        "UU10m",
-        "VV10m",
+        {"UU10m", SchismFormulation::METEO},
+        {"VV10m", SchismFormulation::METEO},
 
         /* Input Boundary Conditions */
         // ETA2_bnd - water surface elevation at the boundaries
-        "ETA2_bnd",
+        {"ETA2_bnd", SchismFormulation::OFFSHORE},
         // Q_bnd - flows at boundaries
-        "Q_bnd"
+        {"Q_bnd", SchismFormulation::INFLOW},
     };
 
 std::vector<std::string> SchismFormulation::exported_output_variable_names_ =
@@ -68,7 +70,7 @@ void SchismFormulation::initialize()
     auto const& input_vars = bmi_->GetInputVarNames();
 
     for (auto const& name : input_vars) {
-        if (expected_input_variable_names_.find(name) == expected_input_variable_names_.end()) {
+        if (expected_input_variables_.find(name) == expected_input_variables_.end()) {
             throw std::runtime_error("SCHISM instance requests unexpected input variable '" + name + "'");
         }
 
@@ -76,31 +78,43 @@ void SchismFormulation::initialize()
         input_variable_type_[name] = bmi_->GetVarType(name);
         input_variable_count_[name] = mesh_size(name);
     }
+
+    //set_inputs();
 }
 
 void SchismFormulation::finalize()
 {
+#if 0
     meteorological_forcings_provider_->finalize();
     offshore_boundary_provider_->finalize();
     inflows_boundary_provider_->finalize();
-
+#endif
     bmi_->Finalize();
+}
+
+void SchismFormulation::set_inputs()
+{
+    for (auto var : expected_input_variables_) {
+        auto& name = var.first;
+        auto selector = var.second;
+        auto points = MeshPointsSelector{name, current_time_, time_step_length_, input_variable_units_[name], all_points};
+
+        ProviderType* provider = [this, selector](){
+            switch(selector) {
+            case METEO: return meteorological_forcings_provider_.get();
+            case OFFSHORE: return offshore_boundary_provider_.get();
+            case INFLOW: return inflows_boundary_provider_.get();
+            default: throw std::runtime_error("Unknown SCHISM provider selector type");
+            }
+        }();
+        std::vector<double> values = provider->get_values(points);
+        bmi_->SetValue(name, values.data());
+    }
 }
 
 void SchismFormulation::update()
 {
-    // RAINRATE - precipitation
-    // SFCPRS - surface atmospheric pressure
-    // SPFH2m - specific humidity at 2m
-    // TMP2m - temperature at 2m
-    // UU10m, VV10m - wind velocity components at 10m
-
-    //auto rain_points = MeshPointsSelector{"RAINRATE", current_time_, time_step_length_, input_variable_units_["RAINRATE"], all_points};
-
-    // ETA2_bnd - water surface elevation at the boundaries
-    // Q_bnd - flows at boundaries
-
-
+    set_inputs();
     bmi_->Update();
 }
 
