@@ -8,6 +8,7 @@
 #include <bmi/Bmi_Fortran_Adapter.hpp>
 #include <memory>
 #include <set>
+#include <vector>
 
 class SchismFormulation final : public CoastalFormulation
 {
@@ -51,6 +52,8 @@ private:
     std::map<std::string, std::string> input_variable_units_;
     std::map<std::string, std::string> input_variable_type_;
     std::map<std::string, size_t> input_variable_count_;
+
+    static std::vector<std::string> exported_output_variable_names_;
 
     time_t current_time_;
     std::chrono::seconds time_step_length_;

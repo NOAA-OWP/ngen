@@ -19,6 +19,14 @@ std::set<std::string> SchismFormulation::expected_input_variable_names_ =
         "Q_bnd"
     };
 
+std::vector<std::string> SchismFormulation::exported_output_variable_names_ =
+    {
+        "ETA2",
+        "VX",
+        "VY",
+        "BEDLEVEL"
+    };
+
 SchismFormulation::SchismFormulation(
                                      std::string const& id
                                      , std::string const& library_path
@@ -96,8 +104,7 @@ void SchismFormulation::update()
 
 boost::span<const std::string> SchismFormulation::get_available_variable_names() const
 {
-    throw std::runtime_error(__func__);
-    return {};
+    return exported_output_variable_names_;
 }
 
 long SchismFormulation::get_data_start_time() const
