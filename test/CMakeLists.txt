@@ -147,6 +147,7 @@ ngen_add_test(
         NGen::ngen_bmi
     REQUIRES
         NGEN_WITH_BMI_FORTRAN
+        NGEN_WITH_MPI
 )
 
 ########################## GeoJSON Unit Tests
