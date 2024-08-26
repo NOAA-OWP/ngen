@@ -140,7 +140,7 @@ size_t SchismFormulation::mesh_size(std::string const& variable_name)
     auto nbytes = bmi_->GetVarNbytes(variable_name);
     auto itemsize = bmi_->GetVarItemsize(variable_name);
     if (nbytes % itemsize != 0) {
-        throw std::runtime_error("For SCHISM input variable '" + variable_name + "', itemsize " + std::to_string(itemsize) +
+        throw std::runtime_error("For SCHISM variable '" + variable_name + "', itemsize " + std::to_string(itemsize) +
                                  " does not evenly divide nbytes " + std::to_string(nbytes));
     }
     return nbytes / itemsize;
