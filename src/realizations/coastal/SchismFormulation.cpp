@@ -3,11 +3,9 @@
 #if NGEN_WITH_BMI_FORTRAN && NGEN_WITH_MPI
 
 #include <realizations/coastal/SchismFormulation.hpp>
-#include <mpi.h>
+#include <utilities/parallel_utils.h>
 
 const static auto s_schism_registration_function = "register_bmi";
-
-
 
 std::map<std::string, SchismFormulation::ForcingSelector> SchismFormulation::expected_input_variables_ =
     {
@@ -79,7 +77,7 @@ void SchismFormulation::initialize()
         input_variable_count_[name] = mesh_size(name);
     }
 
-    //set_inputs();
+    set_inputs();
 }
 
 void SchismFormulation::finalize()
