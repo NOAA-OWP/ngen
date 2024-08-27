@@ -135,20 +135,23 @@ endfunction()
 ########################## Individual tests ##########################
 
 ########################## Coastal Formulation Tests
-ngen_add_test(
-    test_coastal
-    OBJECTS
-        coastal/SchismFormulation_Test.cpp
-    LIBRARIES
-        NGen::core
-        NGen::realizations_catchment
-        NGen::core_mediator
-        NGen::forcing
-        NGen::ngen_bmi
-    REQUIRES
-        NGEN_WITH_BMI_FORTRAN
-        NGEN_WITH_MPI
-)
+# ngen_add_test(
+#     test_coastal
+#     OBJECTS
+#         coastal/SchismFormulation_Test.cpp
+#     LIBRARIES
+#         NGen::core
+#         NGen::realizations_catchment
+#         NGen::core_mediator
+#         NGen::forcing
+#         NGen::ngen_bmi
+#     REQUIRES
+#         NGEN_WITH_BMI_FORTRAN
+#         NGEN_WITH_MPI
+# )
+
+add_executable(test_coastal coastal/SchismFormulation_Test.cpp)
+target_link_libraries(test_coastal NGen::core NGen::realizations_catchment NGen::realizations_coastal NGen::core_mediator NGen::forcing NGen::ngen_bmi)
 
 ########################## GeoJSON Unit Tests
 ngen_add_test(
