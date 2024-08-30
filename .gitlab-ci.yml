@@ -38,6 +38,10 @@ build:
   script:
     - echo "Building ${CI_PROJECT_NAME} docker image.. "
     - docker build -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
+    - echo "Logging in to Gitlab Container Registry..."
+    - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - docker push $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+    - docker logout
 
 unit-test:
   stage: unit_test
