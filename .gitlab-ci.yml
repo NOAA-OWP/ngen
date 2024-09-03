@@ -92,5 +92,4 @@ deploy:
     - docker push $DOCKER_IMAGE_NAME:latest
     - docker logout
   rules:
-    - if: '$CI_MERGE_REQUEST_APPROVED && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development"'
-      when: on_success
+    - if: '$CI_COMMIT_BRANCH == "development"'
