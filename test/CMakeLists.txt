@@ -175,15 +175,6 @@ ngen_add_test(
 )
 
 ngen_add_test(
-    test_gridselector
-    OBJECTS
-        forcing/GridDataSelector_Test.cpp
-    LIBRARIES
-        NGen::forcing
-        NGen::geojson
-)
-
-ngen_add_test(
     test_forcings_engine
     OBJECTS
         forcing/ForcingsEngineDataProvider_Test.cpp
@@ -486,7 +477,6 @@ ngen_add_test(
         forcing/CsvPerFeatureForcingProvider_Test.cpp
         forcing/OptionalWrappedDataProvider_Test.cpp
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
-        forcing/GridDataSelector_Test.cpp
         core/mediator/UnitsHelper_Tests.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/NetworkTests.cpp
