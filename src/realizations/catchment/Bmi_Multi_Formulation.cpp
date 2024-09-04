@@ -147,6 +147,13 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
 
     // check if a requested output variable name is valid, if not, stop the execution
     check_output_var_names();
+
+    // initialize available_forcings from nested modules
+    for (const nested_module_ptr &module: modules) {
+        for (const std::string &out_var_name: module->get_bmi_output_variables()) {
+            available_forcings.push_back(module->get_config_mapped_variable_name(out_var_name));
+        }
+    }
 }
 
 /**
@@ -186,18 +193,11 @@ const bool &Bmi_Multi_Formulation::get_allow_model_exceed_end_time() const {
  * @return The collection of forcing output property names this instance can provide.
  * @see ForcingProvider
  */
-boost::span<const std::string> Bmi_Multi_Formulation::get_available_variable_names() {
-    if (is_model_initialized() && available_forcings.empty()) {
-        for (const nested_module_ptr &module: modules) {
-            for (const std::string &out_var_name: module->get_bmi_output_variables()) {
-                available_forcings.push_back(module->get_config_mapped_variable_name(out_var_name));
-            }
-        }
-    }
+boost::span<const std::string> Bmi_Multi_Formulation::get_available_variable_names() const {
     return available_forcings;
 }
 
-const time_t &Bmi_Multi_Formulation::get_bmi_model_start_time_forcing_offset_s() {
+const time_t &Bmi_Multi_Formulation::get_bmi_model_start_time_forcing_offset_s() const {
     return modules[0]->get_bmi_model_start_time_forcing_offset_s();
 }
 
@@ -219,12 +219,12 @@ const time_t &Bmi_Multi_Formulation::get_bmi_model_start_time_forcing_offset_s()
  * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
  * @see get_config_mapped_variable_name(string, shared_ptr, shared_ptr)
  */
-const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const std::string &model_var_name) {
+const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const std::string &model_var_name) const {
     return get_config_mapped_variable_name(model_var_name, true, true);
 }
 
 const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const std::string &model_var_name, bool check_first,
-                                                                     bool check_last)
+                                                                     bool check_last) const
 {
     if (check_first) {
         // If an input var in first module, see if we get back a mapping (i.e., not the same thing), and return if so
@@ -269,7 +269,7 @@ const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const 
  */
 const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const std::string &output_var_name,
                                                                      const std::shared_ptr<Bmi_Formulation>& out_module,
-                                                                     const std::shared_ptr<Bmi_Formulation>& in_module)
+                                                                     const std::shared_ptr<Bmi_Formulation>& in_module) const
 {
     if (!out_module->is_bmi_output_variable(output_var_name))
         return output_var_name;
@@ -389,20 +389,20 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
     return modules[index]->get_var_value_as_double(0, get_bmi_main_output_var());
 }
 
-bool Bmi_Multi_Formulation::is_bmi_input_variable(const std::string &var_name) {
+bool Bmi_Multi_Formulation::is_bmi_input_variable(const std::string &var_name) const {
     return modules[0]->is_bmi_input_variable(var_name);
 }
 
-bool Bmi_Multi_Formulation::is_bmi_model_time_step_fixed() {
+bool Bmi_Multi_Formulation::is_bmi_model_time_step_fixed() const {
     return std::all_of(modules.cbegin(), modules.cend(),
                        [](const std::shared_ptr<Bmi_Formulation>& m) { return m->is_bmi_model_time_step_fixed(); });
 }
 
-bool Bmi_Multi_Formulation::is_bmi_output_variable(const std::string &var_name) {
+bool Bmi_Multi_Formulation::is_bmi_output_variable(const std::string &var_name) const {
     return modules.back()->is_bmi_output_variable(var_name);
 }
 
-bool Bmi_Multi_Formulation::is_model_initialized() {
+bool Bmi_Multi_Formulation::is_model_initialized() const {
     return std::all_of(modules.cbegin(), modules.cend(),
                        [](const std::shared_ptr<Bmi_Formulation>& m) { return m->is_model_initialized(); });
 }

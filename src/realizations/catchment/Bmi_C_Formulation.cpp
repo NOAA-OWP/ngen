@@ -5,7 +5,7 @@ using namespace models::bmi;
 Bmi_C_Formulation::Bmi_C_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
     : Bmi_Module_Formulation(id, forcing_provider, output_stream) { }
 
-std::string Bmi_C_Formulation::get_formulation_type() {
+std::string Bmi_C_Formulation::get_formulation_type() const {
     return "bmi_c";
 }
 
@@ -75,16 +75,16 @@ double Bmi_C_Formulation::get_var_value_as_double(const int& index, const std::s
                              " as double: no logic for converting variable type " + type);
 }
 
-bool Bmi_C_Formulation::is_bmi_input_variable(const std::string &var_name) {
+bool Bmi_C_Formulation::is_bmi_input_variable(const std::string &var_name) const {
     const std::vector<std::string> names = get_bmi_model()->GetInputVarNames();
     return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
 }
 
-bool Bmi_C_Formulation::is_bmi_output_variable(const std::string &var_name) {
+bool Bmi_C_Formulation::is_bmi_output_variable(const std::string &var_name) const {
     const std::vector<std::string> names = get_bmi_model()->GetOutputVarNames();
     return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
 }
 
-bool Bmi_C_Formulation::is_model_initialized() {
+bool Bmi_C_Formulation::is_model_initialized() const {
     return std::dynamic_pointer_cast<models::bmi::Bmi_C_Adapter>(get_bmi_model())->is_model_initialized();
 }

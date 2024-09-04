@@ -1,10 +1,15 @@
 #ifndef NGEN_REALIZATION_CONFIG_FORMULATION_H
 #define NGEN_REALIZATION_CONFIG_FORMULATION_H
 
+#include <NGenConfig.h>
 #include <boost/property_tree/ptree.hpp>
 #include <string>
 
 #include "JSONProperty.hpp"
+
+#if NGEN_WITH_MPI
+#include <mpi.h>
+#endif
 
 namespace realization{
   namespace config{
@@ -53,9 +58,16 @@ namespace realization{
                 //Create the nested formulations in order of definition
                 nested.push_back(Formulation(module.second));
             }
+        // If running MPI job, output with only one processor
+        #if NGEN_WITH_MPI
+        int mpi_rank;
+        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+        if (mpi_rank == 0)
+        #endif
+        {
             geojson::JSONProperty::print_property(parameters.at("modules"));
         }
-        
+      }
     }
 
     /**

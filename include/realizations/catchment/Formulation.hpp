@@ -22,7 +22,7 @@ namespace realization {
             
             virtual ~Formulation(){};
 
-            virtual std::string get_formulation_type() = 0;
+            virtual std::string get_formulation_type() const = 0;
 
             // TODO: to truly make this properly generalized (beyond catchments, and to some degree even in that
             //  context) a more complex type for the entirety of the response/output is needed, perhaps with independent
@@ -46,7 +46,7 @@ namespace realization {
 
         protected:
 
-            virtual const std::vector<std::string>& get_required_parameters() = 0;
+            virtual const std::vector<std::string>& get_required_parameters() const = 0;
 
             geojson::PropertyMap interpret_parameters(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) {
                 geojson::PropertyMap options;

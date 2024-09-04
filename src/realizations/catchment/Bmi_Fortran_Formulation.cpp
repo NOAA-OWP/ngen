@@ -41,7 +41,7 @@ std::shared_ptr<Bmi_Adapter> Bmi_Fortran_Formulation::construct_model(const geoj
             reg_func);
 }
 
-std::string Bmi_Fortran_Formulation::get_formulation_type() {
+std::string Bmi_Fortran_Formulation::get_formulation_type() const {
     return "bmi_fortran";
 }
 
