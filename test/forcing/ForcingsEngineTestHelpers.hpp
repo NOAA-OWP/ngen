@@ -23,10 +23,6 @@ struct ForcingsEngineDataProviderTest
     }
 
     static void SetUpTestSuite() {
-        #if NGEN_WITH_MPI
-        MPI_Init(nullptr, nullptr)
-        #endif
-
         ForcingsEngineDataProviderTest::gil_ = utils::ngenPy::InterpreterUtil::getInstance();
 
         data_access::detail::assert_forcings_engine_requirements();
@@ -34,17 +30,30 @@ struct ForcingsEngineDataProviderTest
 
     static void TearDownTestSuite() {
         data_access::detail::ForcingsEngineStorage::instances.clear();
-
-        ForcingsEngineDataProviderTest::gil_.reset();
-
-        #if NGEN_WITH_MPI
-        PMPI_Finalize();
-        #endif
     }
+  
     static std::time_t time_start;
     static std::time_t time_end;
 
   private:
-    struct { int initialized = 0, finalized = 0, size = 1, rank = 0; } mpi_{};
+    struct mpi_info {
+      int initialized = 0, finalized = 0, size = 1, rank = 0;
+
+      mpi_info()
+      {
+          #if NGEN_WITH_MPI
+          MPI_Init(nullptr, nullptr);
+          #endif
+      }
+
+      ~mpi_info()
+      {
+          #if NGEN_WITH_MPI
+          PMPI_Finalize();
+          #endif
+      }
+    };
+  
+    static mpi_info mpi_;
     static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_;
 };

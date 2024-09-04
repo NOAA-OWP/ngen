@@ -41,6 +41,7 @@ constexpr auto cat_11410_mask = geojson::box_t{
 
 void TestFixture::SetUpTestSuite()
 {
+    std::cout << "Initializing (Gridded) ForcingsEngineDataProviderTest" << std::endl;
     ForcingsEngineDataProviderTest::SetUpTestSuite();
 
     TestFixture::time_start = data_access::detail::parse_time("2023-01-17 01:00:00");

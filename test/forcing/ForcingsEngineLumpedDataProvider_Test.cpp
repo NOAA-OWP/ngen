@@ -33,6 +33,7 @@ constexpr const char* config_file = NGEN_FORCINGS_LUMPED_CONFIG_PATH;
 
 void TestFixture::SetUpTestSuite()
 {
+    std::cout << "Initializing (Lumped) ForcingsEngineDataProviderTest" << std::endl;
     ForcingsEngineDataProviderTest::SetUpTestSuite();
 
     TestFixture::time_start = data_access::detail::parse_time("2023-01-17 01:00:00");

@@ -7,22 +7,28 @@ using BaseProvider = Provider::base_type;
 
 GridSpecification construct_grid_spec(bmi::Bmi* ptr, int grid)
 {
+    const auto grid_type =  ptr->GetGridType(grid);
+    assert(grid_type == "uniform_rectilinear");
+
+    std::vector<double> coords;
     std::array<int, 2> shape = {-1, -1};
     ptr->GetGridShape(grid, shape.data());
-    assert(shape[0] == shape[1]); // since the grid must be uniform rectilinear
+    assert(shape[0] > 0);
+    assert(shape[1] > 0);
 
-    // Allocate a coordinate vector and reuse for X and Y
-    std::vector<double> coordinate(shape[0]);
+    std::cout << "Grid Shape: " << shape[0] << ", " << shape[1] << '\n';
 
     // Get X bounds
-    ptr->GetGridX(grid, coordinate.data());
-    auto xminmax = std::minmax_element(coordinate.begin(), coordinate.end());
+    coords.resize(shape[1]);
+    ptr->GetGridX(grid, coords.data());
+    auto xminmax = std::minmax_element(coords.begin(), coords.end());
     double xmin  = *xminmax.first;
     double xmax  = *xminmax.second;
 
     // Get Y bounds
-    ptr->GetGridY(grid, coordinate.data());
-    auto yminmax = std::minmax_element(coordinate.begin(), coordinate.end());
+    coords.resize(shape[0]);
+    ptr->GetGridY(grid, coords.data());
+    auto yminmax = std::minmax_element(coords.begin(), coords.end());
     double ymin  = *yminmax.first;
     double ymax  = *yminmax.second;
 
@@ -70,6 +76,8 @@ Provider::ForcingsEngineGriddedDataProvider(
 {
     // FIXME: assert that var_grid_mask_ is (entirely) within var_grid_
     //        (possibly, convert to polygon and use contains predicate)
+    // NOTE: take only first variable name because all variables share the same grid
+    //       in the forcings engine.
     var_grid_id_   = bmi_->GetVarGrid(get_available_variable_names()[0]);
     var_grid_      = construct_grid_spec(bmi_.get(), var_grid_id_);
     var_grid_mask_ = construct_grid_mask(std::move(mask), var_grid_);
@@ -103,14 +111,17 @@ std::vector<Provider::data_type> Provider::get_values(
 
     std::vector<double> values;
     values.reserve(var_grid_mask_.size());
+    std::cout << "Starting time: " << start.time_since_epoch().count() << "\n";
     for (auto current = start; current < end; current += time_step_, bmi_->UpdateUntil((current - start).count())) {
+        std::cout << "Current: " << current.time_since_epoch().count() << "\n";
+        std::cout << "Updated to: " << (current - start).count() << "\n";
         // Get a span over the entire grid
         boost::span<const double> full = { static_cast<double*>(bmi_->GetValuePtr(variable)), var_grid_.rows * var_grid_.columns };
 
         // Iterate row by row over the grid, masking the grid columns in each row.
         // For each row, we add the grid values to the masked grid values.
         for (auto r = var_grid_mask_.rmin; r < var_grid_mask_.rmax; ++r) {
-
+            std::cout << "At row " << r << "\n";
             // Get the starting index of the current row within the full span
             // Equation: <starting column offset> + (<row offset> * <row size>)
             const std::size_t row_address = var_grid_mask_.cmin + (r * var_grid_.columns);
@@ -127,6 +138,8 @@ std::vector<Provider::data_type> Provider::get_values(
 
             // Add grid values to masked values
             std::transform(row.begin(), row.end(), masked.begin(), masked.begin(), std::plus<double>{});
+    
+            std::cout << std::endl;
         }
     }
 
