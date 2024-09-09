@@ -1,3 +1,4 @@
+#include <chrono>
 #include <forcing/ForcingsEngineGriddedDataProvider.hpp>
 
 namespace data_access {
@@ -102,26 +103,23 @@ std::vector<Provider::data_type> Provider::get_values(
     }
 
     const auto duration = std::chrono::seconds{selector.duration};
-
-    const auto start = clock_type::from_time_t(selector.init_time);
+    const auto start    = clock_type::from_time_t(selector.init_time);
     assert(start >= time_begin_);
 
-    const auto end = start + duration;
-    assert(end <= time_end_);
+    auto until = (start - time_begin_) + duration;
+    if (until > time_end_ - time_begin_) {
+        until = time_end_ - time_begin_;
+    }
 
     std::vector<double> values;
-    values.reserve(var_grid_mask_.size());
-    std::cout << "Starting time: " << start.time_since_epoch().count() << "\n";
-    for (auto current = start; current < end; current += time_step_, bmi_->UpdateUntil((current - start).count())) {
-        std::cout << "Current: " << current.time_since_epoch().count() << "\n";
-        std::cout << "Updated to: " << (current - start).count() << "\n";
+    values.resize(var_grid_mask_.size());
+    while (std::chrono::seconds{std::lround(bmi_->GetCurrentTime())} < until) {
         // Get a span over the entire grid
         boost::span<const double> full = { static_cast<double*>(bmi_->GetValuePtr(variable)), var_grid_.rows * var_grid_.columns };
 
         // Iterate row by row over the grid, masking the grid columns in each row.
         // For each row, we add the grid values to the masked grid values.
         for (auto r = var_grid_mask_.rmin; r < var_grid_mask_.rmax; ++r) {
-            std::cout << "At row " << r << "\n";
             // Get the starting index of the current row within the full span
             // Equation: <starting column offset> + (<row offset> * <row size>)
             const std::size_t row_address = var_grid_mask_.cmin + (r * var_grid_.columns);
@@ -132,15 +130,22 @@ std::vector<Provider::data_type> Provider::get_values(
 
             // Get a span over the current row index on the underlying grid
             boost::span<const double> row = full.subspan(row_address, var_grid_mask_.columns());
+
+            // Print Row/Column Values
+            // std::cout << "row " << r << ": ";
+            // for (auto c = 0; c < var_grid_mask_.columns(); ++c) {
+            //     std::cout << row[c] << ' ';
+            // }
+            // std::cout << '\n';
             
             // Get a mutable span over the current row index in the masked values
             boost::span<double> masked = { mask_address, var_grid_mask_.columns() };
 
             // Add grid values to masked values
             std::transform(row.begin(), row.end(), masked.begin(), masked.begin(), std::plus<double>{});
-    
-            std::cout << std::endl;
         }
+
+        bmi_->Update();
     }
 
     if (m == ReSampleMethod::MEAN) {

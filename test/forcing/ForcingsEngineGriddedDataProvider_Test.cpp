@@ -53,6 +53,11 @@ void TestFixture::SetUpTestSuite()
         /*time_end_seconds=*/TestFixture::time_end,
         /*mask=*/cat_11223_mask
     );
+
+    #if NGEN_WITH_MPI
+    auto comm = MPI_Comm_c2f(MPI_COMM_WORLD);
+    provider_->model()->model()->attr("set_value")("bmi_mpi_comm", py::array_t<MPI_Fint>(comm));
+    #endif
 }
 
 /**
@@ -100,9 +105,18 @@ TEST_F(ForcingsEngineGriddedDataProviderTest, VariableAccess)
 
     auto selector = GriddedDataSelector{"PSFC", time_start, 3600, "seconds"};
     auto result   = provider_->get_values(selector, data_access::ReSampleMethod::SUM);
-    EXPECT_EQ(result.size(), 48980);
-    // EXPECT_NEAR(result, 99580.52, 1e-2);
+    EXPECT_EQ(result.size(), provider_->mask().size());
+    
+    bool at_least_one = false;
+    for (auto v : result) {
+        if (v > 0) {
+            at_least_one = true;
+            break;
+        }
+    }
+    EXPECT_TRUE(at_least_one) << "All values of `result` are 0";
 
+    // EXPECT_NEAR(result, 99580.52, 1e-2);
     // selector = CatchmentAggrDataSelector{"cat-11223", "LWDOWN", time_start + 3600, 3600, "seconds"};
     // auto result2 = provider_->get_values(selector, data_access::ReSampleMethod::SUM);
     // ASSERT_GT(result2.size(), 0);
