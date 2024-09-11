@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <chrono>
 #include <stdexcept>
 #include <utility>
@@ -18,7 +19,7 @@ struct simulation_clock final
 {
     /* Clock named requirements */
 
-    using rep = long; // TODO: double vs std::int64_t
+    using rep = std::int64_t; // TODO: double vs std::int64_t
     using period = std::ratio<1>;
     using duration = std::chrono::duration<rep, period>;
     using time_point = std::chrono::time_point<simulation_clock, duration>;
@@ -75,7 +76,7 @@ struct simulation_clock final
     // simulation management functions //
 
     //! Unitialized epoch value, aka the epoch of typename simulation_clock::calendar_clock.
-    static constexpr auto uninitialized_epoch = calendar_time_point{};
+    static constexpr calendar_time_point uninitialized_epoch() noexcept;
 
     //! Get the simulation epoch.
     //! \see simulation_clock::calendar_time_point
@@ -124,9 +125,14 @@ struct simulation_clock final
 
 /* simulation_clock Implementation */
 
+inline constexpr simulation_clock::calendar_time_point simulation_clock::uninitialized_epoch() noexcept
+{
+    return {};
+}
+
 inline simulation_clock::calendar_time_point& simulation_clock::internal_epoch()
 {
-    static calendar_time_point epoch = simulation_clock::uninitialized_epoch;
+    static calendar_time_point epoch = simulation_clock::uninitialized_epoch();
     return epoch;
 }
 
@@ -143,6 +149,8 @@ inline simulation_clock::time_point simulation_clock::now() noexcept
 
 inline simulation_clock::time_point simulation_clock::from_calendar(const calendar_time_point& calendar_time)
 {
+    assert(simulation_clock::has_epoch());
+
     return simulation_time_point{
         std::chrono::duration_cast<simulation_duration>(simulation_clock::internal_epoch() - calendar_time)
     };
@@ -150,17 +158,23 @@ inline simulation_clock::time_point simulation_clock::from_calendar(const calend
 
 inline simulation_clock::calendar_time_point simulation_clock::to_calendar(const simulation_time_point& sim_time)
 {
+    assert(simulation_clock::has_epoch());
+
     simulation_duration sim_duration = sim_time.time_since_epoch();
     return simulation_clock::internal_epoch() + std::chrono::duration_cast<calendar_duration>(sim_duration);
 }
 
 inline simulation_clock::time_point simulation_clock::from_time_t(std::time_t t)
 {
+    assert(simulation_clock::has_epoch());
+
     return simulation_clock::from_calendar(calendar_clock::from_time_t(t));
 }
 
 inline std::time_t simulation_clock::to_time_t(const simulation_time_point& sim_time)
 {
+    assert(simulation_clock::has_epoch());
+
     return calendar_clock::to_time_t(simulation_clock::to_calendar(sim_time));
 }
 
@@ -180,7 +194,7 @@ inline void simulation_clock::set_epoch(calendar_time_point calendar_time)
 
 inline bool simulation_clock::has_epoch() noexcept
 {
-    return simulation_clock::internal_epoch() != simulation_clock::uninitialized_epoch;
+    return simulation_clock::internal_epoch() != simulation_clock::uninitialized_epoch();
 }
 
 inline void simulation_clock::tick(rep steps)
