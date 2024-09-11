@@ -75,7 +75,7 @@ struct simulation_clock final
 
     // simulation management functions //
 
-    //! Unitialized epoch value, aka the epoch of typename simulation_clock::calendar_clock.
+    //! Uninitialized epoch value, aka the epoch of typename simulation_clock::calendar_clock.
     static constexpr calendar_time_point uninitialized_epoch() noexcept;
 
     //! Get the simulation epoch.
