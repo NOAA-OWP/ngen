@@ -14,7 +14,7 @@
 | [pybind11](#pybind11) | submodule | `v2.6.0` | Can be [excluded](#overriding-pybind11-dependency). |
 | [dmod.subsetservice](#the-dmodsubsetservice-package) | external | `>= 0.3.0` | Only required to perform integrated [hydrofabric file subdividing](DISTRIBUTED_PROCESSING.md#subdivided-hydrofabric) for distributed processing . |
 | [t-route](#t-route) | submodule | see below | Module required to enable channel-routing.  Requires pybind11 to enable |
-| [NetCDF Libraries](#netcdf-libraries) | external | NetCDF-C \>= `4.7.4`, CXX \>= `4.3.1`, Fortran \>= `4.5.4` | Enables NetCDF I/O support |
+| [NetCDF Libraries](#netcdf-libraries) | external | NetCDF-C \>= `4.7.4`, CXX \>= `4.3.1` | Enables NetCDF I/O support |
 | [SQLite3](https://www.sqlite.org/cintro.html) | external | \> `3.7.17` | Enables GeoPackage reading support |
 # Details
 

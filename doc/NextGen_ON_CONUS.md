@@ -32,7 +32,7 @@ We also need all the submodule codes. So run the command below:
 
 `git submodule update --init --recursive`
 
-# Setting up the Environment
+# Setting Up the Environment
 
 For setting up the build and computation environment, we refer the users to our documentation chapter [DEPENDENCIES.md](DEPENDENCIES.md) for details. Basically, you will need to have access to C/C++ compiler, MPI, Boost, NetCDF, Cmake, SQLite3. Some of them may already be on your system. Otherwise, you have to install your own version. There are also some required software packages that come with `ngen` as submodules, such as `pybind11`, and `iso_c_fortran_bmi`. 
 
