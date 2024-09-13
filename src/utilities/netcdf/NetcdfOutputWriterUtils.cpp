@@ -3,10 +3,14 @@
 #include <DomainLayer.hpp>
 #include <utilities/logging_utils.h>
 #include <unordered_set>
+#include <NetcdfOutputWriter.hpp>
+
+using data_output::NetcdfDimensionDiscription;
+using data_output::NetcdfVariableDiscription;
 
 void add_dimensions_for_layer(dimension_discription_vec& dim_desc, std::shared_ptr<ngen::Layer> layer, unsigned long num_catchments, unsigned long num_nexuses )
 {
-    dim_desc.push_back(data_output::NetcdfDimensionDiscription("time"));
+    dim_desc.push_back(NetcdfDimensionDiscription("time"));
 
     int layer_class_id = layer->class_id();
     switch(layer_class_id)
@@ -14,7 +18,7 @@ void add_dimensions_for_layer(dimension_discription_vec& dim_desc, std::shared_p
         // setup variables and description for surface layers
         case ngen::LayerClass::kSurfaceLayer:
         {
-            dim_desc.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
+            dim_desc.push_back(NetcdfDimensionDiscription("catchment-id",num_catchments));
         }
         break;
 
@@ -23,22 +27,22 @@ void add_dimensions_for_layer(dimension_discription_vec& dim_desc, std::shared_p
         {
             std::shared_ptr<ngen::DomainLayer> domain_layer = std::dynamic_pointer_cast<ngen::DomainLayer,ngen::Layer>(layer);
 
-            dim_desc.push_back(data_output::NetcdfDimensionDiscription("x"));
-            dim_desc.push_back(data_output::NetcdfDimensionDiscription("y"));   
+            dim_desc.push_back(NetcdfDimensionDiscription("x"));
+            dim_desc.push_back(NetcdfDimensionDiscription("y"));   
         }
         break;
 
         // setup variables and description for catchment layers
         case ngen::LayerClass::kCatchmentLayer:
         {
-            dim_desc.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
+            dim_desc.push_back(NetcdfDimensionDiscription("catchment-id",num_catchments));
         }
         break;
 
         // setup variables and description for nexus layers
         case ngen::LayerClass::kNexusLayer:
         {
-            dim_desc.push_back(data_output::NetcdfDimensionDiscription("nexus-id",num_nexuses));
+            dim_desc.push_back(NetcdfDimensionDiscription("nexus-id",num_nexuses));
         }
         break;
 
@@ -48,7 +52,7 @@ void add_dimensions_for_layer(dimension_discription_vec& dim_desc, std::shared_p
             // basicly layer should probably never be reached so log warning
             logging::warning("Layer of class gen::LayerClass::kLayer encountered this is a base class not intended for direct use\n");
 
-            dim_desc.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
+            dim_desc.push_back(NetcdfDimensionDiscription("catchment-id",num_catchments));
         }
         break;
 
@@ -103,7 +107,7 @@ void add_variables_for_layer(variable_discription_vec& var_vec, std::shared_ptr<
                 {
                     variable_names.insert(name);
 
-                    data_output::NetcdfVariableDiscription var_desc;
+                    NetcdfVariableDiscription var_desc;
 
                     var_desc.name = name;
                     
