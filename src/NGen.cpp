@@ -40,6 +40,15 @@ bool is_subdivided_hydrofabric_wanted = false;
 
 // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
 int mpi_rank = 0;
+int mpi_num_procs = 1;
+
+std::size_t local_num_catchments = 0;
+std::size_t local_num_nexus = 0;
+std::size_t globabl_num_catchments = 0;
+std::size_t global_num_catchments = 0;
+
+std::size_t catchment_offset = 0;
+std::size_t nexus_offset = 0;
 
 #ifdef NGEN_MPI_ACTIVE
 
@@ -55,7 +64,6 @@ int mpi_rank = 0;
 #include "core/Partition_One.hpp"
 
 std::string PARTITION_PATH = "";
-int mpi_num_procs;
 #endif // NGEN_MPI_ACTIVE
 
 #include <Layer.hpp>
@@ -363,6 +371,24 @@ int main(int argc, char *argv[]) {
         }
         nexus_subset_ids = std::vector<std::string>(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
         catchment_subset_ids = std::vector<std::string>(local_data.catchment_ids.begin(), local_data.catchment_ids.end());
+
+        local_num_catchments = catchment_subset_ids.size();
+        local_num_nexus = nexus_subset_ids.size();
+
+        for (std::size_t i = 0; i < mpi_num_procs; ++i)
+        {
+          std::size_t current_catchment_count = std::count(partitions[i].catchment_ids.begin(), partitions[i].catchment_ids.end());
+          std::size_t current_nexus_count = std::count(partitions[i].nexus_ids.begin(), partitions[i].nexus_ids.end());
+          
+          if (i < mpi_rank )
+          {
+            catchment_offset += current_catchment_count;
+            nexus_offset += current_nexus_count;
+          }
+
+          global_num_catchments += current_catchment_count;
+          global_num_nexus += current_nexus_count;
+        }
     }
     #endif // NGEN_MPI_ACTIVE
 
@@ -458,6 +484,14 @@ int main(int argc, char *argv[]) {
         #endif
     }
 
+    #ifndef NGEN_MPI_ACTIVE
+    // this data is set when reading partitions for mpi runs
+    local_num_catchments = globabl_num_catchments = std::count(features.catchments().begin(), features.catchments().end());
+    local_num_nexus = globabl_num_nexus = std::count(features.nexuses().begin(), features.nexuses().end());
+    catchment_offset = 0;
+    nexus_offset = 0;
+    #endif
+
     std::cout<<"Running Models"<<std::endl;
 
     // check the time loops for the existing layers
@@ -515,15 +549,12 @@ int main(int argc, char *argv[]) {
     #ifdef NETCDF_ACTIVE
     // make netcdf output objects for layers
 
-    unsigned long num_catchments = std::distance(features.catchments().begin(), features.catchments().end() ); // TODO calculate this during parsing
-    unsigned long num_nexuses = std::distance(features.nexuses().begin(), features.nexuses().end() ); // TODO calculate this during parsing
-
     for ( std::shared_ptr<ngen::Layer> layer : layers )
     {
         dimension_discription_vec dimension_discription;
         variable_discription_vec variable_discription;
 
-        add_dimensions_for_layer(dimension_discription, layer, num_catchments, num_nexuses);
+        add_dimensions_for_layer(dimension_discription, layer, global_num_catchments, global_num_nexuses);
         add_variables_for_layer(variable_discription,layer);
 
         // create the netcdf file for each layer
@@ -570,7 +601,7 @@ int main(int argc, char *argv[]) {
             #if NEGN_WITH_NETCDF
             writer = netcdf_writers[layer->get_name()];
             #endif
-            layer->update_models(writer); //assume update_models() calls time->advance_timestep()
+            layer->update_models(count, writer); //assume update_models() calls time->advance_timestep()
             prev_layer_time = layer_next_time;
           }
           else

@@ -147,7 +147,7 @@ namespace ngen
          * @brief Run one simulation timestep for each model in this layer
         */
 
-        virtual void update_models(std::shared_ptr<data_output::OutputWriter> writer);
+        virtual void update_models(unsigned long current_time_idx, std::shared_ptr<data_output::OutputWriter> writer);
 
 
         protected:

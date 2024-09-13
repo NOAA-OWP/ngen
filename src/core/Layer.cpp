@@ -12,7 +12,7 @@ namespace ngen
      * @brief Run one simulation timestep for each model in this layer
     */
 
-    void Layer::update_models(std::shared_ptr<data_output::OutputWriter> writer)
+    void Layer::update_models(unsigned long current_time_idx, std::shared_ptr<data_output::OutputWriter> writer)
     {
         auto idx = simulation_time.next_timestep_index();
         auto step = simulation_time.get_output_interval_seconds();
@@ -191,25 +191,25 @@ namespace ngen
                     /** \brief write the content of the double buffers to the netcdf file */
                     for ( const auto& pair : double_buffers )
                     {
-                        (*nc_writer)[pair.first] << nc_offset(0,0) << nc_stride(1UL,pair.second.size()) << pair.second;  
+                        (*nc_writer)[pair.first] << nc_offset(0UL,current_time_idx) << nc_stride(1UL,pair.second.size()) << pair.second;  
                     }
 
                     /** \brief write the content of the float buffers to the netcdf file */
                     for ( const auto& pair : float_buffers )
                     {
-                        (*nc_writer)[pair.first] << nc_offset(0,0) << nc_stride(1UL,pair.second.size()) << pair.second;  
+                        (*nc_writer)[pair.first] << nc_offset(0UL,current_time_idx) << nc_stride(1UL,pair.second.size()) << pair.second;  
                     }
 
                     /** \brief write the content of the int buffers to the netcdf file */
                     for ( const auto& pair : int_buffers )
                     {
-                        (*nc_writer)[pair.first] << nc_offset(0,0) << nc_stride(1UL,pair.second.size()) << pair.second;  
+                        (*nc_writer)[pair.first] << nc_offset(0UL,current_time_idx) << nc_stride(1UL,pair.second.size()) << pair.second;  
                     }
 
                     /** \brief write the content of the long buffers to the netcdf file */
                     for ( const auto& pair : long_buffers )
                     {
-                        (*nc_writer)[pair.first] << nc_offset(0,0) << nc_stride(1UL,pair.second.size()) << pair.second;  
+                        (*nc_writer)[pair.first] << nc_offset(0UL,current_time_idx) << nc_stride(1UL,pair.second.size()) << pair.second;  
                     }        
                 }
                 catch (std::exception e)
