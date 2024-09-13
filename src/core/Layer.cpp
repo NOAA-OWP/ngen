@@ -4,6 +4,8 @@
 #include <boost/algorithm/string.hpp>
 #include "bmi.hpp"
 
+#include "utilities/netcdf/NetcdfOutputWriterUtils.hpp"
+
 namespace ngen
 {
     /***
@@ -156,7 +158,47 @@ namespace ngen
                 throw(e);
             }
             
-        } //done catchments   
+        } //done catchments  
+
+        // write to output file for this layer
+        {
+            std::shared_ptr<data_output::NetcdfOutputWriter> nc_writer = std::dynamic_pointer_cast<data_output::NetcdfOutputWriter>(writer);
+            if (nc_writer)
+            {
+                // check to see if we are connected to a netcdf file
+                if (!nc_writer->is_open())
+                {
+                    unsigned long num_catchments = std::distance(features.catchments().begin(), features.catchments().end() ); // TODO THIS SHOULD BE CACHED
+                    unsigned long num_nexuses = std::distance(features.nexuses().begin(), features.nexuses().end() );           // TODO THIS SHOULD BE CACHED
+                    
+                    std::string output_path = "layer-"+ this->get_name() + ".nc";
+
+                    dimension_discription_vec netcdf_dimensions;
+                    variable_discription_vec netcdf_variables;
+
+                    add_dimensions_for_layer(netcdf_dimensions, std::make_shared<ngen::Layer>(*this), num_catchments, num_nexuses);
+                    add_variables_for_layer(netcdf_variables, std::make_shared<ngen::Layer>(*this));
+                    
+                    nc_writer->open(output_path, netcdf_dimensions, netcdf_variables);
+                }
+
+                // output data
+
+                using namespace data_output;
+
+                try
+                {
+                    for ( const auto& pair : double_buffers )
+                    {
+                        (*nc_writer)[pair.first] << nc_offset(0,0) << nc_stride(1UL,pair.second.size()) << pair.second;  
+                    }   
+                }
+                catch (std::exception e)
+                {
+                    throw(e);
+                }
+            }
+        } 
 
         ++output_time_index;
         if ( output_time_index < simulation_time.get_total_output_times() )

@@ -1,6 +1,67 @@
 #include <NetcdfOutputWriterUtils.hpp>
-
+#include <Layer.hpp>
+#include <DomainLayer.hpp>
+#include <utilities/logging_utils.h>
 #include <unordered_set>
+
+void add_dimensions_for_layer(dimension_discription_vec& dim_desc, std::shared_ptr<ngen::Layer> layer, unsigned long num_catchments, unsigned long num_nexuses )
+{
+    dim_desc.push_back(data_output::NetcdfDimensionDiscription("time"));
+
+    int layer_class_id = layer->class_id();
+    switch(layer_class_id)
+    {
+        // setup variables and description for surface layers
+        case ngen::LayerClass::kSurfaceLayer:
+        {
+            dim_desc.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
+        }
+        break;
+
+        // setup variables and description for domain layers
+        case ngen::LayerClass::kDomainLayer:
+        {
+            std::shared_ptr<ngen::DomainLayer> domain_layer = std::dynamic_pointer_cast<ngen::DomainLayer,ngen::Layer>(layer);
+
+            dim_desc.push_back(data_output::NetcdfDimensionDiscription("x"));
+            dim_desc.push_back(data_output::NetcdfDimensionDiscription("y"));   
+        }
+        break;
+
+        // setup variables and description for catchment layers
+        case ngen::LayerClass::kCatchmentLayer:
+        {
+            dim_desc.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
+        }
+        break;
+
+        // setup variables and description for nexus layers
+        case ngen::LayerClass::kNexusLayer:
+        {
+            dim_desc.push_back(data_output::NetcdfDimensionDiscription("nexus-id",num_nexuses));
+        }
+        break;
+
+        // setup variables and description for surface layers
+        case ngen::LayerClass::kLayer:
+        {
+            // basicly layer should probably never be reached so log warning
+            logging::warning("Layer of class gen::LayerClass::kLayer encountered this is a base class not intended for direct use\n");
+
+            dim_desc.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
+        }
+        break;
+
+        default:
+        {
+            std::stringstream ss;
+            ss << "Unexepected Layer class encountered with id " << layer_class_id << "\n";
+            throw std::runtime_error(ss.str().c_str());
+        }
+        break;
+    }    
+}
+
 
 void add_variables_for_layer(variable_discription_vec& var_vec, std::shared_ptr<ngen::Layer> layer)
 {

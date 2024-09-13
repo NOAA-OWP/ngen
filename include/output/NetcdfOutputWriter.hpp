@@ -76,7 +76,7 @@ namespace data_output
      * to be used for a offset vector.
      */
 
-    class NetcdfOutputWriterOffset : public OutputWriter
+    class NetcdfOutputWriterOffset
     {
         public:
 
@@ -130,11 +130,13 @@ namespace data_output
      * 
     */
 
-    class NetcdfOutputWriter
+    class NetcdfOutputWriter : public OutputWriter
     {
         public:
         
-        NetcdfOutputWriter(path output_file) : netcdfFile()
+        NetcdfOutputWriter() : OutputWriter(), netcdfFile() {}
+
+        NetcdfOutputWriter(path output_file) : OutputWriter(), netcdfFile()
         {
             open(output_file);
         }
@@ -150,7 +152,12 @@ namespace data_output
             open(output_file, dimensions, variables);
         }  
 
-        virtual ~NetcdfOutputWriter() {}
+        ~NetcdfOutputWriter() {}
+
+        bool is_open() override
+        {
+            return true;
+        }
 
         /** \brief Open this writter with a new output path. This replaces any existing file at the same location.*/
 
@@ -276,6 +283,14 @@ namespace data_output
             /** \brief attempt to use the data proved by vector for a write operation with the current offset and stride */
 
             template <class T> NetcdfOutputWriterHelper& operator<<(std::vector<T>& d)
+            {
+
+                writer->netcdfVars[var].putVar(offset, stride, &d[0]);
+
+                return *this;
+            }
+
+            template <class T> NetcdfOutputWriterHelper& operator<<(const std::vector<T>& d)
             {
 
                 writer->netcdfVars[var].putVar(offset, stride, &d[0]);

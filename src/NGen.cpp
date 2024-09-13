@@ -523,75 +523,14 @@ int main(int argc, char *argv[]) {
         dimension_discription_vec dimension_discription;
         variable_discription_vec variable_discription;
 
-        dimension_discription.push_back(data_output::NetcdfDimensionDiscription("time"));
-        
-        int layer_class_id = layer->class_id();
-        switch(layer_class_id)
-        {
-            // setup variables and description for surface layers
-            case ngen::LayerClass::kSurfaceLayer:
-            {
-              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
-              add_variables_for_layer(variable_discription,layer);
-            }
-            break;
-
-            // setup variables and description for domain layers
-            case ngen::LayerClass::kDomainLayer:
-            {
-              std::shared_ptr<ngen::DomainLayer> domain_layer = std::dynamic_pointer_cast<ngen::DomainLayer,ngen::Layer>(layer);
-
-              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("x"));
-              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("y"));
-
-              add_variables_for_layer(variable_discription, layer);
-            
-            }
-            break;
-
-            // setup variables and description for catchment layers
-            case ngen::LayerClass::kCatchmentLayer:
-            {
-              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
-              add_variables_for_layer(variable_discription, layer);
-            }
-            break;
-
-            // setup variables and description for nexus layers
-            case ngen::LayerClass::kNexusLayer:
-            {
-              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("nexus-id",num_nexuses));
-              add_variables_for_layer(variable_discription, layer);
-            }
-            break;
-
-            // setup variables and description for surface layers
-            case ngen::LayerClass::kLayer:
-            {
-              // basicly layer should probably never be reached so log warning
-              logging::warning("Layer of class gen::LayerClass::kLayer encountered this is a base class not intended for direct use\n");
-
-              dimension_discription.push_back(data_output::NetcdfDimensionDiscription("catchment-id",num_catchments));
-              add_variables_for_layer(variable_discription, layer);
-            }
-            break;
-
-            default:
-            {
-              std::stringstream ss;
-              ss << "Unexepected Layer class encountered with id " << layer_class_id << "\n";
-              throw std::runtime_error(ss.str().c_str());
-            }
-            break;
-        }
+        add_dimensions_for_layer(dimension_discription, layer, num_catchments, num_nexuses);
+        add_variables_for_layer(variable_discription,layer);
 
         // create the netcdf file for each layer
         netcdf_writers[layer->get_name()] = std::make_shared<data_output::NetcdfOutputWriter>(
           "layer-"+ layer->get_name() + ".nc",
             dimension_discription,
             variable_discription);
-
-
     }
     #endif
 

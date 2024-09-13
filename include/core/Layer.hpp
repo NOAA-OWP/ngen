@@ -12,6 +12,7 @@
 #endif
 
 #include "OutputWriter.hpp"
+#include "NetcdfOutputWriter.hpp"
 
 namespace ngen
 {
@@ -166,6 +167,8 @@ namespace ngen
         std::unordered_map<std::string, std::vector<int> > int_buffers;
         std::unordered_map<std::string, std::vector<long> > long_buffers;
         std::unordered_map<std::string, std::vector<std::string> > string_buffers;
+
+        data_output::NetcdfOutputWriter writer;
            
 
     };

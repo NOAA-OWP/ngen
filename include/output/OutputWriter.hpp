@@ -7,6 +7,11 @@ namespace data_output
     {
         public:
 
+        OutputWriter() {}
+        virtual ~OutputWriter() {}
+
+        virtual bool is_open() = 0;
+
         private:
     };
 }
