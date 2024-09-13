@@ -90,12 +90,6 @@ namespace ngen
         */
         virtual int class_id() { return LayerClass::kLayer; }
 
-        /**
-         * @brief Get a list of output variables names for this layer
-         * 
-         * @return vector of output variable names
-        */
-
         /***
          * @brief Return the next timestep that will be processed by this layer in epoch time units
         */
