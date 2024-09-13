@@ -188,10 +188,29 @@ namespace ngen
 
                 try
                 {
+                    /** \brief write the content of the double buffers to the netcdf file */
                     for ( const auto& pair : double_buffers )
                     {
                         (*nc_writer)[pair.first] << nc_offset(0,0) << nc_stride(1UL,pair.second.size()) << pair.second;  
-                    }   
+                    }
+
+                    /** \brief write the content of the float buffers to the netcdf file */
+                    for ( const auto& pair : float_buffers )
+                    {
+                        (*nc_writer)[pair.first] << nc_offset(0,0) << nc_stride(1UL,pair.second.size()) << pair.second;  
+                    }
+
+                    /** \brief write the content of the int buffers to the netcdf file */
+                    for ( const auto& pair : int_buffers )
+                    {
+                        (*nc_writer)[pair.first] << nc_offset(0,0) << nc_stride(1UL,pair.second.size()) << pair.second;  
+                    }
+
+                    /** \brief write the content of the long buffers to the netcdf file */
+                    for ( const auto& pair : long_buffers )
+                    {
+                        (*nc_writer)[pair.first] << nc_offset(0,0) << nc_stride(1UL,pair.second.size()) << pair.second;  
+                    }        
                 }
                 catch (std::exception e)
                 {
