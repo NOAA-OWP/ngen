@@ -1,6 +1,7 @@
 #include "Logger.hpp"
 #include <cstring>
 #include <string>
+#include <chrono>
 
 std::shared_ptr<Logger> Logger::loggerInstance;
 
@@ -190,14 +191,21 @@ void Logger::LogMessage(const std::string& message, LogLevel log_level) {
 	}
 }
 
-std::string Logger::createTimestamp() {
-	time_t timestamp;
-	time(&timestamp);    
-    std::string ts_string = strtok(ctime(&timestamp), "\n");
-    size_t found = 0;
-    while ((found = ts_string.find(" ", found)) != std::string::npos) {
-      ts_string.replace(found, 1, "_");
-    }
+using std::chrono::system_clock;
 
-	return ts_string;
+std::string Logger::createTimestamp() {
+    std::chrono::_V2::system_clock::time_point currentTime = std::chrono::system_clock::now();
+    char buffer[80];
+    
+    long transformed = currentTime.time_since_epoch().count() / 1000000;
+    
+    long millis = transformed % 1000;
+    
+    std::time_t tt;
+    tt = system_clock::to_time_t ( currentTime );
+    tm *timeinfo = localtime (&tt);
+    strftime (buffer,80,"%FT%H:%M:%S",timeinfo);
+    sprintf(buffer, "%s:%03d",buffer,(int)millis);
+    
+    return std::string(buffer);
 }

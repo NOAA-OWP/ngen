@@ -159,6 +159,8 @@ else()
 endif()
 add_compile_definitions(NGEN_SHARED_LIB_EXTENSION)
 
+add_compile_definitions(_GLIBCXX_USE_CXX11_ABI=0)
+
 # -----------------------------------------------------------------------------
 # Find the Boost library and configure usage
 set(Boost_USE_STATIC_LIBS OFF)
