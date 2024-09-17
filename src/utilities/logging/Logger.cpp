@@ -109,14 +109,8 @@ void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG, L
 		mod_name = module_name[static_cast<int>(module)];
 		std::string separator = " ";
 		// log the message while handling multiline cases
-		size_t found = 0;
-		std:string tmp_string = message;
-   	 	while ((found = tmp_string.find("\n", found)) != std::string::npos) {
-			final_message = createTimestamp() + separator + mod_name + separator + logType + tmp_string.substr(0, found);
- 			LogMessage(final_message, messageLevel);
-			tmp_string.erase(0, found+1);
-    	}
-
+		final_message = createTimestamp() + separator + mod_name + separator + logType + message;
+ 		LogMessage(final_message, messageLevel);
 	}
 }
 
@@ -172,15 +166,15 @@ void Logger::LogMessage(const std::string& message, LogLevel log_level) {
 	time_t timestamp = time(NULL);
 	
 	if (logOutput == LogOutput::FILE) {
-		logFile << message << std::endl;
+		logFile << message;
 	}
 	else if (logOutput == LogOutput::CONSOLE_AND_FILE) {
-		logFile << message << std::endl;
+		logFile << message;
 		if ((log_level == LogLevel::ERROR) || (log_level == LogLevel::FATAL)) {
-			std::cerr << message << std::endl;
+			std::cerr << message;
 		}
 		else {
-			std::cout << message << std::endl;
+			std::cout << message;
 		}
 	}
 	else {
