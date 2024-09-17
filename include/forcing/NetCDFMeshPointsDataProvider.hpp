@@ -47,19 +47,6 @@ namespace data_access
 
         using time_point_type = std::chrono::time_point<std::chrono::system_clock>;
 
-        /**
-         * @brief Factory method that creates or returns an existing provider for the provided path.
-         * @param input_path The path to a NetCDF file with lumped catchment forcing values.
-         * @param log_s An output log stream for messages from the underlying library. If a provider object for
-         * the given path already exists, this argument will be ignored.
-         */
-        static std::shared_ptr<NetCDFMeshPointsDataProvider> get_shared_provider(std::string input_path, time_point_type sim_start, time_point_type sim_end);
-
-        /**
-         * @brief Cleanup the shared providers cache, ensuring that the files get closed.
-         */
-        static void cleanup_shared_providers();
-
         NetCDFMeshPointsDataProvider(std::string input_path,
                                      time_point_type sim_start,
                                      time_point_type sim_end);
@@ -133,9 +120,6 @@ namespace data_access
         time_point_type sim_end_date_time_epoch;
         std::chrono::seconds sim_to_data_time_offset; // Deliberately signed--sim should never start before data, yes?
 
-        static std::mutex shared_providers_mutex;
-        static std::map<std::string, std::shared_ptr<NetCDFMeshPointsDataProvider>> shared_providers;
-
         std::vector<std::string> variable_names;
         std::vector<time_point_type> time_vals;
         std::chrono::seconds time_stride;                             // the amount of time between stored time values
@@ -144,10 +128,6 @@ namespace data_access
 
         struct metadata_cache_entry;
         std::map<std::string, metadata_cache_entry> ncvar_cache;
-
-        boost::compute::detail::lru_cache<std::string, std::shared_ptr<std::vector<double>>> value_cache;
-        size_t cache_slice_t_size = 1;
-        size_t cache_slice_c_size = 1;
     };
 }
 

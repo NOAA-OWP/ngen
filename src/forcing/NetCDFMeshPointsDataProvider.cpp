@@ -5,9 +5,6 @@
 #include <chrono>
 #include <netcdf>
 
-std::mutex data_access::NetCDFMeshPointsDataProvider::shared_providers_mutex;
-std::map<std::string, std::shared_ptr<data_access::NetCDFMeshPointsDataProvider>> data_access::NetCDFMeshPointsDataProvider::shared_providers;
-
 namespace data_access {
 
 // Out-of-line class definition after forward-declaration so that the
@@ -20,28 +17,8 @@ struct NetCDFMeshPointsDataProvider::metadata_cache_entry {
     double offset;
 };
 
-std::shared_ptr<NetCDFMeshPointsDataProvider> NetCDFMeshPointsDataProvider::get_shared_provider(std::string input_path, time_point_type sim_start, time_point_type sim_end)
-{
-    const std::lock_guard<std::mutex> lock(shared_providers_mutex);
-    std::shared_ptr<NetCDFMeshPointsDataProvider> p;
-    if(shared_providers.count(input_path) > 0){
-        p = shared_providers[input_path];
-    } else {
-        p = std::make_shared<data_access::NetCDFMeshPointsDataProvider>(input_path, sim_start, sim_end);
-        shared_providers[input_path] = p;
-    }
-    return p;
-}
-
-void NetCDFMeshPointsDataProvider::cleanup_shared_providers()
-{
-    const std::lock_guard<std::mutex> lock(shared_providers_mutex);
-    // First lets try just emptying the map... if all goes well, everything will destruct properly on its own...
-    shared_providers.clear();
-}
-
 NetCDFMeshPointsDataProvider::NetCDFMeshPointsDataProvider(std::string input_path, time_point_type sim_start, time_point_type sim_end)
-    : value_cache(20),
+    :
     sim_start_date_time_epoch(sim_start),
     sim_end_date_time_epoch(sim_end)
 {
