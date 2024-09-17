@@ -534,7 +534,7 @@ int main(int argc, char *argv[]) {
           // only advance if you would not pass the master next time and the previous layer next time
           if ( layer_next_time <= next_time && layer_next_time <=  prev_layer_time)
           {
-            if(count%100==0) std::cout<<"Updating layer: "<<layer->get_name()<<"\n";
+            if(count%100==0) std::cout<<"Running timestep " <<count<<", Updating layer: "<<layer->get_name()<<"\n";
             layer->update_models(); //assume update_models() calls time->advance_timestep()
             prev_layer_time = layer_next_time;
           }
