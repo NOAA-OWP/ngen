@@ -84,8 +84,7 @@ namespace data_access
          */
         double get_value(const selection_type& selector, ReSampleMethod m) override;
 
-        // The interface that DataProvider really should have
-        virtual void get_values(const selection_type& selector, boost::span<double> data);
+        void get_values(const selection_type& selector, boost::span<double> data) override;
 
         // And an implementation of the usual version using it
         std::vector<data_type> get_values(const selection_type& selector, data_access::ReSampleMethod) override

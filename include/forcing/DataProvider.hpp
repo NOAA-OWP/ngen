@@ -96,6 +96,8 @@ namespace data_access
          */
         virtual std::vector<data_type> get_values(const selection_type& selector, ReSampleMethod m=SUM) = 0;
 
+        virtual void get_values(const selection_type& selector, boost::span<double> data) { throw std::runtime_error("DP::get_values(span) Unimplemented"); }
+
         virtual bool is_property_sum_over_time_step(const std::string& name) const {return false; }
 
         private:

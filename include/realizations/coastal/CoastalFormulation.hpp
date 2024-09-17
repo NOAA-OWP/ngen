@@ -23,8 +23,7 @@ public:
     void finalize() override = 0;
     virtual void update() = 0;
 
-    // The interface that DataProvider really should have
-    virtual void get_values(const selection_type& selector, boost::span<double> data) = 0;
+    void get_values(const selection_type& selector, boost::span<double> data) override = 0;
 
     // And an implementation of the usual version using it
     std::vector<data_type> get_values(const selection_type& selector, data_access::ReSampleMethod) override
