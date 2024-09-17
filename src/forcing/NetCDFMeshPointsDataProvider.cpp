@@ -119,7 +119,6 @@ boost::span<const std::string> NetCDFMeshPointsDataProvider::get_available_varia
     return variable_names;
 }
 
-/** Return the first valid time for which data from the request variable  can be requested */
 long NetCDFMeshPointsDataProvider::get_data_start_time() const
 {
     return std::chrono::system_clock::to_time_t(time_vals[0]);
@@ -130,7 +129,6 @@ long NetCDFMeshPointsDataProvider::get_data_start_time() const
 #endif
 }
 
-/** Return the last valid time for which data from the requested variable can be requested */
 long NetCDFMeshPointsDataProvider::get_data_stop_time() const
 {
     return std::chrono::system_clock::to_time_t(time_vals.back()) + std::chrono::duration_cast<std::chrono::seconds>(time_stride).count();

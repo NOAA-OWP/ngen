@@ -35,16 +35,6 @@ namespace data_access
     {
         public:
 
-        enum TimeUnit
-        {
-            TIME_HOURS,
-            TIME_MINUTES,
-            TIME_SECONDS,
-            TIME_MILLISECONDS,
-            TIME_MICROSECONDS,
-            TIME_NANOSECONDS
-        };
-
         using time_point_type = std::chrono::time_point<std::chrono::system_clock>;
 
         NetCDFMeshPointsDataProvider(std::string input_path,
@@ -60,10 +50,10 @@ namespace data_access
 
         void finalize() override;
 
-        /** Return the variables that are accessable by this data provider */
+        /** Return the variables that are accessible by this data provider */
         boost::span<const std::string> get_available_variable_names() const override;
 
-        /** Return the first valid time for which data from the request variable  can be requested */
+        /** Return the first valid time for which data from the requested variable can be requested */
         long get_data_start_time() const override;
 
         /** Return the last valid time for which data from the requested variable can be requested */
@@ -100,21 +90,10 @@ namespace data_access
         // And an implementation of the usual version using it
         std::vector<data_type> get_values(const selection_type& selector, data_access::ReSampleMethod) override
         {
-            std::vector<data_type> output(selected_points_count(selector));
-            get_values(selector, output);
-            return output;
+            throw std::runtime_error("Unimplemented");
         }
 
         private:
-
-        size_t mesh_size(std::string const& variable_name);
-
-        size_t selected_points_count(const selection_type& selector)
-        {
-            auto* points = boost::get<std::vector<int>>(&selector.points);
-            size_t size = points ? points->size() : this->mesh_size(selector.variable_name);
-            return size;
-        }
 
         time_point_type sim_start_date_time_epoch;
         time_point_type sim_end_date_time_epoch;
