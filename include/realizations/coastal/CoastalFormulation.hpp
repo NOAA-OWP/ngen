@@ -20,7 +20,7 @@ public:
     }
 
     virtual void initialize() = 0;
-    virtual void finalize() = 0;
+    void finalize() override = 0;
     virtual void update() = 0;
 
     // The interface that DataProvider really should have
