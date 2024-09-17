@@ -141,7 +141,7 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
 
 void setup_logger(void) {
     // One time log preferences
-    (Logger::GetInstance())->SetLogPreferences(LogLevel::NONE, LogOutput::FILE);
+    (Logger::GetInstance())->SetLogPreferences(LogLevel::NONE);
 
     // sample logging for different log levels
     ss << "Sample Log for LogLevel::ERROR" << std::endl;

@@ -16,12 +16,6 @@ enum class LogLevel {
 	FATAL = 5,
 };
 
-enum class LogOutput {
-	CONSOLE,
-	FILE,
-	CONSOLE_AND_FILE
-};
-
 enum class LoggingModule {
 	NGEN = 0,
 	NOAHOWP, 
@@ -46,18 +40,15 @@ enum class LoggingModule {
 class Logger {
   public:
 	static std::shared_ptr<Logger> GetInstance();
-	void SetLogPreferences(LogLevel level, LogOutput output);
+	void SetLogPreferences(LogLevel level);
 	void Log(std::string message, LogLevel messageLevel, LoggingModule module);
-	LogOutput GetLogOutput(const std::string& logOutput);
 	LogLevel GetLogLevel(const std::string& logLevel);
 	std::string createTimestamp();
 
   private:
 	LogLevel logLevel;
-	LogOutput logOutput;
 	std::fstream logFile;
 	static std::shared_ptr<Logger> loggerInstance;
-	void LogMessage(const std::string& message, LogLevel log_level);
 };
 
 

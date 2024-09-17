@@ -32,15 +32,14 @@ std::string module_name[static_cast<int>(LoggingModule::MODULE_COUNT)]
 * @param output: LogOutput::CONSOLE by Default
 * @return void
 */
-void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR, LogOutput output = LogOutput::CONSOLE) {
+void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
 	logLevel = level;
-	logOutput = output;
     std::string fwd_slash = "/";
     std::string logFileName = "ngen_log.txt";
     std::string logFileDir = "/ngencerf/data/run-logs/ngen_" + Logger::createTimestamp() + fwd_slash;
     std::cout << "Log File Directory:" << logFileDir << std::endl;
 
-	if ((logOutput == LogOutput::FILE || logOutput == LogOutput::CONSOLE_AND_FILE) && !logFileName.empty()) {
+	if (!logFileName.empty()) {
     	// creating the directory
    		int status;
 		std::string mkdir_cmd = "mkdir -p " + logFileDir;
@@ -54,7 +53,6 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR, LogOutput outpu
 		logFile.open(logFileDir+logFileName, ios::out);
 		if (!logFile.good()) {
 			std::cerr << "Can't Open Log File" << std::endl;
-			logOutput = LogOutput::CONSOLE;
 		}
 	}
 }
@@ -110,7 +108,7 @@ void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG, L
 		std::string separator = " ";
 		// log the message while handling multiline cases
 		final_message = createTimestamp() + separator + mod_name + separator + logType + message;
- 		LogMessage(final_message, messageLevel);
+		logFile << final_message;
 	}
 }
 
@@ -137,52 +135,6 @@ LogLevel Logger::GetLogLevel(const std::string& logLevel) {
 	}
 
 	return LogLevel::NONE;
-}
-
-/**
-* Convert String Representation of Log Output to LogOutput Type
-* @param logOutput : String log output
-* @return LogOutput
-*/
-LogOutput Logger::GetLogOutput(const std::string& logOutput) {
-	if (logOutput == "FILE") {
-		return LogOutput::FILE;
-	}
-	else if (logOutput == "CONSOLE_AND_FILE")
-	{
-		return LogOutput::CONSOLE_AND_FILE;
-	}
-	
-	//If corrupted string passed output will be on console
-	return LogOutput::CONSOLE;
-}
-
-/**
- * Write out the message to target output
- * @param message : String message
- * @return void
- */
-void Logger::LogMessage(const std::string& message, LogLevel log_level) {
-	time_t timestamp = time(NULL);
-	
-	if (logOutput == LogOutput::FILE) {
-		logFile << message;
-	}
-	else if (logOutput == LogOutput::CONSOLE_AND_FILE) {
-		logFile << message;
-		if ((log_level == LogLevel::ERROR) || (log_level == LogLevel::FATAL)) {
-			std::cerr << message;
-		}
-		else {
-			std::cout << message;
-		}
-	}
-	else {
-		std::cout << message << std::endl;
-		if ((log_level == LogLevel::ERROR) || (log_level == LogLevel::FATAL)) {
-			std::cerr << message << std::endl;
-		}
-	}
 }
 
 using std::chrono::system_clock;
