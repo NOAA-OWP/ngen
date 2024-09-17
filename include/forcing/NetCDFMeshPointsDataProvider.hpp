@@ -12,17 +12,7 @@
 #include <map>
 #include <memory>
 #include <string>
-#include <sstream>
 #include <exception>
-#include <mutex>
-#include "assert.h"
-#include <iomanip>
-#include <boost/compute/detail/lru_cache.hpp>
-
-#include <UnitsHelper.hpp>
-#include <StreamHandler.hpp>
-
-#include "AorcForcing.hpp"
 
 namespace netCDF {
     class NcVar;
@@ -94,9 +84,10 @@ namespace data_access
 
         private:
 
+        void cache_variable(std::string const& var_name);
+
         time_point_type sim_start_date_time_epoch;
         time_point_type sim_end_date_time_epoch;
-        std::chrono::seconds sim_to_data_time_offset; // Deliberately signed--sim should never start before data, yes?
 
         std::vector<std::string> variable_names;
         std::vector<time_point_type> time_vals;

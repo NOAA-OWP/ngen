@@ -2,8 +2,12 @@
 
 #if NGEN_WITH_NETCDF
 #include "NetCDFMeshPointsDataProvider.hpp"
-#include <chrono>
+#include <UnitsHelper.hpp>
+
 #include <netcdf>
+
+#include <chrono>
+#include <sstream>
 
 namespace data_access {
 
@@ -11,46 +15,17 @@ namespace data_access {
 // header doesn't need #include <netcdf> for NcVar to be a complete
 // type there
 struct NetCDFMeshPointsDataProvider::metadata_cache_entry {
-    netCDF::NcVar variable;
+    netCDF::NcVar ncVar;
     std::string units;
     double scale_factor;
     double offset;
 };
 
 NetCDFMeshPointsDataProvider::NetCDFMeshPointsDataProvider(std::string input_path, time_point_type sim_start, time_point_type sim_end)
-    :
-    sim_start_date_time_epoch(sim_start),
-    sim_end_date_time_epoch(sim_end)
+    : sim_start_date_time_epoch(sim_start)
+    , sim_end_date_time_epoch(sim_end)
 {
     nc_file = std::make_shared<netCDF::NcFile>(input_path, netCDF::NcFile::read);
-
-    auto var_set = nc_file->getVars();
-
-    // Populate the variable attributes cache
-    for (const auto& element : var_set)
-    {
-        std::string var_name = element.first;
-        auto ncvar = nc_file->getVar(var_name);
-        variable_names.push_back(var_name);
-
-        std::string native_units;
-        auto units_att = ncvar.getAtt("units");
-        units_att.getValues(native_units);
-
-        double scale_factor = 1.0;
-        auto scale_var = ncvar.getAtt("scale_factor");
-        if (!scale_var.isNull()) {
-            scale_var.getValues(&scale_factor);
-        }
-
-        double offset = 0.0;
-        auto offset_var = ncvar.getAtt("add_offset");
-        if (!offset_var.isNull()) {
-            offset_var.getValues(&offset);
-        }
-
-        ncvar_cache[var_name] = {ncvar, native_units, scale_factor, offset};
-    }
 
     auto num_times = nc_file->getDim("time").getSize();
 
@@ -59,7 +34,7 @@ NetCDFMeshPointsDataProvider::NetCDFMeshPointsDataProvider(std::string input_pat
     auto time_var = nc_file->getVar("Time");
 
     if (time_var.getDimCount() != 1) {
-        throw "'Time' variable has dimension other than 1";
+        throw std::runtime_error("'Time' variable has dimension other than 1");
     }
 
     time_var.getVar(raw_time.data());
@@ -69,7 +44,7 @@ NetCDFMeshPointsDataProvider::NetCDFMeshPointsDataProvider(std::string input_pat
 
     time_unit_att.getValues(time_unit_str);
     if (time_unit_str != "minutes since 1970-01-01 00:00:00 UTC") {
-        throw "Time units not exactly as expected";
+        throw std::runtime_error("Time units not exactly as expected");
     }
 
     time_vals.reserve(num_times);
@@ -82,24 +57,16 @@ NetCDFMeshPointsDataProvider::NetCDFMeshPointsDataProvider(std::string input_pat
 
     time_stride = std::chrono::duration_cast<std::chrono::seconds>(time_vals[1] - time_vals[0]);
 
-#if 0
     // verify the time stride
     for( size_t i = 1; i < time_vals.size() -1; ++i)
     {
         auto tinterval = time_vals[i+1] - time_vals[i];
 
-        if ( tinterval - time_stride > 1us)
+        if ( tinterval - time_stride > std::chrono::microseconds(1) )
         {
             throw std::runtime_error("Time intervals in forcing file are not constant");
         }
     }
-
-    // determine start_time and stop_time;
-    start_time = epoch_start_time + time_vals[0];
-    stop_time = epoch_start_time + time_vals.back() + time_stride;
-
-    sim_to_data_time_offset = std::chrono::duration_cast<std::chrono::seconds>(sim_start_date_time_epoch - start_time);
-#endif
 }
 
 NetCDFMeshPointsDataProvider::~NetCDFMeshPointsDataProvider() = default;
@@ -146,10 +113,11 @@ long NetCDFMeshPointsDataProvider::record_duration() const
 
 size_t NetCDFMeshPointsDataProvider::get_ts_index_for_time(const time_t &epoch_time_in) const
 {
+    // time_t in simulation engine's time frame - i.e. seconds, starting at 0
+    auto epoch_time = sim_start_date_time_epoch + std::chrono::seconds(epoch_time_in);
+
     auto start_time = time_vals.front();
     auto stop_time = time_vals.back() + time_stride;
-
-    auto epoch_time = std::chrono::system_clock::from_time_t(epoch_time_in);
 
     if (start_time <= epoch_time && epoch_time < stop_time)
     {
@@ -159,29 +127,43 @@ size_t NetCDFMeshPointsDataProvider::get_ts_index_for_time(const time_t &epoch_t
     }
     else
     {
-        //std::stringstream ss;
-        //ss << "The value " << (int)epoch_time << " was not in the range [" << (int)start_time << "," << (int)stop_time << ")\n" << SOURCE_LOC;
-        //throw std::out_of_range(ss.str().c_str());
-        throw std::out_of_range("");
+        std::stringstream ss;
+        ss << "The value " << (int)epoch_time_in << " was not in the range ["
+           << std::chrono::system_clock::to_time_t(start_time) << ", "
+           << std::chrono::system_clock::to_time_t(stop_time) << ")\n"
+           << SOURCE_LOC;
+        throw std::out_of_range(ss.str().c_str());
     }
 }
 
 void NetCDFMeshPointsDataProvider::get_values(const selection_type& selector, boost::span<double> data)
 {
-    if (!boost::get<AllPoints>(&selector.points)) throw "Not implemented - only all_points";
+    if (!boost::get<AllPoints>(&selector.points)) throw std::runtime_error("Not implemented - only all_points");
+
+    cache_variable(selector.variable_name);
 
     auto const& metadata = ncvar_cache[selector.variable_name];
     std::string const& source_units = metadata.units;
 
     size_t time_index = get_ts_index_for_time(std::chrono::system_clock::to_time_t(selector.init_time));
 
-    metadata.variable.getVar({time_index, 0}, {1, data.size()}, data.data());
+    metadata.ncVar.getVar({time_index, 0}, {1, data.size()}, data.data());
 
     for (double& value : data) {
         value = value * metadata.scale_factor + metadata.offset;
     }
 
-    UnitsHelper::convert_values(source_units, data.data(), selector.output_units, data.data(), data.size());
+    // These mass and and volume flux density units are very close to
+    // numerically identical for liquid water at atmospheric
+    // conditions, and so we currently treat them as interchangeable
+    bool RAINRATE_equivalence =
+        selector.variable_name == "RAINRATE" &&
+        source_units == "mm s^-1" &&
+        selector.output_units == "kg m-2 s-1";
+
+    if (!RAINRATE_equivalence) {
+        UnitsHelper::convert_values(source_units, data.data(), selector.output_units, data.data(), data.size());
+    }
 }
 
 double NetCDFMeshPointsDataProvider::get_value(const selection_type& selector, ReSampleMethod m)
@@ -189,6 +171,40 @@ double NetCDFMeshPointsDataProvider::get_value(const selection_type& selector, R
     throw std::runtime_error("Not implemented - access chunks of the mesh");
 
     return 0.0;
+}
+
+void NetCDFMeshPointsDataProvider::cache_variable(std::string const& var_name)
+{
+    if (ncvar_cache.find(var_name) != ncvar_cache.end()) return;
+
+    auto ncvar = nc_file->getVar(var_name);
+    variable_names.push_back(var_name);
+
+    std::string native_units;
+    auto units_att = ncvar.getAtt("units");
+    units_att.getValues(native_units);
+
+    double scale_factor = 1.0;
+    try {
+        auto scale_var = ncvar.getAtt("scale_factor");
+        if (!scale_var.isNull()) {
+            scale_var.getValues(&scale_factor);
+        }
+    } catch (...) {
+        // Assume it's just not present, and so keeps the default value
+    }
+
+    double offset = 0.0;
+    try {
+        auto offset_var = ncvar.getAtt("add_offset");
+        if (!offset_var.isNull()) {
+            offset_var.getValues(&offset);
+        }
+    } catch (...) {
+        // Assume it's just not present, and so keeps the default value
+    }
+
+    ncvar_cache[var_name] = {ncvar, native_units, scale_factor, offset};
 }
 
 }
