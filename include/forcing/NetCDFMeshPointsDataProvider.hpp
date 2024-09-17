@@ -138,7 +138,6 @@ namespace data_access
 
         std::vector<std::string> variable_names;
         std::vector<time_point_type> time_vals;
-        TimeUnit time_unit;                             // the unit that time was stored as in the file
         std::chrono::seconds time_stride;                             // the amount of time between stored time values
 
         std::shared_ptr<netCDF::NcFile> nc_file;
