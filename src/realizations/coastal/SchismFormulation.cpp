@@ -7,26 +7,26 @@
 
 const static auto s_schism_registration_function = "register_bmi";
 
-std::map<std::string, SchismFormulation::ForcingSelector> SchismFormulation::expected_input_variables_ =
+std::map<std::string, SchismFormulation::InputMapping> SchismFormulation::expected_input_variables_ =
     {
         /* Meteorological Forcings */
         // RAINRATE - precipitation
-        {"RAINRATE", SchismFormulation::METEO},
+        {"RAINRATE", { SchismFormulation::METEO, "RAINRATE"}},
         // SFCPRS - surface atmospheric pressure
-        {"SFCPRS", SchismFormulation::METEO},
+        {"SFCPRS", { SchismFormulation::METEO, "PSFC"}},
         // SPFH2m - specific humidity at 2m
-        {"SPFH2m", SchismFormulation::METEO},
+        {"SPFH2m", { SchismFormulation::METEO, "Q2D"}},
         // TMP2m - temperature at 2m
-        {"TMP2m", SchismFormulation::METEO},
+        {"TMP2m", { SchismFormulation::METEO, "T2D"}},
         // UU10m, VV10m - wind velocity components at 10m
-        {"UU10m", SchismFormulation::METEO},
-        {"VV10m", SchismFormulation::METEO},
+        {"UU10m", { SchismFormulation::METEO, "U2D"}},
+        {"VV10m", { SchismFormulation::METEO, "V2D"}},
 
         /* Input Boundary Conditions */
         // ETA2_bnd - water surface elevation at the boundaries
-        {"ETA2_bnd", SchismFormulation::OFFSHORE},
+        {"ETA2_bnd", { SchismFormulation::OFFSHORE, "ETA2_bnd"}},
         // Q_bnd - flows at boundaries
-        {"Q_bnd", SchismFormulation::INFLOW},
+        {"Q_bnd", { SchismFormulation::INFLOW, "Q_bnd"}},
     };
 
 std::vector<std::string> SchismFormulation::exported_output_variable_names_ =
@@ -57,7 +57,7 @@ SchismFormulation::SchismFormulation(
          , init_config_path
          , /* model_time_step_fixed = */ true
          , s_schism_registration_function
-         , MPI_COMM_WORLD
+         , MPI_COMM_SELF
          );
 }
 
@@ -77,6 +77,20 @@ void SchismFormulation::initialize()
         input_variable_count_[name] = mesh_size(name);
     }
 
+    auto const& output_vars = bmi_->GetOutputVarNames();
+
+    for (auto const& name : output_vars) {
+        //if (expected_output_variables_.find(name) == expected_output_variables_.end()) {
+        //    throw std::runtime_error("SCHISM instance requests unexpected output variable '" + name + "'");
+        //}
+
+        output_variable_units_[name] = bmi_->GetVarUnits(name);
+        output_variable_type_[name] = bmi_->GetVarType(name);
+        output_variable_count_[name] = mesh_size(name);
+    }
+
+    time_step_length_ = std::chrono::seconds((long long)bmi_->GetTimeStep());
+
     set_inputs();
 }
 
@@ -92,9 +106,11 @@ void SchismFormulation::finalize()
 void SchismFormulation::set_inputs()
 {
     for (auto var : expected_input_variables_) {
-        auto& name = var.first;
-        auto selector = var.second;
-        auto points = MeshPointsSelector{name, current_time_, time_step_length_, input_variable_units_[name], all_points};
+        auto const& name = var.first;
+        auto const& mapping = var.second;
+        auto selector = mapping.selector;
+        auto const& source_name = mapping.name;
+        auto points = MeshPointsSelector{source_name, current_time_, time_step_length_, input_variable_units_[name], all_points};
 
         ProviderType* provider = [this, selector](){
             switch(selector) {
@@ -104,13 +120,15 @@ void SchismFormulation::set_inputs()
             default: throw std::runtime_error("Unknown SCHISM provider selector type");
             }
         }();
-        std::vector<double> values = provider->get_values(points);
-        bmi_->SetValue(name, values.data());
+        std::vector<double> buffer(mesh_size(name));
+        provider->get_values(points, buffer);
+        bmi_->SetValue(name, buffer.data());
     }
 }
 
 void SchismFormulation::update()
 {
+    current_time_ += time_step_length_;
     set_inputs();
     bmi_->Update();
 }
@@ -165,6 +183,5 @@ size_t SchismFormulation::mesh_size(std::string const& variable_name)
     }
     return nbytes / itemsize;
 }
-
 
 #endif // NGEN_WITH_BMI_FORTRAN && NGEN_WITH_MPI

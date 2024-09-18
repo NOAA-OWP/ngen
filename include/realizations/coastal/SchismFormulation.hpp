@@ -49,14 +49,18 @@ private:
     std::unique_ptr<models::bmi::Bmi_Fortran_Adapter> bmi_;
 
     enum ForcingSelector { METEO, OFFSHORE, INFLOW };
-    static std::map<std::string, ForcingSelector> expected_input_variables_;
+    struct InputMapping { ForcingSelector selector; std::string name; };
+    static std::map<std::string, InputMapping> expected_input_variables_;
     std::map<std::string, std::string> input_variable_units_;
     std::map<std::string, std::string> input_variable_type_;
     std::map<std::string, size_t> input_variable_count_;
 
     static std::vector<std::string> exported_output_variable_names_;
+    std::map<std::string, std::string> output_variable_units_;
+    std::map<std::string, std::string> output_variable_type_;
+    std::map<std::string, size_t> output_variable_count_;
 
-    std::chrono::time_point<std::chrono::steady_clock> current_time_;
+    std::chrono::time_point<std::chrono::system_clock> current_time_;
     std::chrono::seconds time_step_length_;
 
     // TODO: Some of these maybe should be members of
