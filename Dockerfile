@@ -257,7 +257,10 @@ RUN set -eux; \
     cmake --build extern/SoilMoistureProfiles/cmake_build/ ; \
     \
     cmake -B extern/SoilFreezeThaw/cmake_build -S extern/SoilFreezeThaw/SoilFreezeThaw/ -DNGEN=ON ; \
-    cmake --build extern/SoilFreezeThaw/cmake_build/
+    cmake --build extern/SoilFreezeThaw/cmake_build/ ; \
+    \
+    cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ ; \
+    cmake --build extern/ueb-bmi/cmake_build/
 
 RUN set -eux; \
     mkdir --parents /ngencerf/data/ngen-run-logs/ ; \
