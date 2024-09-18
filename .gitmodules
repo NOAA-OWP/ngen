@@ -55,3 +55,7 @@
 	path = extern/sac-sma/sac-sma
 	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/sac-sma.git
 	branch = development
+[submodule "extern/ueb-bmi"]
+	path = extern/ueb-bmi
+	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/ueb_bmi.git
+	branch = development

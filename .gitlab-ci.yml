@@ -35,6 +35,7 @@ build:
     - git submodule update --remote extern/LASAM
     - git submodule update --remote extern/snow17
     - git submodule update --remote extern/sac-sma/sac-sma
+    - git submodule update --remote extern/ueb-bmi
   script:
     - echo "Building ${CI_PROJECT_NAME} docker image.. "
     - docker build -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
