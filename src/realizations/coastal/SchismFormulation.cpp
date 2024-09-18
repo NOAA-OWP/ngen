@@ -41,6 +41,7 @@ SchismFormulation::SchismFormulation(
                                      std::string const& id
                                      , std::string const& library_path
                                      , std::string const& init_config_path
+                                     , MPI_Comm mpi_comm
                                      , std::shared_ptr<MeshPointsDataProvider> met_forcings
                                      , std::shared_ptr<MeshPointsDataProvider> offshore_boundary
                                      , std::shared_ptr<MeshPointsDataProvider> inflow_boundary
@@ -57,7 +58,7 @@ SchismFormulation::SchismFormulation(
          , init_config_path
          , /* model_time_step_fixed = */ true
          , s_schism_registration_function
-         , MPI_COMM_SELF
+         , mpi_comm
          );
 }
 

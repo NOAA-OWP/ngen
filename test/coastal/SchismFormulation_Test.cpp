@@ -93,6 +93,7 @@ int main(int argc, char **argv)
     auto schism = std::make_unique<SchismFormulation>(/*id=*/ "test_schism_formulation",
                                                       library_path,
                                                       init_config_path,
+                                                      MPI_COMM_SELF,
                                                       netcdf_met_provider,
                                                       provider,
                                                       provider
