@@ -28,16 +28,11 @@ NetCDFMeshPointsDataProvider::NetCDFMeshPointsDataProvider(std::string input_pat
     nc_file = std::make_shared<netCDF::NcFile>(input_path, netCDF::NcFile::read);
 
     auto num_times = nc_file->getDim("time").getSize();
-
-    std::vector<std::chrono::duration<double, std::ratio<60>>> raw_time(num_times);
-
     auto time_var = nc_file->getVar("Time");
 
     if (time_var.getDimCount() != 1) {
         throw std::runtime_error("'Time' variable has dimension other than 1");
     }
-
-    time_var.getVar(raw_time.data());
 
     auto time_unit_att = time_var.getAtt("units");
     std::string time_unit_str;
@@ -47,8 +42,10 @@ NetCDFMeshPointsDataProvider::NetCDFMeshPointsDataProvider(std::string input_pat
         throw std::runtime_error("Time units not exactly as expected");
     }
 
-    time_vals.reserve(num_times);
+    std::vector<std::chrono::duration<double, std::ratio<60>>> raw_time(num_times);
+    time_var.getVar(raw_time.data());
 
+    time_vals.reserve(num_times);
     for (int i = 0; i < num_times; ++i) {
         // Assume that the system clock's epoch matches Unix time.
         // This is guaranteed from C++20 onwards
@@ -62,7 +59,8 @@ NetCDFMeshPointsDataProvider::NetCDFMeshPointsDataProvider(std::string input_pat
     {
         auto tinterval = time_vals[i+1] - time_vals[i];
 
-        if ( tinterval - time_stride > std::chrono::microseconds(1) )
+        if ( tinterval - time_stride > std::chrono::microseconds(1) ||
+             time_stride - tinterval > std::chrono::microseconds(1) )
         {
             throw std::runtime_error("Time intervals in forcing file are not constant");
         }
@@ -98,7 +96,7 @@ long NetCDFMeshPointsDataProvider::get_data_start_time() const
 
 long NetCDFMeshPointsDataProvider::get_data_stop_time() const
 {
-    return std::chrono::system_clock::to_time_t(time_vals.back()) + std::chrono::duration_cast<std::chrono::seconds>(time_stride).count();
+    return std::chrono::system_clock::to_time_t(time_vals.back() + time_stride);
 #if 0
     //return stop_time;
     //FIXME: Matching behavior from CsvMeshPointsForcingProvider, but both are probably wrong!
