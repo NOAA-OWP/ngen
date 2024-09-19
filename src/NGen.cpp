@@ -150,21 +150,21 @@ void setup_logger(void) {
     ss << "Sample Log for LogLevel::FATAL" << std::endl;
     (Logger::GetInstance())->Log(ss.str(), LogLevel::FATAL, LoggingModule::NGEN); ss.str("");
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    ss << "Sample Log for LogLevel::WARN" << std::endl;
+    ss << "Sample Log for LogLevel::WARN"; // no endl at the end of the message
     (Logger::GetInstance())->Log(ss.str(), LogLevel::WARN, LoggingModule::NGEN); ss.str("");
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
     ss << "Sample Log for LogLevel::INFO" << std::endl;
     (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO, LoggingModule::NGEN); ss.str("");
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    ss << "Sample Log for LogLevel::DEBUG" << std::endl;
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::DEBUG, LoggingModule::NGEN); ss.str("");
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
     // multiline logging
     ss << "First line of multiline log:" << std::endl
        << "   Indented second line of multiline log" << std::endl
        << "         Indented third line of multiline log" << std::endl
-       << "                Indented fourth line of multiline log" << std::endl;
+       << "                Indented fourth line of multiline log"; // no endl at the end of the message
     (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO, LoggingModule::NGEN); ss.str("");
+    ss << "Sample Log for LogLevel::DEBUG" << std::endl;
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::DEBUG, LoggingModule::NGEN); ss.str("");
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
 }
 
 int main(int argc, char *argv[]) {

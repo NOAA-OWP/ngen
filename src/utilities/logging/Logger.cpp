@@ -106,7 +106,12 @@ void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG, L
 		std::string mod_name;
 		mod_name = module_name[static_cast<int>(module)];
 		std::string separator = " ";
-		// log the message while handling multiline cases
+
+		// make sure message has endl at the end
+   	 	if (message.find("\n", message.length()-1) == std::string::npos) {
+			message = message + "\n";
+    	}
+
 		final_message = createTimestamp() + separator + mod_name + separator + logType + message;
 		logFile << final_message;
 	}
@@ -148,8 +153,8 @@ std::string Logger::createTimestamp() {
     long millis = transformed % 1000;
     
     std::time_t tt;
-    tt = system_clock::to_time_t ( currentTime );
-    tm *timeinfo = localtime (&tt);
+    tt = std::time(0);
+    tm *timeinfo = std::gmtime(&tt);
     strftime (buffer,80,"%FT%H:%M:%S",timeinfo);
     sprintf(buffer, "%s:%03d",buffer,(int)millis);
     
