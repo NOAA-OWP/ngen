@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <chrono>
+#include <thread>
 
 #include <boost/core/span.hpp>
 
@@ -15,6 +16,8 @@
 #endif
 
 #include "NGenConfig.h"
+
+#include "Logger.hpp"
 
 #include <FileChecker.h>
 #include <boost/algorithm/string.hpp>
@@ -61,6 +64,7 @@ int mpi_num_procs;
 #include <Layer.hpp>
 #include <SurfaceLayer.hpp>
 #include <DomainLayer.hpp>
+std::stringstream ss;
 
 std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
@@ -135,7 +139,37 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
 
 } // ngen::exec_info::runtime_summary
 
+void setup_logger(void) {
+    // One time log preferences
+    (Logger::GetInstance())->SetLogPreferences(LogLevel::NONE);
+
+    // sample logging for different log levels
+    ss << "Sample Log for LogLevel::ERROR" << std::endl;
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::ERROR, LoggingModule::NGEN); ss.str("");
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    ss << "Sample Log for LogLevel::FATAL" << std::endl;
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::FATAL, LoggingModule::NGEN); ss.str("");
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    ss << "Sample Log for LogLevel::WARN"; // no endl at the end of the message
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::WARN, LoggingModule::NGEN); ss.str("");
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    ss << "Sample Log for LogLevel::INFO" << std::endl;
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO, LoggingModule::NGEN); ss.str("");
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    // multiline logging
+    ss << "First line of multiline log:" << std::endl
+       << "   Indented second line of multiline log" << std::endl
+       << "         Indented third line of multiline log" << std::endl
+       << "                Indented fourth line of multiline log"; // no endl at the end of the message
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO, LoggingModule::NGEN); ss.str("");
+    ss << "Sample Log for LogLevel::DEBUG" << std::endl;
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::DEBUG, LoggingModule::NGEN); ss.str("");
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+}
+
 int main(int argc, char *argv[]) {
+    // Setup the logger
+    setup_logger();
 
     if (argc > 1 && std::string{argv[1]} == "--info") {
         #if NGEN_WITH_MPI
@@ -200,9 +234,9 @@ int main(int argc, char *argv[]) {
         // Build and environment information
         std::cout<<std::endl<<"Build Info:"<<std::endl;
         std::cout<<"  NGen version: " // This is here mainly so that there will be *some* output if somehow no other options are enabled.
-          << ngen_VERSION_MAJOR << "."
-          << ngen_VERSION_MINOR << "."
-          << ngen_VERSION_PATCH << std::endl;
+            << ngen_VERSION_MAJOR << "."
+            << ngen_VERSION_MINOR << "."
+            << ngen_VERSION_PATCH << std::endl;
         #if NGEN_WITH_MPI
         std::cout<<"  Parallel build"<<std::endl;
         #endif
