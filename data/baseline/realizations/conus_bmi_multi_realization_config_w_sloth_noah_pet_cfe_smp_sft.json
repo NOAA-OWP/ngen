@@ -70,6 +70,23 @@
                             }
                         },
                         {
+                            "name": "bmi_c",
+                            "params": {
+                                "model_type_name": "bmi_c_cfe",
+                                "library_file": "./extern/cfe/cmake_build/libcfebmi",
+                                "forcing_file": "",
+                                "init_config": "./conus_config/CFE_{{id}}.ini",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "Q_OUT",
+                                "registration_function": "register_bmi_cfe",
+                                "variables_names_map": {
+                                    "water_potential_evaporation_flux": "potential_evapotranspiration",
+                                    "atmosphere_water__liquid_equivalent_precipitation_rate": "QINSUR"
+                                },
+                                "uses_forcing_file": false
+                            }
+                        },
+                        {
                             "name": "bmi_c++",
                             "params": {
                                 "model_type_name": "bmi_smp",
@@ -97,23 +114,6 @@
                                 },
                                 "uses_forcing_file": false
                             }
-                        },
-                        {
-                            "name": "bmi_c",
-                            "params": {
-                                "model_type_name": "bmi_c_cfe",
-                                "library_file": "./extern/cfe/cmake_build/libcfebmi",
-                                "forcing_file": "",
-                                "init_config": "./conus_config/CFE_{{id}}.ini",
-                                "allow_exceed_end_time": true,
-                                "main_output_variable": "Q_OUT",
-                                "registration_function": "register_bmi_cfe",
-                                "variables_names_map": {
-                                    "water_potential_evaporation_flux": "potential_evapotranspiration",
-                                    "atmosphere_water__liquid_equivalent_precipitation_rate": "QINSUR"
-                                },
-                                "uses_forcing_file": false
-                            }
                         }
                     ],
                     "uses_forcing_file": false
@@ -130,8 +130,5 @@
         "end_time": "2016-01-10 23:00:00",
         "output_interval": 3600
     },
-    "output_root": "./output_dir/",
-    "routing": {
-        "t_route_config_file_with_path": "./data/baseline/routing_config_CONUS.yaml"
-    }
+    "output_root": "./output_dir/"
 }
