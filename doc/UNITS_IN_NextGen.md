@@ -1,8 +1,8 @@
 # Output Variable Units from Running Model Engine
 
 * [Summary](#summary)
-* [Conceptual Functional Equivalent (CFE) Model](#conceptual-functional-equivalent-(cfe)-model)
-* [Potential Evapotranspiration (PET)](#potential-evapotranspiration-(pet))
+* [CFE Model](#cfe-model)
+* [PET Model](#pet-model))
 * [Noah OWP Modular](#noah-owp-modular)
 * [Topmodel](#topmodel)
 
@@ -14,7 +14,7 @@ As for the nex-###.csv outputs, these are the accumulated overland flow contribu
 
 That said, for users who are interested in using the CSV format, we tabulate below output as well as input variables with their units for a few commonly used hydrologic models for users' convenience.
 
-## Conceptual Functional Equivalent (CFE) Model
+## CFE Model
 
 | Output Variable Name | Physical Meaning | Units |
 | ------------- | :-----: | :--------: |
@@ -40,8 +40,9 @@ That said, for users who are interested in using the CSV format, we tabulate bel
 | ice_fraction_xinanjiang | fraction of top soil layer that is frozen based on xinanjiang runoff scheme | none |
 | soil_moisture_profile | entire profile of the soil column (1D array) | none |
 
+* CFE: Conceptual Functional Equivalent
 
-## Potential Evapotranspiration (PET)
+## PET Model
 
 | Output Variable Name | Physical Meaning | Units |
 | ------------- | :-----: | :--------: |
@@ -56,6 +57,8 @@ Input Variable Name | Physical Meaning | Units |
 | land_surface_radiation~incoming_shortwave__energy_flux | self_evident | W/m2 |
 | land_surface_wind__x_component_of_velocity | wind speed in eastward direction | m/s |
 | land_surface_wind__y_component_of_velocity | wind speed in northward direction | m/s |
+
+* PET: Potential Evapotranspiration
 
 
 ## Noah OWP Modular
