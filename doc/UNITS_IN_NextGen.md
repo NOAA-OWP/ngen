@@ -1,5 +1,13 @@
 # Output Variable Units from Running Model Engine
 
+* [Summary](##summary)
+* [Conceptual Functional Equivalent (CFE) Model](##conceptual-functional-equivalent-(cfe)-model)
+* [Potential Evapotranspiration (PET)](##potential-evapotranspiration-(pet))
+* [Noah OWP Modular](##noah-owp-modular)
+* [Topmodel](##topmodel)
+
+## Summary
+
 When running model engine with hydrofabric, the outputs are typically stored in two types of files, cat-###.csv, and nex-###_output.csv, where "###" represents a series of digits (not necessarily 3, but at least 1). The model engine at present does not write the output data with units, the values in the cat-###.csv files come from the model formulation running for that catchment. There are additional output variables that are not witten out to the files. The units of these variables are dictated by the formulation, and the model engine doesn't (currently) do any inspection of the units for output. One option currently is to look at the formulation documentation and see what each BMI variable it advertises as an output variable has for units. We may, in the future, use some BMI functionality to try to attach those units to output automatically, but that is difficult to do with the CSV output we currently produce, [#744](https://github.com/NOAA-OWP/ngen/pull/744) may help to start addressing that.
 
 As for the nex-###.csv outputs, these are the accumulated overland flow contributions at the point from all directly connected catchments assoicated with the nexus. These values should be in units of m^3/s given that a formulation's main_output_variable returns a rate, e.g. m/s, the main_output_variable is currently automatically multiplied by the catchment's area to produce the volumetric flow rate.
@@ -7,6 +15,7 @@ As for the nex-###.csv outputs, these are the accumulated overland flow contribu
 That said, for users who are interested in using the CSV format, we tabulate below output as well as input variables with their units for a few commonly used hydrologic models for users' convenience.
 
 ## Conceptual Functional Equivalent (CFE) Model
+
 | Output Variable Name | Physical Meaning | Units |
 | ------------- | :-----: | :--------: |
 | RAIN_RATE | the amount of rain that falls over a specific time period per unit area | m/h |
@@ -33,6 +42,7 @@ That said, for users who are interested in using the CSV format, we tabulate bel
 
 
 ## Potential Evapotranspiration (PET)
+
 | Output Variable Name | Physical Meaning | Units |
 | ------------- | :-----: | :--------: |
 | water_potential_evaporation_flux | the maximum possible amount of water that would evaporate from a given surface | (m/s) |
@@ -42,13 +52,14 @@ Input Variable Name | Physical Meaning | Units |
 | land_surface_air__pressure | self evident from variable name | Pa |
 | land_surface_air__temperature | self evident | K |
 | atmosphere_air_water~vapor__relative_saturation | self evident | kg kg-1 |
-| land_surface_radiation~incoming~longwave__energy_flux | self_evident | W/m2|
-| land_surface_radiation~incoming~shortwave__energy_flux | self_evident | W/m2 |
+| land_surface_radiation~incoming_longwave__energy_flux | self_evident | W/m2|
+| land_surface_radiation~incoming_shortwave__energy_flux | self_evident | W/m2 |
 | land_surface_wind__x_component_of_velocity | wind speed in eastward direction | m/s |
 | land_surface_wind__y_component_of_velocity | wind speed in northward direction | m/s |
 
 
 ## Noah OWP Modular
+
 Output Variable Name | Physical Meaning | Units |
 | ------------- | :-----: | :--------: |
 | QINSUR | total liquid water input to surface rate | m/s |
@@ -72,6 +83,7 @@ Input Variable Name | Physical Meaning | Units |
 
 
 ## Topmodel
+
 Output Variable Name | Physical Meaning | Units |
 | ------------- | :-----: | :--------: |
 | Qout (= qb + qof) | accumulated discharge | m/h |
@@ -89,7 +101,7 @@ Output Variable Name | Physical Meaning | Units |
 | soil_water__domain_unsaturated-zone_volume (sumuz) | stor_unsat_zone over the whole watershed | m |
 | land_surface_water__water_balance_volume (bal) | the residual of the water balance | m |
 
-* The symbols in the parentheses in the Output Variable Name column are the actual variable names appearing in output files.
+* The symbols in the parentheses in the `Output Variable Name` column are the actual variable names appearing in output files.
 
 Input Variable Name | Physical Meaning | Units |
 | ------------- | :-----: | :--------: |
