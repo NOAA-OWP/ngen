@@ -4,30 +4,48 @@ When running model engine with hydrofabric, the outputs are typically stored in 
 
 As for the nex-###.csv outputs, these are the accumulated overland flow contributions at the point from all directly connected catchments assoicated with the nexus. These values should be in units of m^3/s given that a formulation's main_output_variable returns a rate, e.g. m/s, the main_output_variable is currently automatically multiplied by the catchment's area to produce the volumetric flow rate.
 
-That said, for users who are interested in using the CSV format, we tabulate below output variables with their unuts for a few commonly used hydrologic models for users' convenniece.
+That said, for users who are interested in using the CSV format, we tabulate below output as well as input variables with their units for a few commonly used hydrologic models for users' convenience.
 
 ## Conceptual Functional Equivalent (CFE) Model
 | Output Variable Name | Physical Meaning | Units |
 | ------------- | :-----: | :--------: |
 | RAIN_RATE | the amount of rain that falls over a specific time period per unit area | m/h |
-| DIRECT_RUNOFF | Water that flows over the ground surface directly into water bodies |m/h |
+| DIRECT_RUNOFF | Water that flows over the ground surface directly into water bodies | m/h |
 | GIUH_RUNOFF | rainfall-runoff from Geomorphological Instantaneous Unit Hydrograph model | m/h |
 | NASH_LATERAL_RUNOFF | lateral runoff from Nash-cascade of reservoirs model | m/h |
 | DEEP_GW_TO_CHANNEL_FLUX | flux from the deep reservoir into the channels | m/h |
 | SOIL_TO_GW_FLUX | the movement of water from the soil layer into the groundwater table below | m/h |
-| Q_OUT | Total runoff (sum of GIUH_RUNOFF, NASH_LATERAL_RUNOFF, DEEP_GW_TO_CHANNEL_FLUX | m/h |
+| Q_OUT | total runoff (sum of GIUH_RUNOFF, NASH_LATERAL_RUNOFF, DEEP_GW_TO_CHANNEL_FLUX) | m/h |
 | POTENTIAL_ET | the maximum possible amount of water that would evaporate and transpire from a given surface | m/h |
 | ACTUAL_ET | the actual amount of water lost from a surface due to evaporation and transpiration | m/h |
-| GW_STORAGE | the amount of water that is stored aquifers, i.e., underground water reservoirs | m |
+| GW_STORAGE | the amount of water that is stored in aquifers, i.e., underground water reservoirs | m |
 | SOIL_STORAGE | The amount of water that is held in the soil | m |
 | SOIL_STORAGE_CHANGE | changes in soil water storage | m |
 | SURF_RUNOFF_SCHEME | Schaake or Xinanjiang | none |
+
+| Input Variable Name | Physical Meaning | Units |
+| ------------- | :-----: | :--------: |
+| atmosphere_water__liquid_equivalent_precipitation_rate | rainfall rate | mm/h |
+| water_potential_evaporation_flux | land surface_water potential_evaporation volume flux | m/s |
+| ice_fraction_schaake | the amount of water that is ice based on Schaake runoff scheme | m |
+| ice_fraction_xinanjiang | fraction of top soil layer that is frozen based on xinanjiang runoff scheme | none |
+| soil_moisture_profile | entire profile of the soil column (1D array) | none |
 
 
 ## Potential Evapotranspiration (PET)
 | Output Variable Name | Physical Meaning | Units |
 | ------------- | :-----: | :--------: |
-| water_potential_evaporation_flux | the maximum possible amount of water that would evaporate and transpire from a given surface | (m/s) |
+| water_potential_evaporation_flux | the maximum possible amount of water that would evaporate from a given surface | (m/s) |
+
+Input Variable Name | Physical Meaning | Units |
+| ------------- | :-----: | :--------: |
+| land_surface_air__pressure | self evident from variable name | Pa |
+| land_surface_air__temperature | self evident | K |
+| atmosphere_air_water~vapor__relative_saturation | self evident | kg kg-1 |
+| land_surface_radiation~incoming~longwave__energy_flux | self_evident | W/m2|
+| land_surface_radiation~incoming~shortwave__energy_flux | self_evident | W/m2 |
+| land_surface_wind__x_component_of_velocity | wind speed in eastward direction | m/s |
+| land_surface_wind__y_component_of_velocity | wind speed in northward direction | m/s |
 
 
 ## Noah OWP Modular
@@ -36,25 +54,21 @@ Output Variable Name | Physical Meaning | Units |
 | QINSUR | total liquid water input to surface rate | m/s |
 | ETRAN | transpiration rate | mm/s |
 | QSEVA | evaporation rate | m/s |
+| EVAPOTRANS | evapotranspiration rate | m/s |
 | TG | surface/ground temperature; becomes snow surface temperature when snow is present | K |
 | SNEQV | snow water equivalent | mm |
 | TGS | ground temperature (equal to TG when no snow; equal to bottom of snow temperature when there is snow | K |
-| ACSNOM | Accumulated meltwater from bottom snow layer (NWM 3.0 output variable) | mm |
-| SNOWT_AVG | Average snow temperature (by layer mass) (NWM 3.0 output variable) | K |
-| ISNOW | Number of snow layers (NWM 3.0 output variable) | none |
-| QRAIN | Rainfall rate on the ground (NWM 3.0 output variable) | mm/s |
-| FSNO | Snow-cover fraction on the ground (NWM 3.0 output variable) | none |
-| SNOWH | Snow depth (NWM 3.0 output variable) | m |
-| SNLIQ | Snow layer liquid water (NWM 3.0 output variable) | mm |
-| QSNOW | Snowfall rate on the ground (NWM 3.0 output variable)| mm/s |
-| ECAN | evaporation of intercepted water (NWM 3.0 output variable) | mm |
-| GH | Heat flux into the soil (NWM 3.0 output variable) | W/m-2 |
-| TRAD | Surface radiative temperature (NWM 3.0 output variable) | K |
-| FSA | Total absorbed SW radiation (NWM 3.0 output variable) | W/m-2 |
-| CMC | Total canopy water (liquid + ice) (NWM 3.0 output variable) | mm |
-| LH | Total latent heat to the atmosphere (NWM 3.0 output variable) | W/m-2 |
-| FIRA | Total net LW radiation to atmosphere (NWM 3.0 output variable) | W/m-2 |
-| FSH | Total sensible heat to the atmosphere (NWM 3.0 output variable) | W/m-2 |
+
+Input Variable Name | Physical Meaning | Units |
+| ------------- | :-----: | :--------: |
+| SFCPRS | surface pressure | Pa |
+| SFCTMP | surface air temperature | K |
+| SOLDN | incoming shortwave radiation | W/m2 |
+| LWDN | incoming longwave radiation | W/m2 |
+| UU | wind speed in eastward direction | m/s |
+| VV | wind speed in northward direction | m/s |
+| Q2 | mixing ratio | kg/kg |
+| PRCPNONC | precipitation rate | mm/s |
 
 
 ## Topmodel
@@ -76,3 +90,8 @@ Output Variable Name | Physical Meaning | Units |
 | land_surface_water__water_balance_volume (bal) | the residual of the water balance | m |
 
 * The symbols in the parentheses in the Output Variable Name column are the actual variable names appearing in output files.
+
+Input Variable Name | Physical Meaning | Units |
+| ------------- | :-----: | :--------: |
+| atmosphere_water__liquid_equivalent_precipitation_rate | rainfall rate | m/h |
+| water_potential_evaporation_flux | land surface water potential evaporation volume flux | m/h |
