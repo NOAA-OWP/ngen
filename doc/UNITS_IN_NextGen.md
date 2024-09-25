@@ -2,7 +2,7 @@
 
 * [Summary](#summary)
 * [CFE Model](#cfe-model)
-* [PET Model](#pet-model))
+* [PET Model](#pet-model)
 * [Noah OWP Modular](#noah-owp-modular)
 * [Topmodel](#topmodel)
 
@@ -12,7 +12,7 @@ When running model engine with hydrofabric, the outputs are typically stored in 
 
 As for the nex-###.csv outputs, these are the accumulated overland flow contributions at the point from all directly connected catchments assoicated with the nexus. These values should be in units of m^3/s given that a formulation's main_output_variable returns a rate, e.g. m/s, the main_output_variable is currently automatically multiplied by the catchment's area to produce the volumetric flow rate.
 
-That said, for users who are interested in using the CSV format, we tabulate below output as well as input variables with their units for a few commonly used hydrologic models for users' convenience.
+That said, for users who are interested in using the CSV format, we tabulate below output as well as input variables with their units for a few commonly used hydrologic models for users' reference.
 
 ## CFE Model
 
@@ -20,7 +20,7 @@ That said, for users who are interested in using the CSV format, we tabulate bel
 | ------------- | :-----: | :--------: |
 | RAIN_RATE | the amount of rain that falls over a specific time period per unit area | m/h |
 | DIRECT_RUNOFF | Water that flows over the ground surface directly into water bodies | m/h |
-| GIUH_RUNOFF | rainfall-runoff from Geomorphological Instantaneous Unit Hydrograph model | m/h |
+| GIUH_RUNOFF | rainfall runoff from Geomorphological Instantaneous Unit Hydrograph model | m/h |
 | NASH_LATERAL_RUNOFF | lateral runoff from Nash-cascade of reservoirs model | m/h |
 | DEEP_GW_TO_CHANNEL_FLUX | flux from the deep reservoir into the channels | m/h |
 | SOIL_TO_GW_FLUX | the movement of water from the soil layer into the groundwater table below | m/h |
@@ -35,7 +35,7 @@ That said, for users who are interested in using the CSV format, we tabulate bel
 | Input Variable Name | Physical Meaning | Units |
 | ------------- | :-----: | :--------: |
 | atmosphere_water__liquid_equivalent_precipitation_rate | rainfall rate | mm/h |
-| water_potential_evaporation_flux | land surface_water potential_evaporation volume flux | m/s |
+| water_potential_evaporation_flux | land surface water potential evaporation volume flux | m/s |
 | ice_fraction_schaake | the amount of water that is ice based on Schaake runoff scheme | m |
 | ice_fraction_xinanjiang | fraction of top soil layer that is frozen based on xinanjiang runoff scheme | none |
 | soil_moisture_profile | entire profile of the soil column (1D array) | none |
