@@ -10,7 +10,7 @@ This documentation provides instructions on all neccessary steps and components 
 * [Generate Partition For Parallel Computation](#generate-partition-for-parallel-computation)
 * [Prepare the Input Data](#prepare-the-input-data)
 * [Build the Realization Configurations](#build-the-realization-configurations)
-* [Run Computations with submodules](#run-computations-with-submodules)
+* [Run Computations with Submodules](#run-computations-with-submodules)
 * [Resource Usage](#resource-usage)
 * [Run Computation with Topmodel](#run-computation-with-topmodel)
 * [Run Computation with LASAM](#run-computation-with-lasam)
@@ -153,18 +153,18 @@ With all preparation steps completed, we are now ready to run computations. We u
 For a simple example run and quick turn around, you can run:
 
 ```
-mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth.json conus_partition_32.json
+mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/realizations/conus_bmi_multi_realization_config_w_sloth.json conus_partition_32.json
 ```
 
 For a more substantial example simulation, you can run:
 
 ```
-mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah.json conus_partition_32.json
+mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/realizations/conus_bmi_multi_realization_config_w_sloth_noah.json conus_partition_32.json
 ```
 
 For an example taking into account more realistic conditions, you can try:
 ```
-mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json conus_partition_32.json
+mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/realizations/conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json conus_partition_32.json
 ```
 
 where `ngen` is the executable we built in the [Building the Executable](#build-the-executable) section. All other terms have been discussed above in details. With the current existing realization config files, the above jobs run 10 day simulation time on CONUS scale.
@@ -200,13 +200,13 @@ Running Topmodel is similar to running CFE model. The build process is the same 
 For a relatively simple example involving just two submodules, you can run the following command:
 
 ```
-mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_noah_topm.json conus_partition_32.json
+mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/realizations/conus_bmi_multi_realization_config_w_noah_topm.json conus_partition_32.json
 ```
 
 For a more complex example, you can run:
 
 ```
-mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_topm.json conus_partition_32.json
+mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/realizations/conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_topm.json conus_partition_32.json
 ```
 
 The wall clock timing in our tests for various realization configurations running 10 day simulation are tabulated as follows. Note that the timing values are from a single run, no averaging was attempted.
@@ -230,13 +230,13 @@ Running Lumped Arid/Semi-arid Model (LASAM) is similar to running CFE and Topmod
 To run one of the example realization configs, you can execute the following command:
 
 ```
-mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc.json conus_partition_32.json
+mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/realizations/conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc.json conus_partition_32.json
 ```
 
 To run a realization config with `Routing`, you can execute the following command:
 
 ```
-mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc_trt.json conus_partition_32.json
+mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/realizations/conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc_trt.json conus_partition_32.json
 ```
 
 The wall clock timing in our tests for various realization configurations running 10 day simulation are tabulated as follows. Note that the timing values are from a single run, on different machines with similar architecture, but no averaging was attempted. Note also that frequent `print` statement to the standard output in submodules/model codes can significantly increase the `Computation Time`.
@@ -305,7 +305,7 @@ Note that t-route is a continuously evolving software package. In the process of
 With that, we can run an example with the command:
 
 ```
-mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_trt.json conus_partition_32.json
+mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/realizations/conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_trt.json conus_partition_32.json
 ```
 
 If your run is successful, you should see the directory `stream_output_dir` populated with output files in NetCDF format with each file corresponding to each hour between 2016-01-01 to 2016-01-10.
