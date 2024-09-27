@@ -83,16 +83,21 @@ TEST_F(DomainLayerTest, TestRead0)
         double c_value = UnitsHelper::get_converted_value(m_data.time_step_units,m_data.time_step,"s");
         time_steps.push_back(c_value);
     }
-    boost::range::sort(keys, std::greater<int>());
+    //boost::range::sort(keys, std::greater<int>());
+    boost::range::sort(keys);
     std::vector<std::shared_ptr<ngen::Layer> > layers;
     layers.resize(keys.size());
 
     for(long i = 0; i < keys.size(); ++i)
     {
       auto desc = layer_meta_data.get_layer(keys[i]);
-      ASSERT_EQ(desc.name, "domain_layer");
+      if (i == 0) {
+          ASSERT_EQ(desc.name, "surface layer");
+      } else {
+          ASSERT_EQ(desc.name, "domain_layer");
+      }
       ASSERT_EQ(desc.time_step_units, "s");
-      ASSERT_EQ(desc.id, 0);
+      ASSERT_EQ(desc.id, i);
       ASSERT_EQ(desc.time_step, 3600);
     }
 

@@ -61,7 +61,7 @@
           },
           "layer_name": "domain_layer",
           "time_step_units": "s",
-          "id": 0,
+          "id": 1,
           "time_step": 3600,
           "domain": "catchments"
         },
@@ -89,7 +89,7 @@
           },
           "layer_name": "domain_layer",
           "time_step_units": "s",
-          "id": 0,
+          "id": 2,
           "time_step": 3600,
           "domain": "catchments"
         },
@@ -117,7 +117,7 @@
           },
           "layer_name": "domain_layer",
           "time_step_units": "s",
-          "id": 0,
+          "id": 3,
           "time_step": 3600,
           "domain": "catchments"
         }
