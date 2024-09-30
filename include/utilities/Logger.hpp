@@ -6,6 +6,7 @@
 #include <memory>
 #include <fstream>
 #include <ctime>
+#include <sstream>
 
 enum class LogLevel {
 	NONE = 0,
@@ -41,13 +42,15 @@ class Logger {
   public:
 	static std::shared_ptr<Logger> GetInstance();
 	void SetLogPreferences(LogLevel level);
-	void Log(std::string message, LogLevel messageLevel, LoggingModule module);
+	void Log(std::string message, LogLevel messageLevel);
 	LogLevel GetLogLevel(const std::string& logLevel);
 	std::string createTimestamp();
+	std::string getLogFilePath();
 
   private:
 	LogLevel logLevel;
 	std::fstream logFile;
+	std::string logFilePath;
 	static std::shared_ptr<Logger> loggerInstance;
 };
 
