@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "Logger.hpp"
 #include <cstring>
 #include <string>
@@ -37,22 +38,43 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
     std::string fwd_slash = "/";
     std::string logFileName = "ngen_log.txt";
     std::string logFileDir = "/ngencerf/data/run-logs/ngen_" + Logger::createTimestamp() + fwd_slash;
-    std::cout << "Log File Directory:" << logFileDir << std::endl;
 
-	if (!logFileName.empty()) {
-    	// creating the directory
-   		int status;
-		std::string mkdir_cmd = "mkdir -p " + logFileDir;
-		const char *cstr = mkdir_cmd.c_str();
-   		status = system(cstr);
-   		if (status == -1)
-   		   std::cerr << "Error : " << strerror(errno) << std::endl;
-   		else
-   		   std::cout << "Directories are created" << std::endl;
+    // creating the directory
+   	int status;
+	std::string mkdir_cmd = "mkdir -p " + logFileDir;
+	const char *cstr = mkdir_cmd.c_str();
+   	status = system(cstr);
+   	if (status == -1)
+   	   std::cerr << "Error(" << (errno) << ") creating log file directory: " << logFileDir << std::endl;
+   	else {
+   	   std::cout << "Log directory: " << logFileDir <<std::endl;
 		// creating the file
-		logFile.open(logFileDir+logFileName, ios::out);
+		logFilePath = logFileDir+logFileName;
+		logFile.open(logFilePath, ios::out | ios::app);
 		if (!logFile.good()) {
-			std::cerr << "Can't Open Log File" << std::endl;
+			std::cerr << "Warning: Can't Open Log File: " << logFilePath << std::endl;
+			// try logging to a file in local directory
+    		std::string logFileDir = "./run-logs/ngen_" + Logger::createTimestamp() + fwd_slash;
+			mkdir_cmd = "mkdir -p " + logFileDir;
+			cstr = mkdir_cmd.c_str();
+			status = system(cstr);
+   			if (status == -1)
+   	   			std::cerr << "Error(" << (errno) << ") creating log file directory: " << logFileDir << std::endl;
+   			else {
+				logFilePath = logFileDir+logFileName;
+				logFile.open(logFilePath, ios::out | ios::app);
+				if (!logFile.good()) {
+					std::cerr << "Can't Open local directory Log File:" << logFilePath <<std::endl;			
+				}
+				else {
+					std::cout << "Logging instead into: " << logFilePath << std::endl;
+					setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
+				}
+			}
+		}
+		else {
+			std::cout << "Log File Path:" << logFilePath << std::endl;
+			setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
 		}
 	}
 }
@@ -76,7 +98,9 @@ std::shared_ptr<Logger> Logger::GetInstance() {
 * @param message: Log Message
 * @param messageLevel: Log Level, LogLevel::DEBUG by default
 */
-void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG, LoggingModule module=LoggingModule::NGEN) {
+void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG) {
+	LoggingModule module=LoggingModule::NGEN;
+
 	// don't log if messageLevel < logLevel 
 	if (messageLevel >= logLevel) {
 		std::string logType;
@@ -114,6 +138,7 @@ void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG, L
 
 		final_message = createTimestamp() + separator + mod_name + separator + logType + message;
 		logFile << final_message;
+		logFile.flush();
 	}
 }
 
@@ -146,7 +171,9 @@ using std::chrono::system_clock;
 
 std::string Logger::createTimestamp() {
     std::chrono::_V2::system_clock::time_point currentTime = std::chrono::system_clock::now();
-    char buffer[80];
+    char buffer1[80];
+    char buffer2[80];
+	std::stringstream ss;
     
     long transformed = currentTime.time_since_epoch().count() / 1000000;
     
@@ -155,8 +182,13 @@ std::string Logger::createTimestamp() {
     std::time_t tt;
     tt = std::time(0);
     tm *timeinfo = std::gmtime(&tt);
-    strftime (buffer,80,"%FT%H:%M:%S",timeinfo);
-    sprintf(buffer, "%s:%03d",buffer,(int)millis);
+    strftime (buffer1,100,"%FT%H:%M:%S",timeinfo);
+    sprintf(buffer2, ":%03d", (int)millis);
+	ss << buffer1 << buffer2;
     
-    return std::string(buffer);
+    return ss.str();
+}
+
+std::string Logger::getLogFilePath() {
+	return logFilePath;
 }

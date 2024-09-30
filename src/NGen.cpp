@@ -145,25 +145,25 @@ void setup_logger(void) {
 
     // sample logging for different log levels
     ss << "Sample Log for LogLevel::ERROR" << std::endl;
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::ERROR, LoggingModule::NGEN); ss.str("");
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::ERROR); ss.str("");
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
     ss << "Sample Log for LogLevel::FATAL" << std::endl;
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::FATAL, LoggingModule::NGEN); ss.str("");
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::FATAL); ss.str("");
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
     ss << "Sample Log for LogLevel::WARN"; // no endl at the end of the message
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::WARN, LoggingModule::NGEN); ss.str("");
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::WARN); ss.str("");
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
     ss << "Sample Log for LogLevel::INFO" << std::endl;
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO, LoggingModule::NGEN); ss.str("");
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO); ss.str("");
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
     // multiline logging
     ss << "First line of multiline log:" << std::endl
        << "   Indented second line of multiline log" << std::endl
        << "         Indented third line of multiline log" << std::endl
        << "                Indented fourth line of multiline log"; // no endl at the end of the message
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO, LoggingModule::NGEN); ss.str("");
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO); ss.str("");
     ss << "Sample Log for LogLevel::DEBUG" << std::endl;
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::DEBUG, LoggingModule::NGEN); ss.str("");
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::DEBUG); ss.str("");
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
 }
 
@@ -428,7 +428,11 @@ int main(int argc, char *argv[]) {
     nexus_collection->update_ids("id");
     std::cout<<"Initializing formulations" << std::endl;
     std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
+    ss << "Initializing formulations:" << __FILE__ << ":" << __LINE__ <<std::endl;
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO); ss.str("");
     manager->read(catchment_collection, utils::getStdOut());
+    ss << "Initializing formulations:" << __FILE__ << ":" << __LINE__ <<std::endl;
+    (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO); ss.str("");
 
     //TODO refactor manager->read so certain configs can be queried before the entire
     //realization collection is created
