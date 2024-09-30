@@ -32,6 +32,8 @@ We also need all the submodule codes. So run the command below:
 
 `git submodule update --init --recursive`
 
+If necessary, you may also go to a submodule's github repo to obtain the latest version.
+
 # Setting Up the Environment
 
 For setting up the build and computation environment, we refer the users to our documentation chapter [DEPENDENCIES.md](DEPENDENCIES.md) for details. Basically, you will need to have access to C/C++ compiler, MPI, Boost, NetCDF, Cmake, SQLite3. Some of them may already be on your system. Otherwise, you have to install your own version. There are also some required software packages that come with `ngen` as submodules, such as `pybind11`, and `iso_c_fortran_bmi`. 
@@ -40,7 +42,7 @@ You most likely need to use Python. For that we recommend setting up a virtual e
 
 # Build the Executable
 
-After setting up the environment variables, we need to first build the necessary dynamically linked libraries. Although `ngen` has the capability for automated building of submodule libraries, we build them explicitly so that users have a better understanding. For simplicity, we display the content a script which we name it `build_libs`.
+After setting up the environment variables, we need to first build the necessary dynamically linked libraries. Although `ngen` has the capability for automated building of submodule libraries, we build them explicitly so that users have a better understanding. For simplicity, we display the content of a script which we name it `build_libs`.
 
 ```
 cmake -B extern/sloth/cmake_build -S extern/sloth && \
@@ -69,7 +71,7 @@ Copy the content into a file named `build_libs` and run the command:
 source build_libs
 ```
 
-This will build all libraries we need to run `ngen` at the time of this writing.
+This will build all the submodule libraries we need to run `ngen` at the time of this writing.
 
 Then, with the Python virtual environment activated, we can build the MPI executable using the following script:
 
@@ -109,7 +111,7 @@ This will build an executable in the `cmake_build_mpi` directory named `ngen` an
 
 # CONUS Hydrofabric
 
-The CONUS hydrofabric is downloaded from [here](https://www.lynker-spatial.com/#hydrofabric/v20.1/). The file name under the list is `conus.gpkg`. Note that since the data there is continually evolving, a newer version may be available in the future. When using a newer version, be mindful that the corresponding initial configuration file generation and validation for all submodules at CONUS scale is necessary, which may be a non-trivial process due to the sheer size of the spatial scale.
+The CONUS hydrofabric is downloaded from [here](https://www.lynker-spatial.com/data?path=hydrofabric%2Fv20.1%2F). The file name under the list is `conus.gpkg`. Note that since the data there is continually evolving, a newer version may be available in the future. When using a newer version, be mindful that the corresponding initial configuration file generation and validation for all submodules at CONUS scale is necessary, which may be a non-trivial process due to the sheer size of the spatial scale.
 
 As the file is fairly large, it is worth some consideration to store it in a proper place, then simply sets a symbolic link in the `ngen` home directory, thus named `./hydrofabric/conus.gpkg`. Note that a straight forward way to create the symbolic link is to create a `hydrofabric` directory and then create a link to `conus.gpkg` in `./hydrofabric/`.
 
@@ -125,7 +127,7 @@ In the command above, `conus.gpkg` is the NextGen hydrofabric version 2.01 for C
 
 # Prepare the Input Data
 
-Input data include the forcing data and initial parameter data for various submodules. These depend on what best suits the user's need. For our case, as of this documentation, beside forcing data, which can be accessed at `./forcing/NextGen_forcing_2016010100.nc` using the symbolic link scheme, we also generated initial input data for various submodules: `noah-owp-modular`, `PET`, `CFE`, `SoilMoistureProfiles (SMP)`, `SoilFreezeThaw (SFT)`, and LASAM, or LGAR-C (lgc). The first three are located in `./conus_config/`, the SMP initial configs are located in `./conus_smp_configs/` and the SFT initial configs are located in `./conus_sft_configs/`. For LASAM model coupled with SMP, a different initial configuration is needed for SMP, which is named 'config_layered.txt' in config directory of SMP. For testing purpose, we used the smae initial configure file for all catchments.
+Input data include the forcing data and initial parameter data for various submodules. These depend on what best suits the user's need. For our case, as of this documentation, beside forcing data, which can be accessed at `./forcing/NextGen_forcing_2016010100.nc` using the symbolic link scheme, we also generated initial input data for various submodules: `noah-owp-modular`, `PET`, `CFE`, `SoilMoistureProfiles (SMP)`, `SoilFreezeThaw (SFT)`, and LASAM, or LGAR-C (lgc). The first three are located in `./conus_config/`, the SMP initial configs are located in `./conus_smp_configs/` and the SFT initial configs are located in `./conus_sft_configs/`. For each hydrologic model (CFE, Topmodel, and LASAM) coupled with SMP, a different initial configuration is needed for SMP, which is named `config_conceptual.txt`, `config_topmodel.txt`, and `config_layered.txt` in `config` directory of SMP, respectively. For testing purpose, we used the smae initial configure file for all catchments.
 
 For code used to generate the initial config files for the various modules, the interested users are directed to this [web location](https://github.com/NOAA-OWP/ngen-cal/tree/master/python/ngen_config_gen). 
 
@@ -133,7 +135,7 @@ The users are warned that since the simulated region is large, some of the initi
 
 # Build the Realization Configurations
 
-The realization configuration file, in JSON format, contains high level information to run a `ngen` simulation, such as inter-coupled submodules, paths to forcing file, shared libraries, initialization parameters, duration of simulation, I/O variables, etc. We have built the realization configurations for several commonly used submodules which are located in `data/baseline/`. These are built by adding one submodule at a time (except the last one which used an alternative ordering of the submodules for comparison), performing a test run for a 10 day simulation. The successive submodules used for CFE model are:
+The realization configuration file, in JSON format, contains high level information to run a `ngen` simulation, such as inter-coupled submodules, paths to forcing file, shared libraries, initialization parameters, duration of simulation, I/O variables, etc. We have built the realization configurations for several commonly used submodules which are located in `data/baseline/realizations`. These are built by adding one submodule at a time (except the last row which used an alternative ordering of the submodules for comparison), performing a test run for a 10 day simulation. The successive submodules used for CFE model are:
 
 ```
 sloth (conus_bmi_multi_realization_config_w_sloth.json)
@@ -169,7 +171,7 @@ mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/co
 
 where `ngen` is the executable we built in the [Building the Executable](#build-the-executable) section. All other terms have been discussed above in details. With the current existing realization config files, the above jobs run 10 day simulation time on CONUS scale.
 
-Be ware that the above commands will generate over a million output files associated with catchment and nexus ids. In the realization config files used above, we have specified an `output_root` file directory named `./output_dir/` to store these files. If you `cd` to `./output_dir` and issue a `ls` command, it will be significantly slower than usual to list all the file names. You can choose a different `output_root` file directory name than `./output_dir/` by modifying the directory name in the realization configuration file if you prefer. Note that you need to create the output file directory before running the executable.
+Be ware that the above commands will generate over a million output files associated with catchment and nexus ids. In the realization config files used above, we have specified an `output_root` file directory named `./output_dir/` to store these files. If you `cd` to `./output_dir` and issue a `ls` command, it will be significantly slower than usual to list all the file names. You can choose a different `output_root` file directory name than `./output_dir/` by modifying the directory name in the realization configuration file if you prefer. Note that you can either create the output file directory before running the executable, or `ngen` will create one for you based on the `output_root` specification.
 
 # Resource Usage
 
@@ -195,7 +197,7 @@ The abbreviation used for submodule names in the table:
 
 # Run Computation with Topmodel
 
-Running Topmodel is similar to running CFE model. The build process is the same as described above in the [Build the Executable](#build-the-executable) using the same build script. In the realization configuration file, you will just need to replace the part for CFE submodule with the one for Topmodel submodule. Note that Topmodel uses different initial configuration data and parameters that need to be generated. For this we refer the users to githup home page for [Topmodel](https://github.com/NOAA-OWP/topmodel) for more in depth discussion. In the following, we provide two examples for illustration. Note that in the examples we tested with the realization configuration files that used the so called `synthetic TWI (Topographic Wetness Index)`, i.e., the same initial configuration file for all catchments to make the computation simple. Also, for Topmodel, some of the realization configurations do not need `sloth` submodule for initialization.
+Running Topmodel is similar to running CFE model. The build process is the same as described above in the [Build the Executable](#build-the-executable) using the same build script. In the realization configuration file, you will just need to replace the part for CFE submodule with the one for Topmodel submodule. Note that Topmodel uses different initial configuration data and parameters that need to be generated. For this we refer the users to githup home page for [Topmodel](https://github.com/NOAA-OWP/topmodel) for more in depth discussion. In the following, we provide two examples for illustration. Note that in the examples we tested the realization configurations with the so called `synthetic TWI (Topographic Wetness Index)`, i.e., the same initial configuration file for all catchments to make the computation simple. Also, for Topmodel, some of the realization configurations do not need `sloth` submodule for initialization.
 
 For a relatively simple example involving just two submodules, you can run the following command:
 
@@ -225,7 +227,7 @@ The wall clock timing in our tests for various realization configurations runnin
 
 # Run Computation with LASAM
 
-Running Lumped Arid/Semi-arid Model (LASAM) is similar to running CFE and Topmodel model. The build process is the same as described above in the [Build the Executable](#build-the-executable) using the same build script. In the realization configuration file, you will need to replace the part for CFE or Topmodel submodule with the one for [LASAM](https://github.com/NOAA-OWP/LGAR-C) submodule. For the initial configuration and parameters, for the computation results reported here, we have used the same one for all catchments on CONUS for testing purpose. The initial configuration is a work in progress and when the more realstic initial configuration becomes available, we will repeat the calculations and update the results. It is noted that different initial condition file for LASAM, `config_layered.txt`, is needed for SMP from CFE, where an equivalent of `config_conceptual.txt (SoilMoistureProfile_{{id}}.ini` is used. This is reflected in the realization configuration files.
+Running Lumped Arid/Semi-arid Model (LASAM) is similar to running CFE and Topmodel model. The build process is the same as described above in the [Build the Executable](#build-the-executable) using the same build script. In the realization configuration file, you will need to replace the part for CFE or Topmodel submodule with the one for [LASAM](https://github.com/NOAA-OWP/LGAR-C) submodule. For the initial configuration and parameters, for the computation results reported here, we have used the same one for all catchments on CONUS for testing purpose. The initial configuration is a work in progress and when the more realstic initial configuration becomes available, we will repeat the calculations and update the results. As noted above, a different initial condition file, `config_layered.txt`, is used for SMP. This is reflected in the realization configuration files.
 
 To run one of the example realization configs, you can execute the following command:
 
@@ -239,7 +241,7 @@ To run a realization config with `Routing`, you can execute the following comman
 mpirun -n 32 ./cmake_build_mpi/ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/realizations/conus_bmi_multi_realization_config_w_sloth_noah_pet_lgc_trt.json conus_partition_32.json
 ```
 
-The wall clock timing in our tests for various realization configurations running 10 day simulation are tabulated as follows. Note that the timing values are from a single run, on different machines with similar architecture, but no averaging was attempted. Note also that frequent `print` statement to the standard output in submodules/model codes can significantly increase the `Computation Time`.
+The wall clock timing in our tests for various realization configurations running 10 day simulation are tabulated as follows. Note that the timing values are from a single run, on different machines with similar architecture, no averaging was attempted. Note also that frequent `print` statement to the standard output in submodules/model codes can significantly increase the `Computation Time`.
 
 | Realization | Number of CPUs | Initialization Time (s) | Computation Time (s) | Total Time (s) |
 | ------------- | :-----: | :--------: | :--------: | :--------: |
@@ -258,7 +260,7 @@ The wall clock timing in our tests for various realization configurations runnin
 
 To run computation on CONUS with routing, we need to build the executable with the routing option turned on. This can be done using the build script displayed in the [Build the Executable](#build-the-executable) section, and ensure both `-DNGEN_WITH_PYTHON:BOOL=ON` and `-DNGEN_WITH_ROUTING:BOOL=ON` are enabled. Then, you can run the script to build the `ngen` executable.
 
-You also need to build the `t-route` submodule. First, as the vendored `t-route` submodule is out of date, to get the latest version, you need to remove the old `t-route` and run `git clone https://github.com/NOAA-OWP/t-route` in the `extern` directory. For building `t-route` in general, we refer to the documentation [PYTHON_ROUTING.md](PYTHON_ROUTING.md) for essential details. We just want to add some additional discussion here to make the process easier. Note that there is more than one way to build `t-route`. Do `cd t-route`, then run:
+You also need to build the `t-route` submodule. First, as the vendored `t-route` submodule may possibly be out of date, you may need to remove the old `t-route` and run `git clone https://github.com/NOAA-OWP/t-route` in the `extern` directory to get the latest version. For building `t-route` in general, we refer to the documentation [PYTHON_ROUTING.md](PYTHON_ROUTING.md) for essential details. We just want to add some additional discussion here to make the process easier. Note that there is more than one way to build `t-route`. Do `cd t-route`, then run:
 
 ```
 FC=mpif90 NETCDFINC=<path-to-netcdf-include-directory> ./compiler.sh
