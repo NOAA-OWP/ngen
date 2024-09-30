@@ -1,6 +1,8 @@
 #include <NGenConfig.h>
 
 #include <utilities/parallel_utils.h>
+#include <utilities/FileChecker.h>
+#include <iostream>
 
 int mpi_rank = 0;
 
@@ -294,11 +296,9 @@ namespace parallel {
         isGood = false;
         std::cerr << "Driver is unable to perform required hydrofabric subdividing when Python integration is not active." << std::endl;
 
-
         // Sync with the rest of the ranks and bail if any aren't ready to proceed for any reason
-        if (!mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, "initializing hydrofabric subdivider")) {
-            return false;
-        }
+        return mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, "initializing hydrofabric subdivider");
+
         #else // i.e., #if NGEN_WITH_PYTHON
         // Have rank 0 handle the generation task for all files/partitions
         std::unique_ptr<utils::ngenPy::HydrofabricSubsetter> subdivider;
