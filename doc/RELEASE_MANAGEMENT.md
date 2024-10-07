@@ -23,7 +23,10 @@ The release process can be summarized fairly simply:
     - Version numbering should follow [Semantic Versioning](https://semver.org/) and its typical `MAJOR.MINOR.PATCH` pattern
 2. A release candidate branch, based on `master`, is created in the official OWP repo
     - The name of this branch will be `release-X` for version `X`
-3. All necessary testing and quality pre-release tasks are performed using this release candiate branch
+3. The version is incremented in the main [CMakeLists.txt](../CMakeLists.txt)
+    - Update the line setting the version, which will look something like `project(ngen VERSION x.y.z)`
+    - Then committed and pushed this change to the `release-X` branch
+4. All necessary testing and quality pre-release tasks are performed using this release candidate branch
     - **TODO**: to be documented in more detail
 4. (If necessary) Bug fixes, documentation updates, and other acceptable, non-feature changes are applied to the release branch
     - Such changes should go through some peer review process before inclusion in the official OWP branch (e.g., PRs, out-of-band code reviews, etc.)

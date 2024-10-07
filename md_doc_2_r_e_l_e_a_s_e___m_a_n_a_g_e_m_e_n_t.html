@@ -114,10 +114,17 @@ Process Steps</h2>
 <li>The name of this branch will be <code>release-X</code> for version <code>X</code></li>
 </ul>
 </li>
-<li>All necessary testing and quality pre-release tasks are performed using this release candiate branch<ul>
+<li>The version is incremented in the main <a href="../CMakeLists.txt">CMakeLists.txt</a><ul>
+<li>Update the line setting the version, which will look something like <code>project(ngen VERSION x.y.z)</code></li>
+<li>Then committed and pushed this change to the <code>release-X</code> branch</li>
+</ul>
+</li>
+<li>All necessary testing and quality pre-release tasks are performed using this release candidate branch<ul>
 <li><b>TODO</b>: to be documented in more detail</li>
 </ul>
 </li>
+</ol>
+<ol type="1">
 <li>(If necessary) Bug fixes, documentation updates, and other acceptable, non-feature changes are applied to the release branch<ul>
 <li>Such changes should go through some peer review process before inclusion in the official OWP branch (e.g., PRs, out-of-band code reviews, etc.)</li>
 <li><b>TODO</b>: process to be decided upon and documented</li>
@@ -145,7 +152,7 @@ Process Steps</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Oct 3 2024 13:39:40 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Oct 7 2024 17:39:57 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
