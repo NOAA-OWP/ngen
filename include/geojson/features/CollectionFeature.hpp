@@ -40,7 +40,7 @@ namespace geojson {
                 catch (boost::bad_get &exception) {
                     std::string template_name = "Point";
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
-                    std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                    logging::error((std::string("Asked for ") + template_name + ", but only " + expected_name + " is valid\n").c_str());
                     throw;
                 }
             }
@@ -56,7 +56,7 @@ namespace geojson {
                         catch (boost::bad_get &exception) {
                             std::string template_name = "Point";
                             std::string expected_name = get_geometry_type(geometry);
-                            std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                            logging::error((std::string("Asked for ") + template_name + ", but only " + expected_name + " is valid\n").c_str());
                             throw;
                         }
                     }
@@ -72,7 +72,7 @@ namespace geojson {
                 catch (boost::bad_get &exception) {
                     std::string template_name = "LineString";
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
-                    std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                    logging::error((std::string("Asked for ") + template_name + ", but only " + expected_name + " is valid\n").c_str());
                     throw;
                 }
             }
@@ -88,7 +88,7 @@ namespace geojson {
                         catch (boost::bad_get &exception) {
                             std::string template_name = "LineString";
                             std::string expected_name = get_geometry_type(geometry);
-                            std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                            logging::error((std::string("Asked for ") + template_name + ", but only " + expected_name + " is valid\n").c_str());
                             throw;
                         }
                     }
@@ -104,7 +104,7 @@ namespace geojson {
                 catch (boost::bad_get &exception) {
                     std::string template_name = "Polygon";
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
-                    std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                    logging::error((std::string("Asked for ") + template_name + ", but only " + expected_name + " is valid\n").c_str());
                     throw;
                 }
             }
@@ -120,7 +120,7 @@ namespace geojson {
                         catch (boost::bad_get &exception) {
                             std::string template_name = "Polygon";
                             std::string expected_name = get_geometry_type(geometry);
-                            std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                            logging::error((std::string("Asked for ") + template_name + ", but only " + expected_name + " is valid\n").c_str());
                             throw;
                         }
                     }
@@ -136,7 +136,7 @@ namespace geojson {
                 catch (boost::bad_get &exception) {
                     std::string template_name = "MultiPoint";
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
-                    std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                    logging::error((std::string("Asked for ") + template_name + ", but only " + expected_name + " is valid\n").c_str());
                     throw;
                 }
             }
@@ -160,7 +160,7 @@ namespace geojson {
                 catch (boost::bad_get &exception) {
                     std::string template_name = "MultiLineString";
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
-                    std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                    logging::error((std::string("Asked for ") + template_name + ", but only " + expected_name + " is valid\n").c_str());
                     throw;
                 }
             }
@@ -184,7 +184,7 @@ namespace geojson {
                 catch (boost::bad_get &exception) {
                     std::string template_name = "MultiPolygon";
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
-                    std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                    logging::error((std::string("Asked for ") + template_name + ", but only " + expected_name + " is valid\n").c_str());
                     throw;
                 }
             }

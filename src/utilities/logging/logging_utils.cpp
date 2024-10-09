@@ -40,6 +40,11 @@ extern "C" {
         std::cerr<<"CRITICAL: " <<std::string(msg);
     }
 
+    void formatting(const char* msg)
+    {
+        std::cerr<<std::string(msg);
+    }
+
 #ifdef     __cplusplus
 }
 #endif

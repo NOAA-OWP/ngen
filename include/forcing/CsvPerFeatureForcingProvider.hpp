@@ -20,6 +20,7 @@
 #include "DataProviderSelectors.hpp"
 #include <exception>
 #include <UnitsHelper.hpp>
+#include "logging_utils.h"
 
 /**
  * @brief Forcing class providing time-series precipiation forcing data to the model.
@@ -165,7 +166,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         }
         catch (const std::runtime_error& e){
             #ifndef UDUNITS_QUIET
-            std::cerr<<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
+            logging::warning((std::string("WARN: Unit conversion unsuccessful - Returning unconverted value! (\"")+e.what()+"\")\n").c_str());
             #endif
             return value;
         }

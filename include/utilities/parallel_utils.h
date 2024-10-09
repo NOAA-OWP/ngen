@@ -20,6 +20,7 @@
 #define NGEN_MPI_PROTOCOL_TAG 101
 #endif
 
+#include "utilities/logging_utils.h"
 #include <cstring>
 #include <mpi.h>
 #include <string>
@@ -479,7 +480,7 @@ namespace parallel {
         #if !NGEN_WITH_PYTHON
         // We can't be good to proceed with this, because Python is not active
         isGood = false;
-        std::cerr << "Driver is unable to perform required hydrofabric subdividing when Python integration is not active." << std::endl;
+        logging::critical((std::string("Driver is unable to perform required hydrofabric subdividing when Python integration is not active.\n")).c_str());
 
 
         // Sync with the rest of the ranks and bail if any aren't ready to proceed for any reason
@@ -496,7 +497,7 @@ namespace parallel {
                                                                                    partitionConfigFile);
             }
             catch (const std::exception &e) {
-                std::cerr << e.what() << std::endl;
+                logging::error((e.what() + std::string("\n")).c_str());
                 // Set not good if the subdivider object couldn't be instantiated
                 isGood = false;
             }
@@ -512,7 +513,7 @@ namespace parallel {
                 isGood = subdivider->execSubdivision();
             }
             catch (const std::exception &e) {
-                std::cerr << e.what() << std::endl;
+                logging::error((e.what() + std::string("\n")).c_str());
                 // Set not good if the subdivider object couldn't be instantiated
                 isGood = false;
             }

@@ -130,8 +130,7 @@ namespace realization{
                     case geojson::PropertyType::Object:
                         // TODO: Should list/object values be passed to model parameters?
                         //       Typically, feature properties *should* be scalars.
-                        std::cerr << "WARNING: property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
-                                    << "Must be one of: Natural (int), Real (double), Boolean, or String" << '\n';
+                        logging::error((std::string("WARNING: property type ") + std::to_string(static_cast<int>(catchment_attribute.get_type())) + " not allowed as model parameter. " + "Must be one of: Natural (int), Real (double), Boolean, or String\n").c_str());
                         break;
                     default:
                         attr.at(param.first) = geojson::JSONProperty(param.first, catchment_attribute);
