@@ -120,6 +120,13 @@ runs:
             tar xjf boost_1_79_0.tar.bz2
           shell: bash
 
+        - name: Set Pip Constraints
+          run: |
+            echo "numpy<2.0" > constraints.txt
+            sudo mv constraints.txt /constraints.txt
+            echo "PIP_CONSTRAINT=/constraints.txt" >> $GITHUB_ENV
+          shell: bash
+
         - name: Cache Python Dependencies
           id: cache-py3-dependencies
           uses: actions/cache@v3
@@ -144,7 +151,7 @@ runs:
             python3 -m venv .venv
             . .venv/bin/activate
             pip install pip
-            pip install numpy<2.0.0
+            pip install numpy
             deactivate
           shell: bash
 
