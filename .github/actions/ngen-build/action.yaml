@@ -144,7 +144,7 @@ runs:
             python3 -m venv .venv
             . .venv/bin/activate
             pip install pip
-            pip install numpy<=2.0.0
+            pip install numpy<2.0.0
             deactivate
           shell: bash
 
