@@ -114,7 +114,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 # Define project version and use via generated config header
-project(ngen VERSION 0.2.0)
+project(ngen VERSION 0.3.0)
 
 add_executable(ngen "${NGEN_SRC_DIR}/NGen.cpp")
 
