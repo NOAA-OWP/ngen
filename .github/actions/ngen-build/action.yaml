@@ -122,9 +122,8 @@ runs:
 
         - name: Set Pip Constraints
           run: |
-            echo "numpy<2.0" > constraints.txt
-            sudo mv constraints.txt /constraints.txt
-            echo "PIP_CONSTRAINT=/constraints.txt" >> $GITHUB_ENV
+            echo "numpy<2.0" > $GITHUB_WORKSPACE/constraints.txt
+            echo "PIP_CONSTRAINT=$GITHUB_WORKSPACE/constraints.txt" >> $GITHUB_ENV
           shell: bash
 
         - name: Cache Python Dependencies
