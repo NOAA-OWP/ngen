@@ -421,6 +421,18 @@ namespace realization {
                 if (path.compare(path.size() - 1, 1, "/") != 0) {
                     path += "/";
                 }
+                
+                //In case an idntifier has regex specific characters, need to escape them
+                //This may not be the most optimal algorithm, but for the size of strings we care about, it should work ok for now.
+		std::string::size_type n = 0;
+                for( const char& c : {'.', '+'} ){
+
+                    while ( ( n = identifier.find( c, n ) ) != std::string::npos )
+                    {
+                        identifier.replace( n, 1, std::string("\\\\")+c );
+                        n += 5; //start next find after we replace
+                    }
+                }
 
                 std::string filepattern = forcing_prop_map.at("file_pattern").as_string();
 
