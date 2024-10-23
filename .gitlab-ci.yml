@@ -50,7 +50,12 @@ unit-test:
   script:
     - echo "Running Unit Tests..."
     - cd /ngen-app/ngen/cmake_build
-    - ctest
+    - ctest || {
+        echo "Tests failed. Rerunning failed tests with verbose output...";
+        export CTEST_OUTPUT_ON_FAILURE=1;
+        ctest --rerun-failed --output-on-failure --verbose;
+        exit 1;
+      }
 
 sonarqube:
   stage: sonarqube
