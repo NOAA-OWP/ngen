@@ -347,6 +347,32 @@ namespace realization {
                 return true;
             }
 
+             /**
+             * @brief Check if the formulation uses remote partitioning for mpi partitions
+             *
+             * @code{.cpp}
+             * // Example config:
+             * // ...
+             * // "remotes_enabled": false
+             * // ...
+             * const auto manager = Formulation_Manger(CONFIG);
+             * manager.get_output_root();
+             * //> false
+             * @endcode
+             * 
+             * @return bool
+             */
+            bool remotes_enabled() const {
+                const auto remotes_enabled = this->tree.get_optional<std::string>("remotes_enabled");
+                if (remotes_enabled != boost::none && *remotes_enabled != "") {
+                    // if any variation of "false" or "no" or 0 is found, return false
+                    if (remotes_enabled->compare("false") == 0 || remotes_enabled->compare("no") == 0 || remotes_enabled->compare("0") == 0) {
+                        return false;
+                    }
+                } 
+                return true;
+            }
+
             /**
              * @brief return the layer storage used for formulations
              * @return a reference to the LayerStorageObject
