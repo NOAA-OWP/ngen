@@ -448,9 +448,19 @@ namespace realization {
             }
 
             forcing_params get_forcing_params(const geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
+                int rank;
+                MPI_Comm_rank(MPI_COMM_WORLD, &rank);
                 std::string path = "";
                 if(forcing_prop_map.count("path") != 0){
                     path = forcing_prop_map.at("path").as_string();
+                    int id_index = path.find("{{id}}");
+                    int partition_id_index = path.find("{{partition_id}}");
+                    if (id_index != std::string::npos) {
+                        path = path.replace(id_index, sizeof("{{id}}") - 1, identifier);
+                    }
+                    if (partition_id_index != std::string::npos) {
+                        path = path.replace(partition_id_index, sizeof("{{partition_id}}") - 1, std::to_string(rank));
+                    }
                 }
                 std::string provider;
                 if(forcing_prop_map.count("provider") != 0){
