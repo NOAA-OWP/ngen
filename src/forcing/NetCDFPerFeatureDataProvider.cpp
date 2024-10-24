@@ -4,6 +4,10 @@
 #include "NetCDFPerFeatureDataProvider.hpp"
 
 #include <netcdf>
+#include <iostream>
+#include <iomanip>
+#include <algorithm>
+#include <cmath>
 
 std::mutex data_access::NetCDFPerFeatureDataProvider::shared_providers_mutex;
 std::map<std::string, std::shared_ptr<data_access::NetCDFPerFeatureDataProvider>> data_access::NetCDFPerFeatureDataProvider::shared_providers;
@@ -40,11 +44,11 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
 
     //open the file
     nc_file = std::make_shared<netCDF::NcFile>(input_path, netCDF::NcFile::read);
-    
+ 
     //nc_get_chunk_cache(&sizep, &nelemsp, &preemptionp);
     //std::cout << "Chunk cache parameters: "<<sizep<<", "<<nelemsp<<", "<<preemptionp<<std::endl;
 
-    //get the listing of all variables
+    //get the listing of all variables   
     auto var_set = nc_file->getVars();
 
     // populate the ncvar and units caches...
@@ -99,7 +103,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
 
     if (id_dim.isNull() )
     {
-        throw std::runtime_error("Provided NetCDF file has a NuLL dimension for variable  \"ids\"");
+        throw std::runtime_error("Provided NetCDF file has a NULL dimension for variable  \"ids\"");
     }
 
     auto num_ids = id_dim.getSize();
@@ -107,7 +111,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     //TODO: split into smaller slices if num_ids is large.
     cache_slice_c_size = num_ids;
 
-    // allocate an array of character pointers 
+    // allocate an array of character pointers
     std::vector< char* > string_buffers(num_ids);
 
     // read the id strings
@@ -124,136 +128,79 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     // correct string release
     nc_free_string(num_ids,&string_buffers[0]);
 
-    // now get the size of the time dimension
-    auto num_times = nc_file->getDim("time").getSize();
+// Modified code to handle units, epoch start, and reading all time values correctly - KSL
 
-    // allocate storage for the raw time array
-    std::vector<double> raw_time(num_times);
-
-    // get the time variable
+    // Get the time variable - getVar collects all values at once and stores in memory
+    // Extremely large timespans could be problematic, but for ngen use cases, this should not be a problem
     auto time_var = nc_file->getVar("Time");
 
-    // read from the first catchment row to get the recorded times
-    std::vector<size_t> start;
-    start.push_back(0);
-    start.push_back(0);
-    std::vector<size_t> count;
-    count.push_back(1);
-    count.push_back(num_times);
-    time_var.getVar(start, count, &raw_time[0]);
+    // Get the size of the time dimension
+    size_t num_times = nc_file->getDim("time").getSize();
 
-    // read the meta data to get the time_unit
-    // if absent, assume seconds
-    double time_scale_factor = 1;
-    time_unit = TIME_SECONDS;
+    std::vector<double> raw_time(num_times);
+
     try {
-        auto time_unit_att = time_var.getAtt("units");
-
-        // if time att is not encoded 
-        // TODO determine how this should be handled
-        std::string time_unit_str;
-
-        if ( time_unit_att.isNull() )
-        {
-            log_stream << "Warning using defualt time units\n";
-        }
-        else
-        {  
-            time_unit_att.getValues(time_unit_str);
-        }
-
-        // set time unit and scale factor
-        if ( time_unit_str == "h" || time_unit_str == "hours")
-        {
-            time_unit = TIME_HOURS;
-            time_scale_factor = 3600;
-        }
-        else if ( time_unit_str == "m" || time_unit_str == "minutes" )
-        {
-            time_unit = TIME_MINUTES;
-            time_scale_factor = 60;
-        }
-        else if ( time_unit_str ==  "s" || time_unit_str == "seconds" )
-        {
-            time_unit = TIME_SECONDS;
-            time_scale_factor = 1;
-        }
-        else if ( time_unit_str ==  "ms" || time_unit_str == "milliseconds" )
-        {
-            time_unit = TIME_MILLISECONDS;
-            time_scale_factor = .001;
-        }
-        else if ( time_unit_str ==  "us" || time_unit_str == "microseconds" )
-        {
-            time_unit = TIME_MICROSECONDS;
-            time_scale_factor = .000001;
-        }
-        else if ( time_unit_str ==  "ns" || time_unit_str == "nanoseconds" )
-        {
-            time_unit = TIME_NANOSECONDS;
-            time_scale_factor = .000000001;
-        }
-        else {
-            log_stream << "Warning using defualt time units\n";
-        }
+        time_var.getVar(raw_time.data());
+    } catch(const netCDF::exceptions::NcException& e) {
+        std::cerr << "Error reading time variable: " << e.what() << std::endl;
+        throw;
     }
-    catch(const netCDF::exceptions::NcException& e){
-        std::cerr<<e.what()<<std::endl;
-        log_stream << "Warning using defualt time units\n";
-    }
-    assert(time_scale_factor != 0); // This should not happen.
 
-    std::string epoch_start_str = "01/01/1970 00:00:00";
+    std::string time_units;
     try {
-        // read the meta data to get the epoc start
-        auto epoch_att = time_var.getAtt("epoch_start");
+        time_var.getAtt("units").getValues(time_units);
 
-        if ( epoch_att.isNull() )
-        {
-            log_stream << "Warning using defualt epoc string\n";
-        }
-        else
-        {  
-            epoch_att.getValues(epoch_start_str);
-        }
+    } catch(const netCDF::exceptions::NcException& e) {
+        std::cerr << "Error reading time units: " << e.what() << std::endl;
+        std::cout << "Warning: Using default time units (seconds since epoch)" << std::endl;
+        time_units = "seconds since 1970-01-01 00:00:00";
     }
-    catch(const netCDF::exceptions::NcException& e) {
-        std::cerr<<e.what()<<std::endl;
-        log_stream << "Warning using defualt epoc string\n";
-    }
-    
-    std::tm tm{};
-    std::stringstream s(epoch_start_str);
-    s >> std::get_time(&tm, "%D %T");
-    //std::time_t epoch_start_time = mktime(&tm);
-    // See also comments in Simulation_Time.h .. timegm is not available on Windows at least (elsewhere?)
-    //TODO: Probably make the default string above explicit to UTC and interpret TZ from the string in all cases?
-    std::time_t epoch_start_time = timegm(&tm);
 
-    // scale the time to account for time units and epoch_start
-    // TODO make sure this happens with a FMA instruction
+    double time_scale_factor = 1.0;
+    std::time_t epoch_start_time = 0;
+
+	//The following makes some assumptions that NetCDF output from the forcing engine will be relatively uniform
+	//Specifically, it assumes time values are in units since the Unix Epoch. 
+	//If the forcings engine outputs additional unit formats, this will need to be expanded
+    if (time_units.find("minutes since") != std::string::npos) {
+        time_unit = TIME_MINUTES;
+        time_scale_factor = 60.0;
+    } else if (time_units.find("hours since") != std::string::npos) {
+        time_unit = TIME_HOURS;
+        time_scale_factor = 3600.0;
+    } else {
+        time_unit = TIME_SECONDS;
+        time_scale_factor = 1.0;
+    }
+	//This is also based on the NetCDF from the forcings engine, and may not be super flexible
+    std::string datetime_str = time_units.substr(time_units.find("since") + 6);
+    std::tm tm = {};
+    std::istringstream ss(datetime_str); 
+    ss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S"); //This may be particularly inflexible
+    epoch_start_time = timegm(&tm); //timegm may not be available in all environments/OSes ie: Windows
     time_vals.resize(raw_time.size());
-    std::transform(raw_time.begin(), raw_time.end(), time_vals.begin(), 
-        [&](const auto& n){return n * time_scale_factor + epoch_start_time; });
-        
+// End modification - KSL
 
-    // determine the stride of the time array
+    std::transform(raw_time.begin(), raw_time.end(), time_vals.begin(), 
+        [&](const auto& n) {
+            return n * time_scale_factor + epoch_start_time;
+        });
+
     time_stride = time_vals[1] - time_vals[0];
 
-    #ifndef NCEP_OPERATIONS
     // verify the time stride
-    for( size_t i = 1; i < time_vals.size() -1; ++i)
-    {
-        double tinterval = time_vals[i+1] - time_vals[i];
-
-        if ( tinterval - time_stride > 0.000001)
-        {
+    #ifndef NCEP_OPERATIONS
+    for (size_t i = 1; i < time_vals.size(); ++i) {
+        double interval = time_vals[i] - time_vals[i-1];
+        if (std::abs(interval - time_stride) > 1e-6) {
+            std::cout << "Inconsistent interval at index " << i << ": " << interval << std::endl;
             log_stream << "Error: Time intervals are not constant in forcing file\n";
-
             throw std::runtime_error("Time intervals in forcing file are not constant");
         }
     }
     #endif
+
+    std::cout << "All time intervals are constant within tolerance." << std::endl;
 
     // determine start_time and stop_time;
     start_time = time_vals[0];
@@ -281,7 +228,6 @@ const std::vector<std::string>& NetCDFPerFeatureDataProvider::get_ids() const
 {
     return loc_ids;
 }
-
 /** Return the first valid time for which data from the request variable  can be requested */
 long NetCDFPerFeatureDataProvider::get_data_start_time()
 {
@@ -321,8 +267,9 @@ size_t NetCDFPerFeatureDataProvider::get_ts_index_for_time(const time_t &epoch_t
 
 double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m) 
 {
+
     auto init_time = selector.get_init_time();
-    auto stop_time = init_time + selector.get_duration_secs(); // scope hiding! BAD JUJU!
+    auto stop_time = init_time + selector.get_duration_secs();  // scope hiding! BAD JUJU!
     
     size_t idx1 = get_ts_index_for_time(init_time);
     size_t idx2;
@@ -330,6 +277,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         idx2 = get_ts_index_for_time(stop_time-1); // Don't include next timestep when duration % timestep = 0
     }
     catch(const std::out_of_range &e){
+        log_stream << "Warning: stop_time out of range, using last available time index" << std::endl;
         idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
     }
 
@@ -338,8 +286,6 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     std::vector<std::size_t> start, count;
 
     auto cat_pos = id_pos[selector.get_id()];
-
-
 
     double t1 = time_vals[idx1];
     double t2 = time_vals[idx2];
@@ -355,32 +301,58 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     std::vector<double> raw_values;
     raw_values.resize(read_len);
 
-    //TODO: Currently assuming a whole variable cache slice across all catchments for a single timestep...but some stuff here to support otherwise.
-    size_t cache_slices_t_n = read_len / cache_slice_t_size; // Integer division!
+    //TODO: Currently assuming a whole variable cache slice across all catchments for a single timestep...but some stuff here to support otherwise. 
     // For reference: https://stackoverflow.com/a/72030286
+    
+//Modified to work with NetCDF dimension shapes and fix errors - KSL
+    size_t cache_slices_t_n = (read_len + cache_slice_t_size - 1) / cache_slice_t_size; // Ceiling division to ensure remainders have a slice
+
+
+	//Explicitly setting dimension shapes
+    auto dims = ncvar.getDims();
+    size_t catchment_dim_size = dims[1].getSize();
+    size_t time_dim_size = dims[0].getSize();
+
+	//Cache slicing - modified to work with dimensions structure
     for( size_t i = 0; i < cache_slices_t_n; i++ ) {
         std::shared_ptr<std::vector<double>> cached;
-        int cache_t_idx = (idx1 - (idx1 % cache_slice_t_size) + i);
-        std::string key = ncvar.getName() + "|" + std::to_string(cache_t_idx);
+        size_t cache_t_idx = idx1 + i * cache_slice_t_size;
+        size_t slice_size = std::min(cache_slice_t_size, time_dim_size - cache_t_idx);
+        std::string key = ncvar.getName() + "|" + std::to_string(cache_t_idx) + "|" + std::to_string(slice_size);
+        
         if(value_cache.contains(key)){
             cached = value_cache.get(key).get();
         } else {
-            cached = std::make_shared<std::vector<double>>(cache_slice_c_size * cache_slice_t_size);
+            cached = std::make_shared<std::vector<double>>(catchment_dim_size * slice_size);
             start.clear();
-            start.push_back(0); // only always 0 when cache_slice_c_size = numids!
-            start.push_back(cache_t_idx * cache_slice_t_size);
+            start.push_back(cache_t_idx); // start from correct time index
+            start.push_back(0); // Start from the first catchment
             count.clear();
-            count.push_back(cache_slice_c_size);
-            count.push_back(cache_slice_t_size); // Must be 1 for now!...probably...
-            ncvar.getVar(start,count,&(*cached)[0]);
-            value_cache.insert(key, cached);
+            count.push_back(slice_size); // Read the calculated slice size for time
+            count.push_back(catchment_dim_size); // Read all catchments
+            try {
+                ncvar.getVar(start,count,&(*cached)[0]);
+                value_cache.insert(key, cached);
+            } catch (netCDF::exceptions::NcException& e) {
+                log_stream << "NetCDF exception: " << e.what() << std::endl;
+                throw;
+            }
         }
-        for( size_t j = 0; j < cache_slice_t_size; j++){
-            raw_values[i+j] = cached->at((j*cache_slice_t_size) + cat_pos);
+        for( size_t j = 0; j < slice_size; j++){
+            size_t raw_index = i * cache_slice_t_size + j;
+            size_t cached_index = j * catchment_dim_size + cat_pos;
+            if (raw_index < raw_values.size() && cached_index < cached->size()) {
+                raw_values[raw_index] = cached->at(cached_index);
+            } else {
+                log_stream << "Error: Index out of bounds: raw_index=" << raw_index 
+                          << ", cached_index=" << cached_index 
+                          << ", raw_values.size()=" << raw_values.size()
+                          << ", cached->size()=" << cached->size() << std::endl;
+                break;
+            }
         }
     }
-
-    
+// End modification
     rvalue = 0.0;
 
     double a , b = 0.0;
@@ -423,13 +395,18 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
     try 
     {
-        return UnitsHelper::get_converted_value(native_units, rvalue, selector.get_output_units());
+        //minor change to aid debugging
+        double converted_value = UnitsHelper::get_converted_value(native_units, rvalue, selector.get_output_units());
+        return converted_value;
     }
     catch (const std::runtime_error& e)
     {
         #ifndef UDUNITS_QUIET
-        std::cerr<<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
+        std::cerr<<"WARN: Unit conversion unsuccessful - Returning unconverted value!"
         #endif
+        //minor change to aid debugging
+        log_stream <<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
+        log_stream << "=== Exiting get_value function ===" << std::endl;
         return rvalue;
     }
 
