@@ -450,6 +450,12 @@ namespace realization {
             forcing_params get_forcing_params(const geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
                 int rank;
                 MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+                bool enable_cache = true;
+
+                if (forcing_prop_map.count("enable_cache") != 0) {
+                    enable_cache = forcing_prop_map.at("enable_cache").as_boolean();
+                }
+
                 std::string path = "";
                 if(forcing_prop_map.count("path") != 0){
                     path = forcing_prop_map.at("path").as_string();
@@ -471,7 +477,8 @@ namespace realization {
                         path,
                         provider,
                         simulation_time_config.start_time,
-                        simulation_time_config.end_time
+                        simulation_time_config.end_time,
+                        enable_cache
                     );
                 }
 
@@ -560,7 +567,8 @@ namespace realization {
                                     path + entry->d_name,
                                     provider,
                                     simulation_time_config.start_time,
-                                    simulation_time_config.end_time
+                                    simulation_time_config.end_time,
+                                    enable_cache
                                 );
                             }
                             else if ( entry->d_type == DT_UNKNOWN )
@@ -579,7 +587,8 @@ namespace realization {
                                         path + entry->d_name,
                                         provider,
                                         simulation_time_config.start_time,
-                                        simulation_time_config.end_time
+                                        simulation_time_config.end_time,
+                                        enable_cache
                                     );
                                 }
                                 throw std::runtime_error("Forcing data is path "+path+entry->d_name+" is not a file");

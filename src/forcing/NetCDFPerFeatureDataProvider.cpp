@@ -10,14 +10,14 @@ std::map<std::string, std::shared_ptr<data_access::NetCDFPerFeatureDataProvider>
 
 namespace data_access {
 
-std::shared_ptr<NetCDFPerFeatureDataProvider> NetCDFPerFeatureDataProvider::get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s)
+std::shared_ptr<NetCDFPerFeatureDataProvider> NetCDFPerFeatureDataProvider::get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s, bool enable_cache)
 {
     const std::lock_guard<std::mutex> lock(shared_providers_mutex);
     std::shared_ptr<NetCDFPerFeatureDataProvider> p;
     if(shared_providers.count(input_path) > 0){
         p = shared_providers[input_path];
     } else {
-        p = std::make_shared<data_access::NetCDFPerFeatureDataProvider>(input_path, sim_start, sim_end, log_s);
+        p = std::make_shared<data_access::NetCDFPerFeatureDataProvider>(input_path, sim_start, sim_end, log_s, enable_cache);
         shared_providers[input_path] = p;
     }
     return p;
@@ -30,9 +30,10 @@ void NetCDFPerFeatureDataProvider::cleanup_shared_providers()
     shared_providers.clear();
 }
 
-NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s) : log_stream(log_s), value_cache(20),
+NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s, bool enable_cache) : log_stream(log_s), value_cache(20),
     sim_start_date_time_epoch(sim_start),
-    sim_end_date_time_epoch(sim_end)
+    sim_end_date_time_epoch(sim_end),
+    enable_cache(enable_cache)
 {
     //size_t sizep = 1073741824, nelemsp = 202481;
     //float preemptionp = 0.75;
@@ -322,105 +323,112 @@ size_t NetCDFPerFeatureDataProvider::get_ts_index_for_time(const time_t &epoch_t
 double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m) 
 {
     auto init_time = selector.get_init_time();
-    auto stop_time = init_time + selector.get_duration_secs(); // scope hiding! BAD JUJU!
-    
     size_t idx1 = get_ts_index_for_time(init_time);
-    size_t idx2;
-    try {
-        idx2 = get_ts_index_for_time(stop_time-1); // Don't include next timestep when duration % timestep = 0
-    }
-    catch(const std::out_of_range &e){
-        idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
-    }
-
-    auto stride = idx2 - idx1;
-
-    std::vector<std::size_t> start, count;
-
     auto cat_pos = id_pos[selector.get_id()];
-
-
-
-    double t1 = time_vals[idx1];
-    double t2 = time_vals[idx2];
-
+    std::vector<std::size_t> start, count;
     double rvalue = 0.0;
-    
+    std::string native_units = get_ncvar_units(selector.get_variable_name());
     auto ncvar = get_ncvar(selector.get_variable_name());
 
-    std::string native_units = get_ncvar_units(selector.get_variable_name());
-
-    auto read_len = idx2 - idx1 + 1;
-
-    std::vector<double> raw_values;
-    raw_values.resize(read_len);
-
-    //TODO: Currently assuming a whole variable cache slice across all catchments for a single timestep...but some stuff here to support otherwise.
-    size_t cache_slices_t_n = read_len / cache_slice_t_size; // Integer division!
-    // For reference: https://stackoverflow.com/a/72030286
-    for( size_t i = 0; i < cache_slices_t_n; i++ ) {
-        std::shared_ptr<std::vector<double>> cached;
-        int cache_t_idx = (idx1 - (idx1 % cache_slice_t_size) + i);
-        std::string key = ncvar.getName() + "|" + std::to_string(cache_t_idx);
-        if(value_cache.contains(key)){
-            cached = value_cache.get(key).get();
-        } else {
-            cached = std::make_shared<std::vector<double>>(cache_slice_c_size * cache_slice_t_size);
-            start.clear();
-            start.push_back(0); // only always 0 when cache_slice_c_size = numids!
-            start.push_back(cache_t_idx * cache_slice_t_size);
-            count.clear();
-            count.push_back(cache_slice_c_size);
-            count.push_back(cache_slice_t_size); // Must be 1 for now!...probably...
-            ncvar.getVar(start,count,&(*cached)[0]);
-            value_cache.insert(key, cached);
-        }
-        for( size_t j = 0; j < cache_slice_t_size; j++){
-            raw_values[i+j] = cached->at((j*cache_slice_t_size) + cat_pos);
-        }
-    }
-
-    
-    rvalue = 0.0;
-
-    double a , b = 0.0;
-    
-    a = 1.0 - ( (t1 - init_time) / time_stride );
-    rvalue += (a * raw_values[0]);
-
-    for( size_t i = 1; i < raw_values.size() -1; ++i )
+    if (enable_cache == false)
     {
-        rvalue += raw_values[i];
+        // vector start is the catchment index and the time index
+        // vector count is how much to read in both directions
+        start.clear();
+        start.push_back(cat_pos);
+        start.push_back(idx1);
+        count.clear();
+        count.push_back(1);
+        count.push_back(1); 
+        ncvar.getVar(start, count, &rvalue);
     }
-
-    if (  raw_values.size() > 1) // likewise the last data value may not be fully in the window
+    else
     {
-        b = (stop_time - t2) / time_stride;
-        rvalue += (b * raw_values.back() );
-    }
-
-    // account for the resampling methods
-    switch(m)
-    {
-        case SUM:   // we allready have the sum so do nothing
-            ;
-        break;
-
-        case MEAN: 
-        { 
-            // This is getting a length weighted mean
-            // the data values where allready scaled for where there was only partial use of a data value
-            // so we just need to do a final scale to account for the differnce between time_stride and duration_s
-
-            double scale_factor = (selector.get_duration_secs() > time_stride ) ? (time_stride / selector.get_duration_secs()) : (1.0 / (a + b));
-            rvalue *= scale_factor;
+        auto stop_time = init_time + selector.get_duration_secs(); // scope hiding! BAD JUJU!
+        
+        size_t idx2;
+        try {
+            idx2 = get_ts_index_for_time(stop_time-1); // Don't include next timestep when duration % timestep = 0
         }
-        break;
+        catch(const std::out_of_range &e){
+            idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
+        }
 
-        default:
-            ;
+        auto stride = idx2 - idx1;
+
+        double t1 = time_vals[idx1];
+        double t2 = time_vals[idx2];
+
+        auto read_len = idx2 - idx1 + 1;
+
+        std::vector<double> raw_values;
+        raw_values.resize(read_len);
+
+
+
+        //TODO: Currently assuming a whole variable cache slice across all catchments for a single timestep...but some stuff here to support otherwise.
+        size_t cache_slices_t_n = read_len / cache_slice_t_size; // Integer division!
+        // For reference: https://stackoverflow.com/a/72030286
+        for( size_t i = 0; i < cache_slices_t_n; i++ ) {
+            std::shared_ptr<std::vector<double>> cached;
+            int cache_t_idx = (idx1 - (idx1 % cache_slice_t_size) + i);
+            std::string key = ncvar.getName() + "|" + std::to_string(cache_t_idx);
+            if(value_cache.contains(key)){
+                cached = value_cache.get(key).get();
+            } else {
+                cached = std::make_shared<std::vector<double>>(cache_slice_c_size * cache_slice_t_size);
+                start.clear();
+                start.push_back(0); // only always 0 when cache_slice_c_size = numids!
+                start.push_back(cache_t_idx * cache_slice_t_size);
+                count.clear();
+                count.push_back(cache_slice_c_size);
+                count.push_back(cache_slice_t_size); // Must be 1 for now!...probably...
+                ncvar.getVar(start,count,&(*cached)[0]);
+                value_cache.insert(key, cached);
+            }
+            for( size_t j = 0; j < cache_slice_t_size; j++){
+                raw_values[i+j] = cached->at((j*cache_slice_t_size) + cat_pos);
+            }
+        }    
+        rvalue = 0.0;
+
+        double a , b = 0.0;
+        
+        a = 1.0 - ( (t1 - init_time) / time_stride );
+        rvalue += (a * raw_values[0]);
+
+        for( size_t i = 1; i < raw_values.size() -1; ++i )
+        {
+            rvalue += raw_values[i];
+        }
+
+        if (  raw_values.size() > 1) // likewise the last data value may not be fully in the window
+        {
+            b = (stop_time - t2) / time_stride;
+            rvalue += (b * raw_values.back() );
+        }
+        // account for the resampling methods
+        switch(m)
+        {
+            case SUM:   // we allready have the sum so do nothing
+                ;
+            break;
+
+            case MEAN: 
+            { 
+                // This is getting a length weighted mean
+                // the data values where allready scaled for where there was only partial use of a data value
+                // so we just need to do a final scale to account for the differnce between time_stride and duration_s
+
+                double scale_factor = (selector.get_duration_secs() > time_stride ) ? (time_stride / selector.get_duration_secs()) : (1.0 / (a + b));
+                rvalue *= scale_factor;
+            }
+            break;
+
+            default:
+                ;
+        }
     }
-
     try 
     {
         return UnitsHelper::get_converted_value(native_units, rvalue, selector.get_output_units());
@@ -433,7 +441,6 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         return rvalue;
     }
 
-    return rvalue;
 }
 
 std::vector<double> NetCDFPerFeatureDataProvider::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
