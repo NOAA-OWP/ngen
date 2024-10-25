@@ -448,9 +448,11 @@ namespace realization {
             }
 
             forcing_params get_forcing_params(const geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
-                int rank;
-                MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+                int rank = 0;
                 bool enable_cache = true;
+                #if NGEN_WITH_MPI
+                MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+                #endif
 
                 if (forcing_prop_map.count("enable_cache") != 0) {
                     enable_cache = forcing_prop_map.at("enable_cache").as_boolean();
