@@ -2,6 +2,10 @@
 #include "bmi/State_Exception.hpp"
 #include "utilities/FileChecker.h"
 #include "utilities/logging_utils.h"
+#include "Logger.hpp"
+
+using namespace std;
+std::stringstream str_stream;
 
 namespace models {
 namespace bmi {
@@ -25,6 +29,11 @@ Bmi_Adapter::Bmi_Adapter(
                              "'. Error: " + std::strerror(errno);
         throw std::runtime_error(init_exception_msg);
     }
+
+    str_stream << __FILE__ << ":" << __LINE__ << " mode name:" << this->model_name << std::endl;
+    (Logger::GetInstance())->Log(str_stream.str(), LogLevel::INFO); str_stream.str("");
+    str_stream << __FILE__ << ":" << __LINE__ << " bmi_init_config:" << this->bmi_init_config << std::endl;
+    (Logger::GetInstance())->Log(str_stream.str(), LogLevel::INFO); str_stream.str("");
 }
 
 Bmi_Adapter::~Bmi_Adapter() = default;
@@ -100,6 +109,7 @@ void Bmi_Adapter::Initialize(std::string config_file) {
             " to " + config_file
         );
     }
+    std::cout << __FILE__ << ":" << __LINE__ << " Bmi_Adapter::Initialize: config_file = " << config_file << std::endl;
 
     if (config_file != bmi_init_config && !model_initialized) {
         std::string message = "Bmi_Adapter::Initialize: initialization call changes model config from " + bmi_init_config + " to " + config_file;

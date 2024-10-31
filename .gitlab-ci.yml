@@ -1,0 +1,96 @@
+# GitLab CI/CD configuration file for ngen repository
+include:
+  - template: Jobs/Container-Scanning.gitlab-ci.yml
+
+variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+
+stages:
+  - build
+  - unit_test
+  - sonarqube
+  - test
+  - deploy
+
+image: registry.sh.nextgenwaterprediction.com/infrastructure/docker/docker:latest
+
+variables:
+    DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE
+    DOCKER_IMAGE_TAG: $CI_COMMIT_REF_NAME
+
+build:
+  stage: build
+  before_script:
+    - git config --global url."https://oauth2:${GITLAB_TOKEN}@gitlab.sh.nextgenwaterprediction.com/".insteadOf "https://gitlab.sh.nextgenwaterprediction.com/"
+    - git config --global --add safe.directory /builds/NGWPC/nwm-ngen/ngen
+    - git submodule update --init --recursive
+    - git submodule update --remote extern/cfe/cfe
+    - git submodule update --remote extern/SoilFreezeThaw/SoilFreezeThaw
+    - git submodule update --remote extern/SoilMoistureProfiles/SoilMoistureProfiles
+    - git submodule update --remote extern/evapotranspiration/evapotranspiration
+    - git submodule update --remote extern/noah-owp-modular/noah-owp-modular
+    - git submodule update --remote extern/topmodel/topmodel
+    - git submodule update --remote extern/t-route
+    - git submodule update --remote extern/sloth
+    - git submodule update --remote extern/LASAM
+    - git submodule update --remote extern/snow17
+    - git submodule update --remote extern/sac-sma/sac-sma
+    - git submodule update --remote extern/ueb-bmi
+  script:
+    - echo "Building ${CI_PROJECT_NAME} docker image.. "
+    - docker build -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
+    - echo "Logging in to Gitlab Container Registry..."
+    - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - docker push $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+    - docker logout
+
+unit-test:
+  stage: unit_test
+  image: $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+  script:
+    - echo "Running Unit Tests..."
+    - cd /ngen-app/ngen/cmake_build
+    - ctest
+
+sonarqube:
+  stage: sonarqube
+  image:
+    name: registry.sh.nextgenwaterprediction.com/infrastructure/sonar-scanner-cli/sonar-scanner-cli:5.0.1
+    entrypoint: [""]
+  variables:
+    # Defines the location of the analysis task cache
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    # Shallow cloning needs to be disabled.
+    # See https://docs.sonarqube.org/latest/analysis/gitlab-cicd/.
+    GIT_DEPTH: 0
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner -X -Dsonar.verbose=true
+  rules:
+    # SonarQube CommunityEdition only supports analyzing a single branch.
+    - if: '$CI_COMMIT_BRANCH == "development"'
+
+container_scanning:
+  stage: test
+  needs:
+    - build
+  variables:
+    SECURE_LOG_LEVEL: info
+    CS_SEVERITY_THRESHOLD: UNKNOWN
+    CS_IMAGE: $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Logging in to Gitlab Container Registry to push the image..."
+    - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - echo "Pushing to the docker registry"
+    - docker push $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+    - docker tag $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG $DOCKER_IMAGE_NAME:latest
+    - docker push $DOCKER_IMAGE_NAME:latest
+    - docker logout
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "development"'

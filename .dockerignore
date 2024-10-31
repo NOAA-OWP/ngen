@@ -1,0 +1,12 @@
+# exclude Docker artifacts
+.dockerignore
+Dockerfile
+docker.md
+docker
+
+# exclude gitlab and github artifacts
+.github
+.gitlab-ci.yml
+.gitpod.Dockerfile
+.gitpod.yml 
+sonar-project.properties

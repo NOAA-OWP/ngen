@@ -1,0 +1,194 @@
+#include <stdlib.h>
+#include "Logger.hpp"
+#include <cstring>
+#include <string>
+#include <chrono>
+
+std::shared_ptr<Logger> Logger::loggerInstance;
+
+using namespace std;
+
+std::string module_name[static_cast<int>(LoggingModule::MODULE_COUNT)] 
+{
+	"NGEN    ",
+	"NOAHOWP ", 
+	"SNOW17  ", 
+	"UEB     ", 
+	"CFE     ", 
+	"SACSMA  ", 
+	"LASAM   ", 
+	"SMP     ", 
+	"SFT     ", 
+	"TROUTE  ", 
+	"SCHISM  ", 
+	"SFINCS  ", 
+	"GC2D    ", 
+	"TOPOFLOW",
+};
+
+/**
+* Configure Logger Preferences
+* @param logFile
+* @param level: LogLevel::ERROR by Default
+* @param output: LogOutput::CONSOLE by Default
+* @return void
+*/
+void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
+	logLevel = level;
+    std::string fwd_slash = "/";
+    std::string logFileName = "ngen_log.txt";
+    std::string logFileDir = "/ngencerf/data/run-logs/ngen_" + Logger::createTimestamp() + fwd_slash;
+
+    // creating the directory
+   	int status;
+	std::string mkdir_cmd = "mkdir -p " + logFileDir;
+	const char *cstr = mkdir_cmd.c_str();
+   	status = system(cstr);
+   	if (status == -1)
+   	   std::cerr << "Error(" << (errno) << ") creating log file directory: " << logFileDir << std::endl;
+   	else {
+   	   std::cout << "Log directory: " << logFileDir <<std::endl;
+		// creating the file
+		logFilePath = logFileDir+logFileName;
+		logFile.open(logFilePath, ios::out | ios::app);
+		if (!logFile.good()) {
+			std::cerr << "Warning: Can't Open Log File: " << logFilePath << std::endl;
+			// try logging to a file in local directory
+    		std::string logFileDir = "./run-logs/ngen_" + Logger::createTimestamp() + fwd_slash;
+			mkdir_cmd = "mkdir -p " + logFileDir;
+			cstr = mkdir_cmd.c_str();
+			status = system(cstr);
+   			if (status == -1)
+   	   			std::cerr << "Error(" << (errno) << ") creating log file directory: " << logFileDir << std::endl;
+   			else {
+				logFilePath = logFileDir+logFileName;
+				logFile.open(logFilePath, ios::out | ios::app);
+				if (!logFile.good()) {
+					std::cerr << "Can't Open local directory Log File:" << logFilePath <<std::endl;			
+				}
+				else {
+					std::cout << "Logging instead into: " << logFilePath << std::endl;
+					setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
+				}
+			}
+		}
+		else {
+			std::cout << "Log File Path:" << logFilePath << std::endl;
+			setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
+		}
+	}
+}
+
+/**
+* Get Single Logger Instance or Create new Object if Not Created
+* @return std::shared_ptr<Logger>
+*/
+std::shared_ptr<Logger> Logger::GetInstance() {
+	if (loggerInstance == nullptr) {
+		loggerInstance = std::shared_ptr<Logger>(new Logger());
+	}
+
+	return loggerInstance;
+}
+
+/**
+* Log given message with defined parameters and generate message to pass on Console or File
+* @param codeFile: __FILE__
+* @param codeLine: __LINE__
+* @param message: Log Message
+* @param messageLevel: Log Level, LogLevel::DEBUG by default
+*/
+void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG) {
+	LoggingModule module=LoggingModule::NGEN;
+
+	// don't log if messageLevel < logLevel 
+	if (messageLevel >= logLevel) {
+		std::string logType;
+		//Set Log Level Name
+		switch (messageLevel) {
+		case LogLevel::FATAL:
+			logType = "FATAL ";
+			break;
+		case LogLevel::DEBUG:
+			logType = "DEBUG ";
+			break;
+		case LogLevel::INFO:
+			logType = "INFO  ";
+			break;
+		case LogLevel::WARN:
+			logType = "WARN  ";
+			break;
+		case LogLevel::ERROR:
+			logType = "ERROR ";
+			break;
+		default:
+			logType = "NONE  ";
+			break;
+		}
+
+		std::string final_message;
+		std::string mod_name;
+		mod_name = module_name[static_cast<int>(module)];
+		std::string separator = " ";
+
+		// make sure message has endl at the end
+   	 	if (message.find("\n", message.length()-1) == std::string::npos) {
+			message = message + "\n";
+    	}
+
+		final_message = createTimestamp() + separator + mod_name + separator + logType + message;
+		logFile << final_message;
+		logFile.flush();
+	}
+}
+
+/**
+* Convert String Representation of Log Level to LogLevel Type
+* @param logLevel : String log level
+* @return LogLevel
+*/
+LogLevel Logger::GetLogLevel(const std::string& logLevel) {
+	if (logLevel == "DEBUG") {
+		return LogLevel::DEBUG;
+	}
+	else if (logLevel == "INFO") {
+		return LogLevel::INFO;
+	}
+	else if (logLevel == "WARN") {
+		return LogLevel::ERROR;
+	}
+	else if (logLevel == "ERROR") {
+		return LogLevel::ERROR;
+	}
+	else if (logLevel == "FATAL") {
+		return LogLevel::ERROR;
+	}
+
+	return LogLevel::NONE;
+}
+
+using std::chrono::system_clock;
+
+std::string Logger::createTimestamp() {
+    std::chrono::_V2::system_clock::time_point currentTime = std::chrono::system_clock::now();
+    char buffer1[80];
+    char buffer2[80];
+	std::stringstream ss;
+    
+    long transformed = currentTime.time_since_epoch().count() / 1000000;
+    
+    long millis = transformed % 1000;
+    
+    std::time_t tt;
+    tt = std::time(0);
+    tm *timeinfo = std::gmtime(&tt);
+    strftime (buffer1,100,"%FT%H:%M:%S",timeinfo);
+    sprintf(buffer2, ":%03d", (int)millis);
+	ss << buffer1 << buffer2;
+    
+    return ss.str();
+}
+
+std::string Logger::getLogFilePath() {
+	return logFilePath;
+}
