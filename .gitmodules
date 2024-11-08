@@ -43,3 +43,6 @@
 [submodule "extern/netcdf-cxx4"]
 	path = extern/netcdf-cxx4/netcdf-cxx4
 	url = https://github.com/Unidata/netcdf-cxx4/
+[submodule "extern/lstm/lstm"]
+	path = extern/lstm/lstm
+	url = https://github.com/CIROH-UA/lstm
