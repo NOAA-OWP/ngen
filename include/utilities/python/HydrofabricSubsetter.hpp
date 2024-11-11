@@ -118,7 +118,7 @@ namespace utils {
                     result = bool_result;
                 }
                 catch (const std::exception &e) {
-                    std::stringstream ss:
+                    std::stringstream ss;
                     ss  << "Failed to subdivide hydrofabric for index " << index << ": " << e.what() << std::endl;
                     LOG(ss.str(), LogLevel::ERROR); ss.str("");
                     result = false;
