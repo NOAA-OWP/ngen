@@ -499,8 +499,7 @@ namespace parallel {
                                                                                    partitionConfigFile);
             }
             catch (const std::exception &e) {
-                std:stringstream ss;
-                ss  << e.what() << std::endl;
+                std::cerr  << e.what() << std::endl;
                 // Set not good if the subdivider object couldn't be instantiated
                 isGood = false;
             }
