@@ -14,6 +14,7 @@ target_link_libraries(ngen_bmi
     NGen::logging
     NGen::geojson
     NGen::core_mediator
+    NGen::logging
 )
 
 target_sources(ngen_bmi

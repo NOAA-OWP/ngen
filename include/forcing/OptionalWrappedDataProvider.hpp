@@ -1,5 +1,6 @@
 #ifndef NGEN_OPTIONALWRAPPEDPROVIDER_HPP
 #define NGEN_OPTIONALWRAPPEDPROVIDER_HPP
+#include "Logger.hpp"
 
 #include <utility>
 
@@ -69,7 +70,9 @@ namespace data_access {
                             msg += ", " + providedOutputs[i];
                         }
                         msg += "])";
-                        throw std::runtime_error(msg);
+                        std::string throw_msg; throw_msg.assign(msg);
+                        LOG(throw_msg, LogLevel::ERROR);
+                        throw std::runtime_error(throw_msg);
                     }
                 }
             }
@@ -105,7 +108,9 @@ namespace data_access {
                             def_it++;
                         }
                         msg += "])";
-                        throw std::runtime_error(msg);
+                        std::string throw_msg; throw_msg.assign(msg);
+                        LOG(throw_msg, LogLevel::ERROR);
+                        throw std::runtime_error(throw_msg);
                     }
                 }
                 // Assuming the mapping is valid, set it for the instance
@@ -199,12 +204,16 @@ namespace data_access {
             
             // Balk if not in this instance's collection of outputs
             if (find(providedOutputs.begin(), providedOutputs.end(), output_name) == providedOutputs.end()) {
-                throw std::runtime_error("Unknown output " + output_name + " requested from wrapped provider");
+                std::string throw_msg; throw_msg.assign("Unknown output " + output_name + " requested from wrapped provider");
+                LOG(throw_msg, LogLevel::ERROR);
+                throw std::runtime_error(throw_msg);
             }
             // Balk if this instance is not ready
             if (!isReadyToProvideData()) {
-                throw std::runtime_error("Cannot get value for " + output_name
+                std::string throw_msg; throw_msg.assign("Cannot get value for " + output_name
                                     + " from optional wrapped provider before it is ready");
+                LOG(throw_msg, LogLevel::ERROR);
+                throw std::runtime_error(throw_msg);
             }
 
             // Remember: when the instance is ready to provide data, one or both of these **must** be true:

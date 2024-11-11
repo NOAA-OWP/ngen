@@ -1,4 +1,5 @@
 #include "proj.hpp"
+#include "Logger.hpp"
 
 namespace ngen {
 namespace srs {
@@ -13,7 +14,7 @@ auto epsg::get(uint32_t srid) -> srs_type
 {
 
     if (defs_.count(srid) == 0) {
-        throw std::runtime_error("SRID " + std::to_string(srid) + " is not supported. Project the input data to EPSG:5070 or EPSG:4326.");
+        Logger::logMsgAndThrowError("SRID " + std::to_string(srid) + " is not supported. Project the input data to EPSG:5070 or EPSG:4326.");
     }
 
     return defs_.at(srid);

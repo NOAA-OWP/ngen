@@ -9,6 +9,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/variant.hpp>
+#include "Logger.hpp"
 
 namespace geojson {
     class JSONProperty;
@@ -440,52 +441,54 @@ namespace geojson {
              */
             static void print_property(const geojson::JSONProperty& p, int tab=0, bool newline = true){
                 char end = '\0';
+                std::stringstream ss;
                 if(newline)  end = '\n';
-                std::cout<<std::setw(tab);
+                ss <<std::setw(tab);
                 switch( p.get_type() ){
                     case geojson::PropertyType::String:
-                        std::cout<<p.as_string()<<end;
+                        ss <<p.as_string()<<end;
                         break;
                     case geojson::PropertyType::Real:
-                        std::cout<<p.as_real_number()<<end;
+                        ss <<p.as_real_number()<<end;
                         break;
                     case geojson::PropertyType::Natural:
-                        std::cout<<p.as_natural_number()<<end;
+                        ss <<p.as_natural_number()<<end;
                         break;
                     case geojson::PropertyType::Boolean:
                         if(p.as_boolean())
-                            std::cout<<"true"<<end;
+                            ss <<"true"<<end;
                         else
-                            std::cout<<"false"<<end;
+                            ss <<"false"<<end;
                         break;   
                     case geojson::PropertyType::List:
-                        std::cout<<std::setw(tab)<<"[";
+                        ss <<std::setw(tab)<<"[";
                         tab += 5;
                         for( const auto& lp : p.as_list() ){
                             //This is a little harder to align nicely without knowing
                             //the length of the property as a string first...so for now,
                             //just try to get a little bit in to make it easier to read
-                            std::cout<<std::setw(tab);
+                            ss <<std::setw(tab);
                             print_property(lp, tab, false);
-                            std::cout<<","<<end;
+                            ss <<","<<end;
                         }
                         tab -= 5;
-                        std::cout<<std::setw(tab)<<" ]"<<end;
+                        ss <<std::setw(tab)<<" ]"<<end;
                         
                         break;
                     case geojson::PropertyType::Object:
                         //tab += 5;
-                        std::cout<<std::setw(tab)<<"{\n";
+                        ss <<std::setw(tab)<<"{\n";
                         tab += 5;
                         for( auto pair : p.get_values() ){
-                            std::cout<<std::setw(tab + pair.first.length())<<pair.first<<" : ";
+                            ss <<std::setw(tab + pair.first.length())<<pair.first<<" : ";
                             print_property(pair.second, tab, false);
-                            std::cout<<",\n";
+                            ss <<",\n";
                         }
                         tab -= 5;
-                        std::cout<<std::setw(tab)<<"}"<<end;
+                        ss <<std::setw(tab)<<"}"<<end;
                         tab -= 5;
                 };
+                LOG(ss.str(), LogLevel::INFO); ss.str("");
             }
 
             /**

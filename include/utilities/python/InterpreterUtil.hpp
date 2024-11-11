@@ -1,7 +1,9 @@
 #ifndef NGEN_INTERPRETERUTIL_HPP
 #define NGEN_INTERPRETERUTIL_HPP
+#include "Logger.hpp"
 
 #include <NGenConfig.h>
+#include "Logger.hpp"
 
 #if NGEN_WITH_PYTHON
 
@@ -104,17 +106,21 @@ namespace utils {
                 if (major != python_major
                     || minor != python_minor
                     || patch != python_patch) {
-                    throw std::runtime_error("Python version mismatch between configure/build ("
+                    std::string throw_msg; throw_msg.assign("Python version mismatch between configure/build ("
                                              + std::string(python_version)
                                              + ") and runtime (" + std::string(runtime_python_version) + ")");
+                    LOG(throw_msg, LogLevel::ERROR);
+                    throw std::runtime_error(throw_msg);
                 }
 
                 importTopLevelModule("numpy");
                 py::str runtime_numpy_version = importedTopLevelModules["numpy"].attr("version").attr("version");
                 if(std::string(runtime_numpy_version) != numpy_version) {
-                    throw std::runtime_error("NumPy version mismatch between configure/build ("
+                    std::string throw_msg; throw_msg.assign("NumPy version mismatch between configure/build ("
                                              + std::string(numpy_version)
                                              + ") and runtime (" + std::string(runtime_numpy_version) + ")");
+                    LOG(throw_msg, LogLevel::ERROR);
+                    throw std::runtime_error(throw_msg);
                 }
             }
 
@@ -157,7 +163,9 @@ namespace utils {
                 }
                 else {
                     std::string dirPath = py::str(requestedDirPath);
-                    throw std::runtime_error("Cannot add non-existing directory '" + dirPath + "' to Python PATH");
+                    std::string throw_msg; throw_msg.assign("Cannot add non-existing directory '" + dirPath + "' to Python PATH");
+                    LOG(throw_msg, LogLevel::ERROR);
+                    throw std::runtime_error(throw_msg);
                 }
             }
 

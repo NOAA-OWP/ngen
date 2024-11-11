@@ -93,8 +93,6 @@ std::shared_ptr<Logger> Logger::GetInstance() {
 
 /**
 * Log given message with defined parameters and generate message to pass on Console or File
-* @param codeFile: __FILE__
-* @param codeLine: __LINE__
 * @param message: Log Message
 * @param messageLevel: Log Level, LogLevel::DEBUG by default
 */

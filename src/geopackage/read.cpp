@@ -2,16 +2,19 @@
 
 #include <numeric>
 #include <regex>
+#include <Logger.hpp>
+
+std::stringstream read_ss("");
 
 void check_table_name(const std::string& table)
 {
     if (boost::algorithm::starts_with(table, "sqlite_")) {
-        throw std::runtime_error("table `" + table + "` is not queryable");
+        Logger::logMsgAndThrowError("table `" + table + "` is not queryable");
     }
 
     std::regex allowed("[^-A-Za-z0-9_ ]+");
     if (std::regex_match(table, allowed)) {
-        throw std::runtime_error("table `" + table + "` contains invalid characters");
+        Logger::logMsgAndThrowError("table `" + table + "` contains invalid characters");
     }
 }
 
@@ -43,7 +46,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
             errquery.next();
         }
 
-        throw std::runtime_error(errmsg);
+        Logger::logMsgAndThrowError(errmsg);
     }
 
     // Introspect if the layer is divides to see which ID field is in use
@@ -57,7 +60,8 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
         catch (const std::exception& e){
             #ifndef NGEN_QUIET
             // output debug info on what is read exactly
-            std::cout << "WARN: Using legacy ID column \"id\" in layer " << layer << " is DEPRECATED and may stop working at any time." << std::endl;
+            read_ss << "WARN: Using legacy ID column \"id\" in layer " << layer << " is DEPRECATED and may stop working at any time." << std::endl;
+            LOG(read_ss.str(), LogLevel::ERROR); read_ss.str("");
             #endif
         }
     }
@@ -85,15 +89,16 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
 
     #ifndef NGEN_QUIET
     // output debug info on what is read exactly
-    std::cout << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"<< id_column << "`";
+    read_ss << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"<< id_column << "`";
     if (!ids.empty()) {
-        std::cout << " (id subset:";
+        read_ss << " (id subset:";
         for (auto& id : ids) {
-            std::cout << " " << id;
+            read_ss << " " << id;
         }
-        std::cout << ")";
+        read_ss << ")";
     }
-    std::cout << std::endl;
+    read_ss << std::endl;
+    LOG(read_ss.str(), LogLevel::DEBUG); read_ss.str("");
     #endif
 
     // Get layer feature metadata (geometry column name + type)

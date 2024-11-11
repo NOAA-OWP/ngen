@@ -1,5 +1,6 @@
 #ifndef CSV_Reader_H
 #define CSV_Reader_H
+#include "Logger.hpp"
 
 #include <fstream>
 #include <vector>
@@ -36,11 +37,13 @@ inline std::vector<std::vector<std::string> > CSVReader::getData()
     std::ifstream file(fileName);
 
     if (file.fail()) {
-        throw std::runtime_error(
+        std::string throw_msg; throw_msg.assign(
                 errno == 0
                     ? "Error: failure opening " + fileName
                     : "Errno " + std::to_string(errno) + " (" + strerror(errno) + ") opening " + fileName
         );
+        LOG(throw_msg, LogLevel::ERROR);
+        throw std::runtime_error(throw_msg);
 
         /// \todo Potentially only output warning and fill array with sentinel values.
     }

@@ -2,6 +2,7 @@
 #define NGEN_FORMULATION_MANAGER_H
 
 #include <NGenConfig.h>
+#include "Logger.hpp"
 
 #include <memory>
 #include <sstream>
@@ -48,6 +49,7 @@ namespace realization {
             ~Formulation_Manager() = default;
 
             void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
+                std::stringstream ss;
                 //TODO seperate the parsing of configuration options like time
                 //and routing and other non feature specific tasks from this main function
                 //which has to iterate the entire hydrofabric.
@@ -60,7 +62,9 @@ namespace realization {
                 auto possible_simulation_time = tree.get_child_optional("time");
 
                 if (!possible_simulation_time) {
-                    throw std::runtime_error("ERROR: No simulation time period defined.");
+                    std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+                    LOG(throw_msg, LogLevel::ERROR);
+                    throw std::runtime_error(throw_msg);
                 }
                 config::Time time = config::Time(*possible_simulation_time);
                 auto simulation_time_config = time.make_params();
@@ -126,8 +130,9 @@ namespace realization {
                     using_routing = true;
                 #else
                     using_routing = false;
-                    std::cerr<<"WARNING: Formulation Manager found routing configuration"
+                    ss <<"WARNING: Formulation Manager found routing configuration"
                              <<", but routing support isn't enabled. No routing will occur."<<std::endl;
+                    LOG(ss.str(), LogLevel::WARN); ss.str("");
                 #endif //NGEN_WITH_ROUTING
                  }
 
@@ -142,16 +147,19 @@ namespace realization {
                       if( catchment_index == -1 )
                       {
                           #ifndef NGEN_QUIET
-                          std::cerr<<"WARNING Formulation_Manager::read: Cannot create formulation for catchment "
+                          ss <<"WARNING Formulation_Manager::read: Cannot create formulation for catchment "
                                   <<catchment_config.first
                                   <<" that isn't identified in the hydrofabric or requested subset"<<std::endl;
+                          LOG(ss.str(), LogLevel::WARN); ss.str("");
                           #endif
                           continue;
                       }
                       realization::config::Config catchment_formulation(catchment_config.second);
 
                       if(!catchment_formulation.has_formulation()){
-                        throw std::runtime_error("ERROR: No formulations defined for "+catchment_config.first+".");
+                        std::string throw_msg; throw_msg.assign("ERROR: No formulations defined for "+catchment_config.first+".");
+                        LOG(throw_msg, LogLevel::ERROR);
+                        throw std::runtime_error(throw_msg);
                       }
                       // Parse catchment-specific model_params
                       auto catchment_feature = fabric->get_feature(catchment_index);
@@ -313,12 +321,16 @@ namespace realization {
                 utils::StreamHandler output_stream
             ) {
                 if(!formulation_exists(catchment_formulation.formulation.type)){
-                    throw std::runtime_error("Catchment " + identifier + " failed initialization: '" +
+                    std::string throw_msg; throw_msg.assign("Catchment " + identifier + " failed initialization: '" +
                             catchment_formulation.formulation.type + "' is not a valid formulation. Options are: "+valid_formulation_keys());
+                    LOG(throw_msg, LogLevel::ERROR);
+                    throw std::runtime_error(throw_msg);
                 }
 
                 if(catchment_formulation.forcing.parameters.empty()){
-                    throw std::runtime_error("No forcing definition was found for " + identifier);
+                    std::string throw_msg; throw_msg.assign("No forcing definition was found for " + identifier);
+                    LOG(throw_msg, LogLevel::ERROR);
+                    throw std::runtime_error(throw_msg);
                 }
 
                 std::vector<std::string> missing_parameters;
@@ -338,7 +350,9 @@ namespace realization {
                         }
                     }
                     
-                    throw std::runtime_error(message);
+                    std::string throw_msg; throw_msg.assign(message);
+                    LOG(throw_msg, LogLevel::ERROR);
+                    throw std::runtime_error(throw_msg);
                 }
 
                 forcing_params forcing_config = this->get_forcing_params(catchment_formulation.forcing.parameters, identifier, simulation_time_config);
@@ -389,8 +403,10 @@ namespace realization {
                 }
 
                 if (path.empty()) {
-                    throw std::runtime_error("Error with NGEN config - 'path' in forcing params must be set to a "
+                    std::string throw_msg; throw_msg.assign("Error with NGEN config - 'path' in forcing params must be set to a "
                                              "non-empty parent directory path when 'file_pattern' is used.");
+                    LOG(throw_msg, LogLevel::ERROR);
+                    throw std::runtime_error(throw_msg);
                 }
 
                 // Since we are given a pattern, we need to identify the directory and pull out anything that matches the pattern
@@ -483,7 +499,9 @@ namespace realization {
                                 //so if a system returns unknown or it isn't supported, need to use stat to determine if it is a file
                                 struct stat st;
                                 if( stat((path+entry->d_name).c_str(), &st) != 0) {
-                                    throw std::runtime_error("Could not stat file "+path+entry->d_name);
+                                    std::string throw_msg; throw_msg.assign("Could not stat file "+path+entry->d_name);
+                                    LOG(throw_msg, LogLevel::ERROR);
+                                    throw std::runtime_error(throw_msg);
                                 }
                                 if( S_ISREG(st.st_mode) ) {
                                     //Sinde we used stat and not lstat, we get the result of the target of links as well
@@ -495,19 +513,26 @@ namespace realization {
                                         simulation_time_config.end_time
                                     );
                                 }
-                                throw std::runtime_error("Forcing data is path "+path+entry->d_name+" is not a file");
+                                //std::string throw_msg; throw_msg.assign("Forcing data is path "+path+entry->d_name+" is not a file");
+                                std::string throw_msg; throw_msg.assign("Forcing data is path "+path+entry->d_name+" is not a file");
+                                LOG(throw_msg, LogLevel::ERROR);
+                                throw std::runtime_error(throw_msg);
                             }
                         } //no match found, try next entry
                     } // end while iter dir
                 } //end if directory
                 else {
                     // The directory wasn't found or otherwise couldn't be opened; forcing data cannot be retrieved
-                    throw std::runtime_error("Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg);
+                    std::string throw_msg; throw_msg.assign("Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg);
+                    LOG(throw_msg, LogLevel::ERROR);
+                    throw std::runtime_error(throw_msg);
                 }
 
                 closedir(directory);
 
-                throw std::runtime_error("Forcing data could not be found for '" + identifier + "'");
+                std::string throw_msg; throw_msg.assign("Forcing data could not be found for '" + identifier + "'");
+                LOG(throw_msg, LogLevel::ERROR);
+                throw std::runtime_error(throw_msg);
             }
 
             /**
@@ -518,6 +543,7 @@ namespace realization {
              * @param catchment_feature Associated catchment feature
              */
             void parse_external_model_params(boost::property_tree::ptree& model_params, const geojson::Feature catchment_feature) {
+                std::stringstream ss;
                  boost::property_tree::ptree attr {};
                  for (decltype(auto) param : model_params) {
                     if (param.second.count("source") == 0) {
@@ -555,15 +581,17 @@ namespace realization {
                             case geojson::PropertyType::List:
                             case geojson::PropertyType::Object:
                             default:
-                                std::cerr << "WARNING: property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
+                                ss  << "WARNING: property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
                                           << "Must be one of: Natural (int), Real (double), Boolean, or String" << '\n';
+                                LOG(ss.str(), LogLevel::WARN); ss.str("");
                                 break;
                         }
                     } else {
-                        std::cerr << "WARNING Failed to parse external parameter: catchment `"
+                        ss  << "WARNING Failed to parse external parameter: catchment `"
                                   << catchment_feature->get_id()
                                   << "` does not contain the property `"
                                   << param_name << "`\n";
+                        LOG(ss.str(), LogLevel::WARN); ss.str("");
                     }
                 }
 
@@ -578,6 +606,7 @@ namespace realization {
              * @param catchment_feature Associated catchment feature
              */
             void parse_external_model_params(geojson::PropertyMap& model_params, const geojson::Feature catchment_feature) {
+                std::stringstream ss;
                 geojson::PropertyMap attr {};
                 for (decltype(auto) param : model_params) {
                     // Check for type to short-circuit. If param.second is not an object, `.has_key()` will throw
@@ -624,8 +653,9 @@ namespace realization {
                             default:
                                 // TODO: Should list/object values be passed to model parameters?
                                 //       Typically, feature properties *should* be scalars.
-                                std::cerr << "WARNING: property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
+                                ss  << "WARNING: property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
                                           << "Must be one of: Natural (int), Real (double), Boolean, or String" << '\n';
+                                LOG(ss.str(), LogLevel::WARN); ss.str("");
                                 break;
                         }
                     }

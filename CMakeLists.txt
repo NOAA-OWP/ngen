@@ -342,6 +342,7 @@ if(NGEN_WITH_ROUTING)
 endif()
 
 add_executable(partitionGenerator src/partitionGenerator.cpp)
+target_link_libraries(partitionGenerator PUBLIC NGen::logging)
 target_include_directories(partitionGenerator PUBLIC "${PROJECT_BINARY_DIR}/include")
 if(NGEN_WITH_SQLITE)
     target_include_directories(partitionGenerator PUBLIC AFTER "${NGEN_INC_DIR}/geopackage")

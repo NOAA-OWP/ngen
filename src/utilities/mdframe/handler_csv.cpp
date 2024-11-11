@@ -1,5 +1,5 @@
 #include <fstream>
-
+#include "Logger.hpp"
 #include "mdframe/mdframe.hpp"
 
 #include <boost/core/span.hpp>
@@ -42,7 +42,7 @@ void mdframe::to_csv(const std::string& path, bool header) const
 {
     std::ofstream output(path);
     if (!output)
-        throw std::runtime_error("failed to open file " + path);
+        Logger::logMsgAndThrowError("failed to open file " + path);
     
     std::string header_line = "";
 
@@ -65,7 +65,7 @@ void mdframe::to_csv(const std::string& path, bool header) const
     }
 
     if (variable_subset.empty()) {
-        throw std::runtime_error("cannot output CSV with no output variables");
+        Logger::logMsgAndThrowError("cannot output CSV with no output variables");
     }
 
     // Calculate total number of rows across all subdimensions (not including header)

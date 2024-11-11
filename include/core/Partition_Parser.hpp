@@ -17,6 +17,7 @@
 #include <FeatureCollection.hpp>
 #include "JSONProperty.hpp"
 #include "Partition_Data.hpp"
+#include "Logger.hpp"
 
 class Partitions_Parser {
 
@@ -25,9 +26,12 @@ class Partitions_Parser {
         Partitions_Parser(const std::string &file_path) {
             boost::property_tree::ptree loaded_tree;
             boost::property_tree::json_parser::read_json(file_path, loaded_tree);
-            std::cout << "file read success" << std::endl;
+            std::stringstream ss("");
+            ss << "file read success" << std::endl;
+            LOG(ss.str(), LogLevel::INFO); ss.str("");
             this->tree = loaded_tree;
-            std::cout << "file_path: " << file_path << std::endl;
+            ss << "file_path: " << file_path << std::endl;
+            LOG(ss.str(), LogLevel::INFO); ss.str("");
         };
 
         Partitions_Parser(const boost::property_tree::ptree tree){
@@ -161,7 +165,10 @@ class Partitions_Parser {
             part_data = partition_ranks[part_id];
             int mpi_world_rank = part_data.mpi_world_rank;
 
-            std::cout << "mpi_world_rank: " << mpi_world_rank << std::endl;
+            std::stringstream ss;
+            ss << "mpi_world_rank: " << mpi_world_rank << std::endl;
+            LOG(ss.str(), LogLevel::INFO); ss.str("");
+            
             return mpi_world_rank;
         }
 
