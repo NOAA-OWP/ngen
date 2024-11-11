@@ -128,7 +128,6 @@ namespace parallel {
         else {
             if (printMsg) { 
                 std::cerr << "Process " << mpi_rank << ": Hydrofabric has not yet been subdivided." << std::endl; 
-                LOG(ss.str(), LogLevel::INFO); ss.str("");
             }
             return false;
         }
@@ -502,7 +501,6 @@ namespace parallel {
             catch (const std::exception &e) {
                 std:stringstream ss;
                 ss  << e.what() << std::endl;
-                LOG(ss.str(), LogLevel::ERROR); ss.str("");
                 // Set not good if the subdivider object couldn't be instantiated
                 isGood = false;
             }
