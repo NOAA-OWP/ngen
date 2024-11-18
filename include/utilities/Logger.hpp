@@ -47,6 +47,7 @@ class Logger {
 	void Log(std::string message, LogLevel messageLevel);
 	LogLevel GetLogLevel(const std::string& logLevel);
 	std::string createTimestamp();
+	std::string createDateString();
 	std::string getLogFilePath();
 	static __always_inline void logMsgAndThrowError(const std::string& message) {
 		(Logger::GetInstance())->Log(message, LogLevel::ERROR);

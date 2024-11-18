@@ -35,9 +35,19 @@ std::string module_name[static_cast<int>(LoggingModule::MODULE_COUNT)]
 */
 void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
 	logLevel = level;
+	std::stringstream ss("");
+
+	// get the log file path
+	ss << getenv("NGEN_RESULTS_DIR");
     std::string fwd_slash = "/";
-    std::string logFileName = "ngen_log.txt";
-    std::string logFileDir = "/ngencerf/data/run-logs/ngen_" + Logger::createTimestamp() + fwd_slash;
+ 	std::string logFileDir;
+	if (ss.str() != "")
+		logFileDir = ss.str() + fwd_slash + "logs" + fwd_slash;
+	else
+		logFileDir = "/ngencerf/data/run-logs/ngen_" + Logger::createDateString() + fwd_slash;
+
+	ss.str("");
+    std::string logFileName = "ngen.log";
 
     // creating the directory
    	int status;
@@ -181,9 +191,22 @@ std::string Logger::createTimestamp() {
     tt = std::time(0);
     tm *timeinfo = std::gmtime(&tt);
     strftime (buffer1,100,"%FT%H:%M:%S",timeinfo);
-    sprintf(buffer2, ":%03d", (int)millis);
+    sprintf(buffer2, ".%03d", (int)millis);
 	ss << buffer1 << buffer2;
     
+    return ss.str();
+}
+
+std::string Logger::createDateString() {
+    char buffer1[80];
+    std::time_t tt;
+	std::stringstream ss;
+
+    tt = std::time(0);
+    tm *timeinfo = std::gmtime(&tt);
+    strftime (buffer1,100,"%F",timeinfo);
+	ss << buffer1;
+
     return ss.str();
 }
 
