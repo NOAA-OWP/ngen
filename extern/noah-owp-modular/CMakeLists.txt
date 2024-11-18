@@ -14,6 +14,7 @@ set(_source_dir "${CMAKE_CURRENT_LIST_DIR}/noah-owp-modular")
 
 add_library(surfacebmi SHARED)
 file(GLOB _SURFACEBMI_OBJECTS CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_LIST_DIR}/../datetime-fortran-1.7.0/src/*.f90"	
     "${_source_dir}/src/*.f90"
     "${_source_dir}/bmi/*.f90"
     "${_source_dir}/driver/*.f90")
