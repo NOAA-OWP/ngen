@@ -142,29 +142,6 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
 void setup_logger(void) {
     // One time log preferences
     (Logger::GetInstance())->SetLogPreferences(LogLevel::INFO);
-
-    // sample logging for different log levels
-    ss << "Sample Log for LogLevel::ERROR" << std::endl;
-    LOG(ss.str(), LogLevel::ERROR); ss.str("");
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    ss << "Sample Log for LogLevel::FATAL" << std::endl;
-    LOG(ss.str(), LogLevel::FATAL); ss.str("");
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    ss << "Sample Log for LogLevel::WARN"; // no endl at the end of the message
-    LOG(ss.str(), LogLevel::WARN); ss.str("");
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    ss << "Sample Log for LogLevel::INFO" << std::endl;
-    LOG(ss.str(), LogLevel::INFO); ss.str("");
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    // multiline logging
-    ss << "First line of multiline log:" << std::endl
-       << "   Indented second line of multiline log" << std::endl
-       << "         Indented third line of multiline log" << std::endl
-       << "                Indented fourth line of multiline log"; // no endl at the end of the message
-    LOG(ss.str(), LogLevel::INFO); ss.str("");
-    ss << "Sample Log for LogLevel::DEBUG" << std::endl;
-    LOG(ss.str(), LogLevel::DEBUG); ss.str("");
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
 }
  
 int main(int argc, char *argv[]) {
@@ -611,7 +588,7 @@ int main(int argc, char *argv[]) {
           {
             if(count%100==0) {
               ss<<"Updating layer: "<<layer->get_name()<<"\n";
-              LOG(ss.str(), LogLevel::INFO); ss.str("");
+              LOG(ss.str(), LogLevel::DEBUG); ss.str("");
             }
             layer->update_models(); //assume update_models() calls time->advance_timestep()
             prev_layer_time = layer_next_time;

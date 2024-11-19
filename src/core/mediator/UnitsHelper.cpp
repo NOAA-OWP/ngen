@@ -20,7 +20,7 @@ std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_u
     if(converters.count(key) == 1){
         if(converters[key] == nullptr){
             // same as last throw below
-            Logger::logMsgAndThrowError("Unable to convert " + in_units + " to " + out_units);
+            throw std::runtime_error("Unable to convert " + in_units + " to " + out_units);
         }
         return converters[key];
     } else {
