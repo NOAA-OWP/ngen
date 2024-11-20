@@ -1,5 +1,6 @@
 #ifndef NGEN_FORMULATION_CONSTRUCTORS_H
 #define NGEN_FORMULATION_CONSTRUCTORS_H
+#include "Logger.hpp"
 
 #include <NGenConfig.h>
 
@@ -56,10 +57,12 @@ namespace realization {
             fp = std::make_shared<NullForcingProvider>();
         }
         else { // Some unknown string in the provider field?
-            throw std::runtime_error(
+            std::string throw_msg; throw_msg.assign(
                     "Invalid formulation forcing provider configuration! identifier: \"" + identifier +
                     "\", formulation_type: \"" + formulation_type +
                     "\", provider: \"" + forcing_config.provider + "\"");
+            LOG(throw_msg, LogLevel::ERROR);
+            throw std::runtime_error(throw_msg);
         }
         return formulation_constructor(identifier, fp, output_stream);
     }
@@ -75,7 +78,9 @@ namespace realization {
           return *key;
         }
 
-        throw std::runtime_error("No valid formulation for " + *key + " was described in the passed in tree.");
+        std::string throw_msg; throw_msg.assign("No valid formulation for " + *key + " was described in the passed in tree.");
+        LOG(throw_msg, LogLevel::ERROR);
+        throw std::runtime_error(throw_msg);
     }
 }
 

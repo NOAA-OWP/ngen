@@ -6,6 +6,9 @@
 #include <utility>
 #include <iostream>
 #include "Routing_Py_Adapter.hpp"
+#include <Logger.hpp>
+
+std::stringstream routing_ss("");
 
 using namespace routing_py_adapter;
 
@@ -17,7 +20,8 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_config_file_with_path
   //in the embedded interpreters PYTHON_PATH
   try {
     this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("ngen_routing.ngen_main");
-    std::cout<<"WARN: Legacy t-route module detected; use of this version is deprecated!"<<std::endl;
+    routing_ss <<"WARN: Legacy t-route module detected; use of this version is deprecated!"<<std::endl;
+    LOG(routing_ss.str(), LogLevel::WARN); routing_ss.str("");
   }
   catch (const pybind11::error_already_set& e){
     try {
@@ -25,7 +29,8 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_config_file_with_path
       this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("nwm_routing.__main__");
     }
     catch (const pybind11::error_already_set& e){
-      std::cerr<<"FAIL: Unable to import a supported routing module."<<std::endl;
+      routing_ss <<"FAIL: Unable to import a supported routing module."<<std::endl;
+      LOG(routing_ss.str(), LogLevel::FATAL); routing_ss.str("");
       throw e;
     }
   }
@@ -61,7 +66,8 @@ void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time)
 
   ngen_main(arg_list);
 
-  std::cout << "Finished routing" << std::endl;
+  routing_ss << "Finished routing" << std::endl;
+  LOG(routing_ss.str(), LogLevel::INFO); routing_ss.str("");
 
 }
 

@@ -1,5 +1,6 @@
 #ifndef NGEN_UNITSHELPER_H
 #define NGEN_UNITSHELPER_H
+#include "Logger.hpp"
 
 // FIXME: Workaround to handle UDUNITS2 includes with differing paths.
 //        Not exactly sure why CMake can't handle this, but even with
@@ -48,7 +49,9 @@ class UnitsHelper {
         #endif
         if (unit_system == NULL) 
         {
-            throw std::runtime_error("Unable to create UDUNITS2 Unit System." SOURCE_LOC);
+            std::string throw_msg; throw_msg.assign("Unable to create UDUNITS2 Unit System." SOURCE_LOC);
+            LOG(throw_msg, LogLevel::ERROR);
+            throw std::runtime_error(throw_msg);
         }
         #ifndef UDUNITS_QUIET
         ut_set_error_message_handler(ut_ignore);

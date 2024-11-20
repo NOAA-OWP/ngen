@@ -1,6 +1,8 @@
 #ifndef SIMULATION_TIME_H
 #define SIMULATION_TIME_H
 
+#include "Logger.hpp"
+
 #include <ctime>
 #include <time.h>
 #include <string>
@@ -157,7 +159,9 @@ class Simulation_Time
 
         if (current_date_time_epoch > end_date_time_epoch)
         {
-            throw std::runtime_error("Simulation time objects current time exceeded the end_date_time_epoch value for that object");
+            std::string throw_msg; throw_msg.assign("Simulation time objects current time exceeded the end_date_time_epoch value for that object");
+            LOG(throw_msg, LogLevel::ERROR);
+            throw std::runtime_error(throw_msg);
         }
     }
 

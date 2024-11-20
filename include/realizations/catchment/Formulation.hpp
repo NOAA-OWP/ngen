@@ -1,5 +1,6 @@
 #ifndef FORMULATION_H
 #define FORMULATION_H
+#include "Logger.hpp"
 
 #include <memory>
 #include <string>
@@ -89,7 +90,9 @@ namespace realization {
                         }
                     }
                     
-                    throw std::runtime_error(message);
+                    std::string throw_msg; throw_msg.assign(message);
+                    LOG(throw_msg, LogLevel::ERROR);
+                    throw std::runtime_error(throw_msg);
                 }
             }
 

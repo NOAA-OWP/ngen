@@ -18,4 +18,5 @@ target_include_directories(core_mediator PUBLIC
 target_link_libraries(core_mediator PUBLIC
         Boost::boost                # Headers-only Boost
         Threads::Threads
+        NGen::logging
         )

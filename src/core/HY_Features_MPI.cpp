@@ -1,5 +1,6 @@
 #include <HY_Features_MPI.hpp>
 #include <HY_PointHydroNexusRemote.hpp>
+#include "Logger.hpp"
 
 #if NGEN_WITH_MPI
 
@@ -80,8 +81,10 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
         }
         else
         {
-          std::cerr<<"HY_Features::HY_Features unknown feature identifier type "<<feat_type<<" for feature id."<<feat_id
+          std::stringstream ss;
+          ss <<"HY_Features::HY_Features unknown feature identifier type "<<feat_type<<" for feature id."<<feat_id
                    <<" Skipping feature"<<std::endl;
+          LOG(ss.str(), LogLevel::ERROR); ss.str("");
         }
       }	
 }

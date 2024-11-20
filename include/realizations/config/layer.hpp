@@ -1,5 +1,6 @@
 #ifndef NGEN_REALIZATION_CONFIG_LAYER_H
 #define NGEN_REALIZATION_CONFIG_LAYER_H
+#include "Logger.hpp"
 
 #include <boost/property_tree/ptree.hpp>
 
@@ -53,7 +54,9 @@ namespace realization{
             //pop off the extra ", "
             message.pop_back();
             message.pop_back();
-            throw std::runtime_error(message);
+            std::string throw_msg; throw_msg.assign(message);
+            LOG(throw_msg, LogLevel::ERROR);
+            throw std::runtime_error(throw_msg);
         }
     }
 

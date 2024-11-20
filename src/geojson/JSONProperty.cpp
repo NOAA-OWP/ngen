@@ -1,4 +1,5 @@
 #include "JSONProperty.hpp"
+#include "Logger.hpp"
 
 using namespace geojson;
 
@@ -17,7 +18,9 @@ long JSONProperty::as_natural_number() const {
 
     // Throw an exception since this can't be considered a natural number
     std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a natural number.";
-    throw std::runtime_error(message);
+    std::string throw_msg; throw_msg.assign(message);
+    LOG(throw_msg, LogLevel::ERROR);
+    throw std::runtime_error(throw_msg);
 }
 
 /**
@@ -39,7 +42,9 @@ double JSONProperty::as_real_number() const {
     }
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a real number.";
-    throw std::runtime_error(message);
+    std::string throw_msg; throw_msg.assign(message);
+    LOG(throw_msg, LogLevel::ERROR);
+    throw std::runtime_error(throw_msg);
 }
 
 bool JSONProperty::as_boolean() const {
@@ -48,7 +53,9 @@ bool JSONProperty::as_boolean() const {
     }
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a boolean.";
-    throw std::runtime_error(message);
+    std::string throw_msg; throw_msg.assign(message);
+    LOG(throw_msg, LogLevel::ERROR);
+    throw std::runtime_error(throw_msg);
 }
 
 std::vector<JSONProperty> JSONProperty::as_list() const {
@@ -66,7 +73,9 @@ std::vector<JSONProperty> JSONProperty::as_list() const {
     }
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a list.";
-    throw std::runtime_error(message);
+    std::string throw_msg; throw_msg.assign(message);
+    LOG(throw_msg, LogLevel::ERROR);
+    throw std::runtime_error(throw_msg);
 }
 
 std::vector<long> JSONProperty::as_natural_vector() const {
@@ -130,7 +139,9 @@ std::string JSONProperty::as_string() const {
     }
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a string.";
-    throw std::runtime_error(message);
+    std::string throw_msg; throw_msg.assign(message);
+    LOG(throw_msg, LogLevel::ERROR);
+    throw std::runtime_error(throw_msg);
 }
 
 JSONProperty JSONProperty::at(std::string key) const {
@@ -139,7 +150,9 @@ JSONProperty JSONProperty::at(std::string key) const {
     }
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + ", not an object and cannot be referenced as one.";
-    throw std::runtime_error(message);
+    std::string throw_msg; throw_msg.assign(message);
+    LOG(throw_msg, LogLevel::ERROR);
+    throw std::runtime_error(throw_msg);
 }
 
 std::vector<std::string> JSONProperty::keys() const {
@@ -154,7 +167,9 @@ std::vector<std::string> JSONProperty::keys() const {
     }
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + ", not an object and cannot be referenced as one.";
-    throw std::runtime_error(message);
+    std::string throw_msg; throw_msg.assign(message);
+    LOG(throw_msg, LogLevel::ERROR);
+    throw std::runtime_error(throw_msg);
 }
 
 PropertyMap JSONProperty::get_values() const {
@@ -163,7 +178,9 @@ PropertyMap JSONProperty::get_values() const {
     }
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + ", not an object and cannot be referenced as one.";
-    throw std::runtime_error(message);
+    std::string throw_msg; throw_msg.assign(message);
+    LOG(throw_msg, LogLevel::ERROR);
+    throw std::runtime_error(throw_msg);
 }
 
 bool JSONProperty::has_key(std::string key) const {

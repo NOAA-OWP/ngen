@@ -420,6 +420,7 @@ ngen_add_test(
     LIBRARIES
         NGen::core # for filechecker utility
         NGen::routing
+        NGen::logging
         pybind11::embed
     REQUIRES
         NGEN_WITH_ROUTING
