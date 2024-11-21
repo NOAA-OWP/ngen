@@ -48,6 +48,8 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
 
 	ss.str("");
     std::string logFileName = "ngen.log";
+    std::string stdout_logFileName = "ngen.stdout";
+    std::string stderr_logFileName = "ngen.stderr";
 
     // creating the directory
    	int status;
@@ -55,14 +57,35 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
 	const char *cstr = mkdir_cmd.c_str();
    	status = system(cstr);
    	if (status == -1)
-   	   std::cerr << "Error(" << (errno) << ") creating log file directory: " << logFileDir << std::endl;
+   	   	std::cerr << "Error(" << (errno) << ") creating log file directory: " << logFileDir << std::endl;
    	else {
-   	   std::cout << "Log directory: " << logFileDir <<std::endl;
-		// creating the file
+   	   	std::cout << "Log directory: " << logFileDir <<std::endl;
+		// creating the stdout/stderr log files
+		std::string stdout_logFilePath = logFileDir+stdout_logFileName;
+		std::string stderr_logFilePath = logFileDir+stderr_logFileName;
+    	// Open stdout log file for writing
+    	stdout_logFile = freopen(stdout_logFilePath.c_str(), "a", stdout);
+    	if (stdout_logFile == NULL) {
+    	    std::cerr << "Error opening ngen.stdout log file." << std::endl;
+    	}
+		else {
+			std::cout << "Log file path for STDOUT:" << stdout_logFilePath << std::endl;
+		}
+
+    	// Open stderr log file for writing
+    	stderr_logFile = freopen(stderr_logFilePath.c_str(), "a", stderr);
+    	if (stderr_logFile == NULL) {
+    	    std::cerr << "Error opening ngen.stderr log file." << std::endl;
+    	}
+		else {
+			std::cerr << "Log file path for STDERR:" << stderr_logFilePath << std::endl;
+		}
+
+		// creating the log file
 		logFilePath = logFileDir+logFileName;
 		logFile.open(logFilePath, ios::out | ios::app);
 		if (!logFile.good()) {
-			std::cerr << "Warning: Can't Open Log File: " << logFilePath << std::endl;
+			std::cerr << "Warning: Can't Open Log File for NGEN: " << logFilePath << std::endl;
 			// try logging to a file in local directory
     		std::string logFileDir = "./run-logs/ngen_" + Logger::createTimestamp() + fwd_slash;
 			mkdir_cmd = "mkdir -p " + logFileDir;
@@ -74,16 +97,16 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
 				logFilePath = logFileDir+logFileName;
 				logFile.open(logFilePath, ios::out | ios::app);
 				if (!logFile.good()) {
-					std::cerr << "Can't Open local directory Log File:" << logFilePath <<std::endl;			
+					std::cerr << "Can't Open local directory Log File for NGEN:" << logFilePath <<std::endl;			
 				}
 				else {
-					std::cout << "Logging instead into: " << logFilePath << std::endl;
+					std::cout << "ngen is logging instead into: " << logFilePath << std::endl;
 					setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
 				}
 			}
 		}
 		else {
-			std::cout << "Log File Path:" << logFilePath << std::endl;
+			std::cout << "NGEN Log File Path:" << logFilePath << std::endl;
 			setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
 		}
 	}

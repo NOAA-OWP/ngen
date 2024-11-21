@@ -59,6 +59,8 @@ class Logger {
 	std::fstream logFile;
 	std::string logFilePath;
 	static std::shared_ptr<Logger> loggerInstance;
+	FILE *stdout_logFile;
+	FILE *stderr_logFile;
 };
 
 
