@@ -72,9 +72,9 @@ namespace data_access
          * @return The value of the forcing property for the described time period, with units converted if needed.
          * @throws std::out_of_range If data for the time period is not available.
          */
-        double get_value(const selection_type& selector, ReSampleMethod m) override;
+        data_type get_value(const selection_type& selector, ReSampleMethod m) override;
 
-        void get_values(const selection_type& selector, boost::span<double> data) override;
+        void get_values(const selection_type& selector, boost::span<data_type> data) override;
 
         // And an implementation of the usual version using it
         std::vector<data_type> get_values(const selection_type& selector, data_access::ReSampleMethod) override

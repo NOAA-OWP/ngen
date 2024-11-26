@@ -42,9 +42,9 @@ SchismFormulation::SchismFormulation(
                                      , std::string const& library_path
                                      , std::string const& init_config_path
                                      , MPI_Comm mpi_comm
-                                     , std::shared_ptr<MeshPointsDataProvider> met_forcings
-                                     , std::shared_ptr<MeshPointsDataProvider> offshore_boundary
-                                     , std::shared_ptr<MeshPointsDataProvider> inflow_boundary
+                                     , std::shared_ptr<ProviderType> met_forcings
+                                     , std::shared_ptr<ProviderType> offshore_boundary
+                                     , std::shared_ptr<ProviderType> inflow_boundary
                                      )
     : CoastalFormulation(id)
     , meteorological_forcings_provider_(met_forcings)

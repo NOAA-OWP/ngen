@@ -1,12 +1,11 @@
 #pragma once
 
-#include <forcing/DataProvider.hpp>
-#include <forcing/MeshPointsSelectors.hpp>
+#include <forcing/GenericDataProvider.hpp>
 
 #include <string>
 #include <boost/core/span.hpp>
 
-class CoastalFormulation : public data_access::DataProvider<double, MeshPointsSelector>
+class CoastalFormulation : public data_access::MeshPointsDataProvider
 {
 public:
     CoastalFormulation(std::string id)

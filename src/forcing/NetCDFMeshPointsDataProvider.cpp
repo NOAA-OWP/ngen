@@ -135,7 +135,7 @@ size_t NetCDFMeshPointsDataProvider::get_ts_index_for_time(const time_t &epoch_t
     }
 }
 
-void NetCDFMeshPointsDataProvider::get_values(const selection_type& selector, boost::span<double> data)
+void NetCDFMeshPointsDataProvider::get_values(const selection_type& selector, boost::span<data_type> data)
 {
     if (!boost::get<AllPoints>(&selector.points)) throw std::runtime_error("Not implemented - only all_points");
 
@@ -148,7 +148,7 @@ void NetCDFMeshPointsDataProvider::get_values(const selection_type& selector, bo
 
     metadata.ncVar.getVar({time_index, 0}, {1, data.size()}, data.data());
 
-    for (double& value : data) {
+    for (auto& value : data) {
         value = value * metadata.scale_factor + metadata.offset;
     }
 
@@ -165,7 +165,7 @@ void NetCDFMeshPointsDataProvider::get_values(const selection_type& selector, bo
     }
 }
 
-double NetCDFMeshPointsDataProvider::get_value(const selection_type& selector, ReSampleMethod m)
+NetCDFMeshPointsDataProvider::data_type NetCDFMeshPointsDataProvider::get_value(const selection_type& selector, ReSampleMethod m)
 {
     throw std::runtime_error("Not implemented - access chunks of the mesh");
 

@@ -13,15 +13,16 @@
 class SchismFormulation final : public CoastalFormulation
 {
 public:
-    using MeshPointsDataProvider = data_access::DataProvider<double, MeshPointsSelector>;
+    using ProviderType = data_access::MeshPointsDataProvider;
+
     SchismFormulation(
                       std::string const& id
                       , std::string const& library_path
                       , std::string const& init_config_path
                       , MPI_Comm mpi_comm
-                      , std::shared_ptr<MeshPointsDataProvider> met_forcings
-                      , std::shared_ptr<MeshPointsDataProvider> offshore_boundary
-                      , std::shared_ptr<MeshPointsDataProvider> inflow_boundary
+                      , std::shared_ptr<ProviderType> met_forcings
+                      , std::shared_ptr<ProviderType> offshore_boundary
+                      , std::shared_ptr<ProviderType> inflow_boundary
                       );
 
     ~SchismFormulation();
@@ -41,7 +42,7 @@ public:
     void finalize() override;
     void update() override;
 
-    void get_values(const selection_type& selector, boost::span<double> data) override;
+    void get_values(const selection_type& selector, boost::span<data_type> data) override;
 
 protected:
     size_t mesh_size(std::string const& variable_name) override;
@@ -71,7 +72,6 @@ private:
     // area-averaged RAINRATE over elements, but we're going to make
     // do with point values at the element centroids
 
-    using ProviderType = data_access::DataProvider<double, MeshPointsSelector>;
     std::shared_ptr<ProviderType> meteorological_forcings_provider_;
     std::shared_ptr<ProviderType> offshore_boundary_provider_;
     std::shared_ptr<ProviderType> inflows_boundary_provider_;
