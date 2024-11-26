@@ -126,10 +126,11 @@ size_t NetCDFMeshPointsDataProvider::get_ts_index_for_time(const time_t &epoch_t
     else
     {
         std::stringstream ss;
-        ss << "The value " << (int)epoch_time_in << " was not in the range ["
+        ss << "The value " << std::chrono::system_clock::to_time_t(epoch_time) << " was not in the range ["
            << std::chrono::system_clock::to_time_t(start_time) << ", "
            << std::chrono::system_clock::to_time_t(stop_time) << ")\n"
-           << SOURCE_LOC;
+           << SOURCE_LOC << "\n";
+        ss << "Off by " << std::chrono::system_clock::to_time_t(epoch_time) - std::chrono::system_clock::to_time_t(start_time) << "\n";
         throw std::out_of_range(ss.str().c_str());
     }
 }
