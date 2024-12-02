@@ -26,7 +26,9 @@ std::map<std::string, SchismFormulation::InputMapping> SchismFormulation::expect
         // ETA2_bnd - water surface elevation at the boundaries
         {"ETA2_bnd", { SchismFormulation::OFFSHORE, "ETA2_bnd"}},
         // Q_bnd - flows at boundaries
-        {"Q_bnd", { SchismFormulation::INFLOW, "Q_bnd"}},
+        {"Q_bnd_source", { SchismFormulation::LAND, "Q_bnd_source"}},
+        // Q_bnd - flows at boundaries
+        {"Q_bnd_sink", { SchismFormulation::LAND, "Q_bnd_sink"}},
     };
 
 std::vector<std::string> SchismFormulation::exported_output_variable_names_ =
@@ -68,14 +70,15 @@ void SchismFormulation::initialize()
 {
     auto const& input_vars = bmi_->GetInputVarNames();
 
-    for (auto const& name : input_vars) {
+    for (auto const& full_name : input_vars) {
+        auto name = full_name.substr(0, full_name.size()-3); // Chop off _t0/_t1 suffixes
         if (expected_input_variables_.find(name) == expected_input_variables_.end()) {
             throw std::runtime_error("SCHISM instance requests unexpected input variable '" + name + "'");
         }
 
-        input_variable_units_[name] = bmi_->GetVarUnits(name);
-        input_variable_type_[name] = bmi_->GetVarType(name);
-        input_variable_count_[name] = mesh_size(name);
+        input_variable_units_[name] = bmi_->GetVarUnits(name + "_t0");
+        input_variable_type_[name] = bmi_->GetVarType(name + "_t0");
+        input_variable_count_[name] = mesh_size(name + "_t0");
     }
 
     auto const& output_vars = bmi_->GetOutputVarNames();
@@ -92,7 +95,7 @@ void SchismFormulation::initialize()
 
     time_step_length_ = std::chrono::seconds((long long)bmi_->GetTimeStep());
 
-    set_inputs();
+    set_inputs(0);
 }
 
 void SchismFormulation::finalize()
@@ -104,7 +107,7 @@ void SchismFormulation::finalize()
     bmi_->Finalize();
 }
 
-void SchismFormulation::set_inputs()
+void SchismFormulation::set_inputs(int timestep_offset)
 {
     for (auto var : expected_input_variables_) {
         auto const& name = var.first;
@@ -117,20 +120,21 @@ void SchismFormulation::set_inputs()
             switch(selector) {
             case METEO: return meteorological_forcings_provider_.get();
             case OFFSHORE: return offshore_boundary_provider_.get();
-            case INFLOW: return inflows_boundary_provider_.get();
+            case LAND: return inflows_boundary_provider_.get();
             default: throw std::runtime_error("Unknown SCHISM provider selector type");
             }
         }();
-        std::vector<double> buffer(mesh_size(name));
+        auto offset_name = name + "_t" + std::to_string(timestep_offset);
+        std::vector<double> buffer(mesh_size(offset_name));
         provider->get_values(points, buffer);
-        bmi_->SetValue(name, buffer.data());
+        bmi_->SetValue(offset_name, buffer.data());
     }
 }
 
 void SchismFormulation::update()
 {
     current_time_ += time_step_length_;
-    set_inputs();
+    set_inputs(1);
     bmi_->Update();
 }
 

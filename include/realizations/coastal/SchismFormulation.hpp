@@ -44,15 +44,17 @@ public:
 
     void get_values(const selection_type& selector, boost::span<data_type> data) override;
 
+    // Visible only for testing use
+    enum ForcingSelector { METEO, OFFSHORE, LAND };
+    struct InputMapping { ForcingSelector selector; std::string name; };
+    static std::map<std::string, InputMapping> expected_input_variables_;
+
 protected:
     size_t mesh_size(std::string const& variable_name) override;
 
 private:
     std::unique_ptr<models::bmi::Bmi_Fortran_Adapter> bmi_;
 
-    enum ForcingSelector { METEO, OFFSHORE, INFLOW };
-    struct InputMapping { ForcingSelector selector; std::string name; };
-    static std::map<std::string, InputMapping> expected_input_variables_;
     std::map<std::string, std::string> input_variable_units_;
     std::map<std::string, std::string> input_variable_type_;
     std::map<std::string, size_t> input_variable_count_;
@@ -76,7 +78,7 @@ private:
     std::shared_ptr<ProviderType> offshore_boundary_provider_;
     std::shared_ptr<ProviderType> inflows_boundary_provider_;
 
-    void set_inputs();
+    void set_inputs(int timestep_offset);
 };
 
 #endif // NGEN_WITH_BMI_FORTRAN && NGEN_WITH_MPI

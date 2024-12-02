@@ -2,13 +2,14 @@
 #include <utilities/parallel_utils.h>
 
 #include "realizations/coastal/SchismFormulation.hpp"
+#include <cmath>
 #include <limits>
 #include <iostream>
 #include <NetCDFMeshPointsDataProvider.hpp>
 
-const static std::string library_path = "/Users/phil/Code/noaa/BUILD/bmischism_2024-08-19-ngen/libtestbmifortranmodel.dylib";
-const static std::string init_config_path = "/Users/phil/Code/noaa/SCHISM_Lake_Champlain_BMI_test/namelist.input";
-const static std::string met_forcing_netcdf_path = "/Users/phil/Code/noaa/NextGen_Forcings_Engine_SCHISM_Lake_Champlain_2015120100.nc";
+const static std::string library_path = "/Users/phil/Code/noaa/BUILD/bmischism_2024-09-27-ngen/libtestbmifortranmodel.dylib";
+const static std::string init_config_path = "/Users/phil/Code/noaa/SCHISM_Lake_Champlain_driver_test/namelist.input";
+const static std::string met_forcing_netcdf_path = "/Users/phil/Code/noaa/SCHISM_Lake_Champlain_BMI_test/NextGen_Forcings_Engine_MESH_output_201104302300.nc";
 
 #if 0
 struct Schism_Formulation_IT : public ::testing::Test
@@ -37,6 +38,10 @@ std::map<std::string, double> input_variables_defaults =
         {"ETA2_bnd", 30},
         // Q_bnd - flows at boundaries
         {"Q_bnd", 0.1},
+        // Q_bnd - flows at boundaries
+        {"Q_bnd_source", 0.1},
+        // Q_bnd - flows at boundaries
+        {"Q_bnd_sink", 0.1},
     };
 
 struct MockProvider : data_access::DataProvider<double, MeshPointsSelector>
@@ -76,15 +81,15 @@ int main(int argc, char **argv)
     auto provider = std::make_shared<MockProvider>();
 
     std::tm start_time_tm{};
-    start_time_tm.tm_year = 2015 - 1900;
-    start_time_tm.tm_mon = 12 - 1;
-    start_time_tm.tm_mday = 1;
+    start_time_tm.tm_year = 2011 - 1900;
+    start_time_tm.tm_mon = 5 - 1;
+    start_time_tm.tm_mday = 2;
     auto start_time_t = std::mktime(&start_time_tm);
 
     std::tm stop_time_tm{};
-    stop_time_tm.tm_year = 2015 - 1900;
-    stop_time_tm.tm_mon = 12 - 1;
-    stop_time_tm.tm_mday = 2;
+    stop_time_tm.tm_year = 2011 - 1900;
+    stop_time_tm.tm_mon = 5 - 1;
+    stop_time_tm.tm_mday = 3;
     auto stop_time_t = std::mktime(&stop_time_tm);
 
     auto netcdf_met_provider = std::make_shared<data_access::NetCDFMeshPointsDataProvider>(met_forcing_netcdf_path,
@@ -101,8 +106,10 @@ int main(int argc, char **argv)
 
     schism->initialize();
 
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 3; ++i) {
+        std::cout << "Step " << i << std::endl;
         schism->update();
+    }
 
     using namespace std::chrono_literals;
 
@@ -118,7 +125,7 @@ int main(int argc, char **argv)
             min = std::min(val, min);
             max = std::max(val, max);
         }
-        std::cout << name << " ranges from " << min << " to " << max << std::endl;
+        std::cout << name << " with " << data.size() << " entries ranges from " << min << " to " << max << std::endl;
     };
 
     std::vector<double> bedlevel(278784, std::numeric_limits<double>::quiet_NaN());
