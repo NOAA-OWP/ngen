@@ -151,7 +151,15 @@ endfunction()
 # )
 
 add_executable(test_coastal coastal/SchismFormulation_Test.cpp)
-target_link_libraries(test_coastal NGen::core NGen::realizations_catchment NGen::realizations_coastal NGen::core_mediator NGen::forcing NGen::ngen_bmi)
+target_link_libraries(test_coastal
+        NGen::core
+        NGen::realizations_catchment
+        NGen::realizations_coastal
+        NGen::core_mediator
+        NGen::forcing
+        NGen::ngen_bmi
+        gtest
+        )
 
 ########################## GeoJSON Unit Tests
 ngen_add_test(
