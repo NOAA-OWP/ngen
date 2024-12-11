@@ -22,7 +22,7 @@ public:
                       , MPI_Comm mpi_comm
                       , std::shared_ptr<ProviderType> met_forcings
                       , std::shared_ptr<ProviderType> offshore_boundary
-                      , std::shared_ptr<ProviderType> inflow_boundary
+                      , std::shared_ptr<ProviderType> channel_flow_boundary
                       );
 
     ~SchismFormulation();
@@ -45,7 +45,7 @@ public:
     void get_values(const selection_type& selector, boost::span<data_type> data) override;
 
     // Visible only for testing use
-    enum ForcingSelector { METEO, OFFSHORE, LAND };
+    enum ForcingSelector { METEO, OFFSHORE, CHANNEL_FLOW };
     struct InputMapping { ForcingSelector selector; std::string name; };
     static std::map<std::string, InputMapping> expected_input_variables_;
 
@@ -76,7 +76,7 @@ private:
 
     std::shared_ptr<ProviderType> meteorological_forcings_provider_;
     std::shared_ptr<ProviderType> offshore_boundary_provider_;
-    std::shared_ptr<ProviderType> inflows_boundary_provider_;
+    std::shared_ptr<ProviderType> channel_flow_boundary_provider_;
 
     void set_inputs(int timestep_offset);
 };

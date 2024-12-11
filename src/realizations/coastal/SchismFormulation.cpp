@@ -26,9 +26,9 @@ std::map<std::string, SchismFormulation::InputMapping> SchismFormulation::expect
         // ETA2_bnd - water surface elevation at the boundaries
         {"ETA2_bnd", { SchismFormulation::OFFSHORE, "ETA2_bnd"}},
         // Q_bnd - flows at boundaries
-        {"Q_bnd_source", { SchismFormulation::LAND, "Q_bnd_source"}},
+        {"Q_bnd_source", { SchismFormulation::CHANNEL_FLOW, "Q_bnd_source"}},
         // Q_bnd - flows at boundaries
-        {"Q_bnd_sink", { SchismFormulation::LAND, "Q_bnd_sink"}},
+        {"Q_bnd_sink", { SchismFormulation::CHANNEL_FLOW, "Q_bnd_sink"}},
     };
 
 std::vector<std::string> SchismFormulation::exported_output_variable_names_ =
@@ -46,12 +46,12 @@ SchismFormulation::SchismFormulation(
                                      , MPI_Comm mpi_comm
                                      , std::shared_ptr<ProviderType> met_forcings
                                      , std::shared_ptr<ProviderType> offshore_boundary
-                                     , std::shared_ptr<ProviderType> inflow_boundary
+                                     , std::shared_ptr<ProviderType> channel_flow_boundary
                                      )
     : CoastalFormulation(id)
     , meteorological_forcings_provider_(met_forcings)
     , offshore_boundary_provider_(offshore_boundary)
-    , inflows_boundary_provider_(inflow_boundary)
+    , channel_flow_boundary_provider_(channel_flow_boundary)
 {
     bmi_ = std::make_unique<models::bmi::Bmi_Fortran_Adapter>
         (
@@ -102,7 +102,7 @@ void SchismFormulation::finalize()
 {
     meteorological_forcings_provider_->finalize();
     offshore_boundary_provider_->finalize();
-    inflows_boundary_provider_->finalize();
+    channel_flow_boundary_provider_->finalize();
 
     bmi_->Finalize();
 }
@@ -120,7 +120,7 @@ void SchismFormulation::set_inputs(int timestep_offset)
             switch(selector) {
             case METEO: return meteorological_forcings_provider_.get();
             case OFFSHORE: return offshore_boundary_provider_.get();
-            case LAND: return inflows_boundary_provider_.get();
+            case CHANNEL_FLOW: return channel_flow_boundary_provider_.get();
             default: throw std::runtime_error("Unknown SCHISM provider selector type");
             }
         }();
