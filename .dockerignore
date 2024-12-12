@@ -10,3 +10,7 @@ docker
 .gitpod.Dockerfile
 .gitpod.yml 
 sonar-project.properties
+
+# exclude artifacts from native build
+cmake_build
+**/*/cmake_build

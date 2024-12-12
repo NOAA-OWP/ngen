@@ -26,9 +26,6 @@ std::shared_ptr<utils::ngenPy::InterpreterUtil> RoutingPyBindTest::interpreter =
 
 TEST_F(RoutingPyBindTest, TestRoutingPyBind)
 {
-  // FIXME: Test broken by gpkg v2.2 format changes
-  GTEST_SKIP() << "Skipping test";
-
   //Use below if calling constructor that includes nexus values
   //std::vector<double> nexus_values_vec{1.1, 2.2, 3.3, 4.4, 5.5};
 
