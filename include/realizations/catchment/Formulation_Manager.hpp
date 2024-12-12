@@ -9,7 +9,11 @@
 #include <functional>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <cerrno>
 #include <regex>
+#include <sys/types.h>
+#include <unistd.h>
+#include <string>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -47,7 +51,7 @@ namespace realization {
 
             ~Formulation_Manager() = default;
 
-            virtual void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
+            void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
                 //TODO seperate the parsing of configuration options like time
                 //and routing and other non feature specific tasks from this main function
                 //which has to iterate the entire hydrofabric.
@@ -180,46 +184,46 @@ namespace realization {
                 }
             }
 
-            virtual void add_formulation(std::shared_ptr<Catchment_Formulation> formulation) {
+            void add_formulation(std::shared_ptr<Catchment_Formulation> formulation) {
                 this->formulations.emplace(formulation->get_id(), formulation);
             }
 
-            virtual std::shared_ptr<Catchment_Formulation> get_formulation(std::string id) const {
+            std::shared_ptr<Catchment_Formulation> get_formulation(std::string id) const {
                 // TODO: Implement on-the-fly formulation creation using global parameters
                 return this->formulations.at(id);
             }
 
-            virtual std::shared_ptr<Catchment_Formulation> get_domain_formulation(long id) const {
+            std::shared_ptr<Catchment_Formulation> get_domain_formulation(long id) const {
                 return this->domain_formulations.at(id);
             }
 
-            virtual bool has_domain_formulation(int id) const {
+            bool has_domain_formulation(int id) const {
                 return this->domain_formulations.count( id ) > 0;
             }
 
-            virtual bool contains(std::string identifier) const {
+            bool contains(std::string identifier) const {
                 return this->formulations.count(identifier) > 0;
             }
 
             /**
              * @return The number of elements within the collection
              */
-            virtual int get_size() {
+            int get_size() {
                 return this->formulations.size();
             }
 
             /**
              * @return Whether or not the collection is empty
              */
-            virtual bool is_empty() {
+            bool is_empty() {
                 return this->formulations.empty();
             }
 
-            virtual typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator begin() const {
+            typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator begin() const {
                 return this->formulations.cbegin();
             }
 
-            virtual typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator end() const {
+            typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator end() const {
                 return this->formulations.cend();
             }
 
@@ -271,7 +275,9 @@ namespace realization {
             }
 
             /**
-             * @brief Get the formatted output root
+             * @brief Get the formatted output root: check the existence of the output_root directory defined
+             * in realization. If true, return the directory name. Otherwise, try to create the directory
+             * or throw an error on failure.
              *
              * @code{.cpp}
              * // Example config:
@@ -285,16 +291,32 @@ namespace realization {
              * 
              * @return std::string of the output root directory
              */
-            std::string get_output_root() const noexcept {
+            std::string get_output_root() const {
                 const auto output_root = this->tree.get_optional<std::string>("output_root");
                 if (output_root != boost::none && *output_root != "") {
                     // Check if the path ends with a trailing slash,
                     // otherwise add it.
-                    return output_root->back() == '/'
+                    std::string str = output_root->back() == '/'
                            ? *output_root
                            : *output_root + "/";
-                }
 
+                    const char* dir = str.c_str();
+
+                    //use C++ system function to check if there is a dir match that defined in realization
+                    struct stat sb;
+                    if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode)) {
+                        return str;
+                    } else {
+                        errno = 0;
+                        int result = mkdir(dir, 0755);      
+                        if (result == 0)
+                            return str;
+                        else
+                            throw std::runtime_error("failed to create directory '" + str + "': " + std::strerror(errno));
+                    }
+                }
+ 
+                //for case where there is no output_root in the realization file
                 return "./";
             }
 
@@ -363,9 +385,11 @@ namespace realization {
                 //because they will eventually be used by someone, someday, looking at configurations
                 //being turned into concrecte formulations...
                 // geojson::JSONProperty::print_property(global_config.formulation.parameters.at("modules"));
-                global_config.formulation.link_external(feature);
-                // geojson::JSONProperty::print_property(global_config.formulation.parameters.at("modules"));
-                missing_formulation->create_formulation(global_config.formulation.parameters);
+
+                //Make a copy of the global configuration so parameters don't clash when linking to external data
+                auto formulation =  realization::config::Formulation(global_config.formulation);
+                formulation.link_external(feature);
+                missing_formulation->create_formulation(formulation.parameters);
 
                 return missing_formulation;
             }

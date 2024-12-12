@@ -57,7 +57,7 @@ namespace realization {
          * @return The collection of forcing output property names this instance can provide.
          * @see ForcingProvider
          */
-        boost::span<const std::string> get_available_variable_names() override;
+        boost::span<const std::string> get_available_variable_names() const override;
 
         /**
          * Get a delimited string with all the output variable values for the given time step.
@@ -139,27 +139,27 @@ namespace realization {
          *
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
-        long get_data_start_time() override;
+        long get_data_start_time() const override;
 
-        long get_data_stop_time() override;
+        long get_data_stop_time() const override;
 
-        long record_duration() override;
+        long record_duration() const override;
 
         /**
          * Get the current time for the backing BMI model in its native format and units.
          *
          * @return The current time for the backing BMI model in its native format and units.
          */
-        const double get_model_current_time() override;
+        const double get_model_current_time() const override;
 
         /**
          * Get the end time for the backing BMI model in its native format and units.
          *
          * @return The end time for the backing BMI model in its native format and units.
          */
-        const double get_model_end_time() override;
+        const double get_model_end_time() const override;
 
-        const std::vector<std::string> &get_required_parameters() override;
+        const std::vector<std::string> &get_required_parameters() const override;
 
         /**
          * When possible, translate a variable name for a BMI model to an internally recognized name.
@@ -175,7 +175,7 @@ namespace realization {
          * @param model_var_name The BMI variable name to translate so its purpose is recognized internally.
          * @return Either the internal equivalent variable name, or the provided name if there is not a mapping entry.
          */
-        const std::string &get_config_mapped_variable_name(const std::string &model_var_name) override;
+        const std::string &get_config_mapped_variable_name(const std::string &model_var_name) const override;
 
         /**
          * Get the index of the forcing time step that contains the given point in time.
@@ -190,7 +190,7 @@ namespace realization {
          * @return The index of the forcing time step that contains the given point in time.
          * @throws std::out_of_range If the given point is not in any time step.
          */
-        size_t get_ts_index_for_time(const time_t &epoch_time) override;
+        size_t get_ts_index_for_time(const time_t &epoch_time) const override;
 
         /**
          * @brief Get the 1D values of a forcing property for an arbitrary time period, converting units if needed.
@@ -224,8 +224,8 @@ namespace realization {
          */
         double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
-        bool is_bmi_input_variable(const std::string &var_name) override;
-        bool is_bmi_output_variable(const std::string &var_name) override;
+        bool is_bmi_input_variable(const std::string &var_name) const override;
+        bool is_bmi_output_variable(const std::string &var_name) const override;
 
         /**
          * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
@@ -245,10 +245,10 @@ namespace realization {
          * @param name The name of the forcing property for which the current value is desired.
          * @return Whether the property's value is an aggregate sum, which is always ``true`` for this type.
          */
-        bool is_property_sum_over_time_step(const std::string& name) override;
+        bool is_property_sum_over_time_step(const std::string& name) const override;
 
-        const std::vector<std::string> get_bmi_input_variables() override;
-        const std::vector<std::string> get_bmi_output_variables() override;
+        const std::vector<std::string> get_bmi_input_variables() const override;
+        const std::vector<std::string> get_bmi_output_variables() const override;
 
     protected:
 
@@ -306,11 +306,9 @@ namespace realization {
          *
          * @return Shared pointer to the backing model object that implements the BMI.
          */
-        std::shared_ptr<models::bmi::Bmi_Adapter> get_bmi_model();
+        std::shared_ptr<models::bmi::Bmi_Adapter> get_bmi_model() const;
 
-        const std::string &get_forcing_file_path() const override;
-
-        const time_t &get_bmi_model_start_time_forcing_offset_s() override;
+        const time_t &get_bmi_model_start_time_forcing_offset_s() const override;
 
         /**
          * Universal logic applied when creating a BMI-backed formulation from NGen config.
@@ -343,21 +341,14 @@ namespace realization {
          *
          * @return Whether backing model has fixed time step size.
          */
-        bool is_bmi_model_time_step_fixed() override;
-
-        /**
-         * Whether the backing model uses/reads the forcing file directly for getting input data.
-         *
-         * @return Whether the backing model uses/reads the forcing file directly for getting input data.
-         */
-        bool is_bmi_using_forcing_file() const override;
+        bool is_bmi_model_time_step_fixed() const override;
 
         /**
          * Test whether the backing model object has been initialize using the BMI standard ``Initialize`` function.
          *
          * @return Whether backing model object has been initialize using the BMI standard ``Initialize`` function.
          */
-        bool is_model_initialized() override;
+        bool is_model_initialized() const override;
 
         void set_allow_model_exceed_end_time(bool allow_exceed_end);
 
@@ -373,15 +364,6 @@ namespace realization {
         void set_bmi_model_start_time_forcing_offset_s(const time_t &offset_s);
 
         void set_bmi_model_time_step_fixed(bool is_fix_time_step);
-
-        /**
-         * Set whether the backing model uses/reads the forcing file directly for getting input data.
-         *
-         * @param uses_forcing_file Whether the backing model uses/reads forcing file directly for getting input data.
-         */
-        void set_bmi_using_forcing_file(bool uses_forcing_file);
-
-        void set_forcing_file_path(const std::string &forcing_path);
 
         /**
          * Set whether the backing model object has been initialize using the BMI standard ``Initialize`` function.
@@ -455,12 +437,10 @@ namespace realization {
         time_t bmi_model_start_time_forcing_offset_s;
         /** A configured mapping of BMI model variable names to standard names for use inside the framework. */
         std::map<std::string, std::string> bmi_var_names_map;
-        /** Whether the backing model uses/reads the forcing file directly for getting input data. */
-        bool bmi_using_forcing_file;
-        std::string forcing_file_path;
         bool model_initialized = false;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
+                BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS
                 BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,
                 BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
@@ -474,7 +454,6 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
                 BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR,
                 BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE,
-                BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS
         };
 
     };
@@ -498,9 +477,7 @@ namespace realization {
         // Required parameters first
         set_bmi_init_config(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG).as_string());
         set_bmi_main_output_var(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR).as_string());
-        set_forcing_file_path(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__FORCING_FILE).as_string());
         set_model_type_name(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE).as_string());
-        set_bmi_using_forcing_file(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS).as_boolean());
 
         // Then optional ...
 

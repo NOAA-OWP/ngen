@@ -3,9 +3,9 @@ name: Module Integration Tests
 # Controls when the action will run.
 on:
   push:
-    branches: [ master, dev, notreal ]
+    branches: [ master, dev, notreal, release-* ]
   pull_request:
-    branches: [ master, dev, notreal ]
+    branches: [ master, dev, notreal, release-* ]
   workflow_dispatch:
 
 env:
@@ -119,14 +119,10 @@ jobs:
             export LIBRARY_PATH=/usr/local/lib/gcc/11/
             export LD_LIBRARY_PATH=/usr/local/lib/gcc/11/
           fi
-          sed -i.bak 's/NETCDF}"/NETCDF}\/include"/' compiler.sh
+          export NETCDFALTERNATIVE=${NETCDF}/include
           export FC=gfortran
           export F90=gfortran 
-          ./compiler.sh
-          cd src
-          pip install troute-nwm/
-          pip install --install-option="--use-cython" troute-network/
-          pip install --install-option="--use-cython" troute-routing/
+          ./compiler.sh no-e
           
           deactivate
 

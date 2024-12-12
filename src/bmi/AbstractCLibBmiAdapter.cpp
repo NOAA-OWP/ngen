@@ -2,6 +2,7 @@
 
 #include "utilities/FileChecker.h"
 #include "utilities/ExternalIntegrationException.hpp"
+#include "utilities/logging_utils.h"
 
 #include <dlfcn.h>
 
@@ -12,19 +13,13 @@ AbstractCLibBmiAdapter::AbstractCLibBmiAdapter(
     const std::string& type_name,
     std::string library_file_path,
     std::string bmi_init_config,
-    std::string forcing_file_path,
-    bool allow_exceed_end,
     bool has_fixed_time_step,
-    std::string registration_func,
-    utils::StreamHandler output
+    std::string registration_func
 )
     : Bmi_Adapter(
           type_name,
           std::move(bmi_init_config),
-          std::move(forcing_file_path),
-          allow_exceed_end,
-          has_fixed_time_step,
-          output
+          has_fixed_time_step
       )
     , bmi_lib_file(std::move(library_file_path))
     , bmi_registration_function(std::move(registration_func)){}
@@ -44,10 +39,8 @@ void AbstractCLibBmiAdapter::dynamic_library_load() {
         throw std::runtime_error(this->init_exception_msg);
     }
     if (dyn_lib_handle != nullptr) {
-        this->output.put(
-            "WARNING: ignoring attempt to reload dynamic shared library '" + bmi_lib_file +
-            "' for " + this->model_name
-        );
+        std::string message = "AbstractCLibBmiAdapter::dynamic_library_load: ignoring attempt to reload dynamic shared library '" + bmi_lib_file + "' for " + this->model_name;
+        logging::warning(message.c_str());
         return;
     }
     if (!utils::FileChecker::file_is_readable(bmi_lib_file)) {

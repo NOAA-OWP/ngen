@@ -12,14 +12,7 @@ namespace realization {
             inner_create_formulation(properties, true);
         }
 
-        boost::span<const std::string> Bmi_Module_Formulation::get_available_variable_names() {
-            if (is_model_initialized() && available_forcings.empty()) {
-                for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
-                    available_forcings.push_back(output_var_name);
-                    if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end())
-                        available_forcings.push_back(bmi_var_names_map[output_var_name]);
-                }
-            }
+        boost::span<const std::string> Bmi_Module_Formulation::get_available_variable_names() const {
             return available_forcings;
         }
 
@@ -83,41 +76,41 @@ namespace realization {
             throw std::runtime_error("Bmi_Modular_Formulation does not yet implement get_variable_time_begin");
         }
 
-        long Bmi_Module_Formulation::get_data_start_time()
+        long Bmi_Module_Formulation::get_data_start_time() const
         {
             return this->get_bmi_model()->GetStartTime();
         }
 
-        long Bmi_Module_Formulation::get_data_stop_time() {
+        long Bmi_Module_Formulation::get_data_stop_time() const {
             // TODO: come back and implement if actually necessary for this type; for now don't use
             throw std::runtime_error("Bmi_Module_Formulation does not yet implement get_data_stop_time");
         }
 
-        long Bmi_Module_Formulation::record_duration() {
+        long Bmi_Module_Formulation::record_duration() const {
             throw std::runtime_error("Bmi_Module_Formulation does not yet implement record_duration");
         }
 
-        const double Bmi_Module_Formulation::get_model_current_time() {
+        const double Bmi_Module_Formulation::get_model_current_time() const {
             return get_bmi_model()->GetCurrentTime();
         }
 
-        const double Bmi_Module_Formulation::get_model_end_time() {
+        const double Bmi_Module_Formulation::get_model_end_time() const {
             return get_bmi_model()->GetEndTime();
         }
 
-        const std::vector<std::string>& Bmi_Module_Formulation::get_required_parameters() {
+        const std::vector<std::string>& Bmi_Module_Formulation::get_required_parameters() const {
             return REQUIRED_PARAMETERS;
         }
 
-        const std::string& Bmi_Module_Formulation::get_config_mapped_variable_name(const std::string &model_var_name) {
+        const std::string& Bmi_Module_Formulation::get_config_mapped_variable_name(const std::string &model_var_name) const {
             // TODO: need to introduce validation elsewhere that all mapped names are valid AORC field constants.
             if (bmi_var_names_map.find(model_var_name) != bmi_var_names_map.end())
-                return bmi_var_names_map[model_var_name];
+                return bmi_var_names_map.at(model_var_name);
             else
                 return model_var_name;
         }
 
-        size_t Bmi_Module_Formulation::get_ts_index_for_time(const time_t &epoch_time) {
+        size_t Bmi_Module_Formulation::get_ts_index_for_time(const time_t &epoch_time) const {
             // TODO: come back and implement if actually necessary for this type; for now don't use
             throw std::runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
         }
@@ -225,24 +218,24 @@ namespace realization {
             return std::count(all_names.begin(), all_names.end(), var_name) > 0;
         }
 
-        bool Bmi_Module_Formulation::is_bmi_input_variable(const std::string &var_name) {
+        bool Bmi_Module_Formulation::is_bmi_input_variable(const std::string &var_name) const {
            return is_var_name_in_collection(get_bmi_input_variables(), var_name);
         }
 
-        bool Bmi_Module_Formulation::is_bmi_output_variable(const std::string &var_name) {
+        bool Bmi_Module_Formulation::is_bmi_output_variable(const std::string &var_name) const {
             return is_var_name_in_collection(get_bmi_output_variables(), var_name);
         }
 
-        bool Bmi_Module_Formulation::is_property_sum_over_time_step(const std::string& name) {
+        bool Bmi_Module_Formulation::is_property_sum_over_time_step(const std::string& name) const {
             // TODO: verify with some kind of proof that "always true" is appropriate
             return true;
         }
 
-        const std::vector<std::string> Bmi_Module_Formulation::get_bmi_input_variables() {
+        const std::vector<std::string> Bmi_Module_Formulation::get_bmi_input_variables() const {
             return get_bmi_model()->GetInputVarNames();
         }
 
-        const std::vector<std::string> Bmi_Module_Formulation::get_bmi_output_variables() {
+        const std::vector<std::string> Bmi_Module_Formulation::get_bmi_output_variables() const {
             return get_bmi_model()->GetOutputVarNames();
         }
 
@@ -285,15 +278,11 @@ namespace realization {
             return bmi_init_config;
         }
 
-        std::shared_ptr<models::bmi::Bmi_Adapter> Bmi_Module_Formulation::get_bmi_model() {
+        std::shared_ptr<models::bmi::Bmi_Adapter> Bmi_Module_Formulation::get_bmi_model() const {
             return bmi_model;
         }
 
-        const std::string& Bmi_Module_Formulation::get_forcing_file_path() const {
-            return forcing_file_path;
-        }
-
-        const time_t& Bmi_Module_Formulation::get_bmi_model_start_time_forcing_offset_s() {
+        const time_t& Bmi_Module_Formulation::get_bmi_model_start_time_forcing_offset_s() const {
             return bmi_model_start_time_forcing_offset_s;
         }
 
@@ -305,15 +294,18 @@ namespace realization {
             set_bmi_init_config(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG).as_string());
             set_bmi_main_output_var(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR).as_string());
             set_model_type_name(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE).as_string());
-            set_bmi_using_forcing_file(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS).as_boolean());
 
             // Then optional ...
 
-            // Note that this must be present if bmi_using_forcing_file is true
-            if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE) != properties.end())
-                set_forcing_file_path(properties.at(BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE).as_string());
-            else if (is_bmi_using_forcing_file())
-                throw std::runtime_error("Can't create BMI formulation: using_forcing_file true but no file path set");
+            auto uses_forcings_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS);
+            if (uses_forcings_it != properties.end() && uses_forcings_it->second.as_boolean()) {
+                throw std::runtime_error("The '" BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS "' parameter was removed and cannot be set");
+            }
+
+            auto forcing_file_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE);
+            if (forcing_file_it != properties.end() && forcing_file_it->second.as_string() != "") {
+                throw std::runtime_error("The '" BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE "' parameter was removed and cannot be set " + forcing_file_it->second.as_string());
+            }
 
             if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END) != properties.end()) {
                 set_allow_model_exceed_end_time(
@@ -382,6 +374,15 @@ namespace realization {
 
             // Finally, make sure this is set
             model_initialized = get_bmi_model()->is_model_initialized();
+
+            // Get output variable names
+            if (model_initialized) {
+                for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
+                    available_forcings.push_back(output_var_name);
+                    if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end())
+                        available_forcings.push_back(bmi_var_names_map[output_var_name]);
+                }
+            }
         }
         /**
          * @brief Template function for copying iterator range into contiguous array.
@@ -552,15 +553,11 @@ namespace realization {
             //implment the overloads in each adapter
             //ensure proper type is prepared before setting value
         }
-        bool Bmi_Module_Formulation::is_bmi_model_time_step_fixed() {
+        bool Bmi_Module_Formulation::is_bmi_model_time_step_fixed() const {
             return bmi_model_time_step_fixed;
         }
 
-        bool Bmi_Module_Formulation::is_bmi_using_forcing_file() const {
-            return bmi_using_forcing_file;
-        }
-
-        bool Bmi_Module_Formulation::is_model_initialized() {
+        bool Bmi_Module_Formulation::is_model_initialized() const {
             return model_initialized;
         }
 
@@ -581,14 +578,6 @@ namespace realization {
 
         void Bmi_Module_Formulation::set_bmi_model_time_step_fixed(bool is_fix_time_step) {
             bmi_model_time_step_fixed = is_fix_time_step;
-        }
-
-        void Bmi_Module_Formulation::set_bmi_using_forcing_file(bool uses_forcing_file) {
-            bmi_using_forcing_file = uses_forcing_file;
-        }
-
-        void Bmi_Module_Formulation::set_forcing_file_path(const std::string &forcing_path) {
-            forcing_file_path = forcing_path;
         }
 
         void Bmi_Module_Formulation::set_model_initialized(bool is_initialized) {

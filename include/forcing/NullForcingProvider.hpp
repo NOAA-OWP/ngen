@@ -3,8 +3,6 @@
 
 #include <vector>
 #include <string>
-#include <stdexcept>
-#include <limits>
 #include "GenericDataProvider.hpp"
 
 /**
@@ -14,43 +12,25 @@ class NullForcingProvider : public data_access::GenericDataProvider
 {
     public:
 
-    NullForcingProvider(){}
+    NullForcingProvider();
 
     // BEGIN DataProvider interface methods
 
-    long get_data_start_time() override {
-        return 0;
-    }
+    long get_data_start_time() const override;
 
-    long get_data_stop_time() override {
-        return LONG_MAX;
-    }
+    long get_data_stop_time() const override;
 
-    long record_duration() override {
-        return 1;
-    }
+    long record_duration() const override;
 
-    size_t get_ts_index_for_time(const time_t &epoch_time) override {
-        return 0;
-    }
+    size_t get_ts_index_for_time(const time_t &epoch_time) const override;
 
-    double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
-    {
-        throw std::runtime_error("Called get_value function in NullDataProvider");
-    }
+    double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
-    virtual std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
-    {
-        throw std::runtime_error("Called get_values function in NullDataProvider");
-    }
+    std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
-    inline bool is_property_sum_over_time_step(const std::string& name) override {
-        throw std::runtime_error("Got request for variable " + name + " but no such variable is provided by NullForcingProvider." + SOURCE_LOC);
-    }
+    inline bool is_property_sum_over_time_step(const std::string& name) const override;
 
-    boost::span<const std::string> get_available_variable_names() override {
-        return {};
-    }
+    boost::span<const std::string> get_available_variable_names() const override;
 };
 
 #endif // NGEN_NULLFORCING_H

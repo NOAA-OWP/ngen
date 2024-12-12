@@ -69,7 +69,8 @@ target_include_directories(test_all PRIVATE ${CMAKE_CURRENT_LIST_DIR}/bmi)
 #[==[
 ngen_add_test(<test name> OBJECTS <source>...
                           LIBRARIES <library>...
-                          [REQUIRES <varname>...])
+                          [REQUIRES <varname>...]
+                          [DEPENDS <dependency>...])
 
 Adds an executable test (i.e. a target) called <test name>.
 
@@ -83,6 +84,11 @@ Adds an executable test (i.e. a target) called <test name>.
     Variable names that this test's creation is dependent on.
     If a given variable is not defined or is FALSE/OFF/etc. then
     the corresponding <test name> target is not created.
+
+`DEPENDS`
+    Additional targets that a test executable depends on. For each
+    dependent target given, add_dependencies(<test name> <dependency>...)
+    is called.
 #]==]
 function(ngen_add_test TESTNAME)
     set(multiValueArgs OBJECTS LIBRARIES REQUIRES DEPENDS)
@@ -176,6 +182,30 @@ ngen_add_test(
         NGen::forcing
         NGen::geojson
 )
+
+ngen_add_test(
+    test_forcings_engine
+    OBJECTS
+        forcing/ForcingsEngineDataProvider_Test.cpp
+        forcing/ForcingsEngineLumpedDataProvider_Test.cpp
+    LIBRARIES
+        NGen::forcing
+    REQUIRES
+        NGEN_WITH_PYTHON
+)
+
+if(TARGET test_forcings_engine)
+    set(FORCINGS_ENGINE_SCRATCH_DIR "${CMAKE_CURRENT_BINARY_DIR}/forcings_engine_scratch")
+    file(MAKE_DIRECTORY "${FORCINGS_ENGINE_SCRATCH_DIR}")
+    configure_file(
+        "${CMAKE_CURRENT_LIST_DIR}/../data/forcing/forcings-engine/config_aorc.yml.in" # Input
+        "${CMAKE_CURRENT_BINARY_DIR}/config_aorc.yml"
+    )
+
+    # Use global add instead of target add so that both `test_forcings_engine` and `test_all`
+    # receive this compile definition.
+    add_compile_definitions(NGEN_LUMPED_CONFIG_PATH="${CMAKE_CURRENT_BINARY_DIR}/config_aorc.yml")
+endif()
 
 ########################## Series Unit Tests
 ngen_add_test(

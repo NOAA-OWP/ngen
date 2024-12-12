@@ -89,7 +89,7 @@ namespace utils {
                                                              py_cli(std::move(p.py_cli)),
                                                              partitionsConfigFile(std::move(p.partitionsConfigFile)) { }
 
-            virtual bool execSubdivision() {
+            bool execSubdivision() {
                 bool result;
                 try {
                     py::bool_ bool_result = py_cli.attr("divide_hydrofabric")();
@@ -102,7 +102,7 @@ namespace utils {
                 return result;
             }
 
-            virtual bool execSubdivision(int index) {
+            bool execSubdivision(int index) {
                 bool result;
                 try {
                     py::bool_ bool_result = py_cli.attr("divide_hydrofabric")(index);

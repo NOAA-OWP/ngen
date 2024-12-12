@@ -23,23 +23,23 @@ namespace data_access {
                 outputs.push_back(OUTPUT_NAME_1);
             }
                                   
-            boost::span<const std::string> get_available_variable_names() override {
+            boost::span<const std::string> get_available_variable_names() const override {
                 return outputs;
             }
 
-            long get_data_start_time() override {
+            long get_data_start_time() const override {
                 return std::numeric_limits<long>::min();
             }
 
-            long get_data_stop_time() override {
+            long get_data_stop_time() const override {
                 return std::numeric_limits<long>::max();
             }
 
-            long record_duration() override {
+            long record_duration() const override {
                 return 1;
             }
 
-            size_t get_ts_index_for_time(const time_t &epoch_time) override {
+            size_t get_ts_index_for_time(const time_t &epoch_time) const override {
                 return 0;
             }
 
@@ -52,7 +52,7 @@ namespace data_access {
                 return std::vector<double>(1, get_value(selector, m));
             }
 
-            bool is_property_sum_over_time_step(const std::string &name) override {
+            bool is_property_sum_over_time_step(const std::string &name) const override {
                 return true;
             }
 

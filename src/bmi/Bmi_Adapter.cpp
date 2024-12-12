@@ -1,6 +1,7 @@
 #include "bmi/Bmi_Adapter.hpp"
 #include "bmi/State_Exception.hpp"
 #include "utilities/FileChecker.h"
+#include "utilities/logging_utils.h"
 
 namespace models {
 namespace bmi {
@@ -8,18 +9,11 @@ namespace bmi {
 Bmi_Adapter::Bmi_Adapter(
     std::string model_name,
     std::string bmi_init_config,
-    std::string forcing_file_path,
-    bool allow_exceed_end,
-    bool has_fixed_time_step,
-    utils::StreamHandler output
+    bool has_fixed_time_step
 )
     : model_name(std::move(model_name))
     , bmi_init_config(std::move(bmi_init_config))
-    , bmi_model_uses_forcing_file(!forcing_file_path.empty())
-    , forcing_file_path(std::move(forcing_file_path))
     , bmi_model_has_fixed_time_step(has_fixed_time_step)
-    , allow_model_exceed_end_time(allow_exceed_end)
-    , output(std::move(output))
     , bmi_model_time_convert_factor(1.0) {
     // This replicates a lot of Initialize, but it's necessary to be able to do it separately to
     // support "initializing" on construction, given using Initialize requires use of virtual
@@ -108,10 +102,9 @@ void Bmi_Adapter::Initialize(std::string config_file) {
     }
 
     if (config_file != bmi_init_config && !model_initialized) {
-        output.put(
-            "Warning: initialization call changes model config from " + bmi_init_config + " to " +
-            config_file
-        );
+        std::string message = "Bmi_Adapter::Initialize: initialization call changes model config from " + bmi_init_config + " to " + config_file;
+        logging::warning(message.c_str());
+
         bmi_init_config = config_file;
     }
     try {

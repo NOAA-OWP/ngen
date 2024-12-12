@@ -7,7 +7,6 @@
 #include "bmi.h"
 #include "AbstractCLibBmiAdapter.hpp"
 #include "State_Exception.hpp"
-#include "utilities/StreamHandler.hpp"
 #include "utilities/ExternalIntegrationException.hpp"
 
 
@@ -32,16 +31,12 @@ namespace models {
              *
              * @param type_name The name of the backing BMI module/model type.
              * @param library_file_path The string path to the shared library file for external module.
-             * @param forcing_file_path The string path for the forcing file the module should use, empty if it does not
-             *                          use one directly.
-             * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
              * @param has_fixed_time_step Whether the model has a fixed time step size.
              * @param registration_func The name for the @see bmi_registration_function.
-             * @param output The output stream handler.
              */
-            explicit Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string forcing_file_path,
-                                   bool allow_exceed_end, bool has_fixed_time_step,
-                                   const std::string& registration_func, utils::StreamHandler output);
+            explicit Bmi_C_Adapter(const std::string &type_name, std::string library_file_path,
+                                   bool has_fixed_time_step,
+                                   const std::string& registration_func);
 
             /**
              * Main public constructor.
@@ -49,16 +44,12 @@ namespace models {
              * @param type_name The name of the backing BMI module/model type.
              * @param library_file_path The string path to the shared library file for external module.
              * @param bmi_init_config The string path to the BMI initialization config file for the module.
-             * @param forcing_file_path The string path for the forcing file the module should use, empty if it does not
-             *                          use one directly.
-             * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
              * @param has_fixed_time_step Whether the model has a fixed time step size.
              * @param registration_func The name for the @see bmi_registration_function.
-             * @param output The output stream handler.
              */
             Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
-                          std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
-                          std::string registration_func, utils::StreamHandler output);
+                          bool has_fixed_time_step,
+                          std::string registration_func);
 
         protected:
 
@@ -76,17 +67,13 @@ namespace models {
              * @param type_name The name of the backing BMI module/model type.
              * @param library_file_path The string path to the shared library file for external module.
              * @param bmi_init_config The string path to the BMI initialization config file for the module.
-             * @param forcing_file_path The string path for the forcing file the module should use, empty if it does not
-             *                          use one directly.
-             * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
              * @param has_fixed_time_step Whether the model has a fixed time step size.
              * @param registration_func The name for the @see bmi_registration_function.
-             * @param output The output stream handler.
              * @param do_initialization Whether initialization should be performed during construction or deferred.
              */
             Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
-                          std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
-                          std::string registration_func, utils::StreamHandler output, bool do_initialization);
+                          bool has_fixed_time_step,
+                          std::string registration_func, bool do_initialization);
 
         public:
 

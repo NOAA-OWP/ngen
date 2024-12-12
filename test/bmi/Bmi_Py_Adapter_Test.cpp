@@ -20,7 +20,6 @@ typedef struct example_scenario {
     std::string bmi_init_config;
     // TODO: probably need to change to package name
     std::string module_directory;
-    std::string forcing_file;
     std::string module_name;
     std::shared_ptr<Bmi_Py_Adapter> adapter;
 } example_scenario;
@@ -133,16 +132,13 @@ void Bmi_Py_Adapter_Test::SetUp() {
         examples[i] = template_ex_struct;
     }
 
-    examples[0].forcing_file = "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv";
-
     // We can handle setting the right init config and initializing the adapter in a loop
     for (int i = 0; i < examples.size(); ++i) {
         examples[i].bmi_init_config = "./test/data/bmi/test_bmi_python/test_bmi_python_config_"
                 + std::to_string(i) + ".yml";
 
         examples[i].adapter = std::make_shared<Bmi_Py_Adapter>(examples[i].module_name, examples[i].bmi_init_config,
-                                                               examples[i].module_name, false, true,
-                                                               utils::StreamHandler());
+                                                               examples[i].module_name, true);
     }
 }
 

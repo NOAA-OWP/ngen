@@ -9,6 +9,7 @@
 #include <exception>
 #include <memory>
 #include <string>
+#include <iostream>
 
 #include "pybind11/pybind11.h"
 #include "pybind11/pytypes.h"
@@ -18,7 +19,6 @@
 
 #include "Bmi_Adapter.hpp"
 
-#include "utilities/StreamHandler.hpp"
 #include "utilities/python/InterpreterUtil.hpp"
 
 // Forward declaration to provide access to protected items in testing
@@ -40,11 +40,7 @@ namespace models {
         public:
 
             Bmi_Py_Adapter(const std::string &type_name, std::string bmi_init_config, const std::string &bmi_python_type,
-                           bool allow_exceed_end, bool has_fixed_time_step, utils::StreamHandler output);
-
-            Bmi_Py_Adapter(const std::string &type_name, std::string bmi_init_config, const std::string &bmi_python_type,
-                           std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
-                           utils::StreamHandler output);
+                           bool has_fixed_time_step);
 
             Bmi_Py_Adapter(Bmi_Py_Adapter const&) = delete;
             Bmi_Py_Adapter(Bmi_Py_Adapter&&) = delete;

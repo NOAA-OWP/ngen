@@ -100,19 +100,11 @@ protected:
         return formulation.get_bmi_model_start_time_forcing_offset_s();
     }
 
-    static std::string get_friend_forcing_file_path(const Bmi_Multi_Formulation& formulation) {
-        return formulation.get_forcing_file_path();
-    }
-
     /*
     static time_t get_friend_forcing_start_time(Bmi_Multi_Formulation& formulation) {
         return formulation.forcing->get_forcing_output_time_begin("");
     }
     */
-
-    static bool get_friend_is_bmi_using_forcing_file(const Bmi_Multi_Formulation& formulation) {
-        return formulation.is_bmi_using_forcing_file();
-    }
 
     static std::string get_friend_nested_module_model_type_name(Bmi_Multi_Formulation& formulation,
                                                                 const int nested_index) {
@@ -514,7 +506,6 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_0_a) {
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 0), nested_module_main_output_variables[ex_index][0]);
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 1), nested_module_main_output_variables[ex_index][1]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
 /** Test to make sure the model config from example 0 initializes no deferred providers. */
@@ -539,7 +530,6 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_1_a) {
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 0), nested_module_main_output_variables[ex_index][0]);
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 1), nested_module_main_output_variables[ex_index][1]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
 /** Test to make sure the model config from example 1 initializes no deferred providers. */
@@ -571,7 +561,6 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_a) {
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 0), nested_module_main_output_variables[ex_index][0]);
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 1), nested_module_main_output_variables[ex_index][1]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
 /** Test to make sure the model config from example 3 initializes expected number of deferred providers. */
@@ -866,6 +855,35 @@ TEST_F(Bmi_Multi_Formulation_Test, GetIdAndCatchmentId) {
     ASSERT_EQ(get_friend_nested_catchment_id<Bmi_Fortran_Formulation>(formulation, 0), "cat-27");
     #endif
     //ASSERT_EQ(formulation.get_catchment_id(), "id");
+}
+
+TEST_F(Bmi_Multi_Formulation_Test, GetAvailableVariableNames) {
+    int ex_index = 1;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+    
+    const auto actual_names =  formulation.get_available_variable_names();
+    const auto expected_names = {
+        "OUTPUT_VAR_1__0",
+        "OUTPUT_VAR_2__0",
+        "OUTPUT_VAR_3__0",
+        "FORTRAN_Grid_Var_2__0",
+        "FORTRAN_Grid_Var_3__0",
+        "GRID_VAR_4",
+        "OUTPUT_VAR_1__1",
+        "OUTPUT_VAR_2__1",
+        "OUTPUT_VAR_3",
+        "GRID_VAR_2",
+        "GRID_VAR_3"
+    };
+
+    for (const auto& expected : expected_names) {
+        EXPECT_NE(
+            std::find(actual_names.begin(), actual_names.end(), expected),
+            actual_names.end()
+        );
+    }
 }
 #endif // NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || NGEN_WITH_PYTHON
 

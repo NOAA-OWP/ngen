@@ -8,7 +8,7 @@ using ModelDestoryer = void (*)(bmi::Bmi*);
 Bmi_Cpp_Formulation::Bmi_Cpp_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
     : Bmi_Module_Formulation(id, forcing_provider, output_stream) { }
 
-std::string Bmi_Cpp_Formulation::get_formulation_type() {
+std::string Bmi_Cpp_Formulation::get_formulation_type() const {
     return "bmi_c++";
 }
 
@@ -37,12 +37,9 @@ std::shared_ptr<Bmi_Adapter> Bmi_Cpp_Formulation::construct_model(const geojson:
                     get_model_type_name(),
                     lib_file,
                     get_bmi_init_config(),
-                    (is_bmi_using_forcing_file() ? get_forcing_file_path() : ""),
-                    get_allow_model_exceed_end_time(),
                     is_bmi_model_time_step_fixed(),
                     model_create_fname,
-                    model_destroy_fname,
-                    output);
+                    model_destroy_fname);
 }
 
 double Bmi_Cpp_Formulation::get_var_value_as_double(const int& index, const std::string& var_name) {
@@ -89,16 +86,16 @@ double Bmi_Cpp_Formulation::get_var_value_as_double(const int& index, const std:
                              " as double: no logic for converting variable type " + type);
 }
 
-bool Bmi_Cpp_Formulation::is_bmi_input_variable(const std::string &var_name) {
+bool Bmi_Cpp_Formulation::is_bmi_input_variable(const std::string &var_name) const {
     const std::vector<std::string> names = get_bmi_model()->GetInputVarNames();
     return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
 }
 
-bool Bmi_Cpp_Formulation::is_bmi_output_variable(const std::string &var_name) {
+bool Bmi_Cpp_Formulation::is_bmi_output_variable(const std::string &var_name) const {
     const std::vector<std::string> names = get_bmi_model()->GetOutputVarNames();
     return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
 }
 
-bool Bmi_Cpp_Formulation::is_model_initialized() {
+bool Bmi_Cpp_Formulation::is_model_initialized() const {
     return get_bmi_model()->is_model_initialized();
 }

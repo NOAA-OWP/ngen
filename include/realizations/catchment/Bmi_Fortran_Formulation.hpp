@@ -6,15 +6,12 @@
 #if NGEN_WITH_BMI_FORTRAN
 
 #include "Bmi_Module_Formulation.hpp"
-#include "Bmi_Fortran_Adapter.hpp"
 #include <GenericDataProvider.hpp>
 
 // TODO: consider merging this somewhere with the C value in that formulation header
 #define BMI_FORTRAN_DEFAULT_REGISTRATION_FUNC "register_bmi"
 
 class Bmi_Fortran_Formulation_Test;
-
-using namespace models::bmi;
 
 namespace realization {
 
@@ -24,7 +21,7 @@ namespace realization {
 
         Bmi_Fortran_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream);
 
-        std::string get_formulation_type() override;
+        std::string get_formulation_type() const override;
 
     protected:
 
@@ -40,15 +37,13 @@ namespace realization {
          * @param properties Configuration properties for the formulation.
          * @return A shared pointer to a newly constructed model adapter object.
          */
-        std::shared_ptr<Bmi_Adapter> construct_model(const geojson::PropertyMap& properties) override;
+        std::shared_ptr<models::bmi::Bmi_Adapter> construct_model(const geojson::PropertyMap& properties) override;
 
-        time_t convert_model_time(const double &model_time) override {
+        time_t convert_model_time(const double &model_time) const override {
             return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));
         }
 
         double get_var_value_as_double(const int &index, const std::string &var_name) override;
-
-        friend class Bmi_Multi_Formulation;
 
         // Unit test access
         friend class ::Bmi_Multi_Formulation_Test;

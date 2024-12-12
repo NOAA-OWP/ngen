@@ -7,8 +7,6 @@
 #include "bmi.hpp"
 
 #include "core/mediator/UnitsHelper.hpp"
-#include "utilities/StreamHandler.hpp"
-
 
 namespace models {
     namespace bmi {
@@ -19,8 +17,7 @@ namespace models {
         class Bmi_Adapter : public ::bmi::Bmi {
         public:
 
-            Bmi_Adapter(std::string model_name, std::string bmi_init_config, std::string forcing_file_path, bool allow_exceed_end,
-                        bool has_fixed_time_step, utils::StreamHandler output);
+            Bmi_Adapter(std::string model_name, std::string bmi_init_config, bool has_fixed_time_step);
 
             Bmi_Adapter(Bmi_Adapter const&) = delete;
             Bmi_Adapter(Bmi_Adapter &&) = delete;
@@ -146,8 +143,6 @@ namespace models {
             std::string get_model_name();
 
         protected:
-            /** Whether model ``Update`` calls are allowed and handled in some way by the backing model. */
-            bool allow_model_exceed_end_time = false;
             /** Path (as a string) to the BMI config file for initializing the backing model (empty if none). */
             std::string bmi_init_config;
             /** Whether this particular model has a time step size that cannot be changed internally or externally. */
@@ -156,9 +151,6 @@ namespace models {
             double bmi_model_time_convert_factor;
             /** Pointer to stored time step size value of backing model, if it is fixed and has been retrieved. */
             std::shared_ptr<double> bmi_model_time_step_size = nullptr;
-            /** Whether this particular model implementation directly reads input data from the forcing file. */
-            bool bmi_model_uses_forcing_file;
-            std::string forcing_file_path;
             /** Message from an exception (if encountered) on the first attempt to initialize the backing model. */
             std::string init_exception_msg;
             /** Pointer to collection of input variable names for backing model, used by ``GetInputVarNames()``. */
@@ -166,7 +158,6 @@ namespace models {
             /** Whether the backing model has been initialized yet, which is always initially ``false``. */
             bool model_initialized = false;
             std::string model_name;
-            utils::StreamHandler output;
             /** Pointer to collection of output variable names for backing model, used by ``GetOutputVarNames()``. */
             std::shared_ptr<std::vector<std::string>> output_var_names;
 

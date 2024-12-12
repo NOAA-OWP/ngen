@@ -3,6 +3,7 @@
 #if NGEN_WITH_BMI_FORTRAN
 
 #include "Bmi_Fortran_Formulation.hpp"
+#include "Bmi_Fortran_Adapter.hpp"
 #include "Constants.h"
 
 using namespace realization;
@@ -36,14 +37,11 @@ std::shared_ptr<Bmi_Adapter> Bmi_Fortran_Formulation::construct_model(const geoj
             get_model_type_name(),
             lib_file,
             get_bmi_init_config(),
-            (is_bmi_using_forcing_file() ? get_forcing_file_path() : ""),
-            get_allow_model_exceed_end_time(),
             is_bmi_model_time_step_fixed(),
-            reg_func,
-            output);
+            reg_func);
 }
 
-std::string Bmi_Fortran_Formulation::get_formulation_type() {
+std::string Bmi_Fortran_Formulation::get_formulation_type() const {
     return "bmi_fortran";
 }
 
