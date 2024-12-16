@@ -1,123 +1,143 @@
-#--------------------------------------------------------------------------------
+bmi_parameters:
+    flowpath_columns:
+    - id
+    - toid
+    - lengthkm
+    attributes_columns:
+    - attributes_id
+    - gage
+    - WaterbodyID
+    - MusK
+    - MusX
+    - n
+    - So
+    - ChSlp
+    - BtmWdth
+    - nCC
+    - TopWdthCC
+    - TopWdth
+    waterbody_columns:
+    - hl_link
+    - ifd
+    - LkArea
+    - LkMxE
+    - OrificeA
+    - OrificeC
+    - OrificeE
+    - WeirC
+    - WeirE
+    - WeirL
+    network_columns:
+    - network_id
+    - hydroseq
+    - hl_uri
 log_parameters:
-    #----------
-    showtiming: True
-    log_level : DEBUG
-#--------------------------------------------------------------------------------
+    showtiming: true
+    log_level: DEBUG
 network_topology_parameters:
-    #----------
     supernetwork_parameters:
-        #----------
-        # geo_file_type: HYFeaturesNetwork 
-        geo_file_path: ./test/data/routing/gauge_01073000.gpkg
-        mask_file_path: # domain/unit_test_noRS/coastal_subset.txt
+        network_type: HYFeaturesNetwork
+        geo_file_path: ./test/data/routing/gages-01123000.gpkg
         columns:
-            key: 'id'
-            downstream: 'toid'
-            dx: 'lengthkm'
-            n: 'n'
-            ncc: 'nCC'
-            s0: 'So'
-            bw: 'BtmWdth'
-            waterbody: 'rl_NHDWaterbodyComID'
-            gages: 'rl_gages'
-            tw: 'TopWdth'
-            twcc: 'TopWdthCC'
-            musk: 'MusK'
-            musx: 'MusX'
-            cs: 'ChSlp'
-            alt: 'alt'
-        synthetic_wb_segments:
-            #- 4800002
-            #- 4800004
-            #- 4800006
-            #- 4800007
+            key: id
+            downstream: toid
+            dx: lengthkm
+            n: n
+            ncc: nCC
+            s0: So
+            bw: BtmWdth
+            waterbody: WaterbodyID
+            gages: gage
+            tw: TopWdth
+            twcc: TopWdthCC
+            musk: MusK
+            musx: MusX
+            cs: ChSlp
+            alt: alt
+        duplicate_wb_segments:
+        - '717696'
+        - '1311881'
+        - '3133581'
+        - '1010832'
+        - '1023120'
+        - '1813525'
+        - '1531545'
+        - '1304859'
+        - '1320604'
+        - '1233435'
+        - '11816'
+        - '1312051'
+        - '2723765'
+        - '2613174'
+        - '846266'
+        - '1304891'
+        - '1233595'
+        - '1996602'
+        - '2822462'
+        - '2384576'
+        - '1021504'
+        - '2360642'
+        - '1326659'
+        - '1826754'
+        - '572364'
+        - '1336910'
+        - '1332558'
+        - '1023054'
+        - '3133527'
+        - '3053788'
+        - '3101661'
+        - '2043487'
+        - '3056866'
+        - '1296744'
+        - '1233515'
+        - '2045165'
+        - '1230577'
+        - '1010164'
+        - '1031669'
+        - '1291638'
+        - '1637751'
     waterbody_parameters:
-        #----------
-        break_network_at_waterbodies: False 
+        break_network_at_waterbodies: true
         level_pool:
-            #----------
-            level_pool_waterbody_parameter_file_path: ./test/data/routing/gauge_01073000.gpkg
-            # reservoir_parameter_file                : ./test/data/routing/gauge_01073000.gpkg
-
-#--------------------------------------------------------------------------------
+            level_pool_waterbody_parameter_file_path: ./test/data/routing/gages-01123000.gpkg
 compute_parameters:
-    #----------
-    parallel_compute_method: by-subnetwork-jit-clustered #serial 
-    compute_kernel         : V02-structured
-    assume_short_ts        : True
-    subnetwork_target_size : 10000
-    cpu_pool               : 1
+    parallel_compute_method: by-subnetwork-jit-clustered
+    subnetwork_target_size: 10000
+    cpu_pool: 16
+    compute_kernel: V02-structured
+    assume_short_ts: true
     restart_parameters:
-        #----------
-        #wrf_hydro_channel_restart_file: restart/HYDRO_RST.2020-08-26_00:00_DOMAIN1
-        #wrf_hydro_channel_ID_crosswalk_file: domain/RouteLink_NWMv2.1.nc
-        #wrf_hydro_waterbody_restart_file: restart/HYDRO_RST.2020-08-26_00:00_DOMAIN1
-        #wrf_hydro_waterbody_ID_crosswalk_file    : domain/LAKEPARM_NWMv2.1.nc 
-        #wrf_hydro_waterbody_crosswalk_filter_file: domain/LAKEPARM_NWMv2.1.nc
-        start_datetime: "2015-12-01_00:00:00"
-    #hybrid_parameters:
-    #    run_hybrid_routing: True
-    #    diffusive_domain  : domain/coastal_domain.yaml  
-    #    use_natl_xsections: False
-    #    topobathy_domain  : # domain/final_diffusive_natural_xs.nc 
-    #    run_refactored_network: False
-    #    refactored_domain: # domain/unit_test_noRS/refactored_coastal_domain.yaml 
-    #    refactored_topobathy_domain: # domain/refac_final_diffusive_natural_xs.nc 
-    #    coastal_boundary_domain: domain/coastal_boundary_domain.yaml
+        start_datetime: '2015-10-01 00:00:00'
     forcing_parameters:
-        #----------
-        qts_subdivisions            : 12
-        dt                          : 300 # [sec]
-        qlat_input_folder           : ./test/data/routing/
-        qlat_file_pattern_filter    : "nex-*"
-        # nexus_input_folder          : ./test/data/routing/
-        # nexus_file_pattern_filter   : "nex-*" #OR "*NEXOUT.parquet" OR "nex-*"
-        binary_nexus_file_folder    : ./test/data/routing/ # this is required if nexus_file_pattern_filter="nex-*"
-        #coastal_boundary_input_file : channel_forcing/schout_1.nc  
-        nts                         : 8640 #288 for 1day
-        max_loop_size               : 720 # [hr]  
+        qts_subdivisions: 12
+        dt: 300
+        qlat_input_folder: ./test/data/routing/
+        qlat_file_pattern_filter: nex-*
+        nts: 8928
+        max_loop_size: 745
     data_assimilation_parameters:
-    #    #----------
-    #    usgs_timeslices_folder   : #usgs_TimeSlice/
-    #    usace_timeslices_folder  : #usace_TimeSlice/
-    #    timeslice_lookback_hours : #48 
-    #    qc_threshold             : #1
+        usgs_timeslices_folder: null
+        usace_timeslices_folder: null
+        timeslice_lookback_hours: 48
+        qc_threshold: 1
         streamflow_da:
-    #        #----------
-            streamflow_nudging            : False
-            diffusive_streamflow_nudging  : False
-    #        gage_segID_crosswalk_file     : # domain/RouteLink_NWMv2.1.nc  
-    #        crosswalk_gage_field          : # 'gages'
-    #        crosswalk_segID_field         : # 'link'
-    #        wrf_hydro_lastobs_file        :                
-    #        lastobs_output_folder         : lastobs/
-
-    # Needed to prevent AttributeError
+            streamflow_nudging: false
+            diffusive_streamflow_nudging: false
+            gage_segID_crosswalk_file: null
         reservoir_da:
-            #----------
             reservoir_persistence_da:
-                reservoir_persistence_usgs  : False
-                reservoir_persistence_usace : False
-        #        gage_lakeID_crosswalk_file  : # domain/reservoir_index_AnA.nc
+                reservoir_persistence_usgs: false
+                reservoir_persistence_usace: false
             reservoir_rfc_da:
-                #----------
-                #reservoir_parameter_file                : domain/reservoir_index_AnA.nc
-                reservoir_rfc_forecasts                 : False
-                #reservoir_rfc_forecasts_time_series_path: rfc_TimeSeries/
-                #reservoir_rfc_forecasts_lookback_hours  : 48
-#--------------------------------------------------------------------------------
+                reservoir_rfc_forecasts: false
+                reservoir_rfc_forecasts_time_series_path: null
+                reservoir_rfc_forecasts_lookback_hours: 28
+                reservoir_rfc_forecasts_offset_hours: 28
+                reservoir_rfc_forecast_persist_days: 11
+            reservoir_parameter_file: null
 output_parameters:
-    #----------
-    #test_output: output/unit_test_hyfeature.pkl 
-    #lite_restart:
-    #    #----------
-    #    lite_restart_output_directory: restart/
-    chrtout_output:
-        #----------
-        #wrf_hydro_channel_output_source_folder: ./
-    chanobs_output:
-        #----------
-        chanobs_output_directory: ./test/data/routing/
-        chanobs_filepath        : Chanobs.nc
-    lakeout_output: ./test/data/routing/
+    stream_output:
+        stream_output_directory: .
+        stream_output_time: 745
+        stream_output_type: .nc
+        stream_output_internal_frequency: 60
