@@ -57,7 +57,7 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
 	const char *cstr = mkdir_cmd.c_str();
    	status = system(cstr);
    	if (status == -1)
-   	   	std::cerr << "Error(" << (errno) << ") creating log file directory: " << logFileDir << std::endl;
+   	   	std::cerr << "Error(" << (errno) << ") creating log file directory for NGEN: " << logFileDir << std::endl;
    	else {
    	   	std::cout << "Log directory: " << logFileDir <<std::endl;
 		// creating the stdout/stderr log files
@@ -110,6 +110,8 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
 			setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
 		}
 	}
+	
+	std::cout << "NGEN Log Level is set at: " << Logger::getLogLevelString(logLevel) << std::endl;
 }
 
 /**
@@ -125,18 +127,14 @@ std::shared_ptr<Logger> Logger::GetInstance() {
 }
 
 /**
-* Log given message with defined parameters and generate message to pass on Console or File
-* @param message: Log Message
-* @param messageLevel: Log Level, LogLevel::DEBUG by default
+* Convert LogLevel to String Representation of Log Level 
+* @param logLevel : LogLevel
+* @return String log level
 */
-void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG) {
-	LoggingModule module=LoggingModule::NGEN;
-
-	// don't log if messageLevel < logLevel 
-	if (messageLevel >= logLevel) {
-		std::string logType;
-		//Set Log Level Name
-		switch (messageLevel) {
+std::string Logger::getLogLevelString(LogLevel level) {
+	std::string logType;
+	//Set Log Level Name
+	switch (level) {
 		case LogLevel::FATAL:
 			logType = "FATAL ";
 			break;
@@ -155,7 +153,22 @@ void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG) {
 		default:
 			logType = "NONE  ";
 			break;
-		}
+	}
+	return logType;
+}
+
+/**
+* Log given message with defined parameters and generate message to pass on Console or File
+* @param message: Log Message
+* @param messageLevel: Log Level, LogLevel::DEBUG by default
+*/
+void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG) {
+	LoggingModule module=LoggingModule::NGEN;
+
+	// don't log if messageLevel < logLevel 
+	if (messageLevel >= logLevel) {
+		std::string logType;
+		logType = Logger::getLogLevelString(messageLevel);
 
 		std::string final_message;
 		std::string mod_name;
@@ -172,6 +185,7 @@ void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG) {
 		logFile.flush();
 	}
 }
+
 
 /**
 * Convert String Representation of Log Level to LogLevel Type
