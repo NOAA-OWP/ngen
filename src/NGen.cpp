@@ -140,8 +140,19 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
 } // ngen::exec_info::runtime_summary
 
 void setup_logger(void) {
-    // One time log preferences
-    (Logger::GetInstance())->SetLogPreferences(LogLevel::INFO);
+  // get from an environment variable the log level setting for ngen
+	std::stringstream ss("");
+
+	// get the log level for NGEN module
+	ss << getenv("ngen_ll");
+ 	LogLevel logLevel;
+	if (ss.str() != "")
+		logLevel = Logger::GetLogLevel(ss.str());
+	else
+		logLevel = LogLevel::INFO;
+
+  // One time log preferences
+  (Logger::GetInstance())->SetLogPreferences(logLevel);
 }
  
 int main(int argc, char *argv[]) {

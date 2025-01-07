@@ -43,9 +43,10 @@ enum class LoggingModule {
 class Logger {
   public:
 	static std::shared_ptr<Logger> GetInstance();
+	static std::string getLogLevelString(LogLevel level);
 	void SetLogPreferences(LogLevel level);
 	void Log(std::string message, LogLevel messageLevel);
-	LogLevel GetLogLevel(const std::string& logLevel);
+	static LogLevel GetLogLevel(const std::string& logLevel);
 	std::string createTimestamp();
 	std::string createDateString();
 	std::string getLogFilePath();
@@ -59,6 +60,8 @@ class Logger {
 	std::fstream logFile;
 	std::string logFilePath;
 	static std::shared_ptr<Logger> loggerInstance;
+	FILE *stdout_logFile;
+	FILE *stderr_logFile;
 };
 
 
