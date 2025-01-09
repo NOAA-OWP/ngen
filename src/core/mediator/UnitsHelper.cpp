@@ -33,7 +33,7 @@ std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_u
         if (to == NULL)
         {
             ut_free(from);
-            //Logger::logMsgAndThrowError("Unable to parse out_units value " + out_units);
+            Logger::logMsgAndThrowError("Unable to parse out_units value " + out_units);
         }
         cv_converter* conv = ut_get_converter(from, to);
         if (conv == NULL)
