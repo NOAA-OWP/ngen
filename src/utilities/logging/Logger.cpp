@@ -48,8 +48,6 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
 
 	ss.str("");
     std::string logFileName = "ngen.log";
-    std::string stdout_logFileName = "ngen.stdout";
-    std::string stderr_logFileName = "ngen.stderr";
 
     // creating the directory
    	int status;
@@ -57,35 +55,14 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
 	const char *cstr = mkdir_cmd.c_str();
    	status = system(cstr);
    	if (status == -1)
-   	   	std::cerr << "Error(" << (errno) << ") creating log file directory for NGEN: " << logFileDir << std::endl;
+   	   std::cerr << "Error(" << (errno) << ") creating log file directory: " << logFileDir << std::endl;
    	else {
-   	   	std::cout << "Log directory: " << logFileDir <<std::endl;
-		// creating the stdout/stderr log files
-		std::string stdout_logFilePath = logFileDir+stdout_logFileName;
-		std::string stderr_logFilePath = logFileDir+stderr_logFileName;
-    	// Open stdout log file for writing
-    	stdout_logFile = freopen(stdout_logFilePath.c_str(), "a", stdout);
-    	if (stdout_logFile == NULL) {
-    	    std::cerr << "Error opening ngen.stdout log file." << std::endl;
-    	}
-		else {
-			std::cout << "Log file path for STDOUT:" << stdout_logFilePath << std::endl;
-		}
-
-    	// Open stderr log file for writing
-    	stderr_logFile = freopen(stderr_logFilePath.c_str(), "a", stderr);
-    	if (stderr_logFile == NULL) {
-    	    std::cerr << "Error opening ngen.stderr log file." << std::endl;
-    	}
-		else {
-			std::cerr << "Log file path for STDERR:" << stderr_logFilePath << std::endl;
-		}
-
-		// creating the log file
+   	   std::cout << "Log directory: " << logFileDir <<std::endl;
+		// creating the file
 		logFilePath = logFileDir+logFileName;
 		logFile.open(logFilePath, ios::out | ios::app);
 		if (!logFile.good()) {
-			std::cerr << "Warning: Can't Open Log File for NGEN: " << logFilePath << std::endl;
+			std::cerr << "Warning: Can't Open Log File: " << logFilePath << std::endl;
 			// try logging to a file in local directory
     		std::string logFileDir = "./run-logs/ngen_" + Logger::createTimestamp() + fwd_slash;
 			mkdir_cmd = "mkdir -p " + logFileDir;
@@ -97,21 +74,19 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
 				logFilePath = logFileDir+logFileName;
 				logFile.open(logFilePath, ios::out | ios::app);
 				if (!logFile.good()) {
-					std::cerr << "Can't Open local directory Log File for NGEN:" << logFilePath <<std::endl;			
+					std::cerr << "Can't Open local directory Log File:" << logFilePath <<std::endl;			
 				}
 				else {
-					std::cout << "ngen is logging instead into: " << logFilePath << std::endl;
+					std::cout << "Logging instead into: " << logFilePath << std::endl;
 					setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
 				}
 			}
 		}
 		else {
-			std::cout << "NGEN Log File Path:" << logFilePath << std::endl;
+			std::cout << "Log File Path:" << logFilePath << std::endl;
 			setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
 		}
 	}
-	
-	std::cout << "NGEN Log Level is set at: " << Logger::getLogLevelString(logLevel) << std::endl;
 }
 
 /**
@@ -127,14 +102,18 @@ std::shared_ptr<Logger> Logger::GetInstance() {
 }
 
 /**
-* Convert LogLevel to String Representation of Log Level 
-* @param logLevel : LogLevel
-* @return String log level
+* Log given message with defined parameters and generate message to pass on Console or File
+* @param message: Log Message
+* @param messageLevel: Log Level, LogLevel::DEBUG by default
 */
-std::string Logger::getLogLevelString(LogLevel level) {
-	std::string logType;
-	//Set Log Level Name
-	switch (level) {
+void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG) {
+	LoggingModule module=LoggingModule::NGEN;
+
+	// don't log if messageLevel < logLevel 
+	if (messageLevel >= logLevel) {
+		std::string logType;
+		//Set Log Level Name
+		switch (messageLevel) {
 		case LogLevel::FATAL:
 			logType = "FATAL ";
 			break;
@@ -153,22 +132,7 @@ std::string Logger::getLogLevelString(LogLevel level) {
 		default:
 			logType = "NONE  ";
 			break;
-	}
-	return logType;
-}
-
-/**
-* Log given message with defined parameters and generate message to pass on Console or File
-* @param message: Log Message
-* @param messageLevel: Log Level, LogLevel::DEBUG by default
-*/
-void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG) {
-	LoggingModule module=LoggingModule::NGEN;
-
-	// don't log if messageLevel < logLevel 
-	if (messageLevel >= logLevel) {
-		std::string logType;
-		logType = Logger::getLogLevelString(messageLevel);
+		}
 
 		std::string final_message;
 		std::string mod_name;
@@ -185,7 +149,6 @@ void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG) {
 		logFile.flush();
 	}
 }
-
 
 /**
 * Convert String Representation of Log Level to LogLevel Type
