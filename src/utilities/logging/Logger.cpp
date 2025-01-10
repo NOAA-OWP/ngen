@@ -60,6 +60,7 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
    	   	std::cerr << "Error(" << (errno) << ") creating log file directory for NGEN: " << logFileDir << std::endl;
    	else {
    	   	std::cout << "Log directory: " << logFileDir <<std::endl;
+#if 0
 		// creating the stdout/stderr log files
 		std::string stdout_logFilePath = logFileDir+stdout_logFileName;
 		std::string stderr_logFilePath = logFileDir+stderr_logFileName;
@@ -80,6 +81,7 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
 		else {
 			std::cerr << "Log file path for STDERR:" << stderr_logFilePath << std::endl;
 		}
+#endif
 
 		// creating the log file
 		logFilePath = logFileDir+logFileName;
