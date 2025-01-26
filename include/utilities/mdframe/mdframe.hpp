@@ -1,5 +1,6 @@
 #ifndef NGEN_MDFRAME_DEFINITION_HPP
 #define NGEN_MDFRAME_DEFINITION_HPP
+#include "Logger.hpp"
 
 #include <unordered_set>
 #include <unordered_map>
@@ -221,7 +222,9 @@ class mdframe {
         for (const auto& d : dimensions) {
             auto dopt = this->get_dimension(d);
             if (dopt == boost::none) {
-                throw std::runtime_error("not a dimension");
+                std::string throw_msg; throw_msg.assign("not a dimension");
+                LOG(throw_msg, LogLevel::ERROR);
+                throw std::runtime_error(throw_msg);
             }
             references.push_back(dopt.get());
         }

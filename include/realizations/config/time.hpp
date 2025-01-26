@@ -1,5 +1,6 @@
 #ifndef NGEN_REALIZATION_CONFIG_TIME_H
 #define NGEN_REALIZATION_CONFIG_TIME_H
+#include "Logger.hpp"
 
 #include <boost/property_tree/ptree.hpp>
 #include <string>
@@ -65,7 +66,9 @@ namespace realization{
                     }
                 }
                 
-                throw std::runtime_error(message);
+                std::string throw_msg; throw_msg.assign(message);
+                LOG(throw_msg, LogLevel::ERROR);
+                throw std::runtime_error(throw_msg);
             }
             return simulation_time_params(
                         start_time,

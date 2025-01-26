@@ -27,13 +27,13 @@ Bmi_Adapter::Bmi_Adapter(
         init_exception_msg = "Cannot create and initialize " + this->model_name +
                              " using unreadable file '" + this->bmi_init_config +
                              "'. Error: " + std::strerror(errno);
-        throw std::runtime_error(init_exception_msg);
+        Logger::logMsgAndThrowError(init_exception_msg);
     }
 
     str_stream << __FILE__ << ":" << __LINE__ << " mode name:" << this->model_name << std::endl;
-    (Logger::GetInstance())->Log(str_stream.str(), LogLevel::INFO); str_stream.str("");
+    LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
     str_stream << __FILE__ << ":" << __LINE__ << " bmi_init_config:" << this->bmi_init_config << std::endl;
-    (Logger::GetInstance())->Log(str_stream.str(), LogLevel::INFO); str_stream.str("");
+    LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
 }
 
 Bmi_Adapter::~Bmi_Adapter() = default;
@@ -51,7 +51,7 @@ double Bmi_Adapter::get_time_convert_factor() {
         //pybind exception is lost and all we see is a generic "uncaught exception"
         //with no context.  This way we at least get the error message wrapped in
         //a runtime error.
-        throw std::runtime_error(e.what());
+        Logger::logMsgAndThrowError(e.what());
     }
     std::string output_units = "s";
     return UnitsHelper::get_converted_value(input_units, value, output_units);
@@ -70,7 +70,7 @@ void Bmi_Adapter::Initialize() {
     // previous message
     errno = 0;
     if (model_initialized && !init_exception_msg.empty()) {
-        throw std::runtime_error(
+        Logger::logMsgAndThrowError(
             "Previous " + model_name + " init attempt had exception: \n\t" + init_exception_msg
         );
     }
@@ -82,7 +82,7 @@ void Bmi_Adapter::Initialize() {
         init_exception_msg = "Cannot initialize " + model_name + " using unreadable file '" +
                              bmi_init_config + "'. Error: " + std::strerror(errno);
         ;
-        throw std::runtime_error(init_exception_msg);
+        Logger::logMsgAndThrowError(init_exception_msg);
     } else {
         try {
             // TODO: make this same name as used with other testing (adjust name in docstring above
@@ -104,16 +104,17 @@ void Bmi_Adapter::Initialize() {
 
 void Bmi_Adapter::Initialize(std::string config_file) {
     if (config_file != bmi_init_config && model_initialized) {
-        throw std::runtime_error(
+        Logger::logMsgAndThrowError(
             "Model init previously attempted; cannot change config from " + bmi_init_config +
             " to " + config_file
         );
     }
-    std::cout << __FILE__ << ":" << __LINE__ << " Bmi_Adapter::Initialize: config_file = " << config_file << std::endl;
+    str_stream << __FILE__ << ":" << __LINE__ << " Bmi_Adapter::Initialize: config_file = " << config_file << std::endl;
+    LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
 
     if (config_file != bmi_init_config && !model_initialized) {
-        std::string message = "Bmi_Adapter::Initialize: initialization call changes model config from " + bmi_init_config + " to " + config_file;
-        logging::warning(message.c_str());
+        str_stream << "Bmi_Adapter::Initialize: initialization call changes model config from " << bmi_init_config << " to " << config_file;
+        LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
 
         bmi_init_config = config_file;
     }
@@ -122,7 +123,7 @@ void Bmi_Adapter::Initialize(std::string config_file) {
     } catch (models::external::State_Exception& e) {
         throw e;
     } catch (std::exception& e) {
-        throw std::runtime_error(e.what());
+        Logger::logMsgAndThrowError(e.what());
     }
 }
 

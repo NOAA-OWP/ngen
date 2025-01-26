@@ -1,6 +1,7 @@
 #include "Bmi_C_Formulation.hpp"
 using namespace realization;
 using namespace models::bmi;
+#include "Logger.hpp"
 
 Bmi_C_Formulation::Bmi_C_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
     : Bmi_Module_Formulation(id, forcing_provider, output_stream) { }
@@ -18,7 +19,7 @@ std::string Bmi_C_Formulation::get_formulation_type() {
 std::shared_ptr<Bmi_Adapter> Bmi_C_Formulation::construct_model(const geojson::PropertyMap& properties) {
     auto library_file_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE);
     if (library_file_iter == properties.end()) {
-        throw std::runtime_error("BMI C formulation requires path to library file, but none provided in config");
+        Logger::logMsgAndThrowError("BMI C formulation requires path to library file, but none provided in config");
     }
     std::string lib_file = library_file_iter->second.as_string();
     auto reg_func_itr = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__REGISTRATION_FUNC);
@@ -71,8 +72,8 @@ double Bmi_C_Formulation::get_var_value_as_double(const int& index, const std::s
     if (type == "unsigned long long" || type == "unsigned long long int")
         return (double) (model->GetValuePtr<unsigned long long>(var_name))[index];
 
-    throw std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
-                             " as double: no logic for converting variable type " + type);
+    Logger::logMsgAndThrowError("Unable to get value of variable " + var_name + " from " + get_model_type_name() + " as double: no logic for converting variable type " + type);
+    return 1.0;
 }
 
 bool Bmi_C_Formulation::is_bmi_input_variable(const std::string &var_name) {

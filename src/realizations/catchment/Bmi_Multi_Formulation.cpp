@@ -11,6 +11,7 @@
 #include "Bmi_C_Formulation.hpp"
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Bmi_Py_Formulation.hpp"
+#include "Logger.hpp"
 
 using namespace realization;
 
@@ -81,12 +82,12 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             #endif // NGEN_WITH_PYTHON
         }
         if (inactive_type_requested) {
-            throw std::runtime_error(
+            Logger::logMsgAndThrowError(
                     get_formulation_type() + " could not initialize sub formulation of type " + type_name +
                     " due to support for this type not being activated.");
         }
         if (module == nullptr) {
-            throw std::runtime_error(get_formulation_type() + " received unexpected subtype formulation " + type_name);
+            Logger::logMsgAndThrowError(get_formulation_type() + " received unexpected subtype formulation " + type_name);
         }
         modules[i] = module;
 
@@ -130,8 +131,10 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             set_output_header_fields(out_headers);
         }
         else {
-            std::cerr << "WARN: configured output headers have " << out_headers.size() << " fields, but there are "
+            std::stringstream ss;
+            ss << "WARN: configured output headers have " << out_headers.size() << " fields, but there are "
                       << get_output_variable_names().size() << " variables in the output" << std::endl;
+            LOG(ss.str(), LogLevel::WARN); ss.str("");
             set_output_header_fields(get_output_variable_names());
         }
     }
@@ -324,7 +327,7 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
 
 double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
     if (modules.empty()) {
-        throw std::runtime_error("Trying to get response of improperly created empty BMI multi-module formulation.");
+        Logger::logMsgAndThrowError("Trying to get response of improperly created empty BMI multi-module formulation.");
     }
     if (t_index < 0) {
         throw std::invalid_argument(

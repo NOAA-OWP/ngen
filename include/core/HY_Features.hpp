@@ -168,26 +168,30 @@ namespace hy_features {
          */
         void validate_dendritic()
         {
+          std::stringstream ss;
           for(const auto& id : catchments())
           {
               auto downstream = network.get_destination_ids(id);
               if(downstream.size() > 1)
               {
-                std::cerr << "Catchment " << id << " has more than one downstream connection." << std::endl;
-                std::cerr << "Downstreams are: ";
+                ss  << "Catchment " << id << " has more than one downstream connection." << std::endl;
+                ss  << "Downstreams are: ";
                 for(const auto& id : downstream){
-                  std::cerr <<id<<" ";
+                  ss  <<id<<" ";
                 }
-                std::cerr << std::endl;
+                ss  << std::endl;
+                LOG(ss.str(), LogLevel::FATAL); ss.str("");
                 assert( false );
               }
               else if (downstream.size() == 0)
               {
-                std::cerr << "Catchment " << id << " has 0 downstream connections, must have 1." << std::endl;
+                ss  << "Catchment " << id << " has 0 downstream connections, must have 1." << std::endl;
+                LOG(ss.str(), LogLevel::FATAL); ss.str("");
                 assert( false );
               }
           }
-          std::cout<<"Catchment topology is dendritic."<<std::endl;
+          ss <<"Catchment topology is dendritic."<<std::endl;
+          LOG(ss.str(), LogLevel::INFO); ss.str("");
         }
 
         /**

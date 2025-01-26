@@ -5,6 +5,7 @@ target_link_libraries(mdframe PUBLIC
 Boost::boost
 NGen::config_header
 NGen::mdarray
+NGen::logging
 )
 
 if(NGEN_WITH_NETCDF)

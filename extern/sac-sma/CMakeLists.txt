@@ -62,7 +62,7 @@ set(MODEL_SOURCE_DIR sac-sma/src/)
 set(BMI_SOURCE_DIR sac-sma/src/bmi/)
 
 file(GLOB BMI_SOURCE ${BMI_SOURCE_DIR}*.f90)
-file( GLOB MODEL_SOURCES ${MODEL_SOURCE_DIR}/sac/*.f ${MODEL_SOURCE_DIR}/driver/*.f90 ${MODEL_SOURCE_DIR}/share/*.f90)
+file( GLOB MODEL_SOURCES ${MODEL_SOURCE_DIR}/sac/*.f ${MODEL_SOURCE_DIR}/driver/*.f90 ${MODEL_SOURCE_DIR}/share/*.f90 ${CMAKE_CURRENT_LIST_DIR}/../datetime-fortran-1.7.0/src/*.f90)
 
 if(WIN32)
     add_library(sacbmi ${BMI_SOURCE} )

@@ -68,7 +68,7 @@ namespace parallel {
                 // If any is ever "not good", overwrite status to be "false"
                 if (codeBuffer != MPI_HF_SUB_CODE_GOOD) {
                     if (printMessage) {
-                        std::cout << "Rank " << i << " not successful/ready after " << taskDesc << std::endl;
+                        std::cerr << "Rank " << i << " not successful/ready after " << taskDesc << std::endl;
                     }
                     status = false;
                 }
@@ -120,11 +120,15 @@ namespace parallel {
         bool isGood = utils::FileChecker::file_is_readable(name);
 
         if (mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs)) {
-            if (printMsg) { std::cout << "Process " << mpi_rank << ": Hydrofabric already subdivided in " << mpi_num_procs << " files." << std::endl; }
+            if (printMsg) { 
+                std::cerr << "Process " << mpi_rank << ": Hydrofabric already subdivided in " << mpi_num_procs << " files." << std::endl; 
+            }
             return true;
         }
         else {
-            if (printMsg) { std::cout << "Process " << mpi_rank << ": Hydrofabric has not yet been subdivided." << std::endl; }
+            if (printMsg) { 
+                std::cerr << "Process " << mpi_rank << ": Hydrofabric has not yet been subdivided." << std::endl; 
+            }
             return false;
         }
     }
@@ -479,8 +483,7 @@ namespace parallel {
         #if !NGEN_WITH_PYTHON
         // We can't be good to proceed with this, because Python is not active
         isGood = false;
-        std::cerr << "Driver is unable to perform required hydrofabric subdividing when Python integration is not active." << std::endl;
-
+        std::cerr  << "Driver is unable to perform required hydrofabric subdividing when Python integration is not active." << std::endl;
 
         // Sync with the rest of the ranks and bail if any aren't ready to proceed for any reason
         if (!mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, "initializing hydrofabric subdivider")) {
@@ -496,7 +499,7 @@ namespace parallel {
                                                                                    partitionConfigFile);
             }
             catch (const std::exception &e) {
-                std::cerr << e.what() << std::endl;
+                std::cerr  << e.what() << std::endl;
                 // Set not good if the subdivider object couldn't be instantiated
                 isGood = false;
             }
@@ -512,7 +515,7 @@ namespace parallel {
                 isGood = subdivider->execSubdivision();
             }
             catch (const std::exception &e) {
-                std::cerr << e.what() << std::endl;
+                std::cerr  << e.what() << std::endl;
                 // Set not good if the subdivider object couldn't be instantiated
                 isGood = false;
             }

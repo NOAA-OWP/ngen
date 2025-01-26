@@ -153,51 +153,46 @@ RUN set -eux; \
     rm --recursive --force /usr/src/hdf5
 
 RUN set -eux; \
-	\
-	curl --location --output netcdf-c.tar.gz "https://github.com/Unidata/netcdf-c/archive/refs/tags/v${NETCDF_C_VERSION%%[a-z]*}.tar.gz"; \
-	mkdir --parents /usr/src/netcdf-c; \
-	tar --extract --directory /usr/src/netcdf-c --strip-components=1 --file netcdf-c.tar.gz; \
-	rm netcdf-c.tar.gz; \
-	\
-	cd /usr/src/netcdf-c; \
-	LD_LIBRARY_PATH="/usr/local/lib/:$LD_LIBRARY_PATH" \
-    CFLAGS="-I/usr/local/include/" \
-    LDFLAGS="-Wl,-L/usr/local/lib/,-rpath,/usr/local/lib/" \ 
-    ./configure \
-	; \
-	nproc="$(nproc)"; \
-	make -j "$nproc" \
-	; \
-	make install ; \
+    \
+    curl --location --output netcdf-c.tar.gz "https://github.com/Unidata/netcdf-c/archive/refs/tags/v${NETCDF_C_VERSION%%[a-z]*}.tar.gz"; \
+    mkdir --parents /usr/src/netcdf-c; \
+    tar --extract --directory /usr/src/netcdf-c --strip-components=1 --file netcdf-c.tar.gz; \
+    rm netcdf-c.tar.gz; \
+    \
+    cd /usr/src/netcdf-c; \
+    cmake -B cmake_build -S . -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF \
+    ; \
+    nproc="$(nproc)"; \
+    cmake --build cmake_build --parallel "$nproc" \
+    ; \
+    cmake --build cmake_build --target install ; \
     \
     rm --recursive --force /usr/src/netcdf-c
 
 RUN set -eux; \
-	\
-	curl --location --output netcdf-fortran.tar.gz "https://github.com/Unidata/netcdf-fortran/archive/refs/tags/v${NETCDF_FORTRAN_VERSION%%[a-z]*}.tar.gz"; \
-	mkdir --parents /usr/src/netcdf-fortran; \
-	tar --extract --directory /usr/src/netcdf-fortran --strip-components=1 --file netcdf-fortran.tar.gz; \
-	rm netcdf-fortran.tar.gz; \
-	\
-	cd /usr/src/netcdf-fortran; \
-	LD_LIBRARY_PATH="/usr/local/lib/:$LD_LIBRARY_PATH" \
-    CFLAGS="-I/usr/local/include/" \
-    LDFLAGS="-Wl,-L/usr/local/lib/,-rpath,/usr/local/lib/" \ 
-    ./configure \
-	; \
-	nproc="$(nproc)"; \
-	make -j "$nproc" \
-	; \
-	make install ; \
+    \
+    curl --location --output netcdf-fortran.tar.gz "https://github.com/Unidata/netcdf-fortran/archive/refs/tags/v${NETCDF_FORTRAN_VERSION%%[a-z]*}.tar.gz"; \
+    mkdir --parents /usr/src/netcdf-fortran; \
+    tar --extract --directory /usr/src/netcdf-fortran --strip-components=1 --file netcdf-fortran.tar.gz; \
+    rm netcdf-fortran.tar.gz; \
+    \
+    cd /usr/src/netcdf-fortran; \
+    cmake -B cmake_build -S . -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF \
+    -DCMAKE_Fortran_COMPILER=/opt/rh/gcc-toolset-10/root/usr/bin/gfortran \
+    ; \
+    nproc="$(nproc)"; \
+    cmake --build cmake_build --parallel "$nproc" \
+    ; \
+    cmake --build cmake_build --target install ; \
     \
     rm --recursive --force /usr/src/netcdf-fortran
 
 RUN set -eux; \
-	\
-	curl --location --output boost.tar.bz2 "https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION%%[a-z]*}/source/boost_${BOOST_VERSION//./_}.tar.bz2"; \
-	mkdir --parents /opt/boost; \
-	tar --extract --directory /opt/boost --strip-components=1 --file boost.tar.bz2; \
-	rm boost.tar.bz2
+    \
+    curl --location --output boost.tar.gz "https://archives.boost.io/release/${BOOST_VERSION%%[a-z]*}/source/boost_${BOOST_VERSION//./_}.tar.gz"; \
+    mkdir --parents /opt/boost; \
+    tar --extract --directory /opt/boost --strip-components=1 --file boost.tar.gz; \
+    rm boost.tar.gz
 
 COPY . /ngen-app/ngen/
 
@@ -220,7 +215,7 @@ RUN set -eux; \
 RUN set -eux; \
 	\
     cd ngen/extern/t-route ; \
-    LDFLAGS="-Wl,-L/usr/local/lib/,-rpath,/usr/local/lib/" ./compiler.sh no-e ; \
+    LDFLAGS="-Wl,-L/usr/local/lib64/,-L/usr/local/lib/,-rpath,/usr/local/lib64/,-rpath,/usr/local/lib/" ./compiler.sh no-e ; \
     \
     pip3 cache purge
 

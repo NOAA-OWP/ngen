@@ -3,6 +3,7 @@
 
 #include <ctime> // timegm
 #include <iomanip> // std::get_time
+#include "Logger.hpp"
 
 namespace data_access {
 namespace detail {
@@ -29,9 +30,9 @@ void assert_forcings_engine_requirements()
             auto mod = interpreter_->getModule(forcings_engine_python_module);
             auto cls = mod.attr(forcings_engine_python_class).cast<py::object>();
         } catch(std::exception& e) {
-            throw std::runtime_error{
+            Logger::logMsgAndThrowError(
                 "Failed to initialize ForcingsEngine: ForcingsEngine python module is not installed or is not properly configured. (" + std::string{e.what()} + ")"
-            };
+            );
         }
     }
 
@@ -39,7 +40,7 @@ void assert_forcings_engine_requirements()
     {
         const auto* wgrib2_exec = std::getenv("WGRIB2");
         if (wgrib2_exec == nullptr) {
-            throw std::runtime_error{"Failed to initialize ForcingsEngine: $WGRIB2 is not defined"};
+            Logger::logMsgAndThrowError("Failed to initialize ForcingsEngine: $WGRIB2 is not defined");
         }
     }
 }

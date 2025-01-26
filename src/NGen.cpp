@@ -17,7 +17,7 @@
 
 #include "NGenConfig.h"
 
-#include "Logger.hpp"
+#include <Logger.hpp>
 
 #include <FileChecker.h>
 #include <boost/algorithm/string.hpp>
@@ -64,7 +64,7 @@ int mpi_num_procs;
 #include <Layer.hpp>
 #include <SurfaceLayer.hpp>
 #include <DomainLayer.hpp>
-std::stringstream ss;
+std::stringstream ss("");
 
 std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
@@ -141,32 +141,9 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
 
 void setup_logger(void) {
     // One time log preferences
-    (Logger::GetInstance())->SetLogPreferences(LogLevel::NONE);
-
-    // sample logging for different log levels
-    ss << "Sample Log for LogLevel::ERROR" << std::endl;
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::ERROR); ss.str("");
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    ss << "Sample Log for LogLevel::FATAL" << std::endl;
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::FATAL); ss.str("");
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    ss << "Sample Log for LogLevel::WARN"; // no endl at the end of the message
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::WARN); ss.str("");
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    ss << "Sample Log for LogLevel::INFO" << std::endl;
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO); ss.str("");
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    // multiline logging
-    ss << "First line of multiline log:" << std::endl
-       << "   Indented second line of multiline log" << std::endl
-       << "         Indented third line of multiline log" << std::endl
-       << "                Indented fourth line of multiline log"; // no endl at the end of the message
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO); ss.str("");
-    ss << "Sample Log for LogLevel::DEBUG" << std::endl;
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::DEBUG); ss.str("");
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    (Logger::GetInstance())->SetLogPreferences(LogLevel::INFO);
 }
-
+ 
 int main(int argc, char *argv[]) {
     // Setup the logger
     setup_logger();
@@ -183,7 +160,8 @@ int main(int argc, char *argv[]) {
             std::ostringstream output;
             output << ngen::exec_info::build_summary;
             ngen::exec_info::runtime_summary(output);
-            std::cout << output.str() << std::endl;
+            ss << output.str() << std::endl;
+            LOG(ss.str(), LogLevel::INFO); ss.str("");
         } // if (mpi_rank == 0)
 
         #if NGEN_WITH_MPI
@@ -195,9 +173,10 @@ int main(int argc, char *argv[]) {
 
     auto time_start = std::chrono::steady_clock::now();
 
-    std::cout << "NGen Framework " << ngen_VERSION_MAJOR << "."
+    ss << "NGen Framework " << ngen_VERSION_MAJOR << "."
               << ngen_VERSION_MINOR << "."
               << ngen_VERSION_PATCH << std::endl;
+    LOG(ss.str(), LogLevel::INFO); ss.str("");
     std::ios::sync_with_stdio(false);
 
     #if NGEN_WITH_PYTHON
@@ -205,6 +184,7 @@ int main(int argc, char *argv[]) {
     // Need to bind to a variable so that the underlying reference count
     // is incremented, this essentially becomes the global reference to keep
     // the interpreter alive till the end of `main`
+    LOG("break 1", LogLevel::INFO); ss.str("");
     auto _interp = utils::ngenPy::InterpreterUtil::getInstance();
     //utils::ngenPy::InterpreterUtil::getInstance();
     #endif // NGEN_WITH_PYTHON
@@ -222,60 +202,77 @@ int main(int argc, char *argv[]) {
 
     std::vector<std::string> catchment_subset_ids;
     std::vector<std::string> nexus_subset_ids;
+    LOG("break 2", LogLevel::INFO); ss.str("");
 
     if( argc < 2) {
         // Usage
-        std::cout << "Usage: " << std::endl;
-        std::cout << argv[0] << " <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids>"
+        ss << "Usage: " << std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
+        ss << argv[0] << " <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids>"
                   << " <realization_config_path>" << std::endl
                   << "Arguments for <catchment subset ids> and <nexus subset ids> must be given." << std::endl
                   << "Use \"all\" as explicit argument when no subset is needed." << std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
 
         // Build and environment information
-        std::cout<<std::endl<<"Build Info:"<<std::endl;
-        std::cout<<"  NGen version: " // This is here mainly so that there will be *some* output if somehow no other options are enabled.
+        ss<<std::endl<<"Build Info:"<<std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
+        ss<<"  NGen version: " // This is here mainly so that there will be *some* output if somehow no other options are enabled.
             << ngen_VERSION_MAJOR << "."
             << ngen_VERSION_MINOR << "."
             << ngen_VERSION_PATCH << std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #if NGEN_WITH_MPI
-        std::cout<<"  Parallel build"<<std::endl;
+        ss<<"  Parallel build"<<std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #endif
         #if NGEN_WITH_NETCDF
-        std::cout<<"  NetCDF lumped forcing enabled"<<std::endl;
+        ss<<"  NetCDF lumped forcing enabled"<<std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #endif
         #if NGEN_WITH_BMI_FORTRAN
-        std::cout<<"  Fortran BMI enabled"<<std::endl;
+        ss<<"  Fortran BMI enabled"<<std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #endif
         #if NGEN_WITH_BMI_C
-        std::cout<<"  C BMI enabled"<<std::endl;
+        ss<<"  C BMI enabled"<<std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #endif
         #if NGEN_WITH_PYTHON
-        std::cout<<"  Python active"<<std::endl;
-        std::cout<<"    Embedded interpreter version: "<<PY_MAJOR_VERSION<<"."<<PY_MINOR_VERSION<<"."<<PY_MICRO_VERSION<<std::endl;
+        ss<<"  Python active"<<std::endl;
+        ss<<"    Embedded interpreter version: "<<PY_MAJOR_VERSION<<"."<<PY_MINOR_VERSION<<"."<<PY_MICRO_VERSION<<std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #endif
         #if NGEN_WITH_ROUTING
-        std::cout<<"  Routing active"<<std::endl;
+        ss<<"  Routing active"<<std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #endif
         #if NGEN_WITH_PYTHON
-        std::cout<<std::endl<<"Python Environment Info:"<<std::endl;
-        std::cout<<"  VIRTUAL_ENV environment variable: "<<(std::getenv("VIRTUAL_ENV") == nullptr ? "(not set)" : std::getenv("VIRTUAL_ENV"))<<std::endl;
-        std::cout<<"  Discovered venv: "<<_interp->getDiscoveredVenvPath()<<std::endl;
+        ss<<std::endl<<"Python Environment Info:"<<std::endl;
+        ss<<"  VIRTUAL_ENV environment variable: "<<(std::getenv("VIRTUAL_ENV") == nullptr ? "(not set)" : std::getenv("VIRTUAL_ENV"))<<std::endl;
+        ss<<"  Discovered venv: "<<_interp->getDiscoveredVenvPath()<<std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
         auto paths = _interp->getSystemPath();
-        std::cout<<"  System paths:"<<std::endl;
+        ss<<"  System paths:"<<std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
         for(std::string& path: std::get<1>(paths)){
-          std::cout<<"    "<<path<<std::endl;
+          ss<<"    "<<path<<std::endl;
+          LOG(ss.str(), LogLevel::INFO); ss.str("");
         }
         #endif
-        std::cout<<std::endl;
+        ss<<std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
         exit(0); // Unsure if this path should have a non-zero exit code?
     } else if( argc < 6) {
-        std::cout << "Missing required args:" << std::endl;
-        std::cout << argv[0] << " <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids>"
+        ss << "Missing required args:" << std::endl;
+        ss << argv[0] << " <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids>"
                   << " <realization_config_path>" << std::endl;
+        LOG(ss.str(), LogLevel::ERROR); ss.str("");
         if(argc > 3) {
-            std::cout << std::endl << "Note:" << std::endl
+            ss << std::endl << "Note:" << std::endl
                       << "Arguments for <catchment subset ids> and <nexus subset ids> must be given." << std::endl
                       << "Use \"all\" as explicit argument when no subset is needed." << std::endl;
+            LOG(ss.str(), LogLevel::WARN); ss.str("");
         }
 
         exit(-1);
@@ -284,6 +281,7 @@ int main(int argc, char *argv[]) {
         catchmentDataFile = argv[1];
         nexusDataFile = argv[3];
         REALIZATION_CONFIG_PATH = argv[5];
+        LOG("In the else part", LogLevel::INFO); ss.str("");
 
         #if NGEN_WITH_MPI
 
@@ -293,19 +291,23 @@ int main(int argc, char *argv[]) {
         MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
 
         if (argc >= 7) {
+          LOG("argc >= 7", LogLevel::INFO); ss.str("");
             PARTITION_PATH = argv[6];
         }
         else if (mpi_num_procs > 1) {
-            std::cout << "Missing required argument for partition file path." << std::endl;
+            ss << "Missing required argument for partition file path." << std::endl;
+            LOG(ss.str(), LogLevel::ERROR); ss.str("");
             exit(-1);
         }
 
         if (argc >= 8) {
+          LOG("argc >= 8", LogLevel::INFO); ss.str("");
             if (strcmp(argv[7], MPI_HF_SUB_CLI_FLAG) == 0) {
                 is_subdivided_hydrofabric_wanted = true;
             }
             else if (mpi_num_procs > 1) {
-                std::cout << "Unexpected arg '" << argv[7] << "'; try " << MPI_HF_SUB_CLI_FLAG << std::endl;
+                ss << "Unexpected arg '" << argv[7] << "'; try " << MPI_HF_SUB_CLI_FLAG << std::endl;
+                LOG(ss.str(), LogLevel::ERROR); ss.str("");
                 exit(-1);
             }
         }
@@ -348,11 +350,14 @@ int main(int argc, char *argv[]) {
             }
             // If subdivided was needed, subdividing was not already done, and we could not subdivide just now ...
             else {
-                std::cout << "Unable to successfully preprocess hydrofabric files into subdivided files per partition.";
+                ss << "Unable to successfully preprocess hydrofabric files into subdivided files per partition.";
+                LOG(ss.str(), LogLevel::ERROR); ss.str("");
                 error = true;
             }
         }
         #endif // NGEN_WITH_MPI
+
+        LOG("before exit", LogLevel::INFO); ss.str("");
 
         if(error) exit(-1);
 
@@ -370,7 +375,8 @@ int main(int argc, char *argv[]) {
     } // end else if (argc < 6)
 
     //Read the collection of nexus
-    std::cout << "Building Nexus collection" << std::endl;
+    ss << "Building Nexus collection" << std::endl;
+    LOG(ss.str(), LogLevel::INFO); ss.str("");
     
     #if NGEN_WITH_MPI
     PartitionData local_data;
@@ -382,10 +388,12 @@ int main(int argc, char *argv[]) {
         std::vector<PartitionData> &partitions = partition_parser.partition_ranks;
         local_data = std::move(partitions[mpi_rank]);
         if (!nexus_subset_ids.empty()) {
-            std::cerr << "Warning: CLI provided nexus subset will be ignored when using partition config";
+            ss << "Warning: CLI provided nexus subset will be ignored when using partition config";
+            LOG(ss.str(), LogLevel::ERROR); ss.str("");
         }
         if (!catchment_subset_ids.empty()) {
-            std::cerr << "Warning: CLI provided catchment subset will be ignored when using partition config";
+            ss << "Warning: CLI provided catchment subset will be ignored when using partition config";
+            LOG(ss.str(), LogLevel::ERROR); ss.str("");
         }
         nexus_subset_ids = std::vector<std::string>(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
         catchment_subset_ids = std::vector<std::string>(local_data.catchment_ids.begin(), local_data.catchment_ids.end());
@@ -398,12 +406,13 @@ int main(int argc, char *argv[]) {
       #if NGEN_WITH_SQLITE3
       nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
       #else
-      throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
+      Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
       #endif
     } else {
       nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
     }
-    std::cout << "Building Catchment collection" << std::endl;
+    ss << "Building Catchment collection" << std::endl;
+    LOG(ss.str(), LogLevel::INFO); ss.str("");
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
     geojson::GeoJSON catchment_collection;
@@ -411,7 +420,7 @@ int main(int argc, char *argv[]) {
       #if NGEN_WITH_SQLITE3
       catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
       #else
-      throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
+      Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
       #endif
     } else {
       catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
@@ -421,18 +430,19 @@ int main(int argc, char *argv[]) {
     {
         //feature->set_id(feature->get_property("id").as_string());
         nexus_collection->add_feature(feature);
-        //std::cout<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toid").as_string()<<std::endl;
+        //ss<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toid").as_string()<<std::endl;
     }
     //Update the feature ids for the combined collection, using the alternative property 'id'
     //to map features to their primary id as well as the alternative property
     nexus_collection->update_ids("id");
-    std::cout<<"Initializing formulations" << std::endl;
+    ss<<"Initializing formulations" << std::endl;
+    LOG(ss.str(), LogLevel::INFO); ss.str("");
     std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
     ss << "Initializing formulations:" << __FILE__ << ":" << __LINE__ <<std::endl;
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO); ss.str("");
+    LOG(ss.str(), LogLevel::INFO); ss.str("");
     manager->read(catchment_collection, utils::getStdOut());
     ss << "Initializing formulations:" << __FILE__ << ":" << __LINE__ <<std::endl;
-    (Logger::GetInstance())->Log(ss.str(), LogLevel::INFO); ss.str("");
+    LOG(ss.str(), LogLevel::INFO); ss.str("");
 
     //TODO refactor manager->read so certain configs can be queried before the entire
     //realization collection is created
@@ -441,16 +451,19 @@ int main(int argc, char *argv[]) {
     if( mpi_rank == 0 )
     { // Run t-route from single process
     if(manager->get_using_routing()) {
-      std::cout<<"Using Routing"<<std::endl;
+      ss<<"Using Routing"<<std::endl;
+      LOG(ss.str(), LogLevel::INFO); ss.str("");
       std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
       router = std::make_unique<routing_py_adapter::Routing_Py_Adapter>(t_route_config_file_with_path);
     }
     else {
-      std::cout<<"Not Using Routing"<<std::endl;
+      ss<<"Not Using Routing"<<std::endl;
+      LOG(ss.str(), LogLevel::INFO); ss.str("");
     }
     }
     #endif //NGEN_WITH_ROUTING
-    std::cout<<"Building Feature Index" <<std::endl;;
+    ss<<"Building Feature Index" <<std::endl;;
+    LOG(ss.str(), LogLevel::INFO); ss.str("");
     std::string link_key = "toid";
     nexus_collection->link_features_from_property(nullptr, &link_key);
 
@@ -488,7 +501,8 @@ int main(int argc, char *argv[]) {
         #endif
     }
 
-    std::cout<<"Running Models"<<std::endl;
+    ss<<"Running Models"<<std::endl;
+    LOG(ss.str(), LogLevel::INFO); ss.str("");
 
     // check the time loops for the existing layers
     ngen::LayerDataStorage& layer_meta_data = manager->get_layer_metadata();
@@ -572,7 +586,10 @@ int main(int argc, char *argv[]) {
           // only advance if you would not pass the master next time and the previous layer next time
           if ( layer_next_time <= next_time && layer_next_time <=  prev_layer_time)
           {
-            if(count%100==0) std::cout<<"Updating layer: "<<layer->get_name()<<"\n";
+            if(count%100==0) {
+              ss<<"Updating layer: "<<layer->get_name()<<"\n";
+              LOG(ss.str(), LogLevel::DEBUG); ss.str("");
+            }
             layer->update_models(); //assume update_models() calls time->advance_timestep()
             prev_layer_time = layer_next_time;
           }
@@ -601,7 +618,8 @@ int main(int argc, char *argv[]) {
 
     if (mpi_rank == 0)
     {
-        std::cout << "Finished " << manager->Simulation_Time_Object->get_total_output_times() << " timesteps." << std::endl;
+        ss << "Finished " << manager->Simulation_Time_Object->get_total_output_times() << " timesteps." << std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
     }
 
     auto time_done_simulation = std::chrono::steady_clock::now();
@@ -633,13 +651,14 @@ int main(int argc, char *argv[]) {
 
     if (mpi_rank == 0)
     {
-        std::cout << "NGen top-level timings:"
+        ss << "NGen top-level timings:"
                   << "\n\tNGen::init: " << time_elapsed_init.count()
                   << "\n\tNGen::simulation: " << time_elapsed_simulation.count()
 #if NGEN_WITH_ROUTING
                   << "\n\tNGen::routing: " << time_elapsed_routing.count()
 #endif
                   << std::endl;
+        LOG(ss.str(), LogLevel::INFO); ss.str("");
     }
 
   manager->finalize();

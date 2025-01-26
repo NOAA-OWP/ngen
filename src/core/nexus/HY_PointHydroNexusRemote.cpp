@@ -126,7 +126,7 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
         //because the `add_upstream_flow` call triggers a `send` which removes from the local accounting
         //all available water and sends it to the remote counterpart for this nexus.
         std::string msg = "Nexus "+id+" attempted to get_downstream_flow, but its communicator type is sender only.";
-        throw std::runtime_error(msg);
+        Logger::logMsgAndThrowError(msg);
     }
     else if ( type == receiver || type == sender_receiver )
     {

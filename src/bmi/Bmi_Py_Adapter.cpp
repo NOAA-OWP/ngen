@@ -5,6 +5,7 @@
 #include <exception>
 #include <utility>
 #include <iostream>
+#include "Logger.hpp"
 
 #include "bmi/Bmi_Py_Adapter.hpp"
 
@@ -101,7 +102,7 @@ void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
     catch (std::runtime_error &e) {
         std::string msg = "Encountered error getting C++ type during call to GetValue: \n";
         msg += e.what();
-        throw std::runtime_error(msg);
+        Logger::logMsgAndThrowError(msg);
     }
 
     if (cxx_type == "short") {
@@ -119,7 +120,7 @@ void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
     } else if (cxx_type == "long double") {
         copy_to_array<long double>(name, (long double *) dest);
     } else {
-        throw std::runtime_error("Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
+        Logger::logMsgAndThrowError("Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
     }
 
 }
@@ -207,7 +208,7 @@ void Bmi_Py_Adapter::SetValueAtIndices(std::string name, int *inds, int count, v
     } else if (val_type == "float" && val_item_size == sizeof(long double)) {
         set_value_at_indices<long double>(name, inds, count, src, val_type);
     } else {
-        throw std::runtime_error(
+        Logger::logMsgAndThrowError(
                 "(Bmi_Py_Adapter) Failed attempt to SET values of BMI variable '" + name + "' from '" +
                 model_name + "' model:  model advertises unsupported combination of type (" + val_type +
                 ") and size (" + std::to_string(val_item_size) + ").");
