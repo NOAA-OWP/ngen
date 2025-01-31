@@ -1,11 +1,11 @@
 <map id="Nexus_Remote_Test" name="Nexus_Remote_Test">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,390,164,576"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="21,262,105,327"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,342,77,390,72,391,66,342"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="130,262,263,327"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,328,151,377,146,375,176,326"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="145,134,248,199"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="199,214,199,262,194,262,194,214"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="186,5,207,71"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="199,70,199,116,194,116,194,70"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,393,165,582"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="23,264,105,330"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,345,77,393,72,394,67,345"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="129,264,260,330"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,331,150,380,146,377,174,329"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="144,135,245,201"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="197,215,197,264,192,264,192,215"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="185,5,204,72"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="197,71,197,118,192,118,192,71"/>
 </map>

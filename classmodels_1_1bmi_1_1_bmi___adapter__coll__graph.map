@@ -1,24 +1,24 @@
 <map id="models::bmi::Bmi_Adapter" name="models::bmi::Bmi_Adapter">
-<area shape="rect" id="Node000001" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="275,878,447,1317"/>
-<area shape="rect" id="Node000002" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="5,435,159,800"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,789,174,799,277,968,273,970,169,802,163,791"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="518,148,587,214"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="571,212,579,237,579,253,581,345,587,424,601,560,603,624,599,692,584,768,556,855,538,896,514,936,460,1005,456,1002,510,933,533,894,552,853,579,767,594,692,598,624,596,560,581,425,575,345,574,253,574,238,566,214"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="407,277,557,342"/>
-<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="531,215,515,239,503,262,498,260,510,236,526,212"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="495,5,610,85"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="555,100,555,148,550,148,550,100"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="183,585,341,650"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="261,650,256,742,258,798,266,854,273,884,267,885,260,855,253,799,251,742,256,650"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="234,277,362,342"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="267,356,263,367,251,426,249,486,253,541,259,585,253,585,247,541,244,486,246,425,258,365,262,354"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="387,578,531,658"/>
-<area shape="poly" id="edge12_Node000008_Node000006" title=" " alt="" coords="324,354,442,577,437,579,319,356"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="325,13,346,78"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="328,79,312,149,302,260,297,260,307,148,323,77"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="348,148,451,214"/>
-<area shape="poly" id="edge11_Node000010_Node000007" title=" " alt="" coords="348,67,379,132,375,135,343,70"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="459,658,450,748,433,855,431,862,426,861,427,854,444,747,454,657"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="482,342,466,561,461,561,477,341"/>
-<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="411,227,422,251,442,275,438,279,417,254,406,229"/>
+<area shape="rect" id="Node000001" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="273,888,446,1334"/>
+<area shape="rect" id="Node000002" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="5,438,159,810"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,799,174,808,276,977,271,980,169,811,164,801"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="518,150,585,216"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="570,215,578,240,578,255,580,348,586,428,600,565,603,631,598,700,583,776,555,865,537,906,514,946,459,1016,455,1013,509,943,532,904,551,863,578,775,593,699,597,631,595,566,580,429,574,349,573,255,573,240,565,217"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="408,279,557,345"/>
+<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="529,217,514,241,503,264,498,262,509,239,525,214"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="495,5,608,87"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="554,102,554,150,549,150,549,102"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="183,591,339,657"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="260,657,255,750,257,807,265,863,271,892,266,894,259,864,252,807,250,750,255,657"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="236,279,361,345"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="266,359,262,370,250,430,248,490,251,546,257,591,252,591,246,547,242,491,245,429,257,369,262,357"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="388,583,529,665"/>
+<area shape="poly" id="edge12_Node000008_Node000006" title=" " alt="" coords="324,357,440,582,436,585,319,359"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="325,13,344,79"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="328,79,312,150,302,262,297,262,307,149,323,78"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="348,150,449,216"/>
+<area shape="poly" id="edge11_Node000010_Node000007" title=" " alt="" coords="346,65,378,133,373,136,341,68"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="458,665,449,756,432,864,430,871,425,870,426,863,443,755,453,664"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="483,345,465,567,460,566,477,345"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="409,229,420,254,440,277,436,281,415,256,404,231"/>
 </map>

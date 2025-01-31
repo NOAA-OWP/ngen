@@ -1,7 +1,7 @@
 <map id="CatchmentAggrDataSelector" name="CatchmentAggrDataSelector">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,293,201,598"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="69,135,138,200"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,200,106,276,101,276,101,200"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="46,5,161,85"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,100,106,135,101,135,101,100"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,295,202,606"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="70,136,137,202"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,202,106,278,101,278,101,202"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="48,5,160,87"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,101,106,136,101,136,101,101"/>
 </map>

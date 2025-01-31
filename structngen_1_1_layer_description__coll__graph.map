@@ -1,7 +1,7 @@
 <map id="ngen::LayerDescription" name="ngen::LayerDescription">
-<area shape="rect" id="Node000001" title="A simple structure to hold meta data related to a computational layer." alt="" coords="5,278,149,363"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="43,135,112,200"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,200,80,261,75,261,75,200"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="20,5,135,85"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="80,100,80,135,75,135,75,100"/>
+<area shape="rect" id="Node000001" title="A simple structure to hold meta data related to a computational layer." alt="" coords="5,280,147,367"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="43,136,110,202"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,202,79,264,74,264,74,202"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="20,5,132,87"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="79,101,79,136,74,136,74,101"/>
 </map>

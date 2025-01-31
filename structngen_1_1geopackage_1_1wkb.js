@@ -3,7 +3,7 @@ var structngen_1_1geopackage_1_1wkb =
     [ "wgs84", "structngen_1_1geopackage_1_1wkb_1_1wgs84.html", "structngen_1_1geopackage_1_1wkb_1_1wgs84" ],
     [ "byte_t", "structngen_1_1geopackage_1_1wkb.html#a504e61e04987b401f1af84dd0e229f24", null ],
     [ "byte_vector", "structngen_1_1geopackage_1_1wkb.html#a210bf77d0b6bd3aac2335dcd64ead09c", null ],
-    [ "geometry", "structngen_1_1geopackage_1_1wkb.html#a121a9bac1d5a8c224fa41c5b10058c8b", null ],
+    [ "geometry", "structngen_1_1geopackage_1_1wkb.html#a900bf4c517b714fd45c2086db19b3e74", null ],
     [ "linestring_t", "structngen_1_1geopackage_1_1wkb.html#ace2f32b4511a4f8a32c8d73ca0611d23", null ],
     [ "multilinestring_t", "structngen_1_1geopackage_1_1wkb.html#a4be63803ef0860b18ab5a1b3142aaced", null ],
     [ "multipoint_t", "structngen_1_1geopackage_1_1wkb.html#ab5c12c7d154e99e30351c7040abb3c0b", null ],

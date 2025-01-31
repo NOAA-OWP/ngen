@@ -1,5 +1,5 @@
 <map id="external::ExternalIntegrationException" name="external::ExternalIntegrationException">
-<area shape="rect" id="Node000001" title="Custom exception indicating a problem when integrating with some external component." alt="" coords="5,119,200,279"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="57,5,149,71"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,86,105,119,100,119,100,86"/>
+<area shape="rect" id="Node000001" title="Custom exception indicating a problem when integrating with some external component." alt="" coords="5,120,200,282"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="58,5,148,72"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,86,106,120,100,120,100,86"/>
 </map>

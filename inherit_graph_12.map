@@ -2,9 +2,9 @@
 <area shape="rect" id="Node000000" href="$classgeojson_1_1_feature_base.html" title="Represents an individual feature within a Geojson definition." alt="" coords="5,169,152,195"/>
 <area shape="rect" id="Node000001" href="$classgeojson_1_1_collection_feature.html" title=" " alt="" coords="208,5,382,31"/>
 <area shape="poly" id="edge52_Node000000_Node000001" title=" " alt="" coords="93,154,135,96,165,66,198,40,221,29,223,34,201,44,168,70,139,100,97,158"/>
-<area shape="rect" id="Node000002" href="$classgeojson_1_1_line_string_feature.html" title=" " alt="" coords="207,55,383,80"/>
+<area shape="rect" id="Node000002" href="$classgeojson_1_1_line_string_feature.html" title=" " alt="" coords="207,55,382,80"/>
 <area shape="poly" id="edge53_Node000000_Node000002" title=" " alt="" coords="104,157,146,123,198,90,230,78,232,83,201,95,149,127,107,161"/>
-<area shape="rect" id="Node000003" href="$classgeojson_1_1_multi_line_string_feature.html" title=" " alt="" coords="215,105,375,145"/>
+<area shape="rect" id="Node000003" href="$classgeojson_1_1_multi_line_string_feature.html" title=" " alt="" coords="215,104,374,145"/>
 <area shape="poly" id="edge54_Node000000_Node000003" title=" " alt="" coords="143,162,215,143,216,148,145,167"/>
 <area shape="rect" id="Node000004" href="$classgeojson_1_1_multi_point_feature.html" title=" " alt="" coords="208,169,382,195"/>
 <area shape="poly" id="edge55_Node000000_Node000004" title=" " alt="" coords="167,180,207,180,207,185,167,185"/>

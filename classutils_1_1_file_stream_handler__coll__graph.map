@@ -1,23 +1,23 @@
 <map id="utils::FileStreamHandler" name="utils::FileStreamHandler">
-<area shape="rect" id="Node000001" title=" " alt="" coords="195,958,346,1044"/>
-<area shape="rect" id="Node000002" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="206,664,335,909"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="273,924,273,959,268,959,268,924"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="143,521,270,601"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="212,600,219,639,221,647,216,648,214,640,207,601"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="34,385,118,450"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="107,448,161,507,157,510,103,452"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="15,235,137,315"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="79,330,79,385,73,385,73,330"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="5,120,147,185"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="79,200,79,235,73,235,73,200"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="31,5,121,71"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="79,86,79,120,73,120,73,86"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="143,385,271,450"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="209,465,209,521,204,521,204,465"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="196,242,217,307"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="209,307,209,368,204,368,204,307"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="307,528,376,593"/>
-<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="334,594,317,648,312,646,329,592"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="295,378,409,458"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="351,473,346,528,341,528,345,472"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="192,968,341,1055"/>
+<area shape="rect" id="Node000002" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="203,670,330,919"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="269,934,269,969,264,969,264,934"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="140,525,265,607"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="207,606,214,645,215,653,210,654,208,646,202,607"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="34,388,116,455"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="105,453,158,511,154,515,101,457"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="15,237,134,318"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="77,333,77,389,72,389,72,333"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,121,144,187"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="77,202,77,237,72,237,72,202"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="31,5,118,72"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="77,87,77,121,72,121,72,87"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="140,388,266,455"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="205,470,205,525,200,525,200,470"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="193,244,212,310"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="205,310,205,372,200,372,200,310"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="303,533,369,599"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="329,599,312,654,307,652,324,598"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="289,381,402,462"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="344,478,341,533,335,533,339,477"/>
 </map>

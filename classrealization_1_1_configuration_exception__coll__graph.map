@@ -1,9 +1,9 @@
 <map id="realization::ConfigurationException" name="realization::ConfigurationException">
-<area shape="rect" id="Node000001" title="Custom exception indicating a problem when integrating with the provided realization configuration." alt="" coords="5,263,168,423"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="19,135,111,200"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,215,80,263,74,263,68,215"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="136,135,205,200"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,201,135,249,130,247,153,199"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="113,5,228,85"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="173,100,173,135,168,135,168,100"/>
+<area shape="rect" id="Node000001" title="Custom exception indicating a problem when integrating with the provided realization configuration." alt="" coords="5,265,168,428"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="21,136,110,202"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,217,80,265,74,266,69,218"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="135,136,202,202"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,203,133,251,129,249,151,201"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="112,5,224,87"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="171,101,171,136,166,136,166,101"/>
 </map>

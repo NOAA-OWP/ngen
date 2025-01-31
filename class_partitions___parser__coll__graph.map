@@ -1,28 +1,28 @@
 <map id="Partitions_Parser" name="Partitions_Parser">
-<area shape="rect" id="Node000001" title=" " alt="" coords="194,786,337,991"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="335,658,505,723"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="398,724,349,786,345,782,393,721"/>
-<area shape="rect" id="Node000003" href="$struct_partition_data.html" title=" " alt="" coords="335,514,449,580"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="401,579,413,640,408,641,396,580"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="37,292,155,372"/>
-<area shape="poly" id="edge12_Node000001_Node000004" title=" " alt="" coords="95,372,93,428,100,490,119,564,145,638,204,769,199,772,140,639,114,566,95,491,88,428,90,372"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="99,371,104,440,110,470,119,489,132,498,151,507,201,521,318,538,318,543,200,526,149,512,129,503,115,492,105,471,99,440,94,372"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="179,148,248,214"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="206,215,195,242,178,269,167,282,163,278,174,266,190,240,201,213"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="156,5,271,85"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="216,100,216,148,211,148,211,100"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="5,148,155,214"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="88,228,95,292,89,292,82,229"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="69,13,91,78"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="83,78,83,132,77,132,77,78"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="358,299,485,364"/>
-<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="407,365,396,396,390,448,390,498,385,498,384,448,391,395,402,363"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="417,148,519,214"/>
-<area shape="poly" id="edge11_Node000002_Node000010" title=" " alt="" coords="510,225,516,237,537,305,541,362,535,419,524,491,512,566,501,598,481,635,461,660,456,657,476,632,496,596,507,565,519,490,530,418,536,362,531,306,511,239,505,227"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="456,229,434,300,429,299,451,227"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="225,396,361,490"/>
-<area shape="poly" id="edge14_Node000012_Node000010" title=" " alt="" coords="403,187,373,193,344,203,317,218,296,239,278,276,272,317,275,358,282,395,276,396,269,359,267,317,273,275,291,236,314,214,342,198,372,188,402,182"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="457,13,479,78"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="471,78,471,132,465,132,465,78"/>
-<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="290,491,277,604,270,769,264,769,272,603,284,490"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="189,793,332,1002"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="331,664,499,730"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="392,732,344,794,340,790,388,729"/>
+<area shape="rect" id="Node000003" href="$struct_partition_data.html" title=" " alt="" coords="330,520,445,586"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="396,585,408,647,403,648,391,586"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="36,294,152,375"/>
+<area shape="poly" id="edge12_Node000001_Node000004" title=" " alt="" coords="93,375,91,432,98,495,117,570,142,644,200,777,195,779,137,646,112,572,93,496,86,433,87,375"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="97,375,102,444,108,475,117,494,130,503,148,512,198,526,314,543,313,548,197,531,146,517,127,508,113,497,103,476,96,445,91,375"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="176,150,243,216"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="203,217,192,245,176,272,165,284,161,280,172,268,187,242,198,215"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="154,5,266,87"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="212,102,212,150,207,150,207,102"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="5,150,153,216"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="86,230,93,294,87,295,81,231"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="69,13,89,79"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="82,79,82,133,76,133,76,79"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="356,302,480,368"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="403,368,391,400,385,453,385,503,380,503,379,453,386,399,398,366"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="414,150,515,216"/>
+<area shape="poly" id="edge11_Node000002_Node000010" title=" " alt="" coords="505,227,511,239,532,309,536,366,531,424,519,496,506,572,495,604,475,641,455,666,451,662,470,639,490,602,501,571,514,495,525,423,531,366,526,310,506,241,501,229"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="453,231,430,303,425,301,448,230"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="223,399,357,496"/>
+<area shape="poly" id="edge14_Node000012_Node000010" title=" " alt="" coords="400,189,370,195,340,205,313,220,291,242,280,259,273,279,268,320,270,362,278,399,272,400,265,362,262,320,268,277,275,257,286,238,309,216,338,200,368,190,399,184"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="455,13,474,79"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="467,79,467,133,462,133,462,79"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="286,496,272,610,265,776,259,776,267,610,280,495"/>
 </map>

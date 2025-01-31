@@ -1,22 +1,22 @@
 <map id="ngen::LayerDataStorage" name="ngen::LayerDataStorage">
-<area shape="rect" id="Node000001" title="A class to hold and manage layer metadata for the system." alt="" coords="197,569,347,735"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="93,426,280,506"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,505,229,553,224,555,202,507"/>
-<area shape="rect" id="Node000003" href="$structngen_1_1_layer_description.html" title="A simple structure to hold meta data related to a computational layer." alt="" coords="5,278,149,363"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="104,361,131,401,140,412,136,415,127,404,100,364"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="43,135,112,200"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="80,200,80,261,75,261,75,200"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="20,5,135,85"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="80,100,80,135,75,135,75,100"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="173,281,299,361"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="211,375,206,388,195,427,190,426,200,387,206,373"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="220,135,241,200"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="234,200,235,254,236,264,230,264,230,254,229,200"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="336,135,357,200"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="338,181,298,226,269,267,265,264,294,222,334,177"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="343,288,446,353"/>
-<area shape="poly" id="edge10_Node000010_Node000008" title=" " alt="" coords="360,199,368,223,383,271,378,273,363,225,355,200"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="321,434,431,499"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="361,500,329,556,324,553,356,497"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="391,368,383,434,377,434,386,368"/>
+<area shape="rect" id="Node000001" title="A class to hold and manage layer metadata for the system." alt="" coords="194,574,342,742"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="92,430,276,511"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,510,226,558,221,560,200,512"/>
+<area shape="rect" id="Node000003" href="$structngen_1_1_layer_description.html" title="A simple structure to hold meta data related to a computational layer." alt="" coords="5,280,147,367"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="102,365,128,404,136,415,132,419,123,408,97,368"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="43,136,110,202"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="79,202,79,264,74,264,74,202"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="20,5,132,87"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="79,101,79,136,74,136,74,101"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="172,283,295,364"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="207,379,202,392,192,431,187,429,197,390,202,377"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="218,136,238,202"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="231,202,233,256,233,266,228,266,228,256,226,202"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="335,136,354,202"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="337,181,296,228,267,270,263,267,291,225,333,178"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="342,290,442,357"/>
+<area shape="poly" id="edge10_Node000010_Node000008" title=" " alt="" coords="356,197,365,226,380,273,375,275,360,227,351,199"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="319,438,426,504"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="357,505,325,561,320,559,352,502"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="388,372,379,438,374,437,383,371"/>
 </map>

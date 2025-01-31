@@ -1,5 +1,5 @@
 <map id="geojson::MultiPolygonFeature" name="geojson::MultiPolygonFeature">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,699,187,844"/>
-<area shape="rect" id="Node000002" href="$classgeojson_1_1_feature_base.html" title="Represents an individual feature within a Geojson definition." alt="" coords="11,5,181,651"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,665,99,699,93,699,93,665"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,709,185,857"/>
+<area shape="rect" id="Node000002" href="$classgeojson_1_1_feature_base.html" title="Represents an individual feature within a Geojson definition." alt="" coords="10,5,180,661"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,676,98,709,92,709,92,676"/>
 </map>

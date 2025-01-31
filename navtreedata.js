@@ -99,7 +99,7 @@ var NAVTREE =
       [ "Compliance with the BMI v2.0 Standard", "md_doc_2_b_m_iconventions.html#autotoc_md64", null ],
       [ "Time Control", "md_doc_2_b_m_iconventions.html#autotoc_md65", [
         [ "Set and Get Values Per Timestep", "md_doc_2_b_m_iconventions.html#autotoc_md66", null ],
-        [ "<tt>update</tt> vs. <tt>update_until</tt>", "md_doc_2_b_m_iconventions.html#autotoc_md67", null ],
+        [ "update vs. update_until", "md_doc_2_b_m_iconventions.html#autotoc_md67", null ],
         [ "Time Units", "md_doc_2_b_m_iconventions.html#autotoc_md68", null ],
         [ "Model time begin", "md_doc_2_b_m_iconventions.html#autotoc_md69", null ],
         [ "Model time end", "md_doc_2_b_m_iconventions.html#autotoc_md70", null ]
@@ -112,12 +112,12 @@ var NAVTREE =
         [ "Input/output variables and the time loop", "md_doc_2_b_m_iconventions.html#autotoc_md75", null ],
         [ "Validation of formulations for input variables", "md_doc_2_b_m_iconventions.html#autotoc_md76", null ],
         [ "Validation of formulations for output variables", "md_doc_2_b_m_iconventions.html#autotoc_md77", null ],
-        [ "Calling <tt>set_value</tt> on output variables", "md_doc_2_b_m_iconventions.html#autotoc_md78", null ],
-        [ "Calling <tt>get_value</tt> on input variables", "md_doc_2_b_m_iconventions.html#autotoc_md79", null ],
+        [ "Calling set_value on output variables", "md_doc_2_b_m_iconventions.html#autotoc_md78", null ],
+        [ "Calling get_value on input variables", "md_doc_2_b_m_iconventions.html#autotoc_md79", null ],
         [ "Input and output with the same name not permitted", "md_doc_2_b_m_iconventions.html#autotoc_md80", null ]
       ] ],
       [ "Unpublished variables", "md_doc_2_b_m_iconventions.html#autotoc_md81", [
-        [ "Unknown/unexpected variables passed to <tt>set_value</tt>", "md_doc_2_b_m_iconventions.html#autotoc_md82", null ],
+        [ "Unknown/unexpected variables passed to set_value", "md_doc_2_b_m_iconventions.html#autotoc_md82", null ],
         [ "Must support variable metadata functions", "md_doc_2_b_m_iconventions.html#autotoc_md83", null ]
       ] ],
       [ "Array representation", "md_doc_2_b_m_iconventions.html#autotoc_md84", [
@@ -128,7 +128,7 @@ var NAVTREE =
           [ "Proper ordering example", "md_doc_2_b_m_iconventions.html#autotoc_md89", null ],
           [ "When this matters", "md_doc_2_b_m_iconventions.html#autotoc_md90", [
             [ "Fortran models using z,y,x index ordering", "md_doc_2_b_m_iconventions.html#autotoc_md91", null ],
-            [ "Clarification for <tt>get_value_at_indices</tt> and <tt>set_value_at_indices</tt>", "md_doc_2_b_m_iconventions.html#autotoc_md92", null ],
+            [ "Clarification for get_value_at_indices and set_value_at_indices", "md_doc_2_b_m_iconventions.html#autotoc_md92", null ],
             [ "Spatial data arrays for structured grids", "md_doc_2_b_m_iconventions.html#autotoc_md93", null ]
           ] ]
         ] ]
@@ -138,11 +138,11 @@ var NAVTREE =
         [ "Ranks and sizes for scalar values", "md_doc_2_b_m_iconventions.html#autotoc_md96", null ]
       ] ],
       [ "Specific ngen uses of unpublished variables", "md_doc_2_b_m_iconventions.html#autotoc_md97", [
-        [ "The <tt>model_params</tt> list", "md_doc_2_b_m_iconventions.html#autotoc_md98", null ],
+        [ "The model_params list", "md_doc_2_b_m_iconventions.html#autotoc_md98", null ],
         [ "Grid sizing parameters", "md_doc_2_b_m_iconventions.html#autotoc_md99", [
-          [ "<tt>ngen_grid_N_shape</tt>", "md_doc_2_b_m_iconventions.html#autotoc_md100", null ],
-          [ "<tt>ngen_grid_N_spacing</tt>", "md_doc_2_b_m_iconventions.html#autotoc_md101", null ],
-          [ "<tt>ngen_grid_N_origin</tt>", "md_doc_2_b_m_iconventions.html#autotoc_md102", null ]
+          [ "ngen_grid_N_shape", "md_doc_2_b_m_iconventions.html#autotoc_md100", null ],
+          [ "ngen_grid_N_spacing", "md_doc_2_b_m_iconventions.html#autotoc_md101", null ],
+          [ "ngen_grid_N_origin", "md_doc_2_b_m_iconventions.html#autotoc_md102", null ]
         ] ]
       ] ]
     ] ],
@@ -193,7 +193,7 @@ var NAVTREE =
         ] ],
         [ "Boost (Headers Only)", "md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md137", [
           [ "Setup", "md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md138", [
-            [ "Setting <strong>BOOST_ROOT</strong>", "md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md139", null ]
+            [ "Setting BOOST_ROOT", "md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md139", null ]
           ] ],
           [ "Version Requirements", "md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md140", null ]
         ] ],
@@ -208,7 +208,7 @@ var NAVTREE =
           [ "Setup", "md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md151", null ],
           [ "Version Requirements", "md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md152", null ]
         ] ],
-        [ "The <tt>dmod.subsetservice</tt> Package", "md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md153", [
+        [ "The dmod.subsetservice Package", "md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md153", [
           [ "Setup", "md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md154", null ],
           [ "Version Requirements", "md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md155", null ]
         ] ],
@@ -238,8 +238,8 @@ var NAVTREE =
     ] ],
     [ "Git Strategy", "md_doc_2_g_i_t___u_s_a_g_e.html", [
       [ "Branching Model", "md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md173", [
-        [ "Feature Branches from <tt>master</tt>", "md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md174", null ],
-        [ "Relating <tt>production</tt>, <tt>master</tt>, and Release Branches", "md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md175", null ]
+        [ "Feature Branches from master", "md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md174", null ],
+        [ "Relating production, master, and Release Branches", "md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md175", null ]
       ] ],
       [ "Contributing", "md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md176", null ],
       [ "Optional: Setting Up Hook Scripts", "md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md177", null ]
@@ -291,13 +291,13 @@ var NAVTREE =
       ] ],
       [ "Running t-route separately with ngen output", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md218", null ],
       [ "Known issues", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md219", [
-        [ "Cleanup of <tt>*.parquet</tt> files required", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md220", null ],
+        [ "Cleanup of *.parquet files required", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md220", null ],
         [ "Bug in multiprocessing on macOS", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md221", null ]
       ] ]
     ] ],
     [ "Realization Configuration", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html", null ],
     [ "<a href=\"https://docs.opengeospatial.org/is/14-111r6/14-111r6.html\" >HY_Features</a>", "md_doc_2references.html", [
-      [ "<a href=\"https://bmi-spec.readthedocs.io/en/latest/\" >BMI</a>", "md_doc_2references.html#autotoc_md224", null ],
+      [ "BMI", "md_doc_2references.html#autotoc_md224", null ],
       [ "Formulations", "md_doc_2references.html#autotoc_md225", null ],
       [ "HYMOD", "md_doc_2references.html#autotoc_md226", null ],
       [ "T-shirt", "md_doc_2references.html#autotoc_md227", null ],
@@ -333,7 +333,7 @@ var NAVTREE =
         [ "Keeping Forks Up to Date", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md251", [
           [ "A Rebase Strategy", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md252", null ],
           [ "Getting Remote Changes", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md253", [
-            [ "For <tt>production</tt> Too", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md254", null ]
+            [ "For production Too", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md254", null ]
           ] ],
           [ "Rebasing Development Branches", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md255", [
             [ "Interactive Rebasing", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md256", null ]
@@ -347,7 +347,7 @@ var NAVTREE =
     ] ],
     [ "Testing", "md_test_2_r_e_a_d_m_e.html", [
       [ "Testing Frameworks", "md_test_2_r_e_a_d_m_e.html#autotoc_md262", [
-        [ "<strong>Google Test</strong>", "md_test_2_r_e_a_d_m_e.html#autotoc_md263", [
+        [ "Google Test", "md_test_2_r_e_a_d_m_e.html#autotoc_md263", [
           [ "(Re)generating CMake Project Buildsystem", "md_test_2_r_e_a_d_m_e.html#autotoc_md264", null ]
         ] ]
       ] ],

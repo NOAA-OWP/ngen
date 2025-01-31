@@ -1,17 +1,17 @@
 <map id="geojson::FeatureBase" name="geojson::FeatureBase">
-<area shape="rect" id="Node000001" title="Represents an individual feature within a Geojson definition." alt="" coords="571,5,741,651"/>
-<area shape="rect" id="Node000002" href="$classgeojson_1_1_collection_feature.html" title=" " alt="" coords="5,699,171,1104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="560,388,472,446,373,519,274,604,227,651,185,700,173,717,168,714,181,697,223,648,270,601,370,514,469,441,557,384"/>
-<area shape="rect" id="Node000003" href="$classgeojson_1_1_line_string_feature.html" title=" " alt="" coords="195,829,362,974"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="564,442,470,563,377,700,341,766,311,830,306,828,336,763,372,697,465,560,560,438"/>
-<area shape="rect" id="Node000004" href="$classgeojson_1_1_multi_line_string_feature.html" title=" " alt="" coords="387,821,549,981"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="569,602,496,823,491,821,564,600"/>
-<area shape="rect" id="Node000005" href="$classgeojson_1_1_multi_point_feature.html" title=" " alt="" coords="573,829,739,974"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="659,666,659,829,653,829,653,666"/>
-<area shape="rect" id="Node000006" href="$classgeojson_1_1_multi_polygon_feature.html" title=" " alt="" coords="763,829,944,974"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="748,587,831,828,826,830,743,589"/>
-<area shape="rect" id="Node000007" href="$classgeojson_1_1_point_feature.html" title=" " alt="" coords="969,829,1106,974"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="753,427,858,552,911,623,958,697,991,763,1017,828,1012,830,987,765,954,700,906,626,853,555,749,431"/>
-<area shape="rect" id="Node000008" href="$classgeojson_1_1_polygon_feature.html" title="Represents a feature based around a polygon defining an area." alt="" coords="1130,839,1283,964"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="755,385,841,442,938,515,1035,601,1080,648,1121,697,1144,731,1163,768,1191,838,1186,840,1158,770,1139,734,1117,700,1076,651,1031,605,934,519,838,446,752,389"/>
+<area shape="rect" id="Node000001" title="Represents an individual feature within a Geojson definition." alt="" coords="566,5,736,661"/>
+<area shape="rect" id="Node000002" href="$classgeojson_1_1_collection_feature.html" title=" " alt="" coords="5,709,168,1121"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="554,395,467,453,369,527,270,614,224,661,182,711,170,728,166,725,178,708,220,658,266,610,365,523,464,449,551,391"/>
+<area shape="rect" id="Node000003" href="$classgeojson_1_1_line_string_feature.html" title=" " alt="" coords="192,842,357,989"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="558,449,464,572,372,711,336,777,306,843,301,840,331,775,367,708,460,569,554,446"/>
+<area shape="rect" id="Node000004" href="$classgeojson_1_1_multi_line_string_feature.html" title=" " alt="" coords="381,834,544,997"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="564,611,491,835,486,834,559,610"/>
+<area shape="rect" id="Node000005" href="$classgeojson_1_1_multi_point_feature.html" title=" " alt="" coords="569,842,732,989"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="653,676,653,842,648,842,648,676"/>
+<area shape="rect" id="Node000006" href="$classgeojson_1_1_multi_polygon_feature.html" title=" " alt="" coords="757,842,936,989"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="743,599,825,841,820,842,738,601"/>
+<area shape="rect" id="Node000007" href="$classgeojson_1_1_point_feature.html" title=" " alt="" coords="960,842,1096,989"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="747,435,851,561,903,633,950,708,983,775,1008,841,1003,842,978,777,946,711,899,636,847,564,743,438"/>
+<area shape="rect" id="Node000008" href="$classgeojson_1_1_polygon_feature.html" title="Represents a feature based around a polygon defining an area." alt="" coords="1120,852,1272,979"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="750,392,834,450,930,524,1025,611,1070,658,1110,708,1133,742,1152,779,1180,851,1175,853,1147,782,1128,745,1106,711,1066,662,1022,615,927,528,831,455,746,396"/>
 </map>

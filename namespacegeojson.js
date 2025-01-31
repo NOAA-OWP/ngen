@@ -25,7 +25,7 @@ var namespacegeojson =
     [ "multipolygon_t", "namespacegeojson.html#a2801a4aa3be7124530f8d2b8de576993", null ],
     [ "polygon_t", "namespacegeojson.html#a7e3a2b10f60ebd32d3fb01d1537350ff", null ],
     [ "PropertyMap", "namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34", null ],
-    [ "PropertyVariant", "namespacegeojson.html#a0e7f78cfe2859f6b67a1d8165e22a99c", null ],
+    [ "PropertyVariant", "namespacegeojson.html#a2e7c008a580b54565782a9484242bd91", null ],
     [ "three_dimensional_coordinates", "namespacegeojson.html#a24198ccd74c3e63a59b0ec353e126352", null ],
     [ "two_dimensional_coordinates", "namespacegeojson.html#a1c9774b2c97ea8d59d6d7255ef005c81", null ],
     [ "FeatureType", "namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0", [

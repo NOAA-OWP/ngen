@@ -1,7 +1,7 @@
 <map id="ngen::detail::dimension" name="ngen::detail::dimension">
-<area shape="rect" id="Node000001" title="Dimension Key." alt="" coords="5,263,148,548"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="42,135,111,200"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,200,79,246,74,246,74,200"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="19,5,134,85"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="79,100,79,135,74,135,74,100"/>
+<area shape="rect" id="Node000001" title="Dimension Key." alt="" coords="5,265,146,555"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="42,136,109,202"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,202,78,249,73,249,73,202"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="19,5,132,87"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="78,101,78,136,73,136,73,101"/>
 </map>

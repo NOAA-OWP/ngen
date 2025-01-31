@@ -1,5 +1,5 @@
 <map id="ngen::detail::visitors::mdarray_shape" name="ngen::detail::visitors::mdarray_shape">
-<area shape="rect" id="Node000001" title="mdarray visitor for retrieving the shape of the mdarray" alt="" coords="9,148,135,228"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,139,100"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,115,75,148,69,148,69,115"/>
+<area shape="rect" id="Node000001" title="mdarray visitor for retrieving the shape of the mdarray" alt="" coords="9,150,132,231"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,136,102"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,117,73,150,68,150,68,117"/>
 </map>

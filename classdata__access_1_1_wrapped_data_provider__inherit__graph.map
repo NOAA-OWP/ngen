@@ -1,9 +1,9 @@
 <map id="data_access::WrappedDataProvider" name="data_access::WrappedDataProvider">
-<area shape="rect" id="Node000001" title="Simple implementation that basically wraps another instance." alt="" coords="23,328,193,657"/>
-<area shape="rect" id="Node000003" href="$classdata__access_1_1_deferred_wrapped_provider.html" title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps." alt="" coords="11,705,205,960"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="111,673,111,706,105,706,105,673"/>
-<area shape="rect" id="Node000002" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="29,5,187,280"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,295,111,329,105,329,105,295"/>
-<area shape="rect" id="Node000004" href="$classdata__access_1_1_optional_wrapped_data_provider.html" title="Extension of DeferredWrappedProvider, where default values can be used instead of a backing provider." alt="" coords="5,1008,211,1388"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="111,975,111,1008,105,1008,105,975"/>
+<area shape="rect" id="Node000001" title="Simple implementation that basically wraps another instance." alt="" coords="24,333,193,668"/>
+<area shape="rect" id="Node000003" href="$classdata__access_1_1_deferred_wrapped_provider.html" title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps." alt="" coords="13,716,204,975"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="111,683,111,716,106,716,106,683"/>
+<area shape="rect" id="Node000002" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="29,5,188,285"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,300,111,333,106,333,106,300"/>
+<area shape="rect" id="Node000004" href="$classdata__access_1_1_optional_wrapped_data_provider.html" title="Extension of DeferredWrappedProvider, where default values can be used instead of a backing provider." alt="" coords="5,1023,211,1409"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="111,990,111,1023,106,1023,106,990"/>
 </map>

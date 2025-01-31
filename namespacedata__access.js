@@ -8,9 +8,9 @@ var namespacedata__access =
     [ "DeferredWrappedProvider", "classdata__access_1_1_deferred_wrapped_provider.html", "classdata__access_1_1_deferred_wrapped_provider" ],
     [ "OptionalWrappedDataProvider", "classdata__access_1_1_optional_wrapped_data_provider.html", "classdata__access_1_1_optional_wrapped_data_provider" ],
     [ "WrappedDataProvider", "classdata__access_1_1_wrapped_data_provider.html", "classdata__access_1_1_wrapped_data_provider" ],
-    [ "BaseProvider", "namespacedata__access.html#a03ca01610b07ed79db21a22f83a34ce9", null ],
-    [ "GenericDataProvider", "namespacedata__access.html#a77172f93a7ac996d03c43baab852ea2e", null ],
-    [ "Provider", "namespacedata__access.html#acdf1e18fc0cce2096da216e8c9062b04", null ],
+    [ "BaseProvider", "namespacedata__access.html#a5a786549d969ed24a18a609e171d829b", null ],
+    [ "GenericDataProvider", "namespacedata__access.html#a80e53ae1180ee33222d2a54436928c24", null ],
+    [ "Provider", "namespacedata__access.html#a207c23d60e9f295baf53aac7cbaadaf9", null ],
     [ "ReSampleMethod", "namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9", [
       [ "MEAN", "namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a728d7f64b9f2ae78bcbae00ce35ec276", null ],
       [ "SUM", "namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a52f32bc197123b0d24b5291d60af3186", null ],

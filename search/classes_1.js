@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['bmi_0',['bmi',['../struct_bmi.html',1,'Bmi'],['../classbmi_1_1_bmi.html',1,'bmi::Bmi']]],
+  ['bmi_0',['Bmi',['../struct_bmi.html',1,'Bmi'],['../classbmi_1_1_bmi.html',1,'bmi::Bmi']]],
   ['bmi_5fadapter_1',['Bmi_Adapter',['../classmodels_1_1bmi_1_1_bmi___adapter.html',1,'models::bmi']]],
   ['bmi_5fc_5fadapter_2',['Bmi_C_Adapter',['../classmodels_1_1bmi_1_1_bmi___c___adapter.html',1,'models::bmi']]],
   ['bmi_5fc_5fformulation_3',['Bmi_C_Formulation',['../classrealization_1_1_bmi___c___formulation.html',1,'realization']]],

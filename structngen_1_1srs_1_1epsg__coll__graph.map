@@ -1,9 +1,9 @@
 <map id="ngen::srs::epsg" name="ngen::srs::epsg">
-<area shape="rect" id="Node000001" title=" " alt="" coords="19,277,117,342"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,134,131,214"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,213,71,260,65,260,65,213"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="23,5,44,71"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="34,70,38,109,40,117,35,119,33,110,29,71"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="92,5,113,71"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="97,71,85,118,80,116,92,70"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="19,279,116,345"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,135,129,216"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,216,70,262,64,262,64,216"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="23,5,42,72"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="33,71,37,110,40,118,35,120,32,111,28,72"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="92,5,111,72"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="96,72,84,119,79,117,91,71"/>
 </map>

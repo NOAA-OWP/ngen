@@ -1,5 +1,5 @@
 <map id="ngen::geopackage::wkb::wgs84" name="ngen::geopackage::wkb::wgs84">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,133,152,353"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="9,5,148,85"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,100,81,133,76,133,76,100"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,135,150,358"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="9,5,146,87"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,102,80,135,75,135,75,102"/>
 </map>

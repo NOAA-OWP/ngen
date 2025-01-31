@@ -1,7 +1,7 @@
 <map id="Network_Test" name="Network_Test">
-<area shape="rect" id="Node000001" title=" " alt="" coords="83,5,202,211"/>
-<area shape="rect" id="Node000002" href="$class_network___test1.html" title=" " alt="" coords="5,259,133,364"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,225,91,260,86,258,98,223"/>
-<area shape="rect" id="Node000003" href="$class_network___test2.html" title=" " alt="" coords="157,269,277,354"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="188,223,204,268,199,270,183,225"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="83,5,203,214"/>
+<area shape="rect" id="Node000002" href="$class_network___test1.html" title=" " alt="" coords="5,262,133,369"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,229,91,263,86,261,98,227"/>
+<area shape="rect" id="Node000003" href="$class_network___test2.html" title=" " alt="" coords="157,272,278,359"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="188,227,205,272,200,274,183,229"/>
 </map>

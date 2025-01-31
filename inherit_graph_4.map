@@ -1,12 +1,12 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" title=" " alt="" coords="5,128,120,153"/>
-<area shape="rect" id="Node000001" href="$structadd__to__summed__nexus.html" title=" " alt="" coords="178,185,337,211"/>
+<area shape="rect" id="Node000001" href="$structadd__to__summed__nexus.html" title=" " alt="" coords="178,185,336,210"/>
 <area shape="poly" id="edge6_Node000000_Node000001" title=" " alt="" coords="122,156,168,170,209,182,208,187,167,175,121,161"/>
 <area shape="rect" id="Node000003" href="$structcompleted__time__step.html" title=" " alt="" coords="185,234,330,260"/>
 <area shape="poly" id="edge7_Node000000_Node000003" title=" " alt="" coords="89,162,125,193,169,221,195,231,193,236,166,225,122,197,86,166"/>
 <area shape="rect" id="Node000005" href="$structinvalid__downstream__request.html" title=" " alt="" coords="189,5,326,46"/>
 <area shape="poly" id="edge8_Node000000_Node000005" title=" " alt="" coords="87,115,123,84,166,55,190,44,192,49,169,60,126,89,90,119"/>
-<area shape="rect" id="Node000006" href="$structinvalid__time__step.html" title=" " alt="" coords="196,70,319,96"/>
+<area shape="rect" id="Node000006" href="$structinvalid__time__step.html" title=" " alt="" coords="196,70,318,96"/>
 <area shape="poly" id="edge9_Node000000_Node000006" title=" " alt="" coords="121,120,167,106,208,94,209,99,168,111,122,125"/>
 <area shape="rect" id="Node000009" href="$structrequest__from__empty__nexus.html" title=" " alt="" coords="188,120,327,161"/>
 <area shape="poly" id="edge10_Node000000_Node000009" title=" " alt="" coords="135,138,187,138,187,143,135,143"/>

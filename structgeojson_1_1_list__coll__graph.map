@@ -1,25 +1,25 @@
 <map id="geojson::List" name="geojson::List">
-<area shape="rect" id="Node000001" title="Struct wrapping a vector of JSONProperty representing a JSON list." alt="" coords="5,560,100,685"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="64,277,193,357"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,358,57,382,43,421,37,463,37,504,40,543,35,544,31,505,32,462,38,420,52,379,69,355"/>
-<area shape="rect" id="Node000003" href="$classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types" alt="" coords="148,420,296,825"/>
-<area shape="poly" id="edge11_Node000003_Node000002" title=" " alt="" coords="126,356,128,395,145,455,140,456,123,396,121,357"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="206,421,190,382,184,371,189,369,195,380,210,419"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="265,888,398,968"/>
-<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="212,824,228,863,253,889,249,893,224,865,207,826"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="282,284,351,349"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="309,350,292,404,287,403,304,348"/>
-<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="325,349,330,380,341,512,346,614,349,849,349,864,348,871,342,871,343,864,343,849,341,614,336,512,325,381,320,350"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="250,134,365,214"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="314,228,317,284,312,284,308,229"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="309,889,299,865,289,841,294,839,303,863,314,887"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="389,141,497,206"/>
-<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="449,221,451,331,447,482,440,567,429,654,413,741,391,826,378,859,360,890,356,887,373,857,386,824,408,740,424,654,435,566,442,482,446,331,443,221"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="433,5,454,71"/>
-<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="446,71,446,124,441,124,441,71"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="271,5,293,71"/>
-<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="294,46,394,128,391,132,291,50"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="103,141,205,206"/>
-<area shape="poly" id="edge13_Node000010_Node000009" title=" " alt="" coords="273,52,197,131,194,127,270,48"/>
-<area shape="poly" id="edge12_Node000002_Node000010" title=" " alt="" coords="148,222,138,277,133,276,143,221"/>
+<area shape="rect" id="Node000001" title="Struct wrapping a vector of JSONProperty representing a JSON list." alt="" coords="5,566,100,693"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="66,279,192,360"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,362,57,386,44,425,37,467,37,509,40,549,35,549,31,510,32,467,38,424,52,383,69,359"/>
+<area shape="rect" id="Node000003" href="$classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types" alt="" coords="149,423,295,835"/>
+<area shape="poly" id="edge11_Node000003_Node000002" title=" " alt="" coords="126,360,128,399,146,463,141,464,123,400,121,360"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="206,425,190,385,184,375,189,372,195,383,211,423"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="265,898,396,980"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="212,834,228,873,253,900,249,904,224,876,208,836"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="284,286,350,353"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="310,353,293,408,288,406,305,352"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="326,352,331,384,343,517,347,621,347,859,347,875,347,882,341,881,342,874,342,859,342,621,338,518,326,385,321,353"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="251,135,364,216"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="314,231,317,286,312,287,308,231"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="308,900,297,875,288,852,293,850,302,873,313,897"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="388,142,494,208"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="446,224,449,334,446,488,439,574,428,662,412,751,390,836,377,870,360,900,355,897,372,867,385,834,407,750,423,662,434,573,440,488,444,334,441,224"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="431,5,451,72"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="444,72,444,125,438,125,438,72"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="272,5,290,72"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="292,45,391,129,388,133,288,49"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="104,142,204,208"/>
+<area shape="poly" id="edge13_Node000010_Node000009" title=" " alt="" coords="274,51,198,132,194,128,270,48"/>
+<area shape="poly" id="edge12_Node000002_Node000010" title=" " alt="" coords="148,224,138,280,133,279,143,223"/>
 </map>

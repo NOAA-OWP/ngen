@@ -1,7 +1,7 @@
 <map id="data_access::WrappedDataProvider" name="data_access::WrappedDataProvider">
-<area shape="rect" id="Node000001" title="Simple implementation that basically wraps another instance." alt="" coords="95,358,266,687"/>
-<area shape="rect" id="Node000002" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,13,164,287"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,301,141,357,136,359,121,302"/>
-<area shape="rect" id="Node000003" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="189,5,367,295"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="243,295,230,342,225,341,238,294"/>
+<area shape="rect" id="Node000001" title="Simple implementation that basically wraps another instance." alt="" coords="96,363,265,698"/>
+<area shape="rect" id="Node000002" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,13,164,292"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,306,141,362,136,364,121,307"/>
+<area shape="rect" id="Node000003" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="188,5,365,300"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="242,300,230,347,225,346,237,299"/>
 </map>

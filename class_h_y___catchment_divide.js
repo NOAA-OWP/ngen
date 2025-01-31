@@ -1,7 +1,7 @@
 var class_h_y___catchment_divide =
 [
-    [ "linestring_t", "class_h_y___catchment_divide.html#a29d2ccf7d6a52b81ab51abc582a771c7", null ],
-    [ "point_t", "class_h_y___catchment_divide.html#a09ebd0dca374f687900cad67d714563d", null ],
+    [ "linestring_t", "class_h_y___catchment_divide.html#a223a209c2f6ec04514a139e640d0a4fe", null ],
+    [ "point_t", "class_h_y___catchment_divide.html#a0ab00c83535749844633ab7cd9551b65", null ],
     [ "HY_CatchmentDivide", "class_h_y___catchment_divide.html#ae7950d7e55019bd66824b225ec10b41f", null ],
     [ "~HY_CatchmentDivide", "class_h_y___catchment_divide.html#a45f9ecac9408609ba7995a76e5b7da22", null ],
     [ "get_catchment_id", "class_h_y___catchment_divide.html#a3423d3533d1ad6c3696aee26664ee63e", null ],
