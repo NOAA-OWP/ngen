@@ -17,6 +17,7 @@ target_link_libraries(forcing PUBLIC
         NGen::core
         Boost::boost                # Headers-only Boost
         NGen::config_header
+        NGen::logging
         Threads::Threads
 )
 

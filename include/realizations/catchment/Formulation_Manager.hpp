@@ -21,6 +21,7 @@
 #include "features/Features.hpp"
 #include "Formulation_Constructors.hpp"
 #include "LayerData.hpp"
+#include "logging_utils.h"
 #include "realizations/config/time.hpp"
 #include "realizations/config/routing.hpp"
 #include "realizations/config/config.hpp"
@@ -130,8 +131,8 @@ namespace realization {
                     using_routing = true;
                 #else
                     using_routing = false;
-                    std::cerr<<"WARNING: Formulation Manager found routing configuration"
-                             <<", but routing support isn't enabled. No routing will occur."<<std::endl;
+                    logging::warning((std::string("WARNING: Formulation Manager found routing configuration")
+                             +", but routing support isn't enabled. No routing will occur.\n").c_str());
                 #endif //NGEN_WITH_ROUTING
                  }
 
@@ -146,9 +147,9 @@ namespace realization {
                       if( catchment_index == -1 )
                       {
                           #ifndef NGEN_QUIET
-                          std::cerr<<"WARNING Formulation_Manager::read: Cannot create formulation for catchment "
-                                  <<catchment_config.first
-                                  <<" that isn't identified in the hydrofabric or requested subset"<<std::endl;
+                          logging::warning((std::string("WARNING Formulation_Manager::read: Cannot create formulation for catchment ")
+                                  +catchment_config.first
+                                  +" that isn't identified in the hydrofabric or requested subset\n").c_str());
                           #endif
                           continue;
                       }
@@ -579,15 +580,14 @@ namespace realization {
                             case geojson::PropertyType::List:
                             case geojson::PropertyType::Object:
                             default:
-                                std::cerr << "WARNING: property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
-                                          << "Must be one of: Natural (int), Real (double), Boolean, or String" << '\n';
+                                logging::error((std::string("WARNING: property type ") + std::to_string(static_cast<int>(catchment_attribute.get_type())) + " not allowed as model parameter. " + "Must be one of: Natural (int), Real (double), Boolean, or String\n").c_str());
                                 break;
                         }
                     } else {
-                        std::cerr << "WARNING Failed to parse external parameter: catchment `"
-                                  << catchment_feature->get_id()
-                                  << "` does not contain the property `"
-                                  << param_name << "`\n";
+                        logging::error((std::string("WARNING Failed to parse external parameter: catchment `")
+                                  + catchment_feature->get_id()
+                                  + "` does not contain the property `"
+                                  + param_name + "`\n").c_str());
                     }
                 }
 
@@ -648,8 +648,7 @@ namespace realization {
                             default:
                                 // TODO: Should list/object values be passed to model parameters?
                                 //       Typically, feature properties *should* be scalars.
-                                std::cerr << "WARNING: property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
-                                          << "Must be one of: Natural (int), Real (double), Boolean, or String" << '\n';
+                                logging::error((std::string("WARNING: property type ") + std::to_string(static_cast<int>(catchment_attribute.get_type())) + " not allowed as model parameter. " + "Must be one of: Natural (int), Real (double), Boolean, or String\n").c_str());
                                 break;
                         }
                     }

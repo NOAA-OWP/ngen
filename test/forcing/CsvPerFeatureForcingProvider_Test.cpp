@@ -92,7 +92,7 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingDataRead)
     int current_day_of_year;
     int i = 65;
     time_t t = begin+(i*3600);
-    std::cerr << std::ctime(&t) << std::endl;
+    logging::critical((std::ctime(&t) + std::string("\n")).c_str());
 
     current_precipitation = Forcing_Object->get_value(CatchmentAggrDataSelector("", CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, begin+(i*3600), 3600, ""), data_access::SUM);
 
@@ -125,7 +125,7 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingDataReadAltFormat)
     int current_day_of_year;
     int i = 8;
     time_t t = begin+(i*3600);
-    std::cerr << std::ctime(&t) << std::endl;
+    logging::critical((std::ctime(&t) + std::string("\n")).c_str());
 
     current_precipitation = Forcing_Object_2->get_value(CatchmentAggrDataSelector("", CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, begin+(i*3600), 3600, ""), data_access::SUM);
 
@@ -154,7 +154,7 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingDataUnitConversion)
     int current_day_of_year;
     int i = 65;
     time_t t = begin+(i*3600);
-    std::cerr << std::ctime(&t) << std::endl;
+    logging::critical((std::ctime(&t) + std::string("\n")).c_str());
 
     current_precipitation = Forcing_Object->get_value(CatchmentAggrDataSelector("", CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, begin+(i*3600), 3600, ""), data_access::SUM);
 
