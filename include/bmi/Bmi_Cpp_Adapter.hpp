@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include "Logger.hpp"
 
 #include "bmi.hpp"
 #include "AbstractCLibBmiAdapter.hpp"
@@ -325,12 +326,16 @@ namespace models {
                     if (model_create_fname.empty()) {
                         this->init_exception_msg =
                                 "Can't init BMI C++ model; empty name given for module's create function.";
-                        throw std::runtime_error(this->init_exception_msg);
+                        std::string throw_msg; throw_msg.assign(this->init_exception_msg);
+                        LOG(throw_msg, LogLevel::ERROR);
+                        throw std::runtime_error(throw_msg);
                     }
                     if (model_destroy_fname.empty()){
                         this->init_exception_msg =
                                 "Can't init BMI C++ model; empty name given for module's destroy function.";
-                        throw std::runtime_error(this->init_exception_msg);
+                        std::string throw_msg; throw_msg.assign(this->init_exception_msg);
+                        LOG(throw_msg, LogLevel::ERROR);
+                        throw std::runtime_error(throw_msg);
                     }
                     dynamic_library_load();
                 }

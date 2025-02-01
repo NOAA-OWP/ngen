@@ -1,4 +1,5 @@
 #include <NGenConfig.h>
+#include "Logger.hpp"
 
 #if NGEN_WITH_PYTHON
 
@@ -15,7 +16,7 @@ Bmi_Py_Formulation::Bmi_Py_Formulation(std::string id, std::shared_ptr<data_acce
 std::shared_ptr<Bmi_Adapter> Bmi_Py_Formulation::construct_model(const geojson::PropertyMap &properties) {
     auto python_type_name_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME);
     if (python_type_name_iter == properties.end()) {
-        throw std::runtime_error("BMI Python formulation requires Python model class type, but none given in config");
+        Logger::logMsgAndThrowError("BMI Python formulation requires Python model class type, but none given in config");
     }
     //Load a custom module path, if provided
     auto python_module_path_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_MODULE_PATH);
@@ -96,8 +97,10 @@ double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const std::
         }
     }
 
-    throw std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
+    Logger::logMsgAndThrowError("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
     " as double: no logic for converting variable type " + val_type);
+
+    return 1.0;
 }
 
 bool Bmi_Py_Formulation::is_bmi_input_variable(const std::string &var_name) {

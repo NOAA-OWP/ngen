@@ -1,4 +1,5 @@
 #include "geopackage.hpp"
+#include "Logger.hpp"
 
 // Points don't have a bounding box, so we can say its bbox is itself    
 inline void build_point_bbox(const geojson::geometry& geom, std::vector<double>& bbox)
@@ -76,6 +77,8 @@ geojson::Feature ngen::geopackage::build_feature(
                 bounding_box
             );
         default:
-            throw std::runtime_error("invalid WKB feature type. Received: " + std::to_string(geometry.which() + 1));
+            std::string throw_msg; throw_msg.assign("invalid WKB feature type. Received: " + std::to_string(geometry.which() + 1));
+            LOG(throw_msg, LogLevel::ERROR);
+            throw std::runtime_error(throw_msg);
     }
 }

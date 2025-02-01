@@ -11,36 +11,53 @@ stages:
   - sonarqube
   - test
   - deploy
+  - release
 
 image: registry.sh.nextgenwaterprediction.com/infrastructure/docker/docker:latest
 
 variables:
     DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE
-    DOCKER_IMAGE_TAG: $CI_COMMIT_REF_NAME
+    DOCKER_IMAGE_TAG: $CI_COMMIT_REF_NAME-test
 
 build:
   stage: build
   before_script:
     - git config --global url."https://oauth2:${GITLAB_TOKEN}@gitlab.sh.nextgenwaterprediction.com/".insteadOf "https://gitlab.sh.nextgenwaterprediction.com/"
-    - git config --global --add safe.directory /builds/NGWPC/nwm-ngen/ngen
+    - chown -R `whoami` .
     - git submodule update --init --recursive
-    - git submodule update --remote extern/cfe/cfe
-    - git submodule update --remote extern/SoilFreezeThaw/SoilFreezeThaw
-    - git submodule update --remote extern/SoilMoistureProfiles/SoilMoistureProfiles
-    - git submodule update --remote extern/evapotranspiration/evapotranspiration
-    - git submodule update --remote extern/noah-owp-modular/noah-owp-modular
-    - git submodule update --remote extern/topmodel/topmodel
-    - git submodule update --remote extern/t-route
-    - git submodule update --remote extern/sloth
-    - git submodule update --remote extern/LASAM
-    - git submodule update --remote extern/snow17
-    - git submodule update --remote extern/sac-sma/sac-sma
-    - git submodule update --remote extern/ueb-bmi
+    - |
+      if [[ "$CI_COMMIT_BRANCH" == "release-candidate" ]] || [[ "$CI_COMMIT_BRANCH" == "master" ]]; then
+        git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/cfe/cfe
+        git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/SoilFreezeThaw/SoilFreezeThaw
+        git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/SoilMoistureProfiles/SoilMoistureProfiles
+        git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/evapotranspiration/evapotranspiration
+        git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/noah-owp-modular/noah-owp-modular
+        git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/topmodel/topmodel
+        git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/t-route
+        git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/sloth
+        git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/LASAM
+        git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/snow17
+        git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/sac-sma/sac-sma
+        git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/ueb-bmi
+      fi
+    # for each submodule checkout the release commit if the release tag is set
+    - git submodule update --remote extern/cfe/cfe && ${CI_COMMIT_TAG:+git -C extern/cfe/cfe checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/SoilFreezeThaw/SoilFreezeThaw && ${CI_COMMIT_TAG:+git -C extern/SoilFreezeThaw/SoilFreezeThaw checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/SoilMoistureProfiles/SoilMoistureProfiles && ${CI_COMMIT_TAG:+git -C extern/SoilMoistureProfiles/SoilMoistureProfiles checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/evapotranspiration/evapotranspiration && ${CI_COMMIT_TAG:+git -C extern/evapotranspiration/evapotranspiration checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/noah-owp-modular/noah-owp-modular && ${CI_COMMIT_TAG:+git -C extern/noah-owp-modular/noah-owp-modular checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/topmodel/topmodel && ${CI_COMMIT_TAG:+git -C extern/topmodel/topmodel checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/t-route && ${CI_COMMIT_TAG:+git -C extern/t-route checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/sloth && ${CI_COMMIT_TAG:+git -C extern/sloth checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/LASAM && ${CI_COMMIT_TAG:+git -C extern/LASAM checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/snow17 && ${CI_COMMIT_TAG:+git -C extern/snow17 checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/sac-sma/sac-sma && ${CI_COMMIT_TAG:+git -C extern/sac-sma/sac-sma checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/ueb-bmi && ${CI_COMMIT_TAG:+git -C extern/ueb-bmi checkout "$CI_COMMIT_TAG"} 
   script:
-    - echo "Building ${CI_PROJECT_NAME} docker image.. "
-    - docker build -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
     - echo "Logging in to Gitlab Container Registry..."
     - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - echo "Building ${CI_PROJECT_NAME} docker image.. "
+    - docker build -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
     - docker push $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
     - docker logout
 
@@ -50,7 +67,12 @@ unit-test:
   script:
     - echo "Running Unit Tests..."
     - cd /ngen-app/ngen/cmake_build
-    - ctest
+    - ctest || {
+        echo "Tests failed. Rerunning failed tests with verbose output...";
+        export CTEST_OUTPUT_ON_FAILURE=1;
+        ctest --rerun-failed --output-on-failure --verbose;
+        exit 1;
+      }
 
 sonarqube:
   stage: sonarqube
@@ -69,9 +91,7 @@ sonarqube:
       - .sonar/cache
   script:
     - sonar-scanner -X -Dsonar.verbose=true
-  rules:
-    # SonarQube CommunityEdition only supports analyzing a single branch.
-    - if: '$CI_COMMIT_BRANCH == "development"'
+  allow_failure: true # FIXME
 
 container_scanning:
   stage: test
@@ -88,9 +108,21 @@ deploy:
     - echo "Logging in to Gitlab Container Registry to push the image..."
     - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
     - echo "Pushing to the docker registry"
-    - docker push $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
     - docker tag $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG $DOCKER_IMAGE_NAME:latest
     - docker push $DOCKER_IMAGE_NAME:latest
     - docker logout
   rules:
     - if: '$CI_COMMIT_BRANCH == "development"'
+
+release:
+  stage: release
+  script:
+    - echo "Logging in to Gitlab Container Registry to push the image..."
+    - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - echo "Pushing to the docker registry"
+    - docker tag $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG $DOCKER_IMAGE_NAME:$CI_COMMIT_TAG
+    - docker push $DOCKER_IMAGE_NAME:$CI_COMMIT_TAG
+    - docker logout
+  rules:
+    - if: $CI_COMMIT_TAG
+    

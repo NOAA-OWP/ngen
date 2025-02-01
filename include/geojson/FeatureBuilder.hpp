@@ -421,7 +421,9 @@ namespace geojson {
                     }
                 }
                 else {
-                    std::cout << "No features were found" << std::endl;
+                    std::stringstream ss;
+                    ss << "No features were found" << std::endl;
+                    LOG(ss.str(), LogLevel::WARN); ss.str("");
                 }
             }
             else {

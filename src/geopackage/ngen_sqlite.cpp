@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <algorithm>
+#include "Logger.hpp"
 
 namespace ngen {
 namespace sqlite {
@@ -134,10 +135,13 @@ void database::iterator::handle_get_index_(int col) const
     }
 
     if (col < 0 || col >= ncol_) {
-        throw std::out_of_range(
+        std::string throw_msg; throw_msg.assign(
             "column " + std::to_string(col) + " out of range of "
                       + std::to_string(ncol_) + " columns"
         );
+        LOG(throw_msg, LogLevel::ERROR);
+        throw std::out_of_range(throw_msg);
+
     }
 }
 

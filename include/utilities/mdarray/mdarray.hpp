@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <boost/core/span.hpp>
+#include "Logger.hpp"
 
 namespace ngen {
 
@@ -218,12 +219,15 @@ class mdarray
         // such that if an mdarray has shape {2, 2}, the index {2, 0}
         // is equivalent to {0, 1}.
         for (size_type i = 0; i < this->m_shape.size(); i++) {
-            if (n[i] >= this->m_shape[i])
-                throw std::out_of_range(
+            if (n[i] >= this->m_shape[i]) {
+                std::string throw_msg; throw_msg.assign(
                     "index " + std::to_string(n[i]) +
                     " must be less than dimension size " +
                     std::to_string(this->m_shape[i])
                 );
+                LOG(throw_msg, LogLevel::ERROR);
+                throw std::out_of_range(throw_msg);
+            };
         }
     }
     

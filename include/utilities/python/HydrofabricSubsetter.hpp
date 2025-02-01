@@ -1,5 +1,6 @@
 #ifndef NGEN_HYDROFABRICSUBSETTER_HPP
 #define NGEN_HYDROFABRICSUBSETTER_HPP
+#include "Logger.hpp"
 
 #include <NGenConfig.h>
 
@@ -30,13 +31,17 @@ namespace utils {
             {
 
                 if (!FileChecker::file_is_readable(catchmentDataFile)) {
-                    throw std::runtime_error(
+                    std::string throw_msg; throw_msg.assign(
                             "Cannot subdivided hydrofabric files: base catchment file " + catchmentDataFile +
                             " does not exist");
+                    LOG(throw_msg, LogLevel::ERROR);
+                    throw std::runtime_error(throw_msg);
                 }
                 if (!FileChecker::file_is_readable(nexusDataFile)) {
-                    throw std::runtime_error(
+                    std::string throw_msg; throw_msg.assign(
                             "Cannot subdivided hydrofabric files: base nexus file " + nexusDataFile + " does not exist");
+                    LOG(throw_msg, LogLevel::ERROR);
+                    throw std::runtime_error(throw_msg);
                 }
                 #if NGEN_WITH_PYTHON
                 py::object Cli_Class = InterpreterUtil::getPyModule("dmod.subsetservice").attr("Cli");
@@ -57,7 +62,9 @@ namespace utils {
                     this->crosswalkDataFile = py::str(py_cli.attr("crosswalk"));
                 }
                 #else
-                throw std::runtime_error("Cannot use Python hydrofabric subsetter tool unless Python support is active");
+                std::string throw_msg; throw_msg.assign("Cannot use Python hydrofabric subsetter tool unless Python support is active");
+                LOG(throw_msg, LogLevel::ERROR);
+                throw std::runtime_error(throw_msg);
                 #endif
 
             }
@@ -96,7 +103,9 @@ namespace utils {
                     result = bool_result;
                 }
                 catch (const std::exception &e) {
-                    std::cerr << "Failed to subdivide hydrofabric: " << e.what() << std::endl;
+                    std::stringstream ss;
+                    ss  << "Failed to subdivide hydrofabric: " << e.what() << std::endl;
+                    LOG(ss.str(), LogLevel::ERROR); ss.str("");
                     result = false;
                 }
                 return result;
@@ -109,7 +118,9 @@ namespace utils {
                     result = bool_result;
                 }
                 catch (const std::exception &e) {
-                    std::cerr << "Failed to subdivide hydrofabric for index " << index << ": " << e.what() << std::endl;
+                    std::stringstream ss;
+                    ss  << "Failed to subdivide hydrofabric for index " << index << ": " << e.what() << std::endl;
+                    LOG(ss.str(), LogLevel::ERROR); ss.str("");
                     result = false;
                 }
                 return result;

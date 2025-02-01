@@ -8,12 +8,14 @@
 #include <ctime>
 #include <sstream>
 
+#define LOG (Logger::GetInstance())->Log
+
 enum class LogLevel {
 	NONE = 0,
-	INFO = 1,
-	ERROR = 2,
-	WARN = 3,
-	DEBUG = 4,
+	DEBUG = 1,
+	INFO = 2,
+	ERROR = 3,
+	WARN = 4,
 	FATAL = 5,
 };
 
@@ -45,7 +47,12 @@ class Logger {
 	void Log(std::string message, LogLevel messageLevel);
 	LogLevel GetLogLevel(const std::string& logLevel);
 	std::string createTimestamp();
+	std::string createDateString();
 	std::string getLogFilePath();
+	static __always_inline void logMsgAndThrowError(const std::string& message) {
+		(Logger::GetInstance())->Log(message, LogLevel::ERROR);
+		throw std::runtime_error(message);
+	};
 
   private:
 	LogLevel logLevel;

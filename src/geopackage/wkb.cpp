@@ -1,5 +1,6 @@
 #include "wkb.hpp"
 #include "proj.hpp"
+#include "Logger.hpp"
 
 namespace ngen {
 namespace geopackage {
@@ -18,7 +19,7 @@ enum wkb_geom_t {
 void throw_if_not_type(uint32_t given, wkb_geom_t expected)
 {
     if (given != expected) {
-        throw std::runtime_error(
+        Logger::logMsgAndThrowError(
             "expected WKB geometry type " +
             std::to_string(expected) +
             ", but received " +
@@ -163,7 +164,7 @@ typename wkb::multipolygon_t wkb::read_multipolygon(const boost::span<const uint
 typename wkb::geometry wkb::read(const boost::span<const uint8_t> buffer)
 {
     if (buffer.size() < 5) {
-        throw std::runtime_error("buffer reached end before encountering WKB");
+        Logger::logMsgAndThrowError("buffer reached end before encountering WKB");
     }
 
     int index = 0;
@@ -187,10 +188,13 @@ typename wkb::geometry wkb::read(const boost::span<const uint8_t> buffer)
         case wkb_geom_t::multipolygon:
             return read_multipolygon(buffer, index, order);
         default:
-            throw std::runtime_error(
+            std::string throw_msg; throw_msg.assign(
                 "this reader only implements OGC geometry types 1-6, "
                 "but received type " + std::to_string(type)
             );
+            LOG(throw_msg, LogLevel::ERROR);
+            throw std::runtime_error(throw_msg);
+
     }
 }
 

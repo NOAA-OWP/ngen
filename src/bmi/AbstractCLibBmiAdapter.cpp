@@ -5,6 +5,7 @@
 #include "utilities/logging_utils.h"
 
 #include <dlfcn.h>
+#include "Logger.hpp"
 
 namespace models {
 namespace bmi {
@@ -36,7 +37,7 @@ void AbstractCLibBmiAdapter::dynamic_library_load() {
     if (bmi_registration_function.empty()) {
         this->init_exception_msg = "Can't init " + this->model_name +
                                    "; empty name given for library's registration function.";
-        throw std::runtime_error(this->init_exception_msg);
+        Logger::logMsgAndThrowError(this->init_exception_msg);
     }
     if (dyn_lib_handle != nullptr) {
         std::string message = "AbstractCLibBmiAdapter::dynamic_library_load: ignoring attempt to reload dynamic shared library '" + bmi_lib_file + "' for " + this->model_name;
@@ -53,7 +54,7 @@ void AbstractCLibBmiAdapter::dynamic_library_load() {
         if (bmi_lib_file.length() == 0) {
             this->init_exception_msg =
                 "Can't init " + this->model_name + "; library file path is empty";
-            throw std::runtime_error(this->init_exception_msg);
+            Logger::logMsgAndThrowError(this->init_exception_msg);
         }
         if (bmi_lib_file.substr(idx) == ".so") {
             alt_bmi_lib_file = bmi_lib_file.substr(0, idx) + ".dylib";
@@ -76,7 +77,7 @@ void AbstractCLibBmiAdapter::dynamic_library_load() {
         } else {
             this->init_exception_msg = "Can't init " + this->model_name +
                                        "; unreadable shared library file '" + bmi_lib_file + "'";
-            throw std::runtime_error(this->init_exception_msg);
+            Logger::logMsgAndThrowError(this->init_exception_msg);
         }
     }
 
@@ -101,7 +102,7 @@ void* AbstractCLibBmiAdapter::dynamic_load_symbol(
     bool is_null_valid
 ) {
     if (dyn_lib_handle == nullptr) {
-        throw std::runtime_error(
+        Logger::logMsgAndThrowError(
             "Cannot load symbol '" + symbol_name +
             "' without handle to shared library (bmi_lib_file = '" + bmi_lib_file + "')"
         );

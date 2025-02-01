@@ -2,6 +2,7 @@
 #include <cstring>
 #include <string>
 #include "logging_utils.h"
+#include "Logger.hpp"
 
 namespace logging {
 
@@ -13,6 +14,7 @@ extern "C" {
     {
         #ifndef NGEN_QUIET
             std::cerr<<"DEBUG: " << std::string(msg);
+            LOG(msg, LogLevel::DEBUG);
         #endif
     }
 
@@ -20,6 +22,7 @@ extern "C" {
     {
         #ifndef NGEN_QUIET
             std::cerr<<"INFO: " << std::string(msg);
+            LOG(msg, LogLevel::INFO);
         #endif
     }
 
@@ -27,17 +30,20 @@ extern "C" {
     {
         #ifndef NGEN_QUIET
             std::cerr<<"WARNING: " <<std::string(msg);
+            LOG(msg, LogLevel::WARN);
         #endif
     }
 
     void error(const char* msg)
     {
         std::cerr<<"ERROR: " <<std::string(msg);
+        LOG(msg, LogLevel::ERROR);
     }
 
     void critical(const char* msg)
     {
         std::cerr<<"CRITICAL: " <<std::string(msg);
+        LOG(msg, LogLevel::FATAL);
     }
 
 #ifdef     __cplusplus

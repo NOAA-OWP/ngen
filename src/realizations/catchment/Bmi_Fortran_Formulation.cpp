@@ -1,4 +1,5 @@
 #include <NGenConfig.h>
+#include "Logger.hpp"
 
 #if NGEN_WITH_BMI_FORTRAN
 
@@ -27,7 +28,7 @@ Bmi_Fortran_Formulation::Bmi_Fortran_Formulation(std::string id, std::shared_ptr
 std::shared_ptr<Bmi_Adapter> Bmi_Fortran_Formulation::construct_model(const geojson::PropertyMap& properties) {
     auto library_file_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE);
     if (library_file_iter == properties.end()) {
-        throw std::runtime_error("BMI C formulation requires path to library file, but none provided in config");
+        Logger::logMsgAndThrowError("BMI C formulation requires path to library file, but none provided in config");
     }
     std::string lib_file = library_file_iter->second.as_string();
     auto reg_func_itr = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__REGISTRATION_FUNC);
@@ -86,8 +87,10 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
     if (type == "unsigned long long" || type == "unsigned long long int")
         return (double) (models::bmi::GetValue<unsigned long long>(*model, var_name))[index];
 
-    throw std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
+    Logger::logMsgAndThrowError("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
     " as double: no logic for converting variable type " + type);
+    
+    return 1.0;
 }
 
 #endif // NGEN_WITH_BMI_FORTRAN

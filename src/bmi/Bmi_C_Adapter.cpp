@@ -2,6 +2,7 @@
 
 #include <exception>
 #include <utility>
+#include "Logger.hpp"
 
 using namespace models::bmi;
 
@@ -119,7 +120,7 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &adapter) : model_name(adapter.model_
 std::string Bmi_C_Adapter::GetComponentName() {
     char component_name[BMI_MAX_COMPONENT_NAME];
     if (bmi_model->get_component_name(bmi_model.get(), component_name) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get model component name.");
+        Logger::logMsgAndThrowError(model_name + " failed to get model component name.");
     }
     return {component_name};
 }
@@ -128,7 +129,7 @@ double Bmi_C_Adapter::GetCurrentTime() {
     double current_time;
     int result = bmi_model->get_current_time(bmi_model.get(), &current_time);
     if (result != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get current model time.");
+        Logger::logMsgAndThrowError(model_name + " failed to get current model time.");
     }
     return current_time;
 }
@@ -137,7 +138,7 @@ double Bmi_C_Adapter::GetEndTime() {
     double end_time;
     int result = bmi_model->get_end_time(bmi_model.get(), &end_time);
     if (result != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get model end time.");
+        Logger::logMsgAndThrowError(model_name + " failed to get model end time.");
     }
     return end_time;
 }
@@ -170,7 +171,7 @@ double Bmi_C_Adapter::GetStartTime() {
     double start_time;
     int result = bmi_model->get_start_time(bmi_model.get(), &start_time);
     if (result != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get model start time.");
+        Logger::logMsgAndThrowError(model_name + " failed to get model start time.");
     }
     return start_time;
 }
@@ -179,7 +180,7 @@ std::string Bmi_C_Adapter::GetTimeUnits() {
     char time_units_cstr[BMI_MAX_UNITS_NAME];
     int result = bmi_model->get_time_units(bmi_model.get(), time_units_cstr);
     if (result != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to read time units from model.");
+        Logger::logMsgAndThrowError(model_name + " failed to read time units from model.");
     }
     return std::string(time_units_cstr);
 }
@@ -194,7 +195,7 @@ int Bmi_C_Adapter::GetVarItemsize(std::string name) {
     int size;
     int success = bmi_model->get_var_itemsize(bmi_model.get(), name.c_str(), &size);
     if (success != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get variable item size for " + name + ".");
+        Logger::logMsgAndThrowError(model_name + " failed to get variable item size for " + name + ".");
     }
     return size;
 }
@@ -203,7 +204,7 @@ int Bmi_C_Adapter::GetVarNbytes(std::string name) {
     int size;
     int success = bmi_model->get_var_nbytes(bmi_model.get(), name.c_str(), &size);
     if (success != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get variable array size (i.e., nbytes) for " + name + ".");
+        Logger::logMsgAndThrowError(model_name + " failed to get variable array size (i.e., nbytes) for " + name + ".");
     }
     return size;
 }
@@ -212,7 +213,7 @@ std::string Bmi_C_Adapter::GetVarType(std::string name) {
     char type_c_str[BMI_MAX_TYPE_NAME];
     int success = bmi_model->get_var_type(bmi_model.get(), name.c_str(), type_c_str);
     if (success != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get variable type for " + name + ".");
+        Logger::logMsgAndThrowError(model_name + " failed to get variable type for " + name + ".");
     }
     return std::string(type_c_str);
 }
@@ -221,7 +222,7 @@ std::string Bmi_C_Adapter::GetVarUnits(std::string name) {
     char units_c_str[BMI_MAX_UNITS_NAME];
     int success = bmi_model->get_var_units(bmi_model.get(), name.c_str(), units_c_str);
     if (success != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get variable units for " + name + ".");
+        Logger::logMsgAndThrowError(model_name + " failed to get variable units for " + name + ".");
     }
     return std::string(units_c_str);
 }
@@ -230,7 +231,7 @@ std::string Bmi_C_Adapter::GetVarLocation(std::string name) {
     char location_c_str[BMI_MAX_LOCATION_NAME];
     int success = bmi_model->get_var_location(bmi_model.get(), name.c_str(), location_c_str);
     if (success != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get variable location for " + name + ".");
+        Logger::logMsgAndThrowError(model_name + " failed to get variable location for " + name + ".");
     }
     return std::string(location_c_str);
 }
@@ -239,7 +240,7 @@ int Bmi_C_Adapter::GetVarGrid(std::string name) {
     int grid;
     int success = bmi_model->get_var_grid(bmi_model.get(), name.c_str(), &grid);
     if (success != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get variable grid for " + name + ".");
+        Logger::logMsgAndThrowError(model_name + " failed to get variable grid for " + name + ".");
     }
     return grid;
 }
@@ -248,7 +249,7 @@ std::string Bmi_C_Adapter::GetGridType(int grid_id) {
     char gridtype_c_str[BMI_MAX_TYPE_NAME];
     int success = bmi_model->get_grid_type(bmi_model.get(), grid_id, gridtype_c_str);
     if (success != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid type for grid ID " + std::to_string(grid_id) + ".");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid type for grid ID " + std::to_string(grid_id) + ".");
     }
     return std::string(gridtype_c_str);
 }
@@ -257,7 +258,7 @@ int Bmi_C_Adapter::GetGridRank(int grid_id) {
     int gridrank;
     int success = bmi_model->get_grid_rank(bmi_model.get(), grid_id, &gridrank);
     if (success != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid rank for grid ID " + std::to_string(grid_id) + ".");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid rank for grid ID " + std::to_string(grid_id) + ".");
     }
     return gridrank;
 }
@@ -266,7 +267,7 @@ int Bmi_C_Adapter::GetGridSize(int grid_id) {
     int gridsize;
     int success = bmi_model->get_grid_size(bmi_model.get(), grid_id, &gridsize);
     if (success != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid size for grid ID " + std::to_string(grid_id) + ".");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid size for grid ID " + std::to_string(grid_id) + ".");
     }
     return gridsize;
 }
@@ -281,7 +282,7 @@ std::shared_ptr<std::vector<std::string>> Bmi_C_Adapter::inner_get_variable_name
         variableCount = (is_input_variables) ? inner_get_input_item_count() : inner_get_output_item_count();
     }
     catch (const std::exception &e) {
-        throw std::runtime_error(model_name + " failed to count of " + varType + " variable names array.");
+        Logger::logMsgAndThrowError(model_name + " failed to count of " + varType + " variable names array.");
     }
 
     // With variable count now obtained, create the vector
@@ -304,7 +305,7 @@ std::shared_ptr<std::vector<std::string>> Bmi_C_Adapter::inner_get_variable_name
         names_result = bmi_model->get_output_var_names(bmi_model.get(), names_array.data());
     }
     if (names_result != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get array of output variables names.");
+        Logger::logMsgAndThrowError(model_name + " failed to get array of output variables names.");
     }
 
     // Then convert from array of C strings to vector of strings, freeing the allocated space as we go
@@ -368,44 +369,44 @@ void Bmi_C_Adapter::UpdateUntil(double time) {
 
 void Bmi_C_Adapter::GetGridShape(const int grid, int *shape) {
     if (bmi_model->get_grid_shape(bmi_model.get(), grid, shape) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " shape.");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid " + std::to_string(grid) + " shape.");
     }
 }
 
 void Bmi_C_Adapter::GetGridSpacing(const int grid, double *spacing) {
     if (bmi_model->get_grid_spacing(bmi_model.get(), grid, spacing) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " spacing.");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid " + std::to_string(grid) + " spacing.");
     }
 }
 
 void Bmi_C_Adapter::GetGridOrigin(const int grid, double *origin) {
     if (bmi_model->get_grid_origin(bmi_model.get(), grid, origin) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " origin.");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid " + std::to_string(grid) + " origin.");
     }
 }
 
 void Bmi_C_Adapter::GetGridX(const int grid, double *x) {
     if (bmi_model->get_grid_x(bmi_model.get(), grid, x) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " x.");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid " + std::to_string(grid) + " x.");
     }
 }
 
 void Bmi_C_Adapter::GetGridY(const int grid, double *y) {
     if (bmi_model->get_grid_y(bmi_model.get(), grid, y) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " y.");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid " + std::to_string(grid) + " y.");
     }
 }
 
 void Bmi_C_Adapter::GetGridZ(const int grid, double *z) {
     if (bmi_model->get_grid_z(bmi_model.get(), grid, z) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " z.");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid " + std::to_string(grid) + " z.");
     }
 }
 
 int Bmi_C_Adapter::GetGridNodeCount(const int grid) {
     int count;
     if (bmi_model->get_grid_node_count(bmi_model.get(), grid, &count) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " node count.");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid " + std::to_string(grid) + " node count.");
     }
     return count;
 }
@@ -413,7 +414,7 @@ int Bmi_C_Adapter::GetGridNodeCount(const int grid) {
 int Bmi_C_Adapter::GetGridEdgeCount(const int grid) {
     int count;
     if (bmi_model->get_grid_edge_count(bmi_model.get(), grid, &count) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " edge count.");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid " + std::to_string(grid) + " edge count.");
     }
     return count;
 }
@@ -421,31 +422,31 @@ int Bmi_C_Adapter::GetGridEdgeCount(const int grid) {
 int Bmi_C_Adapter::GetGridFaceCount(const int grid) {
     int count;
     if (bmi_model->get_grid_face_count(bmi_model.get(), grid, &count) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " face count.");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid " + std::to_string(grid) + " face count.");
     }
     return count;
 }
 
 void Bmi_C_Adapter::GetGridEdgeNodes(const int grid, int *edge_nodes) {
     if (bmi_model->get_grid_edge_nodes(bmi_model.get(), grid, edge_nodes) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " edge nodes.");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid " + std::to_string(grid) + " edge nodes.");
     }
 }
 
 void Bmi_C_Adapter::GetGridFaceEdges(const int grid, int *face_edges) {
     if (bmi_model->get_grid_face_edges(bmi_model.get(), grid, face_edges) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " face edges.");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid " + std::to_string(grid) + " face edges.");
     }
 }
 
 void Bmi_C_Adapter::GetGridFaceNodes(const int grid, int *face_nodes) {
     if (bmi_model->get_grid_face_nodes(bmi_model.get(), grid, face_nodes) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " face nodes.");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid " + std::to_string(grid) + " face nodes.");
     }
 }
 
 void Bmi_C_Adapter::GetGridNodesPerFace(const int grid, int *nodes_per_face) {
     if (bmi_model->get_grid_nodes_per_face(bmi_model.get(), grid, nodes_per_face) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " nodes per face.");
+        Logger::logMsgAndThrowError(model_name + " failed to get grid " + std::to_string(grid) + " nodes per face.");
     }
 }

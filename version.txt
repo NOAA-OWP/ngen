@@ -1,0 +1,3 @@
+version=rc-1.1.0
+date=2025-01-26
+commit=6ababab28cca0e2eb825a06025140474ad62e2c6

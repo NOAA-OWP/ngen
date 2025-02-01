@@ -1,5 +1,6 @@
 #ifndef HY_POINTHDRONEXUSREMOTE_H
 #define HY_POINTHDRONEXUSREMOTE_H
+#include "Logger.hpp"
 
 #include <NGenConfig.h>
 #if NGEN_WITH_MPI
@@ -158,7 +159,9 @@ namespace std
 			return std::string("sender_receiver");
 			break;
 		}
-		throw std::runtime_error("Unhandled value of communication_type");
+		std::string throw_msg; throw_msg.assign("Unhandled value of communication_type");
+        LOG(throw_msg, LogLevel::ERROR);
+        throw std::runtime_error(throw_msg);
 	}
 }
 
