@@ -318,6 +318,33 @@ namespace realization {
  
                 //for case where there is no output_root in the realization file
                 return "./";
+
+            }
+
+             /**
+             * @brief Check if the formulation has catchment output writing enabled
+             *
+             * @code{.cpp}
+             * // Example config:
+             * // ...
+             * // "write_catchment_output": false
+             * // ...
+             * const auto manager = Formulation_Manger(CONFIG);
+             * manager.is_catchment_writing_enabled();
+             * //> false
+             * @endcode
+             * 
+             * @return bool
+             */
+            bool is_catchment_writing_enabled() const {
+                const auto write_enabled = this->tree.get_optional<std::string>("write_catchment_output");
+                if (write_enabled != boost::none && *write_enabled != "") {
+                    // if any variation of "false" or "no" or 0 is found, return false
+                    if (write_enabled->compare("false") == 0 || write_enabled->compare("no") == 0 || write_enabled->compare("0") == 0) {
+                        return false;
+                    }
+                } 
+                return true;
             }
 
             /**
