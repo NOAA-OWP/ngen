@@ -49,7 +49,7 @@ namespace realization {
         }
 #if NGEN_WITH_NETCDF
         else if (forcing_config.provider == "NetCDF"){
-            fp = data_access::NetCDFPerFeatureDataProvider::get_shared_provider(forcing_config.path, forcing_config.simulation_start_t, forcing_config.simulation_end_t, output_stream);
+            fp = data_access::NetCDFPerFeatureDataProvider::get_shared_provider(forcing_config.path, forcing_config.simulation_start_t, forcing_config.simulation_end_t, output_stream, forcing_config.enable_cache);
         }
 #endif
         else if (forcing_config.provider == "NullForcingProvider"){
