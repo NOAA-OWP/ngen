@@ -34,7 +34,7 @@ RUN set -eux; \
         gcc-toolset-10-libasan-devel \
         libasan6 \
         libffi libffi-devel \
-        m4 \ 
+        m4 \
         udunits2 udunits2-devel \
         bzip2 bzip2-devel \
         zlib zlib-devel \
@@ -44,9 +44,10 @@ RUN set -eux; \
         rsync \
         sqlite sqlite-devel \
         tk tk-devel \
-        uuid uuid-devel \ 
-        which \ 
+        uuid uuid-devel \
+        which \
         xz \
+       jq \
     ; \
     dnf clean all
 
@@ -263,6 +264,50 @@ RUN set -eux; \
     mv run-ngen.sh /ngen-app/bin/ ; \
     chmod +x /ngen-app/bin/run-ngen.sh
 
+WORKDIR /ngen-app/ngen
+
+# Extract Git information and write it to the JSON file specified by $GIT_INFO_PATH
+ENV GIT_INFO_PATH=/ngen-app/git_info.json
+
+# Create the main repository JSON object using jq and write it to $GIT_INFO_PATH
+RUN jq -n \
+    --arg commit_hash "$(git rev-parse HEAD)" \
+    --arg branch "$(git rev-parse --abbrev-ref HEAD)" \
+    --arg tags "$(git tag --points-at HEAD | tr '\n' ' ')" \
+    --arg author "$(git log -1 --pretty=format:%an)" \
+    --arg commit_date "$(date -u -d @$(git log -1 --pretty=format:%ct) +'%Y-%m-%d %H:%M:%S UTC')" \
+    --arg message "$(git log -1 --pretty=format:%s | tr '\n' ';')" \
+    --arg build_date "$(date -u +'%Y-%m-%d %H:%M:%S UTC')" \
+    '{"ngen": {"commit_hash": $commit_hash, "branch": $branch, "tags": $tags, "author": $author, "commit_date": $commit_date, "message": $message, "build_date": $build_date, "modules": []}}' \
+    > $GIT_INFO_PATH
+
+# Create directory for submodule JSON files
+RUN mkdir -p /ngen-app/submodules-json
+
+# For each submodule listed in .gitmodules, process it separately (skip unwanted submodules)
+RUN for sub in $(git config --file .gitmodules --get-regexp path | awk '{print $2}'); do \
+      base=$(basename "$sub"); \
+      if [[ "$base" != "googletest" && "$base" != "pybind11" && "$base" != "netcdf-cxx4" ]]; then \
+          cd "$sub"; \
+          info=$(jq -n \
+            --arg commit_hash "$(git rev-parse HEAD)" \
+            --arg branch "$(git rev-parse --abbrev-ref HEAD)" \
+            --arg tags "$(git tag --points-at HEAD | tr '\n' ' ')" \
+            --arg author "$(git log -1 --pretty=format:%an)" \
+            --arg commit_date "$(date -u -d @$(git log -1 --pretty=format:%ct) +'%Y-%m-%d %H:%M:%S UTC')" \
+            --arg message "$(git log -1 --pretty=format:%s | tr '\n' ' ')" \
+            --arg build_date "$(date -u +'%Y-%m-%d %H:%M:%S UTC')" \
+            '{"'"$base"'": {commit_hash: $commit_hash, branch: $branch, tags: $tags, author: $author, commit_date: $commit_date, message: $message, build_date: $build_date}}' ); \
+          cd - > /dev/null; \
+          echo "$info" > /ngen-app/submodules-json/git_info_"$base".json; \
+      fi; \
+    done
+
+# Merge the main repository JSON with all submodule JSON files in the modules array
+RUN modules=$(jq -s '.' /ngen-app/submodules-json/*.json) && \
+    jq --argjson modules "$modules" '.ngen.modules = $modules' "$GIT_INFO_PATH" > /ngen-app/merged_git_info.json && \
+    mv /ngen-app/merged_git_info.json "$GIT_INFO_PATH" && \
+    rm -rf /ngen-app/submodules-json
 
 WORKDIR /
 SHELL ["/bin/bash", "-c"]
