@@ -526,8 +526,8 @@ int main(int argc, char *argv[]) {
         }
     }
     if (errCount) {
-      std::string logStr = "Used " + to_string(errCount) + " unconverted time_steps from layer meta data."
-      LOG(logStr, LogLevel::WARN);
+      ss << "Used " << errCount << " unconverted time_steps from layer meta data." << std::endl;
+      LOG(ss.str(), LogLevel::WARN); ss.str("");
     }
 
     // now create the layer objects
