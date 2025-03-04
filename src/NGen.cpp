@@ -526,7 +526,7 @@ int main(int argc, char *argv[]) {
         }
     }
     if (errCount) {
-      std::string logStr = "Used " + toString(errCount) + " unconverted time_steps from layer meta data."
+      std::string logStr = "Used " + to_string(errCount) + " unconverted time_steps from layer meta data."
       LOG(logStr, LogLevel::WARN);
     }
 
