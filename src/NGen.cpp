@@ -512,11 +512,22 @@ int main(int argc, char *argv[]) {
 
     //FIXME refactor the layer building to avoid this mess
     std::vector<double> time_steps;
+    unsigned int errCount = 0;
     for(int i = 0; i < keys.size(); ++i)
     {
         auto& m_data = layer_meta_data.get_layer(keys[i]);
-        double c_value = UnitsHelper::get_converted_value(m_data.time_step_units,m_data.time_step,"s");
-        time_steps.push_back(c_value);
+        try {
+          double c_value = UnitsHelper::get_converted_value(m_data.time_step_units,m_data.time_step,"s");
+          time_steps.push_back(c_value);
+        }
+        catch ( (const std::runtime_error& e)) {
+          time_steps.push_back(m_data.time_step);
+          errCount++;
+        }
+    }
+    if (errCount) {
+      std::string logStr = "Used " + toString(errCount) + " unconverted time_steps from layer meta data."
+      LOG(logStr, LogLevel::WARN);
     }
 
     // now create the layer objects

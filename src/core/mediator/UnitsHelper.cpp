@@ -1,8 +1,6 @@
 #include "UnitsHelper.hpp"
 #include <cstring>
 #include <mutex>
-#include "logging_utils.h"
-#include "Logger.hpp"
 
 ut_system* UnitsHelper::unit_system;
 std::once_flag UnitsHelper::unit_system_inited;
@@ -11,7 +9,7 @@ std::mutex UnitsHelper::converters_mutex;
 
 std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_units, const std::string& out_units, utEncoding in_encoding, utEncoding out_encoding ){
     if(in_units == "" || out_units == ""){
-        Logger::logMsgAndThrowError("Unable to process empty units value for pairing \"" + in_units + "\" \"" + out_units + "\"");
+        throw std::runtime_error("Unable to process empty units value for pairing \"" + in_units + "\" \"" + out_units + "\"");
     }
 
     const std::lock_guard<std::mutex> lock(converters_mutex);
@@ -27,13 +25,14 @@ std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_u
         ut_unit* from = ut_parse(unit_system, in_units.c_str(), in_encoding);
         if (from == NULL)
         {
-            Logger::logMsgAndThrowError("Unable to parse in_units value " + in_units);
+            throw std::runtime_error("Unable to parse in_units value " + in_units);
         }
         ut_unit* to = ut_parse(unit_system, out_units.c_str(), out_encoding);
         if (to == NULL)
         {
             ut_free(from);
-            Logger::logMsgAndThrowError("Unable to parse out_units value " + out_units);
+            throw std::runtime_error("Unable to parse out_units value " + out_units);
+
         }
         cv_converter* conv = ut_get_converter(from, to);
         if (conv == NULL)
@@ -41,7 +40,7 @@ std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_u
             ut_free(from);
             ut_free(to);
             converters[key] = nullptr;
-            Logger::logMsgAndThrowError("Unable to convert " + in_units + " to " + out_units);
+            throw std::runtime_error("Unable to convert " + in_units + " to " + out_units);
         }
         auto c = std::shared_ptr<cv_converter>(
             conv,
