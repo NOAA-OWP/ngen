@@ -520,7 +520,7 @@ int main(int argc, char *argv[]) {
           double c_value = UnitsHelper::get_converted_value(m_data.time_step_units,m_data.time_step,"s");
           time_steps.push_back(c_value);
         }
-        catch ( (const std::runtime_error& e)) {
+        catch (const std::runtime_error& e) {
           time_steps.push_back(m_data.time_step);
           errCount++;
         }
