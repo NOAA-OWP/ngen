@@ -434,11 +434,7 @@ int main(int argc, char *argv[]) {
     ss<<"Initializing formulations" << std::endl;
     LOG(ss.str(), LogLevel::INFO); ss.str("");
     std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
-    ss << "Initializing formulations:" << __FILE__ << ":" << __LINE__ <<std::endl;
-    LOG(ss.str(), LogLevel::INFO); ss.str("");
     manager->read(catchment_collection, utils::getStdOut());
-    ss << "Initializing formulations:" << __FILE__ << ":" << __LINE__ <<std::endl;
-    LOG(ss.str(), LogLevel::INFO); ss.str("");
 
     //TODO refactor manager->read so certain configs can be queried before the entire
     //realization collection is created
