@@ -58,28 +58,6 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
    	   std::cerr << "Error(" << (errno) << ") creating log file directory: " << logFileDir << std::endl;
    	else {
    	   	std::cout << "Log directory: " << logFileDir <<std::endl;
-#if 0
-		// creating the stdout/stderr log files
-		std::string stdout_logFilePath = logFileDir+stdout_logFileName;
-		std::string stderr_logFilePath = logFileDir+stderr_logFileName;
-    	// Open stdout log file for writing
-    	stdout_logFile = freopen(stdout_logFilePath.c_str(), "a", stdout);
-    	if (stdout_logFile == NULL) {
-    	    std::cerr << "Error opening ngen.stdout log file." << std::endl;
-    	}
-		else {
-			std::cout << "Log file path for STDOUT:" << stdout_logFilePath << std::endl;
-		}
-
-    	// Open stderr log file for writing
-    	stderr_logFile = freopen(stderr_logFilePath.c_str(), "a", stderr);
-    	if (stderr_logFile == NULL) {
-    	    std::cerr << "Error opening ngen.stderr log file." << std::endl;
-    	}
-		else {
-			std::cerr << "Log file path for STDERR:" << stderr_logFilePath << std::endl;
-		}
-#endif
 
 		// creating the log file
 		logFilePath = logFileDir+logFileName;
