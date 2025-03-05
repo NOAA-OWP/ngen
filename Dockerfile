@@ -2,11 +2,6 @@
 ## see: https://jira.nextgenwaterprediction.com/browse/NGWPC-3223
 FROM rockylinux:8
 
-RUN set -eux; \
-    dnf install -y \
-        jq; \
-    dnf clean all
-
 # ensure local python is preferred over distribution python
 ENV PATH="/usr/local/bin:$PATH"
 
@@ -52,7 +47,7 @@ RUN set -eux; \
         uuid uuid-devel \
         which \
         xz \
-       jq \
+        jq \
     ; \
     dnf clean all
 
@@ -272,7 +267,7 @@ RUN set -eux; \
 WORKDIR /ngen-app/ngen
 
 # Extract Git information and write it to the JSON file specified by $GIT_INFO_PATH
-ENV GIT_INFO_PATH=/ngen-app/git_info.json
+ARG GIT_INFO_PATH=/ngen-app/git_info.json
 
 # Create the main repository JSON object using jq and write it to $GIT_INFO_PATH
 RUN jq -n \
