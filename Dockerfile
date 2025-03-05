@@ -267,7 +267,7 @@ RUN set -eux; \
 WORKDIR /ngen-app/ngen
 
 # Extract Git information and write it to the JSON file specified by $GIT_INFO_PATH
-ARG GIT_INFO_PATH=/ngen-app/git_info.json
+ARG GIT_INFO_PATH=/ngen-app/ngen_git_info.json
 
 # Create the main repository JSON object using jq and write it to $GIT_INFO_PATH
 RUN jq -n \
