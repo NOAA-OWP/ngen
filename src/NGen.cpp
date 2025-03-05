@@ -185,7 +185,6 @@ int main(int argc, char *argv[]) {
     // Need to bind to a variable so that the underlying reference count
     // is incremented, this essentially becomes the global reference to keep
     // the interpreter alive till the end of `main`
-    LOG("break 1", LogLevel::INFO); ss.str("");
     auto _interp = utils::ngenPy::InterpreterUtil::getInstance();
     //utils::ngenPy::InterpreterUtil::getInstance();
     #endif // NGEN_WITH_PYTHON
@@ -203,7 +202,6 @@ int main(int argc, char *argv[]) {
 
     std::vector<std::string> catchment_subset_ids;
     std::vector<std::string> nexus_subset_ids;
-    LOG("break 2", LogLevel::INFO); ss.str("");
 
     if( argc < 2) {
         // Usage
@@ -282,7 +280,6 @@ int main(int argc, char *argv[]) {
         catchmentDataFile = argv[1];
         nexusDataFile = argv[3];
         REALIZATION_CONFIG_PATH = argv[5];
-        LOG("In the else part", LogLevel::INFO); ss.str("");
 
         #if NGEN_WITH_MPI
 
@@ -357,8 +354,6 @@ int main(int argc, char *argv[]) {
             }
         }
         #endif // NGEN_WITH_MPI
-
-        LOG("before exit", LogLevel::INFO); ss.str("");
 
         if(error) exit(-1);
 
