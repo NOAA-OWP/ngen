@@ -2,6 +2,11 @@
 ## see: https://jira.nextgenwaterprediction.com/browse/NGWPC-3223
 FROM rockylinux:8
 
+RUN set -eux; \
+    dnf install -y \
+        jq; \
+    dnf clean all
+
 # ensure local python is preferred over distribution python
 ENV PATH="/usr/local/bin:$PATH"
 
