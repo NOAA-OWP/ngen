@@ -44,6 +44,7 @@ bool is_subdivided_hydrofabric_wanted = false;
 // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
 int mpi_rank = 0;
 
+
 #if NGEN_WITH_MPI
 
 #ifndef MPI_HF_SUB_CLI_FLAG
@@ -526,7 +527,7 @@ int main(int argc, char *argv[]) {
         }
     }
     if (errCount) {
-      ss << "Used " << errCount << " unconverted time_steps from layer meta data." << std::endl;
+      ss << "ngen main: layer_meta_data timesteps Used " << errCount << " unconverted value(s)." << std::endl;
       LOG(ss.str(), LogLevel::WARN); ss.str("");
     }
 
