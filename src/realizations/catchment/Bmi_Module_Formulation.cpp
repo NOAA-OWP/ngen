@@ -178,12 +178,19 @@ namespace realization {
                     UnitsHelper::convert_values(native_units, values.data(), output_units, values.data(), values.size());
                     return values;
                 }
-                catch (const std::runtime_error& e){
-                    #ifndef UDUNITS_QUIET
-                    logging::warning((std::string("WARN: Unit conversion unsuccessful - Returning unconverted value! (\"")+e.what()+"\")\n").c_str());
-                    bmiform_ss << "WARN: Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
-                    LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
-                    #endif
+                catch (const std::runtime_error& e) {
+                    // Log at least one error
+                    if (!unitGetValuesErrLogged) {
+                        bmiform_ss << "WARN: BMI Module Formulation: get_values Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+                        unitGetValuesErrLogged = true;
+                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                    }
+                    else {
+                        #ifndef UDUNITS_QUIET
+                        bmiform_ss << "WARN: BMI Module Formulation: get_values Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        #endif
+                    }
                     return values;
                 }
             }
@@ -231,10 +238,18 @@ namespace realization {
                     return UnitsHelper::get_converted_value(native_units, value, output_units);
                 }
                 catch (const std::runtime_error& e){
-                    #ifndef UDUNITS_QUIET
-                    bmiform_ss <<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
-                    LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
-                    #endif
+                    // Log at least one error
+                    if (!unitGetValueErrLogged) {
+                        bmiform_ss << "WARN: BMI Module Formulation: get_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+                        unitGetValueErrLogged = true;
+                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                    }
+                    else {
+                        #ifndef UDUNITS_QUIET
+                        bmiform_ss << "WARN: BMI Module Formulation: get_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        #endif
+                    }
                     return value;
                 }
             }

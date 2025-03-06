@@ -438,6 +438,8 @@ namespace realization {
         /** A configured mapping of BMI model variable names to standard names for use inside the framework. */
         std::map<std::string, std::string> bmi_var_names_map;
         bool model_initialized = false;
+        bool unitGetValueErrLogged = false;
+        bool unitGetValuesErrLogged = false;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS
