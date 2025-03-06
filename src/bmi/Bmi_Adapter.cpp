@@ -30,7 +30,7 @@ Bmi_Adapter::Bmi_Adapter(
         Logger::logMsgAndThrowError(init_exception_msg);
     }
 
-    str_stream << __FILE__ << ":" << __LINE__ << " mode name:" << this->model_name << std::endl;
+    str_stream << __FILE__ << ":" << __LINE__ << " model name:" << this->model_name << std::endl;
     LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
     str_stream << __FILE__ << ":" << __LINE__ << " bmi_init_config:" << this->bmi_init_config << std::endl;
     LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
