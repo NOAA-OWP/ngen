@@ -268,18 +268,22 @@ WORKDIR /ngen-app/ngen
 
 # Extract Git information and write it to the JSON file specified by $GIT_INFO_PATH
 ARG GIT_INFO_PATH=/ngen-app/ngen_git_info.json
+ARG CI_COMMIT_REF_NAME
 
 # Create the main repository JSON object using jq and write it to $GIT_INFO_PATH
-RUN jq -n \
-    --arg commit_hash "$(git rev-parse HEAD)" \
-    --arg branch "$(git rev-parse --abbrev-ref HEAD)" \
-    --arg tags "$(git tag --points-at HEAD | tr '\n' ' ')" \
-    --arg author "$(git log -1 --pretty=format:%an)" \
-    --arg commit_date "$(date -u -d @$(git log -1 --pretty=format:%ct) +'%Y-%m-%d %H:%M:%S UTC')" \
-    --arg message "$(git log -1 --pretty=format:%s | tr '\n' ';')" \
-    --arg build_date "$(date -u +'%Y-%m-%d %H:%M:%S UTC')" \
-    '{"ngen": {"commit_hash": $commit_hash, "branch": $branch, "tags": $tags, "author": $author, "commit_date": $commit_date, "message": $message, "build_date": $build_date, "modules": []}}' \
-    > $GIT_INFO_PATH
+RUN set -eux; \
+    # Determine branch name: if CI_COMMIT_REF_NAME is set (CI build), use it; otherwise, fall back to using the git command for manual builds.
+    branch=$( [ -n "${CI_COMMIT_REF_NAME:-}" ] && echo "${CI_COMMIT_REF_NAME}" || git rev-parse --abbrev-ref HEAD ); \
+    jq -n \
+      --arg commit_hash "$(git rev-parse HEAD)" \
+      --arg branch "$branch" \
+      --arg tags "$(git tag --points-at HEAD | tr '\n' ' ')" \
+      --arg author "$(git log -1 --pretty=format:%an)" \
+      --arg commit_date "$(date -u -d @$(git log -1 --pretty=format:%ct) +'%Y-%m-%d %H:%M:%S UTC')" \
+      --arg message "$(git log -1 --pretty=format:%s | tr '\n' ';')" \
+      --arg build_date "$(date -u +'%Y-%m-%d %H:%M:%S UTC')" \
+      '{"ngen": {"commit_hash": $commit_hash, "branch": $branch, "tags": $tags, "author": $author, "commit_date": $commit_date, "message": $message, "build_date": $build_date, "modules": []}}' \
+      > $GIT_INFO_PATH
 
 # Create directory for submodule JSON files
 RUN mkdir -p /ngen-app/submodules-json
