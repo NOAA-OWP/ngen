@@ -57,10 +57,11 @@ void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
    	if (status == -1)
    	   std::cerr << "Error(" << (errno) << ") creating log file directory: " << logFileDir << std::endl;
    	else {
-   	   std::cout << "Log directory: " << logFileDir <<std::endl;
-		// creating the file
+   	   	std::cout << "Log directory: " << logFileDir <<std::endl;
+
+		// creating the log file
 		logFilePath = logFileDir+logFileName;
-		logFile.open(logFilePath, ios::out | ios::app);
+		logFile.open(logFilePath, ios::out | ios::trunc);
 		if (!logFile.good()) {
 			std::cerr << "Warning: Can't Open Log File: " << logFilePath << std::endl;
 			// try logging to a file in local directory

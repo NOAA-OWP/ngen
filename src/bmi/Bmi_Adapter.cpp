@@ -30,7 +30,7 @@ Bmi_Adapter::Bmi_Adapter(
         Logger::logMsgAndThrowError(init_exception_msg);
     }
 
-    str_stream << __FILE__ << ":" << __LINE__ << " mode name:" << this->model_name << std::endl;
+    str_stream << __FILE__ << ":" << __LINE__ << " model name:" << this->model_name << std::endl;
     LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
     str_stream << __FILE__ << ":" << __LINE__ << " bmi_init_config:" << this->bmi_init_config << std::endl;
     LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
@@ -51,7 +51,9 @@ double Bmi_Adapter::get_time_convert_factor() {
         //pybind exception is lost and all we see is a generic "uncaught exception"
         //with no context.  This way we at least get the error message wrapped in
         //a runtime error.
-        Logger::logMsgAndThrowError(e.what());
+        str_stream << "Bmi_Adapter get_time_convert_factor: Exception caught (" << e.what() << ")" << std::endl;
+        LOG(str_stream.str(), LogLevel::ERROR); str_stream.str("");
+        throw std::runtime_error(e.what());
     }
     std::string output_units = "s";
     return UnitsHelper::get_converted_value(input_units, value, output_units);

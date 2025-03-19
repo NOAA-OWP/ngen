@@ -44,6 +44,7 @@ bool is_subdivided_hydrofabric_wanted = false;
 // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
 int mpi_rank = 0;
 
+
 #if NGEN_WITH_MPI
 
 #ifndef MPI_HF_SUB_CLI_FLAG
@@ -184,7 +185,6 @@ int main(int argc, char *argv[]) {
     // Need to bind to a variable so that the underlying reference count
     // is incremented, this essentially becomes the global reference to keep
     // the interpreter alive till the end of `main`
-    LOG("break 1", LogLevel::INFO); ss.str("");
     auto _interp = utils::ngenPy::InterpreterUtil::getInstance();
     //utils::ngenPy::InterpreterUtil::getInstance();
     #endif // NGEN_WITH_PYTHON
@@ -202,7 +202,6 @@ int main(int argc, char *argv[]) {
 
     std::vector<std::string> catchment_subset_ids;
     std::vector<std::string> nexus_subset_ids;
-    LOG("break 2", LogLevel::INFO); ss.str("");
 
     if( argc < 2) {
         // Usage
@@ -281,7 +280,6 @@ int main(int argc, char *argv[]) {
         catchmentDataFile = argv[1];
         nexusDataFile = argv[3];
         REALIZATION_CONFIG_PATH = argv[5];
-        LOG("In the else part", LogLevel::INFO); ss.str("");
 
         #if NGEN_WITH_MPI
 
@@ -356,8 +354,6 @@ int main(int argc, char *argv[]) {
             }
         }
         #endif // NGEN_WITH_MPI
-
-        LOG("before exit", LogLevel::INFO); ss.str("");
 
         if(error) exit(-1);
 
@@ -438,11 +434,7 @@ int main(int argc, char *argv[]) {
     ss<<"Initializing formulations" << std::endl;
     LOG(ss.str(), LogLevel::INFO); ss.str("");
     std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
-    ss << "Initializing formulations:" << __FILE__ << ":" << __LINE__ <<std::endl;
-    LOG(ss.str(), LogLevel::INFO); ss.str("");
     manager->read(catchment_collection, utils::getStdOut());
-    ss << "Initializing formulations:" << __FILE__ << ":" << __LINE__ <<std::endl;
-    LOG(ss.str(), LogLevel::INFO); ss.str("");
 
     //TODO refactor manager->read so certain configs can be queried before the entire
     //realization collection is created
@@ -512,11 +504,22 @@ int main(int argc, char *argv[]) {
 
     //FIXME refactor the layer building to avoid this mess
     std::vector<double> time_steps;
+    unsigned int errCount = 0;
     for(int i = 0; i < keys.size(); ++i)
     {
         auto& m_data = layer_meta_data.get_layer(keys[i]);
-        double c_value = UnitsHelper::get_converted_value(m_data.time_step_units,m_data.time_step,"s");
-        time_steps.push_back(c_value);
+        try {
+          double c_value = UnitsHelper::get_converted_value(m_data.time_step_units,m_data.time_step,"s");
+          time_steps.push_back(c_value);
+        }
+        catch (const std::runtime_error& e) {
+          time_steps.push_back(m_data.time_step);
+          errCount++;
+        }
+    }
+    if (errCount) {
+      ss << "ngen main: layer_meta_data timesteps Used " << errCount << " unconverted value(s)." << std::endl;
+      LOG(ss.str(), LogLevel::WARN); ss.str("");
     }
 
     // now create the layer objects
