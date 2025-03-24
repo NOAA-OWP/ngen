@@ -273,6 +273,8 @@ ARG CI_COMMIT_REF_NAME
 RUN set -eux; \
     # Get the remote URL from Git configuration
     repo_url=$(git config --get remote.origin.url); \
+    # Remove trailing slash if present
+    repo_url=${repo_url%/}; \
     # Extract the repo name (everything after the last slash) and remove any trailing .git
     key=${repo_url##*/}; \
     key=${key%.git}; \
@@ -304,16 +306,30 @@ RUN set -eux; \
       sub_key=${subrepo_url##*/}; \
       sub_key=${sub_key%.git}; \
       \
-      echo sub_key $sub_key; \
       # Skip unwanted submodules based on the derived key
       if [[ "$sub_key" == "googletest" || "$sub_key" == "pybind11" || "$sub_key" == "netcdf-cxx4" ]]; then \
         cd - > /dev/null; \
         continue; \
       fi; \
       \
+      # Try to find a preferred branch (development, release-candidate, main, or master) that contains the current commit
+      sub_branch=$( \
+        git branch -r --contains HEAD | grep -v '\->' | \
+        grep -E 'origin/(development|release-candidate|main|master)' | \
+        sed 's|origin/||' | head -n1 | xargs \
+      ); \
+      \
+      # If none of the preferred branches contain the commit, fall back to any branch that does
+      if [ -z "$sub_branch" ]; then \
+        sub_branch=$(git branch -r --contains HEAD | grep -v '\->' | sed 's|origin/||' | head -n1 | xargs); \
+      fi; \
+      \
+      # If no branches at all contain the commit, use "HEAD" as a fallback
+      sub_branch=${sub_branch:-HEAD}; \
+      \
       info=$(jq -n \
         --arg commit_hash "$(git rev-parse HEAD)" \
-        --arg branch "$(git rev-parse --abbrev-ref HEAD)" \
+        --arg branch "$sub_branch" \
         --arg tags "$(git tag --points-at HEAD | tr '\n' ' ')" \
         --arg author "$(git log -1 --pretty=format:%an)" \
         --arg commit_date "$(date -u -d @$(git log -1 --pretty=format:%ct) +'%Y-%m-%d %H:%M:%S UTC')" \
