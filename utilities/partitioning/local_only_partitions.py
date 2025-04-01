@@ -76,7 +76,7 @@ def create_partitions(geopackage_path: Path, num_partitions: int = None, output_
     # the maximum number of catchments in a partition is max_cats, but some nexuses may have more than max_cats catchments
     max_cats = max(len(cats), max_cats)
     i = 0
-    j = num_partitions
+    j = num_partitions + 1
     print(f"Number of partitions: {num_partitions}")
     print(f"Number of catchments: {num_cats}")
     print(f"Number of nexus: {len(nexus.keys())}")
@@ -90,7 +90,8 @@ def create_partitions(geopackage_path: Path, num_partitions: int = None, output_
             nex, cats = sorted_nexus.pop(0)
             # If we've looped through all partitions and not added a nexus, then the partitioning has failed
             # I don't think this should ever happen, worth checking for though
-            j = num_partitions
+            # +1 added to make sure the values are attempted to be added to ALL partitions
+            j = num_partitions + 1
         i = (i + 1) % num_partitions
         j -= 1
         if j == 0:
