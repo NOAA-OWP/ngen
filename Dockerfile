@@ -17,7 +17,7 @@ ENV NETCDF_C_VERSION="4.7.4"
 ENV NETCDF_FORTRAN_VERSION="4.5.4"
 ENV BOOST_VERSION="1.79.0"
 
-## FIXME: Replace installation and build of FOSS dependencies wiith a base image. ##
+## FIXME: Replace installation and build of FOSS dependencies with a base image. ##
 
 # runtime dependencies
 RUN set -eux; \
@@ -78,9 +78,8 @@ RUN set -eux; \
 		--without-ensurepip \
 	; \
 	nproc="$(nproc)"; \
-	make -j "$nproc" \
-		"PROFILE_TASK=${PROFILE_TASK:-}" \
-	; \
+	make -j "$nproc" "PROFILE_TASK=${PROFILE_TASK:-}"; \
+	\
 # https://github.com/docker-library/python/issues/784
 # prevent accidental usage of a system installed libpython of the same version
 	rm python; \
@@ -127,13 +126,10 @@ RUN set -eux; \
 	rm szip.gz; \
 	\
 	cd /usr/src/szip; \
-	./configure --prefix=/usr/local/ \
-	; \
+	./configure --prefix=/usr/local/; \
 	nproc="$(nproc)"; \
-	make -j "$nproc" \
-	; \
-	make install ; \
-    \
+	make -j "$nproc"; \
+	make install; \
     rm --recursive --force /usr/src/szip
 
 RUN set -eux; \
@@ -147,8 +143,8 @@ RUN set -eux; \
 	./configure --prefix=/usr/local/ --with-szlib=/usr/local/ \
 	; \
 	nproc="$(nproc)"; \
-	make check -j "$nproc" \
-	; \
+	make check -j "$nproc" ; \
+	\
     make install ; \
     \
     rm --recursive --force /usr/src/hdf5
@@ -195,6 +191,7 @@ RUN set -eux; \
     tar --extract --directory /opt/boost --strip-components=1 --file boost.tar.gz; \
     rm boost.tar.gz
 
+# Copy the remainder of your application code
 COPY . /ngen-app/ngen/
 
 ENV VIRTUAL_ENV=/ngen-app/ngen-python
@@ -206,21 +203,27 @@ ENV PATH=${VIRTUAL_ENV}/bin:${PATH}
 WORKDIR /ngen-app/
 
 RUN set -eux; \
-	\
-    pip3 install -r ngen/extern/test_bmi_py/requirements.txt; \
-    pip3 install -r ngen/extern/t-route/requirements.txt ; \
-    # Lock numpy and netcdf4 versions so t-route doesn't break
-    pip3 install "numpy==1.26.4" "netcdf4<=1.6.3" ; \
+    pip3 install "numpy==1.26.4" "netcdf4<=1.6.3"; \
+    pip3 cache purge
+
+# Copy only the requirements files first for dependency installation caching
+COPY extern/test_bmi_py/requirements.txt /tmp/test_bmi_py_requirements.txt
+COPY extern/t-route/requirements.txt /tmp/t-route_requirements.txt
+
+# Install Python dependencies and remove the temporary requirements files
+RUN set -eux; \
+    pip3 install -r /tmp/test_bmi_py_requirements.txt; \
+    pip3 install -r /tmp/t-route_requirements.txt; \
+    rm /tmp/test_bmi_py_requirements.txt /tmp/t-route_requirements.txt; \
     pip3 cache purge
 
 RUN set -eux; \
-	\
     cd ngen/extern/t-route ; \
     LDFLAGS="-Wl,-L/usr/local/lib64/,-L/usr/local/lib/,-rpath,/usr/local/lib64/,-rpath,/usr/local/lib/" ./compiler.sh no-e ; \
-    \
-    pip3 cache purge
 
 WORKDIR /ngen-app/ngen/
+
+# Configure the build
 RUN set -eux; \
     cmake -B cmake_build -S . \
 ## FIXME: figure out why running with MPI enabled throws errors
@@ -236,26 +239,28 @@ RUN set -eux; \
         -DNGEN_WITH_ROUTING=ON \
         -DNGEN_QUIET=ON \
         -DNGEN_UPDATE_GIT_SUBMODULES=OFF \
-        -DBOOST_ROOT=/opt/boost/; \
-    nproc="$(nproc)"; \
-    cmake --build cmake_build --target all --parallel ${nproc} ; \
-    \
-    cmake -B extern/LASAM/cmake_build -S extern/LASAM/ -DNGEN=ON ; \
-    cmake --build extern/LASAM/cmake_build/ ; \
-    \
-    cmake -B extern/snow17/cmake_build -S extern/snow17/ ; \
-    cmake --build extern/snow17/cmake_build/ ; \
-    \
-    cmake -B extern/sac-sma/cmake_build -S extern/sac-sma/ ; \
-    cmake --build extern/sac-sma/cmake_build/ ; \
-    \
-    cmake -B extern/SoilMoistureProfiles/cmake_build -S extern/SoilMoistureProfiles/SoilMoistureProfiles/ -DNGEN=ON ; \
-    cmake --build extern/SoilMoistureProfiles/cmake_build/ ; \
-    \
-    cmake -B extern/SoilFreezeThaw/cmake_build -S extern/SoilFreezeThaw/SoilFreezeThaw/ -DNGEN=ON ; \
-    cmake --build extern/SoilFreezeThaw/cmake_build/ ; \
-    \
-    cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ ; \
+        -DBOOST_ROOT=/opt/boost/
+
+# Build the project
+RUN nproc="$(nproc)" && cmake --build cmake_build --target all --parallel "${nproc}"
+
+# Build each submodule in a separate layer
+RUN cmake -B extern/LASAM/cmake_build -S extern/LASAM/ -DNGEN=ON && \
+    cmake --build extern/LASAM/cmake_build/
+
+RUN cmake -B extern/snow17/cmake_build -S extern/snow17/ && \
+    cmake --build extern/snow17/cmake_build/
+
+RUN cmake -B extern/sac-sma/cmake_build -S extern/sac-sma/ && \
+    cmake --build extern/sac-sma/cmake_build/
+
+RUN cmake -B extern/SoilMoistureProfiles/cmake_build -S extern/SoilMoistureProfiles/SoilMoistureProfiles/ -DNGEN=ON && \
+    cmake --build extern/SoilMoistureProfiles/cmake_build/
+
+RUN cmake -B extern/SoilFreezeThaw/cmake_build -S extern/SoilFreezeThaw/SoilFreezeThaw/ -DNGEN=ON && \
+    cmake --build extern/SoilFreezeThaw/cmake_build/
+
+RUN cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ && \
     cmake --build extern/ueb-bmi/cmake_build/
 
 RUN set -eux; \
