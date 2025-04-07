@@ -219,7 +219,7 @@ RUN set -eux; \
 
 RUN set -eux; \
     cd ngen/extern/t-route ; \
-    LDFLAGS="-Wl,-L/usr/local/lib64/,-L/usr/local/lib/,-rpath,/usr/local/lib64/,-rpath,/usr/local/lib/" ./compiler.sh no-e ; \
+    LDFLAGS="-Wl,-L/usr/local/lib64/,-L/usr/local/lib/,-rpath,/usr/local/lib64/,-rpath,/usr/local/lib/" ./compiler.sh no-e
 
 WORKDIR /ngen-app/ngen/
 
