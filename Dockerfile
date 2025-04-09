@@ -170,15 +170,7 @@ ENV PATH=${VIRTUAL_ENV}/bin:${PATH}
 
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
     set -eux && \
-    echo "Checking pip version" && \
-    pip3 --version && \
-    echo "Upgrading pip, setuptools, and wheel" && \
     pip3 install --upgrade pip setuptools wheel && \
-    echo "Installed packages:" && \
-    pip3 show wheel && \
-    pip3 show setuptools && \
-    pip3 list && \
-    echo "Installing numpy and netcdf4" && \
     pip3 install 'numpy==1.26.4' 'netcdf4<=1.6.3'
 
 
@@ -208,17 +200,11 @@ RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
         pip3 install -r /tmp/t-route_requirements.txt && \
         rm /tmp/test_bmi_py_requirements.txt /tmp/t-route_requirements.txt
 
+ENV LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
+
 # Use cache for building the t-route submodule
 RUN --mount=type=cache,target=/root/.cache/t-route,id=t-route-build \
     set -eux && \
-    echo "Checking pip version" && \
-    pip3 --version && \
-    echo "Upgrading pip, setuptools, and wheel" && \
-    pip3 install --upgrade pip setuptools wheel && \
-    echo "Installed packages:" && \
-    pip3 show wheel && \
-    pip3 show setuptools && \
-    pip list && \
     cd extern/t-route && \
    echo "Running compiler.sh" && \
     LDFLAGS='-Wl,-L/usr/local/lib64/,-L/usr/local/lib/,-rpath,/usr/local/lib64/,-rpath,/usr/local/lib/' && \
