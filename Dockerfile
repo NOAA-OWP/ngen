@@ -1,28 +1,26 @@
-## TODO: replace with base image created under NGWPC-3223 ##
-## see: https://jira.nextgenwaterprediction.com/browse/NGWPC-3223
-FROM rockylinux:8
+# syntax=docker/dockerfile:1.4
 
-# ensure local python is preferred over distribution python
-ENV PATH="/usr/local/bin:$PATH"
+##############################
+# Stage: Base – Common Setup
+##############################
+FROM rockylinux:8 AS base
 
 # cannot remove LANG even though https://bugs.python.org/issue19846 is fixed
 # last attempted removal of LANG broke many users:
 # https://github.com/docker-library/python/pull/570
-ENV LANG="C.UTF-8"
-
-ENV PYTHON_VERSION="3.10.14"
-ENV SZIP_VERSION="2.1.1"
-ENV HDF5_VERSION="1.10.11"
-ENV NETCDF_C_VERSION="4.7.4"
-ENV NETCDF_FORTRAN_VERSION="4.5.4"
-ENV BOOST_VERSION="1.79.0"
-
-## FIXME: Replace installation and build of FOSS dependencies with a base image. ##
+ENV LANG="C.UTF-8" \
+    \
+    PYTHON_VERSION="3.10.14" \
+    SZIP_VERSION="2.1.1" \
+    HDF5_VERSION="1.10.11" \
+    NETCDF_C_VERSION="4.7.4" \
+    NETCDF_FORTRAN_VERSION="4.5.4" \
+    BOOST_VERSION="1.79.0"
 
 # runtime dependencies
-RUN set -eux; \
-    dnf install -y epel-release; \
-    dnf config-manager --set-enabled powertools; \
+RUN set -eux && \
+    dnf install -y epel-release && \
+    dnf config-manager --set-enabled powertools && \
     dnf install -y \
         cmake \
         curl curl-devel \
@@ -48,8 +46,7 @@ RUN set -eux; \
         which \
         xz \
         jq \
-    ; \
-    dnf clean all
+    && dnf clean all && rm -rf /var/cache/dnf
 
 ## FIXME: replace GNU compilers with Intel compiler ##
 SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
@@ -57,17 +54,17 @@ SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
 ENV PATH="${PATH}:/usr/lib64/openmpi/bin/"
 
 # Fix OpenMPI support within container
-ENV PSM3_HAL=loopback
-ENV PSM3_DEVICES=self
+ENV PSM3_HAL=loopback \
+    PSM3_DEVICES=self
 
-RUN set -eux; \
-	\
-	curl --location --output python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz"; \
-	mkdir --parents /usr/src/python; \
-	tar --extract --directory /usr/src/python --strip-components=1 --file python.tar.xz; \
-	rm python.tar.xz; \
-	\
-	cd /usr/src/python; \
+# Build Python from source and install it
+RUN --mount=type=cache,target=/root/.cache/build-python,id=build-python \
+	set -eux && \
+    curl --location --output python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" && \
+	mkdir --parents /usr/src/python && \
+    tar --extract --directory /usr/src/python --strip-components=1 --file python.tar.xz && \
+    rm python.tar.xz && \
+    cd /usr/src/python && \
 	./configure \
 		--enable-loadable-sqlite-extensions \
 		--enable-optimizations \
@@ -75,42 +72,34 @@ RUN set -eux; \
 		--enable-shared \
 		--with-lto \
 		--with-system-expat \
-		--without-ensurepip \
-	; \
-	nproc="$(nproc)"; \
-	make -j "$nproc" "PROFILE_TASK=${PROFILE_TASK:-}"; \
-	\
+		--without-ensurepip && \
+	nproc="$(nproc)" && \
+	make -j "$nproc" "PROFILE_TASK=${PROFILE_TASK:-}" && \
 # https://github.com/docker-library/python/issues/784
 # prevent accidental usage of a system installed libpython of the same version
-	rm python; \
+    rm python && \
 	make -j "$nproc" \
 		"LDFLAGS=${LDFLAGS:--Wl},-rpath='\$\$ORIGIN/../lib'" \
 		"PROFILE_TASK=${PROFILE_TASK:-}" \
-		python \
-	; \
-	make install; \
+        python && \
+    make install && \
 # enable GDB to load debugging data: https://github.com/docker-library/python/pull/701
-    bin="$(readlink -ve /usr/local/bin/python3)"; \
-    dir="$(dirname "$bin")"; \
-    mkdir --parents "/usr/share/gdb/auto-load/$dir"; \
-    cp -vL Tools/gdb/libpython.py "/usr/share/gdb/auto-load/$bin-gdb.py"; \
-    \
-    cd /; \
-    rm -rf /usr/src/python; \
-    \
+    bin="$(readlink -ve /usr/local/bin/python3)" && \
+    dir="$(dirname "$bin")" && \
+    mkdir --parents "/usr/share/gdb/auto-load/$dir" && \
+    cp -vL Tools/gdb/libpython.py "/usr/share/gdb/auto-load/$bin-gdb.py" && \
+    cd / && \
+    rm -rf /usr/src/python && \
     find /usr/local -depth \
         \( \
             \( -type d -a \( -name test -o -name tests -o -name idle_test \) \) \
             -o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' -o -name 'libpython*.a' \) \) \
-        \) -exec rm -rf '{}' + \
-    ; \
-    \
-    ldconfig; \
-    \
+        \) -exec rm -rf '{}' + && \
+    ldconfig && \
     python3 --version
 
 # make some useful symlinks that are expected to exist ("/usr/local/bin/python" and friends)
-RUN set -eux; \
+RUN set -eux && \
 	for src in idle3 pydoc3 python3 python3-config; do \
 		dst="$(echo "$src" | tr -d 3)"; \
 		[ -s "/usr/local/bin/$src" ]; \
@@ -118,155 +107,178 @@ RUN set -eux; \
 		ln -svT "$src" "/usr/local/bin/$dst"; \
 	done
 
-RUN set -eux; \
-	\
-	curl --location --output szip.gz "https://docs.hdfgroup.org/archive/support/ftp/lib-external/szip/${SZIP_VERSION%%[a-z]*}/src/szip-${SZIP_VERSION}.tar.gz"; \
-	mkdir --parents /usr/src/szip; \
-	tar --extract --directory /usr/src/szip --strip-components=1 --file szip.gz; \
-	rm szip.gz; \
-	\
-	cd /usr/src/szip; \
-	./configure --prefix=/usr/local/; \
-	nproc="$(nproc)"; \
-	make -j "$nproc"; \
-	make install; \
-    rm --recursive --force /usr/src/szip
+# Build additional libraries (SZIP, HDF5, netcdf-c, netcdf-fortran, Boost)
+RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-szip \
+    set -eux && \
+	curl --location --output szip.tar.gz https://docs.hdfgroup.org/archive/support/ftp/lib-external/szip/${SZIP_VERSION%%[a-z]*}/src/szip-${SZIP_VERSION}.tar.gz && \
+	mkdir --parents /usr/src/szip && \
+	tar --extract --directory /usr/src/szip --strip-components=1 --file szip.tar.gz && \
+	cd /usr/src/szip && \
+	./configure --prefix=/usr/local/ && \
+	nproc="$(nproc)" && \
+	make -j "$nproc" && \
+	make install && \
+    rm --recursive --force /usr/src/szip szip.tar.gz
 
-RUN set -eux; \
-	\
-	curl --location --output libhdf5.tar.gz "https://github.com/HDFGroup/hdf5/archive/refs/tags/hdf5-${HDF5_VERSION//./_}.tar.gz"; \
-	mkdir --parents /usr/src/hdf5; \
-	tar --extract --directory /usr/src/hdf5 --strip-components=1 --file libhdf5.tar.gz; \
-	rm libhdf5.tar.gz; \
-	\
-	cd /usr/src/hdf5; \
-	./configure --prefix=/usr/local/ --with-szlib=/usr/local/ \
-	; \
-	nproc="$(nproc)"; \
-	make check -j "$nproc" ; \
-	\
-    make install ; \
-    \
-    rm --recursive --force /usr/src/hdf5
+RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-hdf5 \
+    set -eux && \
+	curl --location --output hdf5.tar.gz https://github.com/HDFGroup/hdf5/archive/refs/tags/hdf5-${HDF5_VERSION//./_}.tar.gz && \
+	mkdir --parents /usr/src/hdf5 && \
+	tar --extract --directory /usr/src/hdf5 --strip-components=1 --file hdf5.tar.gz && \
+	cd /usr/src/hdf5 && \
+	./configure --prefix=/usr/local/ --with-szlib=/usr/local/ && \
+	make check -j "$(nproc)" && \
+    make install && \
+    rm --recursive --force /usr/src/hdf5 hdf5.tar.gz
 
-RUN set -eux; \
-    \
-    curl --location --output netcdf-c.tar.gz "https://github.com/Unidata/netcdf-c/archive/refs/tags/v${NETCDF_C_VERSION%%[a-z]*}.tar.gz"; \
-    mkdir --parents /usr/src/netcdf-c; \
-    tar --extract --directory /usr/src/netcdf-c --strip-components=1 --file netcdf-c.tar.gz; \
-    rm netcdf-c.tar.gz; \
-    \
-    cd /usr/src/netcdf-c; \
+RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-netcdf-c \
+    set -eux && \
+    curl --location --output netcdf-c.tar.gz https://github.com/Unidata/netcdf-c/archive/refs/tags/v${NETCDF_C_VERSION%%[a-z]*}.tar.gz && \
+    mkdir --parents /usr/src/netcdf-c && \
+    tar --extract --directory /usr/src/netcdf-c --strip-components=1 --file netcdf-c.tar.gz && \
+    cd /usr/src/netcdf-c && \
+    cmake -B cmake_build -S . -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF && \
+    cmake --build cmake_build --parallel "$(nproc)" && \
+    cmake --build cmake_build --target install && \
+    rm --recursive --force /usr/src/netcdf-c netcdf-c.tar.gz
+
+RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-netcdf-fortran \
+    set -eux && \
+    curl --location --output netcdf-fortran.tar.gz https://github.com/Unidata/netcdf-fortran/archive/refs/tags/v${NETCDF_FORTRAN_VERSION%%[a-z]*}.tar.gz && \
+    mkdir --parents /usr/src/netcdf-fortran && \
+    tar --extract --directory /usr/src/netcdf-fortran --strip-components=1 --file netcdf-fortran.tar.gz && \
+    cd /usr/src/netcdf-fortran && \
     cmake -B cmake_build -S . -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF \
-    ; \
-    nproc="$(nproc)"; \
-    cmake --build cmake_build --parallel "$nproc" \
-    ; \
-    cmake --build cmake_build --target install ; \
-    \
-    rm --recursive --force /usr/src/netcdf-c
+       -DCMAKE_Fortran_COMPILER=/opt/rh/gcc-toolset-10/root/usr/bin/gfortran && \
+    cmake --build cmake_build --parallel "$(nproc)" && \
+    cmake --build cmake_build --target install && \
+    rm --recursive --force /usr/src/netcdf-fortran netcdf-fortran.tar.gz
 
-RUN set -eux; \
-    \
-    curl --location --output netcdf-fortran.tar.gz "https://github.com/Unidata/netcdf-fortran/archive/refs/tags/v${NETCDF_FORTRAN_VERSION%%[a-z]*}.tar.gz"; \
-    mkdir --parents /usr/src/netcdf-fortran; \
-    tar --extract --directory /usr/src/netcdf-fortran --strip-components=1 --file netcdf-fortran.tar.gz; \
-    rm netcdf-fortran.tar.gz; \
-    \
-    cd /usr/src/netcdf-fortran; \
-    cmake -B cmake_build -S . -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF \
-    -DCMAKE_Fortran_COMPILER=/opt/rh/gcc-toolset-10/root/usr/bin/gfortran \
-    ; \
-    nproc="$(nproc)"; \
-    cmake --build cmake_build --parallel "$nproc" \
-    ; \
-    cmake --build cmake_build --target install ; \
-    \
-    rm --recursive --force /usr/src/netcdf-fortran
-
-RUN set -eux; \
-    \
-    curl --location --output boost.tar.gz "https://archives.boost.io/release/${BOOST_VERSION%%[a-z]*}/source/boost_${BOOST_VERSION//./_}.tar.gz"; \
-    mkdir --parents /opt/boost; \
-    tar --extract --directory /opt/boost --strip-components=1 --file boost.tar.gz; \
+RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-boost \
+    set -eux && \
+    curl --location --output boost.tar.gz https://archives.boost.io/release/${BOOST_VERSION%%[a-z]*}/source/boost_${BOOST_VERSION//./_}.tar.gz && \
+    mkdir --parents /opt/boost && \
+    tar --extract --directory /opt/boost --strip-components=1 --file boost.tar.gz && \
     rm boost.tar.gz
 
-# Copy the remainder of your application code
-COPY . /ngen-app/ngen/
+ENV VIRTUAL_ENV="/ngen-app/ngen-python"
 
-ENV VIRTUAL_ENV=/ngen-app/ngen-python
-RUN set -eux; \
-	\
-    python3.10 -m venv ${VIRTUAL_ENV}
+# Create virtual environment for the application and upgrade pip within it
+RUN python3.10 -m venv ${VIRTUAL_ENV}
+
 ENV PATH=${VIRTUAL_ENV}/bin:${PATH}
+
+RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
+    set -eux && \
+    echo "Checking pip version" && \
+    pip3 --version && \
+    echo "Upgrading pip, setuptools, and wheel" && \
+    pip3 install --upgrade pip setuptools wheel && \
+    echo "Installed packages:" && \
+    pip3 show wheel && \
+    pip3 show setuptools && \
+    pip3 list && \
+    echo "Installing numpy and netcdf4" && \
+    pip3 install 'numpy==1.26.4' 'netcdf4<=1.6.3'
+
 
 WORKDIR /ngen-app/
 
-RUN set -eux; \
-    pip3 install "numpy==1.26.4" "netcdf4<=1.6.3"; \
-    pip3 cache purge
+# TODO This wil invaalidate the cache for all subsequent stages so we don't really want to do this
+# Copy the remainder of your application code
+COPY . /ngen-app/ngen/
+
+##############################
+# Stage: Submodules Build
+##############################
+FROM base AS submodules
+
+SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
+
+WORKDIR /ngen-app/ngen/
 
 # Copy only the requirements files first for dependency installation caching
 COPY extern/test_bmi_py/requirements.txt /tmp/test_bmi_py_requirements.txt
 COPY extern/t-route/requirements.txt /tmp/t-route_requirements.txt
 
 # Install Python dependencies and remove the temporary requirements files
-RUN set -eux; \
-    pip3 install -r /tmp/test_bmi_py_requirements.txt; \
-    pip3 install -r /tmp/t-route_requirements.txt; \
-    rm /tmp/test_bmi_py_requirements.txt /tmp/t-route_requirements.txt; \
-    pip3 cache purge
+RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
+    set -eux && \
+        pip3 install -r /tmp/test_bmi_py_requirements.txt && \
+        pip3 install -r /tmp/t-route_requirements.txt && \
+        rm /tmp/test_bmi_py_requirements.txt /tmp/t-route_requirements.txt
 
-RUN set -eux; \
-    cd ngen/extern/t-route ; \
-    LDFLAGS="-Wl,-L/usr/local/lib64/,-L/usr/local/lib/,-rpath,/usr/local/lib64/,-rpath,/usr/local/lib/" ./compiler.sh no-e
+# Use cache for building the t-route submodule
+RUN --mount=type=cache,target=/root/.cache/t-route,id=t-route-build \
+    set -eux && \
+    echo "Checking pip version" && \
+    pip3 --version && \
+    echo "Upgrading pip, setuptools, and wheel" && \
+    pip3 install --upgrade pip setuptools wheel && \
+    echo "Installed packages:" && \
+    pip3 show wheel && \
+    pip3 show setuptools && \
+    pip list && \
+    cd extern/t-route && \
+   echo "Running compiler.sh" && \
+    LDFLAGS='-Wl,-L/usr/local/lib64/,-L/usr/local/lib/,-rpath,/usr/local/lib64/,-rpath,/usr/local/lib/' && \
+    ./compiler.sh no-e
 
-WORKDIR /ngen-app/ngen/
-
-# Configure the build
-RUN set -eux; \
-    cmake -B cmake_build -S . \
+# Configure the build with cache for CMake
+RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ngen \
+    set -eux && \
+        cmake -B cmake_build -S . \
 ## FIXME: figure out why running with MPI enabled throws errors
 ##      and re-enable it.
-        -DNGEN_WITH_MPI=ON \
-        -DNGEN_WITH_NETCDF=ON \
-        -DNGEN_WITH_SQLITE=ON \
-        -DNGEN_WITH_UDUNITS=ON \
-        -DNGEN_WITH_BMI_FORTRAN=ON \
-        -DNGEN_WITH_BMI_C=ON \
-        -DNGEN_WITH_PYTHON=ON \
-        -DNGEN_WITH_TESTS=ON \
-        -DNGEN_WITH_ROUTING=ON \
-        -DNGEN_QUIET=ON \
-        -DNGEN_UPDATE_GIT_SUBMODULES=OFF \
-        -DBOOST_ROOT=/opt/boost/
+          -DNGEN_WITH_MPI=ON \
+          -DNGEN_WITH_NETCDF=ON \
+          -DNGEN_WITH_SQLITE=ON \
+          -DNGEN_WITH_UDUNITS=ON \
+          -DNGEN_WITH_BMI_FORTRAN=ON \
+          -DNGEN_WITH_BMI_C=ON \
+          -DNGEN_WITH_PYTHON=ON \
+          -DNGEN_WITH_TESTS=ON \
+          -DNGEN_WITH_ROUTING=ON \
+          -DNGEN_QUIET=ON \
+          -DNGEN_UPDATE_GIT_SUBMODULES=OFF \
+          -DBOOST_ROOT=/opt/boost && \
+      cmake --build cmake_build --target all --parallel $(nproc)
 
-# Build the project
-RUN nproc="$(nproc)" && cmake --build cmake_build --target all --parallel "${nproc}"
-
-# Build each submodule in a separate layer
-RUN cmake -B extern/LASAM/cmake_build -S extern/LASAM/ -DNGEN=ON && \
+# Build each submodule in a separate layer, using cache for CMake as well
+RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-lasam \
+    set -eux && \
+    cmake -B extern/LASAM/cmake_build -S extern/LASAM/ -DNGEN=ON && \
     cmake --build extern/LASAM/cmake_build/
 
-RUN cmake -B extern/snow17/cmake_build -S extern/snow17/ && \
+RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-snow17 \
+    set -eux && \
+    cmake -B extern/snow17/cmake_build -S extern/snow17/ && \
     cmake --build extern/snow17/cmake_build/
 
-RUN cmake -B extern/sac-sma/cmake_build -S extern/sac-sma/ && \
+RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-sac-sma \
+    set -eux && \
+    cmake -B extern/sac-sma/cmake_build -S extern/sac-sma/ && \
     cmake --build extern/sac-sma/cmake_build/
 
-RUN cmake -B extern/SoilMoistureProfiles/cmake_build -S extern/SoilMoistureProfiles/SoilMoistureProfiles/ -DNGEN=ON && \
+RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-soilmoistureprofiles \
+    set -eux && \
+    cmake -B extern/SoilMoistureProfiles/cmake_build -S extern/SoilMoistureProfiles/SoilMoistureProfiles/ -DNGEN=ON && \
     cmake --build extern/SoilMoistureProfiles/cmake_build/
 
-RUN cmake -B extern/SoilFreezeThaw/cmake_build -S extern/SoilFreezeThaw/SoilFreezeThaw/ -DNGEN=ON && \
+RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-soilfreezethaw \
+    set -eux && \
+    cmake -B extern/SoilFreezeThaw/cmake_build -S extern/SoilFreezeThaw/SoilFreezeThaw/ -DNGEN=ON && \
     cmake --build extern/SoilFreezeThaw/cmake_build/
 
-RUN cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ && \
+RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ueb-bmi \
+    set -eux && \
+    cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ && \
     cmake --build extern/ueb-bmi/cmake_build/
 
-RUN set -eux; \
-    mkdir --parents /ngencerf/data/ngen-run-logs/ ; \
-    mkdir --parents /ngen-app/bin/ ; \
-    mv run-ngen.sh /ngen-app/bin/ ; \
+RUN set -eux && \
+    mkdir --parents /ngencerf/data/ngen-run-logs/ && \
+    mkdir --parents /ngen-app/bin/ && \
+    mv run-ngen.sh /ngen-app/bin/ && \
     chmod +x /ngen-app/bin/run-ngen.sh
 
 WORKDIR /ngen-app/ngen
@@ -275,7 +287,7 @@ WORKDIR /ngen-app/ngen
 # Extract Git information for the main repository
 ARG CI_COMMIT_REF_NAME
 
-RUN set -eux; \
+RUN set -eux && \
     # Get the remote URL from Git configuration
     repo_url=$(git config --get remote.origin.url); \
     # Remove trailing slash if present
@@ -349,7 +361,6 @@ RUN set -eux; \
     jq -s 'add' $GIT_INFO_PATH /ngen-app/submodules-json/*.json > /ngen-app/merged_git_info.json && \
     mv /ngen-app/merged_git_info.json $GIT_INFO_PATH && \
     rm -rf /ngen-app/submodules-json
-
 
 WORKDIR /
 SHELL ["/bin/bash", "-c"]
