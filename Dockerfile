@@ -190,7 +190,7 @@ SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
 WORKDIR /ngen-app/ngen/
 
 # Copy only the requirements files first for dependency installation caching
-COPY extern/test_bmi_py/requirements.txt /tmp/test_bmi_py_requirements.txt
+COPY extern/test_bmi_py/requirements.txt /tmp/test_bmi_py_requirements.txt 
 COPY extern/t-route/requirements.txt /tmp/t-route_requirements.txt
 
 # Install Python dependencies and remove the temporary requirements files
