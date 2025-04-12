@@ -439,56 +439,53 @@ namespace geojson {
              * @param tab (optional) Additional starting tab to indent (default 0)
              * @param newline (optional) Add a new line to the end of the print (default true)
              */
-            static void print_property(const geojson::JSONProperty& p, int tab=0, bool newline = true){
-                char end = '\0';
-                std::stringstream ss;
-                if(newline)  end = '\n';
-                ss <<std::setw(tab);
-                switch( p.get_type() ){
+            static std::string print_property(const geojson::JSONProperty& p, int tab = 0, bool newline = true) {
+                std::ostringstream output;  // Use a string stream instead of cout
+                char end = newline ? '\n' : '\0';
+                
+                output << std::setw(tab); // Maintain indentation
+                
+                switch (p.get_type()) {
                     case geojson::PropertyType::String:
-                        ss <<p.as_string()<<end;
+                        output << p.as_string() << end;
                         break;
                     case geojson::PropertyType::Real:
-                        ss <<p.as_real_number()<<end;
+                        output << p.as_real_number() << end;
                         break;
                     case geojson::PropertyType::Natural:
-                        ss <<p.as_natural_number()<<end;
+                        output << p.as_natural_number() << end;
                         break;
                     case geojson::PropertyType::Boolean:
-                        if(p.as_boolean())
-                            ss <<"true"<<end;
-                        else
-                            ss <<"false"<<end;
-                        break;   
+                        output << (p.as_boolean() ? "true" : "false") << end;
+                        break;
                     case geojson::PropertyType::List:
-                        ss <<std::setw(tab)<<"[";
+                        output << std::setw(tab) << "[";
                         tab += 5;
-                        for( const auto& lp : p.as_list() ){
+                        for (const auto& lp : p.as_list()) {
                             //This is a little harder to align nicely without knowing
                             //the length of the property as a string first...so for now,
                             //just try to get a little bit in to make it easier to read
-                            ss <<std::setw(tab);
-                            print_property(lp, tab, false);
-                            ss <<","<<end;
+                            output << std::setw(tab);
+                            output << print_property(lp, tab, false);  // Recursively append
+                            output << "," << end;
                         }
                         tab -= 5;
-                        ss <<std::setw(tab)<<" ]"<<end;
-                        
+                        output << std::setw(tab) << " ]" << end;
                         break;
                     case geojson::PropertyType::Object:
-                        //tab += 5;
-                        ss <<std::setw(tab)<<"{\n";
+                        output << std::setw(tab) << "{\n";
                         tab += 5;
-                        for( auto pair : p.get_values() ){
-                            ss <<std::setw(tab + pair.first.length())<<pair.first<<" : ";
-                            print_property(pair.second, tab, false);
-                            ss <<",\n";
+                        for (const auto& pair : p.get_values()) {
+                            output << std::setw(tab + pair.first.length()) << pair.first << " : ";
+                            output << print_property(pair.second, tab, false);  // Recursively append
+                            output << ",\n";
                         }
                         tab -= 5;
-                        ss <<std::setw(tab)<<"}"<<end;
-                        tab -= 5;
-                };
-                LOG(ss.str(), LogLevel::INFO); ss.str("");
+                        output << std::setw(tab) << "}" << end;
+                        break;
+                }
+                
+                return output.str();
             }
 
             /**
