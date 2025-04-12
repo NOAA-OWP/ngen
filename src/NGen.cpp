@@ -206,62 +206,52 @@ int main(int argc, char *argv[]) {
     if( argc < 2) {
         // Usage
         ss << "Usage: " << std::endl;
-        LOG(ss.str(), LogLevel::INFO); ss.str("");
-        ss << argv[0] << " <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids>"
-                  << " <realization_config_path>" << std::endl
-                  << "Arguments for <catchment subset ids> and <nexus subset ids> must be given." << std::endl
-                  << "Use \"all\" as explicit argument when no subset is needed." << std::endl;
-        LOG(ss.str(), LogLevel::INFO); ss.str("");
+        ss << "  " << argv[0] << " <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids> <realization_config_path>" << std::endl;
+        ss << "  " << "Arguments for <catchment subset ids> and <nexus subset ids> must be given." << std::endl;
+        ss << "  " << "Use \"all\" as explicit argument when no subset is needed." << std::endl;
 
         // Build and environment information
-        ss<<std::endl<<"Build Info:"<<std::endl;
-        LOG(ss.str(), LogLevel::INFO); ss.str("");
+        ss<<"Build Info:"<<std::endl;
         ss<<"  NGen version: " // This is here mainly so that there will be *some* output if somehow no other options are enabled.
             << ngen_VERSION_MAJOR << "."
             << ngen_VERSION_MINOR << "."
             << ngen_VERSION_PATCH << std::endl;
-        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #if NGEN_WITH_MPI
         ss<<"  Parallel build"<<std::endl;
-        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #endif
         #if NGEN_WITH_NETCDF
         ss<<"  NetCDF lumped forcing enabled"<<std::endl;
-        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #endif
         #if NGEN_WITH_BMI_FORTRAN
         ss<<"  Fortran BMI enabled"<<std::endl;
-        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #endif
         #if NGEN_WITH_BMI_C
         ss<<"  C BMI enabled"<<std::endl;
-        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #endif
         #if NGEN_WITH_PYTHON
         ss<<"  Python active"<<std::endl;
         ss<<"    Embedded interpreter version: "<<PY_MAJOR_VERSION<<"."<<PY_MINOR_VERSION<<"."<<PY_MICRO_VERSION<<std::endl;
-        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #endif
         #if NGEN_WITH_ROUTING
         ss<<"  Routing active"<<std::endl;
-        LOG(ss.str(), LogLevel::INFO); ss.str("");
         #endif
         #if NGEN_WITH_PYTHON
-        ss<<std::endl<<"Python Environment Info:"<<std::endl;
+        ss<<"Python Environment Info:"<<std::endl;
         ss<<"  VIRTUAL_ENV environment variable: "<<(std::getenv("VIRTUAL_ENV") == nullptr ? "(not set)" : std::getenv("VIRTUAL_ENV"))<<std::endl;
         ss<<"  Discovered venv: "<<_interp->getDiscoveredVenvPath()<<std::endl;
-        LOG(ss.str(), LogLevel::INFO); ss.str("");
         auto paths = _interp->getSystemPath();
         ss<<"  System paths:"<<std::endl;
-        LOG(ss.str(), LogLevel::INFO); ss.str("");
         for(std::string& path: std::get<1>(paths)){
-          ss<<"    "<<path<<std::endl;
-          LOG(ss.str(), LogLevel::INFO); ss.str("");
+            if (!path.empty()) {
+                ss<<"    "<<path<<std::endl;
+            }
         }
         #endif
-        ss<<std::endl;
+        // Put usage in log and send to stdout
+        std::cout << ss.str() << std::endl;
         LOG(ss.str(), LogLevel::INFO); ss.str("");
         exit(0); // Unsure if this path should have a non-zero exit code?
+        
     } else if( argc < 6) {
         ss << "Missing required args:" << std::endl;
         ss << argv[0] << " <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids>"

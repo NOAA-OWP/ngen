@@ -1,93 +1,207 @@
 #include <stdlib.h>
 #include "Logger.hpp"
+#include <iostream>
+#include <sstream>
+#include <fstream>      // For file handling
+#include <cstdlib>      // For getenv()
 #include <cstring>
-#include <string>
+#include <string>       // For std::string
+#include <iomanip>
+#include <algorithm>
+#include <unordered_map>
+#include <iomanip>
 #include <chrono>
+#include <sys/wait.h>
+#include <sys/stat.h>
+
+const std::string MODULE_NAME      = "NGEN    ";          // Must be 8 characters for log entry alignment puroses.
+const std::string LOG_PATH_DEFAULT = "./run-logs/ngen_";  // Default log directory string. Date to be appeneded if used
+const std::string LOG_FILE_NAME    = "ngen";              // Log file name
+const std::string LOG_FILE_EXT     = ".log";              // Log file name extension
+const std::string DS               = "/";                 // Directory separator
 
 std::shared_ptr<Logger> Logger::loggerInstance;
 
 using namespace std;
 
-std::string module_name[static_cast<int>(LoggingModule::MODULE_COUNT)] 
-{
-	"NGEN    ",
-	"NOAHOWP ", 
-	"SNOW17  ", 
-	"UEB     ", 
-	"CFE     ", 
-	"SACSMA  ", 
-	"LASAM   ", 
-	"SMP     ", 
-	"SFT     ", 
-	"TROUTE  ", 
-	"SCHISM  ", 
-	"SFINCS  ", 
-	"GC2D    ", 
-	"TOPOFLOW",
+// String to LogLevel map
+static const std::unordered_map<std::string, LogLevel> logLevelMap = {
+    {"NONE", LogLevel::NONE}, {"0", LogLevel::NONE},
+    {"DEBUG", LogLevel::DEBUG}, {"1", LogLevel::DEBUG},
+    {"INFO", LogLevel::INFO}, {"2", LogLevel::INFO},
+    {"ERROR", LogLevel::ERROR}, {"3", LogLevel::ERROR},
+    {"WARN", LogLevel::WARN}, {"4", LogLevel::WARN},
+    {"FATAL", LogLevel::FATAL}, {"5", LogLevel::FATAL},
 };
 
+// Reverse map: LogLevel to String
+static const std::unordered_map<LogLevel, std::string> logLevelToStringMap = {
+    {LogLevel::NONE,  "NONE "},
+    {LogLevel::DEBUG, "DEBUG"},
+    {LogLevel::INFO,  "INFO "},
+    {LogLevel::ERROR, "ERROR"},
+    {LogLevel::WARN,  "WARN "},
+    {LogLevel::FATAL, "FATAL"},
+};
+
+bool Logger::DirectoryExists(const std::string& path) {
+    struct stat info;
+    if (stat(path.c_str(), &info) != 0) {
+        return false; // Cannot access path
+    }
+    return (info.st_mode & S_IFDIR) != 0;
+}
+
 /**
-* Configure Logger Preferences
-* @param logFile
+ * Create the directory checking both the call
+ * to execute the command and the result of the command
+ */
+bool Logger::CreateDirectory(const std::string& path) {
+
+    if (!DirectoryExists(path)) {
+        std::string mkdir_cmd = "mkdir -p " + path;
+        int status = system(mkdir_cmd.c_str());
+
+        if (status == -1) {
+            std::cerr << "system() failed to run mkdir.\n";
+            return false;
+        } else if (WIFEXITED(status)) {
+            int exitCode = WEXITSTATUS(status);
+            if (exitCode != 0) {
+                std::cerr << "mkdir command failed with exit code: " << exitCode << "\n";
+                return false;
+            }
+        } else {
+            std::cerr << "mkdir terminated abnormally.\n";
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Open log file and return open status. If already open,
+ * ensure the write pointer is at the end of the file. 
+ * If openedOnce false, open the file in truncate mode
+ * so only the last run of ngen in a calibration is saved.
+ * 
+ * return bool true if open and good, false otherwise
+ */
+bool Logger::LogFileReady(void) {
+
+    if (openedOnce && logFile.is_open() && logFile.good()) {
+        logFile.seekp(0, std::ios::end); // Ensure write pointer is at the actual file end
+        return true;
+    }
+    else {
+        if (openedOnce) {
+            // Somehow the logfile was closed. Open in append mode so  
+            // previosly logged messages are not lost
+            logFile.open(logFilePath, ios::out | ios::app); // This will silently fail if already open.
+            if (logFile.good()) return true;
+        }
+        else {
+            // First attempt to save if environmnt var Log file has never been opened for this ngen run
+            // Attempt until opened once (initially and on each attempt to write to the log)
+            if (!logFileDir.empty() && !logFilePath.empty()) {
+                if (CreateDirectory(logFileDir)) {
+                    logFile.open(logFilePath, ios::out | ios::trunc); // Truncating ensures keeping only the last calibration iteration.
+                    if (logFile.good()) {
+                        setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
+                        openedOnce = true;
+                        return true;
+                    }
+                }
+            }
+            // If logFileDir empty or unable to open, attempt to create alternate log file.
+            altLogFileDir = LOG_PATH_DEFAULT + CreateDateString();
+            if (CreateDirectory(altLogFileDir)) {
+                altLogFilePath = altLogFileDir + DS + LOG_FILE_NAME + "_" + CreateTimestamp(false) + LOG_FILE_EXT;
+                logFile.open(altLogFilePath, ios::out | ios::trunc);
+                if (logFile.good()) {
+                    setenv("NGEN_LOG_FILE_PATH", (char *)altLogFilePath.c_str(), 1);
+                    openedOnce = true;
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+/**
+ * Check the log level envinroment variable and update it if it changed.
+ * @return true if environment variable exists otherwise false. 
+ *
+*/
+bool Logger::CheckLogLevelEv(void) {
+    const char* envLogLevel = std::getenv("NGEN_LOGLEVEL");
+    if (envLogLevel != nullptr && envLogLevel[0] != '\0') {
+        LogLevel envll = ConvertStringToLogLevel(envLogLevel);
+        if (envll != logLevel) {
+            logLevel = envll;
+            std::string llMsg = "ngen log level set to NGEN_LOGLEVEL (" + TrimString(ConvertLogLevelToString(logLevel)) + ")\n";
+            Log(llMsg, logLevel);
+            envLogLevelLogged = true;
+        }
+        return true;
+    }
+    return false;
+}
+
+/**
+* Configure Logger Preferences and open log file
 * @param level: LogLevel::ERROR by Default
-* @param output: LogOutput::CONSOLE by Default
 * @return void
 */
-void Logger::SetLogPreferences(LogLevel level = LogLevel::ERROR) {
-	logLevel = level;
-	std::stringstream ss("");
+void Logger::SetLogPreferences(LogLevel level) {
 
-	// get the log file path
-	ss << getenv("NGEN_RESULTS_DIR");
-    std::string fwd_slash = "/";
- 	std::string logFileDir;
-	if (ss.str() != "")
-		logFileDir = ss.str() + fwd_slash + "logs" + fwd_slash;
-	else
-		logFileDir = "/ngencerf/data/run-logs/ngen_" + Logger::createDateString() + fwd_slash;
+    // Make sure the module name used for logging is all uppercase and 8 characters wide.
+    moduleName = MODULE_NAME;
+    std::string upperName = moduleName.substr(0, 8);  // Truncate to 8 chars max
+    std::transform(upperName.begin(), upperName.end(), upperName.begin(), ::toupper);
 
-	ss.str("");
-    std::string logFileName = "ngen.log";
+    std::ostringstream oss;
+    oss << std::left << std::setw(8) << std::setfill(' ') << upperName;
+    moduleName = oss.str();
 
-    // creating the directory
-   	int status;
-	std::string mkdir_cmd = "mkdir -p " + logFileDir;
-	const char *cstr = mkdir_cmd.c_str();
-   	status = system(cstr);
-   	if (status == -1)
-   	   std::cerr << "Error(" << (errno) << ") creating log file directory: " << logFileDir << std::endl;
-   	else {
-   	   	std::cout << "Log directory: " << logFileDir <<std::endl;
+	// Set the log file directory and log filename.
+    // Use name from environment variable if set, otherwise use default
+    logFileDir = "";
+    logFilePath = "";
+    altLogFilePath = "";
+    const char* envVar = std::getenv("NGEN_RESULTS_DIR");
+    if (envVar != nullptr && envVar[0] != '\0') {
+        logFileDir = envVar + DS + "logs";
+        logFilePath = logFileDir + DS + LOG_FILE_NAME + LOG_FILE_EXT;
+    }
 
-		// creating the log file
-		logFilePath = logFileDir+logFileName;
-		logFile.open(logFilePath, ios::out | ios::trunc);
-		if (!logFile.good()) {
-			std::cerr << "Warning: Can't Open Log File: " << logFilePath << std::endl;
-			// try logging to a file in local directory
-    		std::string logFileDir = "./run-logs/ngen_" + Logger::createTimestamp() + fwd_slash;
-			mkdir_cmd = "mkdir -p " + logFileDir;
-			cstr = mkdir_cmd.c_str();
-			status = system(cstr);
-   			if (status == -1)
-   	   			std::cerr << "Error(" << (errno) << ") creating log file directory: " << logFileDir << std::endl;
-   			else {
-				logFilePath = logFileDir+logFileName;
-				logFile.open(logFilePath, ios::out | ios::app);
-				if (!logFile.good()) {
-					std::cerr << "Can't Open local directory Log File:" << logFilePath <<std::endl;			
-				}
-				else {
-					std::cout << "Logging instead into: " << logFilePath << std::endl;
-					setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
-				}
-			}
-		}
-		else {
-			std::cout << "Log File Path:" << logFilePath << std::endl;
-			setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
-		}
-	}
+    openedOnce = false; // Ensure this is false before calling LogFileReady
+    if (LogFileReady()) {
+        std::string lMsg = "INFO: Log File: " + GetLogFilePath() + "\n";
+        std::cout << lMsg << std::endl;
+        // This is an INFO message that always should be in the log but the
+        // logLevel could be different than INFO. Therefore use logLevel to 
+        // ensure the message is recorded in the log
+        Log(lMsg, logLevel); // Calls CheckLogLevelEv
+    }
+    else {
+        std::cout << "Unable to create alternate log directory: " << logFileDir << std::endl;
+        std::cout << "Log entries will be written to stdout." << std::endl;
+        // Set the logger log level if environment var not found
+        if (!CheckLogLevelEv()) logLevel = level;
+    }
+
+    // This is only checked during startup in case the environment log level is 
+    // the same as the default log level so won't get logged in CheckLogLevelEv
+    if (!envLogLevelLogged) {
+        std::string llMsg = "INFO: log level set to " + ConvertLogLevelToString(logLevel) + "\n";
+        // This is an INFO message that always should be in the log but the
+        // logLevel could be different than INFO. Therefore use logLevel to 
+        // ensure the message is recorded in the log
+        Log(llMsg, logLevel);
+        envLogLevelLogged = true;
+    }
 }
 
 /**
@@ -98,57 +212,64 @@ std::shared_ptr<Logger> Logger::GetInstance() {
 	if (loggerInstance == nullptr) {
 		loggerInstance = std::shared_ptr<Logger>(new Logger());
 	}
-
 	return loggerInstance;
 }
 
 /**
 * Log given message with defined parameters and generate message to pass on Console or File
 * @param message: Log Message
-* @param messageLevel: Log Level, LogLevel::DEBUG by default
+* @param messageLevel: Log Level, LogLevel::INFO by default
 */
-void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG) {
-	LoggingModule module=LoggingModule::NGEN;
+void Logger::Log(std::string message, LogLevel messageLevel) {
 
-	// don't log if messageLevel < logLevel 
-	if (messageLevel >= logLevel) {
-		std::string logType;
-		//Set Log Level Name
-		switch (messageLevel) {
-		case LogLevel::FATAL:
-			logType = "FATAL ";
-			break;
-		case LogLevel::DEBUG:
-			logType = "DEBUG ";
-			break;
-		case LogLevel::INFO:
-			logType = "INFO  ";
-			break;
-		case LogLevel::WARN:
-			logType = "WARN  ";
-			break;
-		case LogLevel::ERROR:
-			logType = "ERROR ";
-			break;
-		default:
-			logType = "NONE  ";
-			break;
-		}
+    // Check for change in log level environment variable
+    (void) CheckLogLevelEv();
 
-		std::string final_message;
-		std::string mod_name;
-		mod_name = module_name[static_cast<int>(module)];
-		std::string separator = " ";
+    // don't log if messageLevel < logLevel 
+    if (messageLevel >= logLevel) {
+        std::string   logType   = ConvertLogLevelToString(messageLevel);
+        std::string   logPrefix = CreateTimestamp() + " " +  moduleName + " " + logType;
 
-		// make sure message has endl at the end
-   	 	if (message.find("\n", message.length()-1) == std::string::npos) {
-			message = message + "\n";
-    	}
+        // Log message, creating individual entries for a multi-line message
+        std::istringstream logMsg(message);
+        std::string line;
+        if (LogFileReady()) {
+            while (std::getline(logMsg, line)) {
+                logFile << logPrefix + " " + line << std::endl;
+            }
+            logFile.flush();
+        }
+        else {
+            // Log file not found. Write to stdout.
+            while (std::getline(logMsg, line)) {
+                cout << logPrefix + " " + line << std::endl;
+            }
+            cout << std::flush;
+        }
+    }
+}
 
-		final_message = createTimestamp() + separator + mod_name + separator + logType + message;
-		logFile << final_message;
-		logFile.flush();
-	}
+std::string Logger::ConvertLogLevelToString(LogLevel level) {
+    auto it = logLevelToStringMap.find(level);
+    if (it != logLevelToStringMap.end()) {
+        return it->second;  // Found valid named or numeric log level
+    }
+    return "NONE";
+}
+
+// Function to trim leading and trailing spaces
+std::string Logger::TrimString(const std::string& str) {
+    // Trim leading spaces
+    size_t first = str.find_first_not_of(" \t\n\r\f\v");
+    if (first == std::string::npos) {
+        return "";  // No non-whitespace characters
+    }
+
+    // Trim trailing spaces
+    size_t last = str.find_last_not_of(" \t\n\r\f\v");
+
+    // Return the trimmed string
+    return str.substr(first, last - first + 1);
 }
 
 /**
@@ -156,61 +277,83 @@ void Logger::Log(std::string message, LogLevel messageLevel = LogLevel::DEBUG) {
 * @param logLevel : String log level
 * @return LogLevel
 */
-LogLevel Logger::GetLogLevel(const std::string& logLevel) {
-	if (logLevel == "DEBUG") {
-		return LogLevel::DEBUG;
-	}
-	else if (logLevel == "INFO") {
-		return LogLevel::INFO;
-	}
-	else if (logLevel == "WARN") {
-		return LogLevel::ERROR;
-	}
-	else if (logLevel == "ERROR") {
-		return LogLevel::ERROR;
-	}
-	else if (logLevel == "FATAL") {
-		return LogLevel::ERROR;
-	}
+LogLevel Logger::ConvertStringToLogLevel(const std::string& logLevel) {
+    std::string trimmed = TrimString(logLevel);
+    if (!trimmed.empty()) {
+        // Convert string to LogLevel (supports both names and numbers)
+        auto it = logLevelMap.find(logLevel);
+        if (it != logLevelMap.end()) {
+            return it->second;  // Found valid named or numeric log level
+        }
 
+        // Try parsing as an integer (for cases where an invalid numeric value is given)
+        try {
+            int levelNum = std::stoi(logLevel);
+            if (levelNum >= 0 && levelNum <= 5) {
+                return static_cast<LogLevel>(levelNum);
+            }
+        } catch (...) {
+            // Ignore errors (e.g., if std::stoi fails for non-numeric input)
+        }
+    }
 	return LogLevel::NONE;
 }
 
-using std::chrono::system_clock;
+std::string Logger::CreateTimestamp(bool appendMS) {
+    using namespace std::chrono;
 
-std::string Logger::createTimestamp() {
-    std::chrono::_V2::system_clock::time_point currentTime = std::chrono::system_clock::now();
-    char buffer1[80];
-    char buffer2[80];
-	std::stringstream ss;
-    
-    long transformed = currentTime.time_since_epoch().count() / 1000000;
-    
-    long millis = transformed % 1000;
-    
-    std::time_t tt;
-    tt = std::time(0);
-    tm *timeinfo = std::gmtime(&tt);
-    strftime (buffer1,100,"%FT%H:%M:%S",timeinfo);
-    sprintf(buffer2, ".%03d", (int)millis);
-	ss << buffer1 << buffer2;
-    
+    // Get current time point
+    auto now = system_clock::now();
+    auto now_time_t = system_clock::to_time_t(now);
+
+    // Get milliseconds
+    auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
+
+    // Convert to UTC time
+    std::tm utc_tm;
+    gmtime_r(&now_time_t, &utc_tm);
+
+    if (appendMS) {
+        // Format date/time with strftime
+        char buffer[32];
+        std::strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%S", &utc_tm);
+
+        // Combine with milliseconds
+        std::ostringstream oss;
+        oss << buffer << '.' << std::setw(3) << std::setfill('0') << ms.count();
+
+        return oss.str();
+    }
+    // Format ts for alt logfile name 
+    char buffer[32];
+    std::strftime(buffer, sizeof(buffer), "%Y%m%dT%H%M%S", &utc_tm);
+
+    return std::string(buffer);
+}
+
+std::string Logger::CreateDateString(void) {
+    std::time_t tt = std::time(0);
+    std::tm* timeinfo = std::gmtime(&tt); // Use std::localtime(&tt) if you want local time
+
+    char buffer[11]; // Enough for "YYYY-MM-DD" + null terminator
+    std::strftime(buffer, sizeof(buffer), "%F", timeinfo); // %F == %Y-%m-%d
+
+    std::stringstream ss;
+    ss << buffer;
+
     return ss.str();
 }
 
-std::string Logger::createDateString() {
-    char buffer1[80];
-    std::time_t tt;
-	std::stringstream ss;
-
-    tt = std::time(0);
-    tm *timeinfo = std::gmtime(&tt);
-    strftime (buffer1,100,"%F",timeinfo);
-	ss << buffer1;
-
-    return ss.str();
+std::string Logger::GetLogFilePath(void) {
+    if (!logFilePath.empty()) {
+    	return logFilePath;
+    }
+    else if (!altLogFilePath.empty()) {
+        return altLogFilePath;
+    }
+    return "";
 }
 
-std::string Logger::getLogFilePath() {
-	return logFilePath;
+LogLevel Logger::GetLogLevel(void) {
+	return logLevel;
 }

@@ -4,6 +4,9 @@
 
 #include <map>
 #include <vector>
+#include <iostream>
+#include <stdexcept>
+#include <string>
 #include "Bmi_Formulation.hpp"
 #include "Bmi_Module_Formulation.hpp"
 #include "bmi.hpp"
@@ -11,6 +14,7 @@
 #include "OptionalWrappedDataProvider.hpp"
 #include "ConfigurationException.hpp"
 #include "ExternalIntegrationException.hpp"
+
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"
@@ -308,12 +312,9 @@ namespace realization {
                 }
                 break;
             }
-
             // If not found ...
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
-                std::string throw_msg; throw_msg.assign(get_formulation_type() + " cannot get output record duration for unknown \"" + var_name + "\"");
-                LOG(throw_msg, LogLevel::ERROR);
-                throw std::runtime_error(throw_msg);
+                throw std::runtime_error(get_formulation_type() + " cannot get output record duration for unknown \"" + var_name + "\"");
             }
             return availableData[var_name]->record_duration();
         }

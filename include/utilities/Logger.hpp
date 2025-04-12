@@ -19,45 +19,45 @@ enum class LogLevel {
 	FATAL = 5,
 };
 
-enum class LoggingModule {
-	NGEN = 0,
-	NOAHOWP, 
-	SNOW17, 
-	UEB, 
-	CFE, 
-	SACSMA, 
-	LASAM, 
-	SMP, 
-	SFT, 
-	TROUTE, 
-	SCHISM, 
-	SFINCS, 
-	GC2D, 
-	TOPOFLOW,
-	MODULE_COUNT
-};
-
 /**
 * Logger Class Used to Output Details of Current Application Flow
 */
 class Logger {
   public:
 	static std::shared_ptr<Logger> GetInstance();
-	void SetLogPreferences(LogLevel level);
-	void Log(std::string message, LogLevel messageLevel);
-	LogLevel GetLogLevel(const std::string& logLevel);
-	std::string createTimestamp();
-	std::string createDateString();
-	std::string getLogFilePath();
+
+    bool        CheckLogLevelEv(void);
+    std::string ConvertLogLevelToString(LogLevel level);
+    LogLevel    ConvertStringToLogLevel(const std::string& logLevel);
+	std::string CreateDateString(void);
+    bool        CreateDirectory(const std::string& path);
+	std::string CreateTimestamp(bool appendMS=true);
+    bool        DirectoryExists(const std::string& path);
+    std::string  FormatModuleName(const std::string& moduleName);
+    std::string GetLogFilePath(void);
+	LogLevel    GetLogLevel(void);
+    void        Log(std::string message, LogLevel messageLevel=LogLevel::INFO);
+    bool        LogFileReady(void);
+	void        SetLogPreferences(LogLevel level=LogLevel::INFO);
+    std::string TrimString(const std::string& str);
+
+	
 	static __always_inline void logMsgAndThrowError(const std::string& message) {
-		(Logger::GetInstance())->Log(message, LogLevel::ERROR);
+		(Logger::GetInstance())->Log(message, LogLevel::INFO);
 		throw std::runtime_error(message);
 	};
 
   private:
-	LogLevel logLevel;
+    std::string  altLogFilePath = "";
+    std::string  altLogFileDir = "";
 	std::fstream logFile;
-	std::string logFilePath;
+    std::string  logFileDir = "";
+	std::string  logFilePath = "";
+	LogLevel     logLevel = LogLevel::INFO;
+    std::string  moduleName = "";
+    bool         openedOnce = false;
+    bool         envLogLevelLogged = false;
+
 	static std::shared_ptr<Logger> loggerInstance;
 };
 
