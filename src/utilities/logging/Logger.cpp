@@ -14,11 +14,11 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 
-const std::string MODULE_NAME      = "NGEN    ";          // Must be 8 characters for log entry alignment puroses.
-const std::string LOG_PATH_DEFAULT = "./run-logs/ngen_";  // Default log directory string. Date to be appeneded if used
-const std::string LOG_FILE_NAME    = "ngen";              // Log file name
-const std::string LOG_FILE_EXT     = ".log";              // Log file name extension
-const std::string DS               = "/";                 // Directory separator
+const std::string MODULE_NAME      = "ngen";
+const std::string LOG_DIR_NGENCERF = "/ngencerf/data";  // ngenCERF log directory string if environement var empty.
+const std::string LOG_DIR_DEFAULT  = "run-logs";        // Default parent log directory string if env var empty  & ngencerf dosn't exist
+const std::string LOG_FILE_EXT     = "log";             // Log file name extension
+const std::string DS               = "/";               // Directory separator
 
 std::shared_ptr<Logger> Logger::loggerInstance;
 
@@ -101,25 +101,11 @@ bool Logger::LogFileReady(void) {
             if (logFile.good()) return true;
         }
         else {
-            // First attempt to save if environmnt var Log file has never been opened for this ngen run
             // Attempt until opened once (initially and on each attempt to write to the log)
-            if (!logFileDir.empty() && !logFilePath.empty()) {
-                if (CreateDirectory(logFileDir)) {
-                    logFile.open(logFilePath, ios::out | ios::trunc); // Truncating ensures keeping only the last calibration iteration.
-                    if (logFile.good()) {
-                        setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
-                        openedOnce = true;
-                        return true;
-                    }
-                }
-            }
-            // If logFileDir empty or unable to open, attempt to create alternate log file.
-            altLogFileDir = LOG_PATH_DEFAULT + CreateDateString();
-            if (CreateDirectory(altLogFileDir)) {
-                altLogFilePath = altLogFileDir + DS + LOG_FILE_NAME + "_" + CreateTimestamp(false) + LOG_FILE_EXT;
-                logFile.open(altLogFilePath, ios::out | ios::trunc);
+            if (!logFilePath.empty()) {
+                logFile.open(logFilePath, ios::out | ios::trunc); // Truncating ensures keeping only the last calibration iteration.
                 if (logFile.good()) {
-                    setenv("NGEN_LOG_FILE_PATH", (char *)altLogFilePath.c_str(), 1);
+                    setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
                     openedOnce = true;
                     return true;
                 }
@@ -165,35 +151,65 @@ void Logger::SetLogPreferences(LogLevel level) {
     oss << std::left << std::setw(8) << std::setfill(' ') << upperName;
     moduleName = oss.str();
 
-	// Set the log file directory and log filename.
-    // Use name from environment variable if set, otherwise use default
-    logFileDir = "";
+	// Determine the log file directory and log file name.
+    // Use name from environment variable if set, otherwise use a default
+    std::string logFileDir = "";
     logFilePath = "";
-    altLogFilePath = "";
-    const char* envVar = std::getenv("NGEN_RESULTS_DIR");
+    const char* envVar = std::getenv("NGEN_RESULTS_DIR");  // Currently set by ngen-cal but envision set for WCOSS at some point
     if (envVar != nullptr && envVar[0] != '\0') {
         logFileDir = envVar + DS + "logs";
-        logFilePath = logFileDir + DS + LOG_FILE_NAME + LOG_FILE_EXT;
+        logFilePath = logFileDir + DS + MODULE_NAME + "." + LOG_FILE_EXT;
+    }
+    else { 
+        // Get parent log directory
+        std::string dir;
+        if (DirectoryExists(LOG_DIR_NGENCERF)) {
+            logFileDir = LOG_DIR_NGENCERF + DS + LOG_DIR_DEFAULT;
+        }
+        else {
+            logFileDir = "~" + DS + LOG_DIR_DEFAULT;
+        }
+
+        // Ensure parent log direcotry exists
+        if (CreateDirectory(logFileDir)) {
+            // Get full log directory path
+            const char* envUsername = std::getenv("USER");
+            if (envUsername) { 
+                std::string username = envUsername;
+                logFileDir = logFileDir +  DS + username;
+            }
+            else {
+                logFileDir = logFileDir + DS + CreateDateString();
+            }
+            // Set the full path if log directory exists/created
+            if (CreateDirectory(logFileDir)) 
+                logFilePath = logFileDir + DS + MODULE_NAME + "_" + CreateTimestamp(false,false) + "." + LOG_FILE_EXT;
+        }
     }
 
     openedOnce = false; // Ensure this is false before calling LogFileReady
     if (LogFileReady()) {
-        std::string lMsg = "INFO: Log File: " + GetLogFilePath() + "\n";
-        std::cout << lMsg << std::endl;
+        std::cout << "Program " << MODULE_NAME << " Log File: " << logFilePath << std::endl;
         // This is an INFO message that always should be in the log but the
         // logLevel could be different than INFO. Therefore use logLevel to 
         // ensure the message is recorded in the log
+        std::string lMsg = "INFO: Log File: " + logFilePath + "\n";
         Log(lMsg, logLevel); // Calls CheckLogLevelEv
     }
     else {
-        std::cout << "Unable to create alternate log directory: " << logFileDir << std::endl;
-        std::cout << "Log entries will be written to stdout." << std::endl;
+        std::cout << "Unable to create log directory ";
+        if (!logFileDir.empty()) {
+            std::cout << logFileDir;
+            std::cout << " (Perhaps check permissions)" << std::endl;
+        }
+        std::cout << "Log entries will be written to stdout" << std::endl;
         // Set the logger log level if environment var not found
         if (!CheckLogLevelEv()) logLevel = level;
     }
 
-    // This is only checked during startup in case the environment log level is 
-    // the same as the default log level so won't get logged in CheckLogLevelEv
+    // Ener the initial log level is long. This flag is only checked here during startup in 
+    // case the environment log level is the same as the default log level. If so it wouldn't
+    // get logged in CheckLogLevelEv
     if (!envLogLevelLogged) {
         std::string llMsg = "INFO: log level set to " + ConvertLogLevelToString(logLevel) + "\n";
         // This is an INFO message that always should be in the log but the
@@ -299,7 +315,7 @@ LogLevel Logger::ConvertStringToLogLevel(const std::string& logLevel) {
 	return LogLevel::NONE;
 }
 
-std::string Logger::CreateTimestamp(bool appendMS) {
+std::string Logger::CreateTimestamp(bool appendMS, bool iso) {
     using namespace std::chrono;
 
     // Get current time point
@@ -313,21 +329,21 @@ std::string Logger::CreateTimestamp(bool appendMS) {
     std::tm utc_tm;
     gmtime_r(&now_time_t, &utc_tm);
 
-    if (appendMS) {
-        // Format date/time with strftime
-        char buffer[32];
+    // Format date/time with strftime
+    char buffer[32];
+    if (iso) {
         std::strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%S", &utc_tm);
+    }
+    else {
+        std::strftime(buffer, sizeof(buffer), "%Y%m%dT%H%M%S", &utc_tm);
+    }
 
+    if (appendMS) {
         // Combine with milliseconds
         std::ostringstream oss;
         oss << buffer << '.' << std::setw(3) << std::setfill('0') << ms.count();
-
         return oss.str();
     }
-    // Format ts for alt logfile name 
-    char buffer[32];
-    std::strftime(buffer, sizeof(buffer), "%Y%m%dT%H%M%S", &utc_tm);
-
     return std::string(buffer);
 }
 
@@ -345,13 +361,7 @@ std::string Logger::CreateDateString(void) {
 }
 
 std::string Logger::GetLogFilePath(void) {
-    if (!logFilePath.empty()) {
-    	return logFilePath;
-    }
-    else if (!altLogFilePath.empty()) {
-        return altLogFilePath;
-    }
-    return "";
+    return logFilePath;
 }
 
 LogLevel Logger::GetLogLevel(void) {
