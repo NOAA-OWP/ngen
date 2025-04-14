@@ -126,7 +126,10 @@ bool Logger::CheckLogLevelEv(void) {
         LogLevel envll = ConvertStringToLogLevel(envLogLevel);
         if (envll != logLevel) {
             logLevel = envll;
-            std::string llMsg = "ngen log level set to NGEN_LOGLEVEL (" + TrimString(ConvertLogLevelToString(logLevel)) + ")\n";
+            std::string llMsg = "INFO: " + MODULE_NAME + " log level set to found NGEN_LOGLEVEL (" + TrimString(ConvertLogLevelToString(logLevel)) + ")\n";
+            // This is an INFO message that always should be in the log but the
+            // logLevel could be different than INFO. herefore use logLevel to 
+            // ensure the message is recorded in the log
             Log(llMsg, logLevel);
             envLogLevelLogged = true;
         }
@@ -203,11 +206,13 @@ void Logger::SetLogPreferences(LogLevel level) {
             std::cout << " (Perhaps check permissions)" << std::endl;
         }
         std::cout << "Log entries will be written to stdout" << std::endl;
-        // Set the logger log level if environment var not found
-        if (!CheckLogLevelEv()) logLevel = level;
     }
 
-    // Ener the initial log level is long. This flag is only checked here during startup in 
+    // Set the logger log level if environment var not found
+    envLogLevelLogged = false; // Ensure this is false before calling LogFileReady
+    if (!CheckLogLevelEv()) logLevel = level;
+
+    // Ensure the initial log level is logged. This flag is only checked here during startup in 
     // case the environment log level is the same as the default log level. If so it wouldn't
     // get logged in CheckLogLevelEv
     if (!envLogLevelLogged) {
