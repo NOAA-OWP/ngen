@@ -107,6 +107,8 @@ bool Logger::LogFileReady(void) {
                 if (logFile.good()) {
                     setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
                     openedOnce = true;
+                    // Make sure individual submodule logger files are cleared
+                    unsetenv("UEB_BMI_LOGFILEPATH");
                     return true;
                 }
             }
