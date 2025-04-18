@@ -163,9 +163,10 @@ void Logger::SetLogPreferences(LogLevel level) {
     const char* envVar = std::getenv("NGEN_RESULTS_DIR");  // Currently set by ngen-cal but envision set for WCOSS at some point
     if (envVar != nullptr && envVar[0] != '\0') {
         logFileDir = envVar + DS + "logs";
-        logFilePath = logFileDir + DS + MODULE_NAME + "." + LOG_FILE_EXT;
+        if (CreateDirectory(logFileDir))
+            logFilePath = logFileDir + DS + MODULE_NAME + "." + LOG_FILE_EXT;
     }
-    else { 
+    if (logFilePath.empty()) { 
         // Get parent log directory
         std::string dir;
         if (DirectoryExists(LOG_DIR_NGENCERF)) {
