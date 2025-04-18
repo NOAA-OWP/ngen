@@ -31,7 +31,7 @@ class Logger {
     LogLevel    ConvertStringToLogLevel(const std::string& logLevel);
 	std::string CreateDateString(void);
     bool        CreateDirectory(const std::string& path);
-	std::string CreateTimestamp(bool appendMS=true);
+	std::string CreateTimestamp(bool appendMS=true, bool iso=true);
     bool        DirectoryExists(const std::string& path);
     std::string  FormatModuleName(const std::string& moduleName);
     std::string GetLogFilePath(void);
@@ -48,10 +48,7 @@ class Logger {
 	};
 
   private:
-    std::string  altLogFilePath = "";
-    std::string  altLogFileDir = "";
 	std::fstream logFile;
-    std::string  logFileDir = "";
 	std::string  logFilePath = "";
 	LogLevel     logLevel = LogLevel::INFO;
     std::string  moduleName = "";
