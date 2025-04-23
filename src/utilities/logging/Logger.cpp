@@ -107,7 +107,17 @@ bool Logger::LogFileReady(void) {
                 if (logFile.good()) {
                     setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
                     openedOnce = true;
-                    // Make sure individual submodule logger files are cleared
+                    // Make sure individual submodule logger files pathnames environment vars are cleared
+                    unsetenv("CFE_LOGFILEPATH");
+                    unsetenv("LASAM_LOGFILEPATH");
+                    unsetenv("NOAHOWP_LOGFILEPATH");
+                    unsetenv("PET_LOGFILEPATH");  // Not required
+                    unsetenv("SACSMA_LOGFILEPATH");
+                    unsetenv("SNOW17_LOGFILEPATH");
+                    unsetenv("SFT_LOGFILEPATH");
+                    unsetenv("SMP_LOGFILEPATH"); // Not required
+                    unsetenv("TOPMODEL_LOGFILEPATH");
+                    unsetenv("TROUTE_LOGFILEPATH");
                     unsetenv("UEB_BMI_LOGFILEPATH");
                     return true;
                 }
