@@ -172,6 +172,10 @@ namespace realization {
                        // } //end for formulaitons
                       }//end for catchments
 
+                    // Remove the catchment config section from memory
+                    // It may be useful to remove each subtree after it is processed above
+                    // and/or remove the entire tree after it is read to avoid excessive memory usage
+                    (*possible_catchment_configs).clear();
 
                 }//end if possible_catchment_configs
 
