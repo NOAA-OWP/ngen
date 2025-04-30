@@ -7,6 +7,7 @@
 #include <fstream>
 #include <ctime>
 #include <sstream>
+#include <unordered_map>
 
 #define LOG (Logger::GetInstance())->Log
 
@@ -24,23 +25,13 @@ enum class LogLevel {
 */
 class Logger {
   public:
+//    Logger(void);
+//    ~Logger(void);
+
 	static std::shared_ptr<Logger> GetInstance();
 
-    bool        CheckLogLevelEv(void);
-    std::string ConvertLogLevelToString(LogLevel level);
-    LogLevel    ConvertStringToLogLevel(const std::string& logLevel);
-	std::string CreateDateString(void);
-    bool        CreateDirectory(const std::string& path);
-	std::string CreateTimestamp(bool appendMS=true, bool iso=true);
-    bool        DirectoryExists(const std::string& path);
-    std::string  FormatModuleName(const std::string& moduleName);
-    std::string GetLogFilePath(void);
-	LogLevel    GetLogLevel(void);
+    void        SetLogPreferences(LogLevel level=LogLevel::INFO);
     void        Log(std::string message, LogLevel messageLevel=LogLevel::INFO);
-    bool        LogFileReady(void);
-	void        SetLogPreferences(LogLevel level=LogLevel::INFO);
-    std::string TrimString(const std::string& str);
-
 	
 	static __always_inline void logMsgAndThrowError(const std::string& message) {
 		(Logger::GetInstance())->Log(message, LogLevel::INFO);
@@ -48,12 +39,35 @@ class Logger {
 	};
 
   private:
-	std::fstream logFile;
+    // Methods
+    std::string ConvertLogLevelToString(LogLevel level);
+    LogLevel    ConvertStringToLogLevel(const std::string& logLevel);
+    std::string CreateDateString(void);
+    bool        CreateDirectory(const std::string& path);
+    std::string CreateTimestamp(bool appendMS=true, bool iso=true);
+    bool        DirectoryExists(const std::string& path);
+    std::string ExtractFirstNDirs(const std::string& path, int numDirs);
+    std::string GetLogFilePath(void);
+    LogLevel    GetLogLevel(void);
+    bool        LogFileReady(void);
+    void        ReadConfigFile(void);
+    void        SetupLogFile(void);
+    void        SetLogLevelEnvVars(void);
+    std::string ToUpper(const std::string& str);
+    std::string TrimString(const std::string& str);
+
+    // Variables
+    bool         loggerInitialized = false;
+    bool         loggingEnabled = true;
+    std::fstream logFile;
+	std::string  logFileDir = "";
 	std::string  logFilePath = "";
 	LogLevel     logLevel = LogLevel::INFO;
     std::string  moduleName = "";
+    std::string  ngenResultsDir = "";
     bool         openedOnce = false;
-    bool         envLogLevelLogged = false;
+    
+    std::unordered_map<std::string, LogLevel> moduleLogLevels;
 
 	static std::shared_ptr<Logger> loggerInstance;
 };

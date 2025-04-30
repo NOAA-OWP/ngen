@@ -13,12 +13,18 @@
 #include <chrono>
 #include <sys/wait.h>
 #include <sys/stat.h>
+#include <vector>
 
-const std::string MODULE_NAME      = "ngen";
-const std::string LOG_DIR_NGENCERF = "/ngencerf/data";  // ngenCERF log directory string if environement var empty.
-const std::string LOG_DIR_DEFAULT  = "run-logs";        // Default parent log directory string if env var empty  & ngencerf dosn't exist
-const std::string LOG_FILE_EXT     = "log";             // Log file name extension
-const std::string DS               = "/";               // Directory separator
+
+const std::string  MODULE_NAME         = "ngen";
+const std::string  LOG_DIR_NGENCERF    = "/ngencerf/data";  // ngenCERF log directory string if environement var empty.
+const std::string  LOG_DIR_DEFAULT     = "run-logs";        // Default parent log directory string if env var empty  & ngencerf dosn't exist
+const std::string  LOG_FILE_EXT        = "log";             // Log file name extension
+const std::string  DS                  = "/";               // Directory separator
+const unsigned int LOG_MODULE_NAME_LEN = 8;                 // Width of module name for log entries
+
+const std::string  EV_EWTS_LOGGING     = "NGEN_EWTS_LOGGING";    // Enable/disable of Error Warning and Trapping System  
+const std::string  EV_NGEN_LOGFILEPATH = "NGEN_LOG_FILE_PATH";   // ngen log file 
 
 std::shared_ptr<Logger> Logger::loggerInstance;
 
@@ -42,6 +48,23 @@ static const std::unordered_map<LogLevel, std::string> logLevelToStringMap = {
     {LogLevel::ERROR, "ERROR"},
     {LogLevel::WARN,  "WARN "},
     {LogLevel::FATAL, "FATAL"},
+};
+
+const std::vector<std::string> allModules = {
+    "NGEN",
+    "CFE-S",
+    "CFE-X",
+    "LASAM",
+    "NOAH-OWP-MODULAR",
+    "PET",
+    "SAC-SMA",
+    "SFT",
+    "SMP",
+    "SNOW-17",
+    "TOPMODEL",
+    "TOPOFLOW",
+    "T-ROUTE",
+    "UEB",
 };
 
 bool Logger::DirectoryExists(const std::string& path) {
@@ -82,8 +105,6 @@ bool Logger::CreateDirectory(const std::string& path) {
 /**
  * Open log file and return open status. If already open,
  * ensure the write pointer is at the end of the file. 
- * If openedOnce false, open the file in truncate mode
- * so only the last run of ngen in a calibration is saved.
  * 
  * return bool true if open and good, false otherwise
  */
@@ -93,92 +114,26 @@ bool Logger::LogFileReady(void) {
         logFile.seekp(0, std::ios::end); // Ensure write pointer is at the actual file end
         return true;
     }
-    else {
-        if (openedOnce) {
-            // Somehow the logfile was closed. Open in append mode so  
-            // previosly logged messages are not lost
-            logFile.open(logFilePath, ios::out | ios::app); // This will silently fail if already open.
-            if (logFile.good()) return true;
-        }
-        else {
-            // Attempt until opened once (initially and on each attempt to write to the log)
-            if (!logFilePath.empty()) {
-                logFile.open(logFilePath, ios::out | ios::trunc); // Truncating ensures keeping only the last calibration iteration.
-                if (logFile.good()) {
-                    setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
-                    openedOnce = true;
-                    // Make sure individual submodule logger files pathnames environment vars are cleared
-                    unsetenv("CFE_LOGFILEPATH");
-                    unsetenv("LASAM_LOGFILEPATH");
-                    unsetenv("NOAHOWP_LOGFILEPATH");
-                    unsetenv("PET_LOGFILEPATH");  // Not required
-                    unsetenv("SACSMA_LOGFILEPATH");
-                    unsetenv("SNOW17_LOGFILEPATH");
-                    unsetenv("SFT_LOGFILEPATH");
-                    unsetenv("SMP_LOGFILEPATH"); // Not required
-                    unsetenv("TOPMODEL_LOGFILEPATH");
-                    unsetenv("TROUTE_LOGFILEPATH");
-                    unsetenv("UEB_BMI_LOGFILEPATH");
-                    return true;
-                }
-            }
-        }
+    else if (openedOnce) {
+        // Somehow the logfile was closed. Open in append mode so  
+        // previosly logged messages are not lost
+        logFile.open(logFilePath, ios::out | ios::app); // This will silently fail if already open.
+        if (logFile.good()) return true;
     }
     return false;
 }
 
-/**
- * Check the log level envinroment variable and update it if it changed.
- * @return true if environment variable exists otherwise false. 
- *
-*/
-bool Logger::CheckLogLevelEv(void) {
-    const char* envLogLevel = std::getenv("NGEN_LOGLEVEL");
-    if (envLogLevel != nullptr && envLogLevel[0] != '\0') {
-        LogLevel envll = ConvertStringToLogLevel(envLogLevel);
-        if (envll != logLevel) {
-            logLevel = envll;
-            std::string llMsg = "INFO: " + MODULE_NAME + " log level set to found NGEN_LOGLEVEL (" + TrimString(ConvertLogLevelToString(logLevel)) + ")\n";
-            // This is an INFO message that always should be in the log but the
-            // logLevel could be different than INFO. herefore use logLevel to 
-            // ensure the message is recorded in the log
-            Log(llMsg, logLevel);
-            envLogLevelLogged = true;
-        }
-        return true;
-    }
-    return false;
-}
-
-/**
-* Configure Logger Preferences and open log file
-* @param level: LogLevel::ERROR by Default
-* @return void
-*/
-void Logger::SetLogPreferences(LogLevel level) {
-
-    // Make sure the module name used for logging is all uppercase and 8 characters wide.
-    moduleName = MODULE_NAME;
-    std::string upperName = moduleName.substr(0, 8);  // Truncate to 8 chars max
-    std::transform(upperName.begin(), upperName.end(), upperName.begin(), ::toupper);
-
-    std::ostringstream oss;
-    oss << std::left << std::setw(8) << std::setfill(' ') << upperName;
-    moduleName = oss.str();
+void Logger::SetupLogFile(void) {
 
 	// Determine the log file directory and log file name.
     // Use name from environment variable if set, otherwise use a default
-    std::string logFileDir = "";
-    logFilePath = "";
-    const char* envVar = std::getenv("NGEN_RESULTS_DIR");  // Currently set by ngen-cal but envision set for WCOSS at some point
-    if (envVar != nullptr && envVar[0] != '\0') {
-        logFileDir = envVar + DS + "logs";
+    if (!ngenResultsDir.empty()) {
+        logFileDir = ngenResultsDir + DS + "logs";
         if (CreateDirectory(logFileDir))
             logFilePath = logFileDir + DS + MODULE_NAME + "." + LOG_FILE_EXT;
     }
     if (logFilePath.empty()) { 
         // Get parent log directory
-        std::string dir;
         if (DirectoryExists(LOG_DIR_NGENCERF)) {
             logFileDir = LOG_DIR_NGENCERF + DS + LOG_DIR_DEFAULT;
         }
@@ -203,38 +158,199 @@ void Logger::SetLogPreferences(LogLevel level) {
         }
     }
 
-    openedOnce = false; // Ensure this is false before calling LogFileReady
-    if (LogFileReady()) {
-        std::cout << "Program " << MODULE_NAME << " Log File: " << logFilePath << std::endl;
-        // This is an INFO message that always should be in the log but the
-        // logLevel could be different than INFO. Therefore use logLevel to 
-        // ensure the message is recorded in the log
-        std::string lMsg = "INFO: Log File: " + logFilePath + "\n";
-        Log(lMsg, logLevel); // Calls CheckLogLevelEv
-    }
-    else {
-        std::cout << "Unable to create log directory ";
-        if (!logFileDir.empty()) {
-            std::cout << logFileDir;
-            std::cout << " (Perhaps check permissions)" << std::endl;
+    // Attempt until log file
+    if (!logFilePath.empty()) {
+        logFile.open(logFilePath, ios::out | ios::trunc); // Truncating ensures keeping only the last calibration iteration.
+        if (logFile.is_open()) {
+            openedOnce = true;
+            setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
+            // Make sure individual submodule logger files pathnames environment vars are cleared
+            unsetenv("CFE_LOGFILEPATH");
+            unsetenv("LASAM_LOGFILEPATH");
+            unsetenv("NOAHOWP_LOGFILEPATH");
+            unsetenv("PET_LOGFILEPATH");  // Not required yet
+            unsetenv("SACSMA_LOGFILEPATH");
+            unsetenv("SNOW17_LOGFILEPATH");
+            unsetenv("SFT_LOGFILEPATH");
+            unsetenv("SMP_LOGFILEPATH"); // Not required yet
+            unsetenv("TOPMODEL_LOGFILEPATH");
+            unsetenv("TROUTE_LOGFILEPATH");
+            unsetenv("UEB_BMI_LOGFILEPATH");
+            std::cout << "Program " << MODULE_NAME << " Log File: " << logFilePath << std::endl;
+
+            std::string lMsg = "Log File: " + logFilePath + "\n";
+            LogLevel saveLevel = logLevel;
+            logLevel = LogLevel::INFO; // Ensure this INFO message is always logged
+            Log(lMsg, logLevel);
+            logLevel = saveLevel;
+            return;
         }
-        std::cout << "Log entries will be written to stdout" << std::endl;
+    }
+    std::cout << "Unable to create log file ";
+    if (!logFilePath.empty()) {
+        std::cout << logFilePath;
+    }
+    else if (!logFileDir.empty()) {
+        std::cout << logFileDir;
+    }
+    std::cout << " (Perhaps check permissions)" << std::endl;
+    std::cout << "Log entries will be written to stdout" << std::endl;
+}
+
+std::string Logger::ToUpper(const std::string& input) {
+    std::string result = input;
+    std::transform(result.begin(), result.end(), result.begin(),
+                   [](unsigned char c){ return std::toupper(c); });
+    return result;
+}
+
+std::string Logger::ExtractFirstNDirs(const std::string& path, int numDirs) {
+    size_t pos = 0;
+    int slashCount = 0;
+
+    while (pos < path.length() && slashCount < numDirs) {
+        if (path[pos] == '/') {
+            ++slashCount;
+        }
+        ++pos;
     }
 
-    // Set the logger log level if environment var not found
-    envLogLevelLogged = false; // Ensure this is false before calling LogFileReady
-    if (!CheckLogLevelEv()) logLevel = level;
+    // If the path starts with '/', keep it as is; otherwise return substring
+    return path.substr(0, pos);
+}
 
-    // Ensure the initial log level is logged. This flag is only checked here during startup in 
-    // case the environment log level is the same as the default log level. If so it wouldn't
-    // get logged in CheckLogLevelEv
-    if (!envLogLevelLogged) {
-        std::string llMsg = "INFO: log level set to " + ConvertLogLevelToString(logLevel) + "\n";
-        // This is an INFO message that always should be in the log but the
-        // logLevel could be different than INFO. Therefore use logLevel to 
-        // ensure the message is recorded in the log
-        Log(llMsg, logLevel);
-        envLogLevelLogged = true;
+std::string CleanJsonToken(const std::string& token) {
+    std::string s = token;
+    if (!s.empty() && s.front() == '"') s.erase(0, 1);
+    if (!s.empty() && s.back() == ',') s.pop_back();
+    if (!s.empty() && s.back() == '"') s.pop_back();
+    return s;
+}
+
+void Logger::ReadConfigFile(void) {
+
+    loggingEnabled = true;
+
+    moduleLogLevels.clear();
+    for (const auto& hydroModule : allModules) {
+        moduleLogLevels[hydroModule] = LogLevel::INFO;
+    }
+
+    std::ifstream jsonFile;
+    if (ngenResultsDir.empty()) {
+        std::cout << "WARNING: NGEN_RESULTS_DIR environment variable not set.";
+        std::cout << " Using default logging configuration of enabled and log level INFO" << std::endl;
+    } else {
+        std::string configDir = ExtractFirstNDirs(ngenResultsDir,6);
+        std::string configFilePath = configDir + "logging-config.json";
+        std::cout << "Logger config: Opening logger config file " << configFilePath << std::endl;
+        jsonFile.open(configFilePath.c_str());
+        if (jsonFile.is_open() && (jsonFile.peek() != std::ifstream::traits_type::eof())) {
+            // Parse the json file
+            std::string line;
+            bool inModules = false;
+            while (std::getline(jsonFile, line)) {
+                std::string trimmed = TrimString(line);
+                if (trimmed.find("\"logging_enabled\"") != std::string::npos) {
+                    size_t colon = trimmed.find(":");
+                    if (colon != std::string::npos) {
+                        std::string rawValue = TrimString(trimmed.substr(colon + 1));
+                        std::string value = CleanJsonToken(rawValue);
+                        loggingEnabled = (value == "true");
+                        std::cout << "  Found logging_enabled=" << (loggingEnabled?"true":"false") << std::endl;
+                    }
+                } else if (trimmed.find("\"modules\"") != std::string::npos) {
+                    inModules = true;
+                } else if (inModules && trimmed.find("}") != std::string::npos) {
+                    break; // end of modules section
+                } else if (inModules) {
+                    size_t colon = trimmed.find(":");
+                    if (colon != std::string::npos) {
+                        std::string rawModule = TrimString(trimmed.substr(0, colon));                
+                        std::string moduleTok = CleanJsonToken(rawModule);                
+                        std::string moduleStr = ToUpper(moduleTok);                
+                        std::string rawLevel = TrimString(trimmed.substr(colon + 1));
+                        std::string levelStr = ToUpper(CleanJsonToken(rawLevel)); 
+                        if (std::find(allModules.begin(), allModules.end(), moduleStr) != allModules.end()) {
+                            moduleLogLevels[moduleStr] = ConvertStringToLogLevel(levelStr);
+                            std::cout << "  Found Log level " << moduleTok << "=" << ConvertLogLevelToString(moduleLogLevels[moduleStr]) << std::endl;
+                        } else {
+                            std::cout << "  ERROR: Ignoring unknown module " << moduleStr <<  std::endl;
+                        }
+                    }
+                }
+            }
+        } else {
+            std::cout << "WARNING: Unable to open logging config file " << configFilePath << ".";
+            std::cout << " Using default logging configuration of enabled and log level INFO" << std::endl;    
+        }
+    }
+
+    // Set the environment variables for the module loggers
+    SetLogLevelEnvVars();
+}
+
+void Logger::SetLogLevelEnvVars(void) {
+    cout << "Logger setup: Setting Modules Environment Variables" << endl;
+    for (const auto& hydroModule : allModules) {
+        std::string moduleEnv = "";
+        if (hydroModule == "NGEN") {
+            logLevel = moduleLogLevels[hydroModule];
+            moduleEnv = "NGEN_LOGLEVEL";
+        }
+        else if (hydroModule == "CFE-S" || hydroModule == "CFE-X") moduleEnv = "CFE_LOGLEVEL";
+        else if (hydroModule == "NOAH-OWP-MODULAR") moduleEnv = "NOAHOWP_LOGLEVEL";
+        else if (hydroModule == "SAC-SMA") moduleEnv = "SACSMA_LOGLEVEL";
+        else if (hydroModule == "SNOW-17") moduleEnv = "SNOW17_LOGLEVEL";
+        else if (hydroModule == "T-ROUTE") moduleEnv = "TROUTE_LOGLEVEL";
+        else if (hydroModule == "UEB") moduleEnv = "UEB_BMI_LOGLEVEL";
+        else moduleEnv = hydroModule + "_LOGLEVEL";
+        std::string ll = ConvertLogLevelToString(moduleLogLevels[hydroModule]);
+        setenv(moduleEnv.c_str(), ll.c_str(), 1);
+        cout << "  " << hydroModule << ": " << moduleEnv << "=" << ll << endl;
+    }
+}
+
+/**
+* Configure Logger Preferences and open log file
+* @param level: LogLevel::ERROR by Default
+* @return void
+*/
+void Logger::SetLogPreferences(LogLevel level) {
+
+    if (!loggerInitialized) {
+        loggerInitialized = true; // Only call this once
+
+        // Determine the log file directory and log file name.
+        // Use name from environment variable if set, otherwise use a default
+        std::string logFileDir = "";
+        logFilePath = "";
+        const char* envVar = std::getenv("NGEN_RESULTS_DIR");  // Currently set by ngen-cal but envision set for WCOSS at some point
+        if (envVar != nullptr && envVar[0] != '\0') {
+            ngenResultsDir = envVar;
+        }
+
+        ReadConfigFile();
+        
+        if (loggingEnabled) {
+
+            // Make sure the module name used for logging is all uppercase and LOG_MODULE_NAME_LEN characters wide.
+            moduleName = MODULE_NAME;
+            std::string upperName = moduleName.substr(0, LOG_MODULE_NAME_LEN);  // Truncate to LOG_MODULE_NAME_LEN chars max
+            std::transform(upperName.begin(), upperName.end(), upperName.begin(), ::toupper);
+
+            std::ostringstream oss;
+            oss << std::left << std::setw(LOG_MODULE_NAME_LEN) << std::setfill(' ') << upperName;
+            moduleName = oss.str();
+
+            SetupLogFile();
+
+            std::string llMsg = "Log level set to " + ConvertLogLevelToString(logLevel) + "\n";
+            LogLevel saveLevel = logLevel;
+            logLevel = LogLevel::INFO; // Ensure this INFO message is always logged
+            Log(llMsg, logLevel);
+            logLevel = saveLevel;
+        }
     }
 }
 
@@ -256,11 +372,10 @@ std::shared_ptr<Logger> Logger::GetInstance() {
 */
 void Logger::Log(std::string message, LogLevel messageLevel) {
 
-    // Check for change in log level environment variable
-    (void) CheckLogLevelEv();
+    if (!loggerInitialized) SetLogPreferences();
 
-    // don't log if messageLevel < logLevel 
-    if (messageLevel >= logLevel) {
+    // Log only when appropriate 
+    if  ((loggingEnabled) && (messageLevel >= logLevel)) {
         std::string   logType   = ConvertLogLevelToString(messageLevel);
         std::string   logPrefix = CreateTimestamp() + " " +  moduleName + " " + logType;
 
@@ -283,14 +398,6 @@ void Logger::Log(std::string message, LogLevel messageLevel) {
     }
 }
 
-std::string Logger::ConvertLogLevelToString(LogLevel level) {
-    auto it = logLevelToStringMap.find(level);
-    if (it != logLevelToStringMap.end()) {
-        return it->second;  // Found valid named or numeric log level
-    }
-    return "NONE";
-}
-
 // Function to trim leading and trailing spaces
 std::string Logger::TrimString(const std::string& str) {
     // Trim leading spaces
@@ -304,6 +411,14 @@ std::string Logger::TrimString(const std::string& str) {
 
     // Return the trimmed string
     return str.substr(first, last - first + 1);
+}
+
+std::string Logger::ConvertLogLevelToString(LogLevel level) {
+    auto it = logLevelToStringMap.find(level);
+    if (it != logLevelToStringMap.end()) {
+        return it->second;  // Found valid named or numeric log level
+    }
+    return "NONE";
 }
 
 /**
