@@ -61,7 +61,7 @@ namespace realization {
                     "Invalid formulation forcing provider configuration! identifier: \"" + identifier +
                     "\", formulation_type: \"" + formulation_type +
                     "\", provider: \"" + forcing_config.provider + "\"");
-            LOG(throw_msg, LogLevel::ERROR);
+            LOG(throw_msg, LogLevel::WARNING);
             throw std::runtime_error(throw_msg);
         }
         return formulation_constructor(identifier, fp, output_stream);
@@ -79,7 +79,7 @@ namespace realization {
         }
 
         std::string throw_msg; throw_msg.assign("No valid formulation for " + *key + " was described in the passed in tree.");
-        LOG(throw_msg, LogLevel::ERROR);
+        LOG(throw_msg, LogLevel::WARNING);
         throw std::runtime_error(throw_msg);
     }
 }

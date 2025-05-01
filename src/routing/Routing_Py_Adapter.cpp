@@ -21,7 +21,7 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_config_file_with_path
   try {
     this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("ngen_routing.ngen_main");
     routing_ss <<"WARN: Legacy t-route module detected; use of this version is deprecated!"<<std::endl;
-    LOG(routing_ss.str(), LogLevel::WARN); routing_ss.str("");
+    LOG(routing_ss.str(), LogLevel::SEVERE); routing_ss.str("");
   }
   catch (const pybind11::error_already_set& e){
     try {

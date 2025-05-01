@@ -30,14 +30,14 @@ extern "C" {
     {
         #ifndef NGEN_QUIET
             std::cerr<<"WARNING: " <<std::string(msg); // Necessary for heritiage unit testing only.
-            LOG(msg, LogLevel::WARN);
+            LOG(msg, LogLevel::SEVERE);
         #endif
     }
 
     void error(const char* msg)
     {
         std::cerr<<"ERROR: " <<std::string(msg); // Necessary for heritiage unit testing only.
-        LOG(msg, LogLevel::ERROR);
+        LOG(msg, LogLevel::WARNING);
     }
 
     void critical(const char* msg)

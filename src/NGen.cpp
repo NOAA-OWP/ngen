@@ -267,7 +267,7 @@ int main(int argc, char* argv[]) {
         ss << argv[0]
            << " <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids>"
            << " <realization_config_path>" << std::endl;
-        LOG(ss.str(), LogLevel::ERROR);
+        LOG(ss.str(), LogLevel::WARNING);
         ss.str("");
         if (argc > 3) {
             ss << std::endl
@@ -275,7 +275,7 @@ int main(int argc, char* argv[]) {
                << "Arguments for <catchment subset ids> and <nexus subset ids> must be given."
                << std::endl
                << "Use \"all\" as explicit argument when no subset is needed." << std::endl;
-            LOG(ss.str(), LogLevel::WARN);
+            LOG(ss.str(), LogLevel::SEVERE);
             ss.str("");
         }
 
@@ -298,7 +298,7 @@ int main(int argc, char* argv[]) {
             PARTITION_PATH = argv[6];
         } else if (mpi_num_procs > 1) {
             ss << "Missing required argument for partition file path." << std::endl;
-            LOG(ss.str(), LogLevel::ERROR);
+            LOG(ss.str(), LogLevel::WARNING);
             ss.str("");
             exit(-1);
         }
@@ -311,7 +311,7 @@ int main(int argc, char* argv[]) {
             } else if (mpi_num_procs > 1) {
                 ss << "Unexpected arg '" << argv[7] << "'; try " << MPI_HF_SUB_CLI_FLAG
                    << std::endl;
-                LOG(ss.str(), LogLevel::ERROR);
+                LOG(ss.str(), LogLevel::WARNING);
                 ss.str("");
                 exit(-1);
             }
@@ -365,7 +365,7 @@ int main(int argc, char* argv[]) {
             else {
                 ss << "Unable to successfully preprocess hydrofabric files into subdivided files "
                       "per partition.";
-                LOG(ss.str(), LogLevel::ERROR);
+                LOG(ss.str(), LogLevel::WARNING);
                 ss.str("");
                 error = true;
             }
@@ -407,13 +407,13 @@ int main(int argc, char* argv[]) {
         local_data                             = std::move(partitions[mpi_rank]);
         if (!nexus_subset_ids.empty()) {
             ss << "Warning: CLI provided nexus subset will be ignored when using partition config";
-            LOG(ss.str(), LogLevel::ERROR);
+            LOG(ss.str(), LogLevel::WARNING);
             ss.str("");
         }
         if (!catchment_subset_ids.empty()) {
             ss << "Warning: CLI provided catchment subset will be ignored when using partition "
                   "config";
-            LOG(ss.str(), LogLevel::ERROR);
+            LOG(ss.str(), LogLevel::WARNING);
             ss.str("");
         }
         nexus_subset_ids =
@@ -572,7 +572,7 @@ int main(int argc, char* argv[]) {
     if (errCount) {
         ss << "ngen main: layer_meta_data timesteps Used " << errCount << " unconverted value(s)."
            << std::endl;
-        LOG(ss.str(), LogLevel::WARN);
+        LOG(ss.str(), LogLevel::SEVERE);
         ss.str("");
     }
 

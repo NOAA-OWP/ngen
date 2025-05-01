@@ -78,7 +78,7 @@ geojson::Feature ngen::geopackage::build_feature(
             );
         default:
             std::string throw_msg; throw_msg.assign("invalid WKB feature type. Received: " + std::to_string(geometry.which() + 1));
-            LOG(throw_msg, LogLevel::ERROR);
+            LOG(throw_msg, LogLevel::WARNING);
             throw std::runtime_error(throw_msg);
     }
 }

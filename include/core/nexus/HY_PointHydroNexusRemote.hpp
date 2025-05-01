@@ -160,7 +160,7 @@ namespace std
 			break;
 		}
 		std::string throw_msg; throw_msg.assign("Unhandled value of communication_type");
-        LOG(throw_msg, LogLevel::ERROR);
+        LOG(throw_msg, LogLevel::WARNING);
         throw std::runtime_error(throw_msg);
 	}
 }

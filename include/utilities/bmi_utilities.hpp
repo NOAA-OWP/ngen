@@ -56,7 +56,7 @@ namespace models {
                 std::string throw_msg; throw_msg.assign("Unable to get value of variable "+name+". Model "+ model.get_model_name() + 
                                          " reports no valid items (Nbytes = "+std::to_string(total_mem) +
                                          ", Itemsize = "+std::to_string(item_size)+".");
-                LOG(throw_msg, LogLevel::ERROR);
+                LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }
             int num_items = total_mem/item_size;
@@ -119,7 +119,7 @@ namespace models {
             else{
                 std::string throw_msg; throw_msg.assign("Unable to get value of variable " + name +
                                 " as " + boost::typeindex::type_id<T>().pretty_name() + ": no logic for converting variable type " + type);
-                LOG(throw_msg, LogLevel::ERROR);
+                LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }
             return result;

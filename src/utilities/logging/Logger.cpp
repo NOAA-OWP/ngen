@@ -35,19 +35,19 @@ static const std::unordered_map<std::string, LogLevel> logLevelMap = {
     {"NONE", LogLevel::NONE}, {"0", LogLevel::NONE},
     {"DEBUG", LogLevel::DEBUG}, {"1", LogLevel::DEBUG},
     {"INFO", LogLevel::INFO}, {"2", LogLevel::INFO},
-    {"ERROR", LogLevel::ERROR}, {"3", LogLevel::ERROR},
-    {"WARN", LogLevel::WARN}, {"4", LogLevel::WARN},
+    {"WARNING", LogLevel::WARNING}, {"3", LogLevel::WARNING},
+    {"SEVERE", LogLevel::SEVERE}, {"4", LogLevel::SEVERE},
     {"FATAL", LogLevel::FATAL}, {"5", LogLevel::FATAL},
 };
 
 // Reverse map: LogLevel to String
 static const std::unordered_map<LogLevel, std::string> logLevelToStringMap = {
-    {LogLevel::NONE,  "NONE "},
-    {LogLevel::DEBUG, "DEBUG"},
-    {LogLevel::INFO,  "INFO "},
-    {LogLevel::ERROR, "ERROR"},
-    {LogLevel::WARN,  "WARN "},
-    {LogLevel::FATAL, "FATAL"},
+    {LogLevel::NONE,    "NONE   "},
+    {LogLevel::DEBUG,   "DEBUG  "},
+    {LogLevel::INFO,    "INFO   "},
+    {LogLevel::WARNING, "WARNING"},
+    {LogLevel::SEVERE,  "SEVERE "},
+    {LogLevel::FATAL,   "FATAL  "},
 };
 
 const std::vector<std::string> allModules = {
@@ -138,20 +138,18 @@ void Logger::SetupLogFile(void) {
             logFileDir = LOG_DIR_NGENCERF + DS + LOG_DIR_DEFAULT;
         }
         else {
-            logFileDir = "~" + DS + LOG_DIR_DEFAULT;
+            const char *home = getenv("HOME"); // Get users home directory pathname
+            std::string dir = (home) ? home : "~";
+            logFileDir = dir + DS + LOG_DIR_DEFAULT;
         }
 
         // Ensure parent log direcotry exists
         if (CreateDirectory(logFileDir)) {
             // Get full log directory path
             const char* envUsername = std::getenv("USER");
-            if (envUsername) { 
-                std::string username = envUsername;
-                logFileDir = logFileDir +  DS + username;
-            }
-            else {
-                logFileDir = logFileDir + DS + CreateDateString();
-            }
+            std::string dirName = (envUsername) ? envUsername : CreateDateString();
+            logFileDir = logFileDir +  DS + dirName;
+            
             // Set the full path if log directory exists/created
             if (CreateDirectory(logFileDir)) 
                 logFilePath = logFileDir + DS + MODULE_NAME + "_" + CreateTimestamp(false,false) + "." + LOG_FILE_EXT;
@@ -313,7 +311,7 @@ void Logger::SetLogLevelEnvVars(void) {
 
 /**
 * Configure Logger Preferences and open log file
-* @param level: LogLevel::ERROR by Default
+* @param level: LogLevel::WARNING by Default
 * @return void
 */
 void Logger::SetLogPreferences(LogLevel level) {
@@ -423,21 +421,21 @@ std::string Logger::ConvertLogLevelToString(LogLevel level) {
 
 /**
 * Convert String Representation of Log Level to LogLevel Type
-* @param logLevel : String log level
+* @param levelStr : String log level
 * @return LogLevel
 */
-LogLevel Logger::ConvertStringToLogLevel(const std::string& logLevel) {
-    std::string trimmed = TrimString(logLevel);
-    if (!trimmed.empty()) {
+LogLevel Logger::ConvertStringToLogLevel(const std::string& levelStr) {
+    std::string level = TrimString(levelStr);
+    if (!level.empty()) {
         // Convert string to LogLevel (supports both names and numbers)
-        auto it = logLevelMap.find(logLevel);
+        auto it = logLevelMap.find(level);
         if (it != logLevelMap.end()) {
             return it->second;  // Found valid named or numeric log level
         }
 
         // Try parsing as an integer (for cases where an invalid numeric value is given)
         try {
-            int levelNum = std::stoi(logLevel);
+            int levelNum = std::stoi(level);
             if (levelNum >= 0 && levelNum <= 5) {
                 return static_cast<LogLevel>(levelNum);
             }

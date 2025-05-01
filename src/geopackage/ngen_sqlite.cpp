@@ -139,7 +139,7 @@ void database::iterator::handle_get_index_(int col) const
             "column " + std::to_string(col) + " out of range of "
                       + std::to_string(ncol_) + " columns"
         );
-        LOG(throw_msg, LogLevel::ERROR);
+        LOG(throw_msg, LogLevel::WARNING);
         throw std::out_of_range(throw_msg);
 
     }
