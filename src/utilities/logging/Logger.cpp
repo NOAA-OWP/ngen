@@ -17,11 +17,11 @@
 
 
 const std::string  MODULE_NAME         = "ngen";
-const std::string  LOG_DIR_NGENCERF    = "/ngencerf/data";  // ngenCERF log directory string if environement var empty.
-const std::string  LOG_DIR_DEFAULT     = "run-logs";        // Default parent log directory string if env var empty  & ngencerf dosn't exist
-const std::string  LOG_FILE_EXT        = "log";             // Log file name extension
-const std::string  DS                  = "/";               // Directory separator
-const unsigned int LOG_MODULE_NAME_LEN = 8;                 // Width of module name for log entries
+const std::string  LOG_DIR_NGENCERF    = "/ngencerf/data";       // ngenCERF log directory string if environement var empty.
+const std::string  LOG_DIR_DEFAULT     = "run-logs";             // Default parent log directory string if env var empty  & ngencerf dosn't exist
+const std::string  LOG_FILE_EXT        = "log";                  // Log file name extension
+const std::string  DS                  = "/";                    // Directory separator
+const unsigned int LOG_MODULE_NAME_LEN = 8;                      // Width of module name for log entries
 
 const std::string  EV_EWTS_LOGGING     = "NGEN_EWTS_LOGGING";    // Enable/disable of Error Warning and Trapping System  
 const std::string  EV_NGEN_LOGFILEPATH = "NGEN_LOG_FILE_PATH";   // ngen log file 
@@ -149,7 +149,7 @@ void Logger::SetupLogFile(void) {
             const char* envUsername = std::getenv("USER");
             std::string dirName = (envUsername) ? envUsername : CreateDateString();
             logFileDir = logFileDir +  DS + dirName;
-            
+
             // Set the full path if log directory exists/created
             if (CreateDirectory(logFileDir)) 
                 logFilePath = logFileDir + DS + MODULE_NAME + "_" + CreateTimestamp(false,false) + "." + LOG_FILE_EXT;
@@ -285,11 +285,14 @@ void Logger::ReadConfigFile(void) {
     }
 
     // Set the environment variables for the module loggers
-    SetLogLevelEnvVars();
+    SetLoggingEnvVars();
 }
 
-void Logger::SetLogLevelEnvVars(void) {
-    cout << "Logger setup: Setting Modules Environment Variables" << endl;
+void Logger::SetLoggingEnvVars(void) {
+    cout << "Logger setup: Setting Logger Environment Variables" << endl;
+    setenv((EV_EWTS_LOGGING).c_str(), ((loggingEnabled)?"ENABLED":"DISABLED"), 1);
+    cout << "  " << EV_EWTS_LOGGING << "=" << ((loggingEnabled)?"ENABLED":"DISABLED") << endl;
+
     for (const auto& hydroModule : allModules) {
         std::string moduleEnv = "";
         if (hydroModule == "NGEN") {
@@ -370,7 +373,7 @@ std::shared_ptr<Logger> Logger::GetInstance() {
 */
 void Logger::Log(std::string message, LogLevel messageLevel) {
 
-    if (!loggerInitialized) SetLogPreferences();
+    if (!loggerInitialized) SetLogPreferences(); // Cover case where Log is called before setup done
 
     // Log only when appropriate 
     if  ((loggingEnabled) && (messageLevel >= logLevel)) {

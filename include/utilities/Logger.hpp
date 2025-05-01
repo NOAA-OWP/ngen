@@ -28,15 +28,17 @@ class Logger {
 //    Logger(void);
 //    ~Logger(void);
 
-	static std::shared_ptr<Logger> GetInstance();
-
-    void        SetLogPreferences(LogLevel level=LogLevel::INFO);
-    void        Log(std::string message, LogLevel messageLevel=LogLevel::INFO);
+    // Methods
+    void  SetLogPreferences(LogLevel level=LogLevel::INFO);
+    void  Log(std::string message, LogLevel messageLevel=LogLevel::INFO);
 	
 	static __always_inline void logMsgAndThrowError(const std::string& message) {
 		(Logger::GetInstance())->Log(message, LogLevel::INFO);
 		throw std::runtime_error(message);
 	};
+
+    // Variables
+	static std::shared_ptr<Logger> GetInstance();
 
   private:
     // Methods
@@ -52,7 +54,7 @@ class Logger {
     bool        LogFileReady(void);
     void        ReadConfigFile(void);
     void        SetupLogFile(void);
-    void        SetLogLevelEnvVars(void);
+    void        SetLoggingEnvVars(void);
     std::string ToUpper(const std::string& str);
     std::string TrimString(const std::string& str);
 
