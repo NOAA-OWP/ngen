@@ -132,9 +132,9 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         }
         else {
             std::stringstream ss;
-            ss << "WARN: configured output headers have " << out_headers.size() << " fields, but there are "
+            ss << "configured output headers have " << out_headers.size() << " fields, but there are "
                       << get_output_variable_names().size() << " variables in the output" << std::endl;
-            LOG(ss.str(), LogLevel::SEVERE); ss.str("");
+            LOG(ss.str(), LogLevel::WARNING); ss.str("");
             set_output_header_fields(get_output_variable_names());
         }
     }

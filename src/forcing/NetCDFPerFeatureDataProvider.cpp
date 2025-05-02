@@ -420,7 +420,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     catch (const std::runtime_error& e)
     {
         //minor change to aid debugging (log_stream is an output log stream for messages from the underlying library, therefore logging to both EWTS and library logger) 
-        netcdf_ss << "WARN: NetCDFPerFeatureDataProvider: get_converted_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+        netcdf_ss << "NetCDFPerFeatureDataProvider: get_converted_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
         log_stream << netcdf_ss.str();
         LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
         netcdf_ss << "=== Exiting get_value function ===" << std::endl;

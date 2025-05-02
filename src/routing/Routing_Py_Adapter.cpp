@@ -20,8 +20,8 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_config_file_with_path
   //in the embedded interpreters PYTHON_PATH
   try {
     this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("ngen_routing.ngen_main");
-    routing_ss <<"WARN: Legacy t-route module detected; use of this version is deprecated!"<<std::endl;
-    LOG(routing_ss.str(), LogLevel::SEVERE); routing_ss.str("");
+    routing_ss <<"Legacy t-route module detected; use of this version is deprecated!"<<std::endl;
+    LOG(routing_ss.str(), LogLevel::WARNING); routing_ss.str("");
   }
   catch (const pybind11::error_already_set& e){
     try {
@@ -29,7 +29,7 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_config_file_with_path
       this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("nwm_routing.__main__");
     }
     catch (const pybind11::error_already_set& e){
-      routing_ss <<"FAIL: Unable to import a supported routing module."<<std::endl;
+      routing_ss <<"Unable to import a supported routing module."<<std::endl;
       LOG(routing_ss.str(), LogLevel::FATAL); routing_ss.str("");
       throw e;
     }
