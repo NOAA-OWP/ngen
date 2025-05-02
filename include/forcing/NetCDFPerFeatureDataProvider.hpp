@@ -13,6 +13,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <set>
 #include <sstream>
 #include <exception>
 #include <mutex>
@@ -54,6 +55,9 @@ namespace data_access
          * the given path already exists, this argument will be ignored.
          */
         static std::shared_ptr<NetCDFPerFeatureDataProvider> get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s);
+
+        // aaraney: improve naming and what does const mean?
+        void hint_shared_provider_id(const std::string& id);
 
         /**
          * @brief Cleanup the shared providers cache, ensuring that the files get closed.
@@ -122,7 +126,9 @@ namespace data_access
         std::vector<std::string> variable_names;
         std::vector<std::string> loc_ids;
         std::vector<double> time_vals;
-        std::map<std::string, std::size_t> id_pos;
+        std::set<std::string> hinted_ids;
+        std::map<std::string, std::size_t> id_pos;      // map from cat-id to position in vec of nc var values; accounts for chunking
+        std::vector<std::pair<size_t, size_t>> chunks;  // a chunk is the start and length of a span in the "catchment-id" dim of a nc variable
         double start_time;                              // the begining of the first time for which data is stored
         double stop_time;                               // the end of the last time for which data is stored
         TimeUnit time_unit;                             // the unit that time was stored as in the file
@@ -142,6 +148,7 @@ namespace data_access
 
         const std::string& get_ncvar_units(const std::string& name);
 
+        void maybe_update_chunks_with_hints();
     };
 }
 

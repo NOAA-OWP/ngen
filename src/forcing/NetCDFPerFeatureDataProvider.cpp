@@ -23,6 +23,7 @@ std::shared_ptr<NetCDFPerFeatureDataProvider> NetCDFPerFeatureDataProvider::get_
     return p;
 }
 
+
 void NetCDFPerFeatureDataProvider::cleanup_shared_providers()
 {
     const std::lock_guard<std::mutex> lock(shared_providers_mutex);
@@ -103,6 +104,10 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     }
 
     auto num_ids = id_dim.getSize();
+
+    // include all catchments in the "default" chunk
+    auto pair = std::pair<size_t, size_t>(0, num_ids);
+    chunks.push_back(pair);
 
     //TODO: split into smaller slices if num_ids is large.
     cache_slice_c_size = num_ids;
@@ -262,6 +267,100 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     sim_to_data_time_offset = sim_start_date_time_epoch - start_time;
 }
 
+void NetCDFPerFeatureDataProvider::hint_shared_provider_id(const std::string& id)
+{
+    hinted_ids.emplace(id);
+}
+
+void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
+{
+    auto ids = hinted_ids;
+    if (hinted_ids.size() == 0){
+        return;
+    }
+
+    // Base cases covered in other ctor
+    if (ids.size() == get_ids().size() || ids.size() == 0) {
+        assert(chunks.size() == 1);
+        hinted_ids.clear();
+        return;
+    }
+    // get rid of "default" chunks, we will build them here
+    chunks.clear();
+
+    // Map from nc cat-id index to cat-id; sorted by index position
+    std::map<std::size_t, std::string> idx_map;
+
+    // remove "id_pos" keys that are not in "ids"
+    {
+        auto it = id_pos.begin();
+        while (it != id_pos.end()) {
+            auto sub = ids.find(it->first);
+            if (sub != ids.end()) {
+                // Here we know the id AND its position in the index
+                idx_map.emplace(it->second, it->first);
+                ++it;
+            } else {
+                it = id_pos.erase(it);
+            }
+        }
+    }
+
+    // Build chunks where a chunk has:
+    // a starting nc index
+    // the length of the chunk relative to its starting index
+    //
+    // While building the chunks, rebase nc indices to now "internal" cache indices
+    auto it = idx_map.begin();
+    std::string& key = it->second;
+
+    std::size_t left, right;
+    left = it->first;
+    right = it->first;
+    //  start nc idx, length
+    std::pair<size_t, size_t> pair(left, 1);
+
+    std::size_t n = 0;
+    id_pos[key] = n;
+    n++;
+
+    // NOTE: not sure if there are dependencies elsewhere on the ordering of this vector.
+    // refill in the expected order just to be on the safe side.
+    loc_ids.clear();
+    loc_ids.push_back(key);
+    for (++it; it != idx_map.end(); ++it) {
+        std::size_t current = it->first;
+        if (right < current-1){
+            pair.second = right-left+1;
+            chunks.push_back(pair);
+
+            left  = current;
+            right = current;
+            pair.first = current;
+        }else{
+            right = current;
+        }
+
+        key = it->second;
+        // NOTE: update "id_pos" with new "internal" index
+        id_pos[key] = n;
+        n++;
+
+        // push key back onto "loc_ids" in its original order
+        loc_ids.push_back(key);
+    }
+    pair.second = right-left+1;
+    chunks.push_back(pair);
+
+    // minor gains
+    loc_ids.shrink_to_fit();
+
+    cache_slice_c_size = loc_ids.size();
+
+    // aaraney: improve this; we only want this method to "do something" once
+    hinted_ids.clear();
+}
+
 NetCDFPerFeatureDataProvider::~NetCDFPerFeatureDataProvider() = default;
 
 void NetCDFPerFeatureDataProvider::finalize()
@@ -333,6 +432,12 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
     }
 
+    // update chunks during the first timestep
+    if (hinted_ids.size() > 0){
+        // 'maybe_update_chunks_with_hints' clears 'hinted_ids'
+        maybe_update_chunks_with_hints();
+    }
+
     auto stride = idx2 - idx1;
 
     std::vector<std::size_t> start, count;
@@ -365,14 +470,24 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         if(value_cache.contains(key)){
             cached = value_cache.get(key).get();
         } else {
-            cached = std::make_shared<std::vector<double>>(cache_slice_c_size * cache_slice_t_size);
-            start.clear();
-            start.push_back(0); // only always 0 when cache_slice_c_size = numids!
-            start.push_back(cache_t_idx * cache_slice_t_size);
-            count.clear();
-            count.push_back(cache_slice_c_size);
-            count.push_back(cache_slice_t_size); // Must be 1 for now!...probably...
-            ncvar.getVar(start,count,&(*cached)[0]);
+            cached = std::make_shared<std::vector<double>>(get_ids().size());
+            // read each chunk and add it to "cached"
+            std::size_t next_cache_idx = 0;
+            for(auto const& chunk: chunks){
+                // chunk start index = chunk.first;
+                // chunk length      = chunk.second;
+                start.clear();
+                start.push_back(chunk.first);
+                start.push_back(cache_t_idx);
+
+                count.clear();
+                count.push_back(chunk.second);
+                assert(cache_slice_t_size == 1);
+                count.push_back(cache_slice_t_size); // Must be 1 for now!...probably...
+                ncvar.getVar(start,count,&(*cached)[next_cache_idx]);
+                next_cache_idx += chunk.second;
+            }
+
             value_cache.insert(key, cached);
         }
         for( size_t j = 0; j < cache_slice_t_size; j++){
