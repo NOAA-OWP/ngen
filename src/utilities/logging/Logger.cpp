@@ -161,7 +161,8 @@ void Logger::SetupLogFile(void) {
         logFile.open(logFilePath, ios::out | ios::trunc); // Truncating ensures keeping only the last calibration iteration.
         if (logFile.is_open()) {
             openedOnce = true;
-            setenv("NGEN_LOG_FILE_PATH", (char *)logFilePath.c_str(), 1);
+            setenv("NGEN_LOG_FILE_PATH", logFilePath.c_str(), 1);
+            std::cout << "  NGEN_LOG_FILE_PATH=" << logFilePath << std::endl;
             // Make sure individual submodule logger files pathnames environment vars are cleared
             unsetenv("CFE_LOGFILEPATH");
             unsetenv("LASAM_LOGFILEPATH");
@@ -176,10 +177,10 @@ void Logger::SetupLogFile(void) {
             unsetenv("UEB_BMI_LOGFILEPATH");
             std::cout << "Program " << MODULE_NAME << " Log File: " << logFilePath << std::endl;
 
-            std::string lMsg = "Log File: " + logFilePath + "\n";
+            std::string logMsg = "Log File: " + logFilePath + "\n";
             LogLevel saveLevel = logLevel;
             logLevel = LogLevel::INFO; // Ensure this INFO message is always logged
-            Log(lMsg, logLevel);
+            Log(logMsg, logLevel);
             logLevel = saveLevel;
             return;
         }
