@@ -241,7 +241,7 @@ void Logger::ReadConfigFile(void) {
         std::cout << " Using default logging configuration of enabled and log level INFO" << std::endl;
     } else {
         std::string configDir = ExtractFirstNDirs(ngenResultsDir,6);
-        std::string configFilePath = configDir + "logging-config.json";
+        std::string configFilePath = configDir + "ngen_logging.json";
         std::cout << "Logger config: Opening logger config file " << configFilePath << std::endl;
         jsonFile.open(configFilePath.c_str());
         if (jsonFile.is_open() && (jsonFile.peek() != std::ifstream::traits_type::eof())) {
