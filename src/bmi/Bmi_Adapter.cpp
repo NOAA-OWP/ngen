@@ -50,7 +50,7 @@ double Bmi_Adapter::get_time_convert_factor() {
         //with no context.  This way we at least get the error message wrapped in
         //a runtime error.
         str_stream << "Bmi_Adapter get_time_convert_factor: Exception caught (" << e.what() << ")" << std::endl;
-        LOG(str_stream.str(), LogLevel::ERROR); str_stream.str("");
+        LOG(str_stream.str(), LogLevel::WARNING); str_stream.str("");
         throw std::runtime_error(e.what());
     }
     std::string output_units = "s";

@@ -423,7 +423,7 @@ namespace geojson {
                 else {
                     std::stringstream ss;
                     ss << "No features were found" << std::endl;
-                    LOG(ss.str(), LogLevel::WARN); ss.str("");
+                    LOG(ss.str(), LogLevel::SEVERE); ss.str("");
                 }
             }
             else {

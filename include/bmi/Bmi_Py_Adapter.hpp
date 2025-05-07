@@ -259,7 +259,7 @@ namespace models {
                     std::string throw_msg; throw_msg.assign(
                             "(Bmi_Py_Adapter) Failed determining analogous C++ type for Python model '" + py_type_name +
                             "' type with size " + std::to_string(item_size) + " bytes.");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
             }
@@ -280,7 +280,7 @@ namespace models {
                 } else {
                     std::string throw_msg; throw_msg.assign("(Bmi_Py_Adapter) Failed determining analogous built-in Python type for C++ '" +
                                         cxx_type_name + "' type");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
             }
@@ -319,7 +319,7 @@ namespace models {
 
                 std::string throw_msg; throw_msg.assign("(Bmi_Py_Adapter) Failed determining analogous Python dtype for C++ '" +
                                     cxx_type_name + "' type with size " + std::to_string(item_size) + " bytes.");
-                LOG(throw_msg, LogLevel::ERROR);
+                LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }
 
@@ -459,7 +459,7 @@ namespace models {
                             "(Bmi_Py_Adapter) Failed attempt to GET values of BMI variable '" + name + "' from '" +
                             model_name + "' model:  model advertises unsupported combination of type (" + val_type +
                             ") and size (" + std::to_string(val_item_size) + ").");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
             }
@@ -556,7 +556,7 @@ namespace models {
                 } else {
                     std::string throw_msg; throw_msg.assign("Bmi_Py_Adapter cannot set values for variable '" + name +
                                              "' that has unrecognized C++ type '" + cxx_type + "'");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
             }
@@ -579,7 +579,7 @@ namespace models {
                     std::string throw_msg; throw_msg.assign(
                             "Bmi_Py_Adapter mismatch of lengths setting variable array (" + std::to_string(length) +
                             " expected but " + std::to_string(src.size()) + " received)");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
 
@@ -701,7 +701,7 @@ namespace models {
                     //the original messge before it gets lost in this re-throw.
                     std::stringstream ss;
                     ss <<init_exception_msg<<std::endl;
-                    LOG(ss.str(), LogLevel::ERROR); ss.str("");
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
                     throw e;
                 }
             }
@@ -732,7 +732,7 @@ namespace models {
                     return;
                 }else{
                     std::string throw_msg; throw_msg.assign("GetGrid<X|Y|Z> coordinates not yet implemented for Python BMI adapter for grid type "+grid_type);
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
 
@@ -762,7 +762,7 @@ namespace models {
                     if (split_name.empty()) {
                         std::string throw_msg; throw_msg.assign("Cannot interpret BMI Python model type '" + bmi_type_py_full_name
                                                  + "'; expected format is <python_module>.<python_class>");
-                        LOG(throw_msg, LogLevel::ERROR);
+                        LOG(throw_msg, LogLevel::WARNING);
                         throw std::runtime_error(throw_msg);
                     }
                     // What's left should be the class name

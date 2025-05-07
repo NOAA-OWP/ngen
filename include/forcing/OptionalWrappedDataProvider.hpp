@@ -71,7 +71,7 @@ namespace data_access {
                         }
                         msg += "])";
                         std::string throw_msg; throw_msg.assign(msg);
-                        LOG(throw_msg, LogLevel::ERROR);
+                        LOG(throw_msg, LogLevel::WARNING);
                         throw std::runtime_error(throw_msg);
                     }
                 }
@@ -109,7 +109,7 @@ namespace data_access {
                         }
                         msg += "])";
                         std::string throw_msg; throw_msg.assign(msg);
-                        LOG(throw_msg, LogLevel::ERROR);
+                        LOG(throw_msg, LogLevel::WARNING);
                         throw std::runtime_error(throw_msg);
                     }
                 }
@@ -205,14 +205,14 @@ namespace data_access {
             // Balk if not in this instance's collection of outputs
             if (find(providedOutputs.begin(), providedOutputs.end(), output_name) == providedOutputs.end()) {
                 std::string throw_msg; throw_msg.assign("Unknown output " + output_name + " requested from wrapped provider");
-                LOG(throw_msg, LogLevel::ERROR);
+                LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }
             // Balk if this instance is not ready
             if (!isReadyToProvideData()) {
                 std::string throw_msg; throw_msg.assign("Cannot get value for " + output_name
                                     + " from optional wrapped provider before it is ready");
-                LOG(throw_msg, LogLevel::ERROR);
+                LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }
 

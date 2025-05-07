@@ -223,7 +223,7 @@ class mdframe {
             auto dopt = this->get_dimension(d);
             if (dopt == boost::none) {
                 std::string throw_msg; throw_msg.assign("not a dimension");
-                LOG(throw_msg, LogLevel::ERROR);
+                LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }
             references.push_back(dopt.get());

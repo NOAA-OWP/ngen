@@ -84,7 +84,7 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
           std::stringstream ss;
           ss <<"HY_Features::HY_Features unknown feature identifier type "<<feat_type<<" for feature id."<<feat_id
                    <<" Skipping feature"<<std::endl;
-          LOG(ss.str(), LogLevel::ERROR); ss.str("");
+          LOG(ss.str(), LogLevel::WARNING); ss.str("");
         }
       }	
 }

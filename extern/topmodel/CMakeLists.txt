@@ -12,9 +12,9 @@ set(TOPMODEL_LIB_DESC_CMAKE "OWP TOPMODEL BMI Module Shared Library")
 add_compile_definitions(BMI_ACTIVE)
 
 if(WIN32)
-    add_library(topmodelbmi topmodel/src/bmi_topmodel.c topmodel/src/topmodel.c)
+    add_library(topmodelbmi topmodel/src/bmi_topmodel.c topmodel/src/topmodel.c topmodel/src/logger.c)
 else()
-    add_library(topmodelbmi SHARED topmodel/src/bmi_topmodel.c topmodel/src/topmodel.c)
+    add_library(topmodelbmi SHARED topmodel/src/bmi_topmodel.c topmodel/src/topmodel.c topmodel/src/logger.c)
 endif()
 
 target_include_directories(topmodelbmi PRIVATE topmodel/include)

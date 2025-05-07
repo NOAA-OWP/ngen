@@ -217,7 +217,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
     if( duplicates.size() > 0 ){
         for( auto& id: duplicates){
             partgen_ss << "catchment "<<id<<" is duplicated!"<<std::endl;
-            LOG(partgen_ss.str(), LogLevel::WARN); partgen_ss.str("");
+            LOG(partgen_ss.str(), LogLevel::SEVERE); partgen_ss.str("");
         }
     }
     partgen_ss << "\nNumber of catchments is: " << cat_id_vec.size();
@@ -370,14 +370,14 @@ void read_arguments(int argc, char* argv[],
         partgen_ss << argv[0] << " <catchment_data_path> <nexus_data_path> <partition_output_name> <number of partitions> <catchment_subset_ids> <nexus_subset_ids> " << std::endl;
         partgen_ss << "Use empty strings for subset_ids for no subsetting, e.g ''\nUse \'cat-X,cat-Y\', \'nex-X,nex-Y\' to partition only the defined catchment and nexus"<<std::endl;
         partgen_ss << "Note the use of single quotes, and no spaces between the ids.  (no quotes will also work, but  \"\" will not."<<std::endl;
-        LOG(partgen_ss.str(), LogLevel::ERROR); partgen_ss.str("");
+        LOG(partgen_ss.str(), LogLevel::WARNING); partgen_ss.str("");
         exit(-1);
     }
 
     bool error = false;
     if( !utils::FileChecker::file_is_readable(argv[1]) ) {
         partgen_ss << "catchment data path " << argv[1] << " not readable" << std::endl;
-        LOG(partgen_ss.str(), LogLevel::ERROR); partgen_ss.str("");
+        LOG(partgen_ss.str(), LogLevel::WARNING); partgen_ss.str("");
         error = true;
     } else {
         catchmentDataFile = argv[1];
@@ -385,7 +385,7 @@ void read_arguments(int argc, char* argv[],
 
     if( !utils::FileChecker::file_is_readable(argv[2]) ) {
         partgen_ss << "nexus data path " << argv[2] << " not readable" << std::endl;
-        LOG(partgen_ss.str(), LogLevel::ERROR); partgen_ss.str("");
+        LOG(partgen_ss.str(), LogLevel::WARNING); partgen_ss.str("");
         error = true;
     } else {
         nexusDataFile = argv[2];
@@ -394,7 +394,7 @@ void read_arguments(int argc, char* argv[],
     partitionOutFile = argv[3];
     if (partitionOutFile.empty()) {
         partgen_ss << "Missing output file name " << std::endl;
-        LOG(partgen_ss.str(), LogLevel::ERROR); partgen_ss.str("");
+        LOG(partgen_ss.str(), LogLevel::WARNING); partgen_ss.str("");
         error = true;
     }
 
@@ -404,7 +404,7 @@ void read_arguments(int argc, char* argv[],
     }
     catch(boost::bad_lexical_cast &e) {
         partgen_ss << "number of partitions must be a positive integer." << std::endl;
-        LOG(partgen_ss.str(), LogLevel::ERROR); partgen_ss.str("");
+        LOG(partgen_ss.str(), LogLevel::WARNING); partgen_ss.str("");
         error = true;
     }
 

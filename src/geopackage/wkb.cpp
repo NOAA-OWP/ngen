@@ -192,7 +192,7 @@ typename wkb::geometry wkb::read(const boost::span<const uint8_t> buffer)
                 "this reader only implements OGC geometry types 1-6, "
                 "but received type " + std::to_string(type)
             );
-            LOG(throw_msg, LogLevel::ERROR);
+            LOG(throw_msg, LogLevel::WARNING);
             throw std::runtime_error(throw_msg);
 
     }

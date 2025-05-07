@@ -168,14 +168,14 @@ namespace realization {
                 catch (const std::runtime_error& e) {
                     // Log at least one error
                     if (!unitGetValuesErrLogged) {
-                        bmiform_ss << "WARN: BMI Module Formulation: get_values Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+                        bmiform_ss << "BMI Module Formulation: get_values Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
                         unitGetValuesErrLogged = true;
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        LOG(bmiform_ss.str(), LogLevel::WARNING); bmiform_ss.str("");
                     }
                     else {
                         #ifndef UDUNITS_QUIET
-                        bmiform_ss << "WARN: BMI Module Formulation: get_values Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        bmiform_ss << "BMI Module Formulation: get_values Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::WARNING); bmiform_ss.str("");
                         #endif
                     }
                     return values;
@@ -223,14 +223,14 @@ namespace realization {
                 catch (const std::runtime_error& e){
                     // Log at least one error
                     if (!unitGetValueErrLogged) {
-                        bmiform_ss << "WARN: BMI Module Formulation: get_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+                        bmiform_ss << "BMI Module Formulation: get_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
                         unitGetValueErrLogged = true;
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        LOG(bmiform_ss.str(), LogLevel::WARNING); bmiform_ss.str("");
                     }
                     else {
                         #ifndef UDUNITS_QUIET
-                        bmiform_ss << "WARN: BMI Module Formulation: get_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        bmiform_ss << "BMI Module Formulation: get_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::WARNING); bmiform_ss.str("");
                         #endif
                     }
                     return value;
@@ -538,7 +538,7 @@ namespace realization {
                             if(double_vec.size() == 0){
                                 //logging::warning(("Cannot pass non-numeric lists as a BMI parameter, skipping "+param.first+"\n").c_str());
                                 bmiform_ss << "Cannot pass non-numeric lists as a BMI parameter, skipping " << param.first << std::endl;
-                                LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                                LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                                 continue;
                             }
                             value_ptr = get_values_as_type(type, double_vec.begin(), double_vec.end());
@@ -546,7 +546,7 @@ namespace realization {
                         default:
                             //logging::warning(("Cannot pass parameter of type "+geojson::get_propertytype_name(param.second.get_type())+" as a BMI parameter, skipping "+param.first+"\n").c_str());
                             bmiform_ss << "Cannot pass parameter of type " << geojson::get_propertytype_name(param.second.get_type()) << " as a BMI parameter, skipping " << param.first << std::endl;
-                            LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                            LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                             continue;
                     }
                     try{
@@ -559,18 +559,18 @@ namespace realization {
 //                        logging::warning((std::string("Exception setting parameter value: ")+e.what()).c_str());
 //                        logging::warning(("Skipping parameter: "+param.first+"\n").c_str());
                         bmiform_ss << "Exception setting parameter value: " << e.what() << std::endl;
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                         bmiform_ss << "Skipping parameter: " << param.first << std::endl;
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                     }
                     catch (...)
                     {
 //                        logging::warning((std::string("Unknown Exception setting parameter value: \n")).c_str());
 //                        logging::warning(("Skipping parameter: "+param.first+"\n").c_str());
                         bmiform_ss << "Unknown Exception setting parameter value" << std::endl;
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                         bmiform_ss << "Skipping parameter: " << param.first << std::endl;
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                     }
                     long_vec.clear();
                     double_vec.clear();
@@ -694,7 +694,7 @@ namespace realization {
                         #ifndef NGEN_QUIET
                         std::stringstream ss;
                         ss << "WARN: broadcasting variable '" << var_name << "' from scalar to expected array\n";;
-                        LOG(ss.str(), LogLevel::WARN); ss.str("");
+                        LOG(ss.str(), LogLevel::SEVERE); ss.str("");
                         #endif
                         values.resize(numItems, values[0]);
                     } else if (values.size() != numItems) {

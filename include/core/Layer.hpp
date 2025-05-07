@@ -153,7 +153,7 @@ namespace ngen
                     //for now, only contribute to the first one in the list
                     if(nexus == nullptr){
                         std::string throw_msg; throw_msg.assign("Invalid (null) nexus instantiation downstream of "+id+". "+SOURCE_LOC);
-                        LOG(throw_msg, LogLevel::ERROR);
+                        LOG(throw_msg, LogLevel::WARNING);
                         throw std::runtime_error(throw_msg);
                     }
                     nexus->add_upstream_flow(response_m_h, id, output_time_index);

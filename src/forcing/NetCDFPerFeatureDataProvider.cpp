@@ -147,7 +147,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         time_var.getVar(raw_time.data());
     } catch(const netCDF::exceptions::NcException& e) {
         netcdf_ss << "Error reading time variable: " << e.what() << std::endl;
-        LOG(netcdf_ss.str(), LogLevel::ERROR); netcdf_ss.str("");
+        LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
         throw;
     }
 
@@ -157,9 +157,9 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
 
     } catch(const netCDF::exceptions::NcException& e) {
         netcdf_ss << "Error reading time units: " << e.what() << std::endl;
-        LOG(netcdf_ss.str(), LogLevel::ERROR); netcdf_ss.str("");
+        LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
         netcdf_ss << "Warning: Using default time units (seconds since epoch)" << std::endl;
-        LOG(netcdf_ss.str(), LogLevel::WARN); netcdf_ss.str("");
+        LOG(netcdf_ss.str(), LogLevel::SEVERE); netcdf_ss.str("");
         time_units = "seconds since 1970-01-01 00:00:00";
     }
 
@@ -201,17 +201,17 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         double interval = time_vals[i] - time_vals[i-1];
         if (std::abs(interval - time_stride) > 1e-6) {
             netcdf_ss<< "Inconsistent interval at index " << i << ": " << interval << std::endl;
-            LOG(netcdf_ss.str(), LogLevel::WARN); netcdf_ss.str("");
+            LOG(netcdf_ss.str(), LogLevel::SEVERE); netcdf_ss.str("");
             netcdf_ss << "Error: Time intervals are not constant in forcing file\n" << std::endl;
             log_stream << netcdf_ss.str();
-            LOG(netcdf_ss.str(), LogLevel::ERROR); netcdf_ss.str("");
+            LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
             Logger::logMsgAndThrowError("Time intervals in forcing file are not constant");
         }
     }
     #endif
 
     netcdf_ss << "All time intervals are constant within tolerance." << std::endl;
-    LOG(netcdf_ss.str(), LogLevel::WARN); netcdf_ss.str("");
+    LOG(netcdf_ss.str(), LogLevel::SEVERE); netcdf_ss.str("");
 
     // determine start_time and stop_time;
     start_time = time_vals[0];
@@ -272,7 +272,7 @@ size_t NetCDFPerFeatureDataProvider::get_ts_index_for_time(const time_t &epoch_t
     {
         std::stringstream ss;
         ss << "The value " << (int)epoch_time << " was not in the range [" << (int)start_time << "," << (int)stop_time << ")\n" << SOURCE_LOC;
-        LOG(ss.str(), LogLevel::ERROR);
+        LOG(ss.str(), LogLevel::WARNING);
         throw std::out_of_range(ss.str().c_str());
     }
 }
@@ -291,7 +291,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     catch(const std::out_of_range &e){
         netcdf_ss << "Warning: stop_time out of range, using last available time index" << std::endl;
         log_stream << netcdf_ss.str();
-        LOG(netcdf_ss.str(), LogLevel::WARN); netcdf_ss.str("");
+        LOG(netcdf_ss.str(), LogLevel::SEVERE); netcdf_ss.str("");
         idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
     }
 
@@ -350,7 +350,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
             } catch (netCDF::exceptions::NcException& e) {
                 netcdf_ss << "NetCDF exception: " << e.what() << std::endl;
                 log_stream << netcdf_ss.str();
-                LOG(netcdf_ss.str(), LogLevel::ERROR); netcdf_ss.str("");
+                LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
                 throw;
             }
         }
@@ -365,7 +365,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
                           << ", raw_values.size()=" << raw_values.size()
                           << ", cached->size()=" << cached->size() << std::endl;
                 log_stream << netcdf_ss.str();
-                LOG(netcdf_ss.str(), LogLevel::ERROR); netcdf_ss.str("");
+                LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
                 break;
             }
         }
@@ -420,12 +420,12 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     catch (const std::runtime_error& e)
     {
         //minor change to aid debugging (log_stream is an output log stream for messages from the underlying library, therefore logging to both EWTS and library logger) 
-        netcdf_ss << "WARN: NetCDFPerFeatureDataProvider: get_converted_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+        netcdf_ss << "NetCDFPerFeatureDataProvider: get_converted_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
         log_stream << netcdf_ss.str();
-        LOG(netcdf_ss.str(), LogLevel::ERROR); netcdf_ss.str("");
+        LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
         netcdf_ss << "=== Exiting get_value function ===" << std::endl;
         log_stream << netcdf_ss.str();
-        LOG(netcdf_ss.str(), LogLevel::ERROR); netcdf_ss.str("");
+        LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
         return rvalue;
     }
 
@@ -446,7 +446,7 @@ const netCDF::NcVar& NetCDFPerFeatureDataProvider::get_ncvar(const std::string& 
     }
 
     std::string throw_msg; throw_msg.assign("Got request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
-    LOG(throw_msg, LogLevel::ERROR);
+    LOG(throw_msg, LogLevel::WARNING);
     throw std::runtime_error(throw_msg);
 }
 
@@ -457,7 +457,7 @@ const std::string& NetCDFPerFeatureDataProvider::get_ncvar_units(const std::stri
     }
 
     std::string throw_msg; throw_msg.assign("Got units request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
-    LOG(throw_msg, LogLevel::ERROR);
+    LOG(throw_msg, LogLevel::WARNING);
     throw std::runtime_error(throw_msg);
 
 }

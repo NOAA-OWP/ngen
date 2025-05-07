@@ -109,7 +109,7 @@ namespace utils {
                     std::string throw_msg; throw_msg.assign("Python version mismatch between configure/build ("
                                              + std::string(python_version)
                                              + ") and runtime (" + std::string(runtime_python_version) + ")");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
 
@@ -119,7 +119,7 @@ namespace utils {
                     std::string throw_msg; throw_msg.assign("NumPy version mismatch between configure/build ("
                                              + std::string(numpy_version)
                                              + ") and runtime (" + std::string(runtime_numpy_version) + ")");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
             }
@@ -164,7 +164,7 @@ namespace utils {
                 else {
                     std::string dirPath = py::str(requestedDirPath);
                     std::string throw_msg; throw_msg.assign("Cannot add non-existing directory '" + dirPath + "' to Python PATH");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
             }

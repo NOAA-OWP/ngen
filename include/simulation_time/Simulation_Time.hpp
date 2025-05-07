@@ -160,7 +160,7 @@ class Simulation_Time
         if (current_date_time_epoch > end_date_time_epoch)
         {
             std::string throw_msg; throw_msg.assign("Simulation time objects current time exceeded the end_date_time_epoch value for that object");
-            LOG(throw_msg, LogLevel::ERROR);
+            LOG(throw_msg, LogLevel::WARNING);
             throw std::runtime_error(throw_msg);
         }
     }

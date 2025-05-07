@@ -50,7 +50,7 @@ class UnitsHelper {
         if (unit_system == NULL) 
         {
             std::string throw_msg; throw_msg.assign("Unable to create UDUNITS2 Unit System." SOURCE_LOC);
-            LOG(throw_msg, LogLevel::ERROR);
+            LOG(throw_msg, LogLevel::WARNING);
             throw std::runtime_error(throw_msg);
         }
         #ifndef UDUNITS_QUIET
