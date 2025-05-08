@@ -435,6 +435,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     // update chunks during the first timestep
     if (hinted_ids.size() > 0){
         // 'maybe_update_chunks_with_hints' clears 'hinted_ids'
+        // assumes all id's will have been hinted before 'get_value' is called.
         maybe_update_chunks_with_hints();
     }
 
