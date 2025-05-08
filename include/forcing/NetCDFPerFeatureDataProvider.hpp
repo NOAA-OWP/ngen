@@ -141,7 +141,10 @@ namespace data_access
         std::map<std::string,netCDF::NcVar> ncvar_cache;
         std::map<std::string,std::string> units_cache;
         boost::compute::detail::lru_cache<std::string, std::shared_ptr<std::vector<double>>> value_cache;
-        size_t cache_slice_t_size = 1;
+        // number of time slices per cache entry
+        // this is a tunable parameter; your mileage may vary
+        // NOTE: it would be nice if this were divisible by 2 and 4
+        const size_t cache_slice_t_size = 18;
         size_t cache_slice_c_size = 1;
 
         const netCDF::NcVar& get_ncvar(const std::string& name);
@@ -150,6 +153,20 @@ namespace data_access
 
         void maybe_update_chunks_with_hints();
     };
+
+    /* TODO: aaraney
+    class ValueCache{
+        public:
+
+        void   guard();
+        void   set(const std::vector<double>& values);
+        double get(std::size_t cat_idx, std::size_t time_idx);
+
+        private:
+        std::vector<float> m_values;
+        std::vector<float> prev_cache_last_ts;
+    };
+    */
 }
 
 
