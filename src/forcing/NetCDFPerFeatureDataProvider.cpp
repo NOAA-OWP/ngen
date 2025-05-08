@@ -8,6 +8,11 @@
 std::mutex data_access::NetCDFPerFeatureDataProvider::shared_providers_mutex;
 std::map<std::string, std::shared_ptr<data_access::NetCDFPerFeatureDataProvider>> data_access::NetCDFPerFeatureDataProvider::shared_providers;
 
+// limit access outside of compilation unit.
+namespace {
+    const size_t N_EXPECTED_FORCING_VARS = 8;
+}
+
 namespace data_access {
 
 std::shared_ptr<NetCDFPerFeatureDataProvider> NetCDFPerFeatureDataProvider::get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s)
@@ -164,7 +169,7 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
     return info;
 }
 
-NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s) : log_stream(log_s), value_cache(20),
+NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s) : log_stream(log_s), value_cache(N_EXPECTED_FORCING_VARS),
     sim_start_date_time_epoch(sim_start),
     sim_end_date_time_epoch(sim_end)
 {
@@ -511,9 +516,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
     std::vector<std::size_t> start, count;
 
-    auto cat_pos = id_pos[selector.get_id()];
-
-
+    auto cat_idx = id_pos[selector.get_id()];
 
     double t1 = time_vals[idx1];
     double t2 = time_vals[idx2];
@@ -524,22 +527,41 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
     std::string native_units = get_ncvar_units(selector.get_variable_name());
 
-    auto read_len = idx2 - idx1 + 1;
+    const std::size_t read_len = idx2 - idx1 + 1;
 
     std::vector<double> raw_values;
-    raw_values.resize(read_len);
+    raw_values.reserve(read_len);
 
-    //TODO: Currently assuming a whole variable cache slice across all catchments for a single timestep...but some stuff here to support otherwise.
-    size_t cache_slices_t_n = read_len / cache_slice_t_size; // Integer division!
+    std::size_t idx1_cache_slice_start = idx1 - (idx1 % cache_slice_t_size);
+    std::size_t time_idx = idx1 % cache_slice_t_size;
+
+    std::size_t n_cache_slices = (read_len / cache_slice_t_size) + std::min(read_len % cache_slice_t_size, std::size_t(1));
+    size_t value_idx = idx1;
     // For reference: https://stackoverflow.com/a/72030286
-    for( size_t i = 0; i < cache_slices_t_n; i++ ) {
+    for( size_t i = 0; i < n_cache_slices; i++ ) {
+        // rows: catchments; columns: time;
+        // stride between rows is 'cache_slice_t_size'
         std::shared_ptr<std::vector<double>> cached;
-        int cache_t_idx = (idx1 - (idx1 % cache_slice_t_size) + i);
-        std::string key = ncvar.getName() + "|" + std::to_string(cache_t_idx);
+
+        std::size_t cache_slice_start = idx1_cache_slice_start + (i * cache_slice_t_size);
+        std::size_t adjusted_size = cache_slice_t_size;
+        // Read up to the end of the data, but not beyond
+        if(cache_slice_start + cache_slice_t_size > time_vals.size() ){
+            adjusted_size = time_vals.size() - cache_slice_start;
+        }
+        std::string key = ncvar.getName() + "|" + std::to_string(cache_slice_start);
         if(value_cache.contains(key)){
             cached = value_cache.get(key).get();
         } else {
-            cached = std::make_shared<std::vector<double>>(get_ids().size());
+            // NOTE: aaraney: I am leaning towards just 'over allocating'
+            /* size_t last_bucket = get_ts_index_for_time(this->stop_time-1) / bucket_size; */
+            /* assert(bucket_idx <= last_bucket); */
+            /* size_t n_time = bucket_size; */
+            /* if (bucket_idx == last_bucket){ */
+            /*     n_time = (get_ts_index_for_time(this->stop_time-1) % bucket_size) + 1; */
+            /* } */
+            cached = std::make_shared<std::vector<double>>(get_ids().size() *  cache_slice_t_size);
+
             // read each chunk and add it to "cached"
             std::size_t next_cache_idx = 0;
             for(auto const& chunk: chunks){
@@ -547,24 +569,34 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
                 // chunk length      = chunk.second;
                 start.clear();
                 start.push_back(chunk.first);
-                start.push_back(cache_t_idx);
+
+                // NOTE: in the first iteration, we might read more data in the Time
+                // dimension than we 'need'. b.c. we read from:
+                // 'idx1 - (idx1 % cache_slice_t_size)' to the end of the cache line.
+                // so, if 'idx1 % cache_slice_t_size > 0' we will read
+                // 'idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
+                start.push_back(cache_slice_start);
 
                 count.clear();
                 count.push_back(chunk.second);
-                assert(cache_slice_t_size == 1);
-                count.push_back(cache_slice_t_size); // Must be 1 for now!...probably...
+
+                count.push_back(adjusted_size);
                 ncvar.getVar(start,count,&(*cached)[next_cache_idx]);
-                next_cache_idx += chunk.second;
+                next_cache_idx += chunk.second * adjusted_size;
             }
 
             value_cache.insert(key, cached);
         }
-        for( size_t j = 0; j < cache_slice_t_size; j++){
-            raw_values[i+j] = cached->at((j*cache_slice_t_size) + cat_pos);
+        // Find all values in the current cache slice and push them onto raw_values
+        while(value_idx >= cache_slice_start && 
+              value_idx < cache_slice_start + cache_slice_t_size &&
+              value_idx <= idx2){
+            raw_values.push_back(cached->at((cat_idx * cache_slice_t_size) + (value_idx % cache_slice_t_size)));
+            value_idx++;
         }
     }
 
-    
+    assert(raw_values.size() == read_len);
     rvalue = 0.0;
 
     double a , b = 0.0;
