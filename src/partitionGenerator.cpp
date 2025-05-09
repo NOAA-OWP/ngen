@@ -446,8 +446,14 @@ int main(int argc, char* argv[])
     if (boost::algorithm::ends_with(catchmentDataFile, "gpkg"))
     {
         #if NGEN_WITH_SQLITE3
+        try {
         catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
-        #else
+        } catch (...) {
+            // Handle all exceptions
+            std::string msg = "Geopackage error occurred reading catchment data file: " + catchmentDataFile;
+            Logger::logMsgAndThrowError(msg);
+        }
+    #else
         Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
         #endif
     }
@@ -478,11 +484,17 @@ int main(int argc, char* argv[])
     geojson::GeoJSON global_nexus_collection;
     if (boost::algorithm::ends_with(nexusDataFile, "gpkg")) 
     {
-      #if NGEN_WITH_SQLITE3
-      global_nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
-      #else
-      Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
-      #endif
+    #if NGEN_WITH_SQLITE3
+        try {
+            global_nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
+        } catch (...) {
+            // Handle all exceptions
+            std::string msg = "Geopackage error occurred reading nexus data file: " + nexusDataFile;
+            Logger::logMsgAndThrowError(msg);
+        } 
+    #else
+        Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
+    #endif
     } 
     else 
     {
