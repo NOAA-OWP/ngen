@@ -108,7 +108,7 @@ namespace ngen
             auto step = simulation_time.get_output_interval_seconds();
             
             //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
-            if(output_time_index%100 == 0) std::cout<<"Running timestep " << output_time_index <<std::endl;
+            if(output_time_index%1000 == 0) std::cout<<"Running timestep " << output_time_index <<std::endl;
             std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
             for(const auto& id : processing_units) 
             {
