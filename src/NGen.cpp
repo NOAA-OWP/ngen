@@ -141,14 +141,7 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
 
 } // ngen::exec_info::runtime_summary
 
-void setup_logger(void) {
-    // One time log preferences
-    (Logger::GetInstance())->SetLogPreferences(LogLevel::INFO);
-}
-
 int main(int argc, char* argv[]) {
-    // Setup the logger
-    setup_logger();
 
     if (argc > 1 && std::string{argv[1]} == "--info") {
 #if NGEN_WITH_MPI
