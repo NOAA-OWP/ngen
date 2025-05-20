@@ -1,20 +1,23 @@
-#include <stdlib.h>
 #include "Logger.hpp"
+#include <algorithm>
+#include <cassert>
+#include <chrono>
+#include <cstdarg>
+#include <cstdlib> // For getenv()
+#include <cstdio>
+#include <cstring>
+#include <fstream> // For file handling
+#include <iomanip>
 #include <iostream>
 #include <sstream>
-#include <fstream>      // For file handling
-#include <cstdlib>      // For getenv()
-#include <cstring>
-#include <string>       // For std::string
-#include <iomanip>
-#include <algorithm>
-#include <unordered_map>
-#include <iomanip>
-#include <chrono>
-#include <sys/wait.h>
+#include <string> // For std::string
 #include <sys/stat.h>
+#include <sys/wait.h>
+#include <thread>
+#include <unordered_map>
 #include <vector>
 
+using namespace std;
 
 const std::string  MODULE_NAME         = "ngen";
 const std::string  LOG_DIR_NGENCERF    = "/ngencerf/data";       // ngenCERF log directory string if environement var empty.
@@ -26,9 +29,19 @@ const unsigned int LOG_MODULE_NAME_LEN = 8;                      // Width of mod
 const std::string  EV_EWTS_LOGGING     = "NGEN_EWTS_LOGGING";    // Enable/disable of Error Warning and Trapping System  
 const std::string  EV_NGEN_LOGFILEPATH = "NGEN_LOG_FILE_PATH";   // ngen log file 
 
-std::shared_ptr<Logger> Logger::loggerInstance;
+const std::string  CONFIG_FILENAME     = "ngen_logging.json";    // ngen logging config file 
 
-using namespace std;
+bool         Logger::loggerInitialized = false;
+bool         Logger::loggingEnabled = true;
+std::fstream Logger::logFile;
+std::string  Logger::logFileDir = "";
+std::string  Logger::logFilePath = "";
+LogLevel     Logger::logLevel = LogLevel::INFO;
+std::string  Logger::moduleName = "";
+std::string  Logger::ngenResultsDir = "";
+bool         Logger::openedOnce = false;
+
+std::unordered_map<std::string, LogLevel> Logger::moduleLogLevels;
 
 // String to LogLevel map
 static const std::unordered_map<std::string, LogLevel> logLevelMap = {
@@ -226,61 +239,133 @@ std::string CleanJsonToken(const std::string& token) {
     return s;
 }
 
-void Logger::ReadConfigFile(void) {
+/*
+    JSON file format exmaple:
+    {
+        "logging_enabled": true,
+        "modules": {
+            "ngen": "INFO",
+            "CFE-S": "INFO",
+            "UEB": "INFO",
+            "Noah-OWP-Modular": "DEBUG",
+            "T-Route": "INFO"
+        }
+    }
+*/
+bool Logger::JsonFileValid(std::ifstream& jsonFile)
+{
+    // Move file pointer to beginning of file
+    jsonFile.clear();                 // Clear any error bits. Does not clear the contents of the file
+    jsonFile.seekg(0, std::ios::beg); // Move file pointer to beginning of the file
 
+    std::stringstream buffer;
+    buffer << jsonFile.rdbuf();
+    std::string contents = buffer.str();
+
+    // Trim leading whitespace
+    size_t start = contents.find_first_not_of(" \t\n\r");
+    // Trim trailing whitespace
+    size_t end   = contents.find_last_not_of(" \t\n\r");
+
+    if (start == std::string::npos || end == std::string::npos) {
+        std::cerr << MODULE_NAME << " ERROR: Issue in JSON file. File is empty or whitespace only." << std::endl;
+        return false;
+    }
+
+    // Extract the trimmed content
+    contents = contents.substr(start, end - start + 1);
+
+    // Now check that it starts and ends with braces
+    if (contents.front() != '{' || contents.back() != '}') {
+        std::cerr << MODULE_NAME << " ERROR: Issue in JSON file. Does not begin/end with {}" << std::endl;
+        return false;
+    }
+
+    // Check some basics. Not an exhaustive checker.
+    unsigned int numOpenBraces  = std::count(contents.begin(), contents.end(), '{');
+    unsigned int numCloseBraces = std::count(contents.begin(), contents.end(), '}');
+    unsigned int numQuotes      = std::count(contents.begin(), contents.end(), '"');
+    unsigned int numColons      = std::count(contents.begin(), contents.end(), ':');
+    if ( (numOpenBraces && numCloseBraces && numQuotes && numColons) &&  // Not equal 0
+         (numOpenBraces == numCloseBraces) &&                            // Matching open and close braces
+         ((numQuotes % 2) == 0) )                                        // Even number of quotes
+    {
+        return true;
+    }
+    std::cerr << MODULE_NAME << " ERROR: Issue in JSON file. Open Braces=" << numOpenBraces << ", Close Braces=" << numCloseBraces
+              <<  ", quotes=" << numQuotes << ", and colons=" << numColons << std::endl;
+    return false;
+}
+
+bool Logger::ParseLoggerConfigFile(std::ifstream& jsonFile) 
+{
+    if (JsonFileValid(jsonFile)) {
+        // Move file pointer to beginning of file
+        jsonFile.clear();                 // Clear any error bits. Does not clear the contents of the file
+        jsonFile.seekg(0, std::ios::beg); // Move file pointer to beginning of the file
+
+        // Parse the json file
+        std::string line;
+        bool inModules = false;
+        while (std::getline(jsonFile, line)) {
+            std::string trimmed = TrimString(line);
+            if (trimmed.find("\"logging_enabled\"") != std::string::npos) {
+                size_t colon = trimmed.find(":");
+                if (colon != std::string::npos) {
+                    std::string rawValue = TrimString(trimmed.substr(colon + 1));
+                    std::string value = CleanJsonToken(rawValue);
+                    loggingEnabled = (value == "true");
+                    std::cout << "  Found logging_enabled=" << (loggingEnabled?"true":"false") << std::endl;
+                }
+            } else if (trimmed.find("\"modules\"") != std::string::npos) {
+                inModules = true;
+            } else if (inModules && trimmed.find("}") != std::string::npos) {
+                break; // end of modules section
+            } else if (inModules) {
+                size_t colon = trimmed.find(":");
+                if (colon != std::string::npos) {
+                    std::string rawModule = TrimString(trimmed.substr(0, colon));                
+                    std::string moduleTok = CleanJsonToken(rawModule);                
+                    std::string moduleStr = ToUpper(moduleTok);                
+                    std::string rawLevel = TrimString(trimmed.substr(colon + 1));
+                    std::string levelStr = ToUpper(CleanJsonToken(rawLevel)); 
+                    if (std::find(allModules.begin(), allModules.end(), moduleStr) != allModules.end()) {
+                        moduleLogLevels[moduleStr] = ConvertStringToLogLevel(levelStr);
+                        std::cout << "  Found Log level " << moduleTok << "=" << ConvertLogLevelToString(moduleLogLevels[moduleStr]) << std::endl;
+                    } else {
+                        std::cout << "  ERROR: Ignoring unknown module " << moduleStr <<  std::endl;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
+void Logger::ReadConfigFile(std::string searchPath) {
+
+    // Set logger defaults
     loggingEnabled = true;
-
     moduleLogLevels.clear();
     for (const auto& hydroModule : allModules) {
         moduleLogLevels[hydroModule] = LogLevel::INFO;
     }
 
+    // Open and Parse config file
     std::ifstream jsonFile;
-    if (ngenResultsDir.empty()) {
-        std::cout << "WARNING: NGEN_RESULTS_DIR environment variable not set.";
+    if (searchPath.empty()) {
+        std::cout << "WARNING: NGEN_RESULTS_DIR environment variable not set or empty.";
         std::cout << " Using default logging configuration of enabled and log level INFO" << std::endl;
     } else {
-        std::string configDir = ExtractFirstNDirs(ngenResultsDir,6);
-        std::string configFilePath = configDir + "ngen_logging.json";
-        std::cout << "Logger config: Opening logger config file " << configFilePath << std::endl;
-        jsonFile.open(configFilePath.c_str());
-        if (jsonFile.is_open() && (jsonFile.peek() != std::ifstream::traits_type::eof())) {
-            // Parse the json file
-            std::string line;
-            bool inModules = false;
-            while (std::getline(jsonFile, line)) {
-                std::string trimmed = TrimString(line);
-                if (trimmed.find("\"logging_enabled\"") != std::string::npos) {
-                    size_t colon = trimmed.find(":");
-                    if (colon != std::string::npos) {
-                        std::string rawValue = TrimString(trimmed.substr(colon + 1));
-                        std::string value = CleanJsonToken(rawValue);
-                        loggingEnabled = (value == "true");
-                        std::cout << "  Found logging_enabled=" << (loggingEnabled?"true":"false") << std::endl;
-                    }
-                } else if (trimmed.find("\"modules\"") != std::string::npos) {
-                    inModules = true;
-                } else if (inModules && trimmed.find("}") != std::string::npos) {
-                    break; // end of modules section
-                } else if (inModules) {
-                    size_t colon = trimmed.find(":");
-                    if (colon != std::string::npos) {
-                        std::string rawModule = TrimString(trimmed.substr(0, colon));                
-                        std::string moduleTok = CleanJsonToken(rawModule);                
-                        std::string moduleStr = ToUpper(moduleTok);                
-                        std::string rawLevel = TrimString(trimmed.substr(colon + 1));
-                        std::string levelStr = ToUpper(CleanJsonToken(rawLevel)); 
-                        if (std::find(allModules.begin(), allModules.end(), moduleStr) != allModules.end()) {
-                            moduleLogLevels[moduleStr] = ConvertStringToLogLevel(levelStr);
-                            std::cout << "  Found Log level " << moduleTok << "=" << ConvertLogLevelToString(moduleLogLevels[moduleStr]) << std::endl;
-                        } else {
-                            std::cout << "  ERROR: Ignoring unknown module " << moduleStr <<  std::endl;
-                        }
-                    }
-                }
+        bool configFileFound = false;
+        if (FindAndOpenLogConfigFile(searchPath, jsonFile)) {
+            if (jsonFile.peek() != std::ifstream::traits_type::eof()) {
+                if (ParseLoggerConfigFile(jsonFile)) configFileFound = true;
             }
-        } else {
-            std::cout << "WARNING: Unable to open logging config file " << configFilePath << ".";
+        }
+        if (!configFileFound) {
+            std::cout << MODULE_NAME << " WARNING: Issue with logging config file " << CONFIG_FILENAME << " in " << searchPath << ".";
             std::cout << " Using default logging configuration of enabled and log level INFO" << std::endl;    
         }
     }
@@ -332,7 +417,7 @@ void Logger::SetLogPreferences(LogLevel level) {
             ngenResultsDir = envVar;
         }
 
-        ReadConfigFile();
+        ReadConfigFile(ngenResultsDir);
         
         if (loggingEnabled) {
 
@@ -356,17 +441,36 @@ void Logger::SetLogPreferences(LogLevel level) {
     }
 }
 
-/**
-* Get Single Logger Instance or Create new Object if Not Created
-* @return std::shared_ptr<Logger>
-*/
-std::shared_ptr<Logger> Logger::GetInstance() {
-	if (loggerInstance == nullptr) {
-		loggerInstance = std::shared_ptr<Logger>(new Logger());
-	}
-	return loggerInstance;
+void Logger::Log(LogLevel messageLevel, const char* message, ...) {
+    va_list args;
+    va_start(args, message);
+
+    // Make a copy to calculate required size
+    va_list args_copy;
+    va_copy(args_copy, args);
+    int requiredLen = vsnprintf(nullptr, 0, message, args_copy);
+    va_end(args_copy);
+
+    if (requiredLen > 0) {
+        std::vector<char> buffer(requiredLen + 1);  // +1 for null terminator
+        vsnprintf(buffer.data(), buffer.size(), message, args);
+
+        va_end(args);
+
+        Log(std::string(buffer.data()), messageLevel);
+    } else {
+        va_end(args);  // still need to clean up
+    }
 }
 
+/**
+ * Log given message with defined parameters and generate message to pass on Console or File
+ * @param message: Log Message
+ * @param messageLevel: Log Level, LogLevel::INFO by default
+ */
+void Logger::Log(LogLevel messageLevel, std::string message) {
+    Log(message, messageLevel);
+}
 /**
 * Log given message with defined parameters and generate message to pass on Console or File
 * @param message: Log Message
@@ -502,3 +606,32 @@ std::string Logger::GetLogFilePath(void) {
 LogLevel Logger::GetLogLevel(void) {
 	return logLevel;
 }
+
+bool Logger::IsLoggingEnabled(void) {
+    return loggingEnabled;
+}
+
+bool Logger::FileExists(const std::string& path) {
+    struct stat statbuf{};
+    return stat(path.c_str(), &statbuf) == 0 && S_ISREG(statbuf.st_mode);
+}
+
+std::string Logger::GetParentDirName(const std::string& path) {
+    size_t pos = path.find_last_of('/');
+    if (pos == std::string::npos || pos == 0) return "/";
+    return path.substr(0, pos);
+}
+
+bool Logger::FindAndOpenLogConfigFile(std::string path, std::ifstream& configFileStream) {
+    while (!path.empty() && path != "/") {
+        std::string candidate = path + DS + CONFIG_FILENAME;
+        if (FileExists(candidate)) {
+            std::cout << "Logger config: Opening logger config file " << candidate << std::endl;
+            configFileStream.open(candidate);
+            return configFileStream.is_open();
+        }
+        path = GetParentDirName(path);
+    }
+    return false;
+}
+
