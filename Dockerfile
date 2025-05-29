@@ -228,7 +228,7 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ngen \
           -DNGEN_QUIET=ON \
           -DNGEN_UPDATE_GIT_SUBMODULES=OFF \
           -DBOOST_ROOT=/opt/boost && \
-      cmake --build cmake_build --target all --parallel $(nproc)
+      cmake --build cmake_build --target all
 
 # Build each submodule in a separate layer, using cache for CMake as well
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-lasam \

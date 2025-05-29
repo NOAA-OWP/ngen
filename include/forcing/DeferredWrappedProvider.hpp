@@ -70,7 +70,7 @@ namespace data_access {
          * @return The names of the outputs for which this instance is (or will be) able to provide values.
          */
 
-        boost::span<const std::string> get_available_variable_names() override {
+        boost::span<const std::string> get_available_variable_names() const override {
             return providedOutputs;
         }
 

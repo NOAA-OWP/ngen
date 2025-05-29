@@ -53,9 +53,7 @@ namespace realization{
                 //Create the nested formulations in order of definition
                 nested.push_back(Formulation(module.second));
             }
-            std::string propStr = geojson::JSONProperty::print_property(parameters.at("modules"));
-            LOG(propStr, LogLevel::DEBUG);
-        }
+      }
     }
 
     /**

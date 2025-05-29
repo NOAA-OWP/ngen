@@ -72,18 +72,18 @@ namespace data_access
         void finalize() override;
 
         /** Return the variables that are accessable by this data provider */
-        boost::span<const std::string> get_available_variable_names() override;
+        boost::span<const std::string> get_available_variable_names() const override;
 
         /** return a list of ids in the current file */
         const std::vector<std::string>& get_ids() const;
 
         /** Return the first valid time for which data from the request variable  can be requested */
-        long get_data_start_time() override;
+        long get_data_start_time() const override;
 
         /** Return the last valid time for which data from the requested variable can be requested */
-        long get_data_stop_time() override;
+        long get_data_stop_time() const override;
 
-        long record_duration() override;
+        long record_duration() const override;
 
         /**
          * Get the index of the data time step that contains the given point in time.
@@ -94,7 +94,7 @@ namespace data_access
          * @return The index of the forcing time step that contains the given point in time.
          * @throws std::out_of_range If the given point is not in any time step.
          */
-        size_t get_ts_index_for_time(const time_t &epoch_time) override;
+        size_t get_ts_index_for_time(const time_t &epoch_time) const override;
 
         /**
          * Get the value of a forcing property for an arbitrary time period, converting units if needed.

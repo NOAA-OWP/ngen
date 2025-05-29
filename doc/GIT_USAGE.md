@@ -1,107 +1,143 @@
 # Git Strategy
 
-- [Branching Design](#branching-design)
+Note that this document goes into detail on the Git strategy and branching model for the official OWP repository.  It is here for openness and transparency, but most contributors and users will not need to be concerned with this level of detail.  For information geared toward day-to-day development contributions and Git, see the [CONTRIBUTING](../CONTRIBUTING.md) doc.
+
+- [Branching Model](#branching-model)
+  - [Feature Branches from `master`](#feature-branches-from-master)
+  - [Relating `production`, `master`, and Release Branches](#relating-production-master-and-release-branches)
 - [Contributing](#contributing)
-    - [TLDR;](#contributing-tldr)
-    - [Fork Consistency Requirements](#fork-consistency-requirements)
-    - [Fork Setup Suggestions](#fork-setup-suggestions)
-- [Keeping Forks Up to Date](#keeping-forks-up-to-date)
-    - [Setting the upstream Remote](#setting-the-upstream-remote)
-    - [Getting Upstream Changes](#getting-upstream-changes)
-    - [Rebasing Development Branches](#rebasing-development-branches)
-    - [Fixing Diverging Development Branches](#fixing-diverging-development-branches)
+- [Optional: Setting Up Hook Scripts](#optional-setting-up-hook-scripts)
 
-## Branching Design
+## Branching Model
 
-- Main **upstream** repo has only the single long-term branch called **master**; i.e., `upstream/master` 
-    - There may occasionally be other temporary branches for specific purposes
-- Interaction with **upstream** repo is done exclusively via pull requests (PRs) to `upstream/master`
+- This repo uses a branching model based on [Gitflow](https://nvie.com/posts/a-successful-git-branching-model/) that has two primary long-term branches:
+  - **master**: the main development and integration branch containing the latest completed development work intended for the next released version
+  - **production**: the branch representing the latest code verified as production-ready and pointing to the most recently release, official version
+- Rebasing is used to integrate changes across branches, rather than merge commits
+  - This allows the repo to maintain a more robust and complete history
+- Most interaction with the official OWP repo is done via pull requests (PRs) to the `master` branch
+  - Independent branches for features or bug fixes are created off `master` to contain development work that is in progress
+  - Once work in a feature/fix branch is complete (or at least thought complete), it is used to create a PR
+  - PRs and their linked branches are reviewed and, once approved, have their changes integrated back into `master`
+  - Typically feature/fix branches exist in personal clones and personal Github forks, but not in the official OWP repo
+- Release branches (e.g., `release-X` for pending version `X`) will be created whenever it is time to officially release a new version
+  - These effectively are release candidates, with branches created from `master`
+  - The release branches are managed by the core OWP contributors team
+  - They do exist in the official OWP repo
+  - But they are short-lived and removed once the release becomes official
+  - See the [Release Management](RELEASE_MANAGEMENT.md) doc for more details on the release process
+
+### Feature Branches from `master`
+This illustrates the relationship between feature branches and `master`.  They should be created from `master` and independently contain commits from their feature.  Once done, the changes will be reintegrated back into `master` via rebasing.
+
+```mermaid 
+    %%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': { 'showBranches': true, 'showCommitLabel':true, 'mainBranchName': 'master'}}}%%
+    gitGraph
+        commit id:"feature1.1"
+        commit id:"feature1.2"
+        branch feature-2
+        branch feature-3
+        checkout feature-2
+        commit id:"feature2.1"
+        commit id:"feature2.2"
+        checkout master
+        merge feature-2
+        checkout feature-3
+        commit id:"feature3.1"
+        commit id:"feature3.2"
+        commit id:"feature3.3"
+        checkout master
+        merge feature-3
+```
+
+The resulting state of `master` after rebasing the two new feature branches would be:
+
+```mermaid 
+    %%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': { 'showBranches': true, 'showCommitLabel':true, 'mainBranchName': 'master'}}}%%
+    gitGraph
+        commit id:"feature1.1"
+        commit id:"feature1.2"
+        commit id:"feature2.1"
+        commit id:"feature2.2"
+        commit id:"feature3.1"
+        commit id:"feature3.2"
+        commit id:"feature3.3"
+```
+
+### Relating `production`, `master`, and Release Branches
+
+This illustrates the relationship between `production`, `master`, and `release-v2`.  Notice that `production` has already been tagged with version `v1` at the start.  Commits for `feature1` and `feature2` at some point are integrated into `master`.  When it is time to prepare to release version `v2`, `release-v2` is created.  A few bug fix commits were needed in `release-v2`.  After that, all the changes in `release-v2` are integrated into `production`, and `production` is tagged `v2`.  All the changes are also integrated back into `master`.
+
+
+```mermaid 
+    %%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': { 'showBranches': true, 'showCommitLabel':true, 'mainBranchName': 'master'}}}%%
+    gitGraph
+        commit id:"v1-commit"
+        branch production
+        checkout production
+        commit id:"v1-commit" tag: "v1"
+        checkout master
+        commit id:"feature1.1"
+        commit id:"feature1.2"
+        commit id:"feature2.1"
+        commit id:"feature2.2"
+        commit id:"feature2.3"
+        branch release-v2
+        checkout release-v2
+        commit id:"fix2.1"
+        commit id:"fix2.2"
+        checkout production
+        merge release-v2 tag:"v2"
+        checkout master
+        merge release-v2
+
+```
+
+The resulting state of `production` is:
+
+```mermaid 
+    %%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': { 'showBranches': true, 'showCommitLabel':true, 'mainBranchName': 'production'}}}%%
+    gitGraph
+        commit id:"v1-commit" tag:"v1"
+        commit id:"feature1.1"
+        commit id:"feature1.2"
+        commit id:"feature2.1"
+        commit id:"feature2.2"
+        commit id:"feature2.3"
+        commit id:"fix2.1"
+        commit id:"fix2.2" tag:"v2"
+```
+
+The resulting state of `master` is essentially the same:
+
+```mermaid 
+    %%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': { 'showBranches': true, 'showCommitLabel':true, 'mainBranchName': 'master'}}}%%
+    gitGraph
+        commit id:"v1-commit"
+        commit id:"feature1.1"
+        commit id:"feature1.2"
+        commit id:"feature2.1"
+        commit id:"feature2.2"
+        commit id:"feature2.3"
+        commit id:"fix2.1"
+        commit id:"fix2.2"
+```
 
 ## Contributing
 
-- [TLDR;](#contributing-tldr)
-- [Fork Consistency Requirements](#fork-consistency-requirements)
-- [Fork Setup Suggestions](#fork-setup-suggestions)
+More details on the practical processes and requirements for contributing code changes can be found in the [CONTRIBUTING](../CONTRIBUTING.md) doc.  In summary:
 
-### Contributing TLDR;
+- Github Pull Requests (PRs) are required to incorporate changes into the official OWP repo
+  - Contributors should generally not be pushing changes directly to branches in the OWP repo
+- PRs should be submitted using a feature/fix branch contained in a personal Github fork
+- Rebasing is used, rather than merge commits, to integrate changes across branches and keep branches from different repos in sync
+- PRs should be configured to pull changes into the `master` branch
+- Feature/fix branches should be created from `master`
+- Personal forks and local clone(s) should be kept up to date with the official OWP repo regularly to minimize the introduction of merge conflict in PRs
 
-To work with the repo and contribute changes, the basic process is as follows:
 
-- Create your own fork in Github of the main **upstream** repository
-- Clone your fork on your local development machine
-- Make sure to keep your fork and your local clone(s) up to date with the main upstream repo, keeping histories consistent via rebasing
-- In the local repo, push the changes you make to your Github fork
-- Submit pull requests to `upstream/master` when you have changes ready to be added
+## Optional: Setting Up Hook Scripts
 
-### Fork Consistency Requirements
+_Git_ supports the capability to automatically run various scripts when certain events happen.  These are referred to as [_Git_ hooks](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks).  See Git's documentation for full details on what can be done with hooks and how they are configured.  
 
-Within your own local repo and personal fork, you are mostly free to do whatever branching strategy works for you.  However, branches used for PRs must have all new commits based on the current `HEAD` commit of the `upstream/master` branch, to ensure the repo history remains consistent.  I.e., you need to make sure you rebase the branch with your changes before making a PR.  How you go about this is up to you, but the following suggested setup will make that relatively easy.
-
-### Fork Setup Suggestions
-
-After creating your fork in Github, clone your local repo from the fork.  This should make your fork a remote for you local repo, typically named **origin**.  Then,  [add the **upstream** as a second remote](#setting-the-upstream-remote) in your local repo.
-
-Have your own `master` branch, on your local clone and within your personal fork, just as [a place to rebase changes from `upstream/master`](#getting-upstream-changes).  Do not do any development work or add any of your own changes directly.  Just keep it as a "clean," current copy of the `upstream/master` branch.  
-
-Use separate branches for development work as you see fit.  When preparing to make a PR, create a new branch just for that PR, making sure it is both up to date with **upstream** and has all the desired local changes.  Wait to actually push it to your fork until that has been done and your are ready create the PR.
-
-A separate, "clean" local `master` should be easy to keep it in sync with `upstream/master`, which in turn will make it relatively easy to rebase local development branches whenever needed.  This simplifies maintaining the base-commit consistency requirement for the branches you will use for pull requests.
-
-Clean up above mentioned PR branches regularly (i.e., once their changes get incorporated).  You may also want to do this for the other development branches in your fork, or else you'll end up with branches having [diverged histories that need to be fixed](#fixing-diverging-development-branches).
-
-## Keeping Forks Up to Date
-
-- [Setting the upstream Remote](#setting-the-upstream-remote)
-- [Getting Upstream Changes](#getting-upstream-changes)
-- [Rebasing Development Branches](#rebasing-development-branches)
-- [Fixing Diverging Development Branches](#fixing-diverging-development-branches)
-
-### Setting the **upstream** Remote
-
-To stay in sync with other separate changes added to **upstream**, you will typically need to add the main upstream repository as a Git **remote** on your local development machine.  The standard convention, used here and elsewhere, is to name that remote **upstream**.  Doing the addition will look something like:
-
-    # Add the remote 
-    git remote add upstream https://github.com/NOAA-OWP/ngen.git
-    
-    # Verify
-    git remote -v
-
-### Getting Upstream Changes
-
-When you want to check for or apply updates to your fork (and your local repo), locally check out your `master` branch and do fetch-and-rebase, which can be done with `pull` and the `--rebase` option:
-
-    # Checkout local master branch 
-    git checkout master
-    
-    # Fetch and rebase changes
-    git pull --rebase upstream master
-    
-Then, make sure these get pushed to your fork. Assuming a typical setup where you have cloned from your fork, and you still have `master` checked out, that is just:
-
-    # Note the assumptions mentioned above that required for this syntax
-    git push
-
-Depending on your individual setup, you may want to do this immediately (e.g., if your `master` branch is "clean", as [discussed in the forking suggestions](#fork-setup-suggestions)), or wait until your local `master` is in a state ready to push to your fork. 
-
-### Rebasing Development Branches    
-    
-When the steps in [Getting Upstream Changes](#getting-upstream-changes) do bring in new commits that update `master`, you should rebase your other local branches. E.g., 
-
-    # If using a development branch named 'dev'
-    git checkout dev
-    git rebase master
-    
-Alternatively, you can do an interactive rebase.  This will open up a text editor allowing you to rearrange, squash, omit, etc. your commits when you rebase your development branch onto the new state of `master`. 
-
-    git rebase -i master
-    
-### Fixing Diverging Development Branches
-
-If you have already pushed a local development branch to your fork, and then later need to rebase the branch, doing so will cause the history to diverge.  If you are the only one using your fork, this is easy to fix by simply force-pushing your rebased local branch.
-
-    # To force-push to fix a divergent branch
-    git push -f origin dev
-    
-However, you will need to be careful with this if you are not the only one using you fork (e.g., you are collaborating with someone else on a large set of changes for some new feature).  The particular considerations and best ways to go about things in such cases are outside the scope of this document.  Consult Git's documentation and Google, or contact another contributor for advice.
-
-     
+Use of client-side hooks is optional but can be very useful for things like automating some kind of quality check before committing a change.  However, client-side hooks are not copied as part of cloning a repository.  They must be set up locally for each clone.  This can be done manually or using available helper tools:  e.g., [_pre-commit_](https://pre-commit.com/).  Once again, see Git's docs for available options and setup details.

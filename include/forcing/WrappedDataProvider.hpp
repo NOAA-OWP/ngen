@@ -59,7 +59,7 @@ namespace data_access {
          * @return const std::vector<std::string>& the names of available data variables
          */
 
-        boost::span<const std::string> get_available_variable_names() override {
+        boost::span<const std::string> get_available_variable_names() const override {
             return wrapped_provider->get_available_variable_names();
         }
 
@@ -68,7 +68,7 @@ namespace data_access {
          *
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
-        long get_data_start_time() override {
+        long get_data_start_time() const override {
             return wrapped_provider->get_data_start_time();
         }
 
@@ -77,11 +77,11 @@ namespace data_access {
          *
          * @return The exclusive ending of the period of time over which this instance can provide this data.
          */
-        long get_data_stop_time() override {
+        long get_data_stop_time() const override {
             return wrapped_provider->get_data_stop_time();
         }
 
-        long record_duration() override {
+        long record_duration() const override {
             return wrapped_provider->record_duration();
         }
 
@@ -94,7 +94,7 @@ namespace data_access {
          * @return The index of the forcing time step that contains the given point in time.
          * @throws std::out_of_range If the given point is not in any time step.
          */
-        size_t get_ts_index_for_time(const time_t &epoch_time) override {
+        size_t get_ts_index_for_time(const time_t &epoch_time) const override {
             return wrapped_provider->get_ts_index_for_time(epoch_time);
         }
 
@@ -132,7 +132,7 @@ namespace data_access {
          * @param name The name of the forcing property for which the current value is desired.
          * @return Whether the property's value is an aggregate sum.
          */
-        bool is_property_sum_over_time_step(const std::string& name) override {
+        bool is_property_sum_over_time_step(const std::string& name) const override {
             return wrapped_provider->is_property_sum_over_time_step(name);
         }
 
