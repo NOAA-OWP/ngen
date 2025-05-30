@@ -104,7 +104,7 @@
               "name": "bmi_fortran",
               "params": {
                 "model_type_name": "bmi_fortran_noahowp",
-                "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi.so",
+                "library_file": "./extern-libs/noah-owp-modular/libsurfacebmi.so",
                 "forcing_file": "",
                 "init_config": "./data/bmi/fortran/noah-owp-modular-init-agg-1.namelist.input",
                 "allow_exceed_end_time": true,
