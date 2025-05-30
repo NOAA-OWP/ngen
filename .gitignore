@@ -114,8 +114,6 @@ temp/
 extern/pybind11/
 # libtorch source artifact
 extern/libtorch-*.zip
-# "Standard" build directories for external BMI module shared libraries
-extern/**/cmake_build
 
 # Large Example Datasets for certain tests #
 ############################################
