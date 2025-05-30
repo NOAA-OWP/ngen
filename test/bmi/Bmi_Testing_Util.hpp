@@ -146,9 +146,9 @@ namespace ngen {
              * Relative paths to the directories containing each testing BMI modules, from the project root.
              */
             const map<string, string> bmiModuleRelativePaths = {
-                    {BMI_CPP_TYPE, "extern/test_bmi_cpp/cmake_build/"},
-                    {BMI_C_TYPE, "extern/test_bmi_c/cmake_build/"},
-                    {BMI_FORTRAN_TYPE, "extern/test_bmi_fortran/cmake_build/"},
+                    {BMI_CPP_TYPE, "test-libs/test_bmi_cpp/"},
+                    {BMI_C_TYPE, "test-libs/test_bmi_c/"},
+                    {BMI_FORTRAN_TYPE, "test-libs/test_bmi_fortran/"},
                     // TODO, this may need to just be extern/
                     {BMI_PYTHON_TYPE, "extern/test_bmi_py"}
             };
