@@ -14,7 +14,7 @@
 			    "name": "bmi_c++",
 			    "params": {
                                 "model_type_name": "bmi_c++_sloth",
-                                "library_file": "./extern/sloth/cmake_build/libslothmodel",
+                                "library_file": "./extern-libs/sloth/libslothmodel",
                                 "init_config": "/dev/null",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "z",
@@ -30,7 +30,7 @@
                             "name": "bmi_fortran",
                             "params": {
                                 "model_type_name": "bmi_fortran_noahowp",
-                                "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi",
+                                "library_file": "./extern-libs/noah-owp-modular/libsurfacebmi",
                                 "forcing_file": "",
                                 "init_config": "./data/bmi/fortran/noah-owp-modular-init-{{id}}.namelist.input",
                                 "allow_exceed_end_time": true,
@@ -52,7 +52,7 @@
                             "name": "bmi_c",
                             "params": {
                                 "model_type_name": "bmi_c_cfe",
-                                "library_file": "./extern/cfe/cmake_build/libcfebmi",
+                                "library_file": "./extern-libs/cfe/libcfebmi",
                                 "forcing_file": "",
                                 "init_config": "./data/bmi/c/cfe/{{id}}_bmi_config.ini",
                                 "allow_exceed_end_time": true,
@@ -96,7 +96,7 @@
                             "name": "bmi_c",
                             "params": {
                                 "model_type_name": "bmi_c_pet",
-                                "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
+                                "library_file": "./extern-libs/evapotranspiration/libpetbmi",
                                 "forcing_file": "",
                                 "init_config": "./data/bmi/c/pet/cat-27_bmi_config.ini",
                                 "allow_exceed_end_time": true,
