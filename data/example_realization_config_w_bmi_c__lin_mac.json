@@ -36,7 +36,7 @@
                     "name": "bmi_c",
                     "params": {
                         "model_type_name": "test_bmi_pet",
-                        "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
+                        "library_file": "./extern-libs/evapotranspiration/libpetbmi",
                         "forcing_file": "",
                         "init_config": "./data/bmi/c/pet/laramie_bmi_config_pet_pass.txt",
                         "allow_exceed_end_time": true,
