@@ -133,9 +133,9 @@ void Bmi_Cpp_Formulation_Test::SetUp() {
             "../../test/data/bmi/test_bmi_c/"
     };
     lib_dir_opts = {
-            "./extern/test_bmi_cpp/cmake_build/",
-            "../extern/test_bmi_cpp/cmake_build/",
-            "../../extern/test_bmi_cpp/cmake_build/"
+            "./test-libs/test_bmi_cpp/",
+            "../test-libs/test_bmi_cpp/",
+            "../../test-libs/test_bmi_cpp/"
     };
 
     config_json = std::vector<std::string>(EX_COUNT);

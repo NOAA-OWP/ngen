@@ -23,7 +23,7 @@ git_update_submodule("${NGEN_EXT_DIR}/bmi-cxx")
 
 add_external_subdirectory(
     SOURCE "${NGEN_EXT_DIR}/test_bmi_cpp"
-    OUTPUT "${NGEN_EXT_DIR}/test_bmi_cpp/cmake_build"
+    OUTPUT "${PROJECT_BINARY_DIR}/test-libs/test_bmi_cpp"
     IMPORTS testbmicppmodel
 )
 
@@ -39,7 +39,7 @@ if(NGEN_WITH_BMI_C)
     add_compile_definitions(NGEN_BMI_C_LIB_TESTS_ACTIVE)
     add_external_subdirectory(
         SOURCE "${NGEN_EXT_DIR}/test_bmi_c"
-        OUTPUT "${NGEN_EXT_DIR}/test_bmi_c/cmake_build"
+        OUTPUT "${PROJECT_BINARY_DIR}/test-libs/test_bmi_c"
         IMPORTS testbmicmodel
     )
 endif()
@@ -48,7 +48,7 @@ if(NGEN_WITH_BMI_FORTRAN)
     add_compile_definitions(NGEN_BMI_FORTRAN_LIB_TESTS_ACTIVE)
     add_external_subdirectory(
         SOURCE "${NGEN_EXT_DIR}/test_bmi_fortran"
-        OUTPUT "${NGEN_EXT_DIR}/test_bmi_fortran/cmake_build"
+        OUTPUT "${PROJECT_BINARY_DIR}/test-libs/test_bmi_fortran"
         IMPORTS testbmifortranmodel
     )
 endif()
@@ -523,6 +523,7 @@ if(NGEN_WITH_COVERAGE)
             "${BOOST_ROOT}"
             "${CMAKE_CURRENT_LIST_DIR}"
             "${NGEN_EXT_DIR}"
+            "${PROJECT_BINARY_DIR}/test-libs/"
     )
 
     add_custom_command(
@@ -542,5 +543,6 @@ if(NGEN_WITH_COVERAGE)
             "${BOOST_ROOT}"
             "${CMAKE_CURRENT_LIST_DIR}"
             "${NGEN_EXT_DIR}"
+            "${PROJECT_BINARY_DIR}/test-libs/"
     )
 endif()

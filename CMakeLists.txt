@@ -204,7 +204,7 @@ if(NGEN_WITH_EXTERN_SLOTH)
     set(PACKAGE_TESTS OFF CACHE BOOL "SLoTH testing")
     add_external_subdirectory(
         SOURCE     "${NGEN_EXT_DIR}/sloth"
-        OUTPUT     "${NGEN_EXT_DIR}/sloth/cmake_build"
+        OUTPUT     "${PROJECT_BINARY_DIR}/extern-libs/sloth"
         GIT_UPDATE "${NGEN_EXT_DIR}/sloth"
         IMPORTS    slothmodel
     )
@@ -217,7 +217,7 @@ if(NGEN_WITH_BMI_C)
     if(NGEN_WITH_EXTERN_TOPMODEL)
         add_external_subdirectory(
             SOURCE     "${NGEN_EXT_DIR}/topmodel"
-            OUTPUT     "${NGEN_EXT_DIR}/topmodel/cmake_build"
+            OUTPUT     "${PROJECT_BINARY_DIR}/extern-libs/topmodel"
             GIT_UPDATE "${NGEN_EXT_DIR}/topmodel/topmodel"
             IMPORTS    topmodelbmi
         )
@@ -226,7 +226,7 @@ if(NGEN_WITH_BMI_C)
     if(NGEN_WITH_EXTERN_CFE)
         add_external_subdirectory(
             SOURCE     "${NGEN_EXT_DIR}/cfe"
-            OUTPUT     "${NGEN_EXT_DIR}/cfe/cmake_build"
+            OUTPUT     "${PROJECT_BINARY_DIR}/extern-libs/cfe"
             GIT_UPDATE "${NGEN_EXT_DIR}/cfe/cfe"
             IMPORTS    cfebmi     
         )
@@ -235,7 +235,7 @@ if(NGEN_WITH_BMI_C)
     if(NGEN_WITH_EXTERN_PET)
         add_external_subdirectory(
             SOURCE "${NGEN_EXT_DIR}/evapotranspiration/evapotranspiration"
-            OUTPUT "${NGEN_EXT_DIR}/evapotranspiration/evapotranspiration/cmake_build"
+            OUTPUT "${PROJECT_BINARY_DIR}/extern-libs/evapotranspiration"
             GIT_UPDATE "${NGEN_EXT_DIR}/evapotranspiration/evapotranspiration"
             IMPORTS petbmi
         )
@@ -247,14 +247,14 @@ endif()
 if(NGEN_WITH_BMI_FORTRAN)
     add_external_subdirectory(
         SOURCE  "${NGEN_EXT_DIR}/iso_c_fortran_bmi"
-        OUTPUT  "${NGEN_EXT_DIR}/iso_c_fortran_bmi/cmake_build"
+        OUTPUT  "${PROJECT_BINARY_DIR}/extern-libs/iso_c_fortran_bmi"
         IMPORTS iso_c_bmi
     )
 
     if(NGEN_WITH_EXTERN_NOAH_OWP_MODULAR)
         add_external_subdirectory(
             SOURCE     "${NGEN_EXT_DIR}/noah-owp-modular"
-            OUTPUT     "${NGEN_EXT_DIR}/noah-owp-modular/cmake_build"
+            OUTPUT     "${PROJECT_BINARY_DIR}/extern-libs/noah-owp-modular"
             GIT_UPDATE "${NGEN_EXT_DIR}/noah-owp-modular/noah-owp-modular"
             IMPORTS    surfacebmi
         )
