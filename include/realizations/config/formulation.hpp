@@ -58,16 +58,6 @@ namespace realization{
                 //Create the nested formulations in order of definition
                 nested.push_back(Formulation(module.second));
             }
-        // If running MPI job, output with only one processor
-        #if NGEN_WITH_MPI
-        int mpi_rank;
-        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-        if (mpi_rank == 0)
-        #endif
-        {
-            std::string propStr = geojson::JSONProperty::print_property(parameters.at("modules"));
-            LOG(propStr, LogLevel::DEBUG);
-        }
       }
     }
 
