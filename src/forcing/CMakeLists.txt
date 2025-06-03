@@ -23,7 +23,10 @@ target_link_libraries(forcing PUBLIC
 target_sources(forcing PRIVATE "${CMAKE_CURRENT_LIST_DIR}/NullForcingProvider.cpp")
 
 if(NGEN_WITH_NETCDF)
-    target_sources(forcing PRIVATE "${CMAKE_CURRENT_LIST_DIR}/NetCDFPerFeatureDataProvider.cpp")
+    target_sources(forcing PRIVATE
+                           "${CMAKE_CURRENT_LIST_DIR}/NetCDFPerFeatureDataProvider.cpp"
+                           "${CMAKE_CURRENT_LIST_DIR}/NetCDFMeshPointsDataProvider.cpp"
+                  )
     target_link_libraries(forcing PUBLIC NetCDF)
 endif()
 
