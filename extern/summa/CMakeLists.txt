@@ -11,7 +11,7 @@ endif()
 # SUMMA can be compiled with debug flags by specifiying -DCMAKE_BUILD_TYPE=Debug
 #
 # There are multiple options for building SUMMA, including using the
-# Sundials suite of solvers, the C++ Actor framework, and the NextGen framework.
+# Sundials suite of solvers and the NextGen framework.
 # The options are set by specifying -DOPTION=ON when running cmake.
 # For example to compile SUMMA with Sundials, use
 # cmake -B ../cmake_build -S ../. -DUSE_SUNDIALS=ON
@@ -26,8 +26,8 @@ set(CMAKE_CONFIGURATION_TYPES Release Debug)
 
 # Options: Enable each with cmake -DOPTION=ON
 option(USE_SUNDIALS "Use IDA solver from SUNDIALS suite" OFF)
-option(USE_ACTORS "Use Actors Framework" OFF)
 option(USE_NEXTGEN "Use NextGen Framework" OFF)
+option(USE_OPENWQ "Use OpenWQ Framework" OFF)
 set(EXT_TARGETS) # list of external targets to link to
 
 # Set Default Executable Name
@@ -52,28 +52,8 @@ if (USE_SUNDIALS)
     set(EXEC_NAME summa_sundials.exe)
 endif()
 
-if (USE_ACTORS)
-    message("ENABLING ACTORS")
-    find_package(CAF 0.18.3 QUIET) # Cluster has 0.18.3, but we can use 0.18.6
-    if(NOT CAF_FOUND)
-        find_package(CAF 0.18.6 REQUIRED)
-    endif()
-    list(APPEND EXT_TARGETS CAF::core CAF::io)
-    add_compile_definitions(ACTORS_ACTIVE V4_ACTIVE)
-
-    include(FortranCInterface)
-    FortranCInterface_VERIFY(CXX)
-
-    set(PARENT_DIR "${F_MASTER}/..")
-    set(EXEC_DIR "${PARENT_DIR}/../bin")
-    set(EXEC_NAME summa_actors.exe)
-endif()
-
 if (USE_NEXTGEN)
     message("ENABLING NEXTGEN")
-    if (USE_ACTORS)
-        message(FATAL_ERROR "NextGen incompatible with Summa-Actors")
-    endif()
     add_compile_definitions(NGEN_ACTIVE BMI_ACTIVE NGEN_FORCING_ACTIVE
                             NGEN_OUTPUT_ACTIVE)
     add_subdirectory(../iso_c_fortran_bmi ${CMAKE_BINARY_DIR}/iso_c_bmi)
@@ -86,6 +66,18 @@ else()
     LIST(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_SOURCE_DIR}/cmake/")
     LIST(INSERT CMAKE_PREFIX_PATH 0 "${CMAKE_SOURCE_DIR}/cmake/")
 endif()
+
+# OpenWQ Framework
+if (USE_OPENWQ)
+    message("ENABLING OPENWQ")
+    add_compile_definitions(OPENWQ_ACTIVE)
+    if (USE_SUNDIALS)
+        set(EXEC_NAME summa_sundials_openwq.exe)
+    else()
+        set(EXEC_NAME summa_openwq.exe)
+    endif()
+endif()
+
 
 get_filename_component(F_MASTER "${F_MASTER}" REALPATH)
 get_filename_component(PARENT_DIR "${PARENT_DIR}" REALPATH)
@@ -100,24 +92,46 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${EXEC_DIR})
 find_package(NetCDF REQUIRED)
 list(APPEND EXT_TARGETS NetCDF::NetCDF)
 
-# OpenBLAS
-set(BLA_VENDOR OpenBLAS) # MKL
-find_package(OpenBLAS REQUIRED)
-list(APPEND EXT_TARGETS OpenBLAS::OpenBLAS)
+# Find LAPACK with user-specified links or automatic detection
+option(SPECIFY_LAPACK_LINKS "Use specified LAPACK links" OFF)
+if(SPECIFY_LAPACK_LINKS)
+	message("Using LAPACK links from LIBRARY_LINKS environment variable")
+	if(DEFINED ENV{LIBRARY_LINKS})
+		set(LIBRARY_LINKS $ENV{LIBRARY_LINKS})
+	else()
+		message(FATAL_ERROR "LIBRARY_LINKS environment variable not found. Set this variable or try -DSPECIFY_LAPACK_LINKS=OFF in build file.")
+	endif()
+else()
+	message("Automatically detect LAPACK links")
+	set(LIBRARY_LINKS "")
+
+	# OpenBLAS
+	set(BLA_VENDOR OpenBLAS)
+	find_package(OpenBLAS REQUIRED COMPONENTS serial)
+	list(APPEND EXT_TARGETS OpenBLAS::OpenBLAS)
+endif()
 
 # Set compiler flags
 set(FLAGS_OPT $ENV{FLAGS_OPT}) # get optional user-specified flags from environment variables
 if(CMAKE_BUILD_TYPE MATCHES Debug)
-    message("\nSetting SUMMA Debug Options")
-    add_compile_definitions(DEBUG)
-    set(FLAGS_NOAH -g -O0 -fbacktrace -fbounds-check -ffree-form -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors ${FLAGS_OPT})
-    set(FLAGS_ALL -g -O0 -fbacktrace -fbounds-check -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors -cpp ${FLAGS_OPT})
-    set(FLAGS_CXX -g -O0 -fbounds-check -Wfatal-errors -std=c++17 ${FLAGS_OPT})
+	message("\nSetting SUMMA Debug Options")
+	add_compile_definitions(DEBUG)
+	# Notes: - optimization -Og is selected here to maximize information displayed in debugging software (e.g., gdb)
+	#        - however, it may be useful to vary the optimization level to test for optimization related issues
+	set(FLAGS_NOAH -g -Og -fbacktrace -Wall -fcheck=all,no-array-temps -Wfatal-errors -ffree-line-length-none -fPIC -ffree-form      ${FLAGS_OPT})
+	set(FLAGS_ALL  -g -Og -fbacktrace -Wall -fcheck=all,no-array-temps -Wfatal-errors -ffree-line-length-none -fPIC -cpp -frecursive ${FLAGS_OPT})
+	set(FLAGS_CXX  -g -Og -fbacktrace -Wall -fcheck=all,no-array-temps -Wfatal-errors -std=c++17 ${FLAGS_OPT})
 else()
-    message("\nSetting SUMMA Release Options")
-    set(FLAGS_NOAH -O3 -ffree-form -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors ${FLAGS_OPT})
-    set(FLAGS_ALL  -O3 -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors -cpp ${FLAGS_OPT})
-    set(FLAGS_CXX  -O3 -Wfatal-errors -std=c++17 ${FLAGS_OPT})
+	message("\nSetting SUMMA Release Options")
+	if (CMAKE_Fortran_COMPILER MATCHES gfortran)
+		set(FLAGS_NOAH -O3 -Wfatal-errors -ffree-line-length-none -fPIC -ffree-form      ${FLAGS_OPT})
+		set(FLAGS_ALL  -O3 -Wfatal-errors -ffree-line-length-none -fPIC -cpp -frecursive ${FLAGS_OPT})
+		set(FLAGS_CXX  -O3 -Wfatal-errors -std=c++17 ${FLAGS_OPT})
+	else(CMAKE_Fortran_COMPILER MATCHES ifx) # ifx does not currently compile SUMMA -- derived type modifications needed in source code
+		set(FLAGS_NOAH -O3 -heap-arrays -fPIC -free   ${FLAGS_OPT})
+		set(FLAGS_ALL  -O3 -heap-arrays -fPIC -cxxlib ${FLAGS_OPT})
+		set(FLAGS_CXX  -O3 -std=c++17    ${FLAGS_OPT})
+	endif()
 endif()
 
 #=========================================================================================
@@ -132,14 +146,6 @@ set(HOOKUP_DIR ${F_MASTER}/build/source/hookup)
 set(NETCDF_DIR ${F_MASTER}/build/source/netcdf)
 set(NOAHMP_DIR ${F_MASTER}/build/source/noah-mp)
 
-# Define Actors specific directories
-set(ACTORS_DIR      ${PARENT_DIR}/source)
-set(SYS_INIT_DIR    ${ACTORS_DIR}/system_initialization)
-set(FILE_ACCESS_DIR ${ACTORS_DIR}/file_access_actor)
-set(JOB_ACTOR_DIR   ${ACTORS_DIR}/job_actor)
-set(GRU_ACTOR_DIR   ${ACTORS_DIR}/gru_actor)
-set(HRU_ACTOR_DIR   ${ACTORS_DIR}/hru_actor)
-
 #=========================================================================================
 # COMPILE PART 2: Assemble all of the SUMMA sub-routines
 #=========================================================================================
@@ -153,19 +159,8 @@ add_subdirectory(${F_MASTER}/build/source/)
 #=========================================================================================
 
 set(COMM_ALL ${NRPROC} ${HOOKUP} ${DATAMS} ${UTILMS})
-
 set(SUMMA_ALL ${NETCDF} ${PRELIM} ${MODRUN} ${SOLVER} ${DRIVER})
-
-if (USE_ACTORS)
-    set(COMM_ALL ${COMM_ALL} ${DATAMS_ACTORS} ${INTERFACE})
-    set(SUMMA_ALL ${SUMMA_ALL} ${SYS_INIT_INTERFACE} ${FILE_ACCESS_INTERFACE}
-                  ${JOB_INTERFACE} ${GRU_INTERFACE} ${HRU_INTERFACE})
-    set(MAIN_SUMMA ${ACTORS_DIR}/main.cpp)
-else()
-    set(SUMMA_ALL ${SUMMA_ALL} ${PRELIM_NOT_ACTORS} ${MODRUN_NOT_ACTORS}
-                  ${SOLVER_NOT_ACTORS} ${DRIVER_NOT_ACTORS})
-    set(MAIN_SUMMA ${DRIVER_DIR}/summa_driver.f90)
-endif()
+set(MAIN_SUMMA ${DRIVER_DIR}/summa_driver.f90)
 
 if (USE_NEXTGEN)
     set(SUMMA_ALL ${SUMMA_ALL} ${DRIVER_NEXTGEN})
@@ -175,6 +170,15 @@ if (USE_SUNDIALS)
     set(COMM_ALL ${COMM_ALL} ${DATAMS_SUNDIALS} ${UTILMS_SUNDIALS})
     set(SUMMA_ALL ${SUMMA_ALL} ${MODRUN_SUNDIALS} ${SOLVER_SUNDIALS})
 endif()
+
+if (USE_OPENWQ)
+    add_subdirectory(${F_MASTER}/build/source/openwq)
+    if (DEFINED OPENWQ_ERROR)
+        message(FATAL_ERROR "OpenWQ build failed")
+    endif()
+    set(SUMMA_ALL ${SUMMA_ALL} ${OPENWQ_COUPLER})
+    list(APPEND EXT_TARGETS openWQ)
+endif ()
 
 
 # Define version number, not working correctly
@@ -202,53 +206,32 @@ target_compile_options(SUMMA_NOAHMP PRIVATE ${FLAGS_NOAH})
 # Build SUMMA_COMM Object
 add_library(SUMMA_COMM OBJECT ${COMM_ALL})
 target_compile_options(SUMMA_COMM PRIVATE ${FLAGS_ALL})
-target_link_libraries(SUMMA_COMM PUBLIC SUMMA_NOAHMP ${EXT_TARGETS}) # added flags to the link step
+target_link_libraries(SUMMA_COMM PUBLIC SUMMA_NOAHMP ${EXT_TARGETS} ${LIBRARY_LINKS})
 
 # For NextGen, build SUMMA Shared Library and add the outside BMI libraries
 if(USE_NEXTGEN)
-    if(WIN32)
-        add_library(summabmi ${SUMMA_ALL})
-    else()
-        add_library(summabmi SHARED ${SUMMA_ALL})
-    endif()
-    target_compile_options(summabmi PRIVATE ${FLAGS_ALL})
+	if(WIN32)
+		add_library(summabmi ${SUMMA_ALL})
+	else()
+		add_library(summabmi SHARED ${SUMMA_ALL})
+	endif()
+	target_compile_options(summabmi PRIVATE ${FLAGS_ALL})
 	target_link_libraries(summabmi PUBLIC ${EXT_TARGETS} iso_c_bmi SUMMA_NOAHMP SUMMA_COMM)
 
-    set_target_properties(summabmi PROPERTIES VERSION ${PROJECT_VERSION})
-    include(GNUInstallDirs)
+	set_target_properties(summabmi PROPERTIES VERSION ${PROJECT_VERSION})
+	include(GNUInstallDirs)
 
-    install(TARGETS summabmi
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-    configure_file(summabmi.pc.in summabmi.pc @ONLY)
-    install(FILES ${CMAKE_BINARY_DIR}/summabmi.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
-
+	install(TARGETS summabmi
+                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+	configure_file(summabmi.pc.in summabmi.pc @ONLY)
+	install(FILES ${CMAKE_BINARY_DIR}/summabmi.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
 else()
 	add_library(summa SHARED ${SUMMA_ALL})
 	target_compile_options(summa PRIVATE ${FLAGS_ALL})
-	target_link_libraries(summa PUBLIC ${EXT_TARGETS} SUMMA_NOAHMP SUMMA_COMM)
-
-	# For Actors, build SUMMA Shared Library add the actors libraries and add the executable
-	if(USE_ACTORS)
-	    add_executable(${EXEC_NAME} ${MAIN_SUMMA} ${ACTORS_GLOBAL}
-	                   ${FILE_ACCESS_ACTOR} ${JOB_ACTOR} ${GRU_ACTOR} ${HRU_ACTOR}
-	                   ${SYS_INIT} ${SUMMA_CLIENT} ${SUMMA_SERVER})
-
-	    set_property(TARGET ${EXEC_NAME} PROPERTY LINKER_LANGUAGE Fortran)
-	    target_compile_options(${EXEC_NAME} PUBLIC ${FLAGS_CXX})
-	    target_include_directories(${EXEC_NAME} PUBLIC
-	                               ${PARENT_DIR}/includes/global
-	                               ${PARENT_DIR}/includes/summa_actor
-	                               ${PARENT_DIR}/includes/job_actor
-	                               ${PARENT_DIR}/includes/file_access_actor
-	                               ${PARENT_DIR}/includes/gru_actor
-	                               ${PARENT_DIR}/includes/hru_actor)
-	    target_link_libraries( ${EXEC_NAME} ${EXT_TARGETS} summa)
-
-	# For other cases, build SUMMA Shared Library and add the executable
-	else()
-    	add_executable(${EXEC_NAME} ${MAIN_SUMMA})
-    	set_property(TARGET ${EXEC_NAME} PROPERTY LINKER_LANGUAGE Fortran)
-    	target_link_libraries(${EXEC_NAME} summa ${EXT_TARGETS}) # added flags to the link step
-	endif()
+	target_link_libraries(summa PUBLIC ${EXT_TARGETS} SUMMA_NOAHMP SUMMA_COMM ${LIBRARY_LINKS})
+	add_executable(${EXEC_NAME} ${MAIN_SUMMA})
+	target_compile_options(${EXEC_NAME} PRIVATE ${FLAGS_ALL})
+	set_property(TARGET ${EXEC_NAME} PROPERTY LINKER_LANGUAGE Fortran)
+	target_link_libraries(${EXEC_NAME} summa ${EXT_TARGETS} ${LIBRARY_LINKS})
 endif()
