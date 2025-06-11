@@ -53,9 +53,9 @@ namespace realization{
                 //Create the nested formulations in order of definition
                 nested.push_back(Formulation(module.second));
             }
-            geojson::JSONProperty::print_property(parameters.at("modules"));
+            std::string propStr = geojson::JSONProperty::print_property(parameters.at("modules"));
+            LOG(propStr, LogLevel::DEBUG);
         }
-        
     }
 
     /**
@@ -121,7 +121,7 @@ namespace realization{
                         //       Typically, feature properties *should* be scalars.
                         ss  << "WARNING: property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
                                     << "Must be one of: Natural (int), Real (double), Boolean, or String" << '\n';
-                        LOG(ss.str(), LogLevel::WARN); ss.str("");
+                        LOG(ss.str(), LogLevel::SEVERE); ss.str("");
                         break;
                     default:
                         attr.at(param.first) = geojson::JSONProperty(param.first, catchment_attribute);

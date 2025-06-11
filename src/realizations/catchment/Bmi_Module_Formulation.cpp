@@ -42,9 +42,7 @@ namespace realization {
 
         double Bmi_Module_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
             if (get_bmi_model() == nullptr) {
-                std::string throw_msg; throw_msg.assign("Trying to process response of improperly created BMI formulation of type '" + get_formulation_type() + "'.");
-                LOG(throw_msg, LogLevel::ERROR);
-                throw std::runtime_error(throw_msg);
+                throw std::runtime_error("Trying to process response of improperly created BMI formulation of type '" + get_formulation_type() + "'.");
             }
             if (t_index < 0) {
                 throw std::invalid_argument("Getting response of negative time step in BMI formulation of type '" + get_formulation_type() + "' is not allowed.");
@@ -85,9 +83,7 @@ namespace realization {
 
         time_t Bmi_Module_Formulation::get_variable_time_begin(const std::string &variable_name) {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            std::string throw_msg; throw_msg.assign("Bmi_Modular_Formulation does not yet implement get_variable_time_begin");
-            LOG(throw_msg, LogLevel::ERROR);
-            throw std::runtime_error(throw_msg);
+            throw std::runtime_error("Bmi_Modular_Formulation does not yet implement get_variable_time_begin");
         }
 
         long Bmi_Module_Formulation::get_data_start_time()
@@ -97,16 +93,11 @@ namespace realization {
 
         long Bmi_Module_Formulation::get_data_stop_time() {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            std::string throw_msg; throw_msg.assign("Bmi_Module_Formulation does not yet implement get_data_stop_time");
-            LOG(throw_msg, LogLevel::ERROR);
-            throw std::runtime_error(throw_msg);
+            throw std::runtime_error("Bmi_Module_Formulation does not yet implement get_data_stop_time");
         }
 
         long Bmi_Module_Formulation::record_duration() {
-            std::string throw_msg; throw_msg.assign("Bmi_Module_Formulation does not yet implement record_duration");
-            LOG(throw_msg, LogLevel::ERROR);
-            throw std::runtime_error(throw_msg);
-
+            throw std::runtime_error("Bmi_Module_Formulation does not yet implement record_duration");
         }
 
         const double Bmi_Module_Formulation::get_model_current_time() {
@@ -131,9 +122,7 @@ namespace realization {
 
         size_t Bmi_Module_Formulation::get_ts_index_for_time(const time_t &epoch_time) {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            std::string throw_msg; throw_msg.assign("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
-            LOG(throw_msg, LogLevel::ERROR);
-            throw std::runtime_error(throw_msg);
+            throw std::runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
         }
 
         std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
@@ -146,9 +135,7 @@ namespace realization {
             // First make sure this is an available output
             auto forcing_outputs = get_available_variable_names();
             if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
-                std::string throw_msg; throw_msg.assign(get_formulation_type() + " received invalid output forcing name " + output_name);
-                LOG(throw_msg, LogLevel::ERROR);
-                throw std::runtime_error(throw_msg);
+                throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
             }
             // TODO: do this, or something better, later; right now, just assume anything using this as a provider is
             //  consistent with times
@@ -181,23 +168,21 @@ namespace realization {
                 catch (const std::runtime_error& e) {
                     // Log at least one error
                     if (!unitGetValuesErrLogged) {
-                        bmiform_ss << "WARN: BMI Module Formulation: get_values Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+                        bmiform_ss << "BMI Module Formulation: get_values Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
                         unitGetValuesErrLogged = true;
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        LOG(bmiform_ss.str(), LogLevel::WARNING); bmiform_ss.str("");
                     }
                     else {
                         #ifndef UDUNITS_QUIET
-                        bmiform_ss << "WARN: BMI Module Formulation: get_values Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        bmiform_ss << "BMI Module Formulation: get_values Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::WARNING); bmiform_ss.str("");
                         #endif
                     }
                     return values;
                 }
             }
             //This is unlikely (impossible?) to throw since a pre-check on available names is done above. Assert instead?
-            std::string throw_msg; throw_msg.assign(get_formulation_type() + " received invalid output forcing name " + output_name);
-            LOG(throw_msg, LogLevel::ERROR);
-            throw std::runtime_error(throw_msg);
+            throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
         }
 
         double Bmi_Module_Formulation::get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
@@ -210,9 +195,7 @@ namespace realization {
             // First make sure this is an available output
             auto forcing_outputs = get_available_variable_names();
             if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
-                std::string throw_msg; throw_msg.assign(get_formulation_type() + " received invalid output forcing name " + output_name);
-                LOG(throw_msg, LogLevel::ERROR);
-                throw std::runtime_error(throw_msg);
+                throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
             }
             // TODO: do this, or something better, later; right now, just assume anything using this as a provider is
             //  consistent with times
@@ -240,14 +223,14 @@ namespace realization {
                 catch (const std::runtime_error& e){
                     // Log at least one error
                     if (!unitGetValueErrLogged) {
-                        bmiform_ss << "WARN: BMI Module Formulation: get_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+                        bmiform_ss << "BMI Module Formulation: get_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
                         unitGetValueErrLogged = true;
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        LOG(bmiform_ss.str(), LogLevel::WARNING); bmiform_ss.str("");
                     }
                     else {
                         #ifndef UDUNITS_QUIET
-                        bmiform_ss << "WARN: BMI Module Formulation: get_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                        bmiform_ss << "BMI Module Formulation: get_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::WARNING); bmiform_ss.str("");
                         #endif
                     }
                     return value;
@@ -255,9 +238,7 @@ namespace realization {
             }
 
             //This is unlikely (impossible?) to throw since a pre-check on available names is done above. Assert instead?
-            std::string throw_msg; throw_msg.assign(get_formulation_type() + " received invalid output forcing name " + output_name);
-            LOG(throw_msg, LogLevel::ERROR);
-            throw std::runtime_error(throw_msg);
+            throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
         }
 
 
@@ -346,16 +327,12 @@ namespace realization {
 
             auto uses_forcings_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS);
             if (uses_forcings_it != properties.end() && uses_forcings_it->second.as_boolean()) {
-                std::string throw_msg; throw_msg.assign("The '" BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS "' parameter was removed and cannot be set");
-                LOG(throw_msg, LogLevel::ERROR);
-                throw std::runtime_error(throw_msg);
+                throw std::runtime_error("The '" BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS "' parameter was removed and cannot be set");
             }
 
             auto forcing_file_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE);
             if (forcing_file_it != properties.end() && forcing_file_it->second.as_string() != "") {
-                std::string throw_msg; throw_msg.assign("The '" BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE "' parameter was removed and cannot be set " + forcing_file_it->second.as_string());
-                LOG(throw_msg, LogLevel::ERROR);
-                throw std::runtime_error(throw_msg);
+                throw std::runtime_error("The '" BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE "' parameter was removed and cannot be set " + forcing_file_it->second.as_string());
             }
 
             if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END) != properties.end()) {
@@ -500,10 +477,8 @@ namespace realization {
             if (type == "unsigned long long" || type == "unsigned long long int")
                 return as_c_array<unsigned long long>(begin, end);
 
-            std::string throw_msg; throw_msg.assign("Unable to get values of iterable as type" + type +
+            throw std::runtime_error("Unable to get values of iterable as type" + type +
                 " : no logic for converting values to variable's type.");
-            LOG(throw_msg, LogLevel::ERROR);
-            throw std::runtime_error(throw_msg);
         }
 
 
@@ -561,17 +536,17 @@ namespace realization {
                             //TODO consider some additional introspection/optimization for this?
                             param.second.as_vector(double_vec);
                             if(double_vec.size() == 0){
-                                logging::warning(("Cannot pass non-numeric lists as a BMI parameter, skipping "+param.first+"\n").c_str());
+                                //logging::warning(("Cannot pass non-numeric lists as a BMI parameter, skipping "+param.first+"\n").c_str());
                                 bmiform_ss << "Cannot pass non-numeric lists as a BMI parameter, skipping " << param.first << std::endl;
-                                LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                                LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                                 continue;
                             }
                             value_ptr = get_values_as_type(type, double_vec.begin(), double_vec.end());
                             break;
                         default:
-                            logging::warning(("Cannot pass parameter of type "+geojson::get_propertytype_name(param.second.get_type())+" as a BMI parameter, skipping "+param.first+"\n").c_str());
+                            //logging::warning(("Cannot pass parameter of type "+geojson::get_propertytype_name(param.second.get_type())+" as a BMI parameter, skipping "+param.first+"\n").c_str());
                             bmiform_ss << "Cannot pass parameter of type " << geojson::get_propertytype_name(param.second.get_type()) << " as a BMI parameter, skipping " << param.first << std::endl;
-                            LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+                            LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                             continue;
                     }
                     try{
@@ -581,18 +556,21 @@ namespace realization {
                     }
                     catch (const std::exception &e)
                     {
-                        logging::warning((std::string("Exception setting parameter value: ")+e.what()).c_str());
-                        logging::warning(("Skipping parameter: "+param.first+"\n").c_str());
-                        bmiform_ss << "Cannot pass parameter of type " << geojson::get_propertytype_name(param.second.get_type()) << " as a BMI parameter, skipping " << param.first << std::endl;
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+//                        logging::warning((std::string("Exception setting parameter value: ")+e.what()).c_str());
+//                        logging::warning(("Skipping parameter: "+param.first+"\n").c_str());
+                        bmiform_ss << "Exception setting parameter value: " << e.what() << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
+                        bmiform_ss << "Skipping parameter: " << param.first << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                     }
                     catch (...)
                     {
-                        logging::warning((std::string("Unknown Exception setting parameter value: \n")).c_str());
-                        logging::warning(("Skipping parameter: "+param.first+"\n").c_str());
-                        bmiform_ss << "Unknown Exception setting parameter value: \n";
-                        bmiform_ss << "Skipping parameter: " << param.first << "\n";
-                        LOG(bmiform_ss.str(), LogLevel::WARN); bmiform_ss.str("");
+//                        logging::warning((std::string("Unknown Exception setting parameter value: \n")).c_str());
+//                        logging::warning(("Skipping parameter: "+param.first+"\n").c_str());
+                        bmiform_ss << "Unknown Exception setting parameter value" << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
+                        bmiform_ss << "Skipping parameter: " << param.first << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                     }
                     long_vec.clear();
                     double_vec.clear();
@@ -671,10 +649,8 @@ namespace realization {
             if (type == "unsigned long long" || type == "unsigned long long int")
                 return std::make_shared<unsigned long long>( static_cast<unsigned long long>(value) );
 
-            std::string throw_msg; throw_msg.assign("Unable to get value of variable as type '" + type +
+            throw std::runtime_error("Unable to get value of variable as type '" + type +
                 "': no logic for converting value to variable's type.");
-            LOG(throw_msg, LogLevel::ERROR);
-            throw std::runtime_error(throw_msg);
         }
 
         void Bmi_Module_Formulation::set_model_inputs_prior_to_update(const double &model_init_time, time_step_t t_delta) {
@@ -718,15 +694,13 @@ namespace realization {
                         #ifndef NGEN_QUIET
                         std::stringstream ss;
                         ss << "WARN: broadcasting variable '" << var_name << "' from scalar to expected array\n";;
-                        LOG(ss.str(), LogLevel::WARN); ss.str("");
+                        LOG(ss.str(), LogLevel::SEVERE); ss.str("");
                         #endif
                         values.resize(numItems, values[0]);
                     } else if (values.size() != numItems) {
-                        std::string throw_msg; throw_msg.assign("Mismatch in item count for variable '" + var_name + "': model expects " +
-                                                 std::to_string(numItems) + ", provider returned " + std::to_string(values.size()) +
-                                                 " items\n");
-                        LOG(throw_msg, LogLevel::ERROR);
-                        throw std::runtime_error(throw_msg);
+                        throw std::runtime_error("Mismatch in item count for variable '" + var_name + "': model expects " +
+                            std::to_string(numItems) + ", provider returned " + std::to_string(values.size()) +
+                            " items\n");
 
                     }
                     value_ptr = get_values_as_type( type, values.begin(), values.end() );

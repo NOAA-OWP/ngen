@@ -42,7 +42,7 @@ inline std::vector<std::vector<std::string> > CSVReader::getData()
                     ? "Error: failure opening " + fileName
                     : "Errno " + std::to_string(errno) + " (" + strerror(errno) + ") opening " + fileName
         );
-        LOG(throw_msg, LogLevel::ERROR);
+        LOG(throw_msg, LogLevel::WARNING);
         throw std::runtime_error(throw_msg);
 
         /// \todo Potentially only output warning and fill array with sentinel values.

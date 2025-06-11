@@ -29,11 +29,9 @@ Bmi_Adapter::Bmi_Adapter(
                              "'. Error: " + std::strerror(errno);
         Logger::logMsgAndThrowError(init_exception_msg);
     }
+    str_stream << "Bmi_Adapter: Model name: " << this->model_name << std::endl;
+    LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
 
-    str_stream << __FILE__ << ":" << __LINE__ << " model name:" << this->model_name << std::endl;
-    LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
-    str_stream << __FILE__ << ":" << __LINE__ << " bmi_init_config:" << this->bmi_init_config << std::endl;
-    LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
 }
 
 Bmi_Adapter::~Bmi_Adapter() = default;
@@ -52,7 +50,7 @@ double Bmi_Adapter::get_time_convert_factor() {
         //with no context.  This way we at least get the error message wrapped in
         //a runtime error.
         str_stream << "Bmi_Adapter get_time_convert_factor: Exception caught (" << e.what() << ")" << std::endl;
-        LOG(str_stream.str(), LogLevel::ERROR); str_stream.str("");
+        LOG(str_stream.str(), LogLevel::WARNING); str_stream.str("");
         throw std::runtime_error(e.what());
     }
     std::string output_units = "s";

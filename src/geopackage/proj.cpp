@@ -14,7 +14,9 @@ auto epsg::get(uint32_t srid) -> srs_type
 {
 
     if (defs_.count(srid) == 0) {
-        Logger::logMsgAndThrowError("SRID " + std::to_string(srid) + " is not supported. Project the input data to EPSG:5070 or EPSG:4326.");
+        std::string msg = "SRID " + std::to_string(srid) + " is not supported. Project the input data to EPSG:5070 or EPSG:4326.";
+        LOG(msg,LogLevel::SEVERE);
+        throw std::runtime_error(msg);
     }
 
     return defs_.at(srid);

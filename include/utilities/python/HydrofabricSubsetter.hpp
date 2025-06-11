@@ -34,13 +34,13 @@ namespace utils {
                     std::string throw_msg; throw_msg.assign(
                             "Cannot subdivided hydrofabric files: base catchment file " + catchmentDataFile +
                             " does not exist");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                 if (!FileChecker::file_is_readable(nexusDataFile)) {
                     std::string throw_msg; throw_msg.assign(
                             "Cannot subdivided hydrofabric files: base nexus file " + nexusDataFile + " does not exist");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                 #if NGEN_WITH_PYTHON
@@ -63,7 +63,7 @@ namespace utils {
                 }
                 #else
                 std::string throw_msg; throw_msg.assign("Cannot use Python hydrofabric subsetter tool unless Python support is active");
-                LOG(throw_msg, LogLevel::ERROR);
+                LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
                 #endif
 
@@ -105,7 +105,7 @@ namespace utils {
                 catch (const std::exception &e) {
                     std::stringstream ss;
                     ss  << "Failed to subdivide hydrofabric: " << e.what() << std::endl;
-                    LOG(ss.str(), LogLevel::ERROR); ss.str("");
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
                     result = false;
                 }
                 return result;
@@ -120,7 +120,7 @@ namespace utils {
                 catch (const std::exception &e) {
                     std::stringstream ss;
                     ss  << "Failed to subdivide hydrofabric for index " << index << ": " << e.what() << std::endl;
-                    LOG(ss.str(), LogLevel::ERROR); ss.str("");
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
                     result = false;
                 }
                 return result;

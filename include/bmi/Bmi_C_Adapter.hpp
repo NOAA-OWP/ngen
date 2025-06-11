@@ -230,7 +230,7 @@ namespace models {
                 void *dest;
                 if (bmi_model->get_value_ptr(bmi_model.get(), name.c_str(), &dest) != BMI_SUCCESS) {
                     std::string throw_msg; throw_msg.assign(model_name + " failed to get pointer for BMI variable " + name + ".");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                 return dest;
@@ -256,7 +256,7 @@ namespace models {
                 int nbytes;
                 if (bmi_model->get_var_nbytes(bmi_model.get(), name.c_str(), &nbytes) != BMI_SUCCESS) {
                     std::string throw_msg; throw_msg.assign(model_name + " failed to get pointer for BMI variable " + name + ".");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                     
@@ -380,13 +380,13 @@ namespace models {
                 catch (std::runtime_error &e) {
                     std::string throw_msg; throw_msg.assign("Cannot set " + name + " variable of " + model_name +
                                              "; unable to test item sizes are equal (does variable exist for model?)");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                 if (item_size != sizeof(src[0])) {
                     std::string throw_msg; throw_msg.assign("Cannot set " + name + " variable of " + model_name +
                                              " with values of different item size");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                 SetValue(std::move(name), static_cast<void *>(src.data()));
@@ -407,7 +407,7 @@ namespace models {
                 if (inds.size() != src.size()) {
                     std::string throw_msg; throw_msg.assign("Cannot set specified indexes for " + name + " variable of " + model_name +
                                              " when index collection is different size than collection of values.");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                 if (inds.empty()) {
@@ -420,13 +420,13 @@ namespace models {
                 catch (std::runtime_error &e) {
                     std::string throw_msg; throw_msg.assign("Cannot set specified indexes for " + name + " variable of " + model_name +
                                              "; unable to test item sizes are equal (does variable exist for model?)");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                 if (item_size != sizeof(src[0])) {
                     std::string throw_msg; throw_msg.assign("Cannot set specified indexes for " + name + " variable of " + model_name +
                                              " with values of different item size");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                 SetValueAtIndices(name, inds.data(), inds.size(), static_cast<void *>(src.data()));
@@ -534,7 +534,7 @@ namespace models {
             inline void get_value(const std::string& name, void *dest) {
                 if (bmi_model->get_value(bmi_model.get(), name.c_str(), dest) != BMI_SUCCESS) {
                     std::string throw_msg; throw_msg.assign(model_name + " failed to get values for variable " + name + ".");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
             }
@@ -551,7 +551,7 @@ namespace models {
                 int result = bmi_model->get_time_step(bmi_model.get(), &ts);
                 if (result != BMI_SUCCESS) {
                     std::string throw_msg; throw_msg.assign(model_name + " failed to read time step from model.");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                 return std::make_shared<double>(ts);
@@ -614,7 +614,7 @@ namespace models {
                 int item_count;
                 if (bmi_model->get_input_item_count(bmi_model.get(), &item_count) != BMI_SUCCESS) {
                     std::string throw_msg; throw_msg.assign(model_name + " failed to get model input item count.");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                 return item_count;
@@ -633,7 +633,7 @@ namespace models {
                 int item_count;
                 if (bmi_model->get_output_item_count(bmi_model.get(), &item_count) != BMI_SUCCESS) {
                     std::string throw_msg; throw_msg.assign(model_name + " failed to get model output item count.");
-                    LOG(throw_msg, LogLevel::ERROR);
+                    LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                 return item_count;

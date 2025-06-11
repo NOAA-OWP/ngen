@@ -225,7 +225,7 @@ class mdarray
                     " must be less than dimension size " +
                     std::to_string(this->m_shape[i])
                 );
-                LOG(throw_msg, LogLevel::ERROR);
+                LOG(throw_msg, LogLevel::WARNING);
                 throw std::out_of_range(throw_msg);
             };
         }

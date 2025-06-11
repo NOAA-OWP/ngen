@@ -61,7 +61,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
             #ifndef NGEN_QUIET
             // output debug info on what is read exactly
             read_ss << "WARN: Using legacy ID column \"id\" in layer " << layer << " is DEPRECATED and may stop working at any time." << std::endl;
-            LOG(read_ss.str(), LogLevel::ERROR); read_ss.str("");
+            LOG(read_ss.str(), LogLevel::WARNING); read_ss.str("");
             #endif
         }
     }

@@ -327,14 +327,14 @@ namespace models {
                         this->init_exception_msg =
                                 "Can't init BMI C++ model; empty name given for module's create function.";
                         std::string throw_msg; throw_msg.assign(this->init_exception_msg);
-                        LOG(throw_msg, LogLevel::ERROR);
+                        LOG(throw_msg, LogLevel::WARNING);
                         throw std::runtime_error(throw_msg);
                     }
                     if (model_destroy_fname.empty()){
                         this->init_exception_msg =
                                 "Can't init BMI C++ model; empty name given for module's destroy function.";
                         std::string throw_msg; throw_msg.assign(this->init_exception_msg);
-                        LOG(throw_msg, LogLevel::ERROR);
+                        LOG(throw_msg, LogLevel::WARNING);
                         throw std::runtime_error(throw_msg);
                     }
                     dynamic_library_load();

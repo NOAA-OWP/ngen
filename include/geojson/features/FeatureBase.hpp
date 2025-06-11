@@ -374,7 +374,7 @@ namespace geojson {
                 }
 
                 std::string throw_msg; throw_msg.assign("There is no geometry collection to retrieve");
-                LOG(throw_msg, LogLevel::ERROR);
+                LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }
 
@@ -535,7 +535,7 @@ namespace geojson {
                     std::string template_name = boost::typeindex::type_id<T>().pretty_name();
                     std::string expected_name = get_geometry_type(this->geom);
                     ss  << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
-                    LOG(ss.str(), LogLevel::ERROR); ss.str("");
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
                     throw;
                 }
             }
@@ -554,7 +554,7 @@ namespace geojson {
                     std::string template_name = boost::typeindex::type_id<T>().pretty_name();
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
                     ss  << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
-                    LOG(ss.str(), LogLevel::ERROR); ss.str("");
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
                     throw;
                 }
             }
