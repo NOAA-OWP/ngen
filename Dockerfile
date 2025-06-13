@@ -171,12 +171,18 @@ ENV PATH=${VIRTUAL_ENV}/bin:${PATH}
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
     set -eux && \
     pip3 install --upgrade pip setuptools wheel && \
-    pip3 install 'numpy==1.26.4' 'netcdf4<=1.6.3'
+    pip3 install \
+      'numpy==1.26.4' \
+      'netcdf4<=1.6.3' \
+      'bmipy' \
+      'pandas' \
+      'pyyml' \
+      'torch'
 
 
 WORKDIR /ngen-app/
 
-# TODO This wil invaalidate the cache for all subsequent stages so we don't really want to do this
+# TODO This will invalidate the cache for all subsequent stages so we don't really want to do this
 # Copy the remainder of your application code
 COPY . /ngen-app/ngen/
 
@@ -347,6 +353,9 @@ RUN set -eux && \
     jq -s 'add' $GIT_INFO_PATH /ngen-app/submodules-json/*.json > /ngen-app/merged_git_info.json && \
     mv /ngen-app/merged_git_info.json $GIT_INFO_PATH && \
     rm -rf /ngen-app/submodules-json
+
+# Needed for lstm
+ ENV PYTHONPATH='$PYTHONPATH:/ngen-app/ngen/extern/lstm:/ngen-app/ngen/extern/lstm/lstm'
 
 WORKDIR /
 SHELL ["/bin/bash", "-c"]
