@@ -59,3 +59,8 @@
 	path = extern/ueb-bmi
 	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/ueb_bmi.git
 	branch = development
+[submodule "extern/lstm"]
+	path = extern/lstm
+	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/lstm.git
+        branch = development
+
