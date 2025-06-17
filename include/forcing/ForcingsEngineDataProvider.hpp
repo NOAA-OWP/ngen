@@ -33,7 +33,7 @@ namespace detail {
 
 //! Parse time string from format.
 //! Utility function for ForcingsEngineLumpedDataProvider constructor.
-time_t parse_time(const std::string& time, const std::string& fmt);
+time_t parse_time(const std::string& time, const std::string& fmt = default_time_format);
 
 //! Check that requirements for running the forcings engine
 //! are available at runtime. If requirements are not available,
@@ -104,27 +104,27 @@ struct ForcingsEngineDataProvider
 
     ~ForcingsEngineDataProvider() override = default;
 
-    boost::span<const std::string> get_available_variable_names() override
+    boost::span<const std::string> get_available_variable_names() const override
     {
         return var_output_names_;
     }
 
-    long get_data_start_time() override
+    long get_data_start_time() const override
     {
         return clock_type::to_time_t(time_begin_);
     }
 
-    long get_data_stop_time() override
+    long get_data_stop_time() const override
     {
         return clock_type::to_time_t(time_end_);
     }
 
-    long record_duration() override
+    long record_duration() const override
     {
         return std::chrono::duration_cast<std::chrono::seconds>(time_step_).count();
     }
 
-    size_t get_ts_index_for_time(const time_t& epoch_time) override
+    size_t get_ts_index_for_time(const time_t& epoch_time) const override
     {
         const auto epoch = clock_type::from_time_t(epoch_time);
 
@@ -194,15 +194,32 @@ struct ForcingsEngineDataProvider
         var_output_names_ = bmi_->GetOutputVarNames();
     }
 
+    std::string ensure_variable(std::string name, const std::string& suffix = "_ELEMENT") const
+    {
+        // TODO: use get_available_var_names() once const
+        auto vars = boost::span<const std::string>{var_output_names_};
+
+        if (std::find(vars.begin(), vars.end(), name) != vars.end()) {
+          return name;
+        }
+
+        auto suffixed_name = std::move(name) + suffix;
+        if (std::find(vars.begin(), vars.end(), suffixed_name) != vars.end()) {
+          return suffixed_name;
+        }
+
+        throw std::runtime_error{
+          "ForcingsEngineDataProvider: neither variable `"
+          + suffixed_name.substr(0, suffixed_name.size() - suffix.size())
+          + "` nor `" + suffixed_name + "` exist."
+        };
+    }
+
     //! Forcings Engine instance
     std::shared_ptr<models::bmi::Bmi_Py_Adapter> bmi_ = nullptr;
 
     //! Output variable names
     std::vector<std::string> var_output_names_{};
-
-  private:
-    //! Initialization config file path
-    std::string init_;
 
     //! Calendar time for simulation beginning
     clock_type::time_point time_begin_{};
@@ -212,6 +229,9 @@ struct ForcingsEngineDataProvider
 
     //! Duration of a single simulation tick
     clock_type::duration time_step_{};
+
+    //! Initialization config file path
+    std::string init_;
 };
 
 } // namespace data_access

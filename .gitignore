@@ -127,7 +127,6 @@ data/hydrofabric/huc01_demo/
 # NGen build-related items
 .venv
 boost_*
-include/NGenConfig.h
 
 # Large Example Datasets for certain tests #
 ############################################

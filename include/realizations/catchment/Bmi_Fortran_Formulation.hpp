@@ -21,7 +21,7 @@ namespace realization {
 
         Bmi_Fortran_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream);
 
-        std::string get_formulation_type() override;
+        std::string get_formulation_type() const override;
 
     protected:
 
@@ -39,7 +39,7 @@ namespace realization {
          */
         std::shared_ptr<models::bmi::Bmi_Adapter> construct_model(const geojson::PropertyMap& properties) override;
 
-        time_t convert_model_time(const double &model_time) override {
+        time_t convert_model_time(const double &model_time) const override {
             return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));
         }
 

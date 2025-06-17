@@ -8,20 +8,20 @@
 
 NullForcingProvider::NullForcingProvider() = default;
 
-long NullForcingProvider::get_data_start_time()
+long NullForcingProvider::get_data_start_time() const
 {
     return 0;
 }
 
-long NullForcingProvider::get_data_stop_time() {
+long NullForcingProvider::get_data_stop_time() const {
     return std::numeric_limits<long>::max();
 }
 
-long NullForcingProvider::record_duration() {
+long NullForcingProvider::record_duration() const {
     return 1;
 }
 
-size_t NullForcingProvider::get_ts_index_for_time(const time_t &epoch_time) {
+size_t NullForcingProvider::get_ts_index_for_time(const time_t &epoch_time) const {
     return 0;
 }
 
@@ -39,13 +39,13 @@ std::vector<double> NullForcingProvider::get_values(const CatchmentAggrDataSelec
     throw std::runtime_error(throw_msg);
 }
 
-inline bool NullForcingProvider::is_property_sum_over_time_step(const std::string& name) {
+inline bool NullForcingProvider::is_property_sum_over_time_step(const std::string& name) const {
     std::string throw_msg; throw_msg.assign("Got request for variable " + name + " but no such variable is provided by NullForcingProvider." + SOURCE_LOC);
     LOG(throw_msg, LogLevel::WARNING);
     throw std::runtime_error(throw_msg);
 
 }
 
-boost::span<const std::string> NullForcingProvider::get_available_variable_names() {
+boost::span<const std::string> NullForcingProvider::get_available_variable_names() const {
     return {};
 }

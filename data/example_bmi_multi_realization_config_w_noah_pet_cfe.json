@@ -105,5 +105,6 @@
         "start_time": "2015-12-01 00:00:00",
         "end_time": "2015-12-30 23:00:00",
         "output_interval": 3600
-    }
+    },
+    "output_root": "./output_dir/"
 }
