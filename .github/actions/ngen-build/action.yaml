@@ -82,11 +82,11 @@ runs:
             elif [ ${{ runner.os }} == 'macOS' ]
             then
               brew install netcdf netcdf-cxx netcdf-fortran
-              echo "LIBRARY_PATH=/usr/local/lib/:$LIBRARY_PATH" >> $GITHUB_ENV
-              echo "LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH" >> $GITHUB_ENV
-              echo "LDFLAGS=-L/usr/local/lib" >> $GITHUB_ENV
+              echo "LIBRARY_PATH=$(brew --prefix)/lib/:$LIBRARY_PATH" >> $GITHUB_ENV
+              echo "LD_LIBRARY_PATH=$(brew --prefix)/lib/:$LD_LIBRARY_PATH" >> $GITHUB_ENV
+              echo "LDFLAGS=-L$(brew --prefix)/lib" >> $GITHUB_ENV
               echo "LIB=$LD_LIBRARY_PATH" >> $GITHUB_ENV
-              echo "NETCDF=/usr/local" >> $GITHUB_ENV
+              echo "NETCDF=$(brew --prefix)" >> $GITHUB_ENV
             fi
           shell: bash
 
@@ -118,6 +118,12 @@ runs:
           run: |
             curl -L -o boost_1_79_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.79.0/boost_1_79_0.tar.bz2/download
             tar xjf boost_1_79_0.tar.bz2
+          shell: bash
+
+        - name: Set Pip Constraints
+          run: |
+            echo "numpy<2.0" > $GITHUB_WORKSPACE/constraints.txt
+            echo "PIP_CONSTRAINT=$GITHUB_WORKSPACE/constraints.txt" >> $GITHUB_ENV
           shell: bash
 
         - name: Cache Python Dependencies

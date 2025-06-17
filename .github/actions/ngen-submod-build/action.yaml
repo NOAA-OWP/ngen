@@ -42,7 +42,9 @@ runs:
           if: |
             runner.os == 'macOS'
           run: |
-            echo "FC=gfortran-11" >> $GITHUB_ENV
+            # see macOS image readmes for supported versions
+            # https://github.com/actions/runner-images/tree/main/images/macos
+            echo FC="gfortran-12" >> $GITHUB_ENV
           shell: bash
 
         - name: Cmake Initialization

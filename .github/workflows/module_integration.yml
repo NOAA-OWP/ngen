@@ -3,9 +3,9 @@ name: Module Integration Tests
 # Controls when the action will run.
 on:
   push:
-    branches: [ master, dev, notreal ]
+    branches: [ master, dev, notreal, release-* ]
   pull_request:
-    branches: [ master, dev, notreal ]
+    branches: [ master, dev, notreal, release-* ]
   workflow_dispatch:
 
 env:

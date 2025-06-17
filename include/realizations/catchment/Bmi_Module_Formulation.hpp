@@ -57,7 +57,7 @@ namespace realization {
          * @return The collection of forcing output property names this instance can provide.
          * @see ForcingProvider
          */
-        boost::span<const std::string> get_available_variable_names() override;
+        boost::span<const std::string> get_available_variable_names() const override;
 
         /**
          * Get a delimited string with all the output variable values for the given time step.
@@ -139,27 +139,27 @@ namespace realization {
          *
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
-        long get_data_start_time() override;
+        long get_data_start_time() const override;
 
-        long get_data_stop_time() override;
+        long get_data_stop_time() const override;
 
-        long record_duration() override;
+        long record_duration() const override;
 
         /**
          * Get the current time for the backing BMI model in its native format and units.
          *
          * @return The current time for the backing BMI model in its native format and units.
          */
-        const double get_model_current_time() override;
+        const double get_model_current_time() const override;
 
         /**
          * Get the end time for the backing BMI model in its native format and units.
          *
          * @return The end time for the backing BMI model in its native format and units.
          */
-        const double get_model_end_time() override;
+        const double get_model_end_time() const override;
 
-        const std::vector<std::string> &get_required_parameters() override;
+        const std::vector<std::string> &get_required_parameters() const override;
 
         /**
          * When possible, translate a variable name for a BMI model to an internally recognized name.
@@ -175,7 +175,7 @@ namespace realization {
          * @param model_var_name The BMI variable name to translate so its purpose is recognized internally.
          * @return Either the internal equivalent variable name, or the provided name if there is not a mapping entry.
          */
-        const std::string &get_config_mapped_variable_name(const std::string &model_var_name) override;
+        const std::string &get_config_mapped_variable_name(const std::string &model_var_name) const override;
 
         /**
          * Get the index of the forcing time step that contains the given point in time.
@@ -190,7 +190,7 @@ namespace realization {
          * @return The index of the forcing time step that contains the given point in time.
          * @throws std::out_of_range If the given point is not in any time step.
          */
-        size_t get_ts_index_for_time(const time_t &epoch_time) override;
+        size_t get_ts_index_for_time(const time_t &epoch_time) const override;
 
         /**
          * @brief Get the 1D values of a forcing property for an arbitrary time period, converting units if needed.
@@ -224,8 +224,8 @@ namespace realization {
          */
         double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
-        bool is_bmi_input_variable(const std::string &var_name) override;
-        bool is_bmi_output_variable(const std::string &var_name) override;
+        bool is_bmi_input_variable(const std::string &var_name) const override;
+        bool is_bmi_output_variable(const std::string &var_name) const override;
 
         /**
          * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
@@ -245,10 +245,10 @@ namespace realization {
          * @param name The name of the forcing property for which the current value is desired.
          * @return Whether the property's value is an aggregate sum, which is always ``true`` for this type.
          */
-        bool is_property_sum_over_time_step(const std::string& name) override;
+        bool is_property_sum_over_time_step(const std::string& name) const override;
 
-        const std::vector<std::string> get_bmi_input_variables() override;
-        const std::vector<std::string> get_bmi_output_variables() override;
+        const std::vector<std::string> get_bmi_input_variables() const override;
+        const std::vector<std::string> get_bmi_output_variables() const override;
 
     protected:
 
@@ -306,9 +306,9 @@ namespace realization {
          *
          * @return Shared pointer to the backing model object that implements the BMI.
          */
-        std::shared_ptr<models::bmi::Bmi_Adapter> get_bmi_model();
+        std::shared_ptr<models::bmi::Bmi_Adapter> get_bmi_model() const;
 
-        const time_t &get_bmi_model_start_time_forcing_offset_s() override;
+        const time_t &get_bmi_model_start_time_forcing_offset_s() const override;
 
         /**
          * Universal logic applied when creating a BMI-backed formulation from NGen config.
@@ -341,14 +341,14 @@ namespace realization {
          *
          * @return Whether backing model has fixed time step size.
          */
-        bool is_bmi_model_time_step_fixed() override;
+        bool is_bmi_model_time_step_fixed() const override;
 
         /**
          * Test whether the backing model object has been initialize using the BMI standard ``Initialize`` function.
          *
          * @return Whether backing model object has been initialize using the BMI standard ``Initialize`` function.
          */
-        bool is_model_initialized() override;
+        bool is_model_initialized() const override;
 
         void set_allow_model_exceed_end_time(bool allow_exceed_end);
 
