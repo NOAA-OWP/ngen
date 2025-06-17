@@ -1,15 +1,10 @@
 #ifndef NGEN_REALIZATION_CONFIG_FORMULATION_H
 #define NGEN_REALIZATION_CONFIG_FORMULATION_H
 
-#include <NGenConfig.h>
 #include <boost/property_tree/ptree.hpp>
 #include <string>
 
 #include "JSONProperty.hpp"
-
-#if NGEN_WITH_MPI
-#include <mpi.h>
-#endif
 
 namespace realization{
   namespace config{
