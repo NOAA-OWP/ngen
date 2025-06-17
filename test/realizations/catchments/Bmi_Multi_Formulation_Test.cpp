@@ -855,6 +855,35 @@ TEST_F(Bmi_Multi_Formulation_Test, GetIdAndCatchmentId) {
     #endif
     //ASSERT_EQ(formulation.get_catchment_id(), "id");
 }
+
+TEST_F(Bmi_Multi_Formulation_Test, GetAvailableVariableNames) {
+    int ex_index = 1;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+    
+    const auto actual_names =  formulation.get_available_variable_names();
+    const auto expected_names = {
+        "OUTPUT_VAR_1__0",
+        "OUTPUT_VAR_2__0",
+        "OUTPUT_VAR_3__0",
+        "FORTRAN_Grid_Var_2__0",
+        "FORTRAN_Grid_Var_3__0",
+        "GRID_VAR_4",
+        "OUTPUT_VAR_1__1",
+        "OUTPUT_VAR_2__1",
+        "OUTPUT_VAR_3",
+        "GRID_VAR_2",
+        "GRID_VAR_3"
+    };
+
+    for (const auto& expected : expected_names) {
+        EXPECT_NE(
+            std::find(actual_names.begin(), actual_names.end(), expected),
+            actual_names.end()
+        );
+    }
+}
 #endif // NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || NGEN_WITH_PYTHON
 
 #endif // NGEN_BMI_MULTI_FORMULATION_TEST_CPP
