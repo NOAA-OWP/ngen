@@ -78,6 +78,7 @@ const std::vector<std::string> allModules = {
     "TOPOFLOW",
     "T-ROUTE",
     "UEB",
+    "LSTM",
 };
 
 bool Logger::DirectoryExists(const std::string& path) {
@@ -176,7 +177,8 @@ void Logger::SetupLogFile(void) {
             openedOnce = true;
             setenv("NGEN_LOG_FILE_PATH", logFilePath.c_str(), 1);
             std::cout << "  NGEN_LOG_FILE_PATH=" << logFilePath << std::endl;
-            // Make sure individual submodule logger files pathnames environment vars are cleared
+            // Make sure individual submodule logger file pathnames environment vars are cleared
+            // so they too will truncate their logs from the last iteration and set these again
             unsetenv("CFE_LOGFILEPATH");
             unsetenv("LASAM_LOGFILEPATH");
             unsetenv("NOAHOWP_LOGFILEPATH");
@@ -188,8 +190,8 @@ void Logger::SetupLogFile(void) {
             unsetenv("TOPMODEL_LOGFILEPATH");
             unsetenv("TROUTE_LOGFILEPATH");
             unsetenv("UEB_BMI_LOGFILEPATH");
+            unsetenv("LSTM_LOGFILEPATH");
             std::cout << "Program " << MODULE_NAME << " Log File: " << logFilePath << std::endl;
-
             std::string logMsg = "Log File: " + logFilePath + "\n";
             LogLevel saveLevel = logLevel;
             logLevel = LogLevel::INFO; // Ensure this INFO message is always logged
@@ -355,29 +357,35 @@ void Logger::ReadConfigFile(std::string searchPath) {
     // Open and Parse config file
     std::ifstream jsonFile;
     if (searchPath.empty()) {
-        std::cout << "WARNING: NGEN_RESULTS_DIR environment variable not set or empty.";
+        std::cout << "ngen WARNING: NGEN_RESULTS_DIR environment variable not set or empty.";
         std::cout << " Using default logging configuration of enabled and log level INFO" << std::endl;
     } else {
         bool configFileFound = false;
         if (FindAndOpenLogConfigFile(searchPath, jsonFile)) {
             if (jsonFile.peek() != std::ifstream::traits_type::eof()) {
+                std::cout << "ngen parsing logging config file " << searchPath << std::endl;
                 if (ParseLoggerConfigFile(jsonFile)) configFileFound = true;
             }
         }
         if (!configFileFound) {
-            std::cout << MODULE_NAME << " WARNING: Issue with logging config file " << CONFIG_FILENAME << " in " << searchPath << ".";
+            std::cout << MODULE_NAME << " ngen WARNING: Issue with logging config file " << CONFIG_FILENAME << " in " << searchPath << ".";
             std::cout << " Using default logging configuration of enabled and log level INFO" << std::endl;    
         }
     }
 
     // Set the environment variables for the module loggers
-    SetLoggingEnvVars();
+    ManageLoggingEnvVars(true);
 }
 
-void Logger::SetLoggingEnvVars(void) {
-    cout << "Logger setup: Setting Logger Environment Variables" << endl;
-    setenv((EV_EWTS_LOGGING).c_str(), ((loggingEnabled)?"ENABLED":"DISABLED"), 1);
-    cout << "  " << EV_EWTS_LOGGING << "=" << ((loggingEnabled)?"ENABLED":"DISABLED") << endl;
+void Logger::ManageLoggingEnvVars(bool set) {
+    if (set) {
+        cout << "ngen Logger setup: Setting Module Logger Environment Variables" << endl;
+        setenv((EV_EWTS_LOGGING).c_str(), ((loggingEnabled)?"ENABLED":"DISABLED"), 1);
+        cout << "  " << EV_EWTS_LOGGING << "=" << ((loggingEnabled)?"ENABLED":"DISABLED") << endl;
+    }
+    else {
+        cout << "ngen Logger setup: Unset all Module Logger Environment Variables" << endl;
+    }
 
     for (const auto& hydroModule : allModules) {
         std::string moduleEnv = "";
@@ -392,9 +400,14 @@ void Logger::SetLoggingEnvVars(void) {
         else if (hydroModule == "T-ROUTE") moduleEnv = "TROUTE_LOGLEVEL";
         else if (hydroModule == "UEB") moduleEnv = "UEB_BMI_LOGLEVEL";
         else moduleEnv = hydroModule + "_LOGLEVEL";
-        std::string ll = ConvertLogLevelToString(moduleLogLevels[hydroModule]);
-        setenv(moduleEnv.c_str(), ll.c_str(), 1);
-        cout << "  " << hydroModule << ": " << moduleEnv << "=" << ll << endl;
+        if (set) {
+            std::string ll = ConvertLogLevelToString(moduleLogLevels[hydroModule]);
+            setenv(moduleEnv.c_str(), ll.c_str(), 1);
+            cout << "  " << hydroModule << ": " << moduleEnv << "=" << ll << endl;
+        }
+        else {
+            if (hydroModule != "NGEN") unsetenv(moduleEnv.c_str());
+        }
     }
 }
 
