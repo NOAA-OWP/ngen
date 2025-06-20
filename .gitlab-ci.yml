@@ -39,6 +39,7 @@ build:
         git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/snow17
         git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/sac-sma/sac-sma
         git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/ueb-bmi
+        git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/lstm
       fi
     # for each submodule checkout the release commit if the release tag is set
     - git submodule update --remote extern/cfe/cfe && ${CI_COMMIT_TAG:+git -C extern/cfe/cfe checkout "$CI_COMMIT_TAG"} 
@@ -53,6 +54,7 @@ build:
     - git submodule update --remote extern/snow17 && ${CI_COMMIT_TAG:+git -C extern/snow17 checkout "$CI_COMMIT_TAG"} 
     - git submodule update --remote extern/sac-sma/sac-sma && ${CI_COMMIT_TAG:+git -C extern/sac-sma/sac-sma checkout "$CI_COMMIT_TAG"} 
     - git submodule update --remote extern/ueb-bmi && ${CI_COMMIT_TAG:+git -C extern/ueb-bmi checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/lstm && ${CI_COMMIT_TAG:+git -C extern/lstm checkout "$CI_COMMIT_TAG"}
   script:
     - echo "Logging in to Gitlab Container Registry..."
     - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
