@@ -59,7 +59,7 @@ class Logger {
     static bool        ParseLoggerConfigFile(std::ifstream& jsonFile);
     static void        ReadConfigFile(std::string searchPath);
     static void        SetupLogFile(void);
-    static void        SetLoggingEnvVars(void);
+    static void        ManageLoggingEnvVars(bool set=true);
     static std::string ToUpper(const std::string& str);
     static std::string TrimString(const std::string& str);
 
