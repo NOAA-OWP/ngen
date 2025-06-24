@@ -1,1 +1,7 @@
 /CHANGELOG.md merge=union
+
+# Always favor target branch submodule pointers when merging
+extern/* merge=ours
+extern/*/* merge=ours
+
+
