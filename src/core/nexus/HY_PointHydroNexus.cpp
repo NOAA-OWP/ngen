@@ -110,7 +110,7 @@ double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_st
             {
                     // if the amount of flow allready released plus the amount
                     // of this release is greater than 100 throw an error
-                    LOG(LogLevel::FATAL, "All downstream catchments can not request more than 100% of flux in total");
+                    LOG(LogLevel::FATAL, "All %s downstream catchments can not request more than 100% of flux in total", catchment_id.c_str());
                     BOOST_THROW_EXCEPTION(invalid_downstream_request());
             }
             else
