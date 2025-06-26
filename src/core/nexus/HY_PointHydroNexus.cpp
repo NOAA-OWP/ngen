@@ -2,6 +2,8 @@
 
 #include <boost/exception/all.hpp>
 
+#include "Logger.hpp"
+
 typedef boost::error_info<struct tag_errmsg, std::string> errmsg_info;
 
 struct invalid_downstream_request : public boost::exception, public std::exception
@@ -47,22 +49,28 @@ HY_PointHydroNexus::~HY_PointHydroNexus()
 double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
 {
 
-    if ( t < min_timestep ) BOOST_THROW_EXCEPTION(invalid_time_step());
-    if ( completed.find(t) != completed.end() ) BOOST_THROW_EXCEPTION(completed_time_step());
+    if ( t < min_timestep ) {
+        LOG(LogLevel::FATAL, "Time step %d before minimum time step requested %d", t, min_timestep);
+        BOOST_THROW_EXCEPTION(invalid_time_step());
+    }
+    if ( completed.find(t) != completed.end() ) {
+        LOG(LogLevel::FATAL, "Can not operate on a completed time step");
+        BOOST_THROW_EXCEPTION(completed_time_step());
+    }
 
     auto s1 = upstream_flows.find(t);
 
     if ( percent_flow > 100.0)
     {
         // no downstream may ever receive more than 100% of flows
-
+        LOG(LogLevel::FATAL, "All %s downstream catchments can not request more than 100% of flux in total", catchment_id.c_str());
         BOOST_THROW_EXCEPTION(invalid_downstream_request());
     }
     else if ( s1 == upstream_flows.end() )
     {
         // there are no recorded flows for this time.
         // throw exception
-
+        LOG(LogLevel::FATAL, "There are no recorded flows in %s for time step %d", catchment_id.c_str(), t);
         BOOST_THROW_EXCEPTION(request_from_empty_nexus() );
     }
     else
@@ -102,6 +110,7 @@ double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_st
             {
                     // if the amount of flow allready released plus the amount
                     // of this release is greater than 100 throw an error
+                    LOG(LogLevel::FATAL, "All %s downstream catchments can not request more than 100% of flux in total", catchment_id.c_str());
                     BOOST_THROW_EXCEPTION(invalid_downstream_request());
             }
             else
@@ -134,8 +143,14 @@ double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_st
 
 void HY_PointHydroNexus::add_upstream_flow(double val, std::string catchment_id, time_step_t t)
 {
-     if ( t < min_timestep ) BOOST_THROW_EXCEPTION(invalid_time_step());
-    if ( completed.find(t) != completed.end() ) BOOST_THROW_EXCEPTION(completed_time_step());
+     if ( t < min_timestep ) {
+        LOG(LogLevel::FATAL, "Time step %d before minimum time step requested %d", t, min_timestep);
+        BOOST_THROW_EXCEPTION(invalid_time_step());
+     }
+    if ( completed.find(t) != completed.end() ) {
+        LOG(LogLevel::FATAL, "Can not operate on a completed time step");
+        BOOST_THROW_EXCEPTION(completed_time_step());
+    }
 
     auto s1 = upstream_flows.find(t);
     if (  s1 == upstream_flows.end() )
@@ -163,8 +178,8 @@ void HY_PointHydroNexus::add_upstream_flow(double val, std::string catchment_id,
         {
             // case 3 summed flows exist we can not add water for a time step when
             // one or more catchments have made downstream requests
-
-             BOOST_THROW_EXCEPTION(add_to_summed_nexus());
+            LOG(LogLevel::FATAL, "Can not add water to a summed point nexus");
+            BOOST_THROW_EXCEPTION(add_to_summed_nexus());
          }
     }
 }
