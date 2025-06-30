@@ -24,7 +24,17 @@ build:
   before_script:
     - git config --global url."https://oauth2:${GITLAB_TOKEN}@gitlab.sh.nextgenwaterprediction.com/".insteadOf "https://gitlab.sh.nextgenwaterprediction.com/"
     - chown -R `whoami` .
+    - git fetch --unshallow || true  # In case we’re in a shallow clone
+    - git fetch --prune --prune-tags # Ensures tags are accurate and old ones are removed
     - git submodule update --init --recursive
+    - |
+      # Prune tags/branches in all submodules
+      git submodule foreach --recursive sh -c "
+        echo \"Fetching latest with prune in \$name\"
+        url=\$(git config --get remote.origin.url)
+        git remote set-url origin \${url/https:\/\//https:\/\/oauth2:${GITLAB_TOKEN}@}
+        git fetch --prune --prune-tags || echo \"Warning: fetch failed for \$name\"
+      "
     - |
       if [[ "$CI_COMMIT_BRANCH" == "release-candidate" ]] || [[ "$CI_COMMIT_BRANCH" == "master" ]]; then
         git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/cfe/cfe
