@@ -20,6 +20,7 @@
 #include "Bmi_Adapter.hpp"
 
 #include "utilities/python/InterpreterUtil.hpp"
+#include "utilities/logging_utils.h"
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Py_Adapter_Test;
@@ -685,7 +686,7 @@ namespace models {
                     //This message is lost and often contains valuable info.  Either need to break up and catch 
                     //other possible exceptions, wrap all these in a custom exception, or at the very least, print
                     //the original messge before it gets lost in this re-throw.
-                    std::cerr<<init_exception_msg<<std::endl;
+                    logging::error((init_exception_msg + "\n").c_str());
                     throw e;
                 }
             }
