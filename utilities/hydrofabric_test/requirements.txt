@@ -1,0 +1,5 @@
+pydantic
+pyyaml
+geopandas
+cloudpathlib[s3]
+ngen_config @ git+https://github.com/noaa-owp/ngen-cal@master#egg=ngen_config&subdirectory=python/ngen_conf
