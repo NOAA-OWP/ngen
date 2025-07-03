@@ -71,6 +71,22 @@ void SchismFormulation::initialize()
     auto const& input_vars = bmi_->GetInputVarNames();
 
     for (auto const& name : input_vars) {
+        if (name == "bmi_mpi_comm_handle") {
+            // This is handled at startup by Bmi_Fortran_Adapter
+            continue;
+        }
+
+        if (name == "ETA2_dt") {
+            double eta2_dt = offshore_boundary_provider_->record_duration();
+            bmi_->SetValue(name, &eta2_dt);
+            continue;
+        }
+        if (name == "Q_dt") {
+            double q_dt = channel_flow_boundary_provider_->record_duration();
+            bmi_->SetValue(name, &q_dt);
+            continue;
+        }
+
         if (expected_input_variables_.find(name) == expected_input_variables_.end()) {
             throw std::runtime_error("SCHISM instance requests unexpected input variable '" + name + "'");
         }
