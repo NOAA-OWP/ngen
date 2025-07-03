@@ -78,7 +78,7 @@ private:
     std::shared_ptr<ProviderType> offshore_boundary_provider_;
     std::shared_ptr<ProviderType> channel_flow_boundary_provider_;
 
-    void set_inputs(int timestep_offset);
+    void set_inputs();
 };
 
 #endif // NGEN_WITH_BMI_FORTRAN && NGEN_WITH_MPI

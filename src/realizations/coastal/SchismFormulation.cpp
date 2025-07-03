@@ -70,15 +70,14 @@ void SchismFormulation::initialize()
 {
     auto const& input_vars = bmi_->GetInputVarNames();
 
-    for (auto const& full_name : input_vars) {
-        auto name = full_name.substr(0, full_name.size()-3); // Chop off _t0/_t1 suffixes
+    for (auto const& name : input_vars) {
         if (expected_input_variables_.find(name) == expected_input_variables_.end()) {
             throw std::runtime_error("SCHISM instance requests unexpected input variable '" + name + "'");
         }
 
-        input_variable_units_[name] = bmi_->GetVarUnits(name + "_t0");
-        input_variable_type_[name] = bmi_->GetVarType(name + "_t0");
-        input_variable_count_[name] = mesh_size(name + "_t0");
+        input_variable_units_[name] = bmi_->GetVarUnits(name);
+        input_variable_type_[name] = bmi_->GetVarType(name);
+        input_variable_count_[name] = mesh_size(name);
     }
 
     auto const& output_vars = bmi_->GetOutputVarNames();
@@ -95,7 +94,7 @@ void SchismFormulation::initialize()
 
     time_step_length_ = std::chrono::seconds((long long)bmi_->GetTimeStep());
 
-    set_inputs(0);
+    set_inputs();
 }
 
 void SchismFormulation::finalize()
@@ -107,7 +106,7 @@ void SchismFormulation::finalize()
     bmi_->Finalize();
 }
 
-void SchismFormulation::set_inputs(int timestep_offset)
+void SchismFormulation::set_inputs()
 {
     for (auto var : expected_input_variables_) {
         auto const& name = var.first;
@@ -124,17 +123,16 @@ void SchismFormulation::set_inputs(int timestep_offset)
             default: throw std::runtime_error("Unknown SCHISM provider selector type");
             }
         }();
-        auto offset_name = name + "_t" + std::to_string(timestep_offset);
-        std::vector<double> buffer(mesh_size(offset_name));
+        std::vector<double> buffer(mesh_size(name));
         provider->get_values(points, buffer);
-        bmi_->SetValue(offset_name, buffer.data());
+        bmi_->SetValue(name, buffer.data());
     }
 }
 
 void SchismFormulation::update()
 {
     current_time_ += time_step_length_;
-    set_inputs(1);
+    set_inputs();
     bmi_->Update();
 }
 
