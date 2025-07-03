@@ -19,8 +19,8 @@ std::map<std::string, SchismFormulation::InputMapping> SchismFormulation::expect
         // TMP2m - temperature at 2m
         {"TMP2m", { SchismFormulation::METEO, "T2D"}},
         // UU10m, VV10m - wind velocity components at 10m
-        {"UU10m", { SchismFormulation::METEO, "U2D"}},
-        {"VV10m", { SchismFormulation::METEO, "V2D"}},
+        {"U10m", { SchismFormulation::METEO, "U2D"}},
+        {"V10m", { SchismFormulation::METEO, "V2D"}},
 
         /* Input Boundary Conditions */
         // ETA2_bnd - water surface elevation at the boundaries
