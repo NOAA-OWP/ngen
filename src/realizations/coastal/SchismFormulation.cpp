@@ -124,6 +124,7 @@ void SchismFormulation::finalize()
 
 void SchismFormulation::set_inputs()
 {
+    // Make sure Q_bnd is set before RAINRATE
     for (auto var : expected_input_variables_) {
         auto const& name = var.first;
         auto const& mapping = var.second;

@@ -146,6 +146,8 @@ void NetCDFMeshPointsDataProvider::get_values(const selection_type& selector, bo
 
     size_t time_index = get_ts_index_for_time(std::chrono::system_clock::to_time_t(selector.init_time));
 
+    // XXX: Ignores the point selection in `selector`
+    // Possibly assert somewhere (at startup) that dimensions are actually (Time, Index)
     metadata.ncVar.getVar({time_index, 0}, {1, data.size()}, data.data());
 
     for (auto& value : data) {

@@ -53,7 +53,7 @@ namespace data_access
 
         virtual long get_data_stop_time() const = 0;
 
-        /** Return the stride in the time dimension */
+        /** Return the stride in the time dimension in seconds */
         virtual long record_duration() const = 0;
 
         /**
