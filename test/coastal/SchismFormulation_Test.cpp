@@ -24,14 +24,14 @@ std::map<std::string, double> input_variables_defaults =
         // RAINRATE - precipitation
         {"RAINRATE", 0.01},
         // SFCPRS - surface atmospheric pressure
-        {"SFCPRS", 101325.0},
+        {"PSFC", 101325.0},
         // SPFH2m - specific humidity at 2m
-        {"SPFH2m", 0.01},
+        {"Q2D", 0.01},
         // TMP2m - temperature at 2m
-        {"TMP2m", 293},
+        {"T2D", 293},
         // UU10m, VV10m - wind velocity components at 10m
-        {"UU10m", 1.0},
-        {"VV10m", 1.0},
+        {"U2D", 1.0},
+        {"V2D", 1.0},
 
         /* Input Boundary Conditions */
         // ETA2_bnd - water surface elevation at the boundaries
