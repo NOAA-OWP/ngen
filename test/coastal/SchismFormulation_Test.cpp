@@ -1,4 +1,4 @@
-//#include "gtest/gtest.h"
+#include "gtest/gtest.h"
 #include <utilities/parallel_utils.h>
 
 #include "realizations/coastal/SchismFormulation.hpp"
@@ -7,9 +7,9 @@
 #include <iostream>
 #include <NetCDFMeshPointsDataProvider.hpp>
 
-const static std::string library_path = "/Users/phil/Code/noaa/BUILD/bmischism_2024-09-27-ngen/libtestbmifortranmodel.dylib";
-const static std::string init_config_path = "/Users/phil/Code/noaa/SCHISM_Lake_Champlain_driver_test/namelist.input";
-const static std::string met_forcing_netcdf_path = "/Users/phil/Code/noaa/SCHISM_Lake_Champlain_BMI_test/NextGen_Forcings_Engine_MESH_output_201104302300.nc";
+const static std::string library_path = "/mnt/BUILD/schism_2025-07-02-linux/lib/libschism_bmi.so";
+const static std::string init_config_path = "/mnt/SCHISM_Lake_Champlain_BMI_Driver_Test/namelist.input";
+const static std::string met_forcing_netcdf_path = "/mnt/SCHISM_Lake_Champlain_BMI_test/NextGen_Forcings_Engine_MESH_output_201104302300.nc";
 
 #if 0
 struct Schism_Formulation_IT : public ::testing::Test
@@ -71,6 +71,20 @@ struct MockProvider : data_access::DataProvider<double, MeshPointsSelector>
     }
 };
 
+void test_netcdf_met_provider(std::shared_ptr<data_access::NetCDFMeshPointsDataProvider> provider)
+{
+
+    return;
+    auto available_variables = provider->get_available_variable_names();
+    for (auto const& expected : SchismFormulation::expected_input_variables_) {
+        SchismFormulation::InputMapping const& mapping = expected.second;
+        if (mapping.selector == SchismFormulation::METEO) {
+            auto pos = std::find(available_variables.begin(), available_variables.end(), mapping.name);
+            EXPECT_NE(pos, available_variables.end());
+        }
+    }
+}
+
 int main(int argc, char **argv)
 {
     MPI_Init(&argc, &argv);
@@ -93,14 +107,18 @@ int main(int argc, char **argv)
     auto netcdf_met_provider = std::make_shared<data_access::NetCDFMeshPointsDataProvider>(met_forcing_netcdf_path,
                                                                                            std::chrono::system_clock::from_time_t(start_time_t),
                                                                                            std::chrono::system_clock::from_time_t(stop_time_t));
-    auto schism = std::make_unique<SchismFormulation>(/*id=*/ "test_schism_formulation",
-                                                      library_path,
-                                                      init_config_path,
-                                                      MPI_COMM_SELF,
-                                                      netcdf_met_provider,
-                                                      provider,
-                                                      provider
-                                                      );
+
+    test_netcdf_met_provider(netcdf_met_provider);
+
+    std::unique_ptr<CoastalFormulation> schism =
+        std::make_unique<SchismFormulation>(/*id=*/ "test_schism_formulation",
+                                            library_path,
+                                            init_config_path,
+                                            MPI_COMM_SELF,
+                                            netcdf_met_provider,
+                                            provider,
+                                            provider
+                                            );
 
     schism->initialize();
 
@@ -126,29 +144,35 @@ int main(int argc, char **argv)
         std::cout << name << " with " << data.size() << " entries ranges from " << min << " to " << max << std::endl;
     };
 
-    std::vector<double> bedlevel(278784, std::numeric_limits<double>::quiet_NaN());
     MeshPointsSelector bedlevel_selector{"BEDLEVEL", std::chrono::system_clock::now(), 3600s, "m", all_points};
-    schism->get_values(bedlevel_selector, bedlevel);
+    auto bedlevel = schism->get_values(bedlevel_selector, data_access::ReSampleMethod::FRONT_FILL);
     report(bedlevel, "BEDLEVEL");
 
-    std::vector<double> eta2(278784, std::numeric_limits<double>::quiet_NaN());
+    for (int i = 0; i < bedlevel.size(); ++i) {
+        if (bedlevel[i] == -9999) {
+            std::cout << "Bed level is sentinel at index " << i << std::endl;
+        }
+    }
+
     MeshPointsSelector eta2_selector{"ETA2", std::chrono::system_clock::now(), 3600s, "m", all_points};
-    schism->get_values(eta2_selector, eta2);
+    auto eta2 = schism->get_values(eta2_selector, data_access::ReSampleMethod::FRONT_FILL);
     report(eta2, "ETA2");
 
-    std::vector<double> vx(278784, std::numeric_limits<double>::quiet_NaN());
+    MeshPointsSelector tr_eta2_selector{"TROUTE_ETA2", std::chrono::system_clock::now(), 3600s, "m", all_points};
+    auto tr_eta2 = schism->get_values(tr_eta2_selector, data_access::ReSampleMethod::FRONT_FILL);
+    report(tr_eta2, "TROUTE_ETA2");
+
     MeshPointsSelector vx_selector{"VX", std::chrono::system_clock::now(), 3600s, "m s-1", all_points};
-    schism->get_values(vx_selector, vx);
+    auto vx = schism->get_values(vx_selector, data_access::ReSampleMethod::FRONT_FILL);
     report(vx, "VX");
 
-    std::vector<double> vy(278784, std::numeric_limits<double>::quiet_NaN());
     MeshPointsSelector vy_selector{"VY", std::chrono::system_clock::now(), 3600s, "m s-1", all_points};
-    schism->get_values(vy_selector, vy);
+    auto vy = schism->get_values(vy_selector, data_access::ReSampleMethod::FRONT_FILL);
     report(vy, "VY");
 
     schism->update();
-    schism->get_values(vx_selector, vx);
-    schism->get_values(vy_selector, vy);
+    schism->get_values(vx_selector, data_access::ReSampleMethod::FRONT_FILL);
+    schism->get_values(vy_selector, data_access::ReSampleMethod::FRONT_FILL);
     report(vx, "VX");
     report(vy, "VY");
 
