@@ -37,8 +37,6 @@ std::map<std::string, double> input_variables_defaults =
         // ETA2_bnd - water surface elevation at the boundaries
         {"ETA2_bnd", 30},
         // Q_bnd - flows at boundaries
-        {"Q_bnd", 0.1},
-        // Q_bnd - flows at boundaries
         {"Q_bnd_source", 0.1},
         // Q_bnd - flows at boundaries
         {"Q_bnd_sink", 0.1},
