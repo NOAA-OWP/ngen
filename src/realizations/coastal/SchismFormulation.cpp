@@ -33,6 +33,7 @@ std::map<std::string, SchismFormulation::InputMapping> SchismFormulation::expect
 
 std::vector<std::string> SchismFormulation::exported_output_variable_names_ =
     {
+        "TROUTE_ETA2",
         "ETA2",
         "VX",
         "VY",
