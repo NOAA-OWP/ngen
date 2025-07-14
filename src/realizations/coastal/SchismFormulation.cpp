@@ -97,6 +97,13 @@ void SchismFormulation::initialize()
         input_variable_count_[name] = mesh_size(name);
     }
 
+    for (auto const& var : expected_input_variables_) {
+        auto const& name = var.first;
+        if (input_variable_units_.find(name) == input_variable_units_.end()) {
+            throw std::runtime_error("SCHISM instance is missing expected input variable '" + name + "'");
+        }
+    }
+
     auto const& output_vars = bmi_->GetOutputVarNames();
 
     for (auto const& name : output_vars) {
