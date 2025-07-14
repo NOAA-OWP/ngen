@@ -109,6 +109,12 @@ void SchismFormulation::initialize()
         output_variable_count_[name] = mesh_size(name);
     }
 
+    for (auto const& name : exported_output_variable_names_) {
+        if (output_variable_units_.find(name) == output_variable_units_.end()) {
+            throw std::runtime_error("SCHISM instance is missing expected output variable '" + name + "'");
+        }
+    }
+
     time_step_length_ = std::chrono::seconds((long long)bmi_->GetTimeStep());
 
     set_inputs();
