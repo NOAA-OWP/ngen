@@ -36,3 +36,7 @@ if(NGEN_WITH_BMI_FORTRAN)
     target_sources(ngen_bmi PRIVATE "${CMAKE_CURRENT_LIST_DIR}/Bmi_Fortran_Adapter.cpp")
     target_link_libraries(ngen_bmi PUBLIC iso_c_bmi)
 endif()
+
+if(NGEN_WITH_MPI)
+    target_link_libraries(ngen_bmi PUBLIC MPI::MPI_C MPI::MPI_CXX)
+endif()
