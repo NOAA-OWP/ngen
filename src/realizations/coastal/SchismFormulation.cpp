@@ -77,6 +77,10 @@ void SchismFormulation::initialize()
             continue;
         }
 
+        // XXX: These will need some stricter enforcement of
+        // consistency between the model step and the data steps,
+        // since SCHISM uses them to interpolate down to its internal
+        // timestep
         if (name == "ETA2_dt") {
             double eta2_dt = offshore_boundary_provider_->record_duration();
             bmi_->SetValue(name, &eta2_dt);
@@ -138,7 +142,9 @@ void SchismFormulation::finalize()
 
 void SchismFormulation::set_inputs()
 {
-    // Make sure Q_bnd is set before RAINRATE
+    // Q_bnd_source must be set before RAINRATE due to SCHISM
+    // accumulating the latter into the same array as the former.
+    // This is currently enforced by std::map ordering.
     for (auto var : expected_input_variables_) {
         auto const& name = var.first;
         auto const& mapping = var.second;
