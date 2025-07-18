@@ -1,6 +1,7 @@
 #include "DataProvider.hpp"
 #include <chrono>
 #include <forcing/ForcingsEngineLumpedDataProvider.hpp>
+#include <iostream>
 
 namespace data_access {
 
@@ -16,33 +17,50 @@ std::size_t convert_divide_id_stoi(const std::string& divide_id)
         : &divide_id[separator + 1]
     );
 
+    std::cout << "[ngen debug] Converting divide ID: " << divide_id
+              << " -> " << split << std::endl;
+
     return std::atol(split);
 }
 
 Provider::ForcingsEngineLumpedDataProvider(
-    const std::string& init,
+    const std::string& data_path,
+    const std::string& init_config,
     std::size_t time_begin_seconds,
     std::size_t time_end_seconds,
     const std::string& divide_id
 )
-  : BaseProvider(init, time_begin_seconds, time_end_seconds)
+  : BaseProvider(data_path, init_config, time_begin_seconds, time_end_seconds)
 {
+    // Add detailed logging of the constructor arguments
+    std::cout << "\n[ngen debug] Initializing ForcingsEngineLumpedDataProvider:" << std::endl;
+    std::cout << "  data_path: " << data_path << std::endl;
+    std::cout << "  init_config: " << init_config << std::endl;
+    std::cout << "  start time (seconds): " << time_begin_seconds << " (" << std::ctime(reinterpret_cast<const time_t*>(&time_begin_seconds)) << ")" << std::endl;
+    std::cout << "  end time (seconds): " << time_end_seconds << " (" << std::ctime(reinterpret_cast<const time_t*>(&time_end_seconds)) << ")" << std::endl;
+    std::cout << "  divide ID: " << divide_id << std::endl;
+
     divide_id_ = convert_divide_id_stoi(divide_id);
 
     // Check that CAT-ID is an available output name, otherwise we most likely aren't
     // running the correct configuration of the forcings engine for this class.
     const auto cat_id_pos = std::find(var_output_names_.begin(), var_output_names_.end(), "CAT-ID");
     if (cat_id_pos == var_output_names_.end()) {
+        std::cerr << "[ngen error] Failed to initialize ForcingsEngineLumpedDataProvider: "
+                  << "`CAT-ID` is not an output variable of the forcings engine."
+                  << " Does " << init_config << " have `GRID_TYPE` set to 'hydrofabric'?" << std::endl;
         throw std::runtime_error{
             "Failed to initialize ForcingsEngineLumpedDataProvider: `CAT-ID` is not an output variable of the forcings engine."
-            " Does " + init + " have `GRID_TYPE` set to 'hydrofabric'?"
         };
     }
+    std::cout << "[ngen debug] Found CAT-ID in output names" << std::endl;
+
     var_output_names_.erase(cat_id_pos);
 
     const auto size_id_dimension = static_cast<std::size_t>(
         bmi_->GetVarNbytes("CAT-ID") / bmi_->GetVarItemsize("CAT-ID")
     );
+    std::cout << "[ngen debug] CAT-ID size: " << size_id_dimension << std::endl;
 
     // Copy CAT-ID values into instance vector
     const auto cat_id_span = boost::span<const int>(
@@ -52,11 +70,15 @@ Provider::ForcingsEngineLumpedDataProvider(
 
     auto divide_id_pos = std::find(cat_id_span.begin(), cat_id_span.end(), divide_id_);
     if (divide_id_pos == cat_id_span.end()) {
-        // throw std::runtime_error{"Unable to find divide ID `" + divide_id + "` in given Forcings Engine domain"};
+        std::cerr << "[ngen error] Unable to find divide ID `" << divide_id
+                  << "` in the given Forcings Engine domain" << std::endl;
         divide_idx_ = static_cast<std::size_t>(-1);
     } else {
         divide_idx_ = std::distance(cat_id_span.begin(), divide_id_pos);
+        std::cout << "[ngen debug] Divide ID found at index: " << divide_idx_ << std::endl;
     }
+
+    std::cout << "[ngen debug] ForcingsEngineLumpedDataProvider initialization complete" << std::endl;
 }
 
 std::size_t Provider::divide() const noexcept

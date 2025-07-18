@@ -1,3 +1,5 @@
+// TODO Peter - need to fix this
+
 #include <gtest/gtest.h>
 
 #ifndef NGEN_LUMPED_CONFIG_PATH
@@ -29,6 +31,7 @@ struct ForcingsEngineLumpedDataProviderTest
     }
 
     static constexpr const char* config_file = NGEN_LUMPED_CONFIG_PATH;
+    static constexpr const char* init_config = ""; /*# what should this be? */
     static const std::time_t time_start;
     static const std::time_t time_end;
     static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_;
@@ -43,6 +46,7 @@ struct ForcingsEngineLumpedDataProviderTest
 using TestFixture = ForcingsEngineLumpedDataProviderTest;
 
 constexpr const char* TestFixture::config_file;
+constexpr const char* TestFixture::init_config;
 const std::time_t TestFixture::time_start = data_access::detail::parse_time("2023-01-17 01:00:00");
 const std::time_t TestFixture::time_end = TestFixture::time_start + 3600 + 3600;
 
@@ -60,7 +64,8 @@ void TestFixture::SetUpTestSuite()
     data_access::detail::assert_forcings_engine_requirements();
 
     TestFixture::provider_ = std::make_unique<data_access::ForcingsEngineLumpedDataProvider>(
-        /*init=*/TestFixture::config_file,
+        /*data_path*/TestFixture::config_file,
+        /*init_config*/TestFixture::init_config,
         /*time_begin_seconds=*/TestFixture::time_start,
         /*time_end_seconds=*/TestFixture::time_end,
         /*divide_id=*/"cat-11223"
@@ -86,7 +91,8 @@ void TestFixture::TearDownTestSuite()
 TEST_F(ForcingsEngineLumpedDataProviderTest, Storage)
 {
     auto new_inst = std::make_unique<data_access::ForcingsEngineLumpedDataProvider>(
-        /*init=*/TestFixture::config_file,
+        /*config_file*/TestFixture::config_file,
+        /*init_config*/TestFixture::init_config,
         /*time_begin_seconds=*/TestFixture::time_start,
         /*time_end_seconds=*/TestFixture::time_end,
         /*divide_id=*/"cat-11371"

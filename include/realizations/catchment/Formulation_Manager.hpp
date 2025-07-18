@@ -62,7 +62,6 @@ namespace realization {
 
                 if (possible_global_config) {
                     global_config = realization::config::Config(*possible_global_config);
-                    std::cout << "[DEBUG] Loaded global configuration block" << std::endl;
                 }
 
                 // Log simulation time configuration
@@ -79,7 +78,6 @@ namespace realization {
 
                 // Initialize the Simulation_Time object
                 this->Simulation_Time_Object = std::make_shared<Simulation_Time>(simulation_time_config);
-                std::cout << "[DEBUG] Simulation_Time object initialized" << std::endl;
 
                 // Log layer descriptions
                 // try to get the json node
@@ -134,7 +132,6 @@ namespace realization {
                 #if NGEN_WITH_ROUTING
                     this->routing_config = (config::Routing(*possible_routing_configs)).params;
                     using_routing = true;
-                    std::cout << "[DEBUG] Routing configuration loaded" << std::endl;
                 #else
                     using_routing = false;
                     ss <<"WARNING: Formulation Manager found routing configuration"
@@ -420,11 +417,12 @@ namespace realization {
 
                 // Extract forcing parameters
                 forcing_params forcing_config = this->get_forcing_params(catchment_formulation.forcing.parameters, identifier, simulation_time_config);
-                std::cout << "[DEBUG] Forcing path: " << forcing_config.path << std::endl;
-                std::cout << "[DEBUG] Forcing provider: " << forcing_config.provider << std::endl;
+                std::cout << "[DEBUG] Forcing parameters extracted for identifier: " << identifier << std::endl;
+                std::cout << "  [DEBUG] Forcing path: " << forcing_config.path << std::endl;
+                std::cout << "  [DEBUG] Forcing provider: " << forcing_config.provider << std::endl;
 //                std::cout << "[DEBUG] Forcing init_config: " << forcing_config.init_config << std::endl;
-                std::cout << "[DEBUG] Simulation start time: " << forcing_config.simulation_start_t << std::endl;
-                std::cout << "[DEBUG] Simulation end time: " << forcing_config.simulation_end_t << std::endl;
+                std::cout << "  [DEBUG] Simulation start time: " << forcing_config.simulation_start_t << std::endl;
+                std::cout << "  [DEBUG] Simulation end time: " << forcing_config.simulation_end_t << std::endl;
 
                 // Construct formulation
                 std::cout << "[DEBUG] Constructing formulation for type: " << catchment_formulation.formulation.type << std::endl;
@@ -452,10 +450,10 @@ namespace realization {
                 // Extract forcing parameters from the global config
                 forcing_params forcing_config = this->get_forcing_params(global_config.forcing.parameters, identifier, simulation_time_config);
                 std::cout << "[DEBUG] Forcing parameters extracted for identifier: " << identifier << std::endl;
-                std::cout << "[DEBUG] Forcing path: " << forcing_config.path << std::endl;
-                std::cout << "[DEBUG] Forcing provider: " << forcing_config.provider << std::endl;
-                std::cout << "[DEBUG] Simulation start time: " << forcing_config.simulation_start_t << std::endl;
-                std::cout << "[DEBUG] Simulation end time: " << forcing_config.simulation_end_t << std::endl;
+                std::cout << "  [DEBUG] Forcing path: " << forcing_config.path << std::endl;
+                std::cout << "  [DEBUG] Forcing provider: " << forcing_config.provider << std::endl;
+                std::cout << "  [DEBUG] Simulation start time: " << forcing_config.simulation_start_t << std::endl;
+                std::cout << "  [DEBUG] Simulation end time: " << forcing_config.simulation_end_t << std::endl;
 
                 // Construct the formulation object
                 std::cout << "[DEBUG] Entering construct_formulation for identifier: " << identifier << ", type: " << global_config.formulation.type << std::endl;
@@ -541,50 +539,69 @@ namespace realization {
             forcing_params get_forcing_params(const geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
                 std::cout << "[DEBUG] Entering get_forcing_params for identifier: " << identifier << std::endl;
 
+                // Extract the required 'path' parameter
                 std::string path = "";
                 if (forcing_prop_map.count("path") != 0) {
                     path = forcing_prop_map.at("path").as_string();
-                    std::cout << "[DEBUG] Forcing path: " << path << std::endl;
+                    std::cout << "  [DEBUG] Forcing path: " << path << std::endl;
                 }
 
+                // Extract the required 'provider' parameter
                 std::string provider;
                 if (forcing_prop_map.count("provider") != 0) {
                     provider = forcing_prop_map.at("provider").as_string();
-                    std::cout << "[DEBUG] Forcing provider: " << provider << std::endl;
+                    std::cout << "  [DEBUG] Forcing provider: " << provider << std::endl;
                 }
+
+                // Extract the optional 'init_config' parameter from 'params'
+                std::string init_config = "";
+                if (forcing_prop_map.count("params") != 0) {
+                    const geojson::JSONProperty& params_property = forcing_prop_map.at("params");
+                    if (params_property.get_type() == geojson::PropertyType::Object) {
+                        const geojson::PropertyMap& params_map = params_property.get_values();
+                        if (params_map.count("init_config") != 0) {
+                            init_config = params_map.at("init_config").as_string();
+                            std::cout << "  [DEBUG] Forcing init_config: " << init_config << std::endl;
+                        }
+                    } else {
+                        std::cout << "[WARNING] 'params' is not an object for identifier: " << identifier << std::endl;
+                    }
+                }
+
+                // If no file pattern is present, return the parameters directly
                 if (forcing_prop_map.count("file_pattern") == 0) {
                     return forcing_params(
                         path,
                         provider,
                         simulation_time_config.start_time,
-                        simulation_time_config.end_time
+                        simulation_time_config.end_time,
+                        init_config
                     );
                 }
 
+                // Ensure the 'path' is set for pattern matching
                 if (path.empty()) {
-                    std::string throw_msg; throw_msg.assign("Error with NGEN config - 'path' in forcing params must be set to a "
-                                             "non-empty parent directory path when 'file_pattern' is used.");
+                    std::string throw_msg = "Error with NGEN config - 'path' in forcing params must be set to a "
+                                            "non-empty parent directory path when 'file_pattern' is used.";
                     LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
 
-                // Since we are given a pattern, we need to identify the directory and pull out anything that matches the pattern
+                // Append a trailing slash to the path if not already present
                 if (path.compare(path.size() - 1, 1, "/") != 0) {
                     path += "/";
                 }
 
+                // Extract and process the file pattern
                 std::string filepattern = forcing_prop_map.at("file_pattern").as_string();
-
                 int id_index = filepattern.find("{{id}}");
 
-                // If an index for '{{id}}' was found, we can count on that being where the id for this realization can be found.
-                //     For instance, if we have a pattern of '.*{{id}}_14_15.csv' and this is named 'cat-87',
-                //     this will match on 'stuff_example_cat-87_14_15.csv'
+                // Replace {{id}} if present
                 if (id_index != std::string::npos) {
                     filepattern = filepattern.replace(id_index, sizeof("{{id}}") - 1, identifier);
                 }
 
-                // Create a regular expression used to identify proper file names
+                // Compile the file pattern as a regex
                 std::regex pattern(filepattern);
 
                 // A stream providing the functions necessary for evaluating a directory:
@@ -599,6 +616,8 @@ namespace realization {
                 // Allow for a few retries in certain failure situations
                 size_t attemptCount = 0;
                 std::string errMsg;
+
+                // Retry on certain error codes
                 while (directory == nullptr && attemptCount++ < 5) {
                     // For several error codes, we should break immediately and not retry
                     if (errno == ENOENT) {
@@ -629,67 +648,69 @@ namespace realization {
                         errMsg = "The system has too many open files.";
                         break;
                     }
+
+                    // Sleep before retrying to avoid a tight loop
                     sleep(2);
                     directory = opendir(path.c_str());
                     errMsg = "Received system error number " + std::to_string(errno);
                 }
 
-                // If the directory could be found and opened, we can go ahead and iterate
+                // Iterate over directory entries
                 if (directory != nullptr) {
-                    bool match;
                     while ((entry = readdir(directory))) {
-                        match = std::regex_match(entry->d_name, pattern);
-                        if( match ) {
-                            // If the entry is a regular file or symlink AND the name matches the pattern, 
-                            //    we can consider this ready to be interpretted as valid forcing data (even if it isn't)
-                            #ifdef _DIRENT_HAVE_D_TYPE
-                            if ( entry->d_type == DT_REG or entry->d_type == DT_LNK ) {
+                        if (std::regex_match(entry->d_name, pattern)) {
+                            // Check for regular files and symlinks
+            #ifdef _DIRENT_HAVE_D_TYPE
+                            if (entry->d_type == DT_REG || entry->d_type == DT_LNK) {
+                                closedir(directory);
                                 return forcing_params(
                                     path + entry->d_name,
                                     provider,
                                     simulation_time_config.start_time,
-                                    simulation_time_config.end_time
+                                    simulation_time_config.end_time,
+                                    init_config
                                 );
                             }
-                            else if ( entry->d_type == DT_UNKNOWN )
-                            #endif
-                            {
-                                //dirent is not guaranteed to provide propoer file type identification in d_type
-                                //so if a system returns unknown or it isn't supported, need to use stat to determine if it is a file
+                            else if (entry->d_type == DT_UNKNOWN) {
+            #endif
+                                // Use stat for systems that don't set d_type
                                 struct stat st;
-                                if( stat((path+entry->d_name).c_str(), &st) != 0) {
-                                    std::string throw_msg; throw_msg.assign("Could not stat file "+path+entry->d_name);
+                                if (stat((path + entry->d_name).c_str(), &st) != 0) {
+                                    std::string throw_msg = "Could not stat file " + path + entry->d_name;
                                     LOG(throw_msg, LogLevel::WARNING);
                                     throw std::runtime_error(throw_msg);
                                 }
-                                if( S_ISREG(st.st_mode) ) {
-                                    //Sinde we used stat and not lstat, we get the result of the target of links as well
-                                    //so this covers both cases we are interested in.
+
+                                if (S_ISREG(st.st_mode)) {
+                                    closedir(directory);
                                     return forcing_params(
                                         path + entry->d_name,
                                         provider,
                                         simulation_time_config.start_time,
-                                        simulation_time_config.end_time
+                                        simulation_time_config.end_time,
+                                        init_config
                                     );
                                 }
-                                //std::string throw_msg; throw_msg.assign("Forcing data is path "+path+entry->d_name+" is not a file");
-                                std::string throw_msg; throw_msg.assign("Forcing data is path "+path+entry->d_name+" is not a file");
+
+                                // Log a warning if the entry is not a regular file
+                                std::string throw_msg = "Forcing data in path " + path + entry->d_name + " is not a file";
                                 LOG(throw_msg, LogLevel::WARNING);
                                 throw std::runtime_error(throw_msg);
+            #ifdef _DIRENT_HAVE_D_TYPE
                             }
-                        } //no match found, try next entry
-                    } // end while iter dir
-                } //end if directory
-                else {
+            #endif
+                        }
+                    }
+                    closedir(directory);
+                } else {
                     // The directory wasn't found or otherwise couldn't be opened; forcing data cannot be retrieved
-                    std::string throw_msg; throw_msg.assign("Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg);
+                    std::string throw_msg = "Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg;
                     LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
 
-                closedir(directory);
-
-                std::string throw_msg; throw_msg.assign("Forcing data could not be found for '" + identifier + "'");
+                // If no match was found, throw an error
+                std::string throw_msg = "Forcing data could not be found for '" + identifier + "'";
                 LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }

@@ -27,70 +27,74 @@
 #define AORC_FIELD_NAME_SPEC_HUMID_2M_AG "SPFH_2maboveground"
 
 #include <map>
+#include <string>
+#include <ctime>
 
 /**
  * @brief forcing_params providing configuration information for forcing time period and source.
  */
 struct forcing_params
 {
-  std::string path;
-  std::string start_time;
-  std::string end_time;
-  std::string date_format =  "%Y-%m-%d %H:%M:%S";
-  std::string provider;
-  time_t simulation_start_t;
-  time_t simulation_end_t;
-  /*
-    Constructor for forcing_params
-  */
-  forcing_params(std::string path, std::string provider, std::string start_time, std::string end_time):
-    path(path), provider(provider), start_time(start_time), end_time(end_time)
-    {
-      /// \todo converting to UTC can be tricky, especially if thread safety is a concern
-      /* https://stackoverflow.com/questions/530519/stdmktime-and-timezone-info */
-      struct tm tm;
-      strptime(this->start_time.c_str(), this->date_format.c_str() , &tm);
-      //mktime returns time in local time based on system timezone
-      //FIXME use timegm (not standard)? or implement timegm (see above link)
-      this->simulation_start_t = timegm( &tm );
+    std::string path;
+    std::string provider;
+    std::string start_time;
+    std::string end_time;
+    std::string init_config;
+    std::string date_format = "%Y-%m-%d %H:%M:%S";
+    time_t simulation_start_t;
+    time_t simulation_end_t;
 
-      strptime(this->end_time.c_str(), this->date_format.c_str() , &tm);
-      this->simulation_end_t = timegm( &tm );
+    /*
+        Constructor for forcing_params
+    */
+    forcing_params(std::string path, std::string provider, std::string start_time, std::string end_time, std::string init_config = "")
+        : path(std::move(path)), provider(std::move(provider)), start_time(std::move(start_time)), end_time(std::move(end_time)), init_config(std::move(init_config))
+    {
+      // Convert the start and end times to UTC
+      // Use timegm() for UTC conversion. This function is not part of the C++ standard but is widely supported on POSIX systems.
+      // Note: Unlike mktime(), timegm() is not thread-safe on some platforms, as it may internally use global timezone data.
+      // If this code is used in a multi-threaded context, consider using gmtime_r() or a thread-safe alternative.
+      struct tm tm_start, tm_end;
+      strptime(this->start_time.c_str(), this->date_format.c_str(), &tm_start);
+      this->simulation_start_t = timegm(&tm_start);
+
+      strptime(this->end_time.c_str(), this->date_format.c_str(), &tm_end);
+      this->simulation_end_t = timegm(&tm_end);
     }
 };
 
-//AORC Forcing Data Struct
+// AORC Forcing Data Struct
 struct AORC_data
 {
-  double APCP_surface_kg_per_meters_squared; //Total Precipitation (kg/m^2)
-  double DLWRF_surface_W_per_meters_squared; //Downward Long-Wave Rad. (Flux W/m^2)
-  double DSWRF_surface_W_per_meters_squared; //Downward Short-Wave Radiation (Flux W/m^2)
-  double PRES_surface_Pa; //Pressure (Pa)
-  double SPFH_2maboveground_kg_per_kg; //Specific Humidity (kg/kg)
-  double TMP_2maboveground_K; //Temperature (K)
-  double UGRD_10maboveground_meters_per_second; //U-Component of Wind (m/s)
-  double VGRD_10maboveground_meters_per_second; //V-Component of Wind (m/s)
+    double APCP_surface_kg_per_meters_squared; // Total Precipitation (kg/m^2)
+    double DLWRF_surface_W_per_meters_squared; // Downward Long-Wave Rad. (Flux W/m^2)
+    double DSWRF_surface_W_per_meters_squared; // Downward Short-Wave Radiation (Flux W/m^2)
+    double PRES_surface_Pa; // Pressure (Pa)
+    double SPFH_2maboveground_kg_per_kg; // Specific Humidity (kg/kg)
+    double TMP_2maboveground_K; // Temperature (K)
+    double UGRD_10maboveground_meters_per_second; // U-Component of Wind (m/s)
+    double VGRD_10maboveground_meters_per_second; // V-Component of Wind (m/s)
 };
 
 namespace data_access {
 
     const std::map<std::string, std::tuple<std::string, std::string>> WellKnownFields = {
-        {"precip_rate", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, "mm s^-1" } }, 
+        {"precip_rate", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, "mm s^-1" } },
         {"APCP_surface", { CSDMS_STD_NAME_RAIN_VOLUME_FLUX, "kg m^-2" } }, // Especially this one, is it correct? 
-        {"DLWRF_surface", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } }, 
-        {"DSWRF_surface", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } }, 
-        {"PRES_surface", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } }, 
-        {"SPFH_2maboveground", { NGEN_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } }, 
+        {"DLWRF_surface", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } },
+        {"DSWRF_surface", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } },
+        {"PRES_surface", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } },
+        {"SPFH_2maboveground", { NGEN_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } },
         {"TMP_2maboveground", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
-        {"UGRD_10maboveground", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
-        {"VGRD_10maboveground", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } }, 
-        {"RAINRATE", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE , "mm s^-1" } }, 
-        {"T2D", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
-        {"Q2D", { NGEN_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } }, 
-        {"U2D", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
-        {"V2D", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } }, 
-        {"PSFC", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } }, 
-        {"SWDOWN", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } }, 
+        {"UGRD_10maboveground", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } },
+        {"VGRD_10maboveground", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } },
+        {"RAINRATE", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE , "mm s^-1" } },
+        {"T2D", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } },
+        {"Q2D", { NGEN_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } },
+        {"U2D", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } },
+        {"V2D", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } },
+        {"PSFC", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } },
+        {"SWDOWN", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } },
         {"LWDOWN", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } }
     };
 
