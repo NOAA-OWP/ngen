@@ -26,6 +26,7 @@
 #include "realizations/config/routing.hpp"
 #include "realizations/config/config.hpp"
 #include "realizations/config/layer.hpp"
+#include "forcing/ForcingsEngineDataProvider.hpp"
 
 namespace realization {
 
@@ -304,6 +305,9 @@ namespace realization {
 
 #if NGEN_WITH_NETCDF
                 data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
+#endif
+#if NGEN_WITH_PYTHON
+                data_access::detail::ForcingsEngineStorage::instances.clear();
 #endif
                 std::cout << "[DEBUG] Formulation_Manager finalized" << std::endl;
             }
