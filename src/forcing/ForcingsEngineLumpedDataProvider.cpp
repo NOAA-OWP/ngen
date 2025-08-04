@@ -1,5 +1,7 @@
 #include "DataProvider.hpp"
 #include <chrono>
+#include <ctime>
+#include <iomanip>  // for std::put_time
 #include <forcing/ForcingsEngineLumpedDataProvider.hpp>
 #include <iostream>
 
@@ -34,11 +36,19 @@ Provider::ForcingsEngineLumpedDataProvider(
 {
     // Add detailed logging of the constructor arguments
     std::cout << "\n[ngen debug] Initializing ForcingsEngineLumpedDataProvider:" << std::endl;
-    std::cout << "  data_path: " << data_path << std::endl;
-    std::cout << "  init_config: " << init_config << std::endl;
-    std::cout << "  start time (seconds): " << time_begin_seconds << " (" << std::ctime(reinterpret_cast<const time_t*>(&time_begin_seconds)) << ")" << std::endl;
-    std::cout << "  end time (seconds): " << time_end_seconds << " (" << std::ctime(reinterpret_cast<const time_t*>(&time_end_seconds)) << ")" << std::endl;
-    std::cout << "  divide ID: " << divide_id << std::endl;
+    std::cout << "  data_path:    " << data_path << std::endl;
+    std::cout << "  init_config:  " << init_config << std::endl;
+
+    std::time_t tb_t = static_cast<std::time_t>(time_begin_seconds);
+    std::time_t te_t = static_cast<std::time_t>(time_end_seconds);
+
+    std::cout << "  Time begin:   " << std::put_time(std::gmtime(&tb_t), "%Y-%m-%d %H:%M:%S UTC")
+              << " (" << time_begin_seconds << ")" << std::endl;
+
+    std::cout << "  Time end:     " << std::put_time(std::gmtime(&te_t), "%Y-%m-%d %H:%M:%S UTC")
+              << " (" << time_end_seconds << ")" << std::endl;
+
+    std::cout << "  divide ID:    " << divide_id << std::endl;
 
     divide_id_ = convert_divide_id_stoi(divide_id);
 
@@ -103,10 +113,26 @@ Provider::data_type Provider::get_value(
     if (m == ReSampleMethod::SUM || m == ReSampleMethod::MEAN) {
         double acc = 0.0;
         const auto start = clock_type::from_time_t(selector.get_init_time());
-        assert(start >= time_begin_);
+        const auto end   = std::chrono::seconds{selector.get_duration_secs()} + start;
 
-        const auto end = std::chrono::seconds{selector.get_duration_secs()} + start;
-        assert(end <= time_end_);
+        auto tb_t = std::chrono::system_clock::to_time_t(time_begin_);
+        auto te_t = std::chrono::system_clock::to_time_t(time_end_);
+        auto s_t  = std::chrono::system_clock::to_time_t(start);
+        auto e_t  = std::chrono::system_clock::to_time_t(end);
+
+        std::cout << "get_value() Time begin: " << std::put_time(std::gmtime(&tb_t), "%Y-%m-%d %H:%M:%S UTC")
+                  << " (" << tb_t << ")"
+                  << " | start: " << std::put_time(std::gmtime(&s_t), "%Y-%m-%d %H:%M:%S UTC")
+                  << " (" << s_t << ")" << std::endl;
+
+        std::cout << "get_value() Time end:   " << std::put_time(std::gmtime(&te_t), "%Y-%m-%d %H:%M:%S UTC")
+                  << " (" << te_t << ")"
+                  << " | end:   " << std::put_time(std::gmtime(&e_t), "%Y-%m-%d %H:%M:%S UTC")
+                  << " (" << e_t << ")" << std::endl;
+
+        using namespace std::literals::chrono_literals;
+        assert(start >= time_begin_);
+        assert(end < time_end_ + time_step_ + 1s);
 
         auto current = start;
         while (current < end) {
@@ -137,10 +163,26 @@ std::vector<Provider::data_type> Provider::get_values(
     auto variable = ensure_variable(selector.get_variable_name());
 
     const auto start = clock_type::from_time_t(selector.get_init_time());
-    assert(start >= time_begin_);
-
     const auto end = std::chrono::seconds{selector.get_duration_secs()} + start;
-    assert(end <= time_end_);
+
+    auto tb_t = std::chrono::system_clock::to_time_t(time_begin_);
+    auto te_t = std::chrono::system_clock::to_time_t(time_end_);
+    auto s_t  = std::chrono::system_clock::to_time_t(start);
+    auto e_t  = std::chrono::system_clock::to_time_t(end);
+
+    std::cout << "get_values() Time begin: " << std::put_time(std::gmtime(&tb_t), "%Y-%m-%d %H:%M:%S UTC")
+              << " (" << tb_t << ")"
+              << " | start: " << std::put_time(std::gmtime(&s_t), "%Y-%m-%d %H:%M:%S UTC")
+              << " (" << s_t << ")" << std::endl;
+
+    std::cout << "get_values() Time end:   " << std::put_time(std::gmtime(&te_t), "%Y-%m-%d %H:%M:%S UTC")
+              << " (" << te_t << ")"
+              << " | end:   " << std::put_time(std::gmtime(&e_t), "%Y-%m-%d %H:%M:%S UTC")
+              << " (" << e_t << ")" << std::endl;
+
+    using namespace std::literals::chrono_literals;
+    assert(start >= time_begin_);
+    assert(end < time_end_ + time_step_ + 1s);
 
     std::vector<double> values;
     auto current = start;

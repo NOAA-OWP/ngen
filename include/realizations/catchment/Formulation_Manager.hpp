@@ -421,12 +421,18 @@ namespace realization {
 
                 // Extract forcing parameters
                 forcing_params forcing_config = this->get_forcing_params(catchment_formulation.forcing.parameters, identifier, simulation_time_config);
-                std::cout << "[DEBUG] Forcing parameters extracted for identifier: " << identifier << std::endl;
-                std::cout << "  [DEBUG] Forcing path: " << forcing_config.path << std::endl;
-                std::cout << "  [DEBUG] Forcing provider: " << forcing_config.provider << std::endl;
-//                std::cout << "[DEBUG] Forcing init_config: " << forcing_config.init_config << std::endl;
-                std::cout << "  [DEBUG] Simulation start time: " << forcing_config.simulation_start_t << std::endl;
-                std::cout << "  [DEBUG] Simulation end time: " << forcing_config.simulation_end_t << std::endl;
+                std::cout << "[ngen debug] Forcing parameters extracted for identifier: " << identifier << std::endl;
+                std::cout << "  [ngen debug] Forcing path:        " << forcing_config.path << std::endl;
+                std::cout << "  [ngen debug] Forcing provider:    " << forcing_config.provider << std::endl;
+                std::cout << "  [ngen debug] Forcing init_config: " << forcing_config.init_config << std::endl;
+
+                std::time_t start_t = static_cast<std::time_t>(forcing_config.simulation_start_t);
+                std::time_t end_t   = static_cast<std::time_t>(forcing_config.simulation_end_t);
+
+                std::cout << "  [ngen debug] Simulation start time: " << std::put_time(std::gmtime(&start_t), "%Y-%m-%d %H:%M:%S UTC")
+                          << " (" << forcing_config.simulation_start_t << ")" << std::endl;
+                std::cout << "  [ngen debug] Simulation end time:   " << std::put_time(std::gmtime(&end_t), "%Y-%m-%d %H:%M:%S UTC")
+                          << " (" << forcing_config.simulation_end_t << ")" << std::endl;
 
                 // Construct formulation
                 std::cout << "[DEBUG] Constructing formulation for type: " << catchment_formulation.formulation.type << std::endl;
@@ -453,11 +459,18 @@ namespace realization {
 
                 // Extract forcing parameters from the global config
                 forcing_params forcing_config = this->get_forcing_params(global_config.forcing.parameters, identifier, simulation_time_config);
-                std::cout << "[DEBUG] Forcing parameters extracted for identifier: " << identifier << std::endl;
-                std::cout << "  [DEBUG] Forcing path: " << forcing_config.path << std::endl;
-                std::cout << "  [DEBUG] Forcing provider: " << forcing_config.provider << std::endl;
-                std::cout << "  [DEBUG] Simulation start time: " << forcing_config.simulation_start_t << std::endl;
-                std::cout << "  [DEBUG] Simulation end time: " << forcing_config.simulation_end_t << std::endl;
+                std::cout << "[ngen debug] Forcing parameters extracted for identifier: " << identifier << std::endl;
+                std::cout << "  [ngen debug] Forcing path:        " << forcing_config.path << std::endl;
+                std::cout << "  [ngen debug] Forcing provider:    " << forcing_config.provider << std::endl;
+                std::cout << "  [ngen debug] Forcing init_config: " << forcing_config.init_config << std::endl;
+
+                std::time_t start_t = static_cast<std::time_t>(forcing_config.simulation_start_t);
+                std::time_t end_t   = static_cast<std::time_t>(forcing_config.simulation_end_t);
+
+                std::cout << "  [ngen debug] Simulation start time: " << std::put_time(std::gmtime(&start_t), "%Y-%m-%d %H:%M:%S UTC")
+                          << " (" << forcing_config.simulation_start_t << ")" << std::endl;
+                std::cout << "  [ngen debug] Simulation end time:   " << std::put_time(std::gmtime(&end_t), "%Y-%m-%d %H:%M:%S UTC")
+                          << " (" << forcing_config.simulation_end_t << ")" << std::endl;
 
                 // Construct the formulation object
                 std::cout << "[DEBUG] Entering construct_formulation for identifier: " << identifier << ", type: " << global_config.formulation.type << std::endl;

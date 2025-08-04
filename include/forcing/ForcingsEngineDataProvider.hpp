@@ -11,6 +11,8 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <iomanip>  // for std::put_time
+#include <ctime>    // for std::gmtime
 
 #include "DataProvider.hpp"
 #include "bmi/Bmi_Py_Adapter.hpp"
@@ -169,21 +171,21 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
         std::size_t time_begin_seconds,
         std::size_t time_end_seconds
     )
-      : time_begin_(std::chrono::seconds{time_begin_seconds})
-      , time_end_(std::chrono::seconds{time_end_seconds})
+      : time_begin_(std::chrono::system_clock::from_time_t(time_begin_seconds))
+      , time_end_(std::chrono::system_clock::from_time_t(time_end_seconds))
     {
         // Log the constructor arguments
         std::cout << "[ngen debug] Entering ForcingsEngineDataProvider constructor" << std::endl;
         std::cout << "  data_path: " << data_path << std::endl;
 
-        auto print_time = [](std::size_t epoch) {
-            std::string time_str = std::ctime(reinterpret_cast<const time_t*>(&epoch));
-            time_str.pop_back(); // Remove the trailing newline
-            return time_str;
-        };
+        std::time_t start_t = static_cast<std::time_t>(time_begin_seconds);
+        std::time_t end_t   = static_cast<std::time_t>(time_end_seconds);
 
-        std::cout << "  start time: " << time_begin_seconds << " (" << print_time(time_begin_seconds) << ")" << std::endl;
-        std::cout << "  end time: " << time_end_seconds << " (" << print_time(time_end_seconds) << ")" << std::endl;
+        std::cout << "  Start time: " << std::put_time(std::gmtime(&start_t), "%Y-%m-%d %H:%M:%S UTC")
+                  << " (" << time_begin_seconds << ")" << std::endl;
+
+        std::cout << "  End time:   " << std::put_time(std::gmtime(&end_t), "%Y-%m-%d %H:%M:%S UTC")
+                  << " (" << time_end_seconds << ")" << std::endl;
 
         // Attempt to retrieve a previously created BMI instance
         bmi_ = storage_type::instances.get(data_path);
