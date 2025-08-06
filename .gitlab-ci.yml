@@ -51,6 +51,20 @@ build:
         git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/ueb-bmi
         git submodule set-branch --branch "$CI_COMMIT_BRANCH" extern/lstm
       fi
+      # for each submodule checkout the release commit if the release tag is set
+    - git submodule update --remote extern/cfe/cfe && ${CI_COMMIT_TAG:+git -C extern/cfe/cfe checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/SoilFreezeThaw/SoilFreezeThaw && ${CI_COMMIT_TAG:+git -C extern/SoilFreezeThaw/SoilFreezeThaw checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/SoilMoistureProfiles/SoilMoistureProfiles && ${CI_COMMIT_TAG:+git -C extern/SoilMoistureProfiles/SoilMoistureProfiles checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/evapotranspiration/evapotranspiration && ${CI_COMMIT_TAG:+git -C extern/evapotranspiration/evapotranspiration checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/noah-owp-modular/noah-owp-modular && ${CI_COMMIT_TAG:+git -C extern/noah-owp-modular/noah-owp-modular checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/topmodel/topmodel && ${CI_COMMIT_TAG:+git -C extern/topmodel/topmodel checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/t-route && ${CI_COMMIT_TAG:+git -C extern/t-route checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/sloth && ${CI_COMMIT_TAG:+git -C extern/sloth checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/LASAM && ${CI_COMMIT_TAG:+git -C extern/LASAM checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/snow17 && ${CI_COMMIT_TAG:+git -C extern/snow17 checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/sac-sma/sac-sma && ${CI_COMMIT_TAG:+git -C extern/sac-sma/sac-sma checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/ueb-bmi && ${CI_COMMIT_TAG:+git -C extern/ueb-bmi checkout "$CI_COMMIT_TAG"} 
+    - git submodule update --remote extern/lstm && ${CI_COMMIT_TAG:+git -C extern/lstm checkout "$CI_COMMIT_TAG"}
 
   script:
     - echo "Logging in to Gitlab Container Registry..."
