@@ -423,14 +423,14 @@ namespace realization {
                 }
 
                 std::string filepattern = forcing_prop_map.at("file_pattern").as_string();
-
-                int id_index = filepattern.find("{{id}}");
+                std::string id_pattern = "{{id}}";
+                int id_index = filepattern.find(id_pattern);
 
                 // If an index for '{{id}}' was found, we can count on that being where the id for this realization can be found.
                 //     For instance, if we have a pattern of '.*{{id}}_14_15.csv' and this is named 'cat-87',
                 //     this will match on 'stuff_example_cat-87_14_15.csv'
                 if (id_index != std::string::npos) {
-                    filepattern = filepattern.replace(id_index, sizeof("{{id}}") - 1, identifier);
+                    filepattern = filepattern.replace(id_index, id_pattern.size(), identifier);
                 }
 
                 // Create a regular expression used to identify proper file names
