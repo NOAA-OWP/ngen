@@ -73,15 +73,20 @@ deprecated_option(OLD QUIET                 NEW NGEN_QUIET)
 
 # Options to automate building of extern-distributed models
 option(NGEN_WITH_EXTERN_SLOTH                            "Build with extern-distributed SLoTH"            ON)
+option(NGEN_WITH_EXTERN_SMP                              "Build with extern-distributed SMP"              OFF)
+option(NGEN_WITH_EXTERN_SFT                              "Build with extern-distributed SFT"              OFF)
 cmake_dependent_option(NGEN_WITH_EXTERN_TOPMODEL         "Build with extern-distributed TOPMODEL"         ON "NGEN_WITH_BMI_C"       OFF)
 cmake_dependent_option(NGEN_WITH_EXTERN_CFE              "Build with extern-distributed CFE"              ON "NGEN_WITH_BMI_C"       OFF)
 cmake_dependent_option(NGEN_WITH_EXTERN_PET              "Build with extern-distributed PET"              ON "NGEN_WITH_BMI_C"       OFF)
 cmake_dependent_option(NGEN_WITH_EXTERN_NOAH_OWP_MODULAR "Build with extern-distributed Noah-OWP-Modular" ON "NGEN_WITH_BMI_FORTRAN" OFF)
+cmake_dependent_option(NGEN_WITH_EXTERN_PET              "Build with extern-distributed PET"              ON "NGEN_WITH_BMI_C"       OFF)
 
 # Allow enabling of all extern models dependent on NGen options given.
 option(NGEN_WITH_EXTERN_ALL OFF)
 if(NGEN_WITH_EXTERN_ALL)
     set(NGEN_WITH_EXTERN_SLOTH ON)
+    set(NGEN_WITH_EXTERN_SMP   ON)
+    set(NGEN_WITH_EXTERN_SFT   ON)
 
     # Ensure C support is enabled
     if(NGEN_WITH_BMI_C)
@@ -211,6 +216,32 @@ if(NGEN_WITH_EXTERN_SLOTH)
     set_target_properties(slothmodel PROPERTIES CXX_VISIBILITY_PRESET default)
 endif()
 
+if (NGEN_WITH_EXTERN_SMP OR NGEN_WITH_EXTERN_SFT)
+    # SoilMoistureProfiles and SoilFreezeThaw expect this setting,
+    # as they have alternative standalone build modes.
+    set(NGEN ON CACHE BOOL "Type setting for SMP and SFT")
+endif()
+
+if(NGEN_WITH_EXTERN_SMP)
+    # SoilMoistureProfiles
+    add_external_subdirectory(
+        SOURCE     "${NGEN_EXT_DIR}/SoilMoistureProfiles/SoilMoistureProfiles"
+        OUTPUT     "${NGEN_EXT_DIR}/SoilMoistureProfiles/cmake_build"
+        GIT_UPDATE "${NGEN_EXT_DIR}/SoilMoistureProfiles/SoilMoistureProfiles"
+        IMPORTS    smpbmi
+    )
+endif()
+
+if(NGEN_WITH_EXTERN_SFT)
+    # SoilFreezeThaw
+    add_external_subdirectory(
+        SOURCE     "${NGEN_EXT_DIR}/SoilFreezeThaw/SoilFreezeThaw"
+        OUTPUT     "${NGEN_EXT_DIR}/SoilFreezeThaw/cmake_build"
+        GIT_UPDATE "${NGEN_EXT_DIR}/SoilFreezeThaw/SoilFreezeThaw"
+        IMPORTS    sftbmi
+    )
+endif()
+
 # -----------------------------------------------------------------------------
 # Handle several steps for BMI C library logic and dependencies, at top level, if functionality is turned on
 if(NGEN_WITH_BMI_C)
@@ -293,6 +324,14 @@ target_include_directories(ngen_config_header INTERFACE "${CMAKE_CURRENT_BINARY_
 
 if(NGEN_WITH_EXTERN_SLOTH)
     add_dependencies(ngen slothmodel)
+endif()
+
+if(NGEN_WITH_EXTERN_SMP)
+    add_dependencies(ngen smpbmi)
+endif()
+
+if(NGEN_WITH_EXTERN_SFT)
+    add_dependencies(ngen sftbmi)
 endif()
 
 if(NGEN_WITH_EXTERN_TOPMODEL)
