@@ -16,6 +16,10 @@
 #include <tuple>
 namespace py = pybind11;
 
+static inline const char* safe(const char* s) {
+    return s ? s : "<null>";
+}
+
 namespace utils {
     namespace ngenPy {
 
@@ -116,9 +120,11 @@ namespace utils {
                 importTopLevelModule("numpy");
                 py::str runtime_numpy_version = importedTopLevelModules["numpy"].attr("version").attr("version");
                 if(std::string(runtime_numpy_version) != numpy_version) {
+                    std::string version_str = runtime_numpy_version.cast<std::string>();
+                    const char* version_cstr = version_str.c_str();
                     std::string throw_msg; throw_msg.assign("NumPy version mismatch between configure/build ("
-                                             + std::string(numpy_version)
-                                             + ") and runtime (" + std::string(runtime_numpy_version) + ")");
+                                             + std::string(safe(numpy_version))
+                                             + ") and runtime (" + std::string(safe(version_cstr)) + ")");
                     LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
