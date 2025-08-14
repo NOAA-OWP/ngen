@@ -188,7 +188,7 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
                   << " (" << time_end_seconds << ")" << std::endl;
 
         // Attempt to retrieve a previously created BMI instance
-        bmi_ = storage_type::instances.get(data_path);
+        bmi_ = storage_type::instances.get(init_config);
 
         // If it doesn't exist, create it and assign it to the storage map
         if (bmi_ != nullptr) {
