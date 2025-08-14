@@ -26,17 +26,15 @@ std::size_t convert_divide_id_stoi(const std::string& divide_id)
 }
 
 Provider::ForcingsEngineLumpedDataProvider(
-    const std::string& data_path,
     const std::string& init_config,
     std::size_t time_begin_seconds,
     std::size_t time_end_seconds,
     const std::string& divide_id
 )
-  : BaseProvider(data_path, init_config, time_begin_seconds, time_end_seconds)
+  : BaseProvider(init_config, time_begin_seconds, time_end_seconds)
 {
     // Add detailed logging of the constructor arguments
     std::cout << "\n[ngen debug] Initializing ForcingsEngineLumpedDataProvider:" << std::endl;
-    std::cout << "  data_path:    " << data_path << std::endl;
     std::cout << "  init_config:  " << init_config << std::endl;
 
     std::time_t tb_t = static_cast<std::time_t>(time_begin_seconds);

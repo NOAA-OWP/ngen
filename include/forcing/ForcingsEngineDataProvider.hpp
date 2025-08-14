@@ -166,7 +166,6 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
     //! @note Derived implementations should delegate to this constructor
     //!       to acquire a shared forcings engine instance.
     ForcingsEngineDataProvider(
-        const std::string& data_path,
         const std::string& init_config,
         std::size_t time_begin_seconds,
         std::size_t time_end_seconds
@@ -176,7 +175,6 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
     {
         // Log the constructor arguments
         std::cout << "[ngen debug] Entering ForcingsEngineDataProvider constructor" << std::endl;
-        std::cout << "  data_path: " << data_path << std::endl;
 
         std::time_t start_t = static_cast<std::time_t>(time_begin_seconds);
         std::time_t end_t   = static_cast<std::time_t>(time_end_seconds);

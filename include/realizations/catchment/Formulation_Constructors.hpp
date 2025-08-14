@@ -72,7 +72,7 @@ namespace realization {
 
             // Construct the ForcingsEngineLumpedDataProvider
             fp = std::make_shared<data_access::ForcingsEngineLumpedDataProvider>(
-                forcing_config.path, forcing_config.init_config, start, end, identifier
+                forcing_config.init_config, start, end, identifier
             );
 
             std::cout << "[ngen debug] Finished calling ForcingsEngineLumpedDataProvider constructor" << std::endl;
