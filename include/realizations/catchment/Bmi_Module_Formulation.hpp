@@ -8,6 +8,8 @@
 #include <DataProvider.hpp>
 #include "bmi_utilities.hpp"
 
+#include <boost/core/span.hpp>
+
 using data_access::MEAN;
 using data_access::SUM;
 
@@ -249,6 +251,10 @@ namespace realization {
 
         const std::vector<std::string> get_bmi_input_variables() const override;
         const std::vector<std::string> get_bmi_output_variables() const override;
+
+        const boost::span<char> get_serialization_state() const;
+        void load_serialization_state(const boost::span<char> state) const;
+        void free_serialization_state() const;
 
     protected:
 

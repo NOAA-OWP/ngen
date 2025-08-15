@@ -716,4 +716,29 @@ namespace realization {
                 get_bmi_model()->SetValue(var_name, value_ptr.get());
             }
         }
+
+        const boost::span<char> Bmi_Module_Formulation::get_serialization_state() const {
+            auto bmi = this->bmi_model;
+            // create a new serialized state, getting the amount of data that was saved
+            uint64_t* size = (uint64_t*)bmi->GetValuePtr("serialization_create");
+            // get the pointer of the new state
+            char* serialized = (char*)bmi->GetValuePtr("serialization_state");
+            const boost::span<char> span(serialized, *size);
+            return span;
+        }
+
+        void Bmi_Module_Formulation::load_serialization_state(const boost::span<char> state) const {
+            auto bmi = this->bmi_model;
+            // grab the pointer to the underlying state data
+            void* data = (void*)state.data();
+            // load the state through SetValue
+            bmi->SetValue("serialization_state", data);
+        }
+
+        void Bmi_Module_Formulation::free_serialization_state() const {
+            auto bmi = this->bmi_model;
+            // send message to clear memory associated with serialized data
+            void* _; // this pointer will be unused by SetValue
+            bmi->SetValue("serialization_free", _);
+        }
 }
