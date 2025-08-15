@@ -15,7 +15,7 @@ ENV LANG="C.UTF-8" \
     HDF5_VERSION="1.10.11" \
     NETCDF_C_VERSION="4.7.4" \
     NETCDF_FORTRAN_VERSION="4.5.4" \
-    BOOST_VERSION="1.79.0"
+    BOOST_VERSION="1.83.0"
 
 # runtime dependencies
 RUN set -eux && \
@@ -159,7 +159,9 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-boost \
     curl --location --output boost.tar.gz https://archives.boost.io/release/${BOOST_VERSION%%[a-z]*}/source/boost_${BOOST_VERSION//./_}.tar.gz && \
     mkdir --parents /opt/boost && \
     tar --extract --directory /opt/boost --strip-components=1 --file boost.tar.gz && \
-    rm boost.tar.gz
+    rm boost.tar.gz \
+    # build boost libraries
+    && cd /opt/boost && ./bootstrap.sh && ./b2 && ./b2 install --prefix=/usr/local
 
 ENV VIRTUAL_ENV="/ngen-app/ngen-python"
 
