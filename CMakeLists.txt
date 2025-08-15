@@ -79,7 +79,6 @@ cmake_dependent_option(NGEN_WITH_EXTERN_TOPMODEL         "Build with extern-dist
 cmake_dependent_option(NGEN_WITH_EXTERN_CFE              "Build with extern-distributed CFE"              ON "NGEN_WITH_BMI_C"       OFF)
 cmake_dependent_option(NGEN_WITH_EXTERN_PET              "Build with extern-distributed PET"              ON "NGEN_WITH_BMI_C"       OFF)
 cmake_dependent_option(NGEN_WITH_EXTERN_NOAH_OWP_MODULAR "Build with extern-distributed Noah-OWP-Modular" ON "NGEN_WITH_BMI_FORTRAN" OFF)
-cmake_dependent_option(NGEN_WITH_EXTERN_PET              "Build with extern-distributed PET"              ON "NGEN_WITH_BMI_C"       OFF)
 
 # Allow enabling of all extern models dependent on NGen options given.
 option(NGEN_WITH_EXTERN_ALL OFF)
