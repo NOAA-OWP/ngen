@@ -4,11 +4,15 @@
  * @brief Run one simulation timestep for each model in this layer, then gather catchment output
 */
 
-void ngen::SurfaceLayer::update_models()
+void ngen::SurfaceLayer::update_models(std::vector<double> &catchment_results, 
+                                       std::unordered_map<std::string, int> &catchment_indexes,
+                                       std::vector<double> &nexus_results,
+                                       std::unordered_map<std::string, int> &nexus_indexes,
+                                       int current_step)
 {
     long current_time_index = output_time_index;
     
-    Layer::update_models();
+    Layer::update_models(catchment_results, catchment_indexes, nexus_results, nexus_indexes, current_step);
 
     //At this point, could make an internal routing pass, extracting flows from nexuses and routing
     //across the flowpath to the next nexus.
@@ -36,7 +40,10 @@ void ngen::SurfaceLayer::update_models()
 
         //std::cerr << "Requesting water from nexus, id = " << id << " at time = " <<current_time_index << ",  percent = 100, destination = " << cat_id << std::endl;
         double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, current_time_index, 100.0);
-        
+#if NGEN_WITH_ROUTING
+        int nexus_index = nexus_indexes[id];
+        nexus_results[nexus_index + current_step] = contribution_at_t;
+#endif // NGEN_WITH_ROUTING
         if(nexus_outfiles[id].is_open()) {
         nexus_outfiles[id] << current_time_index << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
         }

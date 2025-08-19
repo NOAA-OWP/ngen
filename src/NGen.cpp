@@ -636,6 +636,27 @@ int main(int argc, char* argv[]) {
 
     // Now loop some time, iterate catchments, do stuff for total number of output times
     auto num_times = manager->Simulation_Time_Object->get_total_output_times();
+
+    // T-ROUTE data storage
+    std::vector<double> catchment_results;
+    std::unordered_map<std::string, int> catchment_indexes;
+    std::vector<double> nexus_results;
+    std::unordered_map<std::string, int> nexus_indexes;
+#if NGEN_WITH_ROUTING
+    catchment_results.resize(catchment_collection->get_size() * num_times);
+    for (int i = 0; i < catchment_collection->get_size(); ++i) {
+        auto feature = catchment_collection->get_feature(i);
+        std::string feature_id = feature->get_id();
+        catchment_indexes[feature_id] = i * num_times;
+    }
+    nexus_results.resize(nexus_collection->get_size() * num_times);
+    for (int i = 0; i < nexus_collection->get_size(); ++i) {
+        auto feature = catchment_collection->get_feature(i);
+        std::string feature_id = feature->get_id();
+        nexus_indexes[feature_id] = i * num_times;
+    }
+#endif // NGEN_WITH_ROUTING
+
     for (int count = 0; count < num_times; count++) {
         // The Inner loop will advance all layers unless doing so will break one of two constraints
         // 1) A layer may not proceed ahead of the master simulation object's current time
@@ -666,7 +687,13 @@ int main(int argc, char* argv[]) {
                         LOG(ss.str(), LogLevel::DEBUG);
                         ss.str("");
                     }
-                    layer->update_models(); // assume update_models() calls time->advance_timestep()
+                    layer->update_models(
+                        catchment_results,
+                        catchment_indexes,
+                        nexus_results,
+                        nexus_indexes,
+                        count
+                    ); // assume update_models() calls time->advance_timestep()
                     prev_layer_time = layer_next_time;
                 } else {
                     layer_min_next_time = prev_layer_time = layer->current_timestep_epoch_time();
