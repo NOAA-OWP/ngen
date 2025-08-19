@@ -4,11 +4,15 @@
  * @brief Run one simulation timestep for each model in this layer, then gather catchment output
 */
 
-void ngen::SurfaceLayer::update_models()
+void ngen::SurfaceLayer::update_models(std::vector<double> &catchment_results,
+                                       std::unordered_map<std::string, int> &catchment_indexes,
+                                       std::vector<double> &nexus_results,
+                                       std::unordered_map<std::string, int> &nexus_indexes,
+                                       int current_step)
 {
     long current_time_index = output_time_index;
     
-    Layer::update_models();
+    Layer::update_models(catchment_results, catchment_indexes, nexus_results, nexus_indexes, current_step);
 
     // On the first time step, check all the nexuses and warn user about ones have no contributing catchments
     if (current_time_index == 0) {
@@ -61,6 +65,12 @@ void ngen::SurfaceLayer::update_models()
 
         //std::cerr << "Requesting water from nexus, id = " << id << " at time = " <<current_time_index << ",  percent = 100, destination = " << cat_id << std::endl;
         double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, current_time_index, 100.0);
+
+#if NGEN_WITH_ROUTING
+        int nexus_index = nexus_indexes[id];
+        nexus_results[nexus_index + current_step] = contribution_at_t;
+#endif // NGEN_WITH_ROUTING
+
         // TODO: (later) eventually may want to use this form, if we support multiple formulations per catchment
         //nexus_outputs_mgr->receive_data_entry(form_id, id, current_time_index, current_timestamp, contribution_at_t);
         nexus_outputs_mgr->receive_data_entry(id, current_time_marker, contribution_at_t);
