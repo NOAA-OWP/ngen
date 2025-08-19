@@ -19,9 +19,9 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.79.0 REQUIRED COMPONENTS serialization)
 
 if(WIN32)
-    add_library(topmodelbmi topmodel/src/bmi_topmodel.c topmodel/src/topmodel.c topmodel/src/logger.c)
+    add_library(topmodelbmi topmodel/src/bmi_topmodel.c topmodel/src/topmodel.c topmodel/src/logger.c topmodel/src/bmi_serialization.cpp)
 else()
-    add_library(topmodelbmi SHARED topmodel/src/bmi_topmodel.c topmodel/src/topmodel.c topmodel/src/logger.c)
+    add_library(topmodelbmi SHARED topmodel/src/bmi_topmodel.c topmodel/src/topmodel.c topmodel/src/logger.c topmodel/src/bmi_serialization.cpp)
 endif()
 
 target_include_directories(topmodelbmi PRIVATE topmodel/include)
