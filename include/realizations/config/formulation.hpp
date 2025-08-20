@@ -57,6 +57,21 @@ namespace realization{
     }
 
     /**
+     * @brief Create a deep copy of the Formulation and all its properties.
+     */
+    Formulation clone() {
+        geojson::PropertyMap parameters_clone;
+        for (auto& param : this->parameters) {
+            parameters_clone[param.first] = geojson::JSONProperty(param.second);
+        }
+        Formulation clone(this->type, parameters_clone);
+        for (auto& n : this->nested) {
+            clone.nested.push_back(n.clone());
+        }
+        return clone;
+    }
+
+    /**
      * @brief Link formulation parameters to hydrofabric data held in feature
      * 
      * @param feature Hydrofabric feature with properties to assign to formulation

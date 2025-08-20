@@ -140,6 +140,24 @@ namespace realization {
                 #endif //NGEN_WITH_ROUTING
                  }
 
+                std::unordered_map<std::string, realization::config::Formulation> formulation_groups;
+                auto possible_formulation_groups = tree.get_child_optional("formulation_groups");
+                if (possible_formulation_groups) {
+                    for (std::pair<std::string, boost::property_tree::ptree> formulation_config : *possible_formulation_groups) {
+                        realization::config::Formulation formulation(formulation_config.second);
+                        formulation_groups[formulation_config.first] = formulation;
+                    }
+                }
+
+                std::unordered_map<std::string, realization::config::Forcing> forcing_groups;
+                auto possible_forcing_groups = tree.get_child_optional("forcing_groups");
+                if (possible_forcing_groups) {
+                    for (std::pair<std::string, boost::property_tree::ptree> forcing_config : *possible_forcing_groups) {
+                        realization::config::Forcing forcing(forcing_config.second);
+                        forcing_groups[forcing_config.first] = forcing;
+                    }
+                }
+
                 /**
                  * Read catchment configurations from configuration file
                  */      
@@ -158,7 +176,7 @@ namespace realization {
                           #endif
                           continue;
                       }
-                      realization::config::Config catchment_formulation(catchment_config.second);
+                      realization::config::Config catchment_formulation(catchment_config.second, formulation_groups, forcing_groups);
 
                       if(!catchment_formulation.has_formulation()){
                         std::string throw_msg; throw_msg.assign("ERROR: No formulations defined for "+catchment_config.first+".");
