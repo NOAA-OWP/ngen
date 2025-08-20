@@ -3,7 +3,7 @@
 
 #include <NGenConfig.hpp>
 
-struct Saver
+struct UnitSaver
 {
     virtual save(boost::span<const char> data) = 0;
 };

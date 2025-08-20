@@ -47,8 +47,14 @@ namespace realization {
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
         void create_formulation(geojson::PropertyMap properties) override;
 
-        void save_state(std::shared_ptr<Saver> saver) const;
-        
+        /**
+         * Passes a serialized representation of the model's state to ``saver``
+         *
+         * Asks the model to serialize its state, queries the pointer
+         * and length, passes that to saver, and then releases it
+         */
+        void save_state(std::shared_ptr<UnitSaver> saver) const;
+
         /**
          * Get the collection of forcing output property names this instance can provide.
          *
