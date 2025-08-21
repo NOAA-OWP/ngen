@@ -144,7 +144,8 @@ namespace realization {
                 auto possible_formulation_groups = tree.get_child_optional("formulation_groups");
                 if (possible_formulation_groups) {
                     for (std::pair<std::string, boost::property_tree::ptree> formulation_config : *possible_formulation_groups) {
-                        realization::config::Formulation formulation(formulation_config.second);
+                        std::cout << formulation_config.first.c_str() << std::endl;
+                        realization::config::Formulation formulation(formulation_config.second.get_child(".")); // "." for first element in list
                         formulation_groups[formulation_config.first] = formulation;
                     }
                 }
