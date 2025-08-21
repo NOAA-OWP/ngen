@@ -1,0 +1,235 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [main, nwm-main, development, release-candidate]
+  push:
+    branches: [main, nwm-main, development, release-candidate]
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+
+jobs:
+  # Setup image variables
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.vars.outputs.image }}
+      tag: ${{ steps.vars.outputs.tag }}
+    steps:
+      - name: Set image variables
+        id: vars
+        run: |
+          ORG=$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')
+          REPO=$(basename "${GITHUB_REPOSITORY}")
+          IMAGE="ghcr.io/${ORG}/${REPO}"
+          TAG="${GITHUB_REF_NAME}"
+
+          echo "image=$IMAGE" >> $GITHUB_OUTPUT
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+  # Build Docker image for branch/tag
+  build:
+    runs-on: ubuntu-latest
+    needs: setup
+    outputs:
+      image: ${{ needs.setup.outputs.image }}
+      tag: ${{ needs.setup.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Verify submodules recursively
+        run: |
+          echo "Checking all submodules recursively..."
+          git submodule update --init --recursive
+          git submodule status --recursive
+
+          echo "Listing files in each submodule..."
+          git submodule foreach --recursive '
+            echo "=== $name ==="
+            pwd
+            ls -l
+          '
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build branch/tag image
+        run: |
+          IMAGE="${{ needs.setup.outputs.image }}"
+          TAG="${{ needs.setup.outputs.tag }}"
+          echo "Building Docker image $IMAGE:$TAG"
+
+          docker build --no-cache \
+            --build-arg CREATE_INPUT_TAG="$TAG" \
+            --build-arg RUN_SWE_TAG="$TAG" \
+            -t "$IMAGE:$TAG" .
+
+      - name: Docker Push the Built Image
+        run: |
+          IMAGE="${{ needs.setup.outputs.image }}"
+          TAG="${{ needs.setup.outputs.tag }}"
+          echo "Pushing  Docker image $IMAGE:$TAG"
+          docker push "$IMAGE:$TAG"
+
+
+  # Run Unit Tests
+  unit-test:
+    runs-on: ubuntu-latest
+    needs: build
+    container:
+      image: ${{ needs.build.outputs.image }}:${{ needs.build.outputs.tag }}
+    steps:
+      - name: Run unit tests
+        run: |
+          echo "Running unit tests..."
+          cd /ngen-app/ngen/cmake_build
+          ctest || {
+            echo "Tests failed. Rerunning failed tests with verbose output...";
+            export CTEST_OUTPUT_ON_FAILURE=1;
+            ctest --rerun-failed --output-on-failure --verbose;
+            exit 1;
+          }
+
+  # SonarQube scan (only runs on internal self-hosted runners)
+  sonarqube-internal:
+    if: github.repository_owner == 'NGWPC'
+    runs-on: self-hosted
+    needs: unit-test
+    #TODO: Configure SonarQube Scans
+    continue-on-error: true
+    container:
+      image: sonarsource/sonar-scanner-cli
+      options: --entrypoint="" --user 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: SonarQube Scan
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: sonar-scanner -X -Dsonar.verbose=true
+
+  # CodeQL scan
+  # TODO: Update to scan as desired.
+  # Added as a minimal MVP for Static Code Analysis on GitHub
+  codeql-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ mpi-default-bin libopenmpi-dev libboost-all-dev libudunits2-dev libnetcdf-dev libnetcdf-c++4-dev
+          python3 -m pip install numpy==1.26.4 netcdf4 bmipy pandas torch pyyaml pyarrow
+        #python3 -m pip install -r extern/test_bmi_py/requirements.txt
+        #python3 -m pip install -r extern/t-route/requirements.txt
+      # Initialize CodeQL (C++ selected)
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+      # Build (replicate your CMake build commands from Dockerfile)
+      - name: Build C++ code
+        env:
+          PYTHONPATH: ${{ env.PYTHONPATH }}
+        run: |
+          cmake -B cmake_build -S . \
+            -DPYTHON_EXECUTABLE=$(which python3) \
+            -DNGEN_WITH_MPI=ON \
+            -DNGEN_WITH_NETCDF=ON \
+            -DNGEN_WITH_SQLITE=ON \
+            -DNGEN_WITH_UDUNITS=ON \
+            -DNGEN_WITH_BMI_FORTRAN=ON \
+            -DNGEN_WITH_BMI_C=ON \
+            -DNGEN_WITH_PYTHON=ON \
+            -DNGEN_WITH_TESTS=OFF \
+            -DNGEN_WITH_ROUTING=ON \
+            -DNGEN_QUIET=ON \
+            -DNGEN_UPDATE_GIT_SUBMODULES=OFF \
+            # Using boost from apt for simplicity and code scanning
+            #-DBOOST_ROOT=/opt/boost
+          cmake --build cmake_build --target all
+      # CodeQL analysis
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  # Container security scanning
+  container-scanning:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Scan container with Trivy
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: ${{ needs.build.outputs.image }}:${{ needs.build.outputs.tag }}
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # Publish production images from development branch
+  publish:
+    runs-on: ubuntu-latest
+    needs: [setup, unit-test, sonarqube-internal, codeql-scan, container-scanning]
+    if: github.ref == 'refs/heads/development'
+    steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build production image
+        run: |
+          IMAGE="${{ needs.setup.outputs.image }}"
+          echo "Building production image with Dockerfile.production-pw"
+          docker build -f Dockerfile.production-pw -t $IMAGE:prod -t $IMAGE:latest .
+
+      - name: Push production image
+        run: |
+          IMAGE="${{ needs.setup.outputs.image }}"
+          docker push $IMAGE:prod
+          docker push $IMAGE:latest
+
+  # Release job for tagged releases
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push release image
+        run: |
+          IMAGE="${{ needs.setup.outputs.image }}"
+          TAG="${{ needs.setup.outputs.tag }}"
+          echo "Pushing release image $IMAGE:$TAG"
+          docker pull $IMAGE:$TAG
+          docker tag $IMAGE:$TAG $IMAGE:release
+          docker push $IMAGE:release
