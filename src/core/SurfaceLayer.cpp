@@ -4,9 +4,9 @@
  * @brief Run one simulation timestep for each model in this layer, then gather catchment output
 */
 
-void ngen::SurfaceLayer::update_models(std::vector<double> &catchment_results, 
+void ngen::SurfaceLayer::update_models(boost::span<double> catchment_results, 
                                        std::unordered_map<std::string, int> &catchment_indexes,
-                                       std::vector<double> &nexus_results,
+                                       boost::span<double> nexus_results,
                                        std::unordered_map<std::string, int> &nexus_indexes,
                                        int current_step)
 {
@@ -42,7 +42,7 @@ void ngen::SurfaceLayer::update_models(std::vector<double> &catchment_results,
         double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, current_time_index, 100.0);
 #if NGEN_WITH_ROUTING
         int nexus_index = nexus_indexes[id];
-        nexus_results[nexus_index + current_step] = contribution_at_t;
+        nexus_results[nexus_index] = contribution_at_t;
 #endif // NGEN_WITH_ROUTING
         if(nexus_outfiles[id].is_open()) {
         nexus_outfiles[id] << current_time_index << ", " << current_timestamp << ", " << contribution_at_t << std::endl;

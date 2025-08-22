@@ -647,13 +647,13 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < catchment_collection->get_size(); ++i) {
         auto feature = catchment_collection->get_feature(i);
         std::string feature_id = feature->get_id();
-        catchment_indexes[feature_id] = i * num_times;
+        catchment_indexes[feature_id] = i;
     }
     nexus_results.resize(nexus_collection->get_size() * num_times);
     for (int i = 0; i < nexus_collection->get_size(); ++i) {
         auto feature = catchment_collection->get_feature(i);
         std::string feature_id = feature->get_id();
-        nexus_indexes[feature_id] = i * num_times;
+        nexus_indexes[feature_id] = i;
     }
 #endif // NGEN_WITH_ROUTING
 
@@ -687,10 +687,19 @@ int main(int argc, char* argv[]) {
                         LOG(ss.str(), LogLevel::DEBUG);
                         ss.str("");
                     }
+#if NGEN_WITH_ROUTING
+                    boost::span<double> catchment_span(catchment_results.data() + (count * catchment_indexes.size()),
+                                                       catchment_indexes.size());
+                    boost::span<double> nexus_span(nexus_results.data() + (count * nexus_indexes.size()),
+                                                   nexus_indexes.size());
+#else
+                    boost::span<double> catchment_span;
+                    boost::span<double> nexus_span;
+#endif
                     layer->update_models(
-                        catchment_results,
+                        catchment_span,
                         catchment_indexes,
-                        nexus_results,
+                        nexus_span,
                         nexus_indexes,
                         count
                     ); // assume update_models() calls time->advance_timestep()

@@ -28,9 +28,9 @@ namespace ngen
         /***
          * @brief Run one simulation timestep for each model in this layer
         */
-        void update_models(std::vector<double> &catchment_results, 
+        void update_models(boost::span<double> catchment_results, 
                            std::unordered_map<std::string, int> &catchment_indexes,
-                           std::vector<double> &nexus_results,
+                           boost::span<double> nexus_results,
                            std::unordered_map<std::string, int> &nexus_indexes,
                            int current_step) override;
 
