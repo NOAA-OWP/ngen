@@ -97,7 +97,7 @@ jobs:
     name: unit-test
     if: github.event_name == 'pull_request' || github.event_name == 'push'
     runs-on: ubuntu-latest
-    needs: build
+    needs: [setup, build]
     container:
       image: ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.test_image_tag }}
     steps:
@@ -117,7 +117,7 @@ jobs:
     name: sonarqube-internal
     if: (github.event_name == 'pull_request' || github.event_name == 'push') && github.repository_owner == 'NGWPC'
     runs-on: self-hosted
-    needs: unit-test
+    needs: [setup, build, unit-test]
     #TODO: Configure SonarQube Scans
     continue-on-error: true
     container:
@@ -140,6 +140,7 @@ jobs:
     name: codeql-scan
     if: github.event_name == 'pull_request' || github.event_name == 'push'
     runs-on: ubuntu-latest
+    needs: [setup, build]
     permissions:
       actions: read
       contents: read
@@ -189,7 +190,7 @@ jobs:
     name: container-scanning
     if: github.event_name == 'pull_request' || github.event_name == 'push'
     runs-on: ubuntu-latest
-    needs: build
+    needs: [setup, build]
     steps:
       - name: Scan container with Trivy
         uses: aquasecurity/trivy-action@0.20.0
@@ -208,7 +209,7 @@ jobs:
     name: deploy-latest-on-development
     if: github.event_name == 'push' && github.ref_name == 'development'
     runs-on: ubuntu-latest
-    needs: [setup, build, unit-test, codeql-scan, container-scanning]
+    needs: [setup, build, unit-test, sonarqube-internal, codeql-scan, container-scanning]
     steps:
       - name: Log in to registry
         uses: docker/login-action@v3
@@ -216,14 +217,10 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      #TODO: Refactor to not require a distinct build for deployment
-      - name: Build production image
+      - name: Build latest image
         run: |
-          IMAGE="${{ needs.setup.outputs.image_base }}"
-          echo "Building production image with Dockerfile.production-pw"
-          docker build -f Dockerfile.production-pw -t $IMAGE:prod -t $IMAGE:latest .
-      - name: Promote commit image to :latest
-        run: |
+          docker pull ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.commit_sha_short }}
+          docker tag  ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.commit_sha_short }} ${{ needs.setup.outputs.image_base }}:latest
           docker push ${{ needs.setup.outputs.image_base }}:latest
 
   release:
