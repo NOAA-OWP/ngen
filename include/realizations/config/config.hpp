@@ -27,20 +27,19 @@ namespace realization{
          * @param tree 
          */
         Config(const boost::property_tree::ptree& tree){
-            // check if forcing is a string insted of object
-            if (!tree.get_optional<std::string>("forcing")) {
-                auto possible_forcing = tree.get_child_optional("forcing");
-                if (possible_forcing) {
+        
+            auto possible_forcing = tree.get_child_optional("forcing");
+            if (possible_forcing) {
+                // check if forcing is a string to a group
+                if (!possible_forcing->empty()) {
                     forcing = Forcing(*possible_forcing);
                 }
             }
-            // check if formulations is a string instead of object
-            if (!tree.get_optional<std::string>("formulations")) {
-                //get first empty key under formulations (corresponds to first json array element)
-                auto possible_formulation_tree = tree.get_child_optional("formulations..");
-                if(possible_formulation_tree){
-                    formulation = Formulation(*possible_formulation_tree);
-                }   
+
+            //get first empty key under formulations (corresponds to first json array element)
+            auto possible_formulation_tree = tree.get_child_optional("formulations..");
+            if(possible_formulation_tree){
+                formulation = Formulation(*possible_formulation_tree);
             }
         }
         /**
