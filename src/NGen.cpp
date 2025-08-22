@@ -638,18 +638,18 @@ int main(int argc, char* argv[]) {
     auto num_times = manager->Simulation_Time_Object->get_total_output_times();
 
     // T-ROUTE data storage
-    std::vector<double> catchment_results;
+    std::vector<double> catchment_outflows;
     std::unordered_map<std::string, int> catchment_indexes;
-    std::vector<double> nexus_results;
+    std::vector<double> nexus_downstream_flows;
     std::unordered_map<std::string, int> nexus_indexes;
 #if NGEN_WITH_ROUTING
-    catchment_results.resize(catchment_collection->get_size() * num_times);
+    catchment_outflows.resize(catchment_collection->get_size() * num_times);
     for (int i = 0; i < catchment_collection->get_size(); ++i) {
         auto feature = catchment_collection->get_feature(i);
         std::string feature_id = feature->get_id();
         catchment_indexes[feature_id] = i;
     }
-    nexus_results.resize(nexus_collection->get_size() * num_times);
+    nexus_downstream_flows.resize(nexus_collection->get_size() * num_times);
     for (int i = 0; i < nexus_collection->get_size(); ++i) {
         auto feature = catchment_collection->get_feature(i);
         std::string feature_id = feature->get_id();
@@ -688,9 +688,9 @@ int main(int argc, char* argv[]) {
                         ss.str("");
                     }
 #if NGEN_WITH_ROUTING
-                    boost::span<double> catchment_span(catchment_results.data() + (count * catchment_indexes.size()),
+                    boost::span<double> catchment_span(catchment_outflows.data() + (count * catchment_indexes.size()),
                                                        catchment_indexes.size());
-                    boost::span<double> nexus_span(nexus_results.data() + (count * nexus_indexes.size()),
+                    boost::span<double> nexus_span(nexus_downstream_flows.data() + (count * nexus_indexes.size()),
                                                    nexus_indexes.size());
 #else
                     boost::span<double> catchment_span;

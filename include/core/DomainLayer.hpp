@@ -56,9 +56,9 @@ namespace ngen
          * Any required connection to other components, e.g. providing inputs to a catchment feature,
          * is not yet implemented in this class.
         */
-        void update_models(boost::span<double> catchment_results, 
+        void update_models(boost::span<double> catchment_outflows, 
                            std::unordered_map<std::string, int> &catchment_indexes,
-                           boost::span<double> nexus_results,
+                           boost::span<double> nexus_downstream_flows,
                            std::unordered_map<std::string, int> &nexus_indexes,
                            int current_step) override {
             std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
