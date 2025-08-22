@@ -4,9 +4,9 @@
  * @brief Run one simulation timestep for each model in this layer, then gather catchment output
 */
 
-void ngen::SurfaceLayer::update_models(std::vector<double> &catchment_results,
+void ngen::SurfaceLayer::update_models(boost::span<double> catchment_results,
                                        std::unordered_map<std::string, int> &catchment_indexes,
-                                       std::vector<double> &nexus_results,
+                                       boost::span<double> nexus_results,
                                        std::unordered_map<std::string, int> &nexus_indexes,
                                        int current_step)
 {
@@ -68,7 +68,7 @@ void ngen::SurfaceLayer::update_models(std::vector<double> &catchment_results,
 
 #if NGEN_WITH_ROUTING
         int nexus_index = nexus_indexes[id];
-        nexus_results[nexus_index + current_step] = contribution_at_t;
+        nexus_results[nexus_index] = contribution_at_t;
 #endif // NGEN_WITH_ROUTING
 
         // TODO: (later) eventually may want to use this form, if we support multiple formulations per catchment
