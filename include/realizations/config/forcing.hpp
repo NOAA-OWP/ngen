@@ -50,6 +50,17 @@ namespace realization{
     bool has_key(const std::string& key) const{
         return parameters.count(key) > 0;
     }
+
+    /**
+     * @brief Create a deep copy of the forcing parameters
+     */
+    Forcing clone() {
+      Forcing clone;
+      for (auto& param : this->parameters) {
+        clone.parameters[param.first] = geojson::JSONProperty(param.second);
+      }
+      return clone;
+    }
   };
 
 
