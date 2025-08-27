@@ -64,7 +64,6 @@ void TestFixture::SetUpTestSuite()
     data_access::detail::assert_forcings_engine_requirements();
 
     TestFixture::provider_ = std::make_unique<data_access::ForcingsEngineLumpedDataProvider>(
-        /*data_path*/TestFixture::config_file,
         /*init_config*/TestFixture::init_config,
         /*time_begin_seconds=*/TestFixture::time_start,
         /*time_end_seconds=*/TestFixture::time_end,
@@ -91,7 +90,6 @@ void TestFixture::TearDownTestSuite()
 TEST_F(ForcingsEngineLumpedDataProviderTest, Storage)
 {
     auto new_inst = std::make_unique<data_access::ForcingsEngineLumpedDataProvider>(
-        /*config_file*/TestFixture::config_file,
         /*init_config*/TestFixture::init_config,
         /*time_begin_seconds=*/TestFixture::time_start,
         /*time_end_seconds=*/TestFixture::time_end,
