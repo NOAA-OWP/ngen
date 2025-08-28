@@ -530,6 +530,18 @@ int main(int argc, char* argv[]) {
     // TODO don't really need catchment_collection once catchments are added to nexus collection
     // Still using  catchments for geometry at the moment, fix this later
     // catchment_collection.reset();
+
+    // T-ROUTE data storage
+    std::unordered_map<std::string, int> nexus_indexes;
+#if NGEN_WITH_ROUTING
+    int nexus_collection_size = nexus_collection->get_size();
+    for (int i = 0; i < nexus_collection_size; ++i) {
+        auto feature = nexus_collection->get_feature(i);
+        std::string feature_id = feature->get_id();
+        nexus_indexes[feature_id] = i;
+    }
+#endif // NGEN_WITH_ROUTING
+
     nexus_collection.reset();
 
     // Still hacking nexus output for the moment
@@ -641,7 +653,6 @@ int main(int argc, char* argv[]) {
     std::vector<double> catchment_outflows;
     std::unordered_map<std::string, int> catchment_indexes;
     std::vector<double> nexus_downstream_flows;
-    std::unordered_map<std::string, int> nexus_indexes;
 #if NGEN_WITH_ROUTING
     catchment_outflows.resize(catchment_collection->get_size() * num_times);
     for (int i = 0; i < catchment_collection->get_size(); ++i) {
@@ -649,12 +660,7 @@ int main(int argc, char* argv[]) {
         std::string feature_id = feature->get_id();
         catchment_indexes[feature_id] = i;
     }
-    nexus_downstream_flows.resize(nexus_collection->get_size() * num_times);
-    for (int i = 0; i < nexus_collection->get_size(); ++i) {
-        auto feature = catchment_collection->get_feature(i);
-        std::string feature_id = feature->get_id();
-        nexus_indexes[feature_id] = i;
-    }
+    nexus_downstream_flows.resize(nexus_collection_size * num_times);
 #endif // NGEN_WITH_ROUTING
 
     for (int count = 0; count < num_times; count++) {
