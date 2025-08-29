@@ -530,6 +530,18 @@ int main(int argc, char* argv[]) {
     // TODO don't really need catchment_collection once catchments are added to nexus collection
     // Still using  catchments for geometry at the moment, fix this later
     // catchment_collection.reset();
+
+    // T-ROUTE data storage
+    std::unordered_map<std::string, int> nexus_indexes;
+#if NGEN_WITH_ROUTING
+    int nexus_collection_size = nexus_collection->get_size();
+    for (int i = 0; i < nexus_collection_size; ++i) {
+        auto feature = nexus_collection->get_feature(i);
+        std::string feature_id = feature->get_id();
+        nexus_indexes[feature_id] = i;
+    }
+#endif // NGEN_WITH_ROUTING
+
     nexus_collection.reset();
 
     // Still hacking nexus output for the moment
@@ -636,6 +648,21 @@ int main(int argc, char* argv[]) {
 
     // Now loop some time, iterate catchments, do stuff for total number of output times
     auto num_times = manager->Simulation_Time_Object->get_total_output_times();
+
+    // T-ROUTE data storage
+    std::vector<double> catchment_outflows;
+    std::unordered_map<std::string, int> catchment_indexes;
+    std::vector<double> nexus_downstream_flows;
+#if NGEN_WITH_ROUTING
+    catchment_outflows.resize(catchment_collection->get_size() * num_times);
+    for (int i = 0; i < catchment_collection->get_size(); ++i) {
+        auto feature = catchment_collection->get_feature(i);
+        std::string feature_id = feature->get_id();
+        catchment_indexes[feature_id] = i;
+    }
+    nexus_downstream_flows.resize(nexus_collection_size * num_times);
+#endif // NGEN_WITH_ROUTING
+
     for (int count = 0; count < num_times; count++) {
         // The Inner loop will advance all layers unless doing so will break one of two constraints
         // 1) A layer may not proceed ahead of the master simulation object's current time
@@ -666,7 +693,22 @@ int main(int argc, char* argv[]) {
                         LOG(ss.str(), LogLevel::DEBUG);
                         ss.str("");
                     }
-                    layer->update_models(); // assume update_models() calls time->advance_timestep()
+#if NGEN_WITH_ROUTING
+                    boost::span<double> catchment_span(catchment_outflows.data() + (count * catchment_indexes.size()),
+                                                       catchment_indexes.size());
+                    boost::span<double> nexus_span(nexus_downstream_flows.data() + (count * nexus_indexes.size()),
+                                                   nexus_indexes.size());
+#else
+                    boost::span<double> catchment_span;
+                    boost::span<double> nexus_span;
+#endif
+                    layer->update_models(
+                        catchment_span,
+                        catchment_indexes,
+                        nexus_span,
+                        nexus_indexes,
+                        count
+                    ); // assume update_models() calls time->advance_timestep()
                     prev_layer_time = layer_next_time;
                 } else {
                     layer_min_next_time = prev_layer_time = layer->current_timestep_epoch_time();
