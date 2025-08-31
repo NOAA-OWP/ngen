@@ -37,6 +37,12 @@ namespace logging {
      * @param msg The variable carries the humanly readable critical message.
      */
     void critical(const char* msg);
+
+    /**
+      * Used for pretty printting when std::cerr has multi-line output
+      * @param msg The variable carries the humanly readable message.
+      */
+    void formatting(const char* msg);
 }
 
 #ifdef     __cplusplus

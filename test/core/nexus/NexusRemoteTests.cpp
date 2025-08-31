@@ -2,6 +2,7 @@
 
 #include "gtest/gtest.h"
 #include "HY_PointHydroNexusRemote.hpp"
+#include "logging_utils.h"
 
 
 #include <vector>
@@ -38,7 +39,7 @@ protected:
     {
         MPI_Finalize();
 
-        std::cerr << "Rank " << mpi_rank << " called finalize\n";
+        logging::critical((std::string("Rank ") + std::to_string(mpi_rank) + " called finalize\n").c_str());
     }
 
     std::vector<double> stored_discharge;
@@ -99,7 +100,7 @@ TEST_F(Nexus_Remote_Test, TestInit0)
         switch(mpi_rank)
         {
             case 0:
-                std::cerr << "Rank 0: Sending flow of " << discharge << " to catchment 26\n";
+                logging::critical((std::string("Rank 0: Sending flow of ") + std::to_string(discharge) + " to catchment 26\n").c_str());
                 nexus->add_upstream_flow(discharge,"cat-26",ts);
                 //nexus->get_downstream_flow("cat-27",ts,100);
             break;
@@ -108,7 +109,7 @@ TEST_F(Nexus_Remote_Test, TestInit0)
                 //nexus->add_upstream_flow(dummy_flow,"cat-26",ts);
                 double received_flow = nexus->get_downstream_flow("cat-27",ts,100);
                 ASSERT_EQ(discharge,received_flow);
-                std::cerr << "Rank 1: Recieving flow of " << received_flow << " from catchment Nexus connected to catchment 26\n";
+                logging::critical((std::string("Rank 1: Recieving flow of ") + std::to_string(received_flow) + " from catchment Nexus connected to catchment 26\n").c_str());
             break;
         }
 
@@ -177,16 +178,16 @@ TEST_F(Nexus_Remote_Test, Test2RemoteSenders)
             case 0:
                 received_flow = nexus->get_downstream_flow("cat-27",ts,100);
                 ASSERT_EQ(discharge+discharge,received_flow);
-                std::cerr << "Rank 0: Recieving flow of " << received_flow << " from catchment Nexus connected to catchment 27\n";
+                logging::critical((std::string("Rank 0: Recieving flow of ") + std::to_string(received_flow) + " from catchment Nexus connected to catchment 27\n").c_str());
             break;
             
             case 1:
-                std::cerr << "Rank 1: Sending flow of " << discharge << " to catchment 27\n";
+                logging::critical((std::string("Rank 1: Sending flow of ") + std::to_string(discharge) + " to catchment 27\n").c_str());
                 nexus->add_upstream_flow(discharge,"cat-25",ts);
             break;
 
             case 2:
-                std::cerr << "Rank 2: Sending flow of " << discharge << " to catchment 27\n";
+                logging::critical((std::string("Rank 2: Sending flow of ") + std::to_string(discharge) + " to catchment 27\n").c_str());
                 nexus->add_upstream_flow(discharge,"cat-26",ts);
             break;
             
@@ -259,16 +260,16 @@ TEST_F(Nexus_Remote_Test, Test2RemoteSenders1LocalSender)
                 nexus->add_upstream_flow(discharge,"cat-24",ts);
                 received_flow = nexus->get_downstream_flow("cat-27",ts,100);
                 ASSERT_EQ(discharge*3,received_flow);
-                std::cerr << "Rank 0: Recieving flow of " << received_flow << " from catchment Nexus connected to catchment 27\n";
+                logging::critical((std::string("Rank 0: Recieving flow of ") + std::to_string(received_flow) + " from catchment Nexus connected to catchment 27\n").c_str());
             break;
             
             case 1:
-                std::cerr << "Rank 1: Sending flow of " << discharge << " to catchment 27\n";
+                logging::critical((std::string("Rank 1: Sending flow of ") + std::to_string(discharge) + " to catchment 27\n").c_str());
                 nexus->add_upstream_flow(discharge,"cat-25",ts);
             break;
 
             case 2:
-                std::cerr << "Rank 2: Sending flow of " << discharge << " to catchment 27\n";
+                logging::critical((std::string("Rank 2: Sending flow of ") + std::to_string(discharge) + " to catchment 27\n").c_str());
                 nexus->add_upstream_flow(discharge,"cat-26",ts);
             break;
             
@@ -368,16 +369,16 @@ TEST_F(Nexus_Remote_Test, Test4R2S2LS)
                 nexus->add_upstream_flow(discharge,"cat-24",ts);
                 received_flow = nexus->get_downstream_flow("cat-27",ts,100);
                 ASSERT_EQ(discharge*3,received_flow);
-                std::cerr << "Rank 0: Recieving flow of " << received_flow << " from catchment Nexus connected to catchment 27\n";
+                logging::critical((std::string("Rank 0: Recieving flow of ") + std::to_string(received_flow) + " from catchment Nexus connected to catchment 27\n").c_str());
             break;
             
             case 1:
-                std::cerr << "Rank 1: Sending flow of " << discharge << " to catchment 27\n";
+                logging::critical((std::string("Rank 1: Sending flow of ") + std::to_string(discharge) + " to catchment 27\n").c_str());
                 nexus->add_upstream_flow(discharge,"cat-25",ts);
             break;
 
             case 2:
-                std::cerr << "Rank 2: Sending flow of " << discharge << " to catchment 27\n";
+                logging::critical((std::string("Rank 2: Sending flow of ") + std::to_string(discharge) + " to catchment 27\n").c_str());
                 nexus->add_upstream_flow(discharge,"cat-26",ts);
             break;
             
@@ -385,16 +386,16 @@ TEST_F(Nexus_Remote_Test, Test4R2S2LS)
                 nexus->add_upstream_flow(discharge,"cat-14",ts);
                 received_flow = nexus->get_downstream_flow("cat-17",ts,100);
                 ASSERT_EQ(discharge*3,received_flow);
-                std::cerr << "Rank 3: Recieving flow of " << received_flow << " from catchment Nexus connected to catchment 27\n";
+                logging::critical((std::string("Rank 3: Recieving flow of ") + std::to_string(received_flow) + " from catchment Nexus connected to catchment 27\n").c_str());
             break;
             
             case 4:
-                std::cerr << "Rank 4: Sending flow of " << discharge << " to catchment 17\n";
+                logging::critical((std::string("Rank 4: Sending flow of ") + std::to_string(discharge) + " to catchment 17\n").c_str());
                 nexus->add_upstream_flow(discharge,"cat-15",ts);
             break;
 
             case 5:
-                std::cerr << "Rank 5: Sending flow of " << discharge << " to catchment 27\n";
+                logging::critical((std::string("Rank 5: Sending flow of ") + std::to_string(discharge) + " to catchment 27\n").c_str());
                 nexus->add_upstream_flow(discharge,"cat-16",ts);
             break;
             
@@ -570,26 +571,25 @@ TEST_F(Nexus_Remote_Test, DISABLED_TestTree1)
         
         nexus_map[i] = std::make_shared<HY_PointHydroNexusRemote>(nex_id, downstream_catchments, upstream_catchments, local_map);
         
-                
-        std::cerr << "mpi rank: " << mpi_rank << " constucted nexus with type = " 
-        	      << std::to_string(nexus_map[i]->get_communicator_type()) << " at tree position " << i << "\n";
-        std::cerr << "upstream catchments = [ " ;
+        logging::critical((std::string("mpi rank: ") + std::to_string(mpi_rank) + " constucted nexus with type = " 
+        	      + std::to_string(nexus_map[i]->get_communicator_type()) + " at tree position " + std::to_string(i) + "\n").c_str());
+        logging::critical((std::string("upstream catchments = [ ")).c_str()) ;
         for ( std::size_t i = 0; i < upstream_catchments.size(); ++i )
-        	std::cerr << upstream_catchments[i] << ",";
-        std::cerr << "\b] for node=" << i << "\n";
+        	logging::formatting((upstream_catchments[i] + std::string(",")).c_str());
+        logging::formatting((std::string("\b] for node=") + std::to_string(i) + "\n").c_str());
         
-        std::cerr << "downstream catchments = [ " ;
+        logging::critical((std::string("downstream catchments = [ ")).c_str());
         for ( std::size_t i = 0; i < downstream_catchments.size(); ++i )
-        	std::cerr << downstream_catchments[i] << ",";
-        std::cerr << "\b] for node=" << i << "\n";
+        	logging::formatting((downstream_catchments[i] + std::string(",")).c_str());
+        logging::formatting((std::string("\b] for node=") + std::to_string(i) + "\n").c_str());
         
-        std::cerr << "local map = [ " ;
+        logging::critical((std::string("local map = [ ")).c_str());
         for ( auto p : local_map )
-        	std::cerr << p.first << ":" << p.second << ",";
-        std::cerr << "\b] for node=" << i << "\n";
+        	logging::formatting((p.first + std::string(":") + std::to_string(p.second) + ",").c_str());
+        logging::formatting((std::string("\b] for node=") + std::to_string(i) + "\n").c_str());
     }
 
-    std::cerr << "-----Rank " << mpi_rank << " Finshed creating nexus objects\n";
+    logging::critical((std::string("-----Rank ") + std::to_string(mpi_rank) + " Finshed creating nexus objects\n").c_str());
 
 
     long ts = 0;
@@ -597,18 +597,18 @@ TEST_F(Nexus_Remote_Test, DISABLED_TestTree1)
     // for each nexus accept upstream flow
     for( int i = stop_id; i >= start_id; --i )
     {
-        std::cerr << "-----Rank " << mpi_rank << " Processing nexus object at position " << i << std::endl;
+        logging::critical((std::string("-----Rank ") + std::to_string(mpi_rank) + " Processing nexus object at position " + std::to_string(i) + "\n").c_str());
 
         if ( leaf(i) )
         {
-            std::cerr << "mpi rank: " << mpi_rank << " adding forcing at node " << i << "\n";
+            logging::critical((std::string("mpi rank: ") + std::to_string(mpi_rank) + " adding forcing at node " + std::to_string(i) + "\n").c_str());
             // if this is a leaf we need a synthetic flow
             nexus_map[i]->add_upstream_flow(1.0,"forcing", ts);
 
         }
         else
         {
-            std::cerr << "mpi rank: " << mpi_rank << " processing node " << i << "\n";
+            logging::critical((std::string("mpi rank: ") + std::to_string(mpi_rank) + " processing node " + std::to_string(i) + "\n").c_str());
             // if this is not a leaf try to get flow from its upstreams
 
             int l = left(i);
@@ -624,7 +624,7 @@ TEST_F(Nexus_Remote_Test, DISABLED_TestTree1)
 
             try
             {
-            	std::cerr << "mpi rank: " << mpi_rank << " processing node " << i << " left \n";
+                logging::critical((std::string("mpi rank: ") + std::to_string(mpi_rank) + " processing node " + std::to_string(i) + " left \n").c_str());
             	float f = nexus_map.at(l)->get_downstream_flow(current_id, ts, 100.0);
             	flow += f;
             	nexus_map[i]->add_upstream_flow(f, left_id, ts );
@@ -636,7 +636,7 @@ TEST_F(Nexus_Remote_Test, DISABLED_TestTree1)
   			
   			try
             {
-            	std::cerr << "mpi rank: " << mpi_rank << " processing node " << i << " right \n";
+                logging::critical((std::string("mpi rank: ") + std::to_string(mpi_rank) + " processing node " + std::to_string(i) + " right \n").c_str());
             	float f = nexus_map.at(r)->get_downstream_flow(current_id, ts, 100.0);
             	flow += f;
             	nexus_map[i]->add_upstream_flow(flow, right_id, ts );
@@ -650,10 +650,10 @@ TEST_F(Nexus_Remote_Test, DISABLED_TestTree1)
             {
             	if ( p != i )
             	{
-            		std::cerr << "mpi rank: " << mpi_rank << " processing node " << i << "parent \n";
+                        logging::critical((std::string("mpi rank: ") + std::to_string(mpi_rank) + " processing node " + std::to_string(i) + " parent \n").c_str());
             		//flow = nexus_map[i]->get_downstream_flow(p_id,ts,100.0);
-            		std::cerr << "p = " << p << "\n";
-            		std::cerr << "i = " << i << "\n";
+            		logging::critical((std::string("p = ") + std::to_string(p) + "\n").c_str());
+                        logging::critical((std::string("i = ") + std::to_string(i) + "\n").c_str());
             		nexus_map.at(p)->add_upstream_flow(flow, current_id, ts );
             	}
             }
@@ -674,7 +674,7 @@ TEST_F(Nexus_Remote_Test, DISABLED_TestTree1)
     {
         double flow = 0.0;
         flow = nexus_map[0]->get_downstream_flow("cat-0", ts, 100.0);
-        std::cerr << "Rank " << mpi_rank<< " final Flow = " << flow << std::endl;
+        logging::critical((std::string("Rank ") + std::to_string(mpi_rank) + " final Flow = " + std::to_string(flow) + "\n").c_str());
 
         ASSERT_TRUE(flow == 512);
     }
