@@ -294,6 +294,21 @@ ngen_add_test(
         NGEN_WITH_BMI_FORTRAN
 )
 
+########################## DomainLayer Tests
+ngen_add_test(
+    test_domainlayer
+    OBJECTS
+        core/multilayer/DomainLayerTest.cpp
+    LIBRARIES
+        NGen::core
+        NGen::geojson
+        NGen::realizations_catchment
+        NGen::core_mediator
+        NGen::forcing
+    REQUIRES
+        NGEN_WITH_NETCDF
+        NGEN_WITH_BMI_FORTRAN
+)
 
 ########################## BMI C++ Tests
 ngen_add_test(
