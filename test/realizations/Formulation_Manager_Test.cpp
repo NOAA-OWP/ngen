@@ -153,7 +153,7 @@ class Formulation_Manager_Test : public ::testing::Test {
         //BMI_CPP_INIT_DIR_PATH
         replace_paths(json, "{{BMI_CPP_INIT_DIR_PATH}}", "data/bmi/test_bmi_cpp");
         //EXTERN_DIR_PATH
-        replace_paths(json, "{{EXTERN_LIB_DIR_PATH}}", "extern/test_bmi_cpp/cmake_build/");
+        replace_paths(json, "{{EXTERN_LIB_DIR_PATH}}", "test-libs/test_bmi_cpp/");
         
         for (unsigned int i = 0; i < forcing_paths.size(); i++) {
           if(json.find(forcing_paths[i]) == std::string::npos){
