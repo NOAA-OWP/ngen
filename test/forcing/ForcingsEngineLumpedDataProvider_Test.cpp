@@ -1,5 +1,3 @@
-// TODO Peter - need to fix this
-
 #include <gtest/gtest.h>
 
 #ifndef NGEN_LUMPED_CONFIG_PATH
@@ -30,7 +28,7 @@ struct ForcingsEngineLumpedDataProviderTest
         #endif
     }
 
-    static constexpr const char* config_file = NGEN_LUMPED_CONFIG_PATH;
+//    static constexpr const char* config_file = NGEN_LUMPED_CONFIG_PATH;
     static constexpr const char* init_config = ""; /*# what should this be? */
     static const std::time_t time_start;
     static const std::time_t time_end;
@@ -45,7 +43,7 @@ struct ForcingsEngineLumpedDataProviderTest
 
 using TestFixture = ForcingsEngineLumpedDataProviderTest;
 
-constexpr const char* TestFixture::config_file;
+//constexpr const char* TestFixture::config_file;
 constexpr const char* TestFixture::init_config;
 const std::time_t TestFixture::time_start = data_access::detail::parse_time("2023-01-17 01:00:00");
 const std::time_t TestFixture::time_end = TestFixture::time_start + 3600 + 3600;
