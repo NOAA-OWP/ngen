@@ -349,7 +349,20 @@ namespace utils {
              * @param topLevelName The name of the desired top level Python module to import.
              */
             inline void importTopLevelModule(const std::string &topLevelName) {
-                importedTopLevelModules[topLevelName] = py::module_::import(topLevelName.c_str());
+                try {
+                    auto module = py::module_::import(topLevelName.c_str());
+                    importedTopLevelModules[topLevelName] = std::move(module);
+                }
+                catch (std::exception &e) {
+                    std::stringstream ss;
+                    ss << "importTopLevelModule: " << topLevelName << ": " << e.what() << std::endl;
+                    ss << "Already imported modules: " <<
+                    for (const auto& module : importedTopLevelModules) {
+                        ss << module.first << ", ";
+                    }
+                    LOG(ss.str(), LogLevel::WARNING);
+                    throw;
+                }
             }
 
         };
