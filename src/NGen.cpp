@@ -534,7 +534,7 @@ int main(int argc, char* argv[]) {
     // T-ROUTE data storage
     std::unordered_map<std::string, int> nexus_indexes;
 #if NGEN_WITH_ROUTING
-    int nexus_collection_size = nexus_collection->get_size();
+    size_t nexus_collection_size = nexus_collection->get_size();
     for (int i = 0; i < nexus_collection_size; ++i) {
         auto feature = nexus_collection->get_feature(i);
         std::string feature_id = feature->get_id();
@@ -654,8 +654,9 @@ int main(int argc, char* argv[]) {
     std::unordered_map<std::string, int> catchment_indexes;
     std::vector<double> nexus_downstream_flows;
 #if NGEN_WITH_ROUTING
-    catchment_outflows.resize(catchment_collection->get_size() * num_times);
-    for (int i = 0; i < catchment_collection->get_size(); ++i) {
+    size_t catchment_collection_size = catchment_collection->get_size();
+    catchment_outflows.resize(catchment_collection_size * num_times);
+    for (int i = 0; i < catchment_collection_size; ++i) {
         auto feature = catchment_collection->get_feature(i);
         std::string feature_id = feature->get_id();
         catchment_indexes[feature_id] = i;
