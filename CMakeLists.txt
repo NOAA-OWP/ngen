@@ -334,6 +334,7 @@ add_subdirectory("src/utilities/mdframe")
 add_subdirectory("src/utilities/logging")
 add_subdirectory("src/utilities/bmi")
 add_subdirectory("src/utilities/output")
+add_subdirectory("src/utilities/python")
 
 target_link_libraries(ngen
     PUBLIC
