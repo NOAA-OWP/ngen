@@ -29,7 +29,7 @@ endif()
 
 if(NGEN_WITH_PYTHON)
     target_sources(ngen_bmi PRIVATE "${CMAKE_CURRENT_LIST_DIR}/Bmi_Py_Adapter.cpp")
-    target_link_libraries(ngen_bmi PUBLIC pybind11::embed)
+    target_link_libraries(ngen_bmi PUBLIC NGen::python)
 endif()
 
 if(NGEN_WITH_BMI_FORTRAN)
