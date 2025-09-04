@@ -321,6 +321,7 @@ add_subdirectory("src/forcing")
 add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
 add_subdirectory("src/utilities/logging")
+add_subdirectory("src/utilities/python")
 
 target_link_libraries(ngen
     PUBLIC

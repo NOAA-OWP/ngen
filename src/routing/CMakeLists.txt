@@ -10,7 +10,7 @@ target_include_directories(routing PUBLIC
         )
         
 target_link_libraries(routing PUBLIC
-                              pybind11::embed
+                              NGen::python
                               NGen::config_header
                               )
 
