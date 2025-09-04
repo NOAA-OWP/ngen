@@ -54,6 +54,7 @@ namespace realization {
             ~Formulation_Manager() = default;
 
             void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
+                std::stringstream ss;
                 std::cout << "[DEBUG] Entering Formulation_Manager::read()" << std::endl;
 
                 //TODO seperate the parsing of configuration options like time
