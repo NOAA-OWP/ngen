@@ -11,6 +11,8 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <iomanip>  // for std::put_time
+#include <ctime>    // for std::gmtime
 
 #include "DataProvider.hpp"
 #include "bmi/Bmi_Py_Adapter.hpp"
@@ -24,7 +26,7 @@ static constexpr auto forcings_engine_python_module = "NextGen_Forcings_Engine";
 static constexpr auto forcings_engine_python_class  = "NWMv3_Forcing_Engine_BMI_model";
 
 //! Full Python classpath for Forcings Engine BMI class
-static constexpr auto forcings_engine_python_classpath = "NextGen_Forcings_Engine.NWMv3_Forcing_Engine_BMI_model";
+static const std::string forcings_engine_python_classpath = std::string(forcings_engine_python_module) + "." + forcings_engine_python_class;
 
 //! Default time format used for parsing timestamp strings
 static constexpr auto default_time_format = "%Y-%m-%d %H:%M:%S";
@@ -95,8 +97,7 @@ struct ForcingsEngineStorage {
 //! @tparam DataType Data type for values returned from derived classes
 //! @tparam SelectionType Selector type for querying data from derived classes
 template<typename DataType, typename SelectionType>
-struct ForcingsEngineDataProvider
-  : public DataProvider<DataType, SelectionType>
+struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
 {
     using data_type = DataType;
     using selection_type = SelectionType;
@@ -165,53 +166,98 @@ struct ForcingsEngineDataProvider
     //! @note Derived implementations should delegate to this constructor
     //!       to acquire a shared forcings engine instance.
     ForcingsEngineDataProvider(
-        const std::string& init,
+        const std::string& init_config,
         std::size_t time_begin_seconds,
         std::size_t time_end_seconds
     )
-      : time_begin_(std::chrono::seconds{time_begin_seconds})
-      , time_end_(std::chrono::seconds{time_end_seconds})
+      : time_begin_(std::chrono::system_clock::from_time_t(time_begin_seconds))
+      , time_end_(std::chrono::system_clock::from_time_t(time_end_seconds))
     {
-        // Get a forcings engine instance if it exists for this initialization file
-        bmi_ = storage_type::instances.get(init);
+        // Log the constructor arguments
+        std::cout << "[ngen debug] Entering ForcingsEngineDataProvider constructor" << std::endl;
+
+        std::time_t start_t = static_cast<std::time_t>(time_begin_seconds);
+        std::time_t end_t   = static_cast<std::time_t>(time_end_seconds);
+
+        std::cout << "  Start time: " << std::put_time(std::gmtime(&start_t), "%Y-%m-%d %H:%M:%S UTC")
+                  << " (" << time_begin_seconds << ")" << std::endl;
+
+        std::cout << "  End time:   " << std::put_time(std::gmtime(&end_t), "%Y-%m-%d %H:%M:%S UTC")
+                  << " (" << time_end_seconds << ")" << std::endl;
+
+        // Attempt to retrieve a previously created BMI instance
+        bmi_ = storage_type::instances.get(init_config);
 
         // If it doesn't exist, create it and assign it to the storage map
-        if (bmi_ == nullptr) {
-            // Outside of this branch, this->bmi_ != nullptr after this
-            bmi_ = std::make_shared<models::bmi::Bmi_Py_Adapter>(
-                "ForcingsEngine",
-                init,
-                forcings_engine_python_classpath,
-                /*has_fixed_time_step=*/true
-            );
+        if (bmi_ != nullptr) {
+            std::cout << "[ngen debug] Reusing existing BMI instance for init_config file: " << init_config << std::endl;
+        } else {
+            // Ensure all prior output is flushed before invoking Python
+            std::cout.flush();
+            std::cerr.flush();
 
-            storage_type::instances.set(init, bmi_);
+            // Log the creation of a new BMI instance
+            std::cout << "[ngen debug] Creating new BMI instance for init_config file: " << init_config << std::endl;
+
+            // Create the BMI instance
+            try {
+                bmi_ = std::make_shared<models::bmi::Bmi_Py_Adapter>(
+                    "ForcingsEngine",
+                    init_config,
+                    forcings_engine_python_classpath,
+                    /*has_fixed_time_step=*/true
+                );
+            } catch (const std::exception& ex) {
+                std::cerr << "[ngen error] Failed to create Bmi_Py_Adapter: " << ex.what() << std::endl;
+                throw;
+            }
+
+            // Store the new BMI instance
+            storage_type::instances.set(init_config, bmi_);
         }
 
-        // Now, initialize the BMI dependent instance members
-        // NOTE: using std::lround instead of static_cast will prevent potential UB
-        time_step_ = std::chrono::seconds{std::lround(bmi_->GetTimeStep())};
-        var_output_names_ = bmi_->GetOutputVarNames();
+        try {
+            // Now, initialize the BMI dependent instance members
+            // NOTE: using std::lround instead of static_cast will prevent potential UB
+            time_step_ = std::chrono::seconds{std::lround(bmi_->GetTimeStep())};
+            var_output_names_ = bmi_->GetOutputVarNames();
+            std::cout << "[ngen debug] BMI instance initialized successfully" << std::endl;
+            std::cout << "[ngen debug] Time step: " << time_step_.count() << " seconds" << std::endl;
+            std::cout << "[ngen debug] Available output variable names:" << std::endl;
+            for (const auto& var_name : var_output_names_) {
+                std::cout << "  - " << var_name << std::endl;
+            }
+        } catch (const std::exception& ex) {
+            std::cerr << "[ngen error] Error initializing BMI instance: " << ex.what() << std::endl;
+            throw;
+        }
+
+        // Log successful constructor exit
+        std::cout << "[ngen debug] Exiting ForcingsEngineDataProvider constructor" << std::endl;
     }
 
+    //! Ensure a variable is available, appending the suffix if needed
     std::string ensure_variable(std::string name, const std::string& suffix = "_ELEMENT") const
     {
         // TODO: use get_available_var_names() once const
         auto vars = boost::span<const std::string>{var_output_names_};
 
+        // Check if the variable exists as-is
         if (std::find(vars.begin(), vars.end(), name) != vars.end()) {
-          return name;
+            return name;
         }
 
+        // Check if the suffixed version exists
         auto suffixed_name = std::move(name) + suffix;
         if (std::find(vars.begin(), vars.end(), suffixed_name) != vars.end()) {
-          return suffixed_name;
+            return suffixed_name;
         }
 
+        // If neither exists, throw an exception
         throw std::runtime_error{
-          "ForcingsEngineDataProvider: neither variable `"
-          + suffixed_name.substr(0, suffixed_name.size() - suffix.size())
-          + "` nor `" + suffixed_name + "` exist."
+            "ForcingsEngineDataProvider: neither variable `"
+            + suffixed_name.substr(0, suffixed_name.size() - suffix.size())
+            + "` nor `" + suffixed_name + "` exist."
         };
     }
 
