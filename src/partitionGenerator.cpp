@@ -451,11 +451,8 @@ int main(int argc, char* argv[])
 
     std::string link_key = "toid";
   
-    Network catchment_network(catchment_collection, &link_key);
     //Assumes dendritic, can add check in network if needed.
     PartitionVSet catchment_part, nexus_part;
-    
-    //catchment_network.print_network();
 
     //build the remote connections from network
     // read the nexus hydrofabric, reuse the catchments
