@@ -149,9 +149,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, P
             }
             if(nexus_set.size() == 0){
                 partgen_ss <<"Error: Catchment "<<catchment<<" has no destination nexus.\n";
-                LOG(partgen_ss.str(), LogLevel::FATAL); partgen_ss.str("");
-
-                exit(1);
+                LOG(partgen_ss.str(), LogLevel::WARNING); partgen_ss.str("");
             }
             for( auto upstream : network.get_origination_ids(catchment) ){
                 nexus_set.emplace(upstream);
@@ -160,6 +158,8 @@ void generate_partitions(network::Network& network, const int& num_partitions, P
 
             //keep track of all the features in this partition
             catchment_set.emplace(catchment);
+            LOG(catchment + " placed in partition " + std::to_string(partition), LogLevel::DEBUG);
+
             counter++;
             if(counter == partition_size)
             {
@@ -533,6 +533,16 @@ int main(int argc, char* argv[])
 
     //The container holding all remote_connections
     std::vector<RemoteConnectionVec> remote_connections_vec;
+
+    for (int i = 0; i < num_partitions; ++i) {
+        partgen_ss << "Partition " << i << " catchments: " << catchment_part[i].size() << "\n";
+        for (auto& c : catchment_part[i])
+            partgen_ss << c << std::endl;
+        partgen_ss << "nexuses " << nexus_part[i].size() << "\n";
+        for (auto& n : nexus_part[i])
+            partgen_ss << n << std::endl;
+        LOG(partgen_ss.str(), LogLevel::DEBUG); partgen_ss.str("");
+    }
 
     int total_remotes = 0;
     // loop over all partitions by partition id
