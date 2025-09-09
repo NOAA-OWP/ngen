@@ -764,7 +764,40 @@ int main(int argc, char* argv[]) {
 
             int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
 
+ #if ROUTING_THROUGH_BMI
+            std::string t_route_config_file_with_path =
+                manager->get_t_route_config_file_with_path();
+            models::bmi::Bmi_Py_Adapter py_router("Python T-Route", t_route_config_file_with_path, "nwm_routing.bmi_troute", true);
+            // set up nexus id indexes
+            std::vector<int> nexus_df_index(nexus_indexes.size());
+            for (const auto& key_value : nexus_indexes) {
+                int id_index = key_value.second;
+                int id_digit_index = -1;
+                for (int si = 0; si < key_value.first.length(); ++si) {
+                    char c = key_value.first[0];
+                    if (std::isdigit(c)) {
+                        id_digit_index = si;
+                        break;
+                    }
+                }
+                try {
+                    nexus_df_index[id_index] 
+                        = std::stoi(key_value.first.substr(id_digit_index));
+                } catch (const std::exception &e) {
+                    // TODO: handle when the nexus id can't be turned into an int
+                }
+            }
+            py_router.SetValue("land_surface_water_source__id", nexus_df_index.data());
+
+            int time_step_s = delta_time / number_of_timesteps;
+            for (int i = 0; i < number_of_timesteps; ++i) {
+                py_router.SetValue("land_surface_water_source__volume_flow_rate",
+                                   nexus_downstream_flows.data() + (i * nexus_indexes.size()));
+                py_router.UpdateUntil(time_step_s * i);
+            }
+#else
             router->route(number_of_timesteps, delta_time);
+#endif // ROUTING_THROUGH_BMI
         }
     }
 #endif
