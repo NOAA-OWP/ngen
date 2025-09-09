@@ -24,17 +24,16 @@ enum class LogLevel {
 */
 class Logger {
   public:
-//    Logger(void);
-//    ~Logger(void);
+    Logger();
+    ~Logger() = default;
 
     // Methods
     static void Log(std::string message, LogLevel messageLevel=LogLevel::INFO);
     static void Log(LogLevel messageLevel, const char* message, ...);
     static void Log(LogLevel messageLevel, std::string message);
-    static bool IsLoggingEnabled(void);
-    static LogLevel GetLogLevel(void);
-    static void SetLogPreferences(LogLevel level=LogLevel::INFO);
-
+    bool IsLoggingEnabled(void);
+    LogLevel GetLogLevel(void);
+    void SetLogPreferences(LogLevel level=LogLevel::INFO);
 	
     static __always_inline void logMsgAndThrowError(const std::string& message) {
 		Log(message, LogLevel::SEVERE);
@@ -45,37 +44,38 @@ class Logger {
     // Methods
     static std::string ConvertLogLevelToString(LogLevel level);
     static LogLevel    ConvertStringToLogLevel(const std::string& logLevel);
-    static std::string CreateDateString(void);
-    static bool        CreateDirectory(const std::string& path);
+    std::string CreateDateString(void);
+    bool        CreateDirectory(const std::string& path);
     static std::string CreateTimestamp(bool appendMS=true, bool iso=true);
-    static bool        DirectoryExists(const std::string& path);
-    static std::string ExtractFirstNDirs(const std::string& path, int numDirs);
-    static bool        FileExists(const std::string& path);
-    static bool        FindAndOpenLogConfigFile(std::string path, std::ifstream& configFileStream);
-    static std::string GetLogFilePath(void);
-    static std::string GetParentDirName(const std::string& path);
-    static bool        JsonFileValid(std::ifstream& jsonFile);
-    static bool        LogFileReady(void);
-    static bool        ParseLoggerConfigFile(std::ifstream& jsonFile);
-    static void        ReadConfigFile(std::string searchPath);
-    static void        SetupLogFile(void);
-    static void        ManageLoggingEnvVars(bool set=true);
+    bool        DirectoryExists(const std::string& path);
+    std::string ExtractFirstNDirs(const std::string& path, int numDirs);
+    bool        FileExists(const std::string& path);
+    bool        FindAndOpenLogConfigFile(std::string path, std::ifstream& configFileStream);
+    std::string GetLogFilePath(void);
+    std::string GetParentDirName(const std::string& path);
+    bool        JsonFileValid(std::ifstream& jsonFile);
+    bool        LogFileReady(void);
+    bool        ParseLoggerConfigFile(std::ifstream& jsonFile);
+    void        ReadConfigFile(std::string searchPath);
+    void        SetupLogFile(void);
+    void        ManageLoggingEnvVars(bool set=true);
     static std::string ToUpper(const std::string& str);
     static std::string TrimString(const std::string& str);
 
     // Variables
-    static bool         loggerInitialized;
-    static bool         loggingEnabled;
-    static std::fstream logFile;
-    static std::string  logFileDir;
-    static std::string  logFilePath;
-    static LogLevel     logLevel;
-    static std::string  moduleName;
-    static std::string  ngenResultsDir;
-    static bool         openedOnce;
+    bool         loggerInitialized = false;
+    bool         loggingEnabled = true;
+    std::fstream logFile;
+    std::string  logFileDir = "";
+    std::string  logFilePath = "";
+    LogLevel     logLevel = LogLevel::INFO;
+    std::string  moduleName = "";
+    std::string  ngenResultsDir = "";
+    bool         openedOnce = false;
     
-    static std::unordered_map<std::string, LogLevel> moduleLogLevels;
+    std::unordered_map<std::string, LogLevel> moduleLogLevels;
 
+    static Logger* GetLogger();
 };
 
 // Placed here to ensure the class is declared before setting this preprocessor symbol

@@ -321,6 +321,7 @@ add_subdirectory("src/forcing")
 add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
 add_subdirectory("src/utilities/logging")
+add_subdirectory("src/utilities/python")
 
 target_link_libraries(ngen
     PUBLIC
@@ -434,7 +435,8 @@ ngen_multiline_message(
 "Environment summary:"
 "  Boost:"
 "    Version: ${Boost_VERSION}"
-"    Include: ${Boost_INCLUDE_DIRS}")
+"    Include: ${Boost_INCLUDE_DIRS}"
+"    Library: ${Boost_LIBRARY_DIRS}")
 ngen_dependent_multiline_message(INTEL_DPCPP
 "  Intel DPC++:"
 "    Version: ${SYCL_LANGUAGE_VERSION}"

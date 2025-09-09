@@ -7,60 +7,60 @@
 	url = https://github.com/pybind/pybind11
 [submodule "extern/t-route"]
 	path = extern/t-route
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/t-route.git
+	url = https://github.com/NGWPC/t-route.git
 	branch = development
 [submodule "extern/cfe/cfe"]
 	path = extern/cfe/cfe
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/cfe.git
+	url = https://github.com/NGWPC/cfe.git
 	branch = development
 [submodule "extern/topmodel/topmodel"]
 	path = extern/topmodel/topmodel
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/topmodel.git
+	url = https://github.com/NGWPC/topmodel.git
 	branch = development
 [submodule "extern/noah-owp-modular/noah-owp-modular"]
 	path = extern/noah-owp-modular/noah-owp-modular
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/noah-owp-modular
+	url = https://github.com/NGWPC/noah-owp-modular
 	branch = development
 [submodule "extern/bmi-cxx"]
 	path = extern/bmi-cxx
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/bmi-cxx.git
+	url = https://github.com/NGWPC/bmi-cxx.git
 [submodule "extern/evapotranspiration/evapotranspiration"]
 	path = extern/evapotranspiration/evapotranspiration
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/evapotranspiration.git
+	url = https://github.com/NGWPC/evapotranspiration.git
 	branch = development
 [submodule "extern/SoilFreezeThaw/SoilFreezeThaw"]
 	path = extern/SoilFreezeThaw/SoilFreezeThaw
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/SoilFreezeThaw
+	url = https://github.com/NGWPC/SoilFreezeThaw
 	branch = development
 [submodule "extern/SoilMoistureProfiles/SoilMoistureProfiles"]
 	path = extern/SoilMoistureProfiles/SoilMoistureProfiles
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/SoilMoistureProfiles
+	url = https://github.com/NGWPC/SoilMoistureProfiles
 	branch = development
 [submodule "extern/sloth"]
 	path = extern/sloth
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/SLoTH
+	url = https://github.com/NGWPC/SLoTH
 	branch = development
 [submodule "extern/netcdf-cxx4"]
 	path = extern/netcdf-cxx4/netcdf-cxx4
 	url = https://github.com/Unidata/netcdf-cxx4/
 [submodule "extern/LASAM"]
 	path = extern/LASAM
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/LGAR-C.git
+	url = https://github.com/NGWPC/LGAR-C.git
 	branch = development
 [submodule "extern/snow17"]
 	path = extern/snow17
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/snow17.git
+	url = https://github.com/NGWPC/snow17.git
 	branch = development
 [submodule "extern/sac-sma/sac-sma"]
 	path = extern/sac-sma/sac-sma
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/sac-sma.git
+	url = https://github.com/NGWPC/sac-sma.git
 	branch = development
 [submodule "extern/ueb-bmi"]
 	path = extern/ueb-bmi
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/ueb_bmi.git
+	url = https://github.com/NGWPC/ueb_bmi.git
 	branch = development
 [submodule "extern/lstm"]
 	path = extern/lstm
-	url = https://gitlab.sh.nextgenwaterprediction.com/NGWPC/nwm-ngen/lstm.git
+	url = https://github.com/NGWPC/lstm.git
         branch = development
 

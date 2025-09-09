@@ -7,6 +7,7 @@
 #include "LayerData.hpp"
 #include "Simulation_Time.hpp"
 #include "State_Exception.hpp"
+#include <boost/core/span.hpp>
 
 #if NGEN_WITH_MPI
 #include "HY_Features_MPI.hpp"
@@ -102,13 +103,17 @@ namespace ngen
         /***
          * @brief Run one simulation timestep for each model in this layer
         */
-        virtual void update_models()
+        virtual void update_models(boost::span<double> catchment_outflows, 
+                                   std::unordered_map<std::string, int> &catchment_indexes,
+                                   boost::span<double> nexus_downstream_flows,
+                                   std::unordered_map<std::string, int> &nexus_indexes,
+                                   int current_step)
         {
             auto idx = simulation_time.next_timestep_index();
             auto step = simulation_time.get_output_interval_seconds();
             
             //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
-            if(output_time_index%100 == 0) std::cout<<"Running timestep " << output_time_index <<std::endl;
+            if(output_time_index%1000 == 0) std::cout<<"Running timestep " << output_time_index <<std::endl;
             std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
             for(const auto& id : processing_units) 
             {
@@ -128,6 +133,10 @@ namespace ngen
                              +" at feature id "+id;
                     throw models::external::State_Exception(msg);
                 }
+#if NGEN_WITH_ROUTING
+                int results_index = catchment_indexes[id];
+                catchment_outflows[results_index] = response;
+#endif // NGEN_WITH_ROUTING
                 std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
                                     r_c->get_output_line_for_timestep(output_time_index)+"\n";
                 r_c->write_output(output);

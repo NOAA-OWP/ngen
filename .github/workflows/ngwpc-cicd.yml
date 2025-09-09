@@ -1,0 +1,253 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [main, nwm-main, development, release-candidate]
+  push:
+    branches: [main, nwm-main, development, release-candidate]
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  setup:
+    name: setup
+    runs-on: ubuntu-latest
+    outputs:
+      image_base: ${{ steps.vars.outputs.image_base }}
+      pr_tag: ${{ steps.vars.outputs.pr_tag }}
+      commit_sha: ${{ steps.vars.outputs.commit_sha }}
+      commit_sha_short: ${{ steps.vars.outputs.commit_sha_short }}
+      test_image_tag: ${{ steps.vars.outputs.test_image_tag }}
+    steps:
+      - name: Compute image vars
+        id: vars
+        shell: bash
+        run: |
+          set -euo pipefail
+          ORG="$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
+          REPO="$(basename "${GITHUB_REPOSITORY}")"
+          IMAGE_BASE="${REGISTRY}/${ORG}/${REPO}"
+          echo "image_base=${IMAGE_BASE}" >> "$GITHUB_OUTPUT"
+
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            PR_NUM="${{ github.event.pull_request.number }}"
+            PR_TAG="pr-${PR_NUM}-build"
+            echo "pr_tag=${PR_TAG}" >> "$GITHUB_OUTPUT"
+            echo "test_image_tag=${PR_TAG}" >> "$GITHUB_OUTPUT"
+          fi
+
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+            COMMIT_SHA="${GITHUB_SHA}"
+            SHORT_SHA="${COMMIT_SHA:0:12}"
+            echo "commit_sha=${COMMIT_SHA}" >> "$GITHUB_OUTPUT"
+            echo "commit_sha_short=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+            echo "test_image_tag=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    name: build
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Verify submodules recursively
+        run: |
+          echo "Checking all submodules recursively..."
+          git submodule update --init --recursive
+          git submodule status --recursive
+
+          echo "Listing files in each submodule..."
+          git submodule foreach --recursive '
+            echo "=== $name ==="
+            pwd
+            ls -l
+          '
+
+      - name: Log in to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.test_image_tag }}
+          build-args: |
+            CREATE_INPUT_TAG=${{ needs.setup.outputs.test_image_tag }}
+            RUN_SWE_TAG=${{ needs.setup.outputs.test_image_tag }}
+
+  unit-test:
+    name: unit-test
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    needs: [setup, build]
+    container:
+      image: ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.test_image_tag }}
+    steps:
+      - name: Run unit tests
+        run: |
+          echo "Running unit tests..."
+          cd /ngen-app/ngen/cmake_build
+          ctest || {
+            echo "Tests failed. Rerunning failed tests with verbose output...";
+            export CTEST_OUTPUT_ON_FAILURE=1;
+            ctest --rerun-failed --output-on-failure --verbose;
+            exit 1;
+          }
+
+  # SonarQube scan (only runs on internal NGWPC self-hosted runners)
+  sonarqube-internal:
+    name: sonarqube-internal
+    if: (github.event_name == 'pull_request' || github.event_name == 'push') && github.repository_owner == 'NGWPC'
+    runs-on: self-hosted
+    needs: [setup, build, unit-test]
+    #TODO: Configure SonarQube Scans
+    continue-on-error: true
+    container:
+      image: sonarsource/sonar-scanner-cli
+      options: --entrypoint="" --user 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: SonarQube Scan
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: sonar-scanner -X -Dsonar.verbose=true
+
+  # CodeQL scan
+  # TODO: Update to scan as desired.
+  # Added as a minimal MVP for Static Code Analysis during GitHub migration
+  codeql-scan:
+    name: codeql-scan
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    needs: [setup, build]
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ mpi-default-bin libopenmpi-dev libboost-all-dev libudunits2-dev libnetcdf-dev libnetcdf-c++4-dev
+          python3 -m pip install numpy==1.26.4 netcdf4 bmipy pandas torch pyyaml pyarrow
+        #python3 -m pip install -r extern/test_bmi_py/requirements.txt
+        #python3 -m pip install -r extern/t-route/requirements.txt
+      # Initialize CodeQL (C++ selected)
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+      # Build (replicate your CMake build commands from Dockerfile or local builds)
+      - name: Build C++ code
+        env:
+          PYTHONPATH: ${{ env.PYTHONPATH }}
+        run: |
+          cmake -B cmake_build -S . \
+            -DPYTHON_EXECUTABLE=$(which python3) \
+            -DNGEN_WITH_MPI=ON \
+            -DNGEN_WITH_NETCDF=ON \
+            -DNGEN_WITH_SQLITE=ON \
+            -DNGEN_WITH_UDUNITS=ON \
+            -DNGEN_WITH_BMI_FORTRAN=ON \
+            -DNGEN_WITH_BMI_C=ON \
+            -DNGEN_WITH_PYTHON=ON \
+            -DNGEN_WITH_TESTS=OFF \
+            -DNGEN_WITH_ROUTING=ON \
+            -DNGEN_QUIET=ON \
+            -DNGEN_UPDATE_GIT_SUBMODULES=OFF \
+            # Using boost from apt for simplicity and code scanning
+            #-DBOOST_ROOT=/opt/boost
+          cmake --build cmake_build --target all
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  container-scanning:
+    name: container-scanning
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    needs: [setup, build]
+    steps:
+      - name: Scan container with Trivy
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.test_image_tag }}
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  deploy-latest-on-development:
+    name: deploy-latest-on-development
+    if: github.event_name == 'push' && github.ref_name == 'development'
+    runs-on: ubuntu-latest
+    needs: [setup, build, unit-test, sonarqube-internal, codeql-scan, container-scanning]
+    steps:
+      - name: Log in to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build latest image
+        run: |
+          docker pull ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.commit_sha_short }}
+          docker tag  ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.commit_sha_short }} ${{ needs.setup.outputs.image_base }}:latest
+          docker push ${{ needs.setup.outputs.image_base }}:latest
+
+  release:
+    name: release
+    if: github.event_name == 'release' && github.event.action == 'published'
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Log in to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check out the release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+      - name: Resolve commit sha for the tag
+        id: rev
+        shell: bash
+        run: |
+          SHORT_SHA="$(git rev-parse --short=12 HEAD)"
+          echo "short_sha=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+      - name: Tag image with release tag
+        run: |
+          docker pull ${{ needs.setup.outputs.image_base }}:${{ steps.rev.outputs.short_sha }}
+          docker tag  ${{ needs.setup.outputs.image_base }}:${{ steps.rev.outputs.short_sha }} ${{ needs.setup.outputs.image_base }}:${{ github.event.release.tag_name }}
+          docker push ${{ needs.setup.outputs.image_base }}:${{ github.event.release.tag_name }}
