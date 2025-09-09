@@ -17,7 +17,7 @@ struct ForcingsEngineLumpedDataProvider final :
     ~ForcingsEngineLumpedDataProvider() override = default;
 
     ForcingsEngineLumpedDataProvider(
-        const std::string& init,
+        const std::string& init_config,
         std::size_t time_begin_seconds,
         std::size_t time_end_seconds,
         const std::string& divide_id

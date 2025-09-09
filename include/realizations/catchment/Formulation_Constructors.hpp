@@ -5,17 +5,16 @@
 #include <NGenConfig.h>
 
 #include "Formulation.hpp"
-#include <JSONProperty.hpp>
-#include <exception>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/optional.hpp>
 
 // Formulations
 #include "Bmi_Formulation.hpp"
-#include <GenericDataProvider.hpp>
 #include "CsvPerFeatureForcingProvider.hpp"
 #include "NullForcingProvider.hpp"
+#include "ForcingsEngineLumpedDataProvider.hpp"
+
 #if NGEN_WITH_NETCDF
     #include "NetCDFPerFeatureDataProvider.hpp"
 #endif
@@ -56,6 +55,29 @@ namespace realization {
         else if (forcing_config.provider == "NullForcingProvider"){
             fp = std::make_shared<NullForcingProvider>();
         }
+#if NGEN_WITH_PYTHON
+        else if (forcing_config.provider == "ForcingsEngineLumpedDataProvider") {
+            std::cout << "[ngen debug] Using ForcingsEngineLumpedDataProvider for '" << identifier
+                      << "' with init_config = " << forcing_config.init_config << std::endl;
+
+
+            // Confirm requirements like Python module + WGRIB2 are present
+            data_access::detail::assert_forcings_engine_requirements();
+
+            // Construct the provider using the start/end times (as time_t)
+            auto start = forcing_config.simulation_start_t;
+            auto end   = forcing_config.simulation_end_t;
+
+            std::cout << "[ngen debug] About to call ForcingsEngineLumpedDataProvider constructor" << std::endl;
+
+            // Construct the ForcingsEngineLumpedDataProvider
+            fp = std::make_shared<data_access::ForcingsEngineLumpedDataProvider>(
+                forcing_config.init_config, start, end, identifier
+            );
+
+            std::cout << "[ngen debug] Finished calling ForcingsEngineLumpedDataProvider constructor" << std::endl;
+        }
+#endif
         else { // Some unknown string in the provider field?
             std::string throw_msg; throw_msg.assign(
                     "Invalid formulation forcing provider configuration! identifier: \"" + identifier +

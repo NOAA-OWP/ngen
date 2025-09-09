@@ -12,10 +12,19 @@ set(CFE_LIB_DESC_CMAKE "OWP CFE BMI Module Shared Library")
 # Make sure these are compiled with this directive
 add_compile_definitions(BMI_ACTIVE)
 
+# -----------------------------------------------------------------------------
+# Find the Boost library and configure usage
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost 1.79.0 REQUIRED COMPONENTS serialization)
+
+
 if(WIN32)
-    add_library(cfebmi cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c cfe/src/logger.c cfe/src/conceptual_reservoir.c)
+
+    add_library(cfebmi cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c cfe/src/logger.c cfe/src/conceptual_reservoir.c cfe/src/nash_cascade.c cfe/src/bmi_serialization.cxx)
 else()
-    add_library(cfebmi SHARED cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c cfe/src/logger.c cfe/src/conceptual_reservoir.c)
+    add_library(cfebmi SHARED cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c cfe/src/logger.c cfe/src/conceptual_reservoir.c cfe/src/nash_cascade.c cfe/src/bmi_serialization.cxx)
 endif()
 
 target_include_directories(cfebmi PRIVATE cfe/include)
@@ -23,6 +32,8 @@ target_include_directories(cfebmi PRIVATE cfe/include)
 set_target_properties(cfebmi PROPERTIES VERSION ${PROJECT_VERSION})
 
 set_target_properties(cfebmi PROPERTIES PUBLIC_HEADER cfe/include/bmi_cfe.h)
+
+target_link_libraries(cfebmi PRIVATE Boost::serialization)
 
 # Code requires minimum of C99 standard to compile
 set_target_properties(cfebmi PROPERTIES C_STANDARD 99 C_STANDARD_REQUIRED ON)

@@ -8,6 +8,8 @@
 #include <DataProvider.hpp>
 #include "bmi_utilities.hpp"
 
+#include <boost/core/span.hpp>
+
 using data_access::MEAN;
 using data_access::SUM;
 
@@ -250,6 +252,10 @@ namespace realization {
         const std::vector<std::string> get_bmi_input_variables() const override;
         const std::vector<std::string> get_bmi_output_variables() const override;
 
+        const boost::span<char> get_serialization_state() const;
+        void load_serialization_state(const boost::span<char> state) const;
+        void free_serialization_state() const;
+
     protected:
 
         /**
@@ -380,6 +386,48 @@ namespace realization {
          *                be different than the model's internal time step.
          */
         void set_model_inputs_prior_to_update(const double &model_init_time, time_step_t t_delta);
+
+        /**
+         * Append `set_model_inputs_prior_to_update` values to an error message. This is intended to be used if the BMI fails to run `update()`.
+         * 
+         * @param model_initial_time The model's time prior to the update, in its internal units and representation.
+         * @param t_delta The size of the time step over which the formulation is going to update the model, which might
+         *                be different than the model's internal time step.
+         * @param inputs Stream the inputs message will be appended to.
+         */
+        void append_model_inputs_to_stream(const double &model_init_time, time_step_t t_delta, std::stringstream &inputs);
+
+        /**
+         * Convert a pointer to an array of data to its correct type, then append these items to a stream. 
+         * The format will appear like a python list, e.g., [0.5, 1.2, 5.8]
+         * 
+         * @param values Raw pointer to data that will be interpreted based on the `type`
+         * @param num_items The number of items expected in the array.
+         * @param inputs Stream the values will be appended to.
+         */
+        template<typename T>
+        void append_inputs(std::shared_ptr<void> values, int num_items, std::stringstream &inputs);
+
+        /**
+         * Convert a pointer to an array of data to its correct type, then append these items to a stream. 
+         * The format will appear like a python list, e.g., [0.5, 1.2, 5.8]
+         * 
+         * @param type String representing the type of data the pointer is for.
+         * @param values Raw pointer to data that will be interpreted based on the `type`
+         * @param num_items The number of items expected in the array.
+         * @param inputs Stream the values will be appended to.
+         */
+        void append_inputs(std::string type, std::shared_ptr<void> values, int num_items, std::stringstream &inputs);
+
+        /**
+         * Convert data to a target data type and append it to an stream.
+         * 
+         * @param type String representing the type of data the pointer is for.
+         * @param value Raw data that will be cast to a value based on the `type`.
+         * @param inputs Stream the interpreted ata will be appeneded to.
+         */
+        template<typename T>
+        void append_input(std::string type, T value, std::stringstream &inputs);
 
         /** The delta of the last model update execution (typically, this is time step size). */
         time_step_t last_model_response_delta = 0;

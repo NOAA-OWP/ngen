@@ -45,21 +45,25 @@ namespace realization {
             auto it = properties.find(key);
             // Do nothing and return if either the key isn't found or the associated property isn't a string
             if (it == properties.end() || it->second.get_type() != geojson::PropertyType::String) {
+                std::cout << "[DEBUG] Skipping pattern substitution for key: " << key << " (not found or not a string)" << std::endl;
                 return;
             }
 
             std::string value = it->second.as_string();
+            std::cout << "[DEBUG] config_pattern_substitution Performing pattern substitution for key: " << key << ", pattern: " << pattern << ", replacement: " << replacement << std::endl;
+//            std::cout << "[DEBUG] Original value: " << value << std::endl;
+
             size_t id_index = value.find(pattern);
-
-            if (id_index != std::string::npos) {
-                do {
-                    value = value.replace(id_index, sizeof(pattern.c_str()) - 2, replacement);
-                    id_index = value.find(pattern);
-                } while (id_index != std::string::npos);
-
-                properties.erase(key);
-                properties.emplace(key, geojson::JSONProperty(key, value));
+            while (id_index != std::string::npos) {
+                value = value.replace(id_index, pattern.size(), replacement);
+                id_index = value.find(pattern);
             }
+
+            // Update the property with the substituted value
+            properties.erase(key);
+            properties.emplace(key, geojson::JSONProperty(key, value));
+
+//            std::cout << "[DEBUG] Substitution result for key: " << key << " -> " << value << std::endl;
         }
 
             /**

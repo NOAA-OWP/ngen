@@ -2,7 +2,7 @@
 
 #if NGEN_WITH_PYTHON
 
-#include "python/InterpreterUtil.hpp"
+#include <utilities/python/InterpreterUtil.hpp>
 
 namespace utils {
     namespace ngenPy {

@@ -1,13 +1,10 @@
 #ifndef NGEN_INTERPRETERUTIL_HPP
 #define NGEN_INTERPRETERUTIL_HPP
-#include "Logger.hpp"
 
 #include <NGenConfig.h>
-#include "Logger.hpp"
 
 #if NGEN_WITH_PYTHON
 
-#include <cstdlib>
 #include <map>
 #include <pybind11/embed.h>
 #include <pybind11/stl.h>
@@ -34,7 +31,6 @@ namespace utils {
         class InterpreterUtil {
 
         public:
-            static std::shared_ptr<InterpreterUtil> getInstance() {
                 /**
                  * @brief Singleton instance of embedded python interpreter.
                  * 
@@ -56,20 +52,7 @@ namespace utils {
                  * https://github.com/pybind/pybind11/issues/1598
                  * 
                  */
-                //Functionally, a global instance variable
-                //This can be made a class attribute, but would need to find a place to put a single definition
-                //e.g. make a .cpp file
-                static std::weak_ptr<InterpreterUtil> _instance;
-                std::shared_ptr<InterpreterUtil> instance = _instance.lock();
-                if(!instance){
-                    //instance is null
-                    InterpreterUtil* pt = new InterpreterUtil();
-                    instance = std::shared_ptr<InterpreterUtil>(pt, Deleter{});
-                    //update the weak ref
-                    _instance = instance;
-                }
-                return instance;
-            }
+            static std::shared_ptr<InterpreterUtil> getInstance();
 
             struct Deleter {
                 /**
@@ -84,45 +67,7 @@ namespace utils {
             friend Deleter;
 
         private:
-            InterpreterUtil() {
-                guardPtr = std::make_shared<py::scoped_interpreter>();
-                // Go ahead and do these
-                importTopLevelModule("pathlib");
-                importTopLevelModule("sys");
-                Path = importedTopLevelModules["pathlib"].attr("Path");
-
-                py::list venv_package_dirs = getVenvPackagesDirOptions();
-                // Add any found options
-                for (auto &opt : venv_package_dirs) {
-                    addToPath(std::string(py::str(opt.attr("parent"))));
-                    addToPath(std::string(py::str(opt)));
-                }
-
-                py::object python_version_info = importedTopLevelModules["sys"].attr("version_info");
-                py::str runtime_python_version = importedTopLevelModules["sys"].attr("version");
-                int major = py::int_(python_version_info.attr("major"));
-                int minor = py::int_(python_version_info.attr("minor"));
-                int patch = py::int_(python_version_info.attr("micro"));
-                if (major != python_major
-                    || minor != python_minor
-                    || patch != python_patch) {
-                    std::string throw_msg; throw_msg.assign("Python version mismatch between configure/build ("
-                                             + std::string(python_version)
-                                             + ") and runtime (" + std::string(runtime_python_version) + ")");
-                    LOG(throw_msg, LogLevel::WARNING);
-                    throw std::runtime_error(throw_msg);
-                }
-
-                importTopLevelModule("numpy");
-                py::str runtime_numpy_version = importedTopLevelModules["numpy"].attr("version").attr("version");
-                if(std::string(runtime_numpy_version) != numpy_version) {
-                    std::string throw_msg; throw_msg.assign("NumPy version mismatch between configure/build ("
-                                             + std::string(numpy_version)
-                                             + ") and runtime (" + std::string(runtime_numpy_version) + ")");
-                    LOG(throw_msg, LogLevel::WARNING);
-                    throw std::runtime_error(throw_msg);
-                }
-            }
+            InterpreterUtil();
 
             ~InterpreterUtil() = default;
 
@@ -137,37 +82,14 @@ namespace utils {
              *
              * @param directoryPath The desired directory to add to the Python system path.
              */
-            static void addToPyPath(const std::string &directoryPath) {
-                getInstance()->addToPath(directoryPath);
-            }
+            static void addToPyPath(const std::string &directoryPath);
 
             /**
              * Add to the Python system path of this instance.
              *
              * @param directoryPath The desired directory to add to the Python system path.
              */
-            void addToPath(const std::string &directoryPath) {
-                std::tuple<py::list, std::vector<std::string>> sysPathTuple = getSystemPath();
-                py::list sys_path = std::get<0>(sysPathTuple);
-                std::vector<std::string> sys_path_vector = std::get<1>(sysPathTuple);
-
-                py::object requestedDirPath = Path(directoryPath);
-                if (py::bool_(requestedDirPath.attr("is_dir")())) {
-                    if (std::find(sys_path_vector.begin(), sys_path_vector.end(), directoryPath) == sys_path_vector.end()) {
-#ifdef __APPLE__
-                        sys_path.attr("insert")(1, py::str(directoryPath));
-#else
-                        sys_path.attr("insert")(sys_path_vector.size(), py::str(directoryPath));
-#endif
-                    }
-                }
-                else {
-                    std::string dirPath = py::str(requestedDirPath);
-                    std::string throw_msg; throw_msg.assign("Cannot add non-existing directory '" + dirPath + "' to Python PATH");
-                    LOG(throw_msg, LogLevel::WARNING);
-                    throw std::runtime_error(throw_msg);
-                }
-            }
+            void addToPath(const std::string &directoryPath);
 
             /**
              * Return bound Python top level module handle from the singleton instance, importing the module if needed.
@@ -179,9 +101,7 @@ namespace utils {
              * @param name Name of the desired top level module or package.
              * @return Handle to the desired top level Python module.
              */
-            static py::object getPyModule(const std::string &name) {
-                return getInstance()->getModule(name);
-            }
+            static py::object getPyModule(const std::string &name);
 
             /**
              * Return bound Python module handle from the singleton instance, importing a top-level module if necessary.
@@ -197,9 +117,7 @@ namespace utils {
              *                         and (when applicable) submodules.
              * @return Handle to the desired Python module or type.
              */
-            static py::object getPyModule(const std::vector<std::string> &moduleLevelNames) {
-                return getInstance()->getModule(moduleLevelNames);
-            }
+            static py::object getPyModule(const std::vector<std::string> &moduleLevelNames);
 
             /**
              * Return a bound handle to a top-level Python module, importing the module if necessary.
@@ -211,12 +129,7 @@ namespace utils {
              * @param name Name of the desired top level module or namespace package.
              * @return Handle to the desired top level Python module.
              */
-            py::object getModule(const std::string &name) {
-                if (!isImported(name)) {
-                    importTopLevelModule(name);
-                }
-                return importedTopLevelModules.find(name)->second;
-            }
+            py::object getModule(const std::string &name);
 
             /**
              * Return a bound handle to a Python module or type, importing the top-level module if necessary.
@@ -228,14 +141,7 @@ namespace utils {
              *                         and (when applicable) submodules.
              * @return Handle to the desired Python module or type.
              */
-            py::object getModule(const std::vector<std::string> &moduleLevelNames) {
-                // Start with top-level module name, then descend through attributes as needed
-                py::object module = getModule(moduleLevelNames[0]);
-                for (size_t i = 1; i < moduleLevelNames.size(); ++i) {
-                    module = module.attr(moduleLevelNames[i].c_str());
-                }
-                return module;
-            }
+            py::object getModule(const std::vector<std::string> &moduleLevelNames);
 
         protected:
 
@@ -244,21 +150,7 @@ namespace utils {
              *
              * @return The absolute path of the site packages directory, as a string.
              */
-            py::list getVenvPackagesDirOptions() {
-                // Look for a local virtual environment directory also, if there is one
-                const char* env_var_venv = std::getenv("VIRTUAL_ENV");
-                py::object venv_dir = env_var_venv != nullptr ? Path(env_var_venv): py::none();
-
-                if (!venv_dir.is_none() && py::bool_(venv_dir.attr("is_dir")())) {
-                    // Resolve the full path
-                    venv_dir = venv_dir.attr("resolve")();
-                    // Get options for the packages dir
-                    py::list site_packages_options = py::list(venv_dir.attr("glob")("**/site-packages/"));
-                    return site_packages_options;
-                }
-
-                return py::list();
-            }
+            py::list getVenvPackagesDirOptions();
 
         public:
             /**
@@ -267,29 +159,14 @@ namespace utils {
              * @return A tuple containing the Python list object and a C++ vector of strings, each representing the
              *         current Python system path.
              */
-            inline std::tuple<py::list, std::vector<std::string>> getSystemPath() {
-                py::list sys_path = importedTopLevelModules.find("sys")->second.attr("path");
-                std::vector<std::string> sys_path_vector(sys_path.size());
-                size_t i = 0;
-                for (auto item : sys_path) {
-                    sys_path_vector[i++] = py::str(item);
-                }
-                return std::make_tuple(sys_path, sys_path_vector);
-            }
+            std::tuple<py::list, std::vector<std::string>> getSystemPath();
+
             /**
              * Find any virtual environment site packages directory, starting from options under the current directory.
              *
              * @return The absolute path of the site packages directory, as a string.
              */
-            std::string getDiscoveredVenvPath() {
-                // Look for a local virtual environment directory also, if there is one
-                const char* env_var_venv = std::getenv("VIRTUAL_ENV");
-                if(env_var_venv != nullptr){
-                    //std::string r(env_var_venv);
-                    return std::string(env_var_venv);
-                }
-                return std::string("None");
-            }
+            std::string getDiscoveredVenvPath();
 
         protected:
             /**
@@ -303,9 +180,7 @@ namespace utils {
              *                         and (when applicable) submodules.
              * @return Whether an Python module is imported.
              */
-            inline bool isImported(const std::vector<std::string> &moduleLevelNames) {
-                return isImported(moduleLevelNames[0]);
-            }
+            bool isImported(const std::vector<std::string> &moduleLevelNames);
 
             /**
              * Get whether a top level Python module is imported.
@@ -313,9 +188,7 @@ namespace utils {
              * @param name The name of the module/package.
              * @return Whether an Python module is imported.
              */
-            inline bool isImported(const std::string &name) {
-                return importedTopLevelModules.find(name) != importedTopLevelModules.end();
-            }
+            bool isImported(const std::string &name);
 
         private:
             //List this FIRST, to ensure it isn't destroyed before anything else (e.g. Path) that might
@@ -342,11 +215,8 @@ namespace utils {
              *
              * @param topLevelName The name of the desired top level Python module to import.
              */
-            inline void importTopLevelModule(const std::string &topLevelName) {
-                importedTopLevelModules[topLevelName] = py::module_::import(topLevelName.c_str());
-            }
-
-        };
+            void importTopLevelModule(const std::string &topLevelName);
+        }; // class InterpreterUtil
     }
 }
 

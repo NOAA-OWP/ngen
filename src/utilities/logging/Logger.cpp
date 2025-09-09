@@ -31,18 +31,6 @@ const std::string  EV_NGEN_LOGFILEPATH = "NGEN_LOG_FILE_PATH";   // ngen log fil
 
 const std::string  CONFIG_FILENAME     = "ngen_logging.json";    // ngen logging config file 
 
-bool         Logger::loggerInitialized = false;
-bool         Logger::loggingEnabled = true;
-std::fstream Logger::logFile;
-std::string  Logger::logFileDir = "";
-std::string  Logger::logFilePath = "";
-LogLevel     Logger::logLevel = LogLevel::INFO;
-std::string  Logger::moduleName = "";
-std::string  Logger::ngenResultsDir = "";
-bool         Logger::openedOnce = false;
-
-std::unordered_map<std::string, LogLevel> Logger::moduleLogLevels;
-
 // String to LogLevel map
 static const std::unordered_map<std::string, LogLevel> logLevelMap = {
     {"NONE", LogLevel::NONE}, {"0", LogLevel::NONE},
@@ -490,22 +478,21 @@ void Logger::Log(LogLevel messageLevel, std::string message) {
 * @param messageLevel: Log Level, LogLevel::INFO by default
 */
 void Logger::Log(std::string message, LogLevel messageLevel) {
-
-    if (!loggerInitialized) SetLogPreferences(); // Cover case where Log is called before setup done
+    Logger *logger = GetLogger();
 
     // Log only when appropriate 
-    if  ((loggingEnabled) && (messageLevel >= logLevel)) {
+    if  ((logger->loggingEnabled) && (messageLevel >= logger->logLevel)) {
         std::string   logType   = ConvertLogLevelToString(messageLevel);
-        std::string   logPrefix = CreateTimestamp() + " " +  moduleName + " " + logType;
+        std::string   logPrefix = CreateTimestamp() + " " +  logger->moduleName + " " + logType;
 
         // Log message, creating individual entries for a multi-line message
         std::istringstream logMsg(message);
         std::string line;
-        if (LogFileReady()) {
+        if (logger->LogFileReady()) {
             while (std::getline(logMsg, line)) {
-                logFile << logPrefix + " " + line << std::endl;
+                logger->logFile << logPrefix + " " + line << std::endl;
             }
-            logFile.flush();
+            logger->logFile.flush();
         }
         else {
             // Log file not found. Write to stdout.
@@ -515,6 +502,21 @@ void Logger::Log(std::string message, LogLevel messageLevel) {
             cout << std::flush;
         }
     }
+}
+
+Logger* Logger::GetLogger()
+{
+    static Logger* logger = nullptr;
+    if (logger == nullptr) {
+        logger = new Logger;
+        logger->SetLogPreferences();
+    }
+    return logger;
+}
+
+Logger::Logger()
+{
+
 }
 
 // Function to trim leading and trailing spaces

@@ -165,7 +165,11 @@ namespace geojson {
      */
     class JSONProperty {
         public:
-            
+            /**
+             * @brief Don't use this, but it's necessary for working with functions and classes that expect a default constructor
+             */
+            JSONProperty() = default;    
+
             JSONProperty(std::string value_key, const boost::property_tree::ptree& property_tree):
             key(std::move(value_key)) {
 
