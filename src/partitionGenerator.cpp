@@ -134,8 +134,6 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
     nexus_set.reserve(partition_size);
     std::string part_id, partition_str;
 
-    std::string up_nexus;
-    std::string down_nexus;
     for(const auto& catchment : network.filter("cat", network::SortOrder::TransposedDepthFirstPreorder)){
             if (partition < remainder)
                 partition_size = partition_size_plus1;
@@ -164,15 +162,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
             counter++;
             if(counter == partition_size)
             {
-                //partgen_ss<<"nexus "<<nexus<<" is remote DOWN on partition "<<partition<<std::endl;
                 //FIXME partitioning shouldn't have to assume dendritic network
-                std::vector<std::string> destinations = network.get_destination_ids(catchment);
-                if(destinations.size() == 0){
-                    partgen_ss <<"Error: Catchment "<<catchment<<" has no destination nexus.\n";
-                    LOG(partgen_ss.str(), LogLevel::FATAL); partgen_ss.str("");
-                    exit(1);
-                }
-                down_nexus = destinations[0];
 
                 part_id = std::to_string(partition);  // Is id used?
                 partition_str = std::to_string(partition);
@@ -187,12 +177,6 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
 
                 partition++;
                 counter = 0;
-                //partgen_ss<<"\nnexus "<<nexus<<" is remote UP on partition "<<partition<<std::endl;
-
-                //this nexus overlaps partitions
-                //Handled above by ensure all up/down stream nexuses are recorded
-                up_nexus = down_nexus;
-                //partgen_ss<<"\nin partition "<<partition<<":"<<std::endl;
             }
     }
 
