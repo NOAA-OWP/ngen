@@ -9,5 +9,6 @@
 #include "MultiLineStringFeature.hpp"
 #include "MultiPolygonFeature.hpp"
 #include "CollectionFeature.hpp"
+#include "SentinelFeature.hpp"
 
 #endif // GEOJSON_FEATURE_H
