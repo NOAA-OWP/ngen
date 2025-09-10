@@ -107,15 +107,16 @@ void write_remote_connections(const PartitionVSet& catchment_part, const Partiti
  * 
  * @param network 
  * @param num_partitions 
- * @param num_catchments
- * @param catchment_part 
+ * @param catchment_part  - which catchments will be simulation on each partition
+ * @param nexus_part - which nexuses have contributing catchments on each partition
  */
-void generate_partitions(network::Network& network, const int& num_partitions, const int& num_catchments, PartitionVSet& catchment_part,
-     PartitionVSet& nexus_part)
+void generate_partitions(network::Network& network, const int& num_partitions, PartitionVSet& catchment_part, PartitionVSet& nexus_part)
 {
+    auto catchments = network.filter("cat", network::SortOrder::TransposedDepthFirstPreorder);
+
     int partition = 0;
     int counter = 0;
-    int total = num_catchments;
+    int total = size(catchments);
     int partition_size = total/num_partitions;
     int partition_size_norm = partition_size;
     int remainder;
@@ -134,7 +135,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
     nexus_set.reserve(partition_size);
     std::string part_id, partition_str;
 
-    for(const auto& catchment : network.filter("cat", network::SortOrder::TransposedDepthFirstPreorder)){
+    for(const auto& catchment : catchments){
             if (partition < remainder)
                 partition_size = partition_size_plus1;
             else
@@ -526,7 +527,7 @@ int main(int argc, char* argv[])
     Network global_network(global_nexus_collection);
 
     //Generate the partitioning
-    generate_partitions(global_network, num_partitions, num_catchments, catchment_part, nexus_part);
+    generate_partitions(global_network, num_partitions, catchment_part, nexus_part);
 
     //global_network.print_network();
 
