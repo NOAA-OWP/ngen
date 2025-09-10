@@ -514,6 +514,30 @@ int main(int argc, char* argv[])
     //Do this before linking features so that the alt ids can lookup the correct feature
     global_nexus_collection->update_ids("id");
     global_nexus_collection->link_features_from_property(nullptr, &link_key);
+
+    // Store these separately to avoid iterator invalidation from inserting them eagerly
+    std::vector<std::shared_ptr<geojson::FeatureBase>> sentinels;
+
+    for (auto& feature : *global_nexus_collection)
+    {
+        auto id = feature->get_id();
+        auto type = id.substr(0,3);
+        if (hy_features::identifiers::isNexus(type)) {
+            if (feature->get_number_of_destination_features() == 0) {
+                std::string sentinel_id = "wb-TERMINAL_SENTINEL-" + feature->get_id();
+                geojson::Feature sentinel_feature = std::make_shared<geojson::SentinelFeature>(sentinel_id);
+                sentinels.push_back(sentinel_feature);
+                feature->add_destination_feature(sentinel_feature.get());
+                LOG("Nexus " + feature->get_id() + " has no destination features; adding " + sentinel_id + " below it", LogLevel::INFO);
+            }
+        }
+    }
+
+    for (auto& sentinel : sentinels)
+    {
+        global_nexus_collection->add_feature(sentinel);
+    }
+
     // make a global network
     Network global_network(global_nexus_collection);
 
