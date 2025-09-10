@@ -40,16 +40,21 @@ namespace geojson {
 
     /**
      *  Describes a type of features
+     *
+     *  These are numbered in accordance with the GeoPackage
+     *  'well-known binary' (WKB) feature types, other than the
+     *  additional 'Sentinel' value defined here
      */
     enum class FeatureType {
-        None,                   /*!< Represents an empty feature with no sort of geometry */
-        Point,                  /*!< Represents a feature that contains a single Point geometry */
-        LineString,             /*!< Represents a feature that is represented by a series of interconnected points */
-        Polygon,                /*!< Represents a feature that is represented by a defined area */
-        MultiPoint,             /*!< Represents a feature that is represented by many points */
-        MultiLineString,        /*!< Represents a feature that is represented by multiple series of interconnected points */
-        MultiPolygon,           /*!< Represents a feature that is represented by multiple areas */
-        GeometryCollection      /*!< Represents a feature that contains a collection of different types of geometry */
+        None                 = 0,  /*!< Represents an empty feature with no sort of geometry */
+        Point                = 1,  /*!< Represents a feature that contains a single Point geometry */
+        LineString           = 2,  /*!< Represents a feature that is represented by a series of interconnected points */
+        Polygon              = 3,  /*!< Represents a feature that is represented by a defined area */
+        MultiPoint           = 4,  /*!< Represents a feature that is represented by many points */
+        MultiLineString      = 5,  /*!< Represents a feature that is represented by multiple series of interconnected points */
+        MultiPolygon         = 6,  /*!< Represents a feature that is represented by multiple areas */
+        GeometryCollection   = 7,  /*!< Represents a feature that contains a collection of different types of geometry */
+        Sentinel             = 100 /*!< Represents a 'dummy' feature included for computational consistency */
     };
 
     /**
