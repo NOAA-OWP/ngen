@@ -34,6 +34,7 @@
 
 #if NGEN_WITH_ROUTING
 #include "routing/Routing_Py_Adapter.hpp"
+#include "routing/transfer_params.hpp"
 #endif // NGEN_WITH_ROUTING
 
 std::string catchmentDataFile         = "";
@@ -763,15 +764,65 @@ int main(int argc, char* argv[]) {
             int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
 
             int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
+//#define ROUTING_THROUGH_BMI
+#ifdef ROUTING_THROUGH_BMI
 
- #if ROUTING_THROUGH_BMI
             std::string t_route_config_file_with_path =
                 manager->get_t_route_config_file_with_path();
-            models::bmi::Bmi_Py_Adapter py_router("Python T-Route", t_route_config_file_with_path, "nwm_routing.bmi_troute", true);
+            // model for writing data
+            models::bmi::Bmi_Py_Adapter py_daforcing("DA Forcing", t_route_config_file_with_path, "bmi_DAforcing.bmi_DAforcing", true);
+            // model for routing
+            models::bmi::Bmi_Py_Adapter py_troute("T-Route", t_route_config_file_with_path, "bmi_troute.bmi_troute", true);
+            int nexus_count = nexus_indexes.size();
+
+            // move read data from DA Forcing to T-route
+            models::bmi::transfer_py_bmi_data("dateNull", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("datesSecondsArray_usgs", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("nDates_usgs", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("stationArray_usgs", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("stationStringLengthArray_usgs", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("nStations_usgs", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("usgs_Array", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("datesSecondsArray_reservoir_usgs", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("nDates_reservoir_usgs", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("stationArray_reservoir_usgs", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("stationStringLengthArray_reservoir_usgs", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("nStations_reservoir_usgs", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("usgs_reservoir_Array", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("datesSecondsArray_reservoir_usace", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("nDates_reservoir_usace", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("stationArray_reservoir_usace", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("stationStringLengthArray_reservoir_usace", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("nStations_reservoir_usace", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("usace_reservoir_Array", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("rfc_da_timestep", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("rfc_totalCounts", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("rfc_synthetic_values", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("rfc_discharges", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("rfc_timeseries_idx", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("rfc_use_rfc", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("rfc_Datetime", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("rfc_timeSteps", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("rfc_StationId_array", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("rfc_StationId_stringLengths", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("rfc_List_array", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("rfc_List_stringLengths", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("waterbody_df", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("waterbody_df_index", py_daforcing, "waterbody_df_ids", py_troute);
+            models::bmi::transfer_py_bmi_data("lastobs_df", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("lastobs_df_index", py_daforcing, "lastobs_df_ids", py_troute);
+            models::bmi::transfer_py_bmi_data("q0", py_daforcing, py_troute);
+            models::bmi::transfer_py_bmi_data("q0_index", py_daforcing, "q0_ids", py_troute);
+            models::bmi::transfer_py_bmi_data("t0", py_daforcing, py_troute);
+
+            // tell BMI to resize nexus containers
+            py_troute.SetValue("land_surface_water_source__volume_flow_rate", &nexus_count);
+            py_troute.SetValue("land_surface_water_source__id", &nexus_count);
             // set up nexus id indexes
-            std::vector<int> nexus_df_index(nexus_indexes.size());
+            std::vector<int> nexus_df_index(nexus_count);
             for (const auto& key_value : nexus_indexes) {
                 int id_index = key_value.second;
+                // strip away non-numeric components of the nexus id
                 int id_digit_index = -1;
                 for (int si = 0; si < key_value.first.length(); ++si) {
                     char c = key_value.first[0];
@@ -787,13 +838,22 @@ int main(int argc, char* argv[]) {
                     // TODO: handle when the nexus id can't be turned into an int
                 }
             }
-            py_router.SetValue("land_surface_water_source__id", nexus_df_index.data());
+            py_troute.SetValue("land_surface_water_source__id", nexus_df_index.data());
 
             int time_step_s = delta_time / number_of_timesteps;
             for (int i = 0; i < number_of_timesteps; ++i) {
-                py_router.SetValue("land_surface_water_source__volume_flow_rate",
+                // move results to troute and update
+                py_troute.SetValue("land_surface_water_source__volume_flow_rate",
                                    nexus_downstream_flows.data() + (i * nexus_indexes.size()));
-                py_router.UpdateUntil(time_step_s * i);
+                py_troute.UpdateUntil(time_step_s * i);
+                // move troute results to DA forcing for writing outputs
+                models::bmi::transfer_py_bmi_data("nudging", py_troute, py_daforcing);
+                models::bmi::transfer_py_bmi_data("nudging_ids", py_troute, py_daforcing);
+                models::bmi::transfer_py_bmi_data("fvd_results", py_troute, py_daforcing);
+                models::bmi::transfer_py_bmi_data("fvd_index", py_troute, py_daforcing);
+                double current_time = py_troute.GetCurrentTime();
+                py_daforcing.SetValue("t-route_model_time", &current_time);
+                py_daforcing.Update();
             }
 #else
             router->route(number_of_timesteps, delta_time);
