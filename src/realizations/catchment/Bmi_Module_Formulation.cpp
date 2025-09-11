@@ -183,7 +183,7 @@ namespace realization {
                 }
                 catch (const std::runtime_error& e) {
                     unit_conversion_exception uce(e.what());
-                    uce.provider_model_name = get_id();
+                    uce.provider_model_name = get_bmi_model()->get_model_name();
                     uce.provider_bmi_var_name = bmi_var_name;
                     uce.unconverted_values = std::move(values);
                     throw uce;
@@ -727,7 +727,7 @@ namespace realization {
                         if (new_error) {
                             std::stringstream ss;
                             ss << "Unit conversion failure:"
-                               << " requester '" << get_id() << "' catchment '" << get_catchment_id() << "' variable '" << var_map_alias << "'"
+                               << " requester '" << get_bmi_model()->get_model_name() << "' catchment '" << get_catchment_id() << "' variable '" << var_map_alias << "'"
                                << " provider '" << uce.provider_model_name << "' source variable '" << uce.provider_bmi_var_name << "'"
                                << " raw value " << uce.unconverted_values[0]
                                << " message \"" << uce.what() << "\"";
