@@ -486,8 +486,26 @@ namespace realization {
         /** A configured mapping of BMI model variable names to standard names for use inside the framework. */
         std::map<std::string, std::string> bmi_var_names_map;
         bool model_initialized = false;
-        bool unitGetValueErrLogged = false;
-        bool unitGetValuesErrLogged = false;
+
+        struct unit_error_log_key {
+            std::string requester_name;
+            std::string requester_variable;
+            std::string provider_name;
+            std::string provider_variable;
+            std::string failure_message;
+
+            bool operator<(unit_error_log_key const& rhs) const {
+                return std::tie(requester_name, requester_variable, provider_name, provider_variable, failure_message)
+                    < std::tie(rhs.requester_name, rhs.requester_variable, rhs.provider_name, rhs.provider_variable, rhs.failure_message);
+            }
+
+            bool operator==(unit_error_log_key const& rhs) const {
+                return std::tie(requester_name, requester_variable, provider_name, provider_variable, failure_message)
+                    == std::tie(rhs.requester_name, rhs.requester_variable, rhs.provider_name, rhs.provider_variable, rhs.failure_message);
+            }
+        };
+
+        static std::set<unit_error_log_key> unit_errors_reported;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS
