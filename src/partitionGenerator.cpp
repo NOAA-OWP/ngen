@@ -500,9 +500,23 @@ int main(int argc, char* argv[])
     global_nexus_collection->update_ids("id");
     global_nexus_collection->link_features_from_property(nullptr, &link_key);
 
-    // Store these separately to avoid iterator invalidation from inserting them eagerly
+    // ngen misbehaves in gathering and storing output when a terminal
+    // nexus is fed by multiple catchments partitioned to different
+    // processes. This was recorded as NOAA-OWP/ngen#284 and NGWPC-6553.
+    //
+    // Address that here by inserting sentinel flowpaths downstream of
+    // those nexuses. Those sentinels will be assigned to specific
+    // processes, which will then properly receive all of the flow for
+    // the nexus in question.
+    //
+    // These features will not exist in the hydrofabric
+    // GeoJSON/GeoPackage. As implemented, that means that they will
+    // simply be ignored when ngen figures out what features to
+    // simulate on each process.
+    //
+    // Store the sentinels separately to avoid iterator invalidation
+    // from inserting them eagerly
     std::vector<std::shared_ptr<geojson::FeatureBase>> sentinels;
-
     for (auto& feature : *global_nexus_collection)
     {
         auto id = feature->get_id();
@@ -517,7 +531,6 @@ int main(int argc, char* argv[])
             }
         }
     }
-
     for (auto& sentinel : sentinels)
     {
         global_nexus_collection->add_feature(sentinel);
