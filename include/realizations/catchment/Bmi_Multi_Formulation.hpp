@@ -574,6 +574,10 @@ namespace realization {
                 //TODO: After merge PR#405, try re-adding support for index
                 return nested_module->get_value(selector);
             }
+            catch (unit_conversion_exception &uce) {
+                // We asked for it as a dimensionless quantity, "1", just above
+                return uce.unconverted_values[0];
+            }
             // If there was any problem with the cast and extraction of the value, throw runtime error
             catch (std::exception &e) {
                 throw std::runtime_error("Multi BMI formulation can't use associated data provider as a nested module"
