@@ -444,6 +444,13 @@ int main(int argc, char* argv[]) {
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments,
     // we instead want to iterate through HY_Catchment objects
     geojson::GeoJSON catchment_collection;
+    // As part of the fix for NOAA-OWP/ngen#284 / NGWPC-6553,
+    // partitioning may insert sentinel flowpaths downstream of
+    // terminal nexuses. Those sentinels will not exist in the
+    // catchmentDataFile. Their listing in catchment_subset_ids works
+    // because the respective geoFOO::read() functions return the
+    // intersection of features in the file and the specified subset,
+    // rather than erroring on missing features.
     if (boost::algorithm::ends_with(catchmentDataFile, "gpkg")) {
 #if NGEN_WITH_SQLITE3
         try {
