@@ -264,6 +264,33 @@ namespace realization {
             output_variable_names = out_var_names;
         }
 
+        struct unit_error_log_key {
+            std::string requester_name;
+            std::string requester_variable;
+            std::string provider_name;
+            std::string provider_variable;
+            std::string failure_message;
+
+            bool operator<(unit_error_log_key const& rhs) const {
+                return std::tie(requester_name, requester_variable, provider_name, provider_variable, failure_message)
+                    < std::tie(rhs.requester_name, rhs.requester_variable, rhs.provider_name, rhs.provider_variable, rhs.failure_message);
+            }
+
+            bool operator==(unit_error_log_key const& rhs) const {
+                return std::tie(requester_name, requester_variable, provider_name, provider_variable, failure_message)
+                    == std::tie(rhs.requester_name, rhs.requester_variable, rhs.provider_name, rhs.provider_variable, rhs.failure_message);
+            }
+        };
+
+        static std::set<unit_error_log_key> unit_errors_reported;
+
+        struct unit_conversion_exception : public std::runtime_error {
+            unit_conversion_exception(std::string message) : std::runtime_error(message) {}
+            std::string provider_model_name;
+            std::string provider_bmi_var_name;
+            std::vector<double> unconverted_values;
+        };
+
     private:
 
         std::string bmi_main_output_var;
