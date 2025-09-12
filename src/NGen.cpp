@@ -764,7 +764,7 @@ int main(int argc, char* argv[]) {
             int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
 
             int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
-//#define ROUTING_THROUGH_BMI
+#define ROUTING_THROUGH_BMI
 #ifdef ROUTING_THROUGH_BMI
 
             std::string t_route_config_file_with_path =
@@ -808,35 +808,36 @@ int main(int argc, char* argv[]) {
             models::bmi::transfer_py_bmi_data("rfc_List_array", py_daforcing, py_troute);
             models::bmi::transfer_py_bmi_data("rfc_List_stringLengths", py_daforcing, py_troute);
             models::bmi::transfer_py_bmi_data("waterbody_df", py_daforcing, py_troute);
-            models::bmi::transfer_py_bmi_data("waterbody_df_index", py_daforcing, "waterbody_df_ids", py_troute);
+            models::bmi::transfer_py_bmi_data("waterbody_df_ids", py_daforcing, "waterbody_df_index", py_troute);
             models::bmi::transfer_py_bmi_data("lastobs_df", py_daforcing, py_troute);
-            models::bmi::transfer_py_bmi_data("lastobs_df_index", py_daforcing, "lastobs_df_ids", py_troute);
+            models::bmi::transfer_py_bmi_data("lastobs_df_ids", py_daforcing, "lastobs_df_index", py_troute);
             models::bmi::transfer_py_bmi_data("q0", py_daforcing, py_troute);
-            models::bmi::transfer_py_bmi_data("q0_index", py_daforcing, "q0_ids", py_troute);
+            models::bmi::transfer_py_bmi_data("q0_ids", py_daforcing, "q0_index", py_troute);
             models::bmi::transfer_py_bmi_data("t0", py_daforcing, py_troute);
 
             // tell BMI to resize nexus containers
-            py_troute.SetValue("land_surface_water_source__volume_flow_rate", &nexus_count);
-            py_troute.SetValue("land_surface_water_source__id", &nexus_count);
+            py_troute.SetValue("land_surface_water_source__volume_flow_rate__count", &nexus_count);
+            py_troute.SetValue("land_surface_water_source__id__count", &nexus_count);
             // set up nexus id indexes
             std::vector<int> nexus_df_index(nexus_count);
             for (const auto& key_value : nexus_indexes) {
                 int id_index = key_value.second;
-                // strip away non-numeric components of the nexus id
-                int id_digit_index = -1;
-                for (int si = 0; si < key_value.first.length(); ++si) {
-                    char c = key_value.first[0];
-                    if (std::isdigit(c)) {
-                        id_digit_index = si;
-                        break;
-                    }
+
+                // Convert string ID into numbers for T-route index
+                int id_as_int = -1;
+                int num_char_index = key_value.first.find_first_of("0123456789");
+                if (num_char_index != std::string::npos) {
+                    int num_char_end = key_value.first.find_first_not_of("0123456789");
+                    std::string substring = num_char_end == std::string::npos
+                        ? key_value.first.substr(num_char_index)
+                        : key_value.first.substr(num_char_index, num_char_end - num_char_index);
+                    id_as_int = std::stoi(substring);
                 }
-                try {
-                    nexus_df_index[id_index] 
-                        = std::stoi(key_value.first.substr(id_digit_index));
-                } catch (const std::exception &e) {
-                    // TODO: handle when the nexus id can't be turned into an int
+                if (id_as_int == -1) {
+                    // TODO: handle problem getting id as int
                 }
+
+                nexus_df_index[id_index] = id_as_int;
             }
             py_troute.SetValue("land_surface_water_source__id", nexus_df_index.data());
 
@@ -844,7 +845,7 @@ int main(int argc, char* argv[]) {
             for (int i = 0; i < number_of_timesteps; ++i) {
                 // move results to troute and update
                 py_troute.SetValue("land_surface_water_source__volume_flow_rate",
-                                   nexus_downstream_flows.data() + (i * nexus_indexes.size()));
+                                   nexus_downstream_flows.data() + (i * nexus_count));
                 py_troute.UpdateUntil(time_step_s * i);
                 // move troute results to DA forcing for writing outputs
                 models::bmi::transfer_py_bmi_data("nudging", py_troute, py_daforcing);
