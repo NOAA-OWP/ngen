@@ -134,13 +134,6 @@ namespace realization {
             throw std::runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
         }
 
-        struct unit_conversion_exception : public std::runtime_error {
-            unit_conversion_exception(std::string message) : std::runtime_error(message) {}
-            std::string provider_model_name;
-            std::string provider_bmi_var_name;
-            std::vector<double> unconverted_values;
-        };
-
         std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
         {
             std::string output_name = selector.get_variable_name();
@@ -739,8 +732,6 @@ namespace realization {
                 get_bmi_model()->SetValue(var_name, value_ptr.get());
             }
         }
-
-        std::set<Bmi_Module_Formulation::unit_error_log_key> Bmi_Module_Formulation::unit_errors_reported = {};
 
         void Bmi_Module_Formulation::append_model_inputs_to_stream(const double &model_init_time, time_step_t t_delta, std::stringstream &inputs) {
             std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();
