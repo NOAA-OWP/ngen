@@ -176,11 +176,11 @@ namespace realization {
                         int catchment_index = fabric->find(catchment_config.first);
                         if (catchment_index == -1) {
                             #ifndef NGEN_QUIET
-                             ss.str("");
-                             ss <<"Formulation_Manager::read: Cannot create formulation for catchment "
-                                << catchment_config.first
-                                << " that isn't identified in the hydrofabric or requested subset" << std::endl;
-                            LOG(ss.str(), LogLevel::WARNING);
+                                ss.str("");
+                                ss << "Formulation_Manager::read: Cannot create formulation for catchment "
+                                   << catchment_config.first
+                                   << " that isn't identified in the hydrofabric or requested subset" << std::endl;
+                                LOG(ss.str(), LogLevel::WARNING);
                             #endif
                             continue;
                         }
