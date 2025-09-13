@@ -65,7 +65,8 @@ Provider::ForcingsEngineLumpedDataProvider(
     // running the correct configuration of the forcings engine for this class.
     const auto cat_id_pos = std::find(var_output_names_.begin(), var_output_names_.end(), "CAT-ID");
     if (cat_id_pos == var_output_names_.end()) {
-        std::cerr << "[ngen error] Failed to initialize ForcingsEngineLumpedDataProvider: "
+
+        ss << "Failed to initialize ForcingsEngineLumpedDataProvider: "
                   << "`CAT-ID` is not an output variable of the forcings engine."
                   << " Does " << init_config << " have `GRID_TYPE` set to 'hydrofabric'?" << std::endl;
         throw std::runtime_error{
@@ -128,9 +129,11 @@ Provider::data_type Provider::get_value(
     std::stringstream ss; 
     if (!(divide_id_ == convert_divide_id_stoi(selector.get_id()))) {
         ss.str("");
-        ss << "divide_id_ " << divide_id_ << " != selector id " << convert_divide_id_stoi(selector.get_id());
+        ss << "get_value() divide_id_ " << divide_id_ << " != selector id " << convert_divide_id_stoi(selector.get_id());
         LOG(LogLevel::FATAL, ss.str());
-        assert(divide_id_ == convert_divide_id_stoi(selector.get_id()));
+        throw std::runtime_error{
+            "Divide ID mismatch in the forcings engine."
+        };
     }
 
     auto variable = ensure_variable(selector.get_variable_name());
@@ -162,17 +165,21 @@ Provider::data_type Provider::get_value(
         using namespace std::literals::chrono_literals;
         if (!(start >= time_begin_)) {
             LOG(LogLevel::FATAL,
-                "Begin time less than start: start=%lld vs time_begin_=%lld",
+                "get_value() Begin time less than start: start=%lld vs time_begin_=%lld",
                 static_cast<long long>(start.time_since_epoch().count()),
                 static_cast<long long>(time_begin_.time_since_epoch().count()));
-            assert(start >= time_begin_);
+            throw std::runtime_error{
+                "Begin time range error."
+            };
         }
         if (!(end < time_end_ + time_step_ + 1s)) {
             LOG(LogLevel::FATAL,
-                "Next Timestep > end: end=%lld vs limit=%lld",
+                "get_value() Next Timestep > end: end=%lld vs limit=%lld",
                 static_cast<long long>(end.time_since_epoch().count()),
                 static_cast<long long>((time_end_ + time_step_ + 1s).time_since_epoch().count()));
-            assert(end < time_end_ + time_step_ + 1s);
+            throw std::runtime_error{
+                "End time range error."
+            };
         }
 
         auto current = start;
@@ -205,9 +212,11 @@ std::vector<Provider::data_type> Provider::get_values(
     std::stringstream ss; 
     if (!(divide_id_ == convert_divide_id_stoi(selector.get_id()))) {
         ss.str("");
-        ss << "divide id " << divide_id_ << "not equal to selector.get_id" << convert_divide_id_stoi(selector.get_id());
+        ss << "get_values() divide id " << divide_id_ << "not equal to selector.get_id" << convert_divide_id_stoi(selector.get_id());
         LOG(LogLevel::FATAL, ss.str());
-        assert(divide_id_ == convert_divide_id_stoi(selector.get_id()));
+        throw std::runtime_error{
+            "Divide ID mismatch in the forcings engine."
+        };
    }
  
     auto variable = ensure_variable(selector.get_variable_name());
@@ -237,17 +246,21 @@ std::vector<Provider::data_type> Provider::get_values(
     using namespace std::literals::chrono_literals;
     if (!(start >= time_begin_)) {
         LOG(LogLevel::FATAL,
-            "Begin time less than start: start=%lld vs time_begin_=%lld",
+            "get_values() Begin time less than start: start=%lld vs time_begin_=%lld",
             static_cast<long long>(start.time_since_epoch().count()),
             static_cast<long long>(time_begin_.time_since_epoch().count()));
-        assert(start >= time_begin_);
+        throw std::runtime_error{
+            "Start time range error."
+        };
     }
     if (!(end < time_end_ + time_step_ + 1s)) {
         LOG(LogLevel::FATAL,
-            "Next Timestep > end: end=%lld vs limit=%lld",
+            "get_values() Next Timestep > end: end=%lld vs limit=%lld",
             static_cast<long long>(end.time_since_epoch().count()),
             static_cast<long long>((time_end_ + time_step_ + 1s).time_since_epoch().count()));
-        assert(end < time_end_ + time_step_ + 1s);
+        throw std::runtime_error{
+            "End time range error."
+        };
     }   
 
     
