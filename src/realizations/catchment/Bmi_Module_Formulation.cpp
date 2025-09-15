@@ -178,6 +178,7 @@ namespace realization {
                     data_access::unit_conversion_exception uce(e.what());
                     uce.provider_model_name = get_bmi_model()->get_model_name();
                     uce.provider_bmi_var_name = bmi_var_name;
+                    uce.provider_units = native_units;
                     uce.unconverted_values = std::move(values);
                     throw uce;
                 }
@@ -225,6 +226,7 @@ namespace realization {
                     data_access::unit_conversion_exception uce(e.what());
                     uce.provider_model_name = get_bmi_model()->get_model_name();
                     uce.provider_bmi_var_name = bmi_var_name;
+                    uce.provider_units = native_units;
                     uce.unconverted_values.push_back(value);
                     throw uce;
                 }
@@ -720,9 +722,11 @@ namespace realization {
                         if (new_error) {
                             std::stringstream ss;
                             ss << "Unit conversion failure:"
-                               << " requester '" << get_bmi_model()->get_model_name() << "' catchment '" << get_catchment_id() << "' variable '" << var_map_alias << "'"
-                               << " provider '" << uce.provider_model_name << "' source variable '" << uce.provider_bmi_var_name << "'"
-                               << " raw value " << uce.unconverted_values[0]
+                               << " requester {'" << get_bmi_model()->get_model_name() << "' catchment '" << get_catchment_id()
+                               << "' variable '" << var_name << "'" << " (alias '" << var_map_alias << "')"
+                               << " units '" << get_bmi_model()->GetVarUnits(var_name) << "'}"
+                               << " provider {'" << uce.provider_model_name << "' source variable '" << uce.provider_bmi_var_name << "'"
+                               << " raw value " << uce.unconverted_values[0] << "}"
                                << " message \"" << uce.what() << "\"";
                             LOG(ss.str(), LogLevel::WARNING); ss.str("");
                         }
