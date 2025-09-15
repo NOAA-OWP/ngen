@@ -51,7 +51,7 @@ protected:
     std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2" };
     std::vector<std::string> expected_output_var_locations = { "node", "node" };
     std::vector<int> expected_output_var_grids = { 0, 0 };
-    std::vector<std::string> expected_output_var_units = { "m", "m" };
+    std::vector<std::string> expected_output_var_units = { "mm/s", "m" };
     std::vector<std::string> expected_output_var_types = { "double", "double" };
     int expected_grid_rank = 1;
     int expected_grid_size = 1;
