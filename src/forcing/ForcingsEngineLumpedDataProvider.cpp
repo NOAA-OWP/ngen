@@ -153,14 +153,14 @@ Provider::data_type Provider::get_value(
             << " (" << tb_t << ")"
             << " | start: " << std::put_time(std::gmtime(&s_t), "%Y-%m-%d %H:%M:%S UTC")
             << " (" << s_t << ")" << std::endl;
-        LOG(LogLevel::INFO, ss.str());
+        LOG(LogLevel::DEBUG, ss.str());
 
         ss.str(""); 
         ss << "get_value() Time end:   " << std::put_time(std::gmtime(&te_t), "%Y-%m-%d %H:%M:%S UTC")
             << " (" << te_t << ")"
             << " | end:   " << std::put_time(std::gmtime(&e_t), "%Y-%m-%d %H:%M:%S UTC")
             << " (" << e_t << ")" << std::endl;
-        LOG(LogLevel::INFO, ss.str());
+        LOG(LogLevel::DEBUG, ss.str());
 
         using namespace std::literals::chrono_literals;
         if (!(start >= time_begin_)) {
@@ -234,14 +234,14 @@ std::vector<Provider::data_type> Provider::get_values(
               << " (" << tb_t << ")"
               << " | start: " << std::put_time(std::gmtime(&s_t), "%Y-%m-%d %H:%M:%S UTC")
               << " (" << s_t << ")" << std::endl;
-    LOG(LogLevel::INFO, ss.str());
+    LOG(LogLevel::DEBUG, ss.str());
 
     ss.str("");
     ss << "get_values() Time end:   " << std::put_time(std::gmtime(&te_t), "%Y-%m-%d %H:%M:%S UTC")
               << " (" << te_t << ")"
               << " | end:   " << std::put_time(std::gmtime(&e_t), "%Y-%m-%d %H:%M:%S UTC")
               << " (" << e_t << ")" << std::endl;
-    LOG(LogLevel::INFO, ss.str());
+    LOG(LogLevel::DEBUG, ss.str());
 
     using namespace std::literals::chrono_literals;
     if (!(start >= time_begin_)) {
