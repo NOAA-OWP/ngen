@@ -427,10 +427,12 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     }
     catch (const std::runtime_error& e)
     {
-        #ifndef UDUNITS_QUIET
-        std::cerr<<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
-        #endif
-        return rvalue;
+        data_access::unit_conversion_exception uce(e.what());
+        uce.provider_model_name = "NetCDFPerFeatureDataProvider " + catchment_id;
+        uce.provider_bmi_var_name = selector.get_variable_name();
+        uce.provider_units = native_units;
+        uce.unconverted_values.push_back(rvalue);
+        throw uce;
     }
 
     return rvalue;
