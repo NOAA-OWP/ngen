@@ -175,7 +175,7 @@ namespace realization {
                     return values;
                 }
                 catch (const std::runtime_error& e) {
-                    unit_conversion_exception uce(e.what());
+                    data_access::unit_conversion_exception uce(e.what());
                     uce.provider_model_name = get_bmi_model()->get_model_name();
                     uce.provider_bmi_var_name = bmi_var_name;
                     uce.unconverted_values = std::move(values);
@@ -222,7 +222,7 @@ namespace realization {
                     return UnitsHelper::get_converted_value(native_units, value, output_units);
                 }
                 catch (const std::runtime_error& e){
-                    unit_conversion_exception uce(e.what());
+                    data_access::unit_conversion_exception uce(e.what());
                     uce.provider_model_name = get_id();
                     uce.provider_bmi_var_name = bmi_var_name;
                     uce.unconverted_values.push_back(value);
@@ -713,9 +713,9 @@ namespace realization {
                         double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
                                                                                      get_bmi_model()->GetVarUnits(var_name)));
                         value_ptr = get_value_as_type(type, value);
-                    } catch (unit_conversion_exception &uce) {
-                        unit_error_log_key key{get_id(), var_map_alias, uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
-                        auto ret = unit_errors_reported.insert(key);
+                    } catch (data_access::unit_conversion_exception &uce) {
+                        data_access::unit_error_log_key key{get_id(), var_map_alias, uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                        auto ret = data_access::unit_errors_reported.insert(key);
                         bool new_error = ret.second;
                         if (new_error) {
                             std::stringstream ss;

@@ -583,7 +583,7 @@ namespace realization {
                 //TODO: After merge PR#405, try re-adding support for index
                 return nested_module->get_value(selector);
             }
-            catch (unit_conversion_exception &uce) {
+            catch (data_access::unit_conversion_exception &uce) {
                 // We asked for it as a dimensionless quantity, "1", just above
                 return uce.unconverted_values[0];
             }
