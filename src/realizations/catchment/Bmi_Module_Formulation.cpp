@@ -223,7 +223,7 @@ namespace realization {
                 }
                 catch (const std::runtime_error& e){
                     data_access::unit_conversion_exception uce(e.what());
-                    uce.provider_model_name = get_id();
+                    uce.provider_model_name = get_bmi_model()->get_model_name();
                     uce.provider_bmi_var_name = bmi_var_name;
                     uce.unconverted_values.push_back(value);
                     throw uce;
