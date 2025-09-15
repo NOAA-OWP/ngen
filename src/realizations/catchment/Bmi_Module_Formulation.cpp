@@ -737,6 +737,7 @@ namespace realization {
             }
         }
 
+
         void Bmi_Module_Formulation::append_model_inputs_to_stream(const double &model_init_time, time_step_t t_delta, std::stringstream &inputs) {
             std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();
             time_t model_epoch_time = convert_model_time(model_init_time) + get_bmi_model_start_time_forcing_offset_s();
