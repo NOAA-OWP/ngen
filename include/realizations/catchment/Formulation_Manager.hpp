@@ -838,7 +838,7 @@ namespace realization {
                         }
                     } else {
                         ss.str("");
-                        ss << " ailed to parse external parameter: catchment `"
+                        ss << " Failed to parse external parameter: catchment `"
                            << catchment_feature->get_id()
                            << "` does not contain the property `"
                            << param_name << "`\n";
