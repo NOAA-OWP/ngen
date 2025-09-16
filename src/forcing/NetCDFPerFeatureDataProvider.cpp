@@ -168,9 +168,11 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
     return info;
 }
 
-NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s) : log_stream(log_s), value_cache(N_EXPECTED_FORCING_VARS),
-    sim_start_date_time_epoch(sim_start),
-    sim_end_date_time_epoch(sim_end)
+NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s)
+    : log_stream(log_s)
+    , value_cache(N_EXPECTED_FORCING_VARS)
+    , sim_start_date_time_epoch(sim_start)
+    , sim_end_date_time_epoch(sim_end)
 {
     //size_t sizep = 1073741824, nelemsp = 202481;
     //float preemptionp = 0.75;
