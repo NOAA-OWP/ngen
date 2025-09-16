@@ -585,6 +585,11 @@ namespace realization {
             }
             catch (data_access::unit_conversion_exception &uce) {
                 // We asked for it as a dimensionless quantity, "1", just above
+                static bool no_conversion_message_logged = false;
+                if (!no_conversion_message_logged) {
+                    no_conversion_message_logged = true;
+                    LOG("Emitting output variables from Bmi_Multi_Formulation without unit conversion - see NGWPC-7604", LogLevel::WARNING);
+                }
                 return uce.unconverted_values[0];
             }
             // If there was any problem with the cast and extraction of the value, throw runtime error
