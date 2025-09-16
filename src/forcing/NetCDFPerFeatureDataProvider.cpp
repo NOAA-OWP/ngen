@@ -38,9 +38,11 @@ void NetCDFPerFeatureDataProvider::cleanup_shared_providers()
     shared_providers.clear();
 }
 
-NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s) : log_stream(log_s), value_cache(20),
-    sim_start_date_time_epoch(sim_start),
-    sim_end_date_time_epoch(sim_end)
+NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s)
+    : log_stream(log_s)
+    , value_cache(20)
+    , sim_start_date_time_epoch(sim_start)
+    , sim_end_date_time_epoch(sim_end)
 {
     //size_t sizep = 1073741824, nelemsp = 202481;
     //float preemptionp = 0.75;
