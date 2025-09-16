@@ -38,9 +38,12 @@ void NetCDFPerFeatureDataProvider::cleanup_shared_providers()
     shared_providers.clear();
 }
 
-NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s) : log_stream(log_s), value_cache(20),
-    sim_start_date_time_epoch(sim_start),
-    sim_end_date_time_epoch(sim_end)
+NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s)
+    : log_stream(log_s)
+    , file_path(input_path)
+    , value_cache(20)
+    , sim_start_date_time_epoch(sim_start)
+    , sim_end_date_time_epoch(sim_end)
 {
     //size_t sizep = 1073741824, nelemsp = 202481;
     //float preemptionp = 0.75;
@@ -420,7 +423,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     catch (const std::runtime_error& e)
     {
         data_access::unit_conversion_exception uce(e.what());
-        uce.provider_model_name = "NetCDFPerFeatureDataProvider " + catchment_id;
+        uce.provider_model_name = "NetCDFPerFeatureDataProvider(" + file_path + ")";
         uce.provider_bmi_var_name = selector.get_variable_name();
         uce.provider_units = native_units;
         uce.unconverted_values.push_back(rvalue);
