@@ -18,3 +18,7 @@ namespace realization
                 BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE,
         };
 }
+
+namespace data_access {
+    std::set<unit_error_log_key> unit_errors_reported;
+}
