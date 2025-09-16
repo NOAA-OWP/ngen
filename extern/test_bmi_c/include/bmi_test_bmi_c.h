@@ -1,6 +1,11 @@
 #ifndef BMI_TEST_BMI_C_H
 #define BMI_TEST_BMI_C_H
 
+#define NGEN_MASS_IN "ngen::mass_in"
+#define NGEN_MASS_OUT "ngen::mass_out"
+#define NGEN_MASS_STORED "ngen::mass_stored"
+#define NGEN_MASS_LEAKED "ngen::mass_leaked"
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
