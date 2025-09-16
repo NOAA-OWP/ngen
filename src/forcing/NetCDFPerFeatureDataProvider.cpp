@@ -170,6 +170,7 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
 
 NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s)
     : log_stream(log_s)
+    , file_path(input_path)
     , value_cache(N_EXPECTED_FORCING_VARS)
     , sim_start_date_time_epoch(sim_start)
     , sim_end_date_time_epoch(sim_end)
