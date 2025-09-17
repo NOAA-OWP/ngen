@@ -77,6 +77,7 @@ option(NGEN_WITH_EXTERN_SMP                              "Build with extern-dist
 option(NGEN_WITH_EXTERN_SFT                              "Build with extern-distributed SFT"              OFF)
 cmake_dependent_option(NGEN_WITH_EXTERN_TOPMODEL         "Build with extern-distributed TOPMODEL"         ON "NGEN_WITH_BMI_C"       OFF)
 cmake_dependent_option(NGEN_WITH_EXTERN_CFE              "Build with extern-distributed CFE"              ON "NGEN_WITH_BMI_C"       OFF)
+cmake_dependent_option(NGEN_WITH_EXTERN_LGAR             "Build with extern-distributed LGAR"             ON "NGEN_WITH_BMI_C"       OFF)
 cmake_dependent_option(NGEN_WITH_EXTERN_PET              "Build with extern-distributed PET"              ON "NGEN_WITH_BMI_C"       OFF)
 cmake_dependent_option(NGEN_WITH_EXTERN_NOAH_OWP_MODULAR "Build with extern-distributed Noah-OWP-Modular" ON "NGEN_WITH_BMI_FORTRAN" OFF)
 
@@ -92,6 +93,7 @@ if(NGEN_WITH_EXTERN_ALL)
         set(NGEN_WITH_EXTERN_TOPMODEL ON)
         set(NGEN_WITH_EXTERN_CFE ON)
         set(NGEN_WITH_EXTERN_PET ON)
+        set(NGEN_WITH_EXTERN_LGAR ON)
     else()
         message(FATAL_ERROR "NGEN_WITH_EXTERN_ALL set to ${NGEN_WITH_EXTERN_ALL}, but NGEN_WITH_BMI_C set to ${NGEN_WITH_BMI_C}")
     endif()
@@ -258,7 +260,7 @@ if(NGEN_WITH_BMI_C)
             SOURCE     "${NGEN_EXT_DIR}/cfe"
             OUTPUT     "${NGEN_EXT_DIR}/cfe/cmake_build"
             GIT_UPDATE "${NGEN_EXT_DIR}/cfe/cfe"
-            IMPORTS    cfebmi     
+            IMPORTS    cfebmi
         )
     endif()
 
@@ -268,6 +270,15 @@ if(NGEN_WITH_BMI_C)
             OUTPUT "${NGEN_EXT_DIR}/evapotranspiration/evapotranspiration/cmake_build"
             GIT_UPDATE "${NGEN_EXT_DIR}/evapotranspiration/evapotranspiration"
             IMPORTS petbmi
+        )
+    endif()
+
+    if(NGEN_WITH_EXTERN_LGAR)
+        add_external_subdirectory(
+            SOURCE     "${NGEN_EXT_DIR}/lgar-c"
+            OUTPUT     "${NGEN_EXT_DIR}/lgar-c/cmake_build"
+            GIT_UPDATE "${NGEN_EXT_DIR}/lgar-c/LGAR-C"
+            IMPORTS    lasambmi
         )
     endif()
 endif()
@@ -343,6 +354,10 @@ endif()
 
 if(NGEN_WITH_EXTERN_PET)
     add_dependencies(ngen petbmi)
+endif()
+
+if(NGEN_WITH_EXTERN_LGAR)
+    add_dependencies(ngen lasambmi)
 endif()
 
 if(NGEN_WITH_EXTERN_NOAH_OWP_MODULAR)
