@@ -7,6 +7,7 @@
 #include "Bmi_Adapter.hpp"
 #include <DataProvider.hpp>
 #include "bmi_utilities.hpp"
+#include "bmi/protocols.hpp"
 
 #include <boost/core/span.hpp>
 #include "bmi/protocols.hpp"
