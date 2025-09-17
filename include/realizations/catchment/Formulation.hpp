@@ -44,6 +44,7 @@ namespace realization {
             virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) = 0;
             virtual void create_formulation(geojson::PropertyMap properties) = 0;
 
+            virtual void check_mass_balance(const int& iteration, const int& total_steps, const std::string& timestamp) const = 0;
         protected:
 
             virtual const std::vector<std::string>& get_required_parameters() const = 0;

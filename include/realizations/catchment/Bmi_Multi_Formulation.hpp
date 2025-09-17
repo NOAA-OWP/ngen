@@ -42,6 +42,15 @@ namespace realization {
 
         virtual ~Bmi_Multi_Formulation() {};
 
+        virtual void check_mass_balance(const int& iteration, const int& total_steps, const std::string& timestamp) const final {
+            for( const auto &module : modules ) {
+                // TODO may need to check on outputs form each module indepdently???
+                // Right now, the assumption is that if each component is mass balanced
+                // then the entire formulation is mass balanced
+                module->check_mass_balance(iteration, total_steps, timestamp);
+            }
+        };
+
         /**
          * Convert a time value from the model to an epoch time in seconds.
          *
