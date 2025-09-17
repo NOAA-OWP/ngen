@@ -382,6 +382,9 @@ namespace realization {
                     if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end())
                         available_forcings.push_back(bmi_var_names_map[output_var_name]);
                 }
+                //Initialize all NgenBmiProtocols with the valid adapter pointer and any properties
+                //provided in the read configuration.
+                bmi_protocols = models::bmi::protocols::NgenBmiProtocols(get_bmi_model(), properties);
             }
         }
         /**

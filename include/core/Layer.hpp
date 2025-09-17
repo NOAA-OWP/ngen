@@ -119,6 +119,8 @@ namespace ngen
                 double response(0.0);
                 try{
                     response = r_c->get_response(output_time_index, simulation_time.get_output_interval_seconds());
+                    // Check mass balance if able
+                    r_c->check_mass_balance(output_time_index, simulation_time.get_total_output_times(), current_timestamp);
                 }
                 catch(models::external::State_Exception& e){
                     std::string msg = e.what();
@@ -126,6 +128,13 @@ namespace ngen
                              +" ("+current_timestamp+")"
                              +" at feature id "+id;
                     throw models::external::State_Exception(msg);
+                }
+                catch(std::exception& e){
+                    std::string msg = e.what();
+                    msg = msg+" at timestep "+std::to_string(output_time_index)
+                             +" ("+current_timestamp+")"
+                             +" at feature id "+id;
+                    throw std::runtime_error(msg);
                 }
                 std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
                                     r_c->get_output_line_for_timestep(output_time_index)+"\n";
