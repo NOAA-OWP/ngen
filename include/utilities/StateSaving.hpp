@@ -1,7 +1,7 @@
 #ifndef STATESAVING_HPP
 #define STATESAVING_HPP
 
-#include <NGenConfig.hpp>
+#include <NGenConfig.h>
 
 struct UnitSaver
 {
