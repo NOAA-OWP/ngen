@@ -5,7 +5,7 @@
 
 struct UnitSaver
 {
-    virtual save(boost::span<const char> data) = 0;
+    virtual void save(boost::span<const char> data) = 0;
 };
 
 #endif // STATESAVING_HPP
