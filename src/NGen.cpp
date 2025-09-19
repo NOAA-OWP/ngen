@@ -619,8 +619,7 @@ int main(int argc, char* argv[]) {
                     sim_time,
                     features,
                     catchment_collection,
-                    0,
-                    nexus_subset_ids
+                    0
                 );
             }
         }

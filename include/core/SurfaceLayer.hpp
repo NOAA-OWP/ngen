@@ -15,10 +15,8 @@ namespace ngen
                 const Simulation_Time& s_t, 
                 feature_type& f, 
                 geojson::GeoJSON cd, 
-                long idx,
-                const std::vector<std::string>& n_u) :
-                    Layer(desc,p_u,s_t,f,cd,idx), 
-                    nexus_ids(n_u)
+                long idx) :
+                    Layer(desc,p_u,s_t,f,cd,idx)
         {
 
         }
@@ -31,10 +29,6 @@ namespace ngen
                            boost::span<double> nexus_downstream_flows,
                            std::unordered_map<std::string, int> &nexus_indexes,
                            int current_step) override;
-
-        private:
-
-        std::vector<std::string> nexus_ids;
     };
 }
 
