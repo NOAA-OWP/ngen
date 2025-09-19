@@ -16,11 +16,9 @@ namespace ngen
                 feature_type& f, 
                 geojson::GeoJSON cd, 
                 long idx,
-                const std::vector<std::string>& n_u,
-                std::unordered_map<std::string, std::ofstream>& output_files) : 
+                const std::vector<std::string>& n_u) :
                     Layer(desc,p_u,s_t,f,cd,idx), 
-                    nexus_ids(n_u), 
-                    nexus_outfiles(output_files)
+                    nexus_ids(n_u)
         {
 
         }
@@ -37,7 +35,6 @@ namespace ngen
         private:
 
         std::vector<std::string> nexus_ids;
-        std::unordered_map<std::string, std::ofstream>& nexus_outfiles;
     };
 }
 
