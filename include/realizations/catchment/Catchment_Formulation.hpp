@@ -13,54 +13,22 @@ namespace realization {
 
     class Catchment_Formulation : public Formulation, public HY_CatchmentArea {
         public:
-            Catchment_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream)
-                : Formulation(id)
-                , HY_CatchmentArea(output_stream)
-                , forcing(forcing)
-        {
-                    // Assume the catchment ID is equal to or embedded in the formulation `id`
-                    size_t idx = id.find(".");
-                    set_catchment_id( idx == std::string::npos ? id : id.substr(0, idx) );
-        }
+            Catchment_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream);
+            Catchment_Formulation(std::string id);
 
-            Catchment_Formulation(std::string id) : Formulation(id){
-                    // Assume the catchment ID is equal to or embedded in the formulation `id`
-                    size_t idx = id.find(".");
-                    set_catchment_id( idx == std::string::npos ? id : id.substr(0, idx) );
-            };
-
-        /**
-         * Perform in-place substitution on the given config property item, if the item and the pattern are present.
-         *
-         * Any and all instances of the substring ``pattern`` are replaced by ``replacement``, if ``key`` maps to a
-         * present string-type property value.
-         *
-         * @param properties A reference to the properties config object to be altered.
-         * @param key The key for the configuration property to potentially adjust.
-         * @param pattern The pattern substring to search for that, when present, should be replaced.
-         * @param replacement The replacement substring to potentially insert.
-         */
-        static void config_pattern_substitution(geojson::PropertyMap &properties, const std::string &key,
-                                                const std::string &pattern, const std::string &replacement) {
-            auto it = properties.find(key);
-            // Do nothing and return if either the key isn't found or the associated property isn't a string
-            if (it == properties.end() || it->second.get_type() != geojson::PropertyType::String) {
-                return;
-            }
-
-            std::string value = it->second.as_string();
-            size_t id_index = value.find(pattern);
-
-            if (id_index != std::string::npos) {
-                do {
-                    value = value.replace(id_index, sizeof(pattern.c_str()) - 2, replacement);
-                    id_index = value.find(pattern);
-                } while (id_index != std::string::npos);
-
-                properties.erase(key);
-                properties.emplace(key, geojson::JSONProperty(key, value));
-            }
-        }
+            /**
+             * Perform in-place substitution on the given config property item, if the item and the pattern are present.
+             *
+             * Any and all instances of the substring ``pattern`` are replaced by ``replacement``, if ``key`` maps to a
+             * present string-type property value.
+             *
+             * @param properties A reference to the properties config object to be altered.
+             * @param key The key for the configuration property to potentially adjust.
+             * @param pattern The pattern substring to search for that, when present, should be replaced.
+             * @param replacement The replacement substring to potentially insert.
+             */
+            static void config_pattern_substitution(geojson::PropertyMap &properties, const std::string &key,
+                                                    const std::string &pattern, const std::string &replacement);
 
             /**
              * Get a header line appropriate for a file made up of entries from this type's implementation of
@@ -72,9 +40,7 @@ namespace realization {
              *
              * @return An appropriate header line for this type.
              */
-            virtual std::string get_output_header_line(std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER) const {
-                return "Total Discharge";
-            }
+            virtual std::string get_output_header_line(std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER) const;
 
             /**
              * Get a formatted line of output values for the given time step as a delimited string.
@@ -114,32 +80,26 @@ namespace realization {
 
             void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override = 0;
             void create_formulation(geojson::PropertyMap properties) override = 0;
-            virtual ~Catchment_Formulation(){};
+            virtual ~Catchment_Formulation() = default;
 
-        /**
-         * Release resources of the given forcing provider
-         */
-        void finalize()
-        {
-            if (forcing) {
-                forcing->finalize();
-                forcing = nullptr;
-            }
-        }
+            /**
+             * Release resources of the given forcing provider
+             */
+            void finalize();
 
     protected:
-        std::string get_catchment_id() const override {
-            return this->cat_id;
-        }
+            std::string get_catchment_id() const override {
+                return this->cat_id;
+            }
 
-        void set_catchment_id(std::string cat_id) override {
-            this->cat_id = cat_id;
-        }
+            void set_catchment_id(std::string cat_id) override {
+                this->cat_id = cat_id;
+            }
 
-        std::shared_ptr<data_access::GenericDataProvider> forcing;
+            std::shared_ptr<data_access::GenericDataProvider> forcing;
 
     private:
-        std::string cat_id;
+            std::string cat_id;
     };
 }
 #endif // CATCHMENT_FORMULATION_H
