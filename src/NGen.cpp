@@ -23,6 +23,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/range/algorithm/sort.hpp>
 
+#include <NgenSimulation.hpp>
+
 #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
 #include <unistd.h>
 #endif // WRITE_PID_FILE_FOR_GDB_SERVER
@@ -506,7 +508,6 @@ int main(int argc, char* argv[]) {
     }
 #endif // NGEN_WITH_ROUTING
     ss << "Building Feature Index" << std::endl;
-    ;
     LOG(ss.str(), LogLevel::INFO);
     ss.str("");
     std::string link_key = "toid";
@@ -646,69 +647,15 @@ int main(int argc, char* argv[]) {
     nexus_downstream_flows.resize(nexus_collection_size * num_times);
 #endif // NGEN_WITH_ROUTING
 
-    for (int count = 0; count < num_times; count++) {
-        // The Inner loop will advance all layers unless doing so will break one of two constraints
-        // 1) A layer may not proceed ahead of the master simulation object's current time
-        // 2) A layer may not proceed ahead of any layer that is computed before it
-        // The do while loop ensures that all layers are tested at least once while allowing
-        // layers with small time steps to be updated more than once
-        // If a layer with a large time step is after a layer with a small time step the
-        // layer with the large time step will wait for multiple timesteps from the preceeding
-        // layer.
+    auto simulation = std::make_unique<NgenSimulation>(manager,
+                                                       layers,
+                                                       catchment_indexes,
+                                                       catchment_outflows,
+                                                       nexus_indexes,
+                                                       nexus_downstream_flows);
 
-        // this is the time that layers are trying to reach (or get as close as possible)
-        auto next_time = manager->Simulation_Time_Object->next_timestep_epoch_time();
-
-        // this is the time that the layer above the current layer is at
-        auto prev_layer_time = next_time;
-
-        // this is the time that the least advanced layer is at
-        auto layer_min_next_time = next_time;
-        do {
-            for (auto& layer : layers) {
-                auto layer_next_time = layer->next_timestep_epoch_time();
-
-                // only advance if you would not pass the master next time and the previous layer
-                // next time
-                if (layer_next_time <= next_time && layer_next_time <= prev_layer_time) {
-                    if (count % 100 == 0) {
-                        ss << "Updating layer: " << layer->get_name() << "\n";
-                        LOG(ss.str(), LogLevel::DEBUG);
-                        ss.str("");
-                    }
-#if NGEN_WITH_ROUTING
-                    boost::span<double> catchment_span(catchment_outflows.data() + (count * catchment_indexes.size()),
-                                                       catchment_indexes.size());
-                    boost::span<double> nexus_span(nexus_downstream_flows.data() + (count * nexus_indexes.size()),
-                                                   nexus_indexes.size());
-#else
-                    boost::span<double> catchment_span;
-                    boost::span<double> nexus_span;
-#endif
-                    layer->update_models(
-                        catchment_span,
-                        catchment_indexes,
-                        nexus_span,
-                        nexus_indexes,
-                        count
-                    ); // assume update_models() calls time->advance_timestep()
-                    prev_layer_time = layer_next_time;
-                } else {
-                    layer_min_next_time = prev_layer_time = layer->current_timestep_epoch_time();
-                }
-
-                if (layer_min_next_time > layer_next_time) {
-                    layer_min_next_time = layer_next_time;
-                }
-            } // done layers
-        } while (layer_min_next_time < next_time
-        ); // rerun the loop until the last layer would pass the master next time
-
-        if (count + 1 < num_times) {
-            manager->Simulation_Time_Object->advance_timestep();
-        }
-
-    } // done time
+    // Currently breaks routing data transfer; will move routing down into this
+    simulation->run_catchments();
 
 #if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
@@ -728,21 +675,7 @@ int main(int argc, char* argv[]) {
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
-#if NGEN_WITH_ROUTING
-    if (mpi_rank == 0) { // Run t-route from single process
-        if (manager->get_using_routing()) {
-            // Note: Currently, delta_time is set in the t-route yaml configuration file, and the
-            // number_of_timesteps is determined from the total number of nexus outputs in t-route.
-            // It is recommended to still pass these values to the routing_py_adapter object in
-            // case a future implmentation needs these two values from the ngen framework.
-            int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
-
-            int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
-
-            router->route(number_of_timesteps, delta_time);
-        }
-    }
-#endif
+    simulation->run_routing();
 
     auto time_done_routing                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_routing = time_done_routing - time_done_simulation;
