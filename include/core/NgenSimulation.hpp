@@ -26,6 +26,8 @@ public:
                    );
     NgenSimulation() = delete;
 
+    ~NgenSimulation();
+
     void run_catchments();
     void run_routing();
     void advance_one_output_step();
