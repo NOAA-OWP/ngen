@@ -697,7 +697,7 @@ int main(int argc, char* argv[]) {
                 // next time
                 if (layer_next_time <= next_time && layer_next_time <= prev_layer_time) {
                     if (count % 100 == 0) {
-                        ss << "Updating layer: " << layer->get_name() << "\n";
+                        ss << "Updating layer: " << layer->get_name() << " Count=" << count << "\n";
                         LOG(ss.str(), LogLevel::DEBUG);
                         ss.str("");
                     }
