@@ -14,17 +14,12 @@ NgenSimulation::NgenSimulation(
                                )
     : catchment_formulation_manager_(formulation_manager)
     , sim_time_(std::make_shared<Simulation_Time>(*formulation_manager->Simulation_Time_Object))
-    , layers_(layers)
+    , layers_(std::move(layers))
     , catchment_indexes_(std::move(catchment_indexes))
     , nexus_indexes_(std::move(nexus_indexes))
 {
-    auto num_times = sim_time_->get_total_output_times();
-
-    size_t num_catchments = catchment_indexes_.size();
-    catchment_outflows_.reserve(num_catchments * num_times);
-
-    size_t num_nexuses = nexus_indexes_.size();
-    nexus_downstream_flows_.reserve(num_nexuses * num_times);
+    catchment_outflows_.reserve(catchment_indexes_.size() * get_num_output_times());
+    nexus_downstream_flows_.reserve(nexus_indexes_.size() * get_num_output_times());
 }
 
 void NgenSimulation::run_catchments()
@@ -32,7 +27,7 @@ void NgenSimulation::run_catchments()
     std::stringstream ss;
 
     // Now loop some time, iterate catchments, do stuff for total number of output times
-    auto num_times = sim_time_->get_total_output_times();
+    auto num_times = get_num_output_times();
 
     for (int count = 0; count < num_times; count++) {
         // The Inner loop will advance all layers unless doing so will break one of two constraints
@@ -65,7 +60,7 @@ void NgenSimulation::run_catchments()
                 // next time
                 if (layer_next_time <= next_time && layer_next_time <= prev_layer_time) {
                     if (count % 100 == 0) {
-                        ss << "Updating layer: " << layer->get_name() << "\n";
+                        ss << "Updating layer: '" << layer->get_name() << "' at output step " << count;
                         LOG(ss.str(), LogLevel::DEBUG);
                         ss.str("");
                     }
@@ -116,19 +111,21 @@ void NgenSimulation::run_routing()
     if (mpi_rank != 0)
         return;
 
-    if (!catchment_formulation_manager_->get_using_routing())
-        return;
-
     // Note: Currently, delta_time is set in the t-route yaml configuration file, and the
     // number_of_timesteps is determined from the total number of nexus outputs in t-route.
     // It is recommended to still pass these values to the routing_py_adapter object in
     // case a future implmentation needs these two values from the ngen framework.
-    int number_of_timesteps = catchment_formulation_manager_->Simulation_Time_Object->get_total_output_times();
+    int number_of_timesteps = get_num_output_times();
 
-    int delta_time = catchment_formulation_manager_->Simulation_Time_Object->get_output_interval_seconds();
+    int delta_time = sim_time_->get_output_interval_seconds();
 
     router_->route(number_of_timesteps, delta_time);
 #endif
+}
+
+size_t NgenSimulation::get_num_output_times()
+{
+    return sim_time_->get_total_output_times();
 }
 
 template <class Archive>

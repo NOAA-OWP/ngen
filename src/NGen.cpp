@@ -669,7 +669,9 @@ int main(int argc, char* argv[]) {
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
-    simulation->run_routing();
+    if (manager->get_using_routing()) {
+        simulation->run_routing();
+    }
 
     auto time_done_routing                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_routing = time_done_routing - time_done_simulation;
