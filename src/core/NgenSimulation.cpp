@@ -23,6 +23,8 @@ NgenSimulation::NgenSimulation(
     nexus_downstream_flows_.reserve(nexus_indexes_.size() * get_num_output_times());
 }
 
+NgenSimulation::~NgenSimulation() = default;
+
 void NgenSimulation::run_catchments()
 {
     std::stringstream ss;

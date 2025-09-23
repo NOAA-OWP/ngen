@@ -648,7 +648,6 @@ int main(int argc, char* argv[]) {
                                                        catchment_indexes,
                                                        nexus_indexes);
 
-    // Currently breaks routing data transfer; will move routing down into this
     simulation->run_catchments();
 
 #if NGEN_WITH_MPI
