@@ -646,22 +646,9 @@ int main(int argc, char* argv[]) {
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
-#if NGEN_WITH_ROUTING
-    if (mpi_rank == 0)
-    { // Run t-route from single process
-        if(manager->get_using_routing()) {
-          //Note: Currently, delta_time is set in the t-route yaml configuration file, and the
-          //number_of_timesteps is determined from the total number of nexus outputs in t-route.
-          //It is recommended to still pass these values to the routing_py_adapter object in
-          //case a future implmentation needs these two values from the ngen framework.
-          int number_of_timesteps = sim_time->get_total_output_times();
-
-          int delta_time = sim_time->get_output_interval_seconds();
-          
-          router->route(number_of_timesteps, delta_time); 
-        }
+    if (manager->get_using_routing()) {
+        simulation->run_routing();
     }
-#endif
 
     auto time_done_routing = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_routing = time_done_routing - time_done_simulation;

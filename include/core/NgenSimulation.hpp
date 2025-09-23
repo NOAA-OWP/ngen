@@ -31,7 +31,8 @@ public:
     void advance_one_output_step();
 
     std::shared_ptr<Simulation_Time> sim_time_;
-    
+    size_t get_num_output_times();
+
     // Catchment data
     std::shared_ptr<realization::Formulation_Manager> catchment_formulation_manager_;
     std::vector<std::shared_ptr<ngen::Layer>> layers_;
