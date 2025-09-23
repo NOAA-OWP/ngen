@@ -13,6 +13,7 @@ NgenSimulation::NgenSimulation(
     std::unordered_map<std::string, int> nexus_indexes
                                )
     : catchment_formulation_manager_(formulation_manager)
+    , simulation_step_(0)
     , sim_time_(std::make_shared<Simulation_Time>(*formulation_manager->Simulation_Time_Object))
     , layers_(std::move(layers))
     , catchment_indexes_(std::move(catchment_indexes))
@@ -29,7 +30,7 @@ void NgenSimulation::run_catchments()
     // Now loop some time, iterate catchments, do stuff for total number of output times
     auto num_times = get_num_output_times();
 
-    for (int count = 0; count < num_times; count++) {
+    for (; simulation_step_ < num_times; simulation_step_++) {
         // The Inner loop will advance all layers unless doing so will break one of two constraints
         // 1) A layer may not proceed ahead of the master simulation object's current time
         // 2) A layer may not proceed ahead of any layer that is computed before it
@@ -59,15 +60,15 @@ void NgenSimulation::run_catchments()
                 // only advance if you would not pass the master next time and the previous layer
                 // next time
                 if (layer_next_time <= next_time && layer_next_time <= prev_layer_time) {
-                    if (count % 100 == 0) {
-                        ss << "Updating layer: '" << layer->get_name() << "' at output step " << count;
+                    if (simulation_step_ % 100 == 0) {
+                        ss << "Updating layer: '" << layer->get_name() << "' at output step " << simulation_step_;
                         LOG(ss.str(), LogLevel::DEBUG);
                         ss.str("");
                     }
 #if NGEN_WITH_ROUTING
-                    boost::span<double> catchment_span(catchment_outflows_.data() + (count * catchment_indexes_.size()),
+                    boost::span<double> catchment_span(catchment_outflows_.data() + (simulation_step_ * catchment_indexes_.size()),
                                                        catchment_indexes_.size());
-                    boost::span<double> nexus_span(nexus_downstream_flows.data() + (count * nexus_indexes_.size()),
+                    boost::span<double> nexus_span(nexus_downstream_flows.data() + (simulation_step_ * nexus_indexes_.size()),
                                                    nexus_indexes_.size());
 #else
                     boost::span<double> catchment_span;
@@ -78,7 +79,7 @@ void NgenSimulation::run_catchments()
                         catchment_indexes_,
                         nexus_span,
                         nexus_indexes_,
-                        count
+                        simulation_step_
                     ); // assume update_models() calls time->advance_timestep()
                     prev_layer_time = layer_next_time;
                 } else {
@@ -91,7 +92,7 @@ void NgenSimulation::run_catchments()
             } // done layers
         } while (layer_min_next_time < next_time); // rerun the loop until the last layer would pass the master next time
 
-        if (count + 1 < num_times) {
+        if (simulation_step_ + 1 < num_times) {
             sim_time_->advance_timestep();
             catchment_formulation_manager_->Simulation_Time_Object->advance_timestep();
         }
@@ -135,6 +136,7 @@ void NgenSimulation::serialize(Archive& ar) {
      * individual catchments and do other tricky things */
     //ar & catchment_formulation_manager
 
+    ar & simulation_step_;
     ar & sim_time_;
 
     // Layers will be reconstructed, but their internal time keeping needs to be serialized

@@ -30,6 +30,8 @@ public:
     void run_routing();
     void advance_one_output_step();
 
+    int simulation_step_;
+
     std::shared_ptr<Simulation_Time> sim_time_;
     size_t get_num_output_times();
 
