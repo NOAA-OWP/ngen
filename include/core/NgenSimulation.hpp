@@ -22,9 +22,7 @@ public:
                    std::shared_ptr<realization::Formulation_Manager> formulation_manager,
                    std::vector<std::shared_ptr<ngen::Layer>> layers,
                    std::unordered_map<std::string, int> catchment_indexes,
-                   std::vector<double> catchment_outflows,
-                   std::unordered_map<std::string, int> nexus_indexes,
-                   std::vector<double> nexus_downstream_flows
+                   std::unordered_map<std::string, int> nexus_indexes
                    );
     NgenSimulation() = delete;
 

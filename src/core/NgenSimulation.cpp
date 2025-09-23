@@ -10,19 +10,21 @@ NgenSimulation::NgenSimulation(
     std::shared_ptr<realization::Formulation_Manager> formulation_manager,
     std::vector<std::shared_ptr<ngen::Layer>> layers,
     std::unordered_map<std::string, int> catchment_indexes,
-    std::vector<double> catchment_outflows,
-    std::unordered_map<std::string, int> nexus_indexes,
-    std::vector<double> nexus_downstream_flows
+    std::unordered_map<std::string, int> nexus_indexes
                                )
     : catchment_formulation_manager_(formulation_manager)
     , sim_time_(std::make_shared<Simulation_Time>(*formulation_manager->Simulation_Time_Object))
     , layers_(layers)
     , catchment_indexes_(std::move(catchment_indexes))
-    , catchment_outflows_(std::move(catchment_outflows))
     , nexus_indexes_(std::move(nexus_indexes))
-    , nexus_downstream_flows_(std::move(nexus_downstream_flows))
 {
+    auto num_times = sim_time_->get_total_output_times();
 
+    size_t num_catchments = catchment_indexes_.size();
+    catchment_outflows_.reserve(num_catchments * num_times);
+
+    size_t num_nexuses = nexus_indexes_.size();
+    nexus_downstream_flows_.reserve(num_nexuses * num_times);
 }
 
 void NgenSimulation::run_catchments()
@@ -30,7 +32,7 @@ void NgenSimulation::run_catchments()
     std::stringstream ss;
 
     // Now loop some time, iterate catchments, do stuff for total number of output times
-    auto num_times = catchment_formulation_manager_->Simulation_Time_Object->get_total_output_times();
+    auto num_times = sim_time_->get_total_output_times();
 
     for (int count = 0; count < num_times; count++) {
         // The Inner loop will advance all layers unless doing so will break one of two constraints
@@ -41,6 +43,10 @@ void NgenSimulation::run_catchments()
         // If a layer with a large time step is after a layer with a small time step the
         // layer with the large time step will wait for multiple timesteps from the preceeding
         // layer.
+
+        // Make room for this output step's results
+        catchment_outflows_.resize(catchment_outflows_.size() + catchment_indexes_.size());
+        nexus_downstream_flows_.resize(nexus_downstream_flows_.size() + nexus_indexes_.size());
 
         // this is the time that layers are trying to reach (or get as close as possible)
         auto next_time = catchment_formulation_manager_->Simulation_Time_Object->next_timestep_epoch_time();

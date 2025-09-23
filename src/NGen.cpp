@@ -633,26 +633,20 @@ int main(int argc, char* argv[]) {
     auto num_times = manager->Simulation_Time_Object->get_total_output_times();
 
     // T-ROUTE data storage
-    std::vector<double> catchment_outflows;
     std::unordered_map<std::string, int> catchment_indexes;
-    std::vector<double> nexus_downstream_flows;
 #if NGEN_WITH_ROUTING
     size_t catchment_collection_size = catchment_collection->get_size();
-    catchment_outflows.resize(catchment_collection_size * num_times);
     for (int i = 0; i < catchment_collection_size; ++i) {
         auto feature = catchment_collection->get_feature(i);
         std::string feature_id = feature->get_id();
         catchment_indexes[feature_id] = i;
     }
-    nexus_downstream_flows.resize(nexus_collection_size * num_times);
 #endif // NGEN_WITH_ROUTING
 
     auto simulation = std::make_unique<NgenSimulation>(manager,
                                                        layers,
                                                        catchment_indexes,
-                                                       catchment_outflows,
-                                                       nexus_indexes,
-                                                       nexus_downstream_flows);
+                                                       nexus_indexes);
 
     // Currently breaks routing data transfer; will move routing down into this
     simulation->run_catchments();
