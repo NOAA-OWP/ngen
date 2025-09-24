@@ -29,7 +29,7 @@ namespace realization {
             static bool no_conversion_message_logged = false;
             if (!no_conversion_message_logged) {
                 no_conversion_message_logged = true;
-                LOG("Emitting output variables from Bmi_Module_Formulation without unit conversion - see NGWPC-7604", LogLevel::WARNING);
+                LOG("Output variables do not have unit conversion. Capability not yet implemented in ngen.", LogLevel::WARNING);
             }
 
             std::string output_str;
