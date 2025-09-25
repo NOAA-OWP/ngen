@@ -189,7 +189,7 @@ RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
       'pandas' \
       'pyyml' \
       'torch' \
-      no-binary=mpi4py mpi4py && \
+      --no-binary=mpi4py mpi4py && \
     pip install /ngen-app/ngen-forcing/
 
 WORKDIR /ngen-app/
