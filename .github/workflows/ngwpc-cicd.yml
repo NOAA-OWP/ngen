@@ -89,9 +89,6 @@ jobs:
           context: .
           push: true
           tags: ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.test_image_tag }}
-          build-args: |
-            CREATE_INPUT_TAG=${{ needs.setup.outputs.test_image_tag }}
-            RUN_SWE_TAG=${{ needs.setup.outputs.test_image_tag }}
 
   unit-test:
     name: unit-test
@@ -211,17 +208,23 @@ jobs:
     runs-on: ubuntu-latest
     needs: [setup, build, unit-test, sonarqube-internal, codeql-scan, container-scanning]
     steps:
-      - name: Log in to registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build latest image
+      - name: Tag image with 'latest'
+        shell: bash
         run: |
-          docker pull ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.commit_sha_short }}
-          docker tag  ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.commit_sha_short }} ${{ needs.setup.outputs.image_base }}:latest
-          docker push ${{ needs.setup.outputs.image_base }}:latest
+          set -euo pipefail
+          IMAGE_BASE="${{ needs.setup.outputs.image_base }}"
+          SHORT_SHA="${{ needs.setup.outputs.commit_sha_short }}"
+
+          # ensure skopeo is available
+          if ! command -v skopeo >/dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y --no-install-recommends skopeo
+          fi
+
+          skopeo copy \
+            --src-creds "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" \
+            --dest-creds "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" \
+            docker://"${IMAGE_BASE}:${SHORT_SHA}" docker://"${IMAGE_BASE}:latest"
 
   release:
     name: release
@@ -229,25 +232,57 @@ jobs:
     runs-on: ubuntu-latest
     needs: setup
     steps:
-      - name: Log in to registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Check out the release tag
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.release.tag_name }}
-          fetch-depth: 0
-      - name: Resolve commit sha for the tag
+      - name: Get commit sha for the tag
         id: rev
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          SHORT_SHA="$(git rev-parse --short=12 HEAD)"
+          set -euo pipefail
+          TAG="${{ github.event.release.tag_name }}"
+          REPO="${{ github.repository }}"
+
+          # ensure jq is available
+          if ! command -v jq >/dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y --no-install-recommends jq
+          fi
+
+          # ensure gh cli is available
+          if ! command -v gh >/dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y --no-install-recommends gh
+          fi
+
+          REF_JSON="$(gh api "repos/${REPO}/git/refs/tags/${TAG}")"
+          OBJ_SHA="$(jq -r '.object.sha' <<<"$REF_JSON")"
+          OBJ_TYPE="$(jq -r '.object.type' <<<"$REF_JSON")"
+
+          if [ "$OBJ_TYPE" = "tag" ]; then
+            TAG_OBJ="$(gh api "repos/${REPO}/git/tags/${OBJ_SHA}")"
+            COMMIT_SHA="$(jq -r '.object.sha' <<<"$TAG_OBJ")"
+          else
+            COMMIT_SHA="$OBJ_SHA"
+          fi
+
+          SHORT_SHA="${COMMIT_SHA:0:12}"
           echo "short_sha=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+
       - name: Tag image with release tag
+        shell: bash
         run: |
-          docker pull ${{ needs.setup.outputs.image_base }}:${{ steps.rev.outputs.short_sha }}
-          docker tag  ${{ needs.setup.outputs.image_base }}:${{ steps.rev.outputs.short_sha }} ${{ needs.setup.outputs.image_base }}:${{ github.event.release.tag_name }}
-          docker push ${{ needs.setup.outputs.image_base }}:${{ github.event.release.tag_name }}
+          set -euo pipefail
+          IMAGE_BASE="${{ needs.setup.outputs.image_base }}"
+          SHORT_SHA="${{ steps.rev.outputs.short_sha }}"
+          RELEASE_TAG="${{ github.event.release.tag_name }}"
+
+          # ensure skopeo is available
+          if ! command -v skopeo >/dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y --no-install-recommends skopeo
+          fi
+
+          skopeo copy \
+            --src-creds "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" \
+            --dest-creds "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" \
+            docker://"${IMAGE_BASE}:${SHORT_SHA}" docker://"${IMAGE_BASE}:${RELEASE_TAG}"
