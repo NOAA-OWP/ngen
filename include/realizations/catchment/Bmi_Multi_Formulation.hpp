@@ -579,7 +579,7 @@ namespace realization {
             try {
                 auto const& nested_module = data_provider_iter->second;
                 long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
-                auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"1");
+		auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"");
                 //TODO: After merge PR#405, try re-adding support for index
                 return nested_module->get_value(selector);
             }
