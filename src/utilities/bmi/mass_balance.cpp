@@ -15,6 +15,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
 
+Version 0.2
+Implement error handling via expected<T, ProtocolError> and error_or_warning
+
 Version 0.1
 Implementation the BMI mass balance checking protocol
 */
@@ -23,7 +26,16 @@ Implementation the BMI mass balance checking protocol
 
 namespace models { namespace bmi { namespace protocols {
 
-void NgenMassBalance::run(const Context& ctx) const{
+NgenMassBalance::NgenMassBalance(const ModelPtr& model, const Properties& properties) :
+  check(false), is_fatal(false), tolerance(1.0E-16), frequency(1){
+    initialize(model, properties);
+}
+
+NgenMassBalance::NgenMassBalance() : check(false) {}
+
+NgenMassBalance::~NgenMassBalance() = default;
+
+auto NgenMassBalance::run(const ModelPtr& model, const Context& ctx) const -> expected<void, ProtocolError> {
     bool check_step = false;
     //if frequency was set to -1, only check at the end
     if( frequency == -1 ){
@@ -34,7 +46,13 @@ void NgenMassBalance::run(const Context& ctx) const{
     else{
         check_step = (ctx.current_time_step % frequency) == 0;
     }
-
+    if( model == nullptr ) {
+        return make_unexpected<ProtocolError>( ProtocolError(
+            Error::UNITIALIZED_MODEL,
+            "Cannot run mass balance protocol with null model."
+            )
+        );
+    }
     if(model && is_supported && check && check_step) {
         double mass_in, mass_out, mass_stored, mass_leaked, mass_balance;
         model->GetValue(INPUT_MASS_NAME, &mass_in);
@@ -43,9 +61,17 @@ void NgenMassBalance::run(const Context& ctx) const{
         model->GetValue(LEAKED_MASS_NAME, &mass_leaked);
         // TODO consider unit conversion if/when it becomes necessary
         mass_balance = mass_in - mass_out - mass_stored - mass_leaked;
+        // std::stringstream ss;
+        // ss << "Mass balance for " << model->GetComponentName() <<"\n\t" <<
+        //         INPUT_MASS_NAME << "(" << mass_in <<  ") - " <<
+        //         OUTPUT_MASS_NAME << " (" << mass_out <<  ") - " << 
+        //         STORED_MASS_NAME << " (" << mass_stored << ") = " << 
+        //         mass_balance << "\n\t" << "tolerance: " << tolerance;
+        // std::cout << ss.str() << std::endl;
         if ( std::abs(mass_balance) > tolerance ) {
             std::stringstream ss;
-            ss << "at timestep " << std::to_string(ctx.current_time_step)
+            ss << "mass_balance: "
+               << "at timestep " << std::to_string(ctx.current_time_step)
                << " ("+ctx.timestamp+")"
                << " at feature id " << ctx.id <<std::endl
                << "\tMass balance check failed for " << model->GetComponentName() << "\n\t" <<
@@ -54,17 +80,18 @@ void NgenMassBalance::run(const Context& ctx) const{
                 STORED_MASS_NAME << " (" << mass_stored <<  ") - " << 
                 LEAKED_MASS_NAME << " (" << mass_leaked << ") = " << 
                 mass_balance << "\n\t" << "tolerance: " << tolerance << std::endl;
-            if(is_fatal)
-                throw MassBalanceError("mass_balance::error " + ss.str());
-            else{
-                std::cerr << "mass_balance::warning " + ss.str();
-            }
-                
+            return make_unexpected<ProtocolError>( ProtocolError(
+                is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING,
+                ss.str()
+                )
+            );
         }
+
     }
+    return {};
 }
 
-void NgenMassBalance::check_support() {
+auto NgenMassBalance::check_support(const ModelPtr& model) -> expected<void, ProtocolError> {
     if (model->is_model_initialized()) {
         double mass_var;
         std::vector<std::string> units;
@@ -79,29 +106,42 @@ void NgenMassBalance::check_support() {
             //Compare all other units to the first one (+1)
             if( std::equal( units.begin()+1, units.end(), units.begin() ) ) {
                 this->is_supported = true;
+                return {};
             }
             else{
                 // It may be possible to do unit conversion and still do meaninful mass balance
                 // this could be added as an extended feature, but for now, I don't think this is
                 // worth the complexity.  It is, however, worth the sanity check performed here
                 // to ensure the units are consistent.
-                throw MassBalanceError( "mass balance variables have incosistent units, cannot perform mass balance" );
+                return make_unexpected<ProtocolError>( ProtocolError(
+                    Error::INTEGRATION_ERROR,
+                    "mass_balance: variables have incosistent units, cannot perform mass balance."
+                    )
+                );
             }
         } catch (const std::exception &e) {
             std::stringstream ss;
-            ss << "mass_balance::integration: Error getting mass balance values for module '" << model->GetComponentName() << "': " << e.what() << std::endl;
-            std::cout << ss.str();
-            this->is_supported= false;
+            ss << "mass_balance: Error getting mass balance values for module '" << model->GetComponentName() << "': " << e.what() << std::endl;
+            return make_unexpected<ProtocolError>( ProtocolError(
+                Error::INTEGRATION_ERROR,
+                ss.str()
+                )
+            );
         }
     } else {
-        throw std::runtime_error("Cannot check mass balance for uninitialized model.");
+        return make_unexpected<ProtocolError>( ProtocolError(
+            Error::UNITIALIZED_MODEL,
+            "Cannot check mass balance for uninitialized model. Disabling mass balance protocol."
+            )
+        );
     }
+    return {};
 }
 
-void NgenMassBalance::initialize(const geojson::PropertyMap& properties)
+auto NgenMassBalance::initialize(const ModelPtr& model, const Properties& properties) -> expected<void, ProtocolError>
 {
     //Ensure the model is capable of mass balance using the protocol
-    check_support();
+    check_support(model).or_else( error_or_warning );
 
     //now check if the user has requested to use mass balance
     auto protocol_it = properties.find(CONFIGURATION_KEY);
@@ -132,6 +172,7 @@ void NgenMassBalance::initialize(const geojson::PropertyMap& properties)
         //no mass balance requested, or not supported, so don't check it
         check = false;
     }
+    return {}; // important to return for the expected to be properly created!
 }
 
 }}} // end namespace models::bmi::protocols
