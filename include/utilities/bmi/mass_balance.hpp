@@ -15,17 +15,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
 
+Version 0.2
+Conform to updated protocol interface
+Removed integration and error exceptions in favor of ProtocolError
+
 Version 0.1
 Interface of the BMI mass balance protocol
 */
 #pragma once
 
+
 #include <string>
 #include <exception>
-#include "protocol.hpp"
+#include <protocol.hpp>
+#include <nonstd/expected.hpp>
 
 namespace models{ namespace bmi{ namespace protocols{
-
+    using nonstd::expected;
     /** Mass balance variable names **/
     constexpr const char* const INPUT_MASS_NAME = "ngen::mass_in";
     constexpr const char* const OUTPUT_MASS_NAME = "ngen::mass_out";
@@ -40,7 +46,7 @@ namespace models{ namespace bmi{ namespace protocols{
     constexpr const char* const FATAL_KEY = "fatal";
     constexpr const char* const CHECK_KEY = "check";
     constexpr const char* const FREQUENCY_KEY = "frequency";
-
+    
     class NgenMassBalance : public NgenBmiProtocol {
         /** @brief Mass Balance protocol
          * 
@@ -58,9 +64,18 @@ namespace models{ namespace bmi{ namespace protocols{
          * @param model A shared pointer to a Bmi_Adapter object which should be
          * initialized before being passed to this constructor.
          */
-        NgenMassBalance(std::shared_ptr<models::bmi::Bmi_Adapter> model=nullptr) :
-          NgenBmiProtocol(model), check(false), is_fatal(false), 
-          tolerance(1.0E-16), frequency(1){}
+        NgenMassBalance(const ModelPtr& model, const Properties& properties);
+
+        /**
+         * @brief Construct a new, default Ngen Mass Balance object
+         * 
+         * By default, the protocol is considered unsupported and won't be checked
+         */
+        NgenMassBalance();
+
+        virtual ~NgenMassBalance() override;
+
+      private:
 
         /**
          * @brief Run the mass balance protocol
@@ -76,17 +91,14 @@ namespace models{ namespace bmi{ namespace protocols{
          * throws: MassBalanceError if the mass balance is not within the configured
          *         acceptable tolerance and the protocol is configured to be fatal.
          */
-        void run(const Context& ctx) const override;
+        auto run(const ModelPtr& model, const Context& ctx) const -> expected<void, ProtocolError> override;
 
-        virtual ~NgenMassBalance() override {};
-
-      private:
         /**
          * @brief Check if the mass balance protocol is supported by the model
          * 
          * throws: MassBalanceIntegrationError if the mass balance protocol is not supported
          */
-        void check_support() override;
+        [[nodiscard]] auto check_support(const ModelPtr& model) -> expected<void, ProtocolError> override;
 
         /**
          * @brief Check the model for support and initialize the mass balance protocol from the given properties.
@@ -107,78 +119,15 @@ namespace models{ namespace bmi{ namespace protocols{
          *                      fatal: bool, default false. Whether to treat mass balance errors as fatal.
          *                   Otherwise, mass balance checking will be disabled (check will be false)
          */
-        void initialize(const geojson::PropertyMap& properties) override;
+        auto initialize(const ModelPtr& model, const Properties& properties) -> expected<void, ProtocolError> override;
 
+    private:
         // Configurable options/values
         bool check;
         bool is_fatal;
         double tolerance;
         // How often (in time steps) to check mass balance
         int frequency; 
-
-        /**
-         * @brief Friend class for checking/managing support and initialization
-         * 
-         * This allows the NgenBmiProtocols container class to access private members,
-         * particularly the check_support() and initialize() methods.
-         * 
-         */
-        friend class NgenBmiProtocols;
-
-    };
-
-    class MassBalanceIntegration : public std::exception {
-        /**
-         * @brief Exception thrown when there is an error in mass balance integration
-         * 
-         * This indicates that the BMI model isn't capable of supporting the mass balance protocol.
-         */
-
-    public:
-
-        MassBalanceIntegration(char const *const message) noexcept : MassBalanceIntegration(std::string(message)) {}
-
-        MassBalanceIntegration(std::string message) noexcept : std::exception(), what_message(std::move(message)) {}
-
-        MassBalanceIntegration(MassBalanceIntegration &exception) noexcept : MassBalanceIntegration(exception.what_message) {}
-
-        MassBalanceIntegration(MassBalanceIntegration &&exception) noexcept
-        : MassBalanceIntegration(std::move(exception.what_message)) {}
-
-        char const *what() const noexcept override {
-            return what_message.c_str();
-        }
-
-    private:
-
-        std::string what_message;
-    };
-
-    class MassBalanceError : public std::exception {
-        /**
-         * @brief Exception thrown when a mass balance error occurs
-         * 
-         * This indicates that a mass balance error has occurred within the model.
-         */
-
-    public:
-
-        MassBalanceError(char const *const message) noexcept : MassBalanceError(std::string(message)) {}
-
-        MassBalanceError(std::string message) noexcept : std::exception(), what_message(std::move(message)) {}
-
-        MassBalanceError(MassBalanceError &exception) noexcept : MassBalanceError(exception.what_message) {}
-
-        MassBalanceError(MassBalanceError &&exception) noexcept
-        : MassBalanceError(std::move(exception.what_message)) {}
-
-        char const *what() const noexcept override {
-            return what_message.c_str();
-        }
-
-    private:
-
-        std::string what_message;
     };
 
 }}}

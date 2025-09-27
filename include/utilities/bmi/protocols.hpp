@@ -15,6 +15,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
 
+Version 0.2
+Enumerate protocol types/names
+The container now holds a single model pointer and passes it to each protocol
+per the updated (v0.2) protocol interface
+Keep protocols in a map for dynamic access by enumeration name
+add operator<< for Protocol enum
+
 Version 0.1
 Container and management for abstract BMI protocols
 */
@@ -23,6 +30,7 @@ Container and management for abstract BMI protocols
 #include <string>
 #include <vector>
 #include <boost/type_index.hpp>
+#include <unordered_map>
 #include "Bmi_Adapter.hpp"
 #include "JSONProperty.hpp"
 
@@ -30,6 +38,12 @@ Container and management for abstract BMI protocols
 
 
 namespace models{ namespace bmi{ namespace protocols{
+
+enum class Protocol {
+    MASS_BALANCE
+};
+
+auto operator<<(std::ostream& os, Protocol p) -> std::ostream&;
 
 class NgenBmiProtocols {
     /**
@@ -42,7 +56,7 @@ class NgenBmiProtocols {
          * @brief Construct a new Ngen Bmi Protocols object with a null model
          * 
          */
-        NgenBmiProtocols();
+        NgenBmiProtocols() : model(nullptr){};
 
         /**
          * @brief Construct a new Ngen Bmi Protocols object for use with a known model
@@ -52,11 +66,23 @@ class NgenBmiProtocols {
          */
         NgenBmiProtocols(std::shared_ptr<models::bmi::Bmi_Adapter> model, const geojson::PropertyMap& properties);
 
+        auto run(const Protocol& protocol_name, const Context& ctx) const -> expected<void, ProtocolError>; 
+
+        private:
+
         /**
-         * @brief Mass Balance Checker
+         * @brief All protocols managed by this container will utilize the same model
+         * 
+         * This reduces the amount of pointer copying and references across a large simulation
+         * and it ensures that all protocols see the same model state.
          * 
          */
-        NgenMassBalance mass_balance;
-};
+        std::shared_ptr<models::bmi::Bmi_Adapter> model;
+        /**
+         * @brief Map of protocol name to protocol instance
+         * 
+         */
+        std::unordered_map<Protocol, std::unique_ptr<NgenBmiProtocol>> protocols;
+    };
 
 }}}

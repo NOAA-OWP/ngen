@@ -15,6 +15,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
 
+Version 0.2
+Implement error handling via expected<T, ProtocolError> and error_or_warning
+
 Version 0.1
 Container and management for abstract BMI protocols
 */
@@ -23,14 +26,39 @@ Container and management for abstract BMI protocols
 
 namespace models{ namespace bmi{ namespace protocols{
 
-NgenBmiProtocols::NgenBmiProtocols(): mass_balance(nullptr) {}
+auto operator<<(std::ostream& os, Protocol p) -> std::ostream& {
+    switch(p) {
+    case Protocol::MASS_BALANCE: os << "MASS_BALANCE"; break;
+    default: os << "UNKNOWN_PROTOCOL"; break;
+    }
+    return os;
+}
 
-NgenBmiProtocols::NgenBmiProtocols(std::shared_ptr<models::bmi::Bmi_Adapter> model, const geojson::PropertyMap& properties)
-    : mass_balance(model) {
-    //initialize mass balance configurable properties
-    //This is done so that initialize is called with a valid model pointer, which is shared
-    //by all protocol instances
-    mass_balance.initialize(properties);
+
+NgenBmiProtocols::NgenBmiProtocols(ModelPtr model, const geojson::PropertyMap& properties)
+    : model(model) {
+    //Create and initialize mass balance configurable properties
+    protocols[Protocol::MASS_BALANCE] = std::make_unique<NgenMassBalance>(model, properties);
+}
+
+auto NgenBmiProtocols::run(const Protocol& protocol_name, const Context& ctx) const -> expected<void, ProtocolError> {
+    // Consider using find() vs switch, especially if the number of protocols grows
+    expected<void, ProtocolError> result_or_err;
+    switch(protocol_name){
+        case Protocol::MASS_BALANCE:
+            protocols.at(Protocol::MASS_BALANCE)->run(model, ctx)
+            .or_else( NgenBmiProtocol::error_or_warning );
+            break;
+        default:
+            std::stringstream ss;
+            ss << "Error: Request for unsupported protocol: '" << protocol_name << "'.";
+            return NgenBmiProtocol::error_or_warning( ProtocolError(
+                Error::UNSUPPORTED_PROTOCOL,
+                ss.str()
+            )
+            );
+    }
+    return {};
 }
 
 }}} // end namespace models::bmi::protocols
