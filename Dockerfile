@@ -4,7 +4,7 @@
 # Stage: Base – Common Setup
 ##############################
 ARG NGEN_FORCING_IMAGE_TAG=latest
-FROM fe-bmi:${NGEN_FORCING_IMAGE_TAG} AS base
+FROM ngen-bmi-forcing AS base
 
 # cannot remove LANG even though https://bugs.python.org/issue19846 is fixed
 # last attempted removal of LANG broke many users:
@@ -134,7 +134,7 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-hdf5 \
     make install && \
     strip --strip-debug /usr/local/lib/libhdf5*.so.* || true && \
     rm -f /usr/local/lib/libhdf5*.a && \
-    rm --recursive --force /usr/src/hdf5 hdf5.tar.gz 
+    rm --recursive --force /usr/src/hdf5 hdf5.tar.gz
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-netcdf-c \
     set -eux && \
@@ -177,7 +177,10 @@ ENV VIRTUAL_ENV="/ngen-app/ngen-python"
 # Create virtual environment for the application and upgrade pip within it
 RUN python3.11 -m venv --system-site-packages ${VIRTUAL_ENV}
 
-ENV PATH=${VIRTUAL_ENV}/bin:${PATH}
+ENV PATH="${VIRTUAL_ENV}/bin:${PATH}"
+
+# Consolidated LD_LIBRARY_PATH for MPI
+ENV LD_LIBRARY_PATH="/usr/lib64/openmpi/lib:/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH}"
 
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
     set -eux && \
@@ -196,7 +199,7 @@ WORKDIR /ngen-app/
 
 # TODO This will invalidate the cache for all subsequent stages so we don't really want to do this
 # Copy the remainder of your application code
- COPY . /ngen-app/ngen/
+COPY . /ngen-app/ngen/
 
 ##############################
 # Stage: Submodules Build
@@ -205,13 +208,10 @@ FROM base AS submodules
 
 SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
 
-#WORKDIR /ngen-app/
-#COPY . /ngen-app/ngen/
-
 WORKDIR /ngen-app/ngen/
 
 # Copy only the requirements files first for dependency installation caching
-COPY extern/test_bmi_py/requirements.txt /tmp/test_bmi_py_requirements.txt 
+COPY extern/test_bmi_py/requirements.txt /tmp/test_bmi_py_requirements.txt
 COPY extern/t-route/requirements.txt /tmp/t-route_requirements.txt
 
 # Install Python dependencies and remove the temporary requirements files
@@ -264,37 +264,37 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ngen \
 # Build each submodule in a separate layer, using cache for CMake as well
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-lasam \
     set -eux && \
-    cmake -B extern/LASAM/cmake_build -S extern/LASAM/ -DNGEN=ON && \
+    cmake -B extern/LASAM/cmake_build -S extern/LASAM/ -DNGEN=ON -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/LASAM/cmake_build/ && \
     find /ngen-app/ngen/extern/LASAM -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-snow17 \
     set -eux && \
-    cmake -B extern/snow17/cmake_build -S extern/snow17/ && \
+    cmake -B extern/snow17/cmake_build -S extern/snow17/ -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/snow17/cmake_build/ && \
     find /ngen-app/ngen/extern/snow17 -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-sac-sma \
     set -eux && \
-    cmake -B extern/sac-sma/cmake_build -S extern/sac-sma/ && \
+    cmake -B extern/sac-sma/cmake_build -S extern/sac-sma/ -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/sac-sma/cmake_build/ && \ 
     find /ngen-app/ngen/extern/sac-sma -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-soilmoistureprofiles \
     set -eux && \
-    cmake -B extern/SoilMoistureProfiles/cmake_build -S extern/SoilMoistureProfiles/SoilMoistureProfiles/ -DNGEN=ON && \
+    cmake -B extern/SoilMoistureProfiles/cmake_build -S extern/SoilMoistureProfiles/SoilMoistureProfiles/ -DNGEN=ON -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/SoilMoistureProfiles/cmake_build/ && \
     find /ngen-app/ngen/extern/SoilMoistureProfiles -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-soilfreezethaw \
     set -eux && \
-    cmake -B extern/SoilFreezeThaw/cmake_build -S extern/SoilFreezeThaw/SoilFreezeThaw/ -DNGEN=ON && \
+    cmake -B extern/SoilFreezeThaw/cmake_build -S extern/SoilFreezeThaw/SoilFreezeThaw/ -DNGEN=ON -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/SoilFreezeThaw/cmake_build/ && \
     find /ngen-app/ngen/extern/SoilFreezeThaw -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ueb-bmi \
     set -eux && \
-    cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ && \
+    cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/ueb-bmi/cmake_build/ && \
     find /ngen-app/ngen/extern/ueb-bmi/ -name '*.o' -exec rm -f {} +
 
@@ -386,8 +386,10 @@ RUN set -eux && \
     mv /ngen-app/merged_git_info.json $GIT_INFO_PATH && \
     rm -rf /ngen-app/submodules-json
 
-# Needed for lstm
- ENV PYTHONPATH='$PYTHONPATH:/ngen-app/ngen/extern/lstm:/ngen-app/ngen/extern/lstm/lstm'
+ # Extend PYTHONPATH for LSTM models (preserve venv path from ngen-bmi-forcing)
+ENV PYTHONPATH="${PYTHONPATH}:/ngen-app/ngen/extern/lstm:/ngen-app/ngen/extern/lstm/lstm"
+
+
 
 WORKDIR /
 SHELL ["/bin/bash", "-c"]
