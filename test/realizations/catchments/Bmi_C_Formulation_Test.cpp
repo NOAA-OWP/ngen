@@ -398,7 +398,7 @@ using models::bmi::protocols::INPUT_MASS_NAME;
 using models::bmi::protocols::OUTPUT_MASS_NAME;
 using models::bmi::protocols::STORED_MASS_NAME;
 using models::bmi::protocols::LEAKED_MASS_NAME;
-using models::bmi::protocols::MassBalanceError;
+using models::bmi::protocols::ProtocolError;
 
 TEST_F(Bmi_C_Formulation_Test, check_mass_balance) {
     int ex_index = 0;
@@ -429,7 +429,7 @@ TEST_F(Bmi_C_Formulation_Test, check_mass_balance_warns) {
     formulation.check_mass_balance(0, 1, "t0");
     std::string output = testing::internal::GetCapturedStderr();
     std::cerr << output;
-    EXPECT_THAT(output, testing::HasSubstr("mass_balance::warning"));
+    EXPECT_THAT(output, testing::HasSubstr("Warning(Protocol)::mass_balance:"));
 }
 
 TEST_F(Bmi_C_Formulation_Test, check_mass_balance_stored_fails) {
@@ -444,7 +444,14 @@ TEST_F(Bmi_C_Formulation_Test, check_mass_balance_stored_fails) {
     double mass_error = 100;
     get_friend_bmi_model(formulation)->SetValue(STORED_MASS_NAME, &mass_error); // Force a mass balance error
     //formulation.check_mass_balance(0, 1, "t0");
-    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), MassBalanceError);
+    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), ProtocolError);
+    try{
+        formulation.check_mass_balance(0, 1, "t0");
+    }
+    catch (ProtocolError& e) {
+        std::cerr << e.to_string() << std::endl;
+        EXPECT_THAT(e.to_string(), MatchesRegex("Error\\(Protocol\\)::mass_balance:.*"));
+    }
 }
 
 TEST_F(Bmi_C_Formulation_Test, check_mass_balance_in_fails_a) {
@@ -457,7 +464,14 @@ TEST_F(Bmi_C_Formulation_Test, check_mass_balance_in_fails_a) {
     formulation.get_response(1, 3600);
     double mass_error = 2;
     get_friend_bmi_model(formulation)->SetValue(INPUT_MASS_NAME, &mass_error); // Force a mass balance error
-    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), MassBalanceError);
+    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), ProtocolError);
+    try{
+        formulation.check_mass_balance(0, 1, "t0");
+    }
+    catch (ProtocolError& e) {
+        std::cerr << e.to_string() << std::endl;
+        EXPECT_THAT(e.to_string(), MatchesRegex("Error\\(Protocol\\)::mass_balance:.*"));
+    }
 }
 
 TEST_F(Bmi_C_Formulation_Test, check_mass_balance_out_fails) {
@@ -470,7 +484,14 @@ TEST_F(Bmi_C_Formulation_Test, check_mass_balance_out_fails) {
     formulation.get_response(1, 3600);
     double mass_error = 2;
     get_friend_bmi_model(formulation)->SetValue(OUTPUT_MASS_NAME, &mass_error); // Force a mass balance error
-    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), MassBalanceError);
+    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), ProtocolError);
+    try{
+        formulation.check_mass_balance(0, 1, "t0");
+    }
+    catch (ProtocolError& e) {
+        std::cerr << e.to_string() << std::endl;
+        EXPECT_THAT(e.to_string(), MatchesRegex("Error\\(Protocol\\)::mass_balance:.*"));
+    }
 }
 
 TEST_F(Bmi_C_Formulation_Test, check_mass_balance_leaked_fails) {
@@ -483,7 +504,14 @@ TEST_F(Bmi_C_Formulation_Test, check_mass_balance_leaked_fails) {
     formulation.get_response(1, 3600);
     double mass_error = 2;
     get_friend_bmi_model(formulation)->SetValue(LEAKED_MASS_NAME, &mass_error); // Force a mass balance error
-    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), MassBalanceError);
+    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), ProtocolError);
+    try{
+        formulation.check_mass_balance(0, 1, "t0");
+    }
+    catch (ProtocolError& e) {
+        std::cerr << e.to_string() << std::endl;
+        EXPECT_THAT(e.to_string(), MatchesRegex("Error\\(Protocol\\)::mass_balance:.*"));
+    }
 }
 
 TEST_F(Bmi_C_Formulation_Test, check_mass_balance_tolerance) {
@@ -499,7 +527,14 @@ TEST_F(Bmi_C_Formulation_Test, check_mass_balance_tolerance) {
     get_friend_bmi_model(formulation)->GetValue(INPUT_MASS_NAME, &mass_error);
     mass_error += 1e-4; // Force a mass balance error not within tolerance
     get_friend_bmi_model(formulation)->SetValue(INPUT_MASS_NAME, &mass_error); // Force a mass balance error
-    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), MassBalanceError);
+    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), ProtocolError);
+    try{
+        formulation.check_mass_balance(0, 1, "t0");
+    }
+    catch (ProtocolError& e) {
+        std::cerr << e.to_string() << std::endl;
+        EXPECT_THAT(e.to_string(), MatchesRegex("Error\\(Protocol\\)::mass_balance:.*"));
+    }
 }
 
 TEST_F(Bmi_C_Formulation_Test, check_mass_balance_tolerance_a) {
@@ -559,13 +594,13 @@ TEST_F(Bmi_C_Formulation_Test, check_mass_balance_frequency) {
     get_friend_bmi_model(formulation)->SetValue(OUTPUT_MASS_NAME, &mass_error); //
     //Check initial mass balance -- should error which indicates it was propoerly checked
     //per frequency setting
-    ASSERT_THROW(formulation.check_mass_balance(0, 2, "t0"), MassBalanceError);
+    ASSERT_THROW(formulation.check_mass_balance(0, 2, "t0"), ProtocolError);
     // Call mass balance check again, this should NOT error, since the actual check
     // should be skipped due to the frequency setting
     formulation.check_mass_balance(1, 2, "t1");
     // Check mass balance again, this SHOULD error since the previous mass balance
     // will propagate, and it should now be checked based on the frequency
-    ASSERT_THROW(formulation.check_mass_balance(2, 2, "t2"), MassBalanceError);
+    ASSERT_THROW(formulation.check_mass_balance(2, 2, "t2"), ProtocolError);
 }
 
 TEST_F(Bmi_C_Formulation_Test, check_mass_balance_frequency_1) {
@@ -585,7 +620,7 @@ TEST_F(Bmi_C_Formulation_Test, check_mass_balance_frequency_1) {
     formulation.check_mass_balance(1, 2, "t1");
     // Check mass balance again, this SHOULD error since the this is step 2/2
     // and it will now be checked based on the frequency (-1, check at end)
-    ASSERT_THROW(formulation.check_mass_balance(2, 2, "t2"), MassBalanceError);
+    ASSERT_THROW(formulation.check_mass_balance(2, 2, "t2"), ProtocolError);
 }
 
 #endif  // NGEN_BMI_C_LIB_TESTS_ACTIVE
