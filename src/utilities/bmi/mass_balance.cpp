@@ -19,6 +19,9 @@ Version 0.3 (see mass_balance.hpp for details)
 Version 0.2
 Implement error handling via expected<T, ProtocolError> and error_or_warning
 
+Version 0.2
+Implement error handling via expected<T, ProtocolError> and error_or_warning
+
 Version 0.1
 Implementation the BMI mass balance checking protocol
 */

@@ -25,6 +25,13 @@ per the updated (v0.2) protocol interface
 Keep protocols in a map for dynamic access by enumeration name
 add operator<< for Protocol enum
 
+Version 0.2
+Enumerate protocol types/names
+The container now holds a single model pointer and passes it to each protocol
+per the updated (v0.2) protocol interface
+Keep protocols in a map for dynamic access by enumeration name
+add operator<< for Protocol enum
+
 Version 0.1
 Container and management for abstract BMI protocols
 */
@@ -59,7 +66,7 @@ class NgenBmiProtocols {
          * @brief Construct a new Ngen Bmi Protocols object with a null model
          * 
          */
-        NgenBmiProtocols();
+        NgenBmiProtocols() : model(nullptr){};
 
         /**
          * @brief Construct a new Ngen Bmi Protocols object for use with a known model
@@ -78,6 +85,10 @@ class NgenBmiProtocols {
          * @return expected<void, ProtocolError> May contain a ProtocolError if
          *         the protocol fails for any reason.
          */
+        auto run(const Protocol& protocol_name, const Context& ctx) const -> expected<void, ProtocolError>; 
+
+        private:
+
         auto run(const Protocol& protocol_name, const Context& ctx) const -> expected<void, ProtocolError>; 
 
         private:
