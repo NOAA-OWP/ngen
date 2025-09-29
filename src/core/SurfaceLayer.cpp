@@ -42,7 +42,7 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
         double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, current_time_index, 100.0);
 #if NGEN_WITH_ROUTING
         int nexus_index = nexus_indexes[id];
-        nexus_downstream_flows[nexus_index] = contribution_at_t;
+        nexus_downstream_flows[nexus_index] += contribution_at_t;
 #endif // NGEN_WITH_ROUTING
         if(nexus_outfiles[id].is_open()) {
         nexus_outfiles[id] << current_time_index << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
