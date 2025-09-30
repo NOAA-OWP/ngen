@@ -676,34 +676,37 @@ namespace models {
             inline void construct_and_init_backing_model_for_py_adapter() {
                 if (model_initialized)
                     return;
+                std::stringstream ss;
 
                 try {
                     separate_package_and_simple_name();
                     std::vector<std::string> moduleComponents = {*bmi_type_py_module_name, *bmi_type_py_class_name};
 
-                    std::cout << "Attempting to load Python BMI module: " << *bmi_type_py_module_name
-                              << ", class: " << *bmi_type_py_class_name << std::endl;
+                    ss << "Attempting to load Python BMI module: " << *bmi_type_py_module_name
+                       << ", class: " << *bmi_type_py_class_name;
+                    LOG(LogLevel::DEBUG, ss.str()); ss.str("");
 
                     // This is a class object for the BMI module Python class
                     py::object bmi_py_class = utils::ngenPy::InterpreterUtil::getPyModule(moduleComponents);
 
-                    std::cout << "Successfully loaded Python class. About to instantiate it..." << std::endl;
+                    LOG(LogLevel::DEBUG, "Successfully loaded Python class. About to instantiate it...");
 
                     // This is the actual backing model object
                     bmi_model = std::make_shared<py::object>(bmi_py_class());
 
-                    std::cout << "Successfully created Python object. Calling initialize..." << std::endl;
+                    LOG(LogLevel::DEBUG, "Successfully created Python object. Calling initialize...");
 
                     bmi_model->attr("initialize")(bmi_init_config);
                 }
                 catch (py::error_already_set& e) {
-                    std::cerr << "Python error during BMI construction:\n" << e.what() << std::endl;
+                    ss << "Python error during BMI construction:\n" << e.what();
+                    LOG(LogLevel::FATAL, ss.str()); ss.str("");
                     throw;
                 }
                 catch (std::runtime_error& e) {
-                    std::string err = "Failed in construct_and_init_backing_model_for_py_adapter: ";
-                    err += e.what();
-                    std::cout << err << std::endl;
+                    ss << "Failed in construct_and_init_backing_model_for_py_adapter:\n" << e.what();
+                    std::string err = ss.str(); ss.str("");
+                    LOG(LogLevel::FATAL, err);
                     throw std::runtime_error(err);
                 }
                 // Record the exception message before re-throwing to handle subsequent function calls properly
@@ -717,10 +720,8 @@ namespace models {
                     // This message is lost and often contains valuable info.  Either need to break up and catch
                     // other possible exceptions, wrap all these in a custom exception, or at the very least, print
                     // the original message before it gets lost in this re-throw.
-                    std::stringstream ss;
                     ss << init_exception_msg << std::endl;
-                    std::cout << "Caught generic exception during BMI setup: " << init_exception_msg << std::endl;
-                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                    LOG(ss.str(), LogLevel::FATAL); ss.str("");
                     throw e;
                 }
             }
