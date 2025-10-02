@@ -785,13 +785,10 @@ int main(int argc, char* argv[]) {
 
                 // Convert string ID into numbers for T-route index
                 int id_as_int = -1;
-                int num_char_index = key_value.first.find_first_of("0123456789");
-                if (num_char_index != std::string::npos) {
-                    int num_char_end = key_value.first.find_first_not_of("0123456789");
-                    std::string substring = num_char_end == std::string::npos
-                        ? key_value.first.substr(num_char_index)
-                        : key_value.first.substr(num_char_index, num_char_end - num_char_index);
-                    id_as_int = std::stoi(substring);
+                int sep_index = key_value.first.find('-');
+                if (sep_index != std::string::npos) {
+                    std::string numbers = key_value.first.substr(sep_index);
+                    id_as_int = std::stoi(numbers);
                 }
                 if (id_as_int == -1) {
                     ss << "Cannot convert the nexus ID to an integer: " << key_value.first;
