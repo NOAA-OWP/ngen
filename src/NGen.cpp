@@ -545,7 +545,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < nexus_collection->get_size(); ++i) {
         auto const& feature = nexus_collection->get_feature(i);
         std::string feature_id = feature->get_id();
-        if (feature_id.compare(0, 4, "nex-") == 0) {
+        if (hy_features::identifiers::isNexus(feature_id.substr(0, 3)) {
             nexus_indexes[feature_id] = nexus_index;
             ++nexus_index;
         }
