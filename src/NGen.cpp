@@ -543,7 +543,7 @@ int main(int argc, char* argv[]) {
 #if NGEN_WITH_ROUTING
     int nexus_index = 0;
     for (int i = 0; i < nexus_collection->get_size(); ++i) {
-        auto feature = nexus_collection->get_feature(i);
+        auto const& feature = nexus_collection->get_feature(i);
         std::string feature_id = feature->get_id();
         if (feature_id.compare(0, 4, "nex-") == 0) {
             nexus_indexes[feature_id] = nexus_index;
