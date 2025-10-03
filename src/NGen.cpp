@@ -32,10 +32,6 @@
 #include <pybind11/embed.h>
 #endif // NGEN_WITH_PYTHON
 
-#if NGEN_WITH_ROUTING
-#include "routing/Routing_Py_Adapter.hpp"
-#endif // NGEN_WITH_ROUTING
-
 std::string catchmentDataFile         = "";
 std::string nexusDataFile             = "";
 std::string REALIZATION_CONFIG_PATH   = "";
@@ -489,17 +485,11 @@ int main(int argc, char* argv[]) {
 // TODO refactor manager->read so certain configs can be queried before the entire
 // realization collection is created
 #if NGEN_WITH_ROUTING
-    std::unique_ptr<routing_py_adapter::Routing_Py_Adapter> router;
     if (mpi_rank == 0) { // Run t-route from single process
         if (manager->get_using_routing()) {
             ss << "Using Routing" << std::endl;
             LOG(ss.str(), LogLevel::INFO);
             ss.str("");
-            std::string t_route_config_file_with_path =
-                manager->get_t_route_config_file_with_path();
-            router = std::make_unique<routing_py_adapter::Routing_Py_Adapter>(
-                t_route_config_file_with_path
-            );
         } else {
             ss << "Not Using Routing" << std::endl;
             LOG(ss.str(), LogLevel::INFO);
