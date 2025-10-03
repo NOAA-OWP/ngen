@@ -541,13 +541,19 @@ int main(int argc, char* argv[]) {
     // T-ROUTE data storage
     std::unordered_map<std::string, int> nexus_indexes;
 #if NGEN_WITH_ROUTING
-    int nexus_index = 0;
-    for (int i = 0; i < nexus_collection->get_size(); ++i) {
-        auto const& feature = nexus_collection->get_feature(i);
-        std::string feature_id = feature->get_id();
-        if (hy_features::identifiers::isNexus(feature_id.substr(0, 3))) {
-            nexus_indexes[feature_id] = nexus_index;
-            ++nexus_index;
+    // create sorted indexes for possible MPI
+    {
+        std::vector<std::string> routing_nexus_ids;
+        for (int i = 0; i < nexus_collection->get_size(); ++i) {
+            auto const& feature = nexus_collection->get_feature(i);
+            std::string feature_id = feature->get_id();
+            if (hy_features::identifiers::isNexus(feature_id.substr(0, 3))) {
+                routing_nexus_ids.push_back(feature_id);
+            }
+        }
+        std::sort(routing_nexus_ids.begin(), routing_nexus_ids.end());
+        for (int i = 0; i < routing_nexus_ids.size(); ++i) {
+            nexus_indexes[routing_nexus_ids[i]] = i;
         }
     }
 #endif // NGEN_WITH_ROUTING
@@ -757,6 +763,31 @@ int main(int argc, char* argv[]) {
 #endif
 
 #if NGEN_WITH_ROUTING
+#if NGEN_WITH_MPI
+    if (mpi_num_procs > 1) {
+        size_t flow_size = nexus_downstream_flows.size();
+        double *gather_downstream_flows = NULL;
+        if (mpi_rank == 0) {
+            gather_downstream_flows = (double *)calloc(flow_size * mpi_num_procs, sizeof(double));
+        }
+
+        MPI_Gather(nexus_downstream_flows.data(), flow_size, MPI_DOUBLE,
+                   gather_downstream_flows, flow_size, MPI_DOUBLE,
+                   0, MPI_COMM_WORLD);
+
+        if (mpi_rank == 0) {
+            // clean current flows, then add together gathered results
+            std::fill(nexus_downstream_flows.begin(), nexus_downstream_flows.end(), 0.0);
+            for (int proc = 0; proc < mpi_num_procs; ++proc) {
+                size_t gather_index = flow_size * proc;
+                for (size_t flow = 0; flow < flow_size; ++flow) {
+                    nexus_downstream_flows[flow] += gather_downstream_flows[gather_index + flow];
+                }
+            }
+            free(gather_downstream_flows);
+        }
+    }
+#endif // NGEN_WITH_MPI
     if (mpi_rank == 0) { // Run t-route from single process
         if (manager->get_using_routing()) {
             LOG(LogLevel::INFO, "Running T-Route on nexus outflows.");
