@@ -50,6 +50,7 @@ int mpi_rank = 0;
 #include "parallel_utils.h"
 #include <HY_Features_MPI.hpp>
 #include <mpi.h>
+#include <algorithm>
 
 #include "core/Partition_One.hpp"
 
@@ -531,19 +532,15 @@ int main(int argc, char* argv[]) {
     // T-ROUTE data storage
     std::unordered_map<std::string, int> nexus_indexes;
 #if NGEN_WITH_ROUTING
-    // create sorted indexes for possible MPI
     {
-        std::vector<std::string> routing_nexus_ids;
+        int nexus_index = 0;
         for (int i = 0; i < nexus_collection->get_size(); ++i) {
             auto const& feature = nexus_collection->get_feature(i);
             std::string feature_id = feature->get_id();
             if (hy_features::identifiers::isNexus(feature_id.substr(0, 3))) {
-                routing_nexus_ids.push_back(feature_id);
+                nexus_indexes[feature_id] = nexus_index;
+                nexus_index += 1;
             }
-        }
-        std::sort(routing_nexus_ids.begin(), routing_nexus_ids.end());
-        for (int i = 0; i < routing_nexus_ids.size(); ++i) {
-            nexus_indexes[routing_nexus_ids[i]] = i;
         }
     }
 #endif // NGEN_WITH_ROUTING
@@ -661,7 +658,7 @@ int main(int argc, char* argv[]) {
     std::vector<double> nexus_downstream_flows;
 #if NGEN_WITH_ROUTING
     size_t catchment_collection_size = catchment_collection->get_size();
-    catchment_outflows.resize(catchment_collection_size * num_times);
+    catchment_outflows.resize(catchment_collection_size * num_times, 0.0);
     for (int i = 0; i < catchment_collection_size; ++i) {
         auto feature = catchment_collection->get_feature(i);
         std::string feature_id = feature->get_id();
@@ -755,27 +752,63 @@ int main(int argc, char* argv[]) {
 #if NGEN_WITH_ROUTING
 #if NGEN_WITH_MPI
     if (mpi_num_procs > 1) {
-        size_t flow_size = nexus_downstream_flows.size();
-        double *gather_downstream_flows = NULL;
-        if (mpi_rank == 0) {
-            gather_downstream_flows = (double *)calloc(flow_size * mpi_num_procs, sizeof(double));
+        int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
+        std::vector<std::string> local_nexus_ids;
+        for (const auto& nexus : nexus_indexes) {
+            local_nexus_ids.push_back(nexus.first);
         }
-
-        MPI_Gather(nexus_downstream_flows.data(), flow_size, MPI_DOUBLE,
-                   gather_downstream_flows, flow_size, MPI_DOUBLE,
-                   0, MPI_COMM_WORLD);
-
+        // MPI_Gather all nexus IDs into a single vector
+        std::vector<std::string> all_nexus_ids = parallel::gather_strings(local_nexus_ids, mpi_rank, mpi_num_procs);
         if (mpi_rank == 0) {
-            // clean current flows, then add together gathered results
-            std::fill(nexus_downstream_flows.begin(), nexus_downstream_flows.end(), 0.0);
-            for (int proc = 0; proc < mpi_num_procs; ++proc) {
-                size_t gather_index = flow_size * proc;
-                for (size_t flow = 0; flow < flow_size; ++flow) {
-                    nexus_downstream_flows[flow] += gather_downstream_flows[gather_index + flow];
+            // filter to only the unique IDs
+            std::sort(all_nexus_ids.begin(), all_nexus_ids.end());
+            all_nexus_ids.erase(
+                std::unique(all_nexus_ids.begin(), all_nexus_ids.end()),
+                all_nexus_ids.end()
+            );
+        }
+        // MPI_Broadcast so all processes share the nexus IDs
+        all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, mpi_rank, mpi_num_procs));
+
+        // MPI_Reduce to collect the results from processes
+        std::vector<double> all_nexus_downflows;
+        if (mpi_rank == 0) {
+            all_nexus_downflows.resize(number_of_timesteps * all_nexus_ids.size(), 0.0);
+        }
+        std::unordered_map<std::string, int> all_nexus_indexes;
+        std::vector<double> local_buffer(number_of_timesteps);
+        std::vector<double> receive_buffer(number_of_timesteps, 0.0);
+        for (int i = 0; i < all_nexus_ids.size(); ++i) {
+            std::string nexus_id = all_nexus_ids[i];
+            if (nexus_indexes.find(nexus_id) != nexus_indexes.end()) {
+                // if this process has the id, copy the values to the buffer
+                int nexus_index = nexus_indexes[nexus_id];
+                for (int step = 0; step < number_of_timesteps; ++step) {
+                    int offset = step * number_of_timesteps + nexus_index;
+                    local_buffer[step] = nexus_downstream_flows[offset];
+                }
+            } else {
+                // if this process does not have the id, fill with 0 to make sure it doesn't affect reduce sum
+                std::fill(local_buffer.begin(), local_buffer.end(), 0.0);
+            }
+            MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+            if (mpi_rank == 0) {
+                // copy reduce values to a combined downflows vector
+                all_nexus_indexes[nexus_id] = i;
+                for (int step = 0; step < number_of_timesteps; ++step) {
+                    int offset = step * number_of_timesteps + i;
+                    all_nexus_downflows[offset] = receive_buffer[step];
+                    receive_buffer[step] = 0.0;
                 }
             }
-            free(gather_downstream_flows);
         }
+
+        if (mpi_rank == 0) {
+            // update root's local data for running t-route below
+            nexus_indexes = std::move(all_nexus_indexes);
+            nexus_downstream_flows = std::move(all_nexus_downflows);
+        }
+
     }
 #endif // NGEN_WITH_MPI
     if (mpi_rank == 0) { // Run t-route from single process
@@ -812,9 +845,7 @@ int main(int argc, char* argv[]) {
                     id_as_int = std::stoi(numbers);
                 }
                 if (id_as_int == -1) {
-                    ss << "Cannot convert the nexus ID to an integer: " << key_value.first;
-                    std::string error_msg = ss.str();
-                    ss.str("");
+                    std::string error_msg = "Cannot convert the nexus ID to an integer: " + key_value.first;
                     LOG(LogLevel::FATAL, error_msg);
                     throw std::runtime_error(error_msg);
                 }
