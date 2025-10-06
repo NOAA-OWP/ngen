@@ -4,7 +4,10 @@
 # Stage: Base – Common Setup
 ##############################
 ARG NGEN_FORCING_IMAGE_TAG=latest
-FROM ngen-bmi-forcing AS base
+FROM ghcr.io/ngwpc/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG} AS base
+
+# Uncomment when building locally
+#FROM ngen-bmi-forcing AS base
 
 # cannot remove LANG even though https://bugs.python.org/issue19846 is fixed
 # last attempted removal of LANG broke many users:
