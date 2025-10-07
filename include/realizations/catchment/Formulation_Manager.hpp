@@ -184,7 +184,7 @@ namespace realization {
                             #endif
                             continue;
                         }
-                        realization::config::Config catchment_formulation(catchment_config.second);
+                        realization::config::Config catchment_formulation(catchment_config.second, formulation_groups, forcing_groups);
 
                         if (!catchment_formulation.has_formulation()) {
                             std::string throw_msg;
