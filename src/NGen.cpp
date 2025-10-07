@@ -839,7 +839,7 @@ int main(int argc, char* argv[]) {
 
                 // Convert string ID into numbers for T-route index
                 int id_as_int = -1;
-                int sep_index = key_value.first.find(hy_features::identifiers::seperator);
+                size_t sep_index = key_value.first.find(hy_features::identifiers::seperator);
                 if (sep_index != std::string::npos) {
                     std::string numbers = key_value.first.substr(sep_index + hy_features::identifiers::seperator.length());
                     id_as_int = std::stoi(numbers);
