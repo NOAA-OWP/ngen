@@ -780,8 +780,8 @@ int main(int argc, char* argv[]) {
         std::vector<double> receive_buffer(number_of_timesteps, 0.0);
         for (int i = 0; i < all_nexus_ids.size(); ++i) {
             std::string nexus_id = all_nexus_ids[i];
-            if (nexus_indexes.find(nexus_id) != nexus_indexes.end()) {
-                // if this process has the id, copy the values to the buffer
+            if (nexus_indexes.find(nexus_id) != nexus_indexes.end() && !features.is_remote_sender_nexus(nexus_id)) {
+                // if this process has the id and receives/records data, copy the values to the buffer
                 int nexus_index = nexus_indexes[nexus_id];
                 for (int step = 0; step < number_of_timesteps; ++step) {
                     int offset = step * nexus_indexes.size() + nexus_index;
