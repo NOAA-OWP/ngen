@@ -604,7 +604,8 @@ namespace parallel {
                 int string_start = start_idx;
                 for (int j = start_idx; j < end_idx; ++j) {
                     if (recv_buffer[j] == '\0') {
-                        gathered_strings.emplace_back(recv_buffer.data() + string_start, j - string_start);
+                        gathered_strings.emplace_back(recv_buffer.data() + string_start, 
+                                                      recv_buffer.data() + j);
                         string_start = j + 1; // Start of next string
                     }
                 }
