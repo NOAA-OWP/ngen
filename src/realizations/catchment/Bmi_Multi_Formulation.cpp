@@ -114,9 +114,25 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         is_out_vars_from_last_mod = true;
         set_output_variable_names(modules.back()->get_output_variable_names());
     }
+
+    auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_NEW_VARS);
     std::stringstream ss_test;
-    ss_test << "Number of output variable names " << get_output_variable_names().size() << std::endl;
-    LOG(ss_test.str(), LogLevel::INFO); ss_test.str("");
+    if (out_var_it != properties.end()) {
+        std::vector<geojson::JSONProperty> out_vars_json_list = out_var_it->second.as_list();
+        std::vector<std::string> out_vars(out_vars_json_list.size());
+        for (int i = 0; i < out_vars_json_list.size(); ++i) {
+            out_vars[i] = out_vars_json_list[i].as_string();
+            ss_test << "Output variable name: " << out_vars[i] << std::endl;
+            LOG(ss_test.str(), LogLevel::INFO); ss_test.str("");
+        }
+        set_output_variable_names(out_vars);
+    }
+    // Otherwise, for multi BMI, the BMI output variables of the last nested module should be used.
+    else {
+        //is_out_vars_from_last_mod = true;
+        //set_output_variable_names(modules.back()->get_output_variable_names());
+    }
+    
     // TODO: consider warning if nested module formulations have formulation output variables, as that level of the
     //  config is (at present) going to be ignored (though strictly speaking, this doesn't apply to the last module in
     //  a certain case).
