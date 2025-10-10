@@ -675,12 +675,28 @@ int main(int argc, char* argv[]) {
     auto time_done_routing                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_routing = time_done_routing - time_done_simulation;
 
+#if NGEN_WITH_MPI
+    MPI_Barrier(MPI_COMM_WORLD);
+#endif
+
+#if NGEN_WITH_COASTAL
+    if (manager->get_using_coastal()) {
+        simulation->run_coastal();
+    }
+
+    auto time_done_coastal                             = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_coastal = time_done_coastal - time_done_routing;
+#endif
+
     if (mpi_rank == 0) {
         ss << "NGen top-level timings:"
            << "\n\tNGen::init: " << time_elapsed_init.count()
            << "\n\tNGen::simulation: " << time_elapsed_simulation.count()
 #if NGEN_WITH_ROUTING
            << "\n\tNGen::routing: " << time_elapsed_routing.count()
+#endif
+#if NGEN_WITH_COASTAL
+           << "\n\tNGen::coastal: " << time_elapsed_coastal.count()
 #endif
            << std::endl;
         LOG(ss.str(), LogLevel::INFO);
