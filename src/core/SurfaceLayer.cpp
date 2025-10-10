@@ -1,4 +1,5 @@
 #include "SurfaceLayer.hpp"
+#include <Logger.hpp>
 
 void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows, 
                                        std::unordered_map<std::string, int> &catchment_indexes,
@@ -23,13 +24,20 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
         // Get the correct "requesting" id for downstream_flow
         const auto& nexus = features.nexus_at(id);
         const auto& cat_ids = nexus->get_receiving_catchments();
+
+        if (cat_ids.size() > 1) {
+            std::string error = "Nexus '" + id + "' violates dendritic hydrofabric network assumption";
+            LOG(error, LogLevel::FATAL);
+            throw std::runtime_error(error);
+        }
+
         std::string cat_id;
-        if( cat_ids.size() > 0 ) {
-            //Assumes dendridic, e.g. only a single downstream...it will consume 100%  of the available flow
+        if( cat_ids.size() == 1 ) {
+            // With a dendritic network, there can only be a single downstream. It will consume 100%  of the available flow
             cat_id = cat_ids[0];
         }
         else {
-            //This is a terminal node, SHOULDN'T be remote, so ID shouldn't matter too much
+            // This is a terminal node, SHOULDN'T be remote, so ID shouldn't matter too much
             cat_id = "terminal";
         }
 
