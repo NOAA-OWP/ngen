@@ -22,7 +22,8 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
         std::string current_timestamp = simulation_time.get_timestamp(current_time_index);
         
         #if NGEN_WITH_MPI
-        if (!features.is_remote_sender_nexus(id)) { //Ensures only one side of the dual sided remote nexus actually doing this...
+        //Ensures only one side of the dual sided remote nexus actually doing this...
+        if (features.is_remote_sender_nexus(id)) continue;
         #endif
 
         //Get the correct "requesting" id for downstream_flow
@@ -46,9 +47,6 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
         nexus_downstream_flows[nexus_index] = contribution_at_t;
 #endif // NGEN_WITH_ROUTING
 
-        #if NGEN_WITH_MPI
-        }
-        #endif
         //std::cout<<"\tNexus "<<id<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
     } //done nexuses
 }
