@@ -50,9 +50,5 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
         }
         #endif
         //std::cout<<"\tNexus "<<id<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
-
-        //Note: Use below if developing in-memory transfer of nexus flows to routing
-        //If using below, then another single time vector would be needed to hold the timestamp
-        //nexus_flows[id].push_back(contribution_at_t); 
     } //done nexuses
 }
