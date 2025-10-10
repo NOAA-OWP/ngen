@@ -1,9 +1,5 @@
 #include "SurfaceLayer.hpp"
 
-/***
- * @brief Run one simulation timestep for each model in this layer, then gather catchment output
-*/
-
 void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows, 
                                        std::unordered_map<std::string, int> &catchment_indexes,
                                        boost::span<double> nexus_downstream_flows,
@@ -14,19 +10,17 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
     
     Layer::update_models(catchment_outflows, catchment_indexes, nexus_downstream_flows, nexus_indexes, current_step);
 
-    //At this point, could make an internal routing pass, extracting flows from nexuses and routing
-    //across the flowpath to the next nexus.
-    //Once everything is updated for this timestep, dump the nexus output
+    // Once contributing catchments are updated for this timestep, dump the nexus output
     for(const auto& id : features.nexuses()) 
     {
         std::string current_timestamp = simulation_time.get_timestamp(current_time_index);
         
         #if NGEN_WITH_MPI
-        //Ensures only one side of the dual sided remote nexus actually doing this...
+        // Ensures only one side of the dual sided remote nexus actually does this
         if (features.is_remote_sender_nexus(id)) continue;
         #endif
 
-        //Get the correct "requesting" id for downstream_flow
+        // Get the correct "requesting" id for downstream_flow
         const auto& nexus = features.nexus_at(id);
         const auto& cat_ids = nexus->get_receiving_catchments();
         std::string cat_id;
