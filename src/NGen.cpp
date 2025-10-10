@@ -482,9 +482,7 @@ int main(int argc, char* argv[]) {
     std::shared_ptr<realization::Formulation_Manager> manager =
         std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
     manager->read(catchment_collection, utils::getStdOut());
-    ss << "Ending formulations" << std::endl;
-    LOG(ss.str(), LogLevel::INFO);
-    return 0;
+
 // TODO refactor manager->read so certain configs can be queried before the entire
 // realization collection is created
 #if NGEN_WITH_ROUTING
