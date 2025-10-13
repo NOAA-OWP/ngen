@@ -100,9 +100,9 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     // TODO: get synced end_time values for all models
 
     // Setup formulation output variable subset and order, if present
-    bool old_format = false;
+    bool old_json_format = false;
     std::vector<std::string> out_headers;//define empty vector for headers
-    std::vector<std::string> out_units;//define empty vector for headers for new format
+    std::vector<std::string> out_units;//define empty vector for units for new json structure
     auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
     if (out_var_it != properties.end()) {
         std::vector<geojson::JSONProperty> out_vars_json_list = out_var_it->second.as_list();
@@ -111,11 +111,11 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         if (out_vars_json_list.size() > 0){
             std::string item_type = get_propertytype_name(out_vars_json_list[0].get_type());
             if (item_type == "String"){
-                old_format = true;
+                old_json_format = true;
             }
         }
         std::vector<std::string> out_vars(out_vars_json_list.size());
-        if (old_format){
+        if (old_json_format){
             for (int i = 0; i < out_vars_json_list.size(); ++i) {
                 out_vars[i] = out_vars_json_list[i].as_string();
             }
@@ -143,7 +143,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     //  a certain case).
 
     // Output header fields, if present
-    if(old_format){
+    if(old_json_format){
         auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
         if (out_headers_it != properties.end()) {
             std::vector<geojson::JSONProperty> out_headers_json_list = out_headers_it->second.as_list();
@@ -170,7 +170,9 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     else{
         //in new format, if headers are not set. 
         //This happens when the the BMI output variables of the last nested module should be used.
-        set_output_header_fields(get_output_variable_names());
+        if(out_headers.size() == 0){
+            set_output_header_fields(get_output_variable_names());
+        }
     }
 
     // Output precision, if present
