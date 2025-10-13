@@ -375,32 +375,63 @@ namespace realization {
             determine_model_time_offset();
 
             // Output variable subset and order, if present
+            bool old_json_format = false;
+            std::vector<std::string> out_headers;//define empty vector for headers
+            std::vector<std::string> out_units;//define empty vector for units for new json structure
             auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
             if (out_var_it != properties.end()) {
                 std::vector<geojson::JSONProperty> out_vars_json_list = out_var_it->second.as_list();
+                //Check if the first item is an object type or string type.
+                //string type: old format; object type: new format
+                if (out_vars_json_list.size() > 0){
+                    std::string item_type = get_propertytype_name(out_vars_json_list[0].get_type());
+                    if (item_type == "String"){
+                        old_json_format = true;
+                    }
+                }
                 std::vector<std::string> out_vars(out_vars_json_list.size());
-                for (int i = 0; i < out_vars_json_list.size(); ++i) {
-                    out_vars[i] = out_vars_json_list[i].as_string();
+                if (old_json_format){
+                    for (int i = 0; i < out_vars_json_list.size(); ++i) {
+                        out_vars[i] = out_vars_json_list[i].as_string();
+                    }
+                }
+                else{
+                    out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
+                    out_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
+                    for (int i = 0; i < out_vars_json_list.size(); ++i) {
+                        out_vars[i] = out_vars_json_list[i].at("name").as_string();
+                        out_headers[i] = out_vars_json_list[i].at("header").as_string();
+                        out_units[i] = out_vars_json_list[i].at("units").as_string();
+                    }
                 }
                 set_output_variable_names(out_vars);
+                set_output_header_fields(out_headers);
             }
-                // Otherwise, just take what literally is provided by the model
+            // Otherwise, just take what literally is provided by the model
             else {
                 set_output_variable_names(get_bmi_model()->GetOutputVarNames());
             }
 
             // Output header fields, if present
-            auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
-            if (out_headers_it != properties.end()) {
-                std::vector<geojson::JSONProperty> out_headers_json_list = out_var_it->second.as_list();
-                std::vector<std::string> out_headers(out_headers_json_list.size());
-                for (int i = 0; i < out_headers_json_list.size(); ++i) {
-                    out_headers[i] = out_headers_json_list[i].as_string();
+            if(old_json_format){
+                auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
+                if (out_headers_it != properties.end()) {
+                    std::vector<geojson::JSONProperty> out_headers_json_list = out_var_it->second.as_list();
+                    std::vector<std::string> out_headers(out_headers_json_list.size());
+                    for (int i = 0; i < out_headers_json_list.size(); ++i) {
+                        out_headers[i] = out_headers_json_list[i].as_string();
+                    }
+                    set_output_header_fields(out_headers);
                 }
-                set_output_header_fields(out_headers);
+                else {
+                    set_output_header_fields(get_output_variable_names());
+                }
             }
-            else {
+            else{
+                // if new format and no output/headers are mentioned.
                 set_output_header_fields(get_output_variable_names());
+            }
+
             }
 
             // Output precision, if present
