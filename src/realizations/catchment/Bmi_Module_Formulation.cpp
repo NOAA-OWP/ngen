@@ -441,8 +441,6 @@ namespace realization {
                 set_output_header_fields(get_output_variable_names());
             }
 
-            }
-
             // Output precision, if present
             auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
             if (out_precision_it != properties.end()) {
