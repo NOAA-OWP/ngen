@@ -95,12 +95,11 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
 
     // After all nested formulations have been initialized, reconcile deferred providers
     init_deferred_associations();
-
+    
     // TODO: get synced start_time values for all models
     // TODO: get synced end_time values for all models
 
     // Setup formulation output variable subset and order, if present
-    bool old_json_format = is_realization_legacy_format();
     std::vector<std::string> out_headers;//define empty vector for headers
     std::vector<std::string> out_units;//define empty vector for units for new json structure
     auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
@@ -115,7 +114,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             }
         }
         std::vector<std::string> out_vars(out_vars_json_list.size());
-        if (old_json_format){
+        if (is_realization_legacy_format()){
             for (int i = 0; i < out_vars_json_list.size(); ++i) {
                 out_vars[i] = out_vars_json_list[i].as_string();
             }
@@ -125,7 +124,18 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             out_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
             for (int i = 0; i < out_vars_json_list.size(); ++i) {
                 out_vars[i] = out_vars_json_list[i].at("name").as_string();
-                out_headers[i] = out_vars_json_list[i].at("header").as_string();
+                if(out_vars_json_list[i].has_key("header")){
+                    //indicates that a valid header is provided
+                    out_headers[i] = out_vars_json_list[i].at("header").as_string();
+                }
+                else{
+                    //indicates that header is not provided. The error actually returns a string.
+                    //in such cases, we assign variable name to the header.
+                    out_headers[i] = out_vars[i];
+                    std::stringstream ss;
+                    ss << "Header not provided for " << out_vars[i] << ". Using the variable name as header." << std::endl;
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                }
                 out_units[i] = out_vars_json_list[i].at("units").as_string();
             }
         }
@@ -144,7 +154,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
 
     // Output header fields, if present
     auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
-    if(old_json_format){
+    if(is_realization_legacy_format()){
         if (out_headers_it != properties.end()) {
             std::vector<geojson::JSONProperty> out_headers_json_list = out_headers_it->second.as_list();
             std::vector<std::string> out_headers(out_headers_json_list.size());
@@ -171,12 +181,12 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         //in new format, if headers are not set. 
         //This happens when the the BMI output variables of the last nested module should be used.
         if(out_headers.size() == 0){
-            if (out_headers_it != properties.end()) {
-                //indicates that the new json format has legacy headers format in the realization. 
-                //put out a message that this is ignored.
-                LOG("Deprecated output_header_fields item found in realization file ignored.", LogLevel::WARNING);
-            }
             set_output_header_fields(get_output_variable_names());
+        }
+        if (out_headers_it != properties.end()) {
+            //indicates that the new json format has legacy headers format in the realization. 
+            //put out a message that this is ignored.
+            LOG("Deprecated output_header_fields item found in realization file ignored.", LogLevel::WARNING);
         }
     }
 
