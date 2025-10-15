@@ -100,7 +100,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     // TODO: get synced end_time values for all models
 
     // Setup formulation output variable subset and order, if present
-    bool old_json_format = false;
+    bool old_json_format = is_realization_legacy_format();
     std::vector<std::string> out_headers;//define empty vector for headers
     std::vector<std::string> out_units;//define empty vector for units for new json structure
     auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
@@ -111,7 +111,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         if (out_vars_json_list.size() > 0){
             std::string item_type = get_propertytype_name(out_vars_json_list[0].get_type());
             if (item_type == "String"){
-                old_json_format = true;
+                set_realization_file_format(true);
             }
         }
         std::vector<std::string> out_vars(out_vars_json_list.size());
@@ -143,8 +143,8 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     //  a certain case).
 
     // Output header fields, if present
+    auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
     if(old_json_format){
-        auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
         if (out_headers_it != properties.end()) {
             std::vector<geojson::JSONProperty> out_headers_json_list = out_headers_it->second.as_list();
             std::vector<std::string> out_headers(out_headers_json_list.size());
@@ -171,6 +171,11 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         //in new format, if headers are not set. 
         //This happens when the the BMI output variables of the last nested module should be used.
         if(out_headers.size() == 0){
+            if (out_headers_it != properties.end()) {
+                //indicates that the new json format has legacy headers format in the realization. 
+                //put out a message that this is ignored.
+                LOG("Deprecated output_header_fields item found in realization file ignored.", LogLevel::WARNING);
+            }
             set_output_header_fields(get_output_variable_names());
         }
     }
@@ -452,6 +457,13 @@ bool Bmi_Multi_Formulation::is_model_initialized() const {
 bool Bmi_Multi_Formulation::is_time_step_beyond_end_time(time_step_t t_index) {
     // TODO: implement
     return false;
+}
+
+bool Bmi_Multi_Formulation::is_realization_legacy_format() const {
+    return legacy_json_format;
+}
+void Bmi_Multi_Formulation::set_realization_file_format(bool is_legacy_format){
+    legacy_json_format = is_legacy_format;
 }
 
 //Function to find whether any item in the string vector is empty or blank

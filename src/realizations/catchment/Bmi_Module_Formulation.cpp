@@ -29,7 +29,9 @@ namespace realization {
             static bool no_conversion_message_logged = false;
             if (!no_conversion_message_logged) {
                 no_conversion_message_logged = true;
-                LOG("Output variables do not have unit conversion. Capability not yet implemented in ngen.", LogLevel::WARNING);
+                if(is_realization_legacy_format()){
+                    LOG("Deprecated realization file format used for output variables. Unit conversion unavailable.", LogLevel::WARNING);    
+                }
             }
 
             std::string output_str;
@@ -384,7 +386,7 @@ namespace realization {
             determine_model_time_offset();
 
             // Output variable subset and order, if present
-            bool old_json_format = false;
+            bool old_json_format = is_realization_legacy_format();
             std::vector<std::string> out_headers;//define empty vector for headers
             std::vector<std::string> out_units;//define empty vector for units for new json structure
             auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
@@ -395,7 +397,7 @@ namespace realization {
                 if (out_vars_json_list.size() > 0){
                     std::string item_type = get_propertytype_name(out_vars_json_list[0].get_type());
                     if (item_type == "String"){
-                        old_json_format = true;
+                        set_realization_file_format(true);
                     }
                 }
                 std::vector<std::string> out_vars(out_vars_json_list.size());
@@ -422,8 +424,8 @@ namespace realization {
             }
 
             // Output header fields, if present
+            auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
             if(old_json_format){
-                auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
                 if (out_headers_it != properties.end()) {
                     std::vector<geojson::JSONProperty> out_headers_json_list = out_var_it->second.as_list();
                     std::vector<std::string> out_headers(out_headers_json_list.size());
@@ -437,6 +439,11 @@ namespace realization {
                 }
             }
             else{
+                if (out_headers_it != properties.end()) {
+                    //indicates that the new json format has legacy headers format in the realization. 
+                    //put out a message that this is ignored.
+                    LOG("Deprecated output_header_fields item found in realization file ignored.", LogLevel::WARNING);
+                }
                 // if new format and no output/headers are mentioned.
                 set_output_header_fields(get_output_variable_names());
             }
@@ -648,6 +655,10 @@ namespace realization {
             return model_initialized;
         }
 
+        bool Bmi_Module_Formulation::is_realization_legacy_format() const {
+            return legacy_json_format;
+        }
+
         void Bmi_Module_Formulation::set_allow_model_exceed_end_time(bool allow_exceed_end) {
             allow_model_exceed_end_time = allow_exceed_end;
         }
@@ -669,6 +680,10 @@ namespace realization {
 
         void Bmi_Module_Formulation::set_model_initialized(bool is_initialized) {
             model_initialized = is_initialized;
+        }
+
+        void Bmi_Module_Formulation::set_realization_file_format(bool is_legacy_format){
+            legacy_json_format = is_legacy_format;
         }
 
         // TODO: need to modify this to support arrays properly, since in general that's what BMI modules deal with
