@@ -32,7 +32,7 @@ namespace routing_py_adapter {
          * Function to run @p number_of_timesteps of routing, extracting 
          * lateral inflows from @p flow_vector
          * 
-         * FIXME This is current unimplemented and will require some addtional
+         * FIXME This is current unimplemented and will require some additional
          * work to properly map flows to the correct t-route network segments.
          * This may not even be the correct concept to implement this type of
          * "integrated" routing.  But the basic idea is that after a catchment 
@@ -44,7 +44,7 @@ namespace routing_py_adapter {
          * vector for each identity and constructs the correct lateral inflow setup to make
          * a full routing pass.
          * 
-         * See NOTE in @ref route(int, int) route() about python module availablity.
+         * See NOTE in @ref route(int, int) route() about python module availability.
          *
          * @param number_of_timesteps
          * @param delta_time
@@ -61,14 +61,14 @@ namespace routing_py_adapter {
          * Currently, these parameters are ignored and are read instead from the yaml configuration
          * file contained in #t_route_config_path
          * 
-         * NOTE this funtion uses a pybind11 embedded interpreter to load the t-route namespace package
+         * NOTE this function uses a pybind11 embedded interpreter to load the t-route namespace package
          * ngen-main and then executes the routing in the python interpreter.
          * It is assumed that the ngen-main module is available in the interpreters PYTHON_PATH.
          * If the module cannot be found, then a ModuleNotFoundError will be thrown.
-         * Similarly, ngen-main depends on severl other python modules.  If any of these are not in the
-         * environments PYTHON_PATH, errors will occur.
+         * Similarly, ngen-main depends on several other python modules.  If any of these are not in the
+         * environment's PYTHON_PATH, errors will occur.
          * 
-         * It is reccommended to intall all t-route packages into a loaded virtual environment or
+         * It is recommended to install all t-route packages into a loaded virtual environment or
          * to the system site-packages.
          * 
          * @param number_of_timesteps
