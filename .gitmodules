@@ -5,41 +5,51 @@
 [submodule "extern/pybind11"]
 	path = extern/pybind11
 	url = https://github.com/pybind/pybind11
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/t-route"]
 	path = extern/t-route
 	url = https://github.com/noaa-owp/t-route.git
-  branch = ngen
+            branch = ngen
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/cfe/cfe"]
 	path = extern/cfe/cfe
 	url = https://github.com/NOAA-OWP/cfe.git
 	branch = master
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/topmodel/topmodel"]
 	path = extern/topmodel/topmodel
 	url = https://github.com/NOAA-OWP/topmodel.git
 	branch = master
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/noah-owp-modular/noah-owp-modular"]
 	path = extern/noah-owp-modular/noah-owp-modular
 	url = https://github.com/NOAA-OWP/noah-owp-modular
 	branch = main
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/bmi-cxx"]
 	path = extern/bmi-cxx
 	url = https://github.com/csdms/bmi-cxx.git
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/evapotranspiration/evapotranspiration"]
 	path = extern/evapotranspiration/evapotranspiration
 	url = https://github.com/NOAA-OWP/evapotranspiration.git
-    branch = master
+            branch = master
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/SoilFreezeThaw/SoilFreezeThaw"]
 	path = extern/SoilFreezeThaw/SoilFreezeThaw
 	url = https://github.com/NOAA-OWP/SoilFreezeThaw
-    branch = master
+            branch = master
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/SoilMoistureProfiles/SoilMoistureProfiles"]
 	path = extern/SoilMoistureProfiles/SoilMoistureProfiles
 	url = https://github.com/NOAA-OWP/SoilMoistureProfiles
 	branch = main
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/sloth"]
 	path = extern/sloth
 	url = https://github.com/noaa-owp/SLoTH
 	branch = latest
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/summa"]
 	path = extern/summa/summa
 	url = https://github.com/ashleymedin/summa.git
@@ -47,9 +57,12 @@
 [submodule "extern/netcdf-cxx4"]
 	path = extern/netcdf-cxx4/netcdf-cxx4
 	url = https://github.com/Unidata/netcdf-cxx4/
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/lstm/lstm"]
 	path = extern/lstm/lstm
 	url = https://github.com/CIROH-UA/lstm
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/lgar-c/LGAR-C"]
 	path = extern/lgar-c/LGAR-C
 	url = https://github.com/NOAA-OWP/LGAR-C.git
+	ignore = dirty # So the generated folder doesn't show up in git status
