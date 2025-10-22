@@ -127,6 +127,7 @@ data/hydrofabric/huc01_demo/
 # NGen build-related items
 .venv
 boost_*
+include/NGenConfig.h
 
 # Large Example Datasets for certain tests #
 ############################################
@@ -134,5 +135,3 @@ boost_*
 data/forcing/huc01_demo/
 # HUC01 Demo Testing Hydrofabric
 data/hydrofabric/huc01_demo/
-cat-27.csv
-nex-26_output.csv
