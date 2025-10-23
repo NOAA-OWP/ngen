@@ -17,6 +17,7 @@ limitations under the License.
 Version 0.3
 Implement is_supported()
 Re-align members for more better memory layout/padding
+Update docstrings
 
 Version 0.2
 Conform to updated protocol interface
@@ -91,15 +92,17 @@ namespace models{ namespace bmi{ namespace protocols{
          * Warns or errors at each check if total mass balance is not within the configured
          * acceptable tolerance.
          * 
-         * throws: MassBalanceError if the mass balance is not within the configured
-         *         acceptable tolerance and the protocol is configured to be fatal.
+         * @return expected<void, ProtocolError> May contain a ProtocolError if
+         *         the protocol fails for any reason.  Errors of ProtocolError::PROTOCOL_WARNING
+         *         severity should be logged as warnings, but not cause the simulation to fail.
          */
         auto run(const ModelPtr& model, const Context& ctx) const -> expected<void, ProtocolError> override;
 
         /**
          * @brief Check if the mass balance protocol is supported by the model
          * 
-         * throws: MassBalanceIntegrationError if the mass balance protocol is not supported
+         * @return expected<void, ProtocolError> May contain a ProtocolError if
+         *         the protocol is not supported by the model.
          */
         [[nodiscard]] auto check_support(const ModelPtr& model) -> expected<void, ProtocolError> override;
 
@@ -121,6 +124,11 @@ namespace models{ namespace bmi{ namespace protocols{
          *                      frequency: int, default 1. How often (in time steps) to check mass balance.
          *                      fatal: bool, default false. Whether to treat mass balance errors as fatal.
          *                   Otherwise, mass balance checking will be disabled (check will be false)
+         * 
+         * @return expected<void, ProtocolError> May contain a ProtocolError if
+         *         initialization fails for any reason, since the protocol must
+         *         be effectively "optional", failed initialization results in
+         *         the protocol being disabled for the duration of the simulation.
          */
         auto initialize(const ModelPtr& model, const Properties& properties) -> expected<void, ProtocolError> override;
 

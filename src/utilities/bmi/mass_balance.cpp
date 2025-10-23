@@ -14,6 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
+Version 0.3 (see mass_balance.hpp for details)
 
 Version 0.2
 Implement error handling via expected<T, ProtocolError> and error_or_warning
@@ -61,13 +62,6 @@ auto NgenMassBalance::run(const ModelPtr& model, const Context& ctx) const -> ex
         model->GetValue(LEAKED_MASS_NAME, &mass_leaked);
         // TODO consider unit conversion if/when it becomes necessary
         mass_balance = mass_in - mass_out - mass_stored - mass_leaked;
-        // std::stringstream ss;
-        // ss << "Mass balance for " << model->GetComponentName() <<"\n\t" <<
-        //         INPUT_MASS_NAME << "(" << mass_in <<  ") - " <<
-        //         OUTPUT_MASS_NAME << " (" << mass_out <<  ") - " << 
-        //         STORED_MASS_NAME << " (" << mass_stored << ") = " << 
-        //         mass_balance << "\n\t" << "tolerance: " << tolerance;
-        // std::cout << ss.str() << std::endl;
         if ( std::abs(mass_balance) > tolerance ) {
             std::stringstream ss;
             ss << "mass_balance: "
