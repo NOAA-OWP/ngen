@@ -14,6 +14,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
+Version 0.3
+Remove "supported" member variable and added is_supported() method to protocol interface
 
 Version 0.2
 Enumerate protocol error types and add ProtocolError exception class
@@ -94,17 +96,6 @@ class NgenBmiProtocol{
    */
 
   public:
-
-    /**
-     * @brief Construct a new Ngen Bmi Protocol object
-     * 
-     * By default, the protocol is considered unsupported.
-     * Subclasses are responsible for implementing the check_support() method,
-     * and ensuring that is_supported is properly set based on the protocol's
-     * requirements.
-     * 
-     */
-    NgenBmiProtocol() : is_supported(false) {}
 
     virtual ~NgenBmiProtocol() = default;
 
@@ -191,7 +182,7 @@ class NgenBmiProtocol{
      * @brief Whether the protocol is supported by the model
      * 
      */
-    bool is_supported = false;
+    virtual bool is_supported() const = 0;
 
     /**
      * @brief Friend class for managing one or more protocols
