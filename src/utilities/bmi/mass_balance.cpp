@@ -92,7 +92,7 @@ auto NgenMassBalance::run(const ModelPtr& model, const Context& ctx) const -> ex
 }
 
 auto NgenMassBalance::check_support(const ModelPtr& model) -> expected<void, ProtocolError> {
-    if (model->is_model_initialized()) {
+    if (model != nullptr && model->is_model_initialized()) {
         double mass_var;
         std::vector<std::string> units;
         units.reserve(4);
