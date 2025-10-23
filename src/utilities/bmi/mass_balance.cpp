@@ -53,7 +53,7 @@ auto NgenMassBalance::run(const ModelPtr& model, const Context& ctx) const -> ex
             )
         );
     }
-    if(model && is_supported && check && check_step) {
+    if(model && supported && check && check_step) {
         double mass_in, mass_out, mass_stored, mass_leaked, mass_balance;
         model->GetValue(INPUT_MASS_NAME, &mass_in);
         model->GetValue(OUTPUT_MASS_NAME, &mass_out);
@@ -105,7 +105,7 @@ auto NgenMassBalance::check_support(const ModelPtr& model) -> expected<void, Pro
             }
             //Compare all other units to the first one (+1)
             if( std::equal( units.begin()+1, units.end(), units.begin() ) ) {
-                this->is_supported = true;
+                this->supported = true;
                 return {};
             }
             else{
@@ -145,7 +145,7 @@ auto NgenMassBalance::initialize(const ModelPtr& model, const Properties& proper
 
     //now check if the user has requested to use mass balance
     auto protocol_it = properties.find(CONFIGURATION_KEY);
-    if ( is_supported && protocol_it != properties.end() ) {
+    if ( supported && protocol_it != properties.end() ) {
         geojson::PropertyMap mass_bal = protocol_it->second.get_values();
 
         auto _it = mass_bal.find(TOLERANCE_KEY);
@@ -173,6 +173,10 @@ auto NgenMassBalance::initialize(const ModelPtr& model, const Properties& proper
         check = false;
     }
     return {}; // important to return for the expected to be properly created!
+}
+
+bool NgenMassBalance::is_supported() const {
+    return this->supported;
 }
 
 }}} // end namespace models::bmi::protocols

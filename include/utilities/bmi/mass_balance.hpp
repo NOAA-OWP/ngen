@@ -14,6 +14,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
+Version 0.3
+Implement is_supported()
 
 Version 0.2
 Conform to updated protocol interface
@@ -121,7 +123,17 @@ namespace models{ namespace bmi{ namespace protocols{
          */
         auto initialize(const ModelPtr& model, const Properties& properties) -> expected<void, ProtocolError> override;
 
+        /**
+         * @brief Whether the protocol is supported by the model
+         * 
+         * @return true  the model exposes the required mass balance variables
+         * @return false the model does not support mass balance checking via this protocol
+         */
+        bool is_supported() const override final;
+
     private:
+        // Whether the protocol is supported by the model, false by default
+        bool supported = false;
         // Configurable options/values
         bool check;
         bool is_fatal;
