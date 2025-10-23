@@ -26,10 +26,10 @@ static const auto noneConfig = std::map<std::string, geojson::JSONProperty> {
 
 static models::bmi::protocols::Context make_context(int current_time_step, int total_steps, const std::string& timestamp, const std::string& id) {
     return models::bmi::protocols::Context{
-        .current_time_step = current_time_step,
-        .total_steps = total_steps,
-        .timestamp = timestamp,
-        .id = id
+        current_time_step,
+        total_steps,
+        timestamp,
+        id
     };
 }
 
