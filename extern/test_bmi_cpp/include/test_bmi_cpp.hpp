@@ -25,6 +25,11 @@
 #define BMI_TYPE_NAME_SHORT "short"
 #define BMI_TYPE_NAME_LONG "long"
 
+#define NGEN_MASS_IN "ngen::mass_in"
+#define NGEN_MASS_OUT "ngen::mass_out"
+#define NGEN_MASS_STORED "ngen::mass_stored"
+#define NGEN_MASS_LEAKED "ngen::mass_leaked"
+
 class TestBmiCpp : public bmi::Bmi {
     public:
         /**
@@ -179,6 +184,11 @@ class TestBmiCpp : public bmi::Bmi {
         std::vector<std::string> output_var_locations = { "node", "node" };
         std::vector<std::string> model_var_locations = {};
 
+        std::vector<std::string> mass_balance_var_names = { NGEN_MASS_IN, NGEN_MASS_OUT, NGEN_MASS_STORED, NGEN_MASS_LEAKED};
+        std::vector<std::string> mass_balance_var_types = { "double", "double", "double", "double"};
+        std::vector<std::string> mass_balance_var_units = { "m", "m", "m", "m" };
+        std::vector<std::string> mass_balance_var_locations = { "node", "node", "node", "node"};
+
         std::vector<int> input_var_item_count = { 1, 1 };
         std::vector<int> output_var_item_count = { 1, 1 };
         std::vector<int> model_var_item_count = {};
@@ -222,6 +232,9 @@ class TestBmiCpp : public bmi::Bmi {
         std::unique_ptr<double> output_var_5 = nullptr;
         std::unique_ptr<double> model_var_1 = nullptr;
         std::unique_ptr<double> model_var_2 = nullptr;
+
+        double mass_stored = 0.0;
+        double mass_leaked = 0.0;
 
         /**
         * Read the BMI initialization config file and use its contents to set the state of the model.

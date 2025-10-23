@@ -165,6 +165,19 @@ void* TestBmiCpp::GetValuePtr(std::string name){
     }
   }
 
+  if (name == NGEN_MASS_STORED) {
+    return &this->mass_stored;
+  }
+  if (name == NGEN_MASS_LEAKED) {
+    return &this->mass_leaked;
+  }
+  if (name == NGEN_MASS_IN) {
+    return this->input_var_1.get();
+  }
+  if (name == NGEN_MASS_OUT) {
+    return this->output_var_1.get();
+  }
+
   throw std::runtime_error("GetValuePtr called for unknown variable: "+name);
 }
 
@@ -212,6 +225,10 @@ int TestBmiCpp::GetVarNbytes(std::string name){
   if(iter != this->model_var_names.end()){
     item_count = this->model_var_item_count[iter - this->model_var_names.begin()];
   }
+  iter = std::find(this->mass_balance_var_names.begin(), this->mass_balance_var_names.end(), name);
+  if(iter != this->mass_balance_var_names.end()){
+    item_count = 1;
+  }
   if(item_count == -1){
     // This is probably impossible to reach--the same conditions above failing will cause a throw
     // in GetVarItemSize --> GetVarType (called earlier) instead.
@@ -233,6 +250,10 @@ std::string TestBmiCpp::GetVarType(std::string name){
   if(iter != this->model_var_names.end()){
     return this->model_var_types[iter - this->model_var_names.begin()];
   }
+  iter = std::find(this->mass_balance_var_names.begin(), this->mass_balance_var_names.end(), name);
+  if(iter != this->mass_balance_var_names.end()){
+    return this->mass_balance_var_types[iter - this->mass_balance_var_names.begin()];
+  }
   throw std::runtime_error("GetVarType called for non-existent variable: "+name+"" SOURCE_LOC );
 }
 
@@ -248,6 +269,10 @@ std::string TestBmiCpp::GetVarUnits(std::string name){
   iter = std::find(this->model_var_names.begin(), this->model_var_names.end(), name);
   if(iter != this->model_var_names.end()){
     return this->model_var_types[iter - this->model_var_names.begin()];
+  }
+  iter = std::find(this->mass_balance_var_names.begin(), this->mass_balance_var_names.end(), name);
+  if(iter != this->mass_balance_var_names.end()){
+    return this->mass_balance_var_units[iter - this->mass_balance_var_names.begin()];
   }
   throw std::runtime_error("GetVarUnits called for non-existent variable: "+name+"" SOURCE_LOC);
 }
@@ -517,4 +542,6 @@ void TestBmiCpp::run(long dt)
         *this->output_var_5 = *this->model_var_2 * 1.0;
     }
     this->current_model_time += (double)dt;
+    this->mass_stored = *this->output_var_1 - *this->input_var_1;
+    this->mass_leaked = 0;
 }
