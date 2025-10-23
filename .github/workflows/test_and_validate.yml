@@ -278,6 +278,35 @@ jobs:
       - name: Clean Up Unit Test Build
         uses: ./.github/actions/clean-build
 
+  # Run BMI protocol tests in linux/unix environment
+  test_bmi_protocols:
+    # The type of runner that the job will run on
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, macos-12]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      - name: Build BMI Protocol Unit Tests
+        uses: ./.github/actions/ngen-build
+        with:
+          targets: "test_bmi_protocols"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+
+      - name: run_bmi_protocol_tests
+        run: |
+          cd ./cmake_build/test/
+          ./test_bmi_protocols
+          cd ../../
+        timeout-minutes: 15
+
+      - name: Clean Up BMI Protocol Unit Test Build
+        uses: ./.github/actions/clean-build
 
   # TODO: fails due to compilation error, at least in large part due to use of POSIX functions not supported on Windows.
   # TODO: Need to determine whether Windows support (in particular, development environment support) is necessary.
