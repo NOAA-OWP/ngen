@@ -150,7 +150,19 @@ auto NgenMassBalance::initialize(const ModelPtr& model, const Properties& proper
 
         auto _it = mass_bal.find(TOLERANCE_KEY);
         if( _it != mass_bal.end() ) tolerance = _it->second.as_real_number();
-
+        //as_real_number() *should* return a floating point NaN representation
+        //if the input value were presented as "NaN" -- non numberic values
+        //non numberic values will throw an exception (not handled here)
+        //it is expected that the user/configuration is responsible for providing
+        //a valid numeric value for tolerance
+        if( std::isnan(tolerance) ) {
+            check = false; //disable mass balance checking
+            return error_or_warning( ProtocolError(
+                Error::PROTOCOL_WARNING,
+                "mass_balance: tolerance value 'NaN' provided, disabling mass balance check."
+                )
+            );
+        }
         _it = mass_bal.find(FATAL_KEY);
         if( _it != mass_bal.end() ) is_fatal = _it->second.as_boolean();
 
