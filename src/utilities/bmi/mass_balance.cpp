@@ -37,8 +37,8 @@ NgenMassBalance::~NgenMassBalance() = default;
 
 auto NgenMassBalance::run(const ModelPtr& model, const Context& ctx) const -> expected<void, ProtocolError> {
     bool check_step = false;
-    //if frequency was set to -1, only check at the end
-    if( frequency == -1 ){
+    //if frequency was set to -1 (or any negative), only check at the end
+    if( frequency < 0 ){
         if(ctx.current_time_step == ctx.total_steps){
             check_step = true;
         }
