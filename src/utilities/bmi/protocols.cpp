@@ -14,6 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
+Version 0.2.1 (See bmi/protocols.hpp for details)
 
 Version 0.2
 Implement error handling via expected<T, ProtocolError> and error_or_warning

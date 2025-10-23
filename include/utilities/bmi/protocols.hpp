@@ -14,6 +14,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
+Version 0.2.1
+Fix NgenBmiProtocols constructor to initialize protocols map when model is null
+Fix run() to return the expected<void, ProtocolError> returned by the wrapped call
 
 Version 0.2
 Enumerate protocol types/names
@@ -65,7 +68,16 @@ class NgenBmiProtocols {
          * @param properties Properties for each protocol being initialized
          */
         NgenBmiProtocols(std::shared_ptr<models::bmi::Bmi_Adapter> model, const geojson::PropertyMap& properties);
-
+        
+        /**
+         * @brief Run a specific BMI protocol by name with a given context
+         * 
+         * @param protocol_name The name of the protocol to run
+         * @param ctx The context of the current protocol run
+         * 
+         * @return expected<void, ProtocolError> May contain a ProtocolError if
+         *         the protocol fails for any reason.
+         */
         auto run(const Protocol& protocol_name, const Context& ctx) const -> expected<void, ProtocolError>; 
 
         private:
