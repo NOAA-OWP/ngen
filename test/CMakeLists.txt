@@ -207,6 +207,20 @@ if(TARGET test_forcings_engine)
     add_compile_definitions(NGEN_LUMPED_CONFIG_PATH="${CMAKE_CURRENT_BINARY_DIR}/config_aorc.yml")
 endif()
 
+########################## BMI Protocol Unit Tests
+
+ngen_add_test(
+    test_bmi_protocols
+    OBJECTS
+        utils/bmi/mass_balance_Test.cpp
+    LIBRARIES
+        NGen::bmi_protocols
+        NGen::ngen_bmi
+        gmock
+    DEPENDS
+        testbmicppmodel
+)
+
 ########################## Series Unit Tests
 ngen_add_test(
     test_mdarray
