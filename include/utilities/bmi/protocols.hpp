@@ -56,7 +56,7 @@ class NgenBmiProtocols {
          * @brief Construct a new Ngen Bmi Protocols object with a null model
          * 
          */
-        NgenBmiProtocols() : model(nullptr){};
+        NgenBmiProtocols();
 
         /**
          * @brief Construct a new Ngen Bmi Protocols object for use with a known model

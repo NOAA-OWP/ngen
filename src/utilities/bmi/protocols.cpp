@@ -34,6 +34,10 @@ auto operator<<(std::ostream& os, Protocol p) -> std::ostream& {
     return os;
 }
 
+NgenBmiProtocols::NgenBmiProtocols()
+    : model(nullptr) {
+        protocols[Protocol::MASS_BALANCE] = std::make_unique<NgenMassBalance>();
+}
 
 NgenBmiProtocols::NgenBmiProtocols(ModelPtr model, const geojson::PropertyMap& properties)
     : model(model) {
@@ -46,7 +50,7 @@ auto NgenBmiProtocols::run(const Protocol& protocol_name, const Context& ctx) co
     expected<void, ProtocolError> result_or_err;
     switch(protocol_name){
         case Protocol::MASS_BALANCE:
-            protocols.at(Protocol::MASS_BALANCE)->run(model, ctx)
+            return protocols.at(Protocol::MASS_BALANCE)->run(model, ctx)
             .or_else( NgenBmiProtocol::error_or_warning );
             break;
         default:
