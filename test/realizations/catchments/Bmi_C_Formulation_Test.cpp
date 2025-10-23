@@ -24,7 +24,7 @@
 #include "FileChecker.h"
 #include "Formulation_Manager.hpp"
 #include <boost/date_time.hpp>
-#include "Bmi_Protocols.hpp"
+#include "../../utils/bmi/MockConfig.hpp"
 using ::testing::MatchesRegex;
 using namespace realization;
 
