@@ -16,6 +16,7 @@ limitations under the License.
 ------------------------------------------------------------------------
 Version 0.3
 Implement is_supported()
+Re-align members for more better memory layout/padding
 
 Version 0.2
 Conform to updated protocol interface
@@ -132,14 +133,14 @@ namespace models{ namespace bmi{ namespace protocols{
         bool is_supported() const override final;
 
     private:
+        double tolerance;
+        // How often (in time steps) to check mass balance
+        int frequency;
         // Whether the protocol is supported by the model, false by default
         bool supported = false;
         // Configurable options/values
         bool check;
         bool is_fatal;
-        double tolerance;
-        // How often (in time steps) to check mass balance
-        int frequency; 
     };
 
 }}}
