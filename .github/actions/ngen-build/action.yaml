@@ -52,6 +52,10 @@ inputs:
       required: false
       description: 'Enable mpi support, only available for Linux runners'
       default: 'OFF'
+    build_extern:
+      required: false
+      description: 'Use external dependencies where possible'
+      default: 'OFF'
 outputs:
   build-dir:
     description: "Directory build was performed in"
@@ -198,6 +202,7 @@ runs:
             which cmake
             cmake --version
             cmake -B ${{ inputs.build-dir }} \
+              -DNGEN_WITH_EXTERN_ALL:BOOL=${{ inputs.build_extern }} \
               -DNGEN_WITH_BMI_C:BOOL=${{ inputs.bmi_c }} \
               -DNGEN_WITH_PYTHON:BOOL=${{ inputs.use_python }} \
               -DNGEN_WITH_UDUNITS:BOOL=${{ inputs.use_udunits }} \
