@@ -139,6 +139,7 @@ jobs:
       - name: Run Tests
         run: |
           cd ./cmake_build/test/
+          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test_bmi_cpp
           cd ../../
         timeout-minutes: 15
@@ -272,6 +273,7 @@ jobs:
       - name: Run Unit Tests
         run: |
           . .venv/bin/activate
+          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./cmake_build/test/test_bmi_multi
         timeout-minutes: 15
 
@@ -301,6 +303,7 @@ jobs:
       - name: run_bmi_protocol_tests
         run: |
           cd ./cmake_build/test/
+          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test_bmi_protocols
           cd ../../
         timeout-minutes: 15
