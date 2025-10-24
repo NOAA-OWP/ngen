@@ -35,15 +35,15 @@ cd ngen
 **Download the Boost Libraries:**
 
 ```shell
-curl -L -o boost_1_79_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.79.0/boost_1_79_0.tar.bz2/download \
-    && tar -xjf boost_1_79_0.tar.bz2 \
-    && rm boost_1_79_0.tar.bz2
+curl -L -o boost_1_86_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.86.0/boost_1_86_0.tar.bz2/download \
+    && tar -xjf boost_1_86_0.tar.bz2 \
+    && rm boost_1_86_0.tar.bz2
 ```
 
 **Set the ENV for Boost and C compiler:**
 
 ```shell
-set BOOST_ROOT="/boost_1_79_0"
+set BOOST_ROOT="/boost_1_86_0"
 set CXX=/usr/bin/g++
 ```
 
@@ -79,7 +79,7 @@ The following CMake command will configure the build:
 
 ```shell
 cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ \
-      -DBOOST_ROOT=boost_1_79_0 \
+      -DBOOST_ROOT=boost_1_86_0 \
       -B /build \
       -S .
 ```

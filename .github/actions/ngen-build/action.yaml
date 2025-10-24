@@ -110,14 +110,14 @@ runs:
           id: cache-boost-dep
           uses: actions/cache@v4
           with:
-            path: boost_1_79_0
+            path: boost_1_86_0
             key: unix-boost-dep
 
         - name: Get Boost Dependency
           if: steps.cache-boost-dep.outputs.cache-hit != 'true'
           run: |
-            curl -L -o boost_1_79_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.79.0/boost_1_79_0.tar.bz2/download
-            tar xjf boost_1_79_0.tar.bz2
+            curl -L -o boost_1_86_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.86.0/boost_1_86_0.tar.bz2/download
+            tar xjf boost_1_86_0.tar.bz2
           shell: bash
 
         - name: Set Pip Constraints
@@ -186,7 +186,7 @@ runs:
         - name: Cmake Initialization
           id: cmake_init
           run: |
-            export BOOST_ROOT="$(pwd)/boost_1_79_0"
+            export BOOST_ROOT="$(pwd)/boost_1_86_0"
             export CFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -Werror"
             export CXXFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override"
             . .venv/bin/activate
