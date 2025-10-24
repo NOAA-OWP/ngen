@@ -62,7 +62,7 @@ auto NgenMassBalance::run(const ModelPtr& model, const Context& ctx) const -> ex
         model->GetValue(LEAKED_MASS_NAME, &mass_leaked);
         // TODO consider unit conversion if/when it becomes necessary
         mass_balance = mass_in - mass_out - mass_stored - mass_leaked;
-        if ( std::abs(mass_balance) > tolerance ) {
+        if ( std::abs(mass_balance) > tolerance || std::isnan(mass_balance)) {
             std::stringstream ss;
             ss << "mass_balance: "
                << "at timestep " << std::to_string(ctx.current_time_step)

@@ -409,4 +409,17 @@ TEST_F(Bmi_Mass_Balance_Test, nan) {
     EXPECT_TRUE( result.has_value() ); // should pass
 }
 
+TEST_F(Bmi_Mass_Balance_Test, model_nan) {
+    auto properties = MassBalanceMock(true).as_json_property();
+    auto context = make_context(0, 2, time, model_name);
+    auto protocols = NgenBmiProtocols(model, properties);
+    auto result = protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, context);
+    EXPECT_TRUE( result.has_value() ); // should pass
+    double mass_error = std::numeric_limits<double>::quiet_NaN();
+    model->SetValue(OUTPUT_MASS_NAME, &mass_error); // Force a NaN into the mass balance computation
+    time = "t1";
+    // should cause an error since mass balance will be NaN using this value in its computation
+    ASSERT_THROW(protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, make_context(1, 2, time, model_name)), ProtocolError);
+}
+
 #endif  // NGEN_BMI_CPP_LIB_TESTS_ACTIVE
