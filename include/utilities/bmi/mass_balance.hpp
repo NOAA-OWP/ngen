@@ -104,7 +104,7 @@ namespace models{ namespace bmi{ namespace protocols{
          * @return expected<void, ProtocolError> May contain a ProtocolError if
          *         the protocol is not supported by the model.
          */
-        [[nodiscard]] auto check_support(const ModelPtr& model) -> expected<void, ProtocolError> override;
+        nsel_NODISCARD auto check_support(const ModelPtr& model) -> expected<void, ProtocolError> override;
 
         /**
          * @brief Check the model for support and initialize the mass balance protocol from the given properties.
