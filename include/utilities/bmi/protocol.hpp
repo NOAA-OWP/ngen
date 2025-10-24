@@ -143,7 +143,7 @@ class NgenBmiProtocol{
      *         the protocol fails for any reason.  Errors of ProtocolError::PROTOCOL_WARNING
      *         severity should be logged as warnings, but not cause the simulation to fail.
      */
-    [[nodiscard]] virtual auto run(const ModelPtr& model, const Context& ctx) const -> expected<void, ProtocolError> = 0;
+    nsel_NODISCARD virtual auto run(const ModelPtr& model, const Context& ctx) const -> expected<void, ProtocolError> = 0;
 
     /**
      * @brief Check if the BMI protocol is supported by the model
@@ -158,7 +158,7 @@ class NgenBmiProtocol{
      * @return expected<void, ProtocolError> May contain a ProtocolError if
      *         the protocol is not supported by the model.
      */
-    [[nodiscard]] virtual expected<void, ProtocolError> check_support(const ModelPtr& model) = 0;
+    nsel_NODISCARD virtual expected<void, ProtocolError> check_support(const ModelPtr& model) = 0;
 
     /**
      * @brief Initialize the BMI protocol from a set of key/value properties
