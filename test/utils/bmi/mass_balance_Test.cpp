@@ -369,6 +369,16 @@ TEST_F(Bmi_Mass_Balance_Test, frequency) {
     ASSERT_THROW(protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, make_context(2, 2, time, model_name)), ProtocolError);
 }
 
+TEST_F(Bmi_Mass_Balance_Test, frequency_zero) {
+    auto properties = MassBalanceMock(true, 1e-5, 0).as_json_property();
+    auto context = make_context(0, 2, time, model_name);
+    auto protocols = NgenBmiProtocols(model, properties);
+    double mass_error = 10; // Force a mass balance error above tolerance
+    model->SetValue(OUTPUT_MASS_NAME, &mass_error);
+    auto result = protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, make_context(0, 2, time, model_name));
+    EXPECT_TRUE( result.has_value() ); // should pass, frequency 0 means never check
+}
+
 TEST_F(Bmi_Mass_Balance_Test, frequency_end) {
     auto properties = MassBalanceMock(true, 1e-5, -1).as_json_property();
     auto context = make_context(0, 2, time, model_name);

@@ -37,24 +37,27 @@ NgenMassBalance::NgenMassBalance() : check(false) {}
 NgenMassBalance::~NgenMassBalance() = default;
 
 auto NgenMassBalance::run(const ModelPtr& model, const Context& ctx) const -> expected<void, ProtocolError> {
-    bool check_step = false;
-    //if frequency was set to -1 (or any negative), only check at the end
-    if( frequency < 0 ){
-        if(ctx.current_time_step == ctx.total_steps){
-            check_step = true;
-        }
-    }
-    else{
-        check_step = (ctx.current_time_step % frequency) == 0;
-    }
     if( model == nullptr ) {
         return make_unexpected<ProtocolError>( ProtocolError(
             Error::UNITIALIZED_MODEL,
             "Cannot run mass balance protocol with null model."
             )
         );
+    } else if( !check || !supported ) {
+        return {};
     }
-    if(model && supported && check && check_step) {
+    bool check_step = false;
+    //if frequency was set to -1 (or any negative), only check at the end
+    //use <= to avoid a potential divide by zero should frequency be 0
+    //(though frequency 0 should have been caught during initialization and check disabled)
+    if( frequency > 0 ){
+        check_step = (ctx.current_time_step % frequency) == 0;
+    }
+    else if(ctx.current_time_step == ctx.total_steps){
+        check_step = true;
+    }
+
+    if(check_step) {
         double mass_in, mass_out, mass_stored, mass_leaked, mass_balance;
         model->GetValue(INPUT_MASS_NAME, &mass_in);
         model->GetValue(OUTPUT_MASS_NAME, &mass_out);
@@ -173,6 +176,9 @@ auto NgenMassBalance::initialize(const ModelPtr& model, const Properties& proper
             frequency = _it->second.as_natural_number();
         } else {
             frequency = 1; //default, check every timestep
+        }
+        if ( frequency == 0 ) {
+            check = false; // can't check at frequency 0, disable mass balance checking
         }
     } else{
         //no mass balance requested, or not supported, so don't check it
