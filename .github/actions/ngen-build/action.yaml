@@ -185,12 +185,18 @@ runs:
 
         - name: Cmake Initialization
           id: cmake_init
+          # NOTE: -DCMAKE_POLICY_VERSION_MINIMUM=3.5 is required to use cmake version 4
+          # and with older pybind11 versions, the minimum cmake version is set to 3.4
+          # which causes cmake configuration to fail.
           run: |
             export BOOST_ROOT="$(pwd)/boost_1_86_0"
             export CFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -Werror"
             export CXXFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override"
             . .venv/bin/activate
             [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
+            echo "Cmake Version:"
+            which cmake
+            cmake --version
             cmake -B ${{ inputs.build-dir }} \
               -DNGEN_WITH_BMI_C:BOOL=${{ inputs.bmi_c }} \
               -DNGEN_WITH_PYTHON:BOOL=${{ inputs.use_python }} \
@@ -199,7 +205,9 @@ runs:
               -DNGEN_WITH_ROUTING:BOOL=${{ inputs.use_troute }} \
               -DNGEN_WITH_NETCDF:BOOL=${{ inputs.use_netcdf }} \
               -DNGEN_WITH_SQLITE:BOOL=${{ inputs.use_sqlite }} \
-              -DNGEN_WITH_MPI:BOOL=${{ inputs.use_mpi }} -S .
+              -DNGEN_WITH_MPI:BOOL=${{ inputs.use_mpi }} \
+              -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -S .
+              
             echo "build-dir=$(echo ${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
           shell: bash
 
