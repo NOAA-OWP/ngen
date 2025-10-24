@@ -24,7 +24,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-12]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -59,7 +59,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-12]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -116,7 +116,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-12]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -151,7 +151,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-12]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -182,7 +182,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-12]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -215,7 +215,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-12]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -250,7 +250,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-12]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -283,7 +283,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-12]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
