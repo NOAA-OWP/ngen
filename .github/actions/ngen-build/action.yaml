@@ -196,6 +196,12 @@ runs:
             export BOOST_ROOT="$(pwd)/boost_1_86_0"
             export CFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -Werror"
             export CXXFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override"
+            if [ ${{ runner.os }} == 'macOS' ]
+            then
+              echo "fun:PyType_FromMetaclass" > /tmp/asan_ignore.txt
+              export CFLAGS="$CFLAGS -fsanitize-ignorelist=/tmp/asan_ignore.txt"
+              export CXXFLAGS="$CXXFLAGS -fsanitize-ignorelist=/tmp/asan_ignore.txt"
+            fi
             . .venv/bin/activate
             [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
             echo "Cmake Version:"
