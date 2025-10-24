@@ -9,11 +9,11 @@ RUN yum update -y \
     && dnf clean all \
   	&& rm -rf /var/cache/yum
 
-RUN curl -L -o boost_1_79_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.79.0/boost_1_79_0.tar.bz2/download \
-    && tar -xjf boost_1_79_0.tar.bz2 \
-    && rm boost_1_79_0.tar.bz2
+RUN curl -L -o boost_1_86_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.86.0/boost_1_86_0.tar.bz2/download \
+    && tar -xjf boost_1_86_0.tar.bz2 \
+    && rm boost_1_86_0.tar.bz2
 
-ENV BOOST_ROOT="/boost_1_79_0"
+ENV BOOST_ROOT="/boost_1_86_0"
 
 ENV CXX=/usr/bin/g++
 
