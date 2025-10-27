@@ -403,6 +403,7 @@ message(STATUS "----------------------------------------------------------------
 ngen_multiline_message(
 "NGen version: ${ngen_VERSION}"
 "Build configuration summary:"
+"  Source directory: ${CMAKE_SOURCE_DIR}"
 "  Generator: ${CMAKE_GENERATOR}"
 "  Build type: ${CMAKE_BUILD_TYPE}"
 "  System: ${CMAKE_SYSTEM_NAME}"

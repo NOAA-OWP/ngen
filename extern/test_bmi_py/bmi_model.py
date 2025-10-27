@@ -73,12 +73,12 @@ class bmi_model(Bmi):
     #     since the input variable names could come from any forcing...
     #------------------------------------------------------
     #_var_name_map_long_first = {
-    _var_name_units_map = {'INPUT_VAR_1':['INPUT_VAR_1','-'],
-                           'INPUT_VAR_2':['INPUT_VAR_2','-'],
-                           'OUTPUT_VAR_1':['OUTPUT_VAR_1','-'],
-                           'OUTPUT_VAR_2':['OUTPUT_VAR_2','-'],
+    _var_name_units_map = {'INPUT_VAR_1':['INPUT_VAR_1','mm/s'],
+                           'INPUT_VAR_2':['INPUT_VAR_2','Pa'],
+                           'OUTPUT_VAR_1':['OUTPUT_VAR_1','m'],
+                           'OUTPUT_VAR_2':['OUTPUT_VAR_2','mm/s'],
                            'OUTPUT_VAR_3':['OUTPUT_VAR_3','-'],
-                           'GRID_VAR_1':['OUTPUT_VAR_1','-'],
+                           'GRID_VAR_1':['OUTPUT_VAR_1','mm/s'],
                            'GRID_VAR_2':['GRID_VAR_2','-'],
                             }
 

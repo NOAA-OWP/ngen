@@ -7,6 +7,8 @@
 #include <HY_CatchmentArea.hpp>
 #include "GenericDataProvider.hpp"
 
+#include "Logger.hpp"
+
 #define DEFAULT_FORMULATION_OUTPUT_DELIMITER ","
 
 namespace realization {
@@ -42,16 +44,23 @@ namespace realization {
          */
         static void config_pattern_substitution(geojson::PropertyMap &properties, const std::string &key,
                                                 const std::string &pattern, const std::string &replacement) {
+            std::stringstream ss;
             auto it = properties.find(key);
             // Do nothing and return if either the key isn't found or the associated property isn't a string
             if (it == properties.end() || it->second.get_type() != geojson::PropertyType::String) {
-                std::cout << "[DEBUG] Skipping pattern substitution for key: " << key << " (not found or not a string)" << std::endl;
+                ss.str("");
+                ss << "Skipping pattern substitution for key: " << key << " (not found or not a string)" << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
                 return;
             }
 
             std::string value = it->second.as_string();
-            std::cout << "[DEBUG] config_pattern_substitution Performing pattern substitution for key: " << key << ", pattern: " << pattern << ", replacement: " << replacement << std::endl;
-//            std::cout << "[DEBUG] Original value: " << value << std::endl;
+            ss.str("");
+            ss << "config_pattern_substitution Performing pattern substitution for key: " << key << ", pattern: " << pattern << ", replacement: " << replacement << std::endl;
+            LOG(ss.str(), LogLevel::DEBUG);
+//            ss.str("");
+//            ss << "Original value: " << value << std::endl;
+//            LOG(ss.str(), LogLevel::DEBUG);
 
             size_t id_index = value.find(pattern);
             while (id_index != std::string::npos) {
@@ -63,7 +72,9 @@ namespace realization {
             properties.erase(key);
             properties.emplace(key, geojson::JSONProperty(key, value));
 
-//            std::cout << "[DEBUG] Substitution result for key: " << key << " -> " << value << std::endl;
+//            ss.str("");
+//            ss << "Substitution result for key: " << key << " -> " << value << std::endl;
+//            LOG(ss.str(), LogLevel::DEBUG);
         }
 
             /**

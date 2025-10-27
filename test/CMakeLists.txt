@@ -426,20 +426,6 @@ ngen_add_test(
         petbmi
 )
 
-########################## Routing Tests
-ngen_add_test(
-    test_routing_pybind
-    OBJECTS
-        routing/Routing_Py_Bind_Test.cpp
-    LIBRARIES
-        NGen::core # for filechecker utility
-        NGen::routing
-        NGen::logging
-        pybind11::embed
-    REQUIRES
-        NGEN_WITH_ROUTING
-)
-
 ########################## Network Class Tests
 ngen_add_test(
     test_network

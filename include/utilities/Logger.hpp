@@ -40,6 +40,8 @@ class Logger {
 		throw std::runtime_error(message);
 	};
 
+    static Logger* GetLogger();
+
   private:
     // Methods
     static std::string ConvertLogLevelToString(LogLevel level);
@@ -74,8 +76,6 @@ class Logger {
     bool         openedOnce = false;
     
     std::unordered_map<std::string, LogLevel> moduleLogLevels;
-
-    static Logger* GetLogger();
 };
 
 // Placed here to ensure the class is declared before setting this preprocessor symbol

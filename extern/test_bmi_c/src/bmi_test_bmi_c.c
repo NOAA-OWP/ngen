@@ -21,7 +21,7 @@ static const char *output_var_locations[OUTPUT_VAR_NAME_COUNT] = { "node", "node
 // Don't forget to update Get_value/Get_value_at_indices (and setter) implementation if these are adjusted
 static const char *input_var_names[INPUT_VAR_NAME_COUNT] = { "INPUT_VAR_1", "INPUT_VAR_2" };
 static const char *input_var_types[INPUT_VAR_NAME_COUNT] = { "double", "double" };
-static const char *input_var_units[INPUT_VAR_NAME_COUNT] = {  "m", "m/s" };
+static const char *input_var_units[INPUT_VAR_NAME_COUNT] = {  "m", "Pa" };
 static const int input_var_item_count[INPUT_VAR_NAME_COUNT] = { 1, 1 };
 static const char *input_var_grids[INPUT_VAR_NAME_COUNT] = { 0, 0 };
 static const char *input_var_locations[INPUT_VAR_NAME_COUNT] = { "node", "node" };

@@ -32,10 +32,6 @@
 #include <pybind11/embed.h>
 #endif // NGEN_WITH_PYTHON
 
-#if NGEN_WITH_ROUTING
-#include "routing/Routing_Py_Adapter.hpp"
-#endif // NGEN_WITH_ROUTING
-
 std::string catchmentDataFile         = "";
 std::string nexusDataFile             = "";
 std::string REALIZATION_CONFIG_PATH   = "";
@@ -54,6 +50,7 @@ int mpi_rank = 0;
 #include "parallel_utils.h"
 #include <HY_Features_MPI.hpp>
 #include <mpi.h>
+#include <algorithm>
 
 #include "core/Partition_One.hpp"
 
@@ -444,6 +441,13 @@ int main(int argc, char* argv[]) {
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments,
     // we instead want to iterate through HY_Catchment objects
     geojson::GeoJSON catchment_collection;
+    // As part of the fix for NOAA-OWP/ngen#284 / NGWPC-6553,
+    // partitioning may insert sentinel flowpaths downstream of
+    // terminal nexuses. Those sentinels will not exist in the
+    // catchmentDataFile. Their listing in catchment_subset_ids works
+    // because the respective geoFOO::read() functions return the
+    // intersection of features in the file and the specified subset,
+    // rather than erroring on missing features.
     if (boost::algorithm::ends_with(catchmentDataFile, "gpkg")) {
 #if NGEN_WITH_SQLITE3
         try {
@@ -482,17 +486,11 @@ int main(int argc, char* argv[]) {
 // TODO refactor manager->read so certain configs can be queried before the entire
 // realization collection is created
 #if NGEN_WITH_ROUTING
-    std::unique_ptr<routing_py_adapter::Routing_Py_Adapter> router;
     if (mpi_rank == 0) { // Run t-route from single process
         if (manager->get_using_routing()) {
             ss << "Using Routing" << std::endl;
             LOG(ss.str(), LogLevel::INFO);
             ss.str("");
-            std::string t_route_config_file_with_path =
-                manager->get_t_route_config_file_with_path();
-            router = std::make_unique<routing_py_adapter::Routing_Py_Adapter>(
-                t_route_config_file_with_path
-            );
         } else {
             ss << "Not Using Routing" << std::endl;
             LOG(ss.str(), LogLevel::INFO);
@@ -534,11 +532,16 @@ int main(int argc, char* argv[]) {
     // T-ROUTE data storage
     std::unordered_map<std::string, int> nexus_indexes;
 #if NGEN_WITH_ROUTING
-    size_t nexus_collection_size = nexus_collection->get_size();
-    for (int i = 0; i < nexus_collection_size; ++i) {
-        auto feature = nexus_collection->get_feature(i);
-        std::string feature_id = feature->get_id();
-        nexus_indexes[feature_id] = i;
+    {
+        int nexus_index = 0;
+        for (int i = 0; i < nexus_collection->get_size(); ++i) {
+            auto const& feature = nexus_collection->get_feature(i);
+            std::string feature_id = feature->get_id();
+            if (hy_features::identifiers::isNexus(feature_id.substr(0, 3))) {
+                nexus_indexes[feature_id] = nexus_index;
+                nexus_index += 1;
+            }
+        }
     }
 #endif // NGEN_WITH_ROUTING
 
@@ -655,13 +658,13 @@ int main(int argc, char* argv[]) {
     std::vector<double> nexus_downstream_flows;
 #if NGEN_WITH_ROUTING
     size_t catchment_collection_size = catchment_collection->get_size();
-    catchment_outflows.resize(catchment_collection_size * num_times);
+    catchment_outflows.resize(catchment_collection_size * num_times, 0.0);
     for (int i = 0; i < catchment_collection_size; ++i) {
         auto feature = catchment_collection->get_feature(i);
         std::string feature_id = feature->get_id();
         catchment_indexes[feature_id] = i;
     }
-    nexus_downstream_flows.resize(nexus_collection_size * num_times);
+    nexus_downstream_flows.resize(nexus_indexes.size() * num_times, 0.0);
 #endif // NGEN_WITH_ROUTING
 
     for (int count = 0; count < num_times; count++) {
@@ -690,7 +693,7 @@ int main(int argc, char* argv[]) {
                 // next time
                 if (layer_next_time <= next_time && layer_next_time <= prev_layer_time) {
                     if (count % 100 == 0) {
-                        ss << "Updating layer: " << layer->get_name() << "\n";
+                        ss << "Updating layer: " << layer->get_name() << " Count=" << count << "\n";
                         LOG(ss.str(), LogLevel::DEBUG);
                         ss.str("");
                     }
@@ -747,8 +750,71 @@ int main(int argc, char* argv[]) {
 #endif
 
 #if NGEN_WITH_ROUTING
+#if NGEN_WITH_MPI
+    if (mpi_num_procs > 1) {
+        int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
+        std::vector<std::string> local_nexus_ids;
+        for (const auto& nexus : nexus_indexes) {
+            local_nexus_ids.push_back(nexus.first);
+        }
+        // MPI_Gather all nexus IDs into a single vector
+        std::vector<std::string> all_nexus_ids = parallel::gather_strings(local_nexus_ids, mpi_rank, mpi_num_procs);
+        if (mpi_rank == 0) {
+            // filter to only the unique IDs
+            std::sort(all_nexus_ids.begin(), all_nexus_ids.end());
+            all_nexus_ids.erase(
+                std::unique(all_nexus_ids.begin(), all_nexus_ids.end()),
+                all_nexus_ids.end()
+            );
+        }
+        // MPI_Broadcast so all processes share the nexus IDs
+        all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, mpi_rank, mpi_num_procs));
+
+        // MPI_Reduce to collect the results from processes
+        std::vector<double> all_nexus_downflows;
+        if (mpi_rank == 0) {
+            all_nexus_downflows.resize(number_of_timesteps * all_nexus_ids.size(), 0.0);
+        }
+        std::unordered_map<std::string, int> all_nexus_indexes;
+        std::vector<double> local_buffer(number_of_timesteps);
+        std::vector<double> receive_buffer(number_of_timesteps, 0.0);
+        for (int i = 0; i < all_nexus_ids.size(); ++i) {
+            std::string nexus_id = all_nexus_ids[i];
+            if (nexus_indexes.find(nexus_id) != nexus_indexes.end() && !features.is_remote_sender_nexus(nexus_id)) {
+                // if this process has the id and receives/records data, copy the values to the buffer
+                int nexus_index = nexus_indexes[nexus_id];
+                for (int step = 0; step < number_of_timesteps; ++step) {
+                    int offset = step * nexus_indexes.size() + nexus_index;
+                    local_buffer[step] = nexus_downstream_flows[offset];
+                }
+            } else {
+                // if this process does not have the id, fill with 0 to make sure it doesn't affect reduce sum
+                std::fill(local_buffer.begin(), local_buffer.end(), 0.0);
+            }
+            MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+            if (mpi_rank == 0) {
+                // copy reduce values to a combined downflows vector
+                all_nexus_indexes[nexus_id] = i;
+                for (int step = 0; step < number_of_timesteps; ++step) {
+                    int offset = step * all_nexus_ids.size() + i;
+                    all_nexus_downflows[offset] = receive_buffer[step];
+                    receive_buffer[step] = 0.0;
+                }
+            }
+        }
+
+        if (mpi_rank == 0) {
+            // update root's local data for running t-route below
+            nexus_indexes = std::move(all_nexus_indexes);
+            nexus_downstream_flows = std::move(all_nexus_downflows);
+        }
+
+    }
+#endif // NGEN_WITH_MPI
     if (mpi_rank == 0) { // Run t-route from single process
         if (manager->get_using_routing()) {
+            LOG(LogLevel::INFO, "Running T-Route on nexus outflows.");
+
             // Note: Currently, delta_time is set in the t-route yaml configuration file, and the
             // number_of_timesteps is determined from the total number of nexus outputs in t-route.
             // It is recommended to still pass these values to the routing_py_adapter object in
@@ -757,7 +823,42 @@ int main(int argc, char* argv[]) {
 
             int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
 
-            router->route(number_of_timesteps, delta_time);
+            std::string t_route_config_file_with_path =
+                manager->get_t_route_config_file_with_path();
+            // model for routing
+            models::bmi::Bmi_Py_Adapter py_troute("T-Route", t_route_config_file_with_path, "troute_nwm_bmi.troute_bmi.BmiTroute", true);
+
+            // tell BMI to resize nexus containers
+            int64_t nexus_count = nexus_indexes.size();
+            py_troute.SetValue("land_surface_water_source__volume_flow_rate__count", &nexus_count);
+            py_troute.SetValue("land_surface_water_source__id__count", &nexus_count);
+            // set up nexus id indexes
+            std::vector<int> nexus_df_index(nexus_count);
+            for (const auto& key_value : nexus_indexes) {
+                int id_index = key_value.second;
+
+                // Convert string ID into numbers for T-route index
+                int id_as_int = -1;
+                size_t sep_index = key_value.first.find(hy_features::identifiers::seperator);
+                if (sep_index != std::string::npos) {
+                    std::string numbers = key_value.first.substr(sep_index + hy_features::identifiers::seperator.length());
+                    id_as_int = std::stoi(numbers);
+                }
+                if (id_as_int == -1) {
+                    std::string error_msg = "Cannot convert the nexus ID to an integer: " + key_value.first;
+                    LOG(LogLevel::FATAL, error_msg);
+                    throw std::runtime_error(error_msg);
+                }
+                nexus_df_index[id_index] = id_as_int;
+            }
+            py_troute.SetValue("land_surface_water_source__id", nexus_df_index.data());
+            for (int i = 0; i < number_of_timesteps; ++i) {
+                py_troute.SetValue("land_surface_water_source__volume_flow_rate",
+                                   nexus_downstream_flows.data() + (i * nexus_count));
+                py_troute.Update();
+            }
+            // Finalize will write the output file
+            py_troute.Finalize();
         }
     }
 #endif

@@ -38,9 +38,12 @@ void NetCDFPerFeatureDataProvider::cleanup_shared_providers()
     shared_providers.clear();
 }
 
-NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s) : log_stream(log_s), value_cache(20),
-    sim_start_date_time_epoch(sim_start),
-    sim_end_date_time_epoch(sim_end)
+NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s)
+    : log_stream(log_s)
+    , file_path(input_path)
+    , value_cache(20)
+    , sim_start_date_time_epoch(sim_start)
+    , sim_end_date_time_epoch(sim_end)
 {
     //size_t sizep = 1073741824, nelemsp = 202481;
     //float preemptionp = 0.75;
@@ -419,14 +422,12 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     }
     catch (const std::runtime_error& e)
     {
-        //minor change to aid debugging (log_stream is an output log stream for messages from the underlying library, therefore logging to both EWTS and library logger) 
-        netcdf_ss << "NetCDFPerFeatureDataProvider: get_converted_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
-        log_stream << netcdf_ss.str();
-        LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
-        netcdf_ss << "=== Exiting get_value function ===" << std::endl;
-        log_stream << netcdf_ss.str();
-        LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
-        return rvalue;
+        data_access::unit_conversion_exception uce(e.what());
+        uce.provider_model_name = "NetCDFPerFeatureDataProvider(" + file_path + ")";
+        uce.provider_bmi_var_name = selector.get_variable_name();
+        uce.provider_units = native_units;
+        uce.unconverted_values.push_back(rvalue);
+        throw uce;
     }
 
     return rvalue;

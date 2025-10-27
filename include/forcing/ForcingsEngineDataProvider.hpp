@@ -16,6 +16,7 @@
 
 #include "DataProvider.hpp"
 #include "bmi/Bmi_Py_Adapter.hpp"
+#include "Logger.hpp"
 
 namespace data_access {
 
@@ -173,31 +174,38 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
       : time_begin_(std::chrono::system_clock::from_time_t(time_begin_seconds))
       , time_end_(std::chrono::system_clock::from_time_t(time_end_seconds))
     {
+        std::stringstream ss; 
+
         // Log the constructor arguments
-        std::cout << "[ngen debug] Entering ForcingsEngineDataProvider constructor" << std::endl;
+        ss.str("");
+        ss << "Entering ForcingsEngineDataProvider constructor" << std::endl;
+        LOG(LogLevel::DEBUG, ss.str());
 
         std::time_t start_t = static_cast<std::time_t>(time_begin_seconds);
         std::time_t end_t   = static_cast<std::time_t>(time_end_seconds);
 
-        std::cout << "  Start time: " << std::put_time(std::gmtime(&start_t), "%Y-%m-%d %H:%M:%S UTC")
-                  << " (" << time_begin_seconds << ")" << std::endl;
+        ss.str("");
+        ss << "  Start time: " << std::put_time(std::gmtime(&start_t), "%Y-%m-%d %H:%M:%S UTC")
+           << " (" << time_begin_seconds << ")" << std::endl;
+        LOG(LogLevel::INFO, ss.str());
 
-        std::cout << "  End time:   " << std::put_time(std::gmtime(&end_t), "%Y-%m-%d %H:%M:%S UTC")
-                  << " (" << time_end_seconds << ")" << std::endl;
+        ss.str("");
+        ss << "  End time:   " << std::put_time(std::gmtime(&end_t), "%Y-%m-%d %H:%M:%S UTC")
+           << " (" << time_end_seconds << ")" << std::endl;
+        LOG(LogLevel::INFO, ss.str());
 
         // Attempt to retrieve a previously created BMI instance
         bmi_ = storage_type::instances.get(init_config);
 
         // If it doesn't exist, create it and assign it to the storage map
         if (bmi_ != nullptr) {
-            std::cout << "[ngen debug] Reusing existing BMI instance for init_config file: " << init_config << std::endl;
+            ss.str("");
+            ss << "Reusing existing BMI instance for init_config file: " << init_config << std::endl;
+            LOG(LogLevel::DEBUG, ss.str());
         } else {
-            // Ensure all prior output is flushed before invoking Python
-            std::cout.flush();
-            std::cerr.flush();
-
             // Log the creation of a new BMI instance
-            std::cout << "[ngen debug] Creating new BMI instance for init_config file: " << init_config << std::endl;
+            ss.str(""); ss << "Creating new BMI instance for init_config file: " << init_config << std::endl;
+            LOG(LogLevel::DEBUG, ss.str());
 
             // Create the BMI instance
             try {
@@ -208,7 +216,8 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
                     /*has_fixed_time_step=*/true
                 );
             } catch (const std::exception& ex) {
-                std::cerr << "[ngen error] Failed to create Bmi_Py_Adapter: " << ex.what() << std::endl;
+                ss.str("");ss << "Failed to create Bmi_Py_Adapter: " << ex.what() << std::endl;
+                LOG(LogLevel::FATAL, ss.str());
                 throw;
             }
 
@@ -221,19 +230,28 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
             // NOTE: using std::lround instead of static_cast will prevent potential UB
             time_step_ = std::chrono::seconds{std::lround(bmi_->GetTimeStep())};
             var_output_names_ = bmi_->GetOutputVarNames();
-            std::cout << "[ngen debug] BMI instance initialized successfully" << std::endl;
-            std::cout << "[ngen debug] Time step: " << time_step_.count() << " seconds" << std::endl;
-            std::cout << "[ngen debug] Available output variable names:" << std::endl;
-            for (const auto& var_name : var_output_names_) {
-                std::cout << "  - " << var_name << std::endl;
+            if (Logger::GetLogger()->GetLogLevel() == LogLevel::DEBUG) {
+                ss.str(""); ss << "BMI instance initialized successfully" << std::endl;
+                LOG(LogLevel::DEBUG, ss.str());
+                ss.str(""); ss << "Time step: " << time_step_.count() << " seconds" << std::endl;
+                LOG(LogLevel::DEBUG, ss.str());
+                ss.str(""); ss << "Available output variable names:" << std::endl;
+                LOG(LogLevel::DEBUG, ss.str());
+                for (const auto& var_name : var_output_names_) {
+                    ss.str(""); ss << "  - " << var_name << std::endl;
+                    LOG(LogLevel::DEBUG, ss.str());
+                }
             }
         } catch (const std::exception& ex) {
-            std::cerr << "[ngen error] Error initializing BMI instance: " << ex.what() << std::endl;
+            ss.str(""); ss << "Error initializing BMI instance: " << ex.what() << std::endl;
+            LOG(LogLevel::FATAL, ss.str());
             throw;
         }
 
         // Log successful constructor exit
-        std::cout << "[ngen debug] Exiting ForcingsEngineDataProvider constructor" << std::endl;
+        ss.str(""); ss << "Exiting ForcingsEngineDataProvider constructor" << std::endl;
+        LOG(LogLevel::DEBUG, ss.str());
+
     }
 
     //! Ensure a variable is available, appending the suffix if needed

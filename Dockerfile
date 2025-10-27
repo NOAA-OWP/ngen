@@ -3,14 +3,18 @@
 ##############################
 # Stage: Base – Common Setup
 ##############################
-FROM rockylinux:8 AS base
+ARG NGEN_FORCING_IMAGE_TAG=latest
+FROM ghcr.io/ngwpc/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG} AS base
+
+# Uncomment when building locally
+#FROM ngen-bmi-forcing AS base
 
 # cannot remove LANG even though https://bugs.python.org/issue19846 is fixed
 # last attempted removal of LANG broke many users:
 # https://github.com/docker-library/python/pull/570
 ENV LANG="C.UTF-8" \
     \
-    PYTHON_VERSION="3.10.14" \
+    PYTHON_VERSION="3.11.13" \
     SZIP_VERSION="2.1.1" \
     HDF5_VERSION="1.10.11" \
     NETCDF_C_VERSION="4.7.4" \
@@ -36,6 +40,7 @@ RUN set -eux && \
         udunits2 udunits2-devel \
         bzip2 bzip2-devel \
         zlib zlib-devel \
+        xz-devel \
 ## FIXME: replace openmpi with Intel MPI libraries ##
         openmpi openmpi-devel \
         openssl openssl-devel \
@@ -118,6 +123,7 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-szip \
 	nproc="$(nproc)" && \
 	make -j "$nproc" && \
 	make install && \
+    strip --strip-debug /usr/local/lib/libsz*.so.* || true && \
     rm --recursive --force /usr/src/szip szip.tar.gz
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-hdf5 \
@@ -129,6 +135,8 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-hdf5 \
 	./configure --prefix=/usr/local/ --with-szlib=/usr/local/ && \
 	make check -j "$(nproc)" && \
     make install && \
+    strip --strip-debug /usr/local/lib/libhdf5*.so.* || true && \
+    rm -f /usr/local/lib/libhdf5*.a && \
     rm --recursive --force /usr/src/hdf5 hdf5.tar.gz
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-netcdf-c \
@@ -140,6 +148,7 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-netcdf-c \
     cmake -B cmake_build -S . -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF && \
     cmake --build cmake_build --parallel "$(nproc)" && \
     cmake --build cmake_build --target install && \
+    #strip --strip-debug /usr/local/lib64/libnetcdf*.so.* || true && \
     rm --recursive --force /usr/src/netcdf-c netcdf-c.tar.gz
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-netcdf-fortran \
@@ -152,6 +161,7 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-netcdf-fortran \
        -DCMAKE_Fortran_COMPILER=/opt/rh/gcc-toolset-10/root/usr/bin/gfortran && \
     cmake --build cmake_build --parallel "$(nproc)" && \
     cmake --build cmake_build --target install && \
+    #strip --strip-debug /usr/local/lib/libnetcdff*.so.* || true && \
     rm --recursive --force /usr/src/netcdf-fortran netcdf-fortran.tar.gz
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-boost \
@@ -161,14 +171,19 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-boost \
     tar --extract --directory /opt/boost --strip-components=1 --file boost.tar.gz && \
     rm boost.tar.gz \
     # build boost libraries
-    && cd /opt/boost && ./bootstrap.sh && ./b2 && ./b2 install --prefix=/usr/local
+    && cd /opt/boost && ./bootstrap.sh && ./b2 && ./b2 install --prefix=/usr/local && \
+    strip --strip-debug /usr/local/lib/libboost_*.so.* || true && \
+    rm -f /usr/local/lib/libboost_*.a
 
 ENV VIRTUAL_ENV="/ngen-app/ngen-python"
 
 # Create virtual environment for the application and upgrade pip within it
-RUN python3.10 -m venv ${VIRTUAL_ENV}
+RUN python3.11 -m venv --system-site-packages ${VIRTUAL_ENV}
 
-ENV PATH=${VIRTUAL_ENV}/bin:${PATH}
+ENV PATH="${VIRTUAL_ENV}/bin:${PATH}"
+
+# Consolidated LD_LIBRARY_PATH for MPI
+ENV LD_LIBRARY_PATH="/usr/lib64/openmpi/lib:/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH}"
 
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
     set -eux && \
@@ -179,8 +194,9 @@ RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
       'bmipy' \
       'pandas' \
       'pyyml' \
-      'torch'
-
+      'torch' \
+      --no-binary=mpi4py mpi4py && \
+    pip install /ngen-app/ngen-forcing/
 
 WORKDIR /ngen-app/
 
@@ -198,7 +214,7 @@ SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
 WORKDIR /ngen-app/ngen/
 
 # Copy only the requirements files first for dependency installation caching
-COPY extern/test_bmi_py/requirements.txt /tmp/test_bmi_py_requirements.txt 
+COPY extern/test_bmi_py/requirements.txt /tmp/test_bmi_py_requirements.txt
 COPY extern/t-route/requirements.txt /tmp/t-route_requirements.txt
 
 # Install Python dependencies and remove the temporary requirements files
@@ -214,17 +230,23 @@ ENV LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
 RUN --mount=type=cache,target=/root/.cache/t-route,id=t-route-build \
     set -eux && \
     cd extern/t-route && \
-   echo "Running compiler.sh" && \
+    echo "Running compiler.sh" && \
     LDFLAGS='-Wl,-L/usr/local/lib64/,-L/usr/local/lib/,-rpath,/usr/local/lib64/,-rpath,/usr/local/lib/' && \
-    ./compiler.sh no-e
+    ./compiler.sh no-e && \
+    rm -rf /ngen-app/ngen/extern/t-route/test/LowerColorado_TX_v4 && \
+    find /ngen-app/ngen/extern/t-route -name "*.o" -exec rm -f {} + && \
+    find /ngen-app/ngen/extern/t-route -name "*.a" -exec rm -f {} +
 
 # Configure the build with cache for CMake
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ngen \
     set -eux && \
+        export FFLAGS="-fPIC" && \
+        export FCFLAGS="-fPIC" && \
+        export CMAKE_Fortran_FLAGS="-fPIC" && \
         cmake -B cmake_build -S . \
 ## FIXME: figure out why running with MPI enabled throws errors
 ##      and re-enable it.
-          -DNGEN_WITH_MPI=ON \
+          -DNGEN_WITH_MPI=OFF \
           -DNGEN_WITH_NETCDF=ON \
           -DNGEN_WITH_SQLITE=ON \
           -DNGEN_WITH_UDUNITS=ON \
@@ -236,44 +258,55 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ngen \
           -DNGEN_QUIET=ON \
           -DNGEN_UPDATE_GIT_SUBMODULES=OFF \
           -DBOOST_ROOT=/opt/boost && \
-      cmake --build cmake_build --target all
+    cmake --build cmake_build --target all && \
+    rm -rf /ngen-app/ngen/cmake_build/test/CMakeFiles && \
+    rm -rf /ngen-app/ngen/cmake_build/src/core/CMakeFiles && \
+    find /ngen-app/ngen/cmake_build -name "*.a" -exec rm -f {} + && \
+    find /ngen-app/ngen/cmake_build -name "*.o" -exec rm -f {} +
 
 # Build each submodule in a separate layer, using cache for CMake as well
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-lasam \
     set -eux && \
-    cmake -B extern/LASAM/cmake_build -S extern/LASAM/ -DNGEN=ON && \
-    cmake --build extern/LASAM/cmake_build/
+    cmake -B extern/LASAM/cmake_build -S extern/LASAM/ -DNGEN=ON -DBOOST_ROOT=/opt/boost && \
+    cmake --build extern/LASAM/cmake_build/ && \
+    find /ngen-app/ngen/extern/LASAM -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-snow17 \
     set -eux && \
-    cmake -B extern/snow17/cmake_build -S extern/snow17/ && \
-    cmake --build extern/snow17/cmake_build/
+    cmake -B extern/snow17/cmake_build -S extern/snow17/ -DBOOST_ROOT=/opt/boost && \
+    cmake --build extern/snow17/cmake_build/ && \
+    find /ngen-app/ngen/extern/snow17 -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-sac-sma \
     set -eux && \
-    cmake -B extern/sac-sma/cmake_build -S extern/sac-sma/ && \
-    cmake --build extern/sac-sma/cmake_build/
+    cmake -B extern/sac-sma/cmake_build -S extern/sac-sma/ -DBOOST_ROOT=/opt/boost && \
+    cmake --build extern/sac-sma/cmake_build/ && \ 
+    find /ngen-app/ngen/extern/sac-sma -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-soilmoistureprofiles \
     set -eux && \
-    cmake -B extern/SoilMoistureProfiles/cmake_build -S extern/SoilMoistureProfiles/SoilMoistureProfiles/ -DNGEN=ON && \
-    cmake --build extern/SoilMoistureProfiles/cmake_build/
+    cmake -B extern/SoilMoistureProfiles/cmake_build -S extern/SoilMoistureProfiles/SoilMoistureProfiles/ -DNGEN=ON -DBOOST_ROOT=/opt/boost && \
+    cmake --build extern/SoilMoistureProfiles/cmake_build/ && \
+    find /ngen-app/ngen/extern/SoilMoistureProfiles -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-soilfreezethaw \
     set -eux && \
-    cmake -B extern/SoilFreezeThaw/cmake_build -S extern/SoilFreezeThaw/SoilFreezeThaw/ -DNGEN=ON && \
-    cmake --build extern/SoilFreezeThaw/cmake_build/
+    cmake -B extern/SoilFreezeThaw/cmake_build -S extern/SoilFreezeThaw/SoilFreezeThaw/ -DNGEN=ON -DBOOST_ROOT=/opt/boost && \
+    cmake --build extern/SoilFreezeThaw/cmake_build/ && \
+    find /ngen-app/ngen/extern/SoilFreezeThaw -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ueb-bmi \
     set -eux && \
-    cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ && \
-    cmake --build extern/ueb-bmi/cmake_build/
+    cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ -DBOOST_ROOT=/opt/boost && \
+    cmake --build extern/ueb-bmi/cmake_build/ && \
+    find /ngen-app/ngen/extern/ueb-bmi/ -name '*.o' -exec rm -f {} +
 
 RUN set -eux && \
     mkdir --parents /ngencerf/data/ngen-run-logs/ && \
     mkdir --parents /ngen-app/bin/ && \
     mv run-ngen.sh /ngen-app/bin/ && \
-    chmod +x /ngen-app/bin/run-ngen.sh
+    chmod +x /ngen-app/bin/run-ngen.sh && \
+    find /ngen-app/ngen -name "*.so" -exec chmod 755 {} \;
 
 WORKDIR /ngen-app/ngen
 
@@ -356,8 +389,10 @@ RUN set -eux && \
     mv /ngen-app/merged_git_info.json $GIT_INFO_PATH && \
     rm -rf /ngen-app/submodules-json
 
-# Needed for lstm
- ENV PYTHONPATH='$PYTHONPATH:/ngen-app/ngen/extern/lstm:/ngen-app/ngen/extern/lstm/lstm'
+ # Extend PYTHONPATH for LSTM models (preserve venv path from ngen-bmi-forcing)
+ENV PYTHONPATH="${PYTHONPATH}:/ngen-app/ngen/extern/lstm:/ngen-app/ngen/extern/lstm/lstm"
+
+
 
 WORKDIR /
 SHELL ["/bin/bash", "-c"]

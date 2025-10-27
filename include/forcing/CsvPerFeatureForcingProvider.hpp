@@ -170,13 +170,13 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         try {
             return UnitsHelper::get_converted_value(available_forcings_units[output_name], value, output_units);
         }
-        catch (const std::runtime_error& e){
-            #ifndef UDUNITS_QUIET
-            std::stringstream ss;
-            ss <<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
-            LOG(ss.str(), LogLevel::SEVERE); ss.str("");
-            #endif
-            return value;
+        catch (const std::runtime_error& e) {
+            data_access::unit_conversion_exception uce(e.what());
+            uce.provider_model_name = "CsvPerFeatureProvider " + std::to_string(catchment_id);
+            uce.provider_bmi_var_name = output_name;
+            uce.provider_units = available_forcings_units[output_name];
+            uce.unconverted_values.push_back(value);
+            throw uce;
         }
     }
 
@@ -341,12 +341,16 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
                     }
                 }
 
+                LOG("CsvProvider has variable '" + var_name + "' with units '" + units + "'", LogLevel::DEBUG);
+
                 auto wkf = data_access::WellKnownFields.find(var_name);
                 if(wkf != data_access::WellKnownFields.end()){
                     units = units.empty() ? std::get<1>(wkf->second) : units;
+                    auto wkf_name = std::get<0>(wkf->second);
+                    LOG("CsvProvider has well-known name '" + wkf_name + "' for variable '" + var_name + "' with units '" + units + "'", LogLevel::DEBUG);
                     available_forcings.push_back(var_name); // Allow lookup by non-canonical name
                     available_forcings_units[var_name] = units; // Allow lookup of units by non-canonical name
-                    var_name = std::get<0>(wkf->second); // Use the CSDMS name from here on
+                    var_name = wkf_name; // Use the CSDMS name from here on
                 }
 
                 forcing_vectors[var_name] = {};
