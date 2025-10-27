@@ -96,10 +96,8 @@ This will build a `cmake_build/libsummabmi.<version>.<ext>` file, where the vers
 There is an example of a bash script to build the ngen libraries at ngen/extern/summa/summa/build/cmake/build_ngen.[system_type].bash. Sundials is turned off here. These need to be run in the main ngen directory.
 
 To run a test basin, in the main ngen directory, run
-    $ cmake_build/ngen data/catchment_data.geojson "celia" ./data/nexus_data.geojson "nex-26" ./extern/summa/summa/test_ngen/example_realization_config_w_summa_bmi.json
+    $ cmake_build/ngen data/catchment_data.geojson "USA_09107000" ./data/nexus_data.geojson "USA_09107000" ./extern/summa/summa/test_ngen/example_realization_config_w_summa_bmi.json
 or 
-    $ cmake_build/ngen data/catchment_data.geojson "cat-27" ./data/nexus_data.geojson "nex-26" ./extern/summa/summa/test_ngen/example_realization_config_w_summa_bmi__mac.json
+    $ cmake_build/ngen data/catchment_data.geojson "USA_09107000" ./data/nexus_data.geojson "USA_09107000" ./extern/summa/summa/test_ngen/example_realization_config_w_summa_bmi__mac.json
 
-This command can be run as `./extern/summa/summa/test_ngen/example_run_celia.[system_type].sh` also.
-
-This test is currently the Celia Laugh test, not the cat-27 ngen example catchment.
+This command can be run as `./extern/summa/summa/test_ngen/example_run_USA_09107000.[system_type].sh` also.
