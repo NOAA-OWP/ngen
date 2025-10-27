@@ -81,7 +81,7 @@ The `global` key-value object must contain the following two object keys:
                   ---continued---  
 ```
   * The json format for `output_variables` has been updated to included information about the variables, headers and their units  as key-value pairs.
-  * The `output_header_fields` item is deprecated and a warning log message is added when the `output variables` are provided in the new format and the `output_header_fields` specified. 
+  * The `output_header_fields` item is deprecated and a warning log message is added when the `output_variables` are provided in the new format and the `output_header_fields` specified. 
 
 ```
 "global": {
@@ -108,7 +108,7 @@ The `global` key-value object must contain the following two object keys:
                       "units":"1"
                     },
                     {
-                      "name": "soil_moisture_fraction",
+                      "name": "soil_moisture_profile",
                       "header": "sm_profile_0.1m",
                       "units": "1"
                     }

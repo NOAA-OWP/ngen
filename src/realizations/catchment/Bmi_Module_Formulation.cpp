@@ -419,8 +419,8 @@ namespace realization {
                             //in such cases, we assign variable name to the header.
                             out_headers[i] = out_vars[i];
                             std::stringstream ss;
-                            ss << "Header not provided for " << out_vars[i] << ". Using the variable name as header." << std::endl;
-                            LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                            ss << "Header not provided for '" << out_vars[i] << "'. Using the variable name as header." << std::endl;
+                            LOG(ss.str(), LogLevel::INFO); ss.str("");
                         }
                         out_units[i] = out_vars_json_list[i].at("units").as_string();
                     }
