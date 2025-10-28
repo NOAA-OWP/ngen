@@ -22,7 +22,8 @@ public:
                    std::shared_ptr<realization::Formulation_Manager> formulation_manager,
                    std::vector<std::shared_ptr<ngen::Layer>> layers,
                    std::unordered_map<std::string, int> catchment_indexes,
-                   std::unordered_map<std::string, int> nexus_indexes
+                   std::unordered_map<std::string, int> nexus_indexes,
+                   int mpi_rank
                    );
     NgenSimulation() = delete;
 
@@ -46,6 +47,8 @@ public:
     std::vector<double> catchment_outflows_;
     std::unordered_map<std::string, int> nexus_indexes_;
     std::vector<double> nexus_downstream_flows_;
+
+    int mpi_rank_;
 
 #if NGEN_WITH_ROUTING
     std::unique_ptr<routing_py_adapter::Routing_Py_Adapter> router_;
