@@ -255,6 +255,7 @@ namespace realization {
         const boost::span<char> get_serialization_state() const;
         void load_serialization_state(const boost::span<char> state) const;
         void free_serialization_state() const;
+        void set_realization_file_format(bool is_legacy_format);
 
     protected:
 
@@ -466,6 +467,8 @@ namespace realization {
          */
         int next_time_step_index = 0;
 
+        bool is_realization_legacy_format() const;
+
     private:
         /**
          * Whether model ``Update`` calls are allowed and handled in some way by the backing model for time steps after
@@ -486,6 +489,9 @@ namespace realization {
         /** A configured mapping of BMI model variable names to standard names for use inside the framework. */
         std::map<std::string, std::string> bmi_var_names_map;
         bool model_initialized = false;
+
+        /** Whether the realization file follows legacy format or the new format. */
+        bool legacy_json_format = false;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS
