@@ -2,7 +2,7 @@
 #include <NGenConfig.h>
 
 #if NGEN_WITH_ROUTING
-#include "routing/Routing_Py_Adapter.hpp"
+#include "bmi/Bmi_Py_Adapter.hpp"
 #endif // NGEN_WITH_ROUTING
 
 NgenSimulation::NgenSimulation(
