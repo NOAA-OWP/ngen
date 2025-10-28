@@ -54,7 +54,6 @@ int mpi_rank = 0;
 
 #include "core/Partition_One.hpp"
 
-std::string PARTITION_PATH = "";
 int mpi_num_procs;
 #endif // NGEN_WITH_MPI
 
@@ -141,6 +140,7 @@ int main(int argc, char* argv[]) {
     std::string nexusDataFile             = "";
     std::string REALIZATION_CONFIG_PATH   = "";
     bool is_subdivided_hydrofabric_wanted = false;
+    std::string PARTITION_PATH = "";
 
     if (argc > 1 && std::string{argv[1]} == "--info") {
 #if NGEN_WITH_MPI
