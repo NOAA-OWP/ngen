@@ -44,7 +44,7 @@ struct forcing_params
   /*
     Constructor for forcing_params
   */
-  forcing_params(std::string path, std::string provider, std::string start_time, std::string end_time, bool enable_cache) :
+  forcing_params(std::string path, std::string provider, std::string start_time, std::string end_time, bool enable_cache = true) :
     path(path), provider(provider), start_time(start_time), end_time(end_time), enable_cache(enable_cache)
     {
       /// \todo converting to UTC can be tricky, especially if thread safety is a concern
