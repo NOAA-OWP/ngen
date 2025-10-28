@@ -150,7 +150,31 @@ int Bmi_Fortran_Adapter::GetGridSize(int grid_id) {
 }
 
 void Bmi_Fortran_Adapter::SetValue(std::string name, void *src) {
-    inner_set_value(name, src);
+    std::string varType = inner_get_var_type(name);
+    int item_size = GetVarItemsize(name);
+
+    // Rely on central function for determining the analogous C++ type for this var
+    try {
+        const std::string analog_cxx_type = get_analogous_cxx_type(varType, item_size);
+        if (analog_cxx_type == "int") {
+            inner_set_value_int(name, (int *)src);
+        }
+        else if (analog_cxx_type == "float") {
+            inner_set_value_float(name, (float *)src);
+        }
+        else if (analog_cxx_type == "double") {
+            inner_set_value_double(name, (double *)src);
+        }
+        else {
+            throw ::external::ExternalIntegrationException(
+                    "Can't set model " + model_name + " variable " + name + " of type '" + varType +
+                    " with unsupported analogous C++ type " + analog_cxx_type + ".");
+        }
+    }
+    catch (std::runtime_error& e) {
+        throw std::runtime_error("Failed to set variable " + name + " for model " +
+            model_name + ": " + e.what());
+    }
 }
 
 bool Bmi_Fortran_Adapter::is_model_initialized() {

@@ -165,7 +165,31 @@ namespace models {
              * @see get_value
              */
             void GetValue(std::string name, void *dest) override {
-                inner_get_value(name, dest);
+                std::string varType = inner_get_var_type(name);
+                int item_size = GetVarItemsize(name);
+
+                // Rely on central function for determining the analogous C++ type for this var
+                try {
+                    const std::string analog_cxx_type = get_analogous_cxx_type(varType, item_size);
+                    if (analog_cxx_type == "int") {
+                        inner_get_value_int(name, (int *)dest);
+                    }
+                    else if (analog_cxx_type == "float") {
+                        inner_get_value_float(name, (float *)dest);
+                    }
+                    else if (analog_cxx_type == "double") {
+                        inner_get_value_double(name, (double *)dest);
+                    }
+                    else {
+                        throw ::external::ExternalIntegrationException(
+                                "Can't get model " + model_name + " variable " + name + " of type '" + varType +
+                                " with unsupported analogous C++ type " + analog_cxx_type + ".");
+                    }
+                }
+                catch (std::runtime_error& e) {
+                    throw std::runtime_error("Failed to get variable " + name + " for model " +
+                        model_name + ": " + e.what());
+                }
             }
 
             void GetValueAtIndices(std::string name, void *dest, int *inds, int count) override;
@@ -317,20 +341,21 @@ namespace models {
              */
             const std::string
             get_analogous_cxx_type(const std::string &external_type_name, const size_t item_size) override {
-                if (external_type_name == "int" || external_type_name == "integer") {
-                    return "int";
-                }
-                else if (external_type_name == "float" || external_type_name == "real") {
-                    return "float";
-                }
-                else if (external_type_name == "double" || external_type_name == "double precision") {
-                    return "double";
-                }
-                else {
-                    throw std::runtime_error(
-                            "Bmi_Fortran_Adapter received unrecognized Fortran type name '" + external_type_name +
-                            "' for which the analogous C++ type could not be determined");
-                }
+                bool is_integer_type = external_type_name == "int" || external_type_name == "integer";
+                bool is_floating_point_type = external_type_name == "float" || external_type_name == "real" ||
+                    external_type_name == "double" || external_type_name == "double precision";
+
+                if (is_integer_type && item_size == sizeof(short)) {return "short";}
+                if (is_integer_type && item_size == sizeof(int)) {return "int";}
+                if (is_integer_type && item_size == sizeof(long)) {return "long";}
+                if (is_integer_type && item_size == sizeof(long long)) {return "long long";}
+                if (is_floating_point_type && item_size == sizeof(float)) {return "float";}
+                if (is_floating_point_type && item_size == sizeof(double)) {return "double";}
+                if (is_floating_point_type && item_size == sizeof(long double)) {return "long double";}
+                throw std::runtime_error(
+                            "Bmi_Fortran_Adapter received Fortran type name '" + external_type_name +
+                            "' for which the analogous C++ type having expected item size " +
+                            std::to_string(item_size) + " could not be determined ");
             }
 
             /**
@@ -386,7 +411,6 @@ namespace models {
              * @param inds Collection of indexes within the model for which this variable should have a value set.
              * @param src Values that should be set for this variable at the corresponding index in `inds`.
              */
-
             template<class T>
             void SetValueAtIndices(const std::string &name, std::vector<int> inds, std::vector<T> src) {
                 if (inds.size() != src.size()) {
@@ -556,7 +580,7 @@ namespace models {
              * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
              * in the corresponding inner implementations here.
              *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * "Inner" functions such as this should not contain nested function calls to any non-inner member functions for
              * the type.
              *
              * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
@@ -567,19 +591,29 @@ namespace models {
              */
             inline void inner_get_value(const std::string& name, void *dest) {
                 std::string varType = inner_get_var_type(name);
-                //Can use the C type or the fortran type, e.g. int or integer
-                if (varType == "int" || varType == "integer") {
-                    inner_get_value_int(name, (int *)dest);
+                int item_size = inner_get_var_itemsize(name);
+
+                // Rely on central function for determining the analogous C++ type for this var
+                try {
+                    const std::string analog_cxx_type = get_analogous_cxx_type(varType, item_size);
+                    if (analog_cxx_type == "int") {
+                        inner_get_value_int(name, (int *)dest);
+                    }
+                    else if (analog_cxx_type == "float") {
+                        inner_get_value_float(name, (float *)dest);
+                    }
+                    else if (analog_cxx_type == "double") {
+                        inner_get_value_double(name, (double *)dest);
+                    }
+                    else {
+                        throw ::external::ExternalIntegrationException(
+                                "Can't get model " + model_name + " variable " + name + " of type '" + varType +
+                                " with unsupported analogous C++ type " + analog_cxx_type + ".");
+                    }
                 }
-                else if (varType == "float" || varType == "real") {
-                    inner_get_value_float(name, (float *)dest);
-                }
-                else if (varType == "double" || varType == "double precision") {
-                    inner_get_value_double(name, (double *)dest);
-                }
-                else {
-                    throw ::external::ExternalIntegrationException(
-                            "Can't get model " + model_name + " variable " + name + " of type '" + varType + ".");
+                catch (std::runtime_error& e) {
+                    throw std::runtime_error("Failed to get variable " + name + " for model " +
+                        model_name + ": " + e.what());
                 }
             }
 
@@ -711,7 +745,7 @@ namespace models {
              * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
              * in the corresponding inner implementations here.
              *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * "Inner" functions such as this should not contain nested function calls to any non-inner member functions for
              * the type.
              *
              * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
@@ -722,19 +756,29 @@ namespace models {
              */
             inline void inner_set_value(const std::string& name, void *src) {
                 std::string varType = inner_get_var_type(name);
-                //Can use the C type or the fortran type, e.g. int or integer
-                if (varType == "int" || varType == "integer") {
-                    inner_set_value_int(name, (int *)src);
+                int item_size = inner_get_var_itemsize(name);
+
+                // Rely on central function for determining the analogous C++ type for this var
+                try {
+                    const std::string analog_cxx_type = get_analogous_cxx_type(varType, item_size);
+                    if (analog_cxx_type == "int") {
+                        inner_set_value_int(name, (int *)src);
+                    }
+                    else if (analog_cxx_type == "float") {
+                        inner_set_value_float(name, (float *)src);
+                    }
+                    else if (analog_cxx_type == "double") {
+                        inner_set_value_double(name, (double *)src);
+                    }
+                    else {
+                        throw ::external::ExternalIntegrationException(
+                                "Can't set model " + model_name + " variable " + name + " of type '" + varType +
+                                " with unsupported analogous C++ type " + analog_cxx_type + ".");
+                    }
                 }
-                else if (varType == "float" || varType == "real") {
-                    inner_set_value_float(name, (float *)src);
-                }
-                else if (varType == "double" || varType == "double precision") {
-                    inner_set_value_double(name, (double *)src);
-                }
-                else {
-                    throw ::external::ExternalIntegrationException(
-                            "Can't get model " + model_name + " variable " + name + " of type '" + varType + ".");
+                catch (std::runtime_error& e) {
+                    throw std::runtime_error("Failed to set variable " + name + " for model " +
+                        model_name + ": " + e.what());
                 }
             }
 
