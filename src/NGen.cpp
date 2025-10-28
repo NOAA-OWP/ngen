@@ -33,9 +33,6 @@
 #include "routing/Routing_Py_Adapter.hpp"
 #endif // NGEN_WITH_ROUTING
 
-// Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
-int mpi_rank = 0;
-
 #if NGEN_WITH_MPI
 
 #ifndef MPI_HF_SUB_CLI_FLAG
@@ -49,7 +46,6 @@ int mpi_rank = 0;
 
 #include "core/Partition_One.hpp"
 
-int mpi_num_procs;
 #endif // NGEN_WITH_MPI
 
 #include <Layer.hpp>
@@ -65,12 +61,6 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
 {
     stream << "Runtime configuration summary:\n";
 
-#if NGEN_WITH_MPI
-    stream << "  MPI:\n"
-           << "    Rank: " << mpi_rank << "\n"
-           << "    Processors: " << mpi_num_procs << "\n";
-#endif // NGEN_WITH_MPI
-  
 #if NGEN_WITH_PYTHON // -------------------------------------------------------
     { // START RAII
         py::scoped_interpreter guard{};
@@ -138,6 +128,10 @@ int main(int argc, char* argv[]) {
     std::string REALIZATION_CONFIG_PATH   = "";
     bool is_subdivided_hydrofabric_wanted = false;
     std::string PARTITION_PATH = "";
+    int mpi_num_procs;
+
+    // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
+    int mpi_rank = 0;
 
     if (argc > 1 && std::string{argv[1]} == "--info") {
         #if NGEN_WITH_MPI
@@ -151,6 +145,12 @@ int main(int argc, char* argv[]) {
             std::ostringstream output;
             output << ngen::exec_info::build_summary;
             ngen::exec_info::runtime_summary(output);
+#if NGEN_WITH_MPI
+            output << "  MPI:\n"
+                   << "    Rank: " << mpi_rank << "\n"
+                   << "    Processors: " << mpi_num_procs << "\n";
+#endif // NGEN_WITH_MPI
+
             std::cout << output.str() << std::endl;
         } // if (mpi_rank == 0)
 
