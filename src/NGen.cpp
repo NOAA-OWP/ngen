@@ -60,7 +60,6 @@ int mpi_num_procs;
 #include <DomainLayer.hpp>
 #include <Layer.hpp>
 #include <SurfaceLayer.hpp>
-std::stringstream ss("");
 
 void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
     stream << "Runtime configuration summary:\n";
@@ -141,6 +140,7 @@ int main(int argc, char* argv[]) {
     std::string REALIZATION_CONFIG_PATH   = "";
     bool is_subdivided_hydrofabric_wanted = false;
     std::string PARTITION_PATH = "";
+    std::stringstream ss("");
 
     if (argc > 1 && std::string{argv[1]} == "--info") {
 #if NGEN_WITH_MPI
