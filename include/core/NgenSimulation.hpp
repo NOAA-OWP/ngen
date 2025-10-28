@@ -5,10 +5,6 @@
 #include <realizations/catchment/Formulation_Manager.hpp>
 #include <Layer.hpp>
 
-namespace routing_py_adapter {
-    class Routing_Py_Adapter;
-}
-
 #include <memory>
 #include <vector>
 #include <unordered_map>
@@ -51,10 +47,6 @@ public:
 
     int mpi_rank_;
     int mpi_num_procs_;
-
-#if NGEN_WITH_ROUTING
-    std::unique_ptr<routing_py_adapter::Routing_Py_Adapter> router_;
-#endif
 
     // Serialization template will be defined and instantiated in the .cpp file
     template <class Archive>
