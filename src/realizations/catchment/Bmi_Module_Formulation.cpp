@@ -424,6 +424,16 @@ namespace realization {
                         }
                         out_units[i] = out_vars_json_list[i].at("units").as_string();
                     }
+                    //check if the units can be parsed correctly and write a warning message
+                    std::stringstream ss;
+                    for (const std::string& out_unit : out_units) {
+                        if (UnitsHelper::cannot_parse(out_unit))
+                        {
+                            ss << "Unable to parse '" << out_unit << "' in units value." << std::endl;
+                            LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                        }
+                    }
+                    set_output_variable_units(out_units);
                 }
                 set_output_variable_names(out_vars);
                 set_output_header_fields(out_headers);

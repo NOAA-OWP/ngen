@@ -255,6 +255,7 @@ namespace realization {
         const boost::span<char> get_serialization_state() const;
         void load_serialization_state(const boost::span<char> state) const;
         void free_serialization_state() const;
+        void set_realization_file_format(bool is_legacy_format);
 
     protected:
 
@@ -356,8 +357,6 @@ namespace realization {
          */
         bool is_model_initialized() const override;
 
-        bool is_realization_legacy_format() const;
-
         void set_allow_model_exceed_end_time(bool allow_exceed_end);
 
         void set_bmi_init_config(const std::string &init_config);
@@ -372,8 +371,6 @@ namespace realization {
         void set_bmi_model_start_time_forcing_offset_s(const time_t &offset_s);
 
         void set_bmi_model_time_step_fixed(bool is_fix_time_step);
-
-        void set_realization_file_format(bool is_legacy_format);
 
         /**
          * Set whether the backing model object has been initialize using the BMI standard ``Initialize`` function.
@@ -470,6 +467,8 @@ namespace realization {
          */
         int next_time_step_index = 0;
 
+        bool is_realization_legacy_format() const;
+
     private:
         /**
          * Whether model ``Update`` calls are allowed and handled in some way by the backing model for time steps after
@@ -491,6 +490,9 @@ namespace realization {
         std::map<std::string, std::string> bmi_var_names_map;
         bool model_initialized = false;
 
+        /** Whether the realization file follows legacy format or the new format. */
+        bool legacy_json_format = false;
+
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS
                 BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,
@@ -507,9 +509,6 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR,
                 BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE,
         };
-
-        /** Whether the realization file follows legacy format or the new format. */
-        bool legacy_json_format = false;
 
     };
 /*

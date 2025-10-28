@@ -138,6 +138,16 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
                 }
                 out_units[i] = out_vars_json_list[i].at("units").as_string();
             }
+            //check if the units can be parsed correctly and write a warning message
+            std::stringstream ss;
+            for (const std::string& out_unit : out_units) {
+                if (UnitsHelper::cannot_parse(out_unit))
+                {
+                    ss << "Unable to parse '" << out_unit << "' in units value." << std::endl;
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                }
+            }
+            set_output_variable_units(out_units);
         }
         set_output_variable_names(out_vars);
         set_output_header_fields(out_headers);
@@ -189,7 +199,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             LOG("Deprecated output_header_fields item found in realization file ignored.", LogLevel::WARNING);
         }
     }
-
+    
     // Output precision, if present
     auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
     if (out_precision_it != properties.end()) {
