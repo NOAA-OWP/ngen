@@ -95,53 +95,111 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
 
     // After all nested formulations have been initialized, reconcile deferred providers
     init_deferred_associations();
-
+    
     // TODO: get synced start_time values for all models
     // TODO: get synced end_time values for all models
 
     // Setup formulation output variable subset and order, if present
+    std::vector<std::string> out_headers;//define empty vector for headers
+    std::vector<std::string> out_units;//define empty vector for units for new json structure
     auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
     if (out_var_it != properties.end()) {
         std::vector<geojson::JSONProperty> out_vars_json_list = out_var_it->second.as_list();
+        //Check if the first item is an object type or string type.
+        //string type: old format; object type: new format
+        if (out_vars_json_list.size() > 0){
+            std::string item_type = get_propertytype_name(out_vars_json_list[0].get_type());
+            if (item_type == "String"){
+                set_realization_file_format(true);
+            }
+        }
         std::vector<std::string> out_vars(out_vars_json_list.size());
-        for (int i = 0; i < out_vars_json_list.size(); ++i) {
-            out_vars[i] = out_vars_json_list[i].as_string();
+        if (is_realization_legacy_format()){
+            for (int i = 0; i < out_vars_json_list.size(); ++i) {
+                out_vars[i] = out_vars_json_list[i].as_string();
+            }
+        }
+        else{
+            out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
+            out_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
+            for (int i = 0; i < out_vars_json_list.size(); ++i) {
+                out_vars[i] = out_vars_json_list[i].at("name").as_string();
+                if(out_vars_json_list[i].has_key("header")){
+                    //indicates that a valid header is provided
+                    out_headers[i] = out_vars_json_list[i].at("header").as_string();
+                }
+                else{
+                    //indicates that header is not provided. The error actually returns a string.
+                    //in such cases, we assign variable name to the header.
+                    out_headers[i] = out_vars[i];
+                    std::stringstream ss;
+                    ss << "Header not provided for " << out_vars[i] << ". Using the variable name as header." << std::endl;
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                }
+                out_units[i] = out_vars_json_list[i].at("units").as_string();
+            }
+            //check if the units can be parsed correctly and write a warning message
+            std::stringstream ss;
+            for (const std::string& out_unit : out_units) {
+                if (!UnitsHelper::can_parse(out_unit))
+                {
+                    ss << "Unable to parse '" << out_unit << "' in units value." << std::endl;
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                }
+            }
+            set_output_variable_units(out_units);
         }
         set_output_variable_names(out_vars);
+        set_output_header_fields(out_headers);
     }
     // Otherwise, for multi BMI, the BMI output variables of the last nested module should be used.
     else {
         is_out_vars_from_last_mod = true;
         set_output_variable_names(modules.back()->get_output_variable_names());
     }
+
     // TODO: consider warning if nested module formulations have formulation output variables, as that level of the
     //  config is (at present) going to be ignored (though strictly speaking, this doesn't apply to the last module in
     //  a certain case).
 
     // Output header fields, if present
     auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
-    if (out_headers_it != properties.end()) {
-        std::vector<geojson::JSONProperty> out_headers_json_list = out_headers_it->second.as_list();
-        std::vector<std::string> out_headers(out_headers_json_list.size());
-        for (int i = 0; i < out_headers_json_list.size(); ++i) {
-            out_headers[i] = out_headers_json_list[i].as_string();
-        }
-        // Make sure that we have the same number of headers as we have output values
-        if (get_output_variable_names().size() == out_headers.size()) {
-            set_output_header_fields(out_headers);
+    if(is_realization_legacy_format()){
+        if (out_headers_it != properties.end()) {
+            std::vector<geojson::JSONProperty> out_headers_json_list = out_headers_it->second.as_list();
+            std::vector<std::string> out_headers(out_headers_json_list.size());
+            for (int i = 0; i < out_headers_json_list.size(); ++i) {
+                out_headers[i] = out_headers_json_list[i].as_string();
+            }
+            // Make sure that we have the same number of headers as we have output values
+            if (get_output_variable_names().size() == out_headers.size()) {
+                set_output_header_fields(out_headers);
+            }
+            else {
+                std::stringstream ss;
+                ss << "Configured output headers have " << out_headers.size() << " fields, but there are "
+                        << get_output_variable_names().size() << " variables in the output" << std::endl;
+                LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                set_output_header_fields(get_output_variable_names());
+            }
         }
         else {
-            std::stringstream ss;
-            ss << "configured output headers have " << out_headers.size() << " fields, but there are "
-                      << get_output_variable_names().size() << " variables in the output" << std::endl;
-            LOG(ss.str(), LogLevel::WARNING); ss.str("");
             set_output_header_fields(get_output_variable_names());
         }
     }
-    else {
-        set_output_header_fields(get_output_variable_names());
+    else{
+        //in new format, if headers are not set. 
+        //This happens when the the BMI output variables of the last nested module should be used.
+        if(out_headers.size() == 0){
+            set_output_header_fields(get_output_variable_names());
+        }
+        if (out_headers_it != properties.end()) {
+            //indicates that the new json format has legacy headers format in the realization. 
+            //put out a message that this is ignored.
+            LOG("Deprecated output_header_fields item found in realization file ignored.", LogLevel::WARNING);
+        }
     }
-
+    
     // Output precision, if present
     auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
     if (out_precision_it != properties.end()) {
@@ -419,4 +477,36 @@ bool Bmi_Multi_Formulation::is_model_initialized() const {
 bool Bmi_Multi_Formulation::is_time_step_beyond_end_time(time_step_t t_index) {
     // TODO: implement
     return false;
+}
+
+bool Bmi_Multi_Formulation::is_realization_legacy_format() const {
+    return legacy_json_format;
+}
+void Bmi_Multi_Formulation::set_realization_file_format(bool is_legacy_format){
+    legacy_json_format = is_legacy_format;
+}
+
+//Function to find whether any item in the string vector is empty or blank
+int find_empty_string_index(const std::vector<std::string>& str_vector) {
+    for (int i = 0; i < str_vector.size(); ++i) {
+        if (str_vector[i].empty() || str_vector[i] == " ") { // Checks for empty string or a single space
+            return i; // Returns the index of the first empty or blank string found
+        }
+    }
+    return -1; // Returns -1 if no empty or blank string is found
+}
+
+// Function to trim leading and trailing whitespace from a string
+std::string trim(const std::string& str) {
+    // Find the first non-whitespace character from the beginning
+    size_t first = str.find_first_not_of(" \t\n\r\f\v");
+    if (std::string::npos == first) {
+        return str; // String contains only whitespace or is empty
+    }
+
+    // Find the last non-whitespace character from the end
+    size_t last = str.find_last_not_of(" \t\n\r\f\v");
+
+    // Extract the substring between the first and last non-whitespace characters
+    return str.substr(first, (last - first + 1));
 }

@@ -52,6 +52,69 @@ The `global` key-value object must contain the following two object keys:
   }
 },  
 ```
+  * One of the `params` must be the `output_variables`. The legacy format contains the variables listed as a comma-separated list.
+  * Another `params` item must be the `output_header_fields`. The legacy format contains the headers listed as a comma-separated list.
+
+```
+"global": {
+        "formulations": [
+            {
+                "name": "bmi_multi", 
+                "params": {
+                    "name": "bmi_multi", 
+                    "model_type_name": "noah_smp_sft_cfex", 
+                    "main_output_variable": "Q_OUT", 
+                    "init_config": "", 
+                    "allow_exceed_end_time": false, 
+                    "fixed_time_step": false, 
+                    "uses_forcing_file": false, 
+                    "output_variables": [
+                        "SNEQV", 
+                        "soil_moisture_fraction", 
+                        "soil_moisture_profile"
+                    ], 
+                    "output_header_fields": [
+                        "SWE_mm", 
+                        "sm_frac_0.4m", 
+                        "sm_profile_0.1m"
+                    ],
+                  ---continued---  
+```
+  * The json format for `output_variables` has been updated to included information about the variables, headers and their units  as key-value pairs.
+  * The `output_header_fields` item is deprecated and a warning log message is added when the `output_variables` are provided in the new format and the `output_header_fields` specified. 
+
+```
+"global": {
+        "formulations": [
+            {
+                "name": "bmi_multi", 
+                "params": {
+                    "name": "bmi_multi", 
+                    "model_type_name": "noah_smp_sft_cfex", 
+                    "main_output_variable": "Q_OUT", 
+                    "init_config": "", 
+                    "allow_exceed_end_time": false, 
+                    "fixed_time_step": false, 
+                    "uses_forcing_file": false,
+                    "output_variables": [
+		                {
+                        "name": "SNEQV",
+                        "header": "WE_mm",
+                        "units": "mm"
+                    },
+                    {
+                      "name": "soil_moisture_fraction",
+                      "header": "sm_frac_0.4m",
+                      "units":"1"
+                    },
+                    {
+                      "name": "soil_moisture_profile",
+                      "header": "sm_profile_0.1m",
+                      "units": "1"
+                    }
+             	    ],
+              ---continued---
+```
 
 The `time` key-value object must contain the following three keys:
 * `start_time`
