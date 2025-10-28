@@ -10,7 +10,8 @@ NgenSimulation::NgenSimulation(
     std::shared_ptr<realization::Formulation_Manager> formulation_manager,
     std::vector<std::shared_ptr<ngen::Layer>> layers,
     std::unordered_map<std::string, int> catchment_indexes,
-    std::unordered_map<std::string, int> nexus_indexes
+    std::unordered_map<std::string, int> nexus_indexes,
+    int mpi_rank
                                )
     : catchment_formulation_manager_(formulation_manager)
     , simulation_step_(0)
@@ -18,6 +19,7 @@ NgenSimulation::NgenSimulation(
     , layers_(std::move(layers))
     , catchment_indexes_(std::move(catchment_indexes))
     , nexus_indexes_(std::move(nexus_indexes))
+    , mpi_rank_(mpi_rank)
 {
     catchment_outflows_.reserve(catchment_indexes_.size() * get_num_output_times());
     nexus_downstream_flows_.reserve(nexus_indexes_.size() * get_num_output_times());
