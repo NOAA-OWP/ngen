@@ -40,8 +40,14 @@ namespace realization {
             if (timestep != (next_time_step_index - 1)) {
                 throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
             }
-            std::string output_str;
 
+            static bool no_conversion_message_logged = false;
+            if (!no_conversion_message_logged) {
+                no_conversion_message_logged = true;
+                LOG("Output variables do not have unit conversion. Capability not yet implemented in ngen.", LogLevel::WARNING);
+            }
+
+            std::string output_str;
             for (const std::string& name : get_output_variable_names()) {
                 output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_value_as_double(0, name));
             }
@@ -149,7 +155,7 @@ namespace realization {
             throw std::runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
         }
 
-        std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
+	std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
         {
             std::string output_name = selector.get_variable_name();
             time_t init_time = selector.get_init_time();
@@ -185,24 +191,26 @@ namespace realization {
 
                 // Convert units
                 std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
+
+                // --- minimal addition: normalize "none"/"" to "1" and skip conversion if equal ---
+                std::string in_units_norm  = (native_units.empty() || native_units == "none") ? "1" : native_units;
+                std::string out_units_norm = (output_units.empty() || output_units == "none") ? "1" : output_units;
+                if (in_units_norm == out_units_norm) {
+                    return values;
+                }
+                // -------------------------------------------------------------------------------
+
                 try {
-                    UnitsHelper::convert_values(native_units, values.data(), output_units, values.data(), values.size());
+                    UnitsHelper::convert_values(in_units_norm, values.data(), out_units_norm, values.data(), values.size());
                     return values;
                 }
                 catch (const std::runtime_error& e) {
-                    // Log at least one error
-                    if (!unitGetValuesErrLogged) {
-                        bmiform_ss << "BMI Module Formulation: get_values Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
-                        unitGetValuesErrLogged = true;
-                        LOG(bmiform_ss.str(), LogLevel::WARNING); bmiform_ss.str("");
-                    }
-                    else {
-                        #ifndef UDUNITS_QUIET
-                        bmiform_ss << "BMI Module Formulation: get_values Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
-                        LOG(bmiform_ss.str(), LogLevel::WARNING); bmiform_ss.str("");
-                        #endif
-                    }
-                    return values;
+                    data_access::unit_conversion_exception uce(e.what());
+                    uce.provider_model_name = get_bmi_model()->get_model_name();
+                    uce.provider_bmi_var_name = bmi_var_name;
+                    uce.provider_units = native_units; // keep original for diagnostics
+                    uce.unconverted_values = std::move(values);
+                    throw uce;
                 }
             }
             //This is unlikely (impossible?) to throw since a pre-check on available names is done above. Assert instead?
@@ -241,30 +249,31 @@ namespace realization {
 
                 // Convert units
                 std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
+
+                // --- minimal addition: normalize "none"/"" to "1" and skip conversion if equal ---
+                std::string in_units_norm  = (native_units.empty() || native_units == "none") ? "1" : native_units;
+                std::string out_units_norm = (output_units.empty() || output_units == "none") ? "1" : output_units;
+                if (in_units_norm == out_units_norm) {
+                    return value;
+                }
+                // -------------------------------------------------------------------------------
+
                 try {
-                    return UnitsHelper::get_converted_value(native_units, value, output_units);
+                    return UnitsHelper::get_converted_value(in_units_norm, value, out_units_norm);
                 }
                 catch (const std::runtime_error& e){
-                    // Log at least one error
-                    if (!unitGetValueErrLogged) {
-                        bmiform_ss << "BMI Module Formulation: get_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
-                        unitGetValueErrLogged = true;
-                        LOG(bmiform_ss.str(), LogLevel::WARNING); bmiform_ss.str("");
-                    }
-                    else {
-                        #ifndef UDUNITS_QUIET
-                        bmiform_ss << "BMI Module Formulation: get_value Unit conversion unsuccessful - Returning unconverted value! (" << e.what() << ")" << std::endl;
-                        LOG(bmiform_ss.str(), LogLevel::WARNING); bmiform_ss.str("");
-                        #endif
-                    }
-                    return value;
+                    data_access::unit_conversion_exception uce(e.what());
+                    uce.provider_model_name = get_bmi_model()->get_model_name();
+                    uce.provider_bmi_var_name = bmi_var_name;
+                    uce.provider_units = native_units; // keep original for diagnostics
+                    uce.unconverted_values.push_back(value);
+                    throw uce;
                 }
             }
 
             //This is unlikely (impossible?) to throw since a pre-check on available names is done above. Assert instead?
             throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
         }
-
 
         static bool is_var_name_in_collection(const std::vector<std::string> &all_names, const std::string &var_name) {
             return std::count(all_names.begin(), all_names.end(), var_name) > 0;
@@ -686,7 +695,7 @@ namespace realization {
                 "': no logic for converting value to variable's type.");
         }
 
-        void Bmi_Module_Formulation::set_model_inputs_prior_to_update(const double &model_init_time, time_step_t t_delta) {
+	void Bmi_Module_Formulation::set_model_inputs_prior_to_update(const double &model_init_time, time_step_t t_delta) {
             std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();
             time_t model_epoch_time = convert_model_time(model_init_time) + get_bmi_model_start_time_forcing_offset_s();
 
@@ -715,10 +724,16 @@ namespace realization {
                 // Finally, use the value obtained to set the model input
                 std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name),
                                                                            varItemSize);
+
+                // Minimal change: normalize requested units (treat ""/none as dimensionless "1")
+                std::string consumer_units = get_bmi_model()->GetVarUnits(var_name);
+                if (consumer_units.empty() || consumer_units == "none")
+                    consumer_units = "1";
+
                 if (numItems != 1) {
                     //more than a single value needed for var_name
                     auto values = provider->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                   get_bmi_model()->GetVarUnits(var_name)));
+                                                   consumer_units));
                     //need to marshal data types to the receiver as well
                     //this could be done a little more elegantly if the provider interface were
                     //"type aware", but for now, this will do (but requires yet another copy)
@@ -739,15 +754,32 @@ namespace realization {
                     value_ptr = get_values_as_type( type, values.begin(), values.end() );
 
                 } else {
-                    //scalar value
-                    double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                   get_bmi_model()->GetVarUnits(var_name)));
-                    value_ptr = get_value_as_type(type, value);
+                    try {
+                        //scalar value
+                        double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
+                                                                                     consumer_units));
+                        value_ptr = get_value_as_type(type, value);
+                    } catch (data_access::unit_conversion_exception &uce) {
+                        data_access::unit_error_log_key key{get_id(), var_map_alias, uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                        auto ret = data_access::unit_errors_reported.insert(key);
+                        bool new_error = ret.second;
+                        if (new_error) {
+                            std::stringstream ss;
+                            ss << "Unit conversion failure:"
+                               << " requester {'" << get_bmi_model()->get_model_name() << "' catchment '" << get_catchment_id()
+                               << "' variable '" << var_name << "'" << " (alias '" << var_map_alias << "')"
+                               << " units '" << get_bmi_model()->GetVarUnits(var_name) << "'}"
+                               << " provider {'" << uce.provider_model_name << "' source variable '" << uce.provider_bmi_var_name << "'"
+                               << " raw value " << uce.unconverted_values[0] << "}"
+                               << " message \"" << uce.what() << "\"";
+                            LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                        }
+                        value_ptr = get_value_as_type(type, uce.unconverted_values[0]);
+                    }
                 }
                 get_bmi_model()->SetValue(var_name, value_ptr.get());
             }
         }
-
 
         void Bmi_Module_Formulation::append_model_inputs_to_stream(const double &model_init_time, time_step_t t_delta, std::stringstream &inputs) {
             std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();

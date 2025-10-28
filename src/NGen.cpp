@@ -34,10 +34,6 @@
 #include <pybind11/embed.h>
 #endif // NGEN_WITH_PYTHON
 
-#if NGEN_WITH_ROUTING
-#include "routing/Routing_Py_Adapter.hpp"
-#endif // NGEN_WITH_ROUTING
-
 #if NGEN_WITH_MPI
 
 #ifndef MPI_HF_SUB_CLI_FLAG
@@ -48,6 +44,7 @@
 #include "parallel_utils.h"
 #include <HY_Features_MPI.hpp>
 #include <mpi.h>
+#include <algorithm>
 
 #include "core/Partition_One.hpp"
 
@@ -488,17 +485,11 @@ int main(int argc, char* argv[]) {
 // TODO refactor manager->read so certain configs can be queried before the entire
 // realization collection is created
 #if NGEN_WITH_ROUTING
-    std::unique_ptr<routing_py_adapter::Routing_Py_Adapter> router;
     if (mpi_rank == 0) { // Run t-route from single process
         if (manager->get_using_routing()) {
             ss << "Using Routing" << std::endl;
             LOG(ss.str(), LogLevel::INFO);
             ss.str("");
-            std::string t_route_config_file_with_path =
-                manager->get_t_route_config_file_with_path();
-            router = std::make_unique<routing_py_adapter::Routing_Py_Adapter>(
-                t_route_config_file_with_path
-            );
         } else {
             ss << "Not Using Routing" << std::endl;
             LOG(ss.str(), LogLevel::INFO);
@@ -539,11 +530,16 @@ int main(int argc, char* argv[]) {
     // T-ROUTE data storage
     std::unordered_map<std::string, int> nexus_indexes;
 #if NGEN_WITH_ROUTING
-    size_t nexus_collection_size = nexus_collection->get_size();
-    for (int i = 0; i < nexus_collection_size; ++i) {
-        auto feature = nexus_collection->get_feature(i);
-        std::string feature_id = feature->get_id();
-        nexus_indexes[feature_id] = i;
+    {
+        int nexus_index = 0;
+        for (int i = 0; i < nexus_collection->get_size(); ++i) {
+            auto const& feature = nexus_collection->get_feature(i);
+            std::string feature_id = feature->get_id();
+            if (hy_features::identifiers::isNexus(feature_id.substr(0, 3))) {
+                nexus_indexes[feature_id] = nexus_index;
+                nexus_index += 1;
+            }
+        }
     }
 #endif // NGEN_WITH_ROUTING
 
@@ -646,7 +642,8 @@ int main(int argc, char* argv[]) {
                                                        layers,
                                                        catchment_indexes,
                                                        nexus_indexes,
-                                                       mpi_rank);
+                                                       mpi_rank,
+                                                       mpi_num_procs);
 
     simulation->run_catchments();
 

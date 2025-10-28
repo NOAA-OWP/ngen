@@ -46,7 +46,7 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
 
 #if NGEN_WITH_ROUTING
         int nexus_index = nexus_indexes[id];
-        nexus_downstream_flows[nexus_index] = contribution_at_t;
+        nexus_downstream_flows[nexus_index] += contribution_at_t;
 #endif // NGEN_WITH_ROUTING
 
         //std::cout<<"\tNexus "<<id<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;

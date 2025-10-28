@@ -525,8 +525,123 @@ namespace parallel {
         }
         #endif // NGEN_WITH_PYTHON
     }
-}
 
+    /**
+     * MPI_Gather vector<string> values from all processes. The result may include duplicate values.
+     * 
+     * @param local_strings Vector of strings from the current process
+     * @param mpi_rank Rank of the current process
+     * @param mpi_num_procs Number of processes
+     * @return A vector of the gathered strings from all processes. This will only be populated if mpi_rank == 0
+     */
+    std::vector<std::string> gather_strings(const std::vector<std::string>& local_strings, int mpi_rank, int mpi_num_procs) {
+        int root_rank = 0;
+        
+        // 1. Determine local string data size
+        int local_data_size = 0;
+        for (const auto& s : local_strings) {
+            local_data_size += s.length() + 1; // +1 for null terminator
+        }
+
+        // 2. Gather all data sizes to root
+        std::vector<int> all_data_sizes(mpi_num_procs); // Only significant at root
+        MPI_Gather(&local_data_size, 1, MPI_INT, all_data_sizes.data(), 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+        // 3. Calculate displacements and total size at root
+        std::vector<int> displs(mpi_num_procs); // Only significant at root
+        int total_recv_size = 0;
+        if (mpi_rank == root_rank) {
+            displs[0] = 0;
+            total_recv_size = all_data_sizes[0];
+            for (int i = 1; i < mpi_num_procs; ++i) {
+                displs[i] = displs[i-1] + all_data_sizes[i-1];
+                total_recv_size += all_data_sizes[i];
+            }
+        }
+
+        // 4. Allocate receive buffer at root
+        std::vector<char> recv_buffer; // Only significant at root
+        if (mpi_rank == root_rank) {
+            recv_buffer.resize(total_recv_size);
+        }
+
+        // 5. Serialize local strings
+        std::vector<char> send_buffer(local_data_size);
+        int current_offset = 0;
+        for (const auto& s : local_strings) {
+            std::copy(s.begin(), s.end(), send_buffer.begin() + current_offset);
+            send_buffer[current_offset + s.length()] = '\0'; // Null terminator
+            current_offset += s.length() + 1;
+        }
+
+        // 6. Perform MPI_Gatherv
+        MPI_Gatherv(send_buffer.data(), local_data_size, MPI_CHAR,
+                    recv_buffer.data(), all_data_sizes.data(), displs.data(), MPI_CHAR,
+                    root_rank, MPI_COMM_WORLD);
+
+        // 7. Deserialize at root
+        std::vector<std::string> gathered_strings;
+        if (mpi_rank == root_rank) {
+            int current_read_offset = 0;
+            for (int i = 0; i < mpi_num_procs; ++i) {
+                int proc_data_size = all_data_sizes[i];
+                int start_idx = displs[i];
+                int end_idx = start_idx + proc_data_size;
+
+                // Extract strings from this process's data
+                int string_start = start_idx;
+                for (int j = start_idx; j < end_idx; ++j) {
+                    if (recv_buffer[j] == '\0') {
+                        gathered_strings.emplace_back(recv_buffer.data() + string_start, 
+                                                      recv_buffer.data() + j);
+                        string_start = j + 1; // Start of next string
+                    }
+                }
+            }
+            // gathered_strings now contains all strings
+        }
+        return gathered_strings;
+    }
+
+    /**
+     * Send a vector<string> from root to all other processes.
+     * 
+     * @param strings If mpi_rank == 0, the strings that will be broadcasted. Unused for other processes.
+     * @param mpi_rank Rank of the current process
+     * @param mpi_num_procs Number of processes
+     * @return vector<string> of the broadcasted strings from mpi_rank == 0
+     */
+    std::vector<std::string> broadcast_strings(const std::vector<std::string>& strings, int mpi_rank, int mpi_num_procs) {
+        int root_rank = 0;
+        
+        // 1. Broadcast the size of the vector
+        int vector_size = strings.size();
+        MPI_Bcast(&vector_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+        std::vector<std::string> out_strings(vector_size);
+
+        // 2. Broadcast the size of each individual string
+        std::vector<int> string_lengths(vector_size);
+        if (mpi_rank == root_rank) {
+            for (int i = 0; i < vector_size; ++i) {
+                string_lengths[i] = strings[i].length() + 1; // +1 for null terminator
+            }
+        }
+        MPI_Bcast(string_lengths.data(), vector_size, MPI_INT, 0, MPI_COMM_WORLD);
+
+        // 3. Broadcast each string individually
+        for (int i = 0; i < vector_size; ++i) {
+            std::vector<char> buffer(string_lengths[i]);
+            if (mpi_rank == root_rank) {
+                std::strcpy(buffer.data(), strings[i].c_str());
+            }
+            MPI_Bcast(buffer.data(), string_lengths[i], MPI_CHAR, 0, MPI_COMM_WORLD);
+            out_strings[i] = buffer.data();
+        }
+
+        return out_strings;
+    }
+}
 #endif // NGEN_WITH_MPI
 
 #endif //NGEN_PARALLEL_UTILS_H

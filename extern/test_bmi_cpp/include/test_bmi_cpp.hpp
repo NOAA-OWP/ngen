@@ -172,8 +172,8 @@ class TestBmiCpp : public bmi::Bmi {
         std::vector<std::string> input_var_types = { "double", "double" };
         std::vector<std::string> output_var_types = { "double", "double" };
         std::vector<std::string> model_var_types = {};
-        std::vector<std::string> input_var_units = { "m", "m" };
-        std::vector<std::string> output_var_units = { "m", "m/s", "m", "m" };
+        std::vector<std::string> input_var_units = { "mm/s", "Pa" };
+        std::vector<std::string> output_var_units = { "mm/s", "m/s", "m", "m" };
         std::vector<std::string> model_var_units = {};
         std::vector<std::string> input_var_locations = { "node", "node" };
         std::vector<std::string> output_var_locations = { "node", "node" };

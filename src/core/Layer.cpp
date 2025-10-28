@@ -31,7 +31,7 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
         }
 #if NGEN_WITH_ROUTING
         int results_index = catchment_indexes[id];
-        catchment_outflows[results_index] = response;
+        catchment_outflows[results_index] += response;
 #endif // NGEN_WITH_ROUTING
         std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
             r_c->get_output_line_for_timestep(output_time_index)+"\n";

@@ -23,7 +23,8 @@ public:
                    std::vector<std::shared_ptr<ngen::Layer>> layers,
                    std::unordered_map<std::string, int> catchment_indexes,
                    std::unordered_map<std::string, int> nexus_indexes,
-                   int mpi_rank
+                   int mpi_rank,
+                   int mpi_num_procs
                    );
     NgenSimulation() = delete;
 
@@ -49,6 +50,7 @@ public:
     std::vector<double> nexus_downstream_flows_;
 
     int mpi_rank_;
+    int mpi_num_procs_;
 
 #if NGEN_WITH_ROUTING
     std::unique_ptr<routing_py_adapter::Routing_Py_Adapter> router_;

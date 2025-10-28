@@ -32,7 +32,6 @@ namespace realization {
 
     class Formulation_Manager {
         public:
-
             std::shared_ptr<Simulation_Time> Simulation_Time_Object;
 
             Formulation_Manager(std::stringstream &data) {
@@ -55,7 +54,8 @@ namespace realization {
 
             void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
                 std::stringstream ss;
-                std::cout << "[DEBUG] Entering Formulation_Manager::read()" << std::endl;
+                ss.str(""); ss << "Entering Formulation_Manager::read()" << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
 
                 //TODO seperate the parsing of configuration options like time
                 //and routing and other non feature specific tasks from this main function
@@ -101,7 +101,8 @@ namespace realization {
 
                         // add the layer to storage
                         layer_storage.put_layer(layer_desc, layer_desc.id);
-                        std::cout << "[DEBUG] Layer added: ID = " << layer_desc.id << ", Name = " << layer_desc.name << std::endl;
+                        ss.str(""); ss << "Layer added: ID = " << layer_desc.id << ", Name = " << layer_desc.name << std::endl;
+                        LOG(ss.str(), LogLevel::DEBUG);
 
                         if (layer.has_formulation() && layer.get_domain() == "catchments") {
                             double c_value = UnitsHelper::get_converted_value(layer_desc.time_step_units, layer_desc.time_step, "s");
@@ -136,9 +137,10 @@ namespace realization {
                     using_routing = true;
                 #else
                     using_routing = false;
-                    ss <<"WARNING: Formulation Manager found routing configuration"
-                             << ", but routing support isn't enabled. No routing will occur." << std::endl;
-                    LOG(ss.str(), LogLevel::SEVERE); ss.str("");
+                    ss.str("");
+                    ss <<"Formulation Manager found routing configuration"
+                       << ", but routing support isn't enabled. No routing will occur." << std::endl;
+                    LOG(ss.str(), LogLevel::WARNING);
                 #endif // NGEN_WITH_ROUTING
                  }
 
@@ -168,19 +170,21 @@ namespace realization {
 
                 if (possible_catchment_configs) {
                     for (std::pair<std::string, boost::property_tree::ptree> catchment_config : *possible_catchment_configs) {
-                        std::cout << "[DEBUG] Processing catchment: " << catchment_config.first << std::endl;
+                        ss.str(""); ss << "Processing catchment: " << catchment_config.first << std::endl;
+                        LOG(ss.str(), LogLevel::DEBUG);
 
                         int catchment_index = fabric->find(catchment_config.first);
                         if (catchment_index == -1) {
                             #ifndef NGEN_QUIET
-                            ss <<"WARNING: Formulation_Manager::read: Cannot create formulation for catchment "
-                               << catchment_config.first
-                               << " that isn't identified in the hydrofabric or requested subset" << std::endl;
-                            LOG(ss.str(), LogLevel::SEVERE); ss.str("");
+                                ss.str("");
+                                ss << "Formulation_Manager::read: Cannot create formulation for catchment "
+                                   << catchment_config.first
+                                   << " that isn't identified in the hydrofabric or requested subset" << std::endl;
+                                LOG(ss.str(), LogLevel::WARNING);
                             #endif
                             continue;
                         }
-                        realization::config::Config catchment_formulation(catchment_config.second);
+                        realization::config::Config catchment_formulation(catchment_config.second, formulation_groups, forcing_groups);
 
                         if (!catchment_formulation.has_formulation()) {
                             std::string throw_msg;
@@ -191,7 +195,8 @@ namespace realization {
 
                         // Parse catchment-specific model_params
                         auto catchment_feature = fabric->get_feature(catchment_index);
-                        std::cout << "[DEBUG] Linking external properties for catchment: " << catchment_config.first << std::endl;
+                        ss.str(""); ss << "Linking external properties for catchment: " << catchment_config.first << std::endl;
+                        LOG(ss.str(), LogLevel::DEBUG);
                         catchment_formulation.formulation.link_external(catchment_feature);
 
                         this->add_formulation(
@@ -202,18 +207,21 @@ namespace realization {
                                 output_stream
                             )
                         );
-                        std::cout << "[DEBUG] Formulation constructed for catchment: " << catchment_config.first << std::endl;
+                        ss.str(""); ss << "Formulation constructed for catchment: " << catchment_config.first << std::endl;
+                        LOG(ss.str(), LogLevel::DEBUG);
                     }
                 }
 
                 // Process any catchments not explicitly defined in the realization file
                 for (geojson::Feature location : *fabric) {
                     if (not this->contains(location->get_id())) {
-                        std::cout << "[DEBUG] Creating missing formulation for location: " << location->get_id() << std::endl;
+                        ss.str(""); ss << "Creating missing formulation for location: " << location->get_id() << std::endl;
+                        LOG(ss.str(), LogLevel::DEBUG);
                         std::shared_ptr<Catchment_Formulation> missing_formulation = this->construct_missing_formulation(
                             location, output_stream, simulation_time_config);
                         this->add_formulation(missing_formulation);
-//                        std::cout << "[DEBUG] Missing formulation created for location: " << location->get_id() << std::endl;
+//                        ss.str(""); ss << "Missing formulation created for location: " << location->get_id() << std::endl;
+//                        LOG(ss.str(), LogLevel::DEBUG);
                     }
                 }
             }
@@ -271,7 +279,9 @@ namespace realization {
              * @return routing t_route_config_file_with_path
              */
             std::string get_t_route_config_file_with_path() {
-                std::cout << "[DEBUG] Retrieving t_route config file path" << std::endl;
+                std::stringstream ss;
+                ss.str(""); ss << "Retrieving t_route config file path" << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
                 if(this->routing_config != nullptr)
                     return this->routing_config->t_route_config_file_with_path;
                 else
@@ -296,7 +306,9 @@ namespace realization {
                 // constituent formulations points to any forcing
                 // object other than the enclosing
                 // Bmi_Multi_Formulation instance itself.
-                std::cout << "[DEBUG] Finalizing Formulation_Manager" << std::endl;
+                std::stringstream ss;
+                ss.str(""); ss << "Finalizing Formulation_Manager" << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
                 for (auto const& fmap: formulations) {
                     fmap.second->finalize();
                 }
@@ -310,7 +322,8 @@ namespace realization {
 #if NGEN_WITH_PYTHON
                 data_access::detail::ForcingsEngineStorage::instances.clear();
 #endif
-                std::cout << "[DEBUG] Formulation_Manager finalized" << std::endl;
+                ss.str(""); ss << "Formulation_Manager finalized" << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
             }
 
             /**
@@ -364,7 +377,9 @@ namespace realization {
              * @return a reference to the LayerStorageObject
              */
             ngen::LayerDataStorage& get_layer_metadata() {
-                std::cout << "[DEBUG] Retrieving layer metadata" << std::endl;
+                std::stringstream ss;
+                ss.str(""); ss << "Retrieving layer metadata" << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
                 return layer_storage;
             }
 
@@ -376,7 +391,9 @@ namespace realization {
                 const realization::config::Config& catchment_formulation,
                 utils::StreamHandler output_stream
             ) {
-                std::cout << "[DEBUG] Entering construct_formulation_from_config for identifier: " << identifier << std::endl;
+                std::stringstream ss;
+                ss.str(""); ss << "Entering construct_formulation_from_config for identifier: " << identifier << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
 
                 // Check if the formulation exists
                 if (!formulation_exists(catchment_formulation.formulation.type)) {
@@ -389,18 +406,20 @@ namespace realization {
                 }
 
                 // Check for missing forcing parameters
-                std::cout << "[DEBUG] Checking forcing parameters for identifier: " << identifier << std::endl;
+                ss.str(""); ss << "Checking forcing parameters for identifier: " << identifier << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
                 if (catchment_formulation.forcing.parameters.empty()) {
                     std::string throw_msg;
                     throw_msg.assign("No forcing definition was found for " + identifier);
-                    LOG(throw_msg, LogLevel::WARNING);
+                    LOG(throw_msg, LogLevel::FATAL);
                     throw std::runtime_error(throw_msg);
                 }
 
                 // Check for missing path
                 std::vector<std::string> missing_parameters;
                 if (!catchment_formulation.forcing.has_key("path")) {
-                    std::cout << "[DEBUG] Missing path parameter for identifier: " << identifier << std::endl;
+                    ss.str(""); ss << "Missing path parameter for identifier: " << identifier << std::endl;
+                    LOG(ss.str(), LogLevel::DEBUG);
                     missing_parameters.push_back("path");
                 }
 
@@ -422,30 +441,38 @@ namespace realization {
 
                 // Extract forcing parameters
                 forcing_params forcing_config = this->get_forcing_params(catchment_formulation.forcing.parameters, identifier, simulation_time_config);
-                std::cout << "[ngen debug] Forcing parameters extracted for identifier: " << identifier << std::endl;
-                std::cout << "  [ngen debug] Forcing path:        " << forcing_config.path << std::endl;
-                std::cout << "  [ngen debug] Forcing provider:    " << forcing_config.provider << std::endl;
-                std::cout << "  [ngen debug] Forcing init_config: " << forcing_config.init_config << std::endl;
+                ss.str("");
+                ss << "Forcing parameters extracted for identifier: " << identifier << std::endl;
+                ss << "  Forcing path:        " << forcing_config.path << std::endl;
+                ss << "  Forcing provider:    " << forcing_config.provider << std::endl;
+                ss << "  Forcing init_config: " << forcing_config.init_config << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
 
                 std::time_t start_t = static_cast<std::time_t>(forcing_config.simulation_start_t);
                 std::time_t end_t   = static_cast<std::time_t>(forcing_config.simulation_end_t);
 
-                std::cout << "  [ngen debug] Simulation start time: " << std::put_time(std::gmtime(&start_t), "%Y-%m-%d %H:%M:%S UTC")
+                ss.str("");
+                ss << "  Simulation start time: " << std::put_time(std::gmtime(&start_t), "%Y-%m-%d %H:%M:%S UTC")
                           << " (" << forcing_config.simulation_start_t << ")" << std::endl;
-                std::cout << "  [ngen debug] Simulation end time:   " << std::put_time(std::gmtime(&end_t), "%Y-%m-%d %H:%M:%S UTC")
+                ss << "  Simulation end time:   " << std::put_time(std::gmtime(&end_t), "%Y-%m-%d %H:%M:%S UTC")
                           << " (" << forcing_config.simulation_end_t << ")" << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
 
                 // Construct formulation
-                std::cout << "[DEBUG] Constructing formulation for type: " << catchment_formulation.formulation.type << std::endl;
+                ss.str(""); ss << "Constructing formulation for type: " << catchment_formulation.formulation.type << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
                 std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(
                     catchment_formulation.formulation.type, identifier, forcing_config, output_stream
                 );
-                std::cout << "[DEBUG] Formulation constructed successfully for identifier: " << identifier << std::endl;
+                ss.str(""); ss << "Formulation constructed successfully for identifier: " << identifier << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
 
                 // Create formulation instance
-                std::cout << "[DEBUG] Calling create_formulation for identifier: " << identifier << std::endl;
+                ss.str(""); ss << "Calling create_formulation for identifier: " << identifier << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
                 constructed_formulation->create_formulation(catchment_formulation.formulation.parameters);
-                std::cout << "[DEBUG] Formulation creation completed for identifier: " << identifier << std::endl;
+                ss.str(""); ss << "Formulation creation completed for identifier: " << identifier << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
 
                 return constructed_formulation;
             }
@@ -455,39 +482,47 @@ namespace realization {
                 utils::StreamHandler output_stream,
                 simulation_time_params &simulation_time_config
             ) {
+                std::stringstream ss;
                 const std::string identifier = feature->get_id();
-                std::cout << "[DEBUG] Entering construct_missing_formulation for identifier: " << identifier << std::endl;
+                ss.str(""); ss << "Entering construct_missing_formulation for identifier: " << identifier << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
 
                 // Extract forcing parameters from the global config
                 forcing_params forcing_config = this->get_forcing_params(global_config.forcing.parameters, identifier, simulation_time_config);
-                std::cout << "[ngen debug] Forcing parameters extracted for identifier: " << identifier << std::endl;
-                std::cout << "  [ngen debug] Forcing path:        " << forcing_config.path << std::endl;
-                std::cout << "  [ngen debug] Forcing provider:    " << forcing_config.provider << std::endl;
-                std::cout << "  [ngen debug] Forcing init_config: " << forcing_config.init_config << std::endl;
+                ss.str(""); 
+                ss << "Forcing parameters extracted for identifier: " << identifier << std::endl;
+                ss << "  Forcing path:        " << forcing_config.path << std::endl;
+                ss << "  Forcing provider:    " << forcing_config.provider << std::endl;
+                ss << "  Forcing init_config: " << forcing_config.init_config << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
 
                 std::time_t start_t = static_cast<std::time_t>(forcing_config.simulation_start_t);
                 std::time_t end_t   = static_cast<std::time_t>(forcing_config.simulation_end_t);
 
-                std::cout << "  [ngen debug] Simulation start time: " << std::put_time(std::gmtime(&start_t), "%Y-%m-%d %H:%M:%S UTC")
+                ss.str(""); 
+                ss << "  Simulation start time: " << std::put_time(std::gmtime(&start_t), "%Y-%m-%d %H:%M:%S UTC")
                           << " (" << forcing_config.simulation_start_t << ")" << std::endl;
-                std::cout << "  [ngen debug] Simulation end time:   " << std::put_time(std::gmtime(&end_t), "%Y-%m-%d %H:%M:%S UTC")
+                ss << "  Simulation end time:   " << std::put_time(std::gmtime(&end_t), "%Y-%m-%d %H:%M:%S UTC")
                           << " (" << forcing_config.simulation_end_t << ")" << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
 
                 // Construct the formulation object
-                std::cout << "[DEBUG] Entering construct_formulation for identifier: " << identifier << ", type: " << global_config.formulation.type << std::endl;
+                ss.str(""); ss << "Entering construct_formulation for identifier: " << identifier << ", type: " << global_config.formulation.type << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
                 std::shared_ptr<Catchment_Formulation> missing_formulation = construct_formulation(
                     global_config.formulation.type,
                     identifier,
                     forcing_config,
                     output_stream
                 );
-                std::cout << "[DEBUG] Formulation object constructed for identifier: " << identifier << std::endl;
+                ss.str(""); ss << "Formulation object constructed for identifier: " << identifier << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
 
                 // Make a copy of the global configuration so parameters don't clash when linking to external data
                 realization::config::Config global_copy = global_config;
 
 //                // Log parameters before substitution
-//                std::cout << "[DEBUG] Global config parameters (before substitution) for identifier: " << identifier << std::endl;
+//                ss.str(""); ss << "Global config parameters (before substitution) for identifier: " << identifier << std::endl;
 //                for (auto it = global_copy.formulation.parameters.begin(); it != global_copy.formulation.parameters.end(); ++it) {
 //                    const std::string& key = it->first;
 //                    const geojson::JSONProperty& value = it->second;
@@ -500,7 +535,8 @@ namespace realization {
 //                }
 
                 // Substitute {{id}} in the global formulation
-                std::cout << "[DEBUG] Checking for init_config before substitution for identifier: " << identifier << std::endl;
+                ss.str(""); ss << "Checking for init_config before substitution for identifier: " << identifier << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
                 auto init_config_it = global_copy.formulation.parameters.find(BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG);
                 if (init_config_it != global_copy.formulation.parameters.end()) {
                     const geojson::JSONProperty& init_config_property = init_config_it->second;
@@ -508,9 +544,12 @@ namespace realization {
                     if (init_config_property.get_type() == geojson::PropertyType::String) {
                         std::string original_value = init_config_property.as_string();
                         if (!original_value.empty()) {
-                            std::cout << "[DEBUG] construct_missing_formulation Performing pattern substitution for key: " << BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG
-                                      << ", pattern: {{id}}, replacement: " << identifier << std::endl;
-//                            std::cout << "[DEBUG] Original value: " << original_value << std::endl;
+                            ss.str(""); ss << "construct_missing_formulation Performing pattern substitution for key: " << BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG
+                                           << ", pattern: {{id}}, replacement: " << identifier << std::endl;
+                            LOG(ss.str(), LogLevel::DEBUG);
+                            ss.str("");
+//                            ss.str(""); ss << "Original value: " << original_value << std::endl;
+//                            LOG(ss.str(), LogLevel::DEBUG);
 
                             Catchment_Formulation::config_pattern_substitution(
                                 global_copy.formulation.parameters,
@@ -519,17 +558,21 @@ namespace realization {
                                 identifier
                             );
                         } else {
-                            std::cout << "[WARNING] init_config is present but empty for identifier: " << identifier << std::endl;
+                            ss.str(""); ss << "init_config is present but empty for identifier: " << identifier << std::endl;
+                            LOG(ss.str(), LogLevel::WARNING);
                         }
                     } else {
-                        std::cout << "[WARNING] init_config is present but not a string for identifier: " << identifier << std::endl;
+                        ss.str(""); ss << "init_config is present but not a string for identifier: " << identifier << std::endl;
+                        LOG(ss.str(), LogLevel::WARNING);
                     }
                 } else {
-                    std::cout << "[WARNING] init_config not present in global configuration for identifier: " << identifier << std::endl;
+                    ss.str(""); ss << "[WARNING] init_config not present in global configuration for identifier: " << identifier << std::endl;
+                    LOG(ss.str(), LogLevel::WARNING);
                 }
 
 //                // Log parameters after substitution
-//                std::cout << "[DEBUG] Global config parameters (after substitution) for identifier: " << identifier << std::endl;
+//                ss.str(""); ss << "Global config parameters (after substitution) for identifier: " << identifier << std::endl;
+//                LOG(ss.str(), LogLevel::DEBUG);
 //                for (auto it = global_copy.formulation.parameters.begin(); it != global_copy.formulation.parameters.end(); ++it) {
 //                    const std::string& key = it->first;
 //                    const geojson::JSONProperty& value = it->second;
@@ -542,33 +585,40 @@ namespace realization {
 //                }
 
                 // Link external properties
-                std::cout << "[DEBUG] Linking external properties for identifier: " << identifier << std::endl;
+                ss.str(""); ss << "Linking external properties for identifier: " << identifier << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
                 auto formulation = realization::config::Formulation(global_copy.formulation);
                 formulation.link_external(feature);
 
                 // Create the formulation
-                std::cout << "[DEBUG] Creating formulation for identifier: " << identifier << std::endl;
+                ss.str(""); ss << "Creating formulation for identifier: " << identifier << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
                 missing_formulation->create_formulation(formulation.parameters);
-//                std::cout << "[DEBUG] Formulation creation completed for identifier: " << identifier << std::endl;
+//                ss.str(""); ss << "Formulation creation completed for identifier: " << identifier << std::endl;
+//                LOG(ss.str(), LogLevel::DEBUG);
 
                 return missing_formulation;
             }
 
             forcing_params get_forcing_params(const geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
-                std::cout << "[DEBUG] Entering get_forcing_params for identifier: " << identifier << std::endl;
+                std::stringstream ss;
+                ss.str(""); ss << "Entering get_forcing_params for identifier: " << identifier << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
 
                 // Extract the required 'path' parameter
                 std::string path = "";
                 if (forcing_prop_map.count("path") != 0) {
                     path = forcing_prop_map.at("path").as_string();
-                    std::cout << "  [DEBUG] Forcing path: " << path << std::endl;
+                    ss.str(""); ss << "  Forcing path: " << path << std::endl;
+                    LOG(ss.str(), LogLevel::DEBUG);
                 }
 
                 // Extract the required 'provider' parameter
                 std::string provider;
                 if (forcing_prop_map.count("provider") != 0) {
                     provider = forcing_prop_map.at("provider").as_string();
-                    std::cout << "  [DEBUG] Forcing provider: " << provider << std::endl;
+                    ss.str(""); ss << "  Forcing provider: " << provider << std::endl;
+                    LOG(ss.str(), LogLevel::DEBUG);
                 }
 
                 // Extract the optional 'init_config' parameter from 'params'
@@ -579,7 +629,8 @@ namespace realization {
                         const geojson::PropertyMap& params_map = params_property.get_values();
                         if (params_map.count("init_config") != 0) {
                             init_config = params_map.at("init_config").as_string();
-                            std::cout << "  [DEBUG] Forcing init_config: " << init_config << std::endl;
+                            ss.str(""); ss << "  Forcing init_config: " << init_config << std::endl;
+                            LOG(ss.str(), LogLevel::DEBUG);
                         }
                     } else {
                         std::cout << "[WARNING] 'params' is not an object for identifier: " << identifier << std::endl;
@@ -779,17 +830,19 @@ namespace realization {
                             case geojson::PropertyType::List:
                             case geojson::PropertyType::Object:
                             default:
-                                ss  << "WARNING: property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
+                                ss.str("");
+                                ss  << "property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
                                           << "Must be one of: Natural (int), Real (double), Boolean, or String" << '\n';
-                                LOG(ss.str(), LogLevel::SEVERE); ss.str("");
+                                LOG(ss.str(), LogLevel::WARNING); ss.str("");
                                 break;
                         }
                     } else {
-                        ss  << "WARNING Failed to parse external parameter: catchment `"
-                                  << catchment_feature->get_id()
-                                  << "` does not contain the property `"
-                                  << param_name << "`\n";
-                        LOG(ss.str(), LogLevel::SEVERE); ss.str("");
+                        ss.str("");
+                        ss << " Failed to parse external parameter: catchment `"
+                           << catchment_feature->get_id()
+                           << "` does not contain the property `"
+                           << param_name << "`\n";
+                        LOG(ss.str(), LogLevel::WARNING); 
                     }
                 }
 
@@ -851,9 +904,9 @@ namespace realization {
                             default:
                                 // TODO: Should list/object values be passed to model parameters?
                                 //       Typically, feature properties *should* be scalars.
-                                ss  << "WARNING: property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
-                                          << "Must be one of: Natural (int), Real (double), Boolean, or String" << '\n';
-                                LOG(ss.str(), LogLevel::SEVERE); ss.str("");
+                                ss.str(""); ss << "property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
+                                               << "Must be one of: Natural (int), Real (double), Boolean, or String" << '\n';
+                                LOG(ss.str(), LogLevel::WARNING);
                                 break;
                         }
                     }
