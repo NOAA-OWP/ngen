@@ -141,7 +141,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             //check if the units can be parsed correctly and write a warning message
             std::stringstream ss;
             for (const std::string& out_unit : out_units) {
-                if (UnitsHelper::cannot_parse(out_unit))
+                if (!UnitsHelper::can_parse(out_unit))
                 {
                     ss << "Unable to parse '" << out_unit << "' in units value." << std::endl;
                     LOG(ss.str(), LogLevel::WARNING); ss.str("");
