@@ -38,11 +38,6 @@
 #include "routing/Routing_Py_Adapter.hpp"
 #endif // NGEN_WITH_ROUTING
 
-std::string catchmentDataFile         = "";
-std::string nexusDataFile             = "";
-std::string REALIZATION_CONFIG_PATH   = "";
-bool is_subdivided_hydrofabric_wanted = false;
-
 // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
 int mpi_rank = 0;
 
@@ -142,6 +137,10 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
 } // ngen::exec_info::runtime_summary
 
 int main(int argc, char* argv[]) {
+    std::string catchmentDataFile         = "";
+    std::string nexusDataFile             = "";
+    std::string REALIZATION_CONFIG_PATH   = "";
+    bool is_subdivided_hydrofabric_wanted = false;
 
     if (argc > 1 && std::string{argv[1]} == "--info") {
 #if NGEN_WITH_MPI
@@ -342,7 +341,7 @@ int main(int argc, char* argv[]) {
         if (is_subdivided_hydrofabric_wanted) {
             // Ensure the hydrofabric is subdivided (either already or by doing it now), and then
             // adjust these paths
-            if (parallel::is_hydrofabric_subdivided(mpi_rank, mpi_num_procs, true) ||
+            if (parallel::is_hydrofabric_subdivided(catchmentDataFile, mpi_rank, mpi_num_procs, true) ||
                 parallel::subdivide_hydrofabric(
                     mpi_rank,
                     mpi_num_procs,

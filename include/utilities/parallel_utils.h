@@ -106,6 +106,7 @@ namespace parallel {
      * ``catchmentDataFile`` and ``nexusDataFile`` variables respectively.  The number of MPI processes is obtained from
      * the global ``mpi_rank`` variable.
      *
+     * @param catchmentDataFile The path to the catchment data file for the hydrofabric.
      * @param mpi_rank The rank of the current process.
      * @param mpi_num_procs The total number of MPI processes.
      * @param printMessage Whether a supplemental message should be printed to standard out indicating status.
@@ -113,7 +114,7 @@ namespace parallel {
      * @return Whether proprocessing has already been performed to divide the main hydrofabric into existing, individual
      *         sub-hydrofabric files for each partition/process.
      */
-    bool is_hydrofabric_subdivided(int mpi_rank, int mpi_num_procs, bool printMsg) {
+    bool is_hydrofabric_subdivided(const std::string &catchmentDataFile, int mpi_rank, int mpi_num_procs, bool printMsg) {
         std::string name = catchmentDataFile + "." + std::to_string(mpi_rank);
         // Initialize isGood based on local state.  Here, local file is "good" when it already exists.
         // TODO: this isn't actually checking whether the files are right (just that they are present) so do we need to?
@@ -131,19 +132,6 @@ namespace parallel {
             }
             return false;
         }
-    }
-
-    /**
-     * Convenience overloaded method for when no supplemental output message is required.
-     *
-     * @param mpi_rank The rank of the current process.
-     * @param mpi_num_procs The total number of MPI processes.
-     * @return Whether proprocessing has already been performed to divide the main hydrofabric into existing, individual
-     *         sub-hydrofabric files for each partition/process.
-     * @see is_hydrofabric_subdivided(bool)
-     */
-    bool is_hydrofabric_subdivided(int mpi_rank, int mpi_num_procs) {
-        return is_hydrofabric_subdivided(mpi_rank, mpi_num_procs, false);
     }
 
     /**
