@@ -112,5 +112,5 @@ bool UnitsHelper::can_parse(const std::string &in_units)
 {
     std::call_once(unit_system_inited, init_unit_system);
     ut_unit* from = ut_parse(unit_system, in_units.c_str(), UT_UTF8);
-    return (from == NULL) ? false : true;
+    return from != NULL;
 }
