@@ -74,7 +74,7 @@ void NgenSimulation::run_catchments()
 #if NGEN_WITH_ROUTING
                     boost::span<double> catchment_span(catchment_outflows_.data() + (simulation_step_ * catchment_indexes_.size()),
                                                        catchment_indexes_.size());
-                    boost::span<double> nexus_span(nexus_downstream_flows.data() + (simulation_step_ * nexus_indexes_.size()),
+                    boost::span<double> nexus_span(nexus_downstream_flows_.data() + (simulation_step_ * nexus_indexes_.size()),
                                                    nexus_indexes_.size());
 #else
                     boost::span<double> catchment_span;
@@ -144,12 +144,12 @@ void NgenSimulation::run_routing()
         std::vector<double> receive_buffer(number_of_timesteps, 0.0);
         for (int i = 0; i < all_nexus_ids.size(); ++i) {
             std::string nexus_id = all_nexus_ids[i];
-            if (nexus_indexes.find(nexus_id) != nexus_indexes.end() && !features.is_remote_sender_nexus(nexus_id)) {
+            if (nexus_indexes_.find(nexus_id) != nexus_indexes_.end() && !features.is_remote_sender_nexus(nexus_id)) {
                 // if this process has the id and receives/records data, copy the values to the buffer
-                int nexus_index = nexus_indexes[nexus_id];
+                int nexus_index = nexus_indexes_[nexus_id];
                 for (int step = 0; step < number_of_timesteps; ++step) {
-                    int offset = step * nexus_indexes.size() + nexus_index;
-                    local_buffer[step] = nexus_downstream_flows[offset];
+                    int offset = step * nexus_indexes_.size() + nexus_index;
+                    local_buffer[step] = nexus_downstream_flows_[offset];
                 }
             } else {
                 // if this process does not have the id, fill with 0 to make sure it doesn't affect reduce sum
@@ -218,12 +218,13 @@ void NgenSimulation::run_routing()
             py_troute.SetValue("land_surface_water_source__id", nexus_df_index.data());
             for (int i = 0; i < number_of_timesteps; ++i) {
                 py_troute.SetValue("land_surface_water_source__volume_flow_rate",
-                                   nexus_downstream_flows.data() + (i * nexus_count));
+                                   nexus_downstream_flows_.data() + (i * nexus_count));
                 py_troute.Update();
             }
             // Finalize will write the output file
             py_troute.Finalize();
         }
+    }
 #endif // NGEN_WITH_ROUTING
 }
 
