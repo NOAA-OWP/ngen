@@ -535,8 +535,8 @@ namespace models {
             /**
              * Internal implementation of logic used for @see GetInputItemCount.
              *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
-             * the type.
+             * "Inner" functions such as this should not contain nested function calls to any non-inner member functions
+             * for the type.
              *
              * @return The count of input BMI variables.
              * @see GetInputItemCount
@@ -552,8 +552,8 @@ namespace models {
             /**
              * Internal implementation of logic used for @see GetOutputItemCount.
              *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
-             * the type.
+             * "Inner" functions such as this should not contain nested function calls to any non-inner member functions
+             * for the type.
              *
              * @return The count of output BMI variables.
              * @see GetOutputItemCount
@@ -575,59 +575,13 @@ namespace models {
             }
 
             /**
-             * Internal implementation of logic used for @see GetValue.
-             *
-             * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
-             * in the corresponding inner implementations here.
-             *
-             * "Inner" functions such as this should not contain nested function calls to any non-inner member functions for
-             * the type.
-             *
-             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
-             * optimization in certain situations.
-             *
-             * @param name The name of the variable for which to get values.
-             * @param dest A float pointer in which to return the values.
-             */
-            inline void inner_get_value(const std::string& name, void *dest) {
-                std::string varType = inner_get_var_type(name);
-                int item_size = inner_get_var_itemsize(name);
-
-                // Rely on central function for determining the analogous C++ type for this var
-                try {
-                    const std::string analog_cxx_type = get_analogous_cxx_type(varType, item_size);
-                    if (analog_cxx_type == "int") {
-                        inner_get_value_int(name, (int *)dest);
-                    }
-                    else if (analog_cxx_type == "float") {
-                        inner_get_value_float(name, (float *)dest);
-                    }
-                    else if (analog_cxx_type == "double") {
-                        inner_get_value_double(name, (double *)dest);
-                    }
-                    else {
-                        throw ::external::ExternalIntegrationException(
-                                "Can't get model " + model_name + " variable " + name + " of type '" + varType +
-                                " with unsupported analogous C++ type " + analog_cxx_type + ".");
-                    }
-                }
-                catch (std::runtime_error& e) {
-                    throw std::runtime_error("Failed to get variable " + name + " for model " +
-                        model_name + ": " + e.what());
-                }
-            }
-
-            /**
              * Internal implementation of logic used for @see GetValue for ints.
              *
              * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
              * in the corresponding inner implementations here.
              *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
-             * the type.
-             *
-             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
-             * optimization in certain situations.
+             * "Inner" functions such as this should not contain nested function calls to any non-inner member functions
+             * for the type.
              *
              * @param name The name of the variable for which to get values.
              * @param dest An int pointer in which to return the values.
@@ -644,11 +598,8 @@ namespace models {
              * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
              * in the corresponding inner implementations here.
              *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
-             * the type.
-             *
-             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
-             * optimization in certain situations.
+             * "Inner" functions such as this should not contain nested function calls to any non-inner member functions
+             * for the type.
              *
              * @param name The name of the variable for which to get values.
              * @param dest A float pointer in which to return the values.
@@ -665,11 +616,8 @@ namespace models {
              * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
              * in the corresponding inner implementations here.
              *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
-             * the type.
-             *
-             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
-             * optimization in certain situations.
+             * "Inner" functions such as this should not contain nested function calls to any non-inner member functions
+             * for the type.
              *
              * @param name The name of the variable for which to get values.
              * @param dest A double pointer in which to return the values.
@@ -683,8 +631,8 @@ namespace models {
             /**
              * Build a vector of the input or output variable names string, and return a pointer to it.
              *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
-             * the type.
+             * "Inner" functions such as this should not contain nested function calls to any non-inner member functions
+             * for the type.
              *
              * This should be used for @see GetInputVarNames and @see GetOutputVarNames.
              *
@@ -740,59 +688,13 @@ namespace models {
             }
 
             /**
-             * Internal implementation of logic used for @see SetValue.
-             *
-             * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
-             * in the corresponding inner implementations here.
-             *
-             * "Inner" functions such as this should not contain nested function calls to any non-inner member functions for
-             * the type.
-             *
-             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
-             * optimization in certain situations.
-             *
-             * @param name The name of the variable for which to get values.
-             * @param dest A pointer that should be passed to the analogous BMI setter of the Fortran module.
-             */
-            inline void inner_set_value(const std::string& name, void *src) {
-                std::string varType = inner_get_var_type(name);
-                int item_size = inner_get_var_itemsize(name);
-
-                // Rely on central function for determining the analogous C++ type for this var
-                try {
-                    const std::string analog_cxx_type = get_analogous_cxx_type(varType, item_size);
-                    if (analog_cxx_type == "int") {
-                        inner_set_value_int(name, (int *)src);
-                    }
-                    else if (analog_cxx_type == "float") {
-                        inner_set_value_float(name, (float *)src);
-                    }
-                    else if (analog_cxx_type == "double") {
-                        inner_set_value_double(name, (double *)src);
-                    }
-                    else {
-                        throw ::external::ExternalIntegrationException(
-                                "Can't set model " + model_name + " variable " + name + " of type '" + varType +
-                                " with unsupported analogous C++ type " + analog_cxx_type + ".");
-                    }
-                }
-                catch (std::runtime_error& e) {
-                    throw std::runtime_error("Failed to set variable " + name + " for model " +
-                        model_name + ": " + e.what());
-                }
-            }
-
-            /**
              * Internal implementation of logic used for @see SetValue for ints.
              *
              * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
              * in the corresponding inner implementations here.
              *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
-             * the type.
-             *
-             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
-             * optimization in certain situations.
+             * "Inner" functions such as this should not contain nested function calls to any non-inner member functions
+             * for the type.
              *
              * @param name The name of the variable for which to get values.
              * @param dest An int pointer that should be passed to the analogous BMI setter of the Fortran module.
@@ -809,11 +711,8 @@ namespace models {
              * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
              * in the corresponding inner implementations here.
              *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
-             * the type.
-             *
-             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
-             * optimization in certain situations.
+             * "Inner" functions such as this should not contain nested function calls to any non-inner member functions
+             * for the type.
              *
              * @param name The name of the variable for which to get values.
              * @param dest A float pointer that should be passed to the analogous BMI setter of the Fortran module.
@@ -830,11 +729,8 @@ namespace models {
              * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
              * in the corresponding inner implementations here.
              *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
-             * the type.
-             *
-             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
-             * optimization in certain situations.
+             * "Inner" functions such as this should not contain nested function calls to any non-inner member functions
+             * for the type.
              *
              * @param name The name of the variable for which to get values.
              * @param dest A double pointer that should be passed to the analogous BMI setter of the Fortran module.
