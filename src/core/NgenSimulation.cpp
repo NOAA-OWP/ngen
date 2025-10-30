@@ -6,6 +6,8 @@
 #include "bmi/Bmi_Py_Adapter.hpp"
 #endif // NGEN_WITH_ROUTING
 
+#include "parallel_utils.h"
+
 NgenSimulation::NgenSimulation(
     std::shared_ptr<realization::Formulation_Manager> formulation_manager,
     std::vector<std::shared_ptr<ngen::Layer>> layers,
@@ -118,7 +120,7 @@ void NgenSimulation::run_routing()
     if (mpi_num_procs_ > 1) {
         int number_of_timesteps = catchment_formulation_manager_->Simulation_Time_Object->get_total_output_times();
         std::vector<std::string> local_nexus_ids;
-        for (const auto& nexus : nexus_indexes) {
+        for (const auto& nexus : nexus_indexes_) {
             local_nexus_ids.push_back(nexus.first);
         }
         // MPI_Gather all nexus IDs into a single vector
@@ -169,8 +171,8 @@ void NgenSimulation::run_routing()
 
         if (mpi_rank_ == 0) {
             // update root's local data for running t-route below
-            nexus_indexes = std::move(all_nexus_indexes);
-            nexus_downstream_flows = std::move(all_nexus_downflows);
+            nexus_indexes_ = std::move(all_nexus_indexes);
+            nexus_downstream_flows_ = std::move(all_nexus_downflows);
         }
 
     }
@@ -193,12 +195,12 @@ void NgenSimulation::run_routing()
             models::bmi::Bmi_Py_Adapter py_troute("T-Route", t_route_config_file_with_path, "troute_nwm_bmi.troute_bmi.BmiTroute", true);
 
             // tell BMI to resize nexus containers
-            int64_t nexus_count = nexus_indexes.size();
+            int64_t nexus_count = nexus_indexes_.size();
             py_troute.SetValue("land_surface_water_source__volume_flow_rate__count", &nexus_count);
             py_troute.SetValue("land_surface_water_source__id__count", &nexus_count);
             // set up nexus id indexes
             std::vector<int> nexus_df_index(nexus_count);
-            for (const auto& key_value : nexus_indexes) {
+            for (const auto& key_value : nexus_indexes_) {
                 int id_index = key_value.second;
 
                 // Convert string ID into numbers for T-route index
