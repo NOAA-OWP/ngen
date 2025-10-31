@@ -137,12 +137,9 @@ auto NgenMassBalance::check_support(const ModelPtr& model) -> expected<void, Pro
 
 auto NgenMassBalance::initialize(const ModelPtr& model, const Properties& properties) -> expected<void, ProtocolError>
 {
-    //Ensure the model is capable of mass balance using the protocol
-    check_support(model).or_else( error_or_warning );
-
     //now check if the user has requested to use mass balance
     auto protocol_it = properties.find(CONFIGURATION_KEY);
-    if ( supported && protocol_it != properties.end() ) {
+    if ( protocol_it != properties.end() ) {
         geojson::PropertyMap mass_bal = protocol_it->second.get_values();
 
         auto _it = mass_bal.find(TOLERANCE_KEY);
@@ -183,6 +180,10 @@ auto NgenMassBalance::initialize(const ModelPtr& model, const Properties& proper
     } else{
         //no mass balance requested, or not supported, so don't check it
         check = false;
+    }
+    if ( check ) {
+        //Ensure the model is capable of mass balance using the protocol
+        check_support(model).or_else( error_or_warning );
     }
     return {}; // important to return for the expected to be properly created!
 }
