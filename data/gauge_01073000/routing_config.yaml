@@ -51,7 +51,7 @@ compute_parameters:
     compute_kernel         : V02-structured
     assume_short_ts        : True
     subnetwork_target_size : 10000
-    cpu_pool               : 1
+    cpu_pool               : 36
     restart_parameters:
         #----------
         #wrf_hydro_channel_restart_file: restart/HYDRO_RST.2020-08-26_00:00_DOMAIN1
