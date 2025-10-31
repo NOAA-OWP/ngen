@@ -135,3 +135,7 @@ include/NGenConfig.h
 data/forcing/huc01_demo/
 # HUC01 Demo Testing Hydrofabric
 data/hydrofabric/huc01_demo/
+
+# output files
+*.csv
+
