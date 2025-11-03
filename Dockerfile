@@ -244,9 +244,7 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ngen \
         export FCFLAGS="-fPIC" && \
         export CMAKE_Fortran_FLAGS="-fPIC" && \
         cmake -B cmake_build -S . \
-## FIXME: figure out why running with MPI enabled throws errors
-##      and re-enable it.
-          -DNGEN_WITH_MPI=OFF \
+          -DNGEN_WITH_MPI=ON \
           -DNGEN_WITH_NETCDF=ON \
           -DNGEN_WITH_SQLITE=ON \
           -DNGEN_WITH_UDUNITS=ON \
