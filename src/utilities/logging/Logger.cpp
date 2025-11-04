@@ -63,7 +63,7 @@ const std::vector<std::string> allModules = {
     "SMP",
     "SNOW-17",
     "TOPMODEL",
-    "TOPOFLOW",
+    "TOPOFLOW-GLACIER",
     "T-ROUTE",
     "UEB",
     "LSTM",
@@ -324,9 +324,6 @@ void Logger::ReadConfigFile(std::string searchPath) {
     // Set logger defaults
     loggingEnabled = true;
     moduleLogLevels.clear();
-//    for (const auto& hydroModule : allModules) {
-//        moduleLogLevels[hydroModule] = LogLevel::INFO;
-//    }
 
     // Open and Parse config file
     std::ifstream jsonFile;
@@ -410,9 +407,9 @@ void Logger::ManageLoggingEnvVars(bool set) {
                 // This is important when running calibrations since iterative runs of ngen
                 // can number in the 1000's and it is only necessary to retain the last ngen run
                 envVar = hydroModule + "_LOGFILEPATH";
-                unsetenv(moduleNameInLog.c_str());
+                unsetenv(envVar.c_str());
                 envVar = hydroModule + "_LOGLEVEL";
-                unsetenv(moduleNameInLog.c_str());
+                unsetenv(envVar.c_str());
             }
         }
     }
