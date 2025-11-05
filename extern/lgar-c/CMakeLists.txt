@@ -19,31 +19,18 @@ else()
     set(LGAR_SRC_PREFIX "")
 endif()
 
-if(WIN32)
-  add_library(lasambmi SHARED
-    ${LGAR_SRC_PREFIX}src/bmi_lgar.cxx
-    ${LGAR_SRC_PREFIX}src/lgar.cxx
-    ${LGAR_SRC_PREFIX}src/soil_funcs.cxx
-    ${LGAR_SRC_PREFIX}src/linked_list.cxx
-    ${LGAR_SRC_PREFIX}src/mem_funcs.cxx
-    ${LGAR_SRC_PREFIX}src/util_funcs.cxx
-    ${LGAR_SRC_PREFIX}src/aet.cxx
-    ${LGAR_SRC_PREFIX}giuh/giuh.c
-    ${LGAR_SRC_PREFIX}include/all.hxx
-    ${LGAR_SRC_PREFIX}giuh/giuh.h)
-else()
-  add_library(lasambmi SHARED
-    ${LGAR_SRC_PREFIX}src/bmi_lgar.cxx
-    ${LGAR_SRC_PREFIX}src/lgar.cxx
-    ${LGAR_SRC_PREFIX}src/soil_funcs.cxx
-    ${LGAR_SRC_PREFIX}src/linked_list.cxx
-    ${LGAR_SRC_PREFIX}src/mem_funcs.cxx
-    ${LGAR_SRC_PREFIX}src/util_funcs.cxx
-    ${LGAR_SRC_PREFIX}src/aet.cxx
-    ${LGAR_SRC_PREFIX}giuh/giuh.c
-    ${LGAR_SRC_PREFIX}include/all.hxx
-    ${LGAR_SRC_PREFIX}giuh/giuh.h)
-endif()
+add_library(lasambmi SHARED
+  ${LGAR_SRC_PREFIX}src/bmi_lgar.cxx
+  ${LGAR_SRC_PREFIX}src/lgar.cxx
+  ${LGAR_SRC_PREFIX}src/soil_funcs.cxx
+  ${LGAR_SRC_PREFIX}src/linked_list.cxx
+  ${LGAR_SRC_PREFIX}src/mem_funcs.cxx
+  ${LGAR_SRC_PREFIX}src/util_funcs.cxx
+  ${LGAR_SRC_PREFIX}src/aet.cxx
+  ${LGAR_SRC_PREFIX}giuh/giuh.c
+  ${LGAR_SRC_PREFIX}include/all.hxx
+  ${LGAR_SRC_PREFIX}giuh/giuh.h
+  ${LGAR_SRC_PREFIX}src/conceptual_reservoir.cxx)
 
 target_include_directories(lasambmi PRIVATE ${LGAR_SRC_PREFIX}include)
 

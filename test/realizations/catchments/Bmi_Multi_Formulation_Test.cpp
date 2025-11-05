@@ -769,7 +769,6 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_0_b) {
 /**
  * Simple test of output for example 1.
  */
-#ifdef ACTIVATE_PYTHON
 TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
 /* Note that a runtime check in SetUp() prevents this from executing when it can't, but
    this needs to be here to prevent compile-time errors if this flag is not enabled. */
@@ -823,7 +822,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
     ASSERT_EQ(output, "0.000001,199280.000000,543.000000,2.000001,3.000001");
 #endif // NGEN_WITH_PYTHON
 }
-#endif
+
 /**
  * Test of output for example 3 with output_variables from multiple BMI modules, picking time step when there was non-zero rain rate.
  */

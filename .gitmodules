@@ -8,7 +8,7 @@
 [submodule "extern/t-route"]
 	path = extern/t-route
 	url = https://github.com/noaa-owp/t-route.git
-  branch = ngen
+            branch = ngen
 [submodule "extern/cfe/cfe"]
 	path = extern/cfe/cfe
 	url = https://github.com/NOAA-OWP/cfe.git
@@ -27,11 +27,11 @@
 [submodule "extern/evapotranspiration/evapotranspiration"]
 	path = extern/evapotranspiration/evapotranspiration
 	url = https://github.com/NOAA-OWP/evapotranspiration.git
-    branch = master
+            branch = master
 [submodule "extern/SoilFreezeThaw/SoilFreezeThaw"]
 	path = extern/SoilFreezeThaw/SoilFreezeThaw
 	url = https://github.com/NOAA-OWP/SoilFreezeThaw
-    branch = master
+            branch = master
 [submodule "extern/SoilMoistureProfiles/SoilMoistureProfiles"]
 	path = extern/SoilMoistureProfiles/SoilMoistureProfiles
 	url = https://github.com/NOAA-OWP/SoilMoistureProfiles
