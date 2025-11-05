@@ -108,7 +108,7 @@ void NgenSimulation::advance_one_output_step()
 
 }
 
-void NgenSimulation::run_routing()
+void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features)
 {
 #if NGEN_WITH_ROUTING
 #if NGEN_WITH_MPI
