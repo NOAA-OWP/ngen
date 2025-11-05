@@ -666,7 +666,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     if (manager->get_using_routing()) {
-        simulation->run_routing();
+        simulation->run_routing(features);
     }
 
     auto time_done_routing                             = std::chrono::steady_clock::now();

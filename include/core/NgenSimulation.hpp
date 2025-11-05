@@ -1,9 +1,17 @@
 #ifndef NGENSIMULATION_HPP
 #define NGENSIMULATION_HPP
 
+#include <NGenConfig.h>
+
 #include <Simulation_Time.hpp>
 #include <realizations/catchment/Formulation_Manager.hpp>
 #include <Layer.hpp>
+
+namespace hy_features
+{
+    class HY_Features;
+    class HY_Features_MPI;
+}
 
 #include <memory>
 #include <vector>
@@ -26,8 +34,14 @@ public:
 
     ~NgenSimulation();
 
+#if NGEN_WITH_MPI
+    using hy_features_t = hy_features::HY_Features_MPI;
+#else
+    using hy_features_t = hy_features::HY_Features;
+#endif
+
     void run_catchments();
-    void run_routing();
+    void run_routing(hy_features_t &features);
     void advance_one_output_step();
 
     int simulation_step_;
