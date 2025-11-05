@@ -35,8 +35,10 @@ namespace realization {
             }
 
             std::string output_str;
-            for (const std::string& name : get_output_variable_names()) {
-                output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_value_as_double(0, name));
+            int var_array_size = get_output_variable_names().size();
+            for (int i = 0; i < var_array_size; ++i) {
+                output_str += (output_str.empty() ? "" : ",") + 
+                std::to_string(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_output_variable_names()[i], 0,0,get_output_variable_units()[i]),MEAN));
             }
             return output_str;
         }
@@ -95,7 +97,21 @@ namespace realization {
                 // TODO: again, consider whether we should store any historic response, ts_delta, or other var values
                 next_time_step_index++;
             }
-            return get_var_value_as_double(0, get_bmi_main_output_var());
+            //get the output variable name and its units in the realization file using the get_bmi_main_output_var()
+            std::vector<std::string> out_var_names = get_output_variable_names();
+            auto it = std::find(out_var_names.begin(), out_var_names.end(), get_bmi_main_output_var());
+            if (it != out_var_names.end()){
+                //indicates that the matching variable name was found. 
+                int out_var_index = distance(out_var_names.begin(), it); //get the item index in the vector
+                return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), out_var_names[out_var_index], 0,0,get_output_variable_units()[out_var_index]),MEAN);
+            }
+            else{
+                //indicates that the bmi main output doesn't match with any variables mentioned in the realization file.
+                //we get the variable units from the bmi and pass it to get the value. no unit conversion will happen.
+                std::string units_in_bmi = get_bmi_model()->GetVarUnits(get_bmi_main_output_var());
+                std::string out_units  = (units_in_bmi.empty() || units_in_bmi == "none") ? "1" : units_in_bmi;
+                return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0,0,out_units),MEAN);
+            }
         }
 
         time_t Bmi_Module_Formulation::get_variable_time_begin(const std::string &variable_name) {

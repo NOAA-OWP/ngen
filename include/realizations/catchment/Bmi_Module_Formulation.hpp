@@ -510,6 +510,8 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE,
         };
 
+        double get_var_value_as_double(const int& index, const std::string& var_name) override;
+
     };
 /*
     template<class M>
