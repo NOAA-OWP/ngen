@@ -640,8 +640,8 @@ int main(int argc, char* argv[]) {
 
     auto simulation = std::make_unique<NgenSimulation>(manager,
                                                        layers,
-                                                       catchment_indexes,
-                                                       nexus_indexes,
+                                                       std::move(catchment_indexes),
+                                                       std::move(nexus_indexes),
                                                        mpi_rank,
                                                        mpi_num_procs);
 
