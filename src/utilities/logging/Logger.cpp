@@ -16,6 +16,8 @@
 #include <thread>
 #include <unordered_map>
 #include <vector>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 using namespace std;
 
@@ -228,94 +230,53 @@ std::string CleanJsonToken(const std::string& token) {
         }
     }
 */
-bool Logger::JsonFileValid(std::ifstream& jsonFile)
-{
-    // Move file pointer to beginning of file
-    jsonFile.clear();                 // Clear any error bits. Does not clear the contents of the file
-    jsonFile.seekg(0, std::ios::beg); // Move file pointer to beginning of the file
-
-    std::stringstream buffer;
-    buffer << jsonFile.rdbuf();
-    std::string contents = buffer.str();
-
-    // Trim leading whitespace
-    size_t start = contents.find_first_not_of(" \t\n\r");
-    // Trim trailing whitespace
-    size_t end   = contents.find_last_not_of(" \t\n\r");
-
-    if (start == std::string::npos || end == std::string::npos) {
-        std::cerr << MODULE_NAME << " ERROR: Issue in JSON file. File is empty or whitespace only." << std::endl;
-        return false;
-    }
-
-    // Extract the trimmed content
-    contents = contents.substr(start, end - start + 1);
-
-    // Now check that it starts and ends with braces
-    if (contents.front() != '{' || contents.back() != '}') {
-        std::cerr << MODULE_NAME << " ERROR: Issue in JSON file. Does not begin/end with {}" << std::endl;
-        return false;
-    }
-
-    // Check some basics. Not an exhaustive checker.
-    unsigned int numOpenBraces  = std::count(contents.begin(), contents.end(), '{');
-    unsigned int numCloseBraces = std::count(contents.begin(), contents.end(), '}');
-    unsigned int numQuotes      = std::count(contents.begin(), contents.end(), '"');
-    unsigned int numColons      = std::count(contents.begin(), contents.end(), ':');
-    if ( (numOpenBraces && numCloseBraces && numQuotes && numColons) &&  // Not equal 0
-         (numOpenBraces == numCloseBraces) &&                            // Matching open and close braces
-         ((numQuotes % 2) == 0) )                                        // Even number of quotes
-    {
-        return true;
-    }
-    std::cerr << MODULE_NAME << " ERROR: Issue in JSON file. Open Braces=" << numOpenBraces << ", Close Braces=" << numCloseBraces
-              <<  ", quotes=" << numQuotes << ", and colons=" << numColons << std::endl;
-    return false;
-}
 
 bool Logger::ParseLoggerConfigFile(std::ifstream& jsonFile) 
 {
-    if (JsonFileValid(jsonFile)) {
-        // Move file pointer to beginning of file
-        jsonFile.clear();                 // Clear any error bits. Does not clear the contents of the file
-        jsonFile.seekg(0, std::ios::beg); // Move file pointer to beginning of the file
+    // Rewind file in case it's been partially read
+    jsonFile.clear();
+    jsonFile.seekg(0, std::ios::beg);
 
-        // Parse the json file
-        std::string line;
-        bool inModules = false;
-        while (std::getline(jsonFile, line)) {
-            std::string trimmed = TrimString(line);
-            if (trimmed.find("\"logging_enabled\"") != std::string::npos) {
-                size_t colon = trimmed.find(":");
-                if (colon != std::string::npos) {
-                    std::string rawValue = TrimString(trimmed.substr(colon + 1));
-                    std::string value = CleanJsonToken(rawValue);
-                    loggingEnabled = (value == "true");
-                    std::cout << "[DEBUG] Found logging_enabled=" << (loggingEnabled?"true":"false") << std::endl;
-                }
-            } else if (trimmed.find("\"modules\"") != std::string::npos) {
-                inModules = true;
-            } else if (inModules && trimmed.find("}") != std::string::npos) {
-                break; // end of modules section
-            } else if (inModules) {
-                size_t colon = trimmed.find(":");
-                if (colon != std::string::npos) {
-                    std::string rawModule = TrimString(trimmed.substr(0, colon));                
-                    std::string moduleTok = CleanJsonToken(rawModule);                
-                    std::string moduleStr = ToUpper(moduleTok);                
-                    std::string rawLevel = TrimString(trimmed.substr(colon + 1));
-                    std::string levelStr = ToUpper(CleanJsonToken(rawLevel)); 
-                    if (std::find(allModules.begin(), allModules.end(), moduleStr) != allModules.end()) {
-                        moduleLogLevels[moduleStr] = ConvertStringToLogLevel(levelStr);
-                        std::cout << "[DEBUG] Found Log level " << moduleTok << "=" << ConvertLogLevelToString(moduleLogLevels[moduleStr]) << std::endl;
-                    } else {
-                        std::cout << "[ERROR] Ignoring unknown module " << moduleStr <<  std::endl;
-                    }
+    try {
+        // Read the JSON into a property tree
+        boost::property_tree::ptree config;
+        boost::property_tree::read_json(jsonFile, config);
+
+        // Read logging_enabled flag
+        loggingEnabled = config.get<bool>("logging_enabled", true);  // default true if missing
+        std::cout << "[DEBUG] Found logging_enabled=" 
+                  << (loggingEnabled ? "true" : "false") << std::endl;
+
+        // Read modules subtree
+        if (auto modulesOpt = config.get_child_optional("modules")) {
+            for (const auto& kv : *modulesOpt) {
+                std::string moduleName = ToUpper(kv.first);
+                std::string levelStr = ToUpper(kv.second.get_value<std::string>());
+
+                if (std::find(allModules.begin(), allModules.end(), moduleName) != allModules.end()) {
+                    moduleLogLevels[moduleName] = ConvertStringToLogLevel(levelStr);
+                    std::cout << "[DEBUG] Found Log level " 
+                              << kv.first << "=" 
+                              << ConvertLogLevelToString(moduleLogLevels[moduleName]) 
+                              << std::endl;
+                } else {
+                    std::cout << "[ERROR] Ignoring unknown module " 
+                              << moduleName << std::endl;
                 }
             }
+        } else {
+            std::cout << "[ERROR] Missing 'modules' section in logging.json" << std::endl;
         }
+
         return true;
     }
+    catch (const boost::property_tree::json_parser_error& e) {
+        std::cout << "[ERROR] JSON parse error: " << e.what() << std::endl;
+    }
+    catch (const std::exception& e) {
+        std::cout << "[ERROR] Exception while parsing config: " << e.what() << std::endl;
+    }
+
     return false;
 }
 
@@ -345,6 +306,20 @@ void Logger::ReadConfigFile(std::string searchPath) {
     }
 }
 
+bool Logger::IsValidEnvVarName(const std::string& name) {
+    if (name.empty()) return false;
+
+    // First character must be a letter or underscore
+    if (!std::isalpha(name[0]) && name[0] != '_') return false;
+
+    // All other characters must be alphanumeric or underscore
+    for (size_t i = 1; i < name.size(); ++i) {
+        if (!std::isalnum(name[i]) && name[i] != '_') return false;
+    }
+
+    return true;
+}
+
 void Logger::ManageLoggingEnvVars(bool set) {
 
     if (set) {
@@ -365,23 +340,29 @@ void Logger::ManageLoggingEnvVars(bool set) {
 
     for (const auto& hydroModule : allModules) {
         std::string envVar = "";
-        std::string moduleNameInLog = "";
+        std::string moduleNameForEnvVar = "";
         
         // Translate to actual module name used, if different
-        if      (hydroModule == "CFE-S" || hydroModule == "CFE-X") moduleNameInLog = "CFE";
-        else if (hydroModule == "NOAH-OWP-MODULAR") moduleNameInLog = "NOAHOWP";
-        else if (hydroModule == "SAC-SMA") moduleNameInLog = "SACSMA";
-        else if (hydroModule == "SNOW-17") moduleNameInLog = "SNOW17";
-        else if (hydroModule == "T-ROUTE") moduleNameInLog = "TROUTE";
-        else if (hydroModule == "UEB") moduleNameInLog = "UEB_BMI";
-        else moduleNameInLog = hydroModule;
+        if      (hydroModule == "CFE-S" || hydroModule == "CFE-X") moduleNameForEnvVar = "CFE";
+        else if (hydroModule == "NOAH-OWP-MODULAR") moduleNameForEnvVar = "NOAHOWP";
+        else if (hydroModule == "SAC-SMA") moduleNameForEnvVar = "SACSMA";
+        else if (hydroModule == "SNOW-17") moduleNameForEnvVar = "SNOW17";
+        else if (hydroModule == "T-ROUTE") moduleNameForEnvVar = "TROUTE";
+        else if (hydroModule == "UEB") moduleNameForEnvVar = "UEB_BMI";
+        else if (hydroModule == "TOPOFLOW-GLACIER") moduleNameForEnvVar = "TFGLACR";
+        else moduleNameForEnvVar = hydroModule;
         
+        if (!IsValidEnvVarName(moduleNameForEnvVar)) {
+            cout << "[WARNING] Ignoring Unknown Module: " << hydroModule << " (" << moduleNameForEnvVar << ")" << std::endl;
+            continue;
+        }
+
         if (set) {
             // The ngen logger only sets the log level envirnoment variable here
             // The log path is set in SetupLogFile()
             auto it = moduleLogLevels.find(hydroModule);
             if (it != moduleLogLevels.end()) {
-                envVar = moduleNameInLog + "_LOGLEVEL";
+                envVar = moduleNameForEnvVar + "_LOGLEVEL";
                 std::string ll = ConvertLogLevelToString(it->second);
                 setenv(envVar.c_str(), ll.c_str(), 1);
                 std::string logMsg = std::string("Set ") + hydroModule 
@@ -406,9 +387,9 @@ void Logger::ManageLoggingEnvVars(bool set) {
                 // environment variable will cause the modules to truncate their logs.
                 // This is important when running calibrations since iterative runs of ngen
                 // can number in the 1000's and it is only necessary to retain the last ngen run
-                envVar = hydroModule + "_LOGFILEPATH";
+                envVar = moduleNameForEnvVar + "_LOGFILEPATH";
                 unsetenv(envVar.c_str());
-                envVar = hydroModule + "_LOGLEVEL";
+                envVar = moduleNameForEnvVar + "_LOGLEVEL";
                 unsetenv(envVar.c_str());
             }
         }

@@ -55,7 +55,7 @@ class Logger {
     bool        FindAndOpenLogConfigFile(std::string path, std::ifstream& configFileStream);
     std::string GetLogFilePath(void);
     std::string GetParentDirName(const std::string& path);
-    bool        JsonFileValid(std::ifstream& jsonFile);
+    bool        IsValidEnvVarName(const std::string& name);
     bool        LogFileReady(void);
     bool        ParseLoggerConfigFile(std::ifstream& jsonFile);
     void        ReadConfigFile(std::string searchPath);
