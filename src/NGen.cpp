@@ -601,14 +601,6 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    auto time_done_init                             = std::chrono::steady_clock::now();
-    std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
-
-    LOG("[TIMING]: Init: " + std::to_string(time_elapsed_init.count()), LogLevel::INFO);
-
-    // Now loop some time, iterate catchments, do stuff for total number of output times
-    auto num_times = manager->Simulation_Time_Object->get_total_output_times();
-
     // T-ROUTE data storage
     std::unordered_map<std::string, int> catchment_indexes;
 #if NGEN_WITH_ROUTING && false
@@ -625,6 +617,9 @@ int main(int argc, char* argv[]) {
                                                        std::move(catchment_indexes),
                                                        std::move(nexus_indexes),
                                                        mpi_rank);
+
+    auto time_done_init                             = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
 
     simulation->run_catchments();
 
