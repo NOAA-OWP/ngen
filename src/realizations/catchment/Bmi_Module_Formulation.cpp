@@ -36,9 +36,10 @@ namespace realization {
 
             std::string output_str;
             int var_array_size = get_output_variable_names().size();
-            for (int i = 0; i < var_array_size; ++i) {
+            for (const std::string& name : get_output_variable_names()) {
+                //Shouldn't be using "m". Should we use get_bmi_model()->GetVarUnits(name)?
                 output_str += (output_str.empty() ? "" : ",") + 
-                std::to_string(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_output_variable_names()[i], 0,0,"m"),MEAN));
+                std::to_string(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0,0,"m"),MEAN)); 
             }
             return output_str;
         }
