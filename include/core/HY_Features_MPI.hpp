@@ -62,7 +62,9 @@ namespace hy_features {
         }
 
         inline auto nexuses() const {
-            return network.filter("nex");
+            // Only return local nexuses, since that's what callers actually want
+            return network.filter("nex") |
+                boost::adaptors::filtered([this](std::string const& id){ return !is_remote_sender_nexus(id);});
         }
 
         void validate_dendritic() {
