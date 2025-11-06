@@ -202,7 +202,7 @@ namespace network {
          * @param order What order to return results in
          * @return auto 
          */
-        auto filter(std::string type, SortOrder order = SortOrder::Topological)
+        auto filter(std::string type, SortOrder order = SortOrder::Topological) const
         {
           //todo need to worry about validating input???
           //if type isn't found as a prefix, this iterator range should be empty,
@@ -243,7 +243,7 @@ namespace network {
          * @param order What order to return results in
          * @return auto 
          */
-        auto filter(std::string type, int target_layer, SortOrder order = SortOrder::Topological)
+        auto filter(std::string type, int target_layer, SortOrder order = SortOrder::Topological) const
         {
           //todo need to worry about valivdating input???
           //if type isn't found as a prefix, this iterator range should be empty,
@@ -253,16 +253,20 @@ namespace network {
                         | boost::adaptors::filtered([this,type,target_layer](std::string const& s) { 
                           //seperate the prefix from the numeric id
                           std::string id_type = s.substr(0, s.find(hy_features::identifiers::seperator) );
-                          if(type == hy_features::identifiers::nexus){
-                            return hy_features::identifiers::isNexus(id_type) && 
-                                   (this->layer_map.find(s) != this->layer_map.end() && this->layer_map[s] == target_layer);
-                          }
-                          if(type == hy_features::identifiers::catchment){
-                            return hy_features::identifiers::isCatchment(id_type) && 
-                                   (this->layer_map.find(s) != this->layer_map.end() && this->layer_map[s] == target_layer);
-                          }
-                          return (id_type == type) && 
-                                  (this->layer_map.find(s) != this->layer_map.end() && (this->layer_map[s] == target_layer)); 
+
+                          bool type_matches;
+
+                          if (type == hy_features::identifiers::nexus) type_matches = hy_features::identifiers::isNexus(id_type);
+                          else if (type == hy_features::identifiers::catchment) type_matches = hy_features::identifiers::isCatchment(id_type);
+                          else type_matches = (id_type == type);
+
+                          if (!type_matches) return false;
+
+                          auto iter = this->layer_map.find(s);
+                          if (iter == this->layer_map.end()) return false;
+
+                          auto const& layer = iter->second;
+                          return layer == target_layer;
                         });
         }
         /**
@@ -273,7 +277,7 @@ namespace network {
          * 
          * @throw std::invalid_argument if @p idx is not in the range of valid vertex descriptors [0, num_verticies)
          */
-        std::string get_id( Graph::vertex_descriptor idx);
+        std::string get_id( Graph::vertex_descriptor idx) const;
 
         /**
          * @brief Get the origination (upstream) ids (immediate neighbors) of all vertices with an edge connecting to @p id
@@ -338,7 +342,7 @@ namespace network {
          */
         NetworkIndexT topo_order;
 
-        NetworkIndexT tdfp_order;
+        mutable NetworkIndexT tdfp_order;
 
         /**
          * @brief Vector of headwater features
@@ -381,7 +385,7 @@ namespace network {
          * @param order The desired order
          * @param cache NOT YET IMPLEMENTED. Whether to cache the generated index. Default is true.
          */
-        const NetworkIndexT& get_sorted_index(SortOrder order = SortOrder::Topological, bool cache = true);
+        const NetworkIndexT& get_sorted_index(SortOrder order = SortOrder::Topological, bool cache = true) const;
 
     };
 }
