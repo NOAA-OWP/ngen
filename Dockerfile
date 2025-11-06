@@ -188,14 +188,12 @@ ENV LD_LIBRARY_PATH="/usr/lib64/openmpi/lib:/usr/local/lib:/usr/local/lib64:${LD
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
     set -eux && \
     pip3 install --upgrade pip setuptools wheel && \
-    pip3 install \
-      'numpy==1.26.4' \
-      'netcdf4<=1.6.3' \
-      'bmipy' \
-      'pandas' \
-      'pyyml' \
-      'torch' \
-      --no-binary=mpi4py mpi4py && \
+    pip3 install 'numpy==1.26.4' && \
+    pip3 install 'netcdf4<=1.6.3' && \
+    pip3 install 'bmipy' && \
+    pip3 install 'pandas' && \
+    pip3 install 'pyyml' && \
+    pip3 install 'torch' --no-binary=mpi4py 'mpi4py' && \
     pip install /ngen-app/ngen-forcing/
 
 WORKDIR /ngen-app/
