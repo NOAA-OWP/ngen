@@ -139,7 +139,7 @@ namespace hy_features {
          * 
          * @return auto 
          */
-        inline auto nexuses(){return network.filter(hy_features::identifiers::nexus);}
+        inline auto nexuses() const { return network.filter(hy_features::identifiers::nexus); }
 
         /**
          * @brief Get a vector of destination (downstream) nexus pointers.
