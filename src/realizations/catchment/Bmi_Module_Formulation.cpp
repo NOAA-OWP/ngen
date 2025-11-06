@@ -38,7 +38,7 @@ namespace realization {
             int var_array_size = get_output_variable_names().size();
             for (int i = 0; i < var_array_size; ++i) {
                 output_str += (output_str.empty() ? "" : ",") + 
-                std::to_string(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_output_variable_names()[i], 0,0,get_output_variable_units()[i]),MEAN));
+                std::to_string(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_output_variable_names()[i], 0,0,"m"),MEAN));
             }
             return output_str;
         }
@@ -97,20 +97,33 @@ namespace realization {
                 // TODO: again, consider whether we should store any historic response, ts_delta, or other var values
                 next_time_step_index++;
             }
+            
+            //return get_var_value_as_double(0,get_bmi_main_output_var());
+
             //get the output variable name and its units in the realization file using the get_bmi_main_output_var()
             std::vector<std::string> out_var_names = get_output_variable_names();
+            LOG("Inside get_response.",LogLevel::WARNING);
             auto it = std::find(out_var_names.begin(), out_var_names.end(), get_bmi_main_output_var());
             if (it != out_var_names.end()){
                 //indicates that the matching variable name was found. 
                 int out_var_index = distance(out_var_names.begin(), it); //get the item index in the vector
-                return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), out_var_names[out_var_index], 0,0,get_output_variable_units()[out_var_index]),MEAN);
+                LOG("Inside get_response - found variable",LogLevel::WARNING);
+                try{
+                    std::string bmi_units = get_bmi_model()->GetVarUnits(out_var_names[out_var_index]);
+                    return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), out_var_names[out_var_index], 0,0,bmi_units),MEAN);
+                } catch(std::exception &e){
+                    return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), out_var_names[out_var_index], 0,0,"m"),MEAN);
+                }
             }
             else{
                 //indicates that the bmi main output doesn't match with any variables mentioned in the realization file.
-                //we get the variable units from the bmi and pass it to get the value. no unit conversion will happen.
-                std::string units_in_bmi = get_bmi_model()->GetVarUnits(get_bmi_main_output_var());
-                std::string out_units  = (units_in_bmi.empty() || units_in_bmi == "none") ? "1" : units_in_bmi;
-                return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0,0,out_units),MEAN);
+                LOG("Inside get_response - variable not found",LogLevel::WARNING);
+                try{
+                    std::string bmi_units = get_bmi_model()->GetVarUnits(get_bmi_main_output_var());
+                    return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0,0,bmi_units),MEAN);
+                } catch(std::exception &e){
+                    return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0,0,"m"),MEAN);
+                }
             }
         }
 
@@ -227,11 +240,15 @@ namespace realization {
             long duration_s = selector.get_duration_secs();
             std::string output_units = selector.get_output_units();
 
+            LOG("Inside get_value for: " + output_name,LogLevel::WARNING);
+            double value = get_var_value_as_double(0, output_name);
+
+
             // First make sure this is an available output
-            auto forcing_outputs = get_available_variable_names();
-            if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
-                throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
-            }
+            // auto forcing_outputs = get_available_variable_names();
+            // if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
+            //     throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
+            // }
             // TODO: do this, or something better, later; right now, just assume anything using this as a provider is
             //  consistent with times
             /*

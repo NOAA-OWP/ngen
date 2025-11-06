@@ -510,7 +510,19 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE,
         };
 
-        double get_var_value_as_double(const int& index, const std::string& var_name) override;
+        /**
+         * Get value for some BMI model variable at a specific index.
+         *
+         *
+         * @param index
+         * @param var_name
+         * @return
+         */
+        double get_var_value_as_double(const int& index, const std::string& var_name) override {
+            //Temporary for testing
+            LOG("Inside Bmi_Module_Formulation::get_var_value_as_double function: " + var_name, LogLevel::WARNING);
+            return -9999.0; //get_var_value_as_double(0,var_name);
+        }
 
     };
 /*
