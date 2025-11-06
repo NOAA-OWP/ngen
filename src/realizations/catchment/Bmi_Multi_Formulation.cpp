@@ -450,8 +450,6 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
             }
         }
     }
-
-    //return modules[index]->get_var_value_as_double(0, get_bmi_main_output_var());
     return modules[index]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0,0,"m"),MEAN);
 }
 
