@@ -383,7 +383,7 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
     return modules.back()->get_output_line_for_timestep(timestep, delimiter);
 }
 
-double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
+void Bmi_Multi_Formulation::update(time_step_t t_index, time_step_t t_delta) {
     if (modules.empty()) {
         Logger::logMsgAndThrowError("Trying to get response of improperly created empty BMI multi-module formulation.");
     }
@@ -428,10 +428,14 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
     while (next_time_step_index <= t_index) {
         for (nested_module_ptr &module : modules) {
             // By setting up in create function, these will now have their own providers
-            module->get_response(t_index, t_delta);
+            module->update(t_index, t_delta);
         }
         next_time_step_index++;
     }
+}
+
+double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
+    update(t_index, t_delta);
     // Find the right module for the main output, checking primary first
     int index = get_index_for_primary_module();
     std::vector<std::string> out_var_names = modules[index]->get_output_variable_names();
@@ -447,7 +451,8 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
         }
     }
 
-    return modules[index]->get_var_value_as_double(0, get_bmi_main_output_var());
+    //return modules[index]->get_var_value_as_double(0, get_bmi_main_output_var());
+    return modules[index]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0,0,"m"),MEAN);
 }
 
 bool Bmi_Multi_Formulation::is_bmi_input_variable(const std::string &var_name) const {

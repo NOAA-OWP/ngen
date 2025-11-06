@@ -235,6 +235,8 @@ namespace realization {
          */
         virtual double get_var_value_as_double(const int& index, const std::string& var_name) = 0;
 
+        virtual void update(time_step_t t_index, time_step_t t_delta) = 0;
+
     protected:
 
         /** Object to help with converting numeric output values to text. */

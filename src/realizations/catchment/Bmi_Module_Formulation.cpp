@@ -43,7 +43,7 @@ namespace realization {
             return output_str;
         }
 
-        double Bmi_Module_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
+        void Bmi_Module_Formulation::update(time_step_t t_index, time_step_t t_delta) {
             if (get_bmi_model() == nullptr) {
                 throw std::runtime_error("Trying to process response of improperly created BMI formulation of type '" + get_formulation_type() + "'.");
             }
@@ -97,32 +97,12 @@ namespace realization {
                 // TODO: again, consider whether we should store any historic response, ts_delta, or other var values
                 next_time_step_index++;
             }
-            
-            //return get_var_value_as_double(0,get_bmi_main_output_var());
-
-            //get the output variable name and its units in the realization file using the get_bmi_main_output_var()
-            std::vector<std::string> out_var_names = get_output_variable_names();
-            auto it = std::find(out_var_names.begin(), out_var_names.end(), get_bmi_main_output_var());
-            if (it != out_var_names.end()){
-                //indicates that the matching variable name was found. 
-                int out_var_index = distance(out_var_names.begin(), it); //get the item index in the vector
-                try{
-                    std::string bmi_units = get_bmi_model()->GetVarUnits(out_var_names[out_var_index]);
-                    return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), out_var_names[out_var_index], 0,0,bmi_units),MEAN);
-                } catch(std::exception &e){
-                    return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), out_var_names[out_var_index], 0,0,"m"),MEAN);
-                }
-            }
-            else{
-                //indicates that the bmi main output doesn't match with any variables mentioned in the realization file.
-                try{
-                    std::string bmi_units = get_bmi_model()->GetVarUnits(get_bmi_main_output_var());
-                    return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0,0,bmi_units),MEAN);
-                } catch(std::exception &e){
-                    return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0,0,"m"),MEAN);
-                }
-            }
         }
+
+        double Bmi_Module_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
+            update(t_index, t_delta);
+            return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0,0,"m"),MEAN);
+        } 
 
         time_t Bmi_Module_Formulation::get_variable_time_begin(const std::string &variable_name) {
             // TODO: come back and implement if actually necessary for this type; for now don't use
@@ -237,15 +217,11 @@ namespace realization {
             long duration_s = selector.get_duration_secs();
             std::string output_units = selector.get_output_units();
 
-            LOG("Inside get_value for: " + output_name,LogLevel::WARNING);
-            double value = get_var_value_as_double(0, output_name);
-
-
             // First make sure this is an available output
-            // auto forcing_outputs = get_available_variable_names();
-            // if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
-            //     throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
-            // }
+            auto forcing_outputs = get_available_variable_names();
+            if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
+                throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
+            }
             // TODO: do this, or something better, later; right now, just assume anything using this as a provider is
             //  consistent with times
             /*

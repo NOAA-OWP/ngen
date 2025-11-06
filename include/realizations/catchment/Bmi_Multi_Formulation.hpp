@@ -539,6 +539,8 @@ namespace realization {
             }
         }
 
+        void update(time_step_t t_index, time_step_t t_delta) override;
+
     protected:
 
         /**

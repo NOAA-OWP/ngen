@@ -121,6 +121,8 @@ namespace realization {
          */
         double get_response(time_step_t t_index, time_step_t t_delta) override;
 
+        void update(time_step_t t_index, time_step_t t_delta) override;
+
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
          *
@@ -509,21 +511,6 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR,
                 BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE,
         };
-
-        /**
-         * Get value for some BMI model variable at a specific index.
-         *
-         *
-         * @param index
-         * @param var_name
-         * @return
-         */
-        double get_var_value_as_double(const int& index, const std::string& var_name) override {
-            //Temporary for testing
-            LOG("Inside Bmi_Module_Formulation::get_var_value_as_double function: " + var_name, LogLevel::WARNING);
-            return -9999.0; //get_var_value_as_double(0,var_name);
-        }
-
     };
 /*
     template<class M>
