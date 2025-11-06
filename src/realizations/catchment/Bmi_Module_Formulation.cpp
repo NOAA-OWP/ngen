@@ -35,7 +35,6 @@ namespace realization {
             }
 
             std::string output_str;
-            int var_array_size = get_output_variable_names().size();
             for (const std::string& name : get_output_variable_names()) {
                 //Shouldn't be using "m". Should we use get_bmi_model()->GetVarUnits(name)?
                 output_str += (output_str.empty() ? "" : ",") + 
