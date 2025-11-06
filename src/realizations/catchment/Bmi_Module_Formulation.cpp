@@ -102,12 +102,10 @@ namespace realization {
 
             //get the output variable name and its units in the realization file using the get_bmi_main_output_var()
             std::vector<std::string> out_var_names = get_output_variable_names();
-            LOG("Inside get_response.",LogLevel::WARNING);
             auto it = std::find(out_var_names.begin(), out_var_names.end(), get_bmi_main_output_var());
             if (it != out_var_names.end()){
                 //indicates that the matching variable name was found. 
                 int out_var_index = distance(out_var_names.begin(), it); //get the item index in the vector
-                LOG("Inside get_response - found variable",LogLevel::WARNING);
                 try{
                     std::string bmi_units = get_bmi_model()->GetVarUnits(out_var_names[out_var_index]);
                     return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), out_var_names[out_var_index], 0,0,bmi_units),MEAN);
@@ -117,7 +115,6 @@ namespace realization {
             }
             else{
                 //indicates that the bmi main output doesn't match with any variables mentioned in the realization file.
-                LOG("Inside get_response - variable not found",LogLevel::WARNING);
                 try{
                     std::string bmi_units = get_bmi_model()->GetVarUnits(get_bmi_main_output_var());
                     return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0,0,bmi_units),MEAN);
