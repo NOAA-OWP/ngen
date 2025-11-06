@@ -32,8 +32,9 @@ namespace hy_features {
             return network.filter("cat");
         }
 
-        inline bool is_remote_sender_nexus(const std::string& id) {
-            return _nexuses.find(id) != _nexuses.end() && _nexuses[id]->is_remote_sender();
+        inline bool is_remote_sender_nexus(const std::string& id) const {
+            auto iter = _nexuses.find(id);
+            return iter != _nexuses.end() && iter->second->is_remote_sender();
         }
         
         inline auto catchments(long lyr) {
@@ -60,7 +61,7 @@ namespace hy_features {
             return (_nexuses.find(id) != _nexuses.end()) ? _nexuses[id] : nullptr;
         }
 
-        inline auto nexuses() {
+        inline auto nexuses() const {
             return network.filter("nex");
         }
 
