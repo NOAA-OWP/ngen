@@ -73,15 +73,11 @@ void NgenSimulation::run_catchments()
                         LOG(ss.str(), LogLevel::DEBUG);
                         ss.str("");
                     }
-#if NGEN_WITH_ROUTING
+
                     boost::span<double> catchment_span(catchment_outflows_.data() + (simulation_step_ * catchment_indexes_.size()),
                                                        catchment_indexes_.size());
                     boost::span<double> nexus_span(nexus_downstream_flows_.data() + (simulation_step_ * nexus_indexes_.size()),
                                                    nexus_indexes_.size());
-#else
-                    boost::span<double> catchment_span;
-                    boost::span<double> nexus_span;
-#endif
                     layer->update_models(
                         catchment_span,
                         catchment_indexes_,
@@ -107,6 +103,16 @@ void NgenSimulation::run_catchments()
     }
 }
 
+int NgenSimulation::get_nexus_index(std::string const& nexus_id) const
+{
+    auto iter = nexus_indexes_.find(nexus_id);
+    return (iter != nexus_indexes_.end()) ? iter->second : -1;
+}
+
+double NgenSimulation::get_nexus_outflow(int nexus_index, int timestep_index) const
+{
+    return nexus_downstream_flows_[timestep_index * nexus_indexes_.size() + nexus_index];
+}
 
 void NgenSimulation::advance_one_output_step()
 {
@@ -230,7 +236,7 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features)
 #endif // NGEN_WITH_ROUTING
 }
 
-size_t NgenSimulation::get_num_output_times()
+size_t NgenSimulation::get_num_output_times() const
 {
     return sim_time_->get_total_output_times();
 }

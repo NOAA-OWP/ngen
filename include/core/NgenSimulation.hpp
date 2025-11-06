@@ -47,7 +47,10 @@ public:
     int simulation_step_;
 
     std::shared_ptr<Simulation_Time> sim_time_;
-    size_t get_num_output_times();
+    size_t get_num_output_times() const;
+
+    int get_nexus_index(std::string const& nexus_id) const;
+    double get_nexus_outflow(int nexus_index, int timestep_index) const;
 
     // Catchment data
     std::shared_ptr<realization::Formulation_Manager> catchment_formulation_manager_;

@@ -121,6 +121,53 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
 
 } // ngen::exec_info::runtime_summary
 
+void write_nexus_outflow_csv_files(std::string const& output_root,
+                                   std::unique_ptr<NgenSimulation> const& simulation,
+                                   NgenSimulation::hy_features_t const& features)
+{
+    std::stringstream ss;
+
+    auto num_times = simulation->get_num_output_times();
+
+    for (const auto& id : features.nexuses()) {
+        ss << "Preparing to write nexus outflow file for nexus '" << id << "'";
+        LOG(ss.str(), LogLevel::DEBUG);
+        ss.str("");
+
+        Simulation_Time time = *simulation->sim_time_;
+
+        std::string filename = output_root + id + "_output.csv";
+        std::ofstream nexus_outfile(filename, std::ios::trunc);
+        if (nexus_outfile.fail()) {
+            // Log error, and try the next one
+            ss << "Failed to open nexus outflow file for nexus '" << id << "', filename '" << filename << "'\n";
+            LOG(ss.str(), LogLevel::SEVERE);
+            ss.str("");
+            continue;
+        }
+
+        auto nexus_index = simulation->get_nexus_index(id);
+        for (int i = 0; i < num_times; ++i) {
+            nexus_outfile << i << ", " << time.get_timestamp(i) << ", " << simulation->get_nexus_outflow(nexus_index, i) << "\n";
+
+            if (nexus_outfile.fail()) {
+                // Log error and move on
+                ss << "Failed to write nexus outflow file for nexus '" << id << "', filename '" << filename << "'\n";
+                LOG(ss.str(), LogLevel::SEVERE);
+                ss.str("");
+                break;
+            }
+        }
+
+        nexus_outfile.close();
+        if (nexus_outfile.fail()) {
+            ss << "Failure reported while closing nexus outflow file for nexus '" << id << "', filename '" << filename << "'\n";
+            LOG(ss.str(), LogLevel::SEVERE);
+            ss.str("");
+        }
+    }
+}
+
 int main(int argc, char* argv[]) {
     std::string catchmentDataFile         = "";
     std::string nexusDataFile             = "";
@@ -622,12 +669,6 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    auto time_done_init                             = std::chrono::steady_clock::now();
-    std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
-
-    // Now loop some time, iterate catchments, do stuff for total number of output times
-    auto num_times = manager->Simulation_Time_Object->get_total_output_times();
-
     // T-ROUTE data storage
     std::unordered_map<std::string, int> catchment_indexes;
 #if NGEN_WITH_ROUTING
@@ -646,6 +687,9 @@ int main(int argc, char* argv[]) {
                                                        mpi_rank,
                                                        mpi_num_procs);
 
+    auto time_done_init                             = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
+
     simulation->run_catchments();
 
 #if NGEN_WITH_MPI
@@ -662,6 +706,25 @@ int main(int argc, char* argv[]) {
     auto time_done_simulation                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_simulation = time_done_simulation - time_done_init;
 
+    // Write nexus outflow CSV files in bulk at the end of the run,
+    // rather than as the simulation runs, to avoid issues when
+    // restarting an interrupted run. This would be less of an issue
+    // if the data were written to a more resilient structured format.
+    write_nexus_outflow_csv_files(manager->get_output_root(), simulation, features);
+
+#if NGEN_WITH_MPI
+    MPI_Barrier(MPI_COMM_WORLD);
+#endif
+
+    if (mpi_rank == 0) {
+        ss << "Finished writing nexus outflow files" << std::endl;
+        LOG(ss.str(), LogLevel::INFO);
+        ss.str("");
+    }
+
+    auto time_done_nexus_output                             = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_nexus_output = time_done_nexus_output - time_done_simulation;
+
 #if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
@@ -671,7 +734,7 @@ int main(int argc, char* argv[]) {
     }
 
     auto time_done_routing                             = std::chrono::steady_clock::now();
-    std::chrono::duration<double> time_elapsed_routing = time_done_routing - time_done_simulation;
+    std::chrono::duration<double> time_elapsed_routing = time_done_routing - time_done_nexus_output;
 
 #if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
