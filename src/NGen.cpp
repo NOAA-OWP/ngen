@@ -127,9 +127,10 @@ int main(int argc, char* argv[]) {
     std::string REALIZATION_CONFIG_PATH   = "";
     bool is_subdivided_hydrofabric_wanted = false;
     std::string PARTITION_PATH = "";
-    int mpi_num_procs;
     std::stringstream ss("");
 
+     // This default value should lead to behavior matching the single-process case in the standalone or non-MPI case
+    int mpi_num_procs = 1;
     // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
     int mpi_rank = 0;
 
