@@ -147,16 +147,7 @@ namespace realization {
             return output_header_fields;
         }
 
-        /**
-         * Get the units for the output variables in the realization file organized as a vector of strings.
-         *
-         * @return The units of output variables in the realization file organized as a vector.
-         */
-        const std::vector<std::string> &get_output_variable_units() const {
-            return output_variable_units;
-        }
-
-        /**
+         /**
          * Get a header line appropriate for a file made up of entries from this type's implementation of
          * ``get_output_line_for_timestep``.
          *
