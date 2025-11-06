@@ -122,7 +122,13 @@ void NgenSimulation::advance_one_output_step()
 void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features)
 {
 #if NGEN_WITH_ROUTING
+    std::vector<double> *routing_nexus_downflows = &nexus_downstream_flows_;
+    std::unordered_map<std::string, int> *routing_nexus_indexes = &nexus_indexes_;
+
 #if NGEN_WITH_MPI
+    std::vector<double> all_nexus_downflows;
+    std::unordered_map<std::string, int> all_nexus_indexes;
+
     if (mpi_num_procs_ > 1) {
         int number_of_timesteps = catchment_formulation_manager_->Simulation_Time_Object->get_total_output_times();
         std::vector<std::string> local_nexus_ids;
@@ -143,11 +149,9 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features)
         all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, mpi_rank_, mpi_num_procs_));
 
         // MPI_Reduce to collect the results from processes
-        std::vector<double> all_nexus_downflows;
         if (mpi_rank_ == 0) {
             all_nexus_downflows.resize(number_of_timesteps * all_nexus_ids.size(), 0.0);
         }
-        std::unordered_map<std::string, int> all_nexus_indexes;
         std::vector<double> local_buffer(number_of_timesteps);
         std::vector<double> receive_buffer(number_of_timesteps, 0.0);
         for (int i = 0; i < all_nexus_ids.size(); ++i) {
@@ -177,12 +181,12 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features)
 
         if (mpi_rank_ == 0) {
             // update root's local data for running t-route below
-            nexus_indexes_ = std::move(all_nexus_indexes);
-            nexus_downstream_flows_ = std::move(all_nexus_downflows);
+            routing_nexus_indexes = &all_nexus_indexes;
+            routing_nexus_downflows = &all_nexus_downflows;
         }
-
     }
 #endif // NGEN_WITH_MPI
+
     if (mpi_rank_ == 0) { // Run t-route from single process
         if (catchment_formulation_manager_->get_using_routing()) {
             LOG(LogLevel::INFO, "Running T-Route on nexus outflows.");
@@ -201,12 +205,12 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features)
             models::bmi::Bmi_Py_Adapter py_troute("T-Route", t_route_config_file_with_path, "troute_nwm_bmi.troute_bmi.BmiTroute", true);
 
             // tell BMI to resize nexus containers
-            int64_t nexus_count = nexus_indexes_.size();
+            int64_t nexus_count = routing_nexus_indexes->size();
             py_troute.SetValue("land_surface_water_source__volume_flow_rate__count", &nexus_count);
             py_troute.SetValue("land_surface_water_source__id__count", &nexus_count);
             // set up nexus id indexes
             std::vector<int> nexus_df_index(nexus_count);
-            for (const auto& key_value : nexus_indexes_) {
+            for (const auto& key_value : *routing_nexus_indexes) {
                 int id_index = key_value.second;
 
                 // Convert string ID into numbers for T-route index
@@ -226,7 +230,7 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features)
             py_troute.SetValue("land_surface_water_source__id", nexus_df_index.data());
             for (int i = 0; i < number_of_timesteps; ++i) {
                 py_troute.SetValue("land_surface_water_source__volume_flow_rate",
-                                   nexus_downstream_flows_.data() + (i * nexus_count));
+                                   routing_nexus_downflows->data() + (i * nexus_count));
                 py_troute.Update();
             }
             // Finalize will write the output file
