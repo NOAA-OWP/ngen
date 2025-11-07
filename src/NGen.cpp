@@ -857,7 +857,8 @@ int main(int argc, char* argv[]) {
                                    nexus_downstream_flows.data() + (i * nexus_count));
                 py_troute.Update();
             }
-            // py_troute will call Finalize() and write files on destruction
+            // Finalize will write the output file
+            py_troute.Finalize();
         }
     }
 #endif
