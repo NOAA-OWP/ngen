@@ -39,7 +39,18 @@ public:
     using hy_features_t = hy_features::HY_Features;
 #endif
 
+    /**
+     * Run the catchment formulations for the full configured duration of the simulation
+     *
+     * Captures calculated runoff values in `catchment_outflows_` and
+     * `nexus_downstream_flows_` for subsequent output and consumption
+     * by `run_routing()`
+     */
     void run_catchments();
+
+    /**
+     * Run t-route on the stored nexus outflow values for the full configured duration of the simulation
+     */
     void run_routing(hy_features_t &features, std::string const& t_route_config_file_with_path);
 
     int get_nexus_index(std::string const& nexus_id) const;
