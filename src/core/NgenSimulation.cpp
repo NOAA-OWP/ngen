@@ -37,8 +37,8 @@ void NgenSimulation::run_catchments()
 
     for (; simulation_step_ < num_times; simulation_step_++) {
         // Make room for this output step's results
-        catchment_outflows_.resize(catchment_outflows_.size() + catchment_indexes_.size());
-        nexus_downstream_flows_.resize(nexus_downstream_flows_.size() + nexus_indexes_.size());
+        catchment_outflows_.resize(catchment_outflows_.size() + catchment_indexes_.size(), 0.0);
+        nexus_downstream_flows_.resize(nexus_downstream_flows_.size() + nexus_indexes_.size(), 0.0);
 
         advance_models_one_output_step();
 
