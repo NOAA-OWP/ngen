@@ -134,8 +134,6 @@ void write_nexus_outflow_csv_files(std::string const& output_root,
         LOG(ss.str(), LogLevel::DEBUG);
         ss.str("");
 
-        Simulation_Time time = *simulation->sim_time_;
-
         std::string filename = output_root + id + "_output.csv";
         std::ofstream nexus_outfile(filename, std::ios::trunc);
         if (nexus_outfile.fail()) {
@@ -148,7 +146,7 @@ void write_nexus_outflow_csv_files(std::string const& output_root,
 
         auto nexus_index = simulation->get_nexus_index(id);
         for (int i = 0; i < num_times; ++i) {
-            nexus_outfile << i << ", " << time.get_timestamp(i) << ", " << simulation->get_nexus_outflow(nexus_index, i) << "\n";
+            nexus_outfile << i << ", " << simulation->get_timestamp_for_step(i) << ", " << simulation->get_nexus_outflow(nexus_index, i) << "\n";
 
             if (nexus_outfile.fail()) {
                 // Log error and move on

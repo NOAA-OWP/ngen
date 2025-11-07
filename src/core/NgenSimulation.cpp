@@ -242,6 +242,11 @@ size_t NgenSimulation::get_num_output_times() const
     return sim_time_->get_total_output_times();
 }
 
+std::string NgenSimulation::get_timestamp_for_step(int step) const
+{
+    return sim_time_->get_timestamp(step);
+}
+
 template <class Archive>
 void NgenSimulation::serialize(Archive& ar) {
     /* Handle `catchment_formulation_manager` specially in the
