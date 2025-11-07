@@ -40,7 +40,7 @@ void NgenSimulation::run_catchments()
         catchment_outflows_.resize(catchment_outflows_.size() + catchment_indexes_.size());
         nexus_downstream_flows_.resize(nexus_downstream_flows_.size() + nexus_indexes_.size());
 
-        advance_one_output_step();
+        advance_models_one_output_step();
 
         if (simulation_step_ + 1 < num_times) {
             sim_time_->advance_timestep();
@@ -48,7 +48,7 @@ void NgenSimulation::run_catchments()
     }
 }
 
-void NgenSimulation::advance_one_output_step()
+void NgenSimulation::advance_models_one_output_step()
 {
     // The Inner loop will advance all layers unless doing so will break one of two constraints
     // 1) A layer may not proceed ahead of the master simulation object's current time

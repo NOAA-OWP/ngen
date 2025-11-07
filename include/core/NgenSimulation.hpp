@@ -49,7 +49,7 @@ public:
     std::string get_timestamp_for_step(int step) const;
 
 private:
-    void advance_one_output_step();
+    void advance_models_one_output_step();
 
     int simulation_step_;
 
