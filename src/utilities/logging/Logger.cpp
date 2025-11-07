@@ -53,23 +53,23 @@ static const std::unordered_map<LogLevel, std::string> logLevelToStringMap = {
     {LogLevel::FATAL,   "FATAL  "},
 };
 
-const std::vector<std::string> allModules = {
-    "NGEN",
-    "CFE-S",
-    "CFE-X",
-    "LASAM",
-    "NOAH-OWP-MODULAR",
-    "PET",
-    "SAC-SMA",
-    "SFT",
-    "SMP",
-    "SNOW-17",
-    "TOPMODEL",
-    "TOPOFLOW-GLACIER",
-    "T-ROUTE",
-    "UEB",
-    "LSTM",
-    "FORCING"
+const std::unordered_map<std::string, std::string> moduleNamesMap = {
+    {"NGEN", "NGEN"},
+    {"CFE-S", "CFE"},
+    {"CFE-X", "CFE"},
+    {"LASAM", "LASAM"},
+    {"NOAH-OWP-MODULAR", "NOAHOWP"},
+    {"PET", "PET"},
+    {"SAC-SMA", "SACSMA"},
+    {"SFT", "SFT"},
+    {"SMP", "SMP"},
+    {"SNOW-17", "SNOW17"},
+    {"TOPMODEL", "TOPMODEL"},
+    {"TOPOFLOW-GLACIER", "TFGLACR"},
+    {"T-ROUTE", "TROUTE"},
+    {"UEB", "UEB_BMI"},
+    {"LSTM", "LSTM"},
+    {"FORCING", "FORCING"}
 };
 
 bool Logger::DirectoryExists(const std::string& path) {
@@ -161,22 +161,15 @@ void Logger::SetupLogFile(void) {
         }
     }
 
-    // Attempt until log file
+    // Attempt to open log file
     if (!logFilePath.empty()) {
         logFile.open(logFilePath, ios::out | ios::trunc); // Truncating ensures keeping only the last calibration iteration.
         if (logFile.is_open()) {
             openedOnce = true;
-            setenv("NGEN_LOG_FILE_PATH", logFilePath.c_str(), 1);
-            std::cout << "Set NGEN_LOG_FILE_PATH=" << logFilePath << std::endl;
-            std::string logMsg = "Log File: " + logFilePath + "\n";
-            LogLevel saveLevel = logLevel;
-            logLevel = LogLevel::INFO; // Ensure this INFO message is always logged
-            Log(logMsg, logLevel);
-            logLevel = saveLevel;
             return;
         }
     }
-    std::cout << "Unable to create log file ";
+    std::cout << "[WARNING] Unable to create log file ";
     if (!logFilePath.empty()) {
         std::cout << logFilePath;
     }
@@ -184,7 +177,7 @@ void Logger::SetupLogFile(void) {
         std::cout << logFileDir;
     }
     std::cout << " (Perhaps check permissions)" << std::endl;
-    std::cout << "Log entries will be written to stdout" << std::endl;
+    std::cout << "[WARNING] Log entries will be written to stdout" << std::endl;
 }
 
 std::string Logger::ToUpper(const std::string& input) {
@@ -253,15 +246,15 @@ bool Logger::ParseLoggerConfigFile(std::ifstream& jsonFile)
                 std::string moduleName = ToUpper(kv.first);
                 std::string levelStr = ToUpper(kv.second.get_value<std::string>());
 
-                if (std::find(allModules.begin(), allModules.end(), moduleName) != allModules.end()) {
+                auto it = moduleNamesMap.find(moduleName);
+                if (it != moduleNamesMap.end()) {
                     moduleLogLevels[moduleName] = ConvertStringToLogLevel(levelStr);
-                    std::cout << "[DEBUG] Found Log level " 
-                              << kv.first << "=" 
-                              << ConvertLogLevelToString(moduleLogLevels[moduleName]) 
-                              << std::endl;
+                    std::cout << "[DEBUG] Found Log level "
+                            << kv.first << "="
+                            << ConvertLogLevelToString(moduleLogLevels[moduleName])
+                            << std::endl;
                 } else {
-                    std::cout << "[ERROR] Ignoring unknown module " 
-                              << moduleName << std::endl;
+                    std::cout << "[ERROR] Ignoring unknown module " << moduleName << std::endl;
                 }
             }
         } else {
@@ -322,8 +315,19 @@ bool Logger::IsValidEnvVarName(const std::string& name) {
 
 void Logger::ManageLoggingEnvVars(bool set) {
 
+    // Set logger env vars common to all modules 
     if (set) {
-        cout << "[DEBUG] ngen Logger setup: Setting Module Logger Environment Variables" << endl;
+        Log("ngen Logger setup: Setting Module Logger Environment Variables", LogLevel::DEBUG);
+        if (!logFilePath.empty()) {
+            // Set the log file env var
+            setenv("NGEN_LOG_FILE_PATH", logFilePath.c_str(), 1);
+            std::cout << "Set NGEN_LOG_FILE_PATH=" << logFilePath << std::endl;
+        }
+        else {
+            cout << "NGEN_LOG_FILE_PATH env var not set. Modules writing to their default logs." << std::endl;           
+        }
+
+        // Set the logging enabled/disabled env var
         setenv((EV_EWTS_LOGGING).c_str(), ((loggingEnabled)?"ENABLED":"DISABLED"), 1);
         std::string logMsg = std::string("Set Logging ") + ((loggingEnabled)?"ENABLED":"DISABLED");
         cout << logMsg << "(envVar=" << EV_EWTS_LOGGING << ")" << endl;
@@ -335,52 +339,56 @@ void Logger::ManageLoggingEnvVars(bool set) {
         }
     }
     else {
-        cout << "[DEBUG] ngen Logger setup: Unset existing Module Logger Environment Variables" << endl;
+        Log("ngen Logger setup: Unset existing Module Logger Environment Variables", LogLevel::DEBUG);
     }
 
-    for (const auto& hydroModule : allModules) {
-        std::string envVar = "";
-        std::string moduleNameForEnvVar = "";
-        
-        // Translate to actual module name used, if different
-        if      (hydroModule == "CFE-S" || hydroModule == "CFE-X") moduleNameForEnvVar = "CFE";
-        else if (hydroModule == "NOAH-OWP-MODULAR") moduleNameForEnvVar = "NOAHOWP";
-        else if (hydroModule == "SAC-SMA") moduleNameForEnvVar = "SACSMA";
-        else if (hydroModule == "SNOW-17") moduleNameForEnvVar = "SNOW17";
-        else if (hydroModule == "T-ROUTE") moduleNameForEnvVar = "TROUTE";
-        else if (hydroModule == "UEB") moduleNameForEnvVar = "UEB_BMI";
-        else if (hydroModule == "TOPOFLOW-GLACIER") moduleNameForEnvVar = "TFGLACR";
-        else moduleNameForEnvVar = hydroModule;
-        
-        if (!IsValidEnvVarName(moduleNameForEnvVar)) {
-            cout << "[WARNING] Ignoring Unknown Module: " << hydroModule << " (" << moduleNameForEnvVar << ")" << std::endl;
+    // Set logger env vars unique to each module in the formulation 
+    // Note: moduleLogLevels is populated from the logging config file which
+    //       only contains the log levels for module in the formulation
+    for (const auto& modulePair : moduleLogLevels) {
+        std::string envVar;
+        std::string moduleNameForEnvVar;
+
+        const std::string& moduleName = modulePair.first;
+        LogLevel           level = modulePair.second;
+
+        // Look up the module env var name in moduleNamesMap
+        auto it = moduleNamesMap.find(moduleName); 
+        if (it != moduleNamesMap.end()) {
+            moduleNameForEnvVar = it->second;
+            if (!IsValidEnvVarName(moduleNameForEnvVar)) {
+                std::string logMsg = std::string("Invalid env var name ") + moduleNameForEnvVar +
+                                     std::string(" for module ") + moduleName;
+                Log(logMsg, LogLevel::WARNING);
+                continue;
+            }
+        } 
+        else {
+            std::string logMsg = std::string("Unknown module in logLevels: ") + moduleName;
+            Log(logMsg, LogLevel::WARNING);
             continue;
         }
 
         if (set) {
-            // The ngen logger only sets the log level envirnoment variable here
-            // The log path is set in SetupLogFile()
-            auto it = moduleLogLevels.find(hydroModule);
-            if (it != moduleLogLevels.end()) {
-                envVar = moduleNameForEnvVar + "_LOGLEVEL";
-                std::string ll = ConvertLogLevelToString(it->second);
-                setenv(envVar.c_str(), ll.c_str(), 1);
-                std::string logMsg = std::string("Set ") + hydroModule 
-                    + ((hydroModule != "NGEN")?" Log Level env var to ":" Log Level to ") 
-                    + TrimString(ll);
-                cout << logMsg;
-                if (hydroModule != "NGEN") cout << " (" << envVar << ")";
-                cout << endl;
-                if (!logFilePath.empty()) {
-                    LogLevel saveLevel = logLevel;
-                    logLevel = LogLevel::INFO; // Ensure this INFO message is always logged
-                    Log(logMsg, logLevel);
-                    logLevel = saveLevel;
-                }
+            // Sets the log level envirnoment variable 
+            envVar = moduleNameForEnvVar + "_LOGLEVEL";
+            std::string ll = ConvertLogLevelToString(level);
+            setenv(envVar.c_str(), ll.c_str(), 1);
+            std::string logMsg = std::string("Set ") + moduleName 
+                + ((moduleName != "NGEN")?" Log Level env var to ":" Log Level to ") 
+                + TrimString(ll);
+            cout << logMsg;
+            if (moduleName != "NGEN") cout << " (" << envVar << ")";
+            cout << endl;
+            if (!logFilePath.empty()) {
+                LogLevel saveLevel = logLevel;
+                logLevel = LogLevel::INFO; // Ensure this INFO message is always logged
+                Log(logMsg, logLevel);
+                logLevel = saveLevel;
             }
         }
         else {
-            if (hydroModule != "NGEN") {
+            if (moduleName != "NGEN") {
                 // It is possible that individual submodules may be writing to their own
                 // logs if there was an issue accessing the ngen log file. The log file used
                 // by each module is stored in its own environment variable. Unsetting this
