@@ -857,8 +857,7 @@ int main(int argc, char* argv[]) {
                                    nexus_downstream_flows.data() + (i * nexus_count));
                 py_troute.Update();
             }
-            // Finalize will write the output file
-            py_troute.Finalize();
+            // py_troute will call Finalize() and write files on destruction
         }
     }
 #endif
@@ -879,6 +878,7 @@ int main(int argc, char* argv[]) {
     }
 
     manager->finalize();
+    _interp.reset();
 
 #if NGEN_WITH_MPI
     MPI_Finalize();
