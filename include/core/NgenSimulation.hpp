@@ -4,7 +4,6 @@
 #include <NGenConfig.h>
 
 #include <Simulation_Time.hpp>
-#include <realizations/catchment/Formulation_Manager.hpp>
 #include <Layer.hpp>
 
 namespace hy_features
@@ -23,7 +22,7 @@ class NgenSimulation
 {
 public:
     NgenSimulation(
-                   std::shared_ptr<realization::Formulation_Manager> formulation_manager,
+                   Simulation_Time const& sim_time,
                    std::vector<std::shared_ptr<ngen::Layer>> layers,
                    std::unordered_map<std::string, int> catchment_indexes,
                    std::unordered_map<std::string, int> nexus_indexes,
@@ -41,7 +40,7 @@ public:
 #endif
 
     void run_catchments();
-    void run_routing(hy_features_t &features);
+    void run_routing(hy_features_t &features, std::string const& t_route_config_file_with_path);
 
     int get_nexus_index(std::string const& nexus_id) const;
     double get_nexus_outflow(int nexus_index, int timestep_index) const;
@@ -57,7 +56,6 @@ private:
     std::shared_ptr<Simulation_Time> sim_time_;
 
     // Catchment data
-    std::shared_ptr<realization::Formulation_Manager> catchment_formulation_manager_;
     std::vector<std::shared_ptr<ngen::Layer>> layers_;
 
     // Routing data structured for t-route

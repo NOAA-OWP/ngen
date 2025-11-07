@@ -9,16 +9,15 @@
 #include "parallel_utils.h"
 
 NgenSimulation::NgenSimulation(
-    std::shared_ptr<realization::Formulation_Manager> formulation_manager,
+    Simulation_Time const& sim_time,
     std::vector<std::shared_ptr<ngen::Layer>> layers,
     std::unordered_map<std::string, int> catchment_indexes,
     std::unordered_map<std::string, int> nexus_indexes,
     int mpi_rank,
     int mpi_num_procs
                                )
-    : catchment_formulation_manager_(formulation_manager)
-    , simulation_step_(0)
-    , sim_time_(std::make_shared<Simulation_Time>(*formulation_manager->Simulation_Time_Object))
+    : simulation_step_(0)
+    , sim_time_(std::make_shared<Simulation_Time>(sim_time))
     , layers_(std::move(layers))
     , catchment_indexes_(std::move(catchment_indexes))
     , nexus_indexes_(std::move(nexus_indexes))
@@ -45,7 +44,6 @@ void NgenSimulation::run_catchments()
 
         if (simulation_step_ + 1 < num_times) {
             sim_time_->advance_timestep();
-            catchment_formulation_manager_->Simulation_Time_Object->advance_timestep();
         }
     }
 }
@@ -62,8 +60,7 @@ void NgenSimulation::advance_one_output_step()
     // layer.
 
     // this is the time that layers are trying to reach (or get as close as possible)
-    auto next_time = catchment_formulation_manager_->Simulation_Time_Object->next_timestep_epoch_time();
-    auto next_time_private = sim_time_->next_timestep_epoch_time();
+    auto next_time = sim_time_->next_timestep_epoch_time();
 
     // this is the time that the layer above the current layer is at
     auto prev_layer_time = next_time;
@@ -116,7 +113,7 @@ double NgenSimulation::get_nexus_outflow(int nexus_index, int timestep_index) co
     return nexus_downstream_flows_[timestep_index * nexus_indexes_.size() + nexus_index];
 }
 
-void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features)
+void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::string const& t_route_config_file_with_path)
 {
 #if NGEN_WITH_ROUTING
     std::vector<double> *routing_nexus_downflows = &nexus_downstream_flows_;
@@ -127,7 +124,7 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features)
     std::unordered_map<std::string, int> all_nexus_indexes;
 
     if (mpi_num_procs_ > 1) {
-        int number_of_timesteps = catchment_formulation_manager_->Simulation_Time_Object->get_total_output_times();
+        int number_of_timesteps = sim_time_->get_total_output_times();
         std::vector<std::string> local_nexus_ids;
         for (const auto& nexus : nexus_indexes_) {
             local_nexus_ids.push_back(nexus.first);
@@ -185,54 +182,50 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features)
 #endif // NGEN_WITH_MPI
 
     if (mpi_rank_ == 0) { // Run t-route from single process
-        if (catchment_formulation_manager_->get_using_routing()) {
-            LOG(LogLevel::INFO, "Running T-Route on nexus outflows.");
+        LOG(LogLevel::INFO, "Running T-Route on nexus outflows.");
 
-            // Note: Currently, delta_time is set in the t-route yaml configuration file, and the
-            // number_of_timesteps is determined from the total number of nexus outputs in t-route.
-            // It is recommended to still pass these values to the routing_py_adapter object in
-            // case a future implmentation needs these two values from the ngen framework.
-            int number_of_timesteps = catchment_formulation_manager_->Simulation_Time_Object->get_total_output_times();
+        // Note: Currently, delta_time is set in the t-route yaml configuration file, and the
+        // number_of_timesteps is determined from the total number of nexus outputs in t-route.
+        // It is recommended to still pass these values to the routing_py_adapter object in
+        // case a future implmentation needs these two values from the ngen framework.
+        int number_of_timesteps = sim_time_->get_total_output_times();
 
-            int delta_time = catchment_formulation_manager_->Simulation_Time_Object->get_output_interval_seconds();
+        int delta_time = sim_time_->get_output_interval_seconds();
 
-            std::string t_route_config_file_with_path =
-                catchment_formulation_manager_->get_t_route_config_file_with_path();
-            // model for routing
-            models::bmi::Bmi_Py_Adapter py_troute("T-Route", t_route_config_file_with_path, "troute_nwm_bmi.troute_bmi.BmiTroute", true);
+        // model for routing
+        models::bmi::Bmi_Py_Adapter py_troute("T-Route", t_route_config_file_with_path, "troute_nwm_bmi.troute_bmi.BmiTroute", true);
 
-            // tell BMI to resize nexus containers
-            int64_t nexus_count = routing_nexus_indexes->size();
-            py_troute.SetValue("land_surface_water_source__volume_flow_rate__count", &nexus_count);
-            py_troute.SetValue("land_surface_water_source__id__count", &nexus_count);
-            // set up nexus id indexes
-            std::vector<int> nexus_df_index(nexus_count);
-            for (const auto& key_value : *routing_nexus_indexes) {
-                int id_index = key_value.second;
+        // tell BMI to resize nexus containers
+        int64_t nexus_count = routing_nexus_indexes->size();
+        py_troute.SetValue("land_surface_water_source__volume_flow_rate__count", &nexus_count);
+        py_troute.SetValue("land_surface_water_source__id__count", &nexus_count);
+        // set up nexus id indexes
+        std::vector<int> nexus_df_index(nexus_count);
+        for (const auto& key_value : *routing_nexus_indexes) {
+            int id_index = key_value.second;
 
-                // Convert string ID into numbers for T-route index
-                int id_as_int = -1;
-                size_t sep_index = key_value.first.find(hy_features::identifiers::seperator);
-                if (sep_index != std::string::npos) {
-                    std::string numbers = key_value.first.substr(sep_index + hy_features::identifiers::seperator.length());
-                    id_as_int = std::stoi(numbers);
-                }
-                if (id_as_int == -1) {
-                    std::string error_msg = "Cannot convert the nexus ID to an integer: " + key_value.first;
-                    LOG(LogLevel::FATAL, error_msg);
-                    throw std::runtime_error(error_msg);
-                }
-                nexus_df_index[id_index] = id_as_int;
+            // Convert string ID into numbers for T-route index
+            int id_as_int = -1;
+            size_t sep_index = key_value.first.find(hy_features::identifiers::seperator);
+            if (sep_index != std::string::npos) {
+                std::string numbers = key_value.first.substr(sep_index + hy_features::identifiers::seperator.length());
+                id_as_int = std::stoi(numbers);
             }
-            py_troute.SetValue("land_surface_water_source__id", nexus_df_index.data());
-            for (int i = 0; i < number_of_timesteps; ++i) {
-                py_troute.SetValue("land_surface_water_source__volume_flow_rate",
-                                   routing_nexus_downflows->data() + (i * nexus_count));
-                py_troute.Update();
+            if (id_as_int == -1) {
+                std::string error_msg = "Cannot convert the nexus ID to an integer: " + key_value.first;
+                LOG(LogLevel::FATAL, error_msg);
+                throw std::runtime_error(error_msg);
             }
-            // Finalize will write the output file
-            py_troute.Finalize();
+            nexus_df_index[id_index] = id_as_int;
         }
+        py_troute.SetValue("land_surface_water_source__id", nexus_df_index.data());
+        for (int i = 0; i < number_of_timesteps; ++i) {
+            py_troute.SetValue("land_surface_water_source__volume_flow_rate",
+                               routing_nexus_downflows->data() + (i * nexus_count));
+            py_troute.Update();
+        }
+        // Finalize will write the output file
+        py_troute.Finalize();
     }
 #endif // NGEN_WITH_ROUTING
 }

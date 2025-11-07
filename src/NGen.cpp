@@ -521,12 +521,30 @@ int main(int argc, char* argv[]) {
     // Update the feature ids for the combined collection, using the alternative property 'id'
     // to map features to their primary id as well as the alternative property
     nexus_collection->update_ids("id");
+
+    boost::property_tree::ptree realization_config;
+    boost::property_tree::json_parser::read_json(REALIZATION_CONFIG_PATH, realization_config);
+
+    std::shared_ptr<Simulation_Time> sim_time;
+
+    auto possible_simulation_time = realization_config.get_child_optional("time");
+    if (!possible_simulation_time) {
+        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    }
+
+    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+
+    sim_time = std::make_shared<Simulation_Time>(simulation_time_config);
+
     ss << "Initializing formulations" << std::endl;
     LOG(ss.str(), LogLevel::INFO);
     ss.str("");
+
     std::shared_ptr<realization::Formulation_Manager> manager =
-        std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
-    manager->read(catchment_collection, utils::getStdOut());
+        std::make_shared<realization::Formulation_Manager>(realization_config);
+    manager->read(simulation_time_config, catchment_collection, utils::getStdOut());
 
 // TODO refactor manager->read so certain configs can be queried before the entire
 // realization collection is created
@@ -635,7 +653,7 @@ int main(int argc, char* argv[]) {
         std::vector<std::string> cat_ids;
 
         // make a new simulation time object with a different output interval
-        Simulation_Time sim_time(*manager->Simulation_Time_Object, time_steps[i]);
+        Simulation_Time sim_time(sim_time, time_steps[i]);
         if (manager->has_domain_formulation(keys[i])) {
             // create a domain wide layer
             auto formulation = manager->get_domain_formulation(keys[i]);
@@ -678,7 +696,7 @@ int main(int argc, char* argv[]) {
     }
 #endif // NGEN_WITH_ROUTING
 
-    auto simulation = std::make_unique<NgenSimulation>(manager,
+    auto simulation = std::make_unique<NgenSimulation>(*sim_time,
                                                        layers,
                                                        std::move(catchment_indexes),
                                                        std::move(nexus_indexes),
@@ -695,7 +713,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     if (mpi_rank == 0) {
-        ss << "Finished " << manager->Simulation_Time_Object->get_total_output_times()
+        ss << "Finished " << sim_time->get_total_output_times()
            << " timesteps." << std::endl;
         LOG(ss.str(), LogLevel::INFO);
         ss.str("");
@@ -728,7 +746,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     if (manager->get_using_routing()) {
-        simulation->run_routing(features);
+        simulation->run_routing(features, manager->get_t_route_config_file_with_path());
     }
 
     auto time_done_routing                             = std::chrono::steady_clock::now();
