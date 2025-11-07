@@ -407,9 +407,26 @@ int main(int argc, char* argv[]) {
     //Update the feature ids for the combined collection, using the alternative property 'id'
     //to map features to their primary id as well as the alternative property
     nexus_collection->update_ids("id");
+
+    boost::property_tree::ptree realization_config;
+    boost::property_tree::json_parser::read_json(REALIZATION_CONFIG_PATH, realization_config);
+
+    std::shared_ptr<Simulation_Time> sim_time;
+
+    auto possible_simulation_time = realization_config.get_child_optional("time");
+    if (!possible_simulation_time) {
+        throw std::runtime_error("ERROR: No simulation time period defined.");
+    }
+
+    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+
+    sim_time = std::make_shared<Simulation_Time>(simulation_time_config);
+
     std::cout<<"Initializing formulations" << std::endl;
-    std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
-    manager->read(catchment_collection, utils::StreamHandler::getNullStream());
+
+    std::shared_ptr<realization::Formulation_Manager> manager =
+        std::make_shared<realization::Formulation_Manager>(realization_config);
+    manager->read(simulation_time_config, catchment_collection, utils::getStdOut());
 
     //TODO refactor manager->read so certain configs can be queried before the entire
     //realization collection is created
@@ -482,7 +499,7 @@ int main(int argc, char* argv[]) {
         // TODO: (later) use nullptr for now, until full support for multiple formulations per catchment is available
         std::shared_ptr<std::vector<std::string>> formulation_ids = nullptr;
 
-        size_t timesteps = manager->Simulation_Time_Object->get_total_output_times();
+        size_t timesteps = sim_time->get_total_output_times();
         #if NGEN_WITH_MPI
         int local_nexus_write_offset, total_nexus_count;
         int local_nexus_count = nexus_ids.size();
@@ -549,12 +566,12 @@ int main(int argc, char* argv[]) {
         std::vector<std::string> cat_ids;
 
         // make a new simulation time object with a different output interval
-        Simulation_Time sim_time(*manager->Simulation_Time_Object, time_steps[i]);
+        Simulation_Time layer_sim_time(*sim_time, time_steps[i]);
         if (manager->has_domain_formulation(keys[i])) {
             // create a domain wide layer
             auto formulation = manager->get_domain_formulation(keys[i]);
             layers[i] =
-                std::make_shared<ngen::DomainLayer>(desc, sim_time, features, 0, formulation);
+                std::make_shared<ngen::DomainLayer>(desc, layer_sim_time, features, 0, formulation);
         } else {
             for (std::string id : features.catchments(keys[i])) {
                 cat_ids.push_back(id);
@@ -563,7 +580,7 @@ int main(int argc, char* argv[]) {
                 layers[i] = std::make_shared<ngen::Layer>(
                     desc,
                     cat_ids,
-                    sim_time,
+                    layer_sim_time,
                     features,
                     catchment_collection,
                     0
@@ -572,7 +589,7 @@ int main(int argc, char* argv[]) {
                 layers[i] = std::make_shared<ngen::SurfaceLayer>(
                     desc,
                     cat_ids,
-                    sim_time,
+                    layer_sim_time,
                     features,
                     catchment_collection,
                     0,
@@ -586,7 +603,7 @@ int main(int argc, char* argv[]) {
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
 
     // Now loop some time, iterate catchments, do stuff for total number of output times
-    auto num_times = manager->Simulation_Time_Object->get_total_output_times();
+    auto num_times = sim_time->get_total_output_times();
 
     // T-ROUTE data storage
     std::vector<double> catchment_outflows;
@@ -614,7 +631,7 @@ int main(int argc, char* argv[]) {
         // layer.
 
         // this is the time that layers are trying to reach (or get as close as possible)
-        auto next_time = manager->Simulation_Time_Object->next_timestep_epoch_time();
+        auto next_time = sim_time->next_timestep_epoch_time();
 
         // this is the time that the layer above the current layer is at
         auto prev_layer_time = next_time;
@@ -660,7 +677,7 @@ int main(int argc, char* argv[]) {
         ); // rerun the loop until the last layer would pass the master next time
 
         if (count + 1 < num_times) {
-            manager->Simulation_Time_Object->advance_timestep();
+            sim_time->advance_timestep();
         }
 
     } // done time
@@ -672,9 +689,8 @@ int main(int argc, char* argv[]) {
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
-    if (mpi_rank == 0)
-    {
-        std::cout << "Finished " << manager->Simulation_Time_Object->get_total_output_times() << " timesteps." << std::endl;
+    if (mpi_rank == 0) {
+        std::cout << "Finished " << sim_time->get_total_output_times() << " timesteps." << std::endl;
     }
 
     auto time_done_simulation = std::chrono::steady_clock::now();
@@ -692,9 +708,9 @@ int main(int argc, char* argv[]) {
           //number_of_timesteps is determined from the total number of nexus outputs in t-route.
           //It is recommended to still pass these values to the routing_py_adapter object in
           //case a future implmentation needs these two values from the ngen framework.
-          int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
+          int number_of_timesteps = sim_time->get_total_output_times();
 
-          int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
+          int delta_time = sim_time->get_output_interval_seconds();
           
           router->route(number_of_timesteps, delta_time); 
         }

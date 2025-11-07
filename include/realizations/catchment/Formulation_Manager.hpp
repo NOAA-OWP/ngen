@@ -30,9 +30,6 @@ namespace realization {
 
     class Formulation_Manager {
         public:
-
-            std::shared_ptr<Simulation_Time> Simulation_Time_Object;
-
             Formulation_Manager(std::stringstream &data) {
                 boost::property_tree::ptree loaded_tree;
                 boost::property_tree::json_parser::read_json(data, loaded_tree);
@@ -51,7 +48,8 @@ namespace realization {
 
             ~Formulation_Manager() = default;
 
-            void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
+            void read(simulation_time_params &simulation_time_config,
+                      geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
                 //TODO seperate the parsing of configuration options like time
                 //and routing and other non feature specific tasks from this main function
                 //which has to iterate the entire hydrofabric.
@@ -75,22 +73,9 @@ namespace realization {
                     global_config = realization::config::Config(*possible_global_config);
                 }
 
-                auto possible_simulation_time = tree.get_child_optional("time");
-
-                if (!possible_simulation_time) {
-                    throw std::runtime_error("ERROR: No simulation time period defined.");
-                }
-                config::Time time = config::Time(*possible_simulation_time);
-                auto simulation_time_config = time.make_params();
-                /**
-                 * Call constructor to construct a Simulation_Time object
-                 */ 
-                this->Simulation_Time_Object = std::make_shared<Simulation_Time>(simulation_time_config);
-
                 /**
                  * Read the layer descriptions
                 */
-
                 // try to get the json node
                 auto layers_json_array = tree.get_child_optional("layers");
                 //Create the default surface layer
@@ -110,10 +95,7 @@ namespace realization {
 
                         // add the layer to storage
                         layer_storage.put_layer(layer_desc, layer_desc.id);
-                        if(layer.has_formulation() && layer.get_domain()=="catchments"){
-                            double c_value = UnitsHelper::get_converted_value(layer_desc.time_step_units,layer_desc.time_step,"s");
-                            // make a new simulation time object with a different output interval
-                            Simulation_Time sim_time(*Simulation_Time_Object, c_value);
+                        if (layer.has_formulation() && layer.get_domain() == "catchments") {
                             domain_formulations.emplace(
                                 layer_desc.id,
                                 construct_formulation_from_config(simulation_time_config,
