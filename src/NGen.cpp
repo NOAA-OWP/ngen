@@ -612,7 +612,7 @@ int main(int argc, char* argv[]) {
     }
 #endif // NGEN_WITH_ROUTING
 
-    auto simulation = std::make_unique<NgenSimulation>(manager,
+    auto simulation = std::make_unique<NgenSimulation>(*sim_time,
                                                        layers,
                                                        std::move(catchment_indexes),
                                                        std::move(nexus_indexes),
@@ -642,7 +642,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     if (manager->get_using_routing()) {
-        simulation->run_routing(features);
+        simulation->run_routing(features, manager->get_t_route_config_file_with_path());
     }
 
     auto time_done_routing = std::chrono::steady_clock::now();
