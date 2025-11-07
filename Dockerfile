@@ -194,7 +194,7 @@ RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
     pip3 install 'bmipy' && \
     pip3 install 'pandas' && \
     pip3 install 'pyyml' && \
-    pip3 install 'torch' 'torchvision' 'torchaudio' && \
+    pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu && \
     pip install /ngen-app/ngen-forcing/
 
 WORKDIR /ngen-app/
