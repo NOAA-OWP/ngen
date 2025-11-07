@@ -119,12 +119,18 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::s
     std::vector<double> *routing_nexus_downflows = &nexus_downstream_flows_;
     std::unordered_map<std::string, int> *routing_nexus_indexes = &nexus_indexes_;
 
+    size_t number_of_timesteps = sim_time_->get_total_output_times();
+    if (nexus_downstream_flows_.size() != number_of_timesteps * nexus_indexes_.size()) {
+        std::string msg = "Routing input data in NgenSimulation::nexus_downstream_flows_ does not reflect a full-duration run";
+        LOG(msg, LogLevel::FATAL);
+        throw std::runtime_error(msg);
+    }
+
 #if NGEN_WITH_MPI
     std::vector<double> all_nexus_downflows;
     std::unordered_map<std::string, int> all_nexus_indexes;
 
     if (mpi_num_procs_ > 1) {
-        int number_of_timesteps = sim_time_->get_total_output_times();
         std::vector<std::string> local_nexus_ids;
         for (const auto& nexus : nexus_indexes_) {
             local_nexus_ids.push_back(nexus.first);
@@ -187,9 +193,7 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::s
         // Note: Currently, delta_time is set in the t-route yaml configuration file, and the
         // number_of_timesteps is determined from the total number of nexus outputs in t-route.
         // It is recommended to still pass these values to the routing_py_adapter object in
-        // case a future implmentation needs these two values from the ngen framework.
-        int number_of_timesteps = sim_time_->get_total_output_times();
-
+        // case a future implementation needs these two values from the ngen framework.
         int delta_time = sim_time_->get_output_interval_seconds();
 
         // model for routing
