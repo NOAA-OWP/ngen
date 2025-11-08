@@ -216,9 +216,9 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::s
 
             // Convert string ID into numbers for T-route index
             int id_as_int = -1;
-            size_t sep_index = key_value.first.find(hy_features::identifiers::seperator);
+            size_t sep_index = key_value.first.find(hy_features::identifiers::separator);
             if (sep_index != std::string::npos) {
-                std::string numbers = key_value.first.substr(sep_index + hy_features::identifiers::seperator.length());
+                std::string numbers = key_value.first.substr(sep_index + hy_features::identifiers::separator.length());
                 id_as_int = std::stoi(numbers);
             }
             if (id_as_int == -1) {
