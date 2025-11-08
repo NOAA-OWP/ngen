@@ -26,7 +26,7 @@ HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_M
 
       for(const auto& feat_idx : network){
         feat_id = network.get_id(feat_idx);//feature->get_id();
-        feat_type = feat_id.substr(0, feat_id.find(hy_features::identifiers::seperator) );
+        feat_type = feat_id.substr(0, feat_id.find(hy_features::identifiers::separator) );
 
         destinations  = network.get_destination_ids(feat_id);
         if(hy_features::identifiers::isCatchment(feat_type))
