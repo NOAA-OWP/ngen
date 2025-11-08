@@ -211,7 +211,7 @@ namespace network {
                         | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
                         | boost::adaptors::filtered([type](std::string const& s) { 
                           //seperate the prefix from the numeric id
-                          std::string id_type = s.substr(0, s.find(hy_features::identifiers::seperator) );
+                          std::string id_type = s.substr(0, s.find(hy_features::identifiers::separator) );
                           //Allow subtypes, e.g. inx, tnx, cnx, to be pass the filter for a generic nexus type
                           if(type == hy_features::identifiers::nexus){
                             return hy_features::identifiers::isNexus(id_type);
@@ -252,7 +252,7 @@ namespace network {
                         | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
                         | boost::adaptors::filtered([this,type,target_layer](std::string const& s) { 
                           //seperate the prefix from the numeric id
-                          std::string id_type = s.substr(0, s.find(hy_features::identifiers::seperator) );
+                          std::string id_type = s.substr(0, s.find(hy_features::identifiers::separator) );
 
                           bool type_matches;
 
