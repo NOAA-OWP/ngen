@@ -7,13 +7,14 @@
 #include "LayerData.hpp"
 #include "Simulation_Time.hpp"
 #include "State_Exception.hpp"
+#include "geojson/FeatureBuilder.hpp"
 #include <boost/core/span.hpp>
 
-#if NGEN_WITH_MPI
-#include "HY_Features_MPI.hpp"
-#else
-#include "HY_Features.hpp"
-#endif
+namespace hy_features
+{
+    class HY_Features;
+    class HY_Features_MPI;
+}
 
 namespace ngen
 {

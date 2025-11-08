@@ -1,5 +1,11 @@
 #include <Layer.hpp>
 
+#if NGEN_WITH_MPI
+#include "HY_Features_MPI.hpp"
+#else
+#include "HY_Features.hpp"
+#endif
+
 void ngen::Layer::update_models(boost::span<double> catchment_outflows,
                                 std::unordered_map<std::string, int> &catchment_indexes,
                                 boost::span<double> nexus_downstream_flows,

@@ -2,6 +2,12 @@
 #include <NGenConfig.h>
 #include <Logger.hpp>
 
+#if NGEN_WITH_MPI
+#include "HY_Features_MPI.hpp"
+#else
+#include "HY_Features.hpp"
+#endif
+
 #if NGEN_WITH_ROUTING
 #include "bmi/Bmi_Py_Adapter.hpp"
 #endif // NGEN_WITH_ROUTING
