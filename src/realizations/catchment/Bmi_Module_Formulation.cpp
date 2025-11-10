@@ -35,10 +35,12 @@ namespace realization {
             }
 
             std::string output_str;
-            for (const std::string& name : get_output_variable_names()) {
-                //Shouldn't be using "m". Should we use get_bmi_model()->GetVarUnits(name)?
+            for (int i = 0; i < get_output_variable_names().size(); ++i) {
+                std::string name = get_output_variable_names()[i];
+                std::string output_units = get_output_variable_units()[i];
+                std::string out_units_norm = (output_units.empty() || output_units == "none") ? "1" : output_units;
                 output_str += (output_str.empty() ? "" : ",") + 
-                std::to_string(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0,0,"m"),MEAN)); 
+                std::to_string(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0,0,output_units),MEAN)); 
             }
             return output_str;
         }

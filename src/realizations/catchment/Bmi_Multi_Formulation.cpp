@@ -365,17 +365,21 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
         output_text_stream->str(std::string());
 
         const std::vector<std::string> &output_var_names = get_output_variable_names();
+        const std::vector<std::string> &output_var_units = get_output_variable_units();
+
         // This almost certainly should never happen, but just to be safe ...
         if (output_var_names.empty()) { return ""; }
-
-        // Do the first separately, without the leading comma
-        *output_text_stream << get_var_value_as_double(0, output_var_names[0]);
-
-        // Do the rest with a leading comma
-        for (int i = 1; i < output_var_names.size(); ++i) {
-            *output_text_stream << delimiter << get_var_value_as_double(0, output_var_names[i]);
+        
+        for (int i = 0; i < output_var_names.size(); ++i) {
+            std::string var_value = std::to_string(get_value(CatchmentAggrDataSelector(get_catchment_id(), output_var_names[i], 0,0,output_var_units[i]),MEAN));    
+            if(i == 0){
+                *output_text_stream << var_value; //without delimiter for first output variable.
+            }
+            else{
+                *output_text_stream << delimiter << var_value; //with delimiter for the rest.
+            }
         }
-        return output_text_stream->str();
+         return output_text_stream->str();
     }
     // Otherwise, use the default behavior, which means we either
     //   - were originally set to use the default of getting the output of the last module
