@@ -13,6 +13,8 @@ var searchData=
   ['nexus_5fremote_5ftest_10',['Nexus_Remote_Test',['../class_nexus___remote___test.html#a84ef792b6f6ec0b55fc6f1a45d969460',1,'Nexus_Remote_Test']]],
   ['nexus_5ftest_11',['Nexus_Test',['../class_nexus___test.html#ab44b788bdf27a20acba375001c999cb0',1,'Nexus_Test']]],
   ['nexuses_12',['nexuses',['../classhy__features_1_1_h_y___features.html#a133814bb22aa41a0ad1827cb68561037',1,'hy_features::HY_Features']]],
-  ['nullforcingprovider_13',['NullForcingProvider',['../class_null_forcing_provider.html#a586f4876aa823dee3c07963f49b2423b',1,'NullForcingProvider']]],
-  ['num_5fcolumns_14',['num_columns',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b',1,'ngen::sqlite::database::iterator']]]
+  ['ngenbmiprotocols_13',['NgenBmiProtocols',['../classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#ac13ed0d829ca9aec2fe298bed3a97e24',1,'models::bmi::protocols::NgenBmiProtocols::NgenBmiProtocols()'],['../classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#acf29428511216939c188402c3841a2b1',1,'models::bmi::protocols::NgenBmiProtocols::NgenBmiProtocols(std::shared_ptr&lt; models::bmi::Bmi_Adapter &gt; model, const geojson::PropertyMap &amp;properties)']]],
+  ['ngenmassbalance_14',['NgenMassBalance',['../classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a942276f6833dfac529000dc902bacca2',1,'models::bmi::protocols::NgenMassBalance::NgenMassBalance(const ModelPtr &amp;model, const Properties &amp;properties)'],['../classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#adaf303401a68e066ddf74e34bb08ace1',1,'models::bmi::protocols::NgenMassBalance::NgenMassBalance()']]],
+  ['nullforcingprovider_15',['NullForcingProvider',['../class_null_forcing_provider.html#a586f4876aa823dee3c07963f49b2423b',1,'NullForcingProvider']]],
+  ['num_5fcolumns_16',['num_columns',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b',1,'ngen::sqlite::database::iterator']]]
 ];

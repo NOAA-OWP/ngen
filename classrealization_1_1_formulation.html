@@ -119,7 +119,7 @@ $(function(){initNavTree('classrealization_1_1_formulation.html',''); initResiza
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classrealization_1_1_formulation__coll__graph.svg" width="186" height="500"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classrealization_1_1_formulation__coll__graph.svg" width="186" height="520"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
@@ -141,6 +141,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6b495fa685dcea07f2b5ca9c41aa76fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cec813cc10759bfb854d0ab0367ebd1" id="r_a2cec813cc10759bfb854d0ab0367ebd1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2cec813cc10759bfb854d0ab0367ebd1">create_formulation</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> properties)=0</td></tr>
 <tr class="separator:a2cec813cc10759bfb854d0ab0367ebd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0cc85bff600c74d7ab3d7a9db96643d" id="r_ab0cc85bff600c74d7ab3d7a9db96643d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0cc85bff600c74d7ab3d7a9db96643d">check_mass_balance</a> (const int &amp;iteration, const int &amp;total_steps, const std::string &amp;timestamp) const =0</td></tr>
+<tr class="separator:ab0cc85bff600c74d7ab3d7a9db96643d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -223,6 +225,42 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab0cc85bff600c74d7ab3d7a9db96643d" name="ab0cc85bff600c74d7ab3d7a9db96643d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0cc85bff600c74d7ab3d7a9db96643d">&#9670;&#160;</a></span>check_mass_balance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void realization::Formulation::check_mass_balance </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>iteration</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>total_steps</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>timestamp</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a53a61d1d8911c96bdb3af81992472dc4">realization::Bmi_Multi_Formulation</a>.</p>
+
+</div>
+</div>
 <a id="a6b495fa685dcea07f2b5ca9c41aa76fc" name="a6b495fa685dcea07f2b5ca9c41aa76fc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6b495fa685dcea07f2b5ca9c41aa76fc">&#9670;&#160;</a></span>create_formulation() <span class="overload">[1/2]</span></h2>
 
@@ -462,7 +500,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_formulation.html">Formulation</a></li>
-    <li class="footer">Generated on Sat Aug 9 2025 18:40:02 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Nov 10 2025 21:43:41 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

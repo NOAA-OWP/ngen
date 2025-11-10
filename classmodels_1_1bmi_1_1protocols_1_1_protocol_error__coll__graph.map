@@ -1,0 +1,9 @@
+<map id="models::bmi::protocols::ProtocolError" name="models::bmi::protocols::ProtocolError">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,265,144,550"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="8,136,98,202"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="60,217,65,265,59,266,55,218"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="123,136,189,202"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="148,203,131,250,126,248,143,201"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="100,5,212,87"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="159,101,159,136,153,136,153,101"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="models::bmi::protocols::Context" name="models::bmi::protocols::Context">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,280,144,382"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="41,136,108,202"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,202,77,264,72,264,72,202"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="18,5,131,87"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="77,101,77,136,72,136,72,101"/>
+</map>

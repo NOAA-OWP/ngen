@@ -37,6 +37,13 @@ var annotated_dup =
     ] ],
     [ "models", "namespacemodels.html", [
       [ "bmi", "namespacemodels_1_1bmi.html", [
+        [ "protocols", "namespacemodels_1_1bmi_1_1protocols.html", [
+          [ "Context", "structmodels_1_1bmi_1_1protocols_1_1_context.html", "structmodels_1_1bmi_1_1protocols_1_1_context" ],
+          [ "NgenBmiProtocol", "classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html", "classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol" ],
+          [ "NgenBmiProtocols", "classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html", "classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols" ],
+          [ "NgenMassBalance", "classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html", "classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance" ],
+          [ "ProtocolError", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error" ]
+        ] ],
         [ "AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter" ],
         [ "Bmi_Adapter", "classmodels_1_1bmi_1_1_bmi___adapter.html", "classmodels_1_1bmi_1_1_bmi___adapter" ],
         [ "Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html", "classmodels_1_1bmi_1_1_bmi___c___adapter" ],
@@ -86,6 +93,13 @@ var annotated_dup =
       [ "mdframe", "classngen_1_1mdframe.html", "classngen_1_1mdframe" ],
       [ "SurfaceLayer", "classngen_1_1_surface_layer.html", "classngen_1_1_surface_layer" ]
     ] ],
+    [ "nonstd", "namespacenonstd.html", [
+      [ "detail", "namespacenonstd_1_1detail.html", [
+        [ "in_place_index_tag", "structnonstd_1_1detail_1_1in__place__index__tag.html", null ],
+        [ "in_place_type_tag", "structnonstd_1_1detail_1_1in__place__type__tag.html", null ]
+      ] ],
+      [ "in_place_t", "structnonstd_1_1in__place__t.html", null ]
+    ] ],
     [ "realization", "namespacerealization.html", [
       [ "config", "namespacerealization_1_1config.html", [
         [ "Config", "structrealization_1_1config_1_1_config.html", "structrealization_1_1config_1_1_config" ],
@@ -104,6 +118,11 @@ var annotated_dup =
       [ "ConfigurationException", "classrealization_1_1_configuration_exception.html", "classrealization_1_1_configuration_exception" ],
       [ "Formulation", "classrealization_1_1_formulation.html", "classrealization_1_1_formulation" ],
       [ "Formulation_Manager", "classrealization_1_1_formulation___manager.html", "classrealization_1_1_formulation___manager" ]
+    ] ],
+    [ "std", "namespacestd.html", [
+      [ "hash< nonstd::expected< T &, E > >", "structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html", "structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4" ],
+      [ "hash< nonstd::expected< T, E > >", "structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_00_01_e_01_4_01_4.html", "structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_00_01_e_01_4_01_4" ],
+      [ "hash< nonstd::expected< void, E > >", "structstd_1_1hash_3_01nonstd_1_1expected_3_01void_00_01_e_01_4_01_4.html", null ]
     ] ],
     [ "utils", "namespaceutils.html", [
       [ "FileChecker", "classutils_1_1_file_checker.html", "classutils_1_1_file_checker" ],

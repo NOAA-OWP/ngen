@@ -23,7 +23,9 @@ var searchData=
   ['stmt_5f_20',['stmt_',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a28564b3455300d38acaba3a70b9f06e6',1,'ngen::sqlite::database::iterator']]],
   ['stored_5fdischarge_21',['stored_discharge',['../class_nexus___remote___test.html#a8ba12946008e2d3cdda67ffa8129cfc0',1,'Nexus_Remote_Test']]],
   ['stored_5flayers_22',['stored_layers',['../classngen_1_1_layer_data_storage.html#a0f3324ac6b9d03817833b09f754bb351',1,'ngen::LayerDataStorage']]],
-  ['sub_5fnetwork_23',['sub_network',['../class_h_y___hydro_network.html#a0de0553c53c7a93eb6d0a4edb42a3c85',1,'HY_HydroNetwork']]],
-  ['summed_5fflows_24',['summed_flows',['../class_h_y___point_hydro_nexus.html#afa54a0484f0f4b1990f88a1a89732a38',1,'HY_PointHydroNexus']]],
-  ['surface_5flayer_25',['SURFACE_LAYER',['../class_h_y___catchment.html#a55f00d5e5a6283c0051e73079335eaf8',1,'HY_Catchment']]]
+  ['stored_5fmass_5fname_23',['STORED_MASS_NAME',['../namespacemodels_1_1bmi_1_1protocols.html#a33953c0ffe885acf27637b67d90abf72',1,'models::bmi::protocols']]],
+  ['sub_5fnetwork_24',['sub_network',['../class_h_y___hydro_network.html#a0de0553c53c7a93eb6d0a4edb42a3c85',1,'HY_HydroNetwork']]],
+  ['summed_5fflows_25',['summed_flows',['../class_h_y___point_hydro_nexus.html#afa54a0484f0f4b1990f88a1a89732a38',1,'HY_PointHydroNexus']]],
+  ['supported_26',['supported',['../classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a43c9f6cc22cc98274d26d55ac5f77b0d',1,'models::bmi::protocols::NgenMassBalance']]],
+  ['surface_5flayer_27',['SURFACE_LAYER',['../class_h_y___catchment.html#a55f00d5e5a6283c0051e73079335eaf8',1,'HY_Catchment']]]
 ];

@@ -1343,6 +1343,82 @@
           <topic label="helper" href="namespacemodels_1_1bmi_1_1helper.html">
             <topic label="make_vector" href="namespacemodels_1_1bmi_1_1helper.html#ae390f681f50fc89690893b76733a88e1"/>
           </topic>
+          <topic label="protocols" href="namespacemodels_1_1bmi_1_1protocols.html">
+            <topic label="Context" href="structmodels_1_1bmi_1_1protocols_1_1_context.html">
+              <topic label="current_time_step" href="structmodels_1_1bmi_1_1protocols_1_1_context.html#aace653cfd38c514210cdd61b218378d8"/>
+              <topic label="id" href="structmodels_1_1bmi_1_1protocols_1_1_context.html#a1e31a50551d4d3c6d3ea67719db8a1bd"/>
+              <topic label="timestamp" href="structmodels_1_1bmi_1_1protocols_1_1_context.html#a67ab38963aa23dc249a409b9ffcec16d"/>
+              <topic label="total_steps" href="structmodels_1_1bmi_1_1protocols_1_1_context.html#a92974f32885c872616b59579ab682e24"/>
+            </topic>
+            <topic label="NgenBmiProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html">
+              <topic label="~NgenBmiProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#ac38bd9b1e5f1fb5062e155caab0f6ad5"/>
+              <topic label="check_support" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#a84d741b66e3a9bb1898e9e3771ead266"/>
+              <topic label="error_or_warning" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#aca11929f23379414c3832821ea76c1ea"/>
+              <topic label="initialize" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#a9074cf912a781a0853674aea5b880f7f"/>
+              <topic label="is_supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#a031dddc337670dc19d19d386e38e1c49"/>
+              <topic label="run" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#ae0d0256860b177262a92569852cdfe4d"/>
+              <topic label="NgenBmiProtocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#ab3d27173cff92a2bce3d00de52db4588"/>
+            </topic>
+            <topic label="NgenBmiProtocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html">
+              <topic label="NgenBmiProtocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#ac13ed0d829ca9aec2fe298bed3a97e24"/>
+              <topic label="NgenBmiProtocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#acf29428511216939c188402c3841a2b1"/>
+              <topic label="run" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#a69fb546446da5929d102ecb276c9ac9d"/>
+              <topic label="model" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#ad8e0eb3e3f86e3e0e0b5dbbc7352ea50"/>
+              <topic label="protocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#ab77f6fa47c05a62ba038210299188ed3"/>
+            </topic>
+            <topic label="NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html">
+              <topic label="NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a942276f6833dfac529000dc902bacca2"/>
+              <topic label="NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#adaf303401a68e066ddf74e34bb08ace1"/>
+              <topic label="~NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a94f2988c778a6e1bf035d3738a16823c"/>
+              <topic label="check_support" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a0f3a680030c5e99d7917077fea0d7369"/>
+              <topic label="error_or_warning" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#aca11929f23379414c3832821ea76c1ea"/>
+              <topic label="initialize" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#ae82d7970700a983977a1753f87f43fdc"/>
+              <topic label="is_supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#aa05dcc8fcf77d85b4aba506c613b9c95"/>
+              <topic label="run" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a1a673a48d66e7bf989e50b2b6e40749d"/>
+              <topic label="check" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a7b916c7ead25199048db9ab54504646b"/>
+              <topic label="frequency" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#ae36ebcec6ab68d031c47fada53f73cf0"/>
+              <topic label="is_fatal" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a1eebe6b07794a906741024418e632249"/>
+              <topic label="supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a43c9f6cc22cc98274d26d55ac5f77b0d"/>
+              <topic label="tolerance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a6d607110426777fdf2c9fc1b539da10d"/>
+            </topic>
+            <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html">
+              <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a919f2c7bbb142675eb33a732344e1fa9"/>
+              <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aaa6a3dcc61eb991e745c46ea4e9c0989"/>
+              <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#ad28c9eb5288cbfb034561a7c72785926"/>
+              <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#ae9cb8bac7c925ac057819eaef1843594"/>
+              <topic label="~ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#afb080ed99f118e6d5cac63c630810c50"/>
+              <topic label="error_code" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aa4081c2fbcf40910ea4c442cc3f21a98"/>
+              <topic label="get_message" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#ae462dffe5a8eb15125c4b506e0944de7"/>
+              <topic label="operator=" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#adfa25eef83ce8f2ffac9df8b7d5ae7e7"/>
+              <topic label="operator=" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aa89e744056d1484dc546d1fe708e8892"/>
+              <topic label="to_string" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aefff4e7722bc069b1a8448dbbc3df53f"/>
+              <topic label="what" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aa37143293db6aa4026694bc1b66b7ff9"/>
+              <topic label="err" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a7ba147cb28f4211d2e64919808f9288a"/>
+              <topic label="message" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a15bf04e5f1a956636bc07166ff872f08"/>
+            </topic>
+            <topic label="ModelPtr" href="namespacemodels_1_1bmi_1_1protocols.html#a3d6ae38d015b690b5b0fdb0a4e0cc6b2"/>
+            <topic label="Properties" href="namespacemodels_1_1bmi_1_1protocols.html#a5405ec54d1c5f12a71a36ddd4639fdb1"/>
+            <topic label="Error" href="namespacemodels_1_1bmi_1_1protocols.html#aa0aa8e7c2fca284c07c66b6186d9fb93">
+              <topic label="UNITIALIZED_MODEL" href="namespacemodels_1_1bmi_1_1protocols.html#aa0aa8e7c2fca284c07c66b6186d9fb93a7388d2f530d3c4a5d519e4b7c65d3a43"/>
+              <topic label="UNSUPPORTED_PROTOCOL" href="namespacemodels_1_1bmi_1_1protocols.html#aa0aa8e7c2fca284c07c66b6186d9fb93a735c3d53d46c84c25dc772162b02ca6c"/>
+              <topic label="INTEGRATION_ERROR" href="namespacemodels_1_1bmi_1_1protocols.html#aa0aa8e7c2fca284c07c66b6186d9fb93a350b47a37214a6d35055db245ae8dcb3"/>
+              <topic label="PROTOCOL_ERROR" href="namespacemodels_1_1bmi_1_1protocols.html#aa0aa8e7c2fca284c07c66b6186d9fb93a23f149f0f9ae9ed9e0119e7209178a5d"/>
+              <topic label="PROTOCOL_WARNING" href="namespacemodels_1_1bmi_1_1protocols.html#aa0aa8e7c2fca284c07c66b6186d9fb93adaaccf134fbc0347bd4c7cb4f4c69e8b"/>
+            </topic>
+            <topic label="Protocol" href="namespacemodels_1_1bmi_1_1protocols.html#a39a83dd4438899d0ebd1db814fe5a02d">
+              <topic label="MASS_BALANCE" href="namespacemodels_1_1bmi_1_1protocols.html#a39a83dd4438899d0ebd1db814fe5a02da901d3c007f56dd095ef89db62a0d3731"/>
+            </topic>
+            <topic label="operator&lt;&lt;" href="namespacemodels_1_1bmi_1_1protocols.html#acace047a630fa3bc0afae145767a6680"/>
+            <topic label="CHECK_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#a2f4f0f2ecbe01aa6add2a542c1b6e233"/>
+            <topic label="CONFIGURATION_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#a924285549e386073adb56d65af2c599a"/>
+            <topic label="FATAL_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#a90c856a194aff973ac83a03aebe4b94d"/>
+            <topic label="FREQUENCY_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#a0d2708045fe54054be425ef0696205b6"/>
+            <topic label="INPUT_MASS_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#aaa1dd08488543edd9137a624bb529fd8"/>
+            <topic label="LEAKED_MASS_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#a3ab87da893c45d154218c925d01037b0"/>
+            <topic label="OUTPUT_MASS_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#a7762c6b1a0dfecc668efd45d6383381b"/>
+            <topic label="STORED_MASS_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#a33953c0ffe885acf27637b67d90abf72"/>
+            <topic label="TOLERANCE_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#ac72387c92378a1dd2554c738b530b08a"/>
+          </topic>
           <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">
             <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad6ea3fcd5981c704fe75093a440f844e"/>
             <topic label="~AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2acdb60b764e84ddcb0426a5aa4c82e6"/>
@@ -2064,6 +2140,17 @@
         <topic label="cartesian_indices" href="namespacengen.html#a2058d2d378fb0c46a66cbd95f49c4d6d"/>
         <topic label="cartesian_indices_recurse" href="namespacengen.html#ad51f53c85438741923d4d083365d6bbf"/>
       </topic>
+      <topic label="nonstd" href="namespacenonstd.html">
+        <topic label="detail" href="namespacenonstd_1_1detail.html">
+          <topic label="in_place_index_tag" href="structnonstd_1_1detail_1_1in__place__index__tag.html"/>
+          <topic label="in_place_type_tag" href="structnonstd_1_1detail_1_1in__place__type__tag.html"/>
+        </topic>
+        <topic label="in_place_t" href="structnonstd_1_1in__place__t.html"/>
+        <topic label="in_place" href="namespacenonstd.html#ac1850ddd40883b56d7fe28c0ae5eb587"/>
+        <topic label="in_place" href="namespacenonstd.html#a96e472c904d9595347fc5879b10e18b8"/>
+        <topic label="in_place_index" href="namespacenonstd.html#a38c05903bf80bd5ecd208257f29cb2d2"/>
+        <topic label="in_place_type" href="namespacenonstd.html#a2a59d6fa28e70ecc47a3bc1fa3fc567a"/>
+      </topic>
       <topic label="realization" href="namespacerealization.html">
         <topic label="config" href="namespacerealization_1_1config.html">
           <topic label="Config" href="structrealization_1_1config_1_1_config.html">
@@ -2116,6 +2203,7 @@
           <topic label="selection_type" href="classrealization_1_1_bmi___c___formulation.html#ab0b1614239c57ead01efc4f45bf7d719"/>
           <topic label="time_step_t" href="classrealization_1_1_bmi___c___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_C_Formulation" href="classrealization_1_1_bmi___c___formulation.html#afb7f4b7f7d8e5b3f636a059181e1a521"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_bmi___c___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___c___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___c___formulation.html#a916aba6fc1f5e4d95c9fcd3f234a5bf0"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___c___formulation.html#a029185f64f954471018b5b5c63cae3b8"/>
@@ -2192,6 +2280,7 @@
           <topic label="bmi_model" href="classrealization_1_1_bmi___c___formulation.html#a1e2d487c21e9540b0cbf36b6e3858cd0"/>
           <topic label="bmi_model_start_time_forcing_offset_s" href="classrealization_1_1_bmi___c___formulation.html#af5408b660a5caba226b7493698d95a1a"/>
           <topic label="bmi_model_time_step_fixed" href="classrealization_1_1_bmi___c___formulation.html#a198b67353fd78fe7a9d1f34d09061944"/>
+          <topic label="bmi_protocols" href="classrealization_1_1_bmi___c___formulation.html#aed9f477812f35c9b954bce2cc57d4eef"/>
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___c___formulation.html#a1a20278de5cf4688c31c4ffff1e97f74"/>
           <topic label="bounds" href="classrealization_1_1_bmi___c___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___c___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
@@ -2218,6 +2307,7 @@
           <topic label="selection_type" href="classrealization_1_1_bmi___cpp___formulation.html#ab0b1614239c57ead01efc4f45bf7d719"/>
           <topic label="time_step_t" href="classrealization_1_1_bmi___cpp___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_Cpp_Formulation" href="classrealization_1_1_bmi___cpp___formulation.html#ac236d280681cc9a31053f505a562d087"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_bmi___cpp___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___cpp___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___cpp___formulation.html#a6b4dbeb33e8d3c85ad89d7555dfeb9b3"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___cpp___formulation.html#a6b136f45d5a43bbb0ed672203bf56bcb"/>
@@ -2293,6 +2383,7 @@
           <topic label="bmi_model" href="classrealization_1_1_bmi___cpp___formulation.html#a1e2d487c21e9540b0cbf36b6e3858cd0"/>
           <topic label="bmi_model_start_time_forcing_offset_s" href="classrealization_1_1_bmi___cpp___formulation.html#af5408b660a5caba226b7493698d95a1a"/>
           <topic label="bmi_model_time_step_fixed" href="classrealization_1_1_bmi___cpp___formulation.html#a198b67353fd78fe7a9d1f34d09061944"/>
+          <topic label="bmi_protocols" href="classrealization_1_1_bmi___cpp___formulation.html#aed9f477812f35c9b954bce2cc57d4eef"/>
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___cpp___formulation.html#a1a20278de5cf4688c31c4ffff1e97f74"/>
           <topic label="bounds" href="classrealization_1_1_bmi___cpp___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___cpp___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
@@ -2320,6 +2411,7 @@
           <topic label="time_step_t" href="classrealization_1_1_bmi___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html#ad23e2ac461a34855b320e2c81cc1e2f6"/>
           <topic label="~Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html#af04ef53959ce9c63da57f1f767740401"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_bmi___formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___formulation.html#a93fab1a9af5c9d1917219528bec89894"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___formulation.html#a4fb8ec9b08820c29d88627ee9781d579"/>
@@ -2392,6 +2484,7 @@
           <topic label="time_step_t" href="classrealization_1_1_bmi___module___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_Module_Formulation" href="classrealization_1_1_bmi___module___formulation.html#a0d0a4a7d1392c8a2f705dfad175be7c4"/>
           <topic label="~Bmi_Module_Formulation" href="classrealization_1_1_bmi___module___formulation.html#af4f6d7edfdca22867e9982ce5577978b"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_bmi___module___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___module___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___module___formulation.html#a87b70a39f69a823f26f752f6e53c3363"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___module___formulation.html#a93fab1a9af5c9d1917219528bec89894"/>
@@ -2470,6 +2563,7 @@
           <topic label="bmi_model" href="classrealization_1_1_bmi___module___formulation.html#a1e2d487c21e9540b0cbf36b6e3858cd0"/>
           <topic label="bmi_model_start_time_forcing_offset_s" href="classrealization_1_1_bmi___module___formulation.html#af5408b660a5caba226b7493698d95a1a"/>
           <topic label="bmi_model_time_step_fixed" href="classrealization_1_1_bmi___module___formulation.html#a198b67353fd78fe7a9d1f34d09061944"/>
+          <topic label="bmi_protocols" href="classrealization_1_1_bmi___module___formulation.html#aed9f477812f35c9b954bce2cc57d4eef"/>
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___module___formulation.html#a1a20278de5cf4688c31c4ffff1e97f74"/>
           <topic label="bounds" href="classrealization_1_1_bmi___module___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___module___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
@@ -2499,6 +2593,7 @@
           <topic label="time_step_t" href="classrealization_1_1_bmi___multi___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#ac9bb1832ccd12b587a4fb8516d126379"/>
           <topic label="~Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#a6ef8f446a1fcece399fb72532e854363"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_bmi___multi___formulation.html#a53a61d1d8911c96bdb3af81992472dc4"/>
           <topic label="check_output_var_names" href="classrealization_1_1_bmi___multi___formulation.html#a5663cca69cb8f68f38899a031a19fc43"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___multi___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___multi___formulation.html#ae867f9a3aa14a30541162165066faaf8"/>
@@ -2597,6 +2692,7 @@
           <topic label="Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#a0ef879abdc4b2e6a9ecc8b2d5bf2bafb"/>
           <topic label="Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#ae20086b1dc436b0a42f149b3d9de1009"/>
           <topic label="~Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#ab1efe9c78511cf0cc5d9b79dc99e9881"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_catchment___formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_catchment___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="create_formulation" href="classrealization_1_1_catchment___formulation.html#a4fb8ec9b08820c29d88627ee9781d579"/>
           <topic label="create_formulation" href="classrealization_1_1_catchment___formulation.html#a2a2ac83503092d24da0ee4e4c6eeaa25"/>
@@ -2633,6 +2729,7 @@
           <topic label="time_step_t" href="classrealization_1_1_formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Formulation" href="classrealization_1_1_formulation.html#a3a5a0e33ca89dac2153a988eecc1d4c2"/>
           <topic label="~Formulation" href="classrealization_1_1_formulation.html#a2a5e659ff09f6851836bd3a249edd7cc"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d"/>
           <topic label="create_formulation" href="classrealization_1_1_formulation.html#a6b495fa685dcea07f2b5ca9c41aa76fc"/>
           <topic label="create_formulation" href="classrealization_1_1_formulation.html#a2cec813cc10759bfb854d0ab0367ebd1"/>
           <topic label="get_formulation_type" href="classrealization_1_1_formulation.html#a224466bc8464766b40109ce929143d86"/>
@@ -2687,6 +2784,19 @@
         <topic label="is_var_name_in_collection" href="namespacerealization.html#a0dcefe582566b875b127ff489f423300"/>
         <topic label="valid_formulation_keys" href="namespacerealization.html#a6b6d6d33a273c0a3de61473e05881ef6"/>
         <topic label="formulations" href="namespacerealization.html#a64fd571493f5bc103daa302fcfbd30f9"/>
+      </topic>
+      <topic label="std" href="namespacestd.html">
+        <topic label="hash&lt; nonstd::expected&lt; T &amp;, E &gt; &gt;" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html">
+          <topic label="argument_type" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html#a1a157479d41b7cd0d185315998736930"/>
+          <topic label="result_type" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html#a50f27ce7531ba9f077fbff6d7d711d11"/>
+          <topic label="operator()" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html#aefb1e2b644430f7c9dc406828d3db766"/>
+        </topic>
+        <topic label="hash&lt; nonstd::expected&lt; T, E &gt; &gt;" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_00_01_e_01_4_01_4.html">
+          <topic label="argument_type" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_00_01_e_01_4_01_4.html#ad644057bc98e61d9ba22a449bf031fdb"/>
+          <topic label="result_type" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_00_01_e_01_4_01_4.html#a9cc625af343f6fce08adf9e671e02a2b"/>
+          <topic label="operator()" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_00_01_e_01_4_01_4.html#ad9415e2ba32a1876fb9f981ff590afa0"/>
+        </topic>
+        <topic label="hash&lt; nonstd::expected&lt; void, E &gt; &gt;" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01void_00_01_e_01_4_01_4.html"/>
       </topic>
       <topic label="utils" href="namespaceutils.html">
         <topic label="FileChecker" href="classutils_1_1_file_checker.html">
@@ -3574,6 +3684,60 @@
       </topic>
       <topic label="models" href="namespacemodels.html">
         <topic label="bmi" href="namespacemodels_1_1bmi.html">
+          <topic label="protocols" href="namespacemodels_1_1bmi_1_1protocols.html">
+            <topic label="Context" href="structmodels_1_1bmi_1_1protocols_1_1_context.html">
+              <topic label="current_time_step" href="structmodels_1_1bmi_1_1protocols_1_1_context.html#aace653cfd38c514210cdd61b218378d8"/>
+              <topic label="id" href="structmodels_1_1bmi_1_1protocols_1_1_context.html#a1e31a50551d4d3c6d3ea67719db8a1bd"/>
+              <topic label="timestamp" href="structmodels_1_1bmi_1_1protocols_1_1_context.html#a67ab38963aa23dc249a409b9ffcec16d"/>
+              <topic label="total_steps" href="structmodels_1_1bmi_1_1protocols_1_1_context.html#a92974f32885c872616b59579ab682e24"/>
+            </topic>
+            <topic label="NgenBmiProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html">
+              <topic label="~NgenBmiProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#ac38bd9b1e5f1fb5062e155caab0f6ad5"/>
+              <topic label="check_support" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#a84d741b66e3a9bb1898e9e3771ead266"/>
+              <topic label="error_or_warning" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#aca11929f23379414c3832821ea76c1ea"/>
+              <topic label="initialize" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#a9074cf912a781a0853674aea5b880f7f"/>
+              <topic label="is_supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#a031dddc337670dc19d19d386e38e1c49"/>
+              <topic label="run" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#ae0d0256860b177262a92569852cdfe4d"/>
+              <topic label="NgenBmiProtocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#ab3d27173cff92a2bce3d00de52db4588"/>
+            </topic>
+            <topic label="NgenBmiProtocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html">
+              <topic label="NgenBmiProtocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#ac13ed0d829ca9aec2fe298bed3a97e24"/>
+              <topic label="NgenBmiProtocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#acf29428511216939c188402c3841a2b1"/>
+              <topic label="run" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#a69fb546446da5929d102ecb276c9ac9d"/>
+              <topic label="model" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#ad8e0eb3e3f86e3e0e0b5dbbc7352ea50"/>
+              <topic label="protocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#ab77f6fa47c05a62ba038210299188ed3"/>
+            </topic>
+            <topic label="NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html">
+              <topic label="NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a942276f6833dfac529000dc902bacca2"/>
+              <topic label="NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#adaf303401a68e066ddf74e34bb08ace1"/>
+              <topic label="~NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a94f2988c778a6e1bf035d3738a16823c"/>
+              <topic label="check_support" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a0f3a680030c5e99d7917077fea0d7369"/>
+              <topic label="error_or_warning" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#aca11929f23379414c3832821ea76c1ea"/>
+              <topic label="initialize" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#ae82d7970700a983977a1753f87f43fdc"/>
+              <topic label="is_supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#aa05dcc8fcf77d85b4aba506c613b9c95"/>
+              <topic label="run" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a1a673a48d66e7bf989e50b2b6e40749d"/>
+              <topic label="check" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a7b916c7ead25199048db9ab54504646b"/>
+              <topic label="frequency" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#ae36ebcec6ab68d031c47fada53f73cf0"/>
+              <topic label="is_fatal" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a1eebe6b07794a906741024418e632249"/>
+              <topic label="supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a43c9f6cc22cc98274d26d55ac5f77b0d"/>
+              <topic label="tolerance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a6d607110426777fdf2c9fc1b539da10d"/>
+            </topic>
+            <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html">
+              <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a919f2c7bbb142675eb33a732344e1fa9"/>
+              <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aaa6a3dcc61eb991e745c46ea4e9c0989"/>
+              <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#ad28c9eb5288cbfb034561a7c72785926"/>
+              <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#ae9cb8bac7c925ac057819eaef1843594"/>
+              <topic label="~ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#afb080ed99f118e6d5cac63c630810c50"/>
+              <topic label="error_code" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aa4081c2fbcf40910ea4c442cc3f21a98"/>
+              <topic label="get_message" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#ae462dffe5a8eb15125c4b506e0944de7"/>
+              <topic label="operator=" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#adfa25eef83ce8f2ffac9df8b7d5ae7e7"/>
+              <topic label="operator=" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aa89e744056d1484dc546d1fe708e8892"/>
+              <topic label="to_string" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aefff4e7722bc069b1a8448dbbc3df53f"/>
+              <topic label="what" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aa37143293db6aa4026694bc1b66b7ff9"/>
+              <topic label="err" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a7ba147cb28f4211d2e64919808f9288a"/>
+              <topic label="message" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a15bf04e5f1a956636bc07166ff872f08"/>
+            </topic>
+          </topic>
           <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">
             <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad6ea3fcd5981c704fe75093a440f844e"/>
             <topic label="~AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2acdb60b764e84ddcb0426a5aa4c82e6"/>
@@ -4254,6 +4418,13 @@
           <topic label="simulation_time" href="classngen_1_1_surface_layer.html#a96c3fed503f10d2b2f9ab00c229a5b91"/>
         </topic>
       </topic>
+      <topic label="nonstd" href="namespacenonstd.html">
+        <topic label="detail" href="namespacenonstd_1_1detail.html">
+          <topic label="in_place_index_tag" href="structnonstd_1_1detail_1_1in__place__index__tag.html"/>
+          <topic label="in_place_type_tag" href="structnonstd_1_1detail_1_1in__place__type__tag.html"/>
+        </topic>
+        <topic label="in_place_t" href="structnonstd_1_1in__place__t.html"/>
+      </topic>
       <topic label="realization" href="namespacerealization.html">
         <topic label="config" href="namespacerealization_1_1config.html">
           <topic label="Config" href="structrealization_1_1config_1_1_config.html">
@@ -4305,6 +4476,7 @@
           <topic label="selection_type" href="classrealization_1_1_bmi___c___formulation.html#ab0b1614239c57ead01efc4f45bf7d719"/>
           <topic label="time_step_t" href="classrealization_1_1_bmi___c___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_C_Formulation" href="classrealization_1_1_bmi___c___formulation.html#afb7f4b7f7d8e5b3f636a059181e1a521"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_bmi___c___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___c___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___c___formulation.html#a916aba6fc1f5e4d95c9fcd3f234a5bf0"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___c___formulation.html#a029185f64f954471018b5b5c63cae3b8"/>
@@ -4381,6 +4553,7 @@
           <topic label="bmi_model" href="classrealization_1_1_bmi___c___formulation.html#a1e2d487c21e9540b0cbf36b6e3858cd0"/>
           <topic label="bmi_model_start_time_forcing_offset_s" href="classrealization_1_1_bmi___c___formulation.html#af5408b660a5caba226b7493698d95a1a"/>
           <topic label="bmi_model_time_step_fixed" href="classrealization_1_1_bmi___c___formulation.html#a198b67353fd78fe7a9d1f34d09061944"/>
+          <topic label="bmi_protocols" href="classrealization_1_1_bmi___c___formulation.html#aed9f477812f35c9b954bce2cc57d4eef"/>
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___c___formulation.html#a1a20278de5cf4688c31c4ffff1e97f74"/>
           <topic label="bounds" href="classrealization_1_1_bmi___c___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___c___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
@@ -4407,6 +4580,7 @@
           <topic label="selection_type" href="classrealization_1_1_bmi___cpp___formulation.html#ab0b1614239c57ead01efc4f45bf7d719"/>
           <topic label="time_step_t" href="classrealization_1_1_bmi___cpp___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_Cpp_Formulation" href="classrealization_1_1_bmi___cpp___formulation.html#ac236d280681cc9a31053f505a562d087"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_bmi___cpp___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___cpp___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___cpp___formulation.html#a6b4dbeb33e8d3c85ad89d7555dfeb9b3"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___cpp___formulation.html#a6b136f45d5a43bbb0ed672203bf56bcb"/>
@@ -4482,6 +4656,7 @@
           <topic label="bmi_model" href="classrealization_1_1_bmi___cpp___formulation.html#a1e2d487c21e9540b0cbf36b6e3858cd0"/>
           <topic label="bmi_model_start_time_forcing_offset_s" href="classrealization_1_1_bmi___cpp___formulation.html#af5408b660a5caba226b7493698d95a1a"/>
           <topic label="bmi_model_time_step_fixed" href="classrealization_1_1_bmi___cpp___formulation.html#a198b67353fd78fe7a9d1f34d09061944"/>
+          <topic label="bmi_protocols" href="classrealization_1_1_bmi___cpp___formulation.html#aed9f477812f35c9b954bce2cc57d4eef"/>
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___cpp___formulation.html#a1a20278de5cf4688c31c4ffff1e97f74"/>
           <topic label="bounds" href="classrealization_1_1_bmi___cpp___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___cpp___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
@@ -4509,6 +4684,7 @@
           <topic label="time_step_t" href="classrealization_1_1_bmi___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html#ad23e2ac461a34855b320e2c81cc1e2f6"/>
           <topic label="~Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html#af04ef53959ce9c63da57f1f767740401"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_bmi___formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___formulation.html#a93fab1a9af5c9d1917219528bec89894"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___formulation.html#a4fb8ec9b08820c29d88627ee9781d579"/>
@@ -4581,6 +4757,7 @@
           <topic label="time_step_t" href="classrealization_1_1_bmi___module___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_Module_Formulation" href="classrealization_1_1_bmi___module___formulation.html#a0d0a4a7d1392c8a2f705dfad175be7c4"/>
           <topic label="~Bmi_Module_Formulation" href="classrealization_1_1_bmi___module___formulation.html#af4f6d7edfdca22867e9982ce5577978b"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_bmi___module___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___module___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___module___formulation.html#a87b70a39f69a823f26f752f6e53c3363"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___module___formulation.html#a93fab1a9af5c9d1917219528bec89894"/>
@@ -4659,6 +4836,7 @@
           <topic label="bmi_model" href="classrealization_1_1_bmi___module___formulation.html#a1e2d487c21e9540b0cbf36b6e3858cd0"/>
           <topic label="bmi_model_start_time_forcing_offset_s" href="classrealization_1_1_bmi___module___formulation.html#af5408b660a5caba226b7493698d95a1a"/>
           <topic label="bmi_model_time_step_fixed" href="classrealization_1_1_bmi___module___formulation.html#a198b67353fd78fe7a9d1f34d09061944"/>
+          <topic label="bmi_protocols" href="classrealization_1_1_bmi___module___formulation.html#aed9f477812f35c9b954bce2cc57d4eef"/>
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___module___formulation.html#a1a20278de5cf4688c31c4ffff1e97f74"/>
           <topic label="bounds" href="classrealization_1_1_bmi___module___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___module___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
@@ -4688,6 +4866,7 @@
           <topic label="time_step_t" href="classrealization_1_1_bmi___multi___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#ac9bb1832ccd12b587a4fb8516d126379"/>
           <topic label="~Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#a6ef8f446a1fcece399fb72532e854363"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_bmi___multi___formulation.html#a53a61d1d8911c96bdb3af81992472dc4"/>
           <topic label="check_output_var_names" href="classrealization_1_1_bmi___multi___formulation.html#a5663cca69cb8f68f38899a031a19fc43"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___multi___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___multi___formulation.html#ae867f9a3aa14a30541162165066faaf8"/>
@@ -4786,6 +4965,7 @@
           <topic label="Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#a0ef879abdc4b2e6a9ecc8b2d5bf2bafb"/>
           <topic label="Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#ae20086b1dc436b0a42f149b3d9de1009"/>
           <topic label="~Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#ab1efe9c78511cf0cc5d9b79dc99e9881"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_catchment___formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_catchment___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="create_formulation" href="classrealization_1_1_catchment___formulation.html#a4fb8ec9b08820c29d88627ee9781d579"/>
           <topic label="create_formulation" href="classrealization_1_1_catchment___formulation.html#a2a2ac83503092d24da0ee4e4c6eeaa25"/>
@@ -4822,6 +5002,7 @@
           <topic label="time_step_t" href="classrealization_1_1_formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Formulation" href="classrealization_1_1_formulation.html#a3a5a0e33ca89dac2153a988eecc1d4c2"/>
           <topic label="~Formulation" href="classrealization_1_1_formulation.html#a2a5e659ff09f6851836bd3a249edd7cc"/>
+          <topic label="check_mass_balance" href="classrealization_1_1_formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d"/>
           <topic label="create_formulation" href="classrealization_1_1_formulation.html#a6b495fa685dcea07f2b5ca9c41aa76fc"/>
           <topic label="create_formulation" href="classrealization_1_1_formulation.html#a2cec813cc10759bfb854d0ab0367ebd1"/>
           <topic label="get_formulation_type" href="classrealization_1_1_formulation.html#a224466bc8464766b40109ce929143d86"/>
@@ -4865,6 +5046,19 @@
           <topic label="tree" href="classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39"/>
           <topic label="using_routing" href="classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b"/>
         </topic>
+      </topic>
+      <topic label="std" href="namespacestd.html">
+        <topic label="hash&lt; nonstd::expected&lt; T &amp;, E &gt; &gt;" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html">
+          <topic label="argument_type" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html#a1a157479d41b7cd0d185315998736930"/>
+          <topic label="result_type" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html#a50f27ce7531ba9f077fbff6d7d711d11"/>
+          <topic label="operator()" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html#aefb1e2b644430f7c9dc406828d3db766"/>
+        </topic>
+        <topic label="hash&lt; nonstd::expected&lt; T, E &gt; &gt;" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_00_01_e_01_4_01_4.html">
+          <topic label="argument_type" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_00_01_e_01_4_01_4.html#ad644057bc98e61d9ba22a449bf031fdb"/>
+          <topic label="result_type" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_00_01_e_01_4_01_4.html#a9cc625af343f6fce08adf9e671e02a2b"/>
+          <topic label="operator()" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_00_01_e_01_4_01_4.html#ad9415e2ba32a1876fb9f981ff590afa0"/>
+        </topic>
+        <topic label="hash&lt; nonstd::expected&lt; void, E &gt; &gt;" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01void_00_01_e_01_4_01_4.html"/>
       </topic>
       <topic label="utils" href="namespaceutils.html">
         <topic label="FileChecker" href="classutils_1_1_file_checker.html">
@@ -5704,6 +5898,11 @@
       <topic label="HY_HydroNexus" href="class_h_y___hydro_nexus.html">
         <topic label="HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html"/>
       </topic>
+      <topic label="models::bmi::protocols::Context" href="structmodels_1_1bmi_1_1protocols_1_1_context.html"/>
+      <topic label="models::bmi::protocols::NgenBmiProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html">
+        <topic label="models::bmi::protocols::NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html"/>
+      </topic>
+      <topic label="models::bmi::protocols::NgenBmiProtocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html"/>
       <topic label="network::Network" href="classnetwork_1_1_network.html"/>
       <topic label="network::VertexProperty" href="structnetwork_1_1_vertex_property.html"/>
       <topic label="Network_Test" href="class_network___test.html">
@@ -5730,6 +5929,9 @@
       <topic label="ngen::srs::epsg" href="structngen_1_1srs_1_1epsg.html"/>
       <topic label="ngen::traits::bool_pack&lt;... &gt;" href="structngen_1_1traits_1_1bool__pack.html"/>
       <topic label="ngen::traits::type_list&lt; Ts &gt;" href="structngen_1_1traits_1_1type__list.html"/>
+      <topic label="nonstd::detail::in_place_index_tag&lt; K &gt;" href="structnonstd_1_1detail_1_1in__place__index__tag.html"/>
+      <topic label="nonstd::detail::in_place_type_tag&lt; T &gt;" href="structnonstd_1_1detail_1_1in__place__type__tag.html"/>
+      <topic label="nonstd::in_place_t" href="structnonstd_1_1in__place__t.html"/>
       <topic label="Partition_One" href="class_partition___one.html"/>
       <topic label="PartitionData" href="struct_partition_data.html"/>
       <topic label="Partitions_Parser" href="class_partitions___parser.html"/>
@@ -5753,6 +5955,7 @@
         <topic label="external::ExternalIntegrationException" href="classexternal_1_1_external_integration_exception.html"/>
         <topic label="invalid_downstream_request" href="structinvalid__downstream__request.html"/>
         <topic label="invalid_time_step" href="structinvalid__time__step.html"/>
+        <topic label="models::bmi::protocols::ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html"/>
         <topic label="models::external::State_Exception" href="classmodels_1_1external_1_1_state___exception.html"/>
         <topic label="realization::ConfigurationException" href="classrealization_1_1_configuration_exception.html"/>
         <topic label="request_from_empty_nexus" href="structrequest__from__empty__nexus.html"/>
@@ -5760,6 +5963,9 @@
           <topic label="ngen::sqlite::sqlite_error" href="structngen_1_1sqlite_1_1sqlite__error.html"/>
         </topic>
       </topic>
+      <topic label="std::hash&lt; nonstd::expected&lt; T &amp;, E &gt; &gt;" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html"/>
+      <topic label="std::hash&lt; nonstd::expected&lt; T, E &gt; &gt;" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_00_01_e_01_4_01_4.html"/>
+      <topic label="std::hash&lt; nonstd::expected&lt; void, E &gt; &gt;" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01void_00_01_e_01_4_01_4.html"/>
       <topic label="testing::Test">
         <topic label="FeatureCollection_Test" href="class_feature_collection___test.html"/>
         <topic label="Feature_Test" href="class_feature___test.html"/>

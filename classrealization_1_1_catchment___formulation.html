@@ -159,6 +159,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a224466bc8464766b40109ce929143d86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02267e0cc9fec2e1d883f55c2c12b39d" id="r_a02267e0cc9fec2e1d883f55c2c12b39d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d">get_id</a> () const</td></tr>
 <tr class="separator:a02267e0cc9fec2e1d883f55c2c12b39d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0cc85bff600c74d7ab3d7a9db96643d" id="r_ab0cc85bff600c74d7ab3d7a9db96643d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d">check_mass_balance</a> (const int &amp;iteration, const int &amp;total_steps, const std::string &amp;timestamp) const =0</td></tr>
+<tr class="separator:ab0cc85bff600c74d7ab3d7a9db96643d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d02de255937deb8f6169ef20f5a07d6" id="r_a9d02de255937deb8f6169ef20f5a07d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_area.html#a9d02de255937deb8f6169ef20f5a07d6">set_output_stream</a> (std::string file_path)</td></tr>
 <tr class="separator:a9d02de255937deb8f6169ef20f5a07d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa989be0629ecaa29a2410f7588404ff9" id="r_aa989be0629ecaa29a2410f7588404ff9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_area.html#aa989be0629ecaa29a2410f7588404ff9">write_output</a> (std::string out)</td></tr>
@@ -314,6 +316,42 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab0cc85bff600c74d7ab3d7a9db96643d" name="ab0cc85bff600c74d7ab3d7a9db96643d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0cc85bff600c74d7ab3d7a9db96643d">&#9670;&#160;</a></span>check_mass_balance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void realization::Formulation::check_mass_balance </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>iteration</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>total_steps</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>timestamp</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a53a61d1d8911c96bdb3af81992472dc4">realization::Bmi_Multi_Formulation</a>.</p>
+
+</div>
+</div>
 <a id="a17f32257b65c7930f8b3570ab43fd58c" name="a17f32257b65c7930f8b3570ab43fd58c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a17f32257b65c7930f8b3570ab43fd58c">&#9670;&#160;</a></span>config_pattern_substitution()</h2>
 
@@ -1024,7 +1062,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a></li>
-    <li class="footer">Generated on Sat Aug 9 2025 18:40:02 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Nov 10 2025 21:43:41 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

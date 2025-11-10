@@ -4,6 +4,7 @@ var classrealization_1_1_catchment___formulation =
     [ "Catchment_Formulation", "classrealization_1_1_catchment___formulation.html#a0ef879abdc4b2e6a9ecc8b2d5bf2bafb", null ],
     [ "Catchment_Formulation", "classrealization_1_1_catchment___formulation.html#ae20086b1dc436b0a42f149b3d9de1009", null ],
     [ "~Catchment_Formulation", "classrealization_1_1_catchment___formulation.html#ab1efe9c78511cf0cc5d9b79dc99e9881", null ],
+    [ "check_mass_balance", "classrealization_1_1_catchment___formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d", null ],
     [ "config_pattern_substitution", "classrealization_1_1_catchment___formulation.html#a17f32257b65c7930f8b3570ab43fd58c", null ],
     [ "create_formulation", "classrealization_1_1_catchment___formulation.html#a4fb8ec9b08820c29d88627ee9781d579", null ],
     [ "create_formulation", "classrealization_1_1_catchment___formulation.html#a2a2ac83503092d24da0ee4e4c6eeaa25", null ],

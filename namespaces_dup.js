@@ -15,6 +15,8 @@ var namespaces_dup =
     [ "models", "namespacemodels.html", "namespacemodels" ],
     [ "network", "namespacenetwork.html", "namespacenetwork" ],
     [ "ngen", "namespacengen.html", "namespacengen" ],
+    [ "nonstd", "namespacenonstd.html", "namespacenonstd" ],
     [ "realization", "namespacerealization.html", "namespacerealization" ],
+    [ "std", "namespacestd.html", "namespacestd" ],
     [ "utils", "namespaceutils.html", "namespaceutils" ]
 ];

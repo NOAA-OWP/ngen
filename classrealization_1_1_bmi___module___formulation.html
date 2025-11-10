@@ -201,6 +201,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae0d3530cb9ec114a5a9798959cee1fa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5736279b7c5266934563a31afc3f6780" id="r_a5736279b7c5266934563a31afc3f6780"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5736279b7c5266934563a31afc3f6780">get_bmi_output_variables</a> () const override</td></tr>
 <tr class="separator:a5736279b7c5266934563a31afc3f6780"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a289cd8db8cd2b7cbfab86eb205d59301" id="r_a289cd8db8cd2b7cbfab86eb205d59301"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a289cd8db8cd2b7cbfab86eb205d59301">check_mass_balance</a> (const int &amp;iteration, const int &amp;total_steps, const std::string &amp;timestamp) const override</td></tr>
+<tr class="separator:a289cd8db8cd2b7cbfab86eb205d59301"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93fab1a9af5c9d1917219528bec89894" id="r_a93fab1a9af5c9d1917219528bec89894"><td class="memItemLeft" align="right" valign="top">virtual time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a93fab1a9af5c9d1917219528bec89894">convert_model_time</a> (const double &amp;model_time) const =0</td></tr>
 <tr class="memdesc:a93fab1a9af5c9d1917219528bec89894"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a time value from the model to an epoch time in seconds.  <br /></td></tr>
 <tr class="separator:a93fab1a9af5c9d1917219528bec89894"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -353,6 +355,8 @@ Protected Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
+<tr class="memitem:aed9f477812f35c9b954bce2cc57d4eef" id="r_aed9f477812f35c9b954bce2cc57d4eef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html">models::bmi::protocols::NgenBmiProtocols</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed9f477812f35c9b954bce2cc57d4eef">bmi_protocols</a></td></tr>
+<tr class="separator:aed9f477812f35c9b954bce2cc57d4eef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4e9c77709218359bd00ef4bfb8b863c" id="r_af4e9c77709218359bd00ef4bfb8b863c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4e9c77709218359bd00ef4bfb8b863c">allow_model_exceed_end_time</a> = false</td></tr>
 <tr class="memdesc:af4e9c77709218359bd00ef4bfb8b863c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether model <code>Update</code> calls are allowed and handled in some way by the backing model for time steps after the model's <code>end_time</code>.  <br /></td></tr>
 <tr class="separator:af4e9c77709218359bd00ef4bfb8b863c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -555,6 +559,44 @@ template&lt;class DataType , class SelectionType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a289cd8db8cd2b7cbfab86eb205d59301" name="a289cd8db8cd2b7cbfab86eb205d59301"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a289cd8db8cd2b7cbfab86eb205d59301">&#9670;&#160;</a></span>check_mass_balance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void realization::Bmi_Module_Formulation::check_mass_balance </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>iteration</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>total_steps</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>timestamp</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classrealization_1_1_formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d">realization::Formulation</a>.</p>
+
+<p class="reference">References <a class="el" href="#aed9f477812f35c9b954bce2cc57d4eef">bmi_protocols</a>, <a class="el" href="namespacemodels_1_1bmi_1_1protocols.html#a39a83dd4438899d0ebd1db814fe5a02da901d3c007f56dd095ef89db62a0d3731">models::bmi::protocols::MASS_BALANCE</a>, and <a class="el" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#a69fb546446da5929d102ecb276c9ac9d">models::bmi::protocols::NgenBmiProtocols::run()</a>.</p>
+
+</div>
+</div>
 <a id="a17f32257b65c7930f8b3570ab43fd58c" name="a17f32257b65c7930f8b3570ab43fd58c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a17f32257b65c7930f8b3570ab43fd58c">&#9670;&#160;</a></span>config_pattern_substitution()</h2>
 
@@ -2034,7 +2076,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="#a5c9d1261dbbaf14773579ca59d0d0a69">available_forcings</a>, <a class="el" href="#a1a20278de5cf4688c31c4ffff1e97f74">bmi_var_names_map</a>, <a class="el" href="#a87b70a39f69a823f26f752f6e53c3363">construct_model()</a>, <a class="el" href="#aaeaf8ef8b36e7c5690ca8134a5cd8065">determine_model_time_offset()</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ac58942d917922a1bad80b1cd70e7196c">realization::Bmi_Formulation::get_output_variable_names()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a833fd44ca84e9b77b876f75e23215776">models::bmi::Bmi_Adapter::is_model_initialized()</a>, <a class="el" href="#abed3046790cc1f64d1a2e46c7c99a367">model_initialized</a>, <a class="el" href="#ad9a8e081c25cbb632514f67958502546">set_allow_model_exceed_end_time()</a>, <a class="el" href="#a043a34098a1c4c014b40f0b57ffacf39">set_bmi_init_config()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a27b7e453211087d4c2a24d7f33860300">realization::Bmi_Formulation::set_bmi_main_output_var()</a>, <a class="el" href="#a9b7e6fa3298ebf4570aa7476548ef3dd">set_bmi_model()</a>, <a class="el" href="#a291e55e27455ce2d068b02b6601fba00">set_bmi_model_time_step_fixed()</a>, <a class="el" href="#ab4acbd230e09c1dc4b0151c301bbe966">set_initial_bmi_parameters()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a3a59e65e398af534a189f5de2bda67f2">realization::Bmi_Formulation::set_model_type_name()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ae520479adedf30609de4068bc389bd41">realization::Bmi_Formulation::set_output_header_fields()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a2be85c1e7a58273fc0267c9e99ca38fc">realization::Bmi_Formulation::set_output_precision()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ac85ef69c4b2de5a261230469cd0f3985">realization::Bmi_Formulation::set_output_variable_names()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a3ed78c910127ec5115d71fcfe4d47896">realization::Formulation::validate_parameters()</a>.</p>
+<p class="reference">References <a class="el" href="#a5c9d1261dbbaf14773579ca59d0d0a69">available_forcings</a>, <a class="el" href="#aed9f477812f35c9b954bce2cc57d4eef">bmi_protocols</a>, <a class="el" href="#a1a20278de5cf4688c31c4ffff1e97f74">bmi_var_names_map</a>, <a class="el" href="#a87b70a39f69a823f26f752f6e53c3363">construct_model()</a>, <a class="el" href="#aaeaf8ef8b36e7c5690ca8134a5cd8065">determine_model_time_offset()</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ac58942d917922a1bad80b1cd70e7196c">realization::Bmi_Formulation::get_output_variable_names()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a833fd44ca84e9b77b876f75e23215776">models::bmi::Bmi_Adapter::is_model_initialized()</a>, <a class="el" href="#abed3046790cc1f64d1a2e46c7c99a367">model_initialized</a>, <a class="el" href="#ad9a8e081c25cbb632514f67958502546">set_allow_model_exceed_end_time()</a>, <a class="el" href="#a043a34098a1c4c014b40f0b57ffacf39">set_bmi_init_config()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a27b7e453211087d4c2a24d7f33860300">realization::Bmi_Formulation::set_bmi_main_output_var()</a>, <a class="el" href="#a9b7e6fa3298ebf4570aa7476548ef3dd">set_bmi_model()</a>, <a class="el" href="#a291e55e27455ce2d068b02b6601fba00">set_bmi_model_time_step_fixed()</a>, <a class="el" href="#ab4acbd230e09c1dc4b0151c301bbe966">set_initial_bmi_parameters()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a3a59e65e398af534a189f5de2bda67f2">realization::Bmi_Formulation::set_model_type_name()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ae520479adedf30609de4068bc389bd41">realization::Bmi_Formulation::set_output_header_fields()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a2be85c1e7a58273fc0267c9e99ca38fc">realization::Bmi_Formulation::set_output_precision()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ac85ef69c4b2de5a261230469cd0f3985">realization::Bmi_Formulation::set_output_variable_names()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a3ed78c910127ec5115d71fcfe4d47896">realization::Formulation::validate_parameters()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#a3e910719332db1e221c4ef4dd3bb9eb1">create_formulation()</a>, and <a class="el" href="#a4dde9b0d6fa6a805262060becece9e52">create_formulation()</a>.</p>
 
@@ -3125,6 +3167,30 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
+<a id="aed9f477812f35c9b954bce2cc57d4eef" name="aed9f477812f35c9b954bce2cc57d4eef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed9f477812f35c9b954bce2cc57d4eef">&#9670;&#160;</a></span>bmi_protocols</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html">models::bmi::protocols::NgenBmiProtocols</a> realization::Bmi_Module_Formulation::bmi_protocols</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="#a289cd8db8cd2b7cbfab86eb205d59301">check_mass_balance()</a>, and <a class="el" href="#a7c62e8f7f7db1d06cfef28ee66554def">inner_create_formulation()</a>.</p>
+
+</div>
+</div>
 <a id="a1a20278de5cf4688c31c4ffff1e97f74" name="a1a20278de5cf4688c31c4ffff1e97f74"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1a20278de5cf4688c31c4ffff1e97f74">&#9670;&#160;</a></span>bmi_var_names_map</h2>
 
@@ -3638,7 +3704,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___module___formulation.html">Bmi_Module_Formulation</a></li>
-    <li class="footer">Generated on Sat Aug 9 2025 18:40:02 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Nov 10 2025 21:43:41 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

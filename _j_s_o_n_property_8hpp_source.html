@@ -221,7 +221,7 @@ $(function(){initNavTree('_j_s_o_n_property_8hpp_source.html',''); initResizable
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            </div>
 <div class="foldopen" id="foldopen00168" data-start="{" data-end="}">
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno"><a class="line" href="classgeojson_1_1_j_s_o_n_property.html#a67c06aa54d9f12507f8255ad3d6d860d">  168</a></span>            <a class="code hl_function" href="classgeojson_1_1_j_s_o_n_property.html#a67c06aa54d9f12507f8255ad3d6d860d">JSONProperty</a>(std::string value_key, <span class="keyword">const</span> boost::property_tree::ptree&amp; property_tree):</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            <a class="code hl_variable" href="classgeojson_1_1_j_s_o_n_property.html#a3fe2ade16ff994a3e9e3fbf106ba690a">key</a>(std::move(value_key)) {</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            <a class="code hl_variable" href="classgeojson_1_1_j_s_o_n_property.html#a3fe2ade16ff994a3e9e3fbf106ba690a">key</a>(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(value_key)) {</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                <span class="keywordflow">if</span>(property_tree.empty() &amp;&amp; property_tree.data().empty()) {</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                    <span class="comment">//Since property trees don&#39;t represent empty strings, list, or objects, they are all just `empty`</span></div>
@@ -286,7 +286,7 @@ $(function(){initNavTree('_j_s_o_n_property_8hpp_source.html',''); initResizable
 <div class="foldopen" id="foldopen00236" data-start="{" data-end="}">
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno"><a class="line" href="classgeojson_1_1_j_s_o_n_property.html#a8124b60e4f0a5d500d7635205344a158">  236</a></span>            <a class="code hl_function" href="classgeojson_1_1_j_s_o_n_property.html#a8124b60e4f0a5d500d7635205344a158">JSONProperty</a>(std::string value_key, <span class="keywordtype">short</span> value)</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>                : type(<a class="code hl_enumeration" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361">PropertyType</a>::<a class="code hl_enumvalue" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a2bd8ab451a35759c5737128e35c8011a">Natural</a>),</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>                    key(std::move(value_key)),</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>                    key(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(value_key)),</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>                    data(long(value))</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            {}</div>
 </div>
@@ -294,7 +294,7 @@ $(function(){initNavTree('_j_s_o_n_property_8hpp_source.html',''); initResizable
 <div class="foldopen" id="foldopen00248" data-start="{" data-end="}">
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno"><a class="line" href="classgeojson_1_1_j_s_o_n_property.html#afec6dc919d680e882f35f36581998cda">  248</a></span>            <a class="code hl_function" href="classgeojson_1_1_j_s_o_n_property.html#afec6dc919d680e882f35f36581998cda">JSONProperty</a>(std::string value_key, <span class="keywordtype">int</span> value)</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                : type(<a class="code hl_enumeration" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361">PropertyType</a>::<a class="code hl_enumvalue" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a2bd8ab451a35759c5737128e35c8011a">Natural</a>),</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                    key(std::move(value_key)),</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                    key(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(value_key)),</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                    data(long(value))</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            {}</div>
 </div>
@@ -302,7 +302,7 @@ $(function(){initNavTree('_j_s_o_n_property_8hpp_source.html',''); initResizable
 <div class="foldopen" id="foldopen00260" data-start="{" data-end="}">
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno"><a class="line" href="classgeojson_1_1_j_s_o_n_property.html#aa6367592b7640fd1ee0b563aa42cd564">  260</a></span>            <a class="code hl_function" href="classgeojson_1_1_j_s_o_n_property.html#aa6367592b7640fd1ee0b563aa42cd564">JSONProperty</a>(std::string value_key, <span class="keywordtype">long</span> value)</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>                : type(<a class="code hl_enumeration" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361">PropertyType</a>::<a class="code hl_enumvalue" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a2bd8ab451a35759c5737128e35c8011a">Natural</a>),</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>                    key(std::move(value_key)),</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>                    key(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(value_key)),</div>
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>                    data(value)</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            {}</div>
 </div>
@@ -310,7 +310,7 @@ $(function(){initNavTree('_j_s_o_n_property_8hpp_source.html',''); initResizable
 <div class="foldopen" id="foldopen00272" data-start="{" data-end="}">
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno"><a class="line" href="classgeojson_1_1_j_s_o_n_property.html#a005efbfb417d3fe6e70700d395f1e973">  272</a></span>            <a class="code hl_function" href="classgeojson_1_1_j_s_o_n_property.html#a005efbfb417d3fe6e70700d395f1e973">JSONProperty</a>(std::string value_key, <span class="keywordtype">float</span> value)</div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>                : type(<a class="code hl_enumeration" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361">PropertyType</a>::<a class="code hl_enumvalue" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a7f80fcc452c2f1ed2bb51b39d0864df1">Real</a>),</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>                    key(std::move(value_key)),</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>                    key(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(value_key)),</div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>                    data(double(value))</div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>            {}</div>
 </div>
@@ -318,7 +318,7 @@ $(function(){initNavTree('_j_s_o_n_property_8hpp_source.html',''); initResizable
 <div class="foldopen" id="foldopen00284" data-start="{" data-end="}">
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno"><a class="line" href="classgeojson_1_1_j_s_o_n_property.html#a1a564389e92c9a770f5894f8f7694a45">  284</a></span>            <a class="code hl_function" href="classgeojson_1_1_j_s_o_n_property.html#a1a564389e92c9a770f5894f8f7694a45">JSONProperty</a>(std::string value_key, <span class="keywordtype">double</span> value)</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                : type(<a class="code hl_enumeration" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361">PropertyType</a>::<a class="code hl_enumvalue" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a7f80fcc452c2f1ed2bb51b39d0864df1">Real</a>),</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>                    key(std::move(value_key)),</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>                    key(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(value_key)),</div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>                    data(value)</div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>            {}</div>
 </div>
@@ -326,13 +326,13 @@ $(function(){initNavTree('_j_s_o_n_property_8hpp_source.html',''); initResizable
 <div class="foldopen" id="foldopen00296" data-start="{" data-end="}">
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno"><a class="line" href="classgeojson_1_1_j_s_o_n_property.html#aca1f67b2d84fa9f1d1505fefcd80404e">  296</a></span>            <a class="code hl_function" href="classgeojson_1_1_j_s_o_n_property.html#aca1f67b2d84fa9f1d1505fefcd80404e">JSONProperty</a>(std::string value_key, <span class="keyword">const</span> <span class="keywordtype">char</span> *value):</div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>                type(<a class="code hl_enumeration" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361">PropertyType</a>::<a class="code hl_enumvalue" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a27118326006d3829667a400ad23d5d98">String</a>),</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>                key(std::move(value_key)),</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>                data(std::string(value))</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>                key(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(value_key)),</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>                data(<a class="code hl_namespace" href="namespacestd.html">std</a>::string(value))</div>
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>            {}</div>
 </div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span> </div>
 <div class="foldopen" id="foldopen00308" data-start="{" data-end="}">
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno"><a class="line" href="classgeojson_1_1_j_s_o_n_property.html#a6b05fb3e595c923c3bef0f612261b425">  308</a></span>            <a class="code hl_function" href="classgeojson_1_1_j_s_o_n_property.html#a6b05fb3e595c923c3bef0f612261b425">JSONProperty</a>(std::string value_key, std::string value):key(std::move(value_key)) {</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno"><a class="line" href="classgeojson_1_1_j_s_o_n_property.html#a6b05fb3e595c923c3bef0f612261b425">  308</a></span>            <a class="code hl_function" href="classgeojson_1_1_j_s_o_n_property.html#a6b05fb3e595c923c3bef0f612261b425">JSONProperty</a>(std::string value_key, std::string value):key(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(value_key)) {</div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>                <span class="keywordflow">if</span> (value == <span class="stringliteral">&quot;true&quot;</span> || value == <span class="stringliteral">&quot;false&quot;</span>) {</div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>                    type = PropertyType::Boolean;</div>
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>                    <span class="comment">//boolean = value == &quot;true&quot;;</span></div>
@@ -390,7 +390,7 @@ $(function(){initNavTree('_j_s_o_n_property_8hpp_source.html',''); initResizable
 </div>
 <div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span> </div>
 <div class="foldopen" id="foldopen00364" data-start="{" data-end="}">
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno"><a class="line" href="classgeojson_1_1_j_s_o_n_property.html#a32e135bb45052932fbe664c5df99d15e">  364</a></span>            <a class="code hl_function" href="classgeojson_1_1_j_s_o_n_property.html#a32e135bb45052932fbe664c5df99d15e">JSONProperty</a>(std::string value_key, std::vector&lt;JSONProperty&gt; properties) : type(<a class="code hl_enumeration" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361">PropertyType</a>::<a class="code hl_struct" href="structgeojson_1_1_list.html">List</a>), key(std::move(value_key)), value_list(std::move(properties))  {</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno"><a class="line" href="classgeojson_1_1_j_s_o_n_property.html#a32e135bb45052932fbe664c5df99d15e">  364</a></span>            <a class="code hl_function" href="classgeojson_1_1_j_s_o_n_property.html#a32e135bb45052932fbe664c5df99d15e">JSONProperty</a>(std::string value_key, std::vector&lt;JSONProperty&gt; properties) : type(<a class="code hl_enumeration" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361">PropertyType</a>::<a class="code hl_struct" href="structgeojson_1_1_list.html">List</a>), key(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(value_key)), value_list(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(properties))  {</div>
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>                data = <a class="code hl_struct" href="structgeojson_1_1_list.html">List</a>( &amp;value_list );</div>
 <div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>            }</div>
 </div>
@@ -431,7 +431,7 @@ $(function(){initNavTree('_j_s_o_n_property_8hpp_source.html',''); initResizable
 <div class="foldopen" id="foldopen00412" data-start="{" data-end="}">
 <div class="line"><a id="l00412" name="l00412"></a><span class="lineno"><a class="line" href="classgeojson_1_1_j_s_o_n_property.html#ad4b8c22025b4a8c5612bcca430ba2e06">  412</a></span>            <a class="code hl_function" href="classgeojson_1_1_j_s_o_n_property.html#ad4b8c22025b4a8c5612bcca430ba2e06">JSONProperty</a>(std::string value_key, <span class="keywordtype">bool</span> value):</div>
 <div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>                type(<a class="code hl_enumeration" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361">PropertyType</a>::<a class="code hl_enumvalue" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a27226c864bac7454a8504f8edb15d95b">Boolean</a>),</div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>                key(std::move(value_key)),</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>                key(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(value_key)),</div>
 <div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>                data(value)</div>
 <div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>            {}</div>
 </div>
@@ -439,7 +439,7 @@ $(function(){initNavTree('_j_s_o_n_property_8hpp_source.html',''); initResizable
 <div class="foldopen" id="foldopen00424" data-start="{" data-end="}">
 <div class="line"><a id="l00424" name="l00424"></a><span class="lineno"><a class="line" href="classgeojson_1_1_j_s_o_n_property.html#acd172570a8cec61a63ae05021d34b0d9">  424</a></span>            <a class="code hl_function" href="classgeojson_1_1_j_s_o_n_property.html#acd172570a8cec61a63ae05021d34b0d9">JSONProperty</a>(std::string value_key, <a class="code hl_typedef" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">PropertyMap</a> &amp;value)</div>
 <div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>                : type(<a class="code hl_enumeration" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361">PropertyType</a>::<a class="code hl_struct" href="structgeojson_1_1_object.html">Object</a>),</div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>                    key(std::move(value_key)),</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>                    key(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(value_key)),</div>
 <div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>                    values(value)</div>
 <div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>            {   </div>
 <div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>                data = <a class="code hl_struct" href="structgeojson_1_1_object.html">Object</a>( &amp;values );</div>
@@ -675,6 +675,7 @@ $(function(){initNavTree('_j_s_o_n_property_8hpp_source.html',''); initResizable
 <div class="ttc" id="anamespacegeojson_html_a972cd4a487858a36473c775ac360f361a497031794414a552435f90151ac3b54b"><div class="ttname"><a href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a497031794414a552435f90151ac3b54b">geojson::PropertyType::Object</a></div><div class="ttdeci">@ Object</div></div>
 <div class="ttc" id="anamespacegeojson_html_a972cd4a487858a36473c775ac360f361a4ee29ca12c7d126654bd0e5275de6135"><div class="ttname"><a href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a4ee29ca12c7d126654bd0e5275de6135">geojson::PropertyType::List</a></div><div class="ttdeci">@ List</div></div>
 <div class="ttc" id="anamespacegeojson_html_a972cd4a487858a36473c775ac360f361a7f80fcc452c2f1ed2bb51b39d0864df1"><div class="ttname"><a href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a7f80fcc452c2f1ed2bb51b39d0864df1">geojson::PropertyType::Real</a></div><div class="ttdeci">@ Real</div></div>
+<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
 <div class="ttc" id="astructgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor_html"><div class="ttname"><a href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html">geojson::JSONProperty::AsVectorVisitor</a></div><div class="ttdoc">Visitor to filter boost variants by type T into a vector of type T.</div><div class="ttdef"><b>Definition</b> JSONProperty.hpp:615</div></div>
 <div class="ttc" id="astructgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor_html_a5799c960bad5171fede3d518204093b9"><div class="ttname"><a href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#a5799c960bad5171fede3d518204093b9">geojson::JSONProperty::AsVectorVisitor::AsVectorVisitor</a></div><div class="ttdeci">AsVectorVisitor(std::vector&lt; T &gt; &amp;v)</div><div class="ttdef"><b>Definition</b> JSONProperty.hpp:618</div></div>
 <div class="ttc" id="astructgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor_html_ab014d75505e8ff9be2fef989bb03ce69"><div class="ttname"><a href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#ab014d75505e8ff9be2fef989bb03ce69">geojson::JSONProperty::AsVectorVisitor::vec</a></div><div class="ttdeci">std::vector&lt; T &gt; &amp; vec</div><div class="ttdef"><b>Definition</b> JSONProperty.hpp:651</div></div>
@@ -696,7 +697,7 @@ $(function(){initNavTree('_j_s_o_n_property_8hpp_source.html',''); initResizable
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_23df12f7bc050f2b7f4a461242b2c584.html">geojson</a></li><li class="navelem"><b>JSONProperty.hpp</b></li>
-    <li class="footer">Generated on Sat Aug 9 2025 18:40:01 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Nov 10 2025 21:43:40 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

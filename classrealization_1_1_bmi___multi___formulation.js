@@ -7,6 +7,7 @@ var classrealization_1_1_bmi___multi___formulation =
     [ "time_step_t", "classrealization_1_1_bmi___multi___formulation.html#aedb7c17dc4527613c7411229a2dc9fff", null ],
     [ "Bmi_Multi_Formulation", "classrealization_1_1_bmi___multi___formulation.html#ac9bb1832ccd12b587a4fb8516d126379", null ],
     [ "~Bmi_Multi_Formulation", "classrealization_1_1_bmi___multi___formulation.html#a6ef8f446a1fcece399fb72532e854363", null ],
+    [ "check_mass_balance", "classrealization_1_1_bmi___multi___formulation.html#a53a61d1d8911c96bdb3af81992472dc4", null ],
     [ "check_output_var_names", "classrealization_1_1_bmi___multi___formulation.html#a5663cca69cb8f68f38899a031a19fc43", null ],
     [ "config_pattern_substitution", "classrealization_1_1_bmi___multi___formulation.html#a17f32257b65c7930f8b3570ab43fd58c", null ],
     [ "convert_model_time", "classrealization_1_1_bmi___multi___formulation.html#ae867f9a3aa14a30541162165066faaf8", null ],

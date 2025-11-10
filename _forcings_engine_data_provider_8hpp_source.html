@@ -239,8 +239,8 @@ $(function(){initNavTree('_forcings_engine_data_provider_8hpp_source.html',''); 
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        std::size_t time_begin_seconds,</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        std::size_t time_end_seconds</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    )</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>      : time_begin_(std::chrono::seconds{time_begin_seconds})</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>      , time_end_(std::chrono::seconds{time_end_seconds})</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>      : time_begin_(<a class="code hl_namespace" href="namespacestd.html">std</a>::chrono::seconds{time_begin_seconds})</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>      , time_end_(<a class="code hl_namespace" href="namespacestd.html">std</a>::chrono::seconds{time_end_seconds})</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    {</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        <span class="comment">// Get a forcings engine instance if it exists for this initialization file</span></div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        bmi_ = storage_type::instances.get(init);</div>
@@ -305,13 +305,14 @@ $(function(){initNavTree('_forcings_engine_data_provider_8hpp_source.html',''); 
 <div class="ttc" id="anamespacedata__access_1_1detail_html_ae4988004a3bd3d26e707317b4f898939"><div class="ttname"><a href="namespacedata__access_1_1detail.html#ae4988004a3bd3d26e707317b4f898939">data_access::detail::assert_forcings_engine_requirements</a></div><div class="ttdeci">void assert_forcings_engine_requirements()</div><div class="ttdef"><b>Definition</b> ForcingsEngineDataProvider.cpp:23</div></div>
 <div class="ttc" id="anamespacedata__access_html"><div class="ttname"><a href="namespacedata__access.html">data_access</a></div><div class="ttdef"><b>Definition</b> AorcForcing.hpp:75</div></div>
 <div class="ttc" id="anamespacedata__access_html_a46435cb3579215dfdfffedc7833e43f9"><div class="ttname"><a href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9">data_access::ReSampleMethod</a></div><div class="ttdeci">ReSampleMethod</div><div class="ttdoc">An abstraction for classes that provides access to data.</div><div class="ttdef"><b>Definition</b> DataProvider.hpp:17</div></div>
+<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1a34ade7a8ced74dfa5d1494ffac178f.html">forcing</a></li><li class="navelem"><b>ForcingsEngineDataProvider.hpp</b></li>
-    <li class="footer">Generated on Sat Aug 9 2025 18:40:01 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Nov 10 2025 21:43:40 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

@@ -15,10 +15,11 @@ var searchData=
   ['print_5fnetwork_12',['print_network',['../classnetwork_1_1_network.html#a3c4ff515a92a465e551dde546c5dd6ca',1,'network::Network']]],
   ['print_5fproperty_13',['print_property',['../classgeojson_1_1_j_s_o_n_property.html#a6d3173d4b100035a3a8dafbaa25a84a2',1,'geojson::JSONProperty']]],
   ['property_5fkeys_14',['property_keys',['../classgeojson_1_1_feature_base.html#aaa9ad61de93c0194b73fbe8b32816c32',1,'geojson::FeatureBase']]],
-  ['ptr_5f_15',['ptr_',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a61a73e09122670e88122238cce97c75f',1,'ngen::sqlite::database::iterator']]],
-  ['push_5fback_16',['push_back',['../structgeojson_1_1_list.html#a9f45981e383d8ad0cc5679e93420f3b1',1,'geojson::List']]],
-  ['put_17',['put',['../classutils_1_1_stream_handler.html#a37b9e817a29d162b43066c3f60debe3f',1,'utils::StreamHandler']]],
-  ['put_5findexed_18',['put_indexed',['../classutils_1_1_stream_handler.html#a3c6d48fc5333e2f7d13df9156eac13b9',1,'utils::StreamHandler']]],
-  ['put_5flayer_19',['put_layer',['../classngen_1_1_layer_data_storage.html#abd30fa604b8e071d901b6aad7023baf8',1,'ngen::LayerDataStorage']]],
-  ['put_5fvar_20',['put_var',['../classutils_1_1_stream_handler.html#a3fac69540f581d628858ececa95a314d',1,'utils::StreamHandler']]]
+  ['protocolerror_15',['ProtocolError',['../classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a919f2c7bbb142675eb33a732344e1fa9',1,'models::bmi::protocols::ProtocolError::ProtocolError()=delete'],['../classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aaa6a3dcc61eb991e745c46ea4e9c0989',1,'models::bmi::protocols::ProtocolError::ProtocolError(Error err, const std::string &amp;message=&quot;&quot;)'],['../classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#ad28c9eb5288cbfb034561a7c72785926',1,'models::bmi::protocols::ProtocolError::ProtocolError(const ProtocolError &amp;other)=default'],['../classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#ae9cb8bac7c925ac057819eaef1843594',1,'models::bmi::protocols::ProtocolError::ProtocolError(ProtocolError &amp;&amp;other) noexcept=default']]],
+  ['ptr_5f_16',['ptr_',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a61a73e09122670e88122238cce97c75f',1,'ngen::sqlite::database::iterator']]],
+  ['push_5fback_17',['push_back',['../structgeojson_1_1_list.html#a9f45981e383d8ad0cc5679e93420f3b1',1,'geojson::List']]],
+  ['put_18',['put',['../classutils_1_1_stream_handler.html#a37b9e817a29d162b43066c3f60debe3f',1,'utils::StreamHandler']]],
+  ['put_5findexed_19',['put_indexed',['../classutils_1_1_stream_handler.html#a3c6d48fc5333e2f7d13df9156eac13b9',1,'utils::StreamHandler']]],
+  ['put_5flayer_20',['put_layer',['../classngen_1_1_layer_data_storage.html#abd30fa604b8e071d901b6aad7023baf8',1,'ngen::LayerDataStorage']]],
+  ['put_5fvar_21',['put_var',['../classutils_1_1_stream_handler.html#a3fac69540f581d628858ececa95a314d',1,'utils::StreamHandler']]]
 ];

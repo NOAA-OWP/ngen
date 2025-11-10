@@ -12,6 +12,7 @@ var searchData=
   ['primary_5fmodule_5findex_9',['primary_module_index',['../classrealization_1_1_bmi___multi___formulation.html#abe3de83fc22850cf3af8ff046616b446',1,'realization::Bmi_Multi_Formulation']]],
   ['processing_5funits_10',['processing_units',['../classngen_1_1_layer.html#a5cb15eea3711606ced64504aa3ea1749',1,'ngen::Layer']]],
   ['properties_11',['properties',['../classgeojson_1_1_feature_base.html#a8b5b4e112d4b3559c8876126f1f1412c',1,'geojson::FeatureBase']]],
-  ['providedoutputs_12',['providedOutputs',['../classdata__access_1_1_deferred_wrapped_provider.html#a20c7ab984ad34e8f71225a6abc422fbd',1,'data_access::DeferredWrappedProvider']]],
-  ['provider_13',['provider',['../structforcing__params.html#ade4fb727ea0eac594b7d1c84aedd9b5a',1,'forcing_params']]]
+  ['protocols_12',['protocols',['../classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#ab77f6fa47c05a62ba038210299188ed3',1,'models::bmi::protocols::NgenBmiProtocols']]],
+  ['providedoutputs_13',['providedOutputs',['../classdata__access_1_1_deferred_wrapped_provider.html#a20c7ab984ad34e8f71225a6abc422fbd',1,'data_access::DeferredWrappedProvider']]],
+  ['provider_14',['provider',['../structforcing__params.html#ade4fb727ea0eac594b7d1c84aedd9b5a',1,'forcing_params']]]
 ];

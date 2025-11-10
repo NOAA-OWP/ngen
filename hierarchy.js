@@ -100,6 +100,11 @@ var hierarchy =
     [ "HY_HydroNexus", "class_h_y___hydro_nexus.html", [
       [ "HY_PointHydroNexus", "class_h_y___point_hydro_nexus.html", null ]
     ] ],
+    [ "models::bmi::protocols::Context", "structmodels_1_1bmi_1_1protocols_1_1_context.html", null ],
+    [ "models::bmi::protocols::NgenBmiProtocol", "classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html", [
+      [ "models::bmi::protocols::NgenMassBalance", "classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html", null ]
+    ] ],
+    [ "models::bmi::protocols::NgenBmiProtocols", "classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html", null ],
     [ "network::Network", "classnetwork_1_1_network.html", null ],
     [ "network::VertexProperty", "structnetwork_1_1_vertex_property.html", null ],
     [ "Network_Test", "class_network___test.html", [
@@ -126,6 +131,9 @@ var hierarchy =
     [ "ngen::srs::epsg", "structngen_1_1srs_1_1epsg.html", null ],
     [ "ngen::traits::bool_pack<... >", "structngen_1_1traits_1_1bool__pack.html", null ],
     [ "ngen::traits::type_list< Ts >", "structngen_1_1traits_1_1type__list.html", null ],
+    [ "nonstd::detail::in_place_index_tag< K >", "structnonstd_1_1detail_1_1in__place__index__tag.html", null ],
+    [ "nonstd::detail::in_place_type_tag< T >", "structnonstd_1_1detail_1_1in__place__type__tag.html", null ],
+    [ "nonstd::in_place_t", "structnonstd_1_1in__place__t.html", null ],
     [ "Partition_One", "class_partition___one.html", null ],
     [ "PartitionData", "struct_partition_data.html", null ],
     [ "Partitions_Parser", "class_partitions___parser.html", null ],
@@ -149,6 +157,7 @@ var hierarchy =
       [ "external::ExternalIntegrationException", "classexternal_1_1_external_integration_exception.html", null ],
       [ "invalid_downstream_request", "structinvalid__downstream__request.html", null ],
       [ "invalid_time_step", "structinvalid__time__step.html", null ],
+      [ "models::bmi::protocols::ProtocolError", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html", null ],
       [ "models::external::State_Exception", "classmodels_1_1external_1_1_state___exception.html", null ],
       [ "realization::ConfigurationException", "classrealization_1_1_configuration_exception.html", null ],
       [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", null ],
@@ -156,6 +165,9 @@ var hierarchy =
         [ "ngen::sqlite::sqlite_error", "structngen_1_1sqlite_1_1sqlite__error.html", null ]
       ] ]
     ] ],
+    [ "std::hash< nonstd::expected< T &, E > >", "structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html", null ],
+    [ "std::hash< nonstd::expected< T, E > >", "structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_00_01_e_01_4_01_4.html", null ],
+    [ "std::hash< nonstd::expected< void, E > >", "structstd_1_1hash_3_01nonstd_1_1expected_3_01void_00_01_e_01_4_01_4.html", null ],
     [ "testing::Test", null, [
       [ "FeatureCollection_Test", "class_feature_collection___test.html", null ],
       [ "Feature_Test", "class_feature___test.html", null ],

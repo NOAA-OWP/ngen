@@ -151,6 +151,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac9bb1832ccd12b587a4fb8516d126379"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ef8f446a1fcece399fb72532e854363" id="r_a6ef8f446a1fcece399fb72532e854363"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ef8f446a1fcece399fb72532e854363">~Bmi_Multi_Formulation</a> ()</td></tr>
 <tr class="separator:a6ef8f446a1fcece399fb72532e854363"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53a61d1d8911c96bdb3af81992472dc4" id="r_a53a61d1d8911c96bdb3af81992472dc4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a53a61d1d8911c96bdb3af81992472dc4">check_mass_balance</a> (const int &amp;iteration, const int &amp;total_steps, const std::string &amp;timestamp) const final</td></tr>
+<tr class="separator:a53a61d1d8911c96bdb3af81992472dc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae867f9a3aa14a30541162165066faaf8" id="r_ae867f9a3aa14a30541162165066faaf8"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae867f9a3aa14a30541162165066faaf8">convert_model_time</a> (const double &amp;model_time) const override</td></tr>
 <tr class="memdesc:ae867f9a3aa14a30541162165066faaf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a time value from the model to an epoch time in seconds.  <br /></td></tr>
 <tr class="separator:ae867f9a3aa14a30541162165066faaf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -592,6 +594,44 @@ template&lt;class DataType , class SelectionType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a53a61d1d8911c96bdb3af81992472dc4" name="a53a61d1d8911c96bdb3af81992472dc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53a61d1d8911c96bdb3af81992472dc4">&#9670;&#160;</a></span>check_mass_balance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void realization::Bmi_Multi_Formulation::check_mass_balance </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>iteration</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>total_steps</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>timestamp</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">final</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classrealization_1_1_formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d">realization::Formulation</a>.</p>
+
+<p class="reference">References <a class="el" href="#a125ff769345d1bc4f004bde256c86686">modules</a>.</p>
+
+</div>
+</div>
 <a id="a5663cca69cb8f68f38899a031a19fc43" name="a5663cca69cb8f68f38899a031a19fc43"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5663cca69cb8f68f38899a031a19fc43">&#9670;&#160;</a></span>check_output_var_names()</h2>
 
@@ -3344,7 +3384,7 @@ template&lt;class T &gt; </div>
 
 <p>The nested BMI modules composing this multi-module formulation, in their order of execution. </p>
 
-<p class="reference">Referenced by <a class="el" href="#a9883f4ed769e6bb3f41ff2a3d4e2788b">convert_model_time()</a>, <a class="el" href="#a8694f5e94f40224efca11a73892da8ff">create_multi_formulation()</a>, <a class="el" href="#aca4c20aff9b42fa0d184cfe49f3dabde">get_allow_model_exceed_end_time()</a>, <a class="el" href="#ae1fe1c0c8efa55b3bec9634d7fa13250">get_bmi_input_variables()</a>, <a class="el" href="#addd17a45e8f2e568fd7a0972c3b599f7">get_bmi_model_start_time_forcing_offset_s()</a>, <a class="el" href="#a26a720e679998b10f230448953ec533f">get_bmi_output_variables()</a>, <a class="el" href="#ad1e6f4895381a9eadf27c118f266911c">get_config_mapped_variable_name()</a>, <a class="el" href="#a6e7cc9b37b7b4b9c3cad5270de73b9f4">get_model_current_time()</a>, <a class="el" href="#a0dd88ef6b6dfd0f2c322cf09805ff0cf">get_model_end_time()</a>, <a class="el" href="#ab4374a374dd0032d13e344031b3a3656">get_model_start_time()</a>, <a class="el" href="#a1424a0e0d1cee27c32ce3cae5879f77b">get_output_line_for_timestep()</a>, <a class="el" href="#a0b66d3f5f51b4b414e08965e15d7bff7">get_response()</a>, <a class="el" href="#a02082f5077fee0a6e959640cf27a404d">is_bmi_input_variable()</a>, <a class="el" href="#a23314851f5d1fcfd10fcfbe79a817a53">is_bmi_model_time_step_fixed()</a>, <a class="el" href="#a489be166a9911277ed618afaeee38174">is_bmi_output_variable()</a>, <a class="el" href="#af37d295e5380fd5aadaf793159a21491">is_model_initialized()</a>, and <a class="el" href="#a33697f092bee233856d4559949f58edf">set_index_for_primary_module()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a53a61d1d8911c96bdb3af81992472dc4">check_mass_balance()</a>, <a class="el" href="#a9883f4ed769e6bb3f41ff2a3d4e2788b">convert_model_time()</a>, <a class="el" href="#a8694f5e94f40224efca11a73892da8ff">create_multi_formulation()</a>, <a class="el" href="#aca4c20aff9b42fa0d184cfe49f3dabde">get_allow_model_exceed_end_time()</a>, <a class="el" href="#ae1fe1c0c8efa55b3bec9634d7fa13250">get_bmi_input_variables()</a>, <a class="el" href="#addd17a45e8f2e568fd7a0972c3b599f7">get_bmi_model_start_time_forcing_offset_s()</a>, <a class="el" href="#a26a720e679998b10f230448953ec533f">get_bmi_output_variables()</a>, <a class="el" href="#ad1e6f4895381a9eadf27c118f266911c">get_config_mapped_variable_name()</a>, <a class="el" href="#a6e7cc9b37b7b4b9c3cad5270de73b9f4">get_model_current_time()</a>, <a class="el" href="#a0dd88ef6b6dfd0f2c322cf09805ff0cf">get_model_end_time()</a>, <a class="el" href="#ab4374a374dd0032d13e344031b3a3656">get_model_start_time()</a>, <a class="el" href="#a1424a0e0d1cee27c32ce3cae5879f77b">get_output_line_for_timestep()</a>, <a class="el" href="#a0b66d3f5f51b4b414e08965e15d7bff7">get_response()</a>, <a class="el" href="#a02082f5077fee0a6e959640cf27a404d">is_bmi_input_variable()</a>, <a class="el" href="#a23314851f5d1fcfd10fcfbe79a817a53">is_bmi_model_time_step_fixed()</a>, <a class="el" href="#a489be166a9911277ed618afaeee38174">is_bmi_output_variable()</a>, <a class="el" href="#af37d295e5380fd5aadaf793159a21491">is_model_initialized()</a>, and <a class="el" href="#a33697f092bee233856d4559949f58edf">set_index_for_primary_module()</a>.</p>
 
 </div>
 </div>
@@ -3621,7 +3661,7 @@ template&lt;class T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___multi___formulation.html">Bmi_Multi_Formulation</a></li>
-    <li class="footer">Generated on Sat Aug 9 2025 18:40:02 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Nov 10 2025 21:43:41 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

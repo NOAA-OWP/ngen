@@ -133,7 +133,7 @@ $(function(){initNavTree('_grid_data_selector_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>{</div>
 <div class="foldopen" id="foldopen00028" data-start="{" data-end="}">
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="struct_bounding_box.html#a157a38901663c7f49e30fa65badfe338">   28</a></span>    <a class="code hl_function" href="struct_bounding_box.html#a157a38901663c7f49e30fa65badfe338">BoundingBox</a>(box_t box)</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>      : <a class="code hl_variable" href="struct_bounding_box.html#a3150fe3908698646e688fccf407ed0e5">box_</a>(std::move(box))</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>      : <a class="code hl_variable" href="struct_bounding_box.html#a3150fe3908698646e688fccf407ed0e5">box_</a>(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(box))</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    {}</div>
 </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
@@ -206,7 +206,7 @@ $(function(){initNavTree('_grid_data_selector_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
 <div class="foldopen" id="foldopen00093" data-start="{" data-end="}">
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="struct_grid_data_selector.html#a9a4461c054cb296816b8911a2c641a38">   93</a></span>    <a class="code hl_function" href="struct_grid_data_selector.html#a9a4461c054cb296816b8911a2c641a38">GridDataSelector</a>(<a class="code hl_struct" href="struct_selector_config.html">SelectorConfig</a> config, boost::span&lt;const Cell&gt; <a class="code hl_function" href="struct_grid_data_selector.html#af865fce922cb858cdeaa5a13fd505097">cells</a>)</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        : <a class="code hl_variable" href="struct_grid_data_selector.html#ad05ef6f47a33f18ef784855479a68ba6">config_</a>(std::move(config))</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        : <a class="code hl_variable" href="struct_grid_data_selector.html#ad05ef6f47a33f18ef784855479a68ba6">config_</a>(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(config))</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        , <a class="code hl_variable" href="struct_grid_data_selector.html#a2296116f6edeca6a90358251ba43ca04">cells_</a>(<a class="code hl_function" href="struct_grid_data_selector.html#af865fce922cb858cdeaa5a13fd505097">cells</a>.begin(), <a class="code hl_function" href="struct_grid_data_selector.html#af865fce922cb858cdeaa5a13fd505097">cells</a>.end()) {</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    }</div>
 </div>
@@ -217,7 +217,7 @@ $(function(){initNavTree('_grid_data_selector_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="keyword">const</span> <a class="code hl_struct" href="struct_grid_specification.html">GridSpecification</a>&amp; grid,</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        boost::span&lt;const geojson::coordinate_t&gt; points</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    )</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>      : <a class="code hl_variable" href="struct_grid_data_selector.html#ad05ef6f47a33f18ef784855479a68ba6">config_</a>(std::move(config))</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>      : <a class="code hl_variable" href="struct_grid_data_selector.html#ad05ef6f47a33f18ef784855479a68ba6">config_</a>(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(config))</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    {</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="comment">// Using a std::set since points may be close enough that they are within</span></div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="comment">// the same grid cell. This ensures that each cell is uniquely indexed.</span></div>
@@ -241,7 +241,7 @@ $(function(){initNavTree('_grid_data_selector_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        <span class="keyword">const</span> <a class="code hl_struct" href="struct_grid_specification.html">GridSpecification</a>&amp; grid,</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespacegeojson.html#a7e3a2b10f60ebd32d3fb01d1537350ff">geojson::polygon_t</a>&amp; polygon</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    )</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        : <a class="code hl_variable" href="struct_grid_data_selector.html#ad05ef6f47a33f18ef784855479a68ba6">config_</a>(std::move(config))</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        : <a class="code hl_variable" href="struct_grid_data_selector.html#ad05ef6f47a33f18ef784855479a68ba6">config_</a>(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(config))</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    {</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        <span class="keyword">const</span> <span class="keyword">auto</span> xmin = grid.<a class="code hl_variable" href="struct_grid_specification.html#ac8686c7f57fc0dd02e893cb168fe88cd">extent</a>.<a class="code hl_function" href="struct_bounding_box.html#a1481210f4eafe09e887181343912935b">xmin</a>();</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        <span class="keyword">const</span> <span class="keyword">auto</span> xmax = grid.<a class="code hl_variable" href="struct_grid_specification.html#ac8686c7f57fc0dd02e893cb168fe88cd">extent</a>.<a class="code hl_function" href="struct_bounding_box.html#a45953c8f84dc0d336b002a4dbc7f4582">xmax</a>();</div>
@@ -274,7 +274,7 @@ $(function(){initNavTree('_grid_data_selector_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>      <span class="keyword">const</span> <a class="code hl_struct" href="struct_grid_specification.html">GridSpecification</a>&amp; grid,</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>      <span class="keyword">const</span> <a class="code hl_struct" href="struct_bounding_box.html">BoundingBox</a>&amp; extent</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    )</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>      : config_(std::move(config))</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>      : config_(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(config))</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    {</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        <span class="keyword">const</span> <span class="keyword">auto</span> col_min = position_(extent.<a class="code hl_function" href="struct_bounding_box.html#a1481210f4eafe09e887181343912935b">xmin</a>(), grid.<a class="code hl_variable" href="struct_grid_specification.html#ac8686c7f57fc0dd02e893cb168fe88cd">extent</a>.<a class="code hl_function" href="struct_bounding_box.html#a1481210f4eafe09e887181343912935b">xmin</a>(), grid.<a class="code hl_variable" href="struct_grid_specification.html#ac8686c7f57fc0dd02e893cb168fe88cd">extent</a>.<a class="code hl_function" href="struct_bounding_box.html#a45953c8f84dc0d336b002a4dbc7f4582">xmax</a>(), grid.<a class="code hl_variable" href="struct_grid_specification.html#aed680933d95fa7ae53d0ae15fbdee6e3">columns</a>);</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        <span class="keyword">const</span> <span class="keyword">auto</span> col_max = position_(extent.<a class="code hl_function" href="struct_bounding_box.html#a45953c8f84dc0d336b002a4dbc7f4582">xmax</a>(), grid.<a class="code hl_variable" href="struct_grid_specification.html#ac8686c7f57fc0dd02e893cb168fe88cd">extent</a>.<a class="code hl_function" href="struct_bounding_box.html#a1481210f4eafe09e887181343912935b">xmin</a>(), grid.<a class="code hl_variable" href="struct_grid_specification.html#ac8686c7f57fc0dd02e893cb168fe88cd">extent</a>.<a class="code hl_function" href="struct_bounding_box.html#a45953c8f84dc0d336b002a4dbc7f4582">xmax</a>(), grid.<a class="code hl_variable" href="struct_grid_specification.html#aed680933d95fa7ae53d0ae15fbdee6e3">columns</a>);</div>
@@ -372,6 +372,7 @@ $(function(){initNavTree('_grid_data_selector_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>};</div>
 </div>
 <div class="ttc" id="anamespacegeojson_html_a7e3a2b10f60ebd32d3fb01d1537350ff"><div class="ttname"><a href="namespacegeojson.html#a7e3a2b10f60ebd32d3fb01d1537350ff">geojson::polygon_t</a></div><div class="ttdeci">bg::model::polygon&lt; coordinate_t &gt; polygon_t</div><div class="ttdoc">A polygon made up of points in geographic degrees.</div><div class="ttdef"><b>Definition</b> JSONGeometry.hpp:30</div></div>
+<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
 <div class="ttc" id="astruct_bounding_box_html"><div class="ttname"><a href="struct_bounding_box.html">BoundingBox</a></div><div class="ttdef"><b>Definition</b> GridDataSelector.hpp:27</div></div>
 <div class="ttc" id="astruct_bounding_box_html_a1481210f4eafe09e887181343912935b"><div class="ttname"><a href="struct_bounding_box.html#a1481210f4eafe09e887181343912935b">BoundingBox::xmin</a></div><div class="ttdeci">double xmin() const noexcept</div><div class="ttdef"><b>Definition</b> GridDataSelector.hpp:32</div></div>
 <div class="ttc" id="astruct_bounding_box_html_a157a38901663c7f49e30fa65badfe338"><div class="ttname"><a href="struct_bounding_box.html#a157a38901663c7f49e30fa65badfe338">BoundingBox::BoundingBox</a></div><div class="ttdeci">BoundingBox(box_t box)</div><div class="ttdef"><b>Definition</b> GridDataSelector.hpp:28</div></div>
@@ -419,7 +420,7 @@ $(function(){initNavTree('_grid_data_selector_8hpp_source.html',''); initResizab
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1a34ade7a8ced74dfa5d1494ffac178f.html">forcing</a></li><li class="navelem"><b>GridDataSelector.hpp</b></li>
-    <li class="footer">Generated on Sat Aug 9 2025 18:40:01 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Nov 10 2025 21:43:40 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
