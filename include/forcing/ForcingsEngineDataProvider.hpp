@@ -105,6 +105,13 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
     using clock_type = std::chrono::system_clock;
 
     ~ForcingsEngineDataProvider() override = default;
+    void finalize() override
+    {
+        if (bmi_ != nullptr) {
+            bmi_->Finalize();
+            bmi_ = nullptr;
+        }
+    }
 
     boost::span<const std::string> get_available_variable_names() const override
     {

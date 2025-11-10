@@ -749,6 +749,8 @@ int main(int argc, char* argv[]) {
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
+    manager->finalize();
+
 #if NGEN_WITH_ROUTING
 #if NGEN_WITH_MPI
     if (mpi_num_procs > 1) {
@@ -878,7 +880,7 @@ int main(int argc, char* argv[]) {
         ss.str("");
     }
 
-    manager->finalize();
+    _interp.reset();
 
 #if NGEN_WITH_MPI
     MPI_Finalize();
