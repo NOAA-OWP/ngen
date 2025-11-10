@@ -379,7 +379,7 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
                 *output_text_stream << delimiter << var_value; //with delimiter for the rest.
             }
         }
-         return output_text_stream->str();
+        return output_text_stream->str();
     }
     // Otherwise, use the default behavior, which means we either
     //   - were originally set to use the default of getting the output of the last module

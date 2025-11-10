@@ -147,7 +147,7 @@ namespace realization {
             return output_header_fields;
         }
 
-         /**
+        /**
          * Get a header line appropriate for a file made up of entries from this type's implementation of
          * ``get_output_line_for_timestep``.
          *
