@@ -511,6 +511,7 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR,
                 BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE,
         };
+
     };
 /*
     template<class M>

@@ -598,6 +598,7 @@ int main(int argc, char* argv[]) {
         LOG(ss.str(), LogLevel::SEVERE);
         ss.str("");
     }
+
     // now create the layer objects
 
     // first make sure that the layer are listed in decreasing order
@@ -645,7 +646,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    auto time_done_init = std::chrono::steady_clock::now();
+    auto time_done_init                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
 
     // Now loop some time, iterate catchments, do stuff for total number of output times
@@ -741,7 +742,7 @@ int main(int argc, char* argv[]) {
         ss.str("");
     }
 
-    auto time_done_simulation = std::chrono::steady_clock::now();
+    auto time_done_simulation                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_simulation = time_done_simulation - time_done_init;
 
 #if NGEN_WITH_MPI

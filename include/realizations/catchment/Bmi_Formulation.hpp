@@ -147,7 +147,7 @@ namespace realization {
             return output_header_fields;
         }
 
-         /**
+        /**
          * Get a header line appropriate for a file made up of entries from this type's implementation of
          * ``get_output_line_for_timestep``.
          *
@@ -228,7 +228,7 @@ namespace realization {
 
         virtual void update(time_step_t t_index, time_step_t t_delta) = 0;
 
-                /**
+        /**
          * Get the configured units for the variables in formulation output.
          *
          * Get the units of the variables to include in the output from this formulation as defined in the realization file

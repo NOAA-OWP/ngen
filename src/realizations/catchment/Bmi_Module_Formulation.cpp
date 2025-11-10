@@ -39,8 +39,8 @@ namespace realization {
                 std::string name = get_output_variable_names()[i];
                 std::string output_units = get_output_variable_units()[i];
                 std::string out_units_norm = (output_units.empty() || output_units == "none") ? "1" : output_units;
-                output_str += (output_str.empty() ? "" : ",") + 
-                std::to_string(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0,0,output_units),MEAN)); 
+                output_str += (output_str.empty() ? "" : ",") +
+                    std::to_string(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units), MEAN));
             }
             return output_str;
         }
@@ -103,8 +103,8 @@ namespace realization {
 
         double Bmi_Module_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
             update(t_index, t_delta);
-            return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0,0,"m"),MEAN);
-        } 
+            return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
+        }
 
         time_t Bmi_Module_Formulation::get_variable_time_begin(const std::string &variable_name) {
             // TODO: come back and implement if actually necessary for this type; for now don't use

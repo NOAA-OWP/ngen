@@ -369,9 +369,10 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
 
         // This almost certainly should never happen, but just to be safe ...
         if (output_var_names.empty()) { return ""; }
-        
+
         for (int i = 0; i < output_var_names.size(); ++i) {
-            std::string var_value = std::to_string(get_value(CatchmentAggrDataSelector(get_catchment_id(), output_var_names[i], 0,0,output_var_units[i]),MEAN));    
+            double value = get_value(CatchmentAggrDataSelector(get_catchment_id(), output_var_names[i], 0, 0, output_var_units[i]), MEAN);
+            std::string var_value = std::to_string(value);
             if(i == 0){
                 *output_text_stream << var_value; //without delimiter for first output variable.
             }
@@ -379,7 +380,7 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
                 *output_text_stream << delimiter << var_value; //with delimiter for the rest.
             }
         }
-         return output_text_stream->str();
+        return output_text_stream->str();
     }
     // Otherwise, use the default behavior, which means we either
     //   - were originally set to use the default of getting the output of the last module
@@ -454,7 +455,7 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
             }
         }
     }
-    return modules[index]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0,0,"m"),MEAN);
+    return modules[index]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"), MEAN);
 }
 
 bool Bmi_Multi_Formulation::is_bmi_input_variable(const std::string &var_name) const {
