@@ -492,6 +492,7 @@ ngen_add_test(
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
         forcing/GridDataSelector_Test.cpp
         core/mediator/UnitsHelper_Tests.cpp
+        simulation_time/simulation_clock_Test.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/NetworkTests.cpp
         utils/include/StreamOutputTest.cpp
