@@ -649,6 +649,8 @@ int main(int argc, char* argv[]) {
     auto time_done_init                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
 
+    LOG("[TIMING]: Init: " + std::to_string(time_elapsed_init.count()), LogLevel::INFO);
+
     // Now loop some time, iterate catchments, do stuff for total number of output times
     auto num_times = manager->Simulation_Time_Object->get_total_output_times();
 
@@ -744,6 +746,8 @@ int main(int argc, char* argv[]) {
 
     auto time_done_simulation                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_simulation = time_done_simulation - time_done_init;
+
+    LOG("[TIMING]: Catchment simulation: " + std::to_string(time_elapsed_simulation.count()), LogLevel::INFO);
 
 #if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
@@ -868,6 +872,8 @@ int main(int argc, char* argv[]) {
     auto time_done_routing                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_routing = time_done_routing - time_done_simulation;
 
+    LOG("[TIMING]: Routing: " + std::to_string(time_elapsed_routing.count()), LogLevel::INFO);
+
     if (mpi_rank == 0) {
         ss << "NGen top-level timings:"
            << "\n\tNGen::init: " << time_elapsed_init.count()
@@ -881,6 +887,11 @@ int main(int argc, char* argv[]) {
     }
 
     _interp.reset();
+
+    auto time_done_total                               = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_total   = time_done_total - time_start;
+
+    LOG("[TIMING]: Total: " + std::to_string(time_elapsed_total.count()), LogLevel::INFO);
 
 #if NGEN_WITH_MPI
     MPI_Finalize();
