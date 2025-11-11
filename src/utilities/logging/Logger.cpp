@@ -236,31 +236,41 @@ bool Logger::ParseLoggerConfigFile(std::ifstream& jsonFile)
         boost::property_tree::read_json(jsonFile, config);
 
         // Read logging_enabled flag
-        loggingEnabled = config.get<bool>("logging_enabled", true);  // default true if missing
-        std::cout << "[DEBUG] Found logging_enabled=" 
-                  << (loggingEnabled ? "true" : "false") << std::endl;
-
-        // Read modules subtree
-        if (auto modulesOpt = config.get_child_optional("modules")) {
-            for (const auto& kv : *modulesOpt) {
-                std::string moduleName = ToUpper(kv.first);
-                std::string levelStr = ToUpper(kv.second.get_value<std::string>());
-
-                auto it = moduleNamesMap.find(moduleName);
-                if (it != moduleNamesMap.end()) {
-                    moduleLogLevels[moduleName] = ConvertStringToLogLevel(levelStr);
-                    std::cout << "[DEBUG] Found Log level "
-                            << kv.first << "="
-                            << ConvertLogLevelToString(moduleLogLevels[moduleName])
-                            << std::endl;
-                } else {
-                    std::cout << "[ERROR] Ignoring unknown module " << moduleName << std::endl;
-                }
-            }
-        } else {
-            std::cout << "[ERROR] Missing 'modules' section in logging.json" << std::endl;
+        try {
+            loggingEnabled = config.get<bool>("logging_enabled", true);  // default true if missing
+            std::cout << "[DEBUG] Logging " 
+                      << (loggingEnabled ? "ENABLED" : "DISABLED") << std::endl;
+        }
+        catch (const boost::property_tree::ptree_bad_data& e) {
+            std::cout << "[DEBUG] JSON data error: " << e.what() << std::endl;
+            return false;
         }
 
+        // Read modules subtree only if logging enabled
+        if (loggingEnabled) {
+            bool atLeastOneModuleFound = false;
+            if (auto modulesOpt = config.get_child_optional("modules")) {
+                for (const auto& kv : *modulesOpt) {
+                    std::string moduleName = ToUpper(kv.first);
+                    std::string levelStr = ToUpper(kv.second.get_value<std::string>());
+
+                    auto it = moduleNamesMap.find(moduleName);
+                    if (it != moduleNamesMap.end()) {
+                        atLeastOneModuleFound = true;
+                        moduleLogLevels[moduleName] = ConvertStringToLogLevel(levelStr);
+                        std::cout << "[DEBUG] Found Log level "
+                                << kv.first << "="
+                                << ConvertLogLevelToString(moduleLogLevels[moduleName])
+                                << std::endl;
+                    } else {
+                        std::cout << "[ERROR] Ignoring unknown module " << moduleName << std::endl;
+                    }
+                }
+            } else {
+                std::cout << "[ERROR] Missing 'modules' section in logging.json." << std::endl;
+            }
+            return atLeastOneModuleFound;
+        }
         return true;
     }
     catch (const boost::property_tree::json_parser_error& e) {
@@ -269,32 +279,36 @@ bool Logger::ParseLoggerConfigFile(std::ifstream& jsonFile)
     catch (const std::exception& e) {
         std::cout << "[ERROR] Exception while parsing config: " << e.what() << std::endl;
     }
-
     return false;
 }
 
 void Logger::ReadConfigFile(std::string searchPath) {
 
+    bool success = false;
+    std::ifstream jsonFile;
+
     // Set logger defaults
-    loggingEnabled = true;
     moduleLogLevels.clear();
+    loggingEnabled = true;
 
     // Open and Parse config file
-    std::ifstream jsonFile;
     if (searchPath.empty()) {
         std::cout << "ngen WARNING: NGEN_RESULTS_DIR environment variable not set or empty.";
         std::cout << " Using default logging configuration of enabled and log level INFO" << std::endl;
     } else {
-        bool configFileFound = false;
         if (FindAndOpenLogConfigFile(searchPath, jsonFile)) {
             if (jsonFile.peek() != std::ifstream::traits_type::eof()) {
-                std::cout << "[DEBUG] ngen parsing logging config file " << searchPath << std::endl;
-                if (ParseLoggerConfigFile(jsonFile)) configFileFound = true;
+                std::cout << "[DEBUG] " << MODULE_NAME << " parsing logging config file " << searchPath << std::endl;
+                success = ParseLoggerConfigFile(jsonFile);
             }
         }
-        if (!configFileFound) {
-            std::cout << MODULE_NAME << "[DEBUG] ngen WARNING: Issue with logging config file " << CONFIG_FILENAME << " in " << searchPath << ".";
-            std::cout << "[DEBUG] Using default logging configuration of enabled and log level INFO" << std::endl;    
+    }
+    if (loggingEnabled && !success) {
+        std::cout << "[DEBUG] " << MODULE_NAME << " WARNING: Issue with logging config file " << CONFIG_FILENAME << " in " << searchPath << ".";
+        std::cout << "[DEBUG] Using default logging configuration of enabled and log level INFO for all known modules" << std::endl;  
+        for (const auto kv : moduleNamesMap) {
+            std::string moduleName = ToUpper(kv.first);
+            moduleLogLevels[moduleName] = LogLevel::INFO;
         }
     }
 }
@@ -324,7 +338,7 @@ void Logger::ManageLoggingEnvVars(bool set) {
             std::cout << "Set NGEN_LOG_FILE_PATH=" << logFilePath << std::endl;
         }
         else {
-            cout << "NGEN_LOG_FILE_PATH env var not set. Modules writing to their default logs." << std::endl;           
+            cout << "NGEN_LOG_FILE_PATH env var not set. Modules writing to their default logs." << std::endl;          
         }
 
         // Set the logging enabled/disabled env var
