@@ -4,6 +4,7 @@ dynamic_sourced_cxx_library(core "${CMAKE_CURRENT_SOURCE_DIR}")
 add_library(NGen::core ALIAS core)
 target_link_libraries(core PUBLIC
                            NGen::config_header
+                           NGen::core_mediator
                            )
 
 target_include_directories(core PUBLIC
