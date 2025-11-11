@@ -7,6 +7,7 @@
 
 #include <pybind11/embed.h>
 #include "InterpreterUtil.hpp"
+#include "utilities/logging_utils.h"
 
 namespace py = pybind11;
 
@@ -96,7 +97,7 @@ namespace utils {
                     result = bool_result;
                 }
                 catch (const std::exception &e) {
-                    std::cerr << "Failed to subdivide hydrofabric: " << e.what() << std::endl;
+                    logging::error((std::string("Failed to subdivide hydrofabric: ") + e.what()).c_str());
                     result = false;
                 }
                 return result;
@@ -109,7 +110,7 @@ namespace utils {
                     result = bool_result;
                 }
                 catch (const std::exception &e) {
-                    std::cerr << "Failed to subdivide hydrofabric for index " << index << ": " << e.what() << std::endl;
+                    logging::error((std::string("Failed to subdivide hydrofabric for index ") + std::to_string(index) + ": " + e.what() + "\n").c_str());
                     result = false;
                 }
                 return result;
