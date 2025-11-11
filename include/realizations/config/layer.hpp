@@ -29,8 +29,8 @@ namespace realization{
      */
     Layer(const boost::property_tree::ptree& tree):formulation(tree){
         std::vector<std::string> missing_keys;
-        auto name = tree.get_optional<std::string>("name");
-        if(!name) missing_keys.push_back("name");
+        auto name = tree.get_optional<std::string>("layer_name");
+        if(!name) missing_keys.push_back("layer_name");
         auto unit = tree.get<std::string>("time_step_units", "s");
 
         auto id = tree.get_optional<int>("id");
