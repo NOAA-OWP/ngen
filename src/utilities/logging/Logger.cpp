@@ -91,16 +91,16 @@ bool Logger::CreateDirectory(const std::string& path) {
         int status = system(mkdir_cmd.c_str());
 
         if (status == -1) {
-            std::cerr << "system() failed to run mkdir.\n";
+            std::cerr << "[CRITICAL] " << MODULE_NAME << " system() failed to run mkdir.\n";
             return false;
         } else if (WIFEXITED(status)) {
             int exitCode = WEXITSTATUS(status);
             if (exitCode != 0) {
-                std::cerr << "mkdir command failed with exit code: " << exitCode << "\n";
+                std::cerr << "[CRITICAL] " << MODULE_NAME << " mkdir command failed with exit code: " << exitCode << "\n";
                 return false;
             }
         } else {
-            std::cerr << "mkdir terminated abnormally.\n";
+            std::cerr << "[CRITICAL] " << MODULE_NAME << " mkdir terminated abnormally.\n";
             return false;
         }
     }
@@ -166,10 +166,11 @@ void Logger::SetupLogFile(void) {
         logFile.open(logFilePath, ios::out | ios::trunc); // Truncating ensures keeping only the last calibration iteration.
         if (logFile.is_open()) {
             openedOnce = true;
+            std::cout << "[DEBUG] " << MODULE_NAME << " Log File: " << logFilePath << std::endl;
             return;
         }
     }
-    std::cout << "[WARNING] Unable to create log file ";
+    std::cout << "[WARNING] " << MODULE_NAME << " Unable to create log file ";
     if (!logFilePath.empty()) {
         std::cout << logFilePath;
     }
@@ -177,7 +178,7 @@ void Logger::SetupLogFile(void) {
         std::cout << logFileDir;
     }
     std::cout << " (Perhaps check permissions)" << std::endl;
-    std::cout << "[WARNING] Log entries will be written to stdout" << std::endl;
+    std::cout << "[WARNING] " << MODULE_NAME << " Log entries will be written to stdout" << std::endl;
 }
 
 std::string Logger::ToUpper(const std::string& input) {
@@ -238,11 +239,11 @@ bool Logger::ParseLoggerConfigFile(std::ifstream& jsonFile)
         // Read logging_enabled flag
         try {
             loggingEnabled = config.get<bool>("logging_enabled", true);  // default true if missing
-            std::cout << "[DEBUG] Logging " 
+            std::cout << "[DEBUG] " << MODULE_NAME << " Logging " 
                       << (loggingEnabled ? "ENABLED" : "DISABLED") << std::endl;
         }
         catch (const boost::property_tree::ptree_bad_data& e) {
-            std::cout << "[DEBUG] JSON data error: " << e.what() << std::endl;
+            std::cout << "[ERROR] " << MODULE_NAME << " JSON data error: " << e.what() << std::endl;
             return false;
         }
 
@@ -258,26 +259,26 @@ bool Logger::ParseLoggerConfigFile(std::ifstream& jsonFile)
                     if (it != moduleNamesMap.end()) {
                         atLeastOneModuleFound = true;
                         moduleLogLevels[moduleName] = ConvertStringToLogLevel(levelStr);
-                        std::cout << "[DEBUG] Found Log level "
+                        std::cout << "[DEBUG] " << MODULE_NAME << " Found Log level "
                                 << kv.first << "="
                                 << ConvertLogLevelToString(moduleLogLevels[moduleName])
                                 << std::endl;
                     } else {
-                        std::cout << "[ERROR] Ignoring unknown module " << moduleName << std::endl;
+                        std::cout << "[ERROR] " << MODULE_NAME << " Ignoring unknown module " << moduleName << std::endl;
                     }
                 }
             } else {
-                std::cout << "[ERROR] Missing 'modules' section in logging.json." << std::endl;
+                 std::cout << "[ERROR] " << MODULE_NAME << " Missing 'modules' section in logging.json." << std::endl;
             }
             return atLeastOneModuleFound;
         }
         return true;
     }
     catch (const boost::property_tree::json_parser_error& e) {
-        std::cout << "[ERROR] JSON parse error: " << e.what() << std::endl;
+        std::cout << "[ERROR] " << MODULE_NAME << " JSON parse error: " << e.what() << std::endl;
     }
     catch (const std::exception& e) {
-        std::cout << "[ERROR] Exception while parsing config: " << e.what() << std::endl;
+        std::cout << "[ERROR] " << MODULE_NAME << " Exception while parsing config: " << e.what() << std::endl;
     }
     return false;
 }
@@ -293,8 +294,8 @@ void Logger::ReadConfigFile(std::string searchPath) {
 
     // Open and Parse config file
     if (searchPath.empty()) {
-        std::cout << "ngen WARNING: NGEN_RESULTS_DIR environment variable not set or empty.";
-        std::cout << " Using default logging configuration of enabled and log level INFO" << std::endl;
+        std::cout << "[WARNING] " << MODULE_NAME << " Logging config file cannot be read from NGEN_RESULTS_DIR environment variable because not set or empty." << std::endl;
+        std::cout << "[WARNING] " << MODULE_NAME << " Using defaults for logging." << std::endl;
     } else {
         if (FindAndOpenLogConfigFile(searchPath, jsonFile)) {
             if (jsonFile.peek() != std::ifstream::traits_type::eof()) {
@@ -304,8 +305,8 @@ void Logger::ReadConfigFile(std::string searchPath) {
         }
     }
     if (loggingEnabled && !success) {
-        std::cout << "[DEBUG] " << MODULE_NAME << " WARNING: Issue with logging config file " << CONFIG_FILENAME << " in " << searchPath << ".";
-        std::cout << "[DEBUG] Using default logging configuration of enabled and log level INFO for all known modules" << std::endl;  
+        std::cout << "[WARNING] " << MODULE_NAME << " Issue with logging config file " << CONFIG_FILENAME << " in " << ((searchPath.empty())?"undefined path":searchPath) << "." << std::endl;
+        std::cout << "[WARNING] " << MODULE_NAME << " Using default logging configuration of enabled and log level INFO for all known modules" << std::endl;  
         for (const auto kv : moduleNamesMap) {
             std::string moduleName = ToUpper(kv.first);
             moduleLogLevels[moduleName] = LogLevel::INFO;
@@ -335,16 +336,16 @@ void Logger::ManageLoggingEnvVars(bool set) {
         if (!logFilePath.empty()) {
             // Set the log file env var
             setenv("NGEN_LOG_FILE_PATH", logFilePath.c_str(), 1);
-            std::cout << "Set NGEN_LOG_FILE_PATH=" << logFilePath << std::endl;
+            std::cout << "[DEBUG] " << MODULE_NAME << " Set env var NGEN_LOG_FILE_PATH=" << logFilePath << std::endl;
         }
         else {
-            cout << "NGEN_LOG_FILE_PATH env var not set. Modules writing to their default logs." << std::endl;          
+            std::cout << "[WARNING] " << MODULE_NAME << " NGEN_LOG_FILE_PATH env var not set. Modules writing to their default logs." << std::endl;          
         }
 
         // Set the logging enabled/disabled env var
         setenv((EV_EWTS_LOGGING).c_str(), ((loggingEnabled)?"ENABLED":"DISABLED"), 1);
         std::string logMsg = std::string("Set Logging ") + ((loggingEnabled)?"ENABLED":"DISABLED");
-        cout << logMsg << "(envVar=" << EV_EWTS_LOGGING << ")" << endl;
+        std::cout << logMsg << "(envVar=" << EV_EWTS_LOGGING << ")" << std::endl;
         if (!logFilePath.empty()) {
             LogLevel saveLevel = logLevel;
             logLevel = LogLevel::INFO; // Ensure this INFO message is always logged
@@ -353,7 +354,7 @@ void Logger::ManageLoggingEnvVars(bool set) {
         }
     }
     else {
-        Log("ngen Logger setup: Unset existing Module Logger Environment Variables", LogLevel::DEBUG);
+        Log("Logger setup: Unset existing Module Logger Environment Variables", LogLevel::DEBUG);
     }
 
     // Set logger env vars unique to each module in the formulation 
@@ -391,9 +392,9 @@ void Logger::ManageLoggingEnvVars(bool set) {
             std::string logMsg = std::string("Set ") + moduleName 
                 + ((moduleName != "NGEN")?" Log Level env var to ":" Log Level to ") 
                 + TrimString(ll);
-            cout << logMsg;
-            if (moduleName != "NGEN") cout << " (" << envVar << ")";
-            cout << endl;
+            std::cout << logMsg;
+            if (moduleName != "NGEN") std::cout << " (" << envVar << ")";
+            std::cout << std::endl;
             if (!logFilePath.empty()) {
                 LogLevel saveLevel = logLevel;
                 logLevel = LogLevel::INFO; // Ensure this INFO message is always logged
@@ -436,7 +437,7 @@ void Logger::SetLogPreferences(LogLevel level) {
         const char* envVar = std::getenv("NGEN_RESULTS_DIR");  // Currently set by ngen-cal but envision set for WCOSS at some point
         if (envVar != nullptr && envVar[0] != '\0') {
             ngenResultsDir = envVar;
-            cout << "[DEBUG] Found envVar NGEN_RESULTS_DIR = " << ngenResultsDir << endl;
+            std::cout << "[DEBUG] " << MODULE_NAME << " Found envVar NGEN_RESULTS_DIR = " << ngenResultsDir << std::endl;
         }
 
         ReadConfigFile(ngenResultsDir);
@@ -515,9 +516,9 @@ void Logger::Log(std::string message, LogLevel messageLevel) {
         else {
             // Log file not found. Write to stdout.
             while (std::getline(logMsg, line)) {
-                cout << logPrefix + " " + line << std::endl;
+                std::cout << logPrefix + " " + line << std::endl;
             }
-            cout << std::flush;
+            std::cout << std::flush;
         }
     }
 }
@@ -659,7 +660,7 @@ bool Logger::FindAndOpenLogConfigFile(std::string path, std::ifstream& configFil
     while (!path.empty() && path != "/") {
         std::string candidate = path + DS + CONFIG_FILENAME;
         if (FileExists(candidate)) {
-            std::cout << "[DEBUG] Opening logger config file " << candidate << std::endl;
+            std::cout << "[DEBUG] " << MODULE_NAME << " Opening logger config file " << candidate << std::endl;
             configFileStream.open(candidate);
             return configFileStream.is_open();
         }
