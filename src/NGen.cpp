@@ -705,6 +705,7 @@ int main(int argc, char* argv[]) {
 
     auto time_done_init                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
+    LOG("[TIMING]: Init: " + std::to_string(time_elapsed_init.count()), LogLevel::INFO);
 
     simulation->run_catchments();
 
@@ -721,6 +722,7 @@ int main(int argc, char* argv[]) {
 
     auto time_done_simulation                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_simulation = time_done_simulation - time_done_init;
+    LOG("[TIMING]: Catchment simulation: " + std::to_string(time_elapsed_simulation.count()), LogLevel::INFO);
 
     // Write nexus outflow CSV files in bulk at the end of the run,
     // rather than as the simulation runs, to avoid issues when
@@ -740,6 +742,9 @@ int main(int argc, char* argv[]) {
 
     auto time_done_nexus_output                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_nexus_output = time_done_nexus_output - time_done_simulation;
+    LOG("[TIMING]: Nexus outflow file writing: " + std::to_string(time_elapsed_nexus_output.count()), LogLevel::INFO);
+
+    manager->finalize();
 
 #if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
@@ -751,6 +756,7 @@ int main(int argc, char* argv[]) {
 
     auto time_done_routing                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_routing = time_done_routing - time_done_nexus_output;
+    LOG("[TIMING]: Routing: " + std::to_string(time_elapsed_routing.count()), LogLevel::INFO);
 
 #if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
@@ -765,22 +771,29 @@ int main(int argc, char* argv[]) {
     std::chrono::duration<double> time_elapsed_coastal = time_done_coastal - time_done_routing;
 #endif
 
+    _interp.reset();
+
+    auto time_done_total                               = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_total   = time_done_total - time_start;
+
+    LOG("[TIMING]: Total: " + std::to_string(time_elapsed_total.count()), LogLevel::INFO);
+
     if (mpi_rank == 0) {
         ss << "NGen top-level timings:"
            << "\n\tNGen::init: " << time_elapsed_init.count()
            << "\n\tNGen::simulation: " << time_elapsed_simulation.count()
+           << "\n\tNGen::nexus_output: " << time_elapsed_nexus_output.count()
 #if NGEN_WITH_ROUTING
            << "\n\tNGen::routing: " << time_elapsed_routing.count()
 #endif
 #if NGEN_WITH_COASTAL
            << "\n\tNGen::coastal: " << time_elapsed_coastal.count()
 #endif
+           << "\n\tNGen::total: " << time_elapsed_total.count()
            << std::endl;
         LOG(ss.str(), LogLevel::INFO);
         ss.str("");
     }
-
-    manager->finalize();
 
 #if NGEN_WITH_MPI
     MPI_Finalize();

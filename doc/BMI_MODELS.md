@@ -156,14 +156,31 @@ There are some special BMI formulation config parameters which are required in c
     ```
 * `output_variables`
   * can specify the particular set and order of output variables to include in the realization's `get_output_line_for_timestep()` (and similar) function
-  * JSON structure should be a list of strings
+  * The new JSON structure contains an array of key-value pairs of output name, header in output file and units for conversion (if needed). The units has not been implemented yet. 
+  * The old JSON structure to mention the output variables as a list of strings is deprecated.
   * if not present, defaults to whatever it returned by the model's BMI `get_output_var_names()` function *the first time* it is invoked
   * if specified, must be at the **root** level of a formulation object.
   * if specified for multi-BMI, it should be within the **formulation-root** config level, i.e. in the **root** config level for a given **formulation**.
   * e.g.,
     ```jsonc
-    // Example for CFE, which has 13 output variables
-    "output_variables": ["RAIN_RATE", "Q_OUT"]
+    // Example for multi models formulation
+    "output_variables": [
+		        {
+			       "name": "SNEQV",
+			       "header": "WE_mm",
+			       "units": "mm"
+            },
+            {
+              "name": "soil_moisture_fraction",
+              "header": "sm_frac_0.4m",
+              "units":"1"
+            },
+            {
+              "name": "soil_moisture_profile",
+              "header": "sm_profile_0.1m",
+              "units": "1"
+	     		  }
+      ]
     ```
 * `output_header_fields`
   * can specify the header strings to use for the realization's printed output (i.e., the value returned by `get_output_header_line()`)

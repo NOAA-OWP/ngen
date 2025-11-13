@@ -32,6 +32,8 @@ class UnitsHelper {
 
     static double* convert_values(const std::string &in_units, double* values, const std::string &out_units, double* out_values, const size_t & count);
 
+    static bool can_parse(const std::string &in_units);
+
     private:
      
     // Theoretically thread-safe. //TODO: Test?
