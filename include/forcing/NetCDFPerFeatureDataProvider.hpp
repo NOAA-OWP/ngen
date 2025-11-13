@@ -53,14 +53,14 @@ namespace data_access
          * @param log_s An output log stream for messages from the underlying library. If a provider object for
          * the given path already exists, this argument will be ignored.
          */
-        static std::shared_ptr<NetCDFPerFeatureDataProvider> get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s);
+        static std::shared_ptr<NetCDFPerFeatureDataProvider> get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s, bool enable_cache);
 
         /**
          * @brief Cleanup the shared providers cache, ensuring that the files get closed.
          */
         static void cleanup_shared_providers();
 
-        NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s);
+        NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s, bool enable_cache);
 
         // Default implementation defined in the .cpp file so that
         // client code doesn't need to have the full definition of
@@ -135,6 +135,7 @@ namespace data_access
         std::map<std::string,netCDF::NcVar> ncvar_cache;
         std::map<std::string,std::string> units_cache;
         boost::compute::detail::lru_cache<std::string, std::shared_ptr<std::vector<double>>> value_cache;
+        bool enable_cache;
         size_t cache_slice_t_size = 1;
         size_t cache_slice_c_size = 1;
 
