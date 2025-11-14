@@ -7,8 +7,11 @@
 #include <HY_Catchment.hpp>
 #include <HY_HydroNexus.hpp>
 #include <network.hpp>
-#include <Formulation_Manager.hpp>
 #include <HY_Features_Ids.hpp>
+
+namespace realization {
+    class Formulation_Manager;
+}
 
 namespace hy_features {
 
@@ -198,7 +201,7 @@ namespace hy_features {
          * @brief Destroy the hy features object
          * 
          */
-        virtual ~HY_Features(){}
+        virtual ~HY_Features();
 
       private:
 
@@ -219,12 +222,6 @@ namespace hy_features {
          * 
          */
         network::Network network;
-
-        /**
-         * @brief Pointer to the formulation manager used to associate catchment formulations with HY_Catchment objects.
-         * 
-         */
-        std::shared_ptr<Formulation_Manager> formulations;
 
         /**
          *  @brief The set of layers that contain at least one catchment
