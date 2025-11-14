@@ -1,5 +1,6 @@
 #include <HY_Features_MPI.hpp>
 #include <HY_PointHydroNexusRemote.hpp>
+#include <Formulation_Manager.hpp>
 #include "Logger.hpp"
 
 #if NGEN_WITH_MPI
@@ -7,7 +8,7 @@
 using namespace hy_features;
 
 HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON linked_hydro_fabric, std::shared_ptr<Formulation_Manager> formulations, int mpi_rank, int mpi_num_procs) :
-      network(linked_hydro_fabric), formulations(formulations), mpi_rank(mpi_rank), mpi_num_procs(mpi_num_procs)
+      network(linked_hydro_fabric), mpi_rank(mpi_rank), mpi_num_procs(mpi_num_procs)
 { 
       std::string feat_id;
       std::string feat_type;

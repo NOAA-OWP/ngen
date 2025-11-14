@@ -11,8 +11,11 @@
 #include <HY_Catchment.hpp>
 #include <HY_PointHydroNexusRemote.hpp>
 #include <network.hpp>
-#include <Formulation_Manager.hpp>
 #include <Partition_Parser.hpp>
+
+namespace realization {
+    class Formulation_Manager;
+}
 
 namespace hy_features {
 
@@ -96,7 +99,6 @@ namespace hy_features {
       std::unordered_map<std::string, std::shared_ptr<HY_Catchment>> _catchments;
       std::unordered_map<std::string, std::shared_ptr<HY_PointHydroNexusRemote>> _nexuses;
       network::Network network;
-      std::shared_ptr<Formulation_Manager> formulations;
       std::set<long> hf_layers;
       int mpi_rank;
       int mpi_num_procs;
