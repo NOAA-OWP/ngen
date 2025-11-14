@@ -1,5 +1,6 @@
 #include <HY_Features.hpp>
 #include <HY_PointHydroNexus.hpp>
+#include <Formulation_Manager.hpp>
 
 using namespace hy_features;
 
@@ -17,7 +18,7 @@ HY_Features::HY_Features( geojson::GeoJSON catchments, std::string* link_key, st
 }
 
 HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_Manager> formulations, geojson::GeoJSON fabric)
-  :network(network), formulations(formulations)
+  :network(network)
 {
       std::string feat_id;
       std::string feat_type;
@@ -73,3 +74,5 @@ HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_M
       }
 
 }
+
+HY_Features::~HY_Features() = default;
