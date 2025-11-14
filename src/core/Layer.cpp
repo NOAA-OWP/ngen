@@ -1,4 +1,5 @@
 #include <Layer.hpp>
+#include <Catchment_Formulation.hpp>
 
 void ngen::Layer::update_models(boost::span<double> catchment_outflows,
                                 std::unordered_map<std::string, int> &catchment_indexes,
@@ -66,7 +67,7 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
             //If there is more than one, some form of catchment partitioning will be required.
             //for now, only contribute to the first one in the list
             if(nexus == nullptr){
-                throw std::runtime_error("Invalid (null) nexus instantiation downstream of "+id+". "+SOURCE_LOC);
+                throw std::runtime_error("Invalid (null) nexus instantiation downstream of '"+id+"'");
             }
             nexus->add_upstream_flow(response_m_h, id, output_time_index);
             /*std::cerr << "Add water to nexus ID = " << nexus->get_id() << " from catchment ID = " << id << " value = "
