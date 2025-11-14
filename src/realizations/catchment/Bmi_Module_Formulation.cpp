@@ -25,7 +25,6 @@ namespace realization {
             if (timestep != (next_time_step_index - 1)) {
                 throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
             }
-
             static bool no_conversion_message_logged = false;
             if (!no_conversion_message_logged) {
                 no_conversion_message_logged = true;
@@ -39,8 +38,26 @@ namespace realization {
                 std::string name = get_output_variable_names()[i];
                 std::string output_units = get_output_variable_units()[i];
                 std::string out_units_norm = (output_units.empty() || output_units == "none") ? "1" : output_units;
+                double var_value;
+                try{
+                    var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units), MEAN);
+                }
+                catch(data_access::unit_conversion_exception &uce){
+                    std::stringstream ss;
+                    ss << "Unit conversion failure:"
+                        << " requester {'Get Output Line for Timestep (Module Formulation)"
+                        << "' catchment '" << get_catchment_id()
+                        << "' variable '" << name
+                        << "' units '" << output_units << "'}"
+                        << " provider {'" << uce.provider_model_name 
+                        << "' source variable '" << uce.provider_bmi_var_name << "'"
+                        << " raw value " << uce.unconverted_values.back() << "}"
+                        << " message \"" << uce.what() << "\"";
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                    var_value = uce.unconverted_values.back();
+                }
                 output_str += (output_str.empty() ? "" : ",") +
-                    std::to_string(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units), MEAN));
+                    std::to_string(var_value);
             }
             return output_str;
         }
@@ -103,7 +120,25 @@ namespace realization {
 
         double Bmi_Module_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
             update(t_index, t_delta);
-            return get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
+            double var_value;
+                try{
+                    var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
+                }
+                catch(data_access::unit_conversion_exception &uce){
+                    std::stringstream ss;
+                    ss << "Unit conversion failure:"
+                        << " requester {'Get Response (Module Formulation)"
+                        << "' catchment '" << get_catchment_id()
+                        << "' variable '" << get_bmi_main_output_var()
+                        << "' units 'm" << "'}"
+                        << " provider {'" << uce.provider_bmi_var_name 
+                        << "' source variable '" << uce.provider_bmi_var_name << "'"
+                        << " raw value " << uce.unconverted_values.back() << "}"
+                        << " message \"" << uce.what() << "\"";
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                    var_value = uce.unconverted_values.back();
+                }
+            return var_value;
         }
 
         time_t Bmi_Module_Formulation::get_variable_time_begin(const std::string &variable_name) {

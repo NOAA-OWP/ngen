@@ -371,7 +371,24 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
         if (output_var_names.empty()) { return ""; }
 
         for (int i = 0; i < output_var_names.size(); ++i) {
-            double value = get_value(CatchmentAggrDataSelector(get_catchment_id(), output_var_names[i], 0, 0, output_var_units[i]), MEAN);
+            double value;
+            try{
+                value = get_value(CatchmentAggrDataSelector(get_catchment_id(), output_var_names[i], 0, 0, output_var_units[i]), MEAN);    
+            }
+            catch(data_access::unit_conversion_exception &uce){
+                std::stringstream ss;
+                ss << "Unit conversion failure:"
+                    << " requester {'Get Output Line for Timestep (Multi Formulation)"
+                    << "' catchment '" << get_catchment_id()
+                    << "' variable '" << output_var_names[i]
+                    << "' units '" << output_var_units[i] << "'}" 
+                    << " provider {'" << uce.provider_model_name 
+                    << "' source variable '" << uce.provider_bmi_var_name << "'"
+                    << " raw value " << uce.unconverted_values.back() << "}"
+                    << " message \"" << uce.what() << "\"";
+                LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                value = uce.unconverted_values.back();
+            }
             std::string var_value = std::to_string(value);
             if(i == 0){
                 *output_text_stream << var_value; //without delimiter for first output variable.
