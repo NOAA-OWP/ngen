@@ -1,4 +1,5 @@
 #include <Layer.hpp>
+#include <Catchment_Formulation.hpp>
 
 #if NGEN_WITH_MPI
 #include "HY_Features_MPI.hpp"
@@ -62,7 +63,7 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
             //If there is more than one, some form of catchment partitioning will be required.
             //for now, only contribute to the first one in the list
             if(nexus == nullptr){
-                std::string throw_msg; throw_msg.assign("Invalid (null) nexus instantiation downstream of "+id+". "+SOURCE_LOC);
+                std::string throw_msg; throw_msg.assign("Invalid (null) nexus instantiation downstream of '"+id+"'");
                 LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }
