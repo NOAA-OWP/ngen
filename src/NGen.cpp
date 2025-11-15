@@ -769,6 +769,7 @@ int main(int argc, char* argv[]) {
 
     auto time_done_coastal                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_coastal = time_done_coastal - time_done_routing;
+    LOG("[TIMING]: Coastal: " + std::to_string(time_elapsed_coastal.count()), LogLevel::INFO);
 #endif
 
     _interp.reset();
