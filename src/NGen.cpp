@@ -653,12 +653,12 @@ int main(int argc, char* argv[]) {
         std::vector<std::string> cat_ids;
 
         // make a new simulation time object with a different output interval
-        Simulation_Time sim_time(sim_time, time_steps[i]);
+        Simulation_Time layer_sim_time(*sim_time, time_steps[i]);
         if (manager->has_domain_formulation(keys[i])) {
             // create a domain wide layer
             auto formulation = manager->get_domain_formulation(keys[i]);
             layers[i] =
-                std::make_shared<ngen::DomainLayer>(desc, sim_time, features, 0, formulation);
+                std::make_shared<ngen::DomainLayer>(desc, layer_sim_time, features, 0, formulation);
         } else {
             for (std::string id : features.catchments(keys[i])) {
                 cat_ids.push_back(id);
@@ -667,7 +667,7 @@ int main(int argc, char* argv[]) {
                 layers[i] = std::make_shared<ngen::Layer>(
                     desc,
                     cat_ids,
-                    sim_time,
+                    layer_sim_time,
                     features,
                     catchment_collection,
                     0
@@ -676,7 +676,7 @@ int main(int argc, char* argv[]) {
                 layers[i] = std::make_shared<ngen::SurfaceLayer>(
                     desc,
                     cat_ids,
-                    sim_time,
+                    layer_sim_time,
                     features,
                     catchment_collection,
                     0
