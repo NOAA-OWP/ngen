@@ -376,18 +376,23 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
                 value = get_value(CatchmentAggrDataSelector(get_catchment_id(), output_var_names[i], 0, 0, output_var_units[i]), MEAN);    
             }
             catch(data_access::unit_conversion_exception &uce){
-                std::stringstream ss;
-                ss << "Unit conversion failure:"
-                    << " requester {'Get Output Line for Timestep (Multi Formulation)"
-                    << "' catchment '" << get_catchment_id()
-                    << "' variable '" << output_var_names[i]
-                    << "' units '" << output_var_units[i] << "'}" 
-                    << " provider {'" << uce.provider_model_name 
-                    << "' source variable '" << uce.provider_bmi_var_name << "'"
-                    << " raw value " << uce.unconverted_values.back() << "}"
-                    << " message \"" << uce.what() << "\"";
-                LOG(ss.str(), LogLevel::WARNING); ss.str("");
-                value = uce.unconverted_values.back();
+                data_access::unit_error_log_key key{get_id(), get_bmi_main_output_var(), uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                auto ret = data_access::unit_errors_reported.insert(key);
+                bool new_error = ret.second;
+                if (new_error) {
+                    std::stringstream ss;
+                    ss << "Unit conversion failure:"
+                        << " requester {'Get Output Line for Timestep (Multi Formulation)"
+                        << "' catchment '" << get_catchment_id()
+                        << "' variable '" << output_var_names[i]
+                        << "' units '" << output_var_units[i] << "'}" 
+                        << " provider {'" << uce.provider_model_name 
+                        << "' source variable '" << uce.provider_bmi_var_name << "'"
+                        << " raw value " << uce.unconverted_values[0] << "}"
+                        << " message \"" << uce.what() << "\"";
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                    value = uce.unconverted_values[0];
+                }
             }
             std::string var_value = std::to_string(value);
             if(i == 0){

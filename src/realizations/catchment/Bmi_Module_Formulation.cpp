@@ -43,18 +43,23 @@ namespace realization {
                     var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units), MEAN);
                 }
                 catch(data_access::unit_conversion_exception &uce){
-                    std::stringstream ss;
-                    ss << "Unit conversion failure:"
-                        << " requester {'Get Output Line for Timestep (Module Formulation)"
-                        << "' catchment '" << get_catchment_id()
-                        << "' variable '" << name
-                        << "' units '" << output_units << "'}"
-                        << " provider {'" << uce.provider_model_name 
-                        << "' source variable '" << uce.provider_bmi_var_name << "'"
-                        << " raw value " << uce.unconverted_values.back() << "}"
-                        << " message \"" << uce.what() << "\"";
-                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
-                    var_value = uce.unconverted_values.back();
+                    data_access::unit_error_log_key key{get_id(), name, uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                    auto ret = data_access::unit_errors_reported.insert(key);
+                    bool new_error = ret.second;
+                    if (new_error) {
+                        std::stringstream ss;
+                        ss << "Unit conversion failure:"
+                            << " requester {'Get Output Line for Timestep (Module Formulation)"
+                            << "' catchment '" << get_catchment_id()
+                            << "' variable '" << name
+                            << "' units '" << output_units << "'}"
+                            << " provider {'" << uce.provider_model_name 
+                            << "' source variable '" << uce.provider_bmi_var_name << "'"
+                            << " raw value " << uce.unconverted_values[0] << "}"
+                            << " message \"" << uce.what() << "\"";
+                        LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                    }
+                    var_value = uce.unconverted_values[0];
                 }
                 output_str += (output_str.empty() ? "" : ",") +
                     std::to_string(var_value);
@@ -125,18 +130,23 @@ namespace realization {
                     var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
                 }
                 catch(data_access::unit_conversion_exception &uce){
-                    std::stringstream ss;
-                    ss << "Unit conversion failure:"
-                        << " requester {'Get Response (Module Formulation)"
-                        << "' catchment '" << get_catchment_id()
-                        << "' variable '" << get_bmi_main_output_var()
-                        << "' units 'm" << "'}"
-                        << " provider {'" << uce.provider_bmi_var_name 
-                        << "' source variable '" << uce.provider_bmi_var_name << "'"
-                        << " raw value " << uce.unconverted_values.back() << "}"
-                        << " message \"" << uce.what() << "\"";
-                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
-                    var_value = uce.unconverted_values.back();
+                    data_access::unit_error_log_key key{get_id(), get_bmi_main_output_var(), uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                    auto ret = data_access::unit_errors_reported.insert(key);
+                    bool new_error = ret.second;
+                    if (new_error) {
+                        std::stringstream ss;
+                        ss << "Unit conversion failure:"
+                            << " requester {'Get Response (Module Formulation)"
+                            << "' catchment '" << get_catchment_id()
+                            << "' variable '" << get_bmi_main_output_var()
+                            << "' units 'm" << "'}"
+                            << " provider {'" << uce.provider_bmi_var_name 
+                            << "' source variable '" << uce.provider_bmi_var_name << "'"
+                            << " raw value " << uce.unconverted_values[0] << "}"
+                            << " message \"" << uce.what() << "\"";
+                        LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                        var_value = uce.unconverted_values[0];
+                    }
                 }
             return var_value;
         }
