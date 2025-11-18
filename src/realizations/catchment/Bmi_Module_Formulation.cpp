@@ -43,7 +43,7 @@ namespace realization {
                     var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units), MEAN);
                 }
                 catch(data_access::unit_conversion_exception &uce){
-                    data_access::unit_error_log_key key{get_id(), name, uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                    data_access::unit_error_log_key key{"File output", name, uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
                     auto ret = data_access::unit_errors_reported.insert(key);
                     bool new_error = ret.second;
                     if (new_error) {
