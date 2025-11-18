@@ -7,6 +7,10 @@ target_link_libraries(core PUBLIC
                            Boost::boost                # Headers-only Boost
                            )
 
+target_link_libraries(core PRIVATE
+                           NGen::parallel
+                           )
+
 target_include_directories(core PUBLIC
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/include/simulation_time

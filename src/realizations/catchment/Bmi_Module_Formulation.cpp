@@ -15,6 +15,21 @@ namespace realization {
             inner_create_formulation(properties, true);
         }
 
+        void Bmi_Module_Formulation::save_state(std::shared_ptr<UnitSaver> saver) const {
+            auto model = get_bmi_model();
+
+            size_t size = 1;
+            model->SetValue("serialization_create", &size);
+            model->GetValue("serialization_size", &size);
+
+            auto serialization_state = static_cast<char const*>(model->GetValuePtr("serialization_state"));
+            boost::span<const char> data(serialization_state, size);
+
+            saver->save(data);
+
+            model->SetValue("serialization_free", &size);
+        }
+
         boost::span<const std::string> Bmi_Module_Formulation::get_available_variable_names() const {
             return available_forcings;
         }

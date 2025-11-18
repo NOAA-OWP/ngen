@@ -1,5 +1,6 @@
 #include <HY_Features.hpp>
 #include <HY_PointHydroNexus.hpp>
+#include <Formulation_Manager.hpp>
 #include "Logger.hpp"
 
 using namespace hy_features;
@@ -18,7 +19,7 @@ HY_Features::HY_Features( geojson::GeoJSON catchments, std::string* link_key, st
 }
 
 HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_Manager> formulations, geojson::GeoJSON fabric)
-  :network(network), formulations(formulations)
+  :network(network)
 {
       std::string feat_id;
       std::string feat_type;
@@ -26,7 +27,7 @@ HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_M
 
       for(const auto& feat_idx : network){
         feat_id = network.get_id(feat_idx);//feature->get_id();
-        feat_type = feat_id.substr(0, feat_id.find(hy_features::identifiers::seperator) );
+        feat_type = feat_id.substr(0, feat_id.find(hy_features::identifiers::separator) );
 
         destinations  = network.get_destination_ids(feat_id);
         if(hy_features::identifiers::isCatchment(feat_type))
@@ -72,3 +73,5 @@ HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_M
       }
 
 }
+
+HY_Features::~HY_Features() = default;

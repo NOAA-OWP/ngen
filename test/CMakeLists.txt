@@ -436,6 +436,19 @@ ngen_add_test(
         NGen::geojson
 )
 
+########################## NgenSimulation Class Tests
+ngen_add_test(
+    test_ngen_simulation
+    OBJECTS
+        core/NgenSimulationTests.cpp
+    LIBRARIES
+        NGen::core
+        NGen::geojson
+        NGen::logging
+        NGen::core_mediator
+        NGen::ngen_bmi
+)
+
 ########################### Netcdf Forcing Tests
 ngen_add_test(
     test_netcdf_forcing
