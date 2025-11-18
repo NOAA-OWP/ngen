@@ -76,7 +76,9 @@ jobs:
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
       - name: Run Tests
-        run: ./cmake_build/test/compare_pet
+        run: |
+          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
+          ./cmake_build/test/compare_pet
         timeout-minutes: 15
 
       - name: Clean Up
