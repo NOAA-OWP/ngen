@@ -98,7 +98,10 @@ namespace realization {
                                     output_stream
                                 )
                             );
-                            domain_formulations.at(layer_desc.id)->set_output_stream(get_output_root() + layer_desc.name + "_layer_"+std::to_string(layer_desc.id) + ".csv");
+                            auto formulation = domain_formulations.at(layer_desc.id);
+                            if (formulation->get_output_header_count() > 0) {
+                                formulation->set_output_stream(get_output_root() + layer_desc.name + "_layer_"+std::to_string(layer_desc.id) + ".csv");
+                            }
                         }
                         //TODO for each layer, create deferred providers for use by other layers
                         //VERY SIMILAR TO NESTED MODULE INIT
