@@ -43,7 +43,8 @@ namespace ngen
                 std::shared_ptr<realization::Catchment_Formulation> formulation):
                     Layer(desc, s_t, features, idx), formulation(formulation)
         {
-            formulation->write_output("Time Step,""Time,"+formulation->get_output_header_line(",")+"\n");
+            if (formulation->get_output_header_count() > 0)
+                formulation->write_output("Time Step,""Time,"+formulation->get_output_header_line(",")+"\n");
         }
 
         /***

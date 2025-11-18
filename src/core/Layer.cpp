@@ -40,9 +40,12 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
         int results_index = catchment_indexes[id];
         catchment_outflows[results_index] += response;
 #endif // NGEN_WITH_ROUTING
-        std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
-            r_c->get_output_line_for_timestep(output_time_index)+"\n";
-        r_c->write_output(output);
+        if (r_c->get_output_header_count() > 0) {
+            // only write output if config specifies output values
+            std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
+                r_c->get_output_line_for_timestep(output_time_index)+"\n";
+            r_c->write_output(output);
+        }
         //TODO put this somewhere else.  For now, just trying to ensure we get m^3/s into nexus output
         double area;
         try {
