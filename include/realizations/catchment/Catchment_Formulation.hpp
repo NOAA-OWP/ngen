@@ -85,6 +85,19 @@ namespace realization {
             virtual ~Catchment_Formulation() = default;
 
             /**
+             * Get get a count of fields that will be included by ``get_output_header_line``.
+             *
+             * Note that like the output generating function, this line does not include anything for time step.
+             *
+             * A default implementation is provided for inheritors of this type, which includes only "Total Discharge."
+             *
+             * @return The number of fields included in the header output.
+             */
+            virtual size_t get_output_header_count() const {
+                return 1;
+            }
+
+            /**
              * Release resources of the given forcing provider
              */
             void finalize();
