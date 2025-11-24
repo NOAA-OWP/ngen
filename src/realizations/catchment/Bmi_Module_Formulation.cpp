@@ -40,7 +40,7 @@ namespace realization {
                 std::string out_units_norm = (output_units.empty() || output_units == "none") ? "1" : output_units;
                 double var_value;
                 try{
-                    var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units), MEAN);
+                    var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, out_units_norm), MEAN);
                 }
                 catch(data_access::unit_conversion_exception &uce){
                     data_access::unit_error_log_key key{"File output", name, uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
@@ -193,6 +193,10 @@ namespace realization {
         size_t Bmi_Module_Formulation::get_ts_index_for_time(const time_t &epoch_time) const {
             // TODO: come back and implement if actually necessary for this type; for now don't use
             throw std::runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
+        }
+
+        const std::string Bmi_Module_Formulation::get_bmi_native_units(const std::string &name) const {
+            return get_bmi_model()->GetVarUnits(name);
         }
 
 	std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
@@ -475,7 +479,13 @@ namespace realization {
                             ss << "Header not provided for '" << out_vars[i] << "'. Using the variable name as header." << std::endl;
                             LOG(ss.str(), LogLevel::INFO); ss.str("");
                         }
-                        out_units[i] = out_vars_json_list[i].at("units").as_string();
+                        if(out_vars_json_list[i].has_key("units")){
+                            //indicates that a valid unit is provided
+                            out_units[i] = out_vars_json_list[i].at("units").as_string();
+                        }
+                        else{
+                           LOG("Units not provided for '" + out_vars[i] + "' in the realization file.",LogLevel::INFO);
+                        }
                     }
                     //check if the units can be parsed correctly and write a warning message
                     std::stringstream ss;
@@ -487,9 +497,9 @@ namespace realization {
                         }
                     }
                     set_output_variable_units(out_units);
+                    set_output_header_fields(out_headers);
                 }
                 set_output_variable_names(out_vars);
-                set_output_header_fields(out_headers);
             }
             // Otherwise, just take what literally is provided by the model
             else {
@@ -520,7 +530,20 @@ namespace realization {
                 // if new format and no output/headers are mentioned.
                 set_output_header_fields(get_output_variable_names());
             }
-
+            
+            //check if units have not been specified. If not, default to native units.
+            if(out_units.size() == 0){
+                out_units.resize(get_output_variable_names().size());
+                for (int i = 0; i < get_output_variable_names().size(); ++i) {
+                    std::string bmi_var_name;
+                    get_bmi_output_var_name(get_output_variable_names()[i], bmi_var_name);
+                    if(!bmi_var_name.empty()){
+                        out_units[i] = get_bmi_model()->GetVarUnits(bmi_var_name);
+                    }
+                }
+                set_output_variable_units(out_units);
+            }
+                                    
             // Output precision, if present
             auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
             if (out_precision_it != properties.end()) {

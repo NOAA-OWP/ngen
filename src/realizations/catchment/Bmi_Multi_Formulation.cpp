@@ -148,9 +148,9 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
                 }
             }
             set_output_variable_units(out_units);
+            set_output_header_fields(out_headers);
         }
         set_output_variable_names(out_vars);
-        set_output_header_fields(out_headers);
     }
     // Otherwise, for multi BMI, the BMI output variables of the last nested module should be used.
     else {
@@ -198,6 +198,21 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             //put out a message that this is ignored.
             LOG("Deprecated output_header_fields item found in realization file ignored.", LogLevel::WARNING);
         }
+    }
+
+    bool model_initialized = is_model_initialized();
+    
+    // //check if units have not been specified. If not, default to native units.
+    if(out_units.size() == 0){
+        auto &names = get_output_variable_names();
+        out_units.resize(names.size());
+        for (int i = 0; i < names.size(); ++i) {
+            out_units[i] = get_bmi_native_units(names[i]);
+        }
+        set_output_variable_units(out_units);
+    }
+    else{
+        LOG("Out units size: " + std::to_string(out_units.size()),LogLevel::WARNING);
     }
     
     // Output precision, if present
@@ -347,6 +362,17 @@ const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const 
     return output_var_name;
 }
 
+const std::string Bmi_Multi_Formulation::get_bmi_native_units(const std::string &name) const {
+    auto iter = availableData.find(name);
+    if(iter == availableData.end()){
+        //handle exception
+        LOG("Multi BMI formulation: No module found for variable " + name, LogLevel::WARNING);
+        throw std::runtime_error("Multi BMI formulation: No module found for variable " + name);
+    }
+    auto model = std::dynamic_pointer_cast<Bmi_Formulation>(iter->second);
+    return model->get_bmi_native_units(name);
+}
+
 std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
     // TODO: have to do some figuring out to make sure this isn't ambiguous (i.e., same output var name from two modules)
     // TODO: need to verify that output variable names are valid, or else warn and return default
@@ -373,10 +399,10 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
         for (int i = 0; i < output_var_names.size(); ++i) {
             double value;
             try{
-                value = get_value(CatchmentAggrDataSelector(get_catchment_id(), output_var_names[i], 0, 0, output_var_units[i]), MEAN);    
+                value = get_value(CatchmentAggrDataSelector(get_catchment_id(), output_var_names[i], 0, 0, output_var_units[i]), MEAN);
             }
             catch(data_access::unit_conversion_exception &uce){
-                data_access::unit_error_log_key key{get_id(), get_bmi_main_output_var(), uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                data_access::unit_error_log_key key{"File Output Multi", output_var_names[i], uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
                 auto ret = data_access::unit_errors_reported.insert(key);
                 bool new_error = ret.second;
                 if (new_error) {
