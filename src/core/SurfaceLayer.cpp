@@ -38,7 +38,7 @@ void ngen::SurfaceLayer::update_models()
         double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, current_time_index, 100.0);
         
         if(nexus_outfiles[id].is_open()) {
-        nexus_outfiles[id] << current_time_index << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
+        nexus_outfiles[id] << current_time_index << ", " << current_timestamp << ", " << contribution_at_t << "\n";
         }
 
         #if NGEN_WITH_MPI
