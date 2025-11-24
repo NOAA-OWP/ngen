@@ -44,6 +44,7 @@ include(CMakeDependentOption)
 
 option(NGEN_WITH_MPI         "Build with MPI support"             OFF)
 option(NGEN_WITH_NETCDF      "Build with NetCDF support"          OFF)
+option(NGEN_WITH_HDF5        "Build with HDF5 support"            OFF)
 option(NGEN_WITH_SQLITE      "Build with SQLite3 support"         OFF)
 option(NGEN_WITH_UDUNITS     "Build with UDUNITS2 support"        ON)
 option(NGEN_WITH_BMI_FORTRAN "Build with Fortran BMI support"     OFF)
@@ -198,6 +199,12 @@ if(NGEN_WITH_NETCDF)
     endif()
 endif()
 
+# -----------------------------------------------------------------------------
+if(NGEN_WITH_HDF5)
+    find_package(HDF5 REQUIRED COMPONENTS C CXX)
+    add_compile_definitions(NGEN_WITH_HDF5)
+endif()
+
 if(NGEN_WITH_EXTERN_SLOTH)
     # This is set because SLOTH will link to gtest by default,
     # which causes a configure error.
@@ -337,6 +344,11 @@ target_link_libraries(ngen
         NGen::bmi_protocols
 )
 
+if(NGEN_WITH_HDF5)
+    target_link_libraries(ngen PUBLIC ${HDF5_LIBRARIES})
+    target_include_directories(ngen PUBLIC ${HDF5_INCLUDE_DIRS})
+endif()
+
 if(NGEN_WITH_SQLITE)
     add_subdirectory("src/geopackage")
     target_link_libraries(ngen PUBLIC NGen::geopackage)
@@ -417,6 +429,7 @@ ngen_multiline_message(
 "  Flags:"
 "    NGEN_WITH_MPI: ${NGEN_WITH_MPI}"
 "    NGEN_WITH_NETCDF: ${NGEN_WITH_NETCDF}"
+"    NGEN_WITH_HDF5: ${NGEN_WITH_HDF5}"
 "    NGEN_WITH_SQLITE: ${NGEN_WITH_SQLITE}"
 "    NGEN_WITH_UDUNITS: ${NGEN_WITH_UDUNITS}"
 "    NGEN_WITH_BMI_FORTRAN: ${NGEN_WITH_BMI_FORTRAN}"
@@ -460,6 +473,12 @@ ngen_dependent_multiline_message(NGEN_WITH_NETCDF
 "    Include: ${NetCDF_INCLUDE_DIR}"
 "    Include (CXX): ${NetCDF_CXX_INCLUDE_DIR}"
 "    Parallel: ${NetCDF_HAS_PARALLEL}")
+ngen_dependent_multiline_message(NGEN_WITH_HDF5
+"  HDF5:"
+"    Version: ${HDF5_VERSION}"
+"    Libraries: ${HDF5_LIBRARIES}"
+"    Include: ${HDF5_INCLUDE_DIRS}"
+"    Is Parallel: ${HDF5_IS_PARALLEL}")
 ngen_dependent_multiline_message(NGEN_WITH_SQLITE
 "  SQLite:"
 "    Version: ${SQLite3_VERSION}"
