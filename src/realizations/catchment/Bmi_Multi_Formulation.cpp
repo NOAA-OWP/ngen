@@ -209,10 +209,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         }
         set_output_variable_units(out_units);
     }
-    else{
-        LOG("Out units size: " + std::to_string(out_units.size()),LogLevel::WARNING);
-    }
-    
+        
     // Output precision, if present
     auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
     if (out_precision_it != properties.end()) {
@@ -361,14 +358,18 @@ const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const 
 }
 
 const std::string Bmi_Multi_Formulation::get_bmi_native_units(const std::string &name) const {
-    auto iter = availableData.find(name);
-    if(iter == availableData.end()){
-        //handle exception
-        LOG("Multi BMI formulation: No module found for variable " + name, LogLevel::WARNING);
-        throw std::runtime_error("Multi BMI formulation: No module found for variable " + name);
+
+    if(!is_out_vars_from_last_mod){
+        auto iter = availableData.find(name);
+        if(iter == availableData.end()){
+            //handle exception
+            LOG("Multi BMI formulation: No module found for variable " + name, LogLevel::WARNING);
+            throw std::runtime_error("Multi BMI formulation: No module found for variable " + name);
+        }
+        auto model = std::dynamic_pointer_cast<Bmi_Formulation>(iter->second);
+        return model->get_bmi_native_units(name);
     }
-    auto model = std::dynamic_pointer_cast<Bmi_Formulation>(iter->second);
-    return model->get_bmi_native_units(name);
+    return modules.back()->get_bmi_native_units(name);
 }
 
 std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
