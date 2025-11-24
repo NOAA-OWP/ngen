@@ -200,8 +200,6 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         }
     }
 
-    bool model_initialized = is_model_initialized();
-    
     // //check if units have not been specified. If not, default to native units.
     if(out_units.size() == 0){
         auto &names = get_output_variable_names();
