@@ -485,6 +485,7 @@ namespace realization {
                         }
                         else{
                            LOG("Units not provided for '" + out_vars[i] + "' in the realization file.",LogLevel::INFO);
+                           out_units[i] = ""; //add an empty entry and populate it with BMI native units later.
                         }
                     }
                     //check if the units can be parsed correctly and write a warning message
@@ -532,13 +533,27 @@ namespace realization {
             }
             
             //check if units have not been specified. If not, default to native units.
+            std::string blank_string = "";
+            auto &names = get_output_variable_names();
             if(out_units.size() == 0){
-                out_units.resize(get_output_variable_names().size());
-                for (int i = 0; i < get_output_variable_names().size(); ++i) {
+                out_units.resize(names.size());
+                for (int i = 0; i < names.size(); ++i) {
                     std::string bmi_var_name;
-                    get_bmi_output_var_name(get_output_variable_names()[i], bmi_var_name);
+                    get_bmi_output_var_name(names[i], bmi_var_name);
                     if(!bmi_var_name.empty()){
                         out_units[i] = get_bmi_model()->GetVarUnits(bmi_var_name);
+                    }
+                }
+                set_output_variable_units(out_units);
+            }
+            else if(std::find(out_units.begin(), out_units.end(), blank_string) != out_units.end()){
+                for (int i = 0; i < names.size(); ++i) {
+                    if (out_units[i] == blank_string){
+                        std::string bmi_var_name;
+                        get_bmi_output_var_name(names[i], bmi_var_name);
+                        if(!bmi_var_name.empty()){
+                            out_units[i] = get_bmi_model()->GetVarUnits(bmi_var_name);
+                        }
                     }
                 }
                 set_output_variable_units(out_units);
