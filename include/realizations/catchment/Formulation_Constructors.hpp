@@ -22,18 +22,18 @@
 namespace realization {
     using constructor = std::shared_ptr<Catchment_Formulation> (*)(std::string, std::shared_ptr<data_access::GenericDataProvider>, utils::StreamHandler);
 
-    extern std::map<std::string, constructor> formulations;
+    extern std::map<std::string, constructor> formulation_constructors;
 
     static std::string valid_formulation_keys(){
         std::string keys = "";
-        for(const auto& kv : formulations){
+        for(const auto& kv : formulation_constructors){
             keys.append(kv.first+" ");
         }
         return keys;
     }
 
     static bool formulation_exists(std::string formulation_type) {
-        return formulations.count(formulation_type) > 0;
+        return formulation_constructors.count(formulation_type) > 0;
     }
 
     static std::shared_ptr<Catchment_Formulation> construct_formulation(
@@ -42,7 +42,7 @@ namespace realization {
         forcing_params &forcing_config,
         utils::StreamHandler output_stream
     ) {
-        constructor formulation_constructor = formulations.at(formulation_type);
+        constructor formulation_constructor = formulation_constructors.at(formulation_type);
         std::shared_ptr<data_access::GenericDataProvider> fp;
         std::stringstream ss; 
 

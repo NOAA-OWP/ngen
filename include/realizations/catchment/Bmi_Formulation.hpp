@@ -159,6 +159,10 @@ namespace realization {
             return boost::algorithm::join(get_output_header_fields(), delimiter);
         }
 
+        size_t get_output_header_count() const override {
+            return get_output_header_fields().size();
+        }
+
         /**
          * Get the names of variables in formulation output.
          *

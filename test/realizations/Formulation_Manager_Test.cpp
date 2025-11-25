@@ -703,17 +703,29 @@ TEST_F(Formulation_Manager_Test, basic_reading_1) {
 
     stream << fix_paths(EXAMPLE_1);
 
+    boost::property_tree::ptree realization_config;
+    boost::property_tree::json_parser::read_json(stream, realization_config);
+
+    auto possible_simulation_time = realization_config.get_child_optional("time");
+    if (!possible_simulation_time) {
+        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    }
+
+    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
     utils::StreamHandler catchment_output(s_ptr);
 
-    realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
+    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     ASSERT_TRUE(manager.is_empty());
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric, catchment_output);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -726,17 +738,29 @@ TEST_F(Formulation_Manager_Test, basic_reading_2) {
     std::stringstream stream;
     stream << fix_paths(EXAMPLE_2);
 
+    boost::property_tree::ptree realization_config;
+    boost::property_tree::json_parser::read_json(stream, realization_config);
+
+    auto possible_simulation_time = realization_config.get_child_optional("time");
+    if (!possible_simulation_time) {
+        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    }
+
+    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
     utils::StreamHandler catchment_output(s_ptr);
 
-    realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
+    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     ASSERT_TRUE(manager.is_empty());
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric, catchment_output);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -749,15 +773,27 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
     std::stringstream stream;
     stream << fix_paths(EXAMPLE_1);
 
+    boost::property_tree::ptree realization_config;
+    boost::property_tree::json_parser::read_json(stream, realization_config);
+
+    auto possible_simulation_time = realization_config.get_child_optional("time");
+    if (!possible_simulation_time) {
+        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    }
+
+    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
     utils::StreamHandler catchment_output(s_ptr);
 
-    realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
+    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric, catchment_output);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -784,14 +820,26 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
     std::stringstream stream;
     stream << fix_paths(EXAMPLE_3);
 
+    boost::property_tree::ptree realization_config;
+    boost::property_tree::json_parser::read_json(stream, realization_config);
+
+    auto possible_simulation_time = realization_config.get_child_optional("time");
+    if (!possible_simulation_time) {
+        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    }
+
+    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
     utils::StreamHandler catchment_output(s_ptr);
 
-    realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
+    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     this->add_feature("cat-67");
-    manager.read(this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric, catchment_output);
 
     ASSERT_EQ(manager.get_size(), 1);
     ASSERT_TRUE(manager.contains("cat-67"));
@@ -819,16 +867,28 @@ TEST_F(Formulation_Manager_Test, read_extra) {
     std::stringstream stream;
     stream << fix_paths(EXAMPLE_3);
 
+    boost::property_tree::ptree realization_config;
+    boost::property_tree::json_parser::read_json(stream, realization_config);
+
+    auto possible_simulation_time = realization_config.get_child_optional("time");
+    if (!possible_simulation_time) {
+        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    }
+
+    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
     utils::StreamHandler catchment_output(s_ptr);
 
-    realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
+    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     ASSERT_TRUE(manager.is_empty());
     
     this->add_feature("cat-67");
-    manager.read(this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric, catchment_output);
 
     ASSERT_EQ(manager.get_size(), 1);
     ASSERT_TRUE(manager.contains("cat-67"));
@@ -838,15 +898,27 @@ TEST_F(Formulation_Manager_Test, forcing_provider_specification) {
     std::stringstream stream;
     stream << fix_paths(EXAMPLE_4);
 
+    boost::property_tree::ptree realization_config;
+    boost::property_tree::json_parser::read_json(stream, realization_config);
+
+    auto possible_simulation_time = realization_config.get_child_optional("time");
+    if (!possible_simulation_time) {
+        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    }
+
+    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
     utils::StreamHandler catchment_output(s_ptr);
 
-    realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
+    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     this->add_feature("cat-67");
     this->add_feature("cat-27115");
-    manager.read(this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric, catchment_output);
 
     ASSERT_EQ(manager.get_size(), 2);
     ASSERT_TRUE(manager.contains("cat-67"));
@@ -925,7 +997,19 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
         }
     };
 
-    auto manager = realization::Formulation_Manager(stream_a);
+    boost::property_tree::ptree realization_config_a;
+    boost::property_tree::json_parser::read_json(stream_a, realization_config_a);
+
+    auto possible_simulation_time_a = realization_config_a.get_child_optional("time");
+    if (!possible_simulation_time_a) {
+        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    }
+
+    auto simulation_time_config_a = realization::config::Time(*possible_simulation_time_a).make_params();
+
+    auto manager = realization::Formulation_Manager(realization_config_a);
   
     add_and_check_feature("cat-67", geojson::PropertyMap{
       { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 10 } },
@@ -942,7 +1026,7 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
       { "e",           geojson::JSONProperty{"e",           2.71828 } }
     });
 
-    manager.read(this->fabric, catchment_output);
+    manager.read(simulation_time_config_a, this->fabric, catchment_output);
 
     ASSERT_EQ(manager.get_size(), 3);
     check_formulation_values(manager, "cat-67",    { 1.70352, 10.0 });
@@ -953,7 +1037,19 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
     this->fabric->remove_feature_by_id("cat-52");
     this->fabric->remove_feature_by_id("cat-27115");
 
-    manager = realization::Formulation_Manager(stream_b);
+    boost::property_tree::ptree realization_config_b;
+    boost::property_tree::json_parser::read_json(stream_b, realization_config_b);
+
+    auto possible_simulation_time_b = realization_config_b.get_child_optional("time");
+    if (!possible_simulation_time_b) {
+        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    }
+
+    auto simulation_time_config_b = realization::config::Time(*possible_simulation_time_b).make_params();
+
+    manager = realization::Formulation_Manager(realization_config_b);
    
     //Test that two hydrofabric features, using global formulation (EXAMPLE_5_b)
     //end up with unique hydrofabric parameters in the formulations after they
@@ -970,7 +1066,7 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
       { "val",          geojson::JSONProperty{"val", 3} }
     });
     
-    manager.read(this->fabric, catchment_output);
+    manager.read(simulation_time_config_b, this->fabric, catchment_output);
     
     check_formulation_values(manager, "cat-27",    { 3.00000, 18.0 });
     check_formulation_values(manager, "cat-67", { 7.41722, 9231 });

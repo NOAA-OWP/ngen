@@ -70,8 +70,22 @@ TEST_F(MultiLayerParserTest, TestInit0)
 
 TEST_F(MultiLayerParserTest, TestRead0)
 {
-    manager = std::make_shared<realization::Formulation_Manager>(realization_config_path.c_str());
-    manager->read(catchment_collection, utils::getStdOut());
+    std::ifstream stream(realization_config_path);
+
+    boost::property_tree::ptree realization_config;
+    boost::property_tree::json_parser::read_json(stream, realization_config);
+
+    auto possible_simulation_time = realization_config.get_child_optional("time");
+    if (!possible_simulation_time) {
+        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    }
+
+    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+
+    manager = std::make_shared<realization::Formulation_Manager>(realization_config);
+    manager->read(simulation_time_config, catchment_collection, utils::getStdOut());
 
     ASSERT_TRUE(true);
 }

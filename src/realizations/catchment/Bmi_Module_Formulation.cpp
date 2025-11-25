@@ -15,6 +15,21 @@ namespace realization {
             inner_create_formulation(properties, true);
         }
 
+        void Bmi_Module_Formulation::save_state(std::shared_ptr<UnitSaver> saver) const {
+            auto model = get_bmi_model();
+
+            size_t size = 1;
+            model->SetValue("serialization_create", &size);
+            model->GetValue("serialization_size", &size);
+
+            auto serialization_state = static_cast<char const*>(model->GetValuePtr("serialization_state"));
+            boost::span<const char> data(serialization_state, size);
+
+            saver->save(data);
+
+            model->SetValue("serialization_free", &size);
+        }
+
         boost::span<const std::string> Bmi_Module_Formulation::get_available_variable_names() const {
             return available_forcings;
         }
@@ -404,6 +419,9 @@ namespace realization {
                     for (int i = 0; i < out_vars_json_list.size(); ++i) {
                         out_vars[i] = out_vars_json_list[i].as_string();
                     }
+                    // empty array may be read as [""], so make it empty
+                    if (out_vars.size() == 1 && out_vars[0].empty())
+                        out_vars.pop_back();
                 }
                 else{
                     out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
@@ -433,6 +451,12 @@ namespace realization {
                             LOG(ss.str(), LogLevel::WARNING); ss.str("");
                         }
                     }
+                    if (out_vars.size() == 1 && out_vars[0].empty()) {
+                        // empty array may be read as [""], so make everything empty
+                        out_vars.pop_back();
+                        out_headers.pop_back();
+                        out_units.pop_back();
+                    }
                     set_output_variable_units(out_units);
                 }
                 set_output_variable_names(out_vars);
@@ -446,7 +470,7 @@ namespace realization {
             // Output header fields, if present
             auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
             if(is_realization_legacy_format()){
-                if (out_headers_it != properties.end()) {
+                if (out_headers_it != properties.end() && get_output_variable_names().size() > 0) {
                     std::vector<geojson::JSONProperty> out_headers_json_list = out_var_it->second.as_list();
                     std::vector<std::string> out_headers(out_headers_json_list.size());
                     for (int i = 0; i < out_headers_json_list.size(); ++i) {

@@ -20,7 +20,7 @@ namespace utils
             {
             }
 
-            /** Create a Stream Handler given a pointer to a ostream object and the seperator to be used in serialization */
+            /** Create a Stream Handler given a pointer to a ostream object and the separator to be used in serialization */
 
             StreamHandler(std::shared_ptr<std::ostream> s) : sep(", ")
             {
@@ -95,7 +95,7 @@ namespace utils
         protected:
 
         std::shared_ptr<std::ostream> output_stream;    /**< The shared pointer to the managed stream object*/
-        std::string sep;                                /**< The seperator string to be used in serialization */
+        std::string sep;                                /**< The separator string to be used in serialization */
 
 
     };
