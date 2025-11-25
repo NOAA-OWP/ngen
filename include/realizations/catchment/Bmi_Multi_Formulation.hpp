@@ -47,6 +47,8 @@ namespace realization {
 
         virtual ~Bmi_Multi_Formulation() {};
 
+        void save_state(std::shared_ptr<State_Snapshot_Saver> saver) const override;
+
         /**
          * Convert a time value from the model to an epoch time in seconds.
          *

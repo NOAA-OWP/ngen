@@ -7,7 +7,6 @@
 #include "Bmi_Adapter.hpp"
 #include <DataProvider.hpp>
 #include "bmi_utilities.hpp"
-#include <utilities/StateSaving.hpp>
 
 #include <boost/core/span.hpp>
 
@@ -47,13 +46,7 @@ namespace realization {
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
         void create_formulation(geojson::PropertyMap properties) override;
 
-        /**
-         * Passes a serialized representation of the model's state to ``saver``
-         *
-         * Asks the model to serialize its state, queries the pointer
-         * and length, passes that to saver, and then releases it
-         */
-        void save_state(std::shared_ptr<UnitSaver> saver) const;
+        void save_state(std::shared_ptr<State_Snapshot_Saver> saver) const override;
 
         /**
          * Get the collection of forcing output property names this instance can provide.

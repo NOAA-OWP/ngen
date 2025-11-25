@@ -41,6 +41,8 @@ class Bmi_Formulation_Test;
 class Bmi_C_Formulation_Test;
 class Bmi_C_Pet_IT;
 
+class State_Snapshot_Saver;
+
 namespace realization {
 
     /**
@@ -67,6 +69,14 @@ namespace realization {
 
 
         virtual ~Bmi_Formulation() {};
+
+        /**
+         * Passes a serialized representation of the model's state to ``saver``
+         *
+         * Asks the model to serialize its state, queries the pointer
+         * and length, passes that to saver, and then releases it
+         */
+        virtual void save_state(std::shared_ptr<State_Snapshot_Saver> saver) const = 0;
 
         /**
          * Convert a time value from the model to an epoch time in seconds.
