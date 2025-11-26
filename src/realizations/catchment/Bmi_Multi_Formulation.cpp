@@ -13,7 +13,29 @@
 #include "Bmi_Py_Formulation.hpp"
 #include "Logger.hpp"
 
+#include <state_save_restore/State_Save_Restore.hpp>
+
 using namespace realization;
+
+void Bmi_Multi_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> saver) const {
+#if 0
+    auto model = get_bmi_model();
+
+    size_t size = 1;
+    model->SetValue("serialization_create", &size);
+    model->GetValue("serialization_size", &size);
+
+    auto serialization_state = static_cast<char const*>(model->GetValuePtr("serialization_state"));
+    boost::span<const char> data(serialization_state, size);
+
+    // Rely on Formulation_Manager also using this->get_id()
+    // as a unique key for the individual catchment
+    // formulations
+    saver->save_unit(this->get_id(), data);
+
+    model->SetValue("serialization_free", &size);
+#endif
+}
 
 void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap properties, bool needs_param_validation) {
     if (needs_param_validation) {

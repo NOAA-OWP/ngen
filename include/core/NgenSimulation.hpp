@@ -12,6 +12,8 @@ namespace hy_features
     class HY_Features_MPI;
 }
 
+class State_Snapshot_Saver;
+
 #include <memory>
 #include <vector>
 #include <unordered_map>
@@ -61,6 +63,8 @@ public:
 
 private:
     void advance_models_one_output_step();
+
+    void save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> snapshot_saver);
 
     int simulation_step_;
 

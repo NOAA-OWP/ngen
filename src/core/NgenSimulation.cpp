@@ -108,6 +108,16 @@ void NgenSimulation::advance_models_one_output_step()
 
 }
 
+void NgenSimulation::save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> snapshot_saver)
+{
+
+    // XXX Handle self, then recursively pass responsibility to Layers
+    for (auto& layer : layers_) {
+        layer->save_state_snapshot(snapshot_saver);
+    }
+}
+
+
 int NgenSimulation::get_nexus_index(std::string const& nexus_id) const
 {
     auto iter = nexus_indexes_.find(nexus_id);

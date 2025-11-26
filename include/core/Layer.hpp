@@ -16,6 +16,8 @@ namespace hy_features
     class HY_Features_MPI;
 }
 
+class State_Snapshot_Saver;
+
 namespace ngen
 {
 
@@ -109,6 +111,8 @@ namespace ngen
                                    boost::span<double> nexus_downstream_flows,
                                    std::unordered_map<std::string, int> &nexus_indexes,
                                    int current_step);
+
+        virtual void save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> snapshot_saver);
 
         protected:
 
