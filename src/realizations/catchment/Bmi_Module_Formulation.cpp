@@ -125,7 +125,7 @@ namespace realization {
 
         double Bmi_Module_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
             update(t_index, t_delta);
-            double var_value;
+            double var_value; // = get_var_value_as_double(0, get_bmi_main_output_var());
                 try{
                     var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
                 }
@@ -145,8 +145,8 @@ namespace realization {
                             << " raw value " << uce.unconverted_values[0] << "}"
                             << " message \"" << uce.what() << "\"";
                         LOG(ss.str(), LogLevel::WARNING); ss.str("");
-                        var_value = uce.unconverted_values[0];
                     }
+                    var_value = uce.unconverted_values[0];
                 }
             return var_value;
         }

@@ -442,8 +442,8 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
                         << " raw value " << uce.unconverted_values[0] << "}"
                         << " message \"" << uce.what() << "\"";
                     LOG(ss.str(), LogLevel::WARNING); ss.str("");
-                    value = uce.unconverted_values[0];
                 }
+                value = uce.unconverted_values[0];
             }
             std::string var_value = std::to_string(value);
             if(i == 0){
