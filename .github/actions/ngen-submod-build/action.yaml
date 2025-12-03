@@ -50,8 +50,14 @@ runs:
         - name: Cmake Initialization
           id: cmake_init
           run: |
-            echo CFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -Werror" >> $GITHUB_ENV
-            echo CXXFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override" >> $GITHUB_ENV
+            if [ ${{ runner.os }} == 'macOS' ]
+            then
+                export OPT_LEVEL_FLAG="-O0"
+            else
+                export OPT_LEVEL_FLAG="-O1"
+            fi
+            echo CFLAGS="-fsanitize=address ${OPT_LEVEL_FLAG:?Optimization flag var not set} -g -fno-omit-frame-pointer -Werror" >> $GITHUB_ENV
+            echo CXXFLAGS="-fsanitize=address ${OPT_LEVEL_FLAG:?Optimization flag var not set} -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override" >> $GITHUB_ENV
             cmake -B ${{ inputs.mod-dir}}/${{ inputs.build-dir }} -S ${{ inputs.mod-dir }} ${{ inputs.cmake-flags }}
             echo "build-dir=$(echo ${{ inputs.mod-dir}}/${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
           shell: bash
