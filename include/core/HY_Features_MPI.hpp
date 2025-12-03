@@ -11,8 +11,11 @@
 #include <HY_Catchment.hpp>
 #include <HY_PointHydroNexusRemote.hpp>
 #include <network.hpp>
-#include <Formulation_Manager.hpp>
 #include <Partition_Parser.hpp>
+
+namespace realization {
+    class Formulation_Manager;
+}
 
 namespace hy_features {
 
@@ -32,8 +35,9 @@ namespace hy_features {
             return network.filter("cat");
         }
 
-        inline bool is_remote_sender_nexus(const std::string& id) {
-            return _nexuses.find(id) != _nexuses.end() && _nexuses[id]->is_remote_sender();
+        inline bool is_remote_sender_nexus(const std::string& id) const {
+            auto iter = _nexuses.find(id);
+            return iter != _nexuses.end() && iter->second->is_remote_sender();
         }
         
         inline auto catchments(long lyr) {
@@ -60,8 +64,10 @@ namespace hy_features {
             return (_nexuses.find(id) != _nexuses.end()) ? _nexuses[id] : nullptr;
         }
 
-        inline auto nexuses() {
-            return network.filter("nex");
+        inline auto nexuses() const {
+            // Only return local nexuses, since that's what callers actually want
+            return network.filter("nex") |
+                boost::adaptors::filtered([this](std::string const& id){ return !is_remote_sender_nexus(id);});
         }
 
         void validate_dendritic() {
@@ -93,7 +99,6 @@ namespace hy_features {
       std::unordered_map<std::string, std::shared_ptr<HY_Catchment>> _catchments;
       std::unordered_map<std::string, std::shared_ptr<HY_PointHydroNexusRemote>> _nexuses;
       network::Network network;
-      std::shared_ptr<Formulation_Manager> formulations;
       std::set<long> hf_layers;
       int mpi_rank;
       int mpi_num_procs;

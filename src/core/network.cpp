@@ -157,7 +157,7 @@ IndexPair Network::tailwaters(){
   return std::make_pair(this->tailwaters_idx.cbegin(),  this->tailwaters_idx.cend());
 }
 
-std::string Network::get_id( Graph::vertex_descriptor idx){
+std::string Network::get_id( Graph::vertex_descriptor idx) const{
   if( idx < 0 || idx >= num_vertices(this->graph) )
   {
     throw std::invalid_argument( std::string("Network::get_id: No vertex descriptor "+std::to_string(idx)+" in network."));
@@ -192,7 +192,7 @@ std::vector<std::string> Network::get_destination_ids(const std::string& id){
   return ids;
 }
 
-const NetworkIndexT& Network::get_sorted_index(SortOrder order, bool cache){
+const NetworkIndexT& Network::get_sorted_index(SortOrder order, bool cache) const {
   if (order == SortOrder::TransposedDepthFirstPreorder) {
     if (!this->tdfp_order.empty()){
       return this->tdfp_order;

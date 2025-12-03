@@ -318,6 +318,7 @@ add_subdirectory("src/geojson")
 add_subdirectory("src/bmi")
 add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/forcing")
+add_subdirectory("src/utilities")
 add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
 add_subdirectory("src/utilities/logging")
@@ -334,6 +335,7 @@ target_link_libraries(ngen
         NGen::forcing
         NGen::core_mediator
         NGen::logging
+        NGen::parallel
 )
 
 if(NGEN_WITH_SQLITE)

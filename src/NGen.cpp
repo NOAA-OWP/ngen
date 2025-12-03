@@ -23,6 +23,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/range/algorithm/sort.hpp>
 
+#include <NgenSimulation.hpp>
+
 #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
 #include <unistd.h>
 #endif // WRITE_PID_FILE_FOR_GDB_SERVER
@@ -31,14 +33,6 @@
 #include "python/InterpreterUtil.hpp"
 #include <pybind11/embed.h>
 #endif // NGEN_WITH_PYTHON
-
-std::string catchmentDataFile         = "";
-std::string nexusDataFile             = "";
-std::string REALIZATION_CONFIG_PATH   = "";
-bool is_subdivided_hydrofabric_wanted = false;
-
-// Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
-int mpi_rank = 0;
 
 #if NGEN_WITH_MPI
 
@@ -54,25 +48,14 @@ int mpi_rank = 0;
 
 #include "core/Partition_One.hpp"
 
-std::string PARTITION_PATH = "";
-int mpi_num_procs;
 #endif // NGEN_WITH_MPI
 
 #include <DomainLayer.hpp>
 #include <Layer.hpp>
 #include <SurfaceLayer.hpp>
-std::stringstream ss("");
-
-std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
 void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
     stream << "Runtime configuration summary:\n";
-
-#if NGEN_WITH_MPI
-    stream << "  MPI:\n"
-           << "    Rank: " << mpi_rank << "\n"
-           << "    Processors: " << mpi_num_procs << "\n";
-#endif // NGEN_WITH_MPI
 
 #if NGEN_WITH_PYTHON // -------------------------------------------------------
     { // START RAII
@@ -138,7 +121,63 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
 
 } // ngen::exec_info::runtime_summary
 
+void write_nexus_outflow_csv_files(std::string const& output_root,
+                                   std::unique_ptr<NgenSimulation> const& simulation,
+                                   NgenSimulation::hy_features_t const& features)
+{
+    std::stringstream ss;
+
+    auto num_times = simulation->get_num_output_times();
+
+    for (const auto& id : features.nexuses()) {
+        ss << "Preparing to write nexus outflow file for nexus '" << id << "'";
+        LOG(ss.str(), LogLevel::DEBUG);
+        ss.str("");
+
+        std::string filename = output_root + id + "_output.csv";
+        std::ofstream nexus_outfile(filename, std::ios::trunc);
+        if (nexus_outfile.fail()) {
+            // Log error, and try the next one
+            ss << "Failed to open nexus outflow file for nexus '" << id << "', filename '" << filename << "'\n";
+            LOG(ss.str(), LogLevel::SEVERE);
+            ss.str("");
+            continue;
+        }
+
+        auto nexus_index = simulation->get_nexus_index(id);
+        for (int i = 0; i < num_times; ++i) {
+            nexus_outfile << i << ", " << simulation->get_timestamp_for_step(i) << ", " << simulation->get_nexus_outflow(nexus_index, i) << "\n";
+
+            if (nexus_outfile.fail()) {
+                // Log error and move on
+                ss << "Failed to write nexus outflow file for nexus '" << id << "', filename '" << filename << "'\n";
+                LOG(ss.str(), LogLevel::SEVERE);
+                ss.str("");
+                break;
+            }
+        }
+
+        nexus_outfile.close();
+        if (nexus_outfile.fail()) {
+            ss << "Failure reported while closing nexus outflow file for nexus '" << id << "', filename '" << filename << "'\n";
+            LOG(ss.str(), LogLevel::SEVERE);
+            ss.str("");
+        }
+    }
+}
+
 int main(int argc, char* argv[]) {
+    std::string catchmentDataFile         = "";
+    std::string nexusDataFile             = "";
+    std::string REALIZATION_CONFIG_PATH   = "";
+    bool is_subdivided_hydrofabric_wanted = false;
+    std::string PARTITION_PATH = "";
+    std::stringstream ss("");
+
+     // This default value should lead to behavior matching the single-process case in the standalone or non-MPI case
+    int mpi_num_procs = 1;
+    // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
+    int mpi_rank = 0;
 
     if (argc > 1 && std::string{argv[1]} == "--info") {
 #if NGEN_WITH_MPI
@@ -151,6 +190,12 @@ int main(int argc, char* argv[]) {
             std::ostringstream output;
             output << ngen::exec_info::build_summary;
             ngen::exec_info::runtime_summary(output);
+#if NGEN_WITH_MPI
+            output << "  MPI:\n"
+                   << "    Rank: " << mpi_rank << "\n"
+                   << "    Processors: " << mpi_num_procs << "\n";
+#endif // NGEN_WITH_MPI
+
             ss << output.str() << std::endl;
             LOG(ss.str(), LogLevel::INFO);
             ss.str("");
@@ -339,7 +384,7 @@ int main(int argc, char* argv[]) {
         if (is_subdivided_hydrofabric_wanted) {
             // Ensure the hydrofabric is subdivided (either already or by doing it now), and then
             // adjust these paths
-            if (parallel::is_hydrofabric_subdivided(mpi_rank, mpi_num_procs, true) ||
+            if (parallel::is_hydrofabric_subdivided(catchmentDataFile, mpi_rank, mpi_num_procs, true) ||
                 parallel::subdivide_hydrofabric(
                     mpi_rank,
                     mpi_num_procs,
@@ -476,12 +521,30 @@ int main(int argc, char* argv[]) {
     // Update the feature ids for the combined collection, using the alternative property 'id'
     // to map features to their primary id as well as the alternative property
     nexus_collection->update_ids("id");
+
+    boost::property_tree::ptree realization_config;
+    boost::property_tree::json_parser::read_json(REALIZATION_CONFIG_PATH, realization_config);
+
+    std::shared_ptr<Simulation_Time> sim_time;
+
+    auto possible_simulation_time = realization_config.get_child_optional("time");
+    if (!possible_simulation_time) {
+        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    }
+
+    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+
+    sim_time = std::make_shared<Simulation_Time>(simulation_time_config);
+
     ss << "Initializing formulations" << std::endl;
     LOG(ss.str(), LogLevel::INFO);
     ss.str("");
+
     std::shared_ptr<realization::Formulation_Manager> manager =
-        std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
-    manager->read(catchment_collection, utils::getStdOut());
+        std::make_shared<realization::Formulation_Manager>(realization_config);
+    manager->read(simulation_time_config, catchment_collection, utils::getStdOut());
 
 // TODO refactor manager->read so certain configs can be queried before the entire
 // realization collection is created
@@ -499,7 +562,6 @@ int main(int argc, char* argv[]) {
     }
 #endif // NGEN_WITH_ROUTING
     ss << "Building Feature Index" << std::endl;
-    ;
     LOG(ss.str(), LogLevel::INFO);
     ss.str("");
     std::string link_key = "toid";
@@ -537,7 +599,9 @@ int main(int argc, char* argv[]) {
         for (int i = 0; i < nexus_collection->get_size(); ++i) {
             auto const& feature = nexus_collection->get_feature(i);
             std::string feature_id = feature->get_id();
-            if (hy_features::identifiers::isNexus(feature_id.substr(0, 3))) {
+            if (hy_features::identifiers::isNexus(feature_id.substr(0, 3))
+                && nexus_indexes.find(feature_id) == nexus_indexes.end())
+            {
                 nexus_indexes[feature_id] = nexus_index;
                 nexus_index += 1;
             }
@@ -546,27 +610,6 @@ int main(int argc, char* argv[]) {
 #endif // NGEN_WITH_ROUTING
 
     nexus_collection.reset();
-
-    // Still hacking nexus output for the moment
-    for (const auto& id : features.nexuses()) {
-#if NGEN_WITH_MPI
-        if (mpi_num_procs > 1) {
-            if (!features.is_remote_sender_nexus(id)) {
-                nexus_outfiles[id].open(
-                    manager->get_output_root() + id + "_output.csv",
-                    std::ios::trunc
-                );
-            }
-        } else {
-            nexus_outfiles[id].open(
-                manager->get_output_root() + id + "_output.csv",
-                std::ios::trunc
-            );
-        }
-#else
-        nexus_outfiles[id].open(manager->get_output_root() + id + "_output.csv", std::ios::trunc);
-#endif
-    }
 
     ss << "Running Models" << std::endl;
     LOG(ss.str(), LogLevel::INFO);
@@ -612,12 +655,12 @@ int main(int argc, char* argv[]) {
         std::vector<std::string> cat_ids;
 
         // make a new simulation time object with a different output interval
-        Simulation_Time sim_time(*manager->Simulation_Time_Object, time_steps[i]);
+        Simulation_Time layer_sim_time(*sim_time, time_steps[i]);
         if (manager->has_domain_formulation(keys[i])) {
             // create a domain wide layer
             auto formulation = manager->get_domain_formulation(keys[i]);
             layers[i] =
-                std::make_shared<ngen::DomainLayer>(desc, sim_time, features, 0, formulation);
+                std::make_shared<ngen::DomainLayer>(desc, layer_sim_time, features, 0, formulation);
         } else {
             for (std::string id : features.catchments(keys[i])) {
                 cat_ids.push_back(id);
@@ -626,7 +669,7 @@ int main(int argc, char* argv[]) {
                 layers[i] = std::make_shared<ngen::Layer>(
                     desc,
                     cat_ids,
-                    sim_time,
+                    layer_sim_time,
                     features,
                     catchment_collection,
                     0
@@ -635,110 +678,45 @@ int main(int argc, char* argv[]) {
                 layers[i] = std::make_shared<ngen::SurfaceLayer>(
                     desc,
                     cat_ids,
-                    sim_time,
+                    layer_sim_time,
                     features,
                     catchment_collection,
-                    0,
-                    nexus_subset_ids,
-                    nexus_outfiles
+                    0
                 );
             }
         }
     }
 
-    auto time_done_init                             = std::chrono::steady_clock::now();
-    std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
-
-    LOG("[TIMING]: Init: " + std::to_string(time_elapsed_init.count()), LogLevel::INFO);
-
-    // Now loop some time, iterate catchments, do stuff for total number of output times
-    auto num_times = manager->Simulation_Time_Object->get_total_output_times();
-
     // T-ROUTE data storage
-    std::vector<double> catchment_outflows;
     std::unordered_map<std::string, int> catchment_indexes;
-    std::vector<double> nexus_downstream_flows;
 #if NGEN_WITH_ROUTING
     size_t catchment_collection_size = catchment_collection->get_size();
-    catchment_outflows.resize(catchment_collection_size * num_times, 0.0);
     for (int i = 0; i < catchment_collection_size; ++i) {
         auto feature = catchment_collection->get_feature(i);
         std::string feature_id = feature->get_id();
         catchment_indexes[feature_id] = i;
     }
-    nexus_downstream_flows.resize(nexus_indexes.size() * num_times, 0.0);
 #endif // NGEN_WITH_ROUTING
 
-    for (int count = 0; count < num_times; count++) {
-        // The Inner loop will advance all layers unless doing so will break one of two constraints
-        // 1) A layer may not proceed ahead of the master simulation object's current time
-        // 2) A layer may not proceed ahead of any layer that is computed before it
-        // The do while loop ensures that all layers are tested at least once while allowing
-        // layers with small time steps to be updated more than once
-        // If a layer with a large time step is after a layer with a small time step the
-        // layer with the large time step will wait for multiple timesteps from the preceeding
-        // layer.
+    auto simulation = std::make_unique<NgenSimulation>(*sim_time,
+                                                       layers,
+                                                       std::move(catchment_indexes),
+                                                       std::move(nexus_indexes),
+                                                       mpi_rank,
+                                                       mpi_num_procs);
 
-        // this is the time that layers are trying to reach (or get as close as possible)
-        auto next_time = manager->Simulation_Time_Object->next_timestep_epoch_time();
+    auto time_done_init                             = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
+    LOG("[TIMING]: Init: " + std::to_string(time_elapsed_init.count()), LogLevel::INFO);
 
-        // this is the time that the layer above the current layer is at
-        auto prev_layer_time = next_time;
-
-        // this is the time that the least advanced layer is at
-        auto layer_min_next_time = next_time;
-        do {
-            for (auto& layer : layers) {
-                auto layer_next_time = layer->next_timestep_epoch_time();
-
-                // only advance if you would not pass the master next time and the previous layer
-                // next time
-                if (layer_next_time <= next_time && layer_next_time <= prev_layer_time) {
-                    if (count % 100 == 0) {
-                        ss << "Updating layer: " << layer->get_name() << " Count=" << count << "\n";
-                        LOG(ss.str(), LogLevel::DEBUG);
-                        ss.str("");
-                    }
-#if NGEN_WITH_ROUTING
-                    boost::span<double> catchment_span(catchment_outflows.data() + (count * catchment_indexes.size()),
-                                                       catchment_indexes.size());
-                    boost::span<double> nexus_span(nexus_downstream_flows.data() + (count * nexus_indexes.size()),
-                                                   nexus_indexes.size());
-#else
-                    boost::span<double> catchment_span;
-                    boost::span<double> nexus_span;
-#endif
-                    layer->update_models(
-                        catchment_span,
-                        catchment_indexes,
-                        nexus_span,
-                        nexus_indexes,
-                        count
-                    ); // assume update_models() calls time->advance_timestep()
-                    prev_layer_time = layer_next_time;
-                } else {
-                    layer_min_next_time = prev_layer_time = layer->current_timestep_epoch_time();
-                }
-
-                if (layer_min_next_time > layer_next_time) {
-                    layer_min_next_time = layer_next_time;
-                }
-            } // done layers
-        } while (layer_min_next_time < next_time
-        ); // rerun the loop until the last layer would pass the master next time
-
-        if (count + 1 < num_times) {
-            manager->Simulation_Time_Object->advance_timestep();
-        }
-
-    } // done time
+    simulation->run_catchments();
 
 #if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
     if (mpi_rank == 0) {
-        ss << "Finished " << manager->Simulation_Time_Object->get_total_output_times()
+        ss << "Finished " << sim_time->get_total_output_times()
            << " timesteps." << std::endl;
         LOG(ss.str(), LogLevel::INFO);
         ss.str("");
@@ -746,145 +724,55 @@ int main(int argc, char* argv[]) {
 
     auto time_done_simulation                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_simulation = time_done_simulation - time_done_init;
-
     LOG("[TIMING]: Catchment simulation: " + std::to_string(time_elapsed_simulation.count()), LogLevel::INFO);
+
+    // Write nexus outflow CSV files in bulk at the end of the run,
+    // rather than as the simulation runs, to avoid issues when
+    // restarting an interrupted run. This would be less of an issue
+    // if the data were written to a more resilient structured format.
+    write_nexus_outflow_csv_files(manager->get_output_root(), simulation, features);
 
 #if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
-    manager->finalize();
-
-#if NGEN_WITH_ROUTING
-#if NGEN_WITH_MPI
-    if (mpi_num_procs > 1) {
-        int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
-        std::vector<std::string> local_nexus_ids;
-        for (const auto& nexus : nexus_indexes) {
-            local_nexus_ids.push_back(nexus.first);
-        }
-        // MPI_Gather all nexus IDs into a single vector
-        std::vector<std::string> all_nexus_ids = parallel::gather_strings(local_nexus_ids, mpi_rank, mpi_num_procs);
-        if (mpi_rank == 0) {
-            // filter to only the unique IDs
-            std::sort(all_nexus_ids.begin(), all_nexus_ids.end());
-            all_nexus_ids.erase(
-                std::unique(all_nexus_ids.begin(), all_nexus_ids.end()),
-                all_nexus_ids.end()
-            );
-        }
-        // MPI_Broadcast so all processes share the nexus IDs
-        all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, mpi_rank, mpi_num_procs));
-
-        // MPI_Reduce to collect the results from processes
-        std::vector<double> all_nexus_downflows;
-        if (mpi_rank == 0) {
-            all_nexus_downflows.resize(number_of_timesteps * all_nexus_ids.size(), 0.0);
-        }
-        std::unordered_map<std::string, int> all_nexus_indexes;
-        std::vector<double> local_buffer(number_of_timesteps);
-        std::vector<double> receive_buffer(number_of_timesteps, 0.0);
-        for (int i = 0; i < all_nexus_ids.size(); ++i) {
-            std::string nexus_id = all_nexus_ids[i];
-            if (nexus_indexes.find(nexus_id) != nexus_indexes.end() && !features.is_remote_sender_nexus(nexus_id)) {
-                // if this process has the id and receives/records data, copy the values to the buffer
-                int nexus_index = nexus_indexes[nexus_id];
-                for (int step = 0; step < number_of_timesteps; ++step) {
-                    int offset = step * nexus_indexes.size() + nexus_index;
-                    local_buffer[step] = nexus_downstream_flows[offset];
-                }
-            } else {
-                // if this process does not have the id, fill with 0 to make sure it doesn't affect reduce sum
-                std::fill(local_buffer.begin(), local_buffer.end(), 0.0);
-            }
-            MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-            if (mpi_rank == 0) {
-                // copy reduce values to a combined downflows vector
-                all_nexus_indexes[nexus_id] = i;
-                for (int step = 0; step < number_of_timesteps; ++step) {
-                    int offset = step * all_nexus_ids.size() + i;
-                    all_nexus_downflows[offset] = receive_buffer[step];
-                    receive_buffer[step] = 0.0;
-                }
-            }
-        }
-
-        if (mpi_rank == 0) {
-            // update root's local data for running t-route below
-            nexus_indexes = std::move(all_nexus_indexes);
-            nexus_downstream_flows = std::move(all_nexus_downflows);
-        }
-
-    }
-#endif // NGEN_WITH_MPI
-    if (mpi_rank == 0) { // Run t-route from single process
-        if (manager->get_using_routing()) {
-            LOG(LogLevel::INFO, "Running T-Route on nexus outflows.");
-
-            // Note: Currently, delta_time is set in the t-route yaml configuration file, and the
-            // number_of_timesteps is determined from the total number of nexus outputs in t-route.
-            // It is recommended to still pass these values to the routing_py_adapter object in
-            // case a future implmentation needs these two values from the ngen framework.
-            int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
-
-            int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
-
-            std::string t_route_config_file_with_path =
-                manager->get_t_route_config_file_with_path();
-            // model for routing
-            models::bmi::Bmi_Py_Adapter py_troute("T-Route", t_route_config_file_with_path, "troute_nwm_bmi.troute_bmi.BmiTroute", true);
-
-            // tell BMI to resize nexus containers
-            int64_t nexus_count = nexus_indexes.size();
-            py_troute.SetValue("land_surface_water_source__volume_flow_rate__count", &nexus_count);
-            py_troute.SetValue("land_surface_water_source__id__count", &nexus_count);
-            // set up nexus id indexes
-            std::vector<int> nexus_df_index(nexus_count);
-            for (const auto& key_value : nexus_indexes) {
-                int id_index = key_value.second;
-
-                // Convert string ID into numbers for T-route index
-                int id_as_int = -1;
-                size_t sep_index = key_value.first.find(hy_features::identifiers::seperator);
-                if (sep_index != std::string::npos) {
-                    std::string numbers = key_value.first.substr(sep_index + hy_features::identifiers::seperator.length());
-                    id_as_int = std::stoi(numbers);
-                }
-                if (id_as_int == -1) {
-                    std::string error_msg = "Cannot convert the nexus ID to an integer: " + key_value.first;
-                    LOG(LogLevel::FATAL, error_msg);
-                    throw std::runtime_error(error_msg);
-                }
-                nexus_df_index[id_index] = id_as_int;
-            }
-            py_troute.SetValue("land_surface_water_source__id", nexus_df_index.data());
-            for (int i = 0; i < number_of_timesteps; ++i) {
-                py_troute.SetValue("land_surface_water_source__volume_flow_rate",
-                                   nexus_downstream_flows.data() + (i * nexus_count));
-                py_troute.Update();
-            }
-            // Finalize will write the output file
-            py_troute.Finalize();
-        }
-    }
-#endif
-
-    auto time_done_routing                             = std::chrono::steady_clock::now();
-    std::chrono::duration<double> time_elapsed_routing = time_done_routing - time_done_simulation;
-
-    LOG("[TIMING]: Routing: " + std::to_string(time_elapsed_routing.count()), LogLevel::INFO);
-
     if (mpi_rank == 0) {
-        ss << "NGen top-level timings:"
-           << "\n\tNGen::init: " << time_elapsed_init.count()
-           << "\n\tNGen::simulation: " << time_elapsed_simulation.count()
-#if NGEN_WITH_ROUTING
-           << "\n\tNGen::routing: " << time_elapsed_routing.count()
-#endif
-           << std::endl;
+        ss << "Finished writing nexus outflow files" << std::endl;
         LOG(ss.str(), LogLevel::INFO);
         ss.str("");
     }
+
+    auto time_done_nexus_output                             = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_nexus_output = time_done_nexus_output - time_done_simulation;
+    LOG("[TIMING]: Nexus outflow file writing: " + std::to_string(time_elapsed_nexus_output.count()), LogLevel::INFO);
+
+    manager->finalize();
+
+#if NGEN_WITH_MPI
+    MPI_Barrier(MPI_COMM_WORLD);
+#endif
+
+    if (manager->get_using_routing()) {
+        simulation->run_routing(features, manager->get_t_route_config_file_with_path());
+    }
+
+    auto time_done_routing                             = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_routing = time_done_routing - time_done_nexus_output;
+    LOG("[TIMING]: Routing: " + std::to_string(time_elapsed_routing.count()), LogLevel::INFO);
+
+#if NGEN_WITH_MPI
+    MPI_Barrier(MPI_COMM_WORLD);
+#endif
+
+#if NGEN_WITH_COASTAL
+    if (manager->get_using_coastal()) {
+        simulation->run_coastal();
+    }
+
+    auto time_done_coastal                             = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_coastal = time_done_coastal - time_done_routing;
+    LOG("[TIMING]: Coastal: " + std::to_string(time_elapsed_coastal.count()), LogLevel::INFO);
+#endif
 
     _interp.reset();
 
@@ -892,6 +780,23 @@ int main(int argc, char* argv[]) {
     std::chrono::duration<double> time_elapsed_total   = time_done_total - time_start;
 
     LOG("[TIMING]: Total: " + std::to_string(time_elapsed_total.count()), LogLevel::INFO);
+
+    if (mpi_rank == 0) {
+        ss << "NGen top-level timings:"
+           << "\n\tNGen::init: " << time_elapsed_init.count()
+           << "\n\tNGen::simulation: " << time_elapsed_simulation.count()
+           << "\n\tNGen::nexus_output: " << time_elapsed_nexus_output.count()
+#if NGEN_WITH_ROUTING
+           << "\n\tNGen::routing: " << time_elapsed_routing.count()
+#endif
+#if NGEN_WITH_COASTAL
+           << "\n\tNGen::coastal: " << time_elapsed_coastal.count()
+#endif
+           << "\n\tNGen::total: " << time_elapsed_total.count()
+           << std::endl;
+        LOG(ss.str(), LogLevel::INFO);
+        ss.str("");
+    }
 
 #if NGEN_WITH_MPI
     MPI_Finalize();
