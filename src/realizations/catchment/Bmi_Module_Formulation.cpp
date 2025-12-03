@@ -125,29 +125,29 @@ namespace realization {
 
         double Bmi_Module_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
             update(t_index, t_delta);
-            double var_value; // = get_var_value_as_double(0, get_bmi_main_output_var());
-                try{
-                    var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
+            double var_value;
+            try{
+                var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
+            }
+            catch(data_access::unit_conversion_exception &uce){
+                data_access::unit_error_log_key key{"Bmi_Module_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                auto ret = data_access::unit_errors_reported.insert(key);
+                bool new_error = ret.second;
+                if (new_error) {
+                    std::stringstream ss;
+                    ss << "Unit conversion failure:"
+                        << " requester {'Get Response (Module Formulation)"
+                        << "' catchment '" << get_catchment_id()
+                        << "' variable '" << get_bmi_main_output_var()
+                        << "' units 'm" << "'}"
+                        << " provider {'" << uce.provider_model_name 
+                        << "' source variable '" << uce.provider_bmi_var_name << "'"
+                        << " raw value " << uce.unconverted_values[0] << "}"
+                        << " message \"" << uce.what() << "\"";
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
                 }
-                catch(data_access::unit_conversion_exception &uce){
-                    data_access::unit_error_log_key key{"Bmi_Module_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
-                    auto ret = data_access::unit_errors_reported.insert(key);
-                    bool new_error = ret.second;
-                    if (new_error) {
-                        std::stringstream ss;
-                        ss << "Unit conversion failure:"
-                            << " requester {'Get Response (Module Formulation)"
-                            << "' catchment '" << get_catchment_id()
-                            << "' variable '" << get_bmi_main_output_var()
-                            << "' units 'm" << "'}"
-                            << " provider {'" << uce.provider_model_name 
-                            << "' source variable '" << uce.provider_bmi_var_name << "'"
-                            << " raw value " << uce.unconverted_values[0] << "}"
-                            << " message \"" << uce.what() << "\"";
-                        LOG(ss.str(), LogLevel::WARNING); ss.str("");
-                    }
-                    var_value = uce.unconverted_values[0];
-                }
+                var_value = uce.unconverted_values[0];
+            }
             return var_value;
         }
 
@@ -195,11 +195,18 @@ namespace realization {
             throw std::runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
         }
 
-        const std::string Bmi_Module_Formulation::get_bmi_native_units(const std::string &name) const {
-            return get_bmi_model()->GetVarUnits(name);
+        const std::string Bmi_Module_Formulation::get_bmi_native_units(const std::string &name) {
+            // check if output is available from BMI
+            std::string bmi_var_name;
+            get_bmi_output_var_name(name, bmi_var_name);
+
+            if(!bmi_var_name.empty())
+            {
+                return get_bmi_model()->GetVarUnits(bmi_var_name);
+            }
         }
 
-	std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
+	    std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
         {
             std::string output_name = selector.get_variable_name();
             time_t init_time = selector.get_init_time();
@@ -487,7 +494,7 @@ namespace realization {
                             out_units[i] = out_vars_json_list[i].at("units").as_string();
                         }
                         else{
-                           LOG("Units not provided for '" + out_vars[i] + "' in the realization file.",LogLevel::INFO);
+                           LOG("Units not provided for '" + out_vars[i] + "' in the realization file.",LogLevel::WARNING);
                            out_units[i] = ""; //add an empty entry and populate it with BMI native units later.
                         }
                     }

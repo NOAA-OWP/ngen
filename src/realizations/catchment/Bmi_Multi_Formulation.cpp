@@ -144,7 +144,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
                     out_units[i] = out_vars_json_list[i].at("units").as_string();
                 }
                 else{
-                    LOG("Units not provided for '" + out_vars[i] + "' in the realization file.",LogLevel::INFO);
+                    LOG("Units not provided for '" + out_vars[i] + "' in the realization file.",LogLevel::WARNING);
                     out_units[i] = ""; //add an empty entry and populate it with BMI native units later.
                 }
             }
@@ -383,7 +383,7 @@ const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const 
     return output_var_name;
 }
 
-const std::string Bmi_Multi_Formulation::get_bmi_native_units(const std::string &name) const {
+const std::string Bmi_Multi_Formulation::get_bmi_native_units(const std::string &name) {
 
     if(!is_out_vars_from_last_mod){
         auto iter = availableData.find(name);
@@ -393,7 +393,9 @@ const std::string Bmi_Multi_Formulation::get_bmi_native_units(const std::string 
             throw std::runtime_error("Multi BMI formulation: No module found for variable " + name);
         }
         auto model = std::dynamic_pointer_cast<Bmi_Formulation>(iter->second);
-        return model->get_bmi_native_units(name);
+        if(model != nullptr){
+            return model->get_bmi_native_units(name);
+        }
     }
     return modules.back()->get_bmi_native_units(name);
 }
