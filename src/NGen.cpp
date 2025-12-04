@@ -544,7 +544,15 @@ int main(int argc, char* argv[]) {
 
     std::shared_ptr<realization::Formulation_Manager> manager =
         std::make_shared<realization::Formulation_Manager>(realization_config);
-    manager->read(simulation_time_config, catchment_collection, utils::getStdOut());
+    try {
+        manager->read(simulation_time_config, catchment_collection, utils::getStdOut());
+    }
+    catch (const std::exception& e) {
+        std::string msg = std::string("Reading formulation data ") + e.what();
+        LOG(msg, LogLevel::FATAL);
+        throw;
+    }
+    LOG("Formulation Initialized", LogLevel::DEBUG);
 
 // TODO refactor manager->read so certain configs can be queried before the entire
 // realization collection is created

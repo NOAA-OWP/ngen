@@ -341,22 +341,29 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
                     }
                 }
 
-                LOG("CsvProvider has variable '" + var_name + "' with units '" + units + "'", LogLevel::DEBUG);
+                if (!var_name.empty()) {
+                    LOG("CsvProvider has variable '" + var_name + "' with units '" + units + "'", LogLevel::DEBUG);
 
-                auto wkf = data_access::WellKnownFields.find(var_name);
-                if(wkf != data_access::WellKnownFields.end()){
-                    units = units.empty() ? std::get<1>(wkf->second) : units;
-                    auto wkf_name = std::get<0>(wkf->second);
-                    LOG("CsvProvider has well-known name '" + wkf_name + "' for variable '" + var_name + "' with units '" + units + "'", LogLevel::DEBUG);
-                    available_forcings.push_back(var_name); // Allow lookup by non-canonical name
-                    available_forcings_units[var_name] = units; // Allow lookup of units by non-canonical name
-                    var_name = wkf_name; // Use the CSDMS name from here on
+                    auto wkf = data_access::WellKnownFields.find(var_name);
+                    if (wkf != data_access::WellKnownFields.end()){
+                        units = units.empty() ? std::get<1>(wkf->second) : units;
+                        auto wkf_name = std::get<0>(wkf->second);
+                        LOG("CsvProvider has well-known name '" + wkf_name + "' for variable '" + var_name + "' with units '" + units + "'", LogLevel::DEBUG);
+                        available_forcings.push_back(var_name); // Allow lookup by non-canonical name
+                        available_forcings_units[var_name] = units; // Allow lookup of units by non-canonical name
+                        var_name = wkf_name; // Use the CSDMS name from here on
+                    }
+
+                    forcing_vectors[var_name] = {};
+                    local_valvec_index.push_back(&(forcing_vectors[var_name]));
+                    available_forcings.push_back(var_name);
+                    available_forcings_units[var_name] = units;
                 }
-
-                forcing_vectors[var_name] = {};
-                local_valvec_index.push_back(&(forcing_vectors[var_name]));
-                available_forcings.push_back(var_name);
-                available_forcings_units[var_name] = units;
+                else {
+                    std::string msg = "Forcing file " + file_name + " is missing column header names";
+                    LOG(msg, LogLevel::FATAL);
+                    throw std::runtime_error(msg);
+                }
             }
             col_num++;
         }
