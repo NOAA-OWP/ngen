@@ -32,18 +32,30 @@ namespace realization {
 
     class Formulation_Manager {
         public:
-            std::shared_ptr<Simulation_Time> Simulation_Time_Object;
-
             Formulation_Manager(std::stringstream &data) {
                 boost::property_tree::ptree loaded_tree;
-                boost::property_tree::json_parser::read_json(data, loaded_tree);
-                this->tree = loaded_tree;
+                try {
+                    boost::property_tree::json_parser::read_json(data, loaded_tree);
+                    this->tree = loaded_tree;
+                }
+                catch (const std::exception& e) {
+                    std::string msg = std::string("Reading json data") + e.what();
+                    LOG(msg, LogLevel::FATAL);
+                    throw;
+                }
             }
 
             Formulation_Manager(const std::string &file_path) {
                 boost::property_tree::ptree loaded_tree;
-                boost::property_tree::json_parser::read_json(file_path, loaded_tree);
-                this->tree = loaded_tree;
+                try {
+                    boost::property_tree::json_parser::read_json(file_path, loaded_tree);
+                    this->tree = loaded_tree;
+                }
+                catch (const std::exception& e) {
+                    std::string msg = std::string("Reading json file ") + file_path + e.what();
+                    LOG(msg, LogLevel::FATAL);
+                    throw;
+                }
             }
 
             Formulation_Manager(boost::property_tree::ptree &loaded_tree) {
@@ -52,7 +64,8 @@ namespace realization {
 
             ~Formulation_Manager() = default;
 
-            void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
+            void read(simulation_time_params &simulation_time_config,
+                      geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
                 std::stringstream ss;
                 ss.str(""); ss << "Entering Formulation_Manager::read()" << std::endl;
                 LOG(ss.str(), LogLevel::DEBUG);
@@ -65,21 +78,6 @@ namespace realization {
                 if (possible_global_config) {
                     global_config = realization::config::Config(*possible_global_config);
                 }
-
-                // Log simulation time configuration
-                auto possible_simulation_time = tree.get_child_optional("time");
-
-                if (!possible_simulation_time) {
-                    std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
-                    LOG(throw_msg, LogLevel::WARNING);
-                    throw std::runtime_error(throw_msg);
-                }
-
-                config::Time time = config::Time(*possible_simulation_time);
-                auto simulation_time_config = time.make_params();
-
-                // Initialize the Simulation_Time object
-                this->Simulation_Time_Object = std::make_shared<Simulation_Time>(simulation_time_config);
 
                 // Log layer descriptions
                 // try to get the json node
@@ -105,9 +103,6 @@ namespace realization {
                         LOG(ss.str(), LogLevel::DEBUG);
 
                         if (layer.has_formulation() && layer.get_domain() == "catchments") {
-                            double c_value = UnitsHelper::get_converted_value(layer_desc.time_step_units, layer_desc.time_step, "s");
-                            // make a new simulation time object with a different output interval
-                            Simulation_Time sim_time(*Simulation_Time_Object, c_value);
                             domain_formulations.emplace(
                                 layer_desc.id,
                                 construct_formulation_from_config(
@@ -117,7 +112,10 @@ namespace realization {
                                     output_stream
                                 )
                             );
-                            domain_formulations.at(layer_desc.id)->set_output_stream(get_output_root() + layer_desc.name + "_layer_"+std::to_string(layer_desc.id) + ".csv");
+                            auto formulation = domain_formulations.at(layer_desc.id);
+                            if (formulation->get_output_header_count() > 0) {
+                                formulation->set_output_stream(get_output_root() + layer_desc.name + "_layer_"+std::to_string(layer_desc.id) + ".csv");
+                            }
                         }
                         //TODO for each layer, create deferred providers for use by other layers
                         //VERY SIMILAR TO NESTED MODULE INIT
