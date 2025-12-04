@@ -410,9 +410,14 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
         throw std::invalid_argument("Only current time step valid when getting multi-module BMI formulation output");
     }
 
-    // Start by first checking whether we are NOT just using the last module's values
-    if (!is_out_vars_from_last_mod) {
-
+    // Start by first checking whether we are just using the last module's values
+    if (is_out_vars_from_last_mod) {
+        // The default behavior, which means we either
+        //   - were originally set to use the default of getting the output of the last module
+        //   - tried a more complex config, but ran into an error, and are needing to revert to the default
+        return modules.back()->get_output_line_for_timestep(timestep, delimiter);
+    }
+    else{    
         // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
         // Clear anything currently in the multi formulation's stream buffer
         output_text_stream->str(std::string());
@@ -457,10 +462,6 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
         }
         return output_text_stream->str();
     }
-    // Otherwise, use the default behavior, which means we either
-    //   - were originally set to use the default of getting the output of the last module
-    //   - tried a more complex config, but ran into an error, and are needing to revert to the default
-    return modules.back()->get_output_line_for_timestep(timestep, delimiter);
 }
 
 void Bmi_Multi_Formulation::update(time_step_t t_index, time_step_t t_delta) {
