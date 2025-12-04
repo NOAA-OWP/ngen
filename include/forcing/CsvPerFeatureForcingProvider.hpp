@@ -21,6 +21,8 @@
 #include "DataProviderSelectors.hpp"
 #include <exception>
 #include <UnitsHelper.hpp>
+#include <cctype>
+
 
 /**
  * @brief Forcing class providing time-series precipiation forcing data to the model.
@@ -295,6 +297,35 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         }
     }
 
+    bool looksLikeHeaderColumn(const std::string& s)
+    {
+        if (s.empty()) return false;
+        if (s.find(',') != std::string::npos) return false;  // comma not allowed
+
+        bool hasNonDigit = false;
+
+        for (unsigned char c : s) {
+            if (!std::isdigit(c)) {
+                // Non-digit found: ensure it isn't just whitespace
+                if (!std::isspace(c))
+                    hasNonDigit = true;
+            }
+        }
+
+        // Must contain at least one non-digit character (letters, dash, etc.)
+        return hasNonDigit;
+    }
+
+    bool headerLooksValid(const std::vector<std::string>& headerRow)
+    {
+        if (headerRow.empty()) return false;
+        for (const auto& col : headerRow) {
+            if (!looksLikeHeaderColumn(col))
+                return false;  // one bad name = not a header row
+        }
+        return true;  // all columns passed
+    }
+
     /**
      * @brief Read Forcing Data from CSV
      * Reads only data within the specified model start and end date-times.
@@ -312,6 +343,19 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         //Get the data from CSV File
         std::vector<std::vector<std::string> > data_list = reader.getData();
 
+        if (data_list.empty()) {
+            std::string msg = "Emply CSV file " + file_name;
+            LOG(msg, LogLevel::WARNING);
+            throw std::runtime_error(msg);
+        }
+
+        const auto& header = data_list[0];
+        if (!headerLooksValid(header)) {
+            std::string msg = "Invalid CSV header in first row of " + file_name;
+            LOG(msg, LogLevel::WARNING);
+            throw std::runtime_error(msg);
+        }
+        
         // Process the header (first) row..
         int col_num = 0;
         for (const auto& col_head : data_list[0]){
@@ -360,7 +404,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
                     available_forcings_units[var_name] = units;
                 }
                 else {
-                    std::string msg = "Forcing file " + file_name + " is missing column header names";
+                    std::string msg = "Forcing file " + file_name + " is missing a column header name";
                     LOG(msg, LogLevel::FATAL);
                     throw std::runtime_error(msg);
                 }
