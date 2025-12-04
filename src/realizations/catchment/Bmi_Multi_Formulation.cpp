@@ -220,21 +220,15 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     std::string blank_string = "";
     auto &names = get_output_variable_names();
     if(out_units.size() == 0){
-        out_units.resize(names.size());
-        for (int i = 0; i < names.size(); ++i) {
+        out_units.resize(names.size(), blank_string);
+    }
+
+    for (int i = 0; i < names.size(); ++i) {
+        if (out_units[i] == blank_string){
             out_units[i] = get_bmi_native_units(names[i]);
-        } 
-        set_output_variable_units(out_units);
-    }
-    else if(std::find(out_units.begin(), out_units.end(), blank_string) != out_units.end()){
-        //this condition is when the user has not specified units for an output variable.
-        for (int i = 0; i < names.size(); ++i) {
-            if (out_units[i] == blank_string){
-                out_units[i] = get_bmi_native_units(names[i]);
-            }
         }
-        set_output_variable_units(out_units);
     }
+    set_output_variable_units(out_units);
 
     // Output precision, if present
     auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
