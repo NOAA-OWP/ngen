@@ -379,7 +379,10 @@ const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const 
 
 const std::string Bmi_Multi_Formulation::get_bmi_native_units(const std::string &name) const {
 
-    if(!is_out_vars_from_last_mod){
+    if(is_out_vars_from_last_mod){
+        return modules.back()->get_bmi_native_units(name);
+    }
+    else{
         auto iter = availableData.find(name);
         if(iter == availableData.end()){
             //handle exception
@@ -394,8 +397,7 @@ const std::string Bmi_Multi_Formulation::get_bmi_native_units(const std::string 
             LOG("Unable to obtain a valid formulation for " + name + ". Units cannot be queried.", LogLevel::WARNING);
             throw std::runtime_error("Unable to obtain a valid formulation for " + name + ". Units cannot be queried.");
         }
-    }
-    return modules.back()->get_bmi_native_units(name);
+    }    
 }
 
 std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {

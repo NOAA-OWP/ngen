@@ -376,7 +376,10 @@ namespace realization {
                 if (std::find(output_names.begin(), output_names.end(), mapped_name) != output_names.end()){
                     bmi_var_name = mapped_name;
                 }
-                //else not an output variable
+                else{//else not an output variable
+                    LOG("No matching BMI variable name found for " + name, LogLevel::WARNING);
+                    throw std::runtime_error("No matching BMI variable name found for " + name);
+                }
             }
         }
 
@@ -556,28 +559,15 @@ namespace realization {
             std::string blank_string = "";
             auto &names = get_output_variable_names();
             if(out_units.size() == 0){
-                out_units.resize(names.size());
-                for (int i = 0; i < names.size(); ++i) {
-                    std::string bmi_var_name;
-                    get_bmi_output_var_name(names[i], bmi_var_name);
-                    if(!bmi_var_name.empty()){
-                        out_units[i] = get_bmi_model()->GetVarUnits(bmi_var_name);
-                    }
-                }
-                set_output_variable_units(out_units);
+                out_units.resize(names.size(), blank_string);
             }
-            else if(std::find(out_units.begin(), out_units.end(), blank_string) != out_units.end()){
-                for (int i = 0; i < names.size(); ++i) {
-                    if (out_units[i] == blank_string){
-                        std::string bmi_var_name;
-                        get_bmi_output_var_name(names[i], bmi_var_name);
-                        if(!bmi_var_name.empty()){
-                            out_units[i] = get_bmi_model()->GetVarUnits(bmi_var_name);
-                        }
-                    }
+
+            for (int i = 0; i < names.size(); ++i) {
+                if (out_units[i] == blank_string){
+                    out_units[i] = get_bmi_native_units(names[i]);
                 }
-                set_output_variable_units(out_units);
             }
+            set_output_variable_units(out_units);
                                     
             // Output precision, if present
             auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
