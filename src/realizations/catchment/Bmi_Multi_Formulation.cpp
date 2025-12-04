@@ -452,12 +452,11 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
                 }
                 value = uce.unconverted_values[0];
             }
-            std::string var_value = std::to_string(value);
             if(i == 0){
-                *output_text_stream << var_value; //without delimiter for first output variable.
+                *output_text_stream << value; //without delimiter for first output variable.
             }
             else{
-                *output_text_stream << delimiter << var_value; //with delimiter for the rest.
+                *output_text_stream << delimiter << value; //with delimiter for the rest.
             }
         }
         return output_text_stream->str();
