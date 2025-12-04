@@ -204,6 +204,10 @@ namespace realization {
             {
                 return get_bmi_model()->GetVarUnits(bmi_var_name);
             }
+            else{
+                LOG("Correct BMI variable name not available for " + name + ". Units cannot be queried.", LogLevel::WARNING);
+                throw std::runtime_error("Correct BMI variable name not available for " + name + ". Units cannot be queried.");
+            }
         }
 
 	    std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)

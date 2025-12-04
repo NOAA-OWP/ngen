@@ -396,6 +396,10 @@ const std::string Bmi_Multi_Formulation::get_bmi_native_units(const std::string 
         if(model != nullptr){
             return model->get_bmi_native_units(name);
         }
+        else{
+            LOG("Unable to obtain a valid formulation for " + name + ". Units cannot be queried.", LogLevel::WARNING);
+            throw std::runtime_error("Unable to obtain a valid formulation for " + name + ". Units cannot be queried.");
+        }
     }
     return modules.back()->get_bmi_native_units(name);
 }
