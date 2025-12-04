@@ -344,7 +344,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         std::vector<std::vector<std::string> > data_list = reader.getData();
 
         if (data_list.empty()) {
-            std::string msg = "Emply CSV file " + file_name;
+            std::string msg = "Empty CSV file " + file_name;
             LOG(msg, LogLevel::WARNING);
             throw std::runtime_error(msg);
         }
