@@ -423,7 +423,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
                     available_forcings_units[var_name] = units;
                 }
                 else {
-                    std::string msg = "Forcing file " + file_name + " is missing column header names";
+                    std::string msg = "Forcing file " + file_name + " is missing a column header name";
                     LOG(msg, LogLevel::FATAL);
                     throw std::runtime_error(msg);
                 }
