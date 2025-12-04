@@ -223,7 +223,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         out_units.resize(names.size());
         for (int i = 0; i < names.size(); ++i) {
             out_units[i] = get_bmi_native_units(names[i]);
-        }
+        } 
         set_output_variable_units(out_units);
     }
     else if(std::find(out_units.begin(), out_units.end(), blank_string) != out_units.end()){
@@ -235,7 +235,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         }
         set_output_variable_units(out_units);
     }
-        
+
     // Output precision, if present
     auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
     if (out_precision_it != properties.end()) {
@@ -383,7 +383,7 @@ const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const 
     return output_var_name;
 }
 
-const std::string Bmi_Multi_Formulation::get_bmi_native_units(const std::string &name) {
+const std::string Bmi_Multi_Formulation::get_bmi_native_units(const std::string &name) const {
 
     if(!is_out_vars_from_last_mod){
         auto iter = availableData.find(name);

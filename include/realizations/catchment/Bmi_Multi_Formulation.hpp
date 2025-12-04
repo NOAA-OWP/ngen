@@ -446,7 +446,7 @@ namespace realization {
 
         void set_realization_file_format(bool is_legacy_format);
 
-        const std::string get_bmi_native_units(const std::string &name) override;
+        const std::string get_bmi_native_units(const std::string &name)const override;
 
         /**
          * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.

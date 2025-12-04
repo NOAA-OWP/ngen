@@ -195,7 +195,7 @@ namespace realization {
             throw std::runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
         }
 
-        const std::string Bmi_Module_Formulation::get_bmi_native_units(const std::string &name) {
+        const std::string Bmi_Module_Formulation::get_bmi_native_units(const std::string &name) const {
             // check if output is available from BMI
             std::string bmi_var_name;
             get_bmi_output_var_name(name, bmi_var_name);
@@ -351,7 +351,7 @@ namespace realization {
             return get_bmi_model()->GetOutputVarNames();
         }
 
-        void Bmi_Module_Formulation::get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name)
+        void Bmi_Module_Formulation::get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name) const
         {
             //check standard output names first
             std::vector<std::string> output_names = get_bmi_model()->GetOutputVarNames();
@@ -362,7 +362,7 @@ namespace realization {
             {
                 //check mapped names
                 std::string mapped_name;
-                for (auto & iter : bmi_var_names_map) {
+                for (auto const& iter : bmi_var_names_map) {
                     if (iter.second == name) {
                         mapped_name = iter.first;
                         break;
