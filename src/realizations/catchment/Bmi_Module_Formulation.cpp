@@ -149,7 +149,7 @@ namespace realization {
                         << " requester {'Get Response (Module Formulation)"
                         << "' catchment '" << get_catchment_id()
                         << "' variable '" << get_bmi_main_output_var()
-                        << "' units 'm" << "'}"
+                        << "' units 'm'}"
                         << " provider {'" << uce.provider_model_name 
                         << "' source variable '" << uce.provider_bmi_var_name << "'"
                         << " raw value " << uce.unconverted_values[0] << "}"
