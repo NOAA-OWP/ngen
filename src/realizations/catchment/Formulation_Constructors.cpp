@@ -29,7 +29,7 @@ namespace realization {
         };
     }
 
-    std::map<std::string, constructor> formulations = {
+    std::map<std::string, constructor> formulation_constructors = {
         {"bmi_c++", create_formulation_constructor<Bmi_Cpp_Formulation>()},
 #if NGEN_WITH_BMI_C
         {"bmi_c", create_formulation_constructor<Bmi_C_Formulation>()},

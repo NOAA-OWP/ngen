@@ -8,7 +8,7 @@ namespace hy_features {
        * Namespace constants, define the string prefixes for various hydrofabric
        * identifier types.
       */
-      static const std::string seperator = "-";
+      static const std::string separator = "-";
       static const std::string nexus = "nex";
       static const std::string coastal = "cnx";
       static const std::string terminal = "tnx";
