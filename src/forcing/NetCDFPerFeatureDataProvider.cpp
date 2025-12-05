@@ -238,6 +238,10 @@ boost::span<const std::string> NetCDFPerFeatureDataProvider::get_available_varia
     return variable_names;
 }
 
+const std::string NetCDFPerFeatureDataProvider::get_provider_units_for_variable(const std::string& name) const{
+    return get_ncvar_units(name);
+}
+
 const std::vector<std::string>& NetCDFPerFeatureDataProvider::get_ids() const
 {
     return loc_ids;
@@ -445,13 +449,13 @@ const netCDF::NcVar& NetCDFPerFeatureDataProvider::get_ncvar(const std::string& 
     if(cache_hit != ncvar_cache.end()){
         return cache_hit->second;
     }
-
-    std::string throw_msg; throw_msg.assign("Got request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
+    std::string throw_msg;
+    throw_msg.assign("Got request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
     LOG(throw_msg, LogLevel::WARNING);
     throw std::runtime_error(throw_msg);
 }
 
-const std::string& NetCDFPerFeatureDataProvider::get_ncvar_units(const std::string& name){
+const std::string& NetCDFPerFeatureDataProvider::get_ncvar_units(const std::string& name) const{
     auto cache_hit = units_cache.find(name);
     if(cache_hit != units_cache.end()){
         return cache_hit->second;

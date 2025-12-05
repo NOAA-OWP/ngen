@@ -19,6 +19,14 @@ namespace realization {
             return available_forcings;
         }
 
+        const std::string Bmi_Module_Formulation::get_provider_units_for_variable(const std::string& name) const{
+            auto iter = available_forcing_units.find(name);
+            if(iter != available_forcing_units.end()){
+                return iter->second;
+            }
+            //is there a possibility of key not found?
+        }
+
         std::string Bmi_Module_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
             // TODO: something must be added to store values if more than the current time step is wanted
             // TODO: if such a thing is added, it should probably be configurable to turn it off
@@ -582,8 +590,11 @@ namespace realization {
             if (model_initialized) {
                 for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
                     available_forcings.push_back(output_var_name);
+                    available_forcing_units[output_var_name] = get_bmi_model()->GetVarUnits(output_var_name);
                     if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end())
                         available_forcings.push_back(bmi_var_names_map[output_var_name]);
+                        available_forcing_units[bmi_var_names_map[output_var_name]] = get_bmi_model()->GetVarUnits(output_var_name); //units come from the model output variable.
+                      
                 }
             }
         }

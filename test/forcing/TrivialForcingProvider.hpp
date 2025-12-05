@@ -7,6 +7,7 @@
 
 
 #define OUTPUT_NAME_1 "output_name_1"
+#define OUTPUT_UNIT_1 "m"
 #define OUTPUT_VALUE_1 42.0
 #define OUTPUT_DEFAULT_1 36.8
 
@@ -26,6 +27,11 @@ namespace data_access {
             boost::span<const std::string> get_available_variable_names() const override {
                 return outputs;
             }
+            
+            const std::string get_provider_units_for_variable(const std::string& name) const override {
+                return OUTPUT_UNIT_1;
+            }
+            
 
             long get_data_start_time() const override {
                 return std::numeric_limits<long>::min();

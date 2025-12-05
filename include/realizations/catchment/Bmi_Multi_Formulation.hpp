@@ -124,6 +124,8 @@ namespace realization {
          */
         boost::span <const std::string> get_available_variable_names() const override;
 
+        const std::string get_provider_units_for_variable(const std::string& name) const override;
+
         /**
         * Get the input variables of 
         * the first nested BMI model.
@@ -776,6 +778,9 @@ namespace realization {
 
         /** The set of available "forcings" (output variables, plus their mapped aliases) this instance can provide. */
         std::vector<std::string> available_forcings;
+
+        std::map<std::string, std::string> available_forcing_units;
+
         /**
          * Any configured default values for outputs, keyed by framework alias (or var name if this is globally unique).
          */
