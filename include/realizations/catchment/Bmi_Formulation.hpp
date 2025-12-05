@@ -228,14 +228,6 @@ namespace realization {
 
         virtual void update(time_step_t t_index, time_step_t t_delta) = 0;
 
-        /**
-         * Get the configured units for the variables in formulation output.
-         *
-         * Get the units of the variables to include in the output from this formulation as defined in the realization file
-         *
-         * @return
-         */
-
     protected:
 
         /** Object to help with converting numeric output values to text. */

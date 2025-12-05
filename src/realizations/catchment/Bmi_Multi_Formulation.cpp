@@ -547,7 +547,7 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
         if (new_error) {
             std::stringstream ss;
             ss << "Unit conversion failure:"
-                << " requester {'Get Output Line for Timestep (Multi Formulation)"
+                << " requester {'Get Response (Multi Formulation)"  
                 << "' catchment '" << get_catchment_id()
                 << "' variable '" << get_bmi_main_output_var()
                 << "' units 'm'}" 
