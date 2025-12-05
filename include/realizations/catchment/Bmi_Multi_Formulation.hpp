@@ -680,7 +680,7 @@ namespace realization {
 
             // Call create_formulation to perform the rest of the typical initialization steps for the formulation.
             mod->create_formulation(properties);
-            
+
             // Set this up for placing in the module_variable_maps member variable
             std::shared_ptr<std::map<std::string, std::string>> var_aliases;
             var_aliases = std::make_shared<std::map<std::string, std::string>>(std::map<std::string, std::string>());

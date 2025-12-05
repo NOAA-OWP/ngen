@@ -297,7 +297,7 @@ const std::string Bmi_Multi_Formulation::get_provider_units_for_variable(const s
         if(iter != available_forcing_units.end()){
             return iter->second;
         }
-        std::string throw_msg; 
+        std::string throw_msg;
         throw_msg.assign("Got request to retrieve units for variable '" + name + "', but it was not found in the data provider. This should not happen." + SOURCE_LOC);
         LOG(throw_msg, LogLevel::WARNING);
         throw std::runtime_error(throw_msg);
@@ -410,13 +410,13 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
         //   - tried a more complex config, but ran into an error, and are needing to revert to the default
         return modules.back()->get_output_line_for_timestep(timestep, delimiter);
     }
-    else{    
+    else{
         // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
         // Clear anything currently in the multi formulation's stream buffer
         output_text_stream->str(std::string());
 
         const std::vector<std::string> &output_var_names = get_output_variable_names();
-        
+
         // This almost certainly should never happen, but just to be safe ...
         if (output_var_names.empty()) { return ""; }
 
@@ -449,8 +449,8 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
                         << " requester {'Get Output Line for Timestep (Multi Formulation)"
                         << "' catchment '" << get_catchment_id()
                         << "' variable '" << output_var_names[i]
-                        << "' units '" << output_var_units[i] << "'}" 
-                        << " provider {'" << uce.provider_model_name 
+                        << "' units '" << output_var_units[i] << "'}"
+                        << " provider {'" << uce.provider_model_name
                         << "' source variable '" << uce.provider_bmi_var_name << "'"
                         << " raw value " << uce.unconverted_values[0] << "}"
                         << " message \"" << uce.what() << "\"";
@@ -547,11 +547,11 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
         if (new_error) {
             std::stringstream ss;
             ss << "Unit conversion failure:"
-                << " requester {'Get Response (Multi Formulation)"  
+                << " requester {'Get Response (Multi Formulation)"
                 << "' catchment '" << get_catchment_id()
                 << "' variable '" << get_bmi_main_output_var()
-                << "' units 'm'}" 
-                << " provider {'" << uce.provider_model_name 
+                << "' units 'm'}"
+                << " provider {'" << uce.provider_model_name
                 << "' source variable '" << uce.provider_bmi_var_name << "'"
                 << " raw value " << uce.unconverted_values[0] << "}"
                 << " message \"" << uce.what() << "\"";

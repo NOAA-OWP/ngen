@@ -24,7 +24,7 @@ namespace realization {
             if(iter != available_forcing_units.end()){
                 return iter->second;
             }
-            std::string throw_msg; 
+            std::string throw_msg;
             throw_msg.assign("Got request to retrieve units for variable '" + name + "', but it was not found in the data provider. This should not happen." + SOURCE_LOC);
             LOG(throw_msg, LogLevel::WARNING);
             throw std::runtime_error(throw_msg);
@@ -36,6 +36,7 @@ namespace realization {
             if (timestep != (next_time_step_index - 1)) {
                 throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
             }
+
             static bool no_conversion_message_logged = false;
             if (!no_conversion_message_logged) {
                 no_conversion_message_logged = true;
@@ -63,7 +64,7 @@ namespace realization {
                             << "' catchment '" << get_catchment_id()
                             << "' variable '" << name
                             << "' units '" << output_var_units[i] << "'}"
-                            << " provider {'" << uce.provider_model_name 
+                            << " provider {'" << uce.provider_model_name
                             << "' source variable '" << uce.provider_bmi_var_name << "'"
                             << " raw value " << uce.unconverted_values[0] << "}"
                             << " message \"" << uce.what() << "\"";
@@ -150,7 +151,7 @@ namespace realization {
                         << "' catchment '" << get_catchment_id()
                         << "' variable '" << get_bmi_main_output_var()
                         << "' units 'm'}"
-                        << " provider {'" << uce.provider_model_name 
+                        << " provider {'" << uce.provider_model_name
                         << "' source variable '" << uce.provider_bmi_var_name << "'"
                         << " raw value " << uce.unconverted_values[0] << "}"
                         << " message \"" << uce.what() << "\"";
@@ -547,7 +548,7 @@ namespace realization {
                 // if new format and no output/headers are mentioned.
                 set_output_header_fields(get_output_variable_names());
             }
-            
+
             // Output precision, if present
             auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
             if (out_precision_it != properties.end()) {

@@ -275,7 +275,6 @@ namespace realization {
          * `output_variable_names`.
          */
         std::vector<std::string> output_header_fields;
-
         /**
          * Names of the variables to include in the output from this formulation, which will be some ordered subset of
          * the BMI module output variables accessible to the instance.
