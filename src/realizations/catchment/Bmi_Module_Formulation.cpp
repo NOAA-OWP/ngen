@@ -47,8 +47,7 @@ namespace realization {
             std::string output_str;
             for (int i = 0; i < get_output_variable_names().size(); ++i) {
                 std::string name = get_output_variable_names()[i];
-                std::string output_units = get_output_variable_units()[i];
-                std::string out_units_norm = (output_units.empty() || output_units == "none") ? "1" : output_units;
+                std::string out_units_norm = (output_var_units[i].empty() || output_var_units[i] == "none") ? "1" : output_var_units[i];
                 double var_value;
                 try{
                     var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, out_units_norm), MEAN);
@@ -63,7 +62,7 @@ namespace realization {
                             << " requester {'Get Output Line for Timestep (Module Formulation)"
                             << "' catchment '" << get_catchment_id()
                             << "' variable '" << name
-                            << "' units '" << output_units << "'}"
+                            << "' units '" << output_var_units[i] << "'}"
                             << " provider {'" << uce.provider_model_name 
                             << "' source variable '" << uce.provider_bmi_var_name << "'"
                             << " raw value " << uce.unconverted_values[0] << "}"
@@ -438,7 +437,6 @@ namespace realization {
                     bmi_var_names_map.insert(
                             std::pair<std::string, std::string>(names_it.first, names_it.second.as_string()));
                 }
-                set_variable_map_availability(true);
             }
 
             // Do this next, since after checking whether other input variables are present in the properties, we can
@@ -455,7 +453,6 @@ namespace realization {
 
             // Output variable subset and order, if present
             std::vector<std::string> out_headers;//define empty vector for headers
-            std::vector<std::string> out_units;//define empty vector for units for new json structure
             auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
             if (out_var_it != properties.end()) {
                 std::vector<geojson::JSONProperty> out_vars_json_list = out_var_it->second.as_list();
@@ -478,7 +475,7 @@ namespace realization {
                 }
                 else{
                     out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
-                    out_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
+                    output_var_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
                     for (int i = 0; i < out_vars_json_list.size(); ++i) {
                         out_vars[i] = out_vars_json_list[i].at("name").as_string();
                         if(out_vars_json_list[i].has_key("header")){
@@ -495,16 +492,16 @@ namespace realization {
                         }
                         if(out_vars_json_list[i].has_key("units")){
                             //indicates that a valid unit is provided
-                            out_units[i] = out_vars_json_list[i].at("units").as_string();
+                            output_var_units[i] = out_vars_json_list[i].at("units").as_string();
                         }
                         else{
                            LOG("Units not provided for '" + out_vars[i] + "' in the realization file.",LogLevel::WARNING);
-                           out_units[i] = ""; //add an empty entry and populate it with BMI native units later.
+                           output_var_units[i] = ""; //add an empty entry and populate it with BMI native units later.
                         }
                     }
                     //check if the units can be parsed correctly and write a warning message
                     std::stringstream ss;
-                    for (const std::string& out_unit : out_units) {
+                    for (const std::string& out_unit : output_var_units) {
                         if (!UnitsHelper::can_parse(out_unit))
                         {
                             ss << "Unable to parse '" << out_unit << "' in units value." << std::endl;
@@ -515,9 +512,8 @@ namespace realization {
                         // empty array may be read as [""], so make everything empty
                         out_vars.pop_back();
                         out_headers.pop_back();
-                        out_units.pop_back();
+                        output_var_units.pop_back();
                     }
-                    set_output_variable_units(out_units);
                     set_output_header_fields(out_headers);
                 }
                 set_output_variable_names(out_vars);
@@ -566,28 +562,25 @@ namespace realization {
                 for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
                     available_forcings.push_back(output_var_name);
                     available_forcing_units[output_var_name] = get_bmi_model()->GetVarUnits(output_var_name);
-                    if (is_variable_mapping_provided()){
-                        if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end()){
-                            available_forcings.push_back(bmi_var_names_map[output_var_name]);
-                            available_forcing_units[bmi_var_names_map[output_var_name]] = get_bmi_model()->GetVarUnits(output_var_name); //units come from the model output variable.
-                        }
-                    } 
+                    if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end()){
+                        available_forcings.push_back(bmi_var_names_map[output_var_name]);
+                        available_forcing_units[bmi_var_names_map[output_var_name]] = get_bmi_model()->GetVarUnits(output_var_name); //units come from the model output variable.
+                    }
                 }
             }
 
             //check if units have not been specified. If not, default to native units.
             std::string blank_string = "";
             auto &names = get_output_variable_names();
-            if(out_units.size() == 0){
-                out_units.resize(names.size(), blank_string);
+            if(output_var_units.size() == 0){
+                output_var_units.resize(names.size(), blank_string);
             }
 
             for (int i = 0; i < names.size(); ++i) {
-                if (out_units[i] == blank_string){
-                    out_units[i] = get_provider_units_for_variable(names[i]);
+                if (output_var_units[i] == blank_string){
+                    output_var_units[i] = get_provider_units_for_variable(names[i]);
                 }
             }
-            set_output_variable_units(out_units);
         }
         /**
          * @brief Template function for copying iterator range into contiguous array.
@@ -782,10 +775,6 @@ namespace realization {
             return legacy_json_format;
         }
 
-        bool Bmi_Module_Formulation::is_variable_mapping_provided() const {
-            return variable_names_map_provided;
-        }
-
         void Bmi_Module_Formulation::set_allow_model_exceed_end_time(bool allow_exceed_end) {
             allow_model_exceed_end_time = allow_exceed_end;
         }
@@ -811,10 +800,6 @@ namespace realization {
 
         void Bmi_Module_Formulation::set_realization_file_format(bool is_legacy_format){
             legacy_json_format = is_legacy_format;
-        }
-
-        void Bmi_Module_Formulation::set_variable_map_availability(bool is_variable_map_available){
-            variable_names_map_provided = is_variable_map_available;
         }
 
         // TODO: need to modify this to support arrays properly, since in general that's what BMI modules deal with

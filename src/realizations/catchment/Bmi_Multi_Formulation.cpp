@@ -102,7 +102,6 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
 
     // Setup formulation output variable subset and order, if present
     std::vector<std::string> out_headers;//define empty vector for headers
-    std::vector<std::string> out_units;//define empty vector for units for new json structure
     auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
     if (out_var_it != properties.end()) {
         std::vector<geojson::JSONProperty> out_vars_json_list = out_var_it->second.as_list();
@@ -125,7 +124,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         }
         else{
             out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
-            out_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
+            output_var_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
             for (int i = 0; i < out_vars_json_list.size(); ++i) {
                 out_vars[i] = out_vars_json_list[i].at("name").as_string();
                 if(out_vars_json_list[i].has_key("header")){
@@ -142,16 +141,16 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
                 }
                 if(out_vars_json_list[i].has_key("units")){
                     //indicates that a valid unit is provided
-                    out_units[i] = out_vars_json_list[i].at("units").as_string();
+                    output_var_units[i] = out_vars_json_list[i].at("units").as_string();
                 }
                 else{
                     LOG("Units not provided for '" + out_vars[i] + "' in the realization file.",LogLevel::WARNING);
-                    out_units[i] = ""; //add an empty entry and populate it with BMI native units later.
+                    output_var_units[i] = ""; //add an empty entry and populate it with BMI native units later.
                 }
             }
             //check if the units can be parsed correctly and write a warning message
             std::stringstream ss;
-            for (const std::string& out_unit : out_units) {
+            for (const std::string& out_unit : output_var_units) {
                 if (!UnitsHelper::can_parse(out_unit))
                 {
                     ss << "Unable to parse '" << out_unit << "' in units value." << std::endl;
@@ -162,9 +161,8 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
                 // empty array may be read as [""], so make everything empty
                 out_vars.pop_back();
                 out_headers.pop_back();
-                out_units.pop_back();
+                output_var_units.pop_back();
             }
-            set_output_variable_units(out_units);
             set_output_header_fields(out_headers);
         }
         set_output_variable_names(out_vars);
@@ -220,17 +218,16 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     //check if units have not been specified. If not, default to native units.
     std::string blank_string = "";
     auto &names = get_output_variable_names();
-    if(out_units.size() == 0){
-        out_units.resize(names.size(), blank_string);
+    if(output_var_units.size() == 0){
+        output_var_units.resize(names.size(), blank_string);
     }
 
     for (int i = 0; i < names.size(); ++i) {
-        if (out_units[i] == blank_string){
-            out_units[i] = get_provider_units_for_variable(names[i]);
+        if (output_var_units[i] == blank_string){
+            output_var_units[i] = get_provider_units_for_variable(names[i]);
         }
     }
-    set_output_variable_units(out_units);
-
+    
     // Output precision, if present
     auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
     if (out_precision_it != properties.end()) {
@@ -419,8 +416,7 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
         output_text_stream->str(std::string());
 
         const std::vector<std::string> &output_var_names = get_output_variable_names();
-        const std::vector<std::string> &output_var_units = get_output_variable_units();
-
+        
         // This almost certainly should never happen, but just to be safe ...
         if (output_var_names.empty()) { return ""; }
 

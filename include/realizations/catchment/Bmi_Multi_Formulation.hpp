@@ -780,6 +780,8 @@ namespace realization {
 
         std::map<std::string, std::string> available_forcing_units;
 
+        std::vector<std::string> output_var_units;
+
         /**
          * Any configured default values for outputs, keyed by framework alias (or var name if this is globally unique).
          */

@@ -235,10 +235,6 @@ namespace realization {
          *
          * @return
          */
-        // TODO: rename this function to make it more clear it is FORMULATION output contents, not simply BMI variables
-        const std::vector<std::string> &get_output_variable_units() const {
-            return output_variable_units;
-        }
 
     protected:
 
@@ -278,10 +274,6 @@ namespace realization {
             output_variable_names = out_var_names;
         }
 
-        void set_output_variable_units(const std::vector<std::string> &output_units) {
-            output_variable_units = output_units;
-        }
-
     private:
 
         std::string bmi_main_output_var;
@@ -291,11 +283,7 @@ namespace realization {
          * `output_variable_names`.
          */
         std::vector<std::string> output_header_fields;
-        /**
-         * Output units for the variables output by the realization, as defined in
-         * `output_variables`.
-         */
-        std::vector<std::string> output_variable_units;
+
         /**
          * Names of the variables to include in the output from this formulation, which will be some ordered subset of
          * the BMI module output variables accessible to the instance.
