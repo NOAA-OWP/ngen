@@ -26,6 +26,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     std::shared_ptr<data_access::WrappedDataProvider> forcing_provider = std::make_shared<data_access::WrappedDataProvider>(forcing.get());
     for (const std::string &forcing_name_or_alias : forcing->get_available_variable_names()) {
         availableData[forcing_name_or_alias] = forcing_provider;
+        available_forcing_units[forcing_name_or_alias] = forcing->get_provider_units_for_variable(forcing_name_or_alias);
     }
 
     // Pull default output values, if any present
@@ -225,7 +226,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
 
     for (int i = 0; i < names.size(); ++i) {
         if (out_units[i] == blank_string){
-            out_units[i] = get_bmi_native_units(names[i]);
+            out_units[i] = get_provider_units_for_variable(names[i]);
         }
     }
     set_output_variable_units(out_units);
@@ -291,14 +292,19 @@ boost::span<const std::string> Bmi_Multi_Formulation::get_available_variable_nam
 }
 
 const std::string Bmi_Multi_Formulation::get_provider_units_for_variable(const std::string& name) const{
-    auto iter = available_forcing_units.find(name);
-    if(iter != available_forcing_units.end()){
-        return iter->second;
+    if(is_out_vars_from_last_mod){
+        return modules.back()->get_provider_units_for_variable(name);
     }
-    std::string throw_msg; 
-    throw_msg.assign("Got request to retrieve units for variable '" + name + "', but it was not found in the data provider. This should not happen." + SOURCE_LOC);
-    LOG(throw_msg, LogLevel::WARNING);
-    throw std::runtime_error(throw_msg);
+    else{
+        auto iter = available_forcing_units.find(name);
+        if(iter != available_forcing_units.end()){
+            return iter->second;
+        }
+        std::string throw_msg; 
+        throw_msg.assign("Got request to retrieve units for variable '" + name + "', but it was not found in the data provider. This should not happen." + SOURCE_LOC);
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    }
 }
 
 const time_t &Bmi_Multi_Formulation::get_bmi_model_start_time_forcing_offset_s() const {
@@ -388,38 +394,6 @@ const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const 
             return mapped_s;
     }
     return output_var_name;
-}
-
-const std::string Bmi_Multi_Formulation::get_bmi_native_units(const std::string &name) const {
-
-    if(is_out_vars_from_last_mod){
-        return modules.back()->get_bmi_native_units(name);
-    }
-    else{
-        auto iter = availableData.find(name);
-        if(iter == availableData.end()){
-            //handle exception
-            LOG("Multi BMI formulation: No module found for variable " + name, LogLevel::WARNING);
-            throw std::runtime_error("Multi BMI formulation: No module found for variable " + name);
-        }
-        std::string units = forcing->get_provider_units_for_variable(name);
-        if(units != "none"){
-            return units;
-        }
-        else{
-            LOG("Units for '" + name + "' not found in the forcing data.", LogLevel::WARNING);
-            throw std::runtime_error("Units for '" + name + "' not found in the forcing data.");
-        }
-
-        // auto model = std::dynamic_pointer_cast<Bmi_Formulation>(iter->second);
-        // if(model != nullptr){
-        //     return model->get_bmi_native_units(name);
-        // }
-        // else{
-        //     LOG("Unable to obtain a valid formulation for " + name + ". Units cannot be queried.", LogLevel::WARNING);
-        //     throw std::runtime_error("Unable to obtain a valid formulation for " + name + ". Units cannot be queried.");
-        // }
-    }    
 }
 
 std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {

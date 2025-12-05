@@ -24,7 +24,10 @@ namespace realization {
             if(iter != available_forcing_units.end()){
                 return iter->second;
             }
-            //is there a possibility of key not found?
+            std::string throw_msg; 
+            throw_msg.assign("Got request to retrieve units for variable '" + name + "', but it was not found in the data provider. This should not happen." + SOURCE_LOC);
+            LOG(throw_msg, LogLevel::WARNING);
+            throw std::runtime_error(throw_msg);
         }
 
         std::string Bmi_Module_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
@@ -203,22 +206,7 @@ namespace realization {
             throw std::runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
         }
 
-        const std::string Bmi_Module_Formulation::get_bmi_native_units(const std::string &name) const {
-            // check if output is available from BMI
-            std::string bmi_var_name;
-            get_bmi_output_var_name(name, bmi_var_name);
-
-            if(!bmi_var_name.empty())
-            {
-                return get_bmi_model()->GetVarUnits(bmi_var_name);
-            }
-            else{
-                LOG("Correct BMI variable name not available for " + name + ". Units cannot be queried.", LogLevel::WARNING);
-                throw std::runtime_error("Correct BMI variable name not available for " + name + ". Units cannot be queried.");
-            }
-        }
-
-	    std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
+        std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
         {
             std::string output_name = selector.get_variable_name();
             time_t init_time = selector.get_init_time();
@@ -450,6 +438,7 @@ namespace realization {
                     bmi_var_names_map.insert(
                             std::pair<std::string, std::string>(names_it.first, names_it.second.as_string()));
                 }
+                set_variable_map_availability(true);
             }
 
             // Do this next, since after checking whether other input variables are present in the properties, we can
@@ -563,20 +552,6 @@ namespace realization {
                 set_output_header_fields(get_output_variable_names());
             }
             
-            //check if units have not been specified. If not, default to native units.
-            std::string blank_string = "";
-            auto &names = get_output_variable_names();
-            if(out_units.size() == 0){
-                out_units.resize(names.size(), blank_string);
-            }
-
-            for (int i = 0; i < names.size(); ++i) {
-                if (out_units[i] == blank_string){
-                    out_units[i] = get_bmi_native_units(names[i]);
-                }
-            }
-            set_output_variable_units(out_units);
-                                    
             // Output precision, if present
             auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
             if (out_precision_it != properties.end()) {
@@ -591,12 +566,28 @@ namespace realization {
                 for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
                     available_forcings.push_back(output_var_name);
                     available_forcing_units[output_var_name] = get_bmi_model()->GetVarUnits(output_var_name);
-                    if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end())
-                        available_forcings.push_back(bmi_var_names_map[output_var_name]);
-                        available_forcing_units[bmi_var_names_map[output_var_name]] = get_bmi_model()->GetVarUnits(output_var_name); //units come from the model output variable.
-                      
+                    if (is_variable_mapping_provided()){
+                        if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end()){
+                            available_forcings.push_back(bmi_var_names_map[output_var_name]);
+                            available_forcing_units[bmi_var_names_map[output_var_name]] = get_bmi_model()->GetVarUnits(output_var_name); //units come from the model output variable.
+                        }
+                    } 
                 }
             }
+
+            //check if units have not been specified. If not, default to native units.
+            std::string blank_string = "";
+            auto &names = get_output_variable_names();
+            if(out_units.size() == 0){
+                out_units.resize(names.size(), blank_string);
+            }
+
+            for (int i = 0; i < names.size(); ++i) {
+                if (out_units[i] == blank_string){
+                    out_units[i] = get_provider_units_for_variable(names[i]);
+                }
+            }
+            set_output_variable_units(out_units);
         }
         /**
          * @brief Template function for copying iterator range into contiguous array.
@@ -791,6 +782,10 @@ namespace realization {
             return legacy_json_format;
         }
 
+        bool Bmi_Module_Formulation::is_variable_mapping_provided() const {
+            return variable_names_map_provided;
+        }
+
         void Bmi_Module_Formulation::set_allow_model_exceed_end_time(bool allow_exceed_end) {
             allow_model_exceed_end_time = allow_exceed_end;
         }
@@ -816,6 +811,10 @@ namespace realization {
 
         void Bmi_Module_Formulation::set_realization_file_format(bool is_legacy_format){
             legacy_json_format = is_legacy_format;
+        }
+
+        void Bmi_Module_Formulation::set_variable_map_availability(bool is_variable_map_available){
+            variable_names_map_provided = is_variable_map_available;
         }
 
         // TODO: need to modify this to support arrays properly, since in general that's what BMI modules deal with

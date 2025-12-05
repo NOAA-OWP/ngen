@@ -259,12 +259,12 @@ namespace realization {
 
         const std::vector<std::string> get_bmi_input_variables() const override;
         const std::vector<std::string> get_bmi_output_variables() const override;
-        const std::string get_bmi_native_units(const std::string &name) const override;
-
+        
         const boost::span<char> get_serialization_state() const;
         void load_serialization_state(const boost::span<char> state) const;
         void free_serialization_state() const;
         void set_realization_file_format(bool is_legacy_format);
+        void set_variable_map_availability(bool is_variable_map_available);
         
     protected:
 
@@ -478,6 +478,8 @@ namespace realization {
 
         bool is_realization_legacy_format() const;
 
+        bool is_variable_mapping_provided() const;
+
     private:
         /**
          * Whether model ``Update`` calls are allowed and handled in some way by the backing model for time steps after
@@ -502,6 +504,8 @@ namespace realization {
 
         /** Whether the realization file follows legacy format or the new format. */
         bool legacy_json_format = false;
+
+        bool variable_names_map_provided = false;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS

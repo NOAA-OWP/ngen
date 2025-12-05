@@ -448,8 +448,6 @@ namespace realization {
 
         void set_realization_file_format(bool is_legacy_format);
 
-        const std::string get_bmi_native_units(const std::string &name)const override;
-
         /**
          * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
          *
@@ -682,7 +680,7 @@ namespace realization {
 
             // Call create_formulation to perform the rest of the typical initialization steps for the formulation.
             mod->create_formulation(properties);
-
+            
             // Set this up for placing in the module_variable_maps member variable
             std::shared_ptr<std::map<std::string, std::string>> var_aliases;
             var_aliases = std::make_shared<std::map<std::string, std::string>>(std::map<std::string, std::string>());
@@ -713,6 +711,7 @@ namespace realization {
                     throw std::runtime_error(throw_msg);
                 }
                 availableData[framework_alias] = mod;
+                available_forcing_units[framework_alias] = mod->get_provider_units_for_variable(framework_alias);
             }
             module_variable_maps[mod_index] = var_aliases;
             return mod;
