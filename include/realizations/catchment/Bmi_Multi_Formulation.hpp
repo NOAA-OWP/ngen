@@ -124,6 +124,8 @@ namespace realization {
          */
         boost::span <const std::string> get_available_variable_names() const override;
 
+        const std::string get_provider_units_for_variable(const std::string& name) const override;
+
         /**
         * Get the input variables of 
         * the first nested BMI model.
@@ -539,6 +541,8 @@ namespace realization {
             }
         }
 
+        void update(time_step_t t_index, time_step_t t_delta) override;
+
     protected:
 
         /**
@@ -700,13 +704,14 @@ namespace realization {
                 if (availableData.count(framework_alias) > 0) {
                     std::string throw_msg; throw_msg.assign(
                             "Multi BMI cannot be created with module " + mod->get_model_type_name() +
-                            " with output variable " + framework_alias +
-                            (var_name == framework_alias ? "" : " (an alias of BMI variable " + var_name + ")") +
+                            " with output variable '" + framework_alias + "'" +
+                            (var_name == framework_alias ? "" : " (an alias of BMI variable '" + var_name + "')") +
                             " because a previous module is using this output variable name/alias.");
                     LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                 availableData[framework_alias] = mod;
+                available_forcing_units[framework_alias] = mod->get_provider_units_for_variable(framework_alias);
             }
             module_variable_maps[mod_index] = var_aliases;
             return mod;
@@ -772,6 +777,11 @@ namespace realization {
 
         /** The set of available "forcings" (output variables, plus their mapped aliases) this instance can provide. */
         std::vector<std::string> available_forcings;
+
+        std::map<std::string, std::string> available_forcing_units;
+
+        std::vector<std::string> output_var_units;
+
         /**
          * Any configured default values for outputs, keyed by framework alias (or var name if this is globally unique).
          */

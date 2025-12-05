@@ -34,6 +34,17 @@ namespace realization {
             return available_forcings;
         }
 
+        const std::string Bmi_Module_Formulation::get_provider_units_for_variable(const std::string& name) const{
+            auto iter = available_forcing_units.find(name);
+            if(iter != available_forcing_units.end()){
+                return iter->second;
+            }
+            std::string throw_msg;
+            throw_msg.assign("Got request to retrieve units for variable '" + name + "', but it was not found in the data provider. This should not happen." + SOURCE_LOC);
+            LOG(throw_msg, LogLevel::WARNING);
+            throw std::runtime_error(throw_msg);
+        }
+
         std::string Bmi_Module_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
             // TODO: something must be added to store values if more than the current time step is wanted
             // TODO: if such a thing is added, it should probably be configurable to turn it off
@@ -50,13 +61,39 @@ namespace realization {
             }
 
             std::string output_str;
-            for (const std::string& name : get_output_variable_names()) {
-                output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_value_as_double(0, name));
+            for (int i = 0; i < get_output_variable_names().size(); ++i) {
+                std::string name = get_output_variable_names()[i];
+                std::string out_units_norm = (output_var_units[i].empty() || output_var_units[i] == "none") ? "1" : output_var_units[i];
+                double var_value;
+                try{
+                    var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, out_units_norm), MEAN);
+                }
+                catch(data_access::unit_conversion_exception &uce){
+                    data_access::unit_error_log_key key{"File output", name, uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                    auto ret = data_access::unit_errors_reported.insert(key);
+                    bool new_error = ret.second;
+                    if (new_error) {
+                        std::stringstream ss;
+                        ss << "Unit conversion failure:"
+                            << " requester {'Get Output Line for Timestep (Module Formulation)"
+                            << "' catchment '" << get_catchment_id()
+                            << "' variable '" << name
+                            << "' units '" << output_var_units[i] << "'}"
+                            << " provider {'" << uce.provider_model_name
+                            << "' source variable '" << uce.provider_bmi_var_name << "'"
+                            << " raw value " << uce.unconverted_values[0] << "}"
+                            << " message \"" << uce.what() << "\"";
+                        LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                    }
+                    var_value = uce.unconverted_values[0];
+                }
+                output_str += (output_str.empty() ? "" : ",") +
+                    std::to_string(var_value);
             }
             return output_str;
         }
 
-        double Bmi_Module_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
+        void Bmi_Module_Formulation::update(time_step_t t_index, time_step_t t_delta) {
             if (get_bmi_model() == nullptr) {
                 throw std::runtime_error("Trying to process response of improperly created BMI formulation of type '" + get_formulation_type() + "'.");
             }
@@ -110,7 +147,34 @@ namespace realization {
                 // TODO: again, consider whether we should store any historic response, ts_delta, or other var values
                 next_time_step_index++;
             }
-            return get_var_value_as_double(0, get_bmi_main_output_var());
+        }
+
+        double Bmi_Module_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
+            update(t_index, t_delta);
+            double var_value;
+            try{
+                var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
+            }
+            catch(data_access::unit_conversion_exception &uce){
+                data_access::unit_error_log_key key{"Bmi_Module_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                auto ret = data_access::unit_errors_reported.insert(key);
+                bool new_error = ret.second;
+                if (new_error) {
+                    std::stringstream ss;
+                    ss << "Unit conversion failure:"
+                        << " requester {'Get Response (Module Formulation)"
+                        << "' catchment '" << get_catchment_id()
+                        << "' variable '" << get_bmi_main_output_var()
+                        << "' units 'm'}"
+                        << " provider {'" << uce.provider_model_name
+                        << "' source variable '" << uce.provider_bmi_var_name << "'"
+                        << " raw value " << uce.unconverted_values[0] << "}"
+                        << " message \"" << uce.what() << "\"";
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                }
+                var_value = uce.unconverted_values[0];
+            }
+            return var_value;
         }
 
         time_t Bmi_Module_Formulation::get_variable_time_begin(const std::string &variable_name) {
@@ -157,7 +221,7 @@ namespace realization {
             throw std::runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
         }
 
-	std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
+        std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
         {
             std::string output_name = selector.get_variable_name();
             time_t init_time = selector.get_init_time();
@@ -302,7 +366,7 @@ namespace realization {
             return get_bmi_model()->GetOutputVarNames();
         }
 
-        void Bmi_Module_Formulation::get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name)
+        void Bmi_Module_Formulation::get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name) const
         {
             //check standard output names first
             std::vector<std::string> output_names = get_bmi_model()->GetOutputVarNames();
@@ -313,7 +377,7 @@ namespace realization {
             {
                 //check mapped names
                 std::string mapped_name;
-                for (auto & iter : bmi_var_names_map) {
+                for (auto const& iter : bmi_var_names_map) {
                     if (iter.second == name) {
                         mapped_name = iter.first;
                         break;
@@ -323,7 +387,10 @@ namespace realization {
                 if (std::find(output_names.begin(), output_names.end(), mapped_name) != output_names.end()){
                     bmi_var_name = mapped_name;
                 }
-                //else not an output variable
+                else{//else not an output variable
+                    LOG("No matching BMI variable name found for " + name, LogLevel::WARNING);
+                    throw std::runtime_error("No matching BMI variable name found for " + name);
+                }
             }
         }
 
@@ -402,7 +469,6 @@ namespace realization {
 
             // Output variable subset and order, if present
             std::vector<std::string> out_headers;//define empty vector for headers
-            std::vector<std::string> out_units;//define empty vector for units for new json structure
             auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
             if (out_var_it != properties.end()) {
                 std::vector<geojson::JSONProperty> out_vars_json_list = out_var_it->second.as_list();
@@ -425,7 +491,7 @@ namespace realization {
                 }
                 else{
                     out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
-                    out_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
+                    output_var_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
                     for (int i = 0; i < out_vars_json_list.size(); ++i) {
                         out_vars[i] = out_vars_json_list[i].at("name").as_string();
                         if(out_vars_json_list[i].has_key("header")){
@@ -440,11 +506,18 @@ namespace realization {
                             ss << "Header not provided for '" << out_vars[i] << "'. Using the variable name as header." << std::endl;
                             LOG(ss.str(), LogLevel::INFO); ss.str("");
                         }
-                        out_units[i] = out_vars_json_list[i].at("units").as_string();
+                        if(out_vars_json_list[i].has_key("units")){
+                            //indicates that a valid unit is provided
+                            output_var_units[i] = out_vars_json_list[i].at("units").as_string();
+                        }
+                        else{
+                           LOG("Units not provided for '" + out_vars[i] + "' in the realization file.",LogLevel::WARNING);
+                           output_var_units[i] = ""; //add an empty entry and populate it with BMI native units later.
+                        }
                     }
                     //check if the units can be parsed correctly and write a warning message
                     std::stringstream ss;
-                    for (const std::string& out_unit : out_units) {
+                    for (const std::string& out_unit : output_var_units) {
                         if (!UnitsHelper::can_parse(out_unit))
                         {
                             ss << "Unable to parse '" << out_unit << "' in units value." << std::endl;
@@ -455,12 +528,11 @@ namespace realization {
                         // empty array may be read as [""], so make everything empty
                         out_vars.pop_back();
                         out_headers.pop_back();
-                        out_units.pop_back();
+                        output_var_units.pop_back();
                     }
-                    set_output_variable_units(out_units);
+                    set_output_header_fields(out_headers);
                 }
                 set_output_variable_names(out_vars);
-                set_output_header_fields(out_headers);
             }
             // Otherwise, just take what literally is provided by the model
             else {
@@ -505,8 +577,24 @@ namespace realization {
             if (model_initialized) {
                 for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
                     available_forcings.push_back(output_var_name);
-                    if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end())
+                    available_forcing_units[output_var_name] = get_bmi_model()->GetVarUnits(output_var_name);
+                    if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end()){
                         available_forcings.push_back(bmi_var_names_map[output_var_name]);
+                        available_forcing_units[bmi_var_names_map[output_var_name]] = get_bmi_model()->GetVarUnits(output_var_name); //units come from the model output variable.
+                    }
+                }
+            }
+
+            //check if units have not been specified. If not, default to native units.
+            std::string blank_string = "";
+            auto &names = get_output_variable_names();
+            if(output_var_units.size() == 0){
+                output_var_units.resize(names.size(), blank_string);
+            }
+
+            for (int i = 0; i < names.size(); ++i) {
+                if (output_var_units[i] == blank_string){
+                    output_var_units[i] = get_provider_units_for_variable(names[i]);
                 }
             }
         }

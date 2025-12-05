@@ -237,6 +237,17 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         return available_forcings;
     }
 
+    const std::string get_provider_units_for_variable(const std::string& name) const {
+        auto iter = available_forcings_units.find(name);
+        if(iter != available_forcings_units.end()){
+            return iter->second;
+        }
+        std::string throw_msg;
+        throw_msg.assign("Got request to retrieve units for variable '" + name + "', but it was not found in the data provider. This should not happen." + SOURCE_LOC);
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    };
+
     private:
 
     /**
