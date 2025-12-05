@@ -424,10 +424,24 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
         // This almost certainly should never happen, but just to be safe ...
         if (output_var_names.empty()) { return ""; }
 
+        auto duration = record_duration();
+        time_t time_offset = get_model_current_time() - get_model_start_time();
+
         for (int i = 0; i < output_var_names.size(); ++i) {
             double value;
             try{
-                value = get_value(CatchmentAggrDataSelector(get_catchment_id(), output_var_names[i], 0, 0, output_var_units[i]), MEAN);
+                auto var_name = output_var_names[i];
+
+                auto source = availableData.find(var_name);
+                if (source == availableData.end()) {
+                    std::string throw_msg; throw_msg.assign(get_formulation_type() + " cannot find a source for output variable '" + var_name + "'");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
+                }
+                auto provider = source->second;
+
+                time_t init_time = provider->get_data_start_time() + time_offset;
+                value = provider->get_value(CatchmentAggrDataSelector(get_catchment_id(), var_name, init_time, duration, output_var_units[i]), MEAN);
             }
             catch(data_access::unit_conversion_exception &uce){
                 data_access::unit_error_log_key key{"File Output Multi", output_var_names[i], uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
