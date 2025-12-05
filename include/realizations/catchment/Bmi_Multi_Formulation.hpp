@@ -704,8 +704,8 @@ namespace realization {
                 if (availableData.count(framework_alias) > 0) {
                     std::string throw_msg; throw_msg.assign(
                             "Multi BMI cannot be created with module " + mod->get_model_type_name() +
-                            " with output variable " + framework_alias +
-                            (var_name == framework_alias ? "" : " (an alias of BMI variable " + var_name + ")") +
+                            " with output variable '" + framework_alias + "'" +
+                            (var_name == framework_alias ? "" : " (an alias of BMI variable '" + var_name + "')") +
                             " because a previous module is using this output variable name/alias.");
                     LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
