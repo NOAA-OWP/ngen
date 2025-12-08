@@ -34,14 +34,28 @@ namespace realization {
         public:
             Formulation_Manager(std::stringstream &data) {
                 boost::property_tree::ptree loaded_tree;
-                boost::property_tree::json_parser::read_json(data, loaded_tree);
-                this->tree = loaded_tree;
+                try {
+                    boost::property_tree::json_parser::read_json(data, loaded_tree);
+                    this->tree = loaded_tree;
+                }
+                catch (const std::exception& e) {
+                    std::string msg = std::string("Reading json data") + e.what();
+                    LOG(msg, LogLevel::FATAL);
+                    throw;
+                }
             }
 
             Formulation_Manager(const std::string &file_path) {
                 boost::property_tree::ptree loaded_tree;
-                boost::property_tree::json_parser::read_json(file_path, loaded_tree);
-                this->tree = loaded_tree;
+                try {
+                    boost::property_tree::json_parser::read_json(file_path, loaded_tree);
+                    this->tree = loaded_tree;
+                }
+                catch (const std::exception& e) {
+                    std::string msg = std::string("Reading json file ") + file_path + e.what();
+                    LOG(msg, LogLevel::FATAL);
+                    throw;
+                }
             }
 
             Formulation_Manager(boost::property_tree::ptree &loaded_tree) {

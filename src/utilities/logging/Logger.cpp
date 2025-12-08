@@ -263,6 +263,7 @@ bool Logger::ParseLoggerConfigFile(std::ifstream& jsonFile)
                                 << kv.first << "="
                                 << ConvertLogLevelToString(moduleLogLevels[moduleName])
                                 << std::endl;
+                        if (moduleName == "NGEN") logLevel = moduleLogLevels[moduleName];
                     } else {
                         std::cout << "[ERROR] " << MODULE_NAME << " Ignoring unknown module " << moduleName << std::endl;
                     }

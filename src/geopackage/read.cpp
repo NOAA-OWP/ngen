@@ -26,7 +26,15 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
 {
     // Check for malicious/invalid layer input
     check_table_name(layer);
+    std::vector<geojson::Feature> features;
+    if (ids.size() > 0)
+        features.reserve(ids.size());
+    double min_x = std::numeric_limits<double>::infinity();
+    double min_y = std::numeric_limits<double>::infinity();
+    double max_x = -std::numeric_limits<double>::infinity();
+    double max_y = -std::numeric_limits<double>::infinity();
 
+    LOG(LogLevel::DEBUG, "Establishing connection to geopackage %s.", gpkg_path.c_str());
     ngen::sqlite::database db{gpkg_path};
 
     // Check if layer exists
@@ -66,80 +74,86 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
         }
     }
 
-    // Layer exists, getting statement for it
-    //
-    // this creates a string in the form:
-    //     WHERE id IN (?, ?, ?, ...)
-    // so that it can be bound by SQLite.
-    // This is safer than trying to concatenate
-    // the IDs together.
-    std::string joined_ids = "";
-    if (!ids.empty()) {
-        joined_ids = " WHERE "+id_column+" IN (?";
-        for (size_t i = 1; i < ids.size(); i++) {
-            joined_ids += ", ?";
+    // execute sub-queries if the number of IDs gets too long or once if ids.size() == 0
+    int bind_limit = 900;
+    boost::span<const std::string> id_span(ids);
+    for (int i = 0; i < ids.size() || (i == 0 && ids.size() == 0); i += bind_limit) {
+        int span_size = (i + bind_limit >= ids.size()) ? (ids.size() - i) : bind_limit;
+        boost::span<const std::string> sub_ids = id_span.subspan(i, span_size);
+
+        // Layer exists, getting statement for it
+        //
+        // this creates a string in the form:
+        //     WHERE id IN (?, ?, ?, ...)
+        // so that it can be bound by SQLite.
+        // This is safer than trying to concatenate
+        // the IDs together.
+        std::string joined_ids = "";
+        if (!sub_ids.empty()) {
+            joined_ids = " WHERE "+id_column+" IN (?";
+            for (size_t i = 1; i < sub_ids.size(); i++) {
+                joined_ids += ", ?";
+            }
+            joined_ids += ")";
         }
-        joined_ids += ")";
-    }
 
-    // Get number of features
-    auto query_get_layer_count = db.query("SELECT COUNT(*) FROM " + layer + joined_ids, ids);
-    query_get_layer_count.next();
-    const int layer_feature_count = query_get_layer_count.get<int>(0);
+        // Get number of features
+        auto query_get_layer_count = db.query("SELECT COUNT(*) FROM " + layer + joined_ids, sub_ids);
+        query_get_layer_count.next();
+        const int layer_feature_count = query_get_layer_count.get<int>(0);
 
-    #ifndef NGEN_QUIET
-    // output debug info on what is read exactly
-    read_ss << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"<< id_column << "`";
-    if (!ids.empty()) {
-        read_ss << " (id subset:";
-        for (auto& id : ids) {
-            read_ss << " " << id;
+        #ifndef NGEN_QUIET
+        // output debug info on what is read exactly
+        read_ss << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"<< id_column << "`";
+        if (!sub_ids.empty()) {
+            read_ss << " (id subset:";
+            for (auto& id : sub_ids) {
+                read_ss << " " << id;
+            }
+            read_ss << ")";
         }
-        read_ss << ")";
-    }
-    read_ss << std::endl;
-    LOG(read_ss.str(), LogLevel::DEBUG); read_ss.str("");
-    #endif
+        read_ss << std::endl;
+        LOG(read_ss.str(), LogLevel::DEBUG); read_ss.str("");
+        #endif
 
-    // Get layer feature metadata (geometry column name + type)
-    auto query_get_layer_geom_meta = db.query("SELECT column_name FROM gpkg_geometry_columns WHERE table_name = ?", layer);
-    query_get_layer_geom_meta.next();
-    const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
+        // Get layer feature metadata (geometry column name + type)
+        auto query_get_layer_geom_meta = db.query("SELECT column_name FROM gpkg_geometry_columns WHERE table_name = ?", layer);
+        query_get_layer_geom_meta.next();
+        const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
 
-    // Get layer
-    auto query_get_layer = db.query("SELECT * FROM " + layer + joined_ids, ids);
-    query_get_layer.next();
-
-    // build features out of layer query
-    std::vector<geojson::Feature> features;
-    features.reserve(layer_feature_count);
-    while(!query_get_layer.done()) {
-        geojson::Feature feature = build_feature(
-            query_get_layer,
-            id_column,
-            layer_geometry_column
-        );
-
-        features.push_back(feature);
+        // Get layer
+        LOG(LogLevel::DEBUG, "Reading %d features from layer %s.", layer_feature_count, layer.c_str());
+        auto query_get_layer = db.query("SELECT * FROM " + layer + joined_ids, sub_ids);
         query_get_layer.next();
-    }
 
-    // get layer bounding box from features
-    //
-    // GeoPackage contains a bounding box in the SQLite DB,
-    // however, it is in the SRS of the GPKG. By creating
-    // the bbox after the features are built, the projection
-    // is already done. This also should be fairly cheap to do.
-    double min_x = std::numeric_limits<double>::infinity();
-    double min_y = std::numeric_limits<double>::infinity();
-    double max_x = -std::numeric_limits<double>::infinity();
-    double max_y = -std::numeric_limits<double>::infinity();
-    for (const auto& feature : features) {
-        const auto& bbox = feature->get_bounding_box();
-        min_x = bbox[0] < min_x ? bbox[0] : min_x;
-        min_y = bbox[1] < min_y ? bbox[1] : min_y;
-        max_x = bbox[2] > max_x ? bbox[2] : max_x;
-        max_y = bbox[3] > max_y ? bbox[3] : max_y;
+        // build features out of layer query
+        if (ids.size() == 0)
+            features.reserve(layer_feature_count);
+        while(!query_get_layer.done()) {
+            geojson::Feature feature = build_feature(
+                query_get_layer,
+                id_column,
+                layer_geometry_column
+            );
+
+            features.push_back(feature);
+            query_get_layer.next();
+        }
+
+        // get layer bounding box from features
+        //
+        // GeoPackage contains a bounding box in the SQLite DB,
+        // however, it is in the SRS of the GPKG. By creating
+        // the bbox after the features are built, the projection
+        // is already done. This also should be fairly cheap to do.
+        for (const auto& feature : features) {
+            const auto& bbox = feature->get_bounding_box();
+            min_x = bbox[0] < min_x ? bbox[0] : min_x;
+            min_y = bbox[1] < min_y ? bbox[1] : min_y;
+            max_x = bbox[2] > max_x ? bbox[2] : max_x;
+            max_y = bbox[3] > max_y ? bbox[3] : max_y;
+        }
+
     }
 
     auto fc = std::make_shared<geojson::FeatureCollection>(
