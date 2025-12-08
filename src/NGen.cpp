@@ -782,8 +782,6 @@ int main(int argc, char* argv[]) {
     LOG("[TIMING]: Coastal: " + std::to_string(time_elapsed_coastal.count()), LogLevel::INFO);
 #endif
 
-    _interp.reset();
-
     auto time_done_total                               = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_total   = time_done_total - time_start;
 
