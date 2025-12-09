@@ -16,7 +16,8 @@ class CatchmentAggrDataSelector
         init_time(0), 
         duration_s(1), 
         output_units(),
-        id_str()
+        id_str(),
+        output_variable_index(0)
     {}
 
     /**
@@ -27,13 +28,15 @@ class CatchmentAggrDataSelector
      * @param dur The duration for this selector   
      * @param units The units to output the result in
      * @param id the id of the associated catchment
+     * @param index the index of the output vector of the associated catchment
      */
-    CatchmentAggrDataSelector(std::string id, std::string var, time_t start, long dur, std::string units) : 
+    CatchmentAggrDataSelector(std::string id, std::string var, time_t start, long dur, std::string units, int index) : 
         id_str(id),
         variable_name(var), 
         init_time(start), 
         duration_s(dur), 
-        output_units(units)
+        output_units(units),
+        output_variable_index(index)
     {}
 
     /**
@@ -65,6 +68,13 @@ class CatchmentAggrDataSelector
     std::string get_output_units() const { return output_units; }
 
     /**
+     * @brief Get the index for output variable that is requested by this selector
+     * 
+     * @return int 
+     */
+    int get_output_variable_index() const { return output_variable_index; }
+
+    /**
      * @brief Set the variable name for this selector
      * 
      * @param var The name of the variable to access
@@ -92,6 +102,13 @@ class CatchmentAggrDataSelector
      */
     void set_output_units(std::string units) { output_units = units; }
 
+        /**
+     * @brief Set the output index for the output variable to be returned with this selector
+     * 
+     * @param index The index of the output variable
+     */
+    void set_output_variable_index(int index) { output_variable_index = index; }
+
     /**
      * @brief Get the id string for this NetCDF Data Selector
      * 
@@ -112,6 +129,7 @@ class CatchmentAggrDataSelector
     time_t init_time; //!< The inital time to query the requested variable
     long duration_s;  //!< The duration of the query
     std::string output_units; //!< required units for the result to be return in
+    int output_variable_index; //!<the index of the output to retrieve (for vector outputs)
     std::string id_str; //< the catchment to access data for
 };
 

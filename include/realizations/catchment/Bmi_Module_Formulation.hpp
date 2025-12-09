@@ -513,6 +513,8 @@ namespace realization {
 
         std::vector<std::string> output_var_units;
 
+        std::vector<int> output_var_indices;
+
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS
                 BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,

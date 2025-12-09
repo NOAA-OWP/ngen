@@ -410,7 +410,7 @@ namespace realization {
                 LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }
-            return availableData[output_name]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
+            return availableData[output_name]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units, 0), m);
         }
 
         std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
@@ -425,7 +425,7 @@ namespace realization {
                 LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }
-            return availableData[output_name]->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
+            return availableData[output_name]->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units, 0), m);
         }
 
         bool is_bmi_input_variable(const std::string &var_name) const override;
@@ -587,7 +587,7 @@ namespace realization {
             try {
                 auto const& nested_module = data_provider_iter->second;
                 long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
-		auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"");
+		        auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"", 0);
                 //TODO: After merge PR#405, try re-adding support for index
                 return nested_module->get_value(selector);
             }
@@ -781,6 +781,8 @@ namespace realization {
         std::map<std::string, std::string> available_forcing_units;
 
         std::vector<std::string> output_var_units;
+
+        std::vector<int> output_var_indices;
 
         /**
          * Any configured default values for outputs, keyed by framework alias (or var name if this is globally unique).

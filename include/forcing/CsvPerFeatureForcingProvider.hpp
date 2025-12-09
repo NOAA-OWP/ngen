@@ -125,7 +125,8 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         auto init_time = selector.get_init_time();
         auto output_name = selector.get_variable_name();
         auto output_units = selector.get_output_units();
-
+        auto output_variable_index = selector.get_output_variable_index();
+        
         try {
             current_index = get_ts_index_for_time(init_time);
         }
