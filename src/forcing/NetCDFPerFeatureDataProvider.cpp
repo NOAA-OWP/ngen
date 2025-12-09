@@ -488,6 +488,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     std::size_t time_idx = idx1 % cache_slice_t_size;
 
     std::size_t n_cache_slices = (read_len / cache_slice_t_size) + std::min(read_len % cache_slice_t_size, std::size_t(1));
+    size_t value_idx = idx1;
     // For reference: https://stackoverflow.com/a/72030286
     for( size_t i = 0; i < n_cache_slices; i++ ) {
         // rows: catchments; columns: time;
@@ -538,21 +539,12 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
             value_cache.insert(key, cached);
         }
-
-        // NOTE: aaraney: this is pretty gross.
-        // is there a better way to do this?
-        std::size_t s = 0;
-        std::size_t e = cache_slice_t_size;
-        if (i == 0){
-            s = time_idx;
-        }
-        if(i == n_cache_slices-1){
-            e = (idx2 % cache_slice_t_size) + 1;
-        }
-        // read from idx1 to idx2
-        for(; s < e; s++){
-            std::size_t idx = (cat_idx * cache_slice_t_size) + s;
-            raw_values.push_back(cached->at(idx));
+        // Find all values in the current cache slice and push them onto raw_values
+        while(value_idx >= cache_slice_start && 
+              value_idx < cache_slice_start + cache_slice_t_size &&
+              value_idx <= idx2){
+            raw_values.push_back(cached->at((cat_idx * cache_slice_t_size) + (value_idx % cache_slice_t_size)));
+            value_idx++;
         }
     }
 
