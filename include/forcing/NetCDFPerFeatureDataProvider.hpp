@@ -161,6 +161,19 @@ namespace data_access
          */
         void test_readable_data();
 
+        /**
+         * @brief Attempts to align the internal cache size with the chunking parameters of
+         * the underlying netCDF variables.
+         * If no chunking is present, the default cache size is used.
+         * 
+         * This can have some significant performance implications.
+         * both in terms of memory use and speed of access.
+         * If the variables are chunked too large, then the cache will hold
+         * a lot of data in memory.  If they are too small, then we end up
+         * doing a lot of small reads from the netCDF file.
+         */
+        void align_cache_with_chunks();
+
         void maybe_update_chunks_with_hints();
     };
 
