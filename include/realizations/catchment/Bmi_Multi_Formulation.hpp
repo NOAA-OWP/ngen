@@ -425,7 +425,7 @@ namespace realization {
                 LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }
-            return availableData[output_name]->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units, 0), m);
+            return availableData[output_name]->get_values(selector, m);
         }
 
         bool is_bmi_input_variable(const std::string &var_name) const override;

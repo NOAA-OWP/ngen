@@ -313,7 +313,7 @@ namespace realization {
             {
                 //Get forcing value from BMI variable
                 double value = get_var_value_as_double(output_index, bmi_var_name);
-                
+
                 // Convert units
                 std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
 
@@ -493,7 +493,7 @@ namespace realization {
                 else{
                     out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
                     output_var_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
-                    output_var_indices.resize(out_vars_json_list.size()); 
+                    output_var_indices.resize(out_vars_json_list.size(), 0); 
                     for (int i = 0; i < out_vars_json_list.size(); ++i) {
                         out_vars[i] = out_vars_json_list[i].at("name").as_string();
                         if(out_vars_json_list[i].has_key("header")){
@@ -519,10 +519,6 @@ namespace realization {
                         if(out_vars_json_list[i].has_key("index")){
                             //indicates that a valid index is provided
                             output_var_indices[i] = stoi(out_vars_json_list[i].at("index").as_string());
-                        }
-                        else{
-                           LOG("BMI Formulation: Index not provided for '" + out_vars[i] + "' in the realization file. Using default value of zero.",LogLevel::WARNING);
-                           output_var_indices[i] = 0;
                         }
                     }
                     //check if the units can be parsed correctly and write a warning message
