@@ -152,10 +152,6 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
                     //indicates that a valid unit is provided
                     output_var_indices[i] = stoi(out_vars_json_list[i].at("index").as_string());
                 }
-                else{
-                    LOG("BMI Multi Formulation: Index not provided for '" + out_vars[i] + "' in the realization file. Using default value of zero.",LogLevel::WARNING);
-                    output_var_indices[i] = 0;
-                }
             }
             //check if the units can be parsed correctly and write a warning message
             std::stringstream ss;

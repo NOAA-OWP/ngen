@@ -102,7 +102,7 @@ class CatchmentAggrDataSelector
      */
     void set_output_units(std::string units) { output_units = units; }
 
-        /**
+    /**
      * @brief Set the output index for the output variable to be returned with this selector
      * 
      * @param index The index of the output variable
