@@ -3,9 +3,37 @@
 
 #include <NGenConfig.h>
 
+#include <boost/property_tree/ptree_fwd.hpp>
+#include <boost/core/span.hpp>
+
 #include <chrono>
 #include <cstdint>
 #include <memory>
+#include <string>
+#include <vector>
+
+class State_Save_Config
+{
+public:
+    /**
+     * Expects the tree @param config that potentially contains a "state_saving" key
+     *
+     *
+     */
+    State_Save_Config(boost::property_tree::ptree const& config);
+
+    struct instance
+    {
+        instance(std::string const& label, std::string const& path, std::string const& mechanism, std::string const& timing);
+
+        std::string label_;
+        std::string path_;
+        std::string mechanism_;
+        std::string timing_;
+    };
+
+    std::vector<instance> instances_;
+};
 
 class State_Snapshot_Saver;
 
