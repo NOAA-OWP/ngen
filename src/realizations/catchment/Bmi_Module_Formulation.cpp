@@ -493,7 +493,7 @@ namespace realization {
                 else{
                     out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
                     output_var_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
-                    output_var_indices.resize(out_vars_json_list.size()); 
+                    output_var_indices.resize(out_vars_json_list.size(), 0); 
                     for (int i = 0; i < out_vars_json_list.size(); ++i) {
                         out_vars[i] = out_vars_json_list[i].at("name").as_string();
                         if(out_vars_json_list[i].has_key("header")){
