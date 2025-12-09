@@ -110,7 +110,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     }
 
     auto num_ids = id_dim.getSize();
-
+    assert(num_ids > 0);
     // include all catchments in the "default" chunk
     auto pair = std::pair<size_t, size_t>(0, num_ids);
     chunks.push_back(pair);
@@ -130,7 +130,9 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         loc_ids.push_back(str);
         id_pos[str] = loc++;
     });
-
+    // Make sure we were able to read an actual string type
+    // each id should start with "cat-"
+    assert(loc_ids[0].size() > 4);;
     // correct string release
     nc_free_string(num_ids,&string_buffers[0]);
 
@@ -548,7 +550,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         }
     }
 
-    
+    assert(raw_values.size() == read_len);
     rvalue = 0.0;
 
     double a , b = 0.0;
