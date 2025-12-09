@@ -40,8 +40,14 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     //nc_set_chunk_cache(sizep, nelemsp, preemptionp);
 
     //open the file
-    nc_file = std::make_shared<netCDF::NcFile>(input_path, netCDF::NcFile::read);
-    
+    try{
+        nc_file = std::make_shared<netCDF::NcFile>(input_path, netCDF::NcFile::read);
+    }
+    catch(const netCDF::exceptions::NcException& e){
+        std::cerr<<"Error opening NetCDF file: "<<input_path<<std::endl;
+        std::cerr<<e.what()<<std::endl;
+        throw;
+    }
     //nc_get_chunk_cache(&sizep, &nelemsp, &preemptionp);
     //std::cout << "Chunk cache parameters: "<<sizep<<", "<<nelemsp<<", "<<preemptionp<<std::endl;
 
