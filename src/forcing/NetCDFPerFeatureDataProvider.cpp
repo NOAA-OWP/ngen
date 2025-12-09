@@ -495,7 +495,11 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         std::shared_ptr<std::vector<double>> cached;
 
         std::size_t cache_slice_start = idx1_cache_slice_start + (i * cache_slice_t_size);
-
+        std::size_t adjusted_size = cache_slice_t_size;
+        // Read up to the end of the data, but not beyond
+        if(cache_slice_start + cache_slice_t_size > time_vals.size() ){
+            adjusted_size = time_vals.size() - cache_slice_start;
+        }
         std::string key = ncvar.getName() + "|" + std::to_string(cache_slice_start);
         if(value_cache.contains(key)){
             cached = value_cache.get(key).get();
@@ -527,9 +531,9 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
                 count.clear();
                 count.push_back(chunk.second);
 
-                count.push_back(cache_slice_t_size);
+                count.push_back(adjusted_size);
                 ncvar.getVar(start,count,&(*cached)[next_cache_idx]);
-                next_cache_idx += chunk.second * cache_slice_t_size;
+                next_cache_idx += chunk.second * adjusted_size;
             }
 
             value_cache.insert(key, cached);
