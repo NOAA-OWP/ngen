@@ -156,6 +156,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     // if absent, assume seconds
     double time_scale_factor = 1;
     time_unit = TIME_SECONDS;
+    std::string unit_epoch_str = "";
     try {
         auto time_unit_att = time_var.getAtt("units");
 
@@ -163,15 +164,18 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         // TODO determine how this should be handled
         std::string time_unit_str;
 
-        if ( time_unit_att.isNull() )
+        if ( !time_unit_att.isNull() )
         {
-            log_stream << "Warning using defualt time units\n";
-        }
-        else
-        {  
             time_unit_att.getValues(time_unit_str);
         }
 
+        // CF conventions may have units of the form "<unit> since <date>"
+        size_t pos = time_unit_str.find(" since ");
+        if(pos != std::string::npos)
+        {
+            unit_epoch_str = time_unit_str.substr(pos + 7); // 7 is length of " since "
+            time_unit_str.erase(pos);
+        }
         // set time unit and scale factor
         if ( time_unit_str == "h" || time_unit_str == "hours")
         {
@@ -209,32 +213,46 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     }
     catch(const netCDF::exceptions::NcException& e){
         std::cerr<<e.what()<<std::endl;
-        log_stream << "Warning using defualt time units\n";
+        log_stream << "Warning: Couldn't read time unit attribute, using defualt time unit of Seconds\n";
     }
     assert(time_scale_factor != 0); // This should not happen.
 
     std::string epoch_start_str = "01/01/1970 00:00:00";
-    try {
-        // read the meta data to get the epoc start
-        auto epoch_att = time_var.getAtt("epoch_start");
+    std::string epoch_format = "%D %T";
+    if(!unit_epoch_str.empty())
+    {
+        epoch_start_str = unit_epoch_str;
+        //CF convention in time units formats as "YYYY-MM-DD HH:MM:SS"
+        epoch_format = "%Y-%m-%d %H:%M:%S";
+    }
+    else{
+        try {
+            // read the meta data to get the epoc start
+            auto epoch_att = time_var.getAtt("epoch_start");
 
-        if ( epoch_att.isNull() )
-        {
+            if ( epoch_att.isNull() )
+            {
+                log_stream << "Warning using defualt epoc string\n";
+            }
+            else
+            {  
+                epoch_att.getValues(epoch_start_str);
+            }
+        }
+        catch(const netCDF::exceptions::NcException& e) {
+            std::cerr<<e.what()<<std::endl;
             log_stream << "Warning using defualt epoc string\n";
         }
-        else
-        {  
-            epoch_att.getValues(epoch_start_str);
-        }
     }
-    catch(const netCDF::exceptions::NcException& e) {
-        std::cerr<<e.what()<<std::endl;
-        log_stream << "Warning using defualt epoc string\n";
-    }
-    
     std::tm tm{};
     std::stringstream s(epoch_start_str);
-    s >> std::get_time(&tm, "%D %T");
+    s >> std::get_time(&tm, epoch_format.c_str());
+    if(s.fail()){
+        std::stringstream ss;
+        ss << "std::get_time failed to parse epoch string with: " << epoch_start_str << " with format string " << epoch_format << "\n";
+        log_stream << ss.str();
+        throw std::runtime_error(ss.str());
+    }
     //std::time_t epoch_start_time = mktime(&tm);
     // See also comments in Simulation_Time.h .. timegm is not available on Windows at least (elsewhere?)
     //TODO: Probably make the default string above explicit to UTC and interpret TZ from the string in all cases?
