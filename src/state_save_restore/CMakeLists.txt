@@ -14,4 +14,3 @@ target_include_directories(state_save_restore PUBLIC
         ${PROJECT_SOURCE_DIR}/include
         )
 
-
