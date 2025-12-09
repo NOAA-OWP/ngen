@@ -151,6 +151,16 @@ namespace data_access
 
         const std::string& get_ncvar_units(const std::string& name);
 
+        /**
+         * @brief Check all variables can be read from the source file
+         * 
+         * This is also useful for warming up the netcdf/hdf5 caches.
+         * 
+         * @throws std::runtime_error if any variable cannot be read
+         * 
+         */
+        void test_readable_data();
+
         void maybe_update_chunks_with_hints();
     };
 

@@ -48,6 +48,10 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         std::cerr<<e.what()<<std::endl;
         throw;
     }
+    // do a quick test of the netcdf variables to ensure
+    // they are readable, especially if compressed with HDF5 filters
+    // This also has the added benefit of warming up the chunk cache
+    test_readable_data();
     //nc_get_chunk_cache(&sizep, &nelemsp, &preemptionp);
     //std::cout << "Chunk cache parameters: "<<sizep<<", "<<nelemsp<<", "<<preemptionp<<std::endl;
 
@@ -629,6 +633,57 @@ const std::string& NetCDFPerFeatureDataProvider::get_ncvar_units(const std::stri
     }
 
     throw std::runtime_error("Got units request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
+}
+
+void NetCDFPerFeatureDataProvider::test_readable_data() {
+    // Try to read one element from each variable to test if NetCDF/HDF5 linking works for compressed data
+    auto var_set = nc_file->getVars();
+    for (const auto& var_pair : var_set) {
+        const std::string& var_name = var_pair.first;
+        auto var = var_pair.second;
+        // Skip scalar variables
+        if (var.getDimCount() == 0) continue;
+        std::vector<size_t> start(var.getDimCount(), 0);
+        std::vector<size_t> count(var.getDimCount(), 1);
+        try {
+            if (var.getType().getTypeClass() == NC_STRING) {
+                // Handle string variable
+                std::vector<char*> buffer(1);
+                var.getVar(start, count, buffer.data());
+                nc_free_string(1, buffer.data());
+            } else if (var.getType().getTypeClass() == NC_INT) {
+                // Handle int variable
+                int val;
+                var.getVar(start, count, &val);
+            } else if (var.getType().getTypeClass() == NC_DOUBLE) {
+                // Handle double variable
+                double val;
+                var.getVar(start, count, &val);
+            } else {
+                // Skip other types
+                continue;
+            }
+        } catch (const netCDF::exceptions::NcException& e) {
+            std::string err_str = e.what();
+            // libnetcxx puts a lot of noice in the error message
+            // so filter it out for clarity...
+            size_t file_pos = err_str.find("file:");
+            if (file_pos != std::string::npos) {
+                err_str = err_str.substr(0, file_pos);
+            }
+            std::string msg = "Error reading " + var_name + " variable: " + err_str;
+            // If ngen isn't directly linked against HDF5, then loading hdf5 plugin filters
+            // fails, and compressed data cannot be read.  So check for filter issues
+            // and provide a more helpful error message.
+            if (err_str.find("NetCDF") != std::string::npos && (err_str.find("filter") != std::string::npos || err_str.find("Filter") != std::string::npos)) {
+                msg +=  "This may happen if HDF5 isn't properly linked with ngen. "
+                        "Ensure the build uses NGEN_WITH_HDF5. "
+                        "Also check the $HDF5_PLUGIN_PATH environment variable and/or "
+                        "nc-config --plugindir to ensure filter plugins are available.";
+            }
+            throw std::runtime_error(msg);
+        }
+    }
 }
 
 }
