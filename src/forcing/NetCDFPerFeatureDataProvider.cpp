@@ -122,8 +122,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     std::vector< char* > string_buffers(num_ids);
 
     // read the id strings
-    ids.getVar(&string_buffers[0]);
-
+    ids.getVar(string_buffers.data());
     // initalize the map of catchment-name to offset location and free the strings allocated by the C library
     size_t loc = 0;
     for_each( string_buffers.begin(), string_buffers.end(), [&](char* str)
