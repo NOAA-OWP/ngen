@@ -178,7 +178,7 @@ namespace data_access
         // number of time slices per cache entry
         // this is a tunable parameter; your mileage may vary
         // NOTE: it would be nice if this were divisible by 2 and 4
-        size_t cache_slice_t_size = 18;
+        size_t cache_slice_t_size = 24;
         size_t cache_slice_c_size = 1;
 
         const netCDF::NcVar& get_ncvar(const std::string& name);
@@ -199,6 +199,19 @@ namespace data_access
          * @return the resolved time metadata
          */
         TimeInfo get_time_metadata(const netCDF::NcVar& time_var);
+
+        /**
+         * @brief Attempts to align the internal cache size with the chunking parameters of
+         * the underlying netCDF variables.
+         * If no chunking is present, the default cache size is used.
+         *
+         * This can have some significant performance implications.
+         * both in terms of memory use and speed of access.
+         * If the variables are chunked too large, then the cache will hold
+         * a lot of data in memory.  If they are too small, then we end up
+         * doing a lot of small reads from the netCDF file.
+         */
+        void align_cache_with_chunks();
 
         /**
          * @brief If applicable, update chunk spans.
