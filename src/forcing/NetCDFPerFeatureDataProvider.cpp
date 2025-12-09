@@ -328,7 +328,9 @@ void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
             }
         }
     }
-
+    if(idx_map.empty()){
+        throw std::runtime_error("NetCDF source has no ids matching the domain hinted ids.");
+    }
     // Build chunks where a chunk has:
     // a starting nc index
     // the length of the chunk relative to its starting index
