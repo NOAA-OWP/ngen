@@ -28,7 +28,6 @@ std::shared_ptr<NetCDFPerFeatureDataProvider> NetCDFPerFeatureDataProvider::get_
     return p;
 }
 
-
 void NetCDFPerFeatureDataProvider::cleanup_shared_providers()
 {
     const std::lock_guard<std::mutex> lock(shared_providers_mutex);
@@ -193,7 +192,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
 
     //nc_get_chunk_cache(&sizep, &nelemsp, &preemptionp);
     //std::cout << "Chunk cache parameters: "<<sizep<<", "<<nelemsp<<", "<<preemptionp<<std::endl;
-
+    align_cache_with_chunks();
     //get the listing of all variables
     auto var_set = nc_file->getVars();
 
@@ -726,6 +725,32 @@ void NetCDFPerFeatureDataProvider::test_data_is_readable() {
             throw std::runtime_error(msg);
         }
     }
+}
+
+void NetCDFPerFeatureDataProvider::align_cache_with_chunks()
+{
+    auto num_times = nc_file->getDim("time").getSize();
+
+    auto var_set = nc_file->getVars();
+    for (const auto& var_pair : var_set) {
+        const std::string& var_name = var_pair.first;
+        auto var = var_pair.second;
+        // Skip the Time variable itself and ids, look for data variables with at least 2 dimensions
+        if (var_name == "Time" || var_name == "ids" || var_name == "catchment-id" || var.getDimCount() < 2) continue;
+        netCDF::NcVar::ChunkMode mode;
+        std::vector<size_t> chunk_sizes;
+        var.getChunkingParameters(mode, chunk_sizes);
+        if (mode == netCDF::NcVar::ChunkMode::nc_CHUNKED && chunk_sizes.size() >= 2) {
+            cache_slice_t_size = chunk_sizes[1];  // Assume second dimension is time
+            break;  // Use the first suitable chunk size found
+        }
+    }
+    if (num_times && cache_slice_t_size > num_times){
+        cache_slice_t_size = num_times;
+    }
+    //At this point the time slice cache is either aligned with the chunking of the data variables
+    //or set to the default value.
+    return;
 }
 
 }
