@@ -7,10 +7,6 @@ target_link_libraries(state_save_restore PUBLIC
                            Boost::boost                # Headers-only Boost
                            )
 
-#target_link_libraries(core
-#        PRIVATE
-#                          )
-
 target_include_directories(state_save_restore PUBLIC
         ${PROJECT_SOURCE_DIR}/include
         )
