@@ -61,8 +61,9 @@ int mpi_num_procs;
 #include <Layer.hpp>
 #include <SurfaceLayer.hpp>
 #include <DomainLayer.hpp>
-
-std::unordered_map<std::string, std::ofstream> nexus_outfiles;
+#include "utilities/NexusOutputsMgr.hpp"
+#include "utilities/PerNexusCsvOutputMgr.hpp"
+#include "utilities/PerFormulationNexusOutputMgr.hpp"
 
 void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
 {
@@ -430,30 +431,34 @@ int main(int argc, char *argv[]) {
         partition_one.generate_partition(catchment_collection);
         local_data = std::move(partition_one.partition_data);
     }
-    hy_features::HY_Features_MPI features = hy_features::HY_Features_MPI(local_data, nexus_collection, manager, mpi_rank, mpi_num_procs);
+    std::shared_ptr<hy_features::HY_Features_MPI> features = std::make_shared<hy_features::HY_Features_MPI>(local_data, nexus_collection, manager, mpi_rank, mpi_num_procs);
     #else
-    hy_features::HY_Features features = hy_features::HY_Features(nexus_collection, manager);
+    std::shared_ptr<hy_features::HY_Features> features = std::make_shared<hy_features::HY_Features>(nexus_collection, manager);
     #endif
 
     //validate dendritic connections
-    features.validate_dendritic();
+    features->validate_dendritic();
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     //Still using  catchments for geometry at the moment, fix this later
     //catchment_collection.reset();
     nexus_collection.reset();
 
-    //Still hacking nexus output for the moment
-    for(const auto& id : features.nexuses()) {
+    std::shared_ptr<utils::NexusOutputsMgr> nexus_outputs_mgr;
+
+    if (manager->is_using_per_formulation_nexus_files()) {
+        // TODO: (later) use nullptr for now, until full support for multiple formulations per catchment is available
+        std::shared_ptr<std::vector<const std::string>> formulation_ids = nullptr;
         #if NGEN_WITH_MPI
-        if (mpi_num_procs > 1) {
-            if (!features.is_remote_sender_nexus(id)) {
-                nexus_outfiles[id].open(manager->get_output_root() + id + "_output.csv", std::ios::trunc);
-            }
-        } else {
-          nexus_outfiles[id].open(manager->get_output_root() + id + "_output.csv", std::ios::trunc);
-        }
+        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(features, formulation_ids, manager->get_output_root(), mpi_rank);
         #else
-        nexus_outfiles[id].open(manager->get_output_root() + id + "_output.csv", std::ios::trunc);
+        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(features, formulation_ids, manager->get_output_root());
+        #endif
+    }
+    else {
+        #if NGEN_WITH_MPI
+        nexus_outputs_mgr = std::make_shared<utils::PerNexusCsvOutputMgr>(features, manager->get_output_root(), mpi_num_procs);
+        #else
+        nexus_outputs_mgr = std::make_shared<utils::PerNexusCsvOutputMgr>(features, manager->get_output_root());
         #endif
     }
 
@@ -492,17 +497,17 @@ int main(int argc, char *argv[]) {
       if( manager->has_domain_formulation(keys[i])){
         //create a domain wide layer
         auto formulation = manager->get_domain_formulation(keys[i]);
-        layers[i] = std::make_shared<ngen::DomainLayer>(desc, sim_time, features, 0, formulation);
+        layers[i] = std::make_shared<ngen::DomainLayer>(desc, sim_time, *features, 0, formulation);
       }
       else{
-        for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
+        for ( std::string id : features->catchments(keys[i]) ) { cat_ids.push_back(id); }
         if (keys[i] != 0 )
         {
-          layers[i] = std::make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, 0);
+          layers[i] = std::make_shared<ngen::Layer>(desc, cat_ids, sim_time, *features, catchment_collection, 0);
         }
         else
         {
-          layers[i] = std::make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, features, catchment_collection, 0, nexus_subset_ids, nexus_outfiles);
+          layers[i] = std::make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, *features, catchment_collection, 0, nexus_subset_ids, nexus_outputs_mgr);
         }
       }
 
