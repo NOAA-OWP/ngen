@@ -37,12 +37,25 @@ The configuration may optionally contain a `routing` key with a subobject that d
 ## Examples of Top-Level Structure
 Note that these are not exhaustive examples.
 
+The configuration may also *optionally* contain a `per_formulation_nexus_files` key with a boolean value to indicate per-formulation, NetCDF files should be used for writing nexus data, rather than the default of per-nexus CSV files.  Note that if `per_formulation_nexus_files` is set to `true`, the `catchments` cannot be used to define formulations for individual catchments, and the global formulation config must be used for all catchments.
+
+I.e., either of these forms is allowed, with it also being valid to omit `output_root` in either case:
+
 ```
 {
    "global": {},
    "time": {},
    "catchments": {},
    "output_root": "/path/to/output/"
+} 
+```
+or
+```
+{
+   "global": {},
+   "time": {},
+   "output_root": "/path/to/output/",
+   "per_formulation_nexus_files": true|false
 } 
 ```
 
