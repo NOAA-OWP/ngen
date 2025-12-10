@@ -17,12 +17,25 @@ The Configuration is a key-value object and must contain these three first level
 
 The configuration may *optionally* contain an `output_root` key with a user-defined root output directory as the key, for nexus and catchment outputs.
 
+The configuration may also *optionally* contain a `per_formulation_nexus_files` key with a boolean value to indicate per-formulation, NetCDF files should be used for writing nexus data, rather than the default of per-nexus CSV files.  Note that if `per_formulation_nexus_files` is set to `true`, the `catchments` cannot be used to define formulations for individual catchments, and the global formulation config must be used for all catchments.
+
+I.e., either of these forms is allowed, with it also being valid to omit `output_root` in either case:
+
 ```
 {
    "global": {},
    "time": {},
    "catchments": {},
    "output_root": "/path/to/output/"
+} 
+```
+or
+```
+{
+   "global": {},
+   "time": {},
+   "output_root": "/path/to/output/",
+   "per_formulation_nexus_files": true|false
 } 
 ```
 

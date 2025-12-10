@@ -55,6 +55,13 @@ namespace realization {
                 //TODO seperate the parsing of configuration options like time
                 //and routing and other non feature specific tasks from this main function
                 //which has to iterate the entire hydrofabric.
+
+                // TODO: (later) consider whether this really belongs inside the global formulation
+                auto per_formulation_setting = tree.get_child_optional("per_formulation_nexus_files");
+                if (per_formulation_setting) {
+                    use_per_formulation_nexus_files = per_formulation_setting->get_value<bool>();
+                }
+
                 auto possible_global_config = tree.get_child_optional("global");
 
                 if (possible_global_config) {
@@ -137,8 +144,16 @@ namespace realization {
 
                 /**
                  * Read catchment configurations from configuration file
-                 */      
+                 */
                 auto possible_catchment_configs = tree.get_child_optional("catchments");
+
+                // For now at least, this isn't allowed
+                if (possible_catchment_configs && use_per_formulation_nexus_files) {
+                    std::string msg = "ERROR: Individual catchment formulation configs are not allowed when using "
+                                      "per-formulation nexus files.";
+                    std::cerr << msg;
+                    throw std::runtime_error(msg);
+                }
 
                 if (possible_catchment_configs) {
                     for (std::pair<std::string, boost::property_tree::ptree> catchment_config : *possible_catchment_configs) {
@@ -217,6 +232,10 @@ namespace realization {
              */
             bool is_empty() {
                 return this->formulations.empty();
+            }
+
+            bool is_using_per_formulation_nexus_files() const {
+                return use_per_formulation_nexus_files;
             }
 
             typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator begin() const {
@@ -672,6 +691,8 @@ namespace realization {
             bool using_routing = false;
 
             ngen::LayerDataStorage layer_storage;
+
+            bool use_per_formulation_nexus_files;
     };
 }
 #endif // NGEN_FORMULATION_MANAGER_H
