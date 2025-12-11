@@ -49,3 +49,6 @@
 [submodule "extern/lgar-c/LGAR-C"]
 	path = extern/lgar-c/LGAR-C
 	url = https://github.com/NOAA-OWP/LGAR-C.git
+[submodule "extern/dhbv2/dhbv2"]
+	path = extern/dhbv2/dhbv2
+	url = https://github.com/mhpi/dhbv2
