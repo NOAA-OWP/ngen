@@ -400,10 +400,6 @@ namespace realization {
         double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
         {
             std::string output_name = selector.get_variable_name();
-            time_t init_time = selector.get_init_time();
-            long duration_s = selector.get_duration_secs();
-            std::string output_units = selector.get_output_units();
-            
             // If not found ...
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
                 std::string throw_msg; throw_msg.assign(get_formulation_type() + " cannot get output value for unknown " + output_name + SOURCE_LOC);
@@ -416,10 +412,6 @@ namespace realization {
         std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
         {
             std::string output_name = selector.get_variable_name();
-            time_t init_time = selector.get_init_time();
-            long duration_s = selector.get_duration_secs();
-            std::string output_units = selector.get_output_units();
-
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
                 std::string throw_msg; throw_msg.assign(get_formulation_type() + " cannot get output values for unknown " + output_name + SOURCE_LOC);
                 LOG(throw_msg, LogLevel::WARNING);

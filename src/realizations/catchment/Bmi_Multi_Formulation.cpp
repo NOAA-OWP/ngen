@@ -476,6 +476,7 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
                 *output_text_stream << delimiter << value; //with delimiter for the rest.
             }
         }
+        LOG("BMI Multi Formulation: " + output_text_stream->str(), LogLevel::INFO);
         return output_text_stream->str();
     }
 }

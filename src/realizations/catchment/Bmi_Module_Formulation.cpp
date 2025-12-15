@@ -224,8 +224,6 @@ namespace realization {
         std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
         {
             std::string output_name = selector.get_variable_name();
-            time_t init_time = selector.get_init_time();
-            long duration_s = selector.get_duration_secs();
             std::string output_units = selector.get_output_units();
 
             // First make sure this is an available output
@@ -286,8 +284,6 @@ namespace realization {
         double Bmi_Module_Formulation::get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
         {
             std::string output_name = selector.get_variable_name();
-            time_t init_time = selector.get_init_time();
-            long duration_s = selector.get_duration_secs();
             std::string output_units = selector.get_output_units();
             int output_index = selector.get_output_variable_index();
 
