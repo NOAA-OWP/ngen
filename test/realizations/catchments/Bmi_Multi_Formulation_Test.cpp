@@ -227,6 +227,33 @@ private:
                 "                        }";
     }
 
+    inline std::string buildNestedCpp(const int ex_index, const int nested_index) {
+        std::string nested_index_str = std::to_string(nested_index);
+        std::string input_var_alias = determineNestedInputAliasValue(ex_index, nested_index);
+        return  "                        {\n"
+                "                            \"name\": \"" + std::string(BMI_CPP_TYPE) + "\",\n"
+                "                            \"params\": {\n"
+                "                                \"model_type_name\": \"" + nested_module_type_name_lists[ex_index][nested_index] + "\",\n"
+                "                                \"forcing_file\": \"\",\n"
+                "                                \"init_config\": \"" + nested_init_config_lists[ex_index][nested_index] + "\",\n"
+                "                                \"allow_exceed_end_time\": true,\n"
+                "                                \"main_output_variable\": \"" + nested_module_main_output_variables[ex_index][nested_index] + "\",\n"
+                "                                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6,\n"
+
+                "                                \"library_file\": \"" + nested_module_file_lists[ex_index][nested_index] + "\",\n"
+                "                                \"registration_function\": \"" + nested_registration_function_lists[ex_index][nested_index] + "\",\n"
+                "                                \"variables_names_map\": {\n"
+                "                                    \"OUTPUT_VAR_2\": \"OUTPUT_VAR_2__" + nested_index_str + "\",\n"
+                "                                    \"OUTPUT_VAR_1\": \"OUTPUT_VAR_1__" + nested_index_str + "\",\n"
+                "                                    \"INPUT_VAR_2\": \"" + CSDMS_STD_NAME_SURFACE_AIR_PRESSURE + "\",\n"
+                "                                    \"INPUT_VAR_1\": \"" + input_var_alias + "\",\n"
+                "                                    \"GRID_VAR_1\": \""  + input_var_alias +"\"\n"
+                "                                },\n"
+                "                                \"uses_forcing_file\": " + (uses_forcing_file[ex_index] ? "true" : "false") + "\n"
+                "                            }\n"
+                "                        }";
+    }
+
     inline std::string buildNestedFortran(const int ex_index, const int nested_index) {
         std::string nested_index_str = std::to_string(nested_index);
         std::string input_var_alias = determineNestedInputAliasValue(ex_index, nested_index);
@@ -320,6 +347,9 @@ private:
         if (bmi_type == BMI_C_TYPE) {
             return buildNestedC(ex_index, nested_index);
         }
+        else if (bmi_type == BMI_CPP_TYPE) {
+            return buildNestedCpp(ex_index, nested_index);
+        }
         else if (bmi_type == BMI_FORTRAN_TYPE) {
             return buildNestedFortran(ex_index, nested_index);
         }
@@ -333,7 +363,7 @@ private:
         }
     }
 
-    inline std::string buildExampleOutputVariablesSubConfig(const int ex_index){
+    inline std::string buildExampleOutputVariablesSubConfig(const int ex_index, bool newFormat = false){
         auto list = specified_output_variables[ex_index];
         std::string s = "";
         if(list.size() == 0){
@@ -341,15 +371,24 @@ private:
         }
         s = ",\"output_variables\": [";
         std::string comma = "";
-        for (auto item : list) {
-            s += comma + "\"" + item + "\"" ;
-            comma = ",";
+        if(newFormat){
+            for (int i = 0; i < list.size(); ++i) {
+                s += comma + "{\n\"name\": \"" + list[i] + "\",\n" +"\"index\": \"" + std::to_string(i) + "\"\n}";
+                comma = ",";
+            }
+        }
+        else{
+            for (auto item : list) {
+                s += comma + "\"" + item + "\"" ;
+                comma = ",";
+            }
         }
         s += "]";
         return s;
     }
 
     inline void buildExampleConfig(const int ex_index) {
+        std::string outputVariablesSubConfig = (ex_index == 6) ? buildExampleOutputVariablesSubConfig(ex_index, true) : buildExampleOutputVariablesSubConfig(ex_index) + "\n";
         std::string config =
                 "{\n"
                 "    \"global\": {},\n"
@@ -369,7 +408,7 @@ private:
                 + buildExampleNestedModuleSubConfig(ex_index, 1) + "\n"
                 "                        ],\n"
                 "                        \"uses_forcing_file\": false\n"
-                + buildExampleOutputVariablesSubConfig(ex_index) + "\n"
+                + outputVariablesSubConfig +
                 "                    }\n"
                 "                }\n"
                 "            ],\n"
@@ -451,7 +490,7 @@ void Bmi_Multi_Formulation_Test::SetUp() {
 
     // Define this manually to set how many nested modules per example, and implicitly how many examples.
     // This means example_module_depth.size() example scenarios with example_module_depth[i] nested modules in each scenario.
-    example_module_depth = {2, 2, 2, 2, 2, 2};
+    example_module_depth = {2, 2, 2, 2, 2, 2, 2};
 
     // Initialize the members for holding required input and result test data for individual example scenarios
     setupExampleDataCollections();
@@ -491,6 +530,9 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     // Cases 4 and 5 Specifically to test output_variables failure cases...
     initializeTestExample(4, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, { "bogus_variable" });
     initializeTestExample(5, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, { "OUTPUT_VAR_1" });
+
+    initializeTestExample(6, "cat-27", {std::string(BMI_CPP_TYPE), std::string(BMI_FORTRAN_TYPE)}, { "OUTPUT_VAR_3","OUTPUT_VAR_3","OUTPUT_VAR_3" });
+
    
 }
 
@@ -838,6 +880,20 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_3_a) {
     formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
     ASSERT_EQ(output, "0.000001112,199280.000000000,199240.000000000,199280.000000000,0.000000000,0.000001001");
+}
+
+/**
+ * Test for output variable being an array.
+ */
+TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_6_a) {
+    int ex_index = 6;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    formulation.get_response(0, 3600);
+    std::string output = formulation.get_output_line_for_timestep(0, ",");
+    ASSERT_EQ(output, "1.000000000,2.000000000,3.000000000");
 }
 
 /**
