@@ -159,7 +159,7 @@ There are some special BMI formulation config parameters which are required in c
   * The new JSON structure contains an array of key-value pairs of `name`, `header` and `units` for the output variables. The units provided will be used to perform unit conversion on the output variable, if necessary. Wherever possible, the output is reported in the requested unit. If conversion fails, the raw value, as specified in the BMI, is reported.
   * Added a `index` item to the `output_variables` information in the realization config. The `index` is used for output variables that are array-based. The `index` item is optional and will default to `0` if none provided. The output variable should be repeated for every requested index.
   * The old JSON structure to mention the output variables as a list of strings is deprecated.
-  * if not present, defaults to whatever it returned by the model's BMI `get_output_var_names()` function *the first time* it is invoked
+  * if not present, defaults to whatever is returned by the model's BMI `get_output_var_names()` function *the first time* it is invoked
   * if specified, must be at the **root** level of a formulation object.
   * if specified for multi-BMI, it should be within the **formulation-root** config level, i.e. in the **root** config level for a given **formulation**.
   * e.g.,
