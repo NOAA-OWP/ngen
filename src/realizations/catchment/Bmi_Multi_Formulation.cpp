@@ -125,6 +125,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         else{
             out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
             output_var_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
+            output_var_indices.resize(out_vars_json_list.size());
             for (int i = 0; i < out_vars_json_list.size(); ++i) {
                 out_vars[i] = out_vars_json_list[i].at("name").as_string();
                 if(out_vars_json_list[i].has_key("header")){
@@ -147,6 +148,10 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
                     LOG("Units not provided for '" + out_vars[i] + "' in the realization file.",LogLevel::WARNING);
                     output_var_units[i] = ""; //add an empty entry and populate it with BMI native units later.
                 }
+                if(out_vars_json_list[i].has_key("index")){
+                    //indicates that a valid unit is provided
+                    output_var_indices[i] = stoi(out_vars_json_list[i].at("index").as_string());
+                }
             }
             //check if the units can be parsed correctly and write a warning message
             std::stringstream ss;
@@ -162,6 +167,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
                 out_vars.pop_back();
                 out_headers.pop_back();
                 output_var_units.pop_back();
+                output_var_indices.pop_back();
             }
             set_output_header_fields(out_headers);
         }
@@ -226,6 +232,11 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         if (output_var_units[i] == blank_string){
             output_var_units[i] = get_provider_units_for_variable(names[i]);
         }
+    }
+
+    //check if output variable indices (for vector variables) are specified in config. If not, default to zero (first index).
+    if(output_var_indices.size() == 0){
+        output_var_indices.resize(names.size(), 0);
     }
     
     // Output precision, if present
@@ -437,7 +448,7 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
                 auto provider = source->second;
 
                 time_t init_time = provider->get_data_start_time() + time_offset;
-                value = provider->get_value(CatchmentAggrDataSelector(get_catchment_id(), var_name, init_time, duration, output_var_units[i]), MEAN);
+                value = provider->get_value(CatchmentAggrDataSelector(get_catchment_id(), var_name, init_time, duration, output_var_units[i], output_var_indices[i]), MEAN);
             }
             catch(data_access::unit_conversion_exception &uce){
                 data_access::unit_error_log_key key{"File Output Multi", output_var_names[i], uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
@@ -465,6 +476,7 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
                 *output_text_stream << delimiter << value; //with delimiter for the rest.
             }
         }
+        LOG("BMI Multi Formulation: " + output_text_stream->str(), LogLevel::INFO);
         return output_text_stream->str();
     }
 }
@@ -538,7 +550,7 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
     }
     double var_value;
     try{
-        var_value = modules[index]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"), MEAN);
+        var_value = modules[index]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m", 0), MEAN);
     }
     catch(data_access::unit_conversion_exception &uce){
         data_access::unit_error_log_key key{"Bmi_Multi_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
