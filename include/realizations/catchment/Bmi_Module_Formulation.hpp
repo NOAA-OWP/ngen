@@ -243,6 +243,26 @@ namespace realization {
          */
         double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
+        /**
+         * Get value for some BMI model variable at a specific index.
+         *
+         * Function gets the value for a provided variable, returned from the backing model as an array, and returns the
+         * specific value at the desired index cast as a double type.
+         *
+         * The function makes several assumptions:
+         *
+         *     1. `index` is within array bounds
+         *     2. `var_name` is in the set of valid variable names for the model
+         *     3. the type for output variable allows the value to be cast to a `double` appropriately
+         *
+         * It falls to user (functions) of this function to ensure these assumptions hold before invoking.
+         *
+         * @param index
+         * @param var_name
+         * @return
+         */
+        virtual double get_var_value_as_double(const int& index, const std::string& var_name) = 0;
+
         bool is_bmi_input_variable(const std::string &var_name) const override;
         bool is_bmi_output_variable(const std::string &var_name) const override;
 
@@ -512,6 +532,8 @@ namespace realization {
         bool legacy_json_format = false;
 
         std::vector<std::string> output_var_units;
+
+        std::vector<int> output_var_indices;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS

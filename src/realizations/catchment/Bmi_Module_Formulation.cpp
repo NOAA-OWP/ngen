@@ -66,7 +66,7 @@ namespace realization {
                 std::string out_units_norm = (output_var_units[i].empty() || output_var_units[i] == "none") ? "1" : output_var_units[i];
                 double var_value;
                 try{
-                    var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, out_units_norm), MEAN);
+                    var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, out_units_norm, output_var_indices[i]), MEAN);
                 }
                 catch(data_access::unit_conversion_exception &uce){
                     data_access::unit_error_log_key key{"File output", name, uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
@@ -153,7 +153,7 @@ namespace realization {
             update(t_index, t_delta);
             double var_value;
             try{
-                var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
+                var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m", 0),MEAN);
             }
             catch(data_access::unit_conversion_exception &uce){
                 data_access::unit_error_log_key key{"Bmi_Module_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
@@ -224,8 +224,6 @@ namespace realization {
         std::vector<double> Bmi_Module_Formulation::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
         {
             std::string output_name = selector.get_variable_name();
-            time_t init_time = selector.get_init_time();
-            long duration_s = selector.get_duration_secs();
             std::string output_units = selector.get_output_units();
 
             // First make sure this is an available output
@@ -286,9 +284,8 @@ namespace realization {
         double Bmi_Module_Formulation::get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
         {
             std::string output_name = selector.get_variable_name();
-            time_t init_time = selector.get_init_time();
-            long duration_s = selector.get_duration_secs();
             std::string output_units = selector.get_output_units();
+            int output_index = selector.get_output_variable_index();
 
             // First make sure this is an available output
             auto forcing_outputs = get_available_variable_names();
@@ -311,7 +308,7 @@ namespace realization {
             if( !bmi_var_name.empty() )
             {
                 //Get forcing value from BMI variable
-                double value = get_var_value_as_double(0, bmi_var_name);
+                double value = get_var_value_as_double(output_index, bmi_var_name);
 
                 // Convert units
                 std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
@@ -492,6 +489,7 @@ namespace realization {
                 else{
                     out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
                     output_var_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
+                    output_var_indices.resize(out_vars_json_list.size(), 0); 
                     for (int i = 0; i < out_vars_json_list.size(); ++i) {
                         out_vars[i] = out_vars_json_list[i].at("name").as_string();
                         if(out_vars_json_list[i].has_key("header")){
@@ -514,6 +512,10 @@ namespace realization {
                            LOG("Units not provided for '" + out_vars[i] + "' in the realization file.",LogLevel::WARNING);
                            output_var_units[i] = ""; //add an empty entry and populate it with BMI native units later.
                         }
+                        if(out_vars_json_list[i].has_key("index")){
+                            //indicates that a valid index is provided
+                            output_var_indices[i] = stoi(out_vars_json_list[i].at("index").as_string());
+                        }
                     }
                     //check if the units can be parsed correctly and write a warning message
                     std::stringstream ss;
@@ -529,6 +531,7 @@ namespace realization {
                         out_vars.pop_back();
                         out_headers.pop_back();
                         output_var_units.pop_back();
+                        output_var_indices.pop_back();
                     }
                     set_output_header_fields(out_headers);
                 }
@@ -596,6 +599,11 @@ namespace realization {
                 if (output_var_units[i] == blank_string){
                     output_var_units[i] = get_provider_units_for_variable(names[i]);
                 }
+            }
+
+            //check if output variable indices (for vector variables) are specified in config. If not, default to zero (first index).
+            if(output_var_indices.size() == 0){
+                output_var_indices.resize(names.size(), 0);
             }
         }
         /**
@@ -894,7 +902,7 @@ namespace realization {
                 if (numItems != 1) {
                     //more than a single value needed for var_name
                     auto values = provider->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                   consumer_units));
+                                                   consumer_units, 0));
                     //need to marshal data types to the receiver as well
                     //this could be done a little more elegantly if the provider interface were
                     //"type aware", but for now, this will do (but requires yet another copy)
@@ -918,7 +926,7 @@ namespace realization {
                     try {
                         //scalar value
                         double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                                                     consumer_units));
+                                                                                     consumer_units, 0));
                         value_ptr = get_value_as_type(type, value);
                     } catch (data_access::unit_conversion_exception &uce) {
                         data_access::unit_error_log_key key{get_id(), var_map_alias, uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
@@ -976,7 +984,7 @@ namespace realization {
                 if (numItems != 1) {
                     //more than a single value needed for var_name
                     auto values = provider->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                   get_bmi_model()->GetVarUnits(var_name)));
+                                                   get_bmi_model()->GetVarUnits(var_name), 0));
                     value_ptr = get_values_as_type( type, values.begin(), values.end() );
                     // array like input: precipitation_mm_per_h = [0.2, 0.8, 1.8]
                     this->append_inputs(type, value_ptr, numItems, inputs);
@@ -984,7 +992,7 @@ namespace realization {
                 } else {
                     //scalar value
                     double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                   get_bmi_model()->GetVarUnits(var_name)));
+                                                   get_bmi_model()->GetVarUnits(var_name), 0));
                     this->append_input(type, value, inputs);
                 }
             }
