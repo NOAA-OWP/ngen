@@ -638,14 +638,6 @@ std::string Logger::GetLogFilePath(void) {
     return logFilePath;
 }
 
-LogLevel Logger::GetLogLevel(void) {
-	return logLevel;
-}
-
-bool Logger::IsLoggingEnabled(void) {
-    return loggingEnabled;
-}
-
 bool Logger::FileExists(const std::string& path) {
     struct stat statbuf{};
     return stat(path.c_str(), &statbuf) == 0 && S_ISREG(statbuf.st_mode);
@@ -670,3 +662,10 @@ bool Logger::FindAndOpenLogConfigFile(std::string path, std::ifstream& configFil
     return false;
 }
 
+LogLevel Logger::GetLogLevel(void) {
+	return logLevel;
+}
+
+bool Logger::IsLoggingEnabled(void) {
+    return loggingEnabled;
+}
