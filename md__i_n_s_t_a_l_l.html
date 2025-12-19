@@ -116,11 +116,11 @@ Building manually:</h1>
 <div class="fragment"><div class="line">git clone https://github.com/NOAA-OWP/ngen</div>
 <div class="line">cd ngen</div>
 </div><!-- fragment --><p><b>Download the Boost Libraries:</b></p>
-<div class="fragment"><div class="line">curl -L -o boost_1_79_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.79.0/boost_1_79_0.tar.bz2/download \</div>
-<div class="line">    &amp;&amp; tar -xjf boost_1_79_0.tar.bz2 \</div>
-<div class="line">    &amp;&amp; rm boost_1_79_0.tar.bz2</div>
+<div class="fragment"><div class="line">curl -L -o boost_1_86_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.86.0/boost_1_86_0.tar.bz2/download \</div>
+<div class="line">    &amp;&amp; tar -xjf boost_1_86_0.tar.bz2 \</div>
+<div class="line">    &amp;&amp; rm boost_1_86_0.tar.bz2</div>
 </div><!-- fragment --><p><b>Set the ENV for Boost and C compiler:</b></p>
-<div class="fragment"><div class="line">set BOOST_ROOT=&quot;/boost_1_79_0&quot;</div>
+<div class="fragment"><div class="line">set BOOST_ROOT=&quot;/boost_1_86_0&quot;</div>
 <div class="line">set CXX=/usr/bin/g++</div>
 </div><!-- fragment --><p><b>Get the git submodules:</b></p>
 <div class="fragment"><div class="line">git submodule update --init --recursive -- test/googletest </div>
@@ -159,7 +159,7 @@ Building manually:</h1>
 </blockquote>
 <p>The following CMake command will configure the build:</p>
 <div class="fragment"><div class="line">cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ \</div>
-<div class="line">      -DBOOST_ROOT=boost_1_79_0 \</div>
+<div class="line">      -DBOOST_ROOT=boost_1_86_0 \</div>
 <div class="line">      -B /build \</div>
 <div class="line">      -S .</div>
 </div><!-- fragment --><p><b>Build NGen using cmake:</b></p>
@@ -178,7 +178,7 @@ Building manually:</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Nov 10 2025 21:43:40 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Dec 19 2025 20:35:55 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
