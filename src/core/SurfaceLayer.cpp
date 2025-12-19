@@ -18,7 +18,10 @@ void ngen::SurfaceLayer::update_models()
         std::string current_timestamp = simulation_time.get_timestamp(current_time_index);
         
         #if NGEN_WITH_MPI
-        if (!features.is_remote_sender_nexus(id)) { //Ensures only one side of the dual sided remote nexus actually doing this...
+        if (features.is_remote_sender_nexus(id)) {
+            //Ensures only one side of the dual sided remote nexus actually doing this...
+            return;
+        }
         #endif
 
         //Get the correct "requesting" id for downstream_flow
@@ -36,18 +39,10 @@ void ngen::SurfaceLayer::update_models()
 
         //std::cerr << "Requesting water from nexus, id = " << id << " at time = " <<current_time_index << ",  percent = 100, destination = " << cat_id << std::endl;
         double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, current_time_index, 100.0);
-        
-        if(nexus_outfiles[id].is_open()) {
-        nexus_outfiles[id] << current_time_index << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
-        }
+        // TODO: (later) eventually may want to use this form, if we support multiple formulations per catchment
+        //nexus_outputs_mgr->receive_data_entry(form_id, id, current_time_index, current_timestamp, contribution_at_t);
+        nexus_outputs_mgr->receive_data_entry(id, current_time_index, current_timestamp, contribution_at_t);
 
-        #if NGEN_WITH_MPI
-        }
-        #endif
-        //std::cout<<"\tNexus "<<id<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
-
-        //Note: Use below if developing in-memory transfer of nexus flows to routing
-        //If using below, then another single time vector would be needed to hold the timestamp
-        //nexus_flows[id].push_back(contribution_at_t); 
     } //done nexuses
+    nexus_outputs_mgr->commit_writes();
 }
