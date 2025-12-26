@@ -135,8 +135,6 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     // correct string release
     nc_free_string(num_ids,&string_buffers[0]);
 
-// Modified code to handle units, epoch start, and reading all time values correctly - KSL
-
     // Get the time variable - getVar collects all values at once and stores in memory
     // Extremely large timespans could be problematic, but for ngen use cases, this should not be a problem
     auto time_var = nc_file->getVar("Time");
@@ -168,7 +166,6 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     std::string time_units;
     try {
         time_var.getAtt("units").getValues(time_units);
-
     } catch(const netCDF::exceptions::NcException& e) {
         netcdf_ss << "Error reading time units: " << e.what() << std::endl;
         LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
@@ -180,9 +177,9 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     double time_scale_factor = 1.0;
     std::time_t epoch_start_time = 0;
 
-	//The following makes some assumptions that NetCDF output from the forcing engine will be relatively uniform
-	//Specifically, it assumes time values are in units since the Unix Epoch. 
-	//If the forcings engine outputs additional unit formats, this will need to be expanded
+    // The following makes some assumptions that NetCDF output from the forcing engine will be relatively uniform
+    // Specifically, it assumes time values are in units since the Unix Epoch.
+    // If the forcings engine outputs additional unit formats, this will need to be expanded
     if (time_units.find("minutes since") != std::string::npos) {
         time_unit = TIME_MINUTES;
         time_scale_factor = 60.0;
@@ -193,14 +190,13 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         time_unit = TIME_SECONDS;
         time_scale_factor = 1.0;
     }
-	//This is also based on the NetCDF from the forcings engine, and may not be super flexible
+    // This is also based on the NetCDF from the forcings engine, and may not be super flexible
     std::string datetime_str = time_units.substr(time_units.find("since") + 6);
     std::tm tm = {};
     std::istringstream ss(datetime_str); 
-    ss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S"); //This may be particularly inflexible
-    epoch_start_time = timegm(&tm); //timegm may not be available in all environments/OSes ie: Windows
+    ss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S"); // This may be particularly inflexible
+    epoch_start_time = timegm(&tm); // timegm may not be available in all environments/OSes ie: Windows
     time_vals.resize(raw_time.size());
-// End modification - KSL
 
     std::transform(raw_time.begin(), raw_time.end(), time_vals.begin(), 
         [&](const auto& n) {
