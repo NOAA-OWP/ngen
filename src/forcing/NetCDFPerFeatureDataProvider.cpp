@@ -177,25 +177,42 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     double time_scale_factor = 1.0;
     std::time_t epoch_start_time = 0;
 
-    // The following makes some assumptions that NetCDF output from the forcing engine will be relatively uniform
-    // Specifically, it assumes time values are in units since the Unix Epoch.
-    // If the forcings engine outputs additional unit formats, this will need to be expanded
-    if (time_units.find("minutes since") != std::string::npos) {
+    std::string time_base_unit;
+    auto since_index = time_units.find("since");
+    if (since_index != std::string::npos) {
+        time_base_unit = time_units.substr(0, since_index - 1);
+
+        std::string datetime_str = time_units.substr(since_index + 6);
+        std::tm tm = {};
+        std::istringstream ss(datetime_str);
+        ss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S"); // This may be particularly inflexible
+        epoch_start_time = timegm(&tm); // timegm may not be available in all environments/OSes ie: Windows
+    } else {
+        time_base_unit = time_units;
+    }
+
+    if (time_base_unit == "minutes") {
         time_unit = TIME_MINUTES;
         time_scale_factor = 60.0;
-    } else if (time_units.find("hours since") != std::string::npos) {
+    } else if (time_base_unit == "hours") {
         time_unit = TIME_HOURS;
         time_scale_factor = 3600.0;
-    } else {
+    } else if (time_base_unit == "seconds" || time_base_unit == "s") {
         time_unit = TIME_SECONDS;
         time_scale_factor = 1.0;
+    } else if (time_base_unit == "milliseconds" || time_base_unit == "ms") {
+        time_unit = TIME_MILLISECONDS;
+        time_scale_factor = 1.0e-3;
+    } else if (time_base_unit == "microseconds" || time_base_unit == "us") {
+        time_unit = TIME_MICROSECONDS;
+        time_scale_factor = 1.0e-6;
+    } else if (time_base_unit == "nanoseconds" || time_base_unit == "ns") {
+        time_unit = TIME_NANOSECONDS;
+        time_scale_factor = 1.0e-9;
+    } else {
+        Logger::logMsgAndThrowError("In NetCDF file '" + input_path + "', time unit '" + time_base_unit + "' could not be converted");
     }
-    // This is also based on the NetCDF from the forcings engine, and may not be super flexible
-    std::string datetime_str = time_units.substr(time_units.find("since") + 6);
-    std::tm tm = {};
-    std::istringstream ss(datetime_str); 
-    ss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S"); // This may be particularly inflexible
-    epoch_start_time = timegm(&tm); // timegm may not be available in all environments/OSes ie: Windows
+
     time_vals.resize(raw_time.size());
 
     std::transform(raw_time.begin(), raw_time.end(), time_vals.begin(), 
@@ -221,13 +238,20 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     #endif
 
     netcdf_ss << "All time intervals are constant within tolerance." << std::endl;
-    LOG(netcdf_ss.str(), LogLevel::SEVERE); netcdf_ss.str("");
+    LOG(netcdf_ss.str(), LogLevel::DEBUG); netcdf_ss.str("");
 
     // determine start_time and stop_time;
     start_time = time_vals[0];
     stop_time = time_vals.back() + time_stride;
 
     sim_to_data_time_offset = sim_start_date_time_epoch - start_time;
+
+    netcdf_ss << "NetCDF Forcing from file '" << input_path << "'"
+              << "Start time " << (time_t)start_time
+              << ", Stop time " << (time_t)stop_time
+              << ", sim_start_date_time_epoch " << sim_start_date_time_epoch
+        ;
+    LOG(netcdf_ss.str(), LogLevel::DEBUG); netcdf_ss.str("");
 }
 
 NetCDFPerFeatureDataProvider::~NetCDFPerFeatureDataProvider() = default;
