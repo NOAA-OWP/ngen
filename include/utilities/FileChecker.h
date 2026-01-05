@@ -7,6 +7,10 @@
 #include <iostream>
 #include <cerrno>
 
+#ifndef _WIN32 // This should catch both 32 and 64 bit Windows
+#include <sys/stat.h>
+#endif
+
 namespace utils {
 
     /**
@@ -14,6 +18,21 @@ namespace utils {
      */
     class FileChecker {
     public:
+
+        /**
+         * Check whether a directory already exists.
+         *
+         * @param path The path of interest.
+         * @return Whether there is a directory existing at the given path.
+         */
+        static bool directory_exists(const std::string& path) {
+            #ifdef _WIN32 // This should catch both 32 and 64 bit Windows
+            throw std::runtime_error("Windows support not yet implemented for directory_exists util function.");
+            #else
+            struct stat info;
+            return stat(path.c_str(), &info) == 0 && info.st_mode & S_IFDIR;
+            #endif
+        }
 
         /**
          * Get whether a write to a file at the given path is permitted.
