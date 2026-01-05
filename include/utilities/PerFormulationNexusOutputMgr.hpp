@@ -39,8 +39,8 @@ namespace utils
          * @param mpi_rank The MPI rank of this process, when using MPI (always `0` if no MPI).
          * @param nexuses_per_rank The total number nexuses for each running rank.
          */
-        PerFormulationNexusOutputMgr(const std::vector<const std::string> nexus_ids,
-                                     std::shared_ptr<std::vector<const std::string>> formulation_ids,
+        PerFormulationNexusOutputMgr(const std::vector<std::string> nexus_ids,
+                                     std::shared_ptr<std::vector<std::string>> formulation_ids,
                                      const std::string &output_root,
                                      const int mpi_rank,
                                      const std::vector<int>& nexuses_per_rank)
@@ -76,7 +76,7 @@ namespace utils
 
             // Should always have one formulation at least, so
             if (formulation_ids == nullptr) {
-                formulation_ids = std::make_shared<std::vector<const std::string>>();
+                formulation_ids = std::make_shared<std::vector<std::string>>();
             }
             if (formulation_ids->empty()) {
                 formulation_ids->push_back(get_default_formulation_id());
@@ -113,8 +113,8 @@ namespace utils
          * @param formulation_ids
          * @param output_root The output root for written files (as a string).
          */
-        PerFormulationNexusOutputMgr(const std::vector<const std::string> nexus_ids,
-                                     std::shared_ptr<std::vector<const std::string>> formulation_ids,
+        PerFormulationNexusOutputMgr(const std::vector<std::string> nexus_ids,
+                                     std::shared_ptr<std::vector<std::string>> formulation_ids,
                                      const std::string &output_root) : PerFormulationNexusOutputMgr(nexus_ids, formulation_ids, output_root, 0, {}) {}
 
         /**
@@ -207,7 +207,7 @@ namespace utils
         /** Current time index of latest ``receive_data_entry``. */
         long current_time_index = 0;
         /** Nexus ids for which this instance/process will write data to the file (i.e., local when using MPI, all otherwise). */
-        const std::vector<const std::string> nexus_ids;
+        const std::vector<std::string> nexus_ids;
         int mpi_rank;
         std::vector<unsigned long>::size_type local_offset;
         /** Map of formulation ids to nexus data file paths (as string) */
