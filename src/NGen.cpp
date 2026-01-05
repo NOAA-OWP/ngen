@@ -445,14 +445,14 @@ int main(int argc, char *argv[]) {
 
     std::shared_ptr<utils::NexusOutputsMgr> nexus_outputs_mgr;
     #if NGEN_WITH_MPI
-    std::vector<const std::string> nexus_ids(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
+    std::vector<std::string> nexus_ids(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
     #else
-    std::vector<const std::string> nexus_ids(features->nexuses().begin(), features->nexuses().end());
+    std::vector<std::string> nexus_ids(features->nexuses().begin(), features->nexuses().end());
     #endif
 
     if (manager->is_using_per_formulation_nexus_files()) {
         // TODO: (later) use nullptr for now, until full support for multiple formulations per catchment is available
-        std::shared_ptr<std::vector<const std::string>> formulation_ids = nullptr;
+        std::shared_ptr<std::vector<std::string>> formulation_ids = nullptr;
 
         #if NGEN_WITH_MPI
         std::vector<int> nexuses_per_rank(mpi_num_procs, 0);
