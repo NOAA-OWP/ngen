@@ -462,6 +462,8 @@ int main(int argc, char *argv[]) {
             MPI_Barrier(MPI_COMM_WORLD);
         }
         nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root(), mpi_rank, nexuses_per_rank);
+        // One more barrier here to make sure other ranks wait while rank 0 creates the per-formulation nexus file
+        MPI_Barrier(MPI_COMM_WORLD);
         #else
         nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root());
         #endif
