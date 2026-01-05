@@ -8,5 +8,5 @@ Description: @SUMMA_DESC_CMAKE@
 Version: @PROJECT_VERSION@
 
 Requires:
-Libs: -L${libdir} -lmylib
+Libs: -L${libdir} -lsummabmi
 Cflags: -I${includedir}

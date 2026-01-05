@@ -181,21 +181,36 @@ if (USE_OPENWQ)
 endif ()
 
 
-# Define version number, not working correctly
+# Define version number
 set(VERSIONFILE     ${DRIVER_DIR}/summaversion.inc)
-execute_process(COMMAND "    ${GIT_EXECUTABLE} tag | tail -n 1" OUTPUT_VARIABLE VERSION)
-execute_process(COMMAND "date" OUTPUT_VARIABLE BULTTIM)
-execute_process(COMMAND "    ${GIT_EXECUTABLE} describe --long --all --always | sed -e's/heads\///'" OUTPUT_VARIABLE GITBRCH)
-execute_process(COMMAND "    ${GIT_EXECUTABLE} rev-parse HEAD" OUTPUT_VARIABLE GITHASH)
-
+execute_process(
+    COMMAND bash -c "git tag | tail -n 1"
+    OUTPUT_VARIABLE VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+execute_process(
+    COMMAND date
+    OUTPUT_VARIABLE BUILDTIM
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+execute_process(
+    COMMAND bash -c "git describe --long --all --always | sed 's#heads/##'"
+    OUTPUT_VARIABLE GITBRCH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+execute_process(
+    COMMAND git rev-parse HEAD
+    OUTPUT_VARIABLE GITHASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 
 #=========================================================================================
 # COMPILE PART 4: Do the compilation
 #=========================================================================================
 
-# update version information, not working correctly
+# update version information
 file(WRITE  ${VERSIONFILE} "character(len=64), parameter     :: summaVersion = '${VERSION}'\n")
-file(APPEND ${VERSIONFILE} "character(len=64), parameter     :: buildTime = ''\n")
+file(APPEND ${VERSIONFILE} "character(len=64), parameter     :: buildTime = '${BUILDTIM}'\n")
 file(APPEND ${VERSIONFILE} "character(len=64), parameter     :: gitBranch = '${GITBRCH}'\n")
 file(APPEND ${VERSIONFILE} "character(len=64), parameter     :: gitHash = '${GITHASH}'")
 

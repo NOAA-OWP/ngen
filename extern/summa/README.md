@@ -47,7 +47,7 @@ Note that this will be done in the NGen repo configuration, so it can then be co
 
 ## Building Libraries
 
-If you plan on using any of the NextGen python modules (e.g. routing with t-route), you likely need to build a python environment for NextGen.  An example environment is included in `summa/test_ngen/python_env/environemnt.yml`. ON a Linux machine, you can run
+If you plan on using any of the NextGen python modules (e.g. routing with t-route), you likely need to build a python environment for NextGen.  An example environment is included in `summa/test_ngen/python_env/environment.yml`. ON a Linux machine, you can run
     $ cd ${NGEN_DIR}/ngen/extern/summa/summa/test_ngen/python_env
     $ conda env create -f environment.yml -n pyngen  
     $ conda activate pyngen
