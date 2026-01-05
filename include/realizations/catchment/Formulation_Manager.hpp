@@ -61,6 +61,9 @@ namespace realization {
                 if (per_formulation_setting) {
                     use_per_formulation_nexus_files = per_formulation_setting->get_value<bool>();
                 }
+                else {
+                    use_per_formulation_nexus_files = false;
+                }
 
                 auto possible_global_config = tree.get_child_optional("global");
 
