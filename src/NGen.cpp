@@ -444,21 +444,33 @@ int main(int argc, char *argv[]) {
     nexus_collection.reset();
 
     std::shared_ptr<utils::NexusOutputsMgr> nexus_outputs_mgr;
+    #if NGEN_WITH_MPI
+    std::vector<const std::string> nexus_ids(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
+    #else
+    std::vector<const std::string> nexus_ids(features->nexuses().begin(), features->nexuses().end());
+    #endif
 
     if (manager->is_using_per_formulation_nexus_files()) {
         // TODO: (later) use nullptr for now, until full support for multiple formulations per catchment is available
         std::shared_ptr<std::vector<const std::string>> formulation_ids = nullptr;
+
         #if NGEN_WITH_MPI
-        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(features, formulation_ids, manager->get_output_root(), mpi_rank);
+        std::vector<int> nexuses_per_rank(mpi_num_procs, 0);
+        nexuses_per_rank[mpi_rank] += local_data.nexus_ids.size();
+        for (int i = 0; i < mpi_num_procs; i++) {
+            MPI_Bcast(nexuses_per_rank.data() + i, 1, MPI_INT, i, MPI_COMM_WORLD);
+            MPI_Barrier(MPI_COMM_WORLD);
+        }
+        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root(), mpi_rank, nexuses_per_rank);
         #else
-        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(features, formulation_ids, manager->get_output_root());
+        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root());
         #endif
     }
     else {
         #if NGEN_WITH_MPI
-        nexus_outputs_mgr = std::make_shared<utils::PerNexusCsvOutputMgr>(features, manager->get_output_root(), mpi_num_procs);
+        nexus_outputs_mgr = std::make_shared<utils::PerNexusCsvOutputMgr>(nexus_ids, manager->get_output_root(), mpi_num_procs);
         #else
-        nexus_outputs_mgr = std::make_shared<utils::PerNexusCsvOutputMgr>(features, manager->get_output_root());
+        nexus_outputs_mgr = std::make_shared<utils::PerNexusCsvOutputMgr>(nexus_ids, manager->get_output_root());
         #endif
     }
 
