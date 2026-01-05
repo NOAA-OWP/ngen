@@ -26,7 +26,12 @@ namespace utils
         virtual ~PerFormulationNexusOutputMgr() = default;
 
         /**
-         * Construct instance set for managing/writing nexus data files.
+         * Construct instance set for managing/writing nexus data files, creating the file(s) appropriately.
+         *
+         * Note that the class is designed to be aware of its MPI rank and supports multiple instances across different
+         * ranks writing to the same file.  However, only rank `0` will initially create the nexus output file. Further,
+         * the instance relies on users/callers to maintain MPI synchronization (i.e., call MPI_Barrier so other ranks
+         * don't get ahead of rank `0` while it creates the file).
          *
          * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
          * @param formulation_ids
@@ -84,7 +89,7 @@ namespace utils
             }
 
             // Have rank 0 set up the files
-            if (mpi_rank == 0) {
+            if (this->mpi_rank == 0) {
                 for (const std::string& fid : *formulation_ids) {
                     std::string filename = output_root + "/formulation_" + fid + "_nexuses.nc";
                     nexus_outfiles[fid] = filename;
@@ -99,10 +104,6 @@ namespace utils
                     netCDF::NcVar flow = ncf.addVar("runoff_rate", netCDF::ncDouble, {dim_nexus, dim_time});
                 }
             }
-
-            #if NGEN_WITH_MPI
-            MPI_Barrier(MPI_COMM_WORLD);
-            #endif
         }
 
         /**
