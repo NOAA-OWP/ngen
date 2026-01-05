@@ -28,18 +28,47 @@ namespace utils
         /**
          * Construct instance set for managing/writing nexus data files.
          *
-         * @param nexus_features Nexus features object, from which we can get nexus ids and remote status.
+         * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
          * @param formulation_ids
          * @param output_root The output root for written files (as a string).
-         * @param mpi_rank The MPI rank of this process, when using MPI.
+         * @param mpi_rank The MPI rank of this process, when using MPI (always `0` if no MPI).
+         * @param nexuses_per_rank The total number nexuses for each running rank.
          */
-        PerFormulationNexusOutputMgr(const std::shared_ptr<HY_Features_Type>& nexus_features,
+        PerFormulationNexusOutputMgr(const std::vector<const std::string> nexus_ids,
                                      std::shared_ptr<std::vector<const std::string>> formulation_ids,
                                      const std::string &output_root,
-                                     const int mpi_rank)
-            :   NexusOutputsMgr(nexus_features),
-                all_nexus_ids(nexus_features->nexuses().begin(), nexus_features->nexuses().end())
+                                     const int mpi_rank,
+                                     const std::vector<int>& nexuses_per_rank)
+            :   nexus_ids(nexus_ids),
+                mpi_rank(mpi_rank),
+                nexuses_per_rank(nexuses_per_rank)
         {
+            if (this->nexuses_per_rank.empty()) {
+                if (this->mpi_rank > 0)
+                    throw std::runtime_error("Must supply nexuses_per_rank values when using multiple MPI processes.");
+                this->nexuses_per_rank.push_back(this->nexus_ids.size());
+            }
+
+            if (this->nexuses_per_rank.size() <= this->mpi_rank) {
+                throw std::runtime_error("To few values in nexuses_per_rank value ("
+                    + std::to_string(this->nexuses_per_rank.size()) + ") for rank "
+                    + std::to_string(mpi_rank) + ".");
+            }
+
+            if (this->nexuses_per_rank[this->mpi_rank] != this->nexus_ids.size()) {
+                throw std::runtime_error("Invalid nexuses_per_rank value for rank " + std::to_string(this->mpi_rank)
+                    + ": " + std::to_string(this->nexuses_per_rank[this->mpi_rank]) + " does not match number of "
+                    + "supplied nexus ids (" + std::to_string(this->nexus_ids.size()) + ").");
+            }
+
+            if (this->mpi_rank == 0) {
+                for (size_t r = 0; r < this->nexuses_per_rank.size(); r++) {
+                    if (this->nexuses_per_rank[r] < 0) {
+                        throw std::runtime_error("Invalid nexuses_per_rank value for rank " + std::to_string(r) + ".");
+                    }
+                }
+            }
+
             // Should always have one formulation at least, so
             if (formulation_ids == nullptr) {
                 formulation_ids = std::make_shared<std::vector<const std::string>>();
@@ -48,28 +77,11 @@ namespace utils
                 formulation_ids->push_back(get_default_formulation_id());
             }
 
-            // Ensure order (especially if MPI in play)
-            std::sort(all_nexus_ids.begin(), all_nexus_ids.end());
-
-            #if NGEN_WITH_MPI
-            // Figure out what's local (also sorted)
-            for (const auto& nex_id : all_nexus_ids) {
-                if (!nexus_features->is_remote_sender_nexus(nex_id)) {
-                    local_nexus_ids.push_back(nex_id);
-                }
-            }
-            std::sort(local_nexus_ids.begin(), local_nexus_ids.end());
-            // And make sure we know where to start from
-            for (size_t i = 0; i < all_nexus_ids.size(); ++i) {
-                if (all_nexus_ids[i] == local_nexus_ids[0]) {
-                    local_offset = i;
-                    break;
-                }
-            }
-            #else
-            local_nexus_ids = all_nexus_ids;
             local_offset = 0;
-            #endif
+
+            for (size_t r = 0; r < mpi_rank; ++r) {
+                local_offset += nexuses_per_rank[r];
+            }
 
             // Have rank 0 set up the files
             if (mpi_rank == 0) {
@@ -81,10 +93,10 @@ namespace utils
                     /* ************************************************************************************************
                      * Important:  do not change order or add more dims w/out also updating commit_writes appropriately.
                      * ********************************************************************************************** */
-                    netCDF::NcDim dim_nexus = ncf.addDim("nexus", all_nexus_ids.size());
+                    netCDF::NcDim dim_nexus = ncf.addDim("feature_id", nexus_ids.size());
                     netCDF::NcDim dim_time = ncf.addDim("time");
 
-                    netCDF::NcVar flow = ncf.addVar("flow", netCDF::ncDouble, {dim_nexus, dim_time});
+                    netCDF::NcVar flow = ncf.addVar("runoff_rate", netCDF::ncDouble, {dim_nexus, dim_time});
                 }
             }
 
@@ -96,13 +108,13 @@ namespace utils
         /**
          * Construct instance set for managing/writing nexus data files, supplying a default value of `0` for MPI rank.
          *
-         * @param nexus_features Nexus features object, from which we can get nexus ids and remote status.
+         * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
          * @param formulation_ids
          * @param output_root The output root for written files (as a string).
          */
-        PerFormulationNexusOutputMgr(const std::shared_ptr<HY_Features_Type>& nexus_features,
+        PerFormulationNexusOutputMgr(const std::vector<const std::string> nexus_ids,
                                      std::shared_ptr<std::vector<const std::string>> formulation_ids,
-                                     const std::string &output_root) : PerFormulationNexusOutputMgr(nexus_features, formulation_ids, output_root, 0) {}
+                                     const std::string &output_root) : PerFormulationNexusOutputMgr(nexus_ids, formulation_ids, output_root, 0, {}) {}
 
         /**
          * Write any received data entries that were not written immediately upon receipt to the managed data files.
@@ -116,27 +128,27 @@ namespace utils
             }
 
             // Get properly ordered data vector
-            std::vector<double> data(local_nexus_ids.size());
-            for (size_t i = 0; i < local_nexus_ids.size(); ++i) {
+            std::vector<double> data(nexus_ids.size());
+            for (size_t i = 0; i < nexus_ids.size(); ++i) {
                 // Sanity check we have everything in our block of nexus ids
-                if (data_cache.find(local_nexus_ids[i]) == data_cache.end()) {
+                if (data_cache.find(nexus_ids[i]) == data_cache.end()) {
                     throw std::runtime_error(
-                        "Missing data for nexus " + local_nexus_ids[i] + " in formulation " + current_formulation_id +
+                        "Missing data for nexus " + nexus_ids[i] + " in formulation " + current_formulation_id +
                         " at time index " + std::to_string(current_time_index) + ".");
                 }
-                data[i] = data_cache[local_nexus_ids[i]];
+                data[i] = data_cache[nexus_ids[i]];
             }
 
-            std::string filename = nexus_outfiles[current_formulation_id];
+            const std::string filename = nexus_outfiles[current_formulation_id];
 
-            netCDF::NcFile ncf(filename, netCDF::NcFile::write);
-            netCDF::NcVar flow = ncf.getVar("flow");
+            const netCDF::NcFile ncf(filename, netCDF::NcFile::write);
+            const netCDF::NcVar flow = ncf.getVar("flow");
 
             // Assume base on how constructor was set up (imply for conciseness)
             //size_t nexus_dim_index = 0;
             //size_t time_dim_index = 1;
-            std::vector<size_t> start = {local_offset, static_cast<size_t>(current_time_index)};
-            std::vector<size_t> count = {local_nexus_ids.size(), 1};
+            const std::vector<size_t> start = {local_offset, static_cast<size_t>(current_time_index)};
+            const std::vector<size_t> count = {nexus_ids.size(), 1};
 
             flow.putVar(start, count, data.data());
             data_cache.clear();
@@ -150,7 +162,7 @@ namespace utils
          * @return Whether this instance manages writing data for the given nexus to a managed data file.
          */
         bool is_nexus_managed(const std::string& nexus_id) override {
-            return std::find(local_nexus_ids.begin(), local_nexus_ids.end(), nexus_id) != local_nexus_ids.end();
+            return std::find(nexus_ids.begin(), nexus_ids.end(), nexus_id) != nexus_ids.end();
         }
 
         /**
@@ -187,21 +199,20 @@ namespace utils
         }
 
     private:
-        std::vector<std::string> all_nexus_ids;
         /** Map of nexus ids to corresponding cached flow data from ``receive_data_entry``. */
         std::unordered_map<std::string, double> data_cache;
         /** The current/last formulation id value received by `receive_data_entry`. */
         std::string current_formulation_id;
         /** Current time index of latest ``receive_data_entry``. */
         long current_time_index = 0;
-        /** Non-remote nexus ids, which are the ones for which this instance/process will write data to the file. */
-        std::vector<std::string> local_nexus_ids;
-        /** The index offset for "all" nexus ids; e.g., the index in ``all_nexus_ids`` in which you will find
-         * ``local_nexus_ids[0]``, etc.
-         */
-        size_t local_offset;
+        /** Nexus ids for which this instance/process will write data to the file (i.e., local when using MPI, all otherwise). */
+        const std::vector<const std::string> nexus_ids;
+        int mpi_rank;
+        std::vector<unsigned long>::size_type local_offset;
         /** Map of formulation ids to nexus data file paths (as string) */
         std::unordered_map<std::string, std::string> nexus_outfiles;
+        /** The number of nexuses assigned to each rank. */
+        std::vector<int> nexuses_per_rank;
 
     };
 } // utils

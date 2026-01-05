@@ -21,32 +21,26 @@ namespace utils
         /**
          * Construct instance set for managing/writing nexus data files.
          *
-         * @param nexus_features Nexus features object, from which we can get nexus ids and remote status.
+         * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
          * @param output_root The output root for written files (as a string).
          * @param num_procs The number of (MPI) processes (ignored if MPI not used).
          */
-        PerNexusCsvOutputMgr(const std::shared_ptr<HY_Features_Type>& nexus_features,
+        PerNexusCsvOutputMgr(const std::vector<const std::string>& nexus_ids,
                              const std::string &output_root,
-                             int num_procs) : NexusOutputsMgr(nexus_features) {
-            for(const auto& id : nexus_features->nexuses()) {
-                #if NGEN_WITH_MPI
-                if (num_procs <= 1 || !nexus_features->is_remote_sender_nexus(id)) {
-                    nexus_outfiles[id].open(output_root + id + "_output.csv", std::ios::trunc);
-                }
-                #else
+                             int num_procs) {
+            for(const auto& id : nexus_ids) {
                 nexus_outfiles[id].open(output_root + id + "_output.csv", std::ios::trunc);
-                #endif // NGEN_WITH_MPI
             }
         }
 
         /**
          * Construct instance set for managing/writing nexus data files, assuming a single process.
          *
-         * @param nexus_features Nexus features object, from which we can get nexus ids and remote status.
+         * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
          * @param output_root The output root for written files (as a string).
          */
-        PerNexusCsvOutputMgr(const std::shared_ptr<HY_Features_Type>& nexus_features,
-                             const std::string &output_root) : PerNexusCsvOutputMgr(nexus_features, output_root, 1) { }
+        PerNexusCsvOutputMgr(const std::vector<const std::string>& nexus_ids,
+                             const std::string &output_root) : PerNexusCsvOutputMgr(nexus_ids, output_root, 1) { }
 
         /**
          * No-op, since this type writes entries as they are received.

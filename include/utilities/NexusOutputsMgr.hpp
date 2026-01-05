@@ -6,16 +6,9 @@
 #define NGEN_NEXUSOUTPUTSMGR_HPP
 
 #include <string>
-#include "boost/range/any_range.hpp"
 
 namespace utils
 {
-
-    #if NGEN_WITH_MPI
-    typedef hy_features::HY_Features_MPI HY_Features_Type;
-    #else
-    typedef hy_features::HY_Features HY_Features_Type;
-    #endif
 
     /**
      * Abstract class for managing and writing to nexus data files.
@@ -24,13 +17,6 @@ namespace utils
     {
 
     public:
-
-        /**
-         * Construct instance set for managing/writing nexus data files.
-         *
-         * @param nexus_features Nexus features object, from which we can get nexus ids and remote status.
-         */
-        explicit NexusOutputsMgr(const std::shared_ptr<HY_Features_Type>& nexus_features) : nexus_features(nexus_features) { }
 
         /**
          * Write any received data entries that were not written immediately upon receipt to the managed data files.
@@ -74,8 +60,6 @@ namespace utils
         }
 
     protected:
-        std::shared_ptr<HY_Features_Type> nexus_features;
-
         ~NexusOutputsMgr() = default;
 
         /**
