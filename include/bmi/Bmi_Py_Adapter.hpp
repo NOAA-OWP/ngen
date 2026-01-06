@@ -236,24 +236,31 @@ namespace models {
                  * this might cause trouble on certain systems, since (depending on the particular sizes of types) that
                  * could produce duplicate "case" values.
                  */
-                //TODO: include other numpy type strings, https://numpy.org/doc/stable/user/basics.types.html
-                if ( (py_type_name == "int" || py_type_name == "int16") && item_size == sizeof(short)) {
+                if (item_size == sizeof(signed char) && (py_type_name == "int8" || py_type_name == "numpy.int8")) {
+                    return "signed char";
+                } else if (item_size == sizeof(unsigned char) && (py_type_name == "uint8" || py_type_name == "numpy.uint8")) {
+                    return "unsigned char";
+                } else if (item_size == sizeof(short) && (py_type_name == "int" || py_type_name == "int16" || py_type_name == "numpy.int16")) {
                     return "short";
-                } else if ( (py_type_name == "int" || py_type_name == "int32" )&& item_size == sizeof(int)) {
+                } else if (item_size == sizeof(unsigned short) && (py_type_name == "uint16" || py_type_name == "numpy.uint16" || py_type_name == "ushort" || py_type_name == "numpy.ushort")) {
+                    return "unsigned short";
+                } else if (item_size == sizeof(int) && (py_type_name == "int" || py_type_name == "int32" || py_type_name == "numpy.int32" || py_type_name == "intc" || py_type_name == "numpy.intc")) {
                     return "int";
-                } else if (py_type_name == "int" && item_size == sizeof(long)) {
+                } else if (item_size == sizeof(unsigned int) && (py_type_name == "uint32" || py_type_name == "numpy.uint32" || py_type_name == "uintc" || py_type_name == "numpy.uintc")) {
+                    return "unsigned int";
+                } else if (item_size == sizeof(long) && (py_type_name == "int" || py_type_name == "int64" || py_type_name == "numpy.int64" || py_type_name == "long" || py_type_name == "numpy.long")) {
                     return "long";
-                } else if ( (py_type_name == "int" || py_type_name == "int64") && item_size == sizeof(long long)) {
+                } else if (item_size == sizeof(unsigned long) && (py_type_name == "uint64" || py_type_name == "numpy.uint64" || py_type_name == "uint32" || py_type_name == "numpy.uint32" || py_type_name == "ulong" || py_type_name == "numpy.ulong")) {
+                    return "unsigned long";
+                } else if (item_size == sizeof(long long) && (py_type_name == "int" || py_type_name == "int64" || py_type_name == "numpy.int64" || py_type_name == "longlong")) {
                     return "long long";
-                } else if (py_type_name == "longlong" && item_size == sizeof(long long)) {
-                    return "long long"; //numpy type
-                } else if ( (py_type_name == "float" || py_type_name == "float32" || py_type_name == "np.float32" ||
-                           py_type_name == "numpy.float32" || py_type_name == "np.single" ||  py_type_name == "numpy.single") && item_size == sizeof(float)) {
+                } else if (item_size == sizeof(unsigned long long) && (py_type_name == "ulonglong" || py_type_name == "numpy.ulonglong")) {
+                    return "unsigned long long";
+                } else if (item_size == sizeof(float) && (py_type_name == "float" || py_type_name == "float32" || py_type_name == "numpy.float32" || py_type_name == "single" || py_type_name == "numpy.single")) {
                     return "float";
-                } else if ((py_type_name == "float" || py_type_name == "float64" || py_type_name == "np.float64" ||
-                            py_type_name == "numpy.float64") && item_size == sizeof(double)) {
+                } else if (item_size == sizeof(double) && (py_type_name == "float" || py_type_name == "float64" || py_type_name == "numpy.float64" || py_type_name == "double" || py_type_name == "numpy.double")) {
                     return "double";
-                } else if (py_type_name == "float" && item_size == sizeof(long double)) {
+                } else if (item_size == sizeof(long double) && (py_type_name == "float" || py_type_name == "float128" || py_type_name == "numpy.float128" || py_type_name == "longdouble" || py_type_name == "numpy.longdouble")) {
                     return "long double";
                 } else {
                     std::string throw_msg; throw_msg.assign(
