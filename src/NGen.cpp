@@ -63,7 +63,9 @@ int mpi_num_procs;
 #include <DomainLayer.hpp>
 #include "utilities/NexusOutputsMgr.hpp"
 #include "utilities/PerNexusCsvOutputMgr.hpp"
+#ifdef NGEN_WITH_NETCDF
 #include "utilities/PerFormulationNexusOutputMgr.hpp"
+#endif
 
 void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
 {
@@ -461,11 +463,22 @@ int main(int argc, char *argv[]) {
             MPI_Bcast(nexuses_per_rank.data() + i, 1, MPI_INT, i, MPI_COMM_WORLD);
             MPI_Barrier(MPI_COMM_WORLD);
         }
+        #ifdef NGEN_WITH_NETCDF
         nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root(), mpi_rank, nexuses_per_rank);
+        #else
+        throw std::runtime_error("NetCDF support required to use per-formulation nexus files.");
+        #endif
+
         // One more barrier here to make sure other ranks wait while rank 0 creates the per-formulation nexus file
         MPI_Barrier(MPI_COMM_WORLD);
         #else
+
+        #ifdef NGEN_WITH_NETCDF
         nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root());
+        #else
+        throw std::runtime_error("NetCDF support required to use per-formulation nexus files.");
+        #endif
+
         #endif
     }
     else {
