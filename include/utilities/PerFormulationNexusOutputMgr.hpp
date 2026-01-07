@@ -94,6 +94,10 @@ namespace utils
                 local_offset += nexuses_per_rank[r];
             }
 
+            int total_nexuses = 0;
+            for (const int n : nexuses_per_rank) {
+                total_nexuses += n;
+            }
 
             for (const std::string& fid : *formulation_ids) {
                 std::string filename = output_root + "/formulation_" + fid + "_nexuses.nc";
@@ -105,7 +109,7 @@ namespace utils
                     /* ************************************************************************************************
                      * Important:  do not change order or add more dims w/out also updating commit_writes appropriately.
                      * ********************************************************************************************** */
-                    netCDF::NcDim dim_nexus = ncf.addDim(nc_nex_id_dim_name, nexus_ids.size());
+                    netCDF::NcDim dim_nexus = ncf.addDim(nc_nex_id_dim_name, total_nexuses);
                     netCDF::NcDim dim_time = ncf.addDim(nc_time_dim_name);
 
                     netCDF::NcVar flow = ncf.addVar(nc_flow_var_name, netCDF::ncDouble, {dim_nexus, dim_time});
