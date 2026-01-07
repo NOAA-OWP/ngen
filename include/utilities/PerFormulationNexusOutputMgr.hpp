@@ -10,6 +10,9 @@
 #include <vector>
 #include <algorithm>
 
+// Forward declaration to provide access to protected items in testing
+class PerFormulationNexusOutputMgr_Test;
+
 namespace utils
 {
 
@@ -21,6 +24,9 @@ namespace utils
      */
     class PerFormulationNexusOutputMgr : public NexusOutputsMgr
     {
+    private:
+        // For unit testing
+        friend class ::PerFormulationNexusOutputMgr_Test;
 
     public:
         virtual ~PerFormulationNexusOutputMgr() = default;
@@ -198,6 +204,20 @@ namespace utils
 
             data_cache[nexus_id] = flow_data_at_t;
         }
+
+    protected:
+        // This block of functions is mostly just for unit testing
+        std::unordered_map<std::string, double> get_data_cache() const { return data_cache; }
+        std::string get_current_formulation_id() const { return current_formulation_id; }
+        long get_current_time_index() const { return current_time_index; }
+        std::vector<std::string> get_nexus_ids() const { return nexus_ids; }
+        std::unordered_map<std::string, std::string> get_nexus_outfiles() const { return nexus_outfiles; }
+        int get_mpi_rank() const { return mpi_rank; }
+        std::vector<unsigned long>::size_type get_local_offset();
+        std::vector<int> get_nexuses_per_rank() const { return nexuses_per_rank; }
+        const std::string& get_nc_flow_var_name() const { return nc_flow_var_name; }
+        const std::string& get_nc_nex_id_dim_name() const { return nc_nex_id_dim_name; }
+        const std::string& get_nc_time_dim_name() const { return nc_time_dim_name; }
 
     private:
         /** Map of nexus ids to corresponding cached flow data from ``receive_data_entry``. */
