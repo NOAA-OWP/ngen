@@ -33,6 +33,15 @@ protected:
     // Per timestamp, per-nexus data
     std::vector<std::vector<double>> ex_0_data = {{1.0, 2.0, 3.0, 4.0}, {11.0, 12.0, 13.0, 14.0}};
 
+    std::shared_ptr<std::vector<std::string>> ex_1_form_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>{"form-0"});
+    std::vector<std::string> ex_1_form_0_group_a_nexus_ids = ex_0_form_0_nexus_ids;
+    std::vector<std::string> ex_1_form_0_group_b_nexus_ids = {"nex-5", "nex-6", "nex-7", "nex-8"};
+    std::vector<std::string> ex_1_form_0_all_nexus_id = {"nex-1", "nex-2", "nex-3", "nex-4", "nex-5", "nex-6", "nex-7", "nex-8"};
+    std::vector<std::vector<double>> ex_1_group_a_data = ex_0_data;
+    std::vector<std::vector<double>> ex_1_group_b_data = {{51.0, 52.0, 53.0, 54.0}, {61.0, 62.0, 63.0, 64.0}};
+    std::vector<std::vector<double>> ex_1_all_data = {{1.0, 2.0, 3.0, 4.0, 51.0, 52.0, 53.0, 54.0}, {11.0, 12.0, 13.0, 14.0, 61.0, 62.0, 63.0, 64.0}};
+    std::vector<std::string> ex_1_timestamps = {"2025-01-01T00:00:00Z", "2025-01-01T01:00:00Z"};
+
     std::vector<std::string> files_to_cleanup;
 
 };
@@ -47,8 +56,6 @@ void PerFormulationNexusOutputMgr_Test::SetUp()
     if (mkdir(output_root.c_str(), 0777) != 0) {
         throw std::runtime_error("Failed to create output root directory '" + output_root + "'");
     }
-
-    // TODO: have setup make sure no file(s) present where tests will produce them
 }
 
 void PerFormulationNexusOutputMgr_Test::TearDown()
@@ -69,11 +76,9 @@ void PerFormulationNexusOutputMgr_Test::TearDown()
     }
 }
 
-// TODO: (though elsewhere) test that the right type of mgr class is created per config settings
-// TODO: (though elsewhere) test that things work in the CSV version also
-// TODO: (though elsewhere) test that things only work if global formulation is exclusively used
-
-// TODO: test that receive_data_entry works but does not write anything
+// TODO: (later though elsewhere) test that the right type of mgr class is created per config settings
+// TODO: (later hough elsewhere) test that things work in the CSV version also
+// TODO: (later though elsewhere) test that things only work if global formulation is exclusively used
 
 /** Test that example 0 gets constructed and expects a single managed file. */
 TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_a)
@@ -294,7 +299,102 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_c) {
     ASSERT_THROW(mgr.commit_writes(), std::runtime_error);
 }
 
+/** Make sure writes work example 1 (multiple instances) for multiple time steps, alternating writes. */
+TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_a) {
 
-// TODO: (maybe) test that receive_data_entry and commit_writes keep things separate and write separate files for different formulations
+    std::string form_name = ex_1_form_names->at(0);
 
-// TODO: test that multiple instances can write to the same file successfully
+
+    std::vector<int> nexus_per_rank = {
+        static_cast<int>(ex_1_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_1_form_0_group_b_nexus_ids.size())
+    };
+
+    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 0, nexus_per_rank);
+    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 1, nexus_per_rank);
+
+    // Make sure we know what files to clean up (and these should be the same for each)
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    // Alternate writing, first all for group_a in a time step, then all for group b in a time step, then the next time step
+    for (int t = 0; t < ex_1_timestamps.size(); ++t) {
+        for (int n = 0; n < ex_1_form_0_group_a_nexus_ids.size(); ++n) {
+            mgr_a.receive_data_entry(form_name, ex_1_form_0_group_a_nexus_ids[n], t, ex_1_timestamps[t], ex_1_group_a_data[t][n]);
+        }
+        mgr_a.commit_writes();
+        for (int n = 0; n < ex_1_form_0_group_b_nexus_ids.size(); ++n) {
+            mgr_b.receive_data_entry(form_name, ex_1_form_0_group_b_nexus_ids[n], t, ex_1_timestamps[t], ex_1_group_b_data[t][n]);
+        }
+        mgr_b.commit_writes();
+    }
+
+    // Should still only be one filename
+    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_a));
+
+
+
+    ASSERT_FALSE(flow.isNull());
+    // Note that nexus feature_id dim comes before time dim, so have to order this way
+    double values[ex_1_form_0_all_nexus_id.size()][ex_1_all_data.size()];
+    flow.getVar(values);
+    for (size_t t = 0; t < ex_1_timestamps.size(); ++t) {
+        for (size_t n = 0; n < ex_1_form_0_all_nexus_id.size(); ++n) {
+            ASSERT_EQ(values[n][t], ex_1_all_data[t][n]);
+        }
+    }
+}
+
+/**
+ * Make sure writes work example 1 (multiple instances) for multiple time steps, where all the second instance stuff is
+ * written and then all the first instance stuff is written.
+ */
+TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_b) {
+
+    std::string form_name = ex_1_form_names->at(0);
+
+
+    std::vector<int> nexus_per_rank = {
+        static_cast<int>(ex_1_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_1_form_0_group_b_nexus_ids.size())
+    };
+
+    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 0, nexus_per_rank);
+    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 1, nexus_per_rank);
+
+    // Make sure we know what files to clean up (and these should be the same for each)
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    // Write all the b group stuff first
+    for (int t = 0; t < ex_1_timestamps.size(); ++t) {
+        for (int n = 0; n < ex_1_form_0_group_b_nexus_ids.size(); ++n) {
+            mgr_b.receive_data_entry(form_name, ex_1_form_0_group_b_nexus_ids[n], t, ex_1_timestamps[t], ex_1_group_b_data[t][n]);
+        }
+        mgr_b.commit_writes();
+    }
+    // Then come back and write all the a group stuff
+    for (int t = 0; t < ex_1_timestamps.size(); ++t) {
+        for (int n = 0; n < ex_1_form_0_group_a_nexus_ids.size(); ++n) {
+            mgr_a.receive_data_entry(form_name, ex_1_form_0_group_a_nexus_ids[n], t, ex_1_timestamps[t], ex_1_group_a_data[t][n]);
+        }
+        mgr_a.commit_writes();
+    }
+
+    // Should still only be one filename
+    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_a));
+
+    ASSERT_FALSE(flow.isNull());
+    // Note that nexus feature_id dim comes before time dim, so have to order this way
+    double values[ex_1_form_0_all_nexus_id.size()][ex_1_all_data.size()];
+    flow.getVar(values);
+    for (size_t t = 0; t < ex_1_timestamps.size(); ++t) {
+        for (size_t n = 0; n < ex_1_form_0_all_nexus_id.size(); ++n) {
+            ASSERT_EQ(values[n][t], ex_1_all_data[t][n]);
+        }
+    }
+}
