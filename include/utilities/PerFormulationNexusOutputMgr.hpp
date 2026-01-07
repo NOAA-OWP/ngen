@@ -104,10 +104,10 @@ namespace utils
                     /* ************************************************************************************************
                      * Important:  do not change order or add more dims w/out also updating commit_writes appropriately.
                      * ********************************************************************************************** */
-                    netCDF::NcDim dim_nexus = ncf.addDim("feature_id", nexus_ids.size());
-                    netCDF::NcDim dim_time = ncf.addDim("time");
+                    netCDF::NcDim dim_nexus = ncf.addDim(nc_nex_id_dim_name, nexus_ids.size());
+                    netCDF::NcDim dim_time = ncf.addDim(nc_time_dim_name);
 
-                    netCDF::NcVar flow = ncf.addVar("runoff_rate", netCDF::ncDouble, {dim_nexus, dim_time});
+                    netCDF::NcVar flow = ncf.addVar(nc_flow_var_name, netCDF::ncDouble, {dim_nexus, dim_time});
                 }
             }
         }
@@ -149,7 +149,7 @@ namespace utils
             const std::string filename = nexus_outfiles[current_formulation_id];
 
             const netCDF::NcFile ncf(filename, netCDF::NcFile::write);
-            const netCDF::NcVar flow = ncf.getVar("flow");
+            const netCDF::NcVar flow = ncf.getVar(nc_flow_var_name);
 
             // Assume base on how constructor was set up (imply for conciseness)
             //size_t nexus_dim_index = 0;
@@ -220,6 +220,11 @@ namespace utils
         const std::string& get_nc_time_dim_name() const { return nc_time_dim_name; }
 
     private:
+
+        const std::string nc_nex_id_dim_name = std::string("feature_id");
+        const std::string nc_time_dim_name = "time";
+        const std::string nc_flow_var_name = "runoff_rate";
+
         /** Map of nexus ids to corresponding cached flow data from ``receive_data_entry``. */
         std::unordered_map<std::string, double> data_cache;
         /** The current/last formulation id value received by `receive_data_entry`. */
