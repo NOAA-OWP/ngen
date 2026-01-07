@@ -19,11 +19,11 @@ protected:
     void SetUp() override;
     void TearDown() override;
 
-    std::string friend_get_current_formulation_id(utils::PerFormulationNexusOutputMgr* obj) { return obj->get_current_formulation_id(); }
-    std::unordered_map<std::string, std::string> friend_get_nexus_outfiles(utils::PerFormulationNexusOutputMgr* obj) { return obj->get_nexus_outfiles(); }
-    std::string friend_get_nc_flow_var_name(utils::PerFormulationNexusOutputMgr* obj) { return obj->get_nc_flow_var_name(); }
-    std::string friend_get_nc_nex_id_dim_name(utils::PerFormulationNexusOutputMgr* obj) { return obj->get_nc_nex_id_dim_name(); }
-    std::string friend_get_nc_time_dim_name(utils::PerFormulationNexusOutputMgr* obj) { return obj->get_nc_time_dim_name(); }
+    static std::string friend_get_current_formulation_id(const utils::PerFormulationNexusOutputMgr* obj) { return obj->get_current_formulation_id(); }
+    static std::unordered_map<std::string, std::string> friend_get_nexus_outfiles(const utils::PerFormulationNexusOutputMgr* obj) { return obj->get_nexus_outfiles(); }
+    static std::string friend_get_nc_flow_var_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->get_nc_flow_var_name(); }
+    static std::string friend_get_nc_nex_id_dim_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->get_nc_nex_id_dim_name(); }
+    static std::string friend_get_nc_time_dim_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->get_nc_time_dim_name(); }
 
     std::string output_root = "/tmp/PerFormulationNexusOutputMgrTest";
 
