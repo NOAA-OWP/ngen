@@ -35,6 +35,10 @@ if(NGEN_WITH_MPI)
     add_compile_definitions(NGEN_MPI_TESTS_ACTIVE)
 endif()
 
+if(NGEN_WITH_NETCDF)
+    add_compile_definitions(NGEN_NETCDF_TESTS_ACTIVE)
+endif()
+
 if(NGEN_WITH_BMI_C)
     add_compile_definitions(NGEN_BMI_C_LIB_TESTS_ACTIVE)
     add_external_subdirectory(

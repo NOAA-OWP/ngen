@@ -2,6 +2,8 @@
 // Created by Robert Bartel on 12/29/25.
 //
 
+#ifdef NGEN_NETCDF_TESTS_ACTIVE
+
 #include "gtest/gtest.h"
 #include "PerFormulationNexusOutputMgr.hpp"
 #include "FileChecker.h"
@@ -403,3 +405,5 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_b) {
         }
     }
 }
+
+#endif
