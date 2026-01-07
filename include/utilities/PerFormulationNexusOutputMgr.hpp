@@ -165,6 +165,19 @@ namespace utils
         }
 
         /**
+         * Get a new vector containing the filenames for managed files for this instance.
+         *
+         * @return Pointer to new vector with the managed files for this instance.
+         */
+        std::shared_ptr<std::vector<std::string>> get_filenames() {
+            std::shared_ptr<std::vector<std::string>> filenames(new std::vector<std::string>());
+            for (const auto& pair : nexus_outfiles) {
+                filenames->push_back(pair.second);
+            }
+            return filenames;
+        }
+
+        /**
          * Get whether this instance manages writing data for the given nexus to a managed data file.
          *
          * @param nexus_id The id for the Nexus of interest.
