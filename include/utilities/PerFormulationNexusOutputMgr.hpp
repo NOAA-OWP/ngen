@@ -158,6 +158,8 @@ namespace utils
             const std::vector<size_t> count = {nexus_ids.size(), 1};
 
             flow.putVar(start, count, data.data());
+
+            current_time_index++;
             data_cache.clear();
             current_formulation_id.clear();
         }
