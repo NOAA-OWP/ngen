@@ -10,6 +10,9 @@
 #include <vector>
 #include <algorithm>
 
+// Forward declaration to provide access to protected items in testing
+class PerFormulationNexusOutputMgr_Test;
+
 namespace utils
 {
 
@@ -21,6 +24,9 @@ namespace utils
      */
     class PerFormulationNexusOutputMgr : public NexusOutputsMgr
     {
+    private:
+        // For unit testing
+        friend class ::PerFormulationNexusOutputMgr_Test;
 
     public:
         virtual ~PerFormulationNexusOutputMgr() = default;
@@ -88,20 +94,25 @@ namespace utils
                 local_offset += nexuses_per_rank[r];
             }
 
-            // Have rank 0 set up the files
-            if (this->mpi_rank == 0) {
-                for (const std::string& fid : *formulation_ids) {
-                    std::string filename = output_root + "/formulation_" + fid + "_nexuses.nc";
-                    nexus_outfiles[fid] = filename;
+            int total_nexuses = 0;
+            for (const int n : nexuses_per_rank) {
+                total_nexuses += n;
+            }
 
+            for (const std::string& fid : *formulation_ids) {
+                std::string filename = output_root + "/formulation_" + fid + "_nexuses.nc";
+                nexus_outfiles[fid] = filename;
+
+                // Have rank 0 set up the files
+                if (this->mpi_rank == 0) {
                     netCDF::NcFile ncf(filename, netCDF::NcFile::replace);
                     /* ************************************************************************************************
                      * Important:  do not change order or add more dims w/out also updating commit_writes appropriately.
                      * ********************************************************************************************** */
-                    netCDF::NcDim dim_nexus = ncf.addDim("feature_id", nexus_ids.size());
-                    netCDF::NcDim dim_time = ncf.addDim("time");
+                    netCDF::NcDim dim_nexus = ncf.addDim(nc_nex_id_dim_name, total_nexuses);
+                    netCDF::NcDim dim_time = ncf.addDim(nc_time_dim_name);
 
-                    netCDF::NcVar flow = ncf.addVar("runoff_rate", netCDF::ncDouble, {dim_nexus, dim_time});
+                    netCDF::NcVar flow = ncf.addVar(nc_flow_var_name, netCDF::ncDouble, {dim_nexus, dim_time});
                 }
             }
         }
@@ -120,7 +131,10 @@ namespace utils
         /**
          * Write any received data entries that were not written immediately upon receipt to the managed data files.
          *
-         * Function expects/requires data for all local nexus ids to have been received.
+         * Function expects/requires data for all local nexus ids to have been received. Since it expects this, it also
+         * increments the ::attribute:`current_time_index` value before exiting.
+         *
+         * Additionally, it clears the current ::attribute:`data_cache` and ::attribute:`current_formulation_id` values.
          */
         void commit_writes() override {
             // If no current formulation id set, that should mean there is nothing to write
@@ -143,7 +157,7 @@ namespace utils
             const std::string filename = nexus_outfiles[current_formulation_id];
 
             const netCDF::NcFile ncf(filename, netCDF::NcFile::write);
-            const netCDF::NcVar flow = ncf.getVar("flow");
+            const netCDF::NcVar flow = ncf.getVar(nc_flow_var_name);
 
             // Assume base on how constructor was set up (imply for conciseness)
             //size_t nexus_dim_index = 0;
@@ -152,8 +166,23 @@ namespace utils
             const std::vector<size_t> count = {nexus_ids.size(), 1};
 
             flow.putVar(start, count, data.data());
+
+            current_time_index++;
             data_cache.clear();
             current_formulation_id.clear();
+        }
+
+        /**
+         * Get a new vector containing the filenames for managed files for this instance.
+         *
+         * @return Pointer to new vector with the managed files for this instance.
+         */
+        std::shared_ptr<std::vector<std::string>> get_filenames() {
+            std::shared_ptr<std::vector<std::string>> filenames(new std::vector<std::string>());
+            for (const auto& pair : nexus_outfiles) {
+                filenames->push_back(pair.second);
+            }
+            return filenames;
         }
 
         /**
@@ -168,8 +197,6 @@ namespace utils
 
         /**
          * Receive a data entry for this nexus, specifying details including the formulation id.
-         *
-         * Note that formulation id must be the default value when this instance is managing CSV output files.
          *
          * @param formulation_id The id of the formulation involved in producing this data.
          * @param nexus_id The id for the nexus to which this data applies.
@@ -199,7 +226,26 @@ namespace utils
             data_cache[nexus_id] = flow_data_at_t;
         }
 
+    protected:
+        // This block of functions is mostly just for unit testing
+        std::unordered_map<std::string, double> get_data_cache() const { return data_cache; }
+        std::string get_current_formulation_id() const { return current_formulation_id; }
+        long get_current_time_index() const { return current_time_index; }
+        std::vector<std::string> get_nexus_ids() const { return nexus_ids; }
+        std::unordered_map<std::string, std::string> get_nexus_outfiles() const { return nexus_outfiles; }
+        int get_mpi_rank() const { return mpi_rank; }
+        std::vector<unsigned long>::size_type get_local_offset();
+        std::vector<int> get_nexuses_per_rank() const { return nexuses_per_rank; }
+        const std::string& get_nc_flow_var_name() const { return nc_flow_var_name; }
+        const std::string& get_nc_nex_id_dim_name() const { return nc_nex_id_dim_name; }
+        const std::string& get_nc_time_dim_name() const { return nc_time_dim_name; }
+
     private:
+
+        const std::string nc_nex_id_dim_name = std::string("feature_id");
+        const std::string nc_time_dim_name = "time";
+        const std::string nc_flow_var_name = "runoff_rate";
+
         /** Map of nexus ids to corresponding cached flow data from ``receive_data_entry``. */
         std::unordered_map<std::string, double> data_cache;
         /** The current/last formulation id value received by `receive_data_entry`. */
