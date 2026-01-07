@@ -12,24 +12,32 @@
 
 #include "HY_HydroNexus.hpp"
 
-class PerFormulationNexusOutputMgrTest: public ::testing::Test {
+class PerFormulationNexusOutputMgr_Test: public ::testing::Test {
 
 protected:
 
     void SetUp() override;
     void TearDown() override;
 
+    std::string friend_get_current_formulation_id(utils::PerFormulationNexusOutputMgr* obj) { return obj->get_current_formulation_id(); }
+    std::unordered_map<std::string, std::string> friend_get_nexus_outfiles(utils::PerFormulationNexusOutputMgr* obj) { return obj->get_nexus_outfiles(); }
+    std::string friend_get_nc_flow_var_name(utils::PerFormulationNexusOutputMgr* obj) { return obj->get_nc_flow_var_name(); }
+    std::string friend_get_nc_nex_id_dim_name(utils::PerFormulationNexusOutputMgr* obj) { return obj->get_nc_nex_id_dim_name(); }
+    std::string friend_get_nc_time_dim_name(utils::PerFormulationNexusOutputMgr* obj) { return obj->get_nc_time_dim_name(); }
+
     std::string output_root = "/tmp/PerFormulationNexusOutputMgrTest";
 
     std::vector<std::string> ex_0_form_0_nexus_ids = {"nex-1", "nex-2", "nex-3", "nex-4"};
     std::shared_ptr<std::vector<std::string>> ex_0_form_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>{"form-0"});
-    std::vector<std::string> ex_0_timestamps = {"2025-01-01T00:00:00Z"};
+    std::vector<std::string> ex_0_timestamps = {"2025-01-01T00:00:00Z", "2025-01-01T01:00:00Z"};
     // Per timestamp, per-nexus data
     std::vector<std::vector<double>> ex_0_data = {{1.0, 2.0, 3.0, 4.0}, {11.0, 12.0, 13.0, 14.0}};
 
+    std::vector<std::string> files_to_cleanup;
+
 };
 
-void PerFormulationNexusOutputMgrTest::SetUp()
+void PerFormulationNexusOutputMgr_Test::SetUp()
 {
     Test::SetUp();
 
@@ -43,12 +51,21 @@ void PerFormulationNexusOutputMgrTest::SetUp()
     // TODO: have setup make sure no file(s) present where tests will produce them
 }
 
-void PerFormulationNexusOutputMgrTest::TearDown()
+void PerFormulationNexusOutputMgr_Test::TearDown()
 {
     Test::TearDown();
-    // TODO: have tearDown clean up produced file(s)
+
+    // Have tearDown clean up produced file(s) and directory
+    for (const auto& f : files_to_cleanup) {
+        if (std::remove(f.c_str()) != 0) {
+            throw std::runtime_error("Failed to cleanup file '" + f + "'");
+        }
+    }
     if (utils::FileChecker::directory_exists(output_root)) {
         rmdir(output_root.c_str());
+    }
+    else {
+        throw std::runtime_error("Output root directory '" + output_root + "' does not appear to exist after tests!!!");
     }
 }
 
@@ -58,34 +75,226 @@ void PerFormulationNexusOutputMgrTest::TearDown()
 
 // TODO: test that receive_data_entry works but does not write anything
 
+/** Test that example 0 gets constructed and expects a single managed file. */
+TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_a)
+{
+    int nex_id_index = 0;
+    std::string form_name = ex_0_form_0_nexus_ids[0];
+    int time_index = 0;
 
-TEST_F(PerFormulationNexusOutputMgrTest, receive_data_entry_0_a) {
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    ASSERT_EQ(filenames->size(), 1);
+}
+
+/** Test that example 0 gets constructed and single instance creates the NetCDF file. */
+TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_b)
+{
+    int nex_id_index = 0;
+    std::string form_name = ex_0_form_0_nexus_ids[0];
+    int time_index = 0;
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    ASSERT_TRUE(utils::FileChecker::file_can_be_written(filenames->at(0)));
+}
+
+/** Test that example 0 gets constructed and has expected nexus output files. */
+TEST_F(PerFormulationNexusOutputMgr_Test, nexus_out_files_0_a)
+{
+    int nex_id_index = 0;
+    std::string form_name = ex_0_form_0_nexus_ids[0];
+    int time_index = 0;
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    std::unordered_map<std::string, std::string> nexus_outfiles = friend_get_nexus_outfiles(&mgr);
+    ASSERT_EQ(nexus_outfiles.size(), ex_0_form_names->size());
+    for (size_t i = 0; i < ex_0_form_names->size(); ++i) {
+        ASSERT_TRUE(nexus_outfiles.find(ex_0_form_names->at(i)) != nexus_outfiles.end());
+    }
+}
+
+/** Test that current formulation id is as expected after receiving data entry. */
+TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_a) {
 
     int nex_id_index = 0;
     std::string form_name = ex_0_form_0_nexus_ids[0];
     int time_index = 0;
 
     utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
     mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[nex_id_index], time_index, ex_0_timestamps[time_index], ex_0_data[time_index][nex_id_index]);
 
+    std::string current_form_id = friend_get_current_formulation_id(&mgr);
+    ASSERT_EQ(current_form_id, form_name);
 }
 
+/** Make sure can't receive data additional data entries for more than one time steps without writing first. */
+TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_b)
+{
+    int nex_id_index = 0;
+    std::string form_name = ex_0_form_names->at(0);
+    int time_index = 0;
 
-// TODO: test that commit_writes actually writes things
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root);
 
-// TODO: test that commit_writes writes everything for multiple time steps
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
 
-// TODO: test that commit_writes writes everything for multiple nexuses
 
-// TODO: test that commit_writes doesn't work unless we've received data for all nexuses for a time step
+    for (int n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
+        mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], 0, ex_0_timestamps[0], ex_0_data[0][n]);
+    }
 
-// TODO: test that receive_data_entry doesn't work if we get data for different time steps
+    ASSERT_THROW(mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[0], 1, ex_0_timestamps[1], ex_0_data[1][0]),
+                 std::runtime_error);
+}
+
+/** Test that receive_data_entry doesn't actually write any data to the file. */
+TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_c) {
+
+    std::string form_name = ex_0_form_names->at(0);
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    for (int n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
+        mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], 0, ex_0_timestamps[0], ex_0_data[0][n]);
+    }
+
+    // Should only be one filename
+    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+
+    ASSERT_FALSE(flow.isNull());
+    double values[ex_0_form_0_nexus_ids.size()];
+    flow.getVar(values);
+    for (size_t i = 0; i < ex_0_form_0_nexus_ids.size(); ++i) {
+        ASSERT_NE(values[i], ex_0_data[0][i]);
+    }
+}
+
+/** Make sure writes work for example 0 (single instance) for a single time step. */
+TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_a) {
+
+    std::string form_name = ex_0_form_names->at(0);
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    for (int n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
+        mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], 0, ex_0_timestamps[0], ex_0_data[0][n]);
+    }
+    mgr.commit_writes();
+
+    // Should only be one filename
+    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+
+    ASSERT_FALSE(flow.isNull());
+    double values[ex_0_form_0_nexus_ids.size()];
+    flow.getVar(values);
+    for (size_t i = 0; i < ex_0_form_0_nexus_ids.size(); ++i) {
+        ASSERT_EQ(values[i], ex_0_data[0][i]);
+    }
+}
+
+/** Make sure writes work example 0 (single instance) for multiple time steps. */
+TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_b) {
+
+    int nex_id_index = 0;
+    std::string form_name = ex_0_form_names->at(0);
+    int time_index = 0;
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    for (int t = 0; t < ex_0_timestamps.size(); ++t) {
+        for (int n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
+            mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], t, ex_0_timestamps[t], ex_0_data[t][n]);
+        }
+        mgr.commit_writes();
+    }
+
+    // Should only be one filename
+    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+
+    ASSERT_FALSE(flow.isNull());
+    // Note that nexus feature_id dim comes before time dim, so have to order this way
+    double values[ex_0_form_0_nexus_ids.size()][ex_0_data.size()];
+    flow.getVar(values);
+    for (size_t t = 0; t < ex_0_timestamps.size(); ++t) {
+        for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
+            ASSERT_EQ(values[n][t], ex_0_data[t][n]);
+        }
+    }
+}
+
+/** Make sure writes don't work for example 0 if it has not received data for all managed nexuses. */
+TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_c) {
+
+    std::string form_name = ex_0_form_names->at(0);
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    // Importantly, using " - 1" below to not do things for all the nexuses
+    for (int n = 0; n < ex_0_form_0_nexus_ids.size() - 1; ++n) {
+        mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], 0, ex_0_timestamps[0], ex_0_data[0][n]);
+    }
+    ASSERT_THROW(mgr.commit_writes(), std::runtime_error);
+}
+
 
 // TODO: (maybe) test that receive_data_entry and commit_writes keep things separate and write separate files for different formulations
 
 // TODO: test that multiple instances can write to the same file successfully
-
-// TODO: test that output format is as expected
-
-
-
