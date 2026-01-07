@@ -205,7 +205,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_c) {
     const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
 
     ASSERT_FALSE(flow.isNull());
-    double values[ex_0_form_0_nexus_ids.size()];
+    //double values[ex_0_form_0_nexus_ids.size()];
+    double values[4];
     flow.getVar(values);
     for (size_t i = 0; i < ex_0_form_0_nexus_ids.size(); ++i) {
         ASSERT_NE(values[i], ex_0_data[0][i]);
@@ -235,7 +236,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_a) {
     const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
 
     ASSERT_FALSE(flow.isNull());
-    double values[ex_0_form_0_nexus_ids.size()];
+    //double values[ex_0_form_0_nexus_ids.size()];
+    double values[4];
     flow.getVar(values);
     for (size_t i = 0; i < ex_0_form_0_nexus_ids.size(); ++i) {
         ASSERT_EQ(values[i], ex_0_data[0][i]);
@@ -270,7 +272,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_b) {
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
-    double values[ex_0_form_0_nexus_ids.size()][ex_0_data.size()];
+    //double values[ex_0_form_0_nexus_ids.size()][ex_0_data.size()];
+    double values[4][2];
     flow.getVar(values);
     for (size_t t = 0; t < ex_0_timestamps.size(); ++t) {
         for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
@@ -338,7 +341,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_a) {
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
-    double values[ex_1_form_0_all_nexus_id.size()][ex_1_all_data.size()];
+    //double values[ex_1_form_0_all_nexus_id.size()][ex_1_all_data.size()];
+    double values[8][2];
     flow.getVar(values);
     for (size_t t = 0; t < ex_1_timestamps.size(); ++t) {
         for (size_t n = 0; n < ex_1_form_0_all_nexus_id.size(); ++n) {
@@ -390,7 +394,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_b) {
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
-    double values[ex_1_form_0_all_nexus_id.size()][ex_1_all_data.size()];
+    //double values[ex_1_form_0_all_nexus_id.size()][ex_1_all_data.size()];
+    double values[8][2];
     flow.getVar(values);
     for (size_t t = 0; t < ex_1_timestamps.size(); ++t) {
         for (size_t n = 0; n < ex_1_form_0_all_nexus_id.size(); ++n) {
