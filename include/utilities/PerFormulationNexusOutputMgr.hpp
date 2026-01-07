@@ -94,12 +94,13 @@ namespace utils
                 local_offset += nexuses_per_rank[r];
             }
 
-            // Have rank 0 set up the files
-            if (this->mpi_rank == 0) {
-                for (const std::string& fid : *formulation_ids) {
-                    std::string filename = output_root + "/formulation_" + fid + "_nexuses.nc";
-                    nexus_outfiles[fid] = filename;
 
+            for (const std::string& fid : *formulation_ids) {
+                std::string filename = output_root + "/formulation_" + fid + "_nexuses.nc";
+                nexus_outfiles[fid] = filename;
+
+                // Have rank 0 set up the files
+                if (this->mpi_rank == 0) {
                     netCDF::NcFile ncf(filename, netCDF::NcFile::replace);
                     /* ************************************************************************************************
                      * Important:  do not change order or add more dims w/out also updating commit_writes appropriately.
@@ -126,7 +127,10 @@ namespace utils
         /**
          * Write any received data entries that were not written immediately upon receipt to the managed data files.
          *
-         * Function expects/requires data for all local nexus ids to have been received.
+         * Function expects/requires data for all local nexus ids to have been received. Since it expects this, it also
+         * increments the ::attribute:`current_time_index` value before exiting.
+         *
+         * Additionally, it clears the current ::attribute:`data_cache` and ::attribute:`current_formulation_id` values.
          */
         void commit_writes() override {
             // If no current formulation id set, that should mean there is nothing to write
@@ -189,8 +193,6 @@ namespace utils
 
         /**
          * Receive a data entry for this nexus, specifying details including the formulation id.
-         *
-         * Note that formulation id must be the default value when this instance is managing CSV output files.
          *
          * @param formulation_id The id of the formulation involved in producing this data.
          * @param nexus_id The id for the nexus to which this data applies.
