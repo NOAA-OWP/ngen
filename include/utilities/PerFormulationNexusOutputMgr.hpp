@@ -8,6 +8,7 @@
 #include "NexusOutputsMgr.hpp"
 #include <netcdf>
 #include <vector>
+#include <unordered_map>
 #include <algorithm>
 
 // Forward declaration to provide access to protected items in testing
@@ -88,10 +89,10 @@ namespace utils
                 formulation_ids->push_back(get_default_formulation_id());
             }
 
-            local_offset = 0;
+            this->local_offset = 0;
 
             for (size_t r = 0; r < mpi_rank; ++r) {
-                local_offset += nexuses_per_rank[r];
+                this->local_offset += nexuses_per_rank[r];
             }
 
             int total_nexuses = 0;
@@ -101,7 +102,7 @@ namespace utils
 
             for (const std::string& fid : *formulation_ids) {
                 std::string filename = output_root + "/formulation_" + fid + "_nexuses.nc";
-                nexus_outfiles[fid] = filename;
+                this->nexus_outfiles[fid] = filename;
 
                 // Have rank 0 set up the files
                 if (this->mpi_rank == 0) {
@@ -109,10 +110,10 @@ namespace utils
                     /* ************************************************************************************************
                      * Important:  do not change order or add more dims w/out also updating commit_writes appropriately.
                      * ********************************************************************************************** */
-                    netCDF::NcDim dim_nexus = ncf.addDim(nc_nex_id_dim_name, total_nexuses);
-                    netCDF::NcDim dim_time = ncf.addDim(nc_time_dim_name);
+                    netCDF::NcDim dim_nexus = ncf.addDim(this->nc_nex_id_dim_name, total_nexuses);
+                    netCDF::NcDim dim_time = ncf.addDim(this->nc_time_dim_name);
 
-                    netCDF::NcVar flow = ncf.addVar(nc_flow_var_name, netCDF::ncDouble, {dim_nexus, dim_time});
+                    netCDF::NcVar flow = ncf.addVar(this->nc_flow_var_name, netCDF::ncDouble, {dim_nexus, dim_time});
                 }
             }
         }
