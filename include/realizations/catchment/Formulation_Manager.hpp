@@ -59,7 +59,11 @@ namespace realization {
                 // TODO: (later) consider whether this really belongs inside the global formulation
                 auto per_formulation_setting = tree.get_child_optional("per_formulation_nexus_files");
                 if (per_formulation_setting) {
+                    #if NGEN_WITH_NETCDF
                     use_per_formulation_nexus_files = per_formulation_setting->get_value<bool>();
+                    #else
+                    throw std::runtime_error("ERROR: per_formulation_nexus_files is set to true, but NGEN was built without NetCDF support.");
+                    #endif
                 }
                 else {
                     use_per_formulation_nexus_files = false;
