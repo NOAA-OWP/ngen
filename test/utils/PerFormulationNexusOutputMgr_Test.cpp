@@ -133,7 +133,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, nexus_out_files_0_a)
         files_to_cleanup.push_back(f);
     }
 
-    std::unordered_map<std::string, std::string> nexus_outfiles = friend_get_nexus_outfiles(&mgr);
+    std::unordered_map<std::string, std::string> nexus_outfiles = PerFormulationNexusOutputMgr_Test::friend_get_nexus_outfiles(&mgr);
     ASSERT_EQ(nexus_outfiles.size(), ex_0_form_names->size());
     for (size_t i = 0; i < ex_0_form_names->size(); ++i) {
         ASSERT_TRUE(nexus_outfiles.find(ex_0_form_names->at(i)) != nexus_outfiles.end());
@@ -157,7 +157,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_a) {
 
     mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[nex_id_index], time_index, ex_0_timestamps[time_index], ex_0_data[time_index][nex_id_index]);
 
-    std::string current_form_id = friend_get_current_formulation_id(&mgr);
+    std::string current_form_id = PerFormulationNexusOutputMgr_Test::friend_get_current_formulation_id(&mgr);
     ASSERT_EQ(current_form_id, form_name);
 }
 
@@ -204,7 +204,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_c) {
 
     // Should only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+    const netCDF::NcVar flow = ncf.getVar(PerFormulationNexusOutputMgr_Test::friend_get_nc_flow_var_name(&mgr));
 
     ASSERT_FALSE(flow.isNull());
     //double values[ex_0_form_0_nexus_ids.size()];
@@ -235,7 +235,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_a) {
 
     // Should only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+    const netCDF::NcVar flow = ncf.getVar(PerFormulationNexusOutputMgr_Test::friend_get_nc_flow_var_name(&mgr));
 
     ASSERT_FALSE(flow.isNull());
     //double values[ex_0_form_0_nexus_ids.size()];
@@ -270,7 +270,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_b) {
 
     // Should only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+    const netCDF::NcVar flow = ncf.getVar(PerFormulationNexusOutputMgr_Test::friend_get_nc_flow_var_name(&mgr));
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
@@ -337,7 +337,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_a) {
 
     // Should still only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_a));
+    const netCDF::NcVar flow = ncf.getVar(PerFormulationNexusOutputMgr_Test::friend_get_nc_flow_var_name(&mgr_a));
 
 
 
@@ -392,7 +392,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_b) {
 
     // Should still only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_a));
+    const netCDF::NcVar flow = ncf.getVar(PerFormulationNexusOutputMgr_Test::friend_get_nc_flow_var_name(&mgr_a));
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
