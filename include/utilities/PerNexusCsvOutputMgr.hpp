@@ -61,10 +61,13 @@ namespace utils
          * @param formulation_id The id of the formulation involved in producing this data.
          * @param nexus_id The id for the nexus to which this data applies.
          * @param current_time_index The simulation output time index for the data.
-         * @param current_timestamp The timestamp for the data.
+         * @param current_epoch_time The corresponding epoch simulation time for current time index, and for the data.
+         * @param current_timestamp The timestamp corresponding to the current epoche time.
          * @param flow_data_at_t The nexus flow contribution at this time index (the main data to write).
          */
-        void receive_data_entry(const std::string &formulation_id, const std::string &nexus_id, long current_time_index, const std::string &current_timestamp, double flow_data_at_t) override {
+        void receive_data_entry(const std::string &formulation_id, const std::string &nexus_id, long current_time_index,
+                                const time_t& current_epoch_time, const std::string &current_timestamp,
+                                double flow_data_at_t) override {
             if (formulation_id != get_default_formulation_id()) {
                 throw std::runtime_error("Cannot write data entry for non-default formulation " + formulation_id + " for nexus " + nexus_id + " when per-nexus CSV output is enabled.");
             }
