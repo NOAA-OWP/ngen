@@ -120,36 +120,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_b)
     ASSERT_TRUE(utils::FileChecker::file_can_be_written(filenames->at(0)));
 }
 
-/** Test that example 0 gets constructed and has the nexus id var values written to the NetCDF file. */
-TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_c)
-{
-    std::string form_name = ex_0_form_0_nexus_ids[0];
-
-    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root);
-
-    // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
-
-    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar nexus_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr));
-
-    // These should all have size 4 for the current example, equal to the size of ex_0_form_0_nexus_ids
-    ASSERT_EQ(nexus_ids.getDim(0).getSize(), 4);
-
-    std::vector<unsigned int> nex_id_numeric(4);
-    nexus_ids.getVar(nex_id_numeric.data());
-
-    std::vector<std::string> nex_id_strs(nex_id_numeric.size());
-    for (size_t i = 0; i < nex_id_strs.size(); ++i) {
-        nex_id_strs[i] = "nex-" + std::to_string(nex_id_numeric[i]);
-    }
-
-    ASSERT_EQ(nex_id_strs, ex_0_form_0_nexus_ids);
-}
-
 /** Test that example 0 gets constructed and has expected nexus output files. */
 TEST_F(PerFormulationNexusOutputMgr_Test, nexus_out_files_0_a)
 {
@@ -339,6 +309,41 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_c) {
     ASSERT_THROW(mgr.commit_writes(), std::runtime_error);
 }
 
+/** Test that example 0 has the nexus id var values written to the NetCDF file. */
+TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_d)
+{
+    std::string form_name = ex_0_form_names->at(0);
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    for (int n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
+        mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], 0, ex_0_timestamps_seconds[0], ex_0_timestamps[0], ex_0_data[0][n]);
+    }
+    mgr.commit_writes();
+
+    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+    const netCDF::NcVar nexus_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr));
+
+    // These should all have size 4 for the current example, equal to the size of ex_0_form_0_nexus_ids
+    ASSERT_EQ(nexus_ids.getDim(0).getSize(), 4);
+
+    std::vector<unsigned int> nex_id_numeric(4);
+    nexus_ids.getVar(nex_id_numeric.data());
+
+    std::vector<std::string> nex_id_strs(nex_id_numeric.size());
+    for (size_t i = 0; i < nex_id_strs.size(); ++i) {
+        nex_id_strs[i] = "nex-" + std::to_string(nex_id_numeric[i]);
+    }
+
+    ASSERT_EQ(nex_id_strs, ex_0_form_0_nexus_ids);
+}
+
 /** Make sure writes work example 1 (multiple instances) for multiple time steps, alternating writes. */
 TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_a) {
 
@@ -439,6 +444,53 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_b) {
             ASSERT_EQ(values[n][t], ex_1_all_data[t][n]);
         }
     }
+}
+
+/** Test that example 1 has the nexus id var values written to the NetCDF file with multiple instances. */
+TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_c)
+{
+    std::string form_name = ex_1_form_names->at(0);
+
+    std::vector<int> nexus_per_rank = {
+        static_cast<int>(ex_1_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_1_form_0_group_b_nexus_ids.size())
+    };
+
+    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 0, nexus_per_rank);
+    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 1, nexus_per_rank);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    // Alternate writing, first all for group_a in a time step, then all for group b in a time step, then the next time step
+    for (int t = 0; t < ex_1_timestamps.size(); ++t) {
+        for (int n = 0; n < ex_1_form_0_group_a_nexus_ids.size(); ++n) {
+            mgr_a.receive_data_entry(form_name, ex_1_form_0_group_a_nexus_ids[n], t, ex_1_timestamps_seconds[t], ex_1_timestamps[t], ex_1_group_a_data[t][n]);
+        }
+        mgr_a.commit_writes();
+        for (int n = 0; n < ex_1_form_0_group_b_nexus_ids.size(); ++n) {
+            mgr_b.receive_data_entry(form_name, ex_1_form_0_group_b_nexus_ids[n], t, ex_1_timestamps_seconds[t], ex_1_timestamps[t], ex_1_group_b_data[t][n]);
+        }
+        mgr_b.commit_writes();
+    }
+
+
+    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+    const netCDF::NcVar nexus_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr_a));
+
+    // These should all have size 8 for the current example, equal to the size of ex_1_form_0_all_nexus_id
+    ASSERT_EQ(nexus_ids.getDim(0).getSize(), 8);
+    std::vector<unsigned int> nex_id_numeric(8);
+    nexus_ids.getVar(nex_id_numeric.data());
+
+    std::vector<std::string> nex_id_strs(nex_id_numeric.size());
+    for (size_t i = 0; i < nex_id_strs.size(); ++i) {
+        nex_id_strs[i] = "nex-" + std::to_string(nex_id_numeric[i]);
+    }
+
+    ASSERT_EQ(nex_id_strs, ex_1_form_0_all_nexus_id);
 }
 
 #endif
