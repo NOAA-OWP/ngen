@@ -25,9 +25,6 @@ namespace utils
      */
     class PerFormulationNexusOutputMgr : public NexusOutputsMgr
     {
-    private:
-        // For unit testing
-        friend class ::PerFormulationNexusOutputMgr_Test;
 
     public:
         virtual ~PerFormulationNexusOutputMgr() = default;
@@ -95,7 +92,7 @@ namespace utils
                 this->local_offset += nexuses_per_rank[r];
             }
 
-            int total_nexuses = 0;
+            size_t total_nexuses = 0;
             for (const int n : nexuses_per_rank) {
                 total_nexuses += n;
             }
@@ -106,14 +103,25 @@ namespace utils
 
                 // Have rank 0 set up the files
                 if (this->mpi_rank == 0) {
-                    netCDF::NcFile ncf(filename, netCDF::NcFile::replace);
+                    netCDF::NcFile ncf(filename, netCDF::NcFile::replace, netCDF::NcFile::nc4);
                     /* ************************************************************************************************
                      * Important:  do not change order or add more dims w/out also updating commit_writes appropriately.
                      * ********************************************************************************************** */
                     netCDF::NcDim dim_nexus = ncf.addDim(this->nc_nex_id_dim_name, total_nexuses);
                     netCDF::NcDim dim_time = ncf.addDim(this->nc_time_dim_name);
 
-                    netCDF::NcVar flow = ncf.addVar(this->nc_flow_var_name, netCDF::ncDouble, {dim_nexus, dim_time});
+                    netCDF::NcVar var_nexus = ncf.addVar(this->nc_nex_id_dim_name, netCDF::ncUint, {dim_nexus});
+                    var_nexus.putAtt("long_name", "Feature ID");
+
+                    netCDF::NcVar var_time = ncf.addVar(this->nc_time_dim_name, netCDF::ncUint, {dim_time});
+                    var_time.putAtt("units", "minutes since 1970-01-01 00:00:00");
+                    var_time.putAtt("calendar", "gregorian");
+                    var_time.putAtt("long_name", "Time");
+
+                    netCDF::NcVar var_flow = ncf.addVar(this->nc_flow_var_name, netCDF::ncDouble, {dim_nexus, dim_time});
+                    var_flow.putAtt("units", "m3 s-1");
+                    var_flow.putAtt("long_name", "Simulated Surface Runoff");
+                    var_flow.setFill(true, -9999.0);
                 }
             }
         }
@@ -157,7 +165,25 @@ namespace utils
 
             const std::string filename = nexus_outfiles[current_formulation_id];
 
-            const netCDF::NcFile ncf(filename, netCDF::NcFile::write);
+            const netCDF::NcFile ncf(filename, netCDF::NcFile::write, netCDF::NcFile::nc4);
+
+            // On the first write, also write the nexus id variable values
+            if (current_time_index == 0) {
+                std::vector<unsigned int> numeric_nex_ids(this->nexus_ids.size());
+                char delimiter = '-';
+
+                for (size_t i = 0; i < this->nexus_ids.size(); ++i) {
+                    std::string::size_type pos = this->nexus_ids[i].find(delimiter);
+                    if (pos == std::string::npos) {
+                        throw std::runtime_error("Invalid nexus id '" + this->nexus_ids[i] + "' (no delimiter '"
+                                                 + std::string(1, delimiter) + "').");
+                    }
+                    numeric_nex_ids[i] = std::stoi(this->nexus_ids[i].substr(pos + 1));
+                }
+                const netCDF::NcVar var_nexus = ncf.getVar(nc_nex_id_dim_name);
+                var_nexus.putVar({this->local_offset}, {numeric_nex_ids.size()}, numeric_nex_ids.data());
+            }
+
             const netCDF::NcVar flow = ncf.getVar(nc_flow_var_name);
 
             // Assume base on how constructor was set up (imply for conciseness)
@@ -168,7 +194,17 @@ namespace utils
 
             flow.putVar(start, count, data.data());
 
+            // For just rank 0, write the time value also
+            if (mpi_rank == 0) {
+                const netCDF::NcVar timestamp = ncf.getVar(nc_time_dim_name);
+                time_t epoch_minutes = current_epoch_time / 60;
+                // TODO: (later) consider if we need to sanity check that times are consistent across ranks (we were
+                // TODO:        effectively assuming this to be the case when not explicitly writing times).
+                timestamp.putVar(std::vector<size_t>{static_cast<size_t>(current_time_index)}, std::vector<size_t>{1}, &epoch_minutes);
+            }
+
             current_time_index++;
+            current_epoch_time = 0;
             data_cache.clear();
             current_formulation_id.clear();
         }
@@ -226,6 +262,17 @@ namespace utils
                     std::to_string(this->current_time_index) + ".");
             }
 
+            if (this->current_epoch_time == 0) {
+                this->current_epoch_time = current_epoch_time;
+            }
+            else if (this->current_epoch_time != current_epoch_time) {
+                throw std::runtime_error(
+                    "Cannot receive data for formulation " + formulation_id + " for nexus " + nexus_id +
+                    ": expected '" + std::to_string(this->current_epoch_time) + "' for epoch time at current time " +
+                    "index " + std::to_string(this->current_time_index) + " but got '"
+                    + std::to_string(current_epoch_time) + "'.");
+            }
+
             data_cache[nexus_id] = flow_data_at_t;
         }
 
@@ -241,6 +288,8 @@ namespace utils
         std::string current_formulation_id;
         /** Current time index of latest ``receive_data_entry``. */
         long current_time_index = 0;
+        /** Current epoch timestamp. */
+        time_t current_epoch_time = 0;
         /** Nexus ids for which this instance/process will write data to the file (i.e., local when using MPI, all otherwise). */
         const std::vector<std::string> nexus_ids;
         int mpi_rank;
@@ -249,6 +298,9 @@ namespace utils
         std::unordered_map<std::string, std::string> nexus_outfiles;
         /** The number of nexuses assigned to each rank. */
         std::vector<int> nexuses_per_rank;
+
+        // For unit testing
+        friend class ::PerFormulationNexusOutputMgr_Test;
 
     };
 } // utils
