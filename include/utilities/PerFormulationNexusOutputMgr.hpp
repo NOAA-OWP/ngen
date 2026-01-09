@@ -181,7 +181,17 @@ namespace utils
 
             flow.putVar(start, count, data.data());
 
+            // For just rank 0, write the time value also
+            if (mpi_rank == 0) {
+                const netCDF::NcVar timestamp = ncf.getVar(nc_time_dim_name);
+                time_t epoch_minutes = current_epoch_time / 60;
+                // TODO: (later) consider if we need to sanity check that times are consistent across ranks (we were
+                // TODO:        effectively assuming this to be the case when not explicitly writing times).
+                timestamp.putVar(std::vector<size_t>{static_cast<size_t>(current_time_index)}, std::vector<size_t>{1}, &epoch_minutes);
+            }
+
             current_time_index++;
+            current_epoch_time = 0;
             data_cache.clear();
             current_formulation_id.clear();
         }
@@ -239,6 +249,17 @@ namespace utils
                     std::to_string(this->current_time_index) + ".");
             }
 
+            if (this->current_epoch_time == 0) {
+                this->current_epoch_time = current_epoch_time;
+            }
+            else if (this->current_epoch_time != current_epoch_time) {
+                throw std::runtime_error(
+                    "Cannot receive data for formulation " + formulation_id + " for nexus " + nexus_id +
+                    ": expected '" + std::to_string(this->current_epoch_time) + "' for epoch time at current time " +
+                    "index " + std::to_string(this->current_time_index) + " but got '"
+                    + std::to_string(current_epoch_time) + "'.");
+            }
+
             data_cache[nexus_id] = flow_data_at_t;
         }
 
@@ -254,6 +275,8 @@ namespace utils
         std::string current_formulation_id;
         /** Current time index of latest ``receive_data_entry``. */
         long current_time_index = 0;
+        /** Current epoch timestamp. */
+        time_t current_epoch_time = 0;
         /** Nexus ids for which this instance/process will write data to the file (i.e., local when using MPI, all otherwise). */
         const std::vector<std::string> nexus_ids;
         int mpi_rank;
