@@ -95,7 +95,7 @@ namespace utils
                 this->local_offset += nexuses_per_rank[r];
             }
 
-            int total_nexuses = 0;
+            size_t total_nexuses = 0;
             for (const int n : nexuses_per_rank) {
                 total_nexuses += n;
             }
@@ -113,7 +113,20 @@ namespace utils
                     netCDF::NcDim dim_nexus = ncf.addDim(this->nc_nex_id_dim_name, total_nexuses);
                     netCDF::NcDim dim_time = ncf.addDim(this->nc_time_dim_name);
 
+                    netCDF::NcVar nexus_ids = ncf.addVar(this->nc_nex_id_dim_name, netCDF::ncChar, {dim_nexus});
+                    nexus_ids.putAtt("long_name", "Feature ID");
+
+                    netCDF::NcVar time = ncf.addVar(this->nc_time_dim_name, netCDF::ncUint, {dim_time});
+                    time.putAtt("units", "minutes since 1970-01-01 00:00:00");
+                    time.putAtt("calendar", "gregorian");
+                    time.putAtt("long_name", "Time");
+
                     netCDF::NcVar flow = ncf.addVar(this->nc_flow_var_name, netCDF::ncDouble, {dim_nexus, dim_time});
+                    flow.putAtt("units", "m3 s-1");
+                    flow.putAtt("long_name", "Simulated Surface Runoff");
+                    flow.setFill(false, -9999.0);
+
+                    nexus_ids.putVar(std::vector<size_t>{this->local_offset}, std::vector<size_t>{total_nexuses}, this->nexus_ids.data());
                 }
             }
         }
