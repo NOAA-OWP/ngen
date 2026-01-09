@@ -32,6 +32,7 @@ protected:
     std::vector<std::string> ex_0_form_0_nexus_ids = {"nex-1", "nex-2", "nex-3", "nex-4"};
     std::shared_ptr<std::vector<std::string>> ex_0_form_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>{"form-0"});
     std::vector<std::string> ex_0_timestamps = {"2025-01-01T00:00:00Z", "2025-01-01T01:00:00Z"};
+    std::vector<std::time_t> ex_0_timestamps_seconds = {1735707600, 1735711200};
     // Per timestamp, per-nexus data
     std::vector<std::vector<double>> ex_0_data = {{1.0, 2.0, 3.0, 4.0}, {11.0, 12.0, 13.0, 14.0}};
 
@@ -43,6 +44,7 @@ protected:
     std::vector<std::vector<double>> ex_1_group_b_data = {{51.0, 52.0, 53.0, 54.0}, {61.0, 62.0, 63.0, 64.0}};
     std::vector<std::vector<double>> ex_1_all_data = {{1.0, 2.0, 3.0, 4.0, 51.0, 52.0, 53.0, 54.0}, {11.0, 12.0, 13.0, 14.0, 61.0, 62.0, 63.0, 64.0}};
     std::vector<std::string> ex_1_timestamps = {"2025-01-01T00:00:00Z", "2025-01-01T01:00:00Z"};
+    std::vector<std::time_t> ex_1_timestamps_seconds = {1735707600, 1735711200};
 
     std::vector<std::string> files_to_cleanup;
 
@@ -155,7 +157,9 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_a) {
         files_to_cleanup.push_back(f);
     }
 
-    mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[nex_id_index], time_index, ex_0_timestamps[time_index], ex_0_data[time_index][nex_id_index]);
+    mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[nex_id_index], time_index,
+        ex_0_timestamps_seconds[time_index], ex_0_timestamps[time_index],
+        ex_0_data[time_index][nex_id_index]);
 
     std::string current_form_id = PerFormulationNexusOutputMgr_Test::friend_get_current_formulation_id(&mgr);
     ASSERT_EQ(current_form_id, form_name);
@@ -178,10 +182,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_b)
 
 
     for (int n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
-        mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], 0, ex_0_timestamps[0], ex_0_data[0][n]);
+        mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], 0, ex_0_timestamps_seconds[0],
+            ex_0_timestamps[0], ex_0_data[0][n]);
     }
 
-    ASSERT_THROW(mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[0], 1, ex_0_timestamps[1], ex_0_data[1][0]),
+    ASSERT_THROW(mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[0], 1, ex_0_timestamps_seconds[1], ex_0_timestamps[1], ex_0_data[1][0]),
                  std::runtime_error);
 }
 
@@ -199,7 +204,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_c) {
     }
 
     for (int n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
-        mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], 0, ex_0_timestamps[0], ex_0_data[0][n]);
+        mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], 0, ex_0_timestamps_seconds[0], ex_0_timestamps[0], ex_0_data[0][n]);
     }
 
     // Should only be one filename
@@ -229,7 +234,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_a) {
     }
 
     for (int n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
-        mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], 0, ex_0_timestamps[0], ex_0_data[0][n]);
+        mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], 0, ex_0_timestamps_seconds[0], ex_0_timestamps[0], ex_0_data[0][n]);
     }
     mgr.commit_writes();
 
@@ -263,7 +268,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_b) {
 
     for (int t = 0; t < ex_0_timestamps.size(); ++t) {
         for (int n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
-            mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], t, ex_0_timestamps[t], ex_0_data[t][n]);
+            mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], t, ex_0_timestamps_seconds[t], ex_0_timestamps[t], ex_0_data[t][n]);
         }
         mgr.commit_writes();
     }
@@ -299,7 +304,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_c) {
 
     // Importantly, using " - 1" below to not do things for all the nexuses
     for (int n = 0; n < ex_0_form_0_nexus_ids.size() - 1; ++n) {
-        mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], 0, ex_0_timestamps[0], ex_0_data[0][n]);
+        mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[n], 0, ex_0_timestamps_seconds[0], ex_0_timestamps[0], ex_0_data[0][n]);
     }
     ASSERT_THROW(mgr.commit_writes(), std::runtime_error);
 }
@@ -326,11 +331,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_a) {
     // Alternate writing, first all for group_a in a time step, then all for group b in a time step, then the next time step
     for (int t = 0; t < ex_1_timestamps.size(); ++t) {
         for (int n = 0; n < ex_1_form_0_group_a_nexus_ids.size(); ++n) {
-            mgr_a.receive_data_entry(form_name, ex_1_form_0_group_a_nexus_ids[n], t, ex_1_timestamps[t], ex_1_group_a_data[t][n]);
+            mgr_a.receive_data_entry(form_name, ex_1_form_0_group_a_nexus_ids[n], t, ex_1_timestamps_seconds[t], ex_1_timestamps[t], ex_1_group_a_data[t][n]);
         }
         mgr_a.commit_writes();
         for (int n = 0; n < ex_1_form_0_group_b_nexus_ids.size(); ++n) {
-            mgr_b.receive_data_entry(form_name, ex_1_form_0_group_b_nexus_ids[n], t, ex_1_timestamps[t], ex_1_group_b_data[t][n]);
+            mgr_b.receive_data_entry(form_name, ex_1_form_0_group_b_nexus_ids[n], t, ex_1_timestamps_seconds[t], ex_1_timestamps[t], ex_1_group_b_data[t][n]);
         }
         mgr_b.commit_writes();
     }
@@ -378,14 +383,14 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_b) {
     // Write all the b group stuff first
     for (int t = 0; t < ex_1_timestamps.size(); ++t) {
         for (int n = 0; n < ex_1_form_0_group_b_nexus_ids.size(); ++n) {
-            mgr_b.receive_data_entry(form_name, ex_1_form_0_group_b_nexus_ids[n], t, ex_1_timestamps[t], ex_1_group_b_data[t][n]);
+            mgr_b.receive_data_entry(form_name, ex_1_form_0_group_b_nexus_ids[n], t, ex_1_timestamps_seconds[t], ex_1_timestamps[t], ex_1_group_b_data[t][n]);
         }
         mgr_b.commit_writes();
     }
     // Then come back and write all the a group stuff
     for (int t = 0; t < ex_1_timestamps.size(); ++t) {
         for (int n = 0; n < ex_1_form_0_group_a_nexus_ids.size(); ++n) {
-            mgr_a.receive_data_entry(form_name, ex_1_form_0_group_a_nexus_ids[n], t, ex_1_timestamps[t], ex_1_group_a_data[t][n]);
+            mgr_a.receive_data_entry(form_name, ex_1_form_0_group_a_nexus_ids[n], t, ex_1_timestamps_seconds[t], ex_1_timestamps[t], ex_1_group_a_data[t][n]);
         }
         mgr_a.commit_writes();
     }
