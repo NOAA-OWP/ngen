@@ -113,20 +113,32 @@ namespace utils
                     netCDF::NcDim dim_nexus = ncf.addDim(this->nc_nex_id_dim_name, total_nexuses);
                     netCDF::NcDim dim_time = ncf.addDim(this->nc_time_dim_name);
 
-                    netCDF::NcVar nexus_ids = ncf.addVar(this->nc_nex_id_dim_name, netCDF::ncChar, {dim_nexus});
-                    nexus_ids.putAtt("long_name", "Feature ID");
+                    netCDF::NcVar var_nexus = ncf.addVar(this->nc_nex_id_dim_name, netCDF::ncUint, {dim_nexus});
+                    var_nexus.putAtt("long_name", "Feature ID");
 
-                    netCDF::NcVar time = ncf.addVar(this->nc_time_dim_name, netCDF::ncUint, {dim_time});
-                    time.putAtt("units", "minutes since 1970-01-01 00:00:00");
-                    time.putAtt("calendar", "gregorian");
-                    time.putAtt("long_name", "Time");
+                    netCDF::NcVar var_time = ncf.addVar(this->nc_time_dim_name, netCDF::ncUint, {dim_time});
+                    var_time.putAtt("units", "minutes since 1970-01-01 00:00:00");
+                    var_time.putAtt("calendar", "gregorian");
+                    var_time.putAtt("long_name", "Time");
 
-                    netCDF::NcVar flow = ncf.addVar(this->nc_flow_var_name, netCDF::ncDouble, {dim_nexus, dim_time});
-                    flow.putAtt("units", "m3 s-1");
-                    flow.putAtt("long_name", "Simulated Surface Runoff");
-                    flow.setFill(false, -9999.0);
+                    netCDF::NcVar var_flow = ncf.addVar(this->nc_flow_var_name, netCDF::ncDouble, {dim_nexus, dim_time});
+                    var_flow.putAtt("units", "m3 s-1");
+                    var_flow.putAtt("long_name", "Simulated Surface Runoff");
+                    var_flow.setFill(true, -9999.0);
 
-                    nexus_ids.putVar(std::vector<size_t>{this->local_offset}, std::vector<size_t>{total_nexuses}, this->nexus_ids.data());
+                    std::vector<unsigned int> numeric_nex_ids(this->nexus_ids.size());
+                    char delimiter = '-';
+
+                    for (size_t i = 0; i < this->nexus_ids.size(); ++i) {
+                        std::string::size_type pos = this->nexus_ids[i].find(delimiter);
+                        if (pos == std::string::npos) {
+                            throw std::runtime_error("Invalid nexus id '" + this->nexus_ids[i] + "' (no delimiter '"
+                                                     + std::string(1, delimiter) + "').");
+                        }
+                        numeric_nex_ids[i] = std::stoi(this->nexus_ids[i].substr(pos + 1));
+                    }
+
+                    var_nexus.putVar({this->local_offset}, {numeric_nex_ids.size()}, numeric_nex_ids.data());
                 }
             }
         }
