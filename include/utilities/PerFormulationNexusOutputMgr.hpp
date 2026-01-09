@@ -106,7 +106,7 @@ namespace utils
 
                 // Have rank 0 set up the files
                 if (this->mpi_rank == 0) {
-                    netCDF::NcFile ncf(filename, netCDF::NcFile::replace);
+                    netCDF::NcFile ncf(filename, netCDF::NcFile::replace, netCDF::NcFile::nc4);
                     /* ************************************************************************************************
                      * Important:  do not change order or add more dims w/out also updating commit_writes appropriately.
                      * ********************************************************************************************** */
@@ -170,7 +170,7 @@ namespace utils
 
             const std::string filename = nexus_outfiles[current_formulation_id];
 
-            const netCDF::NcFile ncf(filename, netCDF::NcFile::write);
+            const netCDF::NcFile ncf(filename, netCDF::NcFile::write, netCDF::NcFile::nc4);
             const netCDF::NcVar flow = ncf.getVar(nc_flow_var_name);
 
             // Assume base on how constructor was set up (imply for conciseness)
