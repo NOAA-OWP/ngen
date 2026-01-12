@@ -24,7 +24,7 @@ void ngen::SurfaceLayer::update_models()
         #if NGEN_WITH_MPI
         if (features.is_remote_sender_nexus(id)) {
             //Ensures only one side of the dual sided remote nexus actually doing this...
-            return;
+            continue;
         }
         #endif
 
