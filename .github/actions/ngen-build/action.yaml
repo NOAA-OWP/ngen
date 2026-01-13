@@ -130,26 +130,9 @@ runs:
             echo "PIP_CONSTRAINT=$GITHUB_WORKSPACE/constraints.txt" >> $GITHUB_ENV
           shell: bash
 
-        - name: Cache Python Dependencies
-          id: cache-py3-dependencies
-          uses: actions/cache@v3
-          with:
-            path: .venv
-            key: ${{ runner.os }}-python-deps
-
         - name: Get Numpy Python Dependency
-          # Tried conditioning the cache/install of python with an extra check:
-          # inputs.use_python != 'OFF' &&
-          # but what happens is that a runner not requiring python will create an empty cache
-          # and future runners will pull that and then fail...
-          # What we could do is try to create a master `requirements.txt`
-          # and/or a `test_requirements.txt` file that we can build the hash key from
-          # and read it from the repo...but we still have to always initialize the cache
-          # regardless of whether a given runner uses it, to avoid another runner failing to 
-          # find it.  Or just initialize this minimum requirement of numpy, and let the venv
-          # grow based on other runners needs, effectively building the cache with each new addition
           if: |
-            steps.cache-py3-dependencies.outputs.cache-hit != 'true'
+            inputs.use_python != 'OFF'
           run: |
             python3 -m venv .venv
             . .venv/bin/activate
@@ -159,14 +142,8 @@ runs:
           shell: bash
 
         - name: Init Additional Python Dependencies
-          # Don't condition additonal installs on a cache hit
-          # What will happen, however, is that the venv will get updated
-          # and thus the cache will get updated
-          # so any pip install will find modules already installed...
-          # if: |
-          #   inputs.additional_python_requirements != '' &&
-          #   steps.cache-py3-dependencies.outputs.cache-hit != 'true'
           if: |
+            inputs.use_python != 'OFF' &&
             inputs.additional_python_requirements != ''
           run: |
             python3 -m venv .venv
