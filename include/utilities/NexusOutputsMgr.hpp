@@ -67,7 +67,7 @@ namespace utils
         }
 
     protected:
-        ~NexusOutputsMgr() = default;
+        virtual ~NexusOutputsMgr() = default;
 
         /**
          * Get some a formulation id value.
