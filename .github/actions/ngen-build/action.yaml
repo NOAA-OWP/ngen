@@ -128,16 +128,32 @@ runs:
           run: |
             echo "numpy<2.0" > $GITHUB_WORKSPACE/constraints.txt
             echo "PIP_CONSTRAINT=$GITHUB_WORKSPACE/constraints.txt" >> $GITHUB_ENV
+            echo "UV_CONSTRAINT=$GITHUB_WORKSPACE/constraints.txt" >> $GITHUB_ENV
+          shell: bash
+
+        - name: Add uv and Native Python Tooling Translations
+          if: |
+            inputs.use_python != 'OFF'
+          run: |
+            echo 'ACTIVATE_VENV_IF_USE_PYTHON=source .venv/bin/activate' >> $GITHUB_ENV
+            if command -v uv &>/dev/null; then
+              echo 'CREATE_VENV=uv venv .venv' >> $GITHUB_ENV
+              echo 'PIP_INSTALL=uv pip install' >> $GITHUB_ENV
+            else
+              echo 'CREATE_VENV=python3 -m venv .venv' >> $GITHUB_ENV
+              echo 'PIP_INSTALL=pip install' >> $GITHUB_ENV
+            fi
           shell: bash
 
         - name: Get Numpy Python Dependency
           if: |
             inputs.use_python != 'OFF'
           run: |
-            python3 -m venv .venv
-            . .venv/bin/activate
-            pip install pip
-            pip install numpy
+            $CREATE_VENV
+            $ACTIVATE_VENV_IF_USE_PYTHON
+            echo $(which python3)
+            $PIP_INSTALL pip
+            $PIP_INSTALL numpy
             deactivate
           shell: bash
 
@@ -146,9 +162,8 @@ runs:
             inputs.use_python != 'OFF' &&
             inputs.additional_python_requirements != ''
           run: |
-            python3 -m venv .venv
-            . .venv/bin/activate
-            pip install -r ${{ inputs.additional_python_requirements }}
+            $ACTIVATE_VENV_IF_USE_PYTHON
+            $PIP_INSTALL -r ${{ inputs.additional_python_requirements }}
             deactivate
           shell: bash
 
@@ -182,7 +197,8 @@ runs:
               export CFLAGS="$CFLAGS -O1"
               export CXXFLAGS="$CXXFLAGS -O1"
             fi
-            . .venv/bin/activate
+            # NOTE: this is not defined if inputs.use_python != 'ON'
+            $ACTIVATE_VENV_IF_USE_PYTHON
             [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
             echo "Cmake Version:"
             which cmake
@@ -208,8 +224,8 @@ runs:
             # Build Targets
             # Disable leak detection during test enumeration
             export ASAN_OPTIONS=detect_leaks=false
-            # Activate venv so that test discovery run during build works
-            . .venv/bin/activate
+            # NOTE: this is not defined if inputs.use_python != 'ON'
+            $ACTIVATE_VENV_IF_USE_PYTHON
             cmake --build ${{ inputs.build-dir }} --target ${{ inputs.targets }} -- -j  ${{ inputs.build-cores }}
           shell: bash
 
