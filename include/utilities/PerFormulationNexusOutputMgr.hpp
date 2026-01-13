@@ -25,9 +25,6 @@ namespace utils
      */
     class PerFormulationNexusOutputMgr : public NexusOutputsMgr
     {
-    private:
-        // For unit testing
-        friend class ::PerFormulationNexusOutputMgr_Test;
 
     public:
         virtual ~PerFormulationNexusOutputMgr() = default;
@@ -301,6 +298,9 @@ namespace utils
         std::unordered_map<std::string, std::string> nexus_outfiles;
         /** The number of nexuses assigned to each rank. */
         std::vector<int> nexuses_per_rank;
+
+        // For unit testing
+        friend class ::PerFormulationNexusOutputMgr_Test;
 
     };
 } // utils
