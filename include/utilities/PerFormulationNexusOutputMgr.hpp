@@ -168,21 +168,7 @@ namespace utils
             const netCDF::NcFile ncf(filename, netCDF::NcFile::write, netCDF::NcFile::nc4);
 
             // On the first write, also write the nexus id variable values
-            if (current_time_index == 0) {
-                std::vector<unsigned int> numeric_nex_ids(this->nexus_ids.size());
-                char delimiter = '-';
-
-                for (size_t i = 0; i < this->nexus_ids.size(); ++i) {
-                    std::string::size_type pos = this->nexus_ids[i].find(delimiter);
-                    if (pos == std::string::npos) {
-                        throw std::runtime_error("Invalid nexus id '" + this->nexus_ids[i] + "' (no delimiter '"
-                                                 + std::string(1, delimiter) + "').");
-                    }
-                    numeric_nex_ids[i] = std::stoi(this->nexus_ids[i].substr(pos + 1));
-                }
-                const netCDF::NcVar var_nexus = ncf.getVar(nc_nex_id_dim_name);
-                var_nexus.putVar({this->local_offset}, {numeric_nex_ids.size()}, numeric_nex_ids.data());
-            }
+            write_nexus_ids_once(ncf);
 
             const netCDF::NcVar flow = ncf.getVar(nc_flow_var_name);
 
@@ -301,6 +287,29 @@ namespace utils
 
         // For unit testing
         friend class ::PerFormulationNexusOutputMgr_Test;
+
+        /**
+         * Helper function to write the nexus id var values to the managed file, but only once (the first time step).
+         *
+         * @param ncf NetCDF file object
+         */
+        void write_nexus_ids_once(const netCDF::NcFile& ncf) {
+            if (current_time_index == 0) {
+                std::vector<unsigned int> numeric_nex_ids(nexus_ids.size());
+                const char delimiter = '-';
+
+                for (size_t i = 0; i < nexus_ids.size(); ++i) {
+                    const std::string::size_type pos = nexus_ids[i].find(delimiter);
+                    if (pos == std::string::npos) {
+                        throw std::runtime_error("Invalid nexus id '" + nexus_ids[i] + "' (no delimiter '"
+                                                 + std::string(1, delimiter) + "').");
+                    }
+                    numeric_nex_ids[i] = std::stoi(nexus_ids[i].substr(pos + 1));
+                }
+                const netCDF::NcVar var_nexus = ncf.getVar(nc_nex_id_dim_name);
+                var_nexus.putVar({this->local_offset}, {numeric_nex_ids.size()}, numeric_nex_ids.data());
+            }
+        }
 
     };
 } // utils
