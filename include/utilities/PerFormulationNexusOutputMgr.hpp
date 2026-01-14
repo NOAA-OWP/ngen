@@ -223,14 +223,11 @@ namespace utils
          *
          * @param formulation_id The id of the formulation involved in producing this data.
          * @param nexus_id The id for the nexus to which this data applies.
-         * @param current_time_index The simulation output time index for the data.
-         * @param current_epoch_time The corresponding epoch simulation time for current time index, and for the data.
-         * @param current_timestamp The timestamp corresponding to the current epoche time.
+         * @param data_time_marker A marker for the current simulation time for the data.
          * @param flow_data_at_t The nexus flow contribution at this time index (the main data to write).
          */
-        void receive_data_entry(const std::string& formulation_id, const std::string& nexus_id, long current_time_index,
-                                const time_t& current_epoch_time, const std::string &current_timestamp,
-                                double flow_data_at_t) override
+        void receive_data_entry(const std::string &formulation_id, const std::string &nexus_id,
+                                const time_marker &data_time_marker, const double flow_data_at_t) override
         {
             if (current_formulation_id.empty()) {
                 current_formulation_id = formulation_id;
@@ -241,22 +238,22 @@ namespace utils
                     " when expecting data for " + current_formulation_id + ".");
             }
 
-            if (current_time_index != this->current_time_index) {
+            if (data_time_marker.sim_time_index != current_time_index) {
                 throw std::runtime_error(
                     "Cannot receive data for formulation " + formulation_id + " for nexus " + nexus_id +
-                    " at time index " + std::to_string(current_time_index) + " when expecting data for time index " +
-                    std::to_string(this->current_time_index) + ".");
+                    " at time index " + std::to_string(data_time_marker.sim_time_index) + " when expecting data for "
+                    + "time index " + std::to_string(current_time_index) + ".");
             }
 
-            if (this->current_epoch_time == 0) {
-                this->current_epoch_time = current_epoch_time;
+            if (current_epoch_time == 0) {
+                current_epoch_time = data_time_marker.epoch_time;
             }
-            else if (this->current_epoch_time != current_epoch_time) {
+            else if (current_epoch_time != data_time_marker.epoch_time) {
                 throw std::runtime_error(
                     "Cannot receive data for formulation " + formulation_id + " for nexus " + nexus_id +
-                    ": expected '" + std::to_string(this->current_epoch_time) + "' for epoch time at current time " +
-                    "index " + std::to_string(this->current_time_index) + " but got '"
-                    + std::to_string(current_epoch_time) + "'.");
+                    ": expected '" + std::to_string(current_epoch_time) + "' for epoch time at current time " +
+                    "index " + std::to_string(current_time_index) + " but got '"
+                    + std::to_string(data_time_marker.epoch_time) + "'.");
             }
 
             data_cache[nexus_id] = flow_data_at_t;

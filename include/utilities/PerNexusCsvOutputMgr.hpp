@@ -54,24 +54,17 @@ namespace utils
         /**
          * Receive a data entry for this nexus, specifying details including the formulation id.
          *
-         * This type also writes entries to the managed file immediately upon receipt.
-         *
-         * Note that formulation id must be the default value when this instance is managing CSV output files.
-         *
          * @param formulation_id The id of the formulation involved in producing this data.
          * @param nexus_id The id for the nexus to which this data applies.
-         * @param current_time_index The simulation output time index for the data.
-         * @param current_epoch_time The corresponding epoch simulation time for current time index, and for the data.
-         * @param current_timestamp The timestamp corresponding to the current epoche time.
+         * @param data_time_marker A marker for the current simulation time for the data.
          * @param flow_data_at_t The nexus flow contribution at this time index (the main data to write).
          */
-        void receive_data_entry(const std::string &formulation_id, const std::string &nexus_id, long current_time_index,
-                                const time_t& current_epoch_time, const std::string &current_timestamp,
-                                double flow_data_at_t) override {
+        void receive_data_entry(const std::string &formulation_id, const std::string &nexus_id,
+                                const time_marker &data_time_marker, const double flow_data_at_t) override {
             if (formulation_id != get_default_formulation_id()) {
                 throw std::runtime_error("Cannot write data entry for non-default formulation " + formulation_id + " for nexus " + nexus_id + " when per-nexus CSV output is enabled.");
             }
-            nexus_outfiles[nexus_id] << current_time_index << ", " << current_timestamp << ", " << flow_data_at_t << std::endl;
+            nexus_outfiles[nexus_id] << data_time_marker.sim_time_index << ", " << data_time_marker.time_stamp << ", " << flow_data_at_t << std::endl;
         }
 
     private:
