@@ -43,7 +43,7 @@ namespace utils
          * @param mpi_rank The MPI rank of this process, when using MPI (always `0` if no MPI).
          * @param nexuses_per_rank The total number nexuses for each running rank.
          */
-        PerFormulationNexusOutputMgr(const std::vector<std::string> nexus_ids,
+        PerFormulationNexusOutputMgr(const std::vector<std::string>& nexus_ids,
                                      std::shared_ptr<std::vector<std::string>> formulation_ids,
                                      const std::string &output_root,
                                      const int mpi_rank,
