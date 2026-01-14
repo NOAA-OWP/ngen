@@ -91,10 +91,6 @@ void PerFormulationNexusOutputMgr_Test::TearDown()
     }
 }
 
-// TODO: (later though elsewhere) test that the right type of mgr class is created per config settings
-// TODO: (later hough elsewhere) test that things work in the CSV version also
-// TODO: (later though elsewhere) test that things only work if global formulation is exclusively used
-
 /** Test that example 0 gets constructed and expects a single managed file. */
 TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_a)
 {
