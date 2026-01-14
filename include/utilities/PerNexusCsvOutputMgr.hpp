@@ -23,24 +23,12 @@ namespace utils
          *
          * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
          * @param output_root The output root for written files (as a string).
-         * @param num_procs The number of (MPI) processes (ignored if MPI not used).
          */
-        PerNexusCsvOutputMgr(const std::vector<std::string>& nexus_ids,
-                             const std::string &output_root,
-                             int num_procs) {
+        PerNexusCsvOutputMgr(const std::vector<std::string>& nexus_ids, const std::string &output_root) {
             for(const auto& id : nexus_ids) {
                 nexus_outfiles[id].open(output_root + id + "_output.csv", std::ios::trunc);
             }
         }
-
-        /**
-         * Construct instance set for managing/writing nexus data files, assuming a single process.
-         *
-         * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
-         * @param output_root The output root for written files (as a string).
-         */
-        PerNexusCsvOutputMgr(const std::vector<std::string>& nexus_ids,
-                             const std::string &output_root) : PerNexusCsvOutputMgr(nexus_ids, output_root, 1) { }
 
         /**
          * No-op, since this type writes entries as they are received.

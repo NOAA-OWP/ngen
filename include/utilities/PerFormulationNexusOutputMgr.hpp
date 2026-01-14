@@ -32,45 +32,47 @@ namespace utils
         /**
          * Construct instance set for managing/writing nexus data files, creating the file(s) appropriately.
          *
-         * Note that the class is designed to be aware of its MPI rank and supports multiple instances across different
-         * ranks writing to the same file.  However, only rank `0` will initially create the nexus output file. Further,
-         * the instance relies on users/callers to maintain MPI synchronization (i.e., call MPI_Barrier so other ranks
-         * don't get ahead of rank `0` while it creates the file).
+         * Note that the class is designed to be aware of its rank in the context of multiple instances operating on the
+         * same managed output file (e.g., when there are multiple MPI ranks) and supports multiple instances across one
+         * or many processes writing to the same file.  However, only rank `0` will initially create the nexus output
+         * file. Further, the instance relies on users/callers to maintain any synchronization (i.e., call MPI_Barrier
+         * so other ranks don't get ahead of rank `0` while it creates the file).
          *
          * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
          * @param formulation_ids
          * @param output_root The output root for written files (as a string).
-         * @param mpi_rank The MPI rank of this process, when using MPI (always `0` if no MPI).
+         * @param rank The rank of this instance when multiple instances may operate on the same file; e.g., when
+         *             using MPI (always `0` if only one instance may operate on the managed file).
          * @param nexuses_per_rank The total number nexuses for each running rank.
          */
         PerFormulationNexusOutputMgr(const std::vector<std::string>& nexus_ids,
                                      std::shared_ptr<std::vector<std::string>> formulation_ids,
                                      const std::string &output_root,
-                                     const int mpi_rank,
+                                     const int rank,
                                      const std::vector<int>& nexuses_per_rank)
             :   nexus_ids(nexus_ids),
-                mpi_rank(mpi_rank),
+                rank(rank),
                 nexuses_per_rank(nexuses_per_rank)
         {
             if (this->nexuses_per_rank.empty()) {
-                if (this->mpi_rank > 0)
+                if (this->rank > 0)
                     throw std::runtime_error("Must supply nexuses_per_rank values when using multiple MPI processes.");
                 this->nexuses_per_rank.push_back(this->nexus_ids.size());
             }
 
-            if (this->nexuses_per_rank.size() <= this->mpi_rank) {
+            if (this->nexuses_per_rank.size() <= this->rank) {
                 throw std::runtime_error("To few values in nexuses_per_rank value ("
                     + std::to_string(this->nexuses_per_rank.size()) + ") for rank "
-                    + std::to_string(mpi_rank) + ".");
+                    + std::to_string(rank) + ".");
             }
 
-            if (this->nexuses_per_rank[this->mpi_rank] != this->nexus_ids.size()) {
-                throw std::runtime_error("Invalid nexuses_per_rank value for rank " + std::to_string(this->mpi_rank)
-                    + ": " + std::to_string(this->nexuses_per_rank[this->mpi_rank]) + " does not match number of "
+            if (this->nexuses_per_rank[this->rank] != this->nexus_ids.size()) {
+                throw std::runtime_error("Invalid nexuses_per_rank value for rank " + std::to_string(this->rank)
+                    + ": " + std::to_string(this->nexuses_per_rank[this->rank]) + " does not match number of "
                     + "supplied nexus ids (" + std::to_string(this->nexus_ids.size()) + ").");
             }
 
-            if (this->mpi_rank == 0) {
+            if (this->rank == 0) {
                 for (size_t r = 0; r < this->nexuses_per_rank.size(); r++) {
                     if (this->nexuses_per_rank[r] < 0) {
                         throw std::runtime_error("Invalid nexuses_per_rank value for rank " + std::to_string(r) + ".");
@@ -88,7 +90,7 @@ namespace utils
 
             this->local_offset = 0;
 
-            for (size_t r = 0; r < mpi_rank; ++r) {
+            for (size_t r = 0; r < rank; ++r) {
                 this->local_offset += nexuses_per_rank[r];
             }
 
@@ -102,7 +104,7 @@ namespace utils
                 this->nexus_outfiles[fid] = filename;
 
                 // Have rank 0 set up the files
-                if (this->mpi_rank == 0) {
+                if (this->rank == 0) {
                     netCDF::NcFile ncf(filename, netCDF::NcFile::replace, netCDF::NcFile::nc4);
                     /* ************************************************************************************************
                      * Important:  do not change order or add more dims w/out also updating commit_writes appropriately.
@@ -181,7 +183,7 @@ namespace utils
             flow.putVar(start, count, data.data());
 
             // For just rank 0, write the time value also
-            if (mpi_rank == 0) {
+            if (rank == 0) {
                 const netCDF::NcVar timestamp = ncf.getVar(nc_time_dim_name);
                 time_t epoch_minutes = current_epoch_time / 60;
                 // TODO: (later) consider if we need to sanity check that times are consistent across ranks (we were
@@ -275,7 +277,7 @@ namespace utils
         time_t current_epoch_time = 0;
         /** Nexus ids for which this instance/process will write data to the file (i.e., local when using MPI, all otherwise). */
         const std::vector<std::string> nexus_ids;
-        int mpi_rank;
+        int rank;
         std::vector<unsigned long>::size_type local_offset;
         /** Map of formulation ids to nexus data file paths (as string) */
         std::unordered_map<std::string, std::string> nexus_outfiles;
