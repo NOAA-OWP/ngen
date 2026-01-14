@@ -173,7 +173,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_a) {
     ASSERT_EQ(current_form_id, form_name);
 }
 
-/** Make sure can't receive data additional data entries for more than one time steps without writing first. */
+/** Make sure can't receive additional data entries for more than one time steps without writing first. */
 TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_b)
 {
     int nex_id_index = 0;
@@ -250,7 +250,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_a) {
         files_to_cleanup.push_back(f);
     }
 
-    for (int n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
+    for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
         mgr.receive_data_entry(form_name,
                                ex_0_form_0_nexus_ids[n],
                                utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]),
