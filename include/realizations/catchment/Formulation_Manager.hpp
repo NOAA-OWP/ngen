@@ -697,9 +697,10 @@ namespace realization {
 
             bool using_routing = false;
 
+            bool use_per_formulation_nexus_files;
+
             ngen::LayerDataStorage layer_storage;
 
-            bool use_per_formulation_nexus_files;
     };
 }
 #endif // NGEN_FORMULATION_MANAGER_H
