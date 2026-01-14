@@ -34,14 +34,6 @@ namespace utils
         virtual void commit_writes() = 0;
 
         /**
-         * Get whether this instance manages writing data for the given nexus to a managed data file.
-         *
-         * @param nexus_id The id for the Nexus of interest.
-         * @return Whether this instance manage a file storing data for the given nexus.
-         */
-        virtual bool is_nexus_managed(const std::string &nexus_id) = 0;
-
-        /**
          * Receive a data entry for this nexus, specifying details including the formulation id.
          *
          * @param formulation_id The id of the formulation involved in producing this data.
