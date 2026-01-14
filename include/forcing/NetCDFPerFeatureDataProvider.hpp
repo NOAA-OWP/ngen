@@ -65,7 +65,7 @@ namespace data_access
         static void cleanup_shared_providers();
 
         NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s);
-
+        NetCDFPerFeatureDataProvider() = delete;
         // Default implementation defined in the .cpp file so that
         // client code doesn't need to have the full definition of
         // NcFile visible for the compiler to implicitly generate
