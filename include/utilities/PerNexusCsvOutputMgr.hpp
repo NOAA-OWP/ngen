@@ -35,10 +35,6 @@ namespace utils
          */
         void commit_writes() override { }
 
-        bool is_nexus_managed(const std::string& nexus_id) override {
-            return nexus_outfiles.find(nexus_id) != nexus_outfiles.end();
-        }
-
         /**
          * Receive a data entry for this nexus, specifying details including the formulation id.
          *
