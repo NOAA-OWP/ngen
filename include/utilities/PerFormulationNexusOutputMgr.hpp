@@ -211,16 +211,6 @@ namespace utils
         }
 
         /**
-         * Get whether this instance manages writing data for the given nexus to a managed data file.
-         *
-         * @param nexus_id The id for the Nexus of interest.
-         * @return Whether this instance manages writing data for the given nexus to a managed data file.
-         */
-        bool is_nexus_managed(const std::string& nexus_id) override {
-            return std::find(nexus_ids.begin(), nexus_ids.end(), nexus_id) != nexus_ids.end();
-        }
-
-        /**
          * Receive a data entry for this nexus, specifying details including the formulation id.
          *
          * @param formulation_id The id of the formulation involved in producing this data.
