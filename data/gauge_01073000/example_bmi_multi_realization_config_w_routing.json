@@ -14,7 +14,7 @@
                             "name": "bmi_c++",
                             "params": {
                                 "model_type_name": "bmi_c++_sloth",
-                                "library_file": "./extern/sloth/cmake_build/libslothmodel.so",
+                                "library_file": "./extern/sloth/cmake_build/libslothmodel",
                                 "init_config": "/dev/null",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "z",
@@ -35,7 +35,7 @@
                             "name": "bmi_c",
                             "params": {
                                 "model_type_name": "PET",
-                                "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi.so",
+                                "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
                                 "forcing_file": "",
                                 "init_config": "./data/gauge_01073000/PET/{{id}}_pet_config.txt",
                                 "allow_exceed_end_time": true,
@@ -48,7 +48,7 @@
                             "name": "bmi_fortran",
                             "params": {
                                 "model_type_name": "bmi_fortran_noahowp",
-                                "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi.so",
+                                "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi",
                                 "forcing_file": "",
                                 "init_config": "./data/gauge_01073000/NOAH/{{id}}.input",
                                 "allow_exceed_end_time": true,
@@ -70,7 +70,7 @@
                             "name": "bmi_c",
                             "params": {
                                 "model_type_name": "bmi_c_cfe",
-                                "library_file": "./extern/cfe/cmake_build/libcfebmi.so",
+                                "library_file": "./extern/cfe/cmake_build/libcfebmi",
                                 "forcing_file": "",
                                 "init_config": "./data/gauge_01073000/CFE/{{id}}_bmi_config_cfe_pass.txt",
                                 "allow_exceed_end_time": true,

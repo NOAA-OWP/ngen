@@ -16,7 +16,8 @@ struct epsg
     enum {
         wgs84        = 4326,
         conus_albers = 5070,
-        mercator     = 3857
+        mercator     = 3857,
+        hawaii_albers = 102007 // it's an ESRI code but might as well treat it like EPSG...
     };
 
     static srs_type get(uint32_t srid);
