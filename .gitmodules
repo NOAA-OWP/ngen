@@ -45,4 +45,4 @@
 	url = https://github.com/Unidata/netcdf-cxx4/
 [submodule "extern/dhbv2/dhbv2"]
 	path = extern/dhbv2/dhbv2
-	url = git@github.com:mhpi/dhbv2.git
+	url = https://github.com/mhpi/dhbv2.git

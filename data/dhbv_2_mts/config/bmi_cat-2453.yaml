@@ -1,0 +1,42 @@
+### Single-catchment configuration ###
+catchment_id: 'cat-2453'
+
+# Catchment attributes
+aridity: 0.6210572673615424
+meanP: 1199.3666323047523
+ETPOT_Hargr: 743.6801723462127
+NDVI: 0.6181836957457131
+FW: 0.0202223578754746
+meanslope: 4.411415391660962
+SoilGrids1km_sand: 56.59315642839602
+SoilGrids1km_clay: 10.75362542723276
+SoilGrids1km_silt: 32.61573248492731
+glaciers: 0.0
+HWSD_clay: 33.819110162857406
+HWSD_gravel: 4.5
+HWSD_sand: 25.861778841368103
+HWSD_silt: 40.319110162857406
+meanelevation: 418.32407413784256
+meanTa: 3.6423248086968183
+permafrost: 0.0
+permeability: -14.050000190734863
+seasonality_P: 0.1300691702471948
+seasonality_PET: 0.68190934875895
+snow_fraction: 0.4627622142285
+snowfall_fraction: 0.303098340899144
+T_clay: 4.0
+T_gravel: 4.0
+T_sand: 85.0
+T_silt: 11.0
+Porosity: 0.2085456259801661
+uparea: 7.7805003825041545
+catchsize: 7.7805003825041545
+lengthkm: 2.147179500288239
+
+# BMI configuration
+model_dir: ./data/dhbv_2_mts/model/dhbv_2_mts/
+dtype: float32
+
+verbose: false
+
+time_step: 1 hour

@@ -1,0 +1,39 @@
+### Single-catchment configuration ###
+catchment_id: 'cat-88306'
+
+# Static catchment attributes
+aridity: 1.041
+meanP: 991.3
+ETPOT_Hargr: 1031.0
+NDVI: 0.594
+FW: 0.004622
+meanslope: 10.55
+SoilGrids1km_sand: 38.65
+SoilGrids1km_clay: 23.31
+SoilGrids1km_silt: 38.06
+glaciers: 0.0
+HWSD_clay: 25.0
+HWSD_gravel: 15.0
+HWSD_sand: 33.0
+HWSD_silt: 42.0
+meanelevation: 335.1
+meanTa: 9.845
+permafrost: 0.0
+permeability: -15.05
+seasonality_P: 0.1035
+seasonality_PET: 0.5703
+snow_fraction: 0.02967
+snowfall_fraction: 0.1049
+T_clay: 20.0
+T_gravel: 10.0
+T_sand: 41.0
+T_silt: 39.0
+Porosity: 0.01
+uparea: 3.254
+
+config_model: models/
+stepwise: True  # True: stepwise inference, False: Single forward simulation on all data in one go
+dtype: np.float32
+verbose: false
+
+time_step: 1 day
