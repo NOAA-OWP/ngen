@@ -15,26 +15,65 @@
 
 #include <state_save_restore/State_Save_Restore.hpp>
 
+#if (__cplusplus >= 202002L)
+#include <bit>
+#endif
+
 using namespace realization;
 
 void Bmi_Multi_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> saver) const {
-#if 0
-    auto model = get_bmi_model();
-
-    size_t size = 1;
-    model->SetValue("serialization_create", &size);
-    model->GetValue("serialization_size", &size);
-
-    auto serialization_state = static_cast<char const*>(model->GetValuePtr("serialization_state"));
-    boost::span<const char> data(serialization_state, size);
-
-    // Rely on Formulation_Manager also using this->get_id()
-    // as a unique key for the individual catchment
-    // formulations
-    saver->save_unit(this->get_id(), data);
-
-    model->SetValue("serialization_free", &size);
+#if (__cplusplus < 202002L)
+    // get system endianness
+    uint16_t endian_bytes = 0xFF00;
+    uint8_t *endian_bits = reinterpret_cast<uint8_t *>(&endian_bytes);
+    bool is_little_endian = endian_bits[0] == 0;
 #endif
+
+    std::vector<std::pair<const char*, uint64_t>> bmi_data;
+    size_t data_size = 0;
+    uint64_t ser_size;
+    // TODO: something more elegant than just skipping sloth
+    for (const nested_module_ptr &m : modules) {
+        auto bmi = static_cast<Bmi_Module_Formulation *>(m.get());
+        if (bmi->get_model_type_name() != "bmi_c++_sloth") {
+            ser_size = 1;
+            const char* serialized = bmi->create_save_state(&ser_size);
+            bmi_data.push_back(std::make_pair(serialized, ser_size));
+            data_size += sizeof(uint64_t) + ser_size;
+            LOG(LogLevel::DEBUG, "Serialization of multi-BMI %s %s completed with a size of %d",
+                bmi->get_id().c_str(), bmi->get_model_type_name().c_str(), ser_size);
+        }
+    }
+    char *data = new char[data_size];
+    size_t index = 0;
+    for (const auto &bmi : bmi_data) {
+        // write the size of the data
+#if (__cplusplus < 202002L)
+        if (is_little_endian) {
+#else
+        if constexpr (std::endian::native == std::endian::little) {
+#endif
+            std::memcpy(&data[index], &bmi.second, sizeof(uint64_t));
+        } else {
+            // store the size bytes in reverse order to ensure saved data is always little endian
+            const char *bytes = reinterpret_cast<const char*>(&bmi.second);
+            size_t endian_index = index + sizeof(uint64_t);
+            for (size_t i = 0; i < sizeof(uint64_t); ++i) {
+                data[--endian_index] = bytes[i];
+            }
+        }
+        // write the serialized data
+        std::memcpy(data + index + sizeof(uint64_t), &bmi.first, bmi.second);
+        index += sizeof(uint64_t) + bmi.second;
+    }
+    boost::span<const char> span(data, data_size);
+    saver->save_unit(this->get_id(), span);
+    
+    delete[] data;
+    for (const nested_module_ptr &m : modules) { 
+        auto bmi = static_cast<Bmi_Module_Formulation *>(m.get());
+        bmi->free_save_state();
+    }
 }
 
 void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap properties, bool needs_param_validation) {

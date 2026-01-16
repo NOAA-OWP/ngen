@@ -46,7 +46,24 @@ namespace realization {
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
         void create_formulation(geojson::PropertyMap properties) override;
 
+        /**
+         * Create a save state, save it using the `State_Snapshot_Saver`, then clear the save state from memory.
+         * `this->get_id()` will be used as the unique ID for the saver.
+         */
         void save_state(std::shared_ptr<State_Snapshot_Saver> saver) const override;
+
+        /**
+         * Requests the BMI to copy its current state into memory. The state will remain in memory until either a new state is made or `free_save_state` is called.
+         * 
+         * @param size A `uint64_t` pointer that will have its value set to the size of the serialized data.
+         * @return Pointer to the beginning of the serialized data.
+         */
+        virtual const char* create_save_state(uint64_t *size) const;
+
+        /**
+         * Clears any serialized data stored by the BMI from memory.
+         */
+        virtual void free_save_state() const;
 
         /**
          * Get the collection of forcing output property names this instance can provide.

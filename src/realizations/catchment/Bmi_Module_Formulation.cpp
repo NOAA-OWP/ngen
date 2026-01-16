@@ -17,13 +17,8 @@ namespace realization {
         }
 
         void Bmi_Module_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> saver) const {
-            auto model = get_bmi_model();
-
-            size_t size = 1;
-            model->SetValue("serialization_create", &size);
-            model->GetValue("serialization_size", &size);
-
-            auto serialization_state = static_cast<char const*>(model->GetValuePtr("serialization_state"));
+            uint64_t size = 1;
+            const char* serialization_state = this->create_save_state(&size);
             boost::span<const char> data(serialization_state, size);
 
             // Rely on Formulation_Manager also using this->get_id()
@@ -31,7 +26,21 @@ namespace realization {
             // formulations
             saver->save_unit(this->get_id(), data);
 
-            model->SetValue("serialization_free", &size);
+            this->free_save_state();
+        }
+
+        const char* Bmi_Module_Formulation::create_save_state(uint64_t *size) const {
+            auto model = get_bmi_model();
+            model->SetValue("serialization_create", size);
+            model->GetValue("serialization_size", size);
+            auto serialization_state = static_cast<char const*>(model->GetValuePtr("serialization_state"));
+            return serialization_state;
+        }
+
+        void Bmi_Module_Formulation::free_save_state() const {
+            auto model = get_bmi_model();
+            int _;
+            model->SetValue("serialization_free", &_);
         }
 
         boost::span<const std::string> Bmi_Module_Formulation::get_available_variable_names() const {

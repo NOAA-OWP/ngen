@@ -165,7 +165,12 @@ add_compile_definitions(NGEN_SHARED_LIB_EXTENSION)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.79.0 REQUIRED)
+if(CMAKE_CXX_STANDARD LESS 17)
+    # requires non-header filesystem for state saving if C++ 11 or lower
+    find_package(Boost 1.79.0 REQUIRED COMPONENTS system filesystem)
+else()
+    find_package(Boost 1.79.0 REQUIRED)
+endif()
 
 # -----------------------------------------------------------------------------
 if(NGEN_WITH_SQLITE)

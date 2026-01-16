@@ -23,6 +23,15 @@ namespace realization {
 
         std::string get_formulation_type() const override;
 
+        /**
+         * Requests the BMI to copy its current state into memory. The state will remain in memory until either a new state is made or `free_save_state` is called.
+         * Because the Fortran BMI has no messaging for 64-bit integers, this overload will use the 32-bit integer interface and copy the results to `size`.
+         * 
+         * @param size A `uint64_t` pointer that will have its value set to the size of the serialized data.
+         * @return Pointer to the beginning of the serialized data.
+         */
+        const char* create_save_state(uint64_t *size) const override;
+
     protected:
 
         /**

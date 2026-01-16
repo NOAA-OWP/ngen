@@ -12,6 +12,9 @@
 #include <string>
 #include <vector>
 
+class State_Saver;
+class State_Snapshot_Saver;
+
 class State_Save_Config
 {
 public:
@@ -21,6 +24,10 @@ public:
      *
      */
     State_Save_Config(boost::property_tree::ptree const& config);
+
+    bool has_end_of_run() const;
+
+    std::shared_ptr<State_Saver> end_of_run_saver() const;
 
     struct instance
     {
@@ -32,10 +39,9 @@ public:
         std::string timing_;
     };
 
+private:
     std::vector<instance> instances_;
 };
-
-class State_Snapshot_Saver;
 
 class State_Saver
 {
@@ -49,6 +55,8 @@ public:
 
     State_Saver() = default;
     virtual ~State_Saver() = default;
+
+    static snapshot_time_t snapshot_time_now();
 
     /**
      * Return an object suitable for saving a simulation state as of a

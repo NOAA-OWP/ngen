@@ -5,6 +5,8 @@ add_library(NGen::state_save_restore ALIAS state_save_restore)
 target_link_libraries(state_save_restore PUBLIC
                            NGen::config_header
                            Boost::boost                # Headers-only Boost
+                           Boost::system
+                           Boost::filesystem
                            )
 
 target_include_directories(state_save_restore PUBLIC
