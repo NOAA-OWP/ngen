@@ -21,10 +21,6 @@
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 
-#if (__cplusplus >= 202002L)
-#include <bit>
-#endif
-
 using namespace realization;
 
 
