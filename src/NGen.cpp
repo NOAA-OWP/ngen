@@ -714,6 +714,16 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
 
     simulation->run_catchments();
 
+    if (state_saving_config.has_end_of_run()) {
+        LOG("Saving end-of-run state.", LogLevel::INFO);
+        std::shared_ptr<State_Saver> saver = state_saving_config.end_of_run_saver();
+        std::shared_ptr<State_Snapshot_Saver> snapshot = saver->initialize_snapshot(
+            State_Saver::snapshot_time_now(),
+            State_Saver::State_Durability::strict
+        );
+        simulation->save_state_snapshot(snapshot);
+    }
+
 #if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
