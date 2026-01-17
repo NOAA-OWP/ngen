@@ -7,7 +7,7 @@
 # Uses CIROH-UA T-Route fork for compatibility.
 ARG NPROC=8
 ARG NGEN_REPO=mhpi/ngen
-ARG NGEN_BRANCH=dhbv2
+ARG NGEN_BRANCH=master
 ARG TROUTE_REPO=CIROH-UA/t-route
 ARG TROUTE_BRANCH=ngiab
 
