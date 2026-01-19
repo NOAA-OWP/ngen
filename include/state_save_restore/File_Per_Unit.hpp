@@ -17,4 +17,18 @@ private:
     std::string base_path_;
 };
 
+
+class File_Per_Unit_Loader : public State_Loader
+{
+public:
+    File_Per_Unit_Loader(std::string dir_path);
+    ~File_Per_Unit_Loader() = default;
+
+    void finalize() override { };
+
+    std::shared_ptr<State_Snapshot_Loader> initialize_snapshot(State_Saver::snapshot_time_t epoch) override;
+private:
+    std::string dir_path_;
+};
+
 #endif // NGEN_FILE_PER_UNIT_HPP

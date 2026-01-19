@@ -12,7 +12,26 @@
 #include <string>
 #include <vector>
 
+enum class State_Save_Direction {
+    None = 0,
+    Save,
+    Load
+};
+
+enum class State_Save_Mechanism {
+    None = 0,
+    FilePerUnit
+};
+
+enum class State_Save_When {
+    None = 0,
+    EndOfRun,
+    FirstOfMonth,
+    StartOfRun
+};
+
 class State_Saver;
+class State_Loader;
 class State_Snapshot_Saver;
 
 class State_Save_Config
@@ -27,20 +46,29 @@ public:
 
     bool has_end_of_run() const;
 
+    bool has_cold_start() const;
+
     std::shared_ptr<State_Saver> end_of_run_saver() const;
+
+    std::shared_ptr<State_Loader> cold_start_saver() const;
 
     struct instance
     {
-        instance(std::string const& label, std::string const& path, std::string const& mechanism, std::string const& timing);
+        instance(std::string const& direction, std::string const& label, std::string const& path, std::string const& mechanism, std::string const& timing);
 
+        State_Save_Direction direction_;
+        State_Save_Mechanism mechanism_;
+        State_Save_When timing_;
         std::string label_;
         std::string path_;
-        std::string mechanism_;
-        std::string timing_;
+
+        std::string mechanism_string() const;
     };
 
 private:
     std::vector<instance> instances_;
+    int end_of_run() const;
+    int cold_start() const;
 };
 
 class State_Saver
@@ -153,6 +181,7 @@ public:
 
 class State_Unit_Loader
 {
+public:
     State_Unit_Loader() = default;
     virtual ~State_Unit_Loader() = default;
     virtual void load(boost::span<char const> data) = 0;

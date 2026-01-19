@@ -20,6 +20,18 @@
 #include <fstream>
 #include <iomanip>
 
+namespace unit_saving_utils {
+    std::string format_epoch(State_Saver::snapshot_time_t epoch)
+    {
+        time_t t = std::chrono::system_clock::to_time_t(epoch);
+        std::tm tm = *std::gmtime(&t);
+
+        std::stringstream tss;
+        tss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%S");
+        return tss.str();
+    }
+}
+
 // This class is only declared and defined here, in the .cpp file,
 // because it is strictly an implementation detail of the top-level
 // File_Per_Unit_Saver class
@@ -37,8 +49,6 @@ public:
     void finish_saving() override;
 
 private:
-    std::string format_epoch(State_Saver::snapshot_time_t epoch);
-
     path dir_path_;
 };
 
@@ -63,22 +73,12 @@ void File_Per_Unit_Saver::finalize()
 
 File_Per_Unit_Snapshot_Saver::File_Per_Unit_Snapshot_Saver(path base_path, State_Saver::snapshot_time_t epoch, State_Saver::State_Durability durability)
     : State_Snapshot_Saver(epoch, durability)
-    , dir_path_(base_path / format_epoch(epoch))
+    , dir_path_(base_path / unit_saving_utils::format_epoch(epoch))
 {
     create_directory(dir_path_);
 }
 
 File_Per_Unit_Snapshot_Saver::~File_Per_Unit_Snapshot_Saver() = default;
-
-std::string File_Per_Unit_Snapshot_Saver::format_epoch(State_Saver::snapshot_time_t epoch)
-{
-    time_t t = std::chrono::system_clock::to_time_t(epoch);
-    std::tm tm = *std::gmtime(&t);
-
-    std::stringstream tss;
-    tss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%S");
-    return tss.str();
-}
 
 void File_Per_Unit_Snapshot_Saver::save_unit(std::string const& unit_name, boost::span<char const> data)
 {
@@ -99,3 +99,79 @@ void File_Per_Unit_Snapshot_Saver::finish_saving()
         // fsync() or whatever
     }
 }
+
+
+// This class is only declared and defined here, in the .cpp file,
+// because it is strictly an implementation detail of the top-level
+// File_Per_Unit_Saver class
+class File_Per_Unit_Snapshot_Loader : public State_Snapshot_Loader
+{
+    friend class State_Snapshot_Loader;
+public:
+    File_Per_Unit_Snapshot_Loader() = default;
+    File_Per_Unit_Snapshot_Loader(path dir_path);
+    ~File_Per_Unit_Snapshot_Loader() override = default;
+
+    /**
+     * Load data from whatever source, and pass it to @param unit_loader->load()
+     */
+    void load_unit(std::string const& unit_name, State_Unit_Loader *unit_loader) override;
+
+    /**
+     * Execute logic to complete the saving process
+     *
+     * Data may be flushed here, and delayed errors may be detected
+     * and reported here. With relaxed durability, error reports may
+     * not come until the parent State_Saver::finalize() call is made,
+     * or ever.
+     */
+    void finish_saving() override { };
+
+private:
+    path dir_path_;
+    std::vector<char> data_;
+};
+
+File_Per_Unit_Snapshot_Loader::File_Per_Unit_Snapshot_Loader(path dir_path)
+    : dir_path_(dir_path)
+{
+
+}
+
+void File_Per_Unit_Snapshot_Loader::load_unit(std::string const& unit_name, State_Unit_Loader *unit_loader) {
+    auto file_path = dir_path_ / unit_name;
+    std::uintmax_t size;
+    try {
+        size = file_size(file_path.string());
+    } catch (std::exception &e) {
+        LOG("Failed to read state save data size for unit '" + unit_name + "' in file '" + file_path.string() + "'", LogLevel::WARNING);
+        throw;
+    }
+    std::ifstream stream(file_path.string(), std::ios_base::ate | std::ios_base::binary);
+    if (!stream) {
+        LOG("Failed to open state save data for unit '" + unit_name + "' in file '" + file_path.string() + "'", LogLevel::WARNING);
+        throw;
+    }
+    try {
+        std::vector<char> buffer(size);
+        stream.read(buffer.data(), size);
+        boost::span<const char> data(buffer.data(), size);
+        unit_loader->load(data);
+    } catch (std::exception &e) {
+        LOG("Failed to read state save data for unit '" + unit_name + "' in file '" + file_path.string() + "'", LogLevel::WARNING);
+        throw;
+    }
+}
+
+File_Per_Unit_Loader::File_Per_Unit_Loader(std::string dir_path)
+    : dir_path_(dir_path)
+{
+
+}
+
+std::shared_ptr<State_Snapshot_Loader> File_Per_Unit_Loader::initialize_snapshot(State_Saver::snapshot_time_t epoch)
+{
+    path dir_path(dir_path_);
+    return std::make_shared<File_Per_Unit_Snapshot_Loader>(dir_path);
+}
+
