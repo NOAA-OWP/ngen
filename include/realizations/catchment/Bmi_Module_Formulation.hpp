@@ -57,18 +57,7 @@ namespace realization {
 
         void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) override;
 
-        /**
-         * Requests the BMI to copy its current state into memory. The state will remain in memory until either a new state is made or `free_save_state` is called.
-         * 
-         * @param size A `uint64_t` pointer that will have its value set to the size of the serialized data.
-         * @return Pointer to the beginning of the serialized data.
-         */
-        virtual const char* create_save_state(uint64_t *size) const;
-
-        /**
-         * Clears any serialized data stored by the BMI from memory.
-         */
-        virtual void free_save_state() const;
+        void load_state(std::shared_ptr<State_Snapshot_Loader> loader) const override;
 
         /**
          * Get the collection of forcing output property names this instance can provide.
