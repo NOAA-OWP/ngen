@@ -18,11 +18,10 @@ State_Save_Config::State_Save_Config(boost::property_tree::ptree const& tree)
         return;
     }
 
-    auto saving_config = *maybe;
-    size_t length = saving_config.size();
-    for (size_t i = 0; i < length; ++i) {
+    //auto saving_config = *maybe;
+    for (const auto& saving_config : *maybe) {
         try {
-            auto subtree = tree.get_child(std::to_string(i));
+            auto& subtree = saving_config.second;
             auto direction = subtree.get<std::string>("direction");
             auto what = subtree.get<std::string>("label");
             auto where = subtree.get<std::string>("path");
@@ -43,15 +42,15 @@ State_Save_Config::State_Save_Config(boost::property_tree::ptree const& tree)
 int State_Save_Config::end_of_run() const {
     for (size_t i = 0; i < instances_.size(); ++i) {
         auto &instance = instances_[i];
-        if (instance.timing_ == State_Save_When::EndOfRun
-            && instance.direction_ == State_Save_Direction::Save)
+        if (instance.timing_ == State_Save_When::EndOfRun && instance.direction_ == State_Save_Direction::Save) {
             return i;
+        }
     }
     return -1;
 }
 
 bool State_Save_Config::has_end_of_run() const {
-    this->end_of_run() >= 0;
+    return this->end_of_run() >= 0;
 }
 
 std::shared_ptr<State_Saver> State_Save_Config::end_of_run_saver() const {
@@ -64,14 +63,15 @@ std::shared_ptr<State_Saver> State_Save_Config::end_of_run_saver() const {
             Logger::logMsgAndThrowError("State_Save_Config: Saving mechanism " + i.mechanism_string() + " is not supported for end of run saving.");
         }
     }
-    Logger::logMsgAndThrowError("State_Save_Config: No end of run was defined in the realization config.");
+    auto error = "State_Save_Config: No end of run was defined in the realization config.";
+    LOG(LogLevel::SEVERE, error);
+    throw std::runtime_error(error);
 }
 
 int State_Save_Config::cold_start() const {
     for (size_t i = 0; i < instances_.size(); ++i) {
         const auto& instance = instances_[i];
-        if (instance.timing_ == State_Save_When::StartOfRun
-            && instance.direction_ == State_Save_Direction::Load) {
+        if (instance.timing_ == State_Save_When::StartOfRun && instance.direction_ == State_Save_Direction::Load) {
             return i;
         }
     }
@@ -92,7 +92,9 @@ std::shared_ptr<State_Loader> State_Save_Config::cold_start_loader() const {
             Logger::logMsgAndThrowError("State_Save_Config: Saving mechanism " + i.mechanism_string() + " is not supported for end of run saving.");
         }
     }
-    Logger::logMsgAndThrowError("State_Save_Config: No configuration was found for loading a cold start.");
+    auto error = "State_Save_Config: No configuration was found for loading a cold start.";
+    LOG(LogLevel::SEVERE, error);
+    throw std::runtime_error(error);
 }
 
 State_Save_Config::instance::instance(std::string const& direction, std::string const& label, std::string const& path, std::string const& mechanism, std::string const& timing)
