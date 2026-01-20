@@ -31,17 +31,15 @@ void Bmi_Multi_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> sav
 
     std::vector<std::pair<const char*, uint64_t>> bmi_data;
     size_t data_size = 0;
-    uint64_t ser_size;
     // TODO: something more elegant than just skipping sloth
     for (const nested_module_ptr &m : modules) {
-        auto bmi = static_cast<Bmi_Module_Formulation *>(m.get());
+        auto bmi = dynamic_cast<Bmi_Module_Formulation *>(m.get());
         if (bmi->get_model_type_name() != "bmi_c++_sloth") {
-            ser_size = 1;
-            const char* serialized = bmi->create_save_state(&ser_size);
-            bmi_data.push_back(std::make_pair(serialized, ser_size));
-            data_size += sizeof(uint64_t) + ser_size;
-            LOG(LogLevel::DEBUG, "Serialization of multi-BMI %s %s completed with a size of %d",
-                bmi->get_id().c_str(), bmi->get_model_type_name().c_str(), ser_size);
+            boost::span<char> span = bmi->get_serialization_state();
+            bmi_data.push_back(std::make_pair(span.data(), span.size()));
+            data_size += sizeof(uint64_t) + span.size();
+            LOG(LogLevel::DEBUG, "Serialization of multi-BMI %s %s completed with a size of %d bytes.",
+                bmi->get_id().c_str(), bmi->get_model_type_name().c_str(), span.size());
         }
     }
     char *data = new char[data_size];
@@ -72,7 +70,46 @@ void Bmi_Multi_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> sav
     delete[] data;
     for (const nested_module_ptr &m : modules) { 
         auto bmi = static_cast<Bmi_Module_Formulation *>(m.get());
-        bmi->free_save_state();
+        if (bmi->get_model_type_name() != "bmi_c++_sloth") {
+            bmi->free_serialization_state();
+        }
+    }
+}
+
+void Bmi_Multi_Formulation::load_state(std::shared_ptr<State_Snapshot_Loader> loader) const {
+#if (__cplusplus < 202002L)
+    // get system endianness
+    uint16_t endian_bytes = 0xFF00;
+    uint8_t *endian_bits = reinterpret_cast<uint8_t *>(&endian_bytes);
+    bool is_little_endian = endian_bits[0] == 0;
+#endif
+    std::vector<char> data;
+    loader->load_unit(this->get_id(), data);
+    size_t index = 0;
+    for (const nested_module_ptr &m : modules) {
+        auto bmi = dynamic_cast<Bmi_Module_Formulation *>(m.get());
+        if (bmi->get_model_type_name() != "bmi_c++_sloth") {
+            uint64_t size;
+#if (__cplusplus < 202002L)
+            if (is_little_endian) {
+#else
+            if constexpr (std::endian::native == std::endian::little) {
+#endif
+                memcpy(&size, data.data() + index, sizeof(uint64_t));
+            } else {
+                // read size bytes in reverse order to interpret from little endian
+                char *size_bytes = reinterpret_cast<char *>(&size);
+                size_t endian_index = sizeof(uint64_t);
+                for (size_t i = 0; i < sizeof(uint64_t); ++i) {
+                    size_bytes[--endian_index] = data[index + i];
+                }
+            }
+            boost::span<char> span(data.data() + index + sizeof(uint64_t), size);
+            bmi->load_serialization_state(span);
+            index += sizeof(uint64_t) + size;
+            LOG(LogLevel::DEBUG, "Loading of multi-BMI %s %s completed with a size of %d bytes.",
+                bmi->get_id().c_str(), bmi->get_model_type_name().c_str(), span.size());
+        }
     }
 }
 

@@ -13,6 +13,7 @@ namespace hy_features
 }
 
 class State_Snapshot_Saver;
+class State_Snapshot_Loader;
 
 #include <memory>
 #include <vector>
@@ -62,6 +63,7 @@ public:
     std::string get_timestamp_for_step(int step) const;
 
     void save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> snapshot_saver);
+    void load_state_snapshot(std::shared_ptr<State_Snapshot_Loader> snapshot_loader);
 
 private:
     void advance_models_one_output_step();

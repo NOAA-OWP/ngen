@@ -95,3 +95,14 @@ void ngen::Layer::save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> snap
         r_c->save_state(snapshot_saver);
     }
 }
+
+void ngen::Layer::load_state_snapshot(std::shared_ptr<State_Snapshot_Loader> snapshot_loader)
+{
+    // XXX Handle any of this class's own state as a meta-data unit
+
+    for (auto const& id : processing_units) {
+        auto r = features.catchment_at(id);
+        auto r_c = std::dynamic_pointer_cast<realization::Bmi_Formulation>(r);
+        r_c->load_state(snapshot_loader);
+    }
+}

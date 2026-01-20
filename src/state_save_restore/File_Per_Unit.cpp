@@ -113,9 +113,11 @@ public:
     ~File_Per_Unit_Snapshot_Loader() override = default;
 
     /**
-     * Load data from whatever source, and pass it to @param unit_loader->load()
+     * Load data from whatever source and store it in the `data` vector.
+     * 
+     * @param data The location where the loaded data will be stored. This will be resized to the amount of data loaded.
      */
-    void load_unit(std::string const& unit_name, State_Unit_Loader *unit_loader) override;
+    void load_unit(std::string const& unit_name, std::vector<char> &data) override;
 
     /**
      * Execute logic to complete the saving process
@@ -138,7 +140,7 @@ File_Per_Unit_Snapshot_Loader::File_Per_Unit_Snapshot_Loader(path dir_path)
 
 }
 
-void File_Per_Unit_Snapshot_Loader::load_unit(std::string const& unit_name, State_Unit_Loader *unit_loader) {
+void File_Per_Unit_Snapshot_Loader::load_unit(std::string const& unit_name, std::vector<char> &data) {
     auto file_path = dir_path_ / unit_name;
     std::uintmax_t size;
     try {
@@ -153,10 +155,8 @@ void File_Per_Unit_Snapshot_Loader::load_unit(std::string const& unit_name, Stat
         throw;
     }
     try {
-        std::vector<char> buffer(size);
-        stream.read(buffer.data(), size);
-        boost::span<const char> data(buffer.data(), size);
-        unit_loader->load(data);
+        data.resize(size);
+        stream.read(data.data(), size);
     } catch (std::exception &e) {
         LOG("Failed to read state save data for unit '" + unit_name + "' in file '" + file_path.string() + "'", LogLevel::WARNING);
         throw;

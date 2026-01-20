@@ -117,6 +117,12 @@ void NgenSimulation::save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> s
     }
 }
 
+void NgenSimulation::load_state_snapshot(std::shared_ptr<State_Snapshot_Loader> snapshot_loader) {
+    for (auto& layer : layers_) {
+        layer->load_state_snapshot(snapshot_loader);
+    }
+}
+
 
 int NgenSimulation::get_nexus_index(std::string const& nexus_id) const
 {

@@ -18,29 +18,21 @@ namespace realization {
 
         void Bmi_Module_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> saver) const {
             uint64_t size = 1;
-            const char* serialization_state = this->create_save_state(&size);
-            boost::span<const char> data(serialization_state, size);
+            boost::span<char> data = this->get_serialization_state();
 
             // Rely on Formulation_Manager also using this->get_id()
             // as a unique key for the individual catchment
             // formulations
             saver->save_unit(this->get_id(), data);
 
-            this->free_save_state();
+            this->free_serialization_state();
         }
 
-        const char* Bmi_Module_Formulation::create_save_state(uint64_t *size) const {
-            auto model = get_bmi_model();
-            model->SetValue("serialization_create", size);
-            model->GetValue("serialization_size", size);
-            auto serialization_state = static_cast<char const*>(model->GetValuePtr("serialization_state"));
-            return serialization_state;
-        }
-
-        void Bmi_Module_Formulation::free_save_state() const {
-            auto model = get_bmi_model();
-            int _;
-            model->SetValue("serialization_free", &_);
+        void Bmi_Module_Formulation::load_state(std::shared_ptr<State_Snapshot_Loader> loader) const {
+            std::vector<char> buffer;
+            loader->load_unit(this->get_id(), buffer);
+            boost::span<char> data(buffer.data(), buffer.size());
+            this->load_serialization_state(data);
         }
 
         boost::span<const std::string> Bmi_Module_Formulation::get_available_variable_names() const {
@@ -1093,12 +1085,12 @@ namespace realization {
         }
 
         const boost::span<char> Bmi_Module_Formulation::get_serialization_state() const {
-            auto bmi = this->bmi_model;
-            // create a new serialized state, getting the amount of data that was saved
-            uint64_t* size = (uint64_t*)bmi->GetValuePtr("serialization_create");
-            // get the pointer of the new state
-            char* serialized = (char*)bmi->GetValuePtr("serialization_state");
-            const boost::span<char> span(serialized, *size);
+            auto model = get_bmi_model();
+            uint64_t size = 0;
+            model->SetValue("serialization_create", &size);
+            model->GetValue("serialization_size", &size);
+            auto serialization_state = static_cast<char *>(model->GetValuePtr("serialization_state"));
+            const boost::span<char> span(serialization_state, size);
             return span;
         }
 

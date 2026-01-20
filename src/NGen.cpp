@@ -720,6 +720,13 @@ int main(int argc, char* argv[]) {
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
     LOG("[TIMING]: Init: " + std::to_string(time_elapsed_init.count()), LogLevel::INFO);
 
+    if (state_saving_config.has_cold_start()) {
+        LOG(LogLevel::INFO, "Loading simulation data from cold start.");
+        std::shared_ptr<State_Loader> cold_loader = state_saving_config.cold_start_loader();
+        std::shared_ptr<State_Snapshot_Loader> cold_snapshot_loader = cold_loader->initialize_snapshot(State_Saver::snapshot_time_now());
+        simulation->load_state_snapshot(cold_snapshot_loader);
+    }
+
     simulation->run_catchments();
 
     if (state_saving_config.has_end_of_run()) {

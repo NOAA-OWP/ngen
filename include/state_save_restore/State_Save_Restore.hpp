@@ -50,7 +50,7 @@ public:
 
     std::shared_ptr<State_Saver> end_of_run_saver() const;
 
-    std::shared_ptr<State_Loader> cold_start_saver() const;
+    std::shared_ptr<State_Loader> cold_start_loader() const;
 
     struct instance
     {
@@ -155,8 +155,6 @@ public:
     virtual void finalize() = 0;
 };
 
-class State_Unit_Loader;
-
 class State_Snapshot_Loader
 {
 public:
@@ -166,7 +164,7 @@ public:
     /**
      * Load data from whatever source, and pass it to @param unit_loader->load()
      */
-    virtual void load_unit(std::string const& unit_name, State_Unit_Loader *unit_loader) = 0;
+    virtual void load_unit(std::string const& unit_name, std::vector<char> &data) = 0;
 
     /**
      * Execute logic to complete the saving process
@@ -177,14 +175,6 @@ public:
      * or ever.
      */
     virtual void finish_saving() = 0;
-};
-
-class State_Unit_Loader
-{
-public:
-    State_Unit_Loader() = default;
-    virtual ~State_Unit_Loader() = default;
-    virtual void load(boost::span<char const> data) = 0;
 };
 
 #endif // NGEN_STATE_SAVE_RESTORE_HPP

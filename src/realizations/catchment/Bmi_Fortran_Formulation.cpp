@@ -93,14 +93,14 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
     return 1.0;
 }
 
-const char* Bmi_Fortran_Formulation::create_save_state(uint64_t *size) const {
+const boost::span<char> Bmi_Fortran_Formulation::get_serialization_state() const {
     auto model = get_bmi_model();
-    int size_int = 1;
+    int size_int = 0;
     model->SetValue("serialization_create", &size_int);
     model->GetValue("serialization_size", &size_int);
-    auto serialization_state = static_cast<char const*>(model->GetValuePtr("serialization_state"));
-    *size = static_cast<uint64_t>(size_int);
-    return serialization_state;
+    auto serialization_state = static_cast<char*>(model->GetValuePtr("serialization_state"));
+    const boost::span<char> span(serialization_state, size_int);
+    return span;
 }
 
 #endif // NGEN_WITH_BMI_FORTRAN

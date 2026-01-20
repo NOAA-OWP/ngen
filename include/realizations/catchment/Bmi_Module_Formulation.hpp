@@ -52,18 +52,7 @@ namespace realization {
          */
         void save_state(std::shared_ptr<State_Snapshot_Saver> saver) const override;
 
-        /**
-         * Requests the BMI to copy its current state into memory. The state will remain in memory until either a new state is made or `free_save_state` is called.
-         * 
-         * @param size A `uint64_t` pointer that will have its value set to the size of the serialized data.
-         * @return Pointer to the beginning of the serialized data.
-         */
-        virtual const char* create_save_state(uint64_t *size) const;
-
-        /**
-         * Clears any serialized data stored by the BMI from memory.
-         */
-        virtual void free_save_state() const;
+        void load_state(std::shared_ptr<State_Snapshot_Loader> loader) const override;
 
         /**
          * Get the collection of forcing output property names this instance can provide.
@@ -299,8 +288,20 @@ namespace realization {
         const std::vector<std::string> get_bmi_input_variables() const override;
         const std::vector<std::string> get_bmi_output_variables() const override;
 
-        const boost::span<char> get_serialization_state() const;
+        /**
+         * Requests the BMI to copy its current state into memory. The state will remain in memory until either a new state is made or `free_serialization_state` is called.
+         * 
+         * @return Span of the serialized data.
+         */
+        virtual const boost::span<char> get_serialization_state() const;
+        /**
+         * Requests the BMI to load data from a previously saved state. This has a side effect of freeing a current state if it currently exists.
+         */
         void load_serialization_state(const boost::span<char> state) const;
+        /**
+         * Requests the BMI to clear a currently saved state from memory.
+         * Existing state pointers should not be used as the stored data may be freed depending on implementation.
+         */
         void free_serialization_state() const;
         void set_realization_file_format(bool is_legacy_format);
 

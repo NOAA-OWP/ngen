@@ -101,12 +101,13 @@
             "provider": "CsvPerFeature"
         }
     },
-    "state_saving": {
+    "state_saving": [{
+        "direction": "save",
         "label": "end",
         "path": "state_end",
         "type": "FilePerUnit",
         "when": "EndOfRun"
-    },
+    }],
     "time": {
         "start_time": "2015-12-01 00:00:00",
         "end_time": "2015-12-30 23:00:00",

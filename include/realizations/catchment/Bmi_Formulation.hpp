@@ -42,6 +42,7 @@ class Bmi_C_Formulation_Test;
 class Bmi_C_Pet_IT;
 
 class State_Snapshot_Saver;
+class State_Snapshot_Loader;
 
 namespace realization {
 
@@ -77,6 +78,13 @@ namespace realization {
          * and length, passes that to saver, and then releases it
          */
         virtual void save_state(std::shared_ptr<State_Snapshot_Saver> saver) const = 0;
+
+        /**
+         * Passes a serialized representation of the model's state to ``loader``
+         *
+         * Asks saver to find data for the BMI and passes that data to the BMI for loading.
+         */
+        virtual void load_state(std::shared_ptr<State_Snapshot_Loader> loader) const = 0;
 
         /**
          * Convert a time value from the model to an epoch time in seconds.

@@ -17,6 +17,7 @@ namespace hy_features
 }
 
 class State_Snapshot_Saver;
+class State_Snapshot_Loader;
 
 namespace ngen
 {
@@ -113,6 +114,7 @@ namespace ngen
                                    int current_step);
 
         virtual void save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> snapshot_saver);
+        virtual void load_state_snapshot(std::shared_ptr<State_Snapshot_Loader> snapshot_loader);
 
         protected:
 

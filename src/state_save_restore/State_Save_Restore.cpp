@@ -82,7 +82,7 @@ bool State_Save_Config::has_cold_start() const {
     return this->cold_start() >= 0;
 }
 
-std::shared_ptr<State_Loader> State_Save_Config::cold_start_saver() const {
+std::shared_ptr<State_Loader> State_Save_Config::cold_start_loader() const {
     int index = this->cold_start();
     if (index >= 0) {
         const auto& i = instances_[index];
@@ -92,6 +92,7 @@ std::shared_ptr<State_Loader> State_Save_Config::cold_start_saver() const {
             Logger::logMsgAndThrowError("State_Save_Config: Saving mechanism " + i.mechanism_string() + " is not supported for end of run saving.");
         }
     }
+    Logger::logMsgAndThrowError("State_Save_Config: No configuration was found for loading a cold start.");
 }
 
 State_Save_Config::instance::instance(std::string const& direction, std::string const& label, std::string const& path, std::string const& mechanism, std::string const& timing)
