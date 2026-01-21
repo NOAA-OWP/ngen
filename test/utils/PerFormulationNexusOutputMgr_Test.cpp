@@ -30,9 +30,6 @@ protected:
     void SetUp() override;
     void TearDown() override;
 
-    //static void SetUpTestSuite();
-    //static void TearDownTestSuite();
-
     static std::string friend_get_current_formulation_id(const utils::PerFormulationNexusOutputMgr* obj) { return obj->current_formulation_id; }
     static std::unordered_map<std::string, std::string> friend_get_nexus_outfiles(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nexus_outfiles; }
     static std::string friend_get_nc_flow_var_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_flow_var_name; }
@@ -196,7 +193,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_2_a)
 /** Test example 2 writes flow data correctly (same as would be over serial) with multiple simultaneous writes via MPI. */
 TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_a)
 {
-
     MPI_Barrier(MPI_COMM_WORLD);
 
     // Expect only two ranks
@@ -225,8 +221,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_a)
     };
     utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, ex_2_form_names, output_root, ex_2_num_time_steps, rank, nexus_per_rank);
 
-    /*
-    * /
     // Add to files_to_clean_up, but only for rank 0 to deal with (they should be the same sets of files)
     if (rank == 0) {
         // Make sure we know what files to clean up
@@ -235,24 +229,15 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_a)
             files_to_cleanup.push_back(f);
         }
     }
-    /*
-     */
 
     // Write for this rank's nexuses
     for (size_t t = 0; t < ex_2_timestamps.size(); ++t) {
-        //for (int n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
         for (size_t n = 0; n < nexus_ids->size(); ++n) {
             mgr.receive_data_entry(ex_2_form_names->at(0),
-                                   //ex_0_form_0_nexus_ids[n],
                                    nexus_ids->at(n),
-                                   //utils::time_marker(t, ex_0_timestamps_seconds[t], ex_0_timestamps[t]),
                                    utils::time_marker(t, ex_2_timestamps_seconds[t], ex_2_timestamps[t]),
-                                   //ex_0_data[t][n]);
                                    group_data->at(t)[n]);
         }
-        //if (rank == 0) {
-        //    printf("Rank %i wrote timestep %lu\n", rank, t);
-        //}
         mgr.commit_writes();
     }
 
@@ -269,18 +254,15 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_a)
     ASSERT_EQ(flow.getDim(0).getSize(), 8);
     ASSERT_EQ(flow.getDim(1).getSize(), 720);
     // Note that nexus feature_id dim comes before time dim, so have to order this way
-    //double values[ex_0_form_0_nexus_ids.size()][ex_0_data.size()];
     double values[8][720];
     flow.getVar(values);
     for (size_t t = 0; t < ex_2_timestamps.size(); ++t) {
         for (size_t n = 0; n < ex_2_form_0_all_nexus_id.size(); ++n) {
-            //printf("At timestep %i for feature %i, expected value %d and received %d", t, n, ex_2_all_data[t][n], values[n][t]);
             ASSERT_EQ(values[n][t], ex_2_all_data[t][n]) << "On timestep " << t << " for nexus id " << nexus_ids->at(n)
                 << " value was " << values[n][t] << " but expected was " << ex_2_all_data[t][n] << "; \n"
                 << "Full timestep data for this timestep is: \n" << values << "\n ***** \n";
         }
     }
-
 }
 
 /** Test example 2 writes feature ids correctly using multiple simultaneous writes via MPI. */
@@ -310,8 +292,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
     };
     utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, ex_2_form_names, output_root, ex_2_num_time_steps, rank, nexus_per_rank);
 
-    /*
-    */
     // Add to files_to_clean_up, but only for rank 0 to deal with (they should be the same sets of files)
     if (rank == 0) {
         // Make sure we know what files to clean up
@@ -320,8 +300,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
             files_to_cleanup.push_back(f);
         }
     }
-    /*
-    */
 
     // Write for this rank's nexuses, but only for the first timestep (i.e., 0) to test the feature ID writes
     size_t t = 0;
@@ -329,7 +307,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
         mgr.receive_data_entry(ex_2_form_names->at(0),
                                nexus_ids->at(n),
                                utils::time_marker(t, ex_2_timestamps_seconds[t], ex_2_timestamps[t]),
-                               //ex_0_data[t][n]);
                                group_data->at(t)[n]);
     }
     mgr.commit_writes();
@@ -347,7 +324,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
     ASSERT_EQ(nc_var_nex_ids.getDim(0).getSize(), ex_2_form_0_all_nexus_id.size());
 
     // Note that nexus feature_id dim comes before time dim, so have to order this way
-    //double values[ex_0_form_0_nexus_ids.size()][ex_0_data.size()];
     std::vector<unsigned int> nex_id_numeric(ex_2_form_0_all_nexus_id.size());
     nc_var_nex_ids.getVar(nex_id_numeric.data());
 
@@ -355,7 +331,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
     for (size_t i = 0; i < nex_id_strs.size(); ++i) {
         nex_id_strs[i] = "nex-" + std::to_string(nex_id_numeric[i]);
     }
-
     ASSERT_EQ(nex_id_strs, ex_2_form_0_all_nexus_id);
 }
 
