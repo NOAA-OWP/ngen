@@ -365,9 +365,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
 /** Test that example 0 gets constructed and expects a single managed file. */
 TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_a)
 {
-    int nex_id_index = 0;
     std::string form_name = ex_0_form_0_nexus_ids[0];
-    int time_index = 0;
 
     utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
 
@@ -383,9 +381,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_a)
 /** Test that example 0 gets constructed and single instance creates the NetCDF file. */
 TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_b)
 {
-    int nex_id_index = 0;
     std::string form_name = ex_0_form_0_nexus_ids[0];
-    int time_index = 0;
 
     utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
 
@@ -401,9 +397,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_b)
 /** Test that example 0 gets constructed and has expected nexus output files. */
 TEST_F(PerFormulationNexusOutputMgr_Test, nexus_out_files_0_a)
 {
-    int nex_id_index = 0;
     std::string form_name = ex_0_form_0_nexus_ids[0];
-    int time_index = 0;
 
     utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
 
@@ -413,7 +407,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, nexus_out_files_0_a)
         files_to_cleanup.push_back(f);
     }
 
-    std::unordered_map<std::string, std::string> nexus_outfiles = PerFormulationNexusOutputMgr_Test::friend_get_nexus_outfiles(&mgr);
+    std::unordered_map<std::string, std::string> nexus_outfiles = friend_get_nexus_outfiles(&mgr);
     ASSERT_EQ(nexus_outfiles.size(), ex_0_form_names->size());
     for (size_t i = 0; i < ex_0_form_names->size(); ++i) {
         ASSERT_TRUE(nexus_outfiles.find(ex_0_form_names->at(i)) != nexus_outfiles.end());
@@ -440,14 +434,13 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_a) {
     mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[nex_id_index], current_time,
         ex_0_data[time_index][nex_id_index]);
 
-    std::string current_form_id = PerFormulationNexusOutputMgr_Test::friend_get_current_formulation_id(&mgr);
+    std::string current_form_id = friend_get_current_formulation_id(&mgr);
     ASSERT_EQ(current_form_id, form_name);
 }
 
 /** Make sure can't receive additional data entries for more than one time steps without writing first. */
 TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_b)
 {
-    int nex_id_index = 0;
     std::string form_name = ex_0_form_names->at(0);
     int time_index = 0;
 
@@ -497,10 +490,9 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_c) {
 
     // Should only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(PerFormulationNexusOutputMgr_Test::friend_get_nc_flow_var_name(&mgr));
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
 
     ASSERT_FALSE(flow.isNull());
-    //double values[ex_0_form_0_nexus_ids.size()];
     double values[4];
     flow.getVar(values);
     for (size_t i = 0; i < ex_0_form_0_nexus_ids.size(); ++i) {
@@ -531,10 +523,9 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_a) {
 
     // Should only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(PerFormulationNexusOutputMgr_Test::friend_get_nc_flow_var_name(&mgr));
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
 
     ASSERT_FALSE(flow.isNull());
-    //double values[ex_0_form_0_nexus_ids.size()];
     double values[4][2];
     flow.getVar(values);
     for (size_t i = 0; i < ex_0_form_0_nexus_ids.size(); ++i) {
@@ -545,9 +536,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_a) {
 /** Make sure writes work example 0 (single instance) for multiple time steps. */
 TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_b) {
 
-    int nex_id_index = 0;
     std::string form_name = ex_0_form_names->at(0);
-    int time_index = 0;
 
     utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
 
@@ -569,11 +558,10 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_b) {
 
     // Should only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(PerFormulationNexusOutputMgr_Test::friend_get_nc_flow_var_name(&mgr));
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
-    //double values[ex_0_form_0_nexus_ids.size()][ex_0_data.size()];
     double values[4][2];
     flow.getVar(values);
     for (size_t t = 0; t < ex_0_timestamps.size(); ++t) {
@@ -683,13 +671,10 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_a) {
 
     // Should still only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(PerFormulationNexusOutputMgr_Test::friend_get_nc_flow_var_name(&mgr_a));
-
-
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_a));
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
-    //double values[ex_1_form_0_all_nexus_id.size()][ex_1_all_data.size()];
     double values[8][2];
     flow.getVar(values);
     for (size_t t = 0; t < ex_1_timestamps.size(); ++t) {
@@ -706,7 +691,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_a) {
 TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_b) {
 
     std::string form_name = ex_1_form_names->at(0);
-
 
     std::vector<int> nexus_per_rank = {
         static_cast<int>(ex_1_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_1_form_0_group_b_nexus_ids.size())
@@ -744,11 +728,10 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_b) {
 
     // Should still only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(PerFormulationNexusOutputMgr_Test::friend_get_nc_flow_var_name(&mgr_a));
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_a));
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
-    //double values[ex_1_form_0_all_nexus_id.size()][ex_1_all_data.size()];
     double values[8][2];
     flow.getVar(values);
     for (size_t t = 0; t < ex_1_timestamps.size(); ++t) {
@@ -830,16 +813,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_c) {
         files_to_cleanup.push_back(f);
     }
 
-    //for (size_t t = 0; t < ex_0_timestamps.size(); ++t) {
     for (size_t t = 0; t < ex_2_timestamps.size(); ++t) {
-        //for (int n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
         for (int n = 0; n < nexus_ids->size(); ++n) {
             mgr.receive_data_entry(form_name,
-                                   //ex_0_form_0_nexus_ids[n],
                                    nexus_ids->at(n),
-                                   //utils::time_marker(t, ex_0_timestamps_seconds[t], ex_0_timestamps[t]),
                                    utils::time_marker(t, ex_2_timestamps_seconds[t], ex_2_timestamps[t]),
-                                   //ex_0_data[t][n]);
                                    group_data->at(t)[n]);
         }
         mgr.commit_writes();
@@ -853,11 +831,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_c) {
     // Note that nexus feature_id dim comes before time dim, so have to order this way
     double values[8][720];
     flow.getVar(values);
-    //for (size_t t = 0; t < ex_0_timestamps.size(); ++t) {
     for (size_t t = 0; t < ex_2_timestamps.size(); ++t) {
-        //for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
         for (size_t n = 0; n < ex_2_form_0_all_nexus_id.size(); ++n) {
-            //ASSERT_EQ(values[n][t], ex_0_data[t][n]);
             ASSERT_EQ(values[n][t], ex_2_all_data[t][n]) << "On timestep " << t << " for nexus id " << nexus_ids->at(n)
                 << " value was " << values[n][t] << " but expected was " << ex_2_all_data[t][n] << "; \n"
                 << "Full timestep data for this timestep is: \n" << values << "\n ***** \n";
