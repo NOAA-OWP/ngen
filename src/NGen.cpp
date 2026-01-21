@@ -464,7 +464,8 @@ int main(int argc, char *argv[]) {
             MPI_Barrier(MPI_COMM_WORLD);
         }
         #if NGEN_WITH_NETCDF
-        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root(), mpi_rank, nexuses_per_rank);
+        size_t timesteps = manager->Simulation_Time_Object->get_total_output_times();
+        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root(), timesteps, mpi_rank, nexuses_per_rank);
         #else
         throw std::runtime_error("NetCDF support required to use per-formulation nexus files.");
         #endif
