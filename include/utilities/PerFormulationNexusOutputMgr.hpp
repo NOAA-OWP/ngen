@@ -7,6 +7,11 @@
 
 #include "NexusOutputsMgr.hpp"
 #include <netcdf>
+#include "netcdf.h"
+#if NGEN_WITH_MPI
+#include "netcdf_par.h"
+#include "mpi.h"
+#endif
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
@@ -41,6 +46,7 @@ namespace utils
          * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
          * @param formulation_ids
          * @param output_root The output root for written files (as a string).
+         * @param total_timesteps The total number of timesteps that will be written to the managed file.
          * @param rank The rank of this instance when multiple instances may operate on the same file; e.g., when
          *             using MPI (always `0` if only one instance may operate on the managed file).
          * @param nexuses_per_rank The total number nexuses for each running rank.
@@ -48,11 +54,13 @@ namespace utils
         PerFormulationNexusOutputMgr(const std::vector<std::string>& nexus_ids,
                                      std::shared_ptr<std::vector<std::string>> formulation_ids,
                                      const std::string &output_root,
+                                     const size_t total_timesteps,
                                      const int rank,
                                      const std::vector<int>& nexuses_per_rank)
             :   nexus_ids(nexus_ids),
                 rank(rank),
-                nexuses_per_rank(nexuses_per_rank)
+                nexuses_per_rank(nexuses_per_rank),
+                total_timesteps(total_timesteps)
         {
             if (this->nexuses_per_rank.empty()) {
                 if (this->rank > 0)
@@ -110,12 +118,12 @@ namespace utils
                      * Important:  do not change order or add more dims w/out also updating commit_writes appropriately.
                      * ********************************************************************************************** */
                     netCDF::NcDim dim_nexus = ncf.addDim(this->nc_nex_id_dim_name, total_nexuses);
-                    netCDF::NcDim dim_time = ncf.addDim(this->nc_time_dim_name);
+                    netCDF::NcDim dim_time = ncf.addDim(this->nc_time_dim_name, total_timesteps);
 
-                    netCDF::NcVar var_nexus = ncf.addVar(this->nc_nex_id_dim_name, netCDF::ncUint, {dim_nexus});
+                    netCDF::NcVar var_nexus = ncf.addVar(this->nc_nex_id_dim_name, netCDF::ncUint, dim_nexus);
                     var_nexus.putAtt("long_name", "Feature ID");
 
-                    netCDF::NcVar var_time = ncf.addVar(this->nc_time_dim_name, netCDF::ncUint, {dim_time});
+                    netCDF::NcVar var_time = ncf.addVar(this->nc_time_dim_name, netCDF::ncUint, dim_time);
                     var_time.putAtt("units", "minutes since 1970-01-01 00:00:00");
                     var_time.putAtt("calendar", "gregorian");
                     var_time.putAtt("long_name", "Time");
@@ -134,10 +142,13 @@ namespace utils
          * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
          * @param formulation_ids
          * @param output_root The output root for written files (as a string).
+         * @param total_timesteps The total number of timesteps that will be written to the managed file.
          */
         PerFormulationNexusOutputMgr(const std::vector<std::string> nexus_ids,
                                      std::shared_ptr<std::vector<std::string>> formulation_ids,
-                                     const std::string &output_root) : PerFormulationNexusOutputMgr(nexus_ids, formulation_ids, output_root, 0, {}) {}
+                                     const std::string &output_root,
+                                     const size_t total_timesteps)
+            : PerFormulationNexusOutputMgr(nexus_ids, formulation_ids, output_root, total_timesteps, 0, {}) {}
 
         /**
          * Write any received data entries that were not written immediately upon receipt to the managed data files.
@@ -148,6 +159,7 @@ namespace utils
          * Additionally, it clears the current ::attribute:`data_cache` and ::attribute:`current_formulation_id` values.
          */
         void commit_writes() override {
+            int nc_status, nc_id, nc_flow_var_id;
             // If no current formulation id set, that should mean there is nothing to write
             if (current_formulation_id.empty()) {
                 return;
@@ -159,38 +171,78 @@ namespace utils
                 // Sanity check we have everything in our block of nexus ids
                 if (data_cache.find(nexus_ids[i]) == data_cache.end()) {
                     throw std::runtime_error(
-                        "Missing data for nexus " + nexus_ids[i] + " in formulation " + current_formulation_id +
-                        " at time index " + std::to_string(current_time_index) + ".");
+                        "PerFormulationNexusOutputMgr missing data attempting to commit_writes for nexus "
+                        + nexus_ids[i] + " in formulation " + current_formulation_id + " at time index "
+                        + std::to_string(current_time_index) + ".");
                 }
                 data[i] = data_cache[nexus_ids[i]];
             }
 
             const std::string filename = nexus_outfiles[current_formulation_id];
 
-            const netCDF::NcFile ncf(filename, netCDF::NcFile::write, netCDF::NcFile::nc4);
+            //netCDF::NcFile ncf(filename, netCDF::NcFile::write, netCDF::NcFile::nc4);
+            //printf("*** Got here rank %i\n", rank);
+            #if NGEN_WITH_MPI
+            if (nexuses_per_rank.size() > 1) {
+                nc_status = nc_open_par(filename.c_str(), NC_WRITE, MPI_COMM_WORLD, MPI_INFO_NULL, &nc_id);
+            }
+            else {
+                nc_status = nc_open(filename.c_str(), NC_WRITE, &nc_id);
+            }
+
+            #else
+            nc_status = nc_open(filename.c_str(), NC_WRITE, &nc_id);
+            #endif
+
+            //printf("*** Got here 2 rank %i\n", rank);
 
             // On the first write, also write the nexus id variable values
-            write_nexus_ids_once(ncf);
+            //write_nexus_ids_once(ncf);
+            write_nexus_ids_once_c(nc_id);
 
-            const netCDF::NcVar flow = ncf.getVar(nc_flow_var_name);
+            // For just rank 0, write the time value
+            if (rank == 0) {
+                //const netCDF::NcVar timestamp = ncf.getVar(nc_time_dim_name);
+                //nc_status = nc_inq_varid(nc_id, nc_time_dim_name.c_str(), &nc_time_var_id);
+                int nc_time_var_id = get_nc_variable_id(nc_time_dim_name, nc_id);
+
+                long epoch_minutes = current_epoch_time / 60;
+                // TODO: (later) consider if we need to sanity check that times are consistent across ranks (we were
+                // TODO:        effectively assuming this to be the case when not explicitly writing times).
+                std::vector<size_t> start_t{static_cast<size_t>(current_time_index)};
+                std::vector<size_t> count_t{1};
+                //timestamp.putVar(std::vector<size_t>{static_cast<size_t>(current_time_index)}, std::vector<size_t>{1}, &epoch_minutes);
+
+                nc_status = nc_put_vara_long(nc_id, nc_time_var_id, start_t.data(), count_t.data(), &epoch_minutes);
+                if (nc_status != NC_NOERR) {
+                    throw std::runtime_error("Error writing time value to nexus file '" + filename + "' ("
+                        + std::to_string(nc_status) + ") at time index " + std::to_string(current_time_index) +".");
+                }
+            }
+
+            //const netCDF::NcVar flow = ncf.getVar(nc_flow_var_name);
+            //nc_status = nc_inq_varid(nc_id, nc_flow_var_name.c_str(), &nc_flow_var_id);
+            nc_flow_var_id = get_nc_variable_id(nc_flow_var_name, nc_id);
 
             // Assume base on how constructor was set up (imply for conciseness)
             //size_t nexus_dim_index = 0;
             //size_t time_dim_index = 1;
-            const std::vector<size_t> start = {local_offset, static_cast<size_t>(current_time_index)};
-            const std::vector<size_t> count = {nexus_ids.size(), 1};
+            const std::vector<size_t> start_f = {local_offset, static_cast<size_t>(current_time_index)};
+            const std::vector<size_t> count_f = {nexus_ids.size(), 1};
 
-            flow.putVar(start, count, data.data());
-
-            // For just rank 0, write the time value also
-            if (rank == 0) {
-                const netCDF::NcVar timestamp = ncf.getVar(nc_time_dim_name);
-                time_t epoch_minutes = current_epoch_time / 60;
-                // TODO: (later) consider if we need to sanity check that times are consistent across ranks (we were
-                // TODO:        effectively assuming this to be the case when not explicitly writing times).
-                timestamp.putVar(std::vector<size_t>{static_cast<size_t>(current_time_index)}, std::vector<size_t>{1}, &epoch_minutes);
+            //flow.putVar(start_f, count_f, data.data());
+            nc_status = nc_put_vara_double(nc_id, nc_flow_var_id, start_f.data(), count_f.data(), data.data());
+            if (nc_status != NC_NOERR) {
+                throw std::runtime_error("Error writing flow value to nexus file '" + filename + "' ("
+                    + std::to_string(nc_status) + ") at time index " + std::to_string(current_time_index) +".");
             }
 
+
+            nc_status = nc_close(nc_id);
+            if (nc_status != NC_NOERR) {
+                throw std::runtime_error("Error closing nexus file '" + filename + "' ("
+                    + std::to_string(nc_status) + ") at time index " + std::to_string(current_time_index) +".");
+            }
             current_time_index++;
             current_epoch_time = 0;
             data_cache.clear();
@@ -273,6 +325,8 @@ namespace utils
         std::unordered_map<std::string, std::string> nexus_outfiles;
         /** The number of nexuses assigned to each rank. */
         std::vector<int> nexuses_per_rank;
+        /** The total number of timesteps that will be written to the managed file. */
+        size_t total_timesteps;
 
         // For unit testing
         friend class ::PerFormulationNexusOutputMgr_Test;
@@ -282,7 +336,7 @@ namespace utils
          *
          * @param ncf NetCDF file object
          */
-        void write_nexus_ids_once(const netCDF::NcFile& ncf) {
+        void write_nexus_ids_once(netCDF::NcFile& ncf) {
             if (current_time_index == 0) {
                 std::vector<unsigned int> numeric_nex_ids(nexus_ids.size());
                 const char delimiter = '-';
@@ -298,6 +352,55 @@ namespace utils
                 const netCDF::NcVar var_nexus = ncf.getVar(nc_nex_id_dim_name);
                 var_nexus.putVar({this->local_offset}, {numeric_nex_ids.size()}, numeric_nex_ids.data());
             }
+        }
+
+        void write_nexus_ids_once_c(int nc_id) {
+            if (current_time_index == 0) {
+                int nc_status, nc_nex_var_id;
+
+                std::vector<unsigned int> numeric_nex_ids(nexus_ids.size());
+                const char delimiter = '-';
+
+                for (size_t i = 0; i < nexus_ids.size(); ++i) {
+                    const std::string::size_type pos = nexus_ids[i].find(delimiter);
+                    if (pos == std::string::npos) {
+                        throw std::runtime_error("Invalid nexus id '" + nexus_ids[i] + "' (no delimiter '"
+                                                 + std::string(1, delimiter) + "').");
+                    }
+                    numeric_nex_ids[i] = std::stoi(nexus_ids[i].substr(pos + 1));
+                }
+
+                nc_nex_var_id = this->get_nc_variable_id(nc_nex_id_dim_name, nc_id);
+
+                std::vector<size_t> start{this->local_offset};
+                std::vector<size_t> count{numeric_nex_ids.size()};
+
+                nc_status = nc_put_vara_uint(nc_id, nc_nex_var_id, start.data(), count.data(), numeric_nex_ids.data());
+                // TODO: (later) do something more thoughtful here ... maybe write separate internal util for this
+                if (nc_status != NC_NOERR) {
+                    throw std::runtime_error("Error writing nexus ids to netcdf for nexus output manager (code was "
+                                             + std::to_string(nc_status) + ").");
+                }
+            }
+        }
+
+        /*!
+         * Get the C API variable id for a given NetCDF variable.
+         *
+         * @param var_name Variable name.
+         * @param nc_id NetCDF C API file handle id.
+         * @return the variable id
+         */
+        int get_nc_variable_id(std::string var_name, int nc_id) {
+            int status, var_id;
+            status = nc_inq_varid(nc_id, var_name.c_str(), &var_id);
+            if (status == NC_EBADID) {
+                throw std::runtime_error("Bad netcdf file id trying to get '" + var_name + " variable for nexus output manager'.");
+            }
+            if (status == NC_ENOTVAR) {
+                throw std::runtime_error("No '" + var_name + "' variable in netcdf file for nexus output manager'.");
+            }
+            return var_id;
         }
 
     };
