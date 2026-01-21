@@ -318,7 +318,7 @@ namespace realization {
                 data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
 #endif
 #if NGEN_WITH_PYTHON
-                data_access::detail::ForcingsEngineStorage::instances.finalize();
+                data_access::detail::ForcingsEngineStorage::instances.clear();
 #endif
                 ss.str(""); ss << "Formulation_Manager finalized" << std::endl;
                 LOG(ss.str(), LogLevel::DEBUG);
