@@ -44,13 +44,9 @@ public:
      */
     State_Save_Config(boost::property_tree::ptree const& config);
 
-    bool has_end_of_run() const;
+    std::unordered_map<std::string, std::shared_ptr<File_Per_Unit_Loader>> start_of_run_loaders() const;
 
-    bool has_cold_start() const;
-
-    std::shared_ptr<State_Saver> end_of_run_saver() const;
-
-    std::shared_ptr<State_Loader> cold_start_loader() const;
+    std::unordered_map<std::string, std::shared_ptr<File_Per_Unit_Saver>> end_of_run_savers() const;
 
     struct instance
     {
@@ -67,8 +63,6 @@ public:
 
 private:
     std::vector<instance> instances_;
-    int end_of_run() const;
-    int cold_start() const;
 };
 
 class State_Saver

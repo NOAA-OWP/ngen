@@ -720,19 +720,17 @@ int main(int argc, char* argv[]) {
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
     LOG("[TIMING]: Init: " + std::to_string(time_elapsed_init.count()), LogLevel::INFO);
 
-    if (state_saving_config.has_cold_start()) {
-        LOG(LogLevel::INFO, "Loading simulation data from cold start.");
-        std::shared_ptr<State_Loader> cold_loader = state_saving_config.cold_start_loader();
-        std::shared_ptr<State_Snapshot_Loader> cold_snapshot_loader = cold_loader->initialize_snapshot(State_Saver::snapshot_time_now());
-        simulation->load_state_snapshot(cold_snapshot_loader);
+    for (const auto& start_loader : state_saving_config.start_of_run_loaders()) {
+        LOG(LogLevel::INFO, "Loading start of run simulation data from state saving config " + start_loader.first);
+        std::shared_ptr<State_Snapshot_Loader> snapshot_loader = start_loader.second->initialize_snapshot(State_Saver::snapshot_time_now());
+        simulation->load_state_snapshot(snapshot_loader);
     }
 
     simulation->run_catchments();
 
-    if (state_saving_config.has_end_of_run()) {
-        LOG("Saving end-of-run state.", LogLevel::INFO);
-        std::shared_ptr<State_Saver> saver = state_saving_config.end_of_run_saver();
-        std::shared_ptr<State_Snapshot_Saver> snapshot = saver->initialize_snapshot(
+    for (const auto& end_saver : state_saving_config.end_of_run_savers()) {
+        LOG(LogLevel::INFO, "Saving end of run simulation data for state saving config " + end_saver.first);
+        std::shared_ptr<State_Snapshot_Saver> snapshot = end_saver.second->initialize_snapshot(
             State_Saver::snapshot_time_now(),
             State_Saver::State_Durability::strict
         );

@@ -39,62 +39,34 @@ State_Save_Config::State_Save_Config(boost::property_tree::ptree const& tree)
     LOG("State saving configured", LogLevel::INFO);
 }
 
-int State_Save_Config::end_of_run() const {
-    for (size_t i = 0; i < instances_.size(); ++i) {
-        auto &instance = instances_[i];
-        if (instance.timing_ == State_Save_When::EndOfRun && instance.direction_ == State_Save_Direction::Save) {
-            return i;
+std::unordered_map<std::string, std::shared_ptr<File_Per_Unit_Loader>> State_Save_Config::start_of_run_loaders() const {
+    std::unordered_map<std::string, std::shared_ptr<File_Per_Unit_Loader>> loaders;
+    for (const auto &i : this->instances_) {
+        if (i.timing_ == State_Save_When::StartOfRun && i.direction_ == State_Save_Direction::Load) {
+            if (i.mechanism_ == State_Save_Mechanism::FilePerUnit) {
+                auto loader = std::make_shared<File_Per_Unit_Loader>(i.path_);
+                loaders[i.label_] = loader;
+            } else {
+                LOG(LogLevel::WARNING, "State_Save_Config: Loading mechanism " + i.mechanism_string() + " is not supported for start of run loading.");
+            }
         }
     }
-    return -1;
+    return loaders;
 }
 
-bool State_Save_Config::has_end_of_run() const {
-    return this->end_of_run() >= 0;
-}
-
-std::shared_ptr<State_Saver> State_Save_Config::end_of_run_saver() const {
-    int index = this->end_of_run();
-    if (index >= 0) {
-        const auto& i = instances_[index];
-        if (i.mechanism_ == State_Save_Mechanism::FilePerUnit) {
-            return std::make_shared<File_Per_Unit_Saver>(i.path_);
-        } else {
-            Logger::logMsgAndThrowError("State_Save_Config: Saving mechanism " + i.mechanism_string() + " is not supported for end of run saving.");
+std::unordered_map<std::string, std::shared_ptr<File_Per_Unit_Saver>> State_Save_Config::end_of_run_savers() const {
+    std::unordered_map<std::string, std::shared_ptr<File_Per_Unit_Saver>> savers;
+    for (const auto &i : this->instances_) {
+        if (i.timing_ == State_Save_When::EndOfRun && i.direction_ == State_Save_Direction::Save) {
+            if (i.mechanism_ == State_Save_Mechanism::FilePerUnit) {
+                auto loader = std::make_shared<File_Per_Unit_Saver>(i.path_);
+                savers[i.label_] = loader;
+            } else {
+                LOG(LogLevel::WARNING, "State_Save_Config: Loading mechanism " + i.mechanism_string() + " is not supported for start of run loading.");
+            }
         }
     }
-    auto error = "State_Save_Config: No end of run was defined in the realization config.";
-    LOG(LogLevel::SEVERE, error);
-    throw std::runtime_error(error);
-}
-
-int State_Save_Config::cold_start() const {
-    for (size_t i = 0; i < instances_.size(); ++i) {
-        const auto& instance = instances_[i];
-        if (instance.timing_ == State_Save_When::StartOfRun && instance.direction_ == State_Save_Direction::Load) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-bool State_Save_Config::has_cold_start() const {
-    return this->cold_start() >= 0;
-}
-
-std::shared_ptr<State_Loader> State_Save_Config::cold_start_loader() const {
-    int index = this->cold_start();
-    if (index >= 0) {
-        const auto& i = instances_[index];
-        if (i.mechanism_ == State_Save_Mechanism::FilePerUnit) {
-            return std::make_shared<File_Per_Unit_Loader>(i.path_);
-        } else {
-            Logger::logMsgAndThrowError("State_Save_Config: Saving mechanism " + i.mechanism_string() + " is not supported for end of run saving.");
-        }
-    }
-    auto error = "State_Save_Config: No configuration was found for loading a cold start.";
-    LOG(LogLevel::SEVERE, error);
-    throw std::runtime_error(error);
+    return savers;
 }
 
 State_Save_Config::instance::instance(std::string const& direction, std::string const& label, std::string const& path, std::string const& mechanism, std::string const& timing)
