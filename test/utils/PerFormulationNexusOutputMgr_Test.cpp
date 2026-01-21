@@ -36,12 +36,9 @@ protected:
     static std::string friend_get_nc_nex_id_dim_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_nex_id_dim_name; }
     static std::string friend_get_nc_time_dim_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_time_dim_name; }
 
-    static void friend_write_nexus_ids_once(utils::PerFormulationNexusOutputMgr* obj, netCDF::NcFile& ncf) {
-        return obj->write_nexus_ids_once(ncf);
-    }
 
-    static void friend_write_nexus_ids_once_c(utils::PerFormulationNexusOutputMgr* obj, int nc_id) {
-        return obj->write_nexus_ids_once_c(nc_id);
+    static void friend_write_nexus_ids_once(utils::PerFormulationNexusOutputMgr* obj, int nc_id) {
+        return obj->write_nexus_ids_once(nc_id);
     }
 
     int rank, size;
@@ -829,9 +826,10 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_0_a)
     }
 
     {
-        // Just call write_nexus_ids_once
-        netCDF::NcFile write_ncf(filenames->at(0), netCDF::NcFile::write, netCDF::NcFile::nc4);
-        friend_write_nexus_ids_once(&mgr, write_ncf);
+        // Just call write_nexus_ids_once_c
+        int write_nc_id;
+        nc_open(filenames->at(0).c_str(), NC_WRITE, &write_nc_id);
+        friend_write_nexus_ids_once(&mgr, write_nc_id);
     }
 
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
@@ -873,92 +871,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_1_a)
     }
 
     {
-        // Just call write_nexus_ids_once
-        netCDF::NcFile write_ncf(filenames->at(0), netCDF::NcFile::write, netCDF::NcFile::nc4);
-        friend_write_nexus_ids_once(&mgr_a, write_ncf);
-        friend_write_nexus_ids_once(&mgr_b, write_ncf);
-    }
-
-    netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar nexus_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr_a));
-
-    // These should all have size 8 for the current example, equal to the size of ex_1_form_0_all_nexus_id
-    ASSERT_EQ(nexus_ids.getDim(0).getSize(), 8);
-    std::vector<unsigned int> nex_id_numeric(8);
-    nexus_ids.getVar(nex_id_numeric.data());
-
-    std::vector<std::string> nex_id_strs(nex_id_numeric.size());
-    for (size_t i = 0; i < nex_id_strs.size(); ++i) {
-        nex_id_strs[i] = "nex-" + std::to_string(nex_id_numeric[i]);
-    }
-
-    ASSERT_EQ(nex_id_strs, ex_1_form_0_all_nexus_id);
-}
-
-/** Test that example 0 works with write_nexus_ids_once and has nexus id var values written to NetCDF file. */
-TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_c_0_a)
-{
-    std::string form_name = ex_0_form_names->at(0);
-
-    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
-
-    // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
-
-    {
         // Just call write_nexus_ids_once_c
         int write_nc_id;
         nc_open(filenames->at(0).c_str(), NC_WRITE, &write_nc_id);
-        friend_write_nexus_ids_once_c(&mgr, write_nc_id);
-    }
-
-    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar nexus_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr));
-
-    // These should all have size 4 for the current example, equal to the size of ex_0_form_0_nexus_ids
-    ASSERT_EQ(nexus_ids.getDim(0).getSize(), 4);
-
-    std::vector<unsigned int> nex_id_numeric(4);
-    nexus_ids.getVar(nex_id_numeric.data());
-
-    std::vector<std::string> nex_id_strs(nex_id_numeric.size());
-    for (size_t i = 0; i < nex_id_strs.size(); ++i) {
-        nex_id_strs[i] = "nex-" + std::to_string(nex_id_numeric[i]);
-    }
-
-    ASSERT_EQ(nex_id_strs, ex_0_form_0_nexus_ids);
-}
-
-/**
- * Test that example 1 works with write_nexus_ids_once and has nexus id var values written to NetCDF file with multiple
- * instances.
- */
-TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_c_1_a)
-{
-    std::string form_name = ex_1_form_names->at(0);
-
-    std::vector<int> nexus_per_rank = {
-        static_cast<int>(ex_1_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_1_form_0_group_b_nexus_ids.size())
-    };
-
-    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, nexus_per_rank);
-    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, nexus_per_rank);
-
-    // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
-
-    {
-        // Just call write_nexus_ids_once_c
-        int write_nc_id;
-        nc_open(filenames->at(0).c_str(), NC_WRITE, &write_nc_id);
-        friend_write_nexus_ids_once_c(&mgr_a, write_nc_id);
-        friend_write_nexus_ids_once_c(&mgr_b, write_nc_id);
+        friend_write_nexus_ids_once(&mgr_a, write_nc_id);
+        friend_write_nexus_ids_once(&mgr_b, write_nc_id);
     }
 
     netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
