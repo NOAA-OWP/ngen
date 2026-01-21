@@ -269,6 +269,39 @@ ngen_add_test(
         NGEN_WITH_MPI
 )
 
+########################## Specialized MPI Tests
+if (NGEN_WITH_MPI)
+    find_package(MPI REQUIRED)
+    add_executable(test_mpi_unit
+            gtest_mpi_main.cpp                          # Special test main() for use with MPI
+            utils/PerFormulationNexusOutputMgr_Test.cpp # Involved test files
+    )
+    # TODO: this might need more
+    target_include_directories(test_mpi_unit PUBLIC include/utils ${MPI_INCLUDE_PATH})
+    target_link_libraries(test_mpi_unit PUBLIC gtest NGen::core NGen::core_nexus NetCDF ${MPI_LIBRARIES})
+    target_compile_definitions(test_mpi_unit PUBLIC NGEN_WITH_MPI NGEN_MPI_UNIT_TESTS)
+
+    #set_target_properties(test_mpi_unit PROPERTIES CROSSCOMPILING_EMULATOR '${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2')
+    set_target_properties(test_mpi_unit PROPERTIES
+            CROSSCOMPILING_EMULATOR "mpirun -np 2"
+            FOLDER test
+    )
+    #gtest_discover_tests(test_mpi_unit)
+
+
+    #set(TEST_MPI_CMD "mpirun" "-np" "2" "test_mpi_unit")
+    #set_target_properties(test_mpi_unit PROPERTIES
+    #        FOLDER test
+    #        VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
+    #)
+    #add_test(
+    #        test_mpi_unit
+    #        COMMAND ${TEST_MPI_CMD}
+    #        #WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    #)
+endif ()
+
+
 ########################## Partitioning Tests
 ngen_add_test(
     test_partition
