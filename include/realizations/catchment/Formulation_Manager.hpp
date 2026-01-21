@@ -318,7 +318,7 @@ namespace realization {
                 data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
 #endif
 #if NGEN_WITH_PYTHON
-                data_access::detail::ForcingsEngineStorage::instances.finalize();
+                data_access::detail::ForcingsEngineStorage::instances.clear();
 #endif
                 ss.str(""); ss << "Formulation_Manager finalized" << std::endl;
                 LOG(ss.str(), LogLevel::DEBUG);
@@ -724,14 +724,12 @@ namespace realization {
 
                 // Iterate over directory entries
                 if (directory != nullptr) {
-                    // handle closing the directory regardless of how the function returns
-                    auto closer = [](DIR *dir){ closedir(dir); };
-                    std::unique_ptr<DIR, decltype(closer)> _(directory, closer);
                     while ((entry = readdir(directory))) {
                         if (std::regex_match(entry->d_name, pattern)) {
                             // Check for regular files and symlinks
             #ifdef _DIRENT_HAVE_D_TYPE
                             if (entry->d_type == DT_REG || entry->d_type == DT_LNK) {
+                                closedir(directory);
                                 return forcing_params(
                                     path + entry->d_name,
                                     provider,
@@ -751,6 +749,7 @@ namespace realization {
                                 }
 
                                 if (S_ISREG(st.st_mode)) {
+                                    closedir(directory);
                                     return forcing_params(
                                         path + entry->d_name,
                                         provider,
@@ -769,6 +768,7 @@ namespace realization {
             #endif
                         }
                     }
+                    closedir(directory);
                 } else {
                     // The directory wasn't found or otherwise couldn't be opened; forcing data cannot be retrieved
                     std::string throw_msg = "Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg;
