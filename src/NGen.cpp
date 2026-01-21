@@ -456,6 +456,7 @@ int main(int argc, char *argv[]) {
         // TODO: (later) use nullptr for now, until full support for multiple formulations per catchment is available
         std::shared_ptr<std::vector<std::string>> formulation_ids = nullptr;
 
+        size_t timesteps = manager->Simulation_Time_Object->get_total_output_times();
         #if NGEN_WITH_MPI
         std::vector<int> nexuses_per_rank(mpi_num_procs, 0);
         nexuses_per_rank[mpi_rank] += local_data.nexus_ids.size();
@@ -464,7 +465,6 @@ int main(int argc, char *argv[]) {
             MPI_Barrier(MPI_COMM_WORLD);
         }
         #if NGEN_WITH_NETCDF
-        size_t timesteps = manager->Simulation_Time_Object->get_total_output_times();
         nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root(), timesteps, mpi_rank, nexuses_per_rank);
         #else
         throw std::runtime_error("NetCDF support required to use per-formulation nexus files.");
@@ -475,7 +475,7 @@ int main(int argc, char *argv[]) {
         #else
 
         #if NGEN_WITH_NETCDF
-        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root());
+        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root(), timesteps);
         #else
         throw std::runtime_error("NetCDF support required to use per-formulation nexus files.");
         #endif
