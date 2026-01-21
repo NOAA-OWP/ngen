@@ -74,6 +74,8 @@ namespace data_access
         /** Return the variables that are accessable by this data provider */
         boost::span<const std::string> get_available_variable_names() const override;
 
+        const std::string get_provider_units_for_variable(const std::string& name) const override;
+
         /** return a list of ids in the current file */
         const std::vector<std::string>& get_ids() const;
 
@@ -140,7 +142,7 @@ namespace data_access
 
         const netCDF::NcVar& get_ncvar(const std::string& name);
 
-        const std::string& get_ncvar_units(const std::string& name);
+        const std::string& get_ncvar_units(const std::string& name) const;
 
     };
 }

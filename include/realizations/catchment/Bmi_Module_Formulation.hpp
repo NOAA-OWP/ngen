@@ -71,6 +71,12 @@ namespace realization {
         boost::span<const std::string> get_available_variable_names() const override;
 
         /**
+         * Get the units of a forcing variable that this instance can provide.
+         * @param name The forcing variable for which the units are requested.
+         */
+        const std::string get_provider_units_for_variable(const std::string& name) const override;
+
+        /**
          * Get a delimited string with all the output variable values for the given time step.
          *
          * This method is useful for preparing calculated data in a representation useful for output files, such as
@@ -129,6 +135,8 @@ namespace realization {
          * @return The total discharge of the model for the given time step.
          */
         double get_response(time_step_t t_index, time_step_t t_delta) override;
+
+        void update(time_step_t t_index, time_step_t t_delta) override;
 
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
@@ -235,6 +243,26 @@ namespace realization {
          */
         double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
+        /**
+         * Get value for some BMI model variable at a specific index.
+         *
+         * Function gets the value for a provided variable, returned from the backing model as an array, and returns the
+         * specific value at the desired index cast as a double type.
+         *
+         * The function makes several assumptions:
+         *
+         *     1. `index` is within array bounds
+         *     2. `var_name` is in the set of valid variable names for the model
+         *     3. the type for output variable allows the value to be cast to a `double` appropriately
+         *
+         * It falls to user (functions) of this function to ensure these assumptions hold before invoking.
+         *
+         * @param index
+         * @param var_name
+         * @return
+         */
+        virtual double get_var_value_as_double(const int& index, const std::string& var_name) = 0;
+
         bool is_bmi_input_variable(const std::string &var_name) const override;
         bool is_bmi_output_variable(const std::string &var_name) const override;
 
@@ -274,7 +302,7 @@ namespace realization {
          * @param name
          * @param bmi_var_name
          */
-        void get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name);
+        void get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name) const;
 
         /**
          * Construct model and its shared pointer, potentially supplying input variable values from config.
@@ -486,6 +514,7 @@ namespace realization {
         bool allow_model_exceed_end_time = false;
         /** The set of available "forcings" (output variables, plus their mapped aliases) that the model can provide. */
         std::vector<std::string> available_forcings;
+        std::map<std::string, std::string> available_forcing_units;
         std::string bmi_init_config;
         std::shared_ptr<models::bmi::Bmi_Adapter> bmi_model;
         /** Whether backing model has fixed time step size. */
@@ -501,6 +530,10 @@ namespace realization {
 
         /** Whether the realization file follows legacy format or the new format. */
         bool legacy_json_format = false;
+
+        std::vector<std::string> output_var_units;
+
+        std::vector<int> output_var_indices;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS

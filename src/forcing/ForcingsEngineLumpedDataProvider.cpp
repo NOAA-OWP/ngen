@@ -79,36 +79,74 @@ Provider::ForcingsEngineLumpedDataProvider(
 
     var_output_names_.erase(cat_id_pos);
 
+    const std::size_t cat_id_item_size = static_cast<std::size_t>(bmi_->GetVarItemsize("CAT-ID"));
     const auto size_id_dimension = static_cast<std::size_t>(
-        bmi_->GetVarNbytes("CAT-ID") / bmi_->GetVarItemsize("CAT-ID")
+        bmi_->GetVarNbytes("CAT-ID") / cat_id_item_size
     );
     ss.str(""); 
     ss << " CAT-ID size: " << size_id_dimension << std::endl;
     LOG(ss.str(), LogLevel::DEBUG);
 
-    // Copy CAT-ID values into instance vector
-    const auto cat_id_span = boost::span<const int>(
-        static_cast<const int*>(bmi_->GetValuePtr("CAT-ID")),
-        size_id_dimension
-    );
+    const std::string cat_id_type = bmi_->GetVarType("CAT-ID");
+    const std::string cat_id_cpp_type = bmi_->get_analogous_cxx_type(cat_id_type, cat_id_item_size);
+    void *cat_id_ptr = bmi_->GetValuePtr("CAT-ID");
 
-    auto divide_id_pos = std::find(cat_id_span.begin(), cat_id_span.end(), divide_id_);
-    if (divide_id_pos == cat_id_span.end()) {
+    // locate the index of the CAT-ID in the provider
+    // max value of divide_idx_ assumed as an error state
+    divide_idx_ = std::numeric_limits<std::size_t>::max();
+    if (cat_id_cpp_type == "short") {
+        this->find_divide_id<short>(cat_id_ptr, size_id_dimension);
+    } else if (cat_id_cpp_type == "unsigned short") {
+        this->find_divide_id<unsigned short>(cat_id_ptr, size_id_dimension);
+    } else if (cat_id_cpp_type == "int") {
+        this->find_divide_id<int>(cat_id_ptr, size_id_dimension);
+    } else if (cat_id_cpp_type == "unsigned int") {
+        this->find_divide_id<unsigned int>(cat_id_ptr, size_id_dimension);
+    } else if (cat_id_cpp_type == "long") {
+        this->find_divide_id<long>(cat_id_ptr, size_id_dimension);
+    } else if (cat_id_cpp_type == "unsigned long") {
+        this->find_divide_id<unsigned long>(cat_id_ptr, size_id_dimension);
+    } else if (cat_id_cpp_type == "float") {
+        this->find_divide_id<float>(cat_id_ptr, size_id_dimension);
+    } else if (cat_id_cpp_type == "double") {
+        this->find_divide_id<double>(cat_id_ptr, size_id_dimension);
+    } else {
+        ss.str("");
+        ss << "(ForcingEngineLumpedDataProvider) Unable to interpret CAT-ID type of C++ type '"
+            << cat_id_cpp_type << "' (python type '"
+            << cat_id_type << "')";
+        std::string error = ss.str();
+        LOG(error, LogLevel::FATAL);
+        throw std::runtime_error(error);
+    }
+
+    if (divide_idx_ == std::numeric_limits<std::size_t>::max()) {
         ss.str(""); 
         ss << "Unable to find divide ID `" << divide_id
             << "` in the given Forcings Engine domain" << std::endl;
         LOG(ss.str(), LogLevel::SEVERE);
-        divide_idx_ = static_cast<std::size_t>(-1);
     } else {
-        divide_idx_ = std::distance(cat_id_span.begin(), divide_id_pos);
         ss.str(""); 
-        ss << " Divide ID found at index: " << divide_idx_ << std::endl;
-        LOG(ss.str(), LogLevel::INFO);
+        ss << " Divide ID " << divide_id << " found at index: " << divide_idx_;
+        LOG(ss.str(), LogLevel::DEBUG);
     }
 
     ss.str(""); 
     ss << " ForcingsEngineLumpedDataProvider initialization complete" << std::endl;
     LOG(LogLevel::DEBUG, ss.str());
+}
+
+template <typename T>
+inline void Provider::find_divide_id(const void *cat_id_ptr, const std::size_t size_id_dimension) {
+    // create span for viewing that data of type T
+    auto cat_id_span = boost::span<const T>(
+        static_cast<const T*>(cat_id_ptr),
+        size_id_dimension
+    );
+    auto loc = std::find(cat_id_span.begin(), cat_id_span.end(), divide_id_);
+    if (loc != cat_id_span.end()) {
+        divide_idx_ = std::distance(cat_id_span.begin(), loc);
+    }
 }
 
 std::size_t Provider::divide() const noexcept

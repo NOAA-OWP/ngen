@@ -82,6 +82,8 @@ The `global` key-value object must contain the following two object keys:
 ```
   * The json format for `output_variables` has been updated to included information about the variables, headers and their units  as key-value pairs.
   * The `output_header_fields` item is deprecated and a warning log message is added when the `output_variables` are provided in the new format and the `output_header_fields` specified. 
+  * A `units` item is added that is used to report output variable values, if the conversion is successful. The item is optional.
+  * An `index` item is added to the realization config for the `output_variables` to enable querying specific index of output variables that are array-based. The item is optional.
 
 ```
 "global": {
@@ -111,6 +113,18 @@ The `global` key-value object must contain the following two object keys:
                       "name": "soil_moisture_profile",
                       "header": "sm_profile_0.1m",
                       "units": "1"
+                    },
+                    {
+                      "name": "soil_moisture_profile",
+                      "header": "sm_profile_0.2m",
+                      "units": "1",
+                      "index": "1"
+                    },
+                    {
+                      "name": "soil_moisture_profile",
+                      "header": "sm_profile_2m",
+                      "units": "1",
+                      "index": "3"
                     }
              	    ],
               ---continued---

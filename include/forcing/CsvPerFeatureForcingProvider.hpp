@@ -125,12 +125,20 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         auto init_time = selector.get_init_time();
         auto output_name = selector.get_variable_name();
         auto output_units = selector.get_output_units();
+        auto output_variable_index = selector.get_output_variable_index();
 
+        //CSV doesn't support array variables, Check that the index is zero.
+        if(output_variable_index != 0){
+            std::string throw_msg; throw_msg.assign("CSV Provider does not support array variables. Bad index " + std::to_string(output_variable_index) + " for value request.");
+            LOG(throw_msg, LogLevel::WARNING);
+            throw std::runtime_error(throw_msg); 
+        }
+        
         try {
             current_index = get_ts_index_for_time(init_time);
         }
         catch (const std::out_of_range &e) {
-            std::string throw_msg; throw_msg.assign("Forcing had bad init_time " + std::to_string(init_time) + " for value request");
+            std::string throw_msg; throw_msg.assign("Forcing had bad init_time " + std::to_string(init_time) + " for value request.");
             LOG(throw_msg, LogLevel::WARNING);
             throw std::out_of_range(throw_msg);            
         }
@@ -236,6 +244,17 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
     boost::span<const std::string> get_available_variable_names() const override {
         return available_forcings;
     }
+
+    const std::string get_provider_units_for_variable(const std::string& name) const {
+        auto iter = available_forcings_units.find(name);
+        if(iter != available_forcings_units.end()){
+            return iter->second;
+        }
+        std::string throw_msg;
+        throw_msg.assign("Got request to retrieve units for variable '" + name + "', but it was not found in the data provider. This should not happen." + SOURCE_LOC);
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    };
 
     private:
 
