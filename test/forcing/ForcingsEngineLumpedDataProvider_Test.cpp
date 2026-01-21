@@ -71,7 +71,7 @@ void TestFixture::SetUpTestSuite()
 
 void TestFixture::TearDownTestSuite()
 {
-    data_access::detail::ForcingsEngineStorage::instances.clear();
+    data_access::detail::ForcingsEngineStorage::instances.finalize();
     gil_.reset();
 
     #if NGEN_WITH_MPI
