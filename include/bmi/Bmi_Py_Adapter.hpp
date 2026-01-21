@@ -47,8 +47,7 @@ namespace models {
             Bmi_Py_Adapter(Bmi_Py_Adapter&&) = delete;
 
             ~Bmi_Py_Adapter() override {
-                if (bmi_model != NULL)
-                    Finalize();
+                Finalize();
             }
 
             /**
