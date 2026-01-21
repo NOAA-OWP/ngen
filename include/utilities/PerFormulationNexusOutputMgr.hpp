@@ -159,7 +159,6 @@ namespace utils
          * Additionally, it clears the current ::attribute:`data_cache` and ::attribute:`current_formulation_id` values.
          */
         void commit_writes() override {
-            int nc_status, nc_id, nc_flow_var_id;
             // If no current formulation id set, that should mean there is nothing to write
             if (current_formulation_id.empty()) {
                 return;
@@ -177,11 +176,9 @@ namespace utils
                 }
                 data[i] = data_cache[nexus_ids[i]];
             }
-
             const std::string filename = nexus_outfiles[current_formulation_id];
 
-            //netCDF::NcFile ncf(filename, netCDF::NcFile::write, netCDF::NcFile::nc4);
-            //printf("*** Got here rank %i\n", rank);
+            int nc_status, nc_id, nc_flow_var_id;
             #if NGEN_WITH_MPI
             if (nexuses_per_rank.size() > 1) {
                 nc_status = nc_open_par(filename.c_str(), NC_WRITE, MPI_COMM_WORLD, MPI_INFO_NULL, &nc_id);
@@ -189,60 +186,52 @@ namespace utils
             else {
                 nc_status = nc_open(filename.c_str(), NC_WRITE, &nc_id);
             }
-
             #else
             nc_status = nc_open(filename.c_str(), NC_WRITE, &nc_id);
             #endif
-
-            //printf("*** Got here 2 rank %i\n", rank);
+            if (nc_status != NC_NOERR) {
+                throw std::runtime_error("Error opening nexus file '" + filename + "' (status code was: "
+                    + std::to_string(nc_status) + ") at time index " + std::to_string(current_time_index) +".");
+            }
 
             // On the first write, also write the nexus id variable values
-            //write_nexus_ids_once(ncf);
-            write_nexus_ids_once_c(nc_id);
+            write_nexus_ids_once(nc_id);
 
             // For just rank 0, write the time value
             if (rank == 0) {
-                //const netCDF::NcVar timestamp = ncf.getVar(nc_time_dim_name);
-                //nc_status = nc_inq_varid(nc_id, nc_time_dim_name.c_str(), &nc_time_var_id);
                 int nc_time_var_id = get_nc_variable_id(nc_time_dim_name, nc_id);
-
                 long epoch_minutes = current_epoch_time / 60;
+                const size_t start_t = static_cast<size_t>(current_time_index);
+                const size_t count_t = 1;
                 // TODO: (later) consider if we need to sanity check that times are consistent across ranks (we were
                 // TODO:        effectively assuming this to be the case when not explicitly writing times).
-                std::vector<size_t> start_t{static_cast<size_t>(current_time_index)};
-                std::vector<size_t> count_t{1};
-                //timestamp.putVar(std::vector<size_t>{static_cast<size_t>(current_time_index)}, std::vector<size_t>{1}, &epoch_minutes);
 
-                nc_status = nc_put_vara_long(nc_id, nc_time_var_id, start_t.data(), count_t.data(), &epoch_minutes);
+                nc_status = nc_put_vara_long(nc_id, nc_time_var_id, &start_t, &count_t, &epoch_minutes);
                 if (nc_status != NC_NOERR) {
                     throw std::runtime_error("Error writing time value to nexus file '" + filename + "' ("
                         + std::to_string(nc_status) + ") at time index " + std::to_string(current_time_index) +".");
                 }
             }
 
-            //const netCDF::NcVar flow = ncf.getVar(nc_flow_var_name);
-            //nc_status = nc_inq_varid(nc_id, nc_flow_var_name.c_str(), &nc_flow_var_id);
             nc_flow_var_id = get_nc_variable_id(nc_flow_var_name, nc_id);
-
             // Assume base on how constructor was set up (imply for conciseness)
             //size_t nexus_dim_index = 0;
             //size_t time_dim_index = 1;
-            const std::vector<size_t> start_f = {local_offset, static_cast<size_t>(current_time_index)};
-            const std::vector<size_t> count_f = {nexus_ids.size(), 1};
+            const size_t start_f[2] = {local_offset, static_cast<size_t>(current_time_index)};
+            const size_t count_f[2] = {nexus_ids.size(), 1};
 
-            //flow.putVar(start_f, count_f, data.data());
-            nc_status = nc_put_vara_double(nc_id, nc_flow_var_id, start_f.data(), count_f.data(), data.data());
+            nc_status = nc_put_vara_double(nc_id, nc_flow_var_id, start_f, count_f, data.data());
             if (nc_status != NC_NOERR) {
                 throw std::runtime_error("Error writing flow value to nexus file '" + filename + "' ("
                     + std::to_string(nc_status) + ") at time index " + std::to_string(current_time_index) +".");
             }
-
 
             nc_status = nc_close(nc_id);
             if (nc_status != NC_NOERR) {
                 throw std::runtime_error("Error closing nexus file '" + filename + "' ("
                     + std::to_string(nc_status) + ") at time index " + std::to_string(current_time_index) +".");
             }
+
             current_time_index++;
             current_epoch_time = 0;
             data_cache.clear();
@@ -331,30 +320,7 @@ namespace utils
         // For unit testing
         friend class ::PerFormulationNexusOutputMgr_Test;
 
-        /**
-         * Helper function to write the nexus id var values to the managed file, but only once (the first time step).
-         *
-         * @param ncf NetCDF file object
-         */
-        void write_nexus_ids_once(netCDF::NcFile& ncf) {
-            if (current_time_index == 0) {
-                std::vector<unsigned int> numeric_nex_ids(nexus_ids.size());
-                const char delimiter = '-';
-
-                for (size_t i = 0; i < nexus_ids.size(); ++i) {
-                    const std::string::size_type pos = nexus_ids[i].find(delimiter);
-                    if (pos == std::string::npos) {
-                        throw std::runtime_error("Invalid nexus id '" + nexus_ids[i] + "' (no delimiter '"
-                                                 + std::string(1, delimiter) + "').");
-                    }
-                    numeric_nex_ids[i] = std::stoi(nexus_ids[i].substr(pos + 1));
-                }
-                const netCDF::NcVar var_nexus = ncf.getVar(nc_nex_id_dim_name);
-                var_nexus.putVar({this->local_offset}, {numeric_nex_ids.size()}, numeric_nex_ids.data());
-            }
-        }
-
-        void write_nexus_ids_once_c(int nc_id) {
+        void write_nexus_ids_once(const int nc_id) {
             if (current_time_index == 0) {
                 int nc_status, nc_nex_var_id;
 
