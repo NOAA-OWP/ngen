@@ -6,6 +6,7 @@
 #include <utility>
 #include <iostream>
 #include "Routing_Py_Adapter.hpp"
+#include "logging_utils.h"
 
 using namespace routing_py_adapter;
 
@@ -25,7 +26,7 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_config_file_with_path
       this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("nwm_routing.__main__");
     }
     catch (const pybind11::error_already_set& e){
-      std::cerr<<"FAIL: Unable to import a supported routing module."<<std::endl;
+      logging::error((std::string("FAIL: Unable to import a supported routing module.\n")).c_str());
       throw e;
     }
   }

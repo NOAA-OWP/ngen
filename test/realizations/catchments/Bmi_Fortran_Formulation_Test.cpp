@@ -16,6 +16,7 @@
 #include "Bmi_Module_Formulation.hpp"
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Bmi_Fortran_Adapter.hpp"
+#include "utilities/logging_utils.h"
 #include "gtest/gtest.h"
 #include <iostream>
 #include <vector>
@@ -174,8 +175,8 @@ void Bmi_Fortran_Formulation_Test::SetUp() {
     registration_functions[1] = "register_bmi";
     uses_forcing_file[1] = false;
 
-    std::cerr<<"lib_file[0]: "<<lib_file[0]<<std::endl;
-    std::cerr<<"lib_file[1]: "<<lib_file[1]<<std::endl;
+    logging::critical((std::string("lib_file[0]: ")+lib_file[0]+"\n").c_str());
+    logging::critical((std::string("lib_file[1]: ")+lib_file[1]+"\n").c_str());
 
     std::string variables_with_rain_rate = "                \"output_variables\": [\"OUTPUT_VAR_2\",\n"
                                            "                    \"OUTPUT_VAR_1\",\n"

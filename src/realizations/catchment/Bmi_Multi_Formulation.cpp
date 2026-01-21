@@ -11,6 +11,7 @@
 #include "Bmi_C_Formulation.hpp"
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Bmi_Py_Formulation.hpp"
+#include "utilities/logging_utils.h"
 
 using namespace realization;
 
@@ -130,8 +131,9 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             set_output_header_fields(out_headers);
         }
         else {
-            std::cerr << "WARN: configured output headers have " << out_headers.size() << " fields, but there are "
-                      << get_output_variable_names().size() << " variables in the output" << std::endl;
+            logging::warning((std::string("WARN: configured output headers have ") + std::to_string(out_headers.size())
+                              + " fields, but there are " + std::to_string(get_output_variable_names().size())
+                              + " variables in the output\n").c_str());
             set_output_header_fields(get_output_variable_names());
         }
     }

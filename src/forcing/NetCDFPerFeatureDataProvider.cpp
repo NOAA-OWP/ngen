@@ -2,6 +2,7 @@
 
 #if NGEN_WITH_NETCDF
 #include "NetCDFPerFeatureDataProvider.hpp"
+#include "logging_utils.h"
 
 #include <netcdf>
 
@@ -198,7 +199,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         }
     }
     catch(const netCDF::exceptions::NcException& e){
-        std::cerr<<e.what()<<std::endl;
+        logging::error((std::string(e.what()) + "\n").c_str());
         log_stream << "Warning using defualt time units\n";
     }
     assert(time_scale_factor != 0); // This should not happen.
@@ -218,7 +219,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         }
     }
     catch(const netCDF::exceptions::NcException& e) {
-        std::cerr<<e.what()<<std::endl;
+        logging::error((std::string(e.what()) + "\n").c_str());
         log_stream << "Warning using defualt epoc string\n";
     }
     
@@ -428,7 +429,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     catch (const std::runtime_error& e)
     {
         #ifndef UDUNITS_QUIET
-        std::cerr<<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
+        logging::warning((std::string("WARN: Unit conversion unsuccessful - Returning unconverted value! (\"")+e.what()+"\")\n").c_str());
         #endif
         return rvalue;
     }
