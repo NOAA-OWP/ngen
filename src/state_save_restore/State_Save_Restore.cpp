@@ -39,13 +39,14 @@ State_Save_Config::State_Save_Config(boost::property_tree::ptree const& tree)
     LOG("State saving configured", LogLevel::INFO);
 }
 
-std::unordered_map<std::string, std::shared_ptr<File_Per_Unit_Loader>> State_Save_Config::start_of_run_loaders() const {
-    std::unordered_map<std::string, std::shared_ptr<File_Per_Unit_Loader>> loaders;
+std::vector<std::pair<std::string, std::shared_ptr<State_Loader>>> State_Save_Config::start_of_run_loaders() const {
+    std::vector<std::pair<std::string, std::shared_ptr<State_Loader>>> loaders;
     for (const auto &i : this->instances_) {
         if (i.timing_ == State_Save_When::StartOfRun && i.direction_ == State_Save_Direction::Load) {
             if (i.mechanism_ == State_Save_Mechanism::FilePerUnit) {
                 auto loader = std::make_shared<File_Per_Unit_Loader>(i.path_);
-                loaders[i.label_] = loader;
+                auto pair = std::make_pair(i.label_, loader);
+                loaders.push_back(pair);
             } else {
                 LOG(LogLevel::WARNING, "State_Save_Config: Loading mechanism " + i.mechanism_string() + " is not supported for start of run loading.");
             }
@@ -54,15 +55,16 @@ std::unordered_map<std::string, std::shared_ptr<File_Per_Unit_Loader>> State_Sav
     return loaders;
 }
 
-std::unordered_map<std::string, std::shared_ptr<File_Per_Unit_Saver>> State_Save_Config::end_of_run_savers() const {
-    std::unordered_map<std::string, std::shared_ptr<File_Per_Unit_Saver>> savers;
+std::vector<std::pair<std::string, std::shared_ptr<State_Saver>>> State_Save_Config::end_of_run_savers() const {
+    std::vector<std::pair<std::string, std::shared_ptr<State_Saver>>> savers;
     for (const auto &i : this->instances_) {
         if (i.timing_ == State_Save_When::EndOfRun && i.direction_ == State_Save_Direction::Save) {
             if (i.mechanism_ == State_Save_Mechanism::FilePerUnit) {
-                auto loader = std::make_shared<File_Per_Unit_Saver>(i.path_);
-                savers[i.label_] = loader;
+                auto saver = std::make_shared<File_Per_Unit_Saver>(i.path_);
+                auto pair = std::make_pair(i.label_, saver);
+                savers.push_back(pair);
             } else {
-                LOG(LogLevel::WARNING, "State_Save_Config: Loading mechanism " + i.mechanism_string() + " is not supported for start of run loading.");
+                LOG(LogLevel::WARNING, "State_Save_Config: Saving mechanism " + i.mechanism_string() + " is not supported for start of run saving.");
             }
         }
     }

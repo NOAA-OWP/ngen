@@ -44,9 +44,19 @@ public:
      */
     State_Save_Config(boost::property_tree::ptree const& config);
 
-    std::unordered_map<std::string, std::shared_ptr<File_Per_Unit_Loader>> start_of_run_loaders() const;
+    /**
+     * Get state loaders that perform before the catchments are run.
+     * 
+     * @return `std::pair`s of the label from the config and an instance of the loader.
+     */
+    std::vector<std::pair<std::string, std::shared_ptr<State_Loader>>> start_of_run_loaders() const;
 
-    std::unordered_map<std::string, std::shared_ptr<File_Per_Unit_Saver>> end_of_run_savers() const;
+    /**
+     * Get state savers that perform after the catchments have run to completion.
+     * 
+     * @return `std::pair`s of the label from the config and an instance of the saver.
+     */
+    std::vector<std::pair<std::string, std::shared_ptr<State_Saver>>> end_of_run_savers() const;
 
     struct instance
     {
