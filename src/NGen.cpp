@@ -433,13 +433,13 @@ int main(int argc, char *argv[]) {
         partition_one.generate_partition(catchment_collection);
         local_data = std::move(partition_one.partition_data);
     }
-    std::shared_ptr<hy_features::HY_Features_MPI> features = std::make_shared<hy_features::HY_Features_MPI>(local_data, nexus_collection, manager, mpi_rank, mpi_num_procs);
+    hy_features::HY_Features_MPI features = hy_features::HY_Features_MPI(local_data, nexus_collection, manager, mpi_rank, mpi_num_procs);
     #else
-    std::shared_ptr<hy_features::HY_Features> features = std::make_shared<hy_features::HY_Features>(nexus_collection, manager);
+    hy_features::HY_Features features = hy_features::HY_Features(nexus_collection, manager);
     #endif
 
     //validate dendritic connections
-    features->validate_dendritic();
+    features.validate_dendritic();
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     //Still using  catchments for geometry at the moment, fix this later
     //catchment_collection.reset();
@@ -449,7 +449,7 @@ int main(int argc, char *argv[]) {
     #if NGEN_WITH_MPI
     std::vector<std::string> nexus_ids(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
     #else
-    std::vector<std::string> nexus_ids(features->nexuses().begin(), features->nexuses().end());
+    std::vector<std::string> nexus_ids(features.nexuses().begin(), features.nexuses().end());
     #endif
 
     if (manager->is_using_per_formulation_nexus_files()) {
@@ -525,17 +525,17 @@ int main(int argc, char *argv[]) {
       if( manager->has_domain_formulation(keys[i])){
         //create a domain wide layer
         auto formulation = manager->get_domain_formulation(keys[i]);
-        layers[i] = std::make_shared<ngen::DomainLayer>(desc, sim_time, *features, 0, formulation);
+        layers[i] = std::make_shared<ngen::DomainLayer>(desc, sim_time, features, 0, formulation);
       }
       else{
-        for ( std::string id : features->catchments(keys[i]) ) { cat_ids.push_back(id); }
+        for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
         if (keys[i] != 0 )
         {
-          layers[i] = std::make_shared<ngen::Layer>(desc, cat_ids, sim_time, *features, catchment_collection, 0);
+          layers[i] = std::make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, 0);
         }
         else
         {
-          layers[i] = std::make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, *features, catchment_collection, 0, nexus_subset_ids, nexus_outputs_mgr);
+          layers[i] = std::make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, features, catchment_collection, 0, nexus_subset_ids, nexus_outputs_mgr);
         }
       }
 
