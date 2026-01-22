@@ -2,20 +2,21 @@
 
 ## Summary
 
-| Dependency | Management | Version | Notes |
-| ------------- |:------------- | :-----:| :-------: |
-| [Google Test](#google-test) | submodule  | `release-1.10.0` | |
-| [C/C++ Compiler](#c-and-c-compiler) | external | see below |  |
-| [CMake](#cmake) | external | \>= `3.17` | |
-| [Boost (Headers Only)](#boost-headers-only) | external | `1.86.0` | headers only library |
-| [Udunits libraries](https://www.unidata.ucar.edu/software/udunits) | external | >= 2.0 | Can be installed via package manager or from source |
-| [MPI](https://www.mpi-forum.org) | external | No current implementation or version requirements | Required for [multi-process distributed execution](DISTRIBUTED_PROCESSING.md) |
-| [Python 3 Libraries](#python-3-libraries) | external | \>= `3.8.0` | Can be [excluded](#overriding-python-dependency). |
-| [pybind11](#pybind11) | submodule | `v2.6.0` | Can be [excluded](#overriding-pybind11-dependency). |
-| [dmod.subsetservice](#the-dmodsubsetservice-package) | external | `>= 0.3.0` | Only required to perform integrated [hydrofabric file subdividing](DISTRIBUTED_PROCESSING.md#subdivided-hydrofabric) for distributed processing . |
-| [t-route](#t-route) | submodule | see below | Module required to enable channel-routing.  Requires pybind11 to enable |
-| [NetCDF Libraries](#netcdf-libraries) | external | \>= `4.7.4` | Enables NetCDF I/O support |
-| [SQLite3](https://www.sqlite.org/cintro.html) | external | \> `3.7.17` | Enables GeoPackage reading support |
+| Dependency                                                                                 | Management |                      Version                      |                                                                                 Notes                                                                                 |
+|--------------------------------------------------------------------------------------------|:-----------|:-------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| [Google Test](#google-test)                                                                | submodule  |                 `release-1.10.0`                  |                                                                                                                                                                       |
+| [C/C++ Compiler](#c-and-c-compiler)                                                        | external   |                     see below                     |                                                                                                                                                                       |
+| [CMake](#cmake)                                                                            | external   |                    \>= `3.17`                     |                                                                                                                                                                       |
+| [Boost (Headers Only)](#boost-headers-only)                                                | external   |                     `1.86.0`                      |                                                                         headers only library                                                                          |
+| [Udunits libraries](https://www.unidata.ucar.edu/software/udunits)                         | external   |                      >= 2.0                       |                                                          Can be installed via package manager or from source                                                          |
+| [MPI](https://www.mpi-forum.org)                                                           | external   | No current implementation or version requirements |                                             Required for [multi-process distributed execution](DISTRIBUTED_PROCESSING.md)                                             |
+| [Python 3 Libraries](#python-3-libraries)                                                  | external   |                    \>= `3.8.0`                    |                                                           Can be [excluded](#overriding-python-dependency).                                                           |
+| [pybind11](#pybind11)                                                                      | submodule  |                     `v2.6.0`                      |                                                          Can be [excluded](#overriding-pybind11-dependency).                                                          |
+| [dmod.subsetservice](#the-dmodsubsetservice-package)                                       | external   |                    `>= 0.3.0`                     |           Only required to perform integrated [hydrofabric file subdividing](DISTRIBUTED_PROCESSING.md#subdivided-hydrofabric) for distributed processing .           |
+| [t-route](#t-route)                                                                        | submodule  |                     see below                     |                                                Module required to enable channel-routing.  Requires pybind11 to enable                                                |
+| [NetCDF Libraries](#netcdf-libraries)                                                      | external   |                    \>= `4.7.4`                    |                                                                      Enables NetCDF I/O support                                                                       |
+| [NetCDF-4 parallel support](https://docs.unidata.ucar.edu/netcdf-c/4.9.3/parallel_io.html) | external   |                                                   |   Optional, but required to use [per-formulation NetCDF nexus output files](REALIZATION_CONFIGURATION.md#per_formulation_nexus_files) in ngen builds supporting MPI   |
+| [SQLite3](https://www.sqlite.org/cintro.html)                                              | external   |                    \> `3.7.17`                    |                                                                  Enables GeoPackage reading support                                                                   |
 # Details
 
 ## Google Test
@@ -227,3 +228,28 @@ source venv/bin/activate
 
 First, check if your compute system already have a version that is up to date, usually in the sub-directories (include/ and lib64/) under /usr. If not, you will have to install your own version. For instructions on how to install netCDF, some randomly selected references are [here](https://docs.unidata.ucar.edu/nug/current/getting_and_building_netcdf.html) and [here](https://docs.geoserver.org/main/en/user/extensions/netcdf-out/nc4.html).
 
+### Parallel NetCDF
+
+In order to make use of the per-formulation NetCDF nexus output files capabilities [noted here](REALIZATION_CONFIGURATION.md#per_formulation_nexus_files) within installations of ngen that support parallel MPI execution, NetCDF-4 and its dependencies must have been built/installed with parallel I/O support.  [See here](https://docs.unidata.ucar.edu/netcdf-c/4.9.3/parallel_io.html) for further details in the NetCDF documentation.  
+
+Without NetCDF Parallel I/O support, parallel builds of ngen will be limited to individual, per-nexus output files for nexus data in CSV format, and an error will occur if a realization config attempting to use per-formulation outputs is supplied.
+
+You can see if the NetCDF dependency found by CMake for ngen builds includes parallel support by looking for this part of the CMake output when you generate/regenerate the build system directory.  Note specifically the `Parallel` sub-item at the end of the NetCDF details.
+
+```aiignore
+...
+-- Environment summary:
+--   Boost:
+--     Version: 1.89.0
+--     Include: /Users/rbartel/Developer/oss/boost/current
+--   NetCDF:
+--     Version: 4.9.3
+--     Library: /opt/local/lib/libnetcdf.dylib
+--     Library (CXX): /opt/local/lib/libnetcdf_c++4.dylib
+--     Include: /opt/local/include
+--     Include (CXX): /opt/local/include
+--     Parallel: TRUE 
+--   SQLite:
+--     Version: 3.49.1
+...
+```
