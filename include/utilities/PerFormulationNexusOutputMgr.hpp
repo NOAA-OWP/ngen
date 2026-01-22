@@ -9,7 +9,9 @@
 #include <netcdf>
 #include "netcdf.h"
 #if NGEN_WITH_MPI
+#if NGEN_WITH_PARALLEL_NETCDF
 #include "netcdf_par.h"
+#endif
 #include "mpi.h"
 #endif
 #include <vector>
@@ -181,7 +183,11 @@ namespace utils
             int nc_status, nc_id, nc_flow_var_id;
             #if NGEN_WITH_MPI
             if (nexuses_per_rank.size() > 1) {
+                #if NGEN_WITH_PARALLEL_NETCDF
                 nc_status = nc_open_par(filename.c_str(), NC_WRITE, MPI_COMM_WORLD, MPI_INFO_NULL, &nc_id);
+                #else
+                throw std::runtime_error("Unexpected execution of path requiring Parallel netCDF support when not enabled.");
+                #endif
             }
             else {
                 nc_status = nc_open(filename.c_str(), NC_WRITE, &nc_id);
