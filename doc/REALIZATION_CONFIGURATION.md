@@ -28,6 +28,9 @@ The configuration may optionally contain an `output_root` key with a user-define
 
 The configuration may optionally contain a `disable_catchment_output` key, with a boolean value.  When set to `true`, catchment output data files will not be written (default: `false`).
 
+### `per_formulation_nexus_files`
+The configuration may optionally contain a `per_formulation_nexus_files` key with a boolean value to indicate per-formulation, NetCDF files should be used for writing nexus data, rather than the default of per-nexus CSV files.  Note that if `per_formulation_nexus_files` is set to `true`, the `catchments` cannot be used to define formulations for individual catchments, and the global formulation config must be used for all catchments.
+
 ### `catchments`
 The configuration may optionally contain a `catchments` key with a list of individual catchments that define their own formulations.  See [more details below](#catchments).
 
@@ -37,9 +40,6 @@ The configuration may optionally contain a `routing` key with a subobject that d
 ## Examples of Top-Level Structure
 Note that these are not exhaustive examples.
 
-The configuration may also *optionally* contain a `per_formulation_nexus_files` key with a boolean value to indicate per-formulation, NetCDF files should be used for writing nexus data, rather than the default of per-nexus CSV files.  Note that if `per_formulation_nexus_files` is set to `true`, the `catchments` cannot be used to define formulations for individual catchments, and the global formulation config must be used for all catchments.
-
-I.e., either of these forms is allowed, with it also being valid to omit `output_root` in either case:
 
 ```
 {
@@ -58,7 +58,7 @@ or
    "per_formulation_nexus_files": true|false
 } 
 ```
-
+or
 ```
 {
    "global": {},
@@ -121,7 +121,7 @@ The `catchments` key-value object must contain a list of all of the catchment ob
 * `cat-` 
   * followed by the unique integer identifier for the catchment
 
-Each catchment is a key-value object and must have the following two object keys:
+Each catchment is a key-value object and must have the following two object keys, similar to the `global` section:
 * `formulations`
   * a list of formulation key-value objects that defines the required formulation(s), and each formulation object has a key `name` and value of a model that is registered with the ngen framework and includes a key-value subobject for `params`
   * Note: future versions could support breaking up `params` into additional key-value subobjects for `options` and `initial_conditions`
