@@ -27,6 +27,11 @@ The configuration may optionally contain an `output_root` key with a user-define
 ### `per_formulation_nexus_files`
 The configuration may optionally contain a `per_formulation_nexus_files` key with a boolean value to indicate per-formulation, NetCDF files should be used for writing nexus data, rather than the default of per-nexus CSV files.  Note that if `per_formulation_nexus_files` is set to `true`, the `catchments` cannot be used to define formulations for individual catchments, and the global formulation config must be used for all catchments.
 
+> [!IMPORTANT]
+> NetCDF support must be turned on for the ngen build to use this option for per-formulation NetCDF file.  This is done by including the `-DNGEN_WITH_NETCDF=ON` arg to CMake on the command line when generating a build directory.
+> 
+> Additionally, for ngen builds that also support MPI (i.e., `-DNGEN_WITH_MPI=ON`), using per-formulation NetCDF files also requires that NetCDF include [parallel I/O support](DEPENDENCIES.md#parallel-netcdf).
+
 ### `catchments`
 The configuration may optionally contain a `catchments` key with a list of individual catchments that define their own formulations.  See [more details below](#catchments).
 
