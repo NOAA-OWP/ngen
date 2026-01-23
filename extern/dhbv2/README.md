@@ -2,15 +2,17 @@
 
 ## About
 
-This directory wraps the *dhbv2* git submodule repo, containing a clone of the repo for the MHPI δHBV2.0 module library implementing BMI. From here, the shared library file for the dhbv2 module can be built for use in NGen.
+This directory wraps the *dhbv2* git submodule repo, containing a clone of the repo for the MHPI δHBV2.0 module library (daily and hourly MTS) implementing BMI. From here, the shared library file for the dhbv2 module can be built for use in NGen.
+
+Note, dhbv2 is a collection of models currently composed of daily (*dhbv_2*) and hourly (*dhbv_2_mts*) implementations of δHBV2.0. See the [dhbv2 repository](https://github.com/mhpi/dhbv2/tree/master) for more information about these variations.
 
 #### Extra Outer Directory
 
-Currently there are two directory layers beneath the top-level *extern/* directory.  This was done so that certain things used by NGen (i.e., a *CMakeLists.txt* file for building shared library files, this readme) can be placed alongside, but not within, the submodule.
+Currently there are two directory layers beneath the top-level *extern/* directory. This was done so that certain things used by NGen (i.e., a *CMakeLists.txt* file for building shared library files, this readme) can be placed alongside, but not within, the submodule.
 
 ## Working with the Submodule
 
-Some simple explanations of several command actions are included below.  To better understand what these things are doing, consult the [Git Submodule documentation](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+Some simple explanations of several command actions are included below. To better understand what these things are doing, consult the [Git Submodule documentation](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
 ### Getting the Latest Changes
 
@@ -55,7 +57,7 @@ Since dhbv2 is a Python submodule, dependencies located at `extern/dhbv2/dhbv2/p
 
 ## Loading Model Weights
 
-dhbv2 uses an LSTM which requires loading trained weights. Since these are too large to store with the module, they must be downloaded and installed from AWS S3 as follows. First, navigate to the submodule.
+For parameterizations, dhbv2 uses neural networks optimized weights that are loaded at runtime. Since these are too large to store within the module, they must be downloaded and installed from AWS S3 as follows. First, navigate to the submodule.
 
     cd extern/dhbv2/dhbv2
 
@@ -63,9 +65,16 @@ If AWS CLI is not installed on your system (check `aws --version`) see [AWS inst
 
 Then download model weights (and coupled normalization statistics file) from S3 like
 
-    aws s3 cp s3://mhpi-spatial/mhpi-release/models/owp/dhbv_2_hfv2.2_15y_daily.zip . --no-sign-request
-    unzip 4-dhbv_2.zip -d /temp
-    mv /temp/dhbv_2_hfv2.2_15y_daily/. /ngen_resources/data/dhbv2/models/hfv2.2_15yr
-    rm -r /temp
+    # For dhbv_2 (daily):
+    aws s3 cp s3://mhpi-spatial/mhpi-release/models/owp/dhbv_2.zip ./temp/ --no-sign-request
+    unzip ./temp/dhbv_2.zip -d ./temp
+    mv ./temp/dhbv_2/ ./ngen_resources/data/dhbv_2/model/
+    rm -r ./temp
 
-Note: Other models made available will be located in `.dhbv2/models/` with a readme providing the specific S3 URI to use above.
+    # For dhbv_2_mts (hourly):
+    aws s3 cp s3://mhpi-spatial/mhpi-release/models/owp/dhbv_2_mts.zip ./temp/ --no-sign-request
+    unzip ./temp/dhbv_2_mts.zip -d ./temp
+    mv ./temp/dhbv_2_mts/ ./ngen_resources/data/dhbv_2_mts/model/
+    rm -r ./temp
+
+Note: Other models made available will be listed in `dhbv2/ngen_resources/data/` with a readme providing the specific S3 URI to use above.
