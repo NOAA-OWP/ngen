@@ -166,7 +166,7 @@ void write_nexus_outflow_csv_files(std::string const& output_root,
     }
 }
 
-int main(int argc, char* argv[]) {
+int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     std::string catchmentDataFile         = "";
     std::string nexusDataFile             = "";
     std::string REALIZATION_CONFIG_PATH   = "";
@@ -174,18 +174,7 @@ int main(int argc, char* argv[]) {
     std::string PARTITION_PATH = "";
     std::stringstream ss("");
 
-     // This default value should lead to behavior matching the single-process case in the standalone or non-MPI case
-    int mpi_num_procs = 1;
-    // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
-    int mpi_rank = 0;
-
     if (argc > 1 && std::string{argv[1]} == "--info") {
-#if NGEN_WITH_MPI
-        MPI_Init(nullptr, nullptr);
-        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-        MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
-#endif
-
         if (mpi_rank == 0) {
             std::ostringstream output;
             output << ngen::exec_info::build_summary;
@@ -201,11 +190,7 @@ int main(int argc, char* argv[]) {
             ss.str("");
         } // if (mpi_rank == 0)
 
-#if NGEN_WITH_MPI
-        MPI_Finalize();
-#endif
-
-        exit(1);
+        return 1;
     }
 
     auto time_start = std::chrono::steady_clock::now();
@@ -282,8 +267,8 @@ int main(int argc, char* argv[]) {
         ss << "  VIRTUAL_ENV environment variable: "
            << (std::getenv("VIRTUAL_ENV") == nullptr ? "(not set)" : std::getenv("VIRTUAL_ENV"))
            << std::endl;
-        ss << "  Discovered venv: " << _interp->getDiscoveredVenvPath() << std::endl;
-        auto paths = _interp->getSystemPath();
+        ss << "  Discovered venv: " << utils::ngenPy::InterpreterUtil::getInstance()->getDiscoveredVenvPath() << std::endl;
+        auto paths = utils::ngenPy::InterpreterUtil::getInstance()->getSystemPath();
         ss << "  System paths:" << std::endl;
         for (std::string& path : std::get<1>(paths)) {
             if (!path.empty()) {
@@ -295,7 +280,7 @@ int main(int argc, char* argv[]) {
         std::cout << ss.str() << std::endl;
         LOG(ss.str(), LogLevel::INFO);
         ss.str("");
-        exit(0); // Unsure if this path should have a non-zero exit code?
+        return 0; // Unsure if this path should have a non-zero exit code?
 
     } else if (argc < 6) {
         ss << "Missing required args:" << std::endl;
@@ -314,19 +299,13 @@ int main(int argc, char* argv[]) {
             ss.str("");
         }
 
-        exit(-1);
+        return -1;
     } else {
         catchmentDataFile       = argv[1];
         nexusDataFile           = argv[3];
         REALIZATION_CONFIG_PATH = argv[5];
 
 #if NGEN_WITH_MPI
-
-        // Initalize MPI
-        MPI_Init(NULL, NULL);
-        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-        MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
-
         if (argc >= 7) {
             LOG("argc >= 7", LogLevel::INFO);
             ss.str("");
@@ -335,7 +314,7 @@ int main(int argc, char* argv[]) {
             ss << "Missing required argument for partition file path." << std::endl;
             LOG(ss.str(), LogLevel::WARNING);
             ss.str("");
-            exit(-1);
+            return -1;
         }
 
         if (argc >= 8) {
@@ -348,7 +327,7 @@ int main(int argc, char* argv[]) {
                    << std::endl;
                 LOG(ss.str(), LogLevel::WARNING);
                 ss.str("");
-                exit(-1);
+                return -1;
             }
         }
 #endif // NGEN_WITH_MPI
@@ -408,7 +387,7 @@ int main(int argc, char* argv[]) {
 #endif // NGEN_WITH_MPI
 
         if (error)
-            exit(-1);
+            return -1;
 
         // split the subset strings into vectors
         boost::split(catchment_subset_ids, argv[2], [](char c) { return c == ','; });
@@ -804,9 +783,46 @@ int main(int argc, char* argv[]) {
         ss.str("");
     }
 
+    return 0;
+}
+
+/**
+ * This function acts as a wrapper around the main executing body of NGEN.
+ * Currently, the end of the `run_ngen` triggers the destruction of the catchment BMIs.
+ * A future improvement would be to turn `run_ngen` into `main` and have a cleaner ownership model of the BMIs
+ * so they can be finalized explicitly instead of when their `shared_ptr` reference count goes to zero.
+ */
+int main(int argc, char* argv[]) {
+     // This default value should lead to behavior matching the single-process case in the standalone or non-MPI case
+    int mpi_num_procs = 1;
+    // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
+    int mpi_rank = 0;
+
+#if NGEN_WITH_MPI
+    // initialize MPI if needed
+    MPI_Init(nullptr, nullptr);
+    MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
+#endif
+
+#if NGEN_WITH_PYTHON
+    // Start Python interpreter via the manager singleton
+    // Need to bind to a variable so that the underlying reference count
+    // is incremented, this essentially becomes the global reference to keep
+    // the interpreter alive till the end of `main`
+    auto _interp = utils::ngenPy::InterpreterUtil::getInstance();
+#endif // NGEN_WITH_PYTHON
+
+    int result = run_ngen(argc, argv, mpi_num_procs, mpi_rank);
+
+#if NGEN_WITH_PYTHON
+    // explicitly destroy the interpreter before calling MPI_Finalize
+    _interp.reset();
+#endif
+
 #if NGEN_WITH_MPI
     MPI_Finalize();
 #endif
 
-    return 0;
+    return result;
 }
