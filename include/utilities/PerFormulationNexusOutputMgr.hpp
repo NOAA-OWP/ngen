@@ -65,7 +65,7 @@ namespace utils
                 total_timesteps(total_timesteps)
         {
             if (this->nexuses_per_rank.empty()) {
-                if (this->rank > 0)
+                if (this->rank != 0)
                     throw std::runtime_error("Must supply nexuses_per_rank values when using multiple MPI processes.");
                 this->nexuses_per_rank.push_back(this->nexus_ids.size());
             }
