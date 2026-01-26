@@ -447,7 +447,13 @@ int main(int argc, char *argv[]) {
 
     std::shared_ptr<utils::NexusOutputsMgr> nexus_outputs_mgr;
     #if NGEN_WITH_MPI
-    std::vector<std::string> nexus_ids(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
+    std::vector<std::string> nexus_ids;
+    std::copy_if(features.nexuses().begin(), features.nexuses().end(), std::back_inserter(nexus_ids),
+                 [&features](std::string nid) { return !features.is_remote_sender_nexus((nid)); });
+    // TODO: (later) I'd love to be able to use local_data.nexus_ids and local_data.remote_connections for this, but
+    // TODO:        they aren't well documented and I've already misused them once.  However, this could probably be
+    // TODO:        optimized in the future based on those.
+
     #else
     std::vector<std::string> nexus_ids(features.nexuses().begin(), features.nexuses().end());
     #endif
@@ -459,7 +465,7 @@ int main(int argc, char *argv[]) {
         size_t timesteps = manager->Simulation_Time_Object->get_total_output_times();
         #if NGEN_WITH_MPI
         std::vector<int> nexuses_per_rank(mpi_num_procs, 0);
-        nexuses_per_rank[mpi_rank] += local_data.nexus_ids.size();
+        nexuses_per_rank[mpi_rank] += nexus_ids.size();
         for (int i = 0; i < mpi_num_procs; i++) {
             MPI_Bcast(nexuses_per_rank.data() + i, 1, MPI_INT, i, MPI_COMM_WORLD);
             MPI_Barrier(MPI_COMM_WORLD);
