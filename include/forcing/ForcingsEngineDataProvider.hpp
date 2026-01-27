@@ -78,11 +78,14 @@ struct ForcingsEngineStorage {
         data_[key] = value;
     }
 
-    //! Clear all references to Forcings Engine instances.
+    //! Clear all references to Forcings Engine instances and run the Finalize methods on each BMI instance.
     //! @note This will not necessarily destroy the Forcings Engine instances. Since they
     //!       are reference counted, it will only decrement their instance by one.
-    void clear()
+    void finalize()
     {
+        for (auto &provider : data_) {
+            provider.second->Finalize();
+        }
         data_.clear();
     }
 
@@ -107,10 +110,7 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
     ~ForcingsEngineDataProvider() override = default;
     void finalize() override
     {
-        if (bmi_ != nullptr) {
-            bmi_->Finalize();
-            bmi_ = nullptr;
-        }
+        bmi_.reset();
     }
 
     boost::span<const std::string> get_available_variable_names() const override
