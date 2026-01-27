@@ -297,7 +297,7 @@ namespace realization {
         /**
          * Requests the BMI to load data from a previously saved state. This has a side effect of freeing a current state if it currently exists.
          */
-        void load_serialization_state(const boost::span<char> state) const;
+        virtual void load_serialization_state(const boost::span<char> state) const;
         /**
          * Requests the BMI to clear a currently saved state from memory.
          * Existing state pointers should not be used as the stored data may be freed depending on implementation.

@@ -117,4 +117,10 @@ bool Bmi_Py_Formulation::is_model_initialized() const {
     return get_bmi_model()->is_model_initialized();
 }
 
+void Bmi_Py_Formulation::load_serialization_state(const boost::span<char> state) const {
+    auto bmi = std::dynamic_pointer_cast<models::bmi::Bmi_Py_Adapter>(get_bmi_model());
+    // load the state through the set value function that does not enforce the input size is the same as the current BMI's size
+    bmi->set_value_unchecked("serialization_state", state.data(), state.size());
+}
+
 #endif //NGEN_WITH_PYTHON

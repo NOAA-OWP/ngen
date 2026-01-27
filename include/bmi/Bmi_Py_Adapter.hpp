@@ -591,6 +591,16 @@ namespace models {
             }
 
             /**
+             * Set the value of a variable. This version of setting a variable will send an array with the `size` specified instead of checking the BMI for its current size of the variable.
+             * 
+             * @param name The name of the BMI variable.
+             * @param src Pointer to the data that will be sent to the BMI.
+             * @param size The number of items represented by the pointer.
+             */
+            template <typename T>
+            void set_value_unchecked(const std::string &name, T *src, size_t size);
+
+            /**
              * Set values for a model's BMI variable at specified indices.
              *
              * This function is required to fulfill the @ref ::bmi::Bmi interface.  It essentially gets the advertised
