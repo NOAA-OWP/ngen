@@ -144,7 +144,7 @@ namespace data_access
         // number of time slices per cache entry
         // this is a tunable parameter; your mileage may vary
         // NOTE: it would be nice if this were divisible by 2 and 4
-        const size_t cache_slice_t_size = 18;
+        size_t cache_slice_t_size = 18;
         size_t cache_slice_c_size = 1;
 
         const netCDF::NcVar& get_ncvar(const std::string& name);
