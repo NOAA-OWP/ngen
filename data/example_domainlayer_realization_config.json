@@ -1,0 +1,125 @@
+{
+    "global": {
+      "formulations": [
+        {
+          "name": "bmi_c++",
+          "params": {
+            "model_type_name": "test_bmi_cpp",
+            "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+            "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
+            "main_output_variable": "OUTPUT_VAR_2",
+            "variables_names_map" : {
+              "INPUT_VAR_2": "TMP_2maboveground",
+              "INPUT_VAR_1": "precip_rate"
+            },
+            "create_function": "bmi_model_create",
+            "destroy_function": "bmi_model_destroy",
+            "uses_forcing_file": false
+          }
+        }
+      ],
+      "forcing": {
+          "file_pattern": ".*{{id}}.*.csv",
+          "path": "./data/forcing/"
+      }
+    },
+    "time": {
+        "start_time": "2015-12-01 00:00:00",
+        "end_time": "2015-12-30 23:00:00",
+        "output_interval": 3600
+    },
+    "layers": {
+        "cat-27": {
+          "formulations": [
+            {
+              "name": "bmi_fortran",
+              "params": {
+                  "model_type_name": "bmi_fortran_noahowp",
+                  "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi",
+                  "forcing_file": "",
+                  "init_config": "./data/bmi/fortran/noah-owp-modular-init-cat-27.namelist.input",
+                  "allow_exceed_end_time": true,
+                  "main_output_variable": "QINSUR",
+                  "variables_names_map": {
+                      "PRCPNONC": "atmosphere_water__liquid_equivalent_precipitation_rate",
+                      "Q2": "atmosphere_air_water~vapor__relative_saturation",
+                      "SFCTMP": "land_surface_air__temperature",
+                      "UU": "land_surface_wind__x_component_of_velocity",
+                      "VV": "land_surface_wind__y_component_of_velocity",
+                      "LWDN": "land_surface_radiation~incoming~longwave__energy_flux",
+                      "SOLDN": "land_surface_radiation~incoming~shortwave__energy_flux",
+                      "SFCPRS": "land_surface_air__pressure"
+                  },
+                  "create_function": "bmi_model_create",
+                  "destroy_function": "bmi_model_destroy",
+                  "uses_forcing_file": false
+              }
+            }
+          ],
+          "forcing": {
+              "path": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+          },
+          "layer_name": "domain_layer",
+          "time_step_units": "s",
+          "id": 1,
+          "time_step": 3600,
+          "domain": "catchments"
+        },
+        "cat-52": {
+          "formulations": [
+            {
+              "name": "bmi_c++",
+              "params": {
+                "model_type_name": "test_bmi_cpp",
+                "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+                "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
+                "main_output_variable": "OUTPUT_VAR_2",
+                "variables_names_map" : {
+                  "INPUT_VAR_2": "TMP_2maboveground",
+                  "INPUT_VAR_1": "precip_rate"
+                },
+                "create_function": "bmi_model_create",
+                "destroy_function": "bmi_model_destroy",
+                "uses_forcing_file": false
+              }
+            }
+          ],
+          "forcing": {
+              "path": "./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+          },
+          "layer_name": "domain_layer",
+          "time_step_units": "s",
+          "id": 2,
+          "time_step": 3600,
+          "domain": "catchments"
+        },
+        "cat-67": {
+          "formulations": [
+            {
+              "name": "bmi_c++",
+              "params": {
+                "model_type_name": "test_bmi_cpp",
+                "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+                "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
+                "main_output_variable": "OUTPUT_VAR_2",
+                "variables_names_map" : {
+                  "INPUT_VAR_2": "TMP_2maboveground",
+                  "INPUT_VAR_1": "precip_rate"
+                },
+                "create_function": "bmi_model_create",
+                "destroy_function": "bmi_model_destroy",
+                "uses_forcing_file": false
+              }
+            }
+          ],
+          "forcing": {
+              "path": "./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+          },
+          "layer_name": "domain_layer",
+          "time_step_units": "s",
+          "id": 3,
+          "time_step": 3600,
+          "domain": "catchments"
+        }
+    }
+}
