@@ -137,9 +137,9 @@ void Bmi_Fortran_Formulation_Test::SetUp() {
             "../../test/data/bmi/test_bmi_fortran/"
     };
     lib_dir_opts = {
-            "./extern/test_bmi_fortran/cmake_build/",
-            "../extern/test_bmi_fortran/cmake_build/",
-            "../../extern/test_bmi_fortran/cmake_build/"
+            "./test-libs/test_bmi_fortran/",
+            "../test-libs/test_bmi_fortran/",
+            "../../test-libs/test_bmi_fortran/"
     };
 
     config_json = std::vector<std::string>(EX_COUNT);
