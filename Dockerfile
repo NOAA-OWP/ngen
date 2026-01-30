@@ -294,7 +294,8 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-soilfreezethaw \
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ueb-bmi \
     set -eux && \
-    cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ -DBOOST_ROOT=/opt/boost && \
+    cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ \
+        -DUEB_SUPPRESS_OUTPUTS=ON -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/ueb-bmi/cmake_build/ && \
     find /ngen-app/ngen/extern/ueb-bmi/ -name '*.o' -exec rm -f {} +
 
