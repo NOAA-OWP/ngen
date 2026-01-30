@@ -599,13 +599,21 @@ namespace models {
 
             /**
              * Set the value of a variable. This version of setting a variable will send an array with the `size` specified instead of checking the BMI for its current size of the variable.
+             * Ownership of the pointer will remain in C++, so the consuming BMI should not maintain a reference to the values beyond the scope of its `set_value` method.
              * 
              * @param name The name of the BMI variable.
              * @param src Pointer to the data that will be sent to the BMI.
              * @param size The number of items represented by the pointer.
              */
             template <typename T>
-            void set_value_unchecked(const std::string &name, T *src, size_t size);
+            void set_value_unchecked(const std::string &name, T *src, size_t size) {
+                // declare readonly array info with the pointer and size
+                py::buffer_info info(src, static_cast<py::ssize_t>(size), true);
+                // create the array with the info and NULL handler so python doesn't take ownership
+                py::array_t<T> src_array(info, nullptr);
+                // pass the array to python to read; the BMI should not attempt to maintain a reference beyond the scope of this function to prevent trying to use freed memory
+                bmi_model->attr("set_value")(name, src_array);
+            }
 
             /**
              * Set values for a model's BMI variable at specified indices.

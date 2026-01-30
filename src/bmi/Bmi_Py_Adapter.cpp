@@ -223,10 +223,4 @@ void Bmi_Py_Adapter::UpdateUntil(double time) {
     bmi_model->attr("update_until")(time);
 }
 
-template <typename T>
-void Bmi_Py_Adapter::set_value_unchecked(const std::string &name, T *src, size_t size) {
-    py::array_t<T> src_array(size, src);
-    bmi_model->attr("set_value")(name, src_array);
-}
-
 #endif //NGEN_WITH_PYTHON
