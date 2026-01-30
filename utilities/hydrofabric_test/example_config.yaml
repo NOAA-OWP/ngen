@@ -1,0 +1,32 @@
+general:
+  #ngen binary to test, must be a complete path to the executable, or the path must be in the PATH env variable
+  ngen: "/Users/nels.frazier/workspace/ngen/cmake_release/ngen"
+  #location to store test outputs, by defult, create a temporary directory
+  #workdir:
+  #hydrofabric: ~/Downloads/gauge_01054300.gpkg
+  #hydrofabric: ~/Downloads/
+  #hydrofabric: s3://nextgen-hydrofabric/pre-release/subsets_sample/
+  #hydrofabric: s3://nextgen-hydrofabric/pre-release/subsets_sample/gauge_01011000.gpkg
+  hydrofabric: ~/Downloads/gauge_01089100.gpkg
+  #hydrofabric: s3://nextgen-hydrofabric/pre-release/subsets_sample/gauge_01089100.gpkg #BROKEN
+  #hydrofabric: s3://nextgen-hydrofabric/calibration/subsets_sample/gauge_01089100.gpkg
+  #hydrofabric: s3://nextgen-hydrofabric/v1.1/camels/VPU01/gauge_01134500.gpkg
+  realization: none
+  forcing:
+    provider: CsvPerFeature
+    path: ./test_forcing.csv
+  time:
+    start_time: 2019-06-01 00:00:00
+    end_time: 2019-06-07 23:00:00
+  routing:
+    embedded: False
+  formulation:
+    name: bmi_c
+    model_name: CFE
+    config_prefix: ""
+    config: /Users/nels.frazier/workspace/ngen-cal/multi_test/10259000/CFE/cat-1_bmi_config_cfe_pass.txt
+    library_prefix: ""
+    library: /Users/nels.frazier/workspace/ngen/extern/cfe/cmake_build/libcfebmi.dylib
+    name_map:
+      atmosphere_water__liquid_equivalent_precipitation_rate: "RAINRATE"
+
