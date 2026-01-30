@@ -623,6 +623,10 @@ namespace models {
                 bmi_model->attr("set_value_at_indices")(name, index_array, src_array);
             }
 
+            auto model() {
+                return bmi_model;
+            }
+
         protected:
             std::string model_name = "BMI Python model";
 

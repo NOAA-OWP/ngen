@@ -175,19 +175,11 @@ ngen_add_test(
 )
 
 ngen_add_test(
-    test_gridselector
-    OBJECTS
-        forcing/GridDataSelector_Test.cpp
-    LIBRARIES
-        NGen::forcing
-        NGen::geojson
-)
-
-ngen_add_test(
     test_forcings_engine
     OBJECTS
         forcing/ForcingsEngineDataProvider_Test.cpp
         forcing/ForcingsEngineLumpedDataProvider_Test.cpp
+        forcing/ForcingsEngineGriddedDataProvider_Test.cpp
     LIBRARIES
         NGen::forcing
     REQUIRES
@@ -197,14 +189,23 @@ ngen_add_test(
 if(TARGET test_forcings_engine)
     set(FORCINGS_ENGINE_SCRATCH_DIR "${CMAKE_CURRENT_BINARY_DIR}/forcings_engine_scratch")
     file(MAKE_DIRECTORY "${FORCINGS_ENGINE_SCRATCH_DIR}")
+
+    # Configure Lumped
     configure_file(
-        "${CMAKE_CURRENT_LIST_DIR}/../data/forcing/forcings-engine/config_aorc.yml.in" # Input
-        "${CMAKE_CURRENT_BINARY_DIR}/config_aorc.yml"
+        "${CMAKE_CURRENT_LIST_DIR}/../data/forcing/forcings-engine/config_aorc_lumped.yml.in" # Input
+        "${CMAKE_CURRENT_BINARY_DIR}/config_aorc_lumped.yml"
+    )
+
+    # Configure Gridded
+    configure_file(
+        "${CMAKE_CURRENT_LIST_DIR}/../data/forcing/forcings-engine/config_aorc_gridded.yml.in" # Input
+        "${CMAKE_CURRENT_BINARY_DIR}/config_aorc_gridded.yml"
     )
 
     # Use global add instead of target add so that both `test_forcings_engine` and `test_all`
     # receive this compile definition.
-    add_compile_definitions(NGEN_LUMPED_CONFIG_PATH="${CMAKE_CURRENT_BINARY_DIR}/config_aorc.yml")
+    add_compile_definitions(NGEN_FORCINGS_LUMPED_CONFIG_PATH="${CMAKE_CURRENT_BINARY_DIR}/config_aorc_lumped.yml")
+    add_compile_definitions(NGEN_FORCINGS_GRIDDED_CONFIG_PATH="${CMAKE_CURRENT_BINARY_DIR}/config_aorc_gridded.yml")
 endif()
 
 ########################## BMI Protocol Unit Tests
@@ -490,7 +491,6 @@ ngen_add_test(
         forcing/CsvPerFeatureForcingProvider_Test.cpp
         forcing/OptionalWrappedDataProvider_Test.cpp
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
-        forcing/GridDataSelector_Test.cpp
         core/mediator/UnitsHelper_Tests.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/NetworkTests.cpp

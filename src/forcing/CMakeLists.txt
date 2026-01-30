@@ -32,6 +32,7 @@ if(NGEN_WITH_PYTHON)
       PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/ForcingsEngineDataProvider.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/ForcingsEngineLumpedDataProvider.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/ForcingsEngineGriddedDataProvider.cpp"
     )
     target_link_libraries(forcing PUBLIC pybind11::embed NGen::ngen_bmi)
 endif()

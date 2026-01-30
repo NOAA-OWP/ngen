@@ -1,80 +1,50 @@
 #include <gtest/gtest.h>
 
-#ifndef NGEN_LUMPED_CONFIG_PATH
-#error "Lumped config file path not defined! Set `-DNGEN_LUMPED_CONFIG_PATH`"
+#ifndef NGEN_FORCINGS_LUMPED_CONFIG_PATH
+#error "Lumped config file path not defined! Set `-DNGEN_FORCINGS_LUMPED_CONFIG_PATH`. " \
+       "Note: you should not be seeing this compile error. Please contact an ngen developer."
 #endif
 
-#include <NGenConfig.h>
-#if NGEN_WITH_MPI
-#include <mpi.h>
-#endif
+#include "ForcingsEngineTestHelpers.hpp"
 
 #include <forcing/ForcingsEngineLumpedDataProvider.hpp>
-#include <forcing/AorcForcing.hpp>
-#include <utilities/python/InterpreterUtil.hpp>
 
 #include <string>
 
 struct ForcingsEngineLumpedDataProviderTest
-  : public testing::Test
+  : public ForcingsEngineDataProviderTest
 {
     using provider_type = data_access::ForcingsEngineLumpedDataProvider;
 
     ForcingsEngineLumpedDataProviderTest()
-    {
-        #if NGEN_WITH_MPI
-        MPI_Comm_size(MPI_COMM_WORLD, &mpi_.size);
-        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_.rank);
-        #endif
-    }
+      : ForcingsEngineDataProviderTest()
+    {}
 
-    static constexpr const char* config_file = NGEN_LUMPED_CONFIG_PATH;
-    static const std::time_t time_start;
-    static const std::time_t time_end;
-    static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_;
     static std::unique_ptr<provider_type> provider_;
 
-    struct { int initialized = 0, finalized = 0, size = 1, rank = 0; } mpi_{};
-
     static void SetUpTestSuite();
-    static void TearDownTestSuite();
 };
 
 using TestFixture = ForcingsEngineLumpedDataProviderTest;
 
-constexpr const char* TestFixture::config_file;
-const std::time_t TestFixture::time_start = data_access::detail::parse_time("2023-01-17 01:00:00");
-const std::time_t TestFixture::time_end = TestFixture::time_start + 3600 + 3600;
-
-std::shared_ptr<utils::ngenPy::InterpreterUtil> TestFixture::gil_ = nullptr;
 std::unique_ptr<TestFixture::provider_type> TestFixture::provider_ = nullptr;
+
+constexpr const char* config_file = NGEN_FORCINGS_LUMPED_CONFIG_PATH;
 
 void TestFixture::SetUpTestSuite()
 {
-    #if NGEN_WITH_MPI
-    MPI_Init(nullptr, nullptr);
-    #endif
+    std::cout << "Initializing (Lumped) ForcingsEngineDataProviderTest" << std::endl;
+    ForcingsEngineDataProviderTest::SetUpTestSuite();
 
-    TestFixture::gil_ = utils::ngenPy::InterpreterUtil::getInstance();
-
-    data_access::detail::assert_forcings_engine_requirements();
+    TestFixture::time_start = data_access::detail::parse_time("2023-01-17 01:00:00");
+    TestFixture::time_end   = TestFixture::time_start + 3600 + 3600;
 
     TestFixture::provider_ = std::make_unique<data_access::ForcingsEngineLumpedDataProvider>(
-        /*init=*/TestFixture::config_file,
+        /*init=*/config_file,
         /*time_begin_seconds=*/TestFixture::time_start,
         /*time_end_seconds=*/TestFixture::time_end,
         /*divide_id=*/"cat-11223"
     );
-}
-
-void TestFixture::TearDownTestSuite()
-{
-    data_access::detail::ForcingsEngineStorage::instances.clear();
-    gil_.reset();
-
-    #if NGEN_WITH_MPI
-    PMPI_Finalize();
-    #endif
 }
 
 /**
@@ -86,7 +56,7 @@ void TestFixture::TearDownTestSuite()
 TEST_F(ForcingsEngineLumpedDataProviderTest, Storage)
 {
     auto new_inst = std::make_unique<data_access::ForcingsEngineLumpedDataProvider>(
-        /*init=*/TestFixture::config_file,
+        /*init=*/config_file,
         /*time_begin_seconds=*/TestFixture::time_start,
         /*time_end_seconds=*/TestFixture::time_end,
         /*divide_id=*/"cat-11371"
@@ -128,5 +98,5 @@ TEST_F(ForcingsEngineLumpedDataProviderTest, VariableAccess)
     selector = CatchmentAggrDataSelector{"cat-11223", "LWDOWN", time_start + 3600, 3600, "seconds"};
     auto result2 = provider_->get_values(selector, data_access::ReSampleMethod::SUM);
     ASSERT_GT(result2.size(), 0);
-    EXPECT_NEAR(result2[0], 0, 1e-6);
+    EXPECT_NEAR(result2[0], 309.800018, 1e-6);
 }

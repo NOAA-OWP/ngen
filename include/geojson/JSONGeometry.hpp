@@ -35,6 +35,8 @@ namespace geojson {
 
     typedef bg::model::multi_polygon<polygon_t> multipolygon_t;
 
+    using box_t = boost::geometry::model::box<geojson::coordinate_t>;
+
     /**
      * A two dimensional matrix of doubles
      */
