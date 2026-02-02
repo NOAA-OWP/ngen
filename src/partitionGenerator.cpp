@@ -144,7 +144,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, P
             for( auto downstream : network.get_destination_ids(catchment) ){
                 nexus_set.emplace(downstream);
             }
-            if(nexus_set.size() == 0){
+            if(nexus_set.size() == 0 && catchment.find("SENTINEL") == std::string::npos){
                 std::cerr<<"Error: Catchment "<<catchment<<" has no destination nexus.\n";
                 exit(1);
             }
