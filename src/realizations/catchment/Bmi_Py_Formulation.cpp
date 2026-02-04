@@ -60,24 +60,24 @@ double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const std::
     int indices[1];
     indices[0] = index;
     // macro for both checking and converting based on type from get_analogous_cxx_type
-#define GET_DOUBLE(type) if (cxx_type == #type) {\
-                            type dest;\
-                            model->get_value_at_indices(var_name, &dest, indices, 1, false);\
-                            return static_cast<double>(dest);}
-    GET_DOUBLE(signed char)
-    else GET_DOUBLE(unsigned char)
-    else GET_DOUBLE(short)
-    else GET_DOUBLE(unsigned short)
-    else GET_DOUBLE(int)
-    else GET_DOUBLE(unsigned int)
-    else GET_DOUBLE(long)
-    else GET_DOUBLE(unsigned long)
-    else GET_DOUBLE(long long)
-    else GET_DOUBLE(unsigned long long)
-    else GET_DOUBLE(float)
-    else GET_DOUBLE(double)
-    else GET_DOUBLE(long double)
-#undef GET_DOUBLE
+#define PY_BMI_DOUBLE_AT_INDEX(type) if (cxx_type == #type) {\
+                                        type dest;\
+                                        model->get_value_at_indices(var_name, &dest, indices, 1, false);\
+                                        return static_cast<double>(dest);}
+    PY_BMI_DOUBLE_AT_INDEX(signed char)
+    else PY_BMI_DOUBLE_AT_INDEX(unsigned char)
+    else PY_BMI_DOUBLE_AT_INDEX(short)
+    else PY_BMI_DOUBLE_AT_INDEX(unsigned short)
+    else PY_BMI_DOUBLE_AT_INDEX(int)
+    else PY_BMI_DOUBLE_AT_INDEX(unsigned int)
+    else PY_BMI_DOUBLE_AT_INDEX(long)
+    else PY_BMI_DOUBLE_AT_INDEX(unsigned long)
+    else PY_BMI_DOUBLE_AT_INDEX(long long)
+    else PY_BMI_DOUBLE_AT_INDEX(unsigned long long)
+    else PY_BMI_DOUBLE_AT_INDEX(float)
+    else PY_BMI_DOUBLE_AT_INDEX(double)
+    else PY_BMI_DOUBLE_AT_INDEX(long double)
+#undef PY_BMI_DOUBLE_AT_INDEX
     Logger::logMsgAndThrowError("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
     " as double: no logic for converting variable type " + val_type);
 
