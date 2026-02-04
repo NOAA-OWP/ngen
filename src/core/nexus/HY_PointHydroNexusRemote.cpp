@@ -146,6 +146,21 @@ void HY_PointHydroNexusRemote::post_receives()
                 MPI_COMM_WORLD,
                 &stored_receives.back().mpi_request));
         }
+        else
+        {
+            std::cerr << "HY_PointHydroNexusRemote: "<< id 
+                      << " destructor timed out after " << timeout/1000 
+                      << " seconds waiting on pending MPI communications\n";
+            // The return is is probably best, logging the error.
+            // There is no good way to recover from this.
+            // Throwing an exception from destructors is generally not a good idea
+            // as it can lead to undefined behavior.
+            // and using std::exit forces the program to terminate immediately,
+            // even if this situation is recoverable/acceptable in some cases.
+            return;
+        }
+        wait_time += 1;
+        MPI_Finalized(&mpi_finalized);
     }
 }
 
