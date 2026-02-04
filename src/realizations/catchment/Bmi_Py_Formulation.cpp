@@ -54,50 +54,30 @@ double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const std::
 
     std::string val_type = model->GetVarType(var_name);
     size_t val_item_size = (size_t)model->GetVarItemsize(var_name);
+    std::string cxx_type = model->get_analogous_cxx_type(val_type, val_item_size);
 
     //void *dest;
     int indices[1];
     indices[0] = index;
-
-    // The available types and how they are handled here should match what is in SetValueAtIndices
-    if (val_type == "int" && val_item_size == sizeof(short)) {
-        short dest;
-        model->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
-    }
-    if (val_type == "int" && val_item_size == sizeof(int)) {
-        int dest;
-        model->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
-    }
-    if (val_type == "int" && val_item_size == sizeof(long)) {
-        long dest;
-        model->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
-    }
-    if (val_type == "int" && val_item_size == sizeof(long long)) {
-        long long dest;
-        model->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
-    }
-    if (val_type == "float" || val_type == "float16" || val_type == "float32" || val_type == "float64") {
-        if (val_item_size == sizeof(float)) {
-            float dest;
-            model->get_value_at_indices(var_name, &dest, indices, 1, false);
-            return (double) dest;
-        }
-        if (val_item_size == sizeof(double)) {
-            double dest;
-            model->get_value_at_indices(var_name, &dest, indices, 1, false);
-            return dest;
-        }
-        if (val_item_size == sizeof(long double)) {
-            long double dest;
-            model->get_value_at_indices(var_name, &dest, indices, 1, false);
-            return (double) dest;
-        }
-    }
-
+    // macro for both checking and converting based on type from get_analogous_cxx_type
+#define GET_DOUBLE(type) if (cxx_type == #type) {\
+                            type dest;\
+                            model->get_value_at_indices(var_name, &dest, indices, 1, false);\
+                            return static_cast<double>(dest);}
+    GET_DOUBLE(signed char)
+    else GET_DOUBLE(unsigned char)
+    else GET_DOUBLE(short)
+    else GET_DOUBLE(unsigned short)
+    else GET_DOUBLE(int)
+    else GET_DOUBLE(unsigned int)
+    else GET_DOUBLE(long)
+    else GET_DOUBLE(unsigned long)
+    else GET_DOUBLE(long long)
+    else GET_DOUBLE(unsigned long long)
+    else GET_DOUBLE(float)
+    else GET_DOUBLE(double)
+    else GET_DOUBLE(long double)
+#undef GET_DOUBLE
     Logger::logMsgAndThrowError("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
     " as double: no logic for converting variable type " + val_type);
 
