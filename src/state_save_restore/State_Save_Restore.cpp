@@ -71,6 +71,19 @@ std::vector<std::pair<std::string, std::shared_ptr<State_Saver>>> State_Save_Con
     return savers;
 }
 
+std::unique_ptr<State_Loader> State_Save_Config::hot_start() const {
+    for (const auto &i : this->instances_) {
+        if (i.direction_ == State_Save_Direction::Load && i.timing_ == State_Save_When::StartOfRun) {
+            if (i.mechanism_ == State_Save_Mechanism::FilePerUnit) {
+                return std::make_unique<File_Per_Unit_Loader>(i.path_);
+            } else {
+                LOG(LogLevel::WARNING, "State_Save_Config: Saving mechanism " + i.mechanism_string() + " is not supported for start of run saving.");
+            }
+        }
+    }
+    return std::unique_ptr<State_Loader>();
+}
+
 State_Save_Config::instance::instance(std::string const& direction, std::string const& label, std::string const& path, std::string const& mechanism, std::string const& timing)
     : label_(label)
     , path_(path)

@@ -35,6 +35,12 @@ namespace realization {
             this->load_serialization_state(data);
         }
 
+        void Bmi_Module_Formulation::load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) const {
+            this->load_state(loader);
+            double rt;
+            this->get_bmi_model()->SetValue("reset_time", &rt);
+        }
+
         boost::span<const std::string> Bmi_Module_Formulation::get_available_variable_names() const {
             return available_forcings;
         }

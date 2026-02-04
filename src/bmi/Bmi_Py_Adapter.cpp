@@ -104,25 +104,35 @@ void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
         msg += e.what();
         Logger::logMsgAndThrowError(msg);
     }
-
-    if (cxx_type == "short") {
-        copy_to_array<short>(name, (short *) dest);
+    if (cxx_type == "signed char") {
+        this->copy_to_array<signed char>(name, static_cast<signed char *>(dest));
+    } else if (cxx_type == "unsigned char") {
+        this->copy_to_array<unsigned char>(name, static_cast<unsigned char *>(dest));
+    } else if (cxx_type == "short") {
+        this->copy_to_array<short>(name, static_cast<short *>(dest));
+    } else if (cxx_type == "unsigned short") {
+        this->copy_to_array<unsigned short>(name, static_cast<unsigned short *>(dest));
     } else if (cxx_type == "int") {
-        copy_to_array<int>(name, (int *) dest);
+        this->copy_to_array<int>(name, static_cast<int *>(dest));
+    } else if (cxx_type == "unsigned int") {
+        this->copy_to_array<unsigned int>(name, static_cast<unsigned int *>(dest));
     } else if (cxx_type == "long") {
-        copy_to_array<long>(name, (long *) dest);
+        this->copy_to_array<long>(name, static_cast<long *>(dest));
+    } else if (cxx_type == "unsigned long") {
+        this->copy_to_array<unsigned long>(name, static_cast<unsigned long *>(dest));
     } else if (cxx_type == "long long") {
-        copy_to_array<long long>(name, (long long *) dest);
+        this->copy_to_array<long long>(name, static_cast<long long *>(dest));
+    } else if (cxx_type == "unsigned long long") {
+        this->copy_to_array<unsigned long long>(name, static_cast<unsigned long long *>(dest));
     } else if (cxx_type == "float") {
-        copy_to_array<float>(name, (float *) dest);
+        this->copy_to_array<float>(name, static_cast<float *>(dest));
     } else if (cxx_type == "double") {
-        copy_to_array<double>(name, (double *) dest);
+        this->copy_to_array<double>(name, static_cast<double *>(dest));
     } else if (cxx_type == "long double") {
-        copy_to_array<long double>(name, (long double *) dest);
+        this->copy_to_array<long double>(name, static_cast<long double *>(dest));
     } else {
         Logger::logMsgAndThrowError("Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
     }
-
 }
 
 void Bmi_Py_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {

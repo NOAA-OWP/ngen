@@ -58,6 +58,13 @@ public:
      */
     std::vector<std::pair<std::string, std::shared_ptr<State_Saver>>> end_of_run_savers() const;
 
+    /**
+     * Get state loader that is intended to be performed before catchment processing starts.
+     * 
+     * The returned pointer may be NULL if no configuration was made for existing data.
+     */
+    std::unique_ptr<State_Loader> hot_start() const;
+
     struct instance
     {
         instance(std::string const& direction, std::string const& label, std::string const& path, std::string const& mechanism, std::string const& timing);
@@ -166,9 +173,14 @@ public:
     virtual ~State_Snapshot_Loader() = default;
 
     /**
+     * Check if data of a unit name exists.
+     */
+    virtual bool has_unit(const std::string &unit_name) = 0;
+
+    /**
      * Load data from whatever source, and pass it to @param unit_loader->load()
      */
-    virtual void load_unit(std::string const& unit_name, std::vector<char> &data) = 0;
+    virtual void load_unit(const std::string &unit_name, std::vector<char> &data) = 0;
 
     /**
      * Execute logic to complete the saving process

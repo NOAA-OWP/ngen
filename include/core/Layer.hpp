@@ -115,6 +115,7 @@ namespace ngen
 
         virtual void save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> snapshot_saver);
         virtual void load_state_snapshot(std::shared_ptr<State_Snapshot_Loader> snapshot_loader);
+        virtual void load_hot_start(std::shared_ptr<State_Snapshot_Loader> snapshot_loader);
 
         protected:
 

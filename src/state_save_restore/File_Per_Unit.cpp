@@ -112,12 +112,14 @@ public:
     File_Per_Unit_Snapshot_Loader(path dir_path);
     ~File_Per_Unit_Snapshot_Loader() override = default;
 
+    bool has_unit(const std::string &unit_name) override;
+
     /**
      * Load data from whatever source and store it in the `data` vector.
      * 
      * @param data The location where the loaded data will be stored. This will be resized to the amount of data loaded.
      */
-    void load_unit(std::string const& unit_name, std::vector<char> &data) override;
+    void load_unit(const std::string &unit_name, std::vector<char> &data) override;
 
     /**
      * Execute logic to complete the saving process
@@ -138,6 +140,11 @@ File_Per_Unit_Snapshot_Loader::File_Per_Unit_Snapshot_Loader(path dir_path)
     : dir_path_(dir_path)
 {
 
+}
+
+bool File_Per_Unit_Snapshot_Loader::has_unit(const std::string &unit_name) {
+    auto file_path = dir_path_ / unit_name;
+    return exists(file_path.string());
 }
 
 void File_Per_Unit_Snapshot_Loader::load_unit(std::string const& unit_name, std::vector<char> &data) {

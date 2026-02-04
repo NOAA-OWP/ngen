@@ -542,24 +542,32 @@ namespace models {
                 std::string py_type = GetVarType(name);
                 std::string cxx_type = get_analogous_cxx_type(py_type, (size_t) itemSize);
 
-                if (cxx_type == "short") {
-                    set_value<short>(name, (short *) src);
+                if (cxx_type == "signed char") {
+                    this->set_value<signed char>(name, static_cast<signed char *>(src));
+                } else if (cxx_type == "unsigned char") {
+                    this->set_value<unsigned char>(name, static_cast<unsigned char *>(src));
+                } else if (cxx_type == "short") {
+                    this->set_value<short>(name, static_cast<short *>(src));
+                } else if (cxx_type == "unsigned short") {
+                    this->set_value<unsigned short>(name, static_cast<unsigned short *>(src));
                 } else if (cxx_type == "int") {
-                    set_value<int>(name, (int *) src);
+                    this->set_value<int>(name, static_cast<int *>(src));
+                } else if (cxx_type == "unsigned int") {
+                    this->set_value<unsigned int>(name, static_cast<unsigned int *>(src));
                 } else if (cxx_type == "long") {
-                    set_value<long>(name, (long *) src);
+                    this->set_value<long>(name, static_cast<long *>(src));
+                } else if (cxx_type == "unsigned long") {
+                    this->set_value<unsigned long>(name, static_cast<unsigned long *>(src));
                 } else if (cxx_type == "long long") {
-                    //FIXME this gets dicey -- if a python numpy array is of type np.int64 (long long), 
-                    //but a c++ int* is passed to this function as src, it will fail in undefined ways...
-                    //the template type overload may be perferred for doing SetValue from framework components
-                    //such as forcing providers...
-                    set_value<long long>(name, (long long *) src);
+                    this->set_value<long long>(name, static_cast<long long *>(src));
+                } else if (cxx_type == "unsigned long long") {
+                    this->set_value<unsigned long long>(name, static_cast<unsigned long long *>(src));
                 } else if (cxx_type == "float") {
-                    set_value<float>(name, (float *) src);
+                    this->set_value<float>(name, static_cast<float *>(src));
                 } else if (cxx_type == "double") {
-                    set_value<double>(name, (double *) src);
+                    this->set_value<double>(name, static_cast<double *>(src));
                 } else if (cxx_type == "long double") {
-                    set_value<long double>(name, (long double *) src);
+                    this->set_value<long double>(name, static_cast<long double *>(src));
                 } else {
                     std::string throw_msg; throw_msg.assign("Bmi_Py_Adapter cannot set values for variable '" + name +
                                              "' that has unrecognized C++ type '" + cxx_type + "'");
@@ -567,7 +575,6 @@ namespace models {
                     throw std::runtime_error(throw_msg);
                 }
             }
-
             /**
              * Set the values of the given BMI variable for the model, sourcing new data from the provided vector.
              *
