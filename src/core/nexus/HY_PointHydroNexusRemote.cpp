@@ -92,9 +92,9 @@ HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(std::string nexus_id, Catchme
 
 HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
 {
-    long wait_time = 0;
-
-    // This destructore might be called after MPI_Finalize so do not attempt communication if
+    const unsigned int timeout = 120000; // timeout threshold in milliseconds
+    unsigned int wait_time = 0;
+    // This destructor might be called after MPI_Finalize so do not attempt communication if
     // this has occured
     int mpi_finalized;
     MPI_Finalized(&mpi_finalized);
@@ -105,15 +105,24 @@ HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
 
         process_communications();
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-
-        wait_time += 1;
-
-        if ( wait_time > 120000 )
-        {
-            // TODO log warning message that some comunications could not complete
-
+        if( wait_time < timeout && wait_time > 0 ){ // don't sleep if first call clears comms!
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
+        else
+        {
+            std::cerr << "HY_PointHydroNexusRemote: "<< id 
+                      << " destructor timed out after " << timeout/1000 
+                      << " seconds waiting on pending MPI communications\n";
+            // The return is is probably best, logging the error.
+            // There is no good way to recover from this.
+            // Throwing an exception from destructors is generally not a good idea
+            // as it can lead to undefined behavior.
+            // and using std::exit forces the program to terminate immediately,
+            // even if this situation is recoverable/acceptable in some cases.
+            return;
+        }
+        wait_time += 1;
+        MPI_Finalized(&mpi_finalized);
     }
 }
 
