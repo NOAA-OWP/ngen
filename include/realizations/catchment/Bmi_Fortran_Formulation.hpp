@@ -25,7 +25,7 @@ namespace realization {
 
         /**
          * Requests the BMI to copy its current state into memory. The state will remain in memory until either a new state is made or `free_serialization_state` is called.
-         * Because the Fortran BMI has no messaging for 64-bit integers, this overload will use the 32-bit integer interface and copy the results to `size`.
+         * Because the Fortran BMI has no messaging for 64-bit integers, this overload will use the 32-bit integer interface.
          * 
          * @return Span of the serialized data.
          */

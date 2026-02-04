@@ -13,6 +13,7 @@
 #include "Bmi_Py_Formulation.hpp"
 #include "Logger.hpp"
 
+#include "state_save_restore/State_Save_Utils.hpp"
 #include <state_save_restore/State_Save_Restore.hpp>
 
 #if (__cplusplus >= 202002L)
@@ -48,12 +49,13 @@ void Bmi_Multi_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> sav
         LOG(LogLevel::DEBUG, "Serialization of multi-BMI %s %s completed with a size of %d bytes.",
             bmi->get_id().c_str(), bmi->get_model_type_name().c_str(), span.size());
     }
-    char *data = new char[data_size];
+    std::vector<char> data;
+    data.reserve(data_size);
     size_t index = 0;
     for (const auto &bmi : bmi_data) {
         // write the size of the data
         if (is_little_endian()) {
-            std::memcpy(&data[index], &bmi.second, sizeof(uint64_t));
+            std::memcpy(data.data() + index, &bmi.second, sizeof(uint64_t));
         } else {
             // store the size bytes in reverse order to ensure saved data is always little endian
             const char *bytes = reinterpret_cast<const char*>(&bmi.second);
@@ -63,13 +65,12 @@ void Bmi_Multi_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> sav
             }
         }
         // write the serialized data
-        std::memcpy(data + index + sizeof(uint64_t), &bmi.first, bmi.second);
+        std::memcpy(data.data() + index + sizeof(uint64_t), &bmi.first, bmi.second);
         index += sizeof(uint64_t) + bmi.second;
     }
-    boost::span<const char> span(data, data_size);
+    boost::span<const char> span(data.data(), data_size);
     saver->save_unit(this->get_id(), span);
     
-    delete[] data;
     for (const nested_module_ptr &m : modules) { 
         auto bmi = static_cast<Bmi_Module_Formulation *>(m.get());
         bmi->free_serialization_state();
@@ -106,7 +107,7 @@ void Bmi_Multi_Formulation::load_hot_start(std::shared_ptr<State_Snapshot_Loader
     double rt;
     for (const nested_module_ptr &m : modules) {
         auto bmi = dynamic_cast<Bmi_Module_Formulation *>(m.get());
-        bmi->get_bmi_model()->SetValue("reset_time", &rt);
+        bmi->get_bmi_model()->SetValue(StateSaveNames::RESET, &rt);
     }
 }
 

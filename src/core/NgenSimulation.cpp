@@ -8,6 +8,7 @@
 #include "HY_Features.hpp"
 #endif
 
+#include "state_save_restore/State_Save_Utils.hpp"
 #include "state_save_restore/State_Save_Restore.hpp"
 #include "parallel_utils.h"
 
@@ -137,12 +138,12 @@ void NgenSimulation::save_end_of_run(std::shared_ptr<State_Snapshot_Saver> snaps
 #if NGEN_WITH_ROUTING
     if (this->mpi_rank_ == 0 && this->py_troute_) {
         uint64_t serialization_size;
-        this->py_troute_->SetValue("serialization_create", &serialization_size);
-        this->py_troute_->GetValue("serialization_size", &serialization_size);
-        void *troute_state = this->py_troute_->GetValuePtr("serialization_state");
+        this->py_troute_->SetValue(StateSaveNames::CREATE, &serialization_size);
+        this->py_troute_->GetValue(StateSaveNames::SIZE, &serialization_size);
+        void *troute_state = this->py_troute_->GetValuePtr(StateSaveNames::STATE);
         boost::span<const char> span(static_cast<const char*>(troute_state), serialization_size);
         snapshot_saver->save_unit(TROUTE_UNIT_NAME, span);
-        this->py_troute_->SetValue("serialization_free", &serialization_size);
+        this->py_troute_->SetValue(StateSaveNames::FREE, &serialization_size);
     }
 #endif // NGEN_WITH_ROUTING
 }
@@ -170,9 +171,9 @@ void NgenSimulation::load_hot_start(std::shared_ptr<State_Snapshot_Loader> snaps
             if (py_troute_ == NULL) {
                 this->make_troute(t_route_config_file_with_path);
             }
-            py_troute_->set_value_unchecked("serialization_state", troute_data.data(), troute_data.size());
+            py_troute_->set_value_unchecked(StateSaveNames::STATE, troute_data.data(), troute_data.size());
             double rt; // unused by the BMI but needed for messaging
-            py_troute_->SetValue("reset_time", &rt);
+            py_troute_->SetValue(StateSaveNames::RESET, &rt);
         } else if (!config_file_set && !snapshot_exists) {
             LOG(LogLevel::DEBUG, "No data set for loading T-Route.");
         } else if (config_file_set && !snapshot_exists) {

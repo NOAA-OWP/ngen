@@ -1,5 +1,6 @@
 #include <NGenConfig.h>
 #include "Logger.hpp"
+#include "state_save_restore/State_Save_Utils.hpp"
 
 #if NGEN_WITH_PYTHON
 
@@ -120,7 +121,7 @@ bool Bmi_Py_Formulation::is_model_initialized() const {
 void Bmi_Py_Formulation::load_serialization_state(const boost::span<char> state) const {
     auto bmi = std::dynamic_pointer_cast<models::bmi::Bmi_Py_Adapter>(get_bmi_model());
     // load the state through the set value function that does not enforce the input size is the same as the current BMI's size
-    bmi->set_value_unchecked<char>("serialization_state", state.data(), state.size());
+    bmi->set_value_unchecked<char>(StateSaveNames::STATE, state.data(), state.size());
 }
 
 #endif //NGEN_WITH_PYTHON

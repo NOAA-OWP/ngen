@@ -2,6 +2,7 @@
 #include "utilities/logging_utils.h"
 #include <UnitsHelper.hpp>
 #include "Logger.hpp"
+#include "state_save_restore/State_Save_Utils.hpp"
 #include <state_save_restore/State_Save_Restore.hpp>
 
 std::stringstream bmiform_ss;
@@ -38,7 +39,7 @@ namespace realization {
         void Bmi_Module_Formulation::load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) const {
             this->load_state(loader);
             double rt;
-            this->get_bmi_model()->SetValue("reset_time", &rt);
+            this->get_bmi_model()->SetValue(StateSaveNames::FREE, &rt);
         }
 
         boost::span<const std::string> Bmi_Module_Formulation::get_available_variable_names() const {
@@ -1093,9 +1094,9 @@ namespace realization {
         const boost::span<char> Bmi_Module_Formulation::get_serialization_state() const {
             auto model = get_bmi_model();
             uint64_t size = 0;
-            model->SetValue("serialization_create", &size);
-            model->GetValue("serialization_size", &size);
-            auto serialization_state = static_cast<char *>(model->GetValuePtr("serialization_state"));
+            model->SetValue(StateSaveNames::CREATE, &size);
+            model->GetValue(StateSaveNames::SIZE, &size);
+            auto serialization_state = static_cast<char *>(model->GetValuePtr(StateSaveNames::STATE));
             const boost::span<char> span(serialization_state, size);
             return span;
         }
@@ -1105,13 +1106,13 @@ namespace realization {
             // grab the pointer to the underlying state data
             void* data = (void*)state.data();
             // load the state through SetValue
-            bmi->SetValue("serialization_state", data);
+            bmi->SetValue(StateSaveNames::STATE, data);
         }
 
         void Bmi_Module_Formulation::free_serialization_state() const {
             auto bmi = this->bmi_model;
             // send message to clear memory associated with serialized data
             void* _; // this pointer will be unused by SetValue
-            bmi->SetValue("serialization_free", _);
+            bmi->SetValue(StateSaveNames::FREE, _);
         }
 }

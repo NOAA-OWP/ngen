@@ -6,6 +6,7 @@
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Bmi_Fortran_Adapter.hpp"
 #include "Constants.h"
+#include "state_save_restore/State_Save_Utils.hpp"
 
 using namespace realization;
 using namespace models::bmi;
@@ -96,9 +97,9 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
 const boost::span<char> Bmi_Fortran_Formulation::get_serialization_state() const {
     auto model = get_bmi_model();
     int size_int = 0;
-    model->SetValue("serialization_create", &size_int);
-    model->GetValue("serialization_size", &size_int);
-    auto serialization_state = static_cast<char*>(model->GetValuePtr("serialization_state"));
+    model->SetValue(StateSaveNames::CREATE, &size_int);
+    model->GetValue(StateSaveNames::SIZE, &size_int);
+    auto serialization_state = static_cast<char*>(model->GetValuePtr(StateSaveNames::STATE));
     const boost::span<char> span(serialization_state, size_int);
     return span;
 }
