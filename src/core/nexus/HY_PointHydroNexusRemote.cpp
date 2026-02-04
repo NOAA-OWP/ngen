@@ -18,7 +18,7 @@ void MPI_Handle_Error(int status)
     }
     else
     {
-        MPI_Abort(MPI_COMM_WORLD,1);
+        MPI_Abort(MPI_COMM_WORLD, status);
     }
 }
 
@@ -117,6 +117,29 @@ HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
     }
 }
 
+void HY_PointHydroNexusRemote::post_receives()
+{
+    // Post receives if not already posted (for pure receiver nexuses)
+    if (stored_receives.empty())
+    {
+        for (int rank : upstream_ranks)
+        {
+            stored_receives.push_back({});
+            stored_receives.back().buffer = std::make_shared<time_step_and_flow_t>();
+            int tag = extract(id);
+            
+            MPI_Handle_Error(MPI_Irecv(
+                stored_receives.back().buffer.get(),
+                1,
+                time_step_and_flow_type,
+                rank,
+                tag,
+                MPI_COMM_WORLD,
+                &stored_receives.back().mpi_request));
+        }
+    }
+}
+
 double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
 {
     double remote_flow = 0.0;
@@ -130,31 +153,15 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
     }
     else if ( type == receiver || type == sender_receiver )
     {
-    	for ( int rank : upstream_ranks )
-    	{
-       		int status;
-
-                stored_receives.resize(stored_receives.size() + 1);
-                stored_receives.back().buffer = std::make_shared<time_step_and_flow_t>();
-
-       		int tag = extract(id);
-
-       		//Receive downstream_flow from Upstream Remote Nexus to this Downstream Remote Nexus
-       		status = MPI_Irecv(
-                        stored_receives.back().buffer.get(),
-          		1,
-          		time_step_and_flow_type,
-          		rank,
-          		tag,
-          		MPI_COMM_WORLD,
-                        &stored_receives.back().mpi_request);
-
-       		MPI_Handle_Error(status); 
-       		
-                //std::cerr << "Creating receive with target_rank=" << rank << " on tag=" << tag << "\n";
-    	}
-    	
-        //std::cerr << "Waiting on receives\n";
+        post_receives();
+        // Wait for receives to complete
+        // This ensures all upstream flows are received before returning
+        // and that we have matched all sends with receives for a given time step.
+        // As long as the functions are called appropriately, e.g. one call to
+        // `add_upstream_flow` per upstream catchment per time step, followed
+        // by a call to `get_downstream_flow` for each downstream catchment per time step,
+        // this loop will terminate and ensures the synchronization of flows between
+        // ranks.
         while ( stored_receives.size() > 0 )
     	{
     		process_communications();
@@ -167,6 +174,28 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
 
 void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchment_id, time_step_t t)
 {
+	// Process any completed communications to free resources
+    // If no communications are pending, this call will do nothing.
+	process_communications();
+    // NOTE: It is possible for a partition to get "too far" ahead since the sends are now
+    // truely asynchronous.  For pure receivers and sender_receivers, this isn't a problem
+    // because the get_downstream_flow function will block until all receives are processed.
+    // However, for pure senders, this could be a problem.
+    // We can use this spinlock here to limit how far ahead a partition can get.
+    // in this case, approximately 100 time steps per downstream catchment...
+    while( stored_sends.size() > downstream_ranks.size()*100 )
+    {
+        process_communications();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+	
+	// Post receives before sending to prevent deadlock
+	// When stored_receives is empty, we need to post for incoming messages
+	if ((type == receiver || type == sender_receiver) && stored_receives.empty())
+	{
+		post_receives();
+	}
+	
 	// first add flow to local copy
 	HY_PointHydroNexus::add_upstream_flow(val, catchment_id, t);
 	
@@ -205,23 +234,25 @@ void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchme
 		    int tag = extract(id);
 
 		    //Send downstream_flow from this Upstream Remote Nexus to the Downstream Remote Nexus
-		    MPI_Isend(
+		    MPI_Handle_Error(
+                MPI_Isend(
 		        stored_sends.back().buffer.get(),
 		        1,
 		        time_step_and_flow_type,
 		        *downstream_ranks.begin(), //TODO currently only support a SINGLE downstream message pairing
 		        tag,
 		        MPI_COMM_WORLD,
-		        &stored_sends.back().mpi_request);
+		        &stored_sends.back().mpi_request)
+            );
 		        
-		    //std::cerr << "Creating send with target_rank=" << *downstream_ranks.begin() << " on tag=" << tag << "\n";	
-		        
+		    //std::cerr << "Creating send with target_rank=" << *downstream_ranks.begin() << " on tag=" << tag << "\n";
 		    
-		    while ( stored_sends.size() > 0 )
-		    {
-		    	process_communications();  
-		    	std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		    }		
+		    // Send is async, the next call to add_upstream_flow will test and ensure the send has completed
+            // and free the memory associated with the send.
+            // This prevents a potential deadlock situation where a send isn't able to complete
+            // because the remote receiver is also trying to send and the underlying mpi buffers/protocol
+            // are forced into a rendevous protocol.  So we ensure that we always post receives before sends.
+            // and that we always test for completed sends before freeing the memory associated with the send.
 		}
 	}
 }
