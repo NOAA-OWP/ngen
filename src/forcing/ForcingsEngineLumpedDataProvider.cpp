@@ -3,6 +3,7 @@
 #include <ctime>
 #include <iomanip>  // for std::put_time
 #include <forcing/ForcingsEngineLumpedDataProvider.hpp>
+#include <UnitsHelper.hpp>
 #include <iostream>
 
 namespace data_access {
@@ -175,7 +176,8 @@ Provider::data_type Provider::get_value(
     }
 
     auto variable = ensure_variable(selector.get_variable_name());
-
+    auto output_units = selector.get_output_units();
+    
     if (m == ReSampleMethod::SUM || m == ReSampleMethod::MEAN) {
         double acc = 0.0;
         const auto start = clock_type::from_time_t(selector.get_init_time());
@@ -226,14 +228,23 @@ Provider::data_type Provider::get_value(
             bmi_->UpdateUntil(std::chrono::duration_cast<std::chrono::seconds>(current - time_begin_).count());
             acc += static_cast<double*>(bmi_->GetValuePtr(variable))[divide_idx_];
         }
-
         if (m == ReSampleMethod::MEAN) {
             auto duration = std::chrono::duration_cast<std::chrono::seconds>(current - start).count();
             auto num_time_steps = duration / time_step_.count();
             acc /= num_time_steps;
         }
-
-        return acc;
+        // Convert units
+        try {
+            return UnitsHelper::get_converted_value(bmi_->GetVarUnits(variable), acc, output_units);
+        }
+        catch (const std::runtime_error& e) {
+            data_access::unit_conversion_exception uce(e.what());
+            uce.provider_model_name = "ForcedEngineLumpedDataProvider " + selector.get_id();
+            uce.provider_bmi_var_name = variable;
+            uce.provider_units = bmi_->GetVarUnits(variable);
+            uce.unconverted_values.push_back(acc);
+            throw uce;
+        }
     }
 
     ss.str(""); 
@@ -258,6 +269,7 @@ std::vector<Provider::data_type> Provider::get_values(
    }
  
     auto variable = ensure_variable(selector.get_variable_name());
+    auto output_units = selector.get_output_units();
 
     const auto start = clock_type::from_time_t(selector.get_init_time());
     const auto end = std::chrono::seconds{selector.get_duration_secs()} + start;
@@ -307,7 +319,19 @@ std::vector<Provider::data_type> Provider::get_values(
     while (current < end) {
         current += time_step_;
         bmi_->UpdateUntil(std::chrono::duration_cast<std::chrono::seconds>(current - time_begin_).count());
-        values.push_back(static_cast<double*>(bmi_->GetValuePtr(variable))[divide_idx_]);
+        double var_value = static_cast<double*>(bmi_->GetValuePtr(variable))[divide_idx_];
+        // Convert units
+        try {
+            values.push_back(UnitsHelper::get_converted_value(bmi_->GetVarUnits(variable), var_value, output_units));
+        }
+        catch (const std::runtime_error& e) {
+            data_access::unit_conversion_exception uce(e.what());
+            uce.provider_model_name = "ForcedEngineLumpedDataProvider " + selector.get_id();
+            uce.provider_bmi_var_name = variable;
+            uce.provider_units = bmi_->GetVarUnits(variable);
+            uce.unconverted_values.push_back(var_value);
+            throw uce;
+        }
     }
 
     return values;
