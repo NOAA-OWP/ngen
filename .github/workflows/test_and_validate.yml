@@ -106,7 +106,7 @@ jobs:
           use_mpi: 'ON'
 
       - name: run_tests
-        run: mpirun --allow-run-as-root -np 2 ./cmake_build/test/test_remote_nexus
+        run: mpirun --allow-run-as-root --oversubscribe -np 4 ./cmake_build/test/test_remote_nexus
         timeout-minutes: 15
 
       - name: Clean Up
