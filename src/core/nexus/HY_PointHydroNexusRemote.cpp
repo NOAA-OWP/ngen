@@ -149,6 +149,29 @@ void HY_PointHydroNexusRemote::post_receives()
     }
 }
 
+void HY_PointHydroNexusRemote::post_receives()
+{
+    // Post receives if not already posted (for pure receiver nexuses)
+    if (stored_receives.empty())
+    {
+        for (int rank : upstream_ranks)
+        {
+            stored_receives.push_back({});
+            stored_receives.back().buffer = std::make_shared<time_step_and_flow_t>();
+            int tag = extract(id);
+            
+            MPI_Handle_Error(MPI_Irecv(
+                stored_receives.back().buffer.get(),
+                1,
+                time_step_and_flow_type,
+                rank,
+                tag,
+                MPI_COMM_WORLD,
+                &stored_receives.back().mpi_request));
+        }
+    }
+}
+
 double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
 {
     double remote_flow = 0.0;
