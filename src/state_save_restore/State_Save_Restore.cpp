@@ -18,7 +18,7 @@ State_Save_Config::State_Save_Config(boost::property_tree::ptree const& tree)
         return;
     }
 
-    //auto saving_config = *maybe;
+    bool hot_start = false;
     for (const auto& saving_config : *maybe) {
         try {
             auto& subtree = saving_config.second;
@@ -29,9 +29,14 @@ State_Save_Config::State_Save_Config(boost::property_tree::ptree const& tree)
             auto when = subtree.get<std::string>("when");
 
             instance i{direction, what, where, how, when};
+            if (i.timing_ == State_Save_When::StartOfRun && i.direction_ == State_Save_Direction::Load) {
+                if (hot_start)
+                    throw std::runtime_error("Only one hot start state saving configuration is allowed.");
+                hot_start = true;
+            }
             instances_.push_back(i);
-        } catch (...) {
-            LOG("Bad state saving config", LogLevel::WARNING);
+        } catch (std::exception &e) {
+            LOG("Bad state saving config: " + std::string(e.what()), LogLevel::WARNING);
             throw;
         }
     }
