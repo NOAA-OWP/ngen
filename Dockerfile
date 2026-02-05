@@ -4,7 +4,9 @@
 # Stage: Base – Common Setup
 ##############################
 ARG NGEN_FORCING_IMAGE_TAG=latest
-FROM ghcr.io/ngwpc/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG} AS base
+ARG NGEN_FORCING_IMAGE=ghcr.io/ngwpc/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG}
+
+FROM ${NGEN_FORCING_IMAGE} AS base
 
 # Uncomment when building locally
 #FROM ngen-bmi-forcing AS base
