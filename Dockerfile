@@ -3,6 +3,7 @@
 ##############################
 # Stage: Base – Common Setup
 ##############################
+ARG ORG=ngwpc
 ARG NGEN_FORCING_IMAGE_TAG=latest
 ARG NGEN_FORCING_IMAGE=ghcr.io/ngwpc/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG}
 
@@ -10,6 +11,26 @@ FROM ${NGEN_FORCING_IMAGE} AS base
 
 # Uncomment when building locally
 #FROM ngen-bmi-forcing AS base
+
+# OCI Metadata Arguments
+ARG NGEN_FORCING_IMAGE
+ARG BASE_IMAGE_DIGEST="unknown"
+ARG BASE_IMAGE_REVISION="unknown"
+ARG IMAGE_SOURCE="unknown"
+ARG IMAGE_VENDOR="unknown"
+ARG IMAGE_VERSION="unknown"
+ARG IMAGE_REVISION="unknown"
+ARG IMAGE_CREATED="unknown"
+
+# OCI Standard Labels
+LABEL org.opencontainers.image.base.name="${NGEN_FORCING_IMAGE}" \
+    org.opencontainers.image.base.digest="${BASE_IMAGE_DIGEST}" \
+    io.ngwpc.image.base.revision="${BASE_IMAGE_REVISION}" \
+    org.opencontainers.image.source="${IMAGE_SOURCE}" \
+    org.opencontainers.image.vendor="${IMAGE_VENDOR}" \
+    org.opencontainers.image.version="${IMAGE_VERSION}" \
+    org.opencontainers.image.revision="${IMAGE_REVISION}" \
+    org.opencontainers.image.created="${IMAGE_CREATED}"
 
 # cannot remove LANG even though https://bugs.python.org/issue19846 is fixed
 # last attempted removal of LANG broke many users:
@@ -280,7 +301,7 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-snow17 \
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-sac-sma \
     set -eux && \
     cmake -B extern/sac-sma/cmake_build -S extern/sac-sma/ -DBOOST_ROOT=/opt/boost && \
-    cmake --build extern/sac-sma/cmake_build/ && \ 
+    cmake --build extern/sac-sma/cmake_build/ && \
     find /ngen-app/ngen/extern/sac-sma -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-soilmoistureprofiles \
