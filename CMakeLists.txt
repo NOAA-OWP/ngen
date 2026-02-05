@@ -489,3 +489,7 @@ ngen_dependent_multiline_message(NGEN_WITH_PYTHON
 message(STATUS "---------------------------------------------------------------------")
 
 configure_file("${NGEN_INC_DIR}/NGenConfig.h.in" "${CMAKE_CURRENT_BINARY_DIR}/include/NGenConfig.h")
+
+include(GNUInstallDirs)
+install(TARGETS ngen OPTIONAL)
+install(TARGETS partitionGenerator OPTIONAL)
