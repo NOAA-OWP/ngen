@@ -100,7 +100,7 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md__r_e_a_d_m_e"></a> <img src="https://github.com/noaa-owp/ngen/workflows/Testing%20and%20Validation/badge.svg" alt="" style="pointer-events: none;" class="inline"/> <a href="https://noaa-owp.github.io/ngen/"><img src="https://github.com/noaa-owp/ngen/workflows/Documentation/badge.svg" alt="" style="pointer-events: none;" class="inline"/></a></p>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md30"></a>
 Next Gen Water Modeling Framework Prototype</h1>
 <p><a href="https://www.youtube.com/watch?v=6XKPX4g9agY"><img src="https://img.youtube.com/vi/6XKPX4g9agY/0.jpg" alt="July 2020 webinar recording" class="inline"/></a></p>
 <p><a href="./doc/presentations/Next_Generation_Modeling_System_Seminar-15July2020.pdf">July 2020 webinar slide deck</a></p>
@@ -112,7 +112,7 @@ Next Gen Water Modeling Framework Prototype</h1>
 <li><b>Technology stack</b>: Core Framework using C++ (minimum standard c++14) to provide polymorphic interfaces with reasonable systems integration.</li>
 <li><b>Status</b>: Version 0.1.0 in initial development including interfaces, logical data model, and framework structure. See <a class="el" href="md__c_h_a_n_g_e_l_o_g.html">CHANGELOG</a> for revision details.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md4"></a>
+<h2><a class="anchor" id="autotoc_md31"></a>
 Structural Diagrams</h2>
 <p><img src="https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/hy_features_catchment_diagram.png" alt="Catchments" class="inline"/></p>
 <p><b>Catchments</b>: Catchments represent arbitrary spatial areas. They are the abstraction used to encapsulate a model. The three marked catchments could use three different models, 3 copies of the same model, or some combination of the previous options.</p>
@@ -120,16 +120,16 @@ Structural Diagrams</h2>
 <p><b>Realizations</b>: Different kinds of catchment realizations can be used to encapsulate different types of models. These models will have different types of relations with neighbors. When a relation exists between two adjacent catchments synchronization is necessary.</p>
 <p><img src="https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/complex_realizations.png" alt="Complex Realizations" class="inline"/></p>
 <p><b>Complex Realizations</b>: An important type of catchment realization is the complex catchment realization. This allows a single catchment to be represented by a network of higher detail catchment realizations and their relationships. This allows the modeled area to be represented at multiple levels of detail and supports dynamic high resolution nesting.</p>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md32"></a>
 Dependencies</h2>
 <p>See the <a class="el" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html">Dependencies</a>.</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md33"></a>
 Installation</h2>
 <p>See <a class="el" href="md__i_n_s_t_a_l_l.html">INSTALL</a>.</p>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md34"></a>
 Configuration</h2>
 <p>To view the compile-time configuration of an pre-compiled NextGen binary use the <code>--info</code> flag, as in <code>ngen --info</code>. for more info see: <a href="https://github.com/NOAA-OWP/ngen/pull/679">https://github.com/NOAA-OWP/ngen/pull/679</a></p>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md35"></a>
 Usage</h2>
 <p>To run the <em>ngen</em> engine, the following command line positional arguments are supported:</p><ul>
 <li><em>catchment_data_path</em> &ndash; path to catchment data geojson input file.</li>
@@ -143,7 +143,7 @@ Usage</h2>
 <p>An example of a complete invocation to run a subset of a hydrofabric. If the realization configuration doesn't contain catchment definitions for the subset keys provided, the default <code>global</code> configuration is used. Alternatively, if the realization configuration contains definitions that are not in the subset (or hydrofabric) keys, then a warning is produced and the formulation isn't created. <code>./cmake-build-debug/ngen ./data/catchment_data.geojson "cat-27,cat-52" ./data/nexus_data.geojson "nex-26,nex-34" ./data/example_realization_config.json</code></p>
 <p>To simulate every catchment in the input hydrofabric, leave the subset lists empty, or use "all" i.e.: <code>ngen ./data/catchment_data.geojson "" ./data/nexus_data.geojson "" ./data/refactored_example_realization_config.json</code> <code>ngen ./data/catchment_data.geojson "all" ./data/nexus_data.geojson "all" ./data/refactored_example_realization_config.json</code></p>
 <p>Examples specific to running with with distributed processing can be found <a href="doc/DISTRIBUTED_PROCESSING.md#examples">here</a>.</p>
-<h2><a class="anchor" id="autotoc_md9"></a>
+<h2><a class="anchor" id="autotoc_md36"></a>
 How to test the software</h2>
 <p>The project uses the <b>Google Test</b> framework for creating automated tests for C++ code.</p>
 <p>To execute the full collection of automated C++ tests, run the <code>test_all</code> target in <b>CMake</b>, then execute the generated executable. Alternatively, replace <code>test_all</code> with <code>test_unit</code> or <code>test_integration</code> to run only those tests. For example: </p><pre class="fragment">cmake --build cmake-build-debug --target test_all -- -j 4
@@ -153,7 +153,7 @@ cmake -DCMAKE_BUILD_TYPE=Debug -DNGEN_WITH_TESTS:BOOL=ON -B cmake-build-debug -S
 cmake --build cmake-build-debug --target test_all -- -j 4
 ./cmake-build-debug/test/test_all
 </pre><p>See the <a class="el" href="md_test_2_r_e_a_d_m_e.html">Testing ReadMe</a> file and <a href="https://github.com/NOAA-OWP/ngen/wiki/NGen-Tutorial">wiki/Quickstart</a> for a more thorough discussion of testing.</p>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md37"></a>
 How to debug the software</h2>
 <p>This is all developed via <b>CMake</b>, so a specific setting must be active within the root <code>CMakeList.txt</code> file: </p><pre class="fragment">target_compile_options(ngen PUBLIC -g)
 </pre><p>This will ensure that ngen and all of the code that is compiled with it has debugging flags enabled. From there, the application may be run via <code>gdb</code>, <code>lldb</code>, or through your IDE.</p>
@@ -179,27 +179,27 @@ How to debug the software</h2>
   ]
 }
 </pre><p>You will now have the configuration named <code>ngen</code> after saving your <code>launch.json</code> file. You may now add a break point within your code by clicking to the left of the line number within your code. This should make a red circle appear. Now, when you run it by clicking the play button in the debugging window, your code will stop on the line where you put your break point, as long as it executes code. It will <b>not</b> stop on whitespace or comments.</p>
-<h2><a class="anchor" id="autotoc_md11"></a>
+<h2><a class="anchor" id="autotoc_md38"></a>
 Known issues</h2>
 <p>Document any known significant shortcomings with the software.</p>
-<h2><a class="anchor" id="autotoc_md12"></a>
+<h2><a class="anchor" id="autotoc_md39"></a>
 Getting help</h2>
 <p>Instruct users how to get help with this software; this might include links to an issue tracker, wiki, mailing list, etc.</p>
 <p><b>Example</b></p>
 <p>If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker.</p>
-<h2><a class="anchor" id="autotoc_md13"></a>
+<h2><a class="anchor" id="autotoc_md40"></a>
 Getting involved</h2>
 <p>This section should detail why people should get involved and describe key areas you are currently focusing on; e.g., trying to get feedback on features, fixing certain bugs, building important pieces, etc.</p>
 <p>General instructions on <em>how</em> to contribute should be stated with a link to <a class="el" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html">CONTRIBUTING</a>.</p>
 <hr  />
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md42"></a>
 Open source licensing info</h2>
 <ol type="1">
 <li><a class="el" href="md__t_e_r_m_s.html">TERMS</a></li>
 <li>[LICENSE](LICENSE)</li>
 </ol>
 <hr  />
-<h2><a class="anchor" id="autotoc_md17"></a>
+<h2><a class="anchor" id="autotoc_md44"></a>
 Credits and references</h2>
 <ol type="1">
 <li>Projects that inspired you</li>
@@ -213,7 +213,7 @@ Credits and references</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 29 2026 20:50:32 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Feb 5 2026 14:50:39 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

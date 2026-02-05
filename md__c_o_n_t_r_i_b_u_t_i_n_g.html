@@ -99,7 +99,7 @@ $(function(){initNavTree('md__c_o_n_t_r_i_b_u_t_i_n_g.html',''); initResizable(t
   <div class="headertitle"><div class="title">Guidance on How to Contribute</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md239"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md266"></a></p>
 <blockquote class="doxtable">
 <p>&zwj;All contributions to this project will be released to the public domain. By submitting a pull request or filing a bug, issue, or feature request, you are agreeing to comply with this waiver of copyright interest. Details can be found in our <a class="el" href="md__t_e_r_m_s.html">TERMS</a> and [LICENSE](LICENSE). </p>
 </blockquote>
@@ -107,11 +107,11 @@ $(function(){initNavTree('md__c_o_n_t_r_i_b_u_t_i_n_g.html',''); initResizable(t
 <li>Using the issue tracker, and</li>
 <li>Changing the code-base.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md240"></a>
+<h1><a class="anchor" id="autotoc_md267"></a>
 Using the Issue Tracker</h1>
 <p>Use the issue tracker to suggest feature requests, report bugs, and ask questions. This is also a great way to connect with the developers of the project as well as others who are interested in this solution.</p>
 <p>Use the issue tracker to find ways to contribute. Find a bug or a feature, mention in the issue that you will take on that effort, then follow the <em>Changing the code-base</em> guidance below.</p>
-<h1><a class="anchor" id="autotoc_md241"></a>
+<h1><a class="anchor" id="autotoc_md268"></a>
 Changing the Code-Base</h1>
 <ul>
 <li>Summary</li>
@@ -120,7 +120,7 @@ Changing the Code-Base</h1>
 <li>Keeping Forks Up to Date</li>
 </ul>
 <p>Note that this document only discusses aspects of Git usage that should be needed for day-to-day development and contributions. For a more detailed overview of ngen's use of Git, see the <a class="el" href="md_doc_2_g_i_t___u_s_a_g_e.html">GIT_USAGE</a> doc.</p>
-<h2><a class="anchor" id="autotoc_md242"></a>
+<h2><a class="anchor" id="autotoc_md269"></a>
 Summary</h2>
 <p>To work with the repo and contribute changes, the basic process is as follows:</p>
 <ul>
@@ -131,7 +131,7 @@ Summary</h2>
 <li>Write changes you want to contribute, commit to your local feature/fix branch, and push these commits to a branch in your personal Github fork</li>
 <li>Submit pull requests to the official OWP repo's <code>master</code> branch from a feature/fix branch your fork when the latter branch has a collection of changes ready to be incorporated</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md243"></a>
+<h2><a class="anchor" id="autotoc_md270"></a>
 Getting Started</h2>
 <p>In order to be able to contribute code changes, you will first need to <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo">create a Github fork</a> of the official OWP repo.</p>
 <p>Next, set up your authentication mechanism with Github for your command line (or IDE). You can either <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent">create an SSH key pair</a> and <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">add the public key</a> to your Github account, or you can set up a <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#using-a-personal-access-token-on-the-command-line">Personal Access Token</a> if you plan to clone the repo locally via HTTPS.</p>
@@ -158,10 +158,10 @@ git remote -v
 git config user.email "john@doe.org"
 </pre><p>Alternatively, one could also set these in the machine's global Git config (or rely upon the global settings if already configured). </p><pre class="fragment"> git config --global user.name "John Doe"
  git config --global user.email "john@doe.org"
-</pre><h3><a class="anchor" id="autotoc_md244"></a>
+</pre><h3><a class="anchor" id="autotoc_md271"></a>
 Optional: Git Hooks</h3>
 <p>While optional, Git hooks are a useful feature for helping maintain code quality in your local development repo. See the repo's <a href="doc/GIT_USAGE.md#optional-setting-up-hook-scripts"><em>Git Usage</em></a> document for more discussion on these.</p>
-<h2><a class="anchor" id="autotoc_md245"></a>
+<h2><a class="anchor" id="autotoc_md272"></a>
 Developing Changes</h2>
 <ul>
 <li>Work in a Dedicated Branch</li>
@@ -171,7 +171,7 @@ Developing Changes</h2>
 </ul>
 </li>
 </ul>
-<h3><a class="anchor" id="autotoc_md246"></a>
+<h3><a class="anchor" id="autotoc_md273"></a>
 Work in a Dedicated Branch</h3>
 <p>When you want to contribute a fix or new feature, start by creating and checking out a local branch (e.g., <code>new_branch</code>) to contain your work. This should be based on <code>master</code> (you may need to sync remote changes first): </p><pre class="fragment"># Create the new branch "new_branch" based on "master"
 git branch new_branch master
@@ -185,7 +185,7 @@ git push -u origin new_branch
 <br  />
  While it is totally optional, parts our documentation - especially example commands - may assume this tracking branch relationship has been set.</dd></dl>
 <p>From there begin writing and committing your changes to the branch. While up to you, it is suggested that development work be committed frequently when changes are complete and meaningful. If work requires modifying more than one file in the source, it is recommended to commit the changes independently to help avoid too large of conflicts if/when they occur.</p>
-<h3><a class="anchor" id="autotoc_md247"></a>
+<h3><a class="anchor" id="autotoc_md274"></a>
 Pushing Incremental Commits</h3>
 <p>Especially if making more frequent, smaller commits as suggested above, it is a good practice to regularly push these smaller commits to your fork. If the <code>-u</code> option was used when initially pushing the branch, it is simple to check if there are local, unpushed commits. </p><pre class="fragment"># The fetch is probably unnecesssary unless you work from multiple local repos
 git fetch
@@ -195,10 +195,10 @@ git status
 
 # And if there are some newer, local changes that haven't been push yet:
 git push
-</pre><h3><a class="anchor" id="autotoc_md248"></a>
+</pre><h3><a class="anchor" id="autotoc_md275"></a>
 Submitting Pull Requests</h3>
 <p>Once a code contribution is finished, make sure all changes have been pushed to the branch in your fork. Then you can navigate to the OWP repo via Github's web interface and <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request">submit a PR</a> to pull this branch into the OWP <code>master</code> branch. Verify that <code>master</code> is selected as the recipient branch. You will also need to make sure you are comparing across forks, choosing your appropriate fork and branch to pull from. Complete details on the process can be found in Github's documentation.</p>
-<h4><a class="anchor" id="autotoc_md249"></a>
+<h4><a class="anchor" id="autotoc_md276"></a>
 Guidelines for Pull Requests</h4>
 <p>The following guidelines are recommended for pull requests. Following these increases the likelihood of a PR being reviewed quickly and minimizes the amount of changes likely to be needed before approval:</p>
 <ul>
@@ -213,10 +213,10 @@ Guidelines for Pull Requests</h4>
 <li>Update repo-level documentation appropriately</li>
 <li>Select one or more appropriate reviewers when creating the PR</li>
 </ul>
-<h4><a class="anchor" id="autotoc_md250"></a>
+<h4><a class="anchor" id="autotoc_md277"></a>
 PR Review and Requested Revisions</h4>
 <p>Once the PR is submitted, it will be reviewed by one or more other repo contributors. Often conversations will be had within the Github PR if reviewers have questions or request revisions be made to the proposed changes. If revisions are requested, you will need to make those in your locally copy of the feature/fix branch, and then re-push that branch (and the updates) to your personal fork. Then, use the PR page in Github to re-request review.</p>
-<h2><a class="anchor" id="autotoc_md251"></a>
+<h2><a class="anchor" id="autotoc_md278"></a>
 Keeping Forks Up to Date</h2>
 <ul>
 <li>A Rebase Strategy</li>
@@ -224,10 +224,10 @@ Keeping Forks Up to Date</h2>
 <li>Rebasing Development Branches</li>
 <li>Fixing Diverging Development Branches</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md252"></a>
+<h3><a class="anchor" id="autotoc_md279"></a>
 A Rebase Strategy</h3>
 <p>Development for this repo uses a <em>rebase</em> strategy for integrating code changes, rather than a <em>merge</em> strategy. More information on rebasing is <a href="https://git-scm.com/book/en/v2/Git-Branching-Rebasing">available here</a>, but the main takeaway is that it is important all changes are integrated into branches using this approach. Deviation from this will likely cause a bit of mess with branch commit histories, which could force rejection of otherwise-good PRs.</p>
-<h3><a class="anchor" id="autotoc_md253"></a>
+<h3><a class="anchor" id="autotoc_md280"></a>
 Getting Remote Changes</h3>
 <p>When it is time to check for or apply updates from the official OWP repo to a personal fork and/or a local repo, check out the <code>master</code> branch locally and do fetch-and-rebase, which can be done with <code>pull</code> and the <code>--rebase</code> option: </p><pre class="fragment"># Checkout local master branch
 git checkout master
@@ -241,20 +241,20 @@ git push
 <p>The previous example command is effectively equivalent to running: </p><pre class="fragment"># Cloning a repo from a fork created a remote for the fork named "origin"; see above assumptions
 git push origin master:master
 </pre><p>You also can omit <code>&lt;local_branch&gt;:</code> (including the colon) and supply just the remote branch name if the appropriate local branch is still checked out.</p>
-<h4><a class="anchor" id="autotoc_md254"></a>
+<h4><a class="anchor" id="autotoc_md281"></a>
 For <code>production</code> Too</h4>
 <p>Note that the above steps to get remote changes from the official OWP repo can be applied to the <code>production</code> branch also (just swap <code>production</code> in place of <code>master</code>). <code>production</code> should not be used as the basis for feature/fix branches, but there are other reasons why one might want the latest <code>production</code> locally or in a personal fork.</p>
-<h3><a class="anchor" id="autotoc_md255"></a>
+<h3><a class="anchor" id="autotoc_md282"></a>
 Rebasing Development Branches</h3>
 <p>When the steps in Getting Remote Changes do bring in new commits that update <code>master</code>, it is usually a good idea (and often necessary) to rebase any local feature/fix branches were previously created. E.g., </p><pre class="fragment"># If using a development branch named 'faster_dataset_writes'
 git checkout faster_dataset_writes
 git rebase master
 </pre><p>See documentation on <a href="https://git-scm.com/docs/git-rebase">the "git rebase" command</a> for more details.</p>
-<h4><a class="anchor" id="autotoc_md256"></a>
+<h4><a class="anchor" id="autotoc_md283"></a>
 Interactive Rebasing</h4>
 <p>It is possible to have more control over rebasing by doing an interactive rebase. E.g.: </p><pre class="fragment">git rebase -i master
 </pre><p>This will open up a text editor allowing for reordering, squashing, dropping, etc., development branch commits prior to rebasing them onto the new base commit from <code>master</code>. See the <a href="https://git-scm.com/docs/git-rebase#_interactive_mode"><b>Interactive Mode</b></a> section on the rebase command for more details.</p>
-<h3><a class="anchor" id="autotoc_md257"></a>
+<h3><a class="anchor" id="autotoc_md284"></a>
 Fixing Diverging Development Branches</h3>
 <p>If a local feature/fix branch is already pushed to a remote fork, and then later rebasing the local branch is necessary, doing so will cause the histories to diverge. For simple cases, the fix is to just force-push the rebased local branch. </p><pre class="fragment"># To force-push to fix a divergent branch
 git push -f origin feature_branch
@@ -265,7 +265,7 @@ git push -f origin feature_branch
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 29 2026 20:50:31 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Feb 5 2026 14:50:38 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

@@ -99,7 +99,7 @@ $(function(){initNavTree('md_doc_2_g_i_t___u_s_a_g_e.html',''); initResizable(tr
   <div class="headertitle"><div class="title">Git Strategy</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md172"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md199"></a></p>
 <p>Note that this document goes into detail on the Git strategy and branching model for the official OWP repository. It is here for openness and transparency, but most contributors and users will not need to be concerned with this level of detail. For information geared toward day-to-day development contributions and Git, see the <a class="el" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html">CONTRIBUTING</a> doc.</p>
 <ul>
 <li>Branching Model<ul>
@@ -110,7 +110,7 @@ $(function(){initNavTree('md_doc_2_g_i_t___u_s_a_g_e.html',''); initResizable(tr
 <li>Contributing</li>
 <li>Optional: Setting Up Hook Scripts</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md173"></a>
+<h1><a class="anchor" id="autotoc_md200"></a>
 Branching Model</h1>
 <ul>
 <li>This repo uses a branching model based on <a href="https://nvie.com/posts/a-successful-git-branching-model/">Gitflow</a> that has two primary long-term branches:<ul>
@@ -138,7 +138,7 @@ Branching Model</h1>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md174"></a>
+<h2><a class="anchor" id="autotoc_md201"></a>
 Feature Branches from <code>master</code></h2>
 <p>This illustrates the relationship between feature branches and <code>master</code>. They should be created from <code>master</code> and independently contain commits from their feature. Once done, the changes will be reintegrated back into <code>master</code> via rebasing.</p>
 <div class="fragment"><div class="line">%%{init: { &#39;logLevel&#39;: &#39;debug&#39;, &#39;theme&#39;: &#39;base&#39;, &#39;gitGraph&#39;: { &#39;showBranches&#39;: true, &#39;showCommitLabel&#39;:true, &#39;mainBranchName&#39;: &#39;master&#39;}}}%%</div>
@@ -168,7 +168,7 @@ Feature Branches from <code>master</code></h2>
 <div class="line">    commit id:&quot;feature3.1&quot;</div>
 <div class="line">    commit id:&quot;feature3.2&quot;</div>
 <div class="line">    commit id:&quot;feature3.3&quot;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md175"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md202"></a>
 Relating <code>production</code>, <code>master</code>, and Release Branches</h2>
 <p>This illustrates the relationship between <code>production</code>, <code>master</code>, and <code>release-v2</code>. Notice that <code>production</code> has already been tagged with version <code>v1</code> at the start. Commits for <code>feature1</code> and <code>feature2</code> at some point are integrated into <code>master</code>. When it is time to prepare to release version <code>v2</code>, <code>release-v2</code> is created. A few bug fix commits were needed in <code>release-v2</code>. After that, all the changes in <code>release-v2</code> are integrated into <code>production</code>, and <code>production</code> is tagged <code>v2</code>. All the changes are also integrated back into <code>master</code>.</p>
 <div class="fragment"><div class="line">%%{init: { &#39;logLevel&#39;: &#39;debug&#39;, &#39;theme&#39;: &#39;base&#39;, &#39;gitGraph&#39;: { &#39;showBranches&#39;: true, &#39;showCommitLabel&#39;:true, &#39;mainBranchName&#39;: &#39;master&#39;}}}%%</div>
@@ -213,7 +213,7 @@ Relating <code>production</code>, <code>master</code>, and Release Branches</h2>
 <div class="line">    commit id:&quot;feature2.3&quot;</div>
 <div class="line">    commit id:&quot;fix2.1&quot;</div>
 <div class="line">    commit id:&quot;fix2.2&quot;</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md176"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md203"></a>
 Contributing</h1>
 <p>More details on the practical processes and requirements for contributing code changes can be found in the <a class="el" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html">CONTRIBUTING</a> doc. In summary:</p>
 <ul>
@@ -227,7 +227,7 @@ Contributing</h1>
 <li>Feature/fix branches should be created from <code>master</code></li>
 <li>Personal forks and local clone(s) should be kept up to date with the official OWP repo regularly to minimize the introduction of merge conflict in PRs</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md177"></a>
+<h1><a class="anchor" id="autotoc_md204"></a>
 Optional: Setting Up Hook Scripts</h1>
 <p><em>Git</em> supports the capability to automatically run various scripts when certain events happen. These are referred to as <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks"><em>Git</em> hooks</a>. See Git's documentation for full details on what can be done with hooks and how they are configured. <br  />
 </p>
@@ -238,7 +238,7 @@ Optional: Setting Up Hook Scripts</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 29 2026 20:50:31 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Feb 5 2026 14:50:38 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

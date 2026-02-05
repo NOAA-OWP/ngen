@@ -99,30 +99,30 @@ $(function(){initNavTree('md_doc_2_a_u_t_o_m_a_t_e_d___t_e_s_t.html',''); initRe
   <div class="headertitle"><div class="title">Github Automated Testing</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md23"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md50"></a></p>
 <ul>
 <li>What Are Automated Tests and How to Start Them</li>
 <li>What Code Tests Are Performed</li>
 <li>Local Testing</li>
 <li>What to Do When a Test Fail</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md24"></a>
+<h1><a class="anchor" id="autotoc_md51"></a>
 What Are Automated Tests and How to Start Them</h1>
 <p>In the <b>ngen</b> github repo, we use github actions/workflows (for an online reference, see for <a href="https://docs.github.com/en/actions/learn-github-actions">example</a>) to automatically test validity of committed codes by developers. The test is triggered when a developer pushes some code to a branch in their <b>ngen</b> fork and creates a <code>Pull Request</code>. The successful test is marked by a <code>green check</code> mark, a failed test is marked by a <code>red cross</code> mark. If a test fails, you have to debug your code (see What to Do When a Test Fail below) and commit/push to the same branch again. The automatic testing will restart in the <code>Pull Request</code>.</p>
-<h1><a class="anchor" id="autotoc_md25"></a>
+<h1><a class="anchor" id="autotoc_md52"></a>
 What Code Tests Are Performed</h1>
 <ul>
 <li>Unit tests: this includes every set of codes that serves a unique functionality. Unit test evolve as new codes are added.</li>
 <li><a href="https://bmi.readthedocs.io/en/stable/">BMI</a> (Basic Model Interface) based formulation tests for C, C++, Fortran, and Python.</li>
 <li>Running <b>ngen</b> executable on example hydrofabric with various realistic modules/models, initial condition, and forcing data.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md26"></a>
+<h1><a class="anchor" id="autotoc_md53"></a>
 Local Testing</h1>
 <p>We strongly recommend you run all the tests on your local computer before you push up the new codes to the branch in your fork. To be able to run the tests, when building the executables (for <code>build</code> with <code>cmake</code> see <a href="https://github.com/stcui007/ngen/blob/ngen_automated_test/doc/BUILDS_AND_CMAKE.md">here</a>), you need to set the test option to <code>ON</code> using <code>cmake</code> option: </p><pre class="fragment">-DNGEN_WITH_TESTS:BOOL=ON
 </pre><p>After <code>build</code> completes, assuming your build directory is <code>cmake_build</code>, you can check that the <code>ngen</code> executable is in <code>cmake_build</code> directory, and all <code>unit test</code> executables are in <code>cmake_build/test</code> directory. To run a unit test, for example, run the following command while in the top project directory: </p><pre class="fragment">./cmake_build/test/test_unit
 </pre><p>There are many other unit test executables you need to run for a complete test. For example, to run an <b>ngen</b> test job using the data set in the <code>data</code> directory, use the following command: </p><pre class="fragment">./cmake_build/ngen data/catchment_data.geojson '' data/nexus_data.geojson '' data/example_bmi_multi_realization_config.json
 </pre><p>To run a multi-processors job with MPI, please see a complete description in <a href="https://github.com/stcui007/ngen/blob/ngen_automated_test/doc/DISTRIBUTED_PROCESSING.md">here</a></p>
-<h1><a class="anchor" id="autotoc_md27"></a>
+<h1><a class="anchor" id="autotoc_md54"></a>
 What to Do When a Test Fail</h1>
 <ul>
 <li>Before getting into debugging, first thing, we recommend that you perform all the necessary tests listed above on you local computer. If all tests are successful, then push up your codes to the intended branch in your fork.</li>
@@ -135,7 +135,7 @@ What to Do When a Test Fail</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 29 2026 20:50:31 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Feb 5 2026 14:50:37 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

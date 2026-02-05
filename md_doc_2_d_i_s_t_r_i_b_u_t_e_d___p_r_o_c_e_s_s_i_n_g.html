@@ -99,7 +99,7 @@ $(function(){initNavTree('md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.h
   <div class="headertitle"><div class="title">Distributed Processing</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md160"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md187"></a></p>
 <p>Distributed multi-process execution of the Nextgen driver (<em>ngen</em>) is possible through use of an implementation of MPI. <br  />
 </p>
 <ul>
@@ -121,16 +121,16 @@ $(function(){initNavTree('md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.h
 </li>
 <li>Partition Config Generator</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md161"></a>
+<h1><a class="anchor" id="autotoc_md188"></a>
 Overview</h1>
 <p>The basic design starts with partitioning configuration. It defines the groupings of catchments and nexuses of the entire hydrofabric into separate collections, while also including details on remote connections where the partitions have features that interact. It also implicitly defines partition processing; partitions have an <code>id</code> property, and it is expected for partitions and MPI ranks to map 1-to-1 and have the same identifier.</p>
 <p>Partition configurations are expected to be represented in JSON. There is a partition generator tool available separately from the main driver for creating these files.</p>
 <p>When executed, the driver is provided a valid partitioning configuration file path <a href="../README.md#usage">as a command line arg</a>. Each rank loads all or part of the supplied hydrofabric, and then constructs the specific model formulations appropriate for the features within its partition. Data communication across partition boundaries is handled by a <a class="el" href="md_doc_2_m_p_i___r_e_m_o_t_e___n_e_x_u_s.html">remote nexus type</a>.</p>
-<h1><a class="anchor" id="autotoc_md162"></a>
+<h1><a class="anchor" id="autotoc_md189"></a>
 Building the MPI-Enabled Nextgen Driver</h1>
 <p>To enable distributed processing capabilities in the driver, the <a class="el" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html">CMake build must be generated</a> with the <code>NGEN_WITH_MPI</code> variable set to <code>ON</code>, such as <code>NGEN_WITH_MPI:BOOL=ON</code> and the necessary MPI libraries must be available to CMake. Additionally, certain features are only supported if <code>NGEN_WITH_PYTHON</code> is also <code>ON</code>.</p>
 <p>Otherwise, if using the standard build process with CMake, the driver is built using the same commands. It can be built either as part of the entire project or the <code>ngen</code> CMake target. CMake manages the necessary adjustments to, e.g., the compiler used, etc.</p>
-<h1><a class="anchor" id="autotoc_md163"></a>
+<h1><a class="anchor" id="autotoc_md190"></a>
 Running the MPI-Enabled Nextgen Driver</h1>
 <ul>
 <li>The MPI-enabled driver is run by wrapping within the <code>mpirun</code> command, supplying also the number of processes to start. <br  />
@@ -138,15 +138,15 @@ Running the MPI-Enabled Nextgen Driver</h1>
 <li>An additional driver <a href="../README.md#usage">CLI arg</a> is also required, to supply the path to the partitioner config.</li>
 <li>Another flag may also optionally be provided as a CLI arg to adjust the way the driver processes load the hydrofabric.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md164"></a>
+<h2><a class="anchor" id="autotoc_md191"></a>
 Subdivided Hydrofabric</h2>
 <p>Certain hydrofabrics may currently require too much memory to be fully loaded by each individual MPI rank/process, which is the default behavior prior to initializing individual catchment formulations. To work around this, it is possible to include the following flag as the final command line argument:</p>
 <p><code>--subdivided-hydrofabric</code></p>
 <p>This will indicate to the driver processes that the provided, full hydrofabric files should not be directly loaded. Instead, rank/process/partition specific files should be used. Each of these contain a subdivided, non-overlapping portion of the entire hydrofabric and are expected to correspond directly to a partition.</p>
-<h3><a class="anchor" id="autotoc_md165"></a>
+<h3><a class="anchor" id="autotoc_md192"></a>
 Driver Runtime Differences</h3>
 <p>When subdivided hydrofabrics should be used, the driver processes will first check to see if the necessary subdivided hydrofabric files already exist. If they do not, and the functionality for doing so is enabled, the driver will generate them. If a subdivided hydrofabric is required, but files are not available and cannot be generated, the driver exits in error.</p>
-<h3><a class="anchor" id="autotoc_md166"></a>
+<h3><a class="anchor" id="autotoc_md193"></a>
 File Names</h3>
 <p>The name of an expected or generated subdivided hydrofabric file is based on two things:</p><ul>
 <li>the name of the complete hydrofabric file from which is its data is obtained</li>
@@ -154,12 +154,12 @@ File Names</h3>
 <li>This will have a partition specific suffix but otherwise have the same name as the full hydrofabric files. E.g., <em>catchment_data.geojson.0</em> would be the subdivided hydrofabric file for <em>catchment_data.geojson</em> specific to rank 0. <br  />
 </li>
 </ul>
-<h3><a class="anchor" id="autotoc_md167"></a>
+<h3><a class="anchor" id="autotoc_md194"></a>
 On-the-fly Generation</h3>
 <p>Driver processes may, under certain conditions, be able to self-subdivide a hydrofabric and generate the files when necessary. For this to be possible, the executable must have been built with Python support (via the CMake <code>NGEN_WITH_PYTHON</code> being set to <code>ON</code>), and the <a href="DEPENDENCIES.md#the-dmodsubsetservice-package">required package</a> must be installed within the Python environment available to the driver processes.</p>
-<h2><a class="anchor" id="autotoc_md168"></a>
+<h2><a class="anchor" id="autotoc_md195"></a>
 Examples</h2>
-<h3><a class="anchor" id="autotoc_md169"></a>
+<h3><a class="anchor" id="autotoc_md196"></a>
 Example 1 - Full Hydrofabric</h3>
 <ul>
 <li>the CMake build directory is named <code>cmake-build/</code></li>
@@ -168,7 +168,7 @@ Example 1 - Full Hydrofabric</h3>
 <li>all processes completely load the entire hydrofabric <div class="fragment"><div class="line">mpirun -n 4 cmake-build/ngen catchment_data.geojson &quot;all&quot; nexus_data.geojson &quot;all&quot; realization_config.json partition_config.json</div>
 </div><!-- fragment --></li>
 </ul>
-<h3><a class="anchor" id="autotoc_md170"></a>
+<h3><a class="anchor" id="autotoc_md197"></a>
 Example 2 - Subdivided Hydrofabric</h3>
 <ul>
 <li>the CMake build directory is named <code>cmake-build/</code></li>
@@ -177,7 +177,7 @@ Example 2 - Subdivided Hydrofabric</h3>
 <li>each process only load files for a subdivided portion of the hydrofabric that corresponds to a given process's partition <div class="fragment"><div class="line">mpirun -n 8 cmake-build/ngen catchment_data.geojson &quot;all&quot; nexus_data.geojson &quot;all&quot; realization_config.json partition_config.json --subdivided-hydrofabric</div>
 </div><!-- fragment --></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md171"></a>
+<h1><a class="anchor" id="autotoc_md198"></a>
 Partitioning Config Generator</h1>
 <p>A separate artifact can be built for generating partition configs. This is the <em>partitionGenerator</em> executable, built in the CMake build directory either when the entire project or specifically the <code>partitionGenerator</code> CMake target is built. The syntax for using is:</p>
 <p>&lsquo;&lt;cmake-build-dir&gt;/partitionGenerator &lt;catchment_data_file&gt; &lt;nexus_data_file&gt; &lt;output_partition_config&gt; &lt;num_partitions&gt; &rsquo;' ''`</p>
@@ -191,7 +191,7 @@ Partitioning Config Generator</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 29 2026 20:50:31 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Feb 5 2026 14:50:38 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

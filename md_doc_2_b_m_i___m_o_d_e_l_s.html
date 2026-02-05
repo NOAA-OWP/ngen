@@ -99,7 +99,7 @@ $(function(){initNavTree('md_doc_2_b_m_i___m_o_d_e_l_s.html',''); initResizable(
   <div class="headertitle"><div class="title">BMI External Models</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md28"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md55"></a></p>
 <ul>
 <li>BMI External Models<ul>
 <li>Summary</li>
@@ -166,7 +166,7 @@ $(function(){initNavTree('md_doc_2_b_m_i___m_o_d_e_l_s.html',''); initResizable(
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md29"></a>
+<h1><a class="anchor" id="autotoc_md56"></a>
 Summary</h1>
 <p>The basic outline of steps needed to work with an external BMI model is:</p><ul>
 <li>Configure the main formulation/realization config properly for the catchments that will use the generalized BMI realization(s)</li>
@@ -177,7 +177,7 @@ Summary</h1>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md30"></a>
+<h1><a class="anchor" id="autotoc_md57"></a>
 Formulation Config</h1>
 <p>The catchment entry in the formulation/realization config must be set to used the appropriate type for the associated BMI realization, via the formulation's <code>name</code> JSON element. E.g.:</p>
 <div class="fragment"><div class="line">//...</div>
@@ -198,7 +198,7 @@ Formulation Config</h1>
 <li><code>bmi_multi</code></li>
 </ul>
 <p>Because of the generalization of the interface to the model, the required and optional parameters for all the BMI formulation types are the same.</p>
-<h2><a class="anchor" id="autotoc_md31"></a>
+<h2><a class="anchor" id="autotoc_md58"></a>
 Required Parameters</h2>
 <p>Certain parameters are strictly required in the formulation/realization JSON config for a catchment entry using a BMI formulation type. Note that there is a slight distinction in "required" between single-module (e.g., <code>bmi_c</code>) and multi-module formulations (i.e., <code>bmi_multi</code>). These are summarized in the following table, with the details of the parameters list below.</p>
 <table class="markdownTable">
@@ -215,7 +215,7 @@ Required Parameters</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>modules</code>   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">:heavy_check_mark:   </td></tr>
 </table>
-<h4><a class="anchor" id="autotoc_md32"></a>
+<h4><a class="anchor" id="autotoc_md59"></a>
 Parameter Details:</h4>
 <ul>
 <li><code>model_type_name</code><ul>
@@ -246,7 +246,7 @@ Parameter Details:</h4>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md33"></a>
+<h2><a class="anchor" id="autotoc_md60"></a>
 Semi-Optional Parameters</h2>
 <p>There are some special BMI formulation config parameters which are required in certain circumstances, but which are neither <em>always</em> required nor required for either all single- or multi-module formulations. Thus, they do not behave exactly as <em>Required</em> params do in the configuration. However, they should be thought of as de facto required (and will trigger errors when missing) in the specific situations in which they are applicable.</p>
 <ul>
@@ -277,7 +277,7 @@ Semi-Optional Parameters</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md34"></a>
+<h2><a class="anchor" id="autotoc_md61"></a>
 Optional Parameters</h2>
 <ul>
 <li><code>variables_names_map</code><ul>
@@ -351,14 +351,14 @@ Optional Parameters</h2>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md35"></a>
+<h1><a class="anchor" id="autotoc_md62"></a>
 BMI Models Written in C</h1>
 <ul>
 <li>Model As Shared Library</li>
 <li>Example</li>
 <li>Caveats</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md36"></a>
+<h2><a class="anchor" id="autotoc_md63"></a>
 BMI C Model As Shared Library</h2>
 <p>For <b>C</b> models, the model must be packaged as a pre-compiled shared library. A CMake cache variables can be configured for controlling whether the framework functionality for working with BMI C libraries is activated. This is found in, or must be added to, the <em>CMakeCache.txt</em> file in the build system directory:</p>
 <ul>
@@ -371,23 +371,23 @@ BMI C Model As Shared Library</h2>
 <p>The CMake build system may need to be <a href="BUILDS_AND_CMAKE.md#regenerating">regenerated</a> after changing these settings.</p>
 <p>See the CMake documentation on the <em><a href="https://cmake.org/cmake/help/latest/command/set.html">set</a></em> function or <a href="https://cmake.org/cmake/help/latest/manual/cmake-language.7.html#cmake-language-variables">variables</a> for more information on working with CMake variables.</p>
 <p>When CMake is able to find the library for the given name, it will automatically set up <a href="../src/realizations/catchment/CMakeLists.txt">the dependent, internal, static library</a> to dynamically link to the external shared library at runtime.</p>
-<h3><a class="anchor" id="autotoc_md37"></a>
+<h3><a class="anchor" id="autotoc_md64"></a>
 Dynamic Loading</h3>
 <p>Additionally, as noted above, the path to the shared library must be provided in the configuration. This is because C libraries must be loaded dynamically within the execution of the NextGen framework, or else certain limitations of C would prevent using more than one such external C BMI model library at a time.</p>
-<h2><a class="anchor" id="autotoc_md38"></a>
+<h2><a class="anchor" id="autotoc_md65"></a>
 BMI C CFE Example</h2>
 <p>An example implementation for an appropriate BMI model as a <b>C</b> shared library is provided in the project <a href="../extern/cfe">here</a>.</p>
-<h2><a class="anchor" id="autotoc_md39"></a>
+<h2><a class="anchor" id="autotoc_md66"></a>
 BMI C Caveats</h2>
 <ul>
 <li>Activation/Deactivation in CMake Required</li>
 <li>Additional Bootstrapping Function Needed</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md40"></a>
+<h3><a class="anchor" id="autotoc_md67"></a>
 BMI C Activate/Deactivation Required in CMake Build</h3>
 <p>BMI C functionality will not work (i.e., will not be compiled or executable) unless set to be active in the CMake build. This requires setting the <code>NGEN_WITH_BMI_C</code> CMake cache variable to <code>ON</code>.</p>
 <p>Conversely, built executables (and perhaps certain build targets) may not function as expected if <code>NGEN_WITH_BMI_C</code> is <code>ON</code> but the configured shared library is not available.</p>
-<h3><a class="anchor" id="autotoc_md41"></a>
+<h3><a class="anchor" id="autotoc_md68"></a>
 Additional Bootstrapping Function Needed</h3>
 <p>BMI models written in <b>C</b> should implement an extra "registration" function in order to be compatible with NextGen. By default, this registration function is expected to be: </p><pre class="fragment">Bmi* register_bmi(Bmi *model);
 </pre><p>It is possible to configure a different name for the function within the NGen realization config, but the return type and parameter list must be as noted here.</p>
@@ -399,11 +399,11 @@ Additional Bootstrapping Function Needed</h3>
         model-&gt;initialize = Initialize;
         ...
 </pre><p>Full examples for how to write this registration function can be found in the local CFE BMI implementation, specifically in <a href="../extern/cfe/src/bmi_cfe.c">extern/cfe/src/bmi_cfe.c</a>, or in the official CSDMS <em>bmi-example-c</em> repo near the bottom of the <a href="https://github.com/csdms/bmi-example-c/blob/master/heat/bmi_heat.c">bmi-heat.c</a> file.</p>
-<h4><a class="anchor" id="autotoc_md42"></a>
+<h4><a class="anchor" id="autotoc_md69"></a>
 Why?</h4>
 <p>This is needed both due to the design of the <b>C</b> language variant of BMI, and the limitations of C regarding duplication of function names. The latter becomes significant when more than one BMI C library is used at once. Even if that is actively the case, NextGen is designed to accomodate that case, so this requirement is in place.</p>
 <p>Future versions of NextGen will provide alternative ways to declaratively configure function names from a BMI C library so they can individually be dynamically loaded.</p>
-<h1><a class="anchor" id="autotoc_md43"></a>
+<h1><a class="anchor" id="autotoc_md70"></a>
 BMI Models Written in C++</h1>
 <ul>
 <li>BMI C++ Model As Shared Library<ul>
@@ -417,13 +417,13 @@ BMI Models Written in C++</h1>
 <li>BMI C++ Example</li>
 </ul>
 <p>You can implement a model in C++ by writing an object which implements the <a href="https://github.com/csdms/bmi-cxx">BMI C++ interface</a>.</p>
-<h2><a class="anchor" id="autotoc_md44"></a>
+<h2><a class="anchor" id="autotoc_md71"></a>
 BMI C++ Model As Shared Library</h2>
 <p>For <b>C++</b> models, the model should be packaged as a pre-compiled shared library. Support for loading of C++ modules/libraries is always enabled, so no build system flags are required. </p>
-<h3><a class="anchor" id="autotoc_md45"></a>
+<h3><a class="anchor" id="autotoc_md72"></a>
 Dynamic Loading</h3>
 <p>As noted above, the path to the shared library must be provided in the configuration so that the module can be loaded at runtime.</p>
-<h3><a class="anchor" id="autotoc_md46"></a>
+<h3><a class="anchor" id="autotoc_md73"></a>
 Additional Bootstrapping Functions Needed</h3>
 <p>BMI models written in <b>C++</b> should implement two <b>C</b> functions declared with <code>extern "C"</code>. These functions instantiate and destroy a <b>C++</b> BMI model object. By default, these functions are expected to be named <code>bmi_model_create</code> and <code>bmi_model_destroy</code>, and have signatures like the following:</p>
 <div class="fragment"><div class="line">++</div>
@@ -444,25 +444,25 @@ Additional Bootstrapping Functions Needed</h3>
 <div class="line"><span class="comment">   }</span></div>
 </div><!-- fragment --><p>It is possible to configure different <em>names</em> for the functions within the NGen realization config by using the keys <code>create_function</code> and <code>destroy_function</code>, but the return types and parameters must be as shown above.</p>
 <p>An example of implementing these functions can be found in the test harness implementation at <a href="../extern/test_bmi_cpp/include/test_bmi_cpp.hpp">/extern/test_bmi_cpp/include/test_bmi_cpp.hpp</a>. </p>
-<h4><a class="anchor" id="autotoc_md47"></a>
+<h4><a class="anchor" id="autotoc_md74"></a>
 Why?</h4>
 <p>Counterintuitively, loading C++ shared libraries into a C++ executable (such as the NextGen framework) requires the use of standard C functions. This is because all C++ compilers "mangle" the names of C++ functions and classes in order to support polymorphism and other scenarios where C++ symbols are allowed to have the same name (which is not possible in standard C). This "mangling" algorithm is not specified or defined so different compilers may use different methods&ndash;and even different versions of the same compiler can vary&ndash;such that it is not possible to predict the symbol name for any C++ class or function in a compiled shared library. Only by using <code>extern "C"</code> will the compiler produce a library with a predictable symbol name (and no two functions having the <code>extern "C"</code> declaration may have the same name!), so this mechanism is used whenever dynamic loading of C++ library classes is needed.</p>
 <p>Similarly, different compilers (or different compiler versions) may implement <code>delete</code> differently, or layout private memory of an object differently. This is why the <code>bmi_model_destroy</code> function should be implemented in the library where the object was instantiated: to prevent compiler behavior differences from potentially freeing memory incorrectly.</p>
-<h2><a class="anchor" id="autotoc_md48"></a>
+<h2><a class="anchor" id="autotoc_md75"></a>
 BMI C++ Example</h2>
 <p>An example implementation for an appropriate BMI model as a <b>C++</b> shared library is provided in the project <a href="../extern/test_bmi_cpp">here</a>.</p>
-<h1><a class="anchor" id="autotoc_md49"></a>
+<h1><a class="anchor" id="autotoc_md76"></a>
 BMI Models Written in Python</h1>
 <ul>
 <li>Enabling Python Integration</li>
 <li>BMI Python Model as Package Class</li>
 <li>BMI Python Example</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md50"></a>
+<h2><a class="anchor" id="autotoc_md77"></a>
 Enabling Python Integration</h2>
 <p>Python integration is controlled with the CMake build flag <code>NGEN_WITH_PYTHON</code>, however this currently defaults to "On"&ndash;you would need to turn this off if Python is not available in your environment. See <a href="DEPENDENCIES.md#python-3-libraries">the Dependencies documentation</a> for specifics on Python requirements, but in summary you will need a working Python environment with NumPy installed. You can set up a Python environment anywhere with the usual environment variables. The appropriate Python environment should be active in the shell when ngen is run.</p>
 <p>For Python BMI models specifically, you will also need to install the <a href="https://github.com/csdms/bmi-python">bmipy</a> package, which provides a base class for Python BMI models.</p>
-<h2><a class="anchor" id="autotoc_md51"></a>
+<h2><a class="anchor" id="autotoc_md78"></a>
 BMI Python Model as Package Class</h2>
 <p>To use a Python BMI model, the model needs to be installed as a package in the Python environment and the package must have a class that extends bmipy, like so</p>
 <div class="fragment"><div class="line"><span class="keyword">from</span> bmipy <span class="keyword">import</span> Bmi</div>
@@ -480,10 +480,10 @@ BMI Python Model as Package Class</h2>
 <div class="line">                &quot;python_type&quot;: &quot;mypackage.bmi_model&quot;,</div>
 <div class="line">                &quot;model_type_name&quot;: &quot;bmi_model&quot;,</div>
 <div class="line">                //...</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md52"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md79"></a>
 BMI Python Example</h2>
 <p>An example implementation for an appropriate BMI model as a <b>Python</b> class is <a href="../extern/test_bmi_py">provided in the project</a>, or you can examine the CSDMS-provided <a href="https://github.com/csdms/bmi-example-python">example Python model</a>.</p>
-<h1><a class="anchor" id="autotoc_md53"></a>
+<h1><a class="anchor" id="autotoc_md80"></a>
 BMI Models Written in Fortran</h1>
 <ul>
 <li>Enabling Fortran Integration</li>
@@ -493,19 +493,19 @@ BMI Models Written in Fortran</h1>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md54"></a>
+<h2><a class="anchor" id="autotoc_md81"></a>
 Enabling Fortran Integration</h2>
 <p>To enable Fortran integration functionality, the CMake build system has to be <a href="BUILDS_AND_CMAKE.md#generating-a-build-system">generated</a> with the <code>NGEN_WITH_BMI_FORTRAN</code> CMake variable set to <code>ON</code>.</p>
-<h2><a class="anchor" id="autotoc_md55"></a>
+<h2><a class="anchor" id="autotoc_md82"></a>
 ISO C Binding Middleware</h2>
 <p>Nextgen takes advantage of the Fortran <code>iso_c_binding</code> module to achieve interoperability with Fortran modules. In short, this works through use of an intermediate middleware module maintained within Nextgen. This module handles the (majority of the) binding through proxy functions that make use of the actual external BMI Fortran module. <br  />
 </p>
 <p>The middleware module source is located in <em>extern/iso_c_fortran_bmi/</em>.</p>
 <p>The proxy functions require an opaque handle to a created BMI Fortran object to be provided as an argument, so such an object and its opaque handle must be setup and returned via a `register_bmi` function.</p>
-<h2><a class="anchor" id="autotoc_md56"></a>
+<h2><a class="anchor" id="autotoc_md83"></a>
 A Compiled Shared Library</h2>
 <p>Because of the use of <code>iso_c_bindings</code>, integrating with a Fortran BMI module works very similarly to integrating with a C BMI module, where a shared library is dynamically loaded. An extra bootstrapping registration function is also, again, required.</p>
-<h3><a class="anchor" id="autotoc_md57"></a>
+<h3><a class="anchor" id="autotoc_md84"></a>
 Required Additional Fortran Registration Function</h3>
 <p>As with C, a registration function must be provided by the module, beyond what is implemented for BMI. It should look very similar to the example below. In fact, it is likely sufficient to simply modify the <code>use bminoahowp</code> and <code>type(bmi_noahowp), target, save :: bmi_model</code> lines to suit the module in question.</p>
 <p>This function should receive an opaque pointer and set it to point to a created BMI object of the appropriate type for the module. Note that while <code>save</code> is being used in a way that persists only the initial object, since this will be used within the scope of a dynamic library loaded specifically for working with a particular catchment formulation, it should not cause issues.</p>
@@ -530,7 +530,7 @@ Required Additional Fortran Registration Function</h3>
 <div class="line">      this = c_loc(bmi_box)</div>
 <div class="line">      bmi_status = bmi_success</div>
 <div class="line">    <span class="keyword">end function </span>register_bmi</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md58"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md85"></a>
 Multi-Module BMI Formulations</h1>
 <p>It is possible to configure a formulation to be a combination of several different individual BMI module components. This is the <code>bmi_multi</code> formulation type. At each time step, formulations of this type proceed through each nested module <em>in configured order</em> and call either the BMI <code>update()</code> or <code>update_until()</code> function for each.</p>
 <details >
@@ -604,10 +604,10 @@ Click here for <code>bmi_multi</code> example</summary>
 <div class="line">            ],</div>
 </div><!-- fragment --> </details>
 <p>As described in Required Parameters, a BMI <code>init_config</code> does not need to be specified for this formulation type, but a nested list of sub-formulation configs (in <code>modules</code>) does. Execution of a formulation time step update proceeds through each module in list order.</p>
-<h2><a class="anchor" id="autotoc_md59"></a>
+<h2><a class="anchor" id="autotoc_md86"></a>
 Passing Variables Between Nested Formulations</h2>
 <p>In addition to using framework-supplied forcings as module inputs, a <code>bmi_multi</code> formulation orchestrate the output variable values of one nested module for use as the input variable values of another. This imposes some extra conditions and requirements on the configuration.</p>
-<h3><a class="anchor" id="autotoc_md60"></a>
+<h3><a class="anchor" id="autotoc_md87"></a>
 How Values Are Orchestrated</h3>
 <p>The <code>bmi_multi</code> formulation orchestrates values by pairing all nested module input variables with some nested module or framework-provided output variable. Paring is done by examining the identifiers for the variables - either a variable's alias configured via <code>variables_names_map</code> (see here) or, if the former wasn't provided, its name - and providing each input with values from an output with a matching identifier. <br  />
 </p>
@@ -626,13 +626,13 @@ How Values Are Orchestrated</h3>
 </ul>
 </li>
 </ul>
-<h3><a class="anchor" id="autotoc_md61"></a>
+<h3><a class="anchor" id="autotoc_md88"></a>
 Look-back and Default Values</h3>
 <p>Any nested module, regardless of its position in the configured order of the modules, may have its provided outputs used as the input values for any other nested module in that formulation. Because modules are updated in order, configuring an earlier module - e.g., <em>module_1</em> - to receive an input value from an output variable of a later module - e.g., <em>module_2</em> - induces a "look-back" capability. At the time <em>module_1</em> needs its input for the current time step, <em>module_2</em> will have not yet processed the current time step. As such, <em>module_2</em>'s output variable values will be those from the previous time step.</p>
 <p>This introduces a special case for when there is no previous time step. Not every BMI module used in this kind of "look-back" scenario will be able to provide a valid output value before processing the first time step. To account for this, an optional default value can be configured for output variables, associated via the identifier (i.e., mapped alias or variable name). <br  />
 </p>
 <dl class="section note"><dt>Note</dt><dd>Currently only <code>double</code> default values are supported.</dd></dl>
-<h4><a class="anchor" id="autotoc_md62"></a>
+<h4><a class="anchor" id="autotoc_md89"></a>
 Example Look-Back Config</h4>
 <p>Below is a partial config example illustrating a look-back setup involving CFE and SoilMoistureProfile (SMP). CFE relies upon the soil moisture profile value from SMP (mapped in both as <code>soil_moisture_profile__smp_output__cfe_input</code>) that was calculated in the previous time step. Because SMP wasn't implemented to have its own default values for variables, a default value is supplied in the configuration that CFE will use in the first time step.</p>
 <div class="fragment"><div class="line">{</div>
@@ -701,7 +701,7 @@ Example Look-Back Config</h4>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 29 2026 20:50:31 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Feb 5 2026 14:50:37 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
