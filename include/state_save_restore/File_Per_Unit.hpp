@@ -9,7 +9,9 @@ public:
     File_Per_Unit_Saver(std::string base_path);
     ~File_Per_Unit_Saver();
 
-    std::shared_ptr<State_Snapshot_Saver> initialize_snapshot(snapshot_time_t epoch, State_Durability durability) override;
+    std::shared_ptr<State_Snapshot_Saver> initialize_snapshot(State_Durability durability) override;
+
+    std::shared_ptr<State_Snapshot_Saver> initialize_checkpoint_snapshot(snapshot_time_t epoch, State_Durability durability) override;
 
     void finalize() override;
 
@@ -26,7 +28,9 @@ public:
 
     void finalize() override { };
 
-    std::shared_ptr<State_Snapshot_Loader> initialize_snapshot(State_Saver::snapshot_time_t epoch) override;
+    std::shared_ptr<State_Snapshot_Loader> initialize_snapshot() override;
+
+    std::shared_ptr<State_Snapshot_Loader> initialize_checkpoint_snapshot(State_Saver::snapshot_time_t epoch) override;
 private:
     std::string dir_path_;
 };

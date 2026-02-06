@@ -40,7 +40,7 @@ namespace realization {
          * 
          * The python BMI requires additional messaging for pre-allocating memory for load
          */
-        void load_serialization_state(const boost::span<char> state) const override;
+        void load_serialization_state(const boost::span<char> state) override;
 
     protected:
 

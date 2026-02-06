@@ -17,7 +17,7 @@ namespace realization {
             inner_create_formulation(properties, true);
         }
 
-        void Bmi_Module_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> saver) const {
+        void Bmi_Module_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> saver) {
             uint64_t size = 1;
             boost::span<char> data = this->get_serialization_state();
 
@@ -29,14 +29,14 @@ namespace realization {
             this->free_serialization_state();
         }
 
-        void Bmi_Module_Formulation::load_state(std::shared_ptr<State_Snapshot_Loader> loader) const {
+        void Bmi_Module_Formulation::load_state(std::shared_ptr<State_Snapshot_Loader> loader) {
             std::vector<char> buffer;
             loader->load_unit(this->get_id(), buffer);
             boost::span<char> data(buffer.data(), buffer.size());
             this->load_serialization_state(data);
         }
 
-        void Bmi_Module_Formulation::load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) const {
+        void Bmi_Module_Formulation::load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) {
             this->load_state(loader);
             double rt;
             this->get_bmi_model()->SetValue(StateSaveNames::FREE, &rt);
@@ -1091,7 +1091,7 @@ namespace realization {
 
         }
 
-        const boost::span<char> Bmi_Module_Formulation::get_serialization_state() const {
+        const boost::span<char> Bmi_Module_Formulation::get_serialization_state() {
             auto model = get_bmi_model();
             uint64_t size = 0;
             model->SetValue(StateSaveNames::CREATE, &size);
@@ -1101,7 +1101,7 @@ namespace realization {
             return span;
         }
 
-        void Bmi_Module_Formulation::load_serialization_state(const boost::span<char> state) const {
+        void Bmi_Module_Formulation::load_serialization_state(const boost::span<char> state) {
             auto bmi = this->bmi_model;
             // grab the pointer to the underlying state data
             void* data = (void*)state.data();
@@ -1109,7 +1109,7 @@ namespace realization {
             bmi->SetValue(StateSaveNames::STATE, data);
         }
 
-        void Bmi_Module_Formulation::free_serialization_state() const {
+        void Bmi_Module_Formulation::free_serialization_state() {
             auto bmi = this->bmi_model;
             // send message to clear memory associated with serialized data
             void* _; // this pointer will be unused by SetValue

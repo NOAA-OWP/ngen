@@ -703,7 +703,7 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
         auto hot_start_loader = state_saving_config.hot_start();
         if (hot_start_loader) {
             LOG(LogLevel::INFO, "Loading hot start data from prior snapshot.");
-            std::shared_ptr<State_Snapshot_Loader> snapshot_loader = hot_start_loader->initialize_snapshot(State_Saver::snapshot_time_now());
+            std::shared_ptr<State_Snapshot_Loader> snapshot_loader = hot_start_loader->initialize_snapshot();
             simulation->load_hot_start(snapshot_loader, manager->get_t_route_config_file_with_path());
         }
     }
@@ -774,10 +774,7 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     // run any end-of-run state saving after T-Route has finished but before starting to tear down data structures
     for (const auto& end_saver : state_saving_config.end_of_run_savers()) {
         LOG(LogLevel::INFO, "Saving end of run simulation data for state saving config " + end_saver.first);
-        std::shared_ptr<State_Snapshot_Saver> snapshot = end_saver.second->initialize_snapshot(
-            State_Saver::snapshot_time_now(),
-            State_Saver::State_Durability::strict
-        );
+        std::shared_ptr<State_Snapshot_Saver> snapshot = end_saver.second->initialize_snapshot(State_Saver::State_Durability::strict);
         simulation->save_end_of_run(snapshot);
     }
 

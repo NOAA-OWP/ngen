@@ -50,11 +50,11 @@ namespace realization {
          * Create a save state, save it using the `State_Snapshot_Saver`, then clear the save state from memory.
          * `this->get_id()` will be used as the unique ID for the saver.
          */
-        void save_state(std::shared_ptr<State_Snapshot_Saver> saver) const override;
+        void save_state(std::shared_ptr<State_Snapshot_Saver> saver) override;
 
-        void load_state(std::shared_ptr<State_Snapshot_Loader> loader) const override;
+        void load_state(std::shared_ptr<State_Snapshot_Loader> loader) override;
 
-        void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) const override;
+        void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) override;
 
         /**
          * Get the collection of forcing output property names this instance can provide.
@@ -295,16 +295,16 @@ namespace realization {
          * 
          * @return Span of the serialized data.
          */
-        virtual const boost::span<char> get_serialization_state() const;
+        virtual const boost::span<char> get_serialization_state();
         /**
          * Requests the BMI to load data from a previously saved state. This has a side effect of freeing a current state if it currently exists.
          */
-        virtual void load_serialization_state(const boost::span<char> state) const;
+        virtual void load_serialization_state(const boost::span<char> state);
         /**
          * Requests the BMI to clear a currently saved state from memory.
          * Existing state pointers should not be used as the stored data may be freed depending on implementation.
          */
-        void free_serialization_state() const;
+        void free_serialization_state();
         void set_realization_file_format(bool is_legacy_format);
 
     protected:

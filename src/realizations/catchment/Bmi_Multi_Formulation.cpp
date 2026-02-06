@@ -13,8 +13,13 @@
 #include "Bmi_Py_Formulation.hpp"
 #include "Logger.hpp"
 
+#include "state_save_restore/vecbuf.hpp"
 #include "state_save_restore/State_Save_Utils.hpp"
 #include <state_save_restore/State_Save_Restore.hpp>
+
+#include <boost/serialization/serialization.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
 
 #if (__cplusplus >= 202002L)
 #include <bit>
@@ -22,89 +27,37 @@
 
 using namespace realization;
 
-namespace {
-    // Check if the system's byte order is little endianness
-    constexpr bool is_little_endian() {
-#if (__cplusplus < 202002L)
-        // C++ less than 2020 requires making a two byte object and checking which byte is 0
-        uint16_t endian_bytes = 0xFF00;
-        uint8_t *endian_bits = reinterpret_cast<uint8_t *>(&endian_bytes);
-        return endian_bits[0] == 0;
-#else
-        // C++ 2020+ has as simpler method
-        return std::endian::native == std::endian::little;
-#endif
-    }
-}
 
-
-void Bmi_Multi_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> saver) const {
-    std::vector<std::pair<const char*, uint64_t>> bmi_data;
-    size_t data_size = 0;
+void Bmi_Multi_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> saver) {
+    LOG(LogLevel::DEBUG, "Saving state for Multi-BMI %s", this->get_id());
+    vecbuf<char> data;
+    boost::archive::binary_oarchive archive(data);
+    // serialization function handles freeing the sub-BMI states after archiving them
+    archive << (*this);
+    // it's recommended to keep data pointers around until serialization completes,
+    //   so freeing the BMI states is done after the data buffer has been completely written to
     for (const nested_module_ptr &m : modules) {
         auto bmi = dynamic_cast<Bmi_Module_Formulation *>(m.get());
-        boost::span<char> span = bmi->get_serialization_state();
-        bmi_data.push_back(std::make_pair(span.data(), span.size()));
-        data_size += sizeof(uint64_t) + span.size();
-        LOG(LogLevel::DEBUG, "Serialization of multi-BMI %s %s completed with a size of %d bytes.",
-            bmi->get_id().c_str(), bmi->get_model_type_name().c_str(), span.size());
-    }
-    std::vector<char> data;
-    data.reserve(data_size);
-    size_t index = 0;
-    for (const auto &bmi : bmi_data) {
-        // write the size of the data
-        if (is_little_endian()) {
-            std::memcpy(data.data() + index, &bmi.second, sizeof(uint64_t));
-        } else {
-            // store the size bytes in reverse order to ensure saved data is always little endian
-            const char *bytes = reinterpret_cast<const char*>(&bmi.second);
-            size_t endian_index = index + sizeof(uint64_t);
-            for (size_t i = 0; i < sizeof(uint64_t); ++i) {
-                data[--endian_index] = bytes[i];
-            }
-        }
-        // write the serialized data
-        std::memcpy(data.data() + index + sizeof(uint64_t), &bmi.first, bmi.second);
-        index += sizeof(uint64_t) + bmi.second;
-    }
-    boost::span<const char> span(data.data(), data_size);
-    saver->save_unit(this->get_id(), span);
-    
-    for (const nested_module_ptr &m : modules) { 
-        auto bmi = static_cast<Bmi_Module_Formulation *>(m.get());
         bmi->free_serialization_state();
     }
+    boost::span<const char> span(data.data(), data.size());
+    saver->save_unit(this->get_id(), span);
 }
 
-void Bmi_Multi_Formulation::load_state(std::shared_ptr<State_Snapshot_Loader> loader) const {
+void Bmi_Multi_Formulation::load_state(std::shared_ptr<State_Snapshot_Loader> loader) {
+    LOG(LogLevel::DEBUG, "Loading save state for Multi-BMI %s", this->get_id());
     std::vector<char> data;
     loader->load_unit(this->get_id(), data);
-    size_t index = 0;
-    for (const nested_module_ptr &m : modules) {
-        auto bmi = dynamic_cast<Bmi_Module_Formulation *>(m.get());
-        uint64_t size;
-        if (is_little_endian()) {
-            memcpy(&size, data.data() + index, sizeof(uint64_t));
-        } else {
-            // read size bytes in reverse order to interpret from little endian
-            char *size_bytes = reinterpret_cast<char *>(&size);
-            size_t endian_index = sizeof(uint64_t);
-            for (size_t i = 0; i < sizeof(uint64_t); ++i) {
-                size_bytes[--endian_index] = data[index + i];
-            }
-        }
-        boost::span<char> span(data.data() + index + sizeof(uint64_t), size);
-        bmi->load_serialization_state(span);
-        index += sizeof(uint64_t) + size;
-        LOG(LogLevel::DEBUG, "Loading of multi-BMI %s %s completed with a size of %d bytes.",
-            bmi->get_id().c_str(), bmi->get_model_type_name().c_str(), span.size());
-    }
+    membuf stream(data.data(), data.size());
+    boost::archive::binary_iarchive archive(stream);
+    archive >> (*this);
 }
 
-void Bmi_Multi_Formulation::load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) const {
+void Bmi_Multi_Formulation::load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) {
     this->load_state(loader);
     double rt;
+    LOG(LogLevel::DEBUG, "Resetting time for sub-BMIs");
+    // Multi-BMI's current forwards its primary BMI's current time, so no additional action needed for the formulation's reset time
     for (const nested_module_ptr &m : modules) {
         auto bmi = dynamic_cast<Bmi_Module_Formulation *>(m.get());
         bmi->get_bmi_model()->SetValue(StateSaveNames::RESET, &rt);
@@ -703,6 +656,34 @@ bool Bmi_Multi_Formulation::is_realization_legacy_format() const {
 }
 void Bmi_Multi_Formulation::set_realization_file_format(bool is_legacy_format){
     legacy_json_format = is_legacy_format;
+}
+
+template<class Archive>
+void Bmi_Multi_Formulation::serialize(Archive &ar, const unsigned int version) {
+    uint64_t data_size;
+    std::vector<char> buffer;
+    for (const nested_module_ptr &m : modules) {
+        auto bmi = dynamic_cast<Bmi_Module_Formulation *>(m.get());
+        // if saving, make the BMI's state and record its size and data
+        if (Archive::is_saving::value) {
+            LOG(LogLevel::DEBUG, "Saving state from sub-BMI " + bmi->get_model_type_name());
+            boost::span<char> span = bmi->get_serialization_state();
+            data_size = span.size();
+            ar & data_size;
+            ar & boost::serialization::make_array(span.data(), data_size);
+            // it's recommended to keep raw pointers alive throughout the entire seiralization process,
+            //   so responsibility for freeing the BMIs' state is left to the caller of this function
+        }
+        // if loading, get the current data size stored at the front, then load that much data as a char blob passed to the BMI
+        else {
+            LOG(LogLevel::DEBUG, "Loading state from sub-BMI " + bmi->get_model_type_name());
+            ar & data_size;
+            buffer.resize(data_size);
+            ar & boost::serialization::make_array(buffer.data(), data_size);
+            boost::span<char> span(buffer.data(), data_size);
+            bmi->load_serialization_state(span);
+        }
+    }
 }
 
 //Function to find whether any item in the string vector is empty or blank

@@ -41,7 +41,7 @@ class File_Per_Unit_Snapshot_Saver : public State_Snapshot_Saver
 
     public:
     File_Per_Unit_Snapshot_Saver() = delete;
-    File_Per_Unit_Snapshot_Saver(path base_path, State_Saver::snapshot_time_t epoch, State_Saver::State_Durability durability);
+    File_Per_Unit_Snapshot_Saver(path base_path, State_Saver::State_Durability durability);
     ~File_Per_Unit_Snapshot_Saver();
 
 public:
@@ -61,9 +61,16 @@ File_Per_Unit_Saver::File_Per_Unit_Saver(std::string base_path)
 
 File_Per_Unit_Saver::~File_Per_Unit_Saver() = default;
 
-std::shared_ptr<State_Snapshot_Saver> File_Per_Unit_Saver::initialize_snapshot(snapshot_time_t epoch, State_Durability durability)
+std::shared_ptr<State_Snapshot_Saver> File_Per_Unit_Saver::initialize_snapshot(State_Durability durability) {
+    // TODO
+    return std::make_shared<File_Per_Unit_Snapshot_Saver>(path(this->base_path_), durability);
+}
+
+std::shared_ptr<State_Snapshot_Saver> File_Per_Unit_Saver::initialize_checkpoint_snapshot(snapshot_time_t epoch, State_Durability durability)
 {
-    return std::make_shared<File_Per_Unit_Snapshot_Saver>(base_path_, epoch, durability);
+    path checkpoint_path = path(this->base_path_) / unit_saving_utils::format_epoch(epoch);
+    create_directory(checkpoint_path);
+    return std::make_shared<File_Per_Unit_Snapshot_Saver>(checkpoint_path, durability);
 }
 
 void File_Per_Unit_Saver::finalize()
@@ -71,9 +78,9 @@ void File_Per_Unit_Saver::finalize()
     // nothing to be done
 }
 
-File_Per_Unit_Snapshot_Saver::File_Per_Unit_Snapshot_Saver(path base_path, State_Saver::snapshot_time_t epoch, State_Saver::State_Durability durability)
-    : State_Snapshot_Saver(epoch, durability)
-    , dir_path_(base_path / unit_saving_utils::format_epoch(epoch))
+File_Per_Unit_Snapshot_Saver::File_Per_Unit_Snapshot_Saver(path base_path, State_Saver::State_Durability durability)
+    : State_Snapshot_Saver(durability)
+    , dir_path_(base_path)
 {
     create_directory(dir_path_);
 }
@@ -156,7 +163,7 @@ void File_Per_Unit_Snapshot_Loader::load_unit(std::string const& unit_name, std:
         LOG("Failed to read state save data size for unit '" + unit_name + "' in file '" + file_path.string() + "'", LogLevel::WARNING);
         throw;
     }
-    std::ifstream stream(file_path.string(), std::ios_base::ate | std::ios_base::binary);
+    std::ifstream stream(file_path.string(), std::ios_base::binary);
     if (!stream) {
         LOG("Failed to open state save data for unit '" + unit_name + "' in file '" + file_path.string() + "'", LogLevel::WARNING);
         throw;
@@ -176,9 +183,14 @@ File_Per_Unit_Loader::File_Per_Unit_Loader(std::string dir_path)
 
 }
 
-std::shared_ptr<State_Snapshot_Loader> File_Per_Unit_Loader::initialize_snapshot(State_Saver::snapshot_time_t epoch)
+std::shared_ptr<State_Snapshot_Loader> File_Per_Unit_Loader::initialize_snapshot()
 {
-    path dir_path(dir_path_);
-    return std::make_shared<File_Per_Unit_Snapshot_Loader>(dir_path);
+    return std::make_shared<File_Per_Unit_Snapshot_Loader>(path(dir_path_));
+}
+
+std::shared_ptr<State_Snapshot_Loader> File_Per_Unit_Loader::initialize_checkpoint_snapshot(State_Saver::snapshot_time_t epoch)
+{
+    path checkpoint_path = path(dir_path_) / unit_saving_utils::format_epoch(epoch);;
+    return std::make_shared<File_Per_Unit_Snapshot_Loader>(checkpoint_path);
 }
 

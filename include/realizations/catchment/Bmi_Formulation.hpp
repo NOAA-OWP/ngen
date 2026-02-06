@@ -77,14 +77,14 @@ namespace realization {
          * Asks the model to serialize its state, queries the pointer
          * and length, passes that to saver, and then releases it
          */
-        virtual void save_state(std::shared_ptr<State_Snapshot_Saver> saver) const = 0;
+        virtual void save_state(std::shared_ptr<State_Snapshot_Saver> saver) = 0;
 
         /**
          * Passes a serialized representation of the model's state to ``loader``
          *
          * Asks saver to find data for the BMI and passes that data to the BMI for loading.
          */
-        virtual void load_state(std::shared_ptr<State_Snapshot_Loader> loader) const = 0;
+        virtual void load_state(std::shared_ptr<State_Snapshot_Loader> loader) = 0;
 
         /**
          * Passes a serialized representation of the model's state to ``loader``
@@ -93,7 +93,7 @@ namespace realization {
          * 
          * Differes from `load_state` by also restting the internal time value to its initial state.
          */
-        virtual void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) const = 0;
+        virtual void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) = 0;
 
         /**
          * Convert a time value from the model to an epoch time in seconds.

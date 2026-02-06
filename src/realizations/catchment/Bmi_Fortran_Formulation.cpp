@@ -94,7 +94,7 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
     return 1.0;
 }
 
-const boost::span<char> Bmi_Fortran_Formulation::get_serialization_state() const {
+const boost::span<char> Bmi_Fortran_Formulation::get_serialization_state() {
     auto model = get_bmi_model();
     int size_int = 0;
     model->SetValue(StateSaveNames::CREATE, &size_int);

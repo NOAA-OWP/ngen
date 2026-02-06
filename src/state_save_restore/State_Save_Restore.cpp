@@ -129,9 +129,8 @@ std::string State_Save_Config::instance::instance::mechanism_string() const {
     }
 }
 
-State_Snapshot_Saver::State_Snapshot_Saver(State_Saver::snapshot_time_t epoch, State_Saver::State_Durability durability)
-    : epoch_(epoch)
-    , durability_(durability)
+State_Snapshot_Saver::State_Snapshot_Saver(State_Saver::State_Durability durability)
+    : durability_(durability)
 {
 
 }

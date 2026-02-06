@@ -105,7 +105,9 @@ public:
      * potential errors to be checked and reported before finalize()
      * and/or State_Snapshot_Saver::finish_saving() return
      */
-    virtual std::shared_ptr<State_Snapshot_Saver> initialize_snapshot(snapshot_time_t epoch, State_Durability durability) = 0;
+    virtual std::shared_ptr<State_Snapshot_Saver> initialize_snapshot(State_Durability durability) = 0;
+
+    virtual std::shared_ptr<State_Snapshot_Saver> initialize_checkpoint_snapshot(snapshot_time_t epoch, State_Durability durability) = 0;
 
     /**
      * Execute any logic necessary to cleanly finish usage, and
@@ -120,7 +122,7 @@ class State_Snapshot_Saver
 {
 public:
     State_Snapshot_Saver() = delete;
-    State_Snapshot_Saver(State_Saver::snapshot_time_t epoch, State_Saver::State_Durability durability);
+    State_Snapshot_Saver(State_Saver::State_Durability durability);
     virtual ~State_Snapshot_Saver() = default;
 
     /**
@@ -139,7 +141,6 @@ public:
     virtual void finish_saving() = 0;
 
 protected:
-    State_Saver::snapshot_time_t epoch_;
     State_Saver::State_Durability durability_;
 };
 
@@ -155,7 +156,9 @@ public:
      * Return an object suitable for loading a simulation state as of
      * a particular moment in time, @param epoch
      */
-    virtual std::shared_ptr<State_Snapshot_Loader> initialize_snapshot(State_Saver::snapshot_time_t epoch) = 0;
+    virtual std::shared_ptr<State_Snapshot_Loader> initialize_snapshot() = 0;
+
+    virtual std::shared_ptr<State_Snapshot_Loader> initialize_checkpoint_snapshot(State_Saver::snapshot_time_t epoch) = 0;
 
     /**
      * Execute any logic necessary to cleanly finish usage, and

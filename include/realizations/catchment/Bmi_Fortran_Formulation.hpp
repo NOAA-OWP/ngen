@@ -29,7 +29,7 @@ namespace realization {
          * 
          * @return Span of the serialized data.
          */
-        const boost::span<char> get_serialization_state() const override;
+        const boost::span<char> get_serialization_state() override;
 
     protected:
 
