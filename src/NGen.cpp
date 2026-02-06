@@ -38,8 +38,7 @@ std::string nexusDataFile = "";
 std::string REALIZATION_CONFIG_PATH = "";
 bool is_subdivided_hydrofabric_wanted = false;
 
-// Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
-int mpi_rank = 0;
+#include "parallel_utils.h"
 
 #if NGEN_WITH_MPI
 
@@ -47,15 +46,12 @@ int mpi_rank = 0;
 #define MPI_HF_SUB_CLI_FLAG "--subdivided-hydrofabric"
 #endif
 
-#include <mpi.h>
-#include "parallel_utils.h"
 #include "core/Partition_Parser.hpp"
 #include <HY_Features_MPI.hpp>
 
 #include "core/Partition_One.hpp"
 
 std::string PARTITION_PATH = "";
-int mpi_num_procs;
 #endif // NGEN_WITH_MPI
 
 #include <Layer.hpp>
@@ -305,7 +301,7 @@ int main(int argc, char *argv[]) {
         // Do some extra steps if we expect to load a subdivided hydrofabric
         if (is_subdivided_hydrofabric_wanted) {
             // Ensure the hydrofabric is subdivided (either already or by doing it now), and then adjust these paths
-            if (parallel::is_hydrofabric_subdivided(mpi_rank, mpi_num_procs, true) ||
+            if (parallel::is_hydrofabric_subdivided(mpi_rank, mpi_num_procs, catchmentDataFile, true) ||
                 parallel::subdivide_hydrofabric(mpi_rank, mpi_num_procs, catchmentDataFile, nexusDataFile,
                                                 PARTITION_PATH))
             {
