@@ -72,8 +72,6 @@ namespace realization {
             }
         };
 
-        void load_state(std::shared_ptr<State_Snapshot_Loader> loader) const override;
-
         /**
          * Convert a time value from the model to an epoch time in seconds.
          *
