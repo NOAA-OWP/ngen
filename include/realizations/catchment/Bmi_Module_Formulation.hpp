@@ -72,11 +72,6 @@ namespace realization {
 
         /**
          * Get the collection of forcing output property names this instance can provide.
-         *
-         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
-         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
-         * (i.e., one of its forcings) a data property output from this object.
-         *
          * For this type, this is the collection of BMI output variables, plus any aliases included in the formulation
          * config's output variable mapping.
          *
@@ -319,6 +314,7 @@ namespace realization {
          * Existing state pointers should not be used as the stored data may be freed depending on implementation.
          */
         virtual void free_serialization_state();
+
         void set_realization_file_format(bool is_legacy_format);
 
         virtual void check_mass_balance(const int& iteration, const int& total_steps, const std::string& timestamp) const override {
