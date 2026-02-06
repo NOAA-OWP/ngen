@@ -63,7 +63,11 @@ namespace realization {
             }
         };
 
-        void save_state(std::shared_ptr<State_Snapshot_Saver> saver) const override;
+        void save_state(std::shared_ptr<State_Snapshot_Saver> saver) override;
+
+        void load_state(std::shared_ptr<State_Snapshot_Loader> loader) override;
+
+        void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) override;
 
         /**
          * Convert a time value from the model to an epoch time in seconds.
