@@ -69,9 +69,9 @@ double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_st
         // there are no recorded flows for this time.
         // throw exception
 
-        std::cout << "No recorded flows for time step " << t << std::endl;
-        std::cout << "catchment id requesting flow: " << catchment_id << std::endl;
-        std::cout << "Nex id: " << id << std::endl;
+        std::cerr << "No recorded flows for time step " << t << "\n";
+        std::cerr << "catchment id requesting flow: " << catchment_id << "\n";
+        std::cerr << "Nex id: " << id << std::endl;
 
         BOOST_THROW_EXCEPTION(request_from_empty_nexus() );
     }
