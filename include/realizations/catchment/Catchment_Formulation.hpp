@@ -53,7 +53,7 @@ namespace realization {
 
             if (id_index != std::string::npos) {
                 do {
-                    value = value.replace(id_index, sizeof(pattern.c_str()) - 2, replacement);
+                    value = value.replace(id_index, pattern.size(), replacement);
                     id_index = value.find(pattern);
                 } while (id_index != std::string::npos);
 
