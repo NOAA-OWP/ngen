@@ -2,19 +2,27 @@ name: CI/CD Pipeline
 
 on:
   pull_request:
-    branches: [ngwpc-candidate, ngwpc-release, main, nwm-main, development, release-candidate]
+    branches:
+      - ngwpc-candidate
+      - ngwpc-release
+      - main
+      - nwm-main
+      - development
+      - release-candidate
   push:
-    branches: [ngwpc-candidate, ngwpc-release, main, nwm-main, development, release-candidate]
-  release:
-    types: [published]
-  repository_dispatch:
-    types: [base_image_published]
+    branches:
+      - ngwpc-candidate
+      - ngwpc-release
+      - main
+      - nwm-main
+      - development
+      - release-candidate
   workflow_dispatch:
     inputs:
-      trigger_downstream:
-        description: 'PENDING APPROVAL: Trigger downstream repositories pipeline after successful run'
-        required: true
-        type: boolean
+      NGEN_FORCING_IMAGE_TAG:
+        description: 'NGEN_FORCING_IMAGE_TAG'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -37,7 +45,7 @@ jobs:
       commit_sha_short: ${{ steps.vars.outputs.commit_sha_short }}
       test_image_tag: ${{ steps.vars.outputs.test_image_tag }}
       alias_tag: ${{ steps.vars.outputs.alias_tag }}
-      forcing_tag: ${{ steps.vars.outputs.forcing_tag }}
+      build_date: ${{ steps.vars.outputs.build_date }}
       clean_ref: ${{ steps.vars.outputs.clean_ref }}
     steps:
       - name: Compute image vars
@@ -45,6 +53,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
+          # set variables to use with Docker images
+          ORG="$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
+          REPO="$(basename "${GITHUB_REPOSITORY}")"
+          IMAGE_BASE="${REGISTRY}/${ORG}/${REPO}"
 
           # one datetime for all time variables
           NOW=$(date -u +'%Y-%m-%d %H:%M:%S')
@@ -55,44 +68,35 @@ jobs:
           # for Docker image tags
           TIMESTAMP=$(date -u -d "$NOW" +'%Y%m%d%H%M%SZ')
 
-          # set forcing tag from payload or default to 'latest'
-          if [ -n "${{ github.event.client_payload.forcing_tag || '' }}" ]; then
-            FORCING_TAG="${{ github.event.client_payload.forcing_tag }}"
-          else
-            FORCING_TAG="latest"
-          fi
-
-          # logic to get the real branch name even on pull requests
+          # logic to get the real branch name and commit SHA on pull requests
           if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
             REAL_REF="${{ github.head_ref }}"
+            REAL_SHA="${{ github.event.pull_request.head.sha }}"
           else
             REAL_REF="${{ github.ref_name }}"
+            REAL_SHA="${GITHUB_SHA}"
           fi
 
           # clean ref name and short commit sha
           CLEAN_REF=$(echo "$REAL_REF" | tr '[:upper:]' '[:lower:]' | sed 's/\//-/g')
           SHORT_SHA="${GITHUB_SHA:0:12}"
 
-          # set variables to use with Docker images
-          ORG="$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
-          REPO="$(basename "${GITHUB_REPOSITORY}")"
-          IMAGE_BASE="${REGISTRY}/${ORG}/${REPO}"
-
           # logic for the tags:
-          # test_image_tag: used for the initial build and test
+          # test_image_tag (commit short sha): used for the initial build and test
           # alias_tag: used for final tagging on successful tests
-          # for pull requests, use pr-<pr-number>-build
-          # for workflow_dispatch and pushes, use <timestamp>-<clean-ref-name>
 
           # test tag is always commit short sha
           TEST_TAG="${SHORT_SHA}"
 
           if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            # for pull requests, use pr-<pr number>-build
             ALIAS="pr-${{ github.event.pull_request.number }}-build"
-          elif [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] || [ "$GITHUB_EVENT_NAME" = "push" ]; then
-            ALIAS="${TIMESTAMP}-${CLEAN_REF}"
+          elif [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] && [ "${{ github.ref_type }}" = "tag" ]; then
+            # for manual workflow dispatch on tags, use the git tag
+            ALIAS="${CLEAN_REF}"
           else
-            ALIAS="${SHORT_SHA}" # fallback
+            # for pushes to branches, use timestamp-branchname
+            ALIAS="${TIMESTAMP}-${CLEAN_REF}"
           fi
 
           # save outputs
@@ -215,8 +219,6 @@ jobs:
           build-args: |
             ORG=${{ needs.setup.outputs.org }}
             NGEN_FORCING_IMAGE_TAG=${{ needs.setup.outputs.forcing_tag }}
-            BASE_IMAGE_DIGEST=${{ github.event.client_payload.digest || 'unknown' }}
-            BASE_IMAGE_REVISION=${{ github.event.client_payload.source_sha || 'unknown' }}
             IMAGE_SOURCE=https://github.com/${{ github.repository }}
             IMAGE_VENDOR=${{ github.repository_owner }}
             IMAGE_VERSION=${{ github.ref_name }}
