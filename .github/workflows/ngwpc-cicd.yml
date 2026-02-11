@@ -2,19 +2,27 @@ name: CI/CD Pipeline
 
 on:
   pull_request:
-    branches: [ngwpc-candidate, ngwpc-release, main, nwm-main, development, release-candidate]
+    branches:
+      - ngwpc-candidate
+      - ngwpc-release
+      - main
+      - nwm-main
+      - development
+      - release-candidate
   push:
-    branches: [ngwpc-candidate, ngwpc-release, main, nwm-main, development, release-candidate]
-  release:
-    types: [published]
-  repository_dispatch:
-    types: [base_image_published]
+    branches:
+      - ngwpc-candidate
+      - ngwpc-release
+      - main
+      - nwm-main
+      - development
+      - release-candidate
   workflow_dispatch:
     inputs:
-      trigger_downstream:
-        description: 'PENDING APPROVAL: Trigger downstream repositories pipeline after successful run'
-        required: true
-        type: boolean
+      NGEN_FORCING_IMAGE_TAG:
+        description: 'NGEN_FORCING_IMAGE_TAG'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -37,7 +45,7 @@ jobs:
       commit_sha_short: ${{ steps.vars.outputs.commit_sha_short }}
       test_image_tag: ${{ steps.vars.outputs.test_image_tag }}
       alias_tag: ${{ steps.vars.outputs.alias_tag }}
-      forcing_tag: ${{ steps.vars.outputs.forcing_tag }}
+      build_date: ${{ steps.vars.outputs.build_date }}
       clean_ref: ${{ steps.vars.outputs.clean_ref }}
     steps:
       - name: Compute image vars
@@ -45,6 +53,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
+          # set variables to use with Docker images
+          ORG="$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
+          REPO="$(basename "${GITHUB_REPOSITORY}")"
+          IMAGE_BASE="${REGISTRY}/${ORG}/${REPO}"
 
           # one datetime for all time variables
           NOW=$(date -u +'%Y-%m-%d %H:%M:%S')
@@ -55,54 +68,44 @@ jobs:
           # for Docker image tags
           TIMESTAMP=$(date -u -d "$NOW" +'%Y%m%d%H%M%SZ')
 
-          # set forcing tag from payload or default to 'latest'
-          if [ -n "${{ github.event.client_payload.forcing_tag || '' }}" ]; then
-            FORCING_TAG="${{ github.event.client_payload.forcing_tag }}"
-          else
-            FORCING_TAG="latest"
-          fi
-
-          # logic to get the real branch name even on pull requests
+          # logic to get the real branch name and commit SHA on pull requests
           if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
             REAL_REF="${{ github.head_ref }}"
+            REAL_SHA="${{ github.event.pull_request.head.sha }}"
           else
             REAL_REF="${{ github.ref_name }}"
+            REAL_SHA="${GITHUB_SHA}"
           fi
 
           # clean ref name and short commit sha
           CLEAN_REF=$(echo "$REAL_REF" | tr '[:upper:]' '[:lower:]' | sed 's/\//-/g')
-          SHORT_SHA="${GITHUB_SHA:0:12}"
-
-          # set variables to use with Docker images
-          ORG="$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
-          REPO="$(basename "${GITHUB_REPOSITORY}")"
-          IMAGE_BASE="${REGISTRY}/${ORG}/${REPO}"
+          SHORT_SHA="${REAL_SHA:0:7}"
 
           # logic for the tags:
-          # test_image_tag: used for the initial build and test
+          # test_image_tag (commit short sha): used for the initial build and test
           # alias_tag: used for final tagging on successful tests
-          # for pull requests, use pr-<pr-number>-build
-          # for workflow_dispatch and pushes, use <timestamp>-<clean-ref-name>
 
           # test tag is always commit short sha
           TEST_TAG="${SHORT_SHA}"
 
           if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            # for pull requests, use pr-<pr number>-build
             ALIAS="pr-${{ github.event.pull_request.number }}-build"
-          elif [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] || [ "$GITHUB_EVENT_NAME" = "push" ]; then
-            ALIAS="${TIMESTAMP}-${CLEAN_REF}"
+          elif [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] && [ "${{ github.ref_type }}" = "tag" ]; then
+            # for manual workflow dispatch on tags, use the git tag
+            ALIAS="${CLEAN_REF}"
           else
-            ALIAS="${SHORT_SHA}" # fallback
+            # for pushes to branches, use timestamp-branchname
+            ALIAS="${TIMESTAMP}-${CLEAN_REF}"
           fi
 
           # save outputs
           echo "org=${ORG}" >> "$GITHUB_OUTPUT"
           echo "image_base=${IMAGE_BASE}" >> "$GITHUB_OUTPUT"
           echo "build_date=${BUILD_DATE}" >> "$GITHUB_OUTPUT"
-          echo "forcing_tag=${FORCING_TAG}" >> "$GITHUB_OUTPUT"
           echo "test_image_tag=${TEST_TAG}" >> "$GITHUB_OUTPUT"
           echo "alias_tag=${ALIAS}" >> "$GITHUB_OUTPUT"
-          echo "commit_sha=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+          echo "commit_sha=${REAL_SHA}" >> "$GITHUB_OUTPUT"
           echo "commit_sha_short=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
           echo "clean_ref=${CLEAN_REF}" >> "$GITHUB_OUTPUT"
 
@@ -112,10 +115,9 @@ jobs:
     if: |
       (github.event_name == 'pull_request') ||
       (github.event_name == 'push') ||
-      (github.event_name == 'repository_dispatch') ||
       (github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
-    needs: [setup]
+    needs: setup
     permissions:
       actions: read
       contents: read
@@ -132,13 +134,11 @@ jobs:
           python3 -m pip install numpy==1.26.4 netcdf4 bmipy pandas torch pyyaml pyarrow
           #python3 -m pip install -r extern/test_bmi_py/requirements.txt
           #python3 -m pip install -r extern/t-route/requirements.txt
-
       # Initialize CodeQL (C++ selected)
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
           languages: cpp
-
       # Build (replicate your CMake build commands from Dockerfile or local builds)
       - name: Build C++ code
         env:
@@ -160,7 +160,6 @@ jobs:
             # Using boost from apt for simplicity and code scanning
             #-DBOOST_ROOT=/opt/boost
           cmake --build cmake_build --target all
-
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
 
@@ -170,10 +169,9 @@ jobs:
     if: |
       (github.event_name == 'pull_request') ||
       (github.event_name == 'push') ||
-      (github.event_name == 'repository_dispatch') ||
       (github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
-    needs: [setup]
+    needs: setup
     outputs:
       digest: ${{ steps.build_image.outputs.digest }}
     steps:
@@ -181,7 +179,6 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
-
       - name: Verify submodules recursively
         run: |
           echo "Checking all submodules recursively..."
@@ -194,19 +191,15 @@ jobs:
             pwd
             ls -l
           '
-
       - name: Log in to registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build & push image
         id: build_image
         uses: docker/build-push-action@v6
-        env:
-          BUILD_DATE: ${{ env.BUILD_DATE }}
         with:
           context: .
           # file: Dockerfile.test # comment out when done testing
@@ -214,14 +207,12 @@ jobs:
           tags: ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.test_image_tag }}
           build-args: |
             ORG=${{ needs.setup.outputs.org }}
-            NGEN_FORCING_IMAGE_TAG=${{ needs.setup.outputs.forcing_tag }}
-            BASE_IMAGE_DIGEST=${{ github.event.client_payload.digest || 'unknown' }}
-            BASE_IMAGE_REVISION=${{ github.event.client_payload.source_sha || 'unknown' }}
+            NGEN_FORCING_IMAGE_TAG=${{ inputs.NGEN_FORCING_IMAGE_TAG || 'latest' }}
             IMAGE_SOURCE=https://github.com/${{ github.repository }}
             IMAGE_VENDOR=${{ github.repository_owner }}
-            IMAGE_VERSION=${{ github.ref_name }}
-            IMAGE_REVISION=${{ github.sha }}
-            IMAGE_CREATED=${{ env.BUILD_DATE }}
+            IMAGE_VERSION=${{ needs.setup.outputs.clean_ref }}
+            IMAGE_REVISION=${{ needs.setup.outputs.commit_sha }}
+            IMAGE_CREATED=${{ needs.setup.outputs.build_date }}
             CI_COMMIT_REF_NAME=${{ needs.setup.outputs.clean_ref }}
 
 # run unit tests inside the built Docker image
@@ -230,14 +221,11 @@ jobs:
     if: |
       (github.event_name == 'pull_request') ||
       (github.event_name == 'push') ||
-      (github.event_name == 'repository_dispatch') ||
       (github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     needs:
-      [
-        setup,
-        build
-      ]
+      - setup
+      - build
     container:
       image: ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.test_image_tag }}
     steps:
@@ -258,14 +246,11 @@ jobs:
     if: |
       (github.event_name == 'pull_request') ||
       (github.event_name == 'push') ||
-      (github.event_name == 'repository_dispatch') ||
       (github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     needs:
-      [
-        setup,
-        build
-      ]
+      - setup
+      - build
     steps:
       - name: Install Trivy
         uses: aquasecurity/setup-trivy@v0.2.2
@@ -295,17 +280,14 @@ jobs:
     if: |
       (github.event_name == 'pull_request') ||
       (github.event_name == 'push') ||
-      (github.event_name == 'repository_dispatch') ||
       (github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     needs:
-      [
-        setup,
-        codeql-scan,
-        build,
-        unit-test,
-        container-scanning,
-      ]
+      - setup
+      - codeql-scan
+      - build
+      - unit-test
+      - container-scanning
     steps:
       - name: Tag image with alias and latest
         shell: bash
@@ -329,7 +311,7 @@ jobs:
             --all \
             "docker://${IMAGE_BASE}:${TEST_TAG}" "docker://${IMAGE_BASE}:${ALIAS_TAG}"
 
-          # additionally tag with 'latest' if on development branch push
+          # tag with 'latest' on development branch push
           if [ "$GITHUB_EVENT_NAME" = "push" ] && [ "$GITHUB_REF_NAME" = "development" ]; then
             skopeo copy \
               --src-creds "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" \
@@ -337,117 +319,3 @@ jobs:
               --all \
               "docker://${IMAGE_BASE}:${TEST_TAG}" "docker://${IMAGE_BASE}:latest"
           fi
-
-# tag official release Docker image with release tag
-  release:
-    name: release
-    if: github.event_name == 'release' && github.event.action == 'published'
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - name: Get commit sha for the tag
-        id: rev
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-
-          TAG="${{ github.event.release.tag_name }}"
-          REPO="${{ github.repository }}"
-
-          REF_JSON="$(gh api "repos/${REPO}/git/refs/tags/${TAG}")"
-          OBJ_SHA="$(jq -r '.object.sha' <<<"$REF_JSON")"
-          OBJ_TYPE="$(jq -r '.object.type' <<<"$REF_JSON")"
-
-          if [ "$OBJ_TYPE" = "tag" ]; then
-            TAG_OBJ="$(gh api "repos/${REPO}/git/tags/${OBJ_SHA}")"
-            COMMIT_SHA="$(jq -r '.object.sha' <<<"$TAG_OBJ")"
-          else
-            COMMIT_SHA="$OBJ_SHA"
-          fi
-
-          SHORT_SHA="${COMMIT_SHA:0:12}"
-          echo "short_sha=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
-
-      - name: Tag image with release tag
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          IMAGE_BASE="${{ needs.setup.outputs.image_base }}"
-          SHORT_SHA="${{ steps.rev.outputs.short_sha }}"
-          RELEASE_TAG="${{ github.event.release.tag_name }}"
-
-          # ensure skopeo is available
-          if ! command -v skopeo >/dev/null 2>&1; then
-            sudo apt-get update -y
-            sudo apt-get install -y --no-install-recommends skopeo
-          fi
-
-          skopeo copy \
-            --src-creds "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" \
-            --dest-creds "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" \
-            docker://"${IMAGE_BASE}:${SHORT_SHA}" docker://"${IMAGE_BASE}:${RELEASE_TAG}"
-
-  # trigger repos downstream of ngen to build on new base image
-  # notify-downstream:
-  #   name: notify-downstream
-  #   if: |
-  #     (github.event_name == 'push') ||
-  #     (github.event_name == 'repository_dispatch') ||
-  #     (github.event_name == 'workflow_dispatch' && inputs.trigger_downstream)
-  #   runs-on: ubuntu-latest
-  #   needs:
-  #     [
-  #       setup,
-  #       codeql-scan,
-  #       build,
-  #       unit-test,
-  #       container-scanning,
-  #       promote-tags
-  #     ]
-  #   env:
-  #     # list of downstream repo names to notify
-  #     DOWNSTREAM_REPOS: '["nwm-cal-mgr", "nwm-fcst-mgr"]'
-  #   steps:
-  #     - name: Trigger Dispatch
-  #       uses: actions/github-script@v8
-  #       with:
-  #         github-token: ${{ secrets.NWM_CICD_PAT }}
-  #         script: |
-  #          // set variables
-  #           const repos = JSON.parse(process.env.DOWNSTREAM_REPOS);
-  #           const owner = context.repo.owner;
-  #           const repo = context.repo.repo;
-  #           const dockerImageTag = "${{ needs.setup.outputs.alias_tag }}";
-
-  #           // construct payload
-  #           const payload = {
-  #             event_type: 'base_image_published',
-  #             client_payload: {
-  #               owner: owner,
-  #               repository: repo,
-  #               docker_image: '${{ needs.setup.outputs.image_base }}',
-  #               docker_tag: dockerImageTag,
-  #               digest: '${{ needs.build.outputs.digest }}',
-  #               source_sha: '${{ needs.setup.outputs.commit_sha }}',
-  #             }
-  #           };
-
-  #           // iterate downstream repos and dispatch
-  #           for (const downstreamRepoName of repos) {
-  #             console.log(`Dispatching to ${owner}/${downstreamRepoName} with tag '${dockerImageTag}'...`);
-  #             try {
-  #               await github.rest.repos.createDispatchEvent({
-  #                 owner: owner,
-  #                 repo: downstreamRepoName,
-  #                 event_type: payload.event_type,
-  #                 client_payload: payload.client_payload
-  #               });
-  #               console.log(`✅ Successfully triggered ${downstreamRepoName}`);
-  #             } catch (error) {
-  #               console.error(`❌ Failed to trigger ${downstreamRepoName}:`, error.message);
-  #               core.setFailed(`Failed to dispatch to ${downstreamRepoName}`);
-  #             }
-  #           }
