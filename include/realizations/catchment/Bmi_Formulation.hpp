@@ -210,25 +210,7 @@ namespace realization {
             *output_text_stream << std::setprecision(output_precision);
         }
 
-        /**
-         * Get value for some BMI model variable at a specific index.
-         *
-         * Function gets the value for a provided variable, returned from the backing model as an array, and returns the
-         * specific value at the desired index cast as a double type.
-         *
-         * The function makes several assumptions:
-         *
-         *     1. `index` is within array bounds
-         *     2. `var_name` is in the set of valid variable names for the model
-         *     3. the type for output variable allows the value to be cast to a `double` appropriately
-         *
-         * It falls to user (functions) of this function to ensure these assumptions hold before invoking.
-         *
-         * @param index
-         * @param var_name
-         * @return
-         */
-        virtual double get_var_value_as_double(const int& index, const std::string& var_name) = 0;
+        virtual void update(time_step_t t_index, time_step_t t_delta) = 0;
 
     protected:
 
@@ -268,10 +250,6 @@ namespace realization {
             output_variable_names = out_var_names;
         }
 
-        void set_output_variable_units(const std::vector<std::string> &output_units) {
-            output_variable_units = output_units;
-        }
-
     private:
 
         std::string bmi_main_output_var;
@@ -281,11 +259,6 @@ namespace realization {
          * `output_variable_names`.
          */
         std::vector<std::string> output_header_fields;
-        /**
-         * Output units for the variables output by the realization, as defined in
-         * `output_variables`.
-         */
-        std::vector<std::string> output_variable_units;
         /**
          * Names of the variables to include in the output from this formulation, which will be some ordered subset of
          * the BMI module output variables accessible to the instance.

@@ -3,11 +3,34 @@
 ##############################
 # Stage: Base – Common Setup
 ##############################
+ARG ORG=ngwpc
 ARG NGEN_FORCING_IMAGE_TAG=latest
-FROM ghcr.io/ngwpc/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG} AS base
+ARG NGEN_FORCING_IMAGE=ghcr.io/ngwpc/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG}
+
+FROM ${NGEN_FORCING_IMAGE} AS base
 
 # Uncomment when building locally
 #FROM ngen-bmi-forcing AS base
+
+# OCI Metadata Arguments
+ARG NGEN_FORCING_IMAGE
+ARG BASE_IMAGE_DIGEST="unknown"
+ARG BASE_IMAGE_REVISION="unknown"
+ARG IMAGE_SOURCE="unknown"
+ARG IMAGE_VENDOR="unknown"
+ARG IMAGE_VERSION="unknown"
+ARG IMAGE_REVISION="unknown"
+ARG IMAGE_CREATED="unknown"
+
+# OCI Standard Labels
+LABEL org.opencontainers.image.base.name="${NGEN_FORCING_IMAGE}" \
+    org.opencontainers.image.base.digest="${BASE_IMAGE_DIGEST}" \
+    io.ngwpc.image.base.revision="${BASE_IMAGE_REVISION}" \
+    org.opencontainers.image.source="${IMAGE_SOURCE}" \
+    org.opencontainers.image.vendor="${IMAGE_VENDOR}" \
+    org.opencontainers.image.version="${IMAGE_VERSION}" \
+    org.opencontainers.image.revision="${IMAGE_REVISION}" \
+    org.opencontainers.image.created="${IMAGE_CREATED}"
 
 # cannot remove LANG even though https://bugs.python.org/issue19846 is fixed
 # last attempted removal of LANG broke many users:
@@ -195,7 +218,8 @@ RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
     pip3 install 'pandas' && \
     pip3 install 'pyyml' && \
     pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu && \
-    pip install /ngen-app/ngen-forcing/
+    pip install /ngen-app/ngen-forcing/ && \
+    pip install /ngen-app/ngen-forcing/nextgen_forcings_ewts/
 
 WORKDIR /ngen-app/
 
@@ -277,7 +301,7 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-snow17 \
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-sac-sma \
     set -eux && \
     cmake -B extern/sac-sma/cmake_build -S extern/sac-sma/ -DBOOST_ROOT=/opt/boost && \
-    cmake --build extern/sac-sma/cmake_build/ && \ 
+    cmake --build extern/sac-sma/cmake_build/ && \
     find /ngen-app/ngen/extern/sac-sma -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-soilmoistureprofiles \
@@ -297,6 +321,11 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ueb-bmi \
     cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/ueb-bmi/cmake_build/ && \
     find /ngen-app/ngen/extern/ueb-bmi/ -name '*.o' -exec rm -f {} +
+
+RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
+    set -eux; \
+    cd extern/lstm; \
+    pip install . ./lstm_ewts
 
 RUN set -eux && \
     mkdir --parents /ngencerf/data/ngen-run-logs/ && \
@@ -386,10 +415,8 @@ RUN set -eux && \
     mv /ngen-app/merged_git_info.json $GIT_INFO_PATH && \
     rm -rf /ngen-app/submodules-json
 
- # Extend PYTHONPATH for LSTM models (preserve venv path from ngen-bmi-forcing)
+# Extend PYTHONPATH for LSTM models (preserve venv path from ngen-bmi-forcing)
 ENV PYTHONPATH="${PYTHONPATH}:/ngen-app/ngen/extern/lstm:/ngen-app/ngen/extern/lstm/lstm"
-
-
 
 WORKDIR /
 SHELL ["/bin/bash", "-c"]
