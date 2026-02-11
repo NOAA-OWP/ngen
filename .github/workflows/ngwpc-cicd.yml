@@ -79,7 +79,7 @@ jobs:
 
           # clean ref name and short commit sha
           CLEAN_REF=$(echo "$REAL_REF" | tr '[:upper:]' '[:lower:]' | sed 's/\//-/g')
-          SHORT_SHA="${GITHUB_SHA:0:7}"
+          SHORT_SHA="${REAL_SHA:0:7}"
 
           # logic for the tags:
           # test_image_tag (commit short sha): used for the initial build and test
