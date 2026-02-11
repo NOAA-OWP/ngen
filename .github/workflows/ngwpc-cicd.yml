@@ -274,8 +274,6 @@ jobs:
       - name: Build & push image
         id: build_image
         uses: docker/build-push-action@v6
-        env:
-          BUILD_DATE: ${{ env.BUILD_DATE }}
         with:
           context: .
           # file: Dockerfile.test # comment out when done testing
