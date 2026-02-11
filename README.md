@@ -1,5 +1,6 @@
 ![](https://github.com/noaa-owp/ngen/workflows/Testing%20and%20Validation/badge.svg)
 [![](https://github.com/noaa-owp/ngen/workflows/Documentation/badge.svg)](https://noaa-owp.github.io/ngen/)
+[![DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/NOAA-OWP/ngen)
 
 # Next Gen Water Modeling Framework Prototype
 [![July 2020 webinar recording](https://img.youtube.com/vi/6XKPX4g9agY/0.jpg)](https://www.youtube.com/watch?v=6XKPX4g9agY)
