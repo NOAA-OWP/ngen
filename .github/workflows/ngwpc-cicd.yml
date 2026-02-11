@@ -207,7 +207,7 @@ jobs:
           tags: ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.test_image_tag }}
           build-args: |
             ORG=${{ needs.setup.outputs.org }}
-            NGEN_FORCING_IMAGE_TAG=${{ github.event.inputs.NGEN_FORCING_IMAGE_TAG || 'latest' }}
+            NGEN_FORCING_IMAGE_TAG=${{ inputs.NGEN_FORCING_IMAGE_TAG || 'latest' }}
             IMAGE_SOURCE=https://github.com/${{ github.repository }}
             IMAGE_VENDOR=${{ github.repository_owner }}
             IMAGE_VERSION=${{ needs.setup.outputs.clean_ref }}
