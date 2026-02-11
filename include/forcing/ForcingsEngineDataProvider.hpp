@@ -78,11 +78,14 @@ struct ForcingsEngineStorage {
         data_[key] = value;
     }
 
-    //! Clear all references to Forcings Engine instances.
+    //! Clear all references to Forcings Engine instances and run the Finalize methods on each BMI instance.
     //! @note This will not necessarily destroy the Forcings Engine instances. Since they
     //!       are reference counted, it will only decrement their instance by one.
-    void clear()
+    void finalize()
     {
+        for (auto &provider : data_) {
+            provider.second->Finalize();
+        }
         data_.clear();
     }
 
@@ -107,15 +110,24 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
     ~ForcingsEngineDataProvider() override = default;
     void finalize() override
     {
-        if (bmi_ != nullptr) {
-            bmi_->Finalize();
-            bmi_ = nullptr;
-        }
+        bmi_.reset();
     }
 
     boost::span<const std::string> get_available_variable_names() const override
     {
         return var_output_names_;
+    }
+
+    const std::string get_provider_units_for_variable(const std::string& name) const override
+    {
+        auto iter = var_output_units_map_.find(name);
+        if(iter != var_output_units_map_.end()){
+            return iter->second;
+        }
+        std::string throw_msg;
+        throw_msg.assign("Got request to retrieve units for variable '" + name + "', but it was not found in the data provider. This should not happen." + SOURCE_LOC);
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
     }
 
     long get_data_start_time() const override
@@ -237,6 +249,9 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
             // NOTE: using std::lround instead of static_cast will prevent potential UB
             time_step_ = std::chrono::seconds{std::lround(bmi_->GetTimeStep())};
             var_output_names_ = bmi_->GetOutputVarNames();
+            for (const std::string &output_var_name : var_output_names_) {
+                var_output_units_map_[output_var_name] = bmi_->GetVarUnits(output_var_name);
+            }
             if (Logger::GetLogger()->GetLogLevel() == LogLevel::DEBUG) {
                 ss.str(""); ss << "BMI instance initialized successfully" << std::endl;
                 LOG(LogLevel::DEBUG, ss.str());
@@ -291,6 +306,9 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
 
     //! Output variable names
     std::vector<std::string> var_output_names_{};
+
+    //! Units of Output variables
+    std::map<std::string, std::string> var_output_units_map_;
 
     //! Calendar time for simulation beginning
     clock_type::time_point time_begin_{};

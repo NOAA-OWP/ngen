@@ -124,6 +124,8 @@ namespace realization {
          */
         boost::span <const std::string> get_available_variable_names() const override;
 
+        const std::string get_provider_units_for_variable(const std::string& name) const override;
+
         /**
         * Get the input variables of 
         * the first nested BMI model.
@@ -398,32 +400,24 @@ namespace realization {
         double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
         {
             std::string output_name = selector.get_variable_name();
-            time_t init_time = selector.get_init_time();
-            long duration_s = selector.get_duration_secs();
-            std::string output_units = selector.get_output_units();
-            
             // If not found ...
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
                 std::string throw_msg; throw_msg.assign(get_formulation_type() + " cannot get output value for unknown " + output_name + SOURCE_LOC);
                 LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }
-            return availableData[output_name]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
+            return availableData[output_name]->get_value(selector, m);
         }
 
         std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
         {
             std::string output_name = selector.get_variable_name();
-            time_t init_time = selector.get_init_time();
-            long duration_s = selector.get_duration_secs();
-            std::string output_units = selector.get_output_units();
-
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
                 std::string throw_msg; throw_msg.assign(get_formulation_type() + " cannot get output values for unknown " + output_name + SOURCE_LOC);
                 LOG(throw_msg, LogLevel::WARNING);
                 throw std::runtime_error(throw_msg);
             }
-            return availableData[output_name]->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
+            return availableData[output_name]->get_values(selector, m);
         }
 
         bool is_bmi_input_variable(const std::string &var_name) const override;
@@ -539,6 +533,8 @@ namespace realization {
             }
         }
 
+        void update(time_step_t t_index, time_step_t t_delta) override;
+
     protected:
 
         /**
@@ -548,63 +544,6 @@ namespace realization {
          * @param needs_param_validation
          */
         void create_multi_formulation(geojson::PropertyMap properties, bool needs_param_validation);
-
-        /**
-         * Get value for some BMI model variable at a specific index.
-         *
-         * Function gets the value for a provided variable, retrieving the variable array from the backing model of the
-         * appropriate nested formulation. The function then returns the specific value at the desired index, cast as a
-         * double type.
-         *
-         * The function makes several assumptions:
-         *
-         *     1. `index` is within array bounds
-         *     2. `var_name` corresponds to a BMI variable for some nested module.
-         *     3. `var_name` is sufficient to identify what value needs to be retrieved
-         *     4. the type for output variable allows the value to be cast to a `double` appropriately
-         *
-         * Item 3. here can be inferred from 2. for non-multi formulations.  For multi formulations, this means the
-         * provided ``var_name`` must either be a unique BMI variable name among all nested module, or a unique mapped
-         * alias to a specific variable in a specific module.
-         *
-         * It falls to users of this function (i.e., other functions) to ensure these assumptions hold before invoking.
-         *
-         * @param index
-         * @param var_name
-         * @return
-         */
-        double get_var_value_as_double(const int& index, const std::string& var_name) override {
-            auto data_provider_iter = availableData.find(var_name);
-            if (data_provider_iter == availableData.end()) {
-                throw external::ExternalIntegrationException(
-                        "Multi BMI formulation can't find correct nested module for BMI variable " + var_name + SOURCE_LOC);
-            }
-            // Otherwise, we have a provider, and we can cast it based on the documented assumptions
-            try {
-                auto const& nested_module = data_provider_iter->second;
-                long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
-		auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"");
-                //TODO: After merge PR#405, try re-adding support for index
-                return nested_module->get_value(selector);
-            }
-            catch (data_access::unit_conversion_exception &uce) {
-                // We asked for it as a dimensionless quantity, "1", just above
-                static bool no_conversion_message_logged = false;
-                if (!no_conversion_message_logged) {
-                    no_conversion_message_logged = true;
-                    LOG("Output variables do not have unit conversion. Capability not yet implemented in ngen.", LogLevel::WARNING);
-                }
-                return uce.unconverted_values[0];
-            }
-            // If there was any problem with the cast and extraction of the value, throw runtime error
-            catch (std::exception &e) {
-                std::string throw_msg; throw_msg.assign("Multi BMI formulation can't use associated data provider as a nested module"
-                                         " when attempting to get values of BMI variable " + var_name + SOURCE_LOC);
-                LOG(throw_msg, LogLevel::WARNING);
-                throw std::runtime_error(throw_msg);
-                // TODO: look at adjusting defs to move this function up in class hierarchy (or at least add TODO there)
-            }
-        }
 
         /**
          * Initialize the deferred associations with the providers in @ref deferredProviders.
@@ -700,13 +639,14 @@ namespace realization {
                 if (availableData.count(framework_alias) > 0) {
                     std::string throw_msg; throw_msg.assign(
                             "Multi BMI cannot be created with module " + mod->get_model_type_name() +
-                            " with output variable " + framework_alias +
-                            (var_name == framework_alias ? "" : " (an alias of BMI variable " + var_name + ")") +
+                            " with output variable '" + framework_alias + "'" +
+                            (var_name == framework_alias ? "" : " (an alias of BMI variable '" + var_name + "')") +
                             " because a previous module is using this output variable name/alias.");
                     LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
                 availableData[framework_alias] = mod;
+                available_forcing_units[framework_alias] = mod->get_provider_units_for_variable(framework_alias);
             }
             module_variable_maps[mod_index] = var_aliases;
             return mod;
@@ -772,6 +712,13 @@ namespace realization {
 
         /** The set of available "forcings" (output variables, plus their mapped aliases) this instance can provide. */
         std::vector<std::string> available_forcings;
+
+        std::map<std::string, std::string> available_forcing_units;
+
+        std::vector<std::string> output_var_units;
+
+        std::vector<int> output_var_indices;
+
         /**
          * Any configured default values for outputs, keyed by framework alias (or var name if this is globally unique).
          */
