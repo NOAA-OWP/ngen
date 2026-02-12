@@ -10,6 +10,22 @@ void ngen::SurfaceLayer::update_models()
     
     Layer::update_models();
 
+    // On the first time step, check all the nexuses and warn user about ones have no contributing catchments
+    if (current_time_index == 0) {
+        for(const auto& id : features.nexuses()) {
+            #if NGEN_WITH_MPI
+            // When running with MPI, only be concerned with the local nexuses
+            if (!features.is_remote_sender_nexus(id) && features.nexus_at(id)->get_contributing_catchments().size() == 0)
+            #else
+            if (features.nexus_at(id)->get_contributing_catchments().size() == 0)
+            #endif
+            {
+                // Likely this means a flow value of 0.0, but that's dependent on the nexus class implementation
+                std::cout << "WARNING: Nexus "<< id << " has no contributing catchments for flow values!" << std::endl;
+            }
+        }
+    }
+
     //At this point, could make an internal routing pass, extracting flows from nexuses and routing
     //across the flowpath to the next nexus.
     //Once everything is updated for this timestep, dump the nexus output
