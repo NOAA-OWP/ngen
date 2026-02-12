@@ -15,10 +15,11 @@ void ngen::SurfaceLayer::update_models()
         for(const auto& id : features.nexuses()) {
             #if NGEN_WITH_MPI
             // When running with MPI, only be concerned with the local nexuses
-            if (!features.is_remote_sender_nexus(id) && features.nexus_at(id)->get_contributing_catchments().size() == 0) {
+            if (!features.is_remote_sender_nexus(id) && features.nexus_at(id)->get_contributing_catchments().size() == 0)
             #else
-            if (features.nexus_at(id)->get_contributing_catchments().size() == 0) {
+            if (features.nexus_at(id)->get_contributing_catchments().size() == 0)
             #endif
+            {
                 // Likely this means a flow value of 0.0, but that's dependent on the nexus class implementation
                 std::cout << "WARNING: Nexus "<< id << " has no contributing catchments for flow values!" << std::endl;
             }
