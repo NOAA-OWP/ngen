@@ -1,0 +1,1 @@
+from .bmi_model import bmi_model
