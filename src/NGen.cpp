@@ -565,24 +565,30 @@ int main(int argc, char *argv[]) {
     } //done time
 
 #if NGEN_WITH_MPI
-    MPI_Barrier(MPI_COMM_WORLD);
-#endif
+    // Ibarrier used to reduce the poll rate and cpu usage boosting performance on variable clock speed systems
+    MPI_Request barrier_request;
+    MPI_Ibarrier(MPI_COMM_WORLD, &barrier_request);
 
-    if (mpi_rank == 0)
-    {
-        std::cout << "Finished " << manager->Simulation_Time_Object->get_total_output_times() << " timesteps." << std::endl;
+    int flag = 0;
+    const int sleep_microseconds = 100000;  // 100 millisecond sleep
+
+    // Wait for all ranks to reach the barrier
+    while (!flag) {
+        MPI_Test(&barrier_request, &flag, MPI_STATUS_IGNORE);
+        if (!flag) {
+            usleep(sleep_microseconds);
+        }
     }
-
-    auto time_done_simulation = std::chrono::steady_clock::now();
-    std::chrono::duration<double> time_elapsed_simulation = time_done_simulation - time_done_init;
-
-#if NGEN_WITH_MPI
-    MPI_Barrier(MPI_COMM_WORLD);
 #endif
+    if (mpi_rank == 0) {    
+        std::cout << "Finished " << manager->Simulation_Time_Object->get_total_output_times() << " timesteps." << std::endl;
+
+        auto time_done_simulation = std::chrono::steady_clock::now();
+        std::chrono::duration<double> time_elapsed_simulation = time_done_simulation - time_done_init;
+
+
 
 #if NGEN_WITH_ROUTING
-    if (mpi_rank == 0)
-    { // Run t-route from single process
         if(manager->get_using_routing()) {
           //Note: Currently, delta_time is set in the t-route yaml configuration file, and the
           //number_of_timesteps is determined from the total number of nexus outputs in t-route.
@@ -594,14 +600,11 @@ int main(int argc, char *argv[]) {
           
           router->route(number_of_timesteps, delta_time); 
         }
-    }
 #endif
 
     auto time_done_routing = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_routing = time_done_routing - time_done_simulation;
 
-    if (mpi_rank == 0)
-    {
         std::cout << "NGen top-level timings:"
                   << "\n\tNGen::init: " << time_elapsed_init.count()
                   << "\n\tNGen::simulation: " << time_elapsed_simulation.count()
@@ -609,10 +612,28 @@ int main(int argc, char *argv[]) {
                   << "\n\tNGen::routing: " << time_elapsed_routing.count()
 #endif
                   << std::endl;
+#if NGEN_WITH_MPI
+        for (int i = 1; i < mpi_num_procs; ++i) {
+            MPI_Send(NULL, 0, MPI_INT, i, 0, MPI_COMM_WORLD);
+        }
+    }
+    else {
+        // Non-root processes
+        MPI_Request recv_request;
+        MPI_Irecv(NULL, 0, MPI_INT, 0, 0, MPI_COMM_WORLD, &recv_request);
+        
+        // manually waiting for troute to finish here to free up the cpu for troute to use it's own parallelism
+        int recv_flag = 0;
+        while (!recv_flag) {
+            MPI_Test(&recv_request, &recv_flag, MPI_STATUS_IGNORE);
+            if (!recv_flag) {
+                usleep(sleep_microseconds);
+            }
+        }
+#endif
     }
 
   manager->finalize();
-
 #if NGEN_WITH_MPI
     MPI_Finalize();
 #endif

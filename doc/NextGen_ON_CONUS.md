@@ -125,6 +125,18 @@ For code used to generate the initial config files for the various modules, the 
 
 The users are warned that since the simulated region is large, some of the initial config parameters values for some catchments may be unsuitable and cause the `ngen` execution to stop due to errors. Usually, in such cases, either `ngen` or the submodule itself may provide some hint as to the catchment ids or the location of the code that caused the error. Users may follow these hints to figure out as to which initial input parameter or parameters are initialized with inappropriate values. In the case of SFT, an initial value of `smcmax=1.0` would be too large. In the case of SMP, an initial value of `b=0.01` would be too small, for example.
 
+# Note on Parallel Computation with NetCDF Input data
+When running in parallel with NetCDF input data, you may encounter a disk IO bottleneck that gets worse with both the number of processes and the number of catchments.
+To remedy this, add the following `"enable_cache"` parameter to your realization.json. This parameter defaults to true if not included.
+```json
+    "forcing": {
+      "path": "./forcings/forcings.nc",
+      "provider": "NetCDF",
+      "enable_cache": false
+    }
+```   
+Depending on the partitions, speedups of ~1.5x-4x were observed with 157 catchments on a single machine with a sata ssda and 24 cores. The same tests on a 96 core machine yielded a ~5x-20x speedup
+
 # Build the Realization Configurations
 
 The realization configuration file, in JSON format, contains high level information to run a `ngen` simulation, such as interconnected submodules, paths to forcing file, shared libraries, initialization parameters, duration of simulation, I/O variables, etc. We have built the realization configurations for several commonly used submodules which are located in `data/baseline/`. These are built by adding one submodule at a time, performing a test run for a 10 day simulation. The successive submodules used are:
