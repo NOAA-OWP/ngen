@@ -72,6 +72,7 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
 		communication_type get_communicator_type() { return type; }
 
     private:
+        void post_receives();
         void process_communications();
 
         int world_rank;
