@@ -55,6 +55,22 @@ namespace realization {
                 //TODO seperate the parsing of configuration options like time
                 //and routing and other non feature specific tasks from this main function
                 //which has to iterate the entire hydrofabric.
+
+                // TODO: (later) consider whether this really belongs inside the global formulation
+                auto per_formulation_setting = tree.get_child_optional("per_formulation_nexus_files");
+                if (per_formulation_setting) {
+                    #if !NGEN_WITH_NETCDF
+                    throw std::runtime_error("ERROR: per_formulation_nexus_files is set to true, but NGEN was built without NetCDF support.");
+                    #elif NGEN_WITH_MPI and !NGEN_WITH_PARALLEL_NETCDF
+                    throw std::runtime_error("ERROR: per_formulation_nexus_files is set to true, but parallel NGEN was built without **parallel** NetCDF support.");
+                    #else // Implies either (NGEN_WITH_MPI and NGEN_WITH_PARALLEL_NETCDF) or (NGEN_WITH_NETCDF and !NGEN_WITH_MPI)
+                    use_per_formulation_nexus_files = per_formulation_setting->get_value<bool>();
+                    #endif
+                }
+                else {
+                    use_per_formulation_nexus_files = false;
+                }
+
                 auto possible_global_config = tree.get_child_optional("global");
 
                 if (possible_global_config) {
@@ -137,8 +153,16 @@ namespace realization {
 
                 /**
                  * Read catchment configurations from configuration file
-                 */      
+                 */
                 auto possible_catchment_configs = tree.get_child_optional("catchments");
+
+                // For now at least, this isn't allowed
+                if (possible_catchment_configs && use_per_formulation_nexus_files) {
+                    std::string msg = "ERROR: Individual catchment formulation configs are not allowed when using "
+                                      "per-formulation nexus files.";
+                    std::cerr << msg;
+                    throw std::runtime_error(msg);
+                }
 
                 if (possible_catchment_configs) {
                     for (std::pair<std::string, boost::property_tree::ptree> catchment_config : *possible_catchment_configs) {
@@ -217,6 +241,10 @@ namespace realization {
              */
             bool is_empty() {
                 return this->formulations.empty();
+            }
+
+            bool is_using_per_formulation_nexus_files() const {
+                return use_per_formulation_nexus_files;
             }
 
             typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator begin() const {
@@ -671,7 +699,10 @@ namespace realization {
 
             bool using_routing = false;
 
+            bool use_per_formulation_nexus_files;
+
             ngen::LayerDataStorage layer_storage;
+
     };
 }
 #endif // NGEN_FORMULATION_MANAGER_H

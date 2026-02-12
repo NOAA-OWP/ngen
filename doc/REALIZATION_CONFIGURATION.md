@@ -1,8 +1,12 @@
-## Realization Configuration
+# Realization Configuration
 
 TODO: Link to Doxygen build
 
+# Description and Top-Level Structure
+
 A Realization Configuration needs to be in [JSON format (JavaScript Object Notation)](https://www.json.org/json-en.html)
+
+## Required Top-Level Keys
 
 The Configuration is a key-value object and must contain these three first level object keys:
 * `global` 
@@ -15,7 +19,27 @@ The Configuration is a key-value object and must contain these three first level
 * `catchments` 
   *  is a key-value object that must include a list of individual catchments
 
-The configuration may *optionally* contain an `output_root` key with a user-defined root output directory as the key, for nexus and catchment outputs.
+## Optional Top-Level Keys
+
+### `output_root`
+The configuration may optionally contain an `output_root` key with a user-defined root output directory as the key, for nexus and catchment outputs.
+
+### `per_formulation_nexus_files`
+The configuration may optionally contain a `per_formulation_nexus_files` key with a boolean value to indicate per-formulation, NetCDF files should be used for writing nexus data, rather than the default of per-nexus CSV files.  Note that if `per_formulation_nexus_files` is set to `true`, the `catchments` cannot be used to define formulations for individual catchments, and the global formulation config must be used for all catchments.
+
+> [!IMPORTANT]
+> NetCDF support must be turned on for the ngen build to use this option for per-formulation NetCDF file.  This is done by including the `-DNGEN_WITH_NETCDF=ON` arg to CMake on the command line when generating a build directory.
+> 
+> Additionally, for ngen builds that also support MPI (i.e., `-DNGEN_WITH_MPI=ON`), using per-formulation NetCDF files also requires that NetCDF include [parallel I/O support](DEPENDENCIES.md#parallel-netcdf).
+
+### `catchments`
+The configuration may optionally contain a `catchments` key with a list of individual catchments that define their own formulations.  See [more details below](#catchments).
+
+### `routing`
+The configuration may optionally contain a `routing` key with a subobject that defines the path to the t-route config file (`t_route_config_file_with_path`).  It also optionally may contain a path to the t-route source code (`t_route_connection_path`), but this is reserved for advanced usage; generally, t-route should be installed as a package in the normal Python environment.
+
+## Example Top-Level Structure
+Either of these forms is allowed, with it also being valid to omit `output_root` in either case:
 
 ```
 {
@@ -25,6 +49,17 @@ The configuration may *optionally* contain an `output_root` key with a user-defi
    "output_root": "/path/to/output/"
 } 
 ```
+or
+```
+{
+   "global": {},
+   "time": {},
+   "output_root": "/path/to/output/",
+   "per_formulation_nexus_files": true|false
+} 
+```
+
+# The Global Section
 
 The `global` key-value object must contain the following two object keys:
 * `formulations` 
@@ -53,6 +88,8 @@ The `global` key-value object must contain the following two object keys:
 },  
 ```
 
+# The Time Section
+
 The `time` key-value object must contain the following three keys:
 * `start_time`
   * defines the UTC start time of the simulation and must be in the form `yyyy-mm-dd hh:mm:ss`
@@ -69,11 +106,13 @@ The `time` key-value object must contain the following three keys:
 },
 ```
 
+# Individual Catchments
+
 The `catchments` key-value object must contain a list of all of the catchment object keys that will have defined formulations, and each catchment key will have the following format:
 * `cat-` 
   * followed by the unique integer identifier for the catchment
 
-Each catchment is a key-value object and must have the following two object keys:
+Each catchment is a key-value object and must have the following two object keys, similar to the `global` section:
 * `formulations`
   * a list of formulation key-value objects that defines the required formulation(s), and each formulation object has a key `name` and value of a model that is registered with the ngen framework and includes a key-value subobject for `params`
   * Note: future versions could support breaking up `params` into additional key-value subobjects for `options` and `initial_conditions`
@@ -129,7 +168,18 @@ Each catchment is a key-value object and must have the following two object keys
     },
 ```
 
+# The Routing Section
+
+```json
+    "routing": {
+        "t_route_config_file_with_path": "extern/t-route/test/input/yaml/ngen.yaml"
+    }
+```
+
+# A Full Example
+
 An [example realization configuration](https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config.json).
 
+# A Note on BMI Models
 BMI is a commonly used model interface and formulation type used in ngen. [BMI documenation](https://github.com/NOAA-OWP/ngen/blob/master/doc/BMI_MODELS.md) with an example [for both Linux and macOS realizations](https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config_w_bmi_c__lin_mac.json).
 

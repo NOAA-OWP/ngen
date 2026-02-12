@@ -61,8 +61,11 @@ int mpi_num_procs;
 #include <Layer.hpp>
 #include <SurfaceLayer.hpp>
 #include <DomainLayer.hpp>
-
-std::unordered_map<std::string, std::ofstream> nexus_outfiles;
+#include "utilities/NexusOutputsMgr.hpp"
+#include "utilities/PerNexusCsvOutputMgr.hpp"
+#if NGEN_WITH_NETCDF
+#include "utilities/PerFormulationNexusOutputMgr.hpp"
+#endif
 
 void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
 {
@@ -442,18 +445,54 @@ int main(int argc, char *argv[]) {
     //catchment_collection.reset();
     nexus_collection.reset();
 
-    //Still hacking nexus output for the moment
-    for(const auto& id : features.nexuses()) {
+    std::shared_ptr<utils::NexusOutputsMgr> nexus_outputs_mgr;
+    #if NGEN_WITH_MPI
+    std::vector<std::string> nexus_ids;
+    std::copy_if(features.nexuses().begin(), features.nexuses().end(), std::back_inserter(nexus_ids),
+                 [&features](std::string nid) { return !features.is_remote_sender_nexus((nid)); });
+    // TODO: (later) I'd love to be able to use local_data.nexus_ids and local_data.remote_connections for this, but
+    // TODO:        they aren't well documented and I've already misused them once.  However, this could probably be
+    // TODO:        optimized in the future based on those.
+
+    #else
+    std::vector<std::string> nexus_ids(features.nexuses().begin(), features.nexuses().end());
+    #endif
+
+    if (manager->is_using_per_formulation_nexus_files()) {
+        // TODO: (later) use nullptr for now, until full support for multiple formulations per catchment is available
+        std::shared_ptr<std::vector<std::string>> formulation_ids = nullptr;
+
+        size_t timesteps = manager->Simulation_Time_Object->get_total_output_times();
         #if NGEN_WITH_MPI
-        if (mpi_num_procs > 1) {
-            if (!features.is_remote_sender_nexus(id)) {
-                nexus_outfiles[id].open(manager->get_output_root() + id + "_output.csv", std::ios::trunc);
-            }
-        } else {
-          nexus_outfiles[id].open(manager->get_output_root() + id + "_output.csv", std::ios::trunc);
+        std::vector<int> nexuses_per_rank(mpi_num_procs, 0);
+        nexuses_per_rank[mpi_rank] += nexus_ids.size();
+        for (int i = 0; i < mpi_num_procs; i++) {
+            MPI_Bcast(nexuses_per_rank.data() + i, 1, MPI_INT, i, MPI_COMM_WORLD);
+            MPI_Barrier(MPI_COMM_WORLD);
         }
+        #if NGEN_WITH_NETCDF and NGEN_WITH_PARALLEL_NETCDF
+        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root(), timesteps, mpi_rank, nexuses_per_rank);
         #else
-        nexus_outfiles[id].open(manager->get_output_root() + id + "_output.csv", std::ios::trunc);
+        throw std::runtime_error("Parallel NetCDF support required to use per-formulation nexus files.");
+        #endif
+
+        // One more barrier here to make sure other ranks wait while rank 0 creates the per-formulation nexus file
+        MPI_Barrier(MPI_COMM_WORLD);
+        #else
+
+        #if NGEN_WITH_NETCDF
+        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root(), timesteps);
+        #else
+        throw std::runtime_error("NetCDF support required to use per-formulation nexus files.");
+        #endif
+
+        #endif
+    }
+    else {
+        #if NGEN_WITH_MPI
+        nexus_outputs_mgr = std::make_shared<utils::PerNexusCsvOutputMgr>(nexus_ids, manager->get_output_root());
+        #else
+        nexus_outputs_mgr = std::make_shared<utils::PerNexusCsvOutputMgr>(nexus_ids, manager->get_output_root());
         #endif
     }
 
@@ -502,7 +541,7 @@ int main(int argc, char *argv[]) {
         }
         else
         {
-          layers[i] = std::make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, features, catchment_collection, 0, nexus_subset_ids, nexus_outfiles);
+          layers[i] = std::make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, features, catchment_collection, 0, nexus_subset_ids, nexus_outputs_mgr);
         }
       }
 
