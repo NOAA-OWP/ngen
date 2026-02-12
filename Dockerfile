@@ -42,7 +42,7 @@ ENV LANG="C.UTF-8" \
     HDF5_VERSION="1.10.11" \
     NETCDF_C_VERSION="4.7.4" \
     NETCDF_FORTRAN_VERSION="4.5.4" \
-    BOOST_VERSION="1.83.0"
+    BOOST_VERSION="1.86.0"
 
 # runtime dependencies
 RUN set -eux && \
