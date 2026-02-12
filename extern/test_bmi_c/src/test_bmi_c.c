@@ -19,5 +19,7 @@ extern int run(test_bmi_c_model* model, long dt)
     }
     model->current_model_time += (double)dt;
 
+    model->mass_stored = *model->output_var_1 - *model->input_var_1;
+    model->mass_leaked = 0;
     return 0;
 }

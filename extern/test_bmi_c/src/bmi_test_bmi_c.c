@@ -9,6 +9,7 @@
 #define INPUT_VAR_NAME_COUNT 2
 #define OUTPUT_VAR_NAME_COUNT 2
 #define PARAM_VAR_NAME_COUNT 3
+#define MASS_BALANCE_VAR_NAME_COUNT 4
 
 // Don't forget to update Get_value/Get_value_at_indices (and setter) implementation if these are adjusted
 static const char *output_var_names[OUTPUT_VAR_NAME_COUNT] = { "OUTPUT_VAR_1", "OUTPUT_VAR_2" };
@@ -33,6 +34,13 @@ static const char *param_var_units[PARAM_VAR_NAME_COUNT] = {  "m", "m/s", "m"};
 static const int param_var_item_count[PARAM_VAR_NAME_COUNT] = { 1, 1, 2 };
 static const char *param_var_grids[PARAM_VAR_NAME_COUNT] = { 0, 0, 0 };
 static const char *param_var_locations[PARAM_VAR_NAME_COUNT] = { "node", "node", "node" };
+
+static const char *mass_balance_var_names[MASS_BALANCE_VAR_NAME_COUNT] = { NGEN_MASS_IN, NGEN_MASS_OUT, NGEN_MASS_STORED, NGEN_MASS_LEAKED};
+static const char *mass_balance_var_types[MASS_BALANCE_VAR_NAME_COUNT] = { "double", "double", "double", "double"};
+static const char *mass_balance_var_units[MASS_BALANCE_VAR_NAME_COUNT] = { "m", "m", "m", "m" };
+static const int mass_balance_var_item_count[MASS_BALANCE_VAR_NAME_COUNT] = { 1, 1, 1, 1};
+static const char *mass_balance_var_grids[MASS_BALANCE_VAR_NAME_COUNT] = { 0, 0, 0, 0 };
+static const char *mass_balance_var_locations[MASS_BALANCE_VAR_NAME_COUNT] = { "node", "node", "node", "node" };
 
 static int Finalize (Bmi *self)
 {
@@ -387,6 +395,23 @@ static int Get_value_ptr (Bmi *self, const char *name, void **dest)
         *dest = ((test_bmi_c_model *)(self->data))->param_var_3;
         return BMI_SUCCESS;
     }
+
+    if (strcmp (name, NGEN_MASS_IN) == 0) {
+        *dest = ((test_bmi_c_model *)(self->data))->input_var_1;
+        return BMI_SUCCESS;
+    }
+    if (strcmp (name, NGEN_MASS_OUT) == 0) {
+        *dest = ((test_bmi_c_model *)(self->data))->output_var_1;
+        return BMI_SUCCESS;
+    }
+    if (strcmp (name, NGEN_MASS_STORED) == 0) {
+        *dest = &((test_bmi_c_model *)(self->data))->mass_stored;
+        return BMI_SUCCESS;
+    }
+    if (strcmp (name, NGEN_MASS_LEAKED) == 0) {
+        *dest = &((test_bmi_c_model *)(self->data))->mass_leaked;
+        return BMI_SUCCESS;
+    }
     return BMI_FAILURE;
 }
 
@@ -483,6 +508,14 @@ static int Get_var_nbytes (Bmi *self, const char *name, int * nbytes)
             }
         }
     }
+    if (item_count < 1) {
+        for (i = 0; i < MASS_BALANCE_VAR_NAME_COUNT; i++) {
+            if (strcmp(name, mass_balance_var_names[i]) == 0) {
+                item_count = mass_balance_var_item_count[i];
+                break;
+            }
+        }
+    }
     if (item_count < 1)
         item_count = ((test_bmi_c_model *) self->data)->num_time_steps;
 
@@ -515,6 +548,13 @@ static int Get_var_type (Bmi *self, const char *name, char * type)
             return BMI_SUCCESS;
         }
     }
+    // Finally check to see if in mass balance array
+    for (i = 0; i < MASS_BALANCE_VAR_NAME_COUNT; i++) {
+        if (strcmp(name, mass_balance_var_names[i]) == 0) {
+            snprintf(type, BMI_MAX_TYPE_NAME, "%s", mass_balance_var_types[i]);
+            return BMI_SUCCESS;
+        }
+    }
     // If we get here, it means the variable name wasn't recognized
     type[0] = '\0';
     return BMI_FAILURE;
@@ -535,6 +575,13 @@ static int Get_var_units (Bmi *self, const char *name, char * units)
     for (i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, input_var_names[i]) == 0) {
             snprintf(units, BMI_MAX_UNITS_NAME, "%s", input_var_units[i]);
+            return BMI_SUCCESS;
+        }
+    }
+    //Check for mass balance
+    for (i = 0; i < MASS_BALANCE_VAR_NAME_COUNT; i++) {
+        if (strcmp(name, mass_balance_var_names[i]) == 0) {
+            snprintf(units, BMI_MAX_UNITS_NAME, "%s", mass_balance_var_units[i]);
             return BMI_SUCCESS;
         }
     }
@@ -559,6 +606,9 @@ static int Initialize (Bmi *self, const char *file)
         return BMI_FAILURE;
     else
         model = (test_bmi_c_model *) self->data;
+
+    model->mass_stored = 0.0;
+    model->mass_leaked = 0.0;
 
     if (read_init_config(file, model) == BMI_FAILURE)
         return BMI_FAILURE;

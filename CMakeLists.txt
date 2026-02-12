@@ -165,7 +165,7 @@ add_compile_definitions(NGEN_SHARED_LIB_EXTENSION)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.79.0 REQUIRED)
+find_package(Boost 1.86.0 REQUIRED)
 
 # -----------------------------------------------------------------------------
 if(NGEN_WITH_SQLITE)
@@ -323,6 +323,7 @@ add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
 add_subdirectory("src/utilities/logging")
 add_subdirectory("src/utilities/python")
+add_subdirectory("src/utilities/bmi")
 
 target_link_libraries(ngen
     PUBLIC
@@ -336,6 +337,7 @@ target_link_libraries(ngen
         NGen::core_mediator
         NGen::logging
         NGen::parallel
+        NGen::bmi_protocols
 )
 
 if(NGEN_WITH_SQLITE)
@@ -493,3 +495,7 @@ ngen_dependent_multiline_message(NGEN_WITH_PYTHON
 message(STATUS "---------------------------------------------------------------------")
 
 configure_file("${NGEN_INC_DIR}/NGenConfig.h.in" "${CMAKE_CURRENT_BINARY_DIR}/include/NGenConfig.h")
+
+include(GNUInstallDirs)
+install(TARGETS ngen OPTIONAL)
+install(TARGETS partitionGenerator OPTIONAL)

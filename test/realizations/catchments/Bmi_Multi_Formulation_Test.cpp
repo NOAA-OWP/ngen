@@ -387,7 +387,7 @@ private:
         return s;
     }
 
-    inline void buildExampleConfig(const int ex_index) {
+    inline void buildExampleConfig(const int ex_index, const int nested_count) {
         std::string outputVariablesSubConfig = (ex_index == 6) ? buildExampleOutputVariablesSubConfig(ex_index, true) : buildExampleOutputVariablesSubConfig(ex_index) + "\n";
         std::string config =
                 "{\n"
@@ -403,10 +403,12 @@ private:
                 "                        \"init_config\": \"\",\n"
                 "                        \"allow_exceed_end_time\": true,\n"
                 "                        \"main_output_variable\": \"" + main_output_variables[ex_index] + "\",\n"
-                "                        \"modules\": [\n"
-                + buildExampleNestedModuleSubConfig(ex_index, 0) + ",\n"
-                + buildExampleNestedModuleSubConfig(ex_index, 1) + "\n"
-                "                        ],\n"
+                "                        \"modules\": [\n";
+        for (int i = 0; i < nested_count - 1; ++i) {
+            config += buildExampleNestedModuleSubConfig(ex_index, i) + ",\n";
+        }
+        config += buildExampleNestedModuleSubConfig(ex_index, nested_count - 1) + "\n";
+        config += "                        ],\n"
                 "                        \"uses_forcing_file\": false\n"
                 + outputVariablesSubConfig +
                 "                    }\n"
@@ -462,7 +464,7 @@ private:
         main_output_variables[ex_index] = nested_module_main_output_variables[ex_index][example_module_depth[ex_index] - 1];
         specified_output_variables[ex_index] = output_variables;
 
-        buildExampleConfig(ex_index);
+        buildExampleConfig(ex_index, nested_module_lists[ex_index].size());
     }
 
 
@@ -490,7 +492,7 @@ void Bmi_Multi_Formulation_Test::SetUp() {
 
     // Define this manually to set how many nested modules per example, and implicitly how many examples.
     // This means example_module_depth.size() example scenarios with example_module_depth[i] nested modules in each scenario.
-    example_module_depth = {2, 2, 2, 2, 2, 2, 2};
+    example_module_depth = {2, 2, 2, 2, 2, 2, 2, 3};
 
     // Initialize the members for holding required input and result test data for individual example scenarios
     setupExampleDataCollections();
@@ -533,7 +535,12 @@ void Bmi_Multi_Formulation_Test::SetUp() {
 
     initializeTestExample(6, "cat-27", {std::string(BMI_CPP_TYPE), std::string(BMI_FORTRAN_TYPE)}, { "OUTPUT_VAR_3","OUTPUT_VAR_3","OUTPUT_VAR_3" });
 
-   
+    #if NGEN_WITH_BMI_C
+    initializeTestExample(7, "cat-27", {std::string(BMI_C_TYPE), std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {"OUTPUT_VAR_1__0"}); // Output var from C module...
+    #else
+    initializeTestExample(7, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {"OUTPUT_VAR_1__0"}); // Output var from Fortran module...
+    
+    #endif // NGEN_WITH_PYTHON
 }
 
 /** Simple test to make sure the model config from example 0 initializes. */
@@ -940,6 +947,16 @@ TEST_F(Bmi_Multi_Formulation_Test, GetAvailableVariableNames) {
         );
     }
 }
+
+TEST_F(Bmi_Multi_Formulation_Test, MassBalanceCheck) {
+    int ex_index = 6;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+    
+    formulation.check_mass_balance(0, 1, "t0");
+}
+
 #endif // NGEN_WITH_BMI_C || NGEN_WITH_BMI_FORTRAN || NGEN_WITH_PYTHON
 
 #endif // NGEN_BMI_MULTI_FORMULATION_TEST_CPP

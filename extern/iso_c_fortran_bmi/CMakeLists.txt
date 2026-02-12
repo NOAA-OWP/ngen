@@ -33,5 +33,5 @@ install(TARGETS iso_c_bmi
 install(DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 configure_file(iso_c_bmi.pc.in iso_c_bmi.pc @ONLY)
-install(FILES ${CMAKE_BINARY_DIR}/iso_c_bmi.pc
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/iso_c_bmi.pc
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)

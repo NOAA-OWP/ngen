@@ -52,6 +52,10 @@ inputs:
       required: false
       description: 'Enable mpi support, only available for Linux runners'
       default: 'OFF'
+    build_extern:
+      required: false
+      description: 'Use external dependencies where possible'
+      default: 'OFF'
 outputs:
   build-dir:
     description: "Directory build was performed in"
@@ -110,64 +114,56 @@ runs:
           id: cache-boost-dep
           uses: actions/cache@v4
           with:
-            path: boost_1_79_0
+            path: boost_1_86_0
             key: unix-boost-dep
 
         - name: Get Boost Dependency
           if: steps.cache-boost-dep.outputs.cache-hit != 'true'
           run: |
-            curl -L -o boost_1_79_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.79.0/boost_1_79_0.tar.bz2/download
-            tar xjf boost_1_79_0.tar.bz2
+            curl -L -o boost_1_86_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.86.0/boost_1_86_0.tar.bz2/download
+            tar xjf boost_1_86_0.tar.bz2
           shell: bash
 
         - name: Set Pip Constraints
           run: |
             echo "numpy<2.0" > $GITHUB_WORKSPACE/constraints.txt
             echo "PIP_CONSTRAINT=$GITHUB_WORKSPACE/constraints.txt" >> $GITHUB_ENV
+            echo "UV_CONSTRAINT=$GITHUB_WORKSPACE/constraints.txt" >> $GITHUB_ENV
           shell: bash
 
-        - name: Cache Python Dependencies
-          id: cache-py3-dependencies
-          uses: actions/cache@v3
-          with:
-            path: .venv
-            key: ${{ runner.os }}-python-deps
+        - name: Add uv and Native Python Tooling Translations
+          if: |
+            inputs.use_python != 'OFF'
+          run: |
+            echo 'ACTIVATE_VENV_IF_USE_PYTHON=source .venv/bin/activate' >> $GITHUB_ENV
+            if command -v uv &>/dev/null; then
+              echo 'CREATE_VENV=uv venv .venv' >> $GITHUB_ENV
+              echo 'PIP_INSTALL=uv pip install' >> $GITHUB_ENV
+            else
+              echo 'CREATE_VENV=python3 -m venv .venv' >> $GITHUB_ENV
+              echo 'PIP_INSTALL=pip install' >> $GITHUB_ENV
+            fi
+          shell: bash
 
         - name: Get Numpy Python Dependency
-          # Tried conditioning the cache/install of python with an extra check:
-          # inputs.use_python != 'OFF' &&
-          # but what happens is that a runner not requiring python will create an empty cache
-          # and future runners will pull that and then fail...
-          # What we could do is try to create a master `requirements.txt`
-          # and/or a `test_requirements.txt` file that we can build the hash key from
-          # and read it from the repo...but we still have to always initialize the cache
-          # regardless of whether a given runner uses it, to avoid another runner failing to 
-          # find it.  Or just initialize this minimum requirement of numpy, and let the venv
-          # grow based on other runners needs, effectively building the cache with each new addition
           if: |
-            steps.cache-py3-dependencies.outputs.cache-hit != 'true'
+            inputs.use_python != 'OFF'
           run: |
-            python3 -m venv .venv
-            . .venv/bin/activate
-            pip install pip
-            pip install numpy
+            $CREATE_VENV
+            $ACTIVATE_VENV_IF_USE_PYTHON
+            echo $(which python3)
+            $PIP_INSTALL pip
+            $PIP_INSTALL numpy
             deactivate
           shell: bash
 
         - name: Init Additional Python Dependencies
-          # Don't condition additonal installs on a cache hit
-          # What will happen, however, is that the venv will get updated
-          # and thus the cache will get updated
-          # so any pip install will find modules already installed...
-          # if: |
-          #   inputs.additional_python_requirements != '' &&
-          #   steps.cache-py3-dependencies.outputs.cache-hit != 'true'
           if: |
+            inputs.use_python != 'OFF' &&
             inputs.additional_python_requirements != ''
           run: |
-            python3 -m venv .venv
-            . .venv/bin/activate
-            pip install -r ${{ inputs.additional_python_requirements }}
+            $ACTIVATE_VENV_IF_USE_PYTHON
+            $PIP_INSTALL -r ${{ inputs.additional_python_requirements }}
             deactivate
           shell: bash
 
@@ -185,13 +181,30 @@ runs:
 
         - name: Cmake Initialization
           id: cmake_init
+          # NOTE: -DCMAKE_POLICY_VERSION_MINIMUM=3.5 is required to use cmake version 4
+          # and with older pybind11 versions, the minimum cmake version is set to 3.4
+          # which causes cmake configuration to fail.
           run: |
-            export BOOST_ROOT="$(pwd)/boost_1_79_0"
-            export CFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -Werror"
-            export CXXFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override"
-            . .venv/bin/activate
+            export BOOST_ROOT="$(pwd)/boost_1_86_0"
+            export CFLAGS="-fsanitize=address -g -fno-omit-frame-pointer -Werror"
+            export CXXFLAGS="-fsanitize=address -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override"
+            if [ ${{ runner.os }} == 'macOS' ]
+            then
+              echo "fun:PyType_FromMetaclass" > /tmp/asan_ignore.txt
+              export CFLAGS="$CFLAGS -O0 -fsanitize-ignorelist=/tmp/asan_ignore.txt -fno-common"
+              export CXXFLAGS="$CXXFLAGS -O0 -fsanitize-ignorelist=/tmp/asan_ignore.txt -fno-common"
+            else
+              export CFLAGS="$CFLAGS -O1"
+              export CXXFLAGS="$CXXFLAGS -O1"
+            fi
+            # NOTE: this is not defined if inputs.use_python != 'ON'
+            $ACTIVATE_VENV_IF_USE_PYTHON
             [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
+            echo "Cmake Version:"
+            which cmake
+            cmake --version
             cmake -B ${{ inputs.build-dir }} \
+              -DNGEN_WITH_EXTERN_ALL:BOOL=${{ inputs.build_extern }} \
               -DNGEN_WITH_BMI_C:BOOL=${{ inputs.bmi_c }} \
               -DNGEN_WITH_PYTHON:BOOL=${{ inputs.use_python }} \
               -DNGEN_WITH_UDUNITS:BOOL=${{ inputs.use_udunits }} \
@@ -199,7 +212,9 @@ runs:
               -DNGEN_WITH_ROUTING:BOOL=${{ inputs.use_troute }} \
               -DNGEN_WITH_NETCDF:BOOL=${{ inputs.use_netcdf }} \
               -DNGEN_WITH_SQLITE:BOOL=${{ inputs.use_sqlite }} \
-              -DNGEN_WITH_MPI:BOOL=${{ inputs.use_mpi }} -S .
+              -DNGEN_WITH_MPI:BOOL=${{ inputs.use_mpi }} \
+              -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -S .
+              
             echo "build-dir=$(echo ${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
           shell: bash
 
@@ -209,8 +224,8 @@ runs:
             # Build Targets
             # Disable leak detection during test enumeration
             export ASAN_OPTIONS=detect_leaks=false
-            # Activate venv so that test discovery run during build works
-            . .venv/bin/activate
+            # NOTE: this is not defined if inputs.use_python != 'ON'
+            $ACTIVATE_VENV_IF_USE_PYTHON
             cmake --build ${{ inputs.build-dir }} --target ${{ inputs.targets }} -- -j  ${{ inputs.build-cores }}
           shell: bash
 
