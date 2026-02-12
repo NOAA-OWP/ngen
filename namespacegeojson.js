@@ -13,6 +13,7 @@ var namespacegeojson =
     [ "Object", "structgeojson_1_1_object.html", "structgeojson_1_1_object" ],
     [ "PointFeature", "classgeojson_1_1_point_feature.html", "classgeojson_1_1_point_feature" ],
     [ "PolygonFeature", "classgeojson_1_1_polygon_feature.html", "classgeojson_1_1_polygon_feature" ],
+    [ "SentinelFeature", "classgeojson_1_1_sentinel_feature.html", "classgeojson_1_1_sentinel_feature" ],
     [ "coordinate_t", "namespacegeojson.html#a1e973c44a04c54096fb9877033c21de5", null ],
     [ "Feature", "namespacegeojson.html#ab724970a20dff6100b94e25491292748", null ],
     [ "FeatureList", "namespacegeojson.html#ad8a5fd2f9372cc99bdbe55db73a64f0d", null ],
@@ -36,7 +37,8 @@ var namespacegeojson =
       [ "MultiPoint", "namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0a3cd60571b78c0f0e0cd78c2f96127bc0", null ],
       [ "MultiLineString", "namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0a6d0b0e1d146d35399060c10baabed5d6", null ],
       [ "MultiPolygon", "namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0a5645dd61a1073a52cf2476fd28f04a3b", null ],
-      [ "GeometryCollection", "namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0aa56fbded614f111bf2bc4741d0f5ad09", null ]
+      [ "GeometryCollection", "namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0aa56fbded614f111bf2bc4741d0f5ad09", null ],
+      [ "Sentinel", "namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0a7b71dfec5c8dd524069eed634dc0a3a5", null ]
     ] ],
     [ "JSONGeometryType", "namespacegeojson.html#a316aa4b4d9aba725f7c899a598b33cb5", [
       [ "None", "namespacegeojson.html#a316aa4b4d9aba725f7c899a598b33cb5a6adf97f83acf6453d4a6a4b1070f3754", null ],

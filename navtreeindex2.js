@@ -13,12 +13,13 @@ var NAVTREEINDEX2 =
 "class_visitor.html#a17082dc5632ed40293f3b589348fb426":[24,0,63,1],
 "class_visitor.html#a2268e4f625d9ace11b788d3cfd82af73":[24,0,63,4],
 "class_visitor.html#a2e9a7089d5714c299733c3a4483e495f":[24,0,63,6],
-"class_visitor.html#a3eb2cd9d4d15c13b69c011e8df28d03b":[24,0,63,8],
+"class_visitor.html#a3eb2cd9d4d15c13b69c011e8df28d03b":[24,0,63,9],
 "class_visitor.html#a47acac126f18a81d0a673c50b970e8e2":[24,0,63,3],
 "class_visitor.html#a4f075bc5c429e201ee31d7f1161d6c57":[24,0,63,0],
 "class_visitor.html#aa66fcfb48a820890361bbd02a49a5d99":[24,0,63,5],
 "class_visitor.html#ab663b5600c24cf1a5892ec6efb08efcd":[24,0,63,7],
 "class_visitor.html#ae06789445c0a1d5ba94d4dcfdcac7636":[24,0,63,2],
+"class_visitor.html#affe28f9bc04407a2c1ae812a9bf971f8":[24,0,63,8],
 "classbmi_1_1_bmi.html":[23,0,0,0],
 "classbmi_1_1_bmi.html":[24,0,0,0],
 "classbmi_1_1_bmi.html#a00f64e1b8841c7a259de3aa8713597db":[23,0,0,0,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "classdata__access_1_1_optional_wrapped_data_provider.html#ae60095f82591ea53f01ef6ce37ede50d":[23,0,1,3,28],
 "classdata__access_1_1_optional_wrapped_data_provider.html#ae60095f82591ea53f01ef6ce37ede50d":[24,0,1,2,28],
 "classdata__access_1_1_optional_wrapped_data_provider.html#aedc8d5253a79ce0b4f79edf5a23a85e2":[23,0,1,3,15],
-"classdata__access_1_1_optional_wrapped_data_provider.html#aedc8d5253a79ce0b4f79edf5a23a85e2":[24,0,1,2,15],
-"classdata__access_1_1_wrapped_data_provider.html":[23,0,1,4]
+"classdata__access_1_1_optional_wrapped_data_provider.html#aedc8d5253a79ce0b4f79edf5a23a85e2":[24,0,1,2,15]
 };

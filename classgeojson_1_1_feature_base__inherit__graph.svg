@@ -47,7 +47,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 958;
+var viewWidth = 1090;
 var viewHeight = 845;
 var sectionId = 'dynsection-0';
 </script>
@@ -59,73 +59,73 @@ var sectionId = 'dynsection-0';
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title="Represents an individual feature within a Geojson definition.">
-<polygon fill="#999999" stroke="none" points="547.75,-837 420.25,-837 420.25,-345 547.75,-345 547.75,-837"/>
-<text text-anchor="start" x="437.12" y="-823.5" font-family="Helvetica,sans-Serif" font-size="10.00">geojson::FeatureBase</text>
-<text text-anchor="start" x="424.62" y="-808.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-808.25" font-family="Helvetica,sans-Serif" font-size="10.00">type</text>
-<text text-anchor="start" x="424.62" y="-793" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-793" font-family="Helvetica,sans-Serif" font-size="10.00">geom</text>
-<text text-anchor="start" x="424.62" y="-777.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-777.75" font-family="Helvetica,sans-Serif" font-size="10.00">geometry_collection</text>
-<text text-anchor="start" x="424.62" y="-762.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-762.5" font-family="Helvetica,sans-Serif" font-size="10.00">properties</text>
-<text text-anchor="start" x="424.62" y="-747.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-747.25" font-family="Helvetica,sans-Serif" font-size="10.00">bounding_box</text>
-<text text-anchor="start" x="424.62" y="-732" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-732" font-family="Helvetica,sans-Serif" font-size="10.00">foreign_members</text>
-<text text-anchor="start" x="424.62" y="-716.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-716.75" font-family="Helvetica,sans-Serif" font-size="10.00">id</text>
-<text text-anchor="start" x="424.62" y="-701.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-701.5" font-family="Helvetica,sans-Serif" font-size="10.00">origination</text>
-<text text-anchor="start" x="424.62" y="-686.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-686.25" font-family="Helvetica,sans-Serif" font-size="10.00">destination</text>
-<text text-anchor="start" x="424.62" y="-671" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-671" font-family="Helvetica,sans-Serif" font-size="10.00">neighbors</text>
-<text text-anchor="start" x="424.25" y="-655.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-655.75" font-family="Helvetica,sans-Serif" font-size="10.00">FeatureBase()</text>
-<text text-anchor="start" x="424.25" y="-640.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-640.5" font-family="Helvetica,sans-Serif" font-size="10.00">~FeatureBase()</text>
-<text text-anchor="start" x="424.25" y="-625.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-625.25" font-family="Helvetica,sans-Serif" font-size="10.00">get_type()</text>
-<text text-anchor="start" x="424.25" y="-610" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-610" font-family="Helvetica,sans-Serif" font-size="10.00">add_origination_feature()</text>
-<text text-anchor="start" x="424.25" y="-594.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-594.75" font-family="Helvetica,sans-Serif" font-size="10.00">add_destination_feature()</text>
-<text text-anchor="start" x="424.25" y="-579.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-579.5" font-family="Helvetica,sans-Serif" font-size="10.00">assign_neighbors()</text>
-<text text-anchor="start" x="424.25" y="-564.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-564.25" font-family="Helvetica,sans-Serif" font-size="10.00">add_neighbor_feature()</text>
-<text text-anchor="start" x="424.25" y="-549" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-549" font-family="Helvetica,sans-Serif" font-size="10.00">get_property()</text>
-<text text-anchor="start" x="424.25" y="-533.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-533.75" font-family="Helvetica,sans-Serif" font-size="10.00">set_id()</text>
-<text text-anchor="start" x="424.25" y="-518.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-518.5" font-family="Helvetica,sans-Serif" font-size="10.00">get()</text>
-<text text-anchor="start" x="424.25" y="-503.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-503.25" font-family="Helvetica,sans-Serif" font-size="10.00">set()</text>
-<text text-anchor="start" x="424.25" y="-488" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-488" font-family="Helvetica,sans-Serif" font-size="10.00">set()</text>
-<text text-anchor="start" x="424.25" y="-472.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-472.75" font-family="Helvetica,sans-Serif" font-size="10.00">set()</text>
-<text text-anchor="start" x="424.25" y="-457.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-457.5" font-family="Helvetica,sans-Serif" font-size="10.00">set()</text>
-<text text-anchor="start" x="424.25" y="-442.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="434.25" y="-442.25" font-family="Helvetica,sans-Serif" font-size="10.00">set()</text>
-<text text-anchor="start" x="434.25" y="-427" font-family="Helvetica,sans-Serif" font-size="10.00">and 31 more...</text>
-<text text-anchor="start" x="424.62" y="-411.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-411.75" font-family="Helvetica,sans-Serif" font-size="10.00">FeatureBase()</text>
-<text text-anchor="start" x="424.62" y="-396.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-396.5" font-family="Helvetica,sans-Serif" font-size="10.00">break_links()</text>
-<text text-anchor="start" x="424.62" y="-381.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-381.25" font-family="Helvetica,sans-Serif" font-size="10.00">remove_destination()</text>
-<text text-anchor="start" x="424.62" y="-366" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-366" font-family="Helvetica,sans-Serif" font-size="10.00">remove_origination()</text>
-<text text-anchor="start" x="424.62" y="-350.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="434.25" y="-350.75" font-family="Helvetica,sans-Serif" font-size="10.00">remove_neighbor()</text>
-<polygon fill="#666666" stroke="#666666" points="420.25,-819.75 420.25,-819.75 547.75,-819.75 547.75,-819.75 420.25,-819.75"/>
-<polygon fill="#666666" stroke="#666666" points="420.25,-667.25 420.25,-667.25 432.25,-667.25 432.25,-667.25 420.25,-667.25"/>
-<polygon fill="#666666" stroke="#666666" points="432.25,-667.25 432.25,-667.25 547.75,-667.25 547.75,-667.25 432.25,-667.25"/>
-<polygon fill="none" stroke="#666666" points="420.25,-345 420.25,-837 547.75,-837 547.75,-345 420.25,-345"/>
+<polygon fill="#999999" stroke="none" points="620.75,-837 493.25,-837 493.25,-345 620.75,-345 620.75,-837"/>
+<text text-anchor="start" x="510.12" y="-823.5" font-family="Helvetica,sans-Serif" font-size="10.00">geojson::FeatureBase</text>
+<text text-anchor="start" x="497.62" y="-808.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-808.25" font-family="Helvetica,sans-Serif" font-size="10.00">type</text>
+<text text-anchor="start" x="497.62" y="-793" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-793" font-family="Helvetica,sans-Serif" font-size="10.00">geom</text>
+<text text-anchor="start" x="497.62" y="-777.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-777.75" font-family="Helvetica,sans-Serif" font-size="10.00">geometry_collection</text>
+<text text-anchor="start" x="497.62" y="-762.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-762.5" font-family="Helvetica,sans-Serif" font-size="10.00">properties</text>
+<text text-anchor="start" x="497.62" y="-747.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-747.25" font-family="Helvetica,sans-Serif" font-size="10.00">bounding_box</text>
+<text text-anchor="start" x="497.62" y="-732" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-732" font-family="Helvetica,sans-Serif" font-size="10.00">foreign_members</text>
+<text text-anchor="start" x="497.62" y="-716.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-716.75" font-family="Helvetica,sans-Serif" font-size="10.00">id</text>
+<text text-anchor="start" x="497.62" y="-701.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-701.5" font-family="Helvetica,sans-Serif" font-size="10.00">origination</text>
+<text text-anchor="start" x="497.62" y="-686.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-686.25" font-family="Helvetica,sans-Serif" font-size="10.00">destination</text>
+<text text-anchor="start" x="497.62" y="-671" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-671" font-family="Helvetica,sans-Serif" font-size="10.00">neighbors</text>
+<text text-anchor="start" x="497.25" y="-655.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-655.75" font-family="Helvetica,sans-Serif" font-size="10.00">FeatureBase()</text>
+<text text-anchor="start" x="497.25" y="-640.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-640.5" font-family="Helvetica,sans-Serif" font-size="10.00">~FeatureBase()</text>
+<text text-anchor="start" x="497.25" y="-625.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-625.25" font-family="Helvetica,sans-Serif" font-size="10.00">get_type()</text>
+<text text-anchor="start" x="497.25" y="-610" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-610" font-family="Helvetica,sans-Serif" font-size="10.00">add_origination_feature()</text>
+<text text-anchor="start" x="497.25" y="-594.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-594.75" font-family="Helvetica,sans-Serif" font-size="10.00">add_destination_feature()</text>
+<text text-anchor="start" x="497.25" y="-579.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-579.5" font-family="Helvetica,sans-Serif" font-size="10.00">assign_neighbors()</text>
+<text text-anchor="start" x="497.25" y="-564.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-564.25" font-family="Helvetica,sans-Serif" font-size="10.00">add_neighbor_feature()</text>
+<text text-anchor="start" x="497.25" y="-549" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-549" font-family="Helvetica,sans-Serif" font-size="10.00">get_property()</text>
+<text text-anchor="start" x="497.25" y="-533.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-533.75" font-family="Helvetica,sans-Serif" font-size="10.00">set_id()</text>
+<text text-anchor="start" x="497.25" y="-518.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-518.5" font-family="Helvetica,sans-Serif" font-size="10.00">get()</text>
+<text text-anchor="start" x="497.25" y="-503.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-503.25" font-family="Helvetica,sans-Serif" font-size="10.00">set()</text>
+<text text-anchor="start" x="497.25" y="-488" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-488" font-family="Helvetica,sans-Serif" font-size="10.00">set()</text>
+<text text-anchor="start" x="497.25" y="-472.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-472.75" font-family="Helvetica,sans-Serif" font-size="10.00">set()</text>
+<text text-anchor="start" x="497.25" y="-457.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-457.5" font-family="Helvetica,sans-Serif" font-size="10.00">set()</text>
+<text text-anchor="start" x="497.25" y="-442.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="507.25" y="-442.25" font-family="Helvetica,sans-Serif" font-size="10.00">set()</text>
+<text text-anchor="start" x="507.25" y="-427" font-family="Helvetica,sans-Serif" font-size="10.00">and 31 more...</text>
+<text text-anchor="start" x="497.62" y="-411.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-411.75" font-family="Helvetica,sans-Serif" font-size="10.00">FeatureBase()</text>
+<text text-anchor="start" x="497.62" y="-396.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-396.5" font-family="Helvetica,sans-Serif" font-size="10.00">break_links()</text>
+<text text-anchor="start" x="497.62" y="-381.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-381.25" font-family="Helvetica,sans-Serif" font-size="10.00">remove_destination()</text>
+<text text-anchor="start" x="497.62" y="-366" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-366" font-family="Helvetica,sans-Serif" font-size="10.00">remove_origination()</text>
+<text text-anchor="start" x="497.62" y="-350.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="507.25" y="-350.75" font-family="Helvetica,sans-Serif" font-size="10.00">remove_neighbor()</text>
+<polygon fill="#666666" stroke="#666666" points="493.25,-819.75 493.25,-819.75 620.75,-819.75 620.75,-819.75 493.25,-819.75"/>
+<polygon fill="#666666" stroke="#666666" points="493.25,-667.25 493.25,-667.25 505.25,-667.25 505.25,-667.25 493.25,-667.25"/>
+<polygon fill="#666666" stroke="#666666" points="505.25,-667.25 505.25,-667.25 620.75,-667.25 620.75,-667.25 505.25,-667.25"/>
+<polygon fill="none" stroke="#666666" points="493.25,-345 493.25,-837 620.75,-837 620.75,-345 493.25,-345"/>
 </a>
 </g>
 </g>
@@ -182,8 +182,8 @@ var sectionId = 'dynsection-0';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node1&#45;&gt;Node2</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M410.62,-546.42C332.69,-497.07 210.08,-410.23 131,-309 127.84,-304.96 124.79,-300.76 121.85,-296.43"/>
-<polygon fill="none" stroke="#63b8ff" points="408.76,-549.38 419.08,-551.74 412.48,-543.46 408.76,-549.38"/>
+<path fill="none" stroke="#63b8ff" d="M483.14,-557.28C390.19,-512.86 230.66,-425.47 131,-309 127.86,-305.33 124.83,-301.49 121.92,-297.53"/>
+<polygon fill="none" stroke="#63b8ff" points="481.41,-560.33 491.94,-561.44 484.4,-554 481.41,-560.33"/>
 </a>
 </g>
 </g>
@@ -214,8 +214,8 @@ var sectionId = 'dynsection-0';
 <g id="edge2_Node000001_Node000003" class="edge">
 <title>Node1&#45;&gt;Node3</title>
 <g id="a_edge2_Node000001_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M413.13,-505.5C369.63,-451.35 314.5,-378.45 273,-309 254.1,-277.37 236.66,-239.86 223.8,-209.84"/>
-<polygon fill="none" stroke="#63b8ff" points="410.33,-507.6 419.33,-513.18 415.77,-503.2 410.33,-507.6"/>
+<path fill="none" stroke="#63b8ff" d="M484.87,-531.63C422.72,-478.54 333.7,-395.49 273,-309 251.49,-278.36 233.8,-240.16 221.45,-209.54"/>
+<polygon fill="none" stroke="#63b8ff" points="482.41,-534.13 492.3,-537.94 486.94,-528.8 482.41,-534.13"/>
 </a>
 </g>
 </g>
@@ -247,8 +247,8 @@ var sectionId = 'dynsection-0';
 <g id="edge3_Node000001_Node000004" class="edge">
 <title>Node1&#45;&gt;Node4</title>
 <g id="a_edge3_Node000001_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M416.85,-383.08C396.92,-321.66 376.63,-259.13 362.37,-215.2"/>
-<polygon fill="none" stroke="#63b8ff" points="413.42,-383.85 419.84,-392.28 420.08,-381.69 413.42,-383.85"/>
+<path fill="none" stroke="#63b8ff" d="M488.14,-457.23C464.28,-410.55 437.61,-357.63 414,-309 399.06,-278.23 383.01,-243.67 369.96,-215.15"/>
+<polygon fill="none" stroke="#63b8ff" points="484.99,-458.74 492.66,-466.05 491.22,-455.55 484.99,-458.74"/>
 </a>
 </g>
 </g>
@@ -279,8 +279,8 @@ var sectionId = 'dynsection-0';
 <g id="edge4_Node000001_Node000005" class="edge">
 <title>Node1&#45;&gt;Node5</title>
 <g id="a_edge4_Node000001_Node000005"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M484,-333.8C484,-286.86 484,-242.43 484,-209.66"/>
-<polygon fill="none" stroke="#63b8ff" points="480.5,-333.62 484,-343.62 487.5,-333.62 480.5,-333.62"/>
+<path fill="none" stroke="#63b8ff" d="M513.96,-333.8C506.07,-286.86 498.6,-242.43 493.1,-209.66"/>
+<polygon fill="none" stroke="#63b8ff" points="510.5,-334.36 515.61,-343.64 517.4,-333.2 510.5,-334.36"/>
 </a>
 </g>
 </g>
@@ -311,8 +311,8 @@ var sectionId = 'dynsection-0';
 <g id="edge5_Node000001_Node000006" class="edge">
 <title>Node1&#45;&gt;Node6</title>
 <g id="a_edge5_Node000001_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M551.33,-390.99C573.81,-324.54 597.07,-255.8 612.61,-209.86"/>
-<polygon fill="none" stroke="#63b8ff" points="548.1,-389.61 548.21,-400.2 554.73,-391.85 548.1,-389.61"/>
+<path fill="none" stroke="#63b8ff" d="M600.63,-333.8C608.63,-286.86 616.2,-242.43 621.78,-209.66"/>
+<polygon fill="none" stroke="#63b8ff" points="597.19,-333.19 598.96,-343.64 604.09,-334.37 597.19,-333.19"/>
 </a>
 </g>
 </g>
@@ -343,8 +343,8 @@ var sectionId = 'dynsection-0';
 <g id="edge6_Node000001_Node000007" class="edge">
 <title>Node1&#45;&gt;Node7</title>
 <g id="a_edge6_Node000001_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M555.04,-513.56C602.61,-459.47 664.13,-383.57 707,-309 724.97,-277.74 739.78,-240.07 750.2,-209.87"/>
-<polygon fill="none" stroke="#63b8ff" points="552.54,-511.1 548.54,-520.91 557.78,-515.74 552.54,-511.1"/>
+<path fill="none" stroke="#63b8ff" d="M626.11,-468.08C652.71,-419.27 682.55,-362.1 707,-309 721.9,-276.64 736.5,-239.45 747.56,-209.78"/>
+<polygon fill="none" stroke="#63b8ff" points="623.11,-466.27 621.39,-476.72 629.25,-469.63 623.11,-466.27"/>
 </a>
 </g>
 </g>
@@ -373,8 +373,34 @@ var sectionId = 'dynsection-0';
 <g id="edge7_Node000001_Node000008" class="edge">
 <title>Node1&#45;&gt;Node8</title>
 <g id="a_edge7_Node000001_Node000008"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M557,-545.41C633.08,-495.79 751.52,-409.27 827,-309 851.25,-276.79 868.62,-234.3 879.44,-202.19"/>
-<polygon fill="none" stroke="#63b8ff" points="555.24,-542.38 548.74,-550.75 559.04,-548.25 555.24,-542.38"/>
+<path fill="none" stroke="#63b8ff" d="M629.11,-528.48C688.24,-475.11 771.03,-393.36 827,-309 849.13,-275.64 866.58,-233.64 877.97,-202.01"/>
+<polygon fill="none" stroke="#63b8ff" points="626.8,-525.85 621.69,-535.13 631.47,-531.06 626.8,-525.85"/>
+</a>
+</g>
+</g>
+<!-- Node9 -->
+<g id="Node000009" class="node">
+<title>Node9</title>
+<g id="a_Node000009"><a xlink:href="classgeojson_1_1_sentinel_feature.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="none" points="1082.25,-187 967.75,-187 967.75,-122 1082.25,-122 1082.25,-187"/>
+<text text-anchor="start" x="971.75" y="-173.5" font-family="Helvetica,sans-Serif" font-size="10.00">geojson::SentinelFeature</text>
+<text text-anchor="start" x="1023.5" y="-158.25" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="977.31" y="-143" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="992.88" y="-143" font-family="Helvetica,sans-Serif" font-size="10.00">SentinelFeature()</text>
+<text text-anchor="start" x="977.31" y="-127.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="992.88" y="-127.75" font-family="Helvetica,sans-Serif" font-size="10.00">visit()</text>
+<polygon fill="#666666" stroke="#666666" points="967.75,-169.75 967.75,-169.75 1082.25,-169.75 1082.25,-169.75 967.75,-169.75"/>
+<polygon fill="#666666" stroke="#666666" points="967.75,-154.5 967.75,-154.5 1082.25,-154.5 1082.25,-154.5 967.75,-154.5"/>
+<polygon fill="none" stroke="#666666" points="967.75,-122 967.75,-187 1082.25,-187 1082.25,-122 967.75,-122"/>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node9 -->
+<g id="edge8_Node000001_Node000009" class="edge">
+<title>Node1&#45;&gt;Node9</title>
+<g id="a_edge8_Node000001_Node000009"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M630.89,-554.58C719.45,-508.84 867.33,-421.58 959,-309 988.95,-272.22 1007.56,-219.81 1017.11,-186.73"/>
+<polygon fill="none" stroke="#63b8ff" points="629.32,-551.45 622.01,-559.12 632.51,-557.68 629.32,-551.45"/>
 </a>
 </g>
 </g>

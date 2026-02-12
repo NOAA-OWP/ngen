@@ -727,6 +727,7 @@
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a8b9b426ee56d01fe1dd900d712f3bf4d"/>
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a77c21007c7e92d9847aa42eb67867ff1"/>
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a2676b1f6dbb3071b3d32df3712b43855"/>
+          <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a4d0001b6778cac69ae6e13fec284b2fb"/>
         </topic>
         <topic label="JSONProperty" href="classgeojson_1_1_j_s_o_n_property.html">
           <topic label="AsVectorVisitor" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html">
@@ -1161,6 +1162,67 @@
           <topic label="properties" href="classgeojson_1_1_polygon_feature.html#a8b5b4e112d4b3559c8876126f1f1412c"/>
           <topic label="type" href="classgeojson_1_1_polygon_feature.html#ac2786341bb4e570fa8d60fefe18dbe0f"/>
         </topic>
+        <topic label="SentinelFeature" href="classgeojson_1_1_sentinel_feature.html">
+          <topic label="SentinelFeature" href="classgeojson_1_1_sentinel_feature.html#a281590499f35bd6404a14f7f7937bb16"/>
+          <topic label="add_destination_feature" href="classgeojson_1_1_sentinel_feature.html#aac23f8caae143de17e37ce091b3b069e"/>
+          <topic label="add_neighbor_feature" href="classgeojson_1_1_sentinel_feature.html#adfb6ba4107e752620dcb9a04aeb4a158"/>
+          <topic label="add_origination_feature" href="classgeojson_1_1_sentinel_feature.html#a29b6852ed6a7359d1e844de4faa9f170"/>
+          <topic label="assign_neighbors" href="classgeojson_1_1_sentinel_feature.html#a3ff99f3984c2097aedd6207a8f1eb5f8"/>
+          <topic label="break_links" href="classgeojson_1_1_sentinel_feature.html#a30269e3419054d9f3e06e4d1c74b44e0"/>
+          <topic label="destination_features" href="classgeojson_1_1_sentinel_feature.html#aa019c821447761d1254a66d23a75b3bc"/>
+          <topic label="geometry" href="classgeojson_1_1_sentinel_feature.html#af8baac5c089adc79a5e10b216a654958"/>
+          <topic label="geometry" href="classgeojson_1_1_sentinel_feature.html#a099497ede94011cda55f2a8309d7be62"/>
+          <topic label="geometry" href="classgeojson_1_1_sentinel_feature.html#ad821415b00bf3b84764ad4c39e978d6d"/>
+          <topic label="get" href="classgeojson_1_1_sentinel_feature.html#a85efe89fcc761fe2f16b13939b71acda"/>
+          <topic label="get_bounding_box" href="classgeojson_1_1_sentinel_feature.html#ad4b899e57b5f11cf0bde1e3d63a9d1c6"/>
+          <topic label="get_contributor_count" href="classgeojson_1_1_sentinel_feature.html#a5c6ed83a4ed8de19e1978cf81316f034"/>
+          <topic label="get_destination_feature" href="classgeojson_1_1_sentinel_feature.html#a21534cea70924836aae67ad39ac236c3"/>
+          <topic label="get_destination_length" href="classgeojson_1_1_sentinel_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
+          <topic label="get_geometry_collection" href="classgeojson_1_1_sentinel_feature.html#a984573e0ad014345634d5e859846ef35"/>
+          <topic label="get_id" href="classgeojson_1_1_sentinel_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_sentinel_feature.html#ae4569552d1767dad95836c54a582658e"/>
+          <topic label="get_number_of_destination_features" href="classgeojson_1_1_sentinel_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
+          <topic label="get_number_of_neighbors" href="classgeojson_1_1_sentinel_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
+          <topic label="get_number_of_origination_features" href="classgeojson_1_1_sentinel_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
+          <topic label="get_origination_feature" href="classgeojson_1_1_sentinel_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
+          <topic label="get_origination_length" href="classgeojson_1_1_sentinel_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
+          <topic label="get_properties" href="classgeojson_1_1_sentinel_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_sentinel_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
+          <topic label="get_property" href="classgeojson_1_1_sentinel_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
+          <topic label="get_type" href="classgeojson_1_1_sentinel_feature.html#a15e8c3693a636453b0af958337cb516f"/>
+          <topic label="has_key" href="classgeojson_1_1_sentinel_feature.html#acc89312542c66882f982168c2ccec094"/>
+          <topic label="has_property" href="classgeojson_1_1_sentinel_feature.html#a7a908b6e0b1bbc1bf17b93736e72563e"/>
+          <topic label="is_leaf" href="classgeojson_1_1_sentinel_feature.html#aa3e4340ccc2137071f2bd8f14fc226a4"/>
+          <topic label="is_root" href="classgeojson_1_1_sentinel_feature.html#a88505d796cbf53f95cb6eb8863df1b71"/>
+          <topic label="keys" href="classgeojson_1_1_sentinel_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
+          <topic label="neighbor_features" href="classgeojson_1_1_sentinel_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
+          <topic label="operator!=" href="classgeojson_1_1_sentinel_feature.html#a6ea15e613f60abad67e86f379a158255"/>
+          <topic label="operator==" href="classgeojson_1_1_sentinel_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="origination_features" href="classgeojson_1_1_sentinel_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
+          <topic label="property_keys" href="classgeojson_1_1_sentinel_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
+          <topic label="remove_destination" href="classgeojson_1_1_sentinel_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
+          <topic label="remove_neighbor" href="classgeojson_1_1_sentinel_feature.html#ad3946b483dae8cba1affb2228a760f1c"/>
+          <topic label="remove_origination" href="classgeojson_1_1_sentinel_feature.html#a847a3fc24978b7b87f57ecf6c4a5d13d"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#ae9f41eadb72d21e31e17783fa4fb82a2"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#aa34509806f3c964856c2b1d596d5c204"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#a7e7054c9c9f0cee0e384330df768d434"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#ae7fa0192036f7406ebb0af6715d6c3b4"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#a14890e668e6d6b49c0f4b9c0e03542f4"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
+          <topic label="set_id" href="classgeojson_1_1_sentinel_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
+          <topic label="visit" href="classgeojson_1_1_sentinel_feature.html#a73ef187fd193aa7ab8d914b00b333a73"/>
+          <topic label="bounding_box" href="classgeojson_1_1_sentinel_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
+          <topic label="destination" href="classgeojson_1_1_sentinel_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
+          <topic label="foreign_members" href="classgeojson_1_1_sentinel_feature.html#a876adde9550a49d9976878efa777c6b4"/>
+          <topic label="geom" href="classgeojson_1_1_sentinel_feature.html#aaba97b89c01dfd529c5eca61517107c7"/>
+          <topic label="geometry_collection" href="classgeojson_1_1_sentinel_feature.html#a9cbe59eecb42e6cedb3ee7b12cddedc2"/>
+          <topic label="id" href="classgeojson_1_1_sentinel_feature.html#a0e329f3a2c6b3989a42756534d1bdf10"/>
+          <topic label="neighbors" href="classgeojson_1_1_sentinel_feature.html#ad2b3f513a87e2787c8450254c0187857"/>
+          <topic label="origination" href="classgeojson_1_1_sentinel_feature.html#a2e62de0267a14d019a8e230b276bb6b4"/>
+          <topic label="properties" href="classgeojson_1_1_sentinel_feature.html#a8b5b4e112d4b3559c8876126f1f1412c"/>
+          <topic label="type" href="classgeojson_1_1_sentinel_feature.html#ac2786341bb4e570fa8d60fefe18dbe0f"/>
+        </topic>
         <topic label="coordinate_t" href="namespacegeojson.html#a1e973c44a04c54096fb9877033c21de5"/>
         <topic label="Feature" href="namespacegeojson.html#ab724970a20dff6100b94e25491292748"/>
         <topic label="FeatureList" href="namespacegeojson.html#ad8a5fd2f9372cc99bdbe55db73a64f0d"/>
@@ -1185,6 +1247,7 @@
           <topic label="MultiLineString" href="namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0a6d0b0e1d146d35399060c10baabed5d6"/>
           <topic label="MultiPolygon" href="namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0a5645dd61a1073a52cf2476fd28f04a3b"/>
           <topic label="GeometryCollection" href="namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0aa56fbded614f111bf2bc4741d0f5ad09"/>
+          <topic label="Sentinel" href="namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0a7b71dfec5c8dd524069eed634dc0a3a5"/>
         </topic>
         <topic label="JSONGeometryType" href="namespacegeojson.html#a316aa4b4d9aba725f7c899a598b33cb5">
           <topic label="None" href="namespacegeojson.html#a316aa4b4d9aba725f7c899a598b33cb5a6adf97f83acf6453d4a6a4b1070f3754"/>
@@ -3191,6 +3254,7 @@
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a8b9b426ee56d01fe1dd900d712f3bf4d"/>
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a77c21007c7e92d9847aa42eb67867ff1"/>
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a2676b1f6dbb3071b3d32df3712b43855"/>
+          <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a4d0001b6778cac69ae6e13fec284b2fb"/>
         </topic>
         <topic label="JSONProperty" href="classgeojson_1_1_j_s_o_n_property.html">
           <topic label="AsVectorVisitor" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html">
@@ -3624,6 +3688,67 @@
           <topic label="origination" href="classgeojson_1_1_polygon_feature.html#a2e62de0267a14d019a8e230b276bb6b4"/>
           <topic label="properties" href="classgeojson_1_1_polygon_feature.html#a8b5b4e112d4b3559c8876126f1f1412c"/>
           <topic label="type" href="classgeojson_1_1_polygon_feature.html#ac2786341bb4e570fa8d60fefe18dbe0f"/>
+        </topic>
+        <topic label="SentinelFeature" href="classgeojson_1_1_sentinel_feature.html">
+          <topic label="SentinelFeature" href="classgeojson_1_1_sentinel_feature.html#a281590499f35bd6404a14f7f7937bb16"/>
+          <topic label="add_destination_feature" href="classgeojson_1_1_sentinel_feature.html#aac23f8caae143de17e37ce091b3b069e"/>
+          <topic label="add_neighbor_feature" href="classgeojson_1_1_sentinel_feature.html#adfb6ba4107e752620dcb9a04aeb4a158"/>
+          <topic label="add_origination_feature" href="classgeojson_1_1_sentinel_feature.html#a29b6852ed6a7359d1e844de4faa9f170"/>
+          <topic label="assign_neighbors" href="classgeojson_1_1_sentinel_feature.html#a3ff99f3984c2097aedd6207a8f1eb5f8"/>
+          <topic label="break_links" href="classgeojson_1_1_sentinel_feature.html#a30269e3419054d9f3e06e4d1c74b44e0"/>
+          <topic label="destination_features" href="classgeojson_1_1_sentinel_feature.html#aa019c821447761d1254a66d23a75b3bc"/>
+          <topic label="geometry" href="classgeojson_1_1_sentinel_feature.html#af8baac5c089adc79a5e10b216a654958"/>
+          <topic label="geometry" href="classgeojson_1_1_sentinel_feature.html#a099497ede94011cda55f2a8309d7be62"/>
+          <topic label="geometry" href="classgeojson_1_1_sentinel_feature.html#ad821415b00bf3b84764ad4c39e978d6d"/>
+          <topic label="get" href="classgeojson_1_1_sentinel_feature.html#a85efe89fcc761fe2f16b13939b71acda"/>
+          <topic label="get_bounding_box" href="classgeojson_1_1_sentinel_feature.html#ad4b899e57b5f11cf0bde1e3d63a9d1c6"/>
+          <topic label="get_contributor_count" href="classgeojson_1_1_sentinel_feature.html#a5c6ed83a4ed8de19e1978cf81316f034"/>
+          <topic label="get_destination_feature" href="classgeojson_1_1_sentinel_feature.html#a21534cea70924836aae67ad39ac236c3"/>
+          <topic label="get_destination_length" href="classgeojson_1_1_sentinel_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
+          <topic label="get_geometry_collection" href="classgeojson_1_1_sentinel_feature.html#a984573e0ad014345634d5e859846ef35"/>
+          <topic label="get_id" href="classgeojson_1_1_sentinel_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_sentinel_feature.html#ae4569552d1767dad95836c54a582658e"/>
+          <topic label="get_number_of_destination_features" href="classgeojson_1_1_sentinel_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
+          <topic label="get_number_of_neighbors" href="classgeojson_1_1_sentinel_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
+          <topic label="get_number_of_origination_features" href="classgeojson_1_1_sentinel_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
+          <topic label="get_origination_feature" href="classgeojson_1_1_sentinel_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
+          <topic label="get_origination_length" href="classgeojson_1_1_sentinel_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
+          <topic label="get_properties" href="classgeojson_1_1_sentinel_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_sentinel_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
+          <topic label="get_property" href="classgeojson_1_1_sentinel_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
+          <topic label="get_type" href="classgeojson_1_1_sentinel_feature.html#a15e8c3693a636453b0af958337cb516f"/>
+          <topic label="has_key" href="classgeojson_1_1_sentinel_feature.html#acc89312542c66882f982168c2ccec094"/>
+          <topic label="has_property" href="classgeojson_1_1_sentinel_feature.html#a7a908b6e0b1bbc1bf17b93736e72563e"/>
+          <topic label="is_leaf" href="classgeojson_1_1_sentinel_feature.html#aa3e4340ccc2137071f2bd8f14fc226a4"/>
+          <topic label="is_root" href="classgeojson_1_1_sentinel_feature.html#a88505d796cbf53f95cb6eb8863df1b71"/>
+          <topic label="keys" href="classgeojson_1_1_sentinel_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
+          <topic label="neighbor_features" href="classgeojson_1_1_sentinel_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
+          <topic label="operator!=" href="classgeojson_1_1_sentinel_feature.html#a6ea15e613f60abad67e86f379a158255"/>
+          <topic label="operator==" href="classgeojson_1_1_sentinel_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="origination_features" href="classgeojson_1_1_sentinel_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
+          <topic label="property_keys" href="classgeojson_1_1_sentinel_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
+          <topic label="remove_destination" href="classgeojson_1_1_sentinel_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
+          <topic label="remove_neighbor" href="classgeojson_1_1_sentinel_feature.html#ad3946b483dae8cba1affb2228a760f1c"/>
+          <topic label="remove_origination" href="classgeojson_1_1_sentinel_feature.html#a847a3fc24978b7b87f57ecf6c4a5d13d"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#ae9f41eadb72d21e31e17783fa4fb82a2"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#aa34509806f3c964856c2b1d596d5c204"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#a7e7054c9c9f0cee0e384330df768d434"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#ae7fa0192036f7406ebb0af6715d6c3b4"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#a14890e668e6d6b49c0f4b9c0e03542f4"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#a817b67e59c22efa08d99d8148a6854af"/>
+          <topic label="set" href="classgeojson_1_1_sentinel_feature.html#acc8d00c3e71a16f5bf350169b161c019"/>
+          <topic label="set_id" href="classgeojson_1_1_sentinel_feature.html#aad1d7ad22e5f98d384d1654daa2f4796"/>
+          <topic label="visit" href="classgeojson_1_1_sentinel_feature.html#a73ef187fd193aa7ab8d914b00b333a73"/>
+          <topic label="bounding_box" href="classgeojson_1_1_sentinel_feature.html#a77d7f52df0473ed087c9a72a7c66fce9"/>
+          <topic label="destination" href="classgeojson_1_1_sentinel_feature.html#ae3da4d699f37811a450985f094b45bf8"/>
+          <topic label="foreign_members" href="classgeojson_1_1_sentinel_feature.html#a876adde9550a49d9976878efa777c6b4"/>
+          <topic label="geom" href="classgeojson_1_1_sentinel_feature.html#aaba97b89c01dfd529c5eca61517107c7"/>
+          <topic label="geometry_collection" href="classgeojson_1_1_sentinel_feature.html#a9cbe59eecb42e6cedb3ee7b12cddedc2"/>
+          <topic label="id" href="classgeojson_1_1_sentinel_feature.html#a0e329f3a2c6b3989a42756534d1bdf10"/>
+          <topic label="neighbors" href="classgeojson_1_1_sentinel_feature.html#ad2b3f513a87e2787c8450254c0187857"/>
+          <topic label="origination" href="classgeojson_1_1_sentinel_feature.html#a2e62de0267a14d019a8e230b276bb6b4"/>
+          <topic label="properties" href="classgeojson_1_1_sentinel_feature.html#a8b5b4e112d4b3559c8876126f1f1412c"/>
+          <topic label="type" href="classgeojson_1_1_sentinel_feature.html#ac2786341bb4e570fa8d60fefe18dbe0f"/>
         </topic>
       </topic>
       <topic label="hy_features" href="namespacehy__features.html">
@@ -5793,6 +5918,7 @@
         <topic label="visit" href="class_visitor.html#aa66fcfb48a820890361bbd02a49a5d99"/>
         <topic label="visit" href="class_visitor.html#a2e9a7089d5714c299733c3a4483e495f"/>
         <topic label="visit" href="class_visitor.html#ab663b5600c24cf1a5892ec6efb08efcd"/>
+        <topic label="visit" href="class_visitor.html#affe28f9bc04407a2c1ae812a9bf971f8"/>
         <topic label="types" href="class_visitor.html#a3eb2cd9d4d15c13b69c011e8df28d03b"/>
       </topic>
     </topic>
@@ -5857,6 +5983,7 @@
         <topic label="geojson::MultiPolygonFeature" href="classgeojson_1_1_multi_polygon_feature.html"/>
         <topic label="geojson::PointFeature" href="classgeojson_1_1_point_feature.html"/>
         <topic label="geojson::PolygonFeature" href="classgeojson_1_1_polygon_feature.html"/>
+        <topic label="geojson::SentinelFeature" href="classgeojson_1_1_sentinel_feature.html"/>
       </topic>
       <topic label="geojson::FeatureCollection" href="classgeojson_1_1_feature_collection.html"/>
       <topic label="geojson::FeatureVisitor" href="classgeojson_1_1_feature_visitor.html">

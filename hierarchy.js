@@ -58,7 +58,8 @@ var hierarchy =
       [ "geojson::MultiPointFeature", "classgeojson_1_1_multi_point_feature.html", null ],
       [ "geojson::MultiPolygonFeature", "classgeojson_1_1_multi_polygon_feature.html", null ],
       [ "geojson::PointFeature", "classgeojson_1_1_point_feature.html", null ],
-      [ "geojson::PolygonFeature", "classgeojson_1_1_polygon_feature.html", null ]
+      [ "geojson::PolygonFeature", "classgeojson_1_1_polygon_feature.html", null ],
+      [ "geojson::SentinelFeature", "classgeojson_1_1_sentinel_feature.html", null ]
     ] ],
     [ "geojson::FeatureCollection", "classgeojson_1_1_feature_collection.html", null ],
     [ "geojson::FeatureVisitor", "classgeojson_1_1_feature_visitor.html", [

@@ -25,7 +25,8 @@ var annotated_dup =
       [ "MultiPolygonFeature", "classgeojson_1_1_multi_polygon_feature.html", "classgeojson_1_1_multi_polygon_feature" ],
       [ "Object", "structgeojson_1_1_object.html", "structgeojson_1_1_object" ],
       [ "PointFeature", "classgeojson_1_1_point_feature.html", "classgeojson_1_1_point_feature" ],
-      [ "PolygonFeature", "classgeojson_1_1_polygon_feature.html", "classgeojson_1_1_polygon_feature" ]
+      [ "PolygonFeature", "classgeojson_1_1_polygon_feature.html", "classgeojson_1_1_polygon_feature" ],
+      [ "SentinelFeature", "classgeojson_1_1_sentinel_feature.html", "classgeojson_1_1_sentinel_feature" ]
     ] ],
     [ "hy_features", "namespacehy__features.html", [
       [ "hydrolocation", "namespacehy__features_1_1hydrolocation.html", [

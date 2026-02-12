@@ -1,0 +1,5 @@
+<map id="geojson::SentinelFeature" name="geojson::SentinelFeature">
+<area shape="rect" id="Node000001" title=" " alt="" coords="14,709,167,796"/>
+<area shape="rect" id="Node000002" href="$classgeojson_1_1_feature_base.html" title="Represents an individual feature within a Geojson definition." alt="" coords="5,5,175,661"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,676,93,710,88,710,88,676"/>
+</map>

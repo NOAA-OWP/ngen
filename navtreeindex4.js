@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"classgeojson_1_1_feature_base.html#a6fe5ef06ba865510cbfc437377102f4d":[24,0,3,1,24],
 "classgeojson_1_1_feature_base.html#a77d7f52df0473ed087c9a72a7c66fce9":[23,0,3,1,52],
 "classgeojson_1_1_feature_base.html#a77d7f52df0473ed087c9a72a7c66fce9":[24,0,3,1,52],
 "classgeojson_1_1_feature_base.html#a7a908b6e0b1bbc1bf17b93736e72563e":[23,0,3,1,30],
@@ -162,6 +163,8 @@ var NAVTREEINDEX4 =
 "classgeojson_1_1_feature_visitor.html#a1ef52b16030fbd59249a80d31afba9af":[24,0,3,3,1],
 "classgeojson_1_1_feature_visitor.html#a2676b1f6dbb3071b3d32df3712b43855":[23,0,3,3,7],
 "classgeojson_1_1_feature_visitor.html#a2676b1f6dbb3071b3d32df3712b43855":[24,0,3,3,7],
+"classgeojson_1_1_feature_visitor.html#a4d0001b6778cac69ae6e13fec284b2fb":[23,0,3,3,8],
+"classgeojson_1_1_feature_visitor.html#a4d0001b6778cac69ae6e13fec284b2fb":[24,0,3,3,8],
 "classgeojson_1_1_feature_visitor.html#a4ff4262c46b2ea403d7a3e3293c92bc1":[23,0,3,3,3],
 "classgeojson_1_1_feature_visitor.html#a4ff4262c46b2ea403d7a3e3293c92bc1":[24,0,3,3,3],
 "classgeojson_1_1_feature_visitor.html#a52987b0b4ff343b45c7919baeaf0baf6":[23,0,3,3,4],
@@ -246,8 +249,5 @@ var NAVTREEINDEX4 =
 "classgeojson_1_1_j_s_o_n_property.html#ae1815462ba6862ac036d8ce098b7d941":[24,0,3,4,31],
 "classgeojson_1_1_j_s_o_n_property.html#ae1d7def48bf2d357a5a1b086930a74b2":[23,0,3,4,38],
 "classgeojson_1_1_j_s_o_n_property.html#ae1d7def48bf2d357a5a1b086930a74b2":[24,0,3,4,38],
-"classgeojson_1_1_j_s_o_n_property.html#af405297de7dae29f9bf8ee584ba08858":[23,0,3,4,34],
-"classgeojson_1_1_j_s_o_n_property.html#af405297de7dae29f9bf8ee584ba08858":[24,0,3,4,34],
-"classgeojson_1_1_j_s_o_n_property.html#afe12f98e6dafc1abb943d3865e601ec1":[23,0,3,4,29],
-"classgeojson_1_1_j_s_o_n_property.html#afe12f98e6dafc1abb943d3865e601ec1":[24,0,3,4,29]
+"classgeojson_1_1_j_s_o_n_property.html#af405297de7dae29f9bf8ee584ba08858":[23,0,3,4,34]
 };

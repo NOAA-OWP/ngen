@@ -7,5 +7,6 @@ var classgeojson_1_1_feature_visitor =
     [ "visit", "classgeojson_1_1_feature_visitor.html#a52987b0b4ff343b45c7919baeaf0baf6", null ],
     [ "visit", "classgeojson_1_1_feature_visitor.html#a8b9b426ee56d01fe1dd900d712f3bf4d", null ],
     [ "visit", "classgeojson_1_1_feature_visitor.html#a77c21007c7e92d9847aa42eb67867ff1", null ],
-    [ "visit", "classgeojson_1_1_feature_visitor.html#a2676b1f6dbb3071b3d32df3712b43855", null ]
+    [ "visit", "classgeojson_1_1_feature_visitor.html#a2676b1f6dbb3071b3d32df3712b43855", null ],
+    [ "visit", "classgeojson_1_1_feature_visitor.html#a4d0001b6778cac69ae6e13fec284b2fb", null ]
 ];

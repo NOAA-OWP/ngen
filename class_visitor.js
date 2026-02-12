@@ -8,5 +8,6 @@ var class_visitor =
     [ "visit", "class_visitor.html#aa66fcfb48a820890361bbd02a49a5d99", null ],
     [ "visit", "class_visitor.html#a2e9a7089d5714c299733c3a4483e495f", null ],
     [ "visit", "class_visitor.html#ab663b5600c24cf1a5892ec6efb08efcd", null ],
+    [ "visit", "class_visitor.html#affe28f9bc04407a2c1ae812a9bf971f8", null ],
     [ "types", "class_visitor.html#a3eb2cd9d4d15c13b69c011e8df28d03b", null ]
 ];

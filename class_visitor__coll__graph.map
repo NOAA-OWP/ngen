@@ -1,15 +1,15 @@
 <map id="Visitor" name="Visitor">
-<area shape="rect" id="Node000001" title=" " alt="" coords="70,551,126,759"/>
-<area shape="rect" id="Node000002" href="$classgeojson_1_1_feature_visitor.html" title="An abstract class used to operate on the children of FeatureBase." alt="" coords="5,279,148,488"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,503,93,551,87,551,83,503"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="172,350,320,416"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="231,417,136,589,132,587,226,415"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="70,571,126,800"/>
+<area shape="rect" id="Node000002" href="$classgeojson_1_1_feature_visitor.html" title="An abstract class used to operate on the children of FeatureBase." alt="" coords="5,279,148,508"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,523,92,571,87,571,83,523"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="172,360,320,427"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="232,428,136,615,131,613,228,425"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="157,150,223,216"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="202,215,213,254,235,333,230,335,207,256,196,217"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="201,215,236,344,231,345,196,216"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="134,5,246,87"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="193,102,193,150,187,150,187,102"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="248,150,348,216"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="288,231,257,351,252,350,283,230"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="289,231,256,361,251,360,284,230"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="289,13,307,79"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="301,79,301,133,295,133,295,79"/>
 </map>

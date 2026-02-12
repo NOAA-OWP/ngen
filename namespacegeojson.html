@@ -140,6 +140,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_polygon_feature.html">PolygonFeature</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a feature based around a polygon defining an area.  <a href="classgeojson_1_1_polygon_feature.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_sentinel_feature.html">SentinelFeature</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -187,21 +189,23 @@ Typedefs</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:ad5d0756236bbc62039740c0b6258cee0" id="r_ad5d0756236bbc62039740c0b6258cee0"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad5d0756236bbc62039740c0b6258cee0">FeatureType</a> { <br />
-&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a6adf97f83acf6453d4a6a4b1070f3754">None</a>
+&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a6adf97f83acf6453d4a6a4b1070f3754">None</a> = 0
 , <br />
-&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a2a3cd5946cfd317eb99c3d32e35e2d4c">Point</a>
+&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a2a3cd5946cfd317eb99c3d32e35e2d4c">Point</a> = 1
 , <br />
-&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a2e321465690359abbb020a3619b1c937">LineString</a>
+&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a2e321465690359abbb020a3619b1c937">LineString</a> = 2
 , <br />
-&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a4c0a11247d92f73fb84baa51e37a3263">Polygon</a>
+&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a4c0a11247d92f73fb84baa51e37a3263">Polygon</a> = 3
 , <br />
-&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a3cd60571b78c0f0e0cd78c2f96127bc0">MultiPoint</a>
+&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a3cd60571b78c0f0e0cd78c2f96127bc0">MultiPoint</a> = 4
 , <br />
-&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a6d0b0e1d146d35399060c10baabed5d6">MultiLineString</a>
+&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a6d0b0e1d146d35399060c10baabed5d6">MultiLineString</a> = 5
 , <br />
-&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a5645dd61a1073a52cf2476fd28f04a3b">MultiPolygon</a>
+&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a5645dd61a1073a52cf2476fd28f04a3b">MultiPolygon</a> = 6
 , <br />
-&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0aa56fbded614f111bf2bc4741d0f5ad09">GeometryCollection</a>
+&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0aa56fbded614f111bf2bc4741d0f5ad09">GeometryCollection</a> = 7
+, <br />
+&#160;&#160;<a class="el" href="#ad5d0756236bbc62039740c0b6258cee0a7b71dfec5c8dd524069eed634dc0a3a5">Sentinel</a> = 100
 <br />
  }</td></tr>
 <tr class="memdesc:ad5d0756236bbc62039740c0b6258cee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describes a type of features.  <a href="#ad5d0756236bbc62039740c0b6258cee0">More...</a><br /></td></tr>
@@ -555,6 +559,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Describes a type of features. </p>
+<p>These are numbered in accordance with the GeoPackage 'well-known binary' (WKB) feature types, other than the additional 'Sentinel' value defined here </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad5d0756236bbc62039740c0b6258cee0a6adf97f83acf6453d4a6a4b1070f3754" name="ad5d0756236bbc62039740c0b6258cee0a6adf97f83acf6453d4a6a4b1070f3754"></a>None&#160;</td><td class="fielddoc"><p>Represents an empty feature with no sort of geometry </p>
 </td></tr>
@@ -571,6 +576,8 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="ad5d0756236bbc62039740c0b6258cee0a5645dd61a1073a52cf2476fd28f04a3b" name="ad5d0756236bbc62039740c0b6258cee0a5645dd61a1073a52cf2476fd28f04a3b"></a>MultiPolygon&#160;</td><td class="fielddoc"><p>Represents a feature that is represented by multiple areas </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ad5d0756236bbc62039740c0b6258cee0aa56fbded614f111bf2bc4741d0f5ad09" name="ad5d0756236bbc62039740c0b6258cee0aa56fbded614f111bf2bc4741d0f5ad09"></a>GeometryCollection&#160;</td><td class="fielddoc"><p>Represents a feature that contains a collection of different types of geometry </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ad5d0756236bbc62039740c0b6258cee0a7b71dfec5c8dd524069eed634dc0a3a5" name="ad5d0756236bbc62039740c0b6258cee0a7b71dfec5c8dd524069eed634dc0a3a5"></a>Sentinel&#160;</td><td class="fielddoc"><p>Represents a 'dummy' feature included for computational consistency </p>
 </td></tr>
 </table>
 
@@ -1321,7 +1328,7 @@ template&lt;typename T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacegeojson.html">geojson</a></li>
-    <li class="footer">Generated on Fri Feb 6 2026 02:09:34 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Feb 12 2026 13:41:48 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

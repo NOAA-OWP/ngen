@@ -1,5 +1,8 @@
 var NAVTREEINDEX5 =
 {
+"classgeojson_1_1_j_s_o_n_property.html#af405297de7dae29f9bf8ee584ba08858":[24,0,3,4,34],
+"classgeojson_1_1_j_s_o_n_property.html#afe12f98e6dafc1abb943d3865e601ec1":[23,0,3,4,29],
+"classgeojson_1_1_j_s_o_n_property.html#afe12f98e6dafc1abb943d3865e601ec1":[24,0,3,4,29],
 "classgeojson_1_1_j_s_o_n_property.html#afec6dc919d680e882f35f36581998cda":[23,0,3,4,3],
 "classgeojson_1_1_j_s_o_n_property.html#afec6dc919d680e882f35f36581998cda":[24,0,3,4,3],
 "classgeojson_1_1_line_string_feature.html":[23,0,3,5],
@@ -246,8 +249,5 @@ var NAVTREEINDEX5 =
 "classgeojson_1_1_multi_line_string_feature.html#aefdf3a8db489eb6344f1d792b09b357a":[24,0,3,7,10],
 "classgeojson_1_1_multi_line_string_feature.html#af289e5db1d2039bddd84bef755f0bab6":[23,0,3,7,38],
 "classgeojson_1_1_multi_line_string_feature.html#af289e5db1d2039bddd84bef755f0bab6":[24,0,3,7,38],
-"classgeojson_1_1_multi_point_feature.html":[23,0,3,8],
-"classgeojson_1_1_multi_point_feature.html":[24,0,3,8],
-"classgeojson_1_1_multi_point_feature.html#a07a793b858d72f62d5bde068cc9d7cbe":[23,0,3,8,21],
-"classgeojson_1_1_multi_point_feature.html#a07a793b858d72f62d5bde068cc9d7cbe":[24,0,3,8,21]
+"classgeojson_1_1_multi_point_feature.html":[23,0,3,8]
 };
