@@ -683,4 +683,438 @@ TEST_F(Nexus_Remote_Test, DISABLED_TestTree1)
 }
 
 
+
+/******************************************************************************
+ * MPI DEADLOCK TESTS
+ * ==================
+ * As of commit 9ad6b7bf561fb2f96065511b382bc43a83167f10
+ * A potential MPI deadlock scenario was discovered in the HY_PointHydroNexusRemote class.
+ *
+ * These tests demonstrate and verify a fix for MPI communication issues
+ * observed in production when running large domains with many partitions.
+ * 
+ * =============================================================================
+ * What can be shown:
+ * =============================================================================
+ * 
+ * 1. Deadlock prone code:
+ *    The original HY_PointHydroNexusRemote::add_upstream_flow() does:
+ *      a. MPI_Isend() - non-blocking, returns immediately
+ *      b. while(stored_sends.size() > 0) { MPI_Test(); } - BLOCKS until
+ *         the send is confirmed complete by MPI
+ *    
+ *    This pattern is problematic because it blocks progress until the send
+ *    completes, preventing the code from posting receives.
+ * 
+ * 2. WITH FORCED RENDEZVOUS, THIS PATTERN DEADLOCKS:
+ *    When we force rendezvous protocol using --mca btl_tcp_eager_limit 80,
+ *    the buggy pattern reliably deadlocks. Rendezvous requires a posted
+ *    MPI_Irecv before the send can complete.
+ * 
+ * 3. PRODUCTION RUNS WERE HANGING:
+ *    Large-scale runs with 384+ partitions and 831K catchments  __across multiple nodes__
+ *    were observed to be hanging (one node was making progress while others were not).
+ *
+ * 4. THE FIX IS CORRECT:
+ *    Pre-posting receives (calling MPI_Irecv before MPI_Isend) is the standard
+ *    MPI best practice and eliminates any rendezvous-related deadlock risk.
+ * 
+ * =============================================================================
+ * Assumptions about this fix that are hard to confirm:
+ * =============================================================================
+ * 
+ * We ASSUMED that production hangs occurred because:
+ *   - High connection count (~38,000 connections) exhausted the eager buffer pool
+ *   - This forced MPI to use rendezvous protocol even for small messages
+ *   - Rendezvous + buggy pattern = deadlock
+ * 
+ * HOWEVER: MPI documentation consistently states that rendezvous protocol is
+ * triggered by MESSAGE SIZE exceeding eager_limit, NOT by buffer pool exhaustion.
+ * We cannot find documentation supporting the "pool exhaustion triggers
+ * rendezvous" theory.
+ * 
+ * Other possibilities for production hangs (unconfirmed)
+ *   - TCP buffer exhaustion: if the sender's socket buffer fills up before
+ *     the receiver can process messages, subsequent sends can block.
+ *     And if two or more nodes get into this state, they can deadlock.
+ *   - Network fabric issues at scale
+ *   - Something else entirely that our fix happened to address
+ * 
+ * =============================================================================
+ * THE FIX IS STILL CORRECT:
+ * =============================================================================
+ * 
+ * Regardless of the exact production trigger, pre-posting receives is:
+ *   1. MPI best practice for avoiding deadlock
+ *   2. Required for correctness under rendezvous protocol
+ *   3. Harmless under eager protocol (just posts receives earlier)
+ * 
+ * The fix eliminates a class of potential deadlocks even if we're uncertain
+ * about the exact mechanism that triggered the production hang.
+ * 
+ * =============================================================================
+ * TRIGGERING THE DEADLOCK IN TESTS:
+ * =============================================================================
+ * 
+ * We use --mca btl_tcp_eager_limit 80 to FORCE rendezvous protocol per-message.
+ * This is a TEST WORKAROUND that demonstrates the buggy pattern CAN deadlock.
+ * 
+ * This is NOT necessarily the exact production failure mode - it's a way to
+ * reliably trigger the deadlock pattern in a controlled test environment.
+ * 
+ * To reproduce in tests, force tcp communcation and set the eager limit to
+ * the minimum value (80 bytes -- openmpi_info may show different limits for 
+ * different BTLs/environments).
+ * 
+ *   mpirun --mca btl tcp,self --mca btl_tcp_eager_limit 80 ...
+ * 
+ * Parameters:
+ *   --mca btl tcp,self           : Disable shared memory, use TCP only
+ *   --mca btl_tcp_eager_limit 80 : Force rendezvous per-message (minimum value)
+ * 
+ * NOTE: Shared memory BTL uses copy-based communication that doesn't require
+ * a synchronous handshake, so --mca btl_sm_eager_limit 80 will NOT trigger
+ * the deadlock.
+ * 
+ ******************************************************************************/
+
+
+/**
+ * =============================================================================
+ * DISABLED_TestRawMpiDeadlockPattern
+ * =============================================================================
+ * 
+ * PURPOSE: Document and demonstrate the MPI communication pattern that causes
+ * deadlock when rendezvous protocol is triggered.
+ * This is the pattern that ngen used up to and including
+ * commit 9ad6b7bf561fb2f96065511b382bc43a83167f10
+ * This test uses RAW MPI calls (not the HY_PointHydroNexusRemote class) to
+ * clearly illustrate the problematic pattern that existed in the original code.
+ * 
+ * =============================================================================
+ * THE PROBLEMATIC PATTERN (from original add_upstream_flow):
+ * =============================================================================
+ *   1. MPI_Isend (non-blocking send)
+ *   2. Loop on MPI_Test waiting for send to complete  <-- BLOCKS HERE
+ *   3. MPI_Irecv (never reached if step 2 blocks)
+ * 
+ * =============================================================================
+ * WHY NGEN PARTITIONS CREATE BIDIRECTIONAL COMMUNICATION:
+ * =============================================================================
+ * 
+ * Real hydrological networks are complex. When we partition the domain, the
+ * partition boundary cuts ACROSS the drainage network, not along it.
+ * This creates BIDIRECTIONAL communication between partitions.
+ * 
+ * Analysis of CONUS (384 partitions, 831K catchments) confirms:
+ *   - 182/384 partitions (47%) have BIDIRECTIONAL communication
+ * 
+ * =============================================================================
+ * TEST TOPOLOGY (simplified bidirectional chain):
+ * =============================================================================
+ * 
+ *   Rank 0 <────> Rank 1 <────> Rank 2 <────> Rank 3
+ *   
+ *   Each rank both SENDS to AND RECEIVES from its neighbors.
+ * 
+ * =============================================================================
+ * TO REPRODUCE DEADLOCK:
+ * =============================================================================
+ *   timeout 10 mpirun --mca btl tcp,self --mca btl_tcp_eager_limit 80 -n 4 \
+ *       ./test/test_remote_nexus --gtest_filter="*TestRawMpiDeadlockPattern*" \
+ *       --gtest_also_run_disabled_tests
+ * 
+ * EXPECTED: Exit code 124 (timeout killed it) - confirms true deadlock
+ * 
+ * =============================================================================
+ */
+TEST_F(Nexus_Remote_Test, DISABLED_TestRawMpiDeadlockPattern)
+{
+    if (mpi_num_procs < 4) {
+        GTEST_SKIP() << "Requires at least 4 MPI ranks to demonstrate bidirectional deadlock";
+    }
+    
+    // Bidirectional chain topology
+    std::vector<int> downstream_ranks;
+    std::vector<int> upstream_ranks;
+    
+    if (mpi_rank == 0) {
+        downstream_ranks.push_back(1);
+        upstream_ranks.push_back(1);
+    } else if (mpi_rank == 1) {
+        downstream_ranks.push_back(0);
+        downstream_ranks.push_back(2);
+        upstream_ranks.push_back(0);
+        upstream_ranks.push_back(2);
+    } else if (mpi_rank == 2) {
+        downstream_ranks.push_back(1);
+        downstream_ranks.push_back(3);
+        upstream_ranks.push_back(1);
+        upstream_ranks.push_back(3);
+    } else if (mpi_rank == 3) {
+        downstream_ranks.push_back(2);
+        upstream_ranks.push_back(2);
+    }
+    
+    bool is_sender = !downstream_ranks.empty();
+    bool is_receiver = !upstream_ranks.empty();
+    
+    // Create MPI datatype for our message
+    struct message_t {
+        long time_step;
+        long id;
+        double flow;
+    };
+    
+    MPI_Datatype msg_type;
+    int counts[3] = {1, 1, 1};
+    MPI_Aint displacements[3] = {0, sizeof(long), 2 * sizeof(long)};
+    MPI_Datatype types[3] = {MPI_LONG, MPI_LONG, MPI_DOUBLE};
+    MPI_Type_create_struct(3, counts, displacements, types, &msg_type);
+    MPI_Type_commit(&msg_type);
+    
+    const int NUM_MESSAGES = 3500;
+    const int TAG_BASE = 1000;
+    
+    std::cerr << "Rank " << mpi_rank << ": Starting bidirectional deadlock pattern\n";
+    
+    MPI_Barrier(MPI_COMM_WORLD);
+    
+    // Storage for async operations
+    std::map<int, std::vector<message_t>> send_buffers;
+    std::map<int, std::vector<message_t>> recv_buffers;
+    std::map<int, std::vector<MPI_Request>> send_requests;
+    std::map<int, std::vector<MPI_Request>> recv_requests;
+    
+    for (int r : downstream_ranks) {
+        send_buffers[r].resize(NUM_MESSAGES);
+        send_requests[r].resize(NUM_MESSAGES);
+    }
+    for (int r : upstream_ranks) {
+        recv_buffers[r].resize(NUM_MESSAGES);
+        recv_requests[r].resize(NUM_MESSAGES);
+    }
+    
+    // Timing asymmetry emulates "work" that causes ranks to run at different "speeds"
+    if (mpi_rank == 1) {
+        volatile double dummy = 0.0;
+        for (int i = 0; i < 100000000; ++i) {
+            dummy += std::sin(i * 0.0001) * std::cos(i * 0.0002);
+        }
+    }
+    
+    // THE PROBLEMATIC PATTERN: All ranks try to complete sends BEFORE posting receives
+    if (is_sender)
+    {
+        for (int downstream : downstream_ranks)
+        {
+            for (int i = 0; i < NUM_MESSAGES; ++i)
+            {
+                send_buffers[downstream][i] = {i, mpi_rank, 100.0 + i};
+                int tag = TAG_BASE + mpi_rank * 10000 + downstream * 100 + i;
+                
+                MPI_Isend(&send_buffers[downstream][i], 1, msg_type, downstream, tag,
+                          MPI_COMM_WORLD, &send_requests[downstream][i]);
+                
+                // BLOCKING WAIT - THIS IS THE "BUG"!
+                // Under eager protocols, this test returns immediately
+                // Under rendezvous protocols, this test blocks until 
+                // the receiver posts a matching Irecv.
+                // Similar logic applies to a full TCP buffer, MPI gets blocked waiting
+                // for TCP buffer to free up, which requires the receiver to 
+                // read the data.
+                int flag = 0;
+                while (!flag) {
+                    MPI_Test(&send_requests[downstream][i], &flag, MPI_STATUS_IGNORE);
+                }
+            }
+        }
+    }
+    
+    // Post receives - NEVER REACHED IN DEADLOCK
+    if (is_receiver)
+    {
+        for (int upstream : upstream_ranks)
+        {
+            for (int i = 0; i < NUM_MESSAGES; ++i)
+            {
+                int tag = TAG_BASE + upstream * 10000 + mpi_rank * 100 + i;
+                MPI_Irecv(&recv_buffers[upstream][i], 1, msg_type, upstream, tag,
+                          MPI_COMM_WORLD, &recv_requests[upstream][i]);
+            }
+            MPI_Waitall(NUM_MESSAGES, recv_requests[upstream].data(), MPI_STATUSES_IGNORE);
+        }
+    }
+    
+    MPI_Type_free(&msg_type);
+    MPI_Barrier(MPI_COMM_WORLD);
+    std::cerr << "Rank " << mpi_rank << ": Test passed (eager buffer was sufficient)\n";
+}
+
+
+/**
+ * =============================================================================
+ * TestRemoteNexusDeadlockFree
+ * =============================================================================
+ * 
+ * PURPOSE: Verify that HY_PointHydroNexusRemote does NOT deadlock, even with
+ * extremely small MPI eager buffers that force rendezvous protocol.
+ * 
+ * This test uses the SAME BIDIRECTIONAL topology as DISABLED_TestRawMpiDeadlockPattern
+ * but uses the HY_PointHydroNexusRemote class instead of raw MPI calls.
+ * 
+ * =============================================================================
+ * THE FIX: AUTO-POSTED RECEIVES
+ * =============================================================================
+ * 
+ * The HY_PointHydroNexusRemote class now auto-posts MPI_Irecv BEFORE sending.
+ * This breaks the deadlock cycle because peers can always complete their sends.
+ * 
+ * =============================================================================
+ * TO RUN (with small eager buffer to force rendezvous):
+ * =============================================================================
+ *   mpirun --mca btl tcp,self --mca btl_tcp_eager_limit 80 -n 4 \
+ *       ./test/test_remote_nexus --gtest_filter="*TestRemoteNexusDeadlockFree*"
+ * 
+ * EXPECTED: Exit code 0 - test passes without deadlock
+ * 
+ * =============================================================================
+ */
+TEST_F(Nexus_Remote_Test, TestRemoteNexusDeadlockFree)
+{
+    if (mpi_num_procs < 4) {
+        GTEST_SKIP() << "Requires at least 4 MPI ranks for bidirectional topology";
+    }
+    
+    // Same bidirectional topology as the deadlock test
+    std::vector<int> downstream_ranks;
+    std::vector<int> upstream_ranks;
+    
+    if (mpi_rank == 0) {
+        downstream_ranks.push_back(1);
+        upstream_ranks.push_back(1);
+    } else if (mpi_rank == 1) {
+        downstream_ranks.push_back(0);
+        downstream_ranks.push_back(2);
+        upstream_ranks.push_back(0);
+        upstream_ranks.push_back(2);
+    } else if (mpi_rank == 2) {
+        downstream_ranks.push_back(1);
+        downstream_ranks.push_back(3);
+        upstream_ranks.push_back(1);
+        upstream_ranks.push_back(3);
+    } else if (mpi_rank == 3) {
+        downstream_ranks.push_back(2);
+        upstream_ranks.push_back(2);
+    }
+    
+    bool is_sender = !downstream_ranks.empty();
+    bool is_receiver = !upstream_ranks.empty();
+    
+    const int NUM_CONNECTIONS = 50;
+    
+    std::cerr << "Rank " << mpi_rank << ": Setting up bidirectional topology\n";
+    
+    // Create sender nexuses for each downstream rank
+    std::map<int, std::vector<std::shared_ptr<HY_PointHydroNexusRemote>>> senders;
+    for (int downstream : downstream_ranks)
+    {
+        for (int i = 0; i < NUM_CONNECTIONS; ++i)
+        {
+            int nex_num = mpi_rank * 100000 + downstream * 1000 + i;
+            std::string nex_id = "nex-" + std::to_string(nex_num);
+            std::string my_cat = "cat-send-" + std::to_string(mpi_rank) + "-" + std::to_string(downstream) + "-" + std::to_string(i);
+            std::string their_cat = "cat-recv-" + std::to_string(downstream) + "-" + std::to_string(mpi_rank) + "-" + std::to_string(i);
+            
+            HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
+            loc_map[their_cat] = downstream;
+            
+            std::vector<std::string> receiving = {their_cat};
+            std::vector<std::string> contributing = {my_cat};
+            
+            senders[downstream].push_back(std::make_shared<HY_PointHydroNexusRemote>(
+                nex_id, receiving, contributing, loc_map));
+        }
+    }
+    
+    // Create receiver nexuses for each upstream rank
+    std::map<int, std::vector<std::shared_ptr<HY_PointHydroNexusRemote>>> receivers;
+    for (int upstream : upstream_ranks)
+    {
+        for (int i = 0; i < NUM_CONNECTIONS; ++i)
+        {
+            int nex_num = upstream * 100000 + mpi_rank * 1000 + i;
+            std::string nex_id = "nex-" + std::to_string(nex_num);
+            std::string their_cat = "cat-send-" + std::to_string(upstream) + "-" + std::to_string(mpi_rank) + "-" + std::to_string(i);
+            std::string my_cat = "cat-recv-" + std::to_string(mpi_rank) + "-" + std::to_string(upstream) + "-" + std::to_string(i);
+            
+            HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
+            loc_map[their_cat] = upstream;
+            
+            std::vector<std::string> receiving = {my_cat};
+            std::vector<std::string> contributing = {their_cat};
+            
+            receivers[upstream].push_back(std::make_shared<HY_PointHydroNexusRemote>(
+                nex_id, receiving, contributing, loc_map));
+        }
+    }
+    
+    MPI_Barrier(MPI_COMM_WORLD);
+    
+    // Timing asymmetry emulates "work" that causes ranks to run at different "speeds"
+    if (mpi_rank == 1) {
+        volatile double dummy = 0.0;
+        for (int i = 0; i < 100000000; ++i) {
+            dummy += std::sin(i * 0.0001) * std::cos(i * 0.0002);
+        }
+    }
+
+    long ts = 0;
+    double flow_value = 42.0;
+    
+    // Send all flows - with the fix, receives are auto-posted before sending
+    if (is_sender)
+    {
+        std::cerr << "Rank " << mpi_rank << ": Starting sends (receives auto-posted by fix)\n";
+        
+        for (auto& kv : senders)
+        {
+            int downstream = kv.first;
+            auto& nexuses = kv.second;
+            for (int i = 0; i < NUM_CONNECTIONS; ++i)
+            {
+                std::string my_cat = "cat-send-" + std::to_string(mpi_rank) + "-" + std::to_string(downstream) + "-" + std::to_string(i);
+                nexuses[i]->add_upstream_flow(flow_value, my_cat, ts);
+            }
+        }
+        std::cerr << "Rank " << mpi_rank << ": All sends completed!\n";
+    }
+    
+    // Receive all flows
+    if (is_receiver)
+    {
+        std::cerr << "Rank " << mpi_rank << ": Receiving from upstream\n";
+        for (auto& kv : receivers)
+        {
+            int upstream = kv.first;
+            auto& nexuses = kv.second;
+            for (int i = 0; i < NUM_CONNECTIONS; ++i)
+            {
+                std::string my_cat = "cat-recv-" + std::to_string(mpi_rank) + "-" + std::to_string(upstream) + "-" + std::to_string(i);
+                double received = nexuses[i]->get_downstream_flow(my_cat, ts, 100.0);
+                ASSERT_DOUBLE_EQ(flow_value, received);
+            }
+        }
+    }
+    
+    senders.clear();
+    receivers.clear();
+    
+    MPI_Barrier(MPI_COMM_WORLD);
+    std::cerr << "Rank " << mpi_rank << ": Test PASSED - no deadlock with remote nexus\n";
+}
+
+
+//#endif  // NGEN_MPI_TESTS_ACTIVE
+
 //#endif  // NGEN_MPI_TESTS_ACTIVE

@@ -11,11 +11,11 @@ ENV CXX=/usr/bin/g++
 
 RUN git submodule update --init --recursive -- test/googletest
 
-RUN curl -L -o boost_1_79_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.79.0/boost_1_79_0.tar.bz2/download
+RUN curl -L -o boost_1_86_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.79.0/boost_1_86_0.tar.bz2/download
 
-RUN tar -xjf boost_1_79_0.tar.bz2
+RUN tar -xjf boost_1_86_0.tar.bz2
 
-ENV BOOST_ROOT="boost_1_79_0"
+ENV BOOST_ROOT="boost_1_86_0"
 
 WORKDIR /ngen
 

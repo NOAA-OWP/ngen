@@ -9,6 +9,7 @@
 #include "bmi_utilities.hpp"
 
 #include <boost/core/span.hpp>
+#include "bmi/protocols.hpp"
 
 using data_access::MEAN;
 using data_access::SUM;
@@ -307,6 +308,12 @@ namespace realization {
         virtual void free_serialization_state();
         void set_realization_file_format(bool is_legacy_format);
 
+        virtual void check_mass_balance(const int& iteration, const int& total_steps, const std::string& timestamp) const override {
+            //Create the protocol context, each member is const, and cannot change during the check
+            models::bmi::protocols::Context ctx{iteration, total_steps, timestamp, id};
+            bmi_protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, ctx);
+        }
+
     protected:
 
         /**
@@ -520,6 +527,7 @@ namespace realization {
         bool is_realization_legacy_format() const;
 
     private:
+        models::bmi::protocols::NgenBmiProtocols bmi_protocols;
         /**
          * Whether model ``Update`` calls are allowed and handled in some way by the backing model for time steps after
          * the model's ``end_time``.

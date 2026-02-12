@@ -167,9 +167,9 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 if(CMAKE_CXX_STANDARD LESS 17)
     # requires non-header filesystem for state saving if C++ 11 or lower
-    find_package(Boost 1.79.0 REQUIRED COMPONENTS system filesystem)
+    find_package(Boost 1.86.0 REQUIRED COMPONENTS system filesystem)
 else()
-    find_package(Boost 1.79.0 REQUIRED)
+    find_package(Boost 1.86.0 REQUIRED)
 endif()
 
 # -----------------------------------------------------------------------------
@@ -329,6 +329,7 @@ add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
 add_subdirectory("src/utilities/logging")
 add_subdirectory("src/utilities/python")
+add_subdirectory("src/utilities/bmi")
 
 target_link_libraries(ngen
     PUBLIC
@@ -343,6 +344,7 @@ target_link_libraries(ngen
         NGen::logging
         NGen::parallel
         NGen::state_save_restore
+        NGen::bmi_protocols
 )
 
 if(NGEN_WITH_SQLITE)
@@ -500,3 +502,7 @@ ngen_dependent_multiline_message(NGEN_WITH_PYTHON
 message(STATUS "---------------------------------------------------------------------")
 
 configure_file("${NGEN_INC_DIR}/NGenConfig.h.in" "${CMAKE_CURRENT_BINARY_DIR}/include/NGenConfig.h")
+
+include(GNUInstallDirs)
+install(TARGETS ngen OPTIONAL)
+install(TARGETS partitionGenerator OPTIONAL)
