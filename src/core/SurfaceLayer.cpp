@@ -10,7 +10,7 @@ void ngen::SurfaceLayer::update_models()
     
     Layer::update_models();
 
-    // One the first time step, check all the nexuses and warn user about ones have no contributing catchments
+    // On the first time step, check all the nexuses and warn user about ones have no contributing catchments
     if (current_time_index == 0) {
         for(const auto& id : features.nexuses()) {
             #if NGEN_WITH_MPI
