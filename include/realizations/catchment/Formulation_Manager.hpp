@@ -318,6 +318,33 @@ namespace realization {
  
                 //for case where there is no output_root in the realization file
                 return "./";
+
+            }
+
+             /**
+             * @brief Check if the formulation has catchment output writing enabled
+             *
+             * @code{.cpp}
+             * // Example config:
+             * // ...
+             * // "write_catchment_output": false
+             * // ...
+             * const auto manager = Formulation_Manger(CONFIG);
+             * manager.is_catchment_writing_enabled();
+             * //> false
+             * @endcode
+             * 
+             * @return bool
+             */
+            bool is_catchment_writing_enabled() const {
+                const auto write_enabled = this->tree.get_optional<std::string>("write_catchment_output");
+                if (write_enabled != boost::none && *write_enabled != "") {
+                    // if any variation of "false" or "no" or 0 is found, return false
+                    if (write_enabled->compare("false") == 0 || write_enabled->compare("no") == 0 || write_enabled->compare("0") == 0) {
+                        return false;
+                    }
+                } 
+                return true;
             }
 
             /**
@@ -395,6 +422,12 @@ namespace realization {
             }
 
             forcing_params get_forcing_params(const geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
+                bool enable_cache = true;
+
+                if (forcing_prop_map.count("enable_cache") != 0) {
+                    enable_cache = forcing_prop_map.at("enable_cache").as_boolean();
+                }
+
                 std::string path = "";
                 if(forcing_prop_map.count("path") != 0){
                     path = forcing_prop_map.at("path").as_string();
@@ -408,7 +441,8 @@ namespace realization {
                         path,
                         provider,
                         simulation_time_config.start_time,
-                        simulation_time_config.end_time
+                        simulation_time_config.end_time,
+                        enable_cache
                     );
                 }
 
@@ -483,52 +517,46 @@ namespace realization {
                     errMsg = "Received system error number " + std::to_string(errno);
                 }
 
-                // If the directory could be found and opened, we can go ahead and iterate
-                if (directory != nullptr) {
-                    bool match;
-                    while ((entry = readdir(directory))) {
-                        match = std::regex_match(entry->d_name, pattern);
-                        if( match ) {
-                            // If the entry is a regular file or symlink AND the name matches the pattern, 
-                            //    we can consider this ready to be interpretted as valid forcing data (even if it isn't)
-                            #ifdef _DIRENT_HAVE_D_TYPE
-                            if ( entry->d_type == DT_REG or entry->d_type == DT_LNK ) {
-                                return forcing_params(
-                                    path + entry->d_name,
-                                    provider,
-                                    simulation_time_config.start_time,
-                                    simulation_time_config.end_time
-                                );
-                            }
-                            else if ( entry->d_type == DT_UNKNOWN )
-                            #endif
-                            {
-                                //dirent is not guaranteed to provide propoer file type identification in d_type
-                                //so if a system returns unknown or it isn't supported, need to use stat to determine if it is a file
-                                struct stat st;
-                                if( stat((path+entry->d_name).c_str(), &st) != 0) {
-                                    throw std::runtime_error("Could not stat file "+path+entry->d_name);
-                                }
-                                if( S_ISREG(st.st_mode) ) {
-                                    //Sinde we used stat and not lstat, we get the result of the target of links as well
-                                    //so this covers both cases we are interested in.
-                                    return forcing_params(
-                                        path + entry->d_name,
-                                        provider,
-                                        simulation_time_config.start_time,
-                                        simulation_time_config.end_time
-                                    );
-                                }
-                                throw std::runtime_error("Forcing data is path "+path+entry->d_name+" is not a file");
-                            }
-                        } //no match found, try next entry
-                    } // end while iter dir
-                } //end if directory
-                else {
-                    // The directory wasn't found or otherwise couldn't be opened; forcing data cannot be retrieved
+                // If the directory could not be opened, throw an error
+                if (directory == nullptr) {
+                    errMsg = "Received system error number " + std::to_string(errno);
                     throw std::runtime_error("Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg);
                 }
 
+                // Check if the file pattern is a file itself
+                std::ifstream possible_file(path + filepattern);
+                if (possible_file.good()) {
+                    possible_file.close();
+                    closedir(directory);
+                    return forcing_params(
+                        path + filepattern,
+                        provider,
+                        simulation_time_config.start_time,
+                        simulation_time_config.end_time,
+                        enable_cache
+                    );
+                }
+
+                // If that failed, use regex to find the file
+                bool match;
+                while ((entry = readdir(directory))) {
+                    match = std::regex_match(entry->d_name, pattern);
+                    if( match ) {
+                        possible_file.open(path + entry->d_name);
+                        if (possible_file.good()) {
+                            possible_file.close();
+                            closedir(directory);
+                            return forcing_params(
+                                path + entry->d_name,
+                                provider,
+                                simulation_time_config.start_time,
+                                simulation_time_config.end_time,
+                                enable_cache
+                            );
+                        }
+                    }
+                }
+                possible_file.close();
                 closedir(directory);
 
                 throw std::runtime_error("Forcing data could not be found for '" + identifier + "'");
