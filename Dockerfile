@@ -473,6 +473,11 @@ RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
     cd extern/topoflow-glacier; \
     pip install .
 
+RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
+    set -eux; \
+    cd extern/topoflow-glacier; \
+    pip install .
+
 RUN set -eux && \
     mkdir --parents /ngencerf/data/ngen-run-logs/ && \
     mkdir --parents /ngen-app/bin/ && \
