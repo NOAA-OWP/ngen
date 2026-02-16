@@ -327,6 +327,11 @@ RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
     cd extern/lstm; \
     pip install . ./lstm_ewts
 
+RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
+    set -eux; \
+    cd extern/topoflow-glacier; \
+    pip install .
+
 RUN set -eux && \
     mkdir --parents /ngencerf/data/ngen-run-logs/ && \
     mkdir --parents /ngen-app/bin/ && \
@@ -417,6 +422,9 @@ RUN set -eux && \
 
 # Extend PYTHONPATH for LSTM models (preserve venv path from ngen-bmi-forcing)
 ENV PYTHONPATH="${PYTHONPATH}:/ngen-app/ngen/extern/lstm:/ngen-app/ngen/extern/lstm/lstm"
+
+# Extend PYTHONPATH for Topoflow-Glacier
+ENV PYTHONPATH="${PYTHONPATH}:/ngen-app/ngen/extern/topoflow-glacier:/ngen-app/ngen/extern/topoflow-glacier/src/topoflow-glacier"
 
 WORKDIR /
 SHELL ["/bin/bash", "-c"]
