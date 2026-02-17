@@ -106,7 +106,7 @@ const boost::span<char> Bmi_Fortran_Formulation::get_serialization_state() {
     // the BMI can have its state freed immediately since the data is now stored on the formulation
     model->SetValue(StateSaveNames::FREE, &size_int);
     // return a span of the data stored on the formulation
-    const boost::span<char>(this->serialized_state.data(), this->serialized_state.size());
+    const boost::span<char> span(this->serialized_state.data(), this->serialized_state.size());
     return span;
 }
 
