@@ -314,7 +314,6 @@ namespace realization {
          * Existing state pointers should not be used as the stored data may be freed depending on implementation.
          */
         virtual void free_serialization_state();
-
         void set_realization_file_format(bool is_legacy_format);
 
         virtual void check_mass_balance(const int& iteration, const int& total_steps, const std::string& timestamp) const override {
