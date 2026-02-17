@@ -304,7 +304,7 @@ namespace realization {
          * Requests the BMI to clear a currently saved state from memory.
          * Existing state pointers should not be used as the stored data may be freed depending on implementation.
          */
-        void free_serialization_state();
+        virtual void free_serialization_state();
         void set_realization_file_format(bool is_legacy_format);
 
     protected:

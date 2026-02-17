@@ -9,4 +9,22 @@ namespace StateSaveNames {
     const auto RESET = "reset_time";
 }
 
+enum class State_Save_Direction {
+    None = 0,
+    Save,
+    Load
+};
+
+enum class State_Save_Mechanism {
+    None = 0,
+    FilePerUnit
+};
+
+enum class State_Save_When {
+    None = 0,
+    EndOfRun,
+    FirstOfMonth,
+    StartOfRun
+};
+
 #endif

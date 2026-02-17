@@ -5,6 +5,7 @@
 
 #if NGEN_WITH_BMI_FORTRAN
 
+#include <vector>
 #include "Bmi_Module_Formulation.hpp"
 #include <GenericDataProvider.hpp>
 
@@ -30,6 +31,10 @@ namespace realization {
          * @return Span of the serialized data.
          */
         const boost::span<char> get_serialization_state() override;
+
+        void load_serialization_state(boost::span<char> state) override;
+
+        void free_serialization_state() override;
 
     protected:
 
@@ -57,6 +62,10 @@ namespace realization {
         friend class ::Bmi_Multi_Formulation_Test;
         friend class ::Bmi_Formulation_Test;
         friend class ::Bmi_Fortran_Formulation_Test;
+
+    private:
+        // location to store serialized state from the BMI because pointer interfaces are not available for Fotran
+        std::vector<char> serialized_state;
     };
 
 }

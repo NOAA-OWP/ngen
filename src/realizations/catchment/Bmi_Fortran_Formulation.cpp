@@ -95,14 +95,36 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
 }
 
 const boost::span<char> Bmi_Fortran_Formulation::get_serialization_state() {
-    auto model = dynamic_cast<models::bmi::Bmi_Fortran_Adapter *>(get_bmi_model().get());
+    auto model = this->get_bmi_model();
+    // create the serialized state on the Fortran BMI
     int size_int = 0;
     model->SetValue(StateSaveNames::CREATE, &size_int);
     model->GetValue(StateSaveNames::SIZE, &size_int);
-    int *serialization_ptr = model->GetValuePtrInt(StateSaveNames::STATE);
-    char *serialization_state = reinterpret_cast<char *>(serialization_ptr);
-    const boost::span<char> span(serialization_state, size_int);
+    // since GetValuePtr on the Fortran BMI does not work currently, store the data on the formulation
+    this->serialized_state.resize(size_int);
+    model->GetValue(StateSaveNames::STATE, this->serialized_state.data());
+    // the BMI can have its state freed immediately since the data is now stored on the formulation
+    model->SetValue(StateSaveNames::FREE, &size_int);
+    // return a span of the data stored on the formulation
+    const boost::span<char>(this->serialized_state.data(), this->serialized_state.size());
     return span;
+}
+
+void Bmi_Fortran_Formulation::load_serialization_state(boost::span<char> state) {
+    auto model = this->get_bmi_model();
+    int int_array_size = std::ceil(state.size() / static_cast<double>(sizeof(int)));
+    // setting size is a workaround for loading the state.
+    // The BMI Fortran interface shapes the incoming pointer to the same size as the data currently backing the BMI's variable.
+    // By setting the size, the BMI can lie about the size of its state variable to that interface.
+    model->SetValue(StateSaveNames::SIZE, &int_array_size);
+    model->SetValue(StateSaveNames::STATE, state.data());
+}
+
+void Bmi_Fortran_Formulation::free_serialization_state() {
+    // The serialized data needs to be stored on the formluation since GetValuePtr is not available on Fortran BMIs.
+    // The backing BMI's serialization data should already be freed during `get_serialization_state`, so clearing the formulation's data is all that is needed.
+    this->serialized_state.clear();
+    this->serialized_state.shrink_to_fit();
 }
 
 #endif // NGEN_WITH_BMI_FORTRAN

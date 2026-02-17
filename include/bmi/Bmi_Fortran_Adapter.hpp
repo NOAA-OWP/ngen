@@ -231,22 +231,6 @@ namespace models {
                 return ptr;
             }
 
-            int* GetValuePtrInt(const std::string &name) {
-                int nbytes;
-                if (get_var_nbytes(&bmi_model->handle, name.c_str(), &nbytes) != BMI_SUCCESS) {
-                    std::string throw_msg; throw_msg.assign(model_name + " failed to get int pointer for BMI variable " + name + ".");
-                    LOG(throw_msg, LogLevel::WARNING);
-                    throw std::runtime_error(throw_msg);
-                }
-                int *dest;
-                if (get_value_ptr_int(&bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
-                    std::string throw_msg; throw_msg.assign(model_name + " failed to get int pointer for BMI variable " + name + ".");
-                    LOG(throw_msg, LogLevel::WARNING);
-                    throw std::runtime_error(throw_msg);
-                }
-                return dest;
-            }
-
             /**
              * Get the size (in bytes) of one item of a variable.
              *
