@@ -48,12 +48,6 @@ namespace realization {
 
         virtual ~Bmi_Multi_Formulation() {};
 
-        void save_state(std::shared_ptr<State_Snapshot_Saver> saver) override;
-
-        void load_state(std::shared_ptr<State_Snapshot_Loader> loader) override;
-
-        void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) override;
-        
         virtual void check_mass_balance(const int& iteration, const int& total_steps, const std::string& timestamp) const final {
             for( const auto &module : modules ) {
                 // TODO may need to check on outputs form each module indepdently???
