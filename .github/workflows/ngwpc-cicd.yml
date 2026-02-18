@@ -160,7 +160,7 @@ jobs:
 
           ./bootstrap.sh --prefix="${PREFIX}"
 
-          # Build only common compiled libs (adjust if you need more)
+          # Build Boost libraries
           ./b2 -j"$(nproc)" install \
             --with-system \
             --with-filesystem \
@@ -169,7 +169,6 @@ jobs:
             --with-regex \
             --with-date_time \
             --with-serialization
-
           echo "BOOST_ROOT=${PREFIX}" >> "$GITHUB_ENV"
           echo "CMAKE_PREFIX_PATH=${PREFIX}:${CMAKE_PREFIX_PATH:-}" >> "$GITHUB_ENV"
 
