@@ -167,7 +167,8 @@ jobs:
             --with-program_options \
             --with-thread \
             --with-regex \
-            --with-date_time
+            --with-date_time \
+            --with-serialization
 
           echo "BOOST_ROOT=${PREFIX}" >> "$GITHUB_ENV"
           echo "CMAKE_PREFIX_PATH=${PREFIX}:${CMAKE_PREFIX_PATH:-}" >> "$GITHUB_ENV"
