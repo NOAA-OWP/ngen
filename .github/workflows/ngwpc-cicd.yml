@@ -139,7 +139,7 @@ jobs:
         uses: github/codeql-action/init@v4
         with:
           languages: cpp
-      - name: Install Boost 1.86.0
+      - name: Install Boost
         shell: bash
         run: |
           set -euo pipefail
@@ -151,9 +151,9 @@ jobs:
           BOOST_UNDERSCORE=1_86_0
           PREFIX=/opt/boost-${BOOST_VER}
 
-          curl -fL --retry 5 --retry-delay 2 \
+          curl -fL --retry 10 --retry-delay 2 --max-time 600 \
             -o /tmp/boost.tar.bz2 \
-            "https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VER}/source/boost_${BOOST_UNDERSCORE}.tar.bz2"
+            "https://sourceforge.net/projects/boost/files/boost/${BOOST_VER}/boost_${BOOST_UNDERSCORE}.tar.bz2/download"
 
           tar -xjf /tmp/boost.tar.bz2 -C /tmp
           cd "/tmp/boost_${BOOST_UNDERSCORE}"
