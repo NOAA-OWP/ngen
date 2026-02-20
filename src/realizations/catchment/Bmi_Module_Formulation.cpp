@@ -583,10 +583,30 @@ namespace realization {
                     available_forcing_units[output_var_name] = get_bmi_model()->GetVarUnits(output_var_name);
                     if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end()){
                         available_forcings.push_back(bmi_var_names_map[output_var_name]);
+                        available_forcing_units[bmi_var_names_map[output_var_name]] = get_bmi_model()->GetVarUnits(output_var_name); //units come from the model output variable.
+                    }
                 }
                 //Initialize all NgenBmiProtocols with the valid adapter pointer and any properties
                 //provided in the read configuration.
                 bmi_protocols = models::bmi::protocols::NgenBmiProtocols(get_bmi_model(), properties);
+            }
+
+            //check if units have not been specified. If not, default to native units.
+            std::string blank_string = "";
+            auto &names = get_output_variable_names();
+            if(output_var_units.size() == 0){
+                output_var_units.resize(names.size(), blank_string);
+            }
+
+            for (int i = 0; i < names.size(); ++i) {
+                if (output_var_units[i] == blank_string){
+                    output_var_units[i] = get_provider_units_for_variable(names[i]);
+                }
+            }
+
+            //check if output variable indices (for vector variables) are specified in config. If not, default to zero (first index).
+            if(output_var_indices.size() == 0){
+                output_var_indices.resize(names.size(), 0);
             }
         }
         /**
