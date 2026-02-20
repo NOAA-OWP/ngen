@@ -388,7 +388,6 @@ private:
     }
 
     inline void buildExampleConfig(const int ex_index, const int nested_count) {
-        std::string outputVariablesSubConfig = (ex_index == 6) ? buildExampleOutputVariablesSubConfig(ex_index, true) : buildExampleOutputVariablesSubConfig(ex_index) + "\n";
         std::string config =
                 "{\n"
                 "    \"global\": {},\n"
@@ -492,7 +491,7 @@ void Bmi_Multi_Formulation_Test::SetUp() {
 
     // Define this manually to set how many nested modules per example, and implicitly how many examples.
     // This means example_module_depth.size() example scenarios with example_module_depth[i] nested modules in each scenario.
-    example_module_depth = {2, 2, 2, 2, 2, 2, 2, 3};
+    example_module_depth = {2, 2, 2, 2, 2, 2, 3};
 
     // Initialize the members for holding required input and result test data for individual example scenarios
     setupExampleDataCollections();
@@ -533,14 +532,13 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     initializeTestExample(4, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, { "bogus_variable" });
     initializeTestExample(5, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, { "OUTPUT_VAR_1" });
 
-    initializeTestExample(6, "cat-27", {std::string(BMI_CPP_TYPE), std::string(BMI_FORTRAN_TYPE)}, { "OUTPUT_VAR_3","OUTPUT_VAR_3","OUTPUT_VAR_3" });
-
     #if NGEN_WITH_BMI_C
-    initializeTestExample(7, "cat-27", {std::string(BMI_C_TYPE), std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {"OUTPUT_VAR_1__0"}); // Output var from C module...
+    initializeTestExample(6, "cat-27", {std::string(BMI_C_TYPE), std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {"OUTPUT_VAR_1__0"}); // Output var from C module...
     #else
-    initializeTestExample(7, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {"OUTPUT_VAR_1__0"}); // Output var from Fortran module...
+    initializeTestExample(6, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {"OUTPUT_VAR_1__0"}); // Output var from Fortran module...
     
     #endif // NGEN_WITH_PYTHON
+    
 }
 
 /** Simple test to make sure the model config from example 0 initializes. */

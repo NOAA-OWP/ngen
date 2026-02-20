@@ -28,7 +28,6 @@ target_link_libraries(ngen_bmi_protocols
   PUBLIC
     ${CMAKE_DL_LIBS}
     Boost::boost # Headers-only Boost
-    NGen::logging
 )
 
 target_sources(ngen_bmi_protocols

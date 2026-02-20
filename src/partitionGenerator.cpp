@@ -147,9 +147,9 @@ void generate_partitions(network::Network& network, const int& num_partitions, P
             for( auto downstream : network.get_destination_ids(catchment) ){
                 nexus_set.emplace(downstream);
             }
-            if(nexus_set.size() == 0){
-                partgen_ss <<"Error: Catchment "<<catchment<<" has no destination nexus.\n";
-                LOG(partgen_ss.str(), LogLevel::WARNING); partgen_ss.str("");
+            if(nexus_set.size() == 0 && catchment.find("SENTINEL") == std::string::npos){
+                std::cerr<<"Error: Catchment "<<catchment<<" has no destination nexus.\n";
+                exit(1);
             }
             for( auto upstream : network.get_origination_ids(catchment) ){
                 nexus_set.emplace(upstream);
@@ -527,7 +527,6 @@ int main(int argc, char* argv[])
                 geojson::Feature sentinel_feature = std::make_shared<geojson::SentinelFeature>(sentinel_id);
                 sentinels.push_back(sentinel_feature);
                 feature->add_destination_feature(sentinel_feature.get());
-                LOG("Nexus " + feature->get_id() + " has no destination features; adding " + sentinel_id + " below it", LogLevel::INFO);
             }
         }
     }
