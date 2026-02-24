@@ -63,8 +63,7 @@
 	path = extern/lstm
 	url = https://github.com/NGWPC/lstm.git
         branch = development
-
 [submodule "extern/topoflow-glacier"]
 	path = extern/topoflow-glacier
 	url = https://github.com/NGWPC/topoflow-glacier.git
-	branch = ngen_integration_mohammed
+	branch = development
