@@ -32,7 +32,7 @@ namespace realization {
          */
         const boost::span<char> get_serialization_state() override;
 
-        void load_serialization_state(boost::span<char> state) override;
+        void load_serialization_state(const boost::span<char> state) override;
 
         void free_serialization_state() override;
 

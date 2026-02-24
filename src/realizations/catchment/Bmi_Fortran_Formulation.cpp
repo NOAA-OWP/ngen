@@ -99,9 +99,11 @@ const boost::span<char> Bmi_Fortran_Formulation::get_serialization_state() {
     // create the serialized state on the Fortran BMI
     int size_int = 0;
     model->SetValue(StateSaveNames::CREATE, &size_int);
+    // the size coming in should be the number of int elements in the Fortran backing array, not the byte size of the array
     model->GetValue(StateSaveNames::SIZE, &size_int);
+    // resize the state to the array to the size of the Fortran's backing array
+    this->serialized_state.resize(size_int * sizeof(int));
     // since GetValuePtr on the Fortran BMI does not work currently, store the data on the formulation
-    this->serialized_state.resize(size_int);
     model->GetValue(StateSaveNames::STATE, this->serialized_state.data());
     // the BMI can have its state freed immediately since the data is now stored on the formulation
     model->SetValue(StateSaveNames::FREE, &size_int);
@@ -110,9 +112,18 @@ const boost::span<char> Bmi_Fortran_Formulation::get_serialization_state() {
     return span;
 }
 
-void Bmi_Fortran_Formulation::load_serialization_state(boost::span<char> state) {
+void Bmi_Fortran_Formulation::load_serialization_state(const boost::span<char> state) {
     auto model = this->get_bmi_model();
-    int int_array_size = std::ceil(state.size() / static_cast<double>(sizeof(int)));
+    // get number of ints needed to store chars
+    double num_ints = state.size() / static_cast<double>(sizeof(int));
+    int int_array_size = std::ceil(num_ints);
+    // assert the number of chars aligns with an integer array to prevent reading out of bounds
+    if (int_array_size != std::floor(num_ints)) {
+        std::string error = "Fortran Deserialization: The number of bytes in the state (" + std::to_string(state.size())
+            + ") must be a multiple of the size of an int (" + std::to_string(sizeof(int)) + ")";
+        LOG(LogLevel::SEVERE, error);
+        throw std::runtime_error(error);
+    }
     // setting size is a workaround for loading the state.
     // The BMI Fortran interface shapes the incoming pointer to the same size as the data currently backing the BMI's variable.
     // By setting the size, the BMI can lie about the size of its state variable to that interface.
