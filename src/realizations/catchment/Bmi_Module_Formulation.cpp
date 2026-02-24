@@ -608,6 +608,22 @@ namespace realization {
             if(output_var_indices.size() == 0){
                 output_var_indices.resize(names.size(), 0);
             }
+
+            // look for optional evapotransporation variable
+            auto evapotranspiration_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__EVAPOTRANSPIRATION);
+            if (evapotranspiration_it != properties.end()) {
+                std::string et_var = evapotranspiration_it->second.as_string();
+                if (!et_var.empty()) {
+                    const auto& out_fields = this->get_output_header_fields();
+                    auto it = std::find(out_fields.begin(), out_fields.end(), et_var);
+                    if (it != out_fields.end()) {
+                        this->evapotranspiration_index = std::distance(out_fields.begin(), it);
+                        this->set_bmi_evapotranspiration_var(et_var);
+                    } else {
+                        LOG(LogLevel::WARNING, "An evapotranspiration source was set (%s) but could not be found in the available output fields.", et_var.c_str());
+                    }
+                }
+            }
         }
         /**
          * @brief Template function for copying iterator range into contiguous array.
@@ -1106,4 +1122,44 @@ namespace realization {
             void* _; // this pointer will be unused by SetValue
             bmi->SetValue("serialization_free", _);
         }
+
+        double Bmi_Module_Formulation::get_current_evapotranspiration() {
+            if (this->evapotranspiration_index < 0) {
+                return 0.0;
+            }
+            std::string out_units_norm = (output_var_units[this->evapotranspiration_index].empty() || output_var_units[this->evapotranspiration_index] == "none") ? "1" : output_var_units[this->evapotranspiration_index];
+            double value;
+            try {
+                value = this->get_value(
+                    CatchmentAggrDataSelector(
+                        this->get_catchment_id(),
+                        this->get_bmi_evapotranspiration_var(),
+                        0,
+                        0,
+                        out_units_norm,
+                        output_var_indices[this->evapotranspiration_index]
+                    ),
+                    MEAN
+                );
+            } catch (data_access::unit_conversion_exception &uce) {
+                data_access::unit_error_log_key key{"Evapotranspiration", this->get_bmi_evapotranspiration_var(), uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                auto ret = data_access::unit_errors_reported.insert(key);
+                if (ret.second) { // if new error
+                    std::stringstream ss;
+                    ss << "Unit conversion failure:"
+                        << " requester {'Get Output Line for Timestep (Module Formulation)"
+                        << "' catchment '" << get_catchment_id()
+                        << "' variable '" << this->get_bmi_evapotranspiration_var()
+                        << "' units '" << output_var_units[this->evapotranspiration_index] << "'}"
+                        << " provider {'" << uce.provider_model_name
+                        << "' source variable '" << uce.provider_bmi_var_name << "'"
+                        << " raw value " << uce.unconverted_values[0] << "}"
+                        << " message \"" << uce.what() << "\"";
+                    LOG(ss.str(), LogLevel::WARNING);
+                }
+                value = uce.unconverted_values[0];
+            }
+            return value;
+        }
+
 }

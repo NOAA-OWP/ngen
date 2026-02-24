@@ -41,7 +41,9 @@ namespace realization {
          * @param output_stream
          */
         Bmi_Module_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
-                : Bmi_Formulation(std::move(id), forcing_provider, output_stream) { }
+            : Bmi_Formulation(std::move(id), forcing_provider, output_stream)
+            , evapotranspiration_index{-1}
+        { }
 
         ~Bmi_Module_Formulation() override = default;
 
@@ -513,6 +515,8 @@ namespace realization {
 
         bool is_realization_legacy_format() const;
 
+        double get_current_evapotranspiration() override;
+
     private:
         models::bmi::protocols::NgenBmiProtocols bmi_protocols;
         /**
@@ -543,6 +547,8 @@ namespace realization {
 
         std::vector<int> output_var_indices;
 
+        int evapotranspiration_index;
+
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS
                 BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,
@@ -552,7 +558,8 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION,
                 BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END,
                 BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP,
-                BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE
+                BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE,
+                BMI_REALIZATION_CFG_PARAM_OPT__EVAPOTRANSPIRATION
         };
         std::vector<std::string> REQUIRED_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,

@@ -256,6 +256,14 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             available_forcing_units[var_name] = module->get_provider_units_for_variable(var_name);
         }
     }
+
+    // find evapotranspiration source if applicable
+    for (int i = 0; i < this->modules.size(); ++i) {
+        if (!this->modules[i]->get_bmi_evapotranspiration_var().empty()) {
+            this->evapotranspiration_module_index = i;
+            break;
+        }
+    }
 }
 
 /**
@@ -607,6 +615,12 @@ bool Bmi_Multi_Formulation::is_realization_legacy_format() const {
 }
 void Bmi_Multi_Formulation::set_realization_file_format(bool is_legacy_format){
     legacy_json_format = is_legacy_format;
+}
+
+double Bmi_Multi_Formulation::get_current_evapotranspiration() {
+    return (this->evapotranspiration_module_index < 0)
+        ? 0.0
+        : this->modules[this->evapotranspiration_module_index]->get_current_evapotranspiration();
 }
 
 //Function to find whether any item in the string vector is empty or blank

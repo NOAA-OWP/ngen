@@ -43,7 +43,9 @@ namespace realization {
          * @param output_stream
          */
         Bmi_Multi_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
-                : Bmi_Formulation(std::move(id), forcing_provider, output_stream) { };
+            : Bmi_Formulation(std::move(id), forcing_provider, output_stream)
+            , evapotranspiration_module_index{-1}
+        { };
 
         virtual ~Bmi_Multi_Formulation() {};
 
@@ -544,6 +546,8 @@ namespace realization {
 
         void update(time_step_t t_index, time_step_t t_delta) override;
 
+        double get_current_evapotranspiration() override;
+
     protected:
 
         /**
@@ -769,6 +773,8 @@ namespace realization {
 
         /** Whether the realization file follows legacy format or the new format. */
         bool legacy_json_format = false;
+
+        int evapotranspiration_module_index;
 
         friend Bmi_Multi_Formulation_Test;
         friend class ::Bmi_Cpp_Multi_Array_Test;

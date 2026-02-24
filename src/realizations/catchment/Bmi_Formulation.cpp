@@ -10,7 +10,8 @@ namespace realization
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS,
                 BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END,
                 BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP,
-                BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE
+                BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE,
+                BMI_REALIZATION_CFG_PARAM_OPT__EVAPOTRANSPIRATION
         };
         const std::vector<std::string> Bmi_Formulation::REQUIRED_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,

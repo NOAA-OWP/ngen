@@ -102,6 +102,8 @@ namespace realization {
              */
             void finalize();
 
+            virtual double get_current_evapotranspiration() = 0;
+
     protected:
             std::string get_catchment_id() const override {
                 return this->cat_id;

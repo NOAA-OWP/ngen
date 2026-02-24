@@ -7,7 +7,7 @@
 #include "HY_Features.hpp"
 #endif
 
-void ngen::Layer::update_models(boost::span<double> catchment_outflows,
+void ngen::Layer::update_models(boost::span<double> catchment_evapotranspiration,
                                 std::unordered_map<std::string, int> &catchment_indexes,
                                 boost::span<double> nexus_downstream_flows,
                                 std::unordered_map<std::string, int> &nexus_indexes,
@@ -46,8 +46,8 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
             throw std::runtime_error(msg);
         }
 #if NGEN_WITH_ROUTING
-        int results_index = catchment_indexes[id];
-        catchment_outflows[results_index] += response;
+        int et_index = catchment_indexes[id];
+        catchment_evapotranspiration[et_index] += r_c->get_current_evapotranspiration();
 #endif // NGEN_WITH_ROUTING
         if (r_c->get_output_header_count() > 0) {
             // only write output if config specifies output values

@@ -16,6 +16,7 @@
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE "model_type_name"
 
 // Then the optional
+#define BMI_REALIZATION_CFG_PARAM_OPT__EVAPOTRANSPIRATION "evapotranspiration_variable"
 #define BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS "uses_forcing_file"
 #define BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE "forcing_file"
 #define BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "variables_names_map"
@@ -176,6 +177,10 @@ namespace realization {
             return output_variable_names;
         }
 
+        std::string get_bmi_evapotranspiration_var() const {
+            return this->bmi_evapotranspiration_var;
+        }
+
         const std::vector<std::string> &get_required_parameters() const override {
             return REQUIRED_PARAMETERS;
         }
@@ -225,6 +230,10 @@ namespace realization {
             bmi_main_output_var = main_output_var;
         }
 
+        void set_bmi_evapotranspiration_var(const std::string &evapotranspiration_var) {
+            this->bmi_evapotranspiration_var = evapotranspiration_var;
+        }
+
         /**
          * Set the name of the specific type of the backing model object.
          *
@@ -253,6 +262,7 @@ namespace realization {
     private:
 
         std::string bmi_main_output_var;
+        std::string bmi_evapotranspiration_var;
         std::string model_type_name;
         /**
          * Output header field strings corresponding to the variables output by the realization, as defined in

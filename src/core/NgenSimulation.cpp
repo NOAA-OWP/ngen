@@ -30,7 +30,7 @@ NgenSimulation::NgenSimulation(
     , mpi_rank_(mpi_rank)
     , mpi_num_procs_(mpi_num_procs)
 {
-    catchment_outflows_.reserve(catchment_indexes_.size() * get_num_output_times());
+    catchment_evapotranspiration_.reserve(catchment_indexes_.size() * get_num_output_times());
     nexus_downstream_flows_.reserve(nexus_indexes_.size() * get_num_output_times());
 }
 
@@ -43,7 +43,7 @@ void NgenSimulation::run_catchments()
 
     for (; simulation_step_ < num_times; simulation_step_++) {
         // Make room for this output step's results
-        catchment_outflows_.resize(catchment_outflows_.size() + catchment_indexes_.size(), 0.0);
+        catchment_evapotranspiration_.resize(catchment_evapotranspiration_.size() + catchment_indexes_.size(), 0.0);
         nexus_downstream_flows_.resize(nexus_downstream_flows_.size() + nexus_indexes_.size(), 0.0);
 
         advance_models_one_output_step();
@@ -84,7 +84,7 @@ void NgenSimulation::advance_models_one_output_step()
                     LOG(("Updating layer: '" + layer->get_name() + "' at output step " + std::to_string(simulation_step_)), LogLevel::DEBUG);
                 }
 
-                boost::span<double> catchment_span(catchment_outflows_.data() + (simulation_step_ * catchment_indexes_.size()),
+                boost::span<double> catchment_span(catchment_evapotranspiration_.data() + (simulation_step_ * catchment_indexes_.size()),
                                                    catchment_indexes_.size());
                 boost::span<double> nexus_span(nexus_downstream_flows_.data() + (simulation_step_ * nexus_indexes_.size()),
                                                nexus_indexes_.size());
@@ -122,6 +122,8 @@ double NgenSimulation::get_nexus_outflow(int nexus_index, int timestep_index) co
 void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::string const& t_route_config_file_with_path)
 {
 #if NGEN_WITH_ROUTING
+    std::vector<double> *routing_evapotranspiration = &this->catchment_evapotranspiration_;
+    std::unordered_map<std::string, int> *routing_catchment_indexes = &this->catchment_indexes_;
     std::vector<double> *routing_nexus_downflows = &nexus_downstream_flows_;
     std::unordered_map<std::string, int> *routing_nexus_indexes = &nexus_indexes_;
 
@@ -135,58 +137,28 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::s
 #if NGEN_WITH_MPI
     std::vector<double> all_nexus_downflows;
     std::unordered_map<std::string, int> all_nexus_indexes;
+    std::vector<double> all_evapotransportations;
+    std::unordered_map<std::string, int> all_catchment_indexes;
 
     if (mpi_num_procs_ > 1) {
-        std::vector<std::string> local_nexus_ids;
-        for (const auto& nexus : nexus_indexes_) {
-            local_nexus_ids.push_back(nexus.first);
-        }
-        // MPI_Gather all nexus IDs into a single vector
-        std::vector<std::string> all_nexus_ids = parallel::gather_strings(local_nexus_ids, mpi_rank_, mpi_num_procs_);
-        if (mpi_rank_ == 0) {
-            // filter to only the unique IDs
-            std::sort(all_nexus_ids.begin(), all_nexus_ids.end());
-            all_nexus_ids.erase(
-                std::unique(all_nexus_ids.begin(), all_nexus_ids.end()),
-                all_nexus_ids.end()
-            );
-        }
-        // MPI_Broadcast so all processes share the nexus IDs
-        all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, mpi_rank_, mpi_num_procs_));
-
-        // MPI_Reduce to collect the results from processes
-        if (mpi_rank_ == 0) {
-            all_nexus_downflows.resize(number_of_timesteps * all_nexus_ids.size(), 0.0);
-        }
-        std::vector<double> local_buffer(number_of_timesteps);
-        std::vector<double> receive_buffer(number_of_timesteps, 0.0);
-        for (int i = 0; i < all_nexus_ids.size(); ++i) {
-            std::string nexus_id = all_nexus_ids[i];
-            if (nexus_indexes_.find(nexus_id) != nexus_indexes_.end() && !features.is_remote_sender_nexus(nexus_id)) {
-                // if this process has the id and receives/records data, copy the values to the buffer
-                int nexus_index = nexus_indexes_[nexus_id];
-                for (int step = 0; step < number_of_timesteps; ++step) {
-                    int offset = step * nexus_indexes_.size() + nexus_index;
-                    local_buffer[step] = nexus_downstream_flows_[offset];
-                }
-            } else {
-                // if this process does not have the id, fill with 0 to make sure it doesn't affect reduce sum
-                std::fill(local_buffer.begin(), local_buffer.end(), 0.0);
-            }
-            MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-            if (mpi_rank_ == 0) {
-                // copy reduce values to a combined downflows vector
-                all_nexus_indexes[nexus_id] = i;
-                for (int step = 0; step < number_of_timesteps; ++step) {
-                    int offset = step * all_nexus_ids.size() + i;
-                    all_nexus_downflows[offset] = receive_buffer[step];
-                    receive_buffer[step] = 0.0;
-                }
-            }
-        }
-
+        this->gather_indexes_and_values(
+            features,
+            this->catchment_indexes_,
+            this->catchment_evapotranspiration_,
+            all_catchment_indexes,
+            all_evapotransportations
+        );
+        this->gather_indexes_and_values(
+            features,
+            this->nexus_indexes_,
+            this->nexus_downstream_flows_,
+            all_nexus_indexes,
+            all_nexus_downflows
+        );
         if (mpi_rank_ == 0) {
             // update root's local data for running t-route below
+            routing_catchment_indexes = &all_catchment_indexes;
+            routing_evapotranspiration = &all_evapotransportations;
             routing_nexus_indexes = &all_nexus_indexes;
             routing_nexus_downflows = &all_nexus_downflows;
         }
@@ -234,10 +206,71 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::s
                                routing_nexus_downflows->data() + (i * nexus_count));
             py_troute.Update();
         }
+        // TODO: messaging to send evapotranspirtion data to T-Route BMI
         // Finalize will write the output file
         py_troute.Finalize();
     }
 #endif // NGEN_WITH_ROUTING
+}
+
+void NgenSimulation::gather_indexes_and_values(
+    const NgenSimulation::hy_features_t &features,
+    const std::unordered_map<std::string, int> &indexes,
+    const std::vector<double> &values,
+    std::unordered_map<std::string, int> &gathered_indexes,
+    std::vector<double> &gathered_values
+) {
+#if NGEN_WITH_MPI
+    size_t number_of_timesteps = sim_time_->get_total_output_times();
+
+    std::vector<std::string> local_ids;
+    for (const auto& ids : indexes) {
+        local_ids.push_back(ids.first);
+    }
+    // MPI_Gather all IDs into a single vector
+    std::vector<std::string> all_ids = parallel::gather_strings(local_ids, this->mpi_rank_, this->mpi_num_procs_);
+    if (mpi_rank_ == 0) {
+        // filter to only the unique IDs
+        std::sort(all_ids.begin(), all_ids.end());
+        all_ids.erase(
+            std::unique(all_ids.begin(), all_ids.end()),
+            all_ids.end()
+        );
+    }
+    // MPI_Broadcast so all processes share the IDs
+    all_ids = std::move(parallel::broadcast_strings(all_ids, this->mpi_rank_, this->mpi_num_procs_));
+
+    // MPI_Reduce to collect the results from processes
+    if (this->mpi_rank_ == 0) {
+        gathered_values.resize(number_of_timesteps * all_ids.size(), 0.0);
+    }
+    std::vector<double> local_buffer(number_of_timesteps);
+    std::vector<double> receive_buffer(number_of_timesteps, 0.0);
+    for (int i = 0; i < all_ids.size(); ++i) {
+        std::string current_id = all_ids[i];
+        if (indexes.find(current_id) != indexes.end() && !features.is_remote_sender_nexus(current_id)) {
+            // if this process has the id and receives/records data, copy the values to the buffer
+            int value_index = indexes.at(current_id);
+            for (int step = 0; step < number_of_timesteps; ++step) {
+                int offset = step * indexes.size() + value_index;
+                local_buffer[step] = values[offset];
+            }
+        } else {
+            // if this process does not have the id, fill with 0 to make sure it doesn't affect reduce sum
+            std::fill(local_buffer.begin(), local_buffer.end(), 0.0);
+        }
+        MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+        if (mpi_rank_ == 0) {
+            // copy reduce values to a combined downflows vector
+            gathered_indexes[current_id] = i;
+            for (int step = 0; step < number_of_timesteps; ++step) {
+                int offset = step * all_ids.size() + i;
+                gathered_values[offset] = receive_buffer[step];
+                receive_buffer[step] = 0.0;
+            }
+        }
+    }
+#endif // NGEN_WITH_MPI
 }
 
 size_t NgenSimulation::get_num_output_times() const
@@ -265,7 +298,7 @@ void NgenSimulation::serialize(Archive& ar) {
     // Nexus and catchment indexes could be re-generated, but only if
     // the set of catchments remains consistent
     ar & catchment_indexes_;
-    ar & catchment_outflows_;
+    ar & catchment_evapotranspiration_;
     ar & nexus_indexes_;
     ar & nexus_downstream_flows_;
 }
