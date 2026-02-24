@@ -137,7 +137,7 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::s
 #if NGEN_WITH_MPI
     std::vector<double> all_nexus_downflows;
     std::unordered_map<std::string, int> all_nexus_indexes;
-    std::vector<double> all_evapotransportations;
+    std::vector<double> all_evapotranspiration;
     std::unordered_map<std::string, int> all_catchment_indexes;
 
     if (mpi_num_procs_ > 1) {
@@ -146,7 +146,7 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::s
             this->catchment_indexes_,
             this->catchment_evapotranspiration_,
             all_catchment_indexes,
-            all_evapotransportations
+            all_evapotranspiration
         );
         this->gather_indexes_and_values(
             features,
@@ -158,7 +158,7 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::s
         if (mpi_rank_ == 0) {
             // update root's local data for running t-route below
             routing_catchment_indexes = &all_catchment_indexes;
-            routing_evapotranspiration = &all_evapotransportations;
+            routing_evapotranspiration = &all_evapotranspiration;
             routing_nexus_indexes = &all_nexus_indexes;
             routing_nexus_downflows = &all_nexus_downflows;
         }
