@@ -37,8 +37,12 @@ protected:
     static std::string friend_get_nc_time_dim_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_time_dim_name; }
 
 
-    static void friend_write_nexus_ids_once(utils::PerFormulationNexusOutputMgr* obj, int nc_id) {
-        return obj->write_nexus_ids_once(nc_id);
+    static void friend_write_nexus_ids_once(utils::PerFormulationNexusOutputMgr* obj) {
+        return obj->write_nexus_ids_once();
+    }
+
+    static void friend_open_file_for_writing_once(utils::PerFormulationNexusOutputMgr* obj) {
+        obj->open_unopened_netcdf_file_via_c_api();
     }
 
     int rank, size;
@@ -826,10 +830,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_0_a)
     }
 
     {
-        // Just call write_nexus_ids_once_c
-        int write_nc_id;
-        nc_open(filenames->at(0).c_str(), NC_WRITE, &write_nc_id);
-        friend_write_nexus_ids_once(&mgr, write_nc_id);
+        friend_open_file_for_writing_once(&mgr);
+        friend_write_nexus_ids_once(&mgr);
     }
 
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
@@ -871,11 +873,10 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_1_a)
     }
 
     {
-        // Just call write_nexus_ids_once_c
-        int write_nc_id;
-        nc_open(filenames->at(0).c_str(), NC_WRITE, &write_nc_id);
-        friend_write_nexus_ids_once(&mgr_a, write_nc_id);
-        friend_write_nexus_ids_once(&mgr_b, write_nc_id);
+        friend_open_file_for_writing_once(&mgr_a);
+        friend_open_file_for_writing_once(&mgr_b);
+        friend_write_nexus_ids_once(&mgr_a);
+        friend_write_nexus_ids_once(&mgr_b);
     }
 
     netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
