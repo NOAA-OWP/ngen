@@ -34,7 +34,12 @@ namespace utils
     {
 
     public:
-        virtual ~PerFormulationNexusOutputMgr() = default;
+        virtual ~PerFormulationNexusOutputMgr() {
+            int nc_status = nc_close(netcdf_file_id);
+            if (nc_status != NC_NOERR) {
+                throw std::runtime_error("Error closing nexus file.");
+            }
+        }
 
         /**
          * Construct instance set for managing/writing nexus data files, creating the file(s) appropriately.
@@ -178,67 +183,52 @@ namespace utils
                 }
                 data[i] = data_cache[nexus_ids[i]];
             }
-            const std::string filename = nexus_outfiles[current_formulation_id];
 
-            int nc_status, nc_id, nc_flow_var_id;
-            #if NGEN_WITH_MPI
-            if (nexuses_per_rank.size() > 1) {
-                #if NGEN_WITH_PARALLEL_NETCDF
-                nc_status = nc_open_par(filename.c_str(), NC_WRITE, MPI_COMM_WORLD, MPI_INFO_NULL, &nc_id);
-                #else
-                throw std::runtime_error("Unexpected execution of path requiring Parallel netCDF support when not enabled.");
-                #endif
-            }
-            else {
-                nc_status = nc_open(filename.c_str(), NC_WRITE, &nc_id);
-            }
-            #else
-            nc_status = nc_open(filename.c_str(), NC_WRITE, &nc_id);
-            #endif
-            if (nc_status != NC_NOERR) {
-                throw std::runtime_error("Error opening nexus file '" + filename + "' (status code was: "
-                    + std::to_string(nc_status) + ") at time index " + std::to_string(current_time_index) +".");
-            }
+            int nc_status, nc_flow_var_id;
+
+            // Make sure, on first time step, that we've opened the file for parallel writing (and have a netcdf_file_id)
+            open_unopened_netcdf_file_via_c_api();
 
             // On the first write, also write the nexus id variable values
-            write_nexus_ids_once(nc_id);
+            write_nexus_ids_once();
 
             // For just rank 0, write the time value
             if (rank == 0) {
-                int nc_time_var_id = get_nc_variable_id(nc_time_dim_name, nc_id);
+                int nc_time_var_id = get_nc_variable_id(nc_time_dim_name, netcdf_file_id);
                 long epoch_minutes = current_epoch_time / 60;
                 const size_t start_t = static_cast<size_t>(current_time_index);
                 const size_t count_t = 1;
                 // TODO: (later) consider if we need to sanity check that times are consistent across ranks (we were
                 // TODO:        effectively assuming this to be the case when not explicitly writing times).
 
-                nc_status = nc_put_vara_long(nc_id, nc_time_var_id, &start_t, &count_t, &epoch_minutes);
+                nc_status = nc_put_vara_long(netcdf_file_id, nc_time_var_id, &start_t, &count_t, &epoch_minutes);
                 if (nc_status != NC_NOERR) {
-                    throw std::runtime_error("Error writing time value to nexus file '" + filename + "' ("
+                    throw std::runtime_error("Error writing time value to nexus file '" + nexus_outfiles[current_formulation_id] + "' ("
                         + std::to_string(nc_status) + ") at time index " + std::to_string(current_time_index) +".");
                 }
             }
 
-            nc_flow_var_id = get_nc_variable_id(nc_flow_var_name, nc_id);
+            nc_flow_var_id = get_nc_variable_id(nc_flow_var_name, netcdf_file_id);
             // Assume base on how constructor was set up (imply for conciseness)
             //size_t nexus_dim_index = 0;
             //size_t time_dim_index = 1;
             const size_t start_f[2] = {local_offset, static_cast<size_t>(current_time_index)};
             const size_t count_f[2] = {nexus_ids.size(), 1};
 
-            nc_status = nc_put_vara_double(nc_id, nc_flow_var_id, start_f, count_f, data.data());
+            nc_status = nc_put_vara_double(netcdf_file_id, nc_flow_var_id, start_f, count_f, data.data());
             if (nc_status != NC_NOERR) {
-                throw std::runtime_error("Error writing flow value to nexus file '" + filename + "' ("
-                    + std::to_string(nc_status) + ") at time index " + std::to_string(current_time_index) +".");
-            }
-
-            nc_status = nc_close(nc_id);
-            if (nc_status != NC_NOERR) {
-                throw std::runtime_error("Error closing nexus file '" + filename + "' ("
+                throw std::runtime_error("Error writing flow value to nexus file '" + nexus_outfiles[current_formulation_id] + "' ("
                     + std::to_string(nc_status) + ") at time index " + std::to_string(current_time_index) +".");
             }
 
             current_time_index++;
+
+            // Flush to disk every so often, or on the last timestep
+            int staggered_flush_interval_ts = data_flush_interval / nexuses_per_rank.size() * (rank + 1);
+            if (current_time_index % staggered_flush_interval_ts == 0 || current_time_index == total_timesteps) {
+                nc_sync(netcdf_file_id);
+            }
+
             current_epoch_time = 0;
             data_cache.clear();
             current_formulation_id.clear();
@@ -306,6 +296,9 @@ namespace utils
 
         /** Map of nexus ids to corresponding cached flow data from ``receive_data_entry``. */
         std::unordered_map<std::string, double> data_cache;
+        /** How many time steps should occur before flushing/syncing data to the NetCDF file. */
+        // TODO: look at potentially making this configurable rather than static
+        const size_t data_flush_interval = 100;
         /** The current/last formulation id value received by `receive_data_entry`. */
         std::string current_formulation_id;
         /** Current time index of latest ``receive_data_entry``. */
@@ -314,6 +307,8 @@ namespace utils
         time_t current_epoch_time = 0;
         /** Nexus ids for which this instance/process will write data to the file (i.e., local when using MPI, all otherwise). */
         const std::vector<std::string> nexus_ids;
+        /** File id member variable for opening and writing to NetCDF file via the C API. */
+        int netcdf_file_id = 0;
         int rank;
         std::vector<unsigned long>::size_type local_offset;
         /** Map of formulation ids to nexus data file paths (as string) */
@@ -326,7 +321,40 @@ namespace utils
         // For unit testing
         friend class ::PerFormulationNexusOutputMgr_Test;
 
-        void write_nexus_ids_once(const int nc_id) {
+        /**
+         * Open the NetCDF file, if it is the first time step (otherwise do nothing).
+         */
+        void open_unopened_netcdf_file_via_c_api() {
+            if (current_time_index != 0) {
+                // TODO: think about adding some debugging/logging here
+                return;
+            }
+
+            const std::string filename = nexus_outfiles[current_formulation_id];
+
+            int nc_status;
+
+            #if NGEN_WITH_MPI
+            if (nexuses_per_rank.size() > 1) {
+            #if NGEN_WITH_PARALLEL_NETCDF
+                nc_status = nc_open_par(filename.c_str(), NC_WRITE, MPI_COMM_WORLD, MPI_INFO_NULL, &netcdf_file_id);
+            #else
+                throw std::runtime_error("Unexpected execution of path requiring Parallel netCDF support when not enabled.");
+            #endif
+            }
+            else {
+                nc_status = nc_open(filename.c_str(), NC_WRITE, &netcdf_file_id);
+            }
+            #else
+            nc_status = nc_open(filename.c_str(), NC_WRITE, &netcdf_file_id);
+            #endif
+            if (nc_status != NC_NOERR) {
+                throw std::runtime_error("Error opening nexus file '" + filename + "' (status code was: "
+                    + std::to_string(nc_status) + ") at time index " + std::to_string(current_time_index) +".");
+            }
+        }
+
+        void write_nexus_ids_once() {
             if (current_time_index == 0) {
                 int nc_status, nc_nex_var_id;
 
@@ -342,12 +370,12 @@ namespace utils
                     numeric_nex_ids[i] = std::stoi(nexus_ids[i].substr(pos + 1));
                 }
 
-                nc_nex_var_id = this->get_nc_variable_id(nc_nex_id_dim_name, nc_id);
+                nc_nex_var_id = this->get_nc_variable_id(nc_nex_id_dim_name, netcdf_file_id);
 
                 std::vector<size_t> start{this->local_offset};
                 std::vector<size_t> count{numeric_nex_ids.size()};
 
-                nc_status = nc_put_vara_uint(nc_id, nc_nex_var_id, start.data(), count.data(), numeric_nex_ids.data());
+                nc_status = nc_put_vara_uint(netcdf_file_id, nc_nex_var_id, start.data(), count.data(), numeric_nex_ids.data());
                 // TODO: (later) do something more thoughtful here ... maybe write separate internal util for this
                 if (nc_status != NC_NOERR) {
                     throw std::runtime_error("Error writing nexus ids to netcdf for nexus output manager (code was "
