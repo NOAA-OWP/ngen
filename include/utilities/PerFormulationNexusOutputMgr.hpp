@@ -34,14 +34,19 @@ namespace utils
     {
 
     public:
-        virtual ~PerFormulationNexusOutputMgr() {
-            int nc_status = nc_sync(netcdf_file_id);
+        ~PerFormulationNexusOutputMgr() override {
+            int nc_status = nc_close(netcdf_file_id);
             if (nc_status != NC_NOERR) {
-                throw std::runtime_error("Error with final sync of nexus NetCDF file.");
+                std::cerr << "WARNING: error closing nexus NetCDF file: ";
             }
-            nc_status = nc_close(netcdf_file_id);
-            if (nc_status != NC_NOERR) {
-                throw std::runtime_error("Error closing nexus NetCDF file.");
+            if (nc_status == NC_EBADID) {
+                std::cerr << "error code indicates invalid nc_id passed to nc_close was invalid.\n";
+            }
+            else if (nc_status == NC_EBADGRPID) {
+                std::cerr << "error code indicates nc_id passed to nc_close did not contain group id of this file.\n";
+            }
+            else {
+                std::cerr << "unexpected error code '" << nc_status << "'.\n";
             }
         }
 
