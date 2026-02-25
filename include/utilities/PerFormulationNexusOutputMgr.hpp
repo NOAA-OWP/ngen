@@ -35,9 +35,13 @@ namespace utils
 
     public:
         virtual ~PerFormulationNexusOutputMgr() {
-            int nc_status = nc_close(netcdf_file_id);
+            int nc_status = nc_sync(netcdf_file_id);
             if (nc_status != NC_NOERR) {
-                throw std::runtime_error("Error closing nexus file.");
+                throw std::runtime_error("Error with final sync of nexus NetCDF file.");
+            }
+            nc_status = nc_close(netcdf_file_id);
+            if (nc_status != NC_NOERR) {
+                throw std::runtime_error("Error closing nexus NetCDF file.");
             }
         }
 
@@ -69,6 +73,22 @@ namespace utils
                 nexuses_per_rank(nexuses_per_rank),
                 total_timesteps(total_timesteps)
         {
+            // TODO: look at potentially making this configurable rather than static
+            // We want to dynamically calculate this, thinking about not having too many data points in memory for too long
+            // Also, worst case is the last rank
+            // So ...
+            int avg_nex_per_rank = 0, total_nexus = 0;
+            for (int npr : nexuses_per_rank) {
+                total_nexus += npr;
+            }
+            avg_nex_per_rank = total_nexus / nexuses_per_rank.size();
+            int max_cached_data_points = 200000000;
+            data_flush_interval = max_cached_data_points / avg_nex_per_rank;
+            // But ...
+            if (data_flush_interval / nexuses_per_rank.size() > 3600 * 2) {
+                data_flush_interval = 3600 * 2 * nexuses_per_rank.size();
+            }
+
             if (this->nexuses_per_rank.empty()) {
                 if (this->rank != 0)
                     throw std::runtime_error("Must supply nexuses_per_rank values when using multiple MPI processes.");
@@ -223,7 +243,8 @@ namespace utils
 
             current_time_index++;
 
-            // Flush to disk every so often, or on the last timestep
+            // Flush to disk every so often - staggering when we do - or on the last timestep
+            // TODO: look at potentially making this configurable rather than static
             int staggered_flush_interval_ts = data_flush_interval / nexuses_per_rank.size() * (rank + 1);
             if (current_time_index % staggered_flush_interval_ts == 0 || current_time_index == total_timesteps) {
                 nc_sync(netcdf_file_id);
@@ -296,9 +317,8 @@ namespace utils
 
         /** Map of nexus ids to corresponding cached flow data from ``receive_data_entry``. */
         std::unordered_map<std::string, double> data_cache;
-        /** How many time steps should occur before flushing/syncing data to the NetCDF file. */
-        // TODO: look at potentially making this configurable rather than static
-        const size_t data_flush_interval = 100;
+        /** How many time steps should occur before flushing/syncing data to the NetCDF file, for a single rank. */
+        size_t data_flush_interval;
         /** The current/last formulation id value received by `receive_data_entry`. */
         std::string current_formulation_id;
         /** Current time index of latest ``receive_data_entry``. */
