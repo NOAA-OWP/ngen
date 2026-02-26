@@ -114,20 +114,19 @@ const boost::span<char> Bmi_Fortran_Formulation::get_serialization_state() {
 
 void Bmi_Fortran_Formulation::load_serialization_state(const boost::span<char> state) {
     auto model = this->get_bmi_model();
-    // get number of ints needed to store chars
-    double num_ints = state.size() / static_cast<double>(sizeof(int));
-    int int_array_size = std::ceil(num_ints);
-    // assert the number of chars aligns with an integer array to prevent reading out of bounds
-    if (int_array_size != std::floor(num_ints)) {
+    int item_size = model->GetVarItemsize(StateSaveNames::STATE);
+    // assert the number of chars aligns with the storage array to prevent reading out of bounds
+    if (state.size() % item_size != 0) {
         std::string error = "Fortran Deserialization: The number of bytes in the state (" + std::to_string(state.size())
-            + ") must be a multiple of the size of an int (" + std::to_string(sizeof(int)) + ")";
+            + ") must be a multiple of the size of the storage unit (" + std::to_string(item_size) + ")";
         LOG(LogLevel::SEVERE, error);
         throw std::runtime_error(error);
     }
     // setting size is a workaround for loading the state.
     // The BMI Fortran interface shapes the incoming pointer to the same size as the data currently backing the BMI's variable.
     // By setting the size, the BMI can lie about the size of its state variable to that interface.
-    model->SetValue(StateSaveNames::SIZE, &int_array_size);
+    int false_nbytes = state.size();
+    model->SetValue(StateSaveNames::SIZE, &false_nbytes);
     model->SetValue(StateSaveNames::STATE, state.data());
 }
 
