@@ -398,6 +398,85 @@ namespace utils
         friend class ::PerFormulationNexusOutputMgr_Test;
 
         /**
+         * Add a NetCDF dimension to the managed NetCDF file/dataset, via the C API.
+         *
+         * @param dim_name The dimension name
+         * @param size The dimension size
+         * @param dim_id_ptr A point to a location to hold the NetCDF dimension id for the added dimension
+         */
+        void add_dimension(const std::string& dim_name, const size_t size, int* dim_id_ptr) const {
+            int nc_status = nc_def_dim(netcdf_file_id, dim_name.c_str(), size, dim_id_ptr);
+
+            if (nc_status != NC_NOERR) {
+                throw std::runtime_error("Cannot add dimension '" + dim_name + "': "
+                                         + parse_netcdf_return_code(nc_status));
+            }
+        }
+
+        /**
+         * Add a NetCDF variable to the managed NetCDF file/dataset via the C API.
+         *
+         * @param var_name The variable name.
+         * @param var_type The NetCDF C API variable type code.
+         * @param dimension_nc_ids Ordered collection of dimensions nc_ids for the dimensions of the new variable.
+         * @param var_id_ptr Pointer to the location in which to save the nc_id for the created variable.
+         */
+        void add_variable(const std::string& var_name, nc_type var_type, const std::vector<int>& dimension_nc_ids, int* var_id_ptr) const {
+            int nc_status = nc_def_var(netcdf_file_id, var_name.c_str(), var_type, dimension_nc_ids.size(), dimension_nc_ids.data(), var_id_ptr);
+            if (nc_status == NC_NOERR) {
+                return;
+            }
+            std::string dim_str = std::to_string(dimension_nc_ids[0]);
+            for (size_t i = 1; i < dimension_nc_ids.size(); ++i) {
+                dim_str += "," + std::to_string(dimension_nc_ids[i]);
+            }
+            throw std::runtime_error("Cannot add variable '" + var_name + "' with nc_type " + std::to_string(var_type)
+                                     + " and dims [" + dim_str + "]: " + parse_netcdf_return_code(nc_status));
+        }
+
+        /**
+         * Add a variable to the managed NetCDF file/dataset, and also put string attributes in place for the variable.
+         *
+         * @param var_name The variable name.
+         * @param var_type The NetCDF variable type code.
+         * @param dim_nc_ids Ordered collection of dimensions nc_ids for the dimensions of the new variable.
+         * @param attributes Map of name:value strings for attributes for the variable.
+         * @param var_id_ptr Pointer to the location in which to save the nc_id for the created variable.
+         */
+        void add_variable(const std::string& var_name, nc_type var_type, const std::vector<int>& dim_nc_ids, const std::map<std::string, std::string>& attributes, int* var_id_ptr) const {
+            add_variable(var_name, var_type, dim_nc_ids, var_id_ptr);
+            int nc_status;
+            for (std::pair<const std::string, const std::string> attr_pair : attributes) {
+                const char* val_cstr[] = {const_cast<char*>(attr_pair.second.c_str())};
+                nc_status = nc_put_att_string(netcdf_file_id, *var_id_ptr, attr_pair.first.c_str(), 1, val_cstr);
+                if (nc_status != NC_NOERR) {
+                    throw std::runtime_error("Cannot add attribute '" + attr_pair.first + "' with nc_type "
+                                             + std::to_string(var_type) + " for variable '" + var_name + "': "
+                                             + parse_netcdf_return_code(nc_status));
+                }
+            }
+        }
+
+        /**
+         * Add a variable, and also put string attributes and a fill value in place for the variable.
+         *
+         * @param var_name The variable name.
+         * @param var_type The NetCDF variable type code.
+         * @param dim_nc_ids Ordered collection of dimensions nc_ids for the dimensions of the new variable.
+         * @param attributes Map of name:value strings for attributes for the variable.
+         * @param fill_value Void pointer to a fill value, which must be of the right actual type for the variable.
+         * @param var_id_ptr Pointer to the location in which to save the nc_id for the created variable.
+         */
+        void add_variable(const std::string& var_name, nc_type var_type, const std::vector<int>& dim_nc_ids, const std::map<std::string, std::string>& attributes, const void* fill_value, int* var_id_ptr) const {
+            add_variable(var_name, var_type, dim_nc_ids, attributes, var_id_ptr);
+            int nc_status = nc_def_var_fill(netcdf_file_id, *var_id_ptr, NC_FILL, fill_value);
+            if (nc_status != NC_NOERR) {
+                throw std::runtime_error("Cannot set fill value for variable '" + var_name + "': "
+                                         + parse_netcdf_return_code(nc_status));
+            }
+        }
+
+        /**
          * Open the NetCDF file, if it is the first time step (otherwise do nothing).
          */
         void open_unopened_netcdf_file_via_c_api() {
