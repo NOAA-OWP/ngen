@@ -73,8 +73,20 @@ namespace utils
         {
             // TODO: look at potentially making this configurable rather than static
             data_flush_interval = 100;
+
             // TODO: definitely come back in future and make this configurable (but only when executing with MPI).
             use_collective_nc_var_access = true;
+
+            // TODO: look at making these chunking details more configurable
+            use_chunking = true;
+            // In the nexus_id dimension, set chunk size to be the size of all nexuses
+            flow_var_chunk_size_per_dim[0] = 0;
+            for (size_t r = 0; r < rank; ++r) {
+                flow_var_chunk_size_per_dim[0] += nexuses_per_rank[r];
+            }
+            // Chunk size is just 1 in the time step dimensions
+            flow_var_chunk_size_per_dim[1] = 1;
+
 
             if (this->nexuses_per_rank.empty()) {
                 if (this->rank != 0)
@@ -386,6 +398,9 @@ namespace utils
         const std::string nc_time_dim_name = "time";
         const std::string nc_flow_var_name = "runoff_rate";
 
+        /** Array of chunk sizes for  dimensions - nexus_id and time - of flow NetCDF variable, to set chunking. */
+        size_t flow_var_chunk_size_per_dim[2];
+
         /** Map of nexus ids to corresponding cached flow data from ``receive_data_entry``. */
         std::unordered_map<std::string, double> data_cache;
 
@@ -436,6 +451,12 @@ namespace utils
 
         /** Variable id for the ``flow`` NetCDF variable. */
         int flow_nc_var_id;
+
+        /**
+         * Whether to use specified chunking for certain NetCDF variables when creating them in
+         * @ref setup_netcdf_metadata.
+         */
+        bool use_chunking;
 
         /**
          * Whether instance should use ``NC_COLLECTIVE`` parallel access mode for NetCDF variables (except ``time``).
@@ -659,6 +680,14 @@ namespace utils
             const double fill_value = -9999.0;
             add_variable(nc_flow_var_name, NC_DOUBLE, {nc_nex_id_dim_id, nc_time_dim_id}, flow_var_attrs,
                          &fill_value, &flow_nc_var_id);
+
+            if (use_chunking) {
+                int nc_status = nc_def_var_chunking(netcdf_file_id, flow_nc_var_id, NC_CHUNKED, flow_var_chunk_size_per_dim);
+                if (nc_status != NC_NOERR) {
+                    throw std::runtime_error("Could not set up chunking for variable '" + nc_flow_var_name + "': "
+                                             + parse_netcdf_return_code(nc_status));
+                }
+            }
         }
 
         /**
