@@ -316,6 +316,57 @@ namespace utils
 
     private:
 
+        static std::string parse_netcdf_return_code(const int nc_status) {
+            switch (nc_status) {
+            case NC_NOERR:
+                return "";
+            case NC_EBADID:
+                return "not a valid NetCDF ID";
+            case NC_EBADNAME:
+                return "not a valid NetCDF name";
+            case NC_EBADGRPID:
+                return "bad group id or nc_id that does not contain group id";
+            case NC_EDIMSIZE:
+                return "invalid dimension size";
+            case NC_EEXIST:
+                return "already exists";
+            case NC_EFILEMETA:
+                return "error with NetCDF-4 file-level metadata in HDF5 file (NetCDF-4 files only)";
+            case NC_EGLOBAL:
+                return "attempting to set on NC_GLOBAL";
+            case NC_EHDFERR:
+                return "HDF5 error (NetCDF-4 files only)";
+            case NC_EINVAL:
+                return "invalid input params to backing netcdf function";
+            case NC_ELATEDEF:
+                return "attempting to set after data is written";
+            case NC_EMAXDIMS:
+                return "maximum number of dimensions exceeded";
+            case NC_EMAXNAME:
+                return "name too long";
+            case NC_ENAMEINUSE:
+                return "name already in use";
+            case NC_ENFILE:
+                return "too many files open";
+            case NC_ENOMEM:
+                return "system out of or otherwise unable to allocate memory";
+            case NC_ENOPAR:
+                return "library was not built with parallel I/O features";
+            case NC_ENOTBUILT:
+                return "library was not built with NetCDF-4 or PnetCDF";
+            case NC_ENOTINDEFINE:
+                return "not in define mode";
+            case NC_ENOTVAR:
+                return "not a variable";
+            case NC_EPERM:
+                return "insufficient permissions or writing to read-only item";
+            case NC_EUNLIMIT:
+                return "unlimited dimension size already in use";
+            default:
+                return "unrecognized error code '" + std::to_string(nc_status) + "'";
+            }
+        }
+
         const std::string nc_nex_id_dim_name = std::string("feature_id");
         const std::string nc_time_dim_name = "time";
         const std::string nc_flow_var_name = "runoff_rate";
