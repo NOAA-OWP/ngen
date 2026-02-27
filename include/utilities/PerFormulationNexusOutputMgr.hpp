@@ -428,6 +428,45 @@ namespace utils
             return var_id;
         }
 
+        #if NGEN_WITH_MPI && NGEN_WITH_PARALLEL_NETCDF
+        /**
+         * Set the NetCDF variable with the given name to have ``NC_COLLECTIVE`` parallel access.
+         *
+         * @param var_name The variable name
+         */
+        void set_nc_var_parallel_collective(const std::string& var_name) {
+            int* nc_var_id;
+            if (var_name == nc_nex_id_dim_name) {
+                nc_var_id = &nexus_nc_var_id;
+            }
+            else if (var_name == nc_time_dim_name) {
+                nc_var_id = &time_nc_var_id;
+            }
+            else if (var_name == nc_flow_var_name) {
+                nc_var_id = &flow_nc_var_id;
+            }
+            else {
+                throw std::runtime_error("Can't set NC_COLLECTIVE for invalid variable name '" + var_name + "'.");
+            }
+            set_nc_var_parallel_collective(*nc_var_id);
+        }
+
+        /**
+         * Set the NetCDF variable with the given variable id to have ``NC_COLLECTIVE`` parallel access.
+         *
+         * @param nc_var_id The numeric NetCDF variable id
+         */
+        void set_nc_var_parallel_collective(const int nc_var_id) const {
+            int nc_status = nc_var_par_access(netcdf_file_id, nc_var_id, NC_COLLECTIVE);
+
+            if (nc_status == NC_NOERR) {
+                return;
+            }
+            throw std::runtime_error("Failed to set variable id '" + std::to_string(nc_var_id) + "' to NC_COLLECTIVE "
+                                     + "access: " + parse_netcdf_return_code(nc_status));
+        }
+        #endif
+
     };
 } // utils
 
