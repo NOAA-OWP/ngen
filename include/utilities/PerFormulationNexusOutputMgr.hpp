@@ -78,8 +78,9 @@ namespace utils
             use_collective_nc_var_access = true;
 
             // TODO: look at making these chunking details more configurable
-            use_chunking = true;
-            // In the nexus_id dimension, set chunk size to be the size of all nexuses
+            //use_chunking = true;
+            use_chunking = false;
+            // In the nexus_id dimension, set chunk size to be the nexus count
             flow_var_chunk_size_per_dim[0] = 0;
             for (size_t r = 0; r < rank; ++r) {
                 flow_var_chunk_size_per_dim[0] += nexuses_per_rank[r];
@@ -141,6 +142,7 @@ namespace utils
             if (nexuses_per_rank.size() > 1 && isMpiInitialized()) {
                 create_netcdf_file_parallel();
                 setup_netcdf_metadata();
+                set_nc_var_parallel_collective(flow_nc_var_id);
             }
             // If 1 rank, any MPI, rank 0 (i.e., all ranks): reg create + setup dims/vars
             // If 2+ ranks, no MPI init, rank 0: reg create + setup dims/vars
@@ -567,6 +569,7 @@ namespace utils
             if (netcdf_file_id != -1) {
                 throw std::runtime_error("Cannot create netCDF file after already created and have nc_id set.");
             }
+            std::cout << "Creating nexus NetCDF file '" << nexus_outfile << "' for regular access." << std::endl;
             int nc_status = nc_create(nexus_outfile.c_str(), NC_NETCDF4 | NC_NOCLOBBER, &netcdf_file_id);
             if (nc_status != NC_NOERR) {
                 throw std::runtime_error("PerFormulationNexusOutputMgr rank " + std::to_string(rank) + " could not "
@@ -591,6 +594,7 @@ namespace utils
             if (netcdf_file_id != -1) {
                 throw std::runtime_error("Cannot (parallel) create netCDF file after already created and have nc_id set.");
             }
+            std::cout << "Creating nexus NetCDF file '" << nexus_outfile << "' for parallel access." << std::endl;
             int nc_status = nc_create_par(nexus_outfile.c_str(), NC_NETCDF4 | NC_NOCLOBBER, MPI_COMM_WORLD, MPI_INFO_NULL, &netcdf_file_id);
             if (nc_status != NC_NOERR) {
                 throw std::runtime_error("PerFormulationNexusOutputMgr rank " + std::to_string(rank) + " could not "
@@ -682,6 +686,9 @@ namespace utils
                          &fill_value, &flow_nc_var_id);
 
             if (use_chunking) {
+                std::cout << "Setting nexus NetCDF variable '" << nc_flow_var_name << "' up for chunking ("
+                          << std::to_string(flow_var_chunk_size_per_dim[0]) + "," + std::to_string(flow_var_chunk_size_per_dim[1])
+                          << std::endl;
                 int nc_status = nc_def_var_chunking(netcdf_file_id, flow_nc_var_id, NC_CHUNKED, flow_var_chunk_size_per_dim);
                 if (nc_status != NC_NOERR) {
                     throw std::runtime_error("Could not set up chunking for variable '" + nc_flow_var_name + "': "
@@ -753,6 +760,7 @@ namespace utils
             int nc_status = nc_var_par_access(netcdf_file_id, nc_var_id, NC_COLLECTIVE);
 
             if (nc_status == NC_NOERR) {
+                std::cout << "Setting NetCDF var '" << std::to_string(nc_var_id) << "' to NC_COLLECTIVE." << std::endl;
                 return;
             }
             throw std::runtime_error("Failed to set variable id '" + std::to_string(nc_var_id) + "' to NC_COLLECTIVE "
