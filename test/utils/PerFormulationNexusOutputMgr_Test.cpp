@@ -374,6 +374,33 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_b)
     ASSERT_TRUE(utils::FileChecker::file_can_be_written(filenames->at(0)));
 }
 
+/** Test correct chunking setup for example 0 (single instance). */
+TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_c) {
+
+    std::string form_name = ex_0_form_names->at(0);
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    netCDF::NcVar::ChunkMode chunk_mode;
+    std::vector<size_t> size_vector;
+
+    // Should only be one filename
+    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+
+    ASSERT_FALSE(flow.isNull());
+    flow.getChunkingParameters(chunk_mode, size_vector);
+    ASSERT_EQ(size_vector.size(), 2);
+    ASSERT_EQ(size_vector[0], ex_0_form_0_nexus_ids.size());
+    ASSERT_EQ(size_vector[1], 1);
+}
+
 /** Test that example 0 gets constructed and has expected nexus output file. */
 TEST_F(PerFormulationNexusOutputMgr_Test, nexus_out_file_0_a)
 {
