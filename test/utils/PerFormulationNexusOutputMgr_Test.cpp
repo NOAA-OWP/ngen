@@ -38,6 +38,7 @@ protected:
     static std::string friend_get_nc_nex_id_dim_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_nex_id_dim_name; }
     static std::string friend_get_nc_time_dim_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_time_dim_name; }
     static std::string friend_get_parsed_nc_status(const utils::PerFormulationNexusOutputMgr* obj, int nc_status) {return obj->parse_netcdf_return_code(nc_status); }
+    static bool friend_is_chunking(const utils::PerFormulationNexusOutputMgr* obj) { return obj->use_chunking;}
 
     static void friend_write_nexus_ids_once(utils::PerFormulationNexusOutputMgr* obj) {
         return obj->write_nexus_ids_once();
@@ -387,18 +388,23 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_c) {
         files_to_cleanup.push_back(f);
     }
 
-    netCDF::NcVar::ChunkMode chunk_mode;
-    std::vector<size_t> size_vector;
+    // TODO: address this better one this is no longer a static, hard-coded setting
+    if (friend_is_chunking(&mgr)) {
+        netCDF::NcVar::ChunkMode chunk_mode;
+        std::vector<size_t> size_vector;
 
-    // Should only be one filename
-    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+        // Should only be one filename
+        const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+        const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
 
-    ASSERT_FALSE(flow.isNull());
-    flow.getChunkingParameters(chunk_mode, size_vector);
-    ASSERT_EQ(size_vector.size(), 2);
-    ASSERT_EQ(size_vector[0], ex_0_form_0_nexus_ids.size());
-    ASSERT_EQ(size_vector[1], 1);
+        ASSERT_FALSE(flow.isNull());
+        flow.getChunkingParameters(chunk_mode, size_vector);
+        ASSERT_EQ(size_vector.size(), 2);
+        ASSERT_EQ(size_vector[0], ex_0_form_0_nexus_ids.size());
+        ASSERT_EQ(size_vector[1], 1);
+    }
+
+
 }
 
 /** Test that example 0 gets constructed and has expected nexus output file. */
