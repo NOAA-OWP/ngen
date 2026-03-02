@@ -99,7 +99,6 @@ const boost::span<char> Bmi_Fortran_Formulation::get_serialization_state() {
     // create the serialized state on the Fortran BMI
     int size_int = 0;
     model->SetValue(StateSaveNames::CREATE, &size_int);
-    // the size coming in should be the number of int elements in the Fortran backing array, not the byte size of the array
     model->GetValue(StateSaveNames::SIZE, &size_int);
     // resize the state to the array to the size of the Fortran's backing array
     this->serialized_state.resize(size_int);
