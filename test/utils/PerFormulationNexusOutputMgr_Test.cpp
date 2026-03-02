@@ -4,6 +4,10 @@
 
 #ifdef NGEN_NETCDF_TESTS_ACTIVE
 
+#ifndef LARGE_NEXUS_EXAMPLE_SIZE
+#define LARGE_NEXUS_EXAMPLE_SIZE 40396
+#endif
+
 #include "gtest/gtest.h"
 #include "PerFormulationNexusOutputMgr.hpp"
 #include "FileChecker.h"
@@ -86,7 +90,7 @@ protected:
 
     // Ex 3 will be small time steps but 40396 nexuses, to test scalability
     std::shared_ptr<std::vector<std::string>> ex_3_form_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>{"form-0"});
-    size_t ex_3_nexus_count = 40396;
+    size_t ex_3_nexus_count = LARGE_NEXUS_EXAMPLE_SIZE;
     std::vector<std::string> ex_3_timestamps = {"2025-01-01T00:00:00Z", "2025-01-01T01:00:00Z"};
     std::vector<std::time_t> ex_3_timestamps_seconds = {1735707600, 1735711200};
     std::vector<std::string> ex_3_form_0_group_a_nexus_ids;
@@ -999,7 +1003,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_3_b) {
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
-    double values[ex_3_nexus_count][2];
+    double values[LARGE_NEXUS_EXAMPLE_SIZE][2];
     flow.getVar(values);
     for (size_t t = 0; t < ex_3_timestamps.size(); ++t) {
         for (size_t n = 0; n < ex_3_form_0_all_nexus_id.size(); ++n) {
