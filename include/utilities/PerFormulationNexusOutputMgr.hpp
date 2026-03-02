@@ -78,7 +78,7 @@ namespace utils
             use_collective_nc_var_access = true;
 
             // TODO: look at making these chunking details more configurable
-            use_chunking = true;
+            use_chunking_flow_var = true;
             // In the nexus_id dimension, set chunk size to be the nexus count
             flow_var_chunk_size_per_dim[0] = 0;
             for (size_t r = 0; r < nexuses_per_rank.size(); ++r) {
@@ -142,6 +142,7 @@ namespace utils
                 create_netcdf_file_parallel();
                 setup_netcdf_metadata();
                 if (use_collective_nc_var_access) {
+                    set_nc_var_parallel_collective(nexus_nc_var_id);
                     set_nc_var_parallel_collective(flow_nc_var_id);
                 }
             }
@@ -458,10 +459,10 @@ namespace utils
         int flow_nc_var_id;
 
         /**
-         * Whether to use specified chunking for certain NetCDF variables when creating them in
+         * Whether to use specified chunking for the NetCDF flow/runoff variable when creating it within
          * @ref setup_netcdf_metadata.
          */
-        bool use_chunking;
+        bool use_chunking_flow_var;
 
         /**
          * Whether instance should use ``NC_COLLECTIVE`` parallel access mode for NetCDF variables (except ``time``).
@@ -688,7 +689,7 @@ namespace utils
             add_variable(nc_flow_var_name, NC_DOUBLE, {nc_nex_id_dim_id, nc_time_dim_id}, flow_var_attrs,
                          &fill_value, &flow_nc_var_id);
 
-            if (use_chunking) {
+            if (use_chunking_flow_var) {
                 std::cout << "Setting nexus NetCDF variable '" << nc_flow_var_name << "' up for chunking ("
                           << std::to_string(flow_var_chunk_size_per_dim[0]) + "," + std::to_string(flow_var_chunk_size_per_dim[1])
                           << ")" << std::endl;

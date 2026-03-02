@@ -38,7 +38,7 @@ protected:
     static std::string friend_get_nc_nex_id_dim_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_nex_id_dim_name; }
     static std::string friend_get_nc_time_dim_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_time_dim_name; }
     static std::string friend_get_parsed_nc_status(const utils::PerFormulationNexusOutputMgr* obj, int nc_status) {return obj->parse_netcdf_return_code(nc_status); }
-    static bool friend_is_chunking(const utils::PerFormulationNexusOutputMgr* obj) { return obj->use_chunking;}
+    static bool friend_is_chunking(const utils::PerFormulationNexusOutputMgr* obj) { return obj->use_chunking_flow_var;}
 
     static void friend_write_nexus_ids_once(utils::PerFormulationNexusOutputMgr* obj) {
         return obj->write_nexus_ids_once();
