@@ -78,11 +78,10 @@ namespace utils
             use_collective_nc_var_access = true;
 
             // TODO: look at making these chunking details more configurable
-            //use_chunking = true;
-            use_chunking = false;
+            use_chunking = true;
             // In the nexus_id dimension, set chunk size to be the nexus count
             flow_var_chunk_size_per_dim[0] = 0;
-            for (size_t r = 0; r < rank; ++r) {
+            for (size_t r = 0; r < nexuses_per_rank.size(); ++r) {
                 flow_var_chunk_size_per_dim[0] += nexuses_per_rank[r];
             }
             // Chunk size is just 1 in the time step dimensions
@@ -251,8 +250,10 @@ namespace utils
 
             current_time_index++;
 
-            // Flush to disk every so often, or on the last timestep
-            if (current_time_index % data_flush_interval == 0 || current_time_index == total_timesteps) {
+            // Trigger a flush to disk every so often
+            // It might be nice to utilize NetCDF's built-in chunk caching, but with MPI it looks like we can't:
+            //  https://support.hdfgroup.org/documentation/hdf5/latest/group___f_a_p_l.html#ga034a5fc54d9b05296555544d8dd9fe89
+            if (current_time_index % data_flush_interval == 0) {
                 nc_status = nc_sync(netcdf_file_id);
                 if (nc_status != NC_NOERR) {
                     throw std::runtime_error("Error syncing/flushing data to nexus file '" + nexus_outfile + "' after "
@@ -688,7 +689,7 @@ namespace utils
             if (use_chunking) {
                 std::cout << "Setting nexus NetCDF variable '" << nc_flow_var_name << "' up for chunking ("
                           << std::to_string(flow_var_chunk_size_per_dim[0]) + "," + std::to_string(flow_var_chunk_size_per_dim[1])
-                          << std::endl;
+                          << ")" << std::endl;
                 int nc_status = nc_def_var_chunking(netcdf_file_id, flow_nc_var_id, NC_CHUNKED, flow_var_chunk_size_per_dim);
                 if (nc_status != NC_NOERR) {
                     throw std::runtime_error("Could not set up chunking for variable '" + nc_flow_var_name + "': "
