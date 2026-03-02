@@ -141,7 +141,9 @@ namespace utils
             if (nexuses_per_rank.size() > 1 && isMpiInitialized()) {
                 create_netcdf_file_parallel();
                 setup_netcdf_metadata();
-                set_nc_var_parallel_collective(flow_nc_var_id);
+                if (use_collective_nc_var_access) {
+                    set_nc_var_parallel_collective(flow_nc_var_id);
+                }
             }
             // If 1 rank, any MPI, rank 0 (i.e., all ranks): reg create + setup dims/vars
             // If 2+ ranks, no MPI init, rank 0: reg create + setup dims/vars
