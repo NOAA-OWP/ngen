@@ -84,6 +84,20 @@ protected:
     std::vector<std::string> ex_2_timestamps; // Will use dummy data for text time stamps ... should be fine for this
     std::vector<std::time_t> ex_2_timestamps_seconds;
 
+    // Ex 3 will be small time steps but 40396 nexuses, to test scalability
+    std::shared_ptr<std::vector<std::string>> ex_3_form_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>{"form-0"});
+    size_t ex_3_nexus_count = 40396;
+    std::vector<std::string> ex_3_timestamps = {"2025-01-01T00:00:00Z", "2025-01-01T01:00:00Z"};
+    std::vector<std::time_t> ex_3_timestamps_seconds = {1735707600, 1735711200};
+    std::vector<std::string> ex_3_form_0_group_a_nexus_ids;
+    std::vector<std::string> ex_3_form_0_group_b_nexus_ids;
+    std::vector<std::string> ex_3_form_0_all_nexus_id;
+    std::vector<std::vector<double>> ex_3_group_a_data;
+    std::vector<std::vector<double>> ex_3_group_b_data;
+    std::vector<std::vector<double>> ex_3_all_data;
+
+    // TODO: Might also need EX 4 with 40396 nexuses but spread about real partitions (and tested exclusively via the MPI stuff)
+
     std::vector<std::string> files_to_cleanup;
 
 };
@@ -134,6 +148,42 @@ void PerFormulationNexusOutputMgr_Test::SetUp()
 
         ex_2_timestamps[t] = dummy_time_stamp;
         ex_2_timestamps_seconds[t] = ex_2_initial_time_seconds + t * 3600;
+    }
+
+    // Generate the ids and data used for example 3 (2 time steps)
+    ex_3_form_0_all_nexus_id.resize(ex_3_nexus_count);
+    ex_3_form_0_group_b_nexus_ids.resize(ex_3_nexus_count / 2);
+    ex_3_form_0_group_a_nexus_ids.resize(ex_3_nexus_count - ex_3_form_0_group_b_nexus_ids.size());
+
+    ex_3_group_a_data = {std::vector<double>(ex_3_form_0_group_a_nexus_ids.size()), std::vector<double>(ex_3_form_0_group_a_nexus_ids.size())};
+    ex_3_group_b_data = {std::vector<double>(ex_3_form_0_group_b_nexus_ids.size()), std::vector<double>(ex_3_form_0_group_b_nexus_ids.size())};
+    ex_3_all_data = {std::vector<double>(ex_3_form_0_all_nexus_id.size()), std::vector<double>(ex_3_form_0_all_nexus_id.size())};
+
+    size_t a_idx = 0, b_idx = 0;
+    for (size_t n = 0; n < ex_3_nexus_count; ++n) {
+        bool is_group_a = n % 2 == 0;
+        std:: string nid = "nex-" + std::to_string(n+1);
+        double data_ts_0 = (n+1)/1000.0;
+        double data_ts_1 = (data_ts_0) * 2.0;
+
+        // Add id and data to appropriate "all" data structures
+        ex_3_form_0_all_nexus_id[n] = nid;
+        ex_3_all_data[0][n] = data_ts_0;
+        ex_3_all_data[1][n] = data_ts_1;
+
+        // Add id and data to appropriate group data structures
+        if (is_group_a) {
+            ex_3_form_0_group_a_nexus_ids[a_idx] = nid;
+            ex_3_group_a_data[0][a_idx] = data_ts_0;
+            ex_3_group_a_data[1][a_idx] = data_ts_1;
+            a_idx++;
+        }
+        else {
+            ex_3_form_0_group_b_nexus_ids[b_idx] = nid;
+            ex_3_group_b_data[0][b_idx] = data_ts_0;
+            ex_3_group_a_data[1][b_idx] = data_ts_1;
+            b_idx++;
+        }
     }
 
     #if NGEN_MPI_UNIT_TESTS
@@ -389,22 +439,88 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_c) {
     }
 
     // TODO: address this better one this is no longer a static, hard-coded setting
-    if (friend_is_chunking(&mgr)) {
+    ASSERT_TRUE(friend_is_chunking(&mgr));
+
+    netCDF::NcVar::ChunkMode chunk_mode;
+    std::vector<size_t> size_vector;
+
+    // Should only be one filename
+    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+
+    ASSERT_FALSE(flow.isNull());
+    flow.getChunkingParameters(chunk_mode, size_vector);
+    ASSERT_EQ(size_vector.size(), 2);
+    ASSERT_EQ(size_vector[0], ex_0_form_0_nexus_ids.size());
+    ASSERT_EQ(size_vector[1], 1);
+}
+
+/** Test correct chunking setup for example 3 (single instance). */
+TEST_F(PerFormulationNexusOutputMgr_Test, construct_3_c) {
+
+    std::string form_name = ex_3_form_names->at(0);
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_3_form_0_all_nexus_id, ex_3_form_names, output_root, 2);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    // TODO: address this better one this is no longer a static, hard-coded setting
+    ASSERT_TRUE(friend_is_chunking(&mgr));
+
+    netCDF::NcVar::ChunkMode chunk_mode;
+    std::vector<size_t> size_vector;
+
+    // Should only be one filename
+    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+
+    ASSERT_FALSE(flow.isNull());
+    flow.getChunkingParameters(chunk_mode, size_vector);
+    ASSERT_EQ(size_vector.size(), 2);
+    ASSERT_EQ(size_vector[0], ex_3_nexus_count);
+    ASSERT_EQ(size_vector[1], 1);
+}
+
+/** Test correct chunking setup for example 3 (multiple instance). */
+TEST_F(PerFormulationNexusOutputMgr_Test, construct_3_d) {
+
+    std::string form_name = ex_3_form_names->at(0);
+
+    std::vector<int> nexus_per_rank = {
+        static_cast<int>(ex_3_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_3_form_0_group_b_nexus_ids.size())
+    };
+
+    //utils::PerFormulationNexusOutputMgr mgr(ex_3_form_0_all_nexus_id, ex_3_form_names, output_root, 2);
+
+    utils::PerFormulationNexusOutputMgr mgr_a(ex_3_form_0_group_a_nexus_ids, ex_3_form_names, output_root, 2, 0, nexus_per_rank);
+    utils::PerFormulationNexusOutputMgr mgr_b(ex_3_form_0_group_b_nexus_ids, ex_3_form_names, output_root, 2, 1, nexus_per_rank);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    // TODO: address this better one this is no longer a static, hard-coded setting
+    //if (friend_is_chunking(&mgr)) {
+    if (true) {
         netCDF::NcVar::ChunkMode chunk_mode;
         std::vector<size_t> size_vector;
 
         // Should only be one filename
         const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-        const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+        const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_a));
 
         ASSERT_FALSE(flow.isNull());
         flow.getChunkingParameters(chunk_mode, size_vector);
         ASSERT_EQ(size_vector.size(), 2);
-        ASSERT_EQ(size_vector[0], ex_0_form_0_nexus_ids.size());
+        ASSERT_EQ(size_vector[0], ex_3_nexus_count);
         ASSERT_EQ(size_vector[1], 1);
     }
-
-
 }
 
 /** Test that example 0 gets constructed and has expected nexus output file. */
@@ -850,6 +966,47 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_c) {
                 << "Full timestep data for this timestep is: \n" << values << "\n ***** \n";
         }
     }
+}
+
+/** Make sure writes work and scale for example 3 (single instance) for multiple time steps. */
+TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_3_b) {
+
+    std::string form_name = ex_3_form_names->at(0);
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_3_form_0_all_nexus_id, ex_3_form_names, output_root, 2);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+
+
+    for (size_t t = 0; t < ex_3_timestamps.size(); ++t) {
+        for (int n = 0; n < ex_3_form_0_all_nexus_id.size(); ++n) {
+            mgr.receive_data_entry(form_name,
+                                   ex_3_form_0_all_nexus_id[n],
+                                   utils::time_marker(t, ex_3_timestamps_seconds[t], ex_3_timestamps[t]),
+                                   ex_3_all_data[t][n]);
+        }
+        mgr.commit_writes();
+    }
+
+    // Should only be one filename
+    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+
+    ASSERT_FALSE(flow.isNull());
+    // Note that nexus feature_id dim comes before time dim, so have to order this way
+    double values[ex_3_nexus_count][2];
+    flow.getVar(values);
+    for (size_t t = 0; t < ex_3_timestamps.size(); ++t) {
+        for (size_t n = 0; n < ex_3_form_0_all_nexus_id.size(); ++n) {
+            ASSERT_EQ(values[n][t], ex_3_all_data[t][n]);
+        }
+    }
+
 }
 
 /** Test that example 0 works with write_nexus_ids_once and has nexus id var values written to NetCDF file. */
