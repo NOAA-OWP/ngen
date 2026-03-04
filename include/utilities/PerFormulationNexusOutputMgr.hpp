@@ -87,7 +87,6 @@ namespace utils
             // Chunk size is just 1 in the time step dimensions
             flow_var_chunk_size_per_dim[1] = 1;
 
-
             if (this->nexuses_per_rank.empty()) {
                 if (this->rank != 0)
                     throw std::runtime_error("Must supply nexuses_per_rank values when using multiple MPI processes.");
@@ -130,6 +129,14 @@ namespace utils
 
             for (size_t r = 0; r < rank; ++r) {
                 this->local_offset += nexuses_per_rank[r];
+            }
+
+            // Initialize data structure for holding nexus data and set with default of fill value
+            current_nexus_data = std::vector<double>(nexus_ids.size(), flow_var_fill_value);
+
+            // Initialize data structure for holding the index of a given nexus in some other instance data structures
+            for (size_t n = 0; n < nexus_ids.size(); ++n) {
+                nexus_data_indices[this->nexus_ids[n]] = n;
             }
 
             nexus_outfile = output_root + "/formulation_" + this->formulation_id + "_nexuses.nc";
@@ -206,19 +213,6 @@ namespace utils
                 return;
             }
 
-            // Get properly ordered data vector
-            std::vector<double> data(nexus_ids.size());
-            for (size_t i = 0; i < nexus_ids.size(); ++i) {
-                // Sanity check we have everything in our block of nexus ids
-                if (data_cache.find(nexus_ids[i]) == data_cache.end()) {
-                    throw std::runtime_error(
-                        "PerFormulationNexusOutputMgr missing data attempting to commit_writes for nexus "
-                        + nexus_ids[i] + " in formulation " + current_formulation_id + " at time index "
-                        + std::to_string(current_time_index) + ".");
-                }
-                data[i] = data_cache[nexus_ids[i]];
-            }
-
             int nc_status;
 
             // On the first write, also write the nexus id variable values
@@ -245,7 +239,9 @@ namespace utils
             const size_t start_f[2] = {local_offset, static_cast<size_t>(current_time_index)};
             const size_t count_f[2] = {nexus_ids.size(), 1};
 
-            nc_status = nc_put_vara_double(netcdf_file_id, flow_nc_var_id, start_f, count_f, data.data());
+            // TODO: perhaps later a configurable option about whether we should thrown an exception if any nexuses
+            //  didn't have a data value set (i.e., are still set to fill value)
+            nc_status = nc_put_vara_double(netcdf_file_id, flow_nc_var_id, start_f, count_f, current_nexus_data.data());
             if (nc_status != NC_NOERR) {
                 throw std::runtime_error("Error writing flow value to nexus file '" + nexus_outfile + "' ("
                     + parse_netcdf_return_code(nc_status) + ") at time index " + std::to_string(current_time_index) + ".");
@@ -266,7 +262,10 @@ namespace utils
             }
 
             current_epoch_time = 0;
-            data_cache.clear();
+            // Reset all current values to default of fill value now that they are no longer current
+            for (size_t i = 0; i < current_nexus_data.size(); ++i) {
+                current_nexus_data[i] = flow_var_fill_value;
+            }
             current_formulation_id.clear();
 
             if (current_time_index == total_timesteps) {
@@ -328,7 +327,7 @@ namespace utils
                     + std::to_string(data_time_marker.epoch_time) + "'.");
             }
 
-            data_cache[nexus_id] = flow_data_at_t;
+            current_nexus_data[nexus_data_indices[nexus_id]] = flow_data_at_t;
         }
 
     private:
@@ -400,15 +399,25 @@ namespace utils
             }
         }
 
-        const std::string nc_nex_id_dim_name = std::string("feature_id");
+        const std::string nc_nex_id_dim_name = "feature_id";
         const std::string nc_time_dim_name = "time";
         const std::string nc_flow_var_name = "runoff_rate";
+
+        const double flow_var_fill_value = -9999.0;
 
         /** Array of chunk sizes for  dimensions - nexus_id and time - of flow NetCDF variable, to set chunking. */
         size_t flow_var_chunk_size_per_dim[2];
 
-        /** Map of nexus ids to corresponding cached flow data from ``receive_data_entry``. */
-        std::unordered_map<std::string, double> data_cache;
+        /** Map of nexus id to corresponding index for that nexus in several data structures for this instance. */
+        std::unordered_map<std::string, size_t> nexus_data_indices;
+
+        /**
+         * Data values for each nexus in the current time step, with indices corresponding to @ref nexus_data_indices.
+         *
+         * Note that at constructions and at the end of every call to @ref commit_writes (i.e., after current data was
+         * written), all values should be set to the default fill value
+         */
+        std::vector<double> current_nexus_data;
 
         /**
          * An offset for NetCDF data arrays that indicates the start of where this instance should begin writing data,
@@ -685,9 +694,8 @@ namespace utils
                 {"units", "m3 s-1"},
                 {"long_name", "Simulated Surface Runoff"}
             };
-            const double fill_value = -9999.0;
             add_variable(nc_flow_var_name, NC_DOUBLE, {nc_nex_id_dim_id, nc_time_dim_id}, flow_var_attrs,
-                         &fill_value, &flow_nc_var_id);
+                         &flow_var_fill_value, &flow_nc_var_id);
 
             if (use_chunking_flow_var) {
                 std::cout << "Setting nexus NetCDF variable '" << nc_flow_var_name << "' up for chunking ("
