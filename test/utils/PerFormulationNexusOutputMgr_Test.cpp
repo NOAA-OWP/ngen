@@ -704,7 +704,9 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_b) {
 }
 
 /** Make sure writes don't work for example 0 if it has not received data for all managed nexuses. */
-TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_c) {
+// TODO: (later) for now, commit_writes has been updated to always just write fill values for anything missing
+// TODO: (later) if that's changed later, perhaps to be configurable, modify and re-add this test (and others)
+TEST_F(PerFormulationNexusOutputMgr_Test, DISABLED_commit_writes_0_c) {
 
     std::string form_name = ex_0_form_names->at(0);
 
