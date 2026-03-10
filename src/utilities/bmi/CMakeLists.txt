@@ -31,6 +31,8 @@ target_link_libraries(ngen_bmi_protocols
     NGen::logging
 )
 
+target_link_libraries(ngen_bmi_protocols PRIVATE ewts::ewts_ngen_bridge)
+
 target_sources(ngen_bmi_protocols
   PRIVATE
     "${PROJECT_SOURCE_DIR}/src/bmi/Bmi_Adapter.cpp"

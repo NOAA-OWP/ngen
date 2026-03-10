@@ -2,7 +2,7 @@
 #define __NGEN_LAYER__
 
 #include <NGenConfig.h>
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include "LayerData.hpp"
 #include "Simulation_Time.hpp"

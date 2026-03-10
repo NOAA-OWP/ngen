@@ -29,7 +29,7 @@ namespace models { namespace bmi { namespace protocols {
 
 NgenMassBalance::NgenMassBalance(const ModelPtr& model, const Properties& properties) :
   check(false), is_fatal(false), tolerance(1.0E-16), frequency(1){
-    initialize(model, properties);
+    auto init = initialize(model, properties);
 }
 
 NgenMassBalance::NgenMassBalance() : check(false) {}
@@ -183,7 +183,7 @@ auto NgenMassBalance::initialize(const ModelPtr& model, const Properties& proper
     }
     if ( check ) {
         //Ensure the model is capable of mass balance using the protocol
-        check_support(model).or_else( error_or_warning );
+        auto result = check_support(model).or_else( error_or_warning );
     }
     return {}; // important to return for the expected to be properly created!
 }

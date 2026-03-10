@@ -3,6 +3,8 @@ dynamic_sourced_cxx_library(core_mediator "${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_library(NGen::core_mediator ALIAS core_mediator)
 
+target_link_libraries(core_mediator PRIVATE ewts::ewts_ngen_bridge)
+
 if(NGEN_WITH_UDUNITS)
     target_link_libraries(core_mediator PUBLIC libudunits2)
 endif()

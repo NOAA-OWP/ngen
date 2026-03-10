@@ -7,6 +7,7 @@ NGen::config_header
 NGen::mdarray
 NGen::logging
 )
+target_link_libraries(mdframe PRIVATE ewts::ewts_ngen_bridge)
 
 if(NGEN_WITH_NETCDF)
     target_link_libraries(mdframe PUBLIC NetCDF)

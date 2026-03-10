@@ -11,6 +11,10 @@ target_link_libraries(core PRIVATE
                            NGen::parallel
                            )
 
+target_link_libraries(core PRIVATE 
+                           ewts::ewts_ngen_bridge
+                           )
+
 target_include_directories(core PUBLIC
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/include/simulation_time

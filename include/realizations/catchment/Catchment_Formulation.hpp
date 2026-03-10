@@ -7,7 +7,7 @@
 #include <HY_CatchmentArea.hpp>
 #include "GenericDataProvider.hpp"
 
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #define DEFAULT_FORMULATION_OUTPUT_DELIMITER ","
 

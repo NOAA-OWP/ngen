@@ -2,7 +2,7 @@
 #define NGEN_BMI_PY_ADAPTER_H
 
 #include <NGenConfig.h>
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #if NGEN_WITH_PYTHON
 

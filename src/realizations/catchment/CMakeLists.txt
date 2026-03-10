@@ -33,3 +33,6 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::bmi_protocols
         )
 
+target_link_libraries(realizations_catchment PRIVATE ewts::ewts_ngen_bridge)
+
+

@@ -19,9 +19,9 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.79.0 REQUIRED COMPONENTS serialization)
 
 if(WIN32)
-    add_library(topmodelbmi topmodel/src/bmi_topmodel.c topmodel/src/topmodel.c topmodel/src/logger.c topmodel/src/bmi_serialization.cpp)
+    add_library(topmodelbmi topmodel/src/bmi_topmodel.c topmodel/src/topmodel.c topmodel/src/bmi_serialization.cpp)
 else()
-    add_library(topmodelbmi SHARED topmodel/src/bmi_topmodel.c topmodel/src/topmodel.c topmodel/src/logger.c topmodel/src/bmi_serialization.cpp)
+    add_library(topmodelbmi SHARED topmodel/src/bmi_topmodel.c topmodel/src/topmodel.c topmodel/src/bmi_serialization.cpp)
 endif()
 
 target_include_directories(topmodelbmi PRIVATE topmodel/include)
@@ -31,6 +31,16 @@ set_target_properties(topmodelbmi PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(topmodelbmi PROPERTIES PUBLIC_HEADER topmodel/include/bmi_topmodel.h)
 
 target_link_libraries(topmodelbmi PRIVATE Boost::serialization)
+
+# --- EWTS (installed from nwm-ewts) ---
+find_package(ewts CONFIG REQUIRED)
+
+# Always use EWTS runtime logger for C
+target_link_libraries(topmodelbmi PRIVATE ewts::ewts_c)
+
+# Built with ngen bridge
+target_link_libraries(topmodelbmi PRIVATE ewts::ewts_ngen_bridge)
+target_compile_definitions(topmodelbmi PRIVATE EWTS_HAVE_NGEN_BRIDGE)
 
 # Code requires minimum of C99 standard to compile
 set_target_properties(topmodelbmi PROPERTIES C_STANDARD 99 C_STANDARD_REQUIRED ON)

@@ -1,5 +1,6 @@
 #include <NGenConfig.h>
-#include "Logger.hpp"
+#include <stdexcept>
+#include "ewts_ngen/logger.hpp"
 #include "state_save_restore/State_Save_Utils.hpp"
 
 #if NGEN_WITH_PYTHON
@@ -17,7 +18,9 @@ Bmi_Py_Formulation::Bmi_Py_Formulation(std::string id, std::shared_ptr<data_acce
 std::shared_ptr<Bmi_Adapter> Bmi_Py_Formulation::construct_model(const geojson::PropertyMap &properties) {
     auto python_type_name_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME);
     if (python_type_name_iter == properties.end()) {
-        Logger::logMsgAndThrowError("BMI Python formulation requires Python model class type, but none given in config");
+        std::string msg = "BMI Python formulation requires Python model class type, but none given in config";
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
     //Load a custom module path, if provided
     auto python_module_path_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_MODULE_PATH);
@@ -78,8 +81,10 @@ double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const std::
     else PY_BMI_DOUBLE_AT_INDEX(double)
     else PY_BMI_DOUBLE_AT_INDEX(long double)
 #undef PY_BMI_DOUBLE_AT_INDEX
-    Logger::logMsgAndThrowError("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
-    " as double: no logic for converting variable type " + val_type);
+    std::string msg = "Unable to get value of variable " + var_name + " from " + get_model_type_name() +
+                      " as double: no logic for converting variable type " + val_type;
+    LOG(LogLevel::FATAL, msg);
+    throw std::runtime_error(msg);
 
     return 1.0;
 }

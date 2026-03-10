@@ -11,7 +11,8 @@
 #include "Bmi_C_Formulation.hpp"
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Bmi_Py_Formulation.hpp"
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
+#include <stdexcept>
 
 #include "state_save_restore/vecbuf.hpp"
 #include "state_save_restore/State_Save_Utils.hpp"
@@ -128,12 +129,15 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             #endif // NGEN_WITH_PYTHON
         }
         if (inactive_type_requested) {
-            Logger::logMsgAndThrowError(
-                    get_formulation_type() + " could not initialize sub formulation of type " + type_name +
-                    " due to support for this type not being activated.");
+            std::string msg = get_formulation_type() + " could not initialize sub formulation of type " + type_name +
+                    " due to support for this type not being activated.";
+            LOG(LogLevel::FATAL, msg);
+            throw std::runtime_error(msg);
         }
         if (module == nullptr) {
-            Logger::logMsgAndThrowError(get_formulation_type() + " received unexpected subtype formulation " + type_name);
+            std::string msg = get_formulation_type() + " received unexpected subtype formulation " + type_name;
+            LOG(LogLevel::FATAL, msg);
+            throw std::runtime_error(msg);
         }
         modules[i] = module;
 
@@ -527,7 +531,9 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
 
 void Bmi_Multi_Formulation::update(time_step_t t_index, time_step_t t_delta) {
     if (modules.empty()) {
-        Logger::logMsgAndThrowError("Trying to get response of improperly created empty BMI multi-module formulation.");
+        std::string msg = "Trying to get response of improperly created empty BMI multi-module formulation.";
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
     if (t_index < 0) {
         throw std::invalid_argument(

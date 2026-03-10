@@ -12,3 +12,7 @@ target_link_libraries(geojson PUBLIC
         Boost::boost                # Headers-only Boost
         NGen::logging
         )
+target_link_libraries(geojson PRIVATE ewts::ewts_ngen_bridge)
+
+
+

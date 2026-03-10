@@ -3,6 +3,8 @@ dynamic_sourced_cxx_library(core_nexus "${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_library(NGen::core_nexus ALIAS core_nexus)
 
+target_link_libraries(core_nexus PRIVATE ewts::ewts_ngen_bridge)
+
 target_include_directories(core_nexus PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core
         ${PROJECT_SOURCE_DIR}/include/core/nexus

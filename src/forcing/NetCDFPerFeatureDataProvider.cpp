@@ -8,7 +8,8 @@
 #include <iomanip>
 #include <algorithm>
 #include <cmath>
-#include "Logger.hpp"
+#include <stdexcept>
+#include "ewts_ngen/logger.hpp"
 
 using namespace std;
 std::stringstream netcdf_ss;
@@ -103,14 +104,18 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     // some sanity checks
     if ( id_dim_count > 1)
     {
-        Logger::logMsgAndThrowError("Provided NetCDF file has an \"ids\" variable with more than 1 dimension");       
+        std::string msg = "Provided NetCDF file has an \"ids\" variable with more than 1 dimension";
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
 
     auto id_dim = ids.getDim(0);
 
     if (id_dim.isNull() )
     {
-        Logger::logMsgAndThrowError("Provided NetCDF file has a NULL dimension for variable  \"ids\"");
+        std::string msg = "Provided NetCDF file has a NULL dimension for variable  \"ids\"";
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
 
     auto num_ids = id_dim.getSize();
@@ -235,7 +240,9 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
             netcdf_ss << "Error: Time intervals are not constant in forcing file\n" << std::endl;
             log_stream << netcdf_ss.str();
             LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
-            Logger::logMsgAndThrowError("Time intervals in forcing file are not constant");
+            std::string msg = "Time intervals in forcing file are not constant";
+            LOG(LogLevel::FATAL, msg);
+            throw std::runtime_error(msg);
         }
     }
     #endif
