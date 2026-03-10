@@ -60,8 +60,6 @@ namespace realization {
 
         void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) override;
 
-        void load_state(std::shared_ptr<State_Snapshot_Loader> loader) override;
-
         /**
          * Get the collection of forcing output property names this instance can provide.
          *

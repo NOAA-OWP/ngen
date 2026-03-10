@@ -19,9 +19,6 @@ Version 0.3 (see mass_balance.hpp for details)
 Version 0.2
 Implement error handling via expected<T, ProtocolError> and error_or_warning
 
-Version 0.2
-Implement error handling via expected<T, ProtocolError> and error_or_warning
-
 Version 0.1
 Implementation the BMI mass balance checking protocol
 */
@@ -115,8 +112,12 @@ auto NgenMassBalance::check_support(const ModelPtr& model) -> expected<void, Pro
                 // to ensure the units are consistent.
                 return make_unexpected<ProtocolError>( ProtocolError(
                     Error::INTEGRATION_ERROR,
+                    "mass_balance: variables have incosistent units, cannot perform mass balance."
                     )
                 );
+            }
+        } catch (const std::exception &e) {
+            std::stringstream ss;
             ss << "mass_balance: Error getting mass balance values for module '" << model->GetComponentName() << "': " << e.what() << std::endl;
             return make_unexpected<ProtocolError>( ProtocolError(
                 Error::INTEGRATION_ERROR,
