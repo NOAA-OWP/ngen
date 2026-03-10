@@ -1,8 +1,12 @@
-## Realization Configuration
+# Realization Configuration
 
 TODO: Link to Doxygen build
 
+# Description and Top-Level Structure
+
 A Realization Configuration needs to be in [JSON format (JavaScript Object Notation)](https://www.json.org/json-en.html)
+
+## Required Top-Level Keys
 
 The Configuration is a key-value object and must contain these three first level object keys:
 * `global` 
@@ -15,7 +19,22 @@ The Configuration is a key-value object and must contain these three first level
 * `catchments` 
   *  is a key-value object that must include a list of individual catchments
 
-The configuration may *optionally* contain an `output_root` key with a user-defined root output directory as the key, for nexus and catchment outputs.
+## Optional Top-Level Keys
+
+### `output_root`
+The configuration may optionally contain an `output_root` key with a user-defined root output directory as the key, for nexus and catchment outputs.
+
+### ``write_catchment_output``
+The configuration may optionally contain a `write_catchment_output` key, with a boolean value.  This allows the user to configure whether files are writen for catchment output data.  If set to ``false``, no catchment data files will be written (default: ``true``).
+
+### `catchments`
+The configuration may optionally contain a `catchments` key with a list of individual catchments that define their own formulations.  See [more details below](#catchments).
+
+### `routing`
+The configuration may optionally contain a `routing` key with a subobject that defines the path to the t-route config file (`t_route_config_file_with_path`).  It also optionally may contain a path to the t-route source code (`t_route_connection_path`), but this is reserved for advanced usage; generally, t-route should be installed as a package in the normal Python environment.
+
+## Examples of Top-Level Structure
+Note that these are not exhaustive examples.
 
 ```
 {
@@ -25,6 +44,17 @@ The configuration may *optionally* contain an `output_root` key with a user-defi
    "output_root": "/path/to/output/"
 } 
 ```
+
+```
+{
+   "global": {},
+   "time": {},
+   "output_root": "/path/to/output/",
+   "write_catchment_output": true|false
+} 
+```
+
+# The Global Section
 
 The `global` key-value object must contain the following two object keys:
 * `formulations` 
@@ -53,6 +83,8 @@ The `global` key-value object must contain the following two object keys:
 },  
 ```
 
+# The Time Section
+
 The `time` key-value object must contain the following three keys:
 * `start_time`
   * defines the UTC start time of the simulation and must be in the form `yyyy-mm-dd hh:mm:ss`
@@ -68,6 +100,8 @@ The `time` key-value object must contain the following three keys:
     "output_interval": 3600
 },
 ```
+
+# Individual Catchments
 
 The `catchments` key-value object must contain a list of all of the catchment object keys that will have defined formulations, and each catchment key will have the following format:
 * `cat-` 
@@ -129,7 +163,19 @@ Each catchment is a key-value object and must have the following two object keys
     },
 ```
 
+# The Routing Section
+
+```json
+    "routing": {
+        "t_route_config_file_with_path": "extern/t-route/test/input/yaml/ngen.yaml"
+    }
+```
+
+# A Full Example
+
 An [example realization configuration](https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config.json).
+
+# A Note on BMI Models
 
 BMI is a commonly used model interface and formulation type used in ngen. [BMI documenation](https://github.com/NOAA-OWP/ngen/blob/master/doc/BMI_MODELS.md) with an example [for both Linux and macOS realizations](https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config_w_bmi_c__lin_mac.json).
 
