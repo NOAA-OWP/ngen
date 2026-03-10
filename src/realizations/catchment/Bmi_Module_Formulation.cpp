@@ -625,8 +625,8 @@ namespace realization {
                 "': no logic for converting value to variable's type.");
         }
 
-        void Bmi_Module_Formulation::set_model_inputs_prior_to_update(const double &model_init_time, time_step_t t_delta) {
-            time_t model_epoch_time = convert_model_time(model_init_time) + get_bmi_model_start_time_forcing_offset_s();
+        void Bmi_Module_Formulation::set_model_inputs_prior_to_update(const double &model_time, time_step_t t_delta) {
+            time_t model_epoch_time = convert_model_time(model_time) + get_bmi_model_start_time_forcing_offset_s();
 
             if (bmi_input_var_details.empty()) {
                 for (std::string & var_name : get_bmi_model()->GetInputVarNames()) {
