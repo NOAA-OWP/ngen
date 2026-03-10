@@ -626,61 +626,62 @@ namespace realization {
         }
 
         void Bmi_Module_Formulation::set_model_inputs_prior_to_update(const double &model_init_time, time_step_t t_delta) {
-            std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();
             time_t model_epoch_time = convert_model_time(model_init_time) + get_bmi_model_start_time_forcing_offset_s();
 
-            for (std::string & var_name : in_var_names) {
-                data_access::GenericDataProvider *provider;
-                std::string var_map_alias = get_config_mapped_variable_name(var_name);
-                if (input_forcing_providers.find(var_map_alias) != input_forcing_providers.end()) {
-                    provider = input_forcing_providers[var_map_alias].get();
-                }
-                else if (var_map_alias != var_name && input_forcing_providers.find(var_name) != input_forcing_providers.end()) {
-                    provider = input_forcing_providers[var_name].get();
-                }
-                else {
-                    provider = forcing.get();
-                }
+            if (bmi_input_var_details.empty()) {
+                for (std::string & var_name : get_bmi_model()->GetInputVarNames()) {
+                    Bmi_Var_Details var_details;
+                    var_details.name = var_name;
+                    var_details.mapped_alias = get_config_mapped_variable_name(var_name);
+                    var_details.item_size = get_bmi_model()->GetVarItemsize(var_name);
+                    var_details.num_items = get_bmi_model()->GetVarNbytes(var_name) / var_details.item_size;
+                    var_details.cpp_type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name),
+                                                                                   var_details.item_size);
 
-                // TODO: probably need to actually allow this by default and warn, but have config option to activate
-                //  this type of behavior
-                // TODO: account for arrays later
-                int nbytes = get_bmi_model()->GetVarNbytes(var_name);
-                int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
-                int numItems = nbytes / varItemSize;
-                assert(nbytes % varItemSize == 0);
+                    if (input_forcing_providers.find(var_details.mapped_alias) != input_forcing_providers.end()) {
+                        var_details.provider = input_forcing_providers[var_details.mapped_alias];
+                    }
+                    else if (var_details.mapped_alias != var_name && input_forcing_providers.find(var_name) != input_forcing_providers.end()) {
+                        var_details.provider = input_forcing_providers[var_name];
+                    }
+                    else {
+                        var_details.provider = forcing;
+                    }
 
+                    bmi_input_var_details.push_back(var_details);
+                }
+            }
+
+            for (Bmi_Var_Details input_var_details : bmi_input_var_details) {
                 std::shared_ptr<void> value_ptr;
-                // Finally, use the value obtained to set the model input
-                std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name),
-                                                                           varItemSize);
-                if (numItems != 1) {
+                if (input_var_details.num_items != 1) {
                     //more than a single value needed for var_name
-                    auto values = provider->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                   get_bmi_model()->GetVarUnits(var_name)));
+                    std::vector<data_type> values = input_var_details.provider->get_values(
+                        CatchmentAggrDataSelector(this->get_catchment_id(), input_var_details.mapped_alias,
+                                                  model_epoch_time, t_delta,
+                                                  get_bmi_model()->GetVarUnits(input_var_details.name)));
                     //need to marshal data types to the receiver as well
                     //this could be done a little more elegantly if the provider interface were
                     //"type aware", but for now, this will do (but requires yet another copy)
                     if(values.size() == 1){
                         //FIXME this isn't generic broadcasting, but works for scalar implementations
                         #ifndef NGEN_QUIET
-                        std::cerr << "WARN: broadcasting variable '" << var_name << "' from scalar to expected array\n";
+                        std::cerr << "WARN: broadcasting variable '" << input_var_details.name << "' from scalar to expected array\n";
                         #endif
-                        values.resize(numItems, values[0]);
-                    } else if (values.size() != numItems) {
-                        throw std::runtime_error("Mismatch in item count for variable '" + var_name + "': model expects " +
-                                                 std::to_string(numItems) + ", provider returned " + std::to_string(values.size()) +
+                        values.resize(input_var_details.num_items, values[0]);
+                    } else if (values.size() != input_var_details.num_items) {
+                        throw std::runtime_error("Mismatch in item count for variable '" + input_var_details.name + "': model expects " +
+                                                 std::to_string(input_var_details.num_items) + ", provider returned " + std::to_string(values.size()) +
                                                  " items\n");
                     }
-                    value_ptr = get_values_as_type( type, values.begin(), values.end() );
+                    value_ptr = get_values_as_type(input_var_details.cpp_type, values.begin(), values.end() );
 
                 } else {
                     //scalar value
-                    double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                   get_bmi_model()->GetVarUnits(var_name)));
-                    value_ptr = get_value_as_type(type, value);
+                    double value = input_var_details.provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),input_var_details.mapped_alias, model_epoch_time, t_delta, get_bmi_model()->GetVarUnits(input_var_details.name)));
+                    value_ptr = get_value_as_type(input_var_details.cpp_type, value);
                 }
-                get_bmi_model()->SetValue(var_name, value_ptr.get());
+                get_bmi_model()->SetValue(input_var_details.name, value_ptr.get());
             }
         }
 }
