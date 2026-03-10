@@ -22,6 +22,36 @@ class Bmi_Cpp_Multi_Array_Test;
 
 namespace realization {
 
+    /** Type to hold some certain details about a BMI module variable that the framework will need used repeatedly. */
+    struct Bmi_Var_Details {
+        /** The module's publicized name for this variable. */
+        std::string name;
+        /** The framework's configured alias for the variable. */
+        std::string mapped_alias;
+        /** Reference to applicable data provided that is source for input values. */
+        std::shared_ptr<data_access::GenericDataProvider> provider;
+        /** The size of individual items for this variable. */
+        int item_size;
+        /** The number of items for this variable. */
+        int num_items;
+        /** String for the C++ type corresponding to this variable's type. */
+        std::string cpp_type;
+
+        Bmi_Var_Details() : Bmi_Var_Details("", "", nullptr, -1, -1, "") { }
+
+        Bmi_Var_Details(std::string name, std::string alias, std::shared_ptr<data_access::GenericDataProvider> provider, int item_size, int num_items, std::string cpp_type)
+            : name(name), mapped_alias(alias), provider(provider), item_size(item_size), num_items(num_items), cpp_type(cpp_type) { }
+
+        Bmi_Var_Details(const Bmi_Var_Details& source) {
+            name = source.name;
+            mapped_alias = source.mapped_alias;
+            provider = source.provider;
+            item_size = source.item_size;
+            num_items = source.num_items;
+            cpp_type = source.cpp_type;
+        }
+    };
+
     /**
      * Abstraction of a formulation with a single backing model object that implements the BMI.
      */
@@ -426,6 +456,14 @@ namespace realization {
         int next_time_step_index = 0;
 
     private:
+        /**
+         * BMI input variables details, cached to improve compute performance when setting values prior to updates.
+         *
+         * This will hold cached details on input variables needed during @ref set_model_inputs_prior_to_update at each
+         * time step.  It will be populated lazily on the first time step.
+         */
+        std::vector<Bmi_Var_Details> bmi_input_var_details;
+
         models::bmi::protocols::NgenBmiProtocols bmi_protocols;
         /**
          * Whether model ``Update`` calls are allowed and handled in some way by the backing model for time steps after
