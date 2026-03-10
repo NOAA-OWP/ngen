@@ -28,14 +28,14 @@ namespace realization {
         std::string name;
         /** The framework's configured alias for the variable. */
         std::string mapped_alias;
+        /** String for the C++ type corresponding to this variable's type. */
+        std::string cpp_type;
         /** Reference to applicable data provided that is source for input values. */
         std::shared_ptr<data_access::GenericDataProvider> provider;
         /** The size of individual items for this variable. */
         int item_size;
         /** The number of items for this variable. */
         int num_items;
-        /** String for the C++ type corresponding to this variable's type. */
-        std::string cpp_type;
 
         Bmi_Var_Details() : Bmi_Var_Details("", "", nullptr, -1, -1, "") { }
 
