@@ -23,10 +23,6 @@ Version 0.2
 Conform to updated protocol interface
 Removed integration and error exceptions in favor of ProtocolError
 
-Version 0.2
-Conform to updated protocol interface
-Removed integration and error exceptions in favor of ProtocolError
-
 Version 0.1
 Interface of the BMI mass balance protocol
 */
@@ -156,4 +152,3 @@ namespace models{ namespace bmi{ namespace protocols{
     };
 
 }}}
-

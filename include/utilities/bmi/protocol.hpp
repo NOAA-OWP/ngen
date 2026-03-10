@@ -23,12 +23,6 @@ Implement error handling via expected<T, ProtocolError> and error_or_warning
 Removed model member and required model reference in run(), check_support(), and initialize()
 Minor refactoring and style changes
 
-Version 0.2
-Enumerate protocol error types and add ProtocolError exception class
-Implement error handling via expected<T, ProtocolError> and error_or_warning
-Removed model member and required model reference in run(), check_support(), and initialize()
-Minor refactoring and style changes
-
 Version 0.1
 Virtual interface for BMI protocols
 */
