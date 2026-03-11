@@ -209,7 +209,7 @@ const std::string EXAMPLE_1 = "{ "
         "\"end_time\": \"2015-12-30 23:00:00\", "
         "\"output_interval\": 3600 "
     "}, "
-    "\"write_catchment_output\": true,"
+    "\"disable_catchment_output\": true,"
     "\"catchments\": { "
         "\"cat-52\": { "
           "\"formulations\": [ "
@@ -730,7 +730,7 @@ const std::string EXAMPLE_6 = "{ "
         "\"end_time\": \"2015-12-30 23:00:00\", "
         "\"output_interval\": 3600 "
     "}, "
-    "\"write_catchment_output\": false,"
+    "\"disable_catchment_output\": false,"
     "\"catchments\": { "
         "\"cat-52\": { "
           "\"formulations\": [ "
@@ -1063,8 +1063,8 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
     check_formulation_values(manager, "cat-67", { 7.41722, 9231 });
 }
 
-/** Test that is_catchment_writing_enabled works properly when explicitly set to ``true`` in config. */
-TEST_F(Formulation_Manager_Test, test_is_catchment_writing_enabled_1_a) {
+/** Test that is_disable_catchment_output works properly when explicitly set to ``true`` in config. */
+TEST_F(Formulation_Manager_Test, test_is_disable_catchment_output_1_a) {
     std::stringstream stream;
 
     stream << fix_paths(EXAMPLE_1);
@@ -1081,11 +1081,11 @@ TEST_F(Formulation_Manager_Test, test_is_catchment_writing_enabled_1_a) {
     this->add_feature("cat-67");
     manager.read(this->fabric, catchment_output);
 
-    ASSERT_TRUE(manager.is_catchment_writing_enabled());
+    ASSERT_TRUE(manager.is_disable_catchment_output());
 }
 
-/** Test that is_catchment_writing_enabled works properly when not explicitly set in config. */
-TEST_F(Formulation_Manager_Test, test_is_catchment_writing_enabled_2_a) {
+/** Test that is_disable_catchment_output works properly (``false``) when not explicitly set in config. */
+TEST_F(Formulation_Manager_Test, test_is_disable_catchment_output_2_a) {
     std::stringstream stream;
 
     stream << fix_paths(EXAMPLE_2);
@@ -1102,11 +1102,11 @@ TEST_F(Formulation_Manager_Test, test_is_catchment_writing_enabled_2_a) {
     this->add_feature("cat-67");
     manager.read(this->fabric, catchment_output);
 
-    ASSERT_TRUE(manager.is_catchment_writing_enabled());
+    ASSERT_FALSE(manager.is_disable_catchment_output());
 }
 
-/** Test that is_catchment_writing_enabled works properly when explicitly set to ``false`` in config. */
-TEST_F(Formulation_Manager_Test, test_is_catchment_writing_enabled_6_a) {
+/** Test that is_disable_catchment_output works properly when explicitly set to ``false`` in config. */
+TEST_F(Formulation_Manager_Test, test_is_disable_catchment_output_6_a) {
     std::stringstream stream;
 
     stream << fix_paths(EXAMPLE_6);
@@ -1123,5 +1123,5 @@ TEST_F(Formulation_Manager_Test, test_is_catchment_writing_enabled_6_a) {
     this->add_feature("cat-67");
     manager.read(this->fabric, catchment_output);
 
-    ASSERT_FALSE(manager.is_catchment_writing_enabled());
+    ASSERT_FALSE(manager.is_disable_catchment_output());
 }
