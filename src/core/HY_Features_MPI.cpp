@@ -38,7 +38,7 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
         {
           //Find and prepare formulation
           auto formulation = formulations->get_formulation(feat_id);
-          if (formulations->is_catchment_writing_enabled() == true)
+          if (!formulations->is_disable_catchment_output())
           {
             formulation->set_output_stream(formulations->get_output_root() + feat_id + ".csv");
           }
