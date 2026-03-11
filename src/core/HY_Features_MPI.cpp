@@ -42,10 +42,7 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
           {
             formulation->set_output_stream(formulations->get_output_root() + feat_id + ".csv");
           }
-          else
-          {
-            formulation->set_output_stream("/dev/null");
-          };
+
           // TODO: add command line or config option to have this be omitted
           //FIXME why isn't default param working here??? get_output_header_line() fails.
           formulation->write_output("Time Step,""Time,"+formulation->get_output_header_line(",")+"\n");
