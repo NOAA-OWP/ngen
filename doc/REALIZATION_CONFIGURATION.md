@@ -24,8 +24,9 @@ The Configuration is a key-value object and must contain these three first level
 ### `output_root`
 The configuration may optionally contain an `output_root` key with a user-defined root output directory as the key, for nexus and catchment outputs.
 
-### `write_catchment_output`
-The configuration may optionally contain a `write_catchment_output` key, with a boolean value.  This allows the user to configure whether files are writen for catchment output data.  If set to `false`, no catchment data files will be written (default: `true`).
+### `disable_catchment_output`
+
+The configuration may optionally contain a `disable_catchment_output` key, with a boolean value.  When set to `true`, catchment output data files will not be written (default: `false`).
 
 ### `catchments`
 The configuration may optionally contain a `catchments` key with a list of individual catchments that define their own formulations.  See [more details below](#catchments).

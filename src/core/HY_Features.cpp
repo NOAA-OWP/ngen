@@ -32,8 +32,8 @@ HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_M
         {
           //Find and prepare formulation
           auto formulation = formulations->get_formulation(feat_id);
-          if (formulations->is_catchment_writing_enabled() == true)
-          {
+
+          if (formulations->is_disable_catchment_output()) {
             formulation->set_output_stream(formulations->get_output_root() + feat_id + ".csv");
           }
 

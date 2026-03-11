@@ -322,29 +322,22 @@ namespace realization {
             }
 
              /**
-             * @brief Check if the formulation has catchment output writing enabled
+             * Check if the formulation has catchment output writing disabled.
              *
              * @code{.cpp}
              * // Example config:
              * // ...
-             * // "write_catchment_output": false
+             * // "disable_catchment_output": true
              * // ...
              * const auto manager = Formulation_Manger(CONFIG);
-             * manager.is_catchment_writing_enabled();
-             * //> false
+             * manager.is_disable_catchment_output();
+             * //> true
              * @endcode
              * 
              * @return bool
              */
-            bool is_catchment_writing_enabled() const {
-                const auto write_enabled = this->tree.get_optional<std::string>("write_catchment_output");
-                if (write_enabled != boost::none && *write_enabled != "") {
-                    // if any variation of "false" or "no" or 0 is found, return false
-                    if (write_enabled->compare("false") == 0 || write_enabled->compare("no") == 0 || write_enabled->compare("0") == 0) {
-                        return false;
-                    }
-                } 
-                return true;
+            bool is_disable_catchment_output() const {
+                return tree.get_optional<bool>("disable_catchment_output").get_value_or(false);
             }
 
             /**
