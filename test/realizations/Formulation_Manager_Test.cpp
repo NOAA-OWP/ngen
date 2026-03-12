@@ -209,6 +209,7 @@ const std::string EXAMPLE_1 = "{ "
         "\"end_time\": \"2015-12-30 23:00:00\", "
         "\"output_interval\": 3600 "
     "}, "
+    "\"disable_catchment_output\": true,"
     "\"catchments\": { "
         "\"cat-52\": { "
           "\"formulations\": [ "
@@ -698,6 +699,92 @@ const std::string EXAMPLE_5_b =
 "    }"
 "}";
 
+const std::string EXAMPLE_6 = "{ "
+    "\"global\": { "
+      "\"formulations\": [ "
+        "{"
+          "\"name\":\"bmi_c++\","
+          "\"params\": {"
+            "\"model_type_name\": \"test_bmi_cpp\","
+            "\"library_file\": \"{{EXTERN_LIB_DIR_PATH}}" BMI_TEST_CPP_LIB_NAME "\","
+            "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+            "\"main_output_variable\": \"OUTPUT_VAR_2\","
+            "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+              "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+              "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+            "},"
+            "\"create_function\": \"bmi_model_create\","
+            "\"destroy_function\": \"bmi_model_destroy\","
+            "\"uses_forcing_file\": false"
+          "} "
+        "} "
+      "], "
+      "\"forcing\": { "
+          "\"file_pattern\": \".*{{id}}.*.csv\", "
+          "\"path\": \"./data/forcing/\", "
+          "\"provider\": \"CsvPerFeature\" "
+      "} "
+    "}, "
+    "\"time\": { "
+        "\"start_time\": \"2015-12-01 00:00:00\", "
+        "\"end_time\": \"2015-12-30 23:00:00\", "
+        "\"output_interval\": 3600 "
+    "}, "
+    "\"disable_catchment_output\": false,"
+    "\"catchments\": { "
+        "\"cat-52\": { "
+          "\"formulations\": [ "
+            "{"
+              "\"name\":\"bmi_c++\","
+              "\"params\": {"
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_LIB_DIR_PATH}}" BMI_TEST_CPP_LIB_NAME "\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
+              "} "
+            "} "
+          "], "
+          "\"forcing\": { "
+              "\"file_pattern\": \".*{{id}}.*.csv\", "
+              "\"path\": \"./data/forcing/\", "
+              "\"provider\": \"CsvPerFeature\" "
+          "} "
+        "}, "
+        "\"cat-67\": { "
+        "\"formulations\": [ "
+            "{"
+              "\"name\":\"bmi_c++\","
+              "\"params\": {"
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_LIB_DIR_PATH}}" BMI_TEST_CPP_LIB_NAME "\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
+              "} "
+            "} "
+          "], "
+          "\"forcing\": { "
+              "\"file_pattern\": \".*{{id}}.*.csv\", "
+              "\"path\": \"./data/forcing/\", "
+              "\"provider\": \"CsvPerFeature\" "
+          "} "
+        "} "
+    "} "
+"}";
+
 TEST_F(Formulation_Manager_Test, basic_reading_1) {
     std::stringstream stream;
 
@@ -974,4 +1061,67 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
     
     check_formulation_values(manager, "cat-27",    { 3.00000, 18.0 });
     check_formulation_values(manager, "cat-67", { 7.41722, 9231 });
+}
+
+/** Test that is_disable_catchment_output works properly when explicitly set to ``true`` in config. */
+TEST_F(Formulation_Manager_Test, test_is_disable_catchment_output_1_a) {
+    std::stringstream stream;
+
+    stream << fix_paths(EXAMPLE_1);
+
+    std::ostream* raw_pointer = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
+
+    ASSERT_TRUE(manager.is_empty());
+
+    this->add_feature("cat-52");
+    this->add_feature("cat-67");
+    manager.read(this->fabric, catchment_output);
+
+    ASSERT_TRUE(manager.is_disable_catchment_output());
+}
+
+/** Test that is_disable_catchment_output works properly (``false``) when not explicitly set in config. */
+TEST_F(Formulation_Manager_Test, test_is_disable_catchment_output_2_a) {
+    std::stringstream stream;
+
+    stream << fix_paths(EXAMPLE_2);
+
+    std::ostream* raw_pointer = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
+
+    ASSERT_TRUE(manager.is_empty());
+
+    this->add_feature("cat-52");
+    this->add_feature("cat-67");
+    manager.read(this->fabric, catchment_output);
+
+    ASSERT_FALSE(manager.is_disable_catchment_output());
+}
+
+/** Test that is_disable_catchment_output works properly when explicitly set to ``false`` in config. */
+TEST_F(Formulation_Manager_Test, test_is_disable_catchment_output_6_a) {
+    std::stringstream stream;
+
+    stream << fix_paths(EXAMPLE_6);
+
+    std::ostream* raw_pointer = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
+
+    ASSERT_TRUE(manager.is_empty());
+
+    this->add_feature("cat-52");
+    this->add_feature("cat-67");
+    manager.read(this->fabric, catchment_output);
+
+    ASSERT_FALSE(manager.is_disable_catchment_output());
 }

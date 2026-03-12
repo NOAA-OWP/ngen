@@ -318,6 +318,26 @@ namespace realization {
  
                 //for case where there is no output_root in the realization file
                 return "./";
+
+            }
+
+             /**
+             * Check if the formulation has catchment output writing disabled.
+             *
+             * @code{.cpp}
+             * // Example config:
+             * // ...
+             * // "disable_catchment_output": true
+             * // ...
+             * const auto manager = Formulation_Manger(CONFIG);
+             * manager.is_disable_catchment_output();
+             * //> true
+             * @endcode
+             * 
+             * @return bool
+             */
+            bool is_disable_catchment_output() const {
+                return tree.get_optional<bool>("disable_catchment_output").get_value_or(false);
             }
 
             /**
