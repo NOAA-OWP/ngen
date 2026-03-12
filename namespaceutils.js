@@ -2,6 +2,7 @@ var namespaceutils =
 [
     [ "FileChecker", "classutils_1_1_file_checker.html", "classutils_1_1_file_checker" ],
     [ "FileStreamHandler", "classutils_1_1_file_stream_handler.html", "classutils_1_1_file_stream_handler" ],
+    [ "NullStream", "classutils_1_1_null_stream.html", "classutils_1_1_null_stream" ],
     [ "StreamHandler", "classutils_1_1_stream_handler.html", "classutils_1_1_stream_handler" ],
     [ "copy_from", "namespaceutils.html#ab26f60f96ec3cf8e061256397c1f501c", null ],
     [ "copy_from< double >", "namespaceutils.html#a33d3d5f81f77152b00078923483b601c", null ],

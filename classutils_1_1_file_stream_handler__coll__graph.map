@@ -1,9 +1,9 @@
 <map id="utils::FileStreamHandler" name="utils::FileStreamHandler">
-<area shape="rect" id="Node000001" title=" " alt="" coords="192,968,341,1055"/>
-<area shape="rect" id="Node000002" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="203,670,330,919"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="269,934,269,969,264,969,264,934"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="192,989,341,1075"/>
+<area shape="rect" id="Node000002" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="203,670,330,939"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="269,955,269,989,264,989,264,955"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="140,525,265,607"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="207,606,214,645,215,653,210,654,208,646,202,607"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="208,606,214,645,215,653,210,654,208,646,202,607"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="34,388,116,455"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="105,453,158,511,154,515,101,457"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="15,237,134,318"/>
@@ -17,7 +17,7 @@
 <area shape="rect" id="Node000009" title=" " alt="" coords="193,244,212,310"/>
 <area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="205,310,205,372,200,372,200,310"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="303,533,369,599"/>
-<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="329,599,312,654,307,652,324,598"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="329,600,313,654,308,652,324,598"/>
 <area shape="rect" id="Node000011" title=" " alt="" coords="289,381,402,462"/>
 <area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="344,478,341,533,335,533,339,477"/>
 </map>

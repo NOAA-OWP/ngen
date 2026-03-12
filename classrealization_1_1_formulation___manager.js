@@ -20,6 +20,7 @@ var classrealization_1_1_formulation___manager =
     [ "get_t_route_config_file_with_path", "classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7", null ],
     [ "get_using_routing", "classrealization_1_1_formulation___manager.html#a599aadb9ffea1e8c28cbd010b3160bd7", null ],
     [ "has_domain_formulation", "classrealization_1_1_formulation___manager.html#aa9cf446b14425ae88c81a493fadcec8a", null ],
+    [ "is_disable_catchment_output", "classrealization_1_1_formulation___manager.html#a12bcd6a0cfe1dfc23e7df61d2ddea27e", null ],
     [ "is_empty", "classrealization_1_1_formulation___manager.html#a7ff3d02eee65fbe7b7b0c41cbf5868d8", null ],
     [ "parse_external_model_params", "classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f", null ],
     [ "parse_external_model_params", "classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1", null ],

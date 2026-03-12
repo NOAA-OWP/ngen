@@ -295,70 +295,87 @@ var NAVTREE =
         [ "Bug in multiprocessing on macOS", "md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md248", null ]
       ] ]
     ] ],
-    [ "Realization Configuration", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html", null ],
+    [ "Realization Configuration", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html", [
+      [ "Description and Top-Level Structure", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md250", [
+        [ "Required Top-Level Keys", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md251", null ],
+        [ "Optional Top-Level Keys", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md252", [
+          [ "output_root", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md253", null ],
+          [ "disable_catchment_output", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md254", null ],
+          [ "catchments", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md255", null ],
+          [ "routing", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md256", null ]
+        ] ],
+        [ "Examples of Top-Level Structure", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md257", null ]
+      ] ],
+      [ "The Global Section", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md258", null ],
+      [ "The Time Section", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md259", null ],
+      [ "Individual Catchments", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md260", null ],
+      [ "The Routing Section", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md261", null ],
+      [ "A Full Example", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md262", null ],
+      [ "A Note on BMI Models", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md263", null ]
+    ] ],
     [ "<a href=\"https://docs.opengeospatial.org/is/14-111r6/14-111r6.html\" >HY_Features</a>", "md_doc_2references.html", [
-      [ "BMI", "md_doc_2references.html#autotoc_md251", null ],
-      [ "Formulations", "md_doc_2references.html#autotoc_md252", null ],
-      [ "HYMOD", "md_doc_2references.html#autotoc_md253", null ],
-      [ "T-shirt", "md_doc_2references.html#autotoc_md254", null ],
-      [ "GIUH", "md_doc_2references.html#autotoc_md255", [
-        [ "Modeling References", "md_doc_2references.html#autotoc_md256", null ]
+      [ "BMI", "md_doc_2references.html#autotoc_md265", null ],
+      [ "Formulations", "md_doc_2references.html#autotoc_md266", null ],
+      [ "HYMOD", "md_doc_2references.html#autotoc_md267", null ],
+      [ "T-shirt", "md_doc_2references.html#autotoc_md268", null ],
+      [ "GIUH", "md_doc_2references.html#autotoc_md269", [
+        [ "Modeling References", "md_doc_2references.html#autotoc_md270", null ]
       ] ]
     ] ],
     [ "Release Management", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html", [
-      [ "The Release Process", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md258", [
-        [ "TL;DR", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md259", null ],
-        [ "Process Steps", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md260", null ]
+      [ "The Release Process", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md272", [
+        [ "TL;DR", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md273", null ],
+        [ "Process Steps", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md274", null ]
       ] ]
     ] ],
     [ "Installation instructions", "md__i_n_s_t_a_l_l.html", [
-      [ "Building and running with docker:", "md__i_n_s_t_a_l_l.html#autotoc_md263", null ],
-      [ "Building manually:", "md__i_n_s_t_a_l_l.html#autotoc_md264", null ]
+      [ "Building and running with docker:", "md__i_n_s_t_a_l_l.html#autotoc_md277", null ],
+      [ "Building manually:", "md__i_n_s_t_a_l_l.html#autotoc_md278", null ]
     ] ],
     [ "Guidance on How to Contribute", "md__c_o_n_t_r_i_b_u_t_i_n_g.html", [
-      [ "Using the Issue Tracker", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md267", null ],
-      [ "Changing the Code-Base", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md268", [
-        [ "Summary", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md269", null ],
-        [ "Getting Started", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md270", [
-          [ "Optional: Git Hooks", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md271", null ]
+      [ "Using the Issue Tracker", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md281", null ],
+      [ "Changing the Code-Base", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md282", [
+        [ "Summary", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md283", null ],
+        [ "Getting Started", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md284", [
+          [ "Optional: Git Hooks", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md285", null ]
         ] ],
-        [ "Developing Changes", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md272", [
-          [ "Work in a Dedicated Branch", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md273", null ],
-          [ "Pushing Incremental Commits", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md274", null ],
-          [ "Submitting Pull Requests", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md275", [
-            [ "Guidelines for Pull Requests", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md276", null ],
-            [ "PR Review and Requested Revisions", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md277", null ]
+        [ "Developing Changes", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md286", [
+          [ "Work in a Dedicated Branch", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md287", null ],
+          [ "Pushing Incremental Commits", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md288", null ],
+          [ "Submitting Pull Requests", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md289", [
+            [ "Guidelines for Pull Requests", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md290", null ],
+            [ "PR Review and Requested Revisions", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md291", null ]
           ] ]
         ] ],
-        [ "Keeping Forks Up to Date", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md278", [
-          [ "A Rebase Strategy", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md279", null ],
-          [ "Getting Remote Changes", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md280", [
-            [ "For production Too", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md281", null ]
+        [ "Keeping Forks Up to Date", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md292", [
+          [ "A Rebase Strategy", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md293", null ],
+          [ "Getting Remote Changes", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md294", [
+            [ "For production Too", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md295", null ]
           ] ],
-          [ "Rebasing Development Branches", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md282", [
-            [ "Interactive Rebasing", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md283", null ]
+          [ "Rebasing Development Branches", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md296", [
+            [ "Interactive Rebasing", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md297", null ]
           ] ],
-          [ "Fixing Diverging Development Branches", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md284", null ]
+          [ "Fixing Diverging Development Branches", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md298", null ]
         ] ]
       ] ]
     ] ],
     [ "Disclaimer", "md__t_e_r_m_s.html", [
-      [ "Exceptions", "md__t_e_r_m_s.html#autotoc_md287", null ]
+      [ "Exceptions", "md__t_e_r_m_s.html#autotoc_md301", null ]
     ] ],
     [ "Testing", "md_test_2_r_e_a_d_m_e.html", [
-      [ "Testing Frameworks", "md_test_2_r_e_a_d_m_e.html#autotoc_md289", [
-        [ "Google Test", "md_test_2_r_e_a_d_m_e.html#autotoc_md290", [
-          [ "(Re)generating CMake Project Buildsystem", "md_test_2_r_e_a_d_m_e.html#autotoc_md291", null ]
+      [ "Testing Frameworks", "md_test_2_r_e_a_d_m_e.html#autotoc_md303", [
+        [ "Google Test", "md_test_2_r_e_a_d_m_e.html#autotoc_md304", [
+          [ "(Re)generating CMake Project Buildsystem", "md_test_2_r_e_a_d_m_e.html#autotoc_md305", null ]
         ] ]
       ] ],
-      [ "Executing Automated Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md292", [
-        [ "C++ Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md293", [
-          [ "Test Targets and Executables", "md_test_2_r_e_a_d_m_e.html#autotoc_md294", null ]
+      [ "Executing Automated Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md306", [
+        [ "C++ Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md307", [
+          [ "Test Targets and Executables", "md_test_2_r_e_a_d_m_e.html#autotoc_md308", null ]
         ] ]
       ] ],
-      [ "Creating New Automated Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md295", [
-        [ "Adding Tests to CMake Builds", "md_test_2_r_e_a_d_m_e.html#autotoc_md296", null ],
-        [ "Test Creation Rules of Thumb", "md_test_2_r_e_a_d_m_e.html#autotoc_md297", null ]
+      [ "Creating New Automated Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md309", [
+        [ "Adding Tests to CMake Builds", "md_test_2_r_e_a_d_m_e.html#autotoc_md310", null ],
+        [ "Test Creation Rules of Thumb", "md_test_2_r_e_a_d_m_e.html#autotoc_md311", null ]
       ] ]
     ] ],
     [ "Todo List", "todo.html", null ],
@@ -410,11 +427,11 @@ var NAVTREEINDEX =
 "classrealization_1_1_bmi___formulation.html#ad23e2ac461a34855b320e2c81cc1e2f6",
 "classrealization_1_1_bmi___multi___formulation.html#a0dd771991a46889d4bc299f8c13cb5e3",
 "classrealization_1_1_configuration_exception.html#a27bcbee434a3d4e75c793c71fd9df74a",
-"index.html#autotoc_md32",
-"namespacebmi.html",
-"struct_a_o_r_c__data.html#a385e5f8c684246ac9eabc4639fe14c68",
-"structngen_1_1detail_1_1variable.html#a4bf069413cf8ac89a95904c9257cc639",
-"structrealization_1_1config_1_1_forcing.html"
+"functions_vars_z.html",
+"md_doc_2programming__standards.html#autotoc_md224",
+"namespacerealization.html#a0328960a5fc84440b67f91a6d705f940",
+"structngen_1_1detail_1_1dimension.html#aebf21ec79670d7f1c0784b62881ccb6b",
+"structngen_1_1traits_1_1type__list.html#a4a32af846a3acc3dc13aef5efe96149f"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -101,7 +101,11 @@ $(function(){initNavTree('md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="autotoc_md249"></a></p>
 <p>TODO: Link to Doxygen build</p>
+<h1><a class="anchor" id="autotoc_md250"></a>
+Description and Top-Level Structure</h1>
 <p>A Realization Configuration needs to be in <a href="https://www.json.org/json-en.html">JSON format (JavaScript Object Notation)</a></p>
+<h2><a class="anchor" id="autotoc_md251"></a>
+Required Top-Level Keys</h2>
 <p>The Configuration is a key-value object and must contain these three first level object keys:</p><ul>
 <li><code>global</code><ul>
 <li>is a key-value object that must include an object key for <code>formulations</code> that defines the default formulation(s) and also an object key for <code>forcing</code> that defines the default forcing file name pattern, path, and provider for any catchment that is not defined in <code>catchments</code></li>
@@ -117,14 +121,38 @@ $(function(){initNavTree('md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i
 </ul>
 </li>
 </ul>
-<p>The configuration may <em>optionally</em> contain an <code>output_root</code> key with a user-defined root output directory as the key, for nexus and catchment outputs.</p>
+<h2><a class="anchor" id="autotoc_md252"></a>
+Optional Top-Level Keys</h2>
+<h3><a class="anchor" id="autotoc_md253"></a>
+<code>output_root</code></h3>
+<p>The configuration may optionally contain an <code>output_root</code> key with a user-defined root output directory as the key, for nexus and catchment outputs.</p>
+<h3><a class="anchor" id="autotoc_md254"></a>
+<code>disable_catchment_output</code></h3>
+<p>The configuration may optionally contain a <code>disable_catchment_output</code> key, with a boolean value. When set to <code>true</code>, catchment output data files will not be written (default: <code>false</code>).</p>
+<h3><a class="anchor" id="autotoc_md255"></a>
+<code>catchments</code></h3>
+<p>The configuration may optionally contain a <code>catchments</code> key with a list of individual catchments that define their own formulations. See more details below.</p>
+<h3><a class="anchor" id="autotoc_md256"></a>
+<code>routing</code></h3>
+<p>The configuration may optionally contain a <code>routing</code> key with a subobject that defines the path to the t-route config file (<code>t_route_config_file_with_path</code>). It also optionally may contain a path to the t-route source code (<code>t_route_connection_path</code>), but this is reserved for advanced usage; generally, t-route should be installed as a package in the normal Python environment.</p>
+<h2><a class="anchor" id="autotoc_md257"></a>
+Examples of Top-Level Structure</h2>
+<p>Note that these are not exhaustive examples.</p>
 <div class="fragment"><div class="line">{</div>
 <div class="line">   &quot;global&quot;: {},</div>
 <div class="line">   &quot;time&quot;: {},</div>
 <div class="line">   &quot;catchments&quot;: {},</div>
 <div class="line">   &quot;output_root&quot;: &quot;/path/to/output/&quot;</div>
 <div class="line">} </div>
-</div><!-- fragment --><p>The <code>global</code> key-value object must contain the following two object keys:</p><ul>
+</div><!-- fragment --><div class="fragment"><div class="line">{</div>
+<div class="line">   &quot;global&quot;: {},</div>
+<div class="line">   &quot;time&quot;: {},</div>
+<div class="line">   &quot;output_root&quot;: &quot;/path/to/output/&quot;,</div>
+<div class="line">   &quot;write_catchment_output&quot;: true|false</div>
+<div class="line">} </div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md258"></a>
+The Global Section</h1>
+<p>The <code>global</code> key-value object must contain the following two object keys:</p><ul>
 <li><code>formulations</code><ul>
 <li>a list of formulation key-value objects that defines the default required formulation(s), and each formulation object has a key <code>name</code> and value of a model that is registered with the ngen framework and includes a key-value subobject for <code>params</code></li>
 <li>Note: future versions could support breaking up <code>params</code> into additional key-value subobjects for <code>options</code> and <code>initial_conditions</code></li>
@@ -152,7 +180,9 @@ $(function(){initNavTree('md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i
 <div class="line">      &quot;path&quot;: &quot;./data/forcing/&quot;</div>
 <div class="line">  }</div>
 <div class="line">},  </div>
-</div><!-- fragment --><p>The <code>time</code> key-value object must contain the following three keys:</p><ul>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md259"></a>
+The Time Section</h1>
+<p>The <code>time</code> key-value object must contain the following three keys:</p><ul>
 <li><code>start_time</code><ul>
 <li>defines the UTC start time of the simulation and must be in the form <code>yyyy-mm-dd hh:mm:ss</code></li>
 </ul>
@@ -171,7 +201,9 @@ $(function(){initNavTree('md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i
 <div class="line">    &quot;end_time&quot;: &quot;2015-12-30 23:00:00&quot;,</div>
 <div class="line">    &quot;output_interval&quot;: 3600</div>
 <div class="line">},</div>
-</div><!-- fragment --><p>The <code>catchments</code> key-value object must contain a list of all of the catchment object keys that will have defined formulations, and each catchment key will have the following format:</p><ul>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md260"></a>
+Individual Catchments</h1>
+<p>The <code>catchments</code> key-value object must contain a list of all of the catchment object keys that will have defined formulations, and each catchment key will have the following format:</p><ul>
 <li><code>cat-</code><ul>
 <li>followed by the unique integer identifier for the catchment</li>
 </ul>
@@ -233,7 +265,16 @@ $(function(){initNavTree('md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i
 <div class="line">        &quot;path&quot;: &quot;./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv&quot;</div>
 <div class="line">      }</div>
 <div class="line">    },</div>
-</div><!-- fragment --><p>An <a href="https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config.json">example realization configuration</a>.</p>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md261"></a>
+The Routing Section</h1>
+<div class="fragment"><div class="line">&quot;routing&quot;: {</div>
+<div class="line">    &quot;t_route_config_file_with_path&quot;: &quot;extern/t-route/test/input/yaml/ngen.yaml&quot;</div>
+<div class="line">}</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md262"></a>
+A Full Example</h1>
+<p>An <a href="https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config.json">example realization configuration</a>.</p>
+<h1><a class="anchor" id="autotoc_md263"></a>
+A Note on BMI Models</h1>
 <p>BMI is a commonly used model interface and formulation type used in ngen. <a href="https://github.com/NOAA-OWP/ngen/blob/master/doc/BMI_MODELS.md">BMI documenation</a> with an example <a href="https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config_w_bmi_c__lin_mac.json">for both Linux and macOS realizations</a>. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -241,7 +282,7 @@ $(function(){initNavTree('md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Feb 12 2026 13:41:48 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Mar 12 2026 17:45:25 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

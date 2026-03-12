@@ -286,76 +286,93 @@
       <topic label="Bug in multiprocessing on macOS" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md248"/>
     </topic>
   </topic>
-  <topic label="Realization Configuration" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html"/>
+  <topic label="Realization Configuration" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html">
+    <topic label="Description and Top-Level Structure" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md250">
+      <topic label="Required Top-Level Keys" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md251"/>
+      <topic label="Optional Top-Level Keys" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md252">
+        <topic label="output_root" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md253"/>
+        <topic label="disable_catchment_output" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md254"/>
+        <topic label="catchments" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md255"/>
+        <topic label="routing" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md256"/>
+      </topic>
+      <topic label="Examples of Top-Level Structure" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md257"/>
+    </topic>
+    <topic label="The Global Section" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md258"/>
+    <topic label="The Time Section" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md259"/>
+    <topic label="Individual Catchments" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md260"/>
+    <topic label="The Routing Section" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md261"/>
+    <topic label="A Full Example" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md262"/>
+    <topic label="A Note on BMI Models" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md263"/>
+  </topic>
   <topic label="&lt;a href=&quot;https://docs.opengeospatial.org/is/14-111r6/14-111r6.html&quot; &gt;HY_Features&lt;/a&gt;" href="md_doc_2references.html">
-    <topic label="BMI" href="md_doc_2references.html#autotoc_md251"/>
-    <topic label="Formulations" href="md_doc_2references.html#autotoc_md252"/>
-    <topic label="HYMOD" href="md_doc_2references.html#autotoc_md253"/>
-    <topic label="T-shirt" href="md_doc_2references.html#autotoc_md254"/>
-    <topic label="GIUH" href="md_doc_2references.html#autotoc_md255">
-      <topic label="Modeling References" href="md_doc_2references.html#autotoc_md256"/>
+    <topic label="BMI" href="md_doc_2references.html#autotoc_md265"/>
+    <topic label="Formulations" href="md_doc_2references.html#autotoc_md266"/>
+    <topic label="HYMOD" href="md_doc_2references.html#autotoc_md267"/>
+    <topic label="T-shirt" href="md_doc_2references.html#autotoc_md268"/>
+    <topic label="GIUH" href="md_doc_2references.html#autotoc_md269">
+      <topic label="Modeling References" href="md_doc_2references.html#autotoc_md270"/>
     </topic>
   </topic>
   <topic label="Release Management" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html">
-    <topic label="The Release Process" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md258">
-      <topic label="TL;DR" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md259"/>
-      <topic label="Process Steps" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md260"/>
+    <topic label="The Release Process" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md272">
+      <topic label="TL;DR" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md273"/>
+      <topic label="Process Steps" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md274"/>
     </topic>
   </topic>
   <topic label="Installation instructions" href="md__i_n_s_t_a_l_l.html">
-    <topic label="Building and running with docker:" href="md__i_n_s_t_a_l_l.html#autotoc_md263"/>
-    <topic label="Building manually:" href="md__i_n_s_t_a_l_l.html#autotoc_md264"/>
+    <topic label="Building and running with docker:" href="md__i_n_s_t_a_l_l.html#autotoc_md277"/>
+    <topic label="Building manually:" href="md__i_n_s_t_a_l_l.html#autotoc_md278"/>
   </topic>
   <topic label="Guidance on How to Contribute" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html">
-    <topic label="Using the Issue Tracker" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md267"/>
-    <topic label="Changing the Code-Base" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md268">
-      <topic label="Summary" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md269"/>
-      <topic label="Getting Started" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md270">
-        <topic label="Optional: Git Hooks" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md271"/>
+    <topic label="Using the Issue Tracker" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md281"/>
+    <topic label="Changing the Code-Base" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md282">
+      <topic label="Summary" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md283"/>
+      <topic label="Getting Started" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md284">
+        <topic label="Optional: Git Hooks" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md285"/>
       </topic>
-      <topic label="Developing Changes" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md272">
-        <topic label="Work in a Dedicated Branch" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md273"/>
-        <topic label="Pushing Incremental Commits" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md274"/>
-        <topic label="Submitting Pull Requests" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md275">
-          <topic label="Guidelines for Pull Requests" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md276"/>
-          <topic label="PR Review and Requested Revisions" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md277"/>
+      <topic label="Developing Changes" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md286">
+        <topic label="Work in a Dedicated Branch" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md287"/>
+        <topic label="Pushing Incremental Commits" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md288"/>
+        <topic label="Submitting Pull Requests" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md289">
+          <topic label="Guidelines for Pull Requests" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md290"/>
+          <topic label="PR Review and Requested Revisions" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md291"/>
         </topic>
       </topic>
-      <topic label="Keeping Forks Up to Date" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md278">
-        <topic label="A Rebase Strategy" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md279"/>
-        <topic label="Getting Remote Changes" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md280">
-          <topic label="For production Too" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md281"/>
+      <topic label="Keeping Forks Up to Date" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md292">
+        <topic label="A Rebase Strategy" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md293"/>
+        <topic label="Getting Remote Changes" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md294">
+          <topic label="For production Too" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md295"/>
         </topic>
-        <topic label="Rebasing Development Branches" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md282">
-          <topic label="Interactive Rebasing" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md283"/>
+        <topic label="Rebasing Development Branches" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md296">
+          <topic label="Interactive Rebasing" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md297"/>
         </topic>
-        <topic label="Fixing Diverging Development Branches" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md284"/>
+        <topic label="Fixing Diverging Development Branches" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md298"/>
       </topic>
     </topic>
   </topic>
   <topic label="Disclaimer" href="md__t_e_r_m_s.html">
-      <topic label="Other Information" href="md__t_e_r_m_s.html#autotoc_md286"/>
-    <topic label="Exceptions" href="md__t_e_r_m_s.html#autotoc_md287"/>
+      <topic label="Other Information" href="md__t_e_r_m_s.html#autotoc_md300"/>
+    <topic label="Exceptions" href="md__t_e_r_m_s.html#autotoc_md301"/>
   </topic>
   <topic label="Testing" href="md_test_2_r_e_a_d_m_e.html">
-    <topic label="Testing Frameworks" href="md_test_2_r_e_a_d_m_e.html#autotoc_md289">
-      <topic label="Google Test" href="md_test_2_r_e_a_d_m_e.html#autotoc_md290">
-        <topic label="(Re)generating CMake Project Buildsystem" href="md_test_2_r_e_a_d_m_e.html#autotoc_md291"/>
+    <topic label="Testing Frameworks" href="md_test_2_r_e_a_d_m_e.html#autotoc_md303">
+      <topic label="Google Test" href="md_test_2_r_e_a_d_m_e.html#autotoc_md304">
+        <topic label="(Re)generating CMake Project Buildsystem" href="md_test_2_r_e_a_d_m_e.html#autotoc_md305"/>
       </topic>
     </topic>
-    <topic label="Executing Automated Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md292">
-      <topic label="C++ Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md293">
-        <topic label="Test Targets and Executables" href="md_test_2_r_e_a_d_m_e.html#autotoc_md294"/>
+    <topic label="Executing Automated Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md306">
+      <topic label="C++ Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md307">
+        <topic label="Test Targets and Executables" href="md_test_2_r_e_a_d_m_e.html#autotoc_md308"/>
       </topic>
     </topic>
-    <topic label="Creating New Automated Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md295">
-      <topic label="Adding Tests to CMake Builds" href="md_test_2_r_e_a_d_m_e.html#autotoc_md296"/>
-      <topic label="Test Creation Rules of Thumb" href="md_test_2_r_e_a_d_m_e.html#autotoc_md297">
-          <topic label="Test Work Before Push or PR" href="md_test_2_r_e_a_d_m_e.html#autotoc_md298"/>
-          <topic label="Separate Test Types in Separate Files" href="md_test_2_r_e_a_d_m_e.html#autotoc_md299"/>
-          <topic label="Use Analogous Names" href="md_test_2_r_e_a_d_m_e.html#autotoc_md300"/>
-          <topic label="Use Analogous Paths" href="md_test_2_r_e_a_d_m_e.html#autotoc_md301"/>
-          <topic label="Keep Unit Test Assertions to a Minimum" href="md_test_2_r_e_a_d_m_e.html#autotoc_md302"/>
+    <topic label="Creating New Automated Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md309">
+      <topic label="Adding Tests to CMake Builds" href="md_test_2_r_e_a_d_m_e.html#autotoc_md310"/>
+      <topic label="Test Creation Rules of Thumb" href="md_test_2_r_e_a_d_m_e.html#autotoc_md311">
+          <topic label="Test Work Before Push or PR" href="md_test_2_r_e_a_d_m_e.html#autotoc_md312"/>
+          <topic label="Separate Test Types in Separate Files" href="md_test_2_r_e_a_d_m_e.html#autotoc_md313"/>
+          <topic label="Use Analogous Names" href="md_test_2_r_e_a_d_m_e.html#autotoc_md314"/>
+          <topic label="Use Analogous Paths" href="md_test_2_r_e_a_d_m_e.html#autotoc_md315"/>
+          <topic label="Keep Unit Test Assertions to a Minimum" href="md_test_2_r_e_a_d_m_e.html#autotoc_md316"/>
       </topic>
     </topic>
   </topic>
@@ -2823,6 +2840,7 @@
           <topic label="get_t_route_config_file_with_path" href="classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7"/>
           <topic label="get_using_routing" href="classrealization_1_1_formulation___manager.html#a599aadb9ffea1e8c28cbd010b3160bd7"/>
           <topic label="has_domain_formulation" href="classrealization_1_1_formulation___manager.html#aa9cf446b14425ae88c81a493fadcec8a"/>
+          <topic label="is_disable_catchment_output" href="classrealization_1_1_formulation___manager.html#a12bcd6a0cfe1dfc23e7df61d2ddea27e"/>
           <topic label="is_empty" href="classrealization_1_1_formulation___manager.html#a7ff3d02eee65fbe7b7b0c41cbf5868d8"/>
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f"/>
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1"/>
@@ -2873,6 +2891,7 @@
         <topic label="FileStreamHandler" href="classutils_1_1_file_stream_handler.html">
           <topic label="FileStreamHandler" href="classutils_1_1_file_stream_handler.html#aa98d206c0e15ef246227e41e13e4bbc9"/>
           <topic label="~FileStreamHandler" href="classutils_1_1_file_stream_handler.html#a2b4519ebca32efe528ad72f6dbeb33f1"/>
+          <topic label="getNullStream" href="classutils_1_1_file_stream_handler.html#a2dfca7edeb224cc942b6ef7302c6a08d"/>
           <topic label="operator&lt;&lt;" href="classutils_1_1_file_stream_handler.html#af36b00975146c10b0e8714daae7c7239"/>
           <topic label="put" href="classutils_1_1_file_stream_handler.html#a37b9e817a29d162b43066c3f60debe3f"/>
           <topic label="put_indexed" href="classutils_1_1_file_stream_handler.html#a3c6d48fc5333e2f7d13df9156eac13b9"/>
@@ -2880,12 +2899,16 @@
           <topic label="output_stream" href="classutils_1_1_file_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798"/>
           <topic label="sep" href="classutils_1_1_file_stream_handler.html#a94fc95b39ccee186539087dcad20f43b"/>
         </topic>
+        <topic label="NullStream" href="classutils_1_1_null_stream.html">
+          <topic label="NullStream" href="classutils_1_1_null_stream.html#ac83443ec2d37a1763d5518655c58e164"/>
+        </topic>
         <topic label="StreamHandler" href="classutils_1_1_stream_handler.html">
           <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#a5f450a99693319a0ed096e0cb3b70a52"/>
           <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#ad7c8ad75f2c18c680d4cbfad2a1416ab"/>
           <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#a15176069893e57510787897d9c8dea34"/>
           <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#af7f3b5a4929b997eb4c1618dbdbaec2f"/>
           <topic label="~StreamHandler" href="classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354"/>
+          <topic label="getNullStream" href="classutils_1_1_stream_handler.html#a2dfca7edeb224cc942b6ef7302c6a08d"/>
           <topic label="operator&lt;&lt;" href="classutils_1_1_stream_handler.html#af36b00975146c10b0e8714daae7c7239"/>
           <topic label="operator=" href="classutils_1_1_stream_handler.html#a0a807b146c1cfde1fc7a62c170f29444"/>
           <topic label="put" href="classutils_1_1_stream_handler.html#a37b9e817a29d162b43066c3f60debe3f"/>
@@ -5158,6 +5181,7 @@
           <topic label="get_t_route_config_file_with_path" href="classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7"/>
           <topic label="get_using_routing" href="classrealization_1_1_formulation___manager.html#a599aadb9ffea1e8c28cbd010b3160bd7"/>
           <topic label="has_domain_formulation" href="classrealization_1_1_formulation___manager.html#aa9cf446b14425ae88c81a493fadcec8a"/>
+          <topic label="is_disable_catchment_output" href="classrealization_1_1_formulation___manager.html#a12bcd6a0cfe1dfc23e7df61d2ddea27e"/>
           <topic label="is_empty" href="classrealization_1_1_formulation___manager.html#a7ff3d02eee65fbe7b7b0c41cbf5868d8"/>
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f"/>
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1"/>
@@ -5197,6 +5221,7 @@
         <topic label="FileStreamHandler" href="classutils_1_1_file_stream_handler.html">
           <topic label="FileStreamHandler" href="classutils_1_1_file_stream_handler.html#aa98d206c0e15ef246227e41e13e4bbc9"/>
           <topic label="~FileStreamHandler" href="classutils_1_1_file_stream_handler.html#a2b4519ebca32efe528ad72f6dbeb33f1"/>
+          <topic label="getNullStream" href="classutils_1_1_file_stream_handler.html#a2dfca7edeb224cc942b6ef7302c6a08d"/>
           <topic label="operator&lt;&lt;" href="classutils_1_1_file_stream_handler.html#af36b00975146c10b0e8714daae7c7239"/>
           <topic label="put" href="classutils_1_1_file_stream_handler.html#a37b9e817a29d162b43066c3f60debe3f"/>
           <topic label="put_indexed" href="classutils_1_1_file_stream_handler.html#a3c6d48fc5333e2f7d13df9156eac13b9"/>
@@ -5204,12 +5229,16 @@
           <topic label="output_stream" href="classutils_1_1_file_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798"/>
           <topic label="sep" href="classutils_1_1_file_stream_handler.html#a94fc95b39ccee186539087dcad20f43b"/>
         </topic>
+        <topic label="NullStream" href="classutils_1_1_null_stream.html">
+          <topic label="NullStream" href="classutils_1_1_null_stream.html#ac83443ec2d37a1763d5518655c58e164"/>
+        </topic>
         <topic label="StreamHandler" href="classutils_1_1_stream_handler.html">
           <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#a5f450a99693319a0ed096e0cb3b70a52"/>
           <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#ad7c8ad75f2c18c680d4cbfad2a1416ab"/>
           <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#a15176069893e57510787897d9c8dea34"/>
           <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#af7f3b5a4929b997eb4c1618dbdbaec2f"/>
           <topic label="~StreamHandler" href="classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354"/>
+          <topic label="getNullStream" href="classutils_1_1_stream_handler.html#a2dfca7edeb224cc942b6ef7302c6a08d"/>
           <topic label="operator&lt;&lt;" href="classutils_1_1_stream_handler.html#af36b00975146c10b0e8714daae7c7239"/>
           <topic label="operator=" href="classutils_1_1_stream_handler.html#a0a807b146c1cfde1fc7a62c170f29444"/>
           <topic label="put" href="classutils_1_1_stream_handler.html#a37b9e817a29d162b43066c3f60debe3f"/>
@@ -5943,6 +5972,9 @@
         <topic label="invalid_downstream_request" href="structinvalid__downstream__request.html"/>
         <topic label="invalid_time_step" href="structinvalid__time__step.html"/>
         <topic label="request_from_empty_nexus" href="structrequest__from__empty__nexus.html"/>
+      </topic>
+      <topic label="boost::iostreams::stream">
+        <topic label="utils::NullStream" href="classutils_1_1_null_stream.html"/>
       </topic>
       <topic label="boost::static_visitor">
         <topic label="geojson::JSONProperty::AsVectorVisitor&lt; T &gt;" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html"/>

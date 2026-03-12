@@ -128,6 +128,7 @@ var annotated_dup =
     [ "utils", "namespaceutils.html", [
       [ "FileChecker", "classutils_1_1_file_checker.html", "classutils_1_1_file_checker" ],
       [ "FileStreamHandler", "classutils_1_1_file_stream_handler.html", "classutils_1_1_file_stream_handler" ],
+      [ "NullStream", "classutils_1_1_null_stream.html", "classutils_1_1_null_stream" ],
       [ "StreamHandler", "classutils_1_1_stream_handler.html", "classutils_1_1_stream_handler" ]
     ] ],
     [ "add_to_summed_nexus", "structadd__to__summed__nexus.html", "structadd__to__summed__nexus" ],

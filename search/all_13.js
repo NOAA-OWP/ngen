@@ -3,7 +3,7 @@ var searchData=
   ['n_0',['n',['../class_network___test.html#a470fa2e04fd1239f0932f52c7e6439d5',1,'Network_Test']]],
   ['name_1',['name',['../structngen_1_1_layer_description.html#a8d632f5ca6bcbda986fde0f73105ba0e',1,'ngen::LayerDescription::name'],['../structngen_1_1detail_1_1dimension.html#a8e56cb9c421652f0ecea0b6ab0417c15',1,'ngen::detail::dimension::name()'],['../structngen_1_1detail_1_1variable.html#ab18eddf746c1d9b798a73ea94043ab56',1,'ngen::detail::variable::name()']]],
   ['name_20not_20permitted_2',['Input and output with the same name not permitted',['../md_doc_2_b_m_iconventions.html#autotoc_md107',1,'']]],
-  ['names_3',['Names',['../md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md193',1,'File Names'],['../md_test_2_r_e_a_d_m_e.html#autotoc_md300',1,'Use Analogous Names']]],
+  ['names_3',['Names',['../md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md193',1,'File Names'],['../md_test_2_r_e_a_d_m_e.html#autotoc_md314',1,'Use Analogous Names']]],
   ['names_3a_4',['Bad Variable Names:',['../md_doc_2programming__standards.html#autotoc_md226',1,'']]],
   ['names_5f_5',['names_',['../structngen_1_1sqlite_1_1database_1_1iterator.html#ab17b2f5d88168158db9acf9ca0d2c3ba',1,'ngen::sqlite::database::iterator']]],
   ['naming_6',['Naming',['../md_doc_2programming__standards.html#autotoc_md225',1,'']]],
@@ -25,7 +25,7 @@ var searchData=
   ['network_5ftest1_22',['Network_Test1',['../class_network___test1.html',1,'Network_Test1'],['../class_network___test1.html#a0b0ececeeb44837e5f1fc2165c14a471',1,'Network_Test1::Network_Test1()']]],
   ['network_5ftest2_23',['Network_Test2',['../class_network___test2.html',1,'Network_Test2'],['../class_network___test2.html#a9c5bd2e0f04f8f1b067bf5f8d3270075',1,'Network_Test2::Network_Test2()']]],
   ['networkindext_24',['NetworkIndexT',['../namespacenetwork.html#af1aad95222480433c10e1d5814ea28ca',1,'network']]],
-  ['new_20automated_20tests_25',['Creating New Automated Tests',['../md_test_2_r_e_a_d_m_e.html#autotoc_md295',1,'']]],
+  ['new_20automated_20tests_25',['Creating New Automated Tests',['../md_test_2_r_e_a_d_m_e.html#autotoc_md309',1,'']]],
   ['new_20subdirectories_26',['Adding New Subdirectories',['../md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md149',1,'']]],
   ['next_27',['next',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a6c3b0d6cb4ca0421cc85ce2f20789cb9',1,'ngen::sqlite::database::iterator']]],
   ['next_20gen_20water_20modeling_20framework_20prototype_28',['Next Gen Water Modeling Framework Prototype',['../index.html#autotoc_md30',1,'']]],
@@ -71,7 +71,9 @@ var searchData=
   ['nooutletreservoir2_68',['NoOutletReservoir2',['../class_reservoir_kernel_test.html#a2388e5a52b338a7a655d4855b4fc84e7',1,'ReservoirKernelTest::NoOutletReservoir2'],['../class_reservoir_timeless_kernel_test.html#af20b4030e198fe3a8a66a30bac9b7ee3',1,'ReservoirTimelessKernelTest::NoOutletReservoir2']]],
   ['nooutletreservoir3_69',['NoOutletReservoir3',['../class_reservoir_kernel_test.html#a8940d7294c4e15d00b6776719c8db958',1,'ReservoirKernelTest::NoOutletReservoir3'],['../class_reservoir_timeless_kernel_test.html#a9991d3dad1be1cc5067c574df69eb38a',1,'ReservoirTimelessKernelTest::NoOutletReservoir3']]],
   ['not_20permitted_70',['Input and output with the same name not permitted',['../md_doc_2_b_m_iconventions.html#autotoc_md107',1,'']]],
-  ['nullforcingprovider_71',['NullForcingProvider',['../class_null_forcing_provider.html',1,'NullForcingProvider'],['../class_null_forcing_provider.html#a586f4876aa823dee3c07963f49b2423b',1,'NullForcingProvider::NullForcingProvider()']]],
-  ['num_5fcolumns_72',['num_columns',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b',1,'ngen::sqlite::database::iterator']]],
-  ['number_5fof_5fdownstream_5fcatchments_73',['number_of_downstream_catchments',['../class_h_y___hydro_nexus.html#a849ee7fd94b2fd0d32a7fc7734bc3234',1,'HY_HydroNexus']]]
+  ['note_20on_20bmi_20models_71',['A Note on BMI Models',['../md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md263',1,'']]],
+  ['nullforcingprovider_72',['NullForcingProvider',['../class_null_forcing_provider.html',1,'NullForcingProvider'],['../class_null_forcing_provider.html#a586f4876aa823dee3c07963f49b2423b',1,'NullForcingProvider::NullForcingProvider()']]],
+  ['nullstream_73',['NullStream',['../classutils_1_1_null_stream.html',1,'utils::NullStream'],['../classutils_1_1_null_stream.html#ac83443ec2d37a1763d5518655c58e164',1,'utils::NullStream::NullStream()']]],
+  ['num_5fcolumns_74',['num_columns',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b',1,'ngen::sqlite::database::iterator']]],
+  ['number_5fof_5fdownstream_5fcatchments_75',['number_of_downstream_catchments',['../class_h_y___hydro_nexus.html#a849ee7fd94b2fd0d32a7fc7734bc3234',1,'HY_HydroNexus']]]
 ];

@@ -549,32 +549,34 @@ var sectionId = 'dynsection-1';
 <g id="Node000020" class="node">
 <title>Node20</title>
 <g id="a_Node000020"><a xlink:href="classutils_1_1_stream_handler.html" target="_top" xlink:title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s...">
-<polygon fill="white" stroke="none" points="1474.75,-2442.62 1379,-2442.62 1379,-2255.62 1474.75,-2255.62 1474.75,-2442.62"/>
-<text text-anchor="start" x="1383" y="-2429.12" font-family="Helvetica,sans-Serif" font-size="10.00">utils::StreamHandler</text>
-<text text-anchor="start" x="1425.38" y="-2413.88" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="1383.31" y="-2398.62" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1393.62" y="-2398.62" font-family="Helvetica,sans-Serif" font-size="10.00">StreamHandler()</text>
-<text text-anchor="start" x="1383.31" y="-2383.38" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1393.62" y="-2383.38" font-family="Helvetica,sans-Serif" font-size="10.00">StreamHandler()</text>
-<text text-anchor="start" x="1383.31" y="-2368.12" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1393.62" y="-2368.12" font-family="Helvetica,sans-Serif" font-size="10.00">StreamHandler()</text>
-<text text-anchor="start" x="1383.31" y="-2352.88" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1393.62" y="-2352.88" font-family="Helvetica,sans-Serif" font-size="10.00">StreamHandler()</text>
-<text text-anchor="start" x="1383.31" y="-2337.62" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1393.62" y="-2337.62" font-family="Helvetica,sans-Serif" font-size="10.00">~StreamHandler()</text>
-<text text-anchor="start" x="1383.31" y="-2322.38" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1393.62" y="-2322.38" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
-<text text-anchor="start" x="1383.31" y="-2307.12" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1393.62" y="-2307.12" font-family="Helvetica,sans-Serif" font-size="10.00">put()</text>
-<text text-anchor="start" x="1383.31" y="-2291.88" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1393.62" y="-2291.88" font-family="Helvetica,sans-Serif" font-size="10.00">put_indexed()</text>
-<text text-anchor="start" x="1383.31" y="-2276.62" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1393.62" y="-2276.62" font-family="Helvetica,sans-Serif" font-size="10.00">put_var()</text>
-<text text-anchor="start" x="1383.31" y="-2261.38" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1393.62" y="-2261.38" font-family="Helvetica,sans-Serif" font-size="10.00">operator&lt;&lt;()</text>
-<polygon fill="#666666" stroke="#666666" points="1379,-2425.38 1379,-2425.38 1474.75,-2425.38 1474.75,-2425.38 1379,-2425.38"/>
-<polygon fill="#666666" stroke="#666666" points="1379,-2410.12 1379,-2410.12 1474.75,-2410.12 1474.75,-2410.12 1379,-2410.12"/>
-<polygon fill="none" stroke="#666666" points="1379,-2255.62 1379,-2442.62 1474.75,-2442.62 1474.75,-2255.62 1379,-2255.62"/>
+<polygon fill="white" stroke="none" points="1474.75,-2450.25 1379,-2450.25 1379,-2248 1474.75,-2248 1474.75,-2450.25"/>
+<text text-anchor="start" x="1383" y="-2436.75" font-family="Helvetica,sans-Serif" font-size="10.00">utils::StreamHandler</text>
+<text text-anchor="start" x="1425.38" y="-2421.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="1383.31" y="-2406.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="1393.62" y="-2406.25" font-family="Helvetica,sans-Serif" font-size="10.00">StreamHandler()</text>
+<text text-anchor="start" x="1383.31" y="-2391" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="1393.62" y="-2391" font-family="Helvetica,sans-Serif" font-size="10.00">StreamHandler()</text>
+<text text-anchor="start" x="1383.31" y="-2375.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="1393.62" y="-2375.75" font-family="Helvetica,sans-Serif" font-size="10.00">StreamHandler()</text>
+<text text-anchor="start" x="1383.31" y="-2360.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="1393.62" y="-2360.5" font-family="Helvetica,sans-Serif" font-size="10.00">StreamHandler()</text>
+<text text-anchor="start" x="1383.31" y="-2345.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="1393.62" y="-2345.25" font-family="Helvetica,sans-Serif" font-size="10.00">~StreamHandler()</text>
+<text text-anchor="start" x="1383.31" y="-2330" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="1393.62" y="-2330" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
+<text text-anchor="start" x="1383.31" y="-2314.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="1393.62" y="-2314.75" font-family="Helvetica,sans-Serif" font-size="10.00">put()</text>
+<text text-anchor="start" x="1383.31" y="-2299.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="1393.62" y="-2299.5" font-family="Helvetica,sans-Serif" font-size="10.00">put_indexed()</text>
+<text text-anchor="start" x="1383.31" y="-2284.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="1393.62" y="-2284.25" font-family="Helvetica,sans-Serif" font-size="10.00">put_var()</text>
+<text text-anchor="start" x="1383.31" y="-2269" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="1393.62" y="-2269" font-family="Helvetica,sans-Serif" font-size="10.00">operator&lt;&lt;()</text>
+<text text-anchor="start" x="1383.31" y="-2253.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="1393.62" y="-2253.75" font-family="Helvetica,sans-Serif" font-size="10.00">getNullStream()</text>
+<polygon fill="#666666" stroke="#666666" points="1379,-2433 1379,-2433 1474.75,-2433 1474.75,-2433 1379,-2433"/>
+<polygon fill="#666666" stroke="#666666" points="1379,-2417.75 1379,-2417.75 1474.75,-2417.75 1474.75,-2417.75 1379,-2417.75"/>
+<polygon fill="none" stroke="#666666" points="1379,-2248 1379,-2450.25 1474.75,-2450.25 1474.75,-2248 1379,-2248"/>
 </a>
 </g>
 </g>
@@ -582,8 +584,8 @@ var sectionId = 'dynsection-1';
 <g id="edge33_Node000020_Node000006" class="edge">
 <title>Node6&#45;&gt;Node20</title>
 <g id="a_edge33_Node000020_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1330.19,-3546.57C1343.51,-3530.35 1359.65,-3507.63 1367.88,-3484.5 1410.62,-3364.24 1352.65,-3024.12 1413.62,-2912 1434.03,-2874.48 1470.02,-2891.32 1489.88,-2853.5 1551.21,-2736.68 1501.54,-2688.9 1504.88,-2557 1505.13,-2547 1509.05,-2543.59 1504.88,-2534.5 1499.74,-2523.33 1490.78,-2526.67 1483.88,-2516.5 1471.21,-2497.83 1461.1,-2476.07 1453.14,-2454.56"/>
-<polygon fill="none" stroke="#63b8ff" points="1453.11,-2454.48 1447.34,-2450.15 1449.11,-2443.16 1454.88,-2447.49 1453.11,-2454.48"/>
+<path fill="none" stroke="#63b8ff" d="M1330.19,-3546.57C1343.51,-3530.35 1359.65,-3507.63 1367.88,-3484.5 1410.62,-3364.24 1352.65,-3024.12 1413.62,-2912 1434.03,-2874.48 1470.02,-2891.32 1489.88,-2853.5 1551.21,-2736.68 1501.54,-2688.9 1504.88,-2557 1505.13,-2547 1509.05,-2543.59 1504.88,-2534.5 1499.74,-2523.33 1490.78,-2526.67 1483.88,-2516.5 1472.71,-2500.05 1463.54,-2481.2 1456.07,-2462.24"/>
+<polygon fill="none" stroke="#63b8ff" points="1456.05,-2462.2 1450.2,-2457.99 1451.84,-2450.96 1457.69,-2455.18 1456.05,-2462.2"/>
 </a>
 </g>
 <text text-anchor="middle" x="1425.25" y="-3030.12" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #sep</text>
@@ -1315,8 +1317,8 @@ var sectionId = 'dynsection-1';
 <g id="edge26_Node000008_Node000020" class="edge">
 <title>Node20&#45;&gt;Node8</title>
 <g id="a_edge26_Node000008_Node000020"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1429.93,-2255.95C1431.45,-2210.03 1433.26,-2155.51 1434.65,-2113.59"/>
-<polygon fill="none" stroke="#63b8ff" points="1434.65,-2113.62 1430.85,-2107.5 1435.04,-2101.63 1438.84,-2107.76 1434.65,-2113.62"/>
+<path fill="none" stroke="#63b8ff" d="M1430.19,-2248.07C1431.66,-2203.83 1433.34,-2153 1434.65,-2113.43"/>
+<polygon fill="none" stroke="#63b8ff" points="1434.65,-2113.36 1430.86,-2107.23 1435.05,-2101.37 1438.85,-2107.5 1434.65,-2113.36"/>
 </a>
 </g>
 <text text-anchor="middle" x="1451.71" y="-2137.38" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #output</text>
@@ -1325,8 +1327,8 @@ var sectionId = 'dynsection-1';
 <g id="edge27_Node000020_Node000021" class="edge">
 <title>Node21&#45;&gt;Node20</title>
 <g id="a_edge27_Node000020_Node000021"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1433.31,-2683.84C1432.36,-2634.66 1430.41,-2533.43 1428.9,-2455.29"/>
-<polygon fill="none" stroke="#63b8ff" points="1428.9,-2455.36 1424.79,-2449.44 1428.67,-2443.36 1432.79,-2449.29 1428.9,-2455.36"/>
+<path fill="none" stroke="#63b8ff" d="M1433.31,-2683.84C1432.39,-2636.18 1430.53,-2539.63 1429.04,-2462.59"/>
+<polygon fill="none" stroke="#63b8ff" points="1429.05,-2462.82 1424.93,-2456.9 1428.82,-2450.82 1432.93,-2456.74 1429.05,-2462.82"/>
 </a>
 </g>
 <text text-anchor="middle" x="1465.67" y="-2541.88" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #output_stream</text>

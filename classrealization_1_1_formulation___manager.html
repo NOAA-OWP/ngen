@@ -155,6 +155,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a99cd5e9e3ee972fb407dfa714bdb4c6c" id="r_a99cd5e9e3ee972fb407dfa714bdb4c6c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a99cd5e9e3ee972fb407dfa714bdb4c6c">get_output_root</a> () const</td></tr>
 <tr class="memdesc:a99cd5e9e3ee972fb407dfa714bdb4c6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the formatted output root: check the existence of the output_root directory defined in realization.  <br /></td></tr>
 <tr class="separator:a99cd5e9e3ee972fb407dfa714bdb4c6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12bcd6a0cfe1dfc23e7df61d2ddea27e" id="r_a12bcd6a0cfe1dfc23e7df61d2ddea27e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a12bcd6a0cfe1dfc23e7df61d2ddea27e">is_disable_catchment_output</a> () const</td></tr>
+<tr class="memdesc:a12bcd6a0cfe1dfc23e7df61d2ddea27e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the formulation has catchment output writing disabled.  <br /></td></tr>
+<tr class="separator:a12bcd6a0cfe1dfc23e7df61d2ddea27e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0fc7e9108d8cd74963053d33986a6ce" id="r_ad0fc7e9108d8cd74963053d33986a6ce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classngen_1_1_layer_data_storage.html">ngen::LayerDataStorage</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0fc7e9108d8cd74963053d33986a6ce">get_layer_metadata</a> ()</td></tr>
 <tr class="memdesc:ad0fc7e9108d8cd74963053d33986a6ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the layer storage used for formulations  <br /></td></tr>
 <tr class="separator:ad0fc7e9108d8cd74963053d33986a6ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -800,6 +803,43 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a12bcd6a0cfe1dfc23e7df61d2ddea27e" name="a12bcd6a0cfe1dfc23e7df61d2ddea27e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12bcd6a0cfe1dfc23e7df61d2ddea27e">&#9670;&#160;</a></span>is_disable_catchment_output()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool realization::Formulation_Manager::is_disable_catchment_output </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if the formulation has catchment output writing disabled. </p>
+<div class="fragment"><div class="line"><span class="comment">// Example config:</span></div>
+<div class="line"><span class="comment">// ...</span></div>
+<div class="line"><span class="comment">// &quot;disable_catchment_output&quot;: true</span></div>
+<div class="line"><span class="comment">// ...</span></div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> manager = Formulation_Manger(CONFIG);</div>
+<div class="line">manager.is_disable_catchment_output();</div>
+<div class="line"><span class="comment">//&gt; true</span></div>
+</div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>bool </dd></dl>
+
+<p class="reference">References <a class="el" href="#ae34d4f2d7d9bf211e5139eb2b8b09e39">tree</a>.</p>
+
+</div>
+</div>
 <a id="a7ff3d02eee65fbe7b7b0c41cbf5868d8" name="a7ff3d02eee65fbe7b7b0c41cbf5868d8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7ff3d02eee65fbe7b7b0c41cbf5868d8">&#9670;&#160;</a></span>is_empty()</h2>
 
@@ -1100,7 +1140,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a58bf2c51c335e14480dbcd42e4ca8d7c">Formulation_Manager()</a>, <a class="el" href="#a0a0de93305e075b3a2ee775a6c74963a">Formulation_Manager()</a>, <a class="el" href="#a999424a470ead9efe66ab5989929eb8e">Formulation_Manager()</a>, <a class="el" href="#a99cd5e9e3ee972fb407dfa714bdb4c6c">get_output_root()</a>, and <a class="el" href="#a1c0de7b0d1ec26ec9ed6177c4413b6f3">read()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a58bf2c51c335e14480dbcd42e4ca8d7c">Formulation_Manager()</a>, <a class="el" href="#a0a0de93305e075b3a2ee775a6c74963a">Formulation_Manager()</a>, <a class="el" href="#a999424a470ead9efe66ab5989929eb8e">Formulation_Manager()</a>, <a class="el" href="#a99cd5e9e3ee972fb407dfa714bdb4c6c">get_output_root()</a>, <a class="el" href="#a12bcd6a0cfe1dfc23e7df61d2ddea27e">is_disable_catchment_output()</a>, and <a class="el" href="#a1c0de7b0d1ec26ec9ed6177c4413b6f3">read()</a>.</p>
 
 </div>
 </div>
@@ -1137,7 +1177,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_formulation___manager.html">Formulation_Manager</a></li>
-    <li class="footer">Generated on Thu Feb 12 2026 13:41:49 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Mar 12 2026 17:45:26 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

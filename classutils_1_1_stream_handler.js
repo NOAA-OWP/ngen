@@ -5,6 +5,7 @@ var classutils_1_1_stream_handler =
     [ "StreamHandler", "classutils_1_1_stream_handler.html#a15176069893e57510787897d9c8dea34", null ],
     [ "StreamHandler", "classutils_1_1_stream_handler.html#af7f3b5a4929b997eb4c1618dbdbaec2f", null ],
     [ "~StreamHandler", "classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354", null ],
+    [ "getNullStream", "classutils_1_1_stream_handler.html#a2dfca7edeb224cc942b6ef7302c6a08d", null ],
     [ "operator<<", "classutils_1_1_stream_handler.html#af36b00975146c10b0e8714daae7c7239", null ],
     [ "operator=", "classutils_1_1_stream_handler.html#a0a807b146c1cfde1fc7a62c170f29444", null ],
     [ "put", "classutils_1_1_stream_handler.html#a37b9e817a29d162b43066c3f60debe3f", null ],

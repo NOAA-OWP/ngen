@@ -1,5 +1,5 @@
 <map id="utils::FileStreamHandler" name="utils::FileStreamHandler">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,323,154,410"/>
-<area shape="rect" id="Node000002" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="16,5,144,275"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,290,82,323,77,323,77,290"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,343,154,430"/>
+<area shape="rect" id="Node000002" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="16,5,144,295"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,311,82,344,77,344,77,311"/>
 </map>
