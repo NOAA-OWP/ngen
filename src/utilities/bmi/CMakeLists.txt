@@ -17,7 +17,7 @@
 add_library(ngen_bmi_protocols protocols.cpp mass_balance.cpp)
 add_library(NGen::bmi_protocols ALIAS ngen_bmi_protocols)
 
-target_include_directories(ngen_bmi_protocols PUBLIC 
+target_include_directories(ngen_bmi_protocols PUBLIC
     ${PROJECT_SOURCE_DIR}/include/bmi
     ${PROJECT_SOURCE_DIR}/include/utilities/bmi
     ${PROJECT_SOURCE_DIR}/include/geojson
@@ -31,7 +31,7 @@ target_link_libraries(ngen_bmi_protocols
     NGen::logging
 )
 
-target_link_libraries(ngen_bmi_protocols PRIVATE ewts::ewts_ngen_bridge)
+target_link_libraries(ngen_bmi_protocols PUBLIC ewts::ewts_ngen_bridge)
 
 target_sources(ngen_bmi_protocols
   PRIVATE

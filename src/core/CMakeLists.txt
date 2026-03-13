@@ -11,7 +11,7 @@ target_link_libraries(core PRIVATE
                            NGen::parallel
                            )
 
-target_link_libraries(core PRIVATE 
+target_link_libraries(core PUBLIC
                            ewts::ewts_ngen_bridge
                            )
 

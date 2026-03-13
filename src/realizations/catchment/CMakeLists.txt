@@ -22,7 +22,7 @@ target_include_directories(realizations_catchment PUBLIC
         ${PROJECT_SOURCE_DIR}/include/geojson
         ${PROJECT_SOURCE_DIR}/include/bmi
         )
-        
+
 target_link_libraries(realizations_catchment PUBLIC
         ${CMAKE_DL_LIBS}
         NGen::config_header
@@ -33,6 +33,6 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::bmi_protocols
         )
 
-target_link_libraries(realizations_catchment PRIVATE ewts::ewts_ngen_bridge)
+target_link_libraries(realizations_catchment PUBLIC ewts::ewts_ngen_bridge)
 
 

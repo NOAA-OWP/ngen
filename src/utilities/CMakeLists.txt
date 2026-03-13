@@ -12,7 +12,7 @@ target_link_libraries(ngen_parallel
     NGen::logging
 )
 
-target_link_libraries(ngen_parallel PRIVATE ewts::ewts_ngen_bridge)
+target_link_libraries(ngen_parallel PUBLIC ewts::ewts_ngen_bridge)
 
 if(NGEN_WITH_MPI)
   target_link_libraries(ngen_parallel

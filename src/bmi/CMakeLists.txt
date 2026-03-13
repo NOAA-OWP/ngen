@@ -16,7 +16,7 @@ target_link_libraries(ngen_bmi
     NGen::core_mediator
 )
 
-target_link_libraries(ngen_bmi PRIVATE ewts::ewts_ngen_bridge)
+target_link_libraries(ngen_bmi PUBLIC ewts::ewts_ngen_bridge)
 
 target_sources(ngen_bmi
   PRIVATE

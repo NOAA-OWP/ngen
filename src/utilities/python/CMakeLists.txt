@@ -2,7 +2,7 @@ add_library(ngen_python InterpreterUtil.cpp)
 add_library(NGen::python ALIAS ngen_python)
 
 find_package(ewts CONFIG REQUIRED)   # if not already in scope
-target_link_libraries(ngen_python PRIVATE ewts::ewts_ngen_bridge)
+target_link_libraries(ngen_python PUBLIC ewts::ewts_ngen_bridge)
 
 target_include_directories(ngen_python PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 
