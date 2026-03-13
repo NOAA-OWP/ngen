@@ -267,6 +267,10 @@ ARG EWTS_REF=development
 # /tmp which can be cleaned unexpectedly.
 ENV EWTS_PREFIX=/opt/ewts
 
+# Point the development fallback to the cloned source tree so that
+# compiler.sh can pip-install EWTS from source if the wheel is missing.
+ENV EWTS_PY_ROOT=/tmp/nwm-ewts/runtime/python/ewts
+
 # Clone nwm-ewts, build, install, capture git metadata for provenance,
 # then remove the source tree.
 # Try shallow clone by branch/tag name first; fall back to full clone + checkout
@@ -302,9 +306,9 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ewts \
       --arg build_date "$(date -u +'%Y-%m-%d %H:%M:%S UTC')" \
       '{"nwm-ewts": {commit_hash: $commit_hash, branch: $branch, tags: $tags, author: $author, commit_date: $commit_date, message: $message, build_date: $build_date}}' \
       > /ngen-app/nwm-ewts_git_info.json && \
-    # ── Cleanup source ──
+    # ── Cleanup source (keep Python source as fallback for compiler.sh) ──
     cd / && \
-    rm -rf /tmp/nwm-ewts
+    rm -rf /tmp/nwm-ewts/cmake_build /tmp/nwm-ewts/.git
 
 # Install the EWTS Python wheel into the venv.
 # This is what makes "import ewts" work for Python-based submodules.
