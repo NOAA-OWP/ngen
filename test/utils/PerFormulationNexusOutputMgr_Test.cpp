@@ -1097,6 +1097,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_1_a)
     ASSERT_EQ(nex_id_strs, ex_1_form_0_all_nexus_id);
 }
 
-#endif // #if NGEN_WITH_MPI
+#endif // #if NGEN_MPI_UNIT_TESTS ... #else
 
 #endif // #ifdef NGEN_NETCDF_TESTS_ACTIVE
