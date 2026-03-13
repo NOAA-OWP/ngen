@@ -5,12 +5,12 @@
 ##############################
 ARG ORG=ngwpc
 ARG NGEN_FORCING_IMAGE_TAG=latest
-ARG NGEN_FORCING_IMAGE=ghcr.io/ngwpc/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG}
+ARG NGEN_FORCING_IMAGE=ghcr.io/${ORG}/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG}
 
-#FROM ${NGEN_FORCING_IMAGE} AS base
+FROM ${NGEN_FORCING_IMAGE} AS base
 
 # Uncomment when building locally
-FROM ngen-bmi-forcing AS base
+#FROM ngen-bmi-forcing AS base
 
 # OCI Metadata Arguments
 ARG NGEN_FORCING_IMAGE
@@ -231,23 +231,24 @@ WORKDIR /ngen-app/
 #   - Iterative ngen/submodule development doesn't re-trigger the EWTS clone+build.
 #   - EWTS_ORG / EWTS_REF can be pinned without affecting other stages' caches.
 #
-# EWTS provides a unified logging library used by ngen core and ALL Fortran/C/C++
-# submodules (LASAM, snow17, sac-sma, SoilMoistureProfiles, SoilFreezeThaw,
-# cfe, topmodel, noah-owp-modular, ueb-bmi) plus a Python package used by lstm.
+# EWTS provides a unified logging framework used by ngen core and ALL C, C++, Fortran, 
+# and Python submodules. Libraries are created for C, C++ and Fortran submodules
+# (cfe, evapotranspiration, LASAM, noah-owp-modular, snow17, sac-sma,
+# SoilFreezeThaw, SoilMoistureProfiles, topmodel, ueb-bmi) and a Python package is
+# used by Python sumbodules (lstm, topoflow-glacier and t-route).
 #
 # How the plumbing works:
 #   1. We build EWTS here and install it to /opt/ewts.
 #   2. Every cmake call in the submodules stage passes
-#      -DCMAKE_PREFIX_PATH=/opt/ewts  so that
+#      -DCMAKE_PREFIX_PATH=/opt/ewts so that
 #      find_package(ewts CONFIG REQUIRED) in each submodule's CMakeLists.txt
 #      can locate the ewtsConfig.cmake package file.
-#   3. That gives each submodule access to the EWTS targets:
-#        ewts::ewts_cpp          – C++ runtime logger  (used by LASAM)
-#        ewts::ewts_fortran      – Fortran runtime      (snow17, sac-sma, SoilMoistureProfiles, SoilFreezeThaw, noah-owp-modular)
-#        ewts::ewts_c            – C runtime             (cfe, topmodel)
+#   3. The following gives each submodule access to the EWTS targets:
+#        ewts::ewts_c            – C runtime             (cfe, evapotranspiration, topmodel)
+#        ewts::ewts_cpp          – C++ runtime logger    (used by LASAM, SoilFreezeThaw, SoilMoistureProfiles)
+#        ewts::ewts_fortran      – Fortran runtime       (noah-owp-modular sac-sma,, snow17)
 #        ewts::ewts_ngen_bridge  – ngen↔EWTS bridge lib  (linked by ngen itself)
-#   4. The EWTS Python wheel is pip-installed so that lstm's bmi_lstm.py can
-#      "import ewts" at runtime.
+#        EWTS Python wheel       – pip intalled package  (lstm, topoflow-glacier, t-route)         
 #
 # Build args – override at build time to pin a branch, tag, or full commit SHA:
 #   docker build --build-arg EWTS_REF=v1.2.3 ...
@@ -308,8 +309,8 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ewts \
     rm -rf /tmp/nwm-ewts
 
 # Install the EWTS Python wheel into the venv.
-# This is what makes "import ewts" work for Python-based submodules (lstm).
-# lstm's bmi_lstm.py does:  import ewts; LOG = ewts.get_logger(ewts.LSTM_ID)
+# This is what makes "import ewts" work for Python-based submodules.
+# For example, lstm's bmi_lstm.py does:  import ewts; LOG = ewts.get_logger(ewts.LSTM_ID)
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
     set -eux && \
     pip install ${EWTS_PREFIX}/python/dist/ewts-*.whl
