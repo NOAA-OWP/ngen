@@ -231,7 +231,7 @@ WORKDIR /ngen-app/
 #   - Iterative ngen/submodule development doesn't re-trigger the EWTS clone+build.
 #   - EWTS_ORG / EWTS_REF can be pinned without affecting other stages' caches.
 #
-# EWTS provides a unified logging framework used by ngen core and ALL C, C++, Fortran, 
+# EWTS provides a unified logging framework used by ngen core and ALL C, C++, Fortran,
 # and Python submodules. Libraries are created for C, C++ and Fortran submodules
 # (cfe, evapotranspiration, LASAM, noah-owp-modular, snow17, sac-sma,
 # SoilFreezeThaw, SoilMoistureProfiles, topmodel, ueb-bmi) and a Python package is
@@ -248,7 +248,7 @@ WORKDIR /ngen-app/
 #        ewts::ewts_cpp          – C++ runtime logger    (used by LASAM, SoilFreezeThaw, SoilMoistureProfiles)
 #        ewts::ewts_fortran      – Fortran runtime       (noah-owp-modular sac-sma,, snow17)
 #        ewts::ewts_ngen_bridge  – ngen↔EWTS bridge lib  (linked by ngen itself)
-#        EWTS Python wheel       – pip intalled package  (lstm, topoflow-glacier, t-route)         
+#        EWTS Python wheel       – pip intalled package  (lstm, topoflow-glacier, t-route)
 #
 # Build args – override at build time to pin a branch, tag, or full commit SHA:
 #   docker build --build-arg EWTS_REF=v1.2.3 ...
@@ -267,19 +267,17 @@ ARG EWTS_REF=development
 # /tmp which can be cleaned unexpectedly.
 ENV EWTS_PREFIX=/opt/ewts
 
-# Clone nwm-ewts with minimal data (blobless clone), build, install, capture
-# git metadata for provenance, then remove the source tree.
-# The four-way fetch fallback handles branches, tags, AND bare commit SHAs
+# Clone nwm-ewts, build, install, capture git metadata for provenance,
+# then remove the source tree.
+# Try shallow clone by branch/tag name first; fall back to full clone + checkout
+# for bare commit SHAs (which git clone -b doesn't support).
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ewts \
     set -eux && \
-    git clone --filter=blob:none --no-checkout \
-        "https://github.com/${EWTS_ORG}/nwm-ewts.git" /tmp/nwm-ewts && \
+    (git clone --depth 1 -b "${EWTS_REF}" \
+        "https://github.com/${EWTS_ORG}/nwm-ewts.git" /tmp/nwm-ewts \
+     || (git clone "https://github.com/${EWTS_ORG}/nwm-ewts.git" /tmp/nwm-ewts && \
+         cd /tmp/nwm-ewts && git checkout "${EWTS_REF}")) && \
     cd /tmp/nwm-ewts && \
-    (git fetch --depth 1 origin "${EWTS_REF}" \
-     || git fetch --depth 1 origin "refs/tags/${EWTS_REF}:refs/tags/${EWTS_REF}" \
-     || git fetch origin "${EWTS_REF}" \
-     || git fetch origin "refs/tags/${EWTS_REF}:refs/tags/${EWTS_REF}") && \
-    git checkout FETCH_HEAD && \
     # ── Build EWTS ──
     # This produces: C, C++, Fortran shared libs + ngen bridge + Python wheel.
     # -DEWTS_WITH_NGEN=ON  enables the ngen bridge (ewts_ngen_bridge.so) which
