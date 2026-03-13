@@ -316,6 +316,11 @@ namespace realization {
                         properties.at(BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP).as_boolean());
             }
 
+            if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__STORE_INPUT_VAR_METADATA) != properties.end()) {
+                set_store_input_var_metadata(
+                        properties.at(BMI_REALIZATION_CFG_PARAM_OPT__STORE_INPUT_VAR_METADATA).as_boolean());
+            }
+
             auto std_names_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES);
             if (std_names_it != properties.end()) {
                 geojson::PropertyMap names_map = std_names_it->second.get_values();

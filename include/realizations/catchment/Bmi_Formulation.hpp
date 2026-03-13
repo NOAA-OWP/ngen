@@ -33,6 +33,7 @@
 #define BMI_REALIZATION_CFG_PARAM_OPT__CPP_DESTROY_FUNC "destroy_function"
 #define BMI_REALIZATION_CFG_PARAM_OPT__CPP_CREATE_FUNC_DEFAULT "bmi_model_create"
 #define BMI_REALIZATION_CFG_PARAM_OPT__CPP_DESTROY_FUNC_DEFAULT "bmi_model_destroy"
+#define BMI_REALIZATION_CFG_PARAM_OPT__STORE_INPUT_VAR_METADATA "store_input_variable_metadata"
 
 /* *************** See also the Forcing.h file for several CSDMS Standard Names definitions *************** */
 
