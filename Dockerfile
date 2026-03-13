@@ -299,7 +299,7 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ewts \
     jq -n \
       --arg commit_hash "$(git rev-parse HEAD)" \
       --arg branch "$(git branch -r --contains HEAD 2>/dev/null | grep -v '\->' | sed 's|origin/||' | head -n1 | xargs || echo "${EWTS_REF}")" \
-      --arg tags "$(git tag --points-at HEAD 2>–/dev/null | tr '\n' ' ')" \
+      --arg tags "$(git tag --points-at HEAD 2>/dev/null | tr '\n' ' ')" \
       --arg author "$(git log -1 --pretty=format:'%an')" \
       --arg commit_date "$(date -u -d @$(git log -1 --pretty=format:'%ct') +'%Y-%m-%d %H:%M:%S UTC')" \
       --arg message "$(git log -1 --pretty=format:'%s' | tr '\n' ';')" \
