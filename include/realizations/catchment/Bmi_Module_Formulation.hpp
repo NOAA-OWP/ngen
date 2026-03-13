@@ -11,9 +11,6 @@
 #include <boost/core/span.hpp>
 #include "bmi/protocols.hpp"
 
-#include <boost/core/span.hpp>
-#include "bmi/protocols.hpp"
-
 using data_access::MEAN;
 using data_access::SUM;
 
