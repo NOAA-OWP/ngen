@@ -599,9 +599,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_b)
                  std::runtime_error);
 }
 
-// TODO: figure out what is going on with this one
 /** Test that receive_data_entry doesn't actually write any data to the file. */
-TEST_F(PerFormulationNexusOutputMgr_Test, DISABLED_receive_data_entry_0_c) {
+TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_c) {
 
     std::string form_name = ex_0_form_names->at(0);
 
@@ -625,10 +624,17 @@ TEST_F(PerFormulationNexusOutputMgr_Test, DISABLED_receive_data_entry_0_c) {
     const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
 
     ASSERT_FALSE(flow.isNull());
-    double values[4];
+    double values[4][2];
     flow.getVar(values);
     for (size_t i = 0; i < ex_0_form_0_nexus_ids.size(); ++i) {
-        ASSERT_NE(values[i], ex_0_data[0][i]);
+        ASSERT_NE(values[i][0], ex_0_data[0][i]);
+    }
+
+    mgr.commit_writes();
+
+    flow.getVar(values);
+    for (size_t i = 0; i < ex_0_form_0_nexus_ids.size(); ++i) {
+        ASSERT_EQ(values[i][0], ex_0_data[0][i]);
     }
 }
 
