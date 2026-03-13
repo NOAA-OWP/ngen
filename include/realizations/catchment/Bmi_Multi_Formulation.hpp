@@ -15,6 +15,7 @@
 #include "ConfigurationException.hpp"
 #include "ExternalIntegrationException.hpp"
 
+#include <boost/serialization/access.hpp>
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"
@@ -55,6 +56,12 @@ namespace realization {
                 module->check_mass_balance(iteration, total_steps, timestamp);
             }
         };
+
+        void save_state(std::shared_ptr<State_Snapshot_Saver> saver) override;
+
+        void load_state(std::shared_ptr<State_Snapshot_Loader> loader) override;
+
+        void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) override;
 
         /**
          * Convert a time value from the model to an epoch time in seconds.
@@ -674,6 +681,7 @@ namespace realization {
         bool is_realization_legacy_format() const;
 
     private:
+        friend class boost::serialization::access;
 
         /**
          * Setup a deferred provider for a nested module, tracking the class as needed.
@@ -773,6 +781,8 @@ namespace realization {
         friend Bmi_Multi_Formulation_Test;
         friend class ::Bmi_Cpp_Multi_Array_Test;
 
+        template<class Archive>
+        void serialize(Archive& ar, const unsigned int version);
     };
 }
 

@@ -41,6 +41,9 @@ class Bmi_Formulation_Test;
 class Bmi_C_Formulation_Test;
 class Bmi_C_Pet_IT;
 
+class State_Snapshot_Saver;
+class State_Snapshot_Loader;
+
 namespace realization {
 
     /**
@@ -67,6 +70,30 @@ namespace realization {
 
 
         virtual ~Bmi_Formulation() {};
+
+        /**
+         * Passes a serialized representation of the model's state to ``saver``
+         *
+         * Asks the model to serialize its state, queries the pointer
+         * and length, passes that to saver, and then releases it
+         */
+        virtual void save_state(std::shared_ptr<State_Snapshot_Saver> saver) = 0;
+
+        /**
+         * Passes a serialized representation of the model's state to ``loader``
+         *
+         * Asks saver to find data for the BMI and passes that data to the BMI for loading.
+         */
+        virtual void load_state(std::shared_ptr<State_Snapshot_Loader> loader) = 0;
+
+        /**
+         * Passes a serialized representation of the model's state to ``loader``
+         *
+         * Asks saver to find data for the BMI and passes that data to the BMI for loading.
+         * 
+         * Differes from `load_state` by also restting the internal time value to its initial state.
+         */
+        virtual void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) = 0;
 
         /**
          * Convert a time value from the model to an epoch time in seconds.

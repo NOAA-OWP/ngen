@@ -165,7 +165,12 @@ add_compile_definitions(NGEN_SHARED_LIB_EXTENSION)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.86.0 REQUIRED)
+if(CMAKE_CXX_STANDARD LESS 17)
+    # requires non-header filesystem for state saving if C++ 11 or lower
+    find_package(Boost 1.86.0 REQUIRED COMPONENTS system filesystem)
+else()
+    find_package(Boost 1.86.0 REQUIRED)
+endif()
 
 # -----------------------------------------------------------------------------
 if(NGEN_WITH_SQLITE)
@@ -318,6 +323,7 @@ add_subdirectory("src/geojson")
 add_subdirectory("src/bmi")
 add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/forcing")
+add_subdirectory("src/state_save_restore")
 add_subdirectory("src/utilities")
 add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
@@ -337,7 +343,9 @@ target_link_libraries(ngen
         NGen::core_mediator
         NGen::logging
         NGen::parallel
+        NGen::state_save_restore
         NGen::bmi_protocols
+        NGen::state_save_restore
 )
 
 if(NGEN_WITH_SQLITE)

@@ -2,6 +2,8 @@
 #include "utilities/logging_utils.h"
 #include <UnitsHelper.hpp>
 #include "Logger.hpp"
+#include "state_save_restore/State_Save_Utils.hpp"
+#include <state_save_restore/State_Save_Restore.hpp>
 
 std::stringstream bmiform_ss;
 
@@ -15,19 +17,29 @@ namespace realization {
             inner_create_formulation(properties, true);
         }
 
-        void Bmi_Module_Formulation::save_state(std::shared_ptr<UnitSaver> saver) const {
-            auto model = get_bmi_model();
+        void Bmi_Module_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> saver) {
+            uint64_t size = 1;
+            boost::span<char> data = this->get_serialization_state();
 
-            size_t size = 1;
-            model->SetValue("serialization_create", &size);
-            model->GetValue("serialization_size", &size);
+            // Rely on Formulation_Manager also using this->get_id()
+            // as a unique key for the individual catchment
+            // formulations
+            saver->save_unit(this->get_id(), data);
 
-            auto serialization_state = static_cast<char const*>(model->GetValuePtr("serialization_state"));
-            boost::span<const char> data(serialization_state, size);
+            this->free_serialization_state();
+        }
 
-            saver->save(data);
+        void Bmi_Module_Formulation::load_state(std::shared_ptr<State_Snapshot_Loader> loader) {
+            std::vector<char> buffer;
+            loader->load_unit(this->get_id(), buffer);
+            boost::span<char> data(buffer.data(), buffer.size());
+            this->load_serialization_state(data);
+        }
 
-            model->SetValue("serialization_free", &size);
+        void Bmi_Module_Formulation::load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) {
+            this->load_state(loader);
+            double rt;
+            this->get_bmi_model()->SetValue(StateSaveNames::FREE, &rt);
         }
 
         boost::span<const std::string> Bmi_Module_Formulation::get_available_variable_names() const {
@@ -1082,28 +1094,28 @@ namespace realization {
 
         }
 
-        const boost::span<char> Bmi_Module_Formulation::get_serialization_state() const {
-            auto bmi = this->bmi_model;
-            // create a new serialized state, getting the amount of data that was saved
-            uint64_t* size = (uint64_t*)bmi->GetValuePtr("serialization_create");
-            // get the pointer of the new state
-            char* serialized = (char*)bmi->GetValuePtr("serialization_state");
-            const boost::span<char> span(serialized, *size);
+        const boost::span<char> Bmi_Module_Formulation::get_serialization_state() {
+            auto model = get_bmi_model();
+            uint64_t size = 0;
+            model->SetValue(StateSaveNames::CREATE, &size);
+            model->GetValue(StateSaveNames::SIZE, &size);
+            auto serialization_state = static_cast<char *>(model->GetValuePtr(StateSaveNames::STATE));
+            const boost::span<char> span(serialization_state, size);
             return span;
         }
 
-        void Bmi_Module_Formulation::load_serialization_state(const boost::span<char> state) const {
+        void Bmi_Module_Formulation::load_serialization_state(const boost::span<char> state) {
             auto bmi = this->bmi_model;
             // grab the pointer to the underlying state data
             void* data = (void*)state.data();
             // load the state through SetValue
-            bmi->SetValue("serialization_state", data);
+            bmi->SetValue(StateSaveNames::STATE, data);
         }
 
-        void Bmi_Module_Formulation::free_serialization_state() const {
+        void Bmi_Module_Formulation::free_serialization_state() {
             auto bmi = this->bmi_model;
             // send message to clear memory associated with serialized data
             void* _; // this pointer will be unused by SetValue
-            bmi->SetValue("serialization_free", _);
+            bmi->SetValue(StateSaveNames::FREE, _);
         }
 }

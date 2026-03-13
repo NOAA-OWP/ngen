@@ -7,7 +7,6 @@
 #include "Bmi_Adapter.hpp"
 #include <DataProvider.hpp>
 #include "bmi_utilities.hpp"
-#include <utilities/StateSaving.hpp>
 
 #include <boost/core/span.hpp>
 #include "bmi/protocols.hpp"
@@ -49,12 +48,14 @@ namespace realization {
         void create_formulation(geojson::PropertyMap properties) override;
 
         /**
-         * Passes a serialized representation of the model's state to ``saver``
-         *
-         * Asks the model to serialize its state, queries the pointer
-         * and length, passes that to saver, and then releases it
+         * Create a save state, save it using the `State_Snapshot_Saver`, then clear the save state from memory.
+         * `this->get_id()` will be used as the unique ID for the saver.
          */
-        void save_state(std::shared_ptr<UnitSaver> saver) const;
+        void save_state(std::shared_ptr<State_Snapshot_Saver> saver) override;
+
+        void load_state(std::shared_ptr<State_Snapshot_Loader> loader) override;
+
+        void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) override;
 
         /**
          * Get the collection of forcing output property names this instance can provide.
@@ -290,9 +291,21 @@ namespace realization {
         const std::vector<std::string> get_bmi_input_variables() const override;
         const std::vector<std::string> get_bmi_output_variables() const override;
 
-        const boost::span<char> get_serialization_state() const;
-        void load_serialization_state(const boost::span<char> state) const;
-        void free_serialization_state() const;
+        /**
+         * Requests the BMI to copy its current state into memory. The state will remain in memory until either a new state is made or `free_serialization_state` is called.
+         * 
+         * @return Span of the serialized data.
+         */
+        virtual const boost::span<char> get_serialization_state();
+        /**
+         * Requests the BMI to load data from a previously saved state. This has a side effect of freeing a current state if it currently exists.
+         */
+        virtual void load_serialization_state(const boost::span<char> state);
+        /**
+         * Requests the BMI to clear a currently saved state from memory.
+         * Existing state pointers should not be used as the stored data may be freed depending on implementation.
+         */
+        virtual void free_serialization_state();
         void set_realization_file_format(bool is_legacy_format);
 
         virtual void check_mass_balance(const int& iteration, const int& total_steps, const std::string& timestamp) const override {

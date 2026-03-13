@@ -104,25 +104,35 @@ void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
         msg += e.what();
         Logger::logMsgAndThrowError(msg);
     }
-
-    if (cxx_type == "short") {
-        copy_to_array<short>(name, (short *) dest);
+    if (cxx_type == "signed char") {
+        this->copy_to_array<signed char>(name, static_cast<signed char *>(dest));
+    } else if (cxx_type == "unsigned char") {
+        this->copy_to_array<unsigned char>(name, static_cast<unsigned char *>(dest));
+    } else if (cxx_type == "short") {
+        this->copy_to_array<short>(name, static_cast<short *>(dest));
+    } else if (cxx_type == "unsigned short") {
+        this->copy_to_array<unsigned short>(name, static_cast<unsigned short *>(dest));
     } else if (cxx_type == "int") {
-        copy_to_array<int>(name, (int *) dest);
+        this->copy_to_array<int>(name, static_cast<int *>(dest));
+    } else if (cxx_type == "unsigned int") {
+        this->copy_to_array<unsigned int>(name, static_cast<unsigned int *>(dest));
     } else if (cxx_type == "long") {
-        copy_to_array<long>(name, (long *) dest);
+        this->copy_to_array<long>(name, static_cast<long *>(dest));
+    } else if (cxx_type == "unsigned long") {
+        this->copy_to_array<unsigned long>(name, static_cast<unsigned long *>(dest));
     } else if (cxx_type == "long long") {
-        copy_to_array<long long>(name, (long long *) dest);
+        this->copy_to_array<long long>(name, static_cast<long long *>(dest));
+    } else if (cxx_type == "unsigned long long") {
+        this->copy_to_array<unsigned long long>(name, static_cast<unsigned long long *>(dest));
     } else if (cxx_type == "float") {
-        copy_to_array<float>(name, (float *) dest);
+        this->copy_to_array<float>(name, static_cast<float *>(dest));
     } else if (cxx_type == "double") {
-        copy_to_array<double>(name, (double *) dest);
+        this->copy_to_array<double>(name, static_cast<double *>(dest));
     } else if (cxx_type == "long double") {
-        copy_to_array<long double>(name, (long double *) dest);
+        this->copy_to_array<long double>(name, static_cast<long double *>(dest));
     } else {
         Logger::logMsgAndThrowError("Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
     }
-
 }
 
 void Bmi_Py_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {
@@ -189,30 +199,30 @@ std::string Bmi_Py_Adapter::get_bmi_type_simple_name() const {
 void Bmi_Py_Adapter::SetValueAtIndices(std::string name, int *inds, int count, void *src) {
     std::string val_type = GetVarType(name);
     size_t val_item_size = (size_t)GetVarItemsize(name);
+    std::string cxx_type = this->get_analogous_cxx_type(val_type, val_item_size);
 
-    // The available types and how they are handled here should match what is in get_value_at_indices
-    if (val_type == "int" && val_item_size == sizeof(short)) {
-        set_value_at_indices<short>(name, inds, count, src, val_type);
-    } else if (val_type == "int" && val_item_size == sizeof(int)) {
-        set_value_at_indices<int>(name, inds, count, src, val_type);
-    } else if (val_type == "int" && val_item_size == sizeof(long)) {
-        set_value_at_indices<long>(name, inds, count, src, val_type);
-    } else if (val_type == "int" && val_item_size == sizeof(long long)) {
-        set_value_at_indices<long long>(name, inds, count, src, val_type);
-    } else if (val_type == "float" && val_item_size == sizeof(float)) {
-        set_value_at_indices<float>(name, inds, count, src, val_type);
-    } else if (val_type == "float" && val_item_size == sizeof(double)) {
-        set_value_at_indices<double>(name, inds, count, src, val_type);
-    } else if (val_type == "float64" && val_item_size == sizeof(double)) {
-        set_value_at_indices<double>(name, inds, count, src, val_type);
-    } else if (val_type == "float" && val_item_size == sizeof(long double)) {
-        set_value_at_indices<long double>(name, inds, count, src, val_type);
-    } else {
+    // macro for checking type and calling `set_value_at_indices` with that type
+    #define BMI_PY_SET_VALUE_INDEX(type) if (cxx_type == #type) { this->set_value_at_indices<type>(name, inds, count, src, val_type); }
+    BMI_PY_SET_VALUE_INDEX(signed char)
+    else BMI_PY_SET_VALUE_INDEX(unsigned char)
+    else BMI_PY_SET_VALUE_INDEX(short)
+    else BMI_PY_SET_VALUE_INDEX(unsigned short)
+    else BMI_PY_SET_VALUE_INDEX(int)
+    else BMI_PY_SET_VALUE_INDEX(unsigned int)
+    else BMI_PY_SET_VALUE_INDEX(long)
+    else BMI_PY_SET_VALUE_INDEX(unsigned long)
+    else BMI_PY_SET_VALUE_INDEX(long long)
+    else BMI_PY_SET_VALUE_INDEX(unsigned long long)
+    else BMI_PY_SET_VALUE_INDEX(float)
+    else BMI_PY_SET_VALUE_INDEX(double)
+    else BMI_PY_SET_VALUE_INDEX(long double)
+    else {
         Logger::logMsgAndThrowError(
                 "(Bmi_Py_Adapter) Failed attempt to SET values of BMI variable '" + name + "' from '" +
                 model_name + "' model:  model advertises unsupported combination of type (" + val_type +
                 ") and size (" + std::to_string(val_item_size) + ").");
     }
+    #undef BMI_PY_SET_VALUE_INDEX
 }
 
 void Bmi_Py_Adapter::Update() {

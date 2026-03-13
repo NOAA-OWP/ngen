@@ -1,5 +1,6 @@
 #include <Layer.hpp>
 #include <Catchment_Formulation.hpp>
+#include <Bmi_Formulation.hpp>
 
 #if NGEN_WITH_MPI
 #include "HY_Features_MPI.hpp"
@@ -91,4 +92,37 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
     if ( output_time_index < simulation_time.get_total_output_times() ) {
         simulation_time.advance_timestep();
     }       
+}
+
+void ngen::Layer::save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> snapshot_saver)
+{
+    // XXX Handle any of this class's own state as a meta-data unit
+
+    for (auto const& id : processing_units) {
+        auto r = features.catchment_at(id);
+        auto r_c = std::dynamic_pointer_cast<realization::Bmi_Formulation>(r);
+        r_c->save_state(snapshot_saver);
+    }
+}
+
+void ngen::Layer::load_state_snapshot(std::shared_ptr<State_Snapshot_Loader> snapshot_loader)
+{
+    // XXX Handle any of this class's own state as a meta-data unit
+
+    for (auto const& id : processing_units) {
+        auto r = features.catchment_at(id);
+        auto r_c = std::dynamic_pointer_cast<realization::Bmi_Formulation>(r);
+        r_c->load_state(snapshot_loader);
+    }
+}
+
+void ngen::Layer::load_hot_start(std::shared_ptr<State_Snapshot_Loader> snapshot_loader)
+{
+    // XXX Handle any of this class's own state as a meta-data unit
+
+    for (auto const& id : processing_units) {
+        auto r = features.catchment_at(id);
+        auto r_c = std::dynamic_pointer_cast<realization::Bmi_Formulation>(r);
+        r_c->load_hot_start(snapshot_loader);
+    }
 }

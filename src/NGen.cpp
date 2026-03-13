@@ -54,6 +54,8 @@
 #include <Layer.hpp>
 #include <SurfaceLayer.hpp>
 
+#include <state_save_restore/State_Save_Restore.hpp>
+
 void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
     stream << "Runtime configuration summary:\n";
 
@@ -514,8 +516,9 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     }
 
     auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
-
     sim_time = std::make_shared<Simulation_Time>(simulation_time_config);
+
+    auto state_saving_config = State_Save_Config(realization_config);
 
     ss << "Initializing formulations" << std::endl;
     LOG(ss.str(), LogLevel::INFO);
@@ -696,6 +699,15 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
     LOG("[TIMING]: Init: " + std::to_string(time_elapsed_init.count()), LogLevel::INFO);
 
+    { // optionally run hot start loader if set in state saving config
+        auto hot_start_loader = state_saving_config.hot_start();
+        if (hot_start_loader) {
+            LOG(LogLevel::INFO, "Loading hot start data from prior snapshot.");
+            std::shared_ptr<State_Snapshot_Loader> snapshot_loader = hot_start_loader->initialize_snapshot();
+            simulation->load_hot_start(snapshot_loader, manager->get_t_route_config_file_with_path());
+        }
+    }
+
     simulation->run_catchments();
 
 #if NGEN_WITH_MPI
@@ -733,8 +745,6 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     std::chrono::duration<double> time_elapsed_nexus_output = time_done_nexus_output - time_done_simulation;
     LOG("[TIMING]: Nexus outflow file writing: " + std::to_string(time_elapsed_nexus_output.count()), LogLevel::INFO);
 
-    manager->finalize();
-
 #if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
@@ -760,6 +770,16 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     std::chrono::duration<double> time_elapsed_coastal = time_done_coastal - time_done_routing;
     LOG("[TIMING]: Coastal: " + std::to_string(time_elapsed_coastal.count()), LogLevel::INFO);
 #endif
+
+    // run any end-of-run state saving after T-Route has finished but before starting to tear down data structures
+    for (const auto& end_saver : state_saving_config.end_of_run_savers()) {
+        LOG(LogLevel::INFO, "Saving end of run simulation data for state saving config " + end_saver.first);
+        std::shared_ptr<State_Snapshot_Saver> snapshot = end_saver.second->initialize_snapshot(State_Saver::State_Durability::strict);
+        simulation->save_end_of_run(snapshot);
+    }
+
+    simulation->finalize();
+    manager->finalize();
 
     auto time_done_total                               = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_total   = time_done_total - time_start;

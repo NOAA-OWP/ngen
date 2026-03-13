@@ -5,6 +5,7 @@
 
 #if NGEN_WITH_BMI_FORTRAN
 
+#include <vector>
 #include "Bmi_Module_Formulation.hpp"
 #include <GenericDataProvider.hpp>
 
@@ -22,6 +23,18 @@ namespace realization {
         Bmi_Fortran_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream);
 
         std::string get_formulation_type() const override;
+
+        /**
+         * Requests the BMI to copy its current state into memory. The state will remain in memory until either a new state is made or `free_serialization_state` is called.
+         * Because the Fortran BMI has no messaging for 64-bit integers, this overload will use the 32-bit integer interface.
+         * 
+         * @return Span of the serialized data.
+         */
+        const boost::span<char> get_serialization_state() override;
+
+        void load_serialization_state(const boost::span<char> state) override;
+
+        void free_serialization_state() override;
 
     protected:
 
@@ -49,6 +62,10 @@ namespace realization {
         friend class ::Bmi_Multi_Formulation_Test;
         friend class ::Bmi_Formulation_Test;
         friend class ::Bmi_Fortran_Formulation_Test;
+
+    private:
+        // location to store serialized state from the BMI because pointer interfaces are not available for Fotran
+        std::vector<char> serialized_state;
     };
 
 }

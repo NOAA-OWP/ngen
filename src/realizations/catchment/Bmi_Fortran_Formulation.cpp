@@ -6,6 +6,7 @@
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Bmi_Fortran_Adapter.hpp"
 #include "Constants.h"
+#include "state_save_restore/State_Save_Utils.hpp"
 
 using namespace realization;
 using namespace models::bmi;
@@ -91,6 +92,48 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
     " as double: no logic for converting variable type " + type);
     
     return 1.0;
+}
+
+const boost::span<char> Bmi_Fortran_Formulation::get_serialization_state() {
+    auto model = this->get_bmi_model();
+    // create the serialized state on the Fortran BMI
+    int size_int = 0;
+    model->SetValue(StateSaveNames::CREATE, &size_int);
+    model->GetValue(StateSaveNames::SIZE, &size_int);
+    // resize the state to the array to the size of the Fortran's backing array
+    this->serialized_state.resize(size_int);
+    // since GetValuePtr on the Fortran BMI does not work currently, store the data on the formulation
+    model->GetValue(StateSaveNames::STATE, this->serialized_state.data());
+    // the BMI can have its state freed immediately since the data is now stored on the formulation
+    model->SetValue(StateSaveNames::FREE, &size_int);
+    // return a span of the data stored on the formulation
+    const boost::span<char> span(this->serialized_state.data(), this->serialized_state.size());
+    return span;
+}
+
+void Bmi_Fortran_Formulation::load_serialization_state(const boost::span<char> state) {
+    auto model = this->get_bmi_model();
+    int item_size = model->GetVarItemsize(StateSaveNames::STATE);
+    // assert the number of chars aligns with the storage array to prevent reading out of bounds
+    if (state.size() % item_size != 0) {
+        std::string error = "Fortran Deserialization: The number of bytes in the state (" + std::to_string(state.size())
+            + ") must be a multiple of the size of the storage unit (" + std::to_string(item_size) + ")";
+        LOG(LogLevel::SEVERE, error);
+        throw std::runtime_error(error);
+    }
+    // setting size is a workaround for loading the state.
+    // The BMI Fortran interface shapes the incoming pointer to the same size as the data currently backing the BMI's variable.
+    // By setting the size, the BMI can lie about the size of its state variable to that interface.
+    int false_nbytes = state.size();
+    model->SetValue(StateSaveNames::SIZE, &false_nbytes);
+    model->SetValue(StateSaveNames::STATE, state.data());
+}
+
+void Bmi_Fortran_Formulation::free_serialization_state() {
+    // The serialized data needs to be stored on the formluation since GetValuePtr is not available on Fortran BMIs.
+    // The backing BMI's serialization data should already be freed during `get_serialization_state`, so clearing the formulation's data is all that is needed.
+    this->serialized_state.clear();
+    this->serialized_state.shrink_to_fit();
 }
 
 #endif // NGEN_WITH_BMI_FORTRAN
