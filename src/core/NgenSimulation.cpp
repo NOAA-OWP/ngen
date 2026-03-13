@@ -305,6 +305,7 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::s
         if (this->py_troute_ == NULL) {
             this->make_troute(t_route_config_file_with_path);
         }
+        this->py_troute_->set_value_unchecked("ngen_dt", &delta_time, 1);
 
         // set up nexus id indexes
         std::vector<int> nexus_df_index(routing_nexus_indexes->size());
