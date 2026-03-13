@@ -222,16 +222,123 @@ RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
 
 WORKDIR /ngen-app/
 
-# TODO This will invalidate the cache for all subsequent stages so we don't really want to do this
-# Copy the remainder of your application code
-COPY . /ngen-app/ngen/
+##############################
+# Stage: EWTS Build – Error, Warning and Trapping System
+##############################
+# EWTS is built in its own stage so that:
+#   - It is cached independently from ngen source changes (COPY . /ngen-app/ngen/
+#     happens later in the submodules stage).
+#   - Iterative ngen/submodule development doesn't re-trigger the EWTS clone+build.
+#   - EWTS_ORG / EWTS_REF can be pinned without affecting other stages' caches.
+#
+# EWTS provides a unified logging library used by ngen core and ALL Fortran/C/C++
+# submodules (LASAM, snow17, sac-sma, SoilMoistureProfiles, SoilFreezeThaw,
+# cfe, topmodel, noah-owp-modular, ueb-bmi) plus a Python package used by lstm.
+#
+# How the plumbing works:
+#   1. We build EWTS here and install it to /opt/ewts.
+#   2. Every cmake call in the submodules stage passes
+#      -DCMAKE_PREFIX_PATH=/opt/ewts  so that
+#      find_package(ewts CONFIG REQUIRED) in each submodule's CMakeLists.txt
+#      can locate the ewtsConfig.cmake package file.
+#   3. That gives each submodule access to the EWTS targets:
+#        ewts::ewts_cpp          – C++ runtime logger  (used by LASAM)
+#        ewts::ewts_fortran      – Fortran runtime      (snow17, sac-sma, SoilMoistureProfiles, SoilFreezeThaw, noah-owp-modular)
+#        ewts::ewts_c            – C runtime             (cfe, topmodel)
+#        ewts::ewts_ngen_bridge  – ngen↔EWTS bridge lib  (linked by ngen itself)
+#   4. The EWTS Python wheel is pip-installed so that lstm's bmi_lstm.py can
+#      "import ewts" at runtime.
+#
+# Build args – override at build time to pin a branch, tag, or full commit SHA:
+#   docker build --build-arg EWTS_REF=v1.2.3 ...
+#   docker build --build-arg EWTS_REF=abc123def456 ...
+##############################
+FROM base AS ewts-build
+
+SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
+
+ARG EWTS_ORG=NGWPC
+ARG EWTS_REF=development
+
+# Install path for the built EWTS libraries, headers, cmake config, and
+# Fortran .mod files.  /opt/ewts follows the FHS convention for add-on
+# packages (same pattern as /opt/boost already in this image) and avoids
+# /tmp which can be cleaned unexpectedly.
+ENV EWTS_PREFIX=/opt/ewts
+
+# Clone nwm-ewts with minimal data (blobless clone), build, install, capture
+# git metadata for provenance, then remove the source tree.
+# The four-way fetch fallback handles branches, tags, AND bare commit SHAs
+RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ewts \
+    set -eux && \
+    git clone --filter=blob:none --no-checkout \
+        "https://github.com/${EWTS_ORG}/nwm-ewts.git" /tmp/nwm-ewts && \
+    cd /tmp/nwm-ewts && \
+    (git fetch --depth 1 origin "${EWTS_REF}" \
+     || git fetch --depth 1 origin "refs/tags/${EWTS_REF}:refs/tags/${EWTS_REF}" \
+     || git fetch origin "${EWTS_REF}" \
+     || git fetch origin "refs/tags/${EWTS_REF}:refs/tags/${EWTS_REF}") && \
+    git checkout FETCH_HEAD && \
+    # ── Build EWTS ──
+    # This produces: C, C++, Fortran shared libs + ngen bridge + Python wheel.
+    # -DEWTS_WITH_NGEN=ON  enables the ngen bridge (ewts_ngen_bridge.so) which
+    #   provides the C shim ewts_ngen_log() that ngen's core calls into.
+    # -DEWTS_BUILD_SHARED=ON  builds .so's so submodule DSOs can link at runtime.
+    cmake -S . -B cmake_build \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DEWTS_WITH_NGEN=ON \
+      -DEWTS_BUILD_SHARED=ON && \
+    cmake --build cmake_build -j "$(nproc)" && \
+    cmake --install cmake_build --prefix ${EWTS_PREFIX} && \
+    # ── Capture EWTS git provenance ──
+    # Saved as a JSON sidecar so the git-info merge step at the bottom of this
+    # Dockerfile can include EWTS metadata alongside ngen + submodules.
+    jq -n \
+      --arg commit_hash "$(git rev-parse HEAD)" \
+      --arg branch "$(git branch -r --contains HEAD 2>/dev/null | grep -v '\->' | sed 's|origin/||' | head -n1 | xargs || echo "${EWTS_REF}")" \
+      --arg tags "$(git tag --points-at HEAD 2>–/dev/null | tr '\n' ' ')" \
+      --arg author "$(git log -1 --pretty=format:'%an')" \
+      --arg commit_date "$(date -u -d @$(git log -1 --pretty=format:'%ct') +'%Y-%m-%d %H:%M:%S UTC')" \
+      --arg message "$(git log -1 --pretty=format:'%s' | tr '\n' ';')" \
+      --arg build_date "$(date -u +'%Y-%m-%d %H:%M:%S UTC')" \
+      '{"nwm-ewts": {commit_hash: $commit_hash, branch: $branch, tags: $tags, author: $author, commit_date: $commit_date, message: $message, build_date: $build_date}}' \
+      > /ngen-app/nwm-ewts_git_info.json && \
+    # ── Cleanup source ──
+    cd / && \
+    rm -rf /tmp/nwm-ewts
+
+# Install the EWTS Python wheel into the venv.
+# This is what makes "import ewts" work for Python-based submodules (lstm).
+# lstm's bmi_lstm.py does:  import ewts; LOG = ewts.get_logger(ewts.LSTM_ID)
+RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
+    set -eux && \
+    pip install ${EWTS_PREFIX}/python/dist/ewts-*.whl
+
+# Make EWTS shared libraries (.so) discoverable at runtime.
+# Without this, ngen and every submodule DSO would fail with:
+#   "error while loading shared libraries: libewts_ngen_bridge.so: cannot open"
+# We include both lib/ and lib64/ because cmake may install to either depending
+# on the platform/distro convention.
+ENV LD_LIBRARY_PATH="${EWTS_PREFIX}/lib:${EWTS_PREFIX}/lib64:${LD_LIBRARY_PATH}"
 
 ##############################
 # Stage: Submodules Build
 ##############################
-FROM base AS submodules
+# Inherits from ewts-build so /opt/ewts is already present.
+# The ngen source COPY happens here — changing ngen code only invalidates
+# this stage and below, not the EWTS build above.
+##############################
+FROM ewts-build AS submodules
 
 SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
+
+WORKDIR /ngen-app/
+
+# Copy the ngen application source.
+# This is placed here (not in base) so that
+# ngen code changes only invalidate the submodules stage, leaving the base and
+# ewts-build stages cached.
+COPY . /ngen-app/ngen/
 
 WORKDIR /ngen-app/ngen/
 
@@ -260,12 +367,17 @@ RUN --mount=type=cache,target=/root/.cache/t-route,id=t-route-build \
     find /ngen-app/ngen/extern/t-route -name "*.a" -exec rm -f {} +
 
 # Configure the build with cache for CMake
+# -DCMAKE_PREFIX_PATH=${EWTS_PREFIX} tells cmake where
+# to find the ewtsConfig.cmake package file so that ngen's
+# CMakeLists.txt line find_package(ewts CONFIG REQUIRED) succeeds.
+# ngen links against ewts::ewts_ngen_bridge (the C++/MPI bridge).
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ngen \
     set -eux && \
         export FFLAGS="-fPIC" && \
         export FCFLAGS="-fPIC" && \
         export CMAKE_Fortran_FLAGS="-fPIC" && \
         cmake -B cmake_build -S . \
+          -DCMAKE_PREFIX_PATH=${EWTS_PREFIX} \
           -DNGEN_WITH_MPI=ON \
           -DNGEN_WITH_NETCDF=ON \
           -DNGEN_WITH_SQLITE=ON \
@@ -284,48 +396,72 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ngen \
     find /ngen-app/ngen/cmake_build -name "*.a" -exec rm -f {} + && \
     find /ngen-app/ngen/cmake_build -name "*.o" -exec rm -f {} +
 
+# ──────────────────────────────────────────────────────────────────────────────
 # Build each submodule in a separate layer, using cache for CMake as well
+#
+# IMPORTANT: Every submodule's CMakeLists.txt now contains:
+#   find_package(ewts CONFIG REQUIRED)
+# so we MUST pass -DCMAKE_PREFIX_PATH=${EWTS_PREFIX} to each cmake call.
+# Without it, cmake cannot locate ewtsConfig.cmake and the build fails with:
+#   "Could not find a package configuration file provided by "ewts"..."
+#
+# What each submodule links:
+#   LASAM              → ewts::ewts_cpp  + ewts::ewts_ngen_bridge
+#   snow17             → ewts::ewts_fortran + ewts::ewts_ngen_bridge
+#   sac-sma            → ewts::ewts_fortran + ewts::ewts_ngen_bridge
+#   SoilMoistureProfiles → (check its CMakeLists.txt for specifics)
+#   SoilFreezeThaw     → (check its CMakeLists.txt for specifics)
+#   cfe                → (check its CMakeLists.txt for specifics)
+#   ueb-bmi            → (check its CMakeLists.txt for specifics)
+# ──────────────────────────────────────────────────────────────────────────────
+
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-lasam \
     set -eux && \
-    cmake -B extern/LASAM/cmake_build -S extern/LASAM/ -DNGEN=ON -DBOOST_ROOT=/opt/boost && \
+    cmake -B extern/LASAM/cmake_build -S extern/LASAM/ \
+      -DCMAKE_PREFIX_PATH=${EWTS_PREFIX} -DNGEN=ON -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/LASAM/cmake_build/ && \
     find /ngen-app/ngen/extern/LASAM -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-snow17 \
     set -eux && \
-    cmake -B extern/snow17/cmake_build -S extern/snow17/ -DBOOST_ROOT=/opt/boost && \
+    cmake -B extern/snow17/cmake_build -S extern/snow17/ \
+      -DCMAKE_PREFIX_PATH=${EWTS_PREFIX} -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/snow17/cmake_build/ && \
     find /ngen-app/ngen/extern/snow17 -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-sac-sma \
     set -eux && \
-    cmake -B extern/sac-sma/cmake_build -S extern/sac-sma/ -DBOOST_ROOT=/opt/boost && \
+    cmake -B extern/sac-sma/cmake_build -S extern/sac-sma/ \
+      -DCMAKE_PREFIX_PATH=${EWTS_PREFIX} -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/sac-sma/cmake_build/ && \
     find /ngen-app/ngen/extern/sac-sma -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-soilmoistureprofiles \
     set -eux && \
-    cmake -B extern/SoilMoistureProfiles/cmake_build -S extern/SoilMoistureProfiles/SoilMoistureProfiles/ -DNGEN=ON -DBOOST_ROOT=/opt/boost && \
+    cmake -B extern/SoilMoistureProfiles/cmake_build -S extern/SoilMoistureProfiles/SoilMoistureProfiles/ \
+      -DCMAKE_PREFIX_PATH=${EWTS_PREFIX} -DNGEN=ON -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/SoilMoistureProfiles/cmake_build/ && \
     find /ngen-app/ngen/extern/SoilMoistureProfiles -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-soilfreezethaw \
     set -eux && \
-    cmake -B extern/SoilFreezeThaw/cmake_build -S extern/SoilFreezeThaw/SoilFreezeThaw/ -DNGEN=ON -DBOOST_ROOT=/opt/boost && \
+    cmake -B extern/SoilFreezeThaw/cmake_build -S extern/SoilFreezeThaw/SoilFreezeThaw/ \
+      -DCMAKE_PREFIX_PATH=${EWTS_PREFIX} -DNGEN=ON -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/SoilFreezeThaw/cmake_build/ && \
     find /ngen-app/ngen/extern/SoilFreezeThaw -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ueb-bmi \
     set -eux && \
     cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ \
-        -DUEB_SUPPRESS_OUTPUTS=ON -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ -DBOOST_ROOT=/opt/boost && \
+      -DUEB_SUPPRESS_OUTPUTS=ON -DCMAKE_PREFIX_PATH=${EWTS_PREFIX} \
+      -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ -DBOOST_ROOT=/opt/boost && \
     cmake --build extern/ueb-bmi/cmake_build/ && \
     find /ngen-app/ngen/extern/ueb-bmi/ -name '*.o' -exec rm -f {} +
 
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
     set -eux; \
     cd extern/lstm; \
-    pip install . ./lstm_ewts
+    pip install .
 
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
     set -eux; \
@@ -415,10 +551,12 @@ RUN set -eux && \
       echo "$info" > /ngen-app/submodules-json/git_info_"$sub_key".json; \
     done; \
     \
-    # Merge the main repository JSON with all submodule JSON files as top-level objects
-    jq -s 'add' $GIT_INFO_PATH /ngen-app/submodules-json/*.json > /ngen-app/merged_git_info.json && \
+    # Merge the main repository JSON + submodule JSONs + EWTS provenance into one file.
+    # The EWTS json was created during the EWTS build step above; including it
+    # here means `cat /ngen-app/ngen_git_info.json` shows EWTS version info too.
+    jq -s 'add' $GIT_INFO_PATH /ngen-app/submodules-json/*.json /ngen-app/nwm-ewts_git_info.json > /ngen-app/merged_git_info.json && \
     mv /ngen-app/merged_git_info.json $GIT_INFO_PATH && \
-    rm -rf /ngen-app/submodules-json
+    rm -rf /ngen-app/submodules-json /ngen-app/nwm-ewts_git_info.json
 
 # Extend PYTHONPATH for LSTM models (preserve venv path from ngen-bmi-forcing)
 ENV PYTHONPATH="${PYTHONPATH}:/ngen-app/ngen/extern/lstm:/ngen-app/ngen/extern/lstm/lstm"
@@ -431,4 +569,105 @@ SHELL ["/bin/bash", "-c"]
 
 ENTRYPOINT [ "/ngen-app/bin/run-ngen.sh" ]
 CMD [ "--info" ]
+
+##############################
+# Stage: EWTS Verification (optional, build with --target ewts-verify)
+##############################
+# Usage:
+#   docker build --target ewts-verify -t ngen-ewts-verify -f Dockerfile .
+#   docker run --rm ngen-ewts-verify
+#
+# This stage runs a comprehensive check that EWTS is properly wired into
+# ngen and all submodules.  It does NOT run ngen itself — just verifies
+# that libraries, headers, cmake config, Python packages, and shared
+# object linkages are all in place.
+##############################
+FROM submodules AS ewts-verify
+
+SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
+
+RUN set -eux && \
+    echo "" && \
+    echo "============================================" && \
+    echo "  EWTS Integration Verification" && \
+    echo "============================================" && \
+    echo "" && \
+    \
+    # ── 1. Check EWTS install tree exists ──
+    echo "--- 1. EWTS install tree ---" && \
+    echo "EWTS_PREFIX=${EWTS_PREFIX}" && \
+    ls -la ${EWTS_PREFIX}/lib/ && \
+    echo "" && \
+    \
+    # ── 2. Check EWTS shared libraries are present ──
+    echo "--- 2. EWTS shared libraries ---" && \
+    echo "Looking for libewts_*.so files..." && \
+    find ${EWTS_PREFIX} -name '*.so' -o -name '*.so.*' | sort && \
+    echo "" && \
+    \
+    # ── 3. Verify cmake package config is findable ──
+    echo "--- 3. EWTS cmake config ---" && \
+    ls ${EWTS_PREFIX}/lib/cmake/ewts/ewtsConfig.cmake && \
+    echo "ewtsConfig.cmake found OK" && \
+    echo "" && \
+    \
+    # ── 4. Check Fortran .mod files (needed by snow17, sac-sma, etc.) ──
+    echo "--- 4. EWTS Fortran .mod files ---" && \
+    find ${EWTS_PREFIX} -name '*.mod' | sort && \
+    echo "" && \
+    \
+    # ── 5. Verify ngen executable exists and links to EWTS ──
+    echo "--- 5. ngen binary – EWTS linkage ---" && \
+    NGEN_BIN=/ngen-app/ngen/cmake_build/ngen && \
+    file "$NGEN_BIN" && \
+    echo "Checking ldd for ewts symbols..." && \
+    ldd "$NGEN_BIN" | grep -i ewts && \
+    echo "ngen links to EWTS OK" && \
+    echo "" && \
+    \
+    # ── 6. Check each submodule .so links to EWTS ──
+    echo "--- 6. Submodule .so files – EWTS linkage ---" && \
+    for so in \
+        extern/LASAM/cmake_build/*.so \
+        extern/snow17/cmake_build/*.so \
+        extern/sac-sma/cmake_build/*.so \
+        extern/SoilMoistureProfiles/cmake_build/*.so \
+        extern/SoilFreezeThaw/cmake_build/*.so \
+        extern/ueb-bmi/cmake_build/*.so; \
+    do \
+        if [ -f "$so" ]; then \
+            echo "Checking: $so"; \
+            if ldd "$so" | grep -qi ewts; then \
+                echo "  ✓ links to EWTS"; \
+            else \
+                echo "  ⚠ WARNING: no EWTS linkage found (may be expected if submodule doesn't use EWTS directly)"; \
+            fi; \
+        fi; \
+    done && \
+    echo "" && \
+    \
+    # ── 7. Verify EWTS Python package is importable ──
+    echo "--- 7. EWTS Python package ---" && \
+    python3 -c "import ewts; print(f'ewts version: {ewts.__version__}')" && \
+    python3 -c "import ewts; print(f'EWTS module keys available: {dir(ewts)}')" && \
+    echo "Python ewts import OK" && \
+    echo "" && \
+    \
+    # ── 8. Verify lstm can import ewts (this is the runtime dependency) ──
+    echo "--- 8. lstm → ewts Python integration ---" && \
+    python3 -c "from lstm.bmi_lstm import *; print('lstm.bmi_lstm imports OK (includes ewts)')" && \
+    echo "" && \
+    \
+    # ── 9. Show git provenance ──
+    echo "--- 9. Git provenance (nwm-ewts entry) ---" && \
+    GIT_INFO=$(find /ngen-app -name '*_git_info.json' | head -1) && \
+    if [ -n "$GIT_INFO" ]; then \
+        jq '."nwm-ewts"' "$GIT_INFO"; \
+    else \
+        echo "No git_info.json found"; \
+    fi && \
+    echo "" && \
+    echo "============================================" && \
+    echo "  EWTS verification complete" && \
+    echo "============================================"
 
