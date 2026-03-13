@@ -597,9 +597,12 @@ RUN set -eux && \
     echo "" && \
     \
     # ── 1. Check EWTS install tree exists ──
+    # cmake may install to lib/ or lib64/ depending on the platform
     echo "--- 1. EWTS install tree ---" && \
     echo "EWTS_PREFIX=${EWTS_PREFIX}" && \
-    ls -la ${EWTS_PREFIX}/lib/ && \
+    EWTS_LIBDIR=$(find ${EWTS_PREFIX} -maxdepth 1 -type d \( -name lib -o -name lib64 \) | head -1) && \
+    echo "EWTS_LIBDIR=${EWTS_LIBDIR}" && \
+    ls -la ${EWTS_LIBDIR}/ && \
     echo "" && \
     \
     # ── 2. Check EWTS shared libraries are present ──
@@ -610,7 +613,7 @@ RUN set -eux && \
     \
     # ── 3. Verify cmake package config is findable ──
     echo "--- 3. EWTS cmake config ---" && \
-    ls ${EWTS_PREFIX}/lib/cmake/ewts/ewtsConfig.cmake && \
+    find ${EWTS_PREFIX} -name 'ewtsConfig.cmake' | head -1 | xargs ls && \
     echo "ewtsConfig.cmake found OK" && \
     echo "" && \
     \
