@@ -355,14 +355,10 @@ RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
 ENV LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
 
 # Use cache for building the t-route submodule
-# EWTS_INSTALL_PREFIX tells t-route's compiler.sh where to find the EWTS
-# Python wheel (at $EWTS_INSTALL_PREFIX/python/dist/ewts-*.whl).
-# Without this it defaults to /tmp/ewts_install which doesn't exist.
 RUN --mount=type=cache,target=/root/.cache/t-route,id=t-route-build \
     set -eux && \
     cd extern/t-route && \
     echo "Running compiler.sh" && \
-    export EWTS_INSTALL_PREFIX=${EWTS_PREFIX} && \
     LDFLAGS='-Wl,-L/usr/local/lib64/,-L/usr/local/lib/,-rpath,/usr/local/lib64/,-rpath,/usr/local/lib/' && \
     ./compiler.sh no-e && \
     rm -rf /ngen-app/ngen/extern/t-route/test/LowerColorado_TX_v4 && \
