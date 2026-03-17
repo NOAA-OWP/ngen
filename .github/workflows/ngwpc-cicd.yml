@@ -157,7 +157,7 @@ jobs:
 
           BOOST_VER=1.86.0
           BOOST_UNDERSCORE=1_86_0
-          PREFIX=/opt/boost-${BOOST_VER}
+          PREFIX=/usr/local
 
           curl -fL --retry 10 --retry-delay 2 --max-time 600 \
             -o /tmp/boost.tar.bz2 \
@@ -169,7 +169,7 @@ jobs:
           ./bootstrap.sh --prefix="${PREFIX}"
 
           # Build Boost libraries
-          ./b2 -j"$(nproc)" install \
+          sudo ./b2 -j"$(nproc)" install \
             --with-system \
             --with-filesystem \
             --with-program_options \
@@ -178,7 +178,6 @@ jobs:
             --with-date_time \
             --with-serialization
           echo "BOOST_ROOT=${PREFIX}" >> "$GITHUB_ENV"
-          echo "CMAKE_PREFIX_PATH=${PREFIX}:${CMAKE_PREFIX_PATH:-}" >> "$GITHUB_ENV"
 
       - name: Build and install EWTS
         run: |
@@ -196,10 +195,7 @@ jobs:
           cmake -S . -B cmake_build \
             -DCMAKE_BUILD_TYPE=Release \
             -DEWTS_WITH_NGEN=ON \
-            -DEWTS_BUILD_SHARED=ON \
-            -DBOOST_ROOT="${BOOST_ROOT}" \
-            -DBoost_NO_SYSTEM_PATHS=ON \
-            -DCMAKE_PREFIX_PATH="${BOOST_ROOT}"
+            -DEWTS_BUILD_SHARED=ON
           cmake --build cmake_build -j "$(nproc)"
           sudo cmake --install cmake_build --prefix "${EWTS_PREFIX}"
 
