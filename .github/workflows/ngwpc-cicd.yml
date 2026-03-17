@@ -180,12 +180,34 @@ jobs:
           echo "BOOST_ROOT=${PREFIX}" >> "$GITHUB_ENV"
           echo "CMAKE_PREFIX_PATH=${PREFIX}:${CMAKE_PREFIX_PATH:-}" >> "$GITHUB_ENV"
 
+      - name: Build and install EWTS
+        run: |
+          set -euo pipefail
+          EWTS_ORG="${{ inputs.EWTS_ORG || 'NGWPC' }}"
+          EWTS_REF="${{ inputs.EWTS_REF || 'development' }}"
+          EWTS_PREFIX=/opt/ewts
+
+          git clone --depth 1 -b "${EWTS_REF}" \
+            "https://github.com/${EWTS_ORG}/nwm-ewts.git" /tmp/nwm-ewts \
+          || (git clone "https://github.com/${EWTS_ORG}/nwm-ewts.git" /tmp/nwm-ewts && \
+              cd /tmp/nwm-ewts && git checkout "${EWTS_REF}")
+
+          cd /tmp/nwm-ewts
+          cmake -S . -B cmake_build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DEWTS_WITH_NGEN=ON \
+            -DEWTS_BUILD_SHARED=ON
+          cmake --build cmake_build -j "$(nproc)"
+          sudo cmake --install cmake_build --prefix "${EWTS_PREFIX}"
+
+          echo "EWTS_PREFIX=${EWTS_PREFIX}" >> "$GITHUB_ENV"
+
       - name: Build C++ code
         env:
           PYTHONPATH: ${{ env.PYTHONPATH }}
         run: |
           cmake -B cmake_build -S . \
-            -DCMAKE_PREFIX_PATH="${BOOST_ROOT}" \
+            -DCMAKE_PREFIX_PATH="${EWTS_PREFIX};${BOOST_ROOT}" \
             -DBoost_NO_SYSTEM_PATHS=ON \
             -DBOOST_ROOT="${BOOST_ROOT}" \
             -DPYTHON_EXECUTABLE=$(which python3) \
