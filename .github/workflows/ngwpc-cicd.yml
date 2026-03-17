@@ -23,6 +23,14 @@ on:
         description: 'NGEN_FORCING_IMAGE_TAG'
         required: false
         type: string
+      EWTS_ORG:
+        description: 'EWTS_ORG'
+        required: false
+        type: string
+      EWTS_REF:
+        description: 'EWTS_REF'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -241,6 +249,8 @@ jobs:
           build-args: |
             ORG=${{ needs.setup.outputs.org }}
             NGEN_FORCING_IMAGE_TAG=${{ inputs.NGEN_FORCING_IMAGE_TAG || 'latest' }}
+            EWTS_ORG=${{ inputs.EWTS_ORG || 'NGWPC' }}
+            EWTS_REF=${{ inputs.EWTS_REF || 'development' }}
             IMAGE_SOURCE=https://github.com/${{ github.repository }}
             IMAGE_VENDOR=${{ github.repository_owner }}
             IMAGE_VERSION=${{ needs.setup.outputs.clean_ref }}
