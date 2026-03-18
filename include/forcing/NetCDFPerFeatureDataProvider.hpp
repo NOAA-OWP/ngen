@@ -176,6 +176,11 @@ namespace data_access
          */
         void align_cache_with_chunks();
 
+        /**
+         * @brief If applicable, update chunk spans.
+         * Note, no hint_shared_provider_id() calls should be made afterwards.
+         * Note, additional calls have no effect.
+         */
         void maybe_update_chunks_with_hints();
     };
 }
