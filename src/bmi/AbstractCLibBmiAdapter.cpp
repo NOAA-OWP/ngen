@@ -6,6 +6,22 @@
 
 #include <dlfcn.h>
 
+// Suppress false positive from ASan's own global registration
+// when dlopen()-ing instrumented shared libraries on macOS.
+// See: ASan runtime's AsanApplyToGlobals() calls getsectiondata()
+// in libmacho.dylib, which uses strcmp on Mach-O section names.
+// ASan's intercepted strcmp then reads shadow memory that has
+// already been poisoned (0xf9 = global redzone) by the same
+// initialization sequence, triggering a spurious report.
+#if defined(__APPLE__) && defined(__has_feature)
+#  if __has_feature(address_sanitizer)
+extern "C" const char *__asan_default_suppressions() {
+    return "interceptor_via_lib:libmacho.dylib\n"
+           "interceptor_via_fun:getsectiondata\n";
+}
+#  endif
+#endif
+
 namespace models {
 namespace bmi {
 
