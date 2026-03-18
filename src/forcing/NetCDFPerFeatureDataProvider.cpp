@@ -118,7 +118,9 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     }
 
     auto num_ids = id_dim.getSize();
-    assert(num_ids > 0);
+    if (num_ids <= 0){
+        throw std::runtime_error("Provided NetCDF file has no features");
+    }
     // include all catchments in the "default" chunk
     auto pair = std::pair<size_t, size_t>(0, num_ids);
     chunks.push_back(pair);
