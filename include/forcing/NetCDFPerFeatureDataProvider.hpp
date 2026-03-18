@@ -161,7 +161,7 @@ namespace data_access
          * @throws std::runtime_error if any variable cannot be read
          * 
          */
-        void test_readable_data();
+        void test_data_is_readable();
 
         /**
          * @brief Attempts to align the internal cache size with the chunking parameters of

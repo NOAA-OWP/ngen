@@ -56,7 +56,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     // do a quick test of the netcdf variables to ensure
     // they are readable, especially if compressed with HDF5 filters
     // This also has the added benefit of warming up the chunk cache
-    test_readable_data();
+    test_data_is_readable();
     //nc_get_chunk_cache(&sizep, &nelemsp, &preemptionp);
     //std::cout << "Chunk cache parameters: "<<sizep<<", "<<nelemsp<<", "<<preemptionp<<std::endl;
     align_cache_with_chunks();
@@ -641,7 +641,7 @@ const std::string& NetCDFPerFeatureDataProvider::get_ncvar_units(const std::stri
     throw std::runtime_error("Got units request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
 }
 
-void NetCDFPerFeatureDataProvider::test_readable_data() {
+void NetCDFPerFeatureDataProvider::test_data_is_readable() {
     // Try to read one element from each variable to test if NetCDF/HDF5 linking works for compressed data
     auto var_set = nc_file->getVars();
     for (const auto& var_pair : var_set) {
