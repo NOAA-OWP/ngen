@@ -8,7 +8,7 @@
 std::mutex data_access::NetCDFPerFeatureDataProvider::shared_providers_mutex;
 std::map<std::string, std::shared_ptr<data_access::NetCDFPerFeatureDataProvider>> data_access::NetCDFPerFeatureDataProvider::shared_providers;
 
-// limit access outside of complication unit.
+// limit access outside of compilation unit.
 namespace {
     const size_t N_EXPECTED_FORCING_VARS = 8;
 }
