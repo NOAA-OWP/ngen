@@ -65,6 +65,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
                 "('cat-' || divides.div_id) AS id, "
                 "('nex-' || flowpaths.dn_nex_id) AS toid, "
                 "flowpaths.slope AS So, "
+                "divides.area_sqkm AS areasqkm, " // faster for later code to rename the field here
                 "divides.geom AS geom "
             "FROM divides "
             "LEFT JOIN flowpaths "

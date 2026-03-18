@@ -627,7 +627,7 @@ namespace realization {
 
             // Since this is a nested formulation, support usage of the '{{id}}' syntax for init config file paths.
             Catchment_Formulation::config_pattern_substitution(properties, BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
-                                                               "{{id}}", id);
+                                                               "{{id}}", Catchment_Formulation::config_pattern_id_replacement(id));
 
             // Call create_formulation to perform the rest of the typical initialization steps for the formulation.
             mod->create_formulation(properties);

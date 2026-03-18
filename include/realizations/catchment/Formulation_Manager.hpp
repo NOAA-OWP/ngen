@@ -200,7 +200,7 @@ namespace realization {
                         this->add_formulation(
                             this->construct_formulation_from_config(
                                 simulation_time_config,
-                                catchment_config.first,
+                                "cat-" + catchment_config.first,
                                 catchment_formulation,
                                 output_stream
                             )
@@ -553,7 +553,7 @@ namespace realization {
                                 global_copy.formulation.parameters,
                                 BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
                                 "{{id}}",
-                                identifier
+                                Catchment_Formulation::config_pattern_id_replacement(identifier)
                             );
                         } else {
                             ss.str(""); ss << "init_config is present but empty for identifier: " << identifier << std::endl;
@@ -665,7 +665,9 @@ namespace realization {
 
                 // Replace {{id}} if present
                 if (id_index != std::string::npos) {
-                    filepattern = filepattern.replace(id_index, sizeof("{{id}}") - 1, identifier);
+                    // account generate the regex to search for the ID with or without a prefix
+                    std::string pattern_id = Catchment_Formulation::config_pattern_id_replacement(identifier);
+                    filepattern = filepattern.replace(id_index, sizeof("{{id}}") - 1, pattern_id);
                 }
 
                 // Compile the file pattern as a regex
