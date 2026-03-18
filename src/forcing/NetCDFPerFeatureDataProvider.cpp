@@ -28,7 +28,6 @@ std::shared_ptr<NetCDFPerFeatureDataProvider> NetCDFPerFeatureDataProvider::get_
     return p;
 }
 
-
 void NetCDFPerFeatureDataProvider::cleanup_shared_providers()
 {
     const std::lock_guard<std::mutex> lock(shared_providers_mutex);
