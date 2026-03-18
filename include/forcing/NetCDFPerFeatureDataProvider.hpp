@@ -56,7 +56,9 @@ namespace data_access
          */
         static std::shared_ptr<NetCDFPerFeatureDataProvider> get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s);
 
-        // aaraney: improve naming and what does const mean?
+        /**
+         * @brief Tell provider an id it is expected to provide.
+         */
         void hint_shared_provider_id(const std::string& id);
 
         /**
@@ -176,20 +178,6 @@ namespace data_access
 
         void maybe_update_chunks_with_hints();
     };
-
-    /* TODO: aaraney
-    class ValueCache{
-        public:
-
-        void   guard();
-        void   set(const std::vector<double>& values);
-        double get(std::size_t cat_idx, std::size_t time_idx);
-
-        private:
-        std::vector<float> m_values;
-        std::vector<float> prev_cache_last_ts;
-    };
-    */
 }
 
 

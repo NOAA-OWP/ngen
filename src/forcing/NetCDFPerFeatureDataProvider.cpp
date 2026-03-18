@@ -388,7 +388,8 @@ void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
 
     cache_slice_c_size = loc_ids.size();
 
-    // aaraney: improve this; we only want this method to "do something" once
+    // TODO: improve this; we only want this method to "do something" once.
+    //       invariant is, weakly, enforced by prelude guard clause.
     hinted_ids.clear();
 }
 

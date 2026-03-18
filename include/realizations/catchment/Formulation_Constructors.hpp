@@ -57,10 +57,9 @@ namespace realization {
             // TODO: this likely needs to be rethought and refactored, but for now, 
             // this allows the NetCDF provider to log to standard output while still allowing
             // formulations to log to their own output streams as needed.
-            // aaraney: where forcing provider is actually setup
             std::shared_ptr<data_access::NetCDFPerFeatureDataProvider> f;
             f = data_access::NetCDFPerFeatureDataProvider::get_shared_provider(forcing_config.path, forcing_config.simulation_start_t, forcing_config.simulation_end_t, utils::getStdOut());
-            // aaraney: this is not _ideal_ but implements the idea.
+            // TODO: this is not _ideal_ but implements the idea.
             // refactor in the future.
             f->hint_shared_provider_id(identifier);
             fp = f;
