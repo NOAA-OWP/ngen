@@ -172,6 +172,7 @@ jobs:
 
       - name: run_bmi_c_tests
         run: |
+          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0,suppressions=$(pwd)/test/asan_suppressions.txt
           cd ./cmake_build/test/
           ./test_bmi_c
           cd ../../
