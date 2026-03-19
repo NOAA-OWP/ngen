@@ -73,7 +73,7 @@ protected:
         return formulation.known_bmi_input_vars;
     }
 
-    static std::vector<const Bmi_Var_Details*>* get_friend_bmi_input_var_details(Bmi_C_Formulation& formulation) {
+    static std::vector<Bmi_Var_Details*>* get_friend_bmi_input_var_details(Bmi_C_Formulation& formulation) {
         return formulation.bmi_input_var_details.get();
     }
 
@@ -438,7 +438,7 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_2_c) {
         response = formulation.get_response(i, 3600);
     }
 
-    std::vector<const Bmi_Var_Details*>* instance_metadata = get_friend_bmi_input_var_details(formulation);
+    std::vector<Bmi_Var_Details*>* instance_metadata = get_friend_bmi_input_var_details(formulation);
     std::set<Bmi_Var_Details> global_metadata = get_friend_known_bmi_input_vars(formulation);
 
     ASSERT_NE(instance_metadata, nullptr);
@@ -458,9 +458,9 @@ TEST_F(Bmi_C_Formulation_Test, bmi_input_var_details_2_a) {
         response = formulation.get_response(i, 3600);
     }
 
-    std::vector<const Bmi_Var_Details*>* input_metadata = get_friend_bmi_input_var_details(formulation);
+    std::vector<Bmi_Var_Details*>* input_metadata = get_friend_bmi_input_var_details(formulation);
 
-    const Bmi_Var_Details* var_metadata = input_metadata->at(0);
+    Bmi_Var_Details* var_metadata = input_metadata->at(0);
     ASSERT_EQ(var_metadata->get_name(), "INPUT_VAR_1");
     ASSERT_EQ(var_metadata->get_mapped_alias(), AORC_FIELD_NAME_PRECIP_RATE);
     ASSERT_EQ(var_metadata->get_units(), "m");
@@ -488,8 +488,8 @@ TEST_F(Bmi_C_Formulation_Test, bmi_input_var_details_2_b) {
     // Advance only one to start with
     formulation_1.get_response(0, 3600);
 
-    std::vector<const Bmi_Var_Details*>* instance_metadata_1 = get_friend_bmi_input_var_details(formulation_1);
-    std::vector<const Bmi_Var_Details*>* instance_metadata_2 = get_friend_bmi_input_var_details(formulation_2);
+    std::vector<Bmi_Var_Details*>* instance_metadata_1 = get_friend_bmi_input_var_details(formulation_1);
+    std::vector<Bmi_Var_Details*>* instance_metadata_2 = get_friend_bmi_input_var_details(formulation_2);
 
     // So, only the first of the instances has actually advanced and populated metadata objects
     ASSERT_NE(instance_metadata_1, nullptr);
@@ -515,8 +515,8 @@ TEST_F(Bmi_C_Formulation_Test, bmi_input_var_details_2_b) {
     // And the instance metadata pointers across the two instances (with different collection objects) will be the same
     ASSERT_NE(&instance_metadata_1, &instance_metadata_2);
     for (size_t i = 0; i < instance_metadata_1->size(); i++) {
-        const Bmi_Var_Details* inst_1_obj_ptr = instance_metadata_1->at(i);
-        const Bmi_Var_Details* inst_2_obj_ptr = instance_metadata_2->at(i);
+        Bmi_Var_Details* inst_1_obj_ptr = instance_metadata_1->at(i);
+        Bmi_Var_Details* inst_2_obj_ptr = instance_metadata_2->at(i);
         ASSERT_EQ(inst_1_obj_ptr, inst_2_obj_ptr);
     }
 }
@@ -536,8 +536,8 @@ TEST_F(Bmi_C_Formulation_Test, bmi_input_var_details_2_c) {
         formulation_2.get_response(i, 3600);
     }
 
-    std::vector<const Bmi_Var_Details*>* instance_metadata_1 = get_friend_bmi_input_var_details(formulation_1);
-    std::vector<const Bmi_Var_Details*>* instance_metadata_2 = get_friend_bmi_input_var_details(formulation_2);
+    std::vector<Bmi_Var_Details*>* instance_metadata_1 = get_friend_bmi_input_var_details(formulation_1);
+    std::vector<Bmi_Var_Details*>* instance_metadata_2 = get_friend_bmi_input_var_details(formulation_2);
 
     std::set<Bmi_Var_Details> global_metadata_1 = get_friend_known_bmi_input_vars(formulation_1);
     std::set<Bmi_Var_Details> global_metadata_2 = get_friend_known_bmi_input_vars(formulation_2);
