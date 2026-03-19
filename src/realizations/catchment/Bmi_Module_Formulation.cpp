@@ -3,6 +3,9 @@
 #include <UnitsHelper.hpp>
 
 namespace realization {
+
+        std::set<Bmi_Var_Details> Bmi_Module_Formulation::known_bmi_input_vars;
+
         void Bmi_Module_Formulation::create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global) {
             geojson::PropertyMap options = this->interpret_parameters(config, global);
             inner_create_formulation(options, false);
@@ -646,32 +649,19 @@ namespace realization {
 
         void Bmi_Module_Formulation::do_bmi_sets_from_stored_metadata(const time_t &src_data_start, const time_step_t &t_delta) {
             if (bmi_input_var_details == nullptr) {
-                bmi_input_var_details = std::make_unique<std::vector<Bmi_Var_Details>>();
-                for (std::string & var_name : get_bmi_model()->GetInputVarNames()) {
-                    Bmi_Var_Details var_details;
-                    var_details.name = var_name;
-                    var_details.mapped_alias = get_config_mapped_variable_name(var_name);
-                    var_details.item_size = get_bmi_model()->GetVarItemsize(var_name);
-                    var_details.num_items = get_bmi_model()->GetVarNbytes(var_name) / var_details.item_size;
-                    var_details.cpp_type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name),
-                                                                                   var_details.item_size);
-                    var_details.units = get_bmi_model()->GetVarUnits(var_name);
-                    var_details.provider = get_provider_for_input_var(var_name, var_details.mapped_alias);
-
-                    bmi_input_var_details->push_back(var_details);
-                }
+                initialize_bmi_input_var_metadata();
             }
 
-            for (Bmi_Var_Details input_var_details : *bmi_input_var_details) {
+            for (size_t i = 0; i < bmi_input_var_details->size(); i++) {
                 perform_set(
                     src_data_start,
                     t_delta,
-                    input_var_details.num_items,
-                    input_var_details.provider.get(),
-                    input_var_details.mapped_alias,
-                    input_var_details.name,
-                    input_var_details.cpp_type,
-                    input_var_details.units
+                    bmi_input_var_details->at(i)->get_num_items(),
+                    bmi_input_providers->at(i).get(),
+                    bmi_input_var_details->at(i)->get_mapped_alias(),
+                    bmi_input_var_details->at(i)->get_name(),
+                    bmi_input_var_details->at(i)->get_cpp_type(),
+                    bmi_input_var_details->at(i)->get_units()
                     );
             }
         }
@@ -702,6 +692,31 @@ namespace realization {
                 return input_forcing_providers[var_name];
 
             return forcing;
+        }
+
+        void Bmi_Module_Formulation::initialize_bmi_input_var_metadata() {
+            if (bmi_input_var_details != nullptr) {
+                throw std::runtime_error("Cannot re-initialize module formulation bmi_input_var_details member");
+            }
+            bmi_input_var_details = std::make_unique<std::vector<const Bmi_Var_Details*>>();
+            bmi_input_providers = std::make_unique<std::vector<const std::shared_ptr<data_access::GenericDataProvider>>>();
+            for (std::string & var_name : get_bmi_model()->GetInputVarNames()) {
+                int item_size = get_bmi_model()->GetVarItemsize(var_name);
+                std::string mapped_alias = get_config_mapped_variable_name(var_name);
+
+                // First in pair will be iterator either to inserted item or to existing that prevents insert duplicate
+                std::pair<std::set<Bmi_Var_Details>::iterator, bool> iter_and_result =
+                    known_bmi_input_vars.insert(
+                        Bmi_Var_Details(var_name,
+                                          mapped_alias,
+                                          item_size,
+                                          get_bmi_model()->GetVarNbytes(var_name) / item_size,
+                                          get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name), item_size),
+                                          get_bmi_model()->GetVarUnits(var_name)));
+
+                bmi_input_var_details->push_back(&(*(iter_and_result.first)));
+                bmi_input_providers->push_back(get_provider_for_input_var(var_name, mapped_alias));
+            }
         }
 
         void Bmi_Module_Formulation::perform_set(const time_t &src_data_start, const time_step_t& t_delta,

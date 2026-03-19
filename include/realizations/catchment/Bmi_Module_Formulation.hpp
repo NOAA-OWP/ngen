@@ -23,36 +23,60 @@ class Bmi_Cpp_Multi_Array_Test;
 namespace realization {
 
     /** Type to hold some certain details about a BMI module variable that the framework will need used repeatedly. */
-    struct Bmi_Var_Details {
+    class Bmi_Var_Details {
+
+    public:
+
+        //Bmi_Var_Details() : Bmi_Var_Details("", "", nullptr, -1, -1, "", "") { }
+
+        Bmi_Var_Details(const std::string& name, const std::string& alias, const int item_size, const int num_items, const std::string& cpp_type, const std::string& units)
+            : name(name), mapped_alias(alias), cpp_type(cpp_type), units(units), item_size(item_size), num_items(num_items) { }
+
+        Bmi_Var_Details(const Bmi_Var_Details& source) : Bmi_Var_Details(source.name, source.mapped_alias, source.item_size, source.num_items, source.cpp_type, source.units) { }
+
+        friend bool operator<(const Bmi_Var_Details& lhs, const Bmi_Var_Details& rhs) {
+            return std::tie(lhs.name, lhs.mapped_alias, lhs.cpp_type, lhs.units, lhs.item_size,
+                            lhs.num_items) < std::tie(rhs.name, rhs.mapped_alias, rhs.cpp_type, rhs.units,
+                                                      rhs.item_size, rhs.num_items);
+        }
+
+        const std::string& get_name() const {
+            return name;
+        }
+
+        const std::string& get_mapped_alias() const {
+            return mapped_alias;
+        }
+
+        const std::string& get_cpp_type() const {
+            return cpp_type;
+        }
+
+        const std::string& get_units() const {
+            return units;
+        }
+
+        int get_item_size() const {
+            return item_size;
+        }
+
+        int get_num_items() const {
+            return num_items;
+        }
+
+    private:
         /** The module's publicized name for this variable. */
-        std::string name;
+        const std::string name;
         /** The framework's configured alias for the variable. */
-        std::string mapped_alias;
+        const std::string mapped_alias;
         /** String for the C++ type corresponding to this variable's type. */
-        std::string cpp_type;
+        const std::string cpp_type;
         /** String for variable's units. */
-        std::string units;
-        /** Reference to applicable data provided that is source for input values. */
-        std::shared_ptr<data_access::GenericDataProvider> provider;
+        const std::string units;;
         /** The size of individual items for this variable. */
         int item_size;
         /** The number of items for this variable. */
         int num_items;
-
-        Bmi_Var_Details() : Bmi_Var_Details("", "", nullptr, -1, -1, "", "") { }
-
-        Bmi_Var_Details(const std::string& name, const std::string& alias, const std::shared_ptr<data_access::GenericDataProvider>& provider, const int item_size, const int num_items, const std::string& cpp_type, const std::string& units)
-            : name(name), mapped_alias(alias), cpp_type(cpp_type), units(units), provider(provider), item_size(item_size), num_items(num_items) { }
-
-        Bmi_Var_Details(const Bmi_Var_Details& source) {
-            name = source.name;
-            mapped_alias = source.mapped_alias;
-            provider = source.provider;
-            item_size = source.item_size;
-            num_items = source.num_items;
-            cpp_type = source.cpp_type;
-            units = source.units;
-        }
     };
 
     /**
@@ -475,12 +499,31 @@ namespace realization {
 
     private:
         /**
-         * BMI input variables details, cached to improve compute performance when setting values prior to updates.
-         *
-         * This will hold cached details on input variables needed during @ref do_bmi_sets_from_stored_metadata at each
-         * time step.  It will be populated lazily on the first time step.
+         * BMI input variables details for all instances, cached to improve compute performance when setting values
+         * prior to updates.
          */
-        std::unique_ptr<std::vector<Bmi_Var_Details>> bmi_input_var_details;
+        static std::set<Bmi_Var_Details> known_bmi_input_vars;
+
+        /**
+         * BMI input variables details for this instance, cached to improve compute performance when setting values
+         * prior to updates.
+         *
+         * This will hold cached details on input variables needed by this instance during
+         * @ref do_bmi_sets_from_stored_metadata at each time step.  It will be populated lazily on the first time step,
+         * via a nested call to @ref initialize_bmi_input_var_metadata.
+         *
+         * These should be pointers to @ref Bmi_Var_Details instances in @ref known_bmi_input_vars.
+         */
+        std::unique_ptr<std::vector<const Bmi_Var_Details*>> bmi_input_var_details;
+
+        /**
+         * Vector of data providers for BMI input vars, with the provider at an index corresponding to the var in
+         * @ref bmi_input_var_details at the same index.
+         *
+         * As with @ref bmi_input_var_details, these should be populated during the first call to
+         * @ref do_bmi_sets_from_stored_metadata via a nested call to @ref initialize_bmi_input_var_metadata.
+         */
+        std::unique_ptr<std::vector<const std::shared_ptr<data_access::GenericDataProvider>>> bmi_input_providers;
 
         models::bmi::protocols::NgenBmiProtocols bmi_protocols;
         /**
@@ -532,8 +575,9 @@ namespace realization {
          * the analogous C++ type, the number of items, etc.  In this execution option, that data is obtained once and
          * stored for subsequent reuse, optimizing compute at each time step a bit at the expense of memory.
          *
-         * These details are stored within the @ref bmi_input_var_details vector, populated on the first call to this
-         * function.
+         * References to objects containing these details are stored within the @ref bmi_input_var_details vector,
+         * populated on the first call to this function.  These are actually pointers to objects contained within the
+         * @ref known_bmi_input_vars static member variable.
          *
          * An important consideration is that this function is not strictly safe relying only on guarantees provided by
          * BMI. Nothing within the BMI spec guarantees that, for example, a variable will not change the number of items
@@ -587,6 +631,15 @@ namespace realization {
          * @return The appropriate data provider
          */
         std::shared_ptr<data_access::GenericDataProvider>& get_provider_for_input_var(const std::string& var_name, const std::string& mapped_alias);
+
+        /**
+         * Initialize the metadata as needed for @ref do_bmi_sets_from_stored_metadata.
+         *
+         * This will populate the @ref bmi_input_var_details member.  As metadata is gather into @ref Bmi_Var_Details
+         * objects, these will be inserted into to the @ref known_bmi_input_vars static member.  Pointers to the values
+         * in that set are then added to @ref bmi_input_var_details.
+         */
+        void initialize_bmi_input_var_metadata();
 
         void perform_set(const time_t &src_data_start, const time_step_t &t_delta, const int num_items, data_access::GenericDataProvider *provider, const std::string &mapped_alias, const std::string &var_name, const std::string &cpp_type, const std::string &units) const;
     };
