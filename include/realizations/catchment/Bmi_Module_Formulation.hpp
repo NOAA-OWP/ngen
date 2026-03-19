@@ -72,7 +72,7 @@ namespace realization {
         /** String for the C++ type corresponding to this variable's type. */
         const std::string cpp_type;
         /** String for variable's units. */
-        const std::string units;;
+        const std::string units;
         /** The size of individual items for this variable. */
         int item_size;
         /** The number of items for this variable. */
