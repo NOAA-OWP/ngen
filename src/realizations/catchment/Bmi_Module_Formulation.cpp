@@ -703,8 +703,8 @@ namespace realization {
             if (bmi_input_var_details != nullptr) {
                 throw std::runtime_error("Cannot re-initialize module formulation bmi_input_var_details member");
             }
-            bmi_input_var_details = std::make_unique<std::vector<const Bmi_Var_Details*>>();
-            bmi_input_providers = std::make_unique<std::vector<const std::shared_ptr<data_access::GenericDataProvider>>>();
+            bmi_input_var_details = std::make_unique<std::vector<Bmi_Var_Details*>>();
+            bmi_input_providers = std::make_unique<std::vector<std::shared_ptr<data_access::GenericDataProvider>>>();
             for (std::string & var_name : get_bmi_model()->GetInputVarNames()) {
                 int item_size = get_bmi_model()->GetVarItemsize(var_name);
                 std::string mapped_alias = get_config_mapped_variable_name(var_name);
@@ -719,7 +719,7 @@ namespace realization {
                                           get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name), item_size),
                                           get_bmi_model()->GetVarUnits(var_name)));
 
-                bmi_input_var_details->push_back(&(*(iter_and_result.first)));
+                bmi_input_var_details->push_back(const_cast<Bmi_Var_Details*>(&(*(iter_and_result.first))));
                 bmi_input_providers->push_back(get_provider_for_input_var(var_name, mapped_alias));
             }
         }

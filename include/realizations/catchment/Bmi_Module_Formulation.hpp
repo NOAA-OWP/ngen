@@ -514,7 +514,7 @@ namespace realization {
          *
          * These should be pointers to @ref Bmi_Var_Details instances in @ref known_bmi_input_vars.
          */
-        std::unique_ptr<std::vector<const Bmi_Var_Details*>> bmi_input_var_details;
+        std::unique_ptr<std::vector<Bmi_Var_Details*>> bmi_input_var_details;
 
         /**
          * Vector of data providers for BMI input vars, with the provider at an index corresponding to the var in
@@ -523,7 +523,7 @@ namespace realization {
          * As with @ref bmi_input_var_details, these should be populated during the first call to
          * @ref do_bmi_sets_from_stored_metadata via a nested call to @ref initialize_bmi_input_var_metadata.
          */
-        std::unique_ptr<std::vector<const std::shared_ptr<data_access::GenericDataProvider>>> bmi_input_providers;
+        std::unique_ptr<std::vector<std::shared_ptr<data_access::GenericDataProvider>>> bmi_input_providers;
 
         models::bmi::protocols::NgenBmiProtocols bmi_protocols;
         /**
