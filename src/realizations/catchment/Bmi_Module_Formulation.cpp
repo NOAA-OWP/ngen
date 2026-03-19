@@ -685,11 +685,16 @@ namespace realization {
         }
 
         std::shared_ptr<data_access::GenericDataProvider>& Bmi_Module_Formulation::get_provider_for_input_var(const std::string& var_name, const std::string& mapped_alias) {
-            if (input_forcing_providers.find(mapped_alias) != input_forcing_providers.end())
-                return input_forcing_providers[mapped_alias];
+            auto alias_iter = input_forcing_providers.find(mapped_alias);
+            if (alias_iter != input_forcing_providers.end())
+                return alias_iter->second;
 
-            if (mapped_alias != var_name && input_forcing_providers.find(var_name) != input_forcing_providers.end())
-                return input_forcing_providers[var_name];
+            if (mapped_alias == var_name)
+                return forcing;
+
+            auto name_iter = input_forcing_providers.find(var_name);
+            if (name_iter != input_forcing_providers.end())
+                return name_iter->second;
 
             return forcing;
         }
