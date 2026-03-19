@@ -236,7 +236,7 @@ Without NetCDF Parallel I/O support, parallel builds of ngen will be limited to 
 
 You can see if the NetCDF dependency found by CMake for ngen builds includes parallel support by looking for this part of the CMake output when you generate/regenerate the build system directory.  Note specifically the `Parallel` sub-item at the end of the NetCDF details.
 
-```aiignore
+```
 ...
 -- Environment summary:
 --   Boost:
