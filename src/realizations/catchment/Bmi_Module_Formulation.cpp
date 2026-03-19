@@ -726,7 +726,7 @@ namespace realization {
             if (num_items != 1) {
                 //more than a single value needed for var_name
                 std::vector<data_type> values = provider->get_values(
-                    CatchmentAggrDataSelector(get_catchment_id(), mapped_alias, src_data_start, t_delta,units)
+                    CatchmentAggrDataSelector(get_catchment_id(), mapped_alias, src_data_start, t_delta, units)
                 );
                 //need to marshal data types to the receiver as well
                 //this could be done a little more elegantly if the provider interface were
@@ -748,7 +748,7 @@ namespace realization {
             }
             else {
                 //scalar value
-                double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),mapped_alias, src_data_start, t_delta, units));
+                double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(), mapped_alias, src_data_start, t_delta, units));
                 value_ptr = get_value_as_type(cpp_type, value);
             }
             get_bmi_model()->SetValue(var_name, value_ptr.get());
