@@ -60,9 +60,12 @@ namespace utils
          * @param total_timesteps The total number of timesteps that will be written to the managed file.
          * @param obj_id The obj_id of this instance when multiple instances may operate on the same file; same as rank
          *               when using MPI (always `0` if only one instance may operate on the managed file).
-        * @param local_offset An offset for NetCDF data arrays that indicates the start of where this instance should
-        *                     begin writing data, in particular when multiple instances are writing to the same file and
-        *                     need to not write in overlapping regions.
+         * @param local_offset An offset for NetCDF data arrays that indicates the start of where this instance should
+         *                     begin writing data, in particular when multiple instances are writing to the same file
+         *                     and need to not write in overlapping regions.
+         * @param instance_count The total number of instances of this type in use across an entire simulation, which is
+         *                       usually (though not always) the number of processes/ranks.
+         * @param total_nexus_count The total number of nexuses involved throughout the entire current simulation.
          */
         PerFormulationNexusOutputMgr(const std::vector<std::string>& nexus_ids,
                                      std::shared_ptr<std::vector<std::string>> formulation_ids,
@@ -72,10 +75,10 @@ namespace utils
                                      const int local_offset,
                                      const int instance_count,
                                      const int total_nexus_count)
-            :   nexus_ids(nexus_ids),
-                obj_id(obj_id),
-                local_offset(local_offset),
+            :   local_offset(local_offset),
+                nexus_ids(nexus_ids),
                 total_timesteps(total_timesteps),
+                obj_id(obj_id),
                 total_nexus_count(total_nexus_count)
         {
             // TODO: look at potentially making this configurable rather than static
