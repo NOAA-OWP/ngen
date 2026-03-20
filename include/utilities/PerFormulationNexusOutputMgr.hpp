@@ -183,6 +183,19 @@ namespace utils
             //: PerFormulationNexusOutputMgr(nexus_ids, formulation_ids, output_root, total_timesteps, 0, {}) {}
             : PerFormulationNexusOutputMgr(nexus_ids, formulation_ids, output_root, total_timesteps, 0, 0, 1, nexus_ids.size()) {}
 
+        ~PerFormulationNexusOutputMgr() override {
+            if (netcdf_file_id != -1) {
+                std::cout << "WARN: Nexus NetCDF file manager being destroyed before file was otherwise closed.\n";
+                try {
+                    close_netcdf_file();
+                }
+                catch (const std::exception& e) {
+                    std::cout << "ERROR: Could not close nexus Netcdf file during manager destruction: " << e.what()
+                              << std::endl;
+                }
+            }
+        }
+
         /**
          * Write any received data entries that were not written immediately upon receipt to the managed data files.
          *
@@ -253,12 +266,7 @@ namespace utils
             current_formulation_id.clear();
 
             if (current_time_index == total_timesteps) {
-                nc_status = nc_close(netcdf_file_id);
-                if (nc_status != NC_NOERR) {
-                    throw std::runtime_error("Error closing nexus file '" + nexus_outfile + "' after write for "
-                        + "FINAL time step " + std::to_string(current_time_index) + ": "
-                        + parse_netcdf_return_code(nc_status));
-                }
+                close_netcdf_file();
             }
         }
 
@@ -609,6 +617,20 @@ namespace utils
             }
         }
         #endif
+
+        /**
+         * Close the (presumed open) NetCDF file and (if successful) clear the corresponding file id by resetting
+         * @ref netcdf_file_id to `-1`.
+         */
+        void close_netcdf_file() {
+            int nc_status = nc_close(netcdf_file_id);
+            if (nc_status != NC_NOERR) {
+                throw std::runtime_error("Error closing nexus file '" + nexus_outfile + "' after write for "
+                    + "FINAL time step " + std::to_string(current_time_index) + ": "
+                    + parse_netcdf_return_code(nc_status));
+            }
+            netcdf_file_id = -1;
+        }
 
         /**
          * Function to open an existing NetCDF file/dataset and set the @ref netcdf_file_id member variable.
