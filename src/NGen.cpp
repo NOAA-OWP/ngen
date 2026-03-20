@@ -464,14 +464,22 @@ int main(int argc, char *argv[]) {
 
         size_t timesteps = manager->Simulation_Time_Object->get_total_output_times();
         #if NGEN_WITH_MPI
-        std::vector<int> nexuses_per_rank(mpi_num_procs, 0);
-        nexuses_per_rank[mpi_rank] += nexus_ids.size();
-        for (int i = 0; i < mpi_num_procs; i++) {
-            MPI_Bcast(nexuses_per_rank.data() + i, 1, MPI_INT, i, MPI_COMM_WORLD);
-            MPI_Barrier(MPI_COMM_WORLD);
-        }
+        int local_nexus_write_offset, total_nexus_count;
+        int local_nexus_count = nexus_ids.size();
+
+        // Get offset as sum of nexus counts for all ranks before this one
+        MPI_Exscan(&local_nexus_count, &local_nexus_write_offset, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+        // Above not defined for 0, so manually set
+        if (mpi_rank == 0)
+            local_nexus_write_offset = 0;
+
+        // Calc total count in the last rank based on it's (max) offset, then broadcast to the others
+        if (mpi_rank == mpi_num_procs - 1)
+            total_nexus_count = local_nexus_write_offset + local_nexus_count;
+        MPI_Bcast(&total_nexus_count, 1, MPI_INT, mpi_num_procs - 1, MPI_COMM_WORLD);
+
         #if NGEN_WITH_NETCDF and NGEN_WITH_PARALLEL_NETCDF
-        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root(), timesteps, mpi_rank, nexuses_per_rank);
+        nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root(), timesteps, mpi_rank, local_nexus_write_offset, mpi_num_procs, total_nexus_count);
         #else
         throw std::runtime_error("Parallel NetCDF support required to use per-formulation nexus files.");
         #endif
@@ -479,7 +487,6 @@ int main(int argc, char *argv[]) {
         // One more barrier here to make sure other ranks wait while rank 0 creates the per-formulation nexus file
         MPI_Barrier(MPI_COMM_WORLD);
         #else
-
         #if NGEN_WITH_NETCDF
         nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root(), timesteps);
         #else
