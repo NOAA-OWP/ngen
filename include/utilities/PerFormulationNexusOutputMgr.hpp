@@ -118,7 +118,7 @@ namespace utils
             // Then:    this is a true parallel execution use case, where instances in all ranks need to run same commands
             // ->       for all ranks, run parallel create + setup dims/vars
             if (instance_count > 1 && isMpiInitialized()) {
-                create_netcdf_file_parallel();
+                create_netcdf_file_parallel(MPI_COMM_WORLD);
                 setup_netcdf_metadata();
                 if (use_collective_nc_var_access) {
                     set_nc_var_parallel_collective(nexus_nc_var_id);
@@ -585,14 +585,16 @@ namespace utils
          * after the @ref nexus_outfile and @ref rank member variables are properly set).  An exception will be thrown
          * if the @ref netcdf_file_id member variable is already set (to something other than ``-1``) when this function
          * is called.
+         *
+         * @param mpi_comm The MPI communicator passed to the NetCDF API function calls
          */
-        void create_netcdf_file_parallel() {
+        void create_netcdf_file_parallel(MPI_Comm mpi_comm) {
             // Bail with error if this has already been run
             if (netcdf_file_id != -1) {
                 throw std::runtime_error("Cannot (parallel) create netCDF file after already created and have nc_id set.");
             }
             std::cout << "Creating nexus NetCDF file '" << nexus_outfile << "' for parallel access." << std::endl;
-            int nc_status = nc_create_par(nexus_outfile.c_str(), NC_NETCDF4 | NC_NOCLOBBER, MPI_COMM_WORLD, MPI_INFO_NULL, &netcdf_file_id);
+            int nc_status = nc_create_par(nexus_outfile.c_str(), NC_NETCDF4 | NC_NOCLOBBER, mpi_comm, MPI_INFO_NULL, &netcdf_file_id);
             if (nc_status != NC_NOERR) {
                 throw std::runtime_error("PerFormulationNexusOutputMgr rank " + std::to_string(rank) + " could not "
                     + "create file '" + nexus_outfile + "' for parallel access: " + parse_netcdf_return_code(nc_status));
