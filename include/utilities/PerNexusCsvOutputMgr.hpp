@@ -11,8 +11,6 @@ namespace utils
 {
     /**
      * Subtype that manages/writes per-nexus data files in CSV format.
-     *
-     * Because it works with CSVs, this type writes data entries to the managed files immediately upon receipt.
      */
     class PerNexusCsvOutputMgr : public NexusOutputsMgr
     {
@@ -31,9 +29,13 @@ namespace utils
         }
 
         /**
-         * No-op, since this type writes entries as they are received.
+         * Commit writes by flushing output file `ofstream`s to filesystem.
          */
-        void commit_writes() override { }
+        void commit_writes() override {
+            for (auto &f : nexus_outfiles) {
+                f.second.flush();
+            }
+        }
 
         /**
          * Receive a data entry for this nexus, specifying details including the formulation id.
