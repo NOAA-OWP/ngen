@@ -16,6 +16,7 @@
 #include <vector>
 #include <map>
 #include <unordered_map>
+#include <math.h>
 #include <algorithm>
 
 // Forward declaration to provide access to protected items in testing
@@ -121,8 +122,8 @@ namespace utils
                 create_netcdf_file_parallel(MPI_COMM_WORLD);
                 setup_netcdf_metadata();
                 if (use_collective_nc_var_access) {
-                    set_nc_var_parallel_collective(nexus_nc_var_id);
-                    set_nc_var_parallel_collective(flow_nc_var_id);
+                    set_nc_var_parallel_collective(nc_var_id_nexus_id);
+                    set_nc_var_parallel_collective(nc_var_id_flow);
                 }
             }
             // If:      1 mgr instance in simulation
@@ -205,7 +206,7 @@ namespace utils
                 // TODO: (later) consider if we need to sanity check that times are consistent across ranks (we were
                 // TODO:        effectively assuming this to be the case when not explicitly writing times).
 
-                nc_status = nc_put_vara_long(netcdf_file_id, time_nc_var_id, &start_t, &count_t, &epoch_minutes);
+                nc_status = nc_put_vara_long(netcdf_file_id, nc_var_id_time, &start_t, &count_t, &epoch_minutes);
                 if (nc_status != NC_NOERR) {
                     throw std::runtime_error("Error writing time value to nexus file '" + nexus_outfile + "' ("
                         + parse_netcdf_return_code(nc_status) + ") at time index " + std::to_string(current_time_index) + ".");
@@ -220,7 +221,7 @@ namespace utils
 
             // TODO: perhaps later a configurable option about whether we should thrown an exception if any nexuses
             //  didn't have a data value set (i.e., are still set to fill value)
-            nc_status = nc_put_vara_double(netcdf_file_id, flow_nc_var_id, start_f, count_f, current_nexus_data.data());
+            nc_status = nc_put_vara_double(netcdf_file_id, nc_var_id_flow, start_f, count_f, current_nexus_data.data());
             if (nc_status != NC_NOERR) {
                 throw std::runtime_error("Error writing flow value to nexus file '" + nexus_outfile + "' ("
                     + parse_netcdf_return_code(nc_status) + ") at time index " + std::to_string(current_time_index) + ".");
@@ -380,11 +381,11 @@ namespace utils
             }
         }
 
-        const std::string nc_nex_id_dim_name = "feature_id";
-        const std::string nc_time_dim_name = "time";
-        const std::string nc_flow_var_name = "runoff_rate";
+        const std::string nc_dim_name_nexus_id = "feature_id";
+        const std::string nc_dim_name_time = "time";
+        const std::string nc_var_name_flow = "runoff_rate";
 
-        const double flow_var_fill_value = -9999.0;
+        const double flow_var_fill_value = nan("");
 
         /** Array of chunk sizes for  dimensions - nexus_id and time - of flow NetCDF variable, to set chunking. */
         size_t flow_var_chunk_size_per_dim[2];
@@ -440,16 +441,16 @@ namespace utils
         int rank;
 
         /** Variable id for the ``nexus_id`` NetCDF variable. */
-        int nexus_nc_var_id;
+        int nc_var_id_nexus_id;
 
         /** Variable id for the ``time`` NetCDF variable. */
-        int time_nc_var_id;
+        int nc_var_id_time;
+
+        /** Variable id for the ``flow`` NetCDF variable. */
+        int nc_var_id_flow;
 
         /** The total number of nexuses in this simulation, potentially across multiple ranks. */
         int total_nexus_count;
-
-        /** Variable id for the ``flow`` NetCDF variable. */
-        int flow_nc_var_id;
 
         /**
          * Whether to use specified chunking for the NetCDF flow/runoff variable when creating it within
@@ -635,15 +636,15 @@ namespace utils
          * Function will lookup and store the variable ids for the nexus_id, time, and flow/runoff variables.
          */
         void lookup_netcdf_metadata() {
-            int nc_status = nc_inq_varid(netcdf_file_id, nc_nex_id_dim_name.c_str(), &nexus_nc_var_id);
+            int nc_status = nc_inq_varid(netcdf_file_id, nc_dim_name_nexus_id.c_str(), &nc_var_id_nexus_id);
             if (nc_status != NC_NOERR) {
                 throw std::runtime_error("Failed to lookup Nexus_id NetCDF variable: " + parse_netcdf_return_code(nc_status));
             }
-            nc_status = nc_inq_varid(netcdf_file_id, nc_time_dim_name.c_str(), &time_nc_var_id);
+            nc_status = nc_inq_varid(netcdf_file_id, nc_dim_name_time.c_str(), &nc_var_id_time);
             if (nc_status != NC_NOERR) {
                 throw std::runtime_error("Failed to lookup Time NetCDF variable: " + parse_netcdf_return_code(nc_status));
             }
-            nc_status = nc_inq_varid(netcdf_file_id, nc_flow_var_name.c_str(), &flow_nc_var_id);
+            nc_status = nc_inq_varid(netcdf_file_id, nc_var_name_flow.c_str(), &nc_var_id_flow);
             if (nc_status != NC_NOERR) {
                 throw std::runtime_error("Failed to lookup Flow NetCDF variable: " + parse_netcdf_return_code(nc_status));
             }
@@ -658,33 +659,33 @@ namespace utils
         void setup_netcdf_metadata() {
             int nc_nex_id_dim_id, nc_time_dim_id;
 
-            add_dimension(nc_nex_id_dim_name, total_nexus_count, &nc_nex_id_dim_id);
-            add_dimension(nc_time_dim_name, total_timesteps, &nc_time_dim_id);
+            add_dimension(nc_dim_name_nexus_id, total_nexus_count, &nc_nex_id_dim_id);
+            add_dimension(nc_dim_name_time, total_timesteps, &nc_time_dim_id);
 
             std::map<std::string, std::string> nex_id_var_attrs = {{"long_name", "Feature ID"}};
-            add_variable(nc_nex_id_dim_name, NC_UINT, {nc_nex_id_dim_id}, nex_id_var_attrs, &nexus_nc_var_id);
+            add_variable(nc_dim_name_nexus_id, NC_UINT, {nc_nex_id_dim_id}, nex_id_var_attrs, &nc_var_id_nexus_id);
 
             std::map<std::string, std::string> time_var_attrs = {
                 {"units", "minutes since 1970-01-01 00:00:00"},
                 {"calendar", "gregorian"},
                 {"long_name", "Time"}
             };
-            add_variable(nc_time_dim_name, NC_UINT, {nc_time_dim_id}, time_var_attrs, &time_nc_var_id);
+            add_variable(nc_dim_name_time, NC_UINT, {nc_time_dim_id}, time_var_attrs, &nc_var_id_time);
 
             std::map<std::string, std::string> flow_var_attrs = {
                 {"units", "m3 s-1"},
                 {"long_name", "Simulated Surface Runoff"}
             };
-            add_variable(nc_flow_var_name, NC_DOUBLE, {nc_nex_id_dim_id, nc_time_dim_id}, flow_var_attrs,
-                         &flow_var_fill_value, &flow_nc_var_id);
+            add_variable(nc_var_name_flow, NC_DOUBLE, {nc_nex_id_dim_id, nc_time_dim_id}, flow_var_attrs,
+                         &flow_var_fill_value, &nc_var_id_flow);
 
             if (use_chunking_flow_var) {
-                std::cout << "Setting nexus NetCDF variable '" << nc_flow_var_name << "' up for chunking ("
+                std::cout << "Setting nexus NetCDF variable '" << nc_var_name_flow << "' up for chunking ("
                           << std::to_string(flow_var_chunk_size_per_dim[0]) + "," + std::to_string(flow_var_chunk_size_per_dim[1])
                           << ")" << std::endl;
-                int nc_status = nc_def_var_chunking(netcdf_file_id, flow_nc_var_id, NC_CHUNKED, flow_var_chunk_size_per_dim);
+                int nc_status = nc_def_var_chunking(netcdf_file_id, nc_var_id_flow, NC_CHUNKED, flow_var_chunk_size_per_dim);
                 if (nc_status != NC_NOERR) {
-                    throw std::runtime_error("Could not set up chunking for variable '" + nc_flow_var_name + "': "
+                    throw std::runtime_error("Could not set up chunking for variable '" + nc_var_name_flow + "': "
                                              + parse_netcdf_return_code(nc_status));
                 }
             }
@@ -713,7 +714,7 @@ namespace utils
             std::vector<size_t> start{this->local_offset};
             std::vector<size_t> count{numeric_nex_ids.size()};
 
-            int nc_status = nc_put_vara_uint(netcdf_file_id, nexus_nc_var_id, start.data(), count.data(),
+            int nc_status = nc_put_vara_uint(netcdf_file_id, nc_var_id_nexus_id, start.data(), count.data(),
                                           numeric_nex_ids.data());
             if (nc_status != NC_NOERR) {
                 throw std::runtime_error("Error writing nexus ids to netcdf for nexus output manager: "
@@ -729,14 +730,14 @@ namespace utils
          */
         void set_nc_var_parallel_collective(const std::string& var_name) {
             int* nc_var_id;
-            if (var_name == nc_nex_id_dim_name) {
-                nc_var_id = &nexus_nc_var_id;
+            if (var_name == nc_dim_name_nexus_id) {
+                nc_var_id = &nc_var_id_nexus_id;
             }
-            else if (var_name == nc_time_dim_name) {
-                nc_var_id = &time_nc_var_id;
+            else if (var_name == nc_dim_name_time) {
+                nc_var_id = &nc_var_id_time;
             }
-            else if (var_name == nc_flow_var_name) {
-                nc_var_id = &flow_nc_var_id;
+            else if (var_name == nc_var_name_flow) {
+                nc_var_id = &nc_var_id_flow;
             }
             else {
                 throw std::runtime_error("Can't set NC_COLLECTIVE for invalid variable name '" + var_name + "'.");
