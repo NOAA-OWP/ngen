@@ -38,9 +38,9 @@ protected:
 
     static std::string friend_get_current_formulation_id(const utils::PerFormulationNexusOutputMgr* obj) { return obj->current_formulation_id; }
     static std::string friend_get_nexus_outfile(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nexus_outfile; }
-    static std::string friend_get_nc_flow_var_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_flow_var_name; }
-    static std::string friend_get_nc_nex_id_dim_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_nex_id_dim_name; }
-    static std::string friend_get_nc_time_dim_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_time_dim_name; }
+    static std::string friend_get_nc_flow_var_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_var_name_flow; }
+    static std::string friend_get_nc_nex_id_dim_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_dim_name_nexus_id; }
+    static std::string friend_get_nc_time_dim_name(const utils::PerFormulationNexusOutputMgr* obj) { return obj->nc_dim_name_time; }
     static std::string friend_get_parsed_nc_status(const utils::PerFormulationNexusOutputMgr* obj, int nc_status) {return obj->parse_netcdf_return_code(nc_status); }
     static bool friend_is_chunking(const utils::PerFormulationNexusOutputMgr* obj) { return obj->use_chunking_flow_var;}
 
