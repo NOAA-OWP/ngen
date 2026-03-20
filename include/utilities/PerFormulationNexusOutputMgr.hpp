@@ -377,6 +377,8 @@ namespace utils
                 return "unlimited dimension size already in use";
             case NC_EINVALCOORDS:
                 return "index exceeds dimension bounds";
+            case NC_EBADCHUNK:
+                return "bad chunk size";
             default:
                 return "unrecognized error code '" + std::to_string(nc_status) + "'";
             }
