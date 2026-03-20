@@ -473,7 +473,7 @@ int main(int argc, char *argv[]) {
         if (mpi_rank == 0)
             local_nexus_write_offset = 0;
 
-        // Calc total count in the last rank based on it's (max) offset, then broadcast to the others
+        // Calc total count in the last rank based on its (max) offset, then broadcast to the others
         if (mpi_rank == mpi_num_procs - 1)
             total_nexus_count = local_nexus_write_offset + local_nexus_count;
         MPI_Bcast(&total_nexus_count, 1, MPI_INT, mpi_num_procs - 1, MPI_COMM_WORLD);
