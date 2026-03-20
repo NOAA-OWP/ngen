@@ -43,11 +43,12 @@ namespace utils
         /**
          * Construct instance set for managing/writing nexus data files, creating the file(s) appropriately.
          *
-         * Note that the class is designed to be aware of its rank in the context of multiple instances operating on the
-         * same managed output file (e.g., when there are multiple MPI ranks) and supports multiple instances across one
-         * or many processes writing to the same file.  However, only rank `0` will initially create the nexus output
-         * file. Further, the instance relies on users/callers to maintain any synchronization (i.e., call MPI_Barrier
-         * so other ranks don't get ahead of rank `0` while it creates the file).
+         * Note that the class is designed to be aware of its object id in the context of multiple instances operating
+         * on the same managed output file (e.g., when there are multiple MPI ranks, in which case @ref obj_id and MPI
+         * rank are synonymous) and supports multiple instances across one or many processes writing to the same file.
+         * However, only obj_id `0` will initially create the nexus output file. Further, the instance relies on
+         * users/callers to maintain any synchronization (i.e., call MPI_Barrier so other obj_ids don't get ahead of
+         * obj_id `0` while it creates the file).
          *
          * While the constructor supports receiving a collection of formulation ids, the class itself can only deal with
          * a single formulation.  As such, the current implementation expects the collection of formulation ids passed
@@ -57,8 +58,8 @@ namespace utils
          * @param formulation_ids Either ``null`` or pointer to vector with at most one formulation id (see above).
          * @param output_root The output root for written files (as a string).
          * @param total_timesteps The total number of timesteps that will be written to the managed file.
-         * @param rank The rank of this instance when multiple instances may operate on the same file; e.g., when
-         *             using MPI (always `0` if only one instance may operate on the managed file).
+         * @param obj_id The obj_id of this instance when multiple instances may operate on the same file; same as rank
+         *               when using MPI (always `0` if only one instance may operate on the managed file).
         * @param local_offset An offset for NetCDF data arrays that indicates the start of where this instance should
         *                     begin writing data, in particular when multiple instances are writing to the same file and
         *                     need to not write in overlapping regions.
@@ -67,12 +68,12 @@ namespace utils
                                      std::shared_ptr<std::vector<std::string>> formulation_ids,
                                      const std::string &output_root,
                                      const size_t total_timesteps,
-                                     const int rank,
+                                     const int obj_id,
                                      const int local_offset,
                                      const int instance_count,
                                      const int total_nexus_count)
             :   nexus_ids(nexus_ids),
-                rank(rank),
+                obj_id(obj_id),
                 local_offset(local_offset),
                 total_timesteps(total_timesteps),
                 total_nexus_count(total_nexus_count)
@@ -116,8 +117,8 @@ namespace utils
             // have to detect things.
             #if NGEN_WITH_MPI && NGEN_WITH_PARALLEL_NETCDF
             // If:      >=2 mgr instances in simulation **AND** MPI is initialized
-            // Then:    this is a true parallel execution use case, where instances in all ranks need to run same commands
-            // ->       for all ranks, run parallel create + setup dims/vars
+            // Then:    true parallel execution use case, where instances in all ranks need to run same commands
+            // ->       for all obj_ids/ranks, run parallel create + setup dims/vars
             if (instance_count > 1 && isMpiInitialized()) {
                 create_netcdf_file_parallel(MPI_COMM_WORLD);
                 setup_netcdf_metadata();
@@ -128,15 +129,15 @@ namespace utils
             }
             // If:      1 mgr instance in simulation
             //          **OR**
-            //          >=2 mgr instances in simulation **AND** MPI not initialized **AND** "this" is rank/instance 0
-            // Then:    this is rank 0 in a non-parallel use case (either nothing to parallelize or not initialized)
+            //          >=2 mgr instances in simulation **AND** MPI not initialized **AND** "this" is obj_id 0
+            // Then:    this is obj_id 0 in a non-parallel use case (either nothing to parallelize or not initialized)
             // ->       call non-parallel create + setup dims/vars
-            else if (instance_count == 1 || rank == 0) {
+            else if (instance_count == 1 || obj_id == 0) {
                 create_netcdf_file();
                 setup_netcdf_metadata();
             }
-            // If:      >=2 mgr instances in simulation **AND** MPI not initialized **AND** "this" is **not** rank 0
-            // Then:    this is some non-primary rank in a non-parallel use case (rank 0 creates, so just open/lookup)
+            // If:      >=2 mgr instances in simulation **AND** MPI not initialized **AND** "this" is **not** obj_id 0
+            // Then:    this is some non-primary obj_id in a non-parallel use case (obj_id 0 creates, so just open/lookup)
             // ->       call open + lookup dims/vars
             else {
                 open_netcdf_file();
@@ -145,9 +146,9 @@ namespace utils
             #else
 
             // As with MPI-case code above, to support testing, support possibility of multiple instances opened,
-            // with rank 0 being the "primary".
-            // As such, only let rank 0 create and setup the file; have any others just open and lookup metadata
-            if (rank == 0) {
+            // with obj_id 0 being the "primary".
+            // As such, only let obj_id 0 create and setup the file; have any others just open and lookup metadata
+            if (obj_id == 0) {
                 create_netcdf_file();
                 setup_netcdf_metadata();
             }
@@ -165,7 +166,7 @@ namespace utils
         }
 
         /**
-         * Construct instance set for managing/writing nexus data files when there is only one rank/instance.
+         * Construct instance set for managing/writing nexus data files when there is only one obj_id/instance.
          *
          * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
          * @param formulation_ids
@@ -198,12 +199,12 @@ namespace utils
             // On the first write, also write the nexus id variable values
             write_nexus_ids_once();
 
-            // For just rank 0, write the time value
-            if (rank == 0) {
+            // For just obj_id 0, write the time value
+            if (obj_id == 0) {
                 long epoch_minutes = current_epoch_time / 60;
                 const size_t start_t = static_cast<size_t>(current_time_index);
                 const size_t count_t = 1;
-                // TODO: (later) consider if we need to sanity check that times are consistent across ranks (we were
+                // TODO: (later) consider if we need to sanity check that times are consistent across obj_ids (we were
                 // TODO:        effectively assuming this to be the case when not explicitly writing times).
 
                 nc_status = nc_put_vara_long(netcdf_file_id, nc_var_id_time, &start_t, &count_t, &epoch_minutes);
@@ -411,9 +412,6 @@ namespace utils
         /** Nexus ids for which this instance/process will write data to the file (i.e., local when using MPI, all otherwise). */
         const std::vector<std::string> nexus_ids;
 
-        /** The number of nexuses assigned to each rank. */
-        //std::vector<int> nexuses_per_rank;
-
         /** The current/last formulation id value received by `receive_data_entry`. */
         std::string current_formulation_id;
 
@@ -437,8 +435,12 @@ namespace utils
         /** File id member variable for opening and writing to NetCDF file via the C API. */
         int netcdf_file_id = -1;
 
-        /** The rank (MPI rank if using MPI) for this instance, which will be 0 if parallel execution is not in use. */
-        int rank;
+        /**
+         * The instance id for this instance, which should be the MPI rank if using MPI.
+         *
+         * For non-MPI use cases, there must always be an id 0, and it is assumed each new id is incremented by 1.
+         */
+        int obj_id;
 
         /** Variable id for the ``nexus_id`` NetCDF variable. */
         int nc_var_id_nexus_id;
@@ -449,7 +451,7 @@ namespace utils
         /** Variable id for the ``flow`` NetCDF variable. */
         int nc_var_id_flow;
 
-        /** The total number of nexuses in this simulation, potentially across multiple ranks. */
+        /** The total number of nexuses in this simulation, potentially across multiple instances and ranks. */
         int total_nexus_count;
 
         /**
@@ -461,7 +463,7 @@ namespace utils
         /**
          * Whether instance should use ``NC_COLLECTIVE`` parallel access mode for NetCDF variables (except ``time``).
          *
-         * Note that the ``time`` variable is excepted and will always only be written by rank 0, and thus remain
+         * Note that the ``time`` variable is excepted and will always only be written by obj_id 0, and thus remain
          * ``NC_INDEPENDENT``.
          *
          * See https://docs.unidata.ucar.edu/netcdf-c/4.9.3/parallel_io.html for details on collective/independent
@@ -558,7 +560,7 @@ namespace utils
          * member variable.
          *
          * Note this function is expected to only be called at most once by an instance, during the constructor (though
-         * after the @ref nexus_outfile and @ref rank member variables are properly set).  An exception will be thrown
+         * after the @ref nexus_outfile and @ref obj_id member variables are properly set).  An exception will be thrown
          * if the @ref netcdf_file_id member variable is already set (to something other than ``-1``) when this function
          * is called.
          */
@@ -570,7 +572,7 @@ namespace utils
             std::cout << "Creating nexus NetCDF file '" << nexus_outfile << "' for regular access." << std::endl;
             int nc_status = nc_create(nexus_outfile.c_str(), NC_NETCDF4 | NC_NOCLOBBER, &netcdf_file_id);
             if (nc_status != NC_NOERR) {
-                throw std::runtime_error("PerFormulationNexusOutputMgr rank " + std::to_string(rank) + " could not "
+                throw std::runtime_error("PerFormulationNexusOutputMgr id " + std::to_string(obj_id) + " could not "
                     + "create file '" + nexus_outfile + "' for regular access: " + parse_netcdf_return_code(nc_status));
             }
         }
@@ -583,7 +585,7 @@ namespace utils
          * member variable.
          *
          * Note this function is expected to only be called at most once by an instance, during the constructor (though
-         * after the @ref nexus_outfile and @ref rank member variables are properly set).  An exception will be thrown
+         * after the @ref nexus_outfile and @ref obj_id member variables are properly set).  An exception will be thrown
          * if the @ref netcdf_file_id member variable is already set (to something other than ``-1``) when this function
          * is called.
          *
@@ -597,7 +599,7 @@ namespace utils
             std::cout << "Creating nexus NetCDF file '" << nexus_outfile << "' for parallel access." << std::endl;
             int nc_status = nc_create_par(nexus_outfile.c_str(), NC_NETCDF4 | NC_NOCLOBBER, mpi_comm, MPI_INFO_NULL, &netcdf_file_id);
             if (nc_status != NC_NOERR) {
-                throw std::runtime_error("PerFormulationNexusOutputMgr rank " + std::to_string(rank) + " could not "
+                throw std::runtime_error("PerFormulationNexusOutputMgr id " + std::to_string(obj_id) + " could not "
                     + "create file '" + nexus_outfile + "' for parallel access: " + parse_netcdf_return_code(nc_status));
             }
         }
@@ -624,7 +626,7 @@ namespace utils
             // first time, it still won't for the second, etc.
             int nc_status = nc_open(nexus_outfile.c_str(), NC_NETCDF4 | NC_NOCLOBBER, &netcdf_file_id);
             if (nc_status != NC_NOERR) {
-                throw std::runtime_error("PerFormulationNexusOutputMgr rank " + std::to_string(rank) + " could not "
+                throw std::runtime_error("PerFormulationNexusOutputMgr obj_id " + std::to_string(obj_id) + " could not "
                                          + " open file '" + nexus_outfile + "': "
                                          + parse_netcdf_return_code(nc_status));
             }
