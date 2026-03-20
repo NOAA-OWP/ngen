@@ -58,18 +58,23 @@ namespace utils
          * @param total_timesteps The total number of timesteps that will be written to the managed file.
          * @param rank The rank of this instance when multiple instances may operate on the same file; e.g., when
          *             using MPI (always `0` if only one instance may operate on the managed file).
-         * @param nexuses_per_rank The total number nexuses for each running rank.
+        * @param local_offset An offset for NetCDF data arrays that indicates the start of where this instance should
+        *                     begin writing data, in particular when multiple instances are writing to the same file and
+        *                     need to not write in overlapping regions.
          */
         PerFormulationNexusOutputMgr(const std::vector<std::string>& nexus_ids,
                                      std::shared_ptr<std::vector<std::string>> formulation_ids,
                                      const std::string &output_root,
                                      const size_t total_timesteps,
                                      const int rank,
-                                     const std::vector<int>& nexuses_per_rank)
+                                     const int local_offset,
+                                     const int instance_count,
+                                     const int total_nexus_count)
             :   nexus_ids(nexus_ids),
                 rank(rank),
-                nexuses_per_rank(nexuses_per_rank),
-                total_timesteps(total_timesteps)
+                local_offset(local_offset),
+                total_timesteps(total_timesteps),
+                total_nexus_count(total_nexus_count)
         {
             // TODO: look at potentially making this configurable rather than static
             data_flush_interval = 100;
@@ -80,38 +85,9 @@ namespace utils
             // TODO: look at making these chunking details more configurable
             use_chunking_flow_var = true;
             // In the nexus_id dimension, set chunk size to be the nexus count
-            flow_var_chunk_size_per_dim[0] = 0;
-            for (size_t r = 0; r < nexuses_per_rank.size(); ++r) {
-                flow_var_chunk_size_per_dim[0] += nexuses_per_rank[r];
-            }
+            flow_var_chunk_size_per_dim[0] = total_nexus_count;
             // Chunk size is just 1 in the time step dimensions
             flow_var_chunk_size_per_dim[1] = 1;
-
-            if (this->nexuses_per_rank.empty()) {
-                if (this->rank != 0)
-                    throw std::runtime_error("Must supply nexuses_per_rank values when using multiple MPI processes.");
-                this->nexuses_per_rank.push_back(this->nexus_ids.size());
-            }
-
-            if (this->nexuses_per_rank.size() <= this->rank) {
-                throw std::runtime_error("To few values in nexuses_per_rank value ("
-                    + std::to_string(this->nexuses_per_rank.size()) + ") for rank "
-                    + std::to_string(rank) + ".");
-            }
-
-            if (this->nexuses_per_rank[this->rank] != this->nexus_ids.size()) {
-                throw std::runtime_error("Invalid nexuses_per_rank value for rank " + std::to_string(this->rank)
-                    + ": " + std::to_string(this->nexuses_per_rank[this->rank]) + " does not match number of "
-                    + "supplied nexus ids (" + std::to_string(this->nexus_ids.size()) + ").");
-            }
-
-            if (this->rank == 0) {
-                for (size_t r = 0; r < this->nexuses_per_rank.size(); r++) {
-                    if (this->nexuses_per_rank[r] < 0) {
-                        throw std::runtime_error("Invalid nexuses_per_rank value for rank " + std::to_string(r) + ".");
-                    }
-                }
-            }
 
             // TODO: (later) in future modify if we decide this class needs to support multiple formulations
             // Should always have one formulation at least, so
@@ -125,12 +101,6 @@ namespace utils
                 this->formulation_id = (*formulation_ids)[0];
             }
 
-            this->local_offset = 0;
-
-            for (size_t r = 0; r < rank; ++r) {
-                this->local_offset += nexuses_per_rank[r];
-            }
-
             // Initialize data structure for holding nexus data and set with default of fill value
             current_nexus_data = std::vector<double>(nexus_ids.size(), flow_var_fill_value);
 
@@ -141,11 +111,13 @@ namespace utils
 
             nexus_outfile = output_root + "/formulation_" + this->formulation_id + "_nexuses.nc";
 
-            // To support unit testing when MPI and parallel netcdf compiled in (which won't always be running through
-            // MPI), we have to detect things.
+            // To support unit testing when not running via MPI, but when MPI and parallel netcdf are compiled in, we
+            // have to detect things.
             #if NGEN_WITH_MPI && NGEN_WITH_PARALLEL_NETCDF
-            // If 2+ ranks yes MPI init, all ranks: para create + setup dims/vars
-            if (nexuses_per_rank.size() > 1 && isMpiInitialized()) {
+            // If:      >=2 mgr instances in simulation **AND** MPI is initialized
+            // Then:    this is a true parallel execution use case, where instances in all ranks need to run same commands
+            // ->       for all ranks, run parallel create + setup dims/vars
+            if (instance_count > 1 && isMpiInitialized()) {
                 create_netcdf_file_parallel();
                 setup_netcdf_metadata();
                 if (use_collective_nc_var_access) {
@@ -153,25 +125,31 @@ namespace utils
                     set_nc_var_parallel_collective(flow_nc_var_id);
                 }
             }
-            // If 1 rank, any MPI, rank 0 (i.e., all ranks): reg create + setup dims/vars
-            // If 2+ ranks, no MPI init, rank 0: reg create + setup dims/vars
-            else if (nexuses_per_rank.size() == 1 || rank == 0) {
+            // If:      1 mgr instance in simulation
+            //          **OR**
+            //          >=2 mgr instances in simulation **AND** MPI not initialized **AND** "this" is rank/instance 0
+            // Then:    this is rank 0 in a non-parallel use case (either nothing to parallelize or not initialized)
+            // ->       call non-parallel create + setup dims/vars
+            else if (instance_count == 1 || rank == 0) {
                 create_netcdf_file();
                 setup_netcdf_metadata();
             }
-            // If 2+ ranks, no MPI init, not rank 0: just open
+            // If:      >=2 mgr instances in simulation **AND** MPI not initialized **AND** "this" is **not** rank 0
+            // Then:    this is some non-primary rank in a non-parallel use case (rank 0 creates, so just open/lookup)
+            // ->       call open + lookup dims/vars
             else {
                 open_netcdf_file();
                 lookup_netcdf_metadata();
             }
             #else
 
-            // If 1 rank or rank 0, reg create
+            // As with MPI-case code above, to support testing, support possibility of multiple instances opened,
+            // with rank 0 being the "primary".
+            // As such, only let rank 0 create and setup the file; have any others just open and lookup metadata
             if (rank == 0) {
                 create_netcdf_file();
                 setup_netcdf_metadata();
             }
-            // If rank > 0, reg open
             else {
                 open_netcdf_file();
                 lookup_netcdf_metadata();
@@ -186,7 +164,7 @@ namespace utils
         }
 
         /**
-         * Construct instance set for managing/writing nexus data files, supplying a default value of `0` for MPI rank.
+         * Construct instance set for managing/writing nexus data files when there is only one rank/instance.
          *
          * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
          * @param formulation_ids
@@ -197,7 +175,8 @@ namespace utils
                                      std::shared_ptr<std::vector<std::string>> formulation_ids,
                                      const std::string &output_root,
                                      const size_t total_timesteps)
-            : PerFormulationNexusOutputMgr(nexus_ids, formulation_ids, output_root, total_timesteps, 0, {}) {}
+            //: PerFormulationNexusOutputMgr(nexus_ids, formulation_ids, output_root, total_timesteps, 0, {}) {}
+            : PerFormulationNexusOutputMgr(nexus_ids, formulation_ids, output_root, total_timesteps, 0, 0, 1, nexus_ids.size()) {}
 
         /**
          * Write any received data entries that were not written immediately upon receipt to the managed data files.
@@ -394,6 +373,8 @@ namespace utils
                 return "insufficient permissions or writing to read-only item";
             case NC_EUNLIMIT:
                 return "unlimited dimension size already in use";
+            case NC_EINVALCOORDS:
+                return "index exceeds dimension bounds";
             default:
                 return "unrecognized error code '" + std::to_string(nc_status) + "'";
             }
@@ -430,7 +411,7 @@ namespace utils
         const std::vector<std::string> nexus_ids;
 
         /** The number of nexuses assigned to each rank. */
-        std::vector<int> nexuses_per_rank;
+        //std::vector<int> nexuses_per_rank;
 
         /** The current/last formulation id value received by `receive_data_entry`. */
         std::string current_formulation_id;
@@ -463,6 +444,9 @@ namespace utils
 
         /** Variable id for the ``time`` NetCDF variable. */
         int time_nc_var_id;
+
+        /** The total number of nexuses in this simulation, potentially across multiple ranks. */
+        int total_nexus_count;
 
         /** Variable id for the ``flow`` NetCDF variable. */
         int flow_nc_var_id;
@@ -672,12 +656,7 @@ namespace utils
         void setup_netcdf_metadata() {
             int nc_nex_id_dim_id, nc_time_dim_id;
 
-            size_t total_nexuses = 0;
-            for (const int n : nexuses_per_rank) {
-                total_nexuses += n;
-            }
-
-            add_dimension(nc_nex_id_dim_name, total_nexuses, &nc_nex_id_dim_id);
+            add_dimension(nc_nex_id_dim_name, total_nexus_count, &nc_nex_id_dim_id);
             add_dimension(nc_time_dim_name, total_timesteps, &nc_time_dim_id);
 
             std::map<std::string, std::string> nex_id_var_attrs = {{"long_name", "Feature ID"}};
