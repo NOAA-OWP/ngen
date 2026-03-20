@@ -236,7 +236,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_2_a)
     const std::vector<int> nexus_per_rank = {
         static_cast<int>(ex_2_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_2_form_0_group_b_nexus_ids.size())
     };
-    utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, test_form_names, output_root, ex_2_num_time_steps, rank, nexus_per_rank);
+    std::vector<int> local_offsets = {0, nexus_per_rank[0]};
+    utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, test_form_names, output_root, ex_2_num_time_steps, rank, local_offsets[rank], 2, ex_2_form_0_all_nexus_id.size());
 
     if (rank == 0) {
         // Make sure we know what files to clean up
@@ -279,7 +280,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_a)
     const std::vector<int> nexus_per_rank = {
         static_cast<int>(ex_2_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_2_form_0_group_b_nexus_ids.size())
     };
-    utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, ex_2_form_names, output_root, ex_2_num_time_steps, rank, nexus_per_rank);
+    std::vector<int> local_offsets = {0, nexus_per_rank[0]};
+    utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, ex_2_form_names, output_root, ex_2_num_time_steps, rank, local_offsets[rank], 2, ex_2_form_0_all_nexus_id.size());
 
     // Add to files_to_clean_up, but only for rank 0 to deal with (they should be the same sets of files)
     if (rank == 0) {
@@ -350,7 +352,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
     const std::vector<int> nexus_per_rank = {
         static_cast<int>(ex_2_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_2_form_0_group_b_nexus_ids.size())
     };
-    utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, ex_2_form_names, output_root, ex_2_num_time_steps, rank, nexus_per_rank);
+    std::vector<int> local_offsets = {0, nexus_per_rank[0]};
+    utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, ex_2_form_names, output_root, ex_2_num_time_steps, rank, local_offsets[rank], 2, ex_2_form_0_all_nexus_id.size());
 
     // Add to files_to_clean_up, but only for rank 0 to deal with (they should be the same sets of files)
     if (rank == 0) {
@@ -500,8 +503,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_3_d) {
 
     //utils::PerFormulationNexusOutputMgr mgr(ex_3_form_0_all_nexus_id, ex_3_form_names, output_root, 2);
 
-    utils::PerFormulationNexusOutputMgr mgr_a(ex_3_form_0_group_a_nexus_ids, ex_3_form_names, output_root, 2, 0, nexus_per_rank);
-    utils::PerFormulationNexusOutputMgr mgr_b(ex_3_form_0_group_b_nexus_ids, ex_3_form_names, output_root, 2, 1, nexus_per_rank);
+    utils::PerFormulationNexusOutputMgr mgr_a(ex_3_form_0_group_a_nexus_ids, ex_3_form_names, output_root, 2, 0, 0, 2, ex_3_form_0_all_nexus_id.size());
+    utils::PerFormulationNexusOutputMgr mgr_b(ex_3_form_0_group_b_nexus_ids, ex_3_form_names, output_root, 2, 1, ex_3_form_0_all_nexus_id.size(), 2, ex_3_form_0_all_nexus_id.size());
 
     // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
@@ -782,8 +785,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_a) {
         static_cast<int>(ex_1_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_1_form_0_group_b_nexus_ids.size())
     };
 
-    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, nexus_per_rank);
-    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, nexus_per_rank);
+    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, 0, 2, ex_1_form_0_all_nexus_id.size());
+    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
 
     // Make sure we know what files to clean up (and these should be the same for each)
     std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
@@ -836,8 +839,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_b) {
         static_cast<int>(ex_1_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_1_form_0_group_b_nexus_ids.size())
     };
 
-    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, nexus_per_rank);
-    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, nexus_per_rank);
+    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, 0, 2, ex_1_form_0_all_nexus_id.size());
+    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
 
     // Make sure we know what files to clean up (and these should be the same for each)
     std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
@@ -890,8 +893,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_c)
         static_cast<int>(ex_1_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_1_form_0_group_b_nexus_ids.size())
     };
 
-    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, nexus_per_rank);
-    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, nexus_per_rank);
+    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, 0, 2, ex_1_form_0_all_nexus_id.size());
+    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
 
     // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
@@ -1067,8 +1070,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_1_a)
         static_cast<int>(ex_1_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_1_form_0_group_b_nexus_ids.size())
     };
 
-    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, nexus_per_rank);
-    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, nexus_per_rank);
+    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, 0, 2, ex_1_form_0_all_nexus_id.size());
+    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
 
     // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
