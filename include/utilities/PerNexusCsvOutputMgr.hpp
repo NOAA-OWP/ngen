@@ -48,7 +48,7 @@ namespace utils
             if (formulation_id != get_default_formulation_id()) {
                 throw std::runtime_error("Cannot write data entry for non-default formulation " + formulation_id + " for nexus " + nexus_id + " when per-nexus CSV output is enabled.");
             }
-            nexus_outfiles[nexus_id] << data_time_marker.sim_time_index << ", " << data_time_marker.time_stamp << ", " << flow_data_at_t << std::endl;
+            nexus_outfiles[nexus_id] << data_time_marker.sim_time_index << ", " << data_time_marker.time_stamp << ", " << flow_data_at_t << '\n';
         }
 
     private:
