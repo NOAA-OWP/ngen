@@ -286,7 +286,7 @@ jobs:
       - build
     steps:
       - name: Install Trivy
-        uses: aquasecurity/setup-trivy@v0.2.5
+        uses: aquasecurity/setup-trivy@v0.2.6
         with:
           cache: true
           version: v0.69.3
