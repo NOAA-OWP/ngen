@@ -1,6 +1,6 @@
 #ifndef NGEN_HYDROFABRICSUBSETTER_HPP
 #define NGEN_HYDROFABRICSUBSETTER_HPP
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include <NGenConfig.h>
 

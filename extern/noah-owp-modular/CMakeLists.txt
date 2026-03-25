@@ -1,3 +1,7 @@
+#
+# noah-owp-modular CMakeLists.txt
+#
+
 cmake_minimum_required(VERSION 3.12...3.26)
 
 # NGen NOAH-OWP-MODULAR listfile shim
@@ -28,6 +32,12 @@ target_compile_options(surfacebmi PRIVATE -cpp -ffree-line-length-none)
 target_include_directories(surfacebmi INTERFACE "${_SURFACEBMI_BINARY_DIR}/mod")
 target_compile_definitions(surfacebmi PRIVATE BMI_ACTIVE)
 
+# --- EWTS (installed from nwm-ewts) ---
+find_package(ewts CONFIG REQUIRED)
+
+# Always use EWTS runtime logger for Fortran
+target_link_libraries(surfacebmi PRIVATE ewts::ewts_fortran)
+
 if(NGEN_IS_MAIN_PROJECT)
 
     # This ensures we can build NOAH-OWP-Modular with NGen support, but
@@ -41,6 +51,10 @@ if(NGEN_IS_MAIN_PROJECT)
 
     target_link_libraries(surfacebmi PUBLIC iso_c_bmi)
     target_compile_definitions(surfacebmi PRIVATE NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE NGEN_ACTIVE)
+
+    # Built with ngen bridge
+    target_link_libraries(surfacebmi PRIVATE ewts::ewts_ngen_bridge)
+    target_compile_definitions(surfacebmi PRIVATE EWTS_HAVE_NGEN_BRIDGE)
 else()
     find_path(NETCDF_MODULE_DIR netcdf.mod
         PATHS "${NETCDF_ROOT}/include"

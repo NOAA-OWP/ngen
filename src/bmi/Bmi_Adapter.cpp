@@ -1,8 +1,10 @@
+#include <sstream>
 #include "bmi/Bmi_Adapter.hpp"
 #include "bmi/State_Exception.hpp"
 #include "utilities/FileChecker.h"
 #include "utilities/logging_utils.h"
-#include "Logger.hpp"
+#include <stdexcept>
+#include "ewts_ngen/logger.hpp"
 
 using namespace std;
 std::stringstream str_stream;
@@ -27,7 +29,8 @@ Bmi_Adapter::Bmi_Adapter(
         init_exception_msg = "Cannot create and initialize " + this->model_name +
                              " using unreadable file '" + this->bmi_init_config +
                              "'. Error: " + std::strerror(errno);
-        Logger::logMsgAndThrowError(init_exception_msg);
+        LOG(LogLevel::FATAL, init_exception_msg);
+        throw std::runtime_error(init_exception_msg);
     }
     str_stream << "Bmi_Adapter: Model name: " << this->model_name << std::endl;
     LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
@@ -43,7 +46,7 @@ double Bmi_Adapter::get_time_convert_factor() {
         input_units  = GetTimeUnits();
     }
     catch(std::exception &e){
-        //Re-throwing any exception as a runtime_error so we don't lose
+        //Re-throwing any exception as a std::runtime_error so we don't lose
         //the error context/message.  We will lose the original exception type, though
         //When a python exception is raised from the py adapter subclass, the
         //pybind exception is lost and all we see is a generic "uncaught exception"
@@ -70,9 +73,8 @@ void Bmi_Adapter::Initialize() {
     // previous message
     errno = 0;
     if (model_initialized && !init_exception_msg.empty()) {
-        Logger::logMsgAndThrowError(
-            "Previous " + model_name + " init attempt had exception: \n\t" + init_exception_msg
-        );
+        LOG(LogLevel::FATAL, init_exception_msg);
+        throw std::runtime_error(init_exception_msg);
     }
     // If there was previous init attempt w/ (implicitly) no exception on previous attempt, just
     // return
@@ -82,7 +84,8 @@ void Bmi_Adapter::Initialize() {
         init_exception_msg = "Cannot initialize " + model_name + " using unreadable file '" +
                              bmi_init_config + "'. Error: " + std::strerror(errno);
         ;
-        Logger::logMsgAndThrowError(init_exception_msg);
+        LOG(LogLevel::FATAL, init_exception_msg);
+        throw std::runtime_error(init_exception_msg);
     } else {
         try {
             // TODO: make this same name as used with other testing (adjust name in docstring above
@@ -104,10 +107,10 @@ void Bmi_Adapter::Initialize() {
 
 void Bmi_Adapter::Initialize(std::string config_file) {
     if (config_file != bmi_init_config && model_initialized) {
-        Logger::logMsgAndThrowError(
-            "Model init previously attempted; cannot change config from " + bmi_init_config +
-            " to " + config_file
-        );
+        LOG(LogLevel::FATAL, "Model init previously attempted; cannot change config from " + bmi_init_config +
+            " to " + config_file);
+        throw std::runtime_error("Model init previously attempted; cannot change config from " + bmi_init_config +
+            " to " + config_file);            
     }
     str_stream << __FILE__ << ":" << __LINE__ << " Bmi_Adapter::Initialize: config_file = " << config_file << std::endl;
     LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
@@ -123,7 +126,8 @@ void Bmi_Adapter::Initialize(std::string config_file) {
     } catch (models::external::State_Exception& e) {
         throw e;
     } catch (std::exception& e) {
-        Logger::logMsgAndThrowError(e.what());
+        LOG(LogLevel::FATAL, e.what());
+        throw std::runtime_error(e.what());
     }
 }
 

@@ -1,6 +1,6 @@
 #ifndef NGEN_MDFRAME_DEFINITION_HPP
 #define NGEN_MDFRAME_DEFINITION_HPP
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include <unordered_set>
 #include <unordered_map>

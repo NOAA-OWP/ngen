@@ -5,7 +5,7 @@
 #include <exception>
 #include <utility>
 #include <iostream>
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include "bmi/Bmi_Py_Adapter.hpp"
 
@@ -102,7 +102,8 @@ void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
     catch (std::runtime_error &e) {
         std::string msg = "Encountered error getting C++ type during call to GetValue: \n";
         msg += e.what();
-        Logger::logMsgAndThrowError(msg);
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
     if (cxx_type == "signed char") {
         this->copy_to_array<signed char>(name, static_cast<signed char *>(dest));
@@ -131,7 +132,8 @@ void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
     } else if (cxx_type == "long double") {
         this->copy_to_array<long double>(name, static_cast<long double *>(dest));
     } else {
-        Logger::logMsgAndThrowError("Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
+        LOG(LogLevel::FATAL, "Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
+        throw std::runtime_error("Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
     }
 }
 
@@ -186,13 +188,13 @@ std::string Bmi_Py_Adapter::get_bmi_type_simple_name() const {
  * type and size of the variable in question via @ref GetVarType and @ref GetVarItemsize to infer the native
  * type for this variable (i.e., the actual type for the values pointed to by ``src``).  It then uses this
  * as the type param in a nested called to the template-based @ref set_value_at_indices.  If such a type
- * param cannot be determined, a ``runtime_error`` is thrown.
+ * param cannot be determined, a ``std::runtime_error`` is thrown.
  *
  * @param name The name of the involved BMI variable.
  * @param inds A C++ integer array of indices to update, corresponding to each value in ``src``.
  * @param count Number of elements in the ``inds`` and ``src`` arrays.
  * @param src A C++ array containing the new values to be set in the BMI variable.
- * @throws runtime_error Thrown if @ref GetVarType and @ref GetVarItemsize functions return a combination for
+ * @throws std::runtime_error Thrown if @ref GetVarType and @ref GetVarItemsize functions return a combination for
  *                       which there is not support for mapping to a native type in the framework.
  * @see set_value_at_indices
  */
@@ -217,10 +219,11 @@ void Bmi_Py_Adapter::SetValueAtIndices(std::string name, int *inds, int count, v
     else BMI_PY_SET_VALUE_INDEX(double)
     else BMI_PY_SET_VALUE_INDEX(long double)
     else {
-        Logger::logMsgAndThrowError(
-                "(Bmi_Py_Adapter) Failed attempt to SET values of BMI variable '" + name + "' from '" +
+        std::string msg = "(Bmi_Py_Adapter) Failed attempt to SET values of BMI variable '" + name + "' from '" +
                 model_name + "' model:  model advertises unsupported combination of type (" + val_type +
-                ") and size (" + std::to_string(val_item_size) + ").");
+                ") and size (" + std::to_string(val_item_size) + ").";
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
     #undef BMI_PY_SET_VALUE_INDEX
 }

@@ -7,9 +7,11 @@ target_link_libraries(state_save_restore PUBLIC
                            Boost::boost                # Headers-only Boost
                            Boost::system
                            Boost::filesystem
+                           ewts::ewts_ngen_bridge
                            )
 
 target_include_directories(state_save_restore PUBLIC
         ${PROJECT_SOURCE_DIR}/include
         )
+
 

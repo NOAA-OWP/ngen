@@ -1,6 +1,6 @@
 #ifndef FORMULATION_H
 #define FORMULATION_H
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include <memory>
 #include <string>

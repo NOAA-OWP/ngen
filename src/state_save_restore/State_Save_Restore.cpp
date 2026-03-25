@@ -1,7 +1,7 @@
 #include <state_save_restore/State_Save_Restore.hpp>
 #include <state_save_restore/File_Per_Unit.hpp>
 
-#include <utilities/Logger.hpp>
+#include "ewts_ngen/logger.hpp"
 
 #include <boost/optional.hpp>
 #include <boost/property_tree/ptree.hpp>
@@ -98,13 +98,19 @@ State_Save_Config::instance::instance(std::string const& direction, std::string 
     } else if (direction == "load") {
         direction_ = State_Save_Direction::Load;
     } else {
-        Logger::logMsgAndThrowError("Unrecognized state saving direction '" + direction + "'");
+        std::string message = "Unrecognized state saving direction '" + direction + "'";
+        std::string throw_msg; throw_msg.assign(message);
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
     }
 
     if (mechanism == "FilePerUnit") {
         mechanism_ = State_Save_Mechanism::FilePerUnit;
     } else {
-        Logger::logMsgAndThrowError("Unrecognized state saving mechanism '" + mechanism + "'");
+        std::string message = "Unrecognized state saving mechanism '" + mechanism + "'";
+        std::string throw_msg; throw_msg.assign(message);
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
     }
 
     if (timing == "EndOfRun") {
@@ -114,7 +120,10 @@ State_Save_Config::instance::instance(std::string const& direction, std::string 
     } else if (timing == "StartOfRun") {
         timing_ = State_Save_When::StartOfRun;
     } else {
-        Logger::logMsgAndThrowError("Unrecognized state saving timing '" + timing + "'");
+        std::string message = "Unrecognized state saving timing '" + timing + "'";
+        std::string throw_msg; throw_msg.assign(message);
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
     }
 }
 

@@ -1,5 +1,5 @@
 #include "JSONProperty.hpp"
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 using namespace geojson;
 

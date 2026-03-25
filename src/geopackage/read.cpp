@@ -2,19 +2,24 @@
 
 #include <numeric>
 #include <regex>
-#include <Logger.hpp>
+#include <stdexcept>
+#include "ewts_ngen/logger.hpp"
 
 std::stringstream read_ss("");
 
 void check_table_name(const std::string& table)
 {
     if (boost::algorithm::starts_with(table, "sqlite_")) {
-        Logger::logMsgAndThrowError("table `" + table + "` is not queryable");
+        std::string msg = "table `" + table + "` is not queryable";
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
 
     std::regex allowed("[^-A-Za-z0-9_ ]+");
     if (std::regex_match(table, allowed)) {
-        Logger::logMsgAndThrowError("table `" + table + "` contains invalid characters");
+        std::string msg = "table `" + table + "` contains invalid characters";
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
 }
 
@@ -53,8 +58,8 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
             errmsg += ", ";
             errquery.next();
         }
-
-        Logger::logMsgAndThrowError(errmsg);
+        LOG(LogLevel::FATAL, errmsg);
+        throw std::runtime_error(errmsg);
     }
 
     // Introspect if the layer is divides to see which ID field is in use

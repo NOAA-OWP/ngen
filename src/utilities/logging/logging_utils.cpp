@@ -2,7 +2,7 @@
 #include <cstring>
 #include <string>
 #include "logging_utils.h"
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 namespace logging {
 

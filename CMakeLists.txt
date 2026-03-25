@@ -1,3 +1,7 @@
+#
+# ngen/CMakeLists.txt
+#
+
 # Ensure CMake policies have defaults depending on the CMake version used
 # between the two versions specified. e.g. if 3.18 is used, then 3.18 defaults
 # will be used instead of 3.17 defaults.
@@ -117,6 +121,30 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 project(ngen VERSION 0.3.0)
 
 add_executable(ngen "${NGEN_SRC_DIR}/NGen.cpp")
+
+# --- EWTS (installed from nwm-ewts) ---
+find_package(ewts CONFIG REQUIRED)
+
+if(DEFINED ewts_VERSION AND NOT "${ewts_VERSION}" STREQUAL "")
+    set(NGEN_EWTS_VERSION "${ewts_VERSION}")
+else()
+    set(NGEN_EWTS_VERSION "<unknown>")
+endif()
+
+if(DEFINED EWTS_NGWPC_VERSION AND NOT "${EWTS_NGWPC_VERSION}" STREQUAL "")
+    set(NGEN_EWTS_NGWPC_VERSION "${EWTS_NGWPC_VERSION}")
+else()
+    set(NGEN_EWTS_NGWPC_VERSION "<unknown>")
+endif()
+
+get_filename_component(EWTS_PREFIX "${ewts_DIR}" DIRECTORY)
+get_filename_component(EWTS_PREFIX "${EWTS_PREFIX}" DIRECTORY)
+get_filename_component(EWTS_PREFIX "${EWTS_PREFIX}" DIRECTORY)
+
+message(STATUS "Found EWTS: ${EWTS_PREFIX} (found version ${ewts_VERSION})")
+
+# NGen itself uses the NGen-specific EWTS logger/bridge
+target_link_libraries(ngen PRIVATE ewts::ewts_ngen_bridge)
 
 # Dependencies ================================================================
 
@@ -286,7 +314,6 @@ if(UDUNITS_QUIET)
     add_compile_definitions(UDUNITS_QUIET)
 endif()
 
-
 # -----------------------------------------------------------------------------
 # Project Targets
 # -----------------------------------------------------------------------------
@@ -359,6 +386,7 @@ if(NGEN_WITH_ROUTING)
 endif()
 
 add_executable(partitionGenerator src/partitionGenerator.cpp)
+target_link_libraries(partitionGenerator PRIVATE ewts::ewts_ngen_bridge)
 target_link_libraries(partitionGenerator PUBLIC NGen::logging)
 target_include_directories(partitionGenerator PUBLIC "${PROJECT_BINARY_DIR}/include")
 if(NGEN_WITH_SQLITE)
@@ -449,7 +477,10 @@ ngen_multiline_message(
 "  Boost:"
 "    Version: ${Boost_VERSION}"
 "    Include: ${Boost_INCLUDE_DIRS}"
-"    Library: ${Boost_LIBRARY_DIRS}")
+"    Library: ${Boost_LIBRARY_DIRS}"
+"  EWTS:"
+"    Package Version: ${NGEN_EWTS_VERSION}"
+"    NGWPC Version: ${NGEN_EWTS_NGWPC_VERSION}")
 ngen_dependent_multiline_message(INTEL_DPCPP
 "  Intel DPC++:"
 "    Version: ${SYCL_LANGUAGE_VERSION}"

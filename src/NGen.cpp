@@ -17,7 +17,7 @@
 
 #include "NGenConfig.h"
 
-#include <Logger.hpp>
+#include "ewts_ngen/logger.hpp"
 
 #include <FileChecker.h>
 #include <boost/algorithm/string.hpp>
@@ -455,7 +455,8 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
             throw std::runtime_error(msg);
         }
 #else
-        Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
+        LOG(LogLevel::FATAL, "SQLite3 support required to read GeoPackage files.");
+        throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
 #endif
     } else {
         nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
@@ -487,7 +488,8 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
         }
 
 #else
-        Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
+        LOG(LogLevel::FATAL, "SQLite3 support required to read GeoPackage files.");
+        throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
 #endif
     } else {
         catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);

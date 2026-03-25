@@ -23,6 +23,14 @@ on:
         description: 'NGEN_FORCING_IMAGE_TAG'
         required: false
         type: string
+      EWTS_ORG:
+        description: 'EWTS_ORG'
+        required: false
+        type: string
+      EWTS_REF:
+        description: 'EWTS_REF'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -149,7 +157,7 @@ jobs:
 
           BOOST_VER=1.86.0
           BOOST_UNDERSCORE=1_86_0
-          PREFIX=/opt/boost-${BOOST_VER}
+          PREFIX=/usr/local
 
           curl -fL --retry 10 --retry-delay 2 --max-time 600 \
             -o /tmp/boost.tar.bz2 \
@@ -161,7 +169,7 @@ jobs:
           ./bootstrap.sh --prefix="${PREFIX}"
 
           # Build Boost libraries
-          ./b2 -j"$(nproc)" install \
+          sudo ./b2 -j"$(nproc)" install \
             --with-system \
             --with-filesystem \
             --with-program_options \
@@ -170,14 +178,35 @@ jobs:
             --with-date_time \
             --with-serialization
           echo "BOOST_ROOT=${PREFIX}" >> "$GITHUB_ENV"
-          echo "CMAKE_PREFIX_PATH=${PREFIX}:${CMAKE_PREFIX_PATH:-}" >> "$GITHUB_ENV"
+
+      - name: Build and install EWTS
+        run: |
+          set -euo pipefail
+          EWTS_ORG="${{ inputs.EWTS_ORG || 'NGWPC' }}"
+          EWTS_REF="${{ inputs.EWTS_REF || 'development' }}"
+          EWTS_PREFIX=/opt/ewts
+
+          git clone --depth 1 -b "${EWTS_REF}" \
+            "https://github.com/${EWTS_ORG}/nwm-ewts.git" /tmp/nwm-ewts \
+          || (git clone "https://github.com/${EWTS_ORG}/nwm-ewts.git" /tmp/nwm-ewts && \
+              cd /tmp/nwm-ewts && git checkout "${EWTS_REF}")
+
+          cd /tmp/nwm-ewts
+          cmake -S . -B cmake_build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DEWTS_WITH_NGEN=ON \
+            -DEWTS_BUILD_SHARED=ON
+          cmake --build cmake_build -j "$(nproc)"
+          sudo cmake --install cmake_build --prefix "${EWTS_PREFIX}"
+
+          echo "EWTS_PREFIX=${EWTS_PREFIX}" >> "$GITHUB_ENV"
 
       - name: Build C++ code
         env:
           PYTHONPATH: ${{ env.PYTHONPATH }}
         run: |
           cmake -B cmake_build -S . \
-            -DCMAKE_PREFIX_PATH="${BOOST_ROOT}" \
+            -DCMAKE_PREFIX_PATH="${EWTS_PREFIX};${BOOST_ROOT}" \
             -DBoost_NO_SYSTEM_PATHS=ON \
             -DBOOST_ROOT="${BOOST_ROOT}" \
             -DPYTHON_EXECUTABLE=$(which python3) \
@@ -241,6 +270,8 @@ jobs:
           build-args: |
             ORG=${{ needs.setup.outputs.org }}
             NGEN_FORCING_IMAGE_TAG=${{ inputs.NGEN_FORCING_IMAGE_TAG || 'latest' }}
+            EWTS_ORG=${{ inputs.EWTS_ORG || 'NGWPC' }}
+            EWTS_REF=${{ inputs.EWTS_REF || 'development' }}
             IMAGE_SOURCE=https://github.com/${{ github.repository }}
             IMAGE_VENDOR=${{ github.repository_owner }}
             IMAGE_VERSION=${{ needs.setup.outputs.clean_ref }}

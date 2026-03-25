@@ -1,5 +1,6 @@
 #include <NGenConfig.h>
-#include "Logger.hpp"
+#include <stdexcept>
+#include "ewts_ngen/logger.hpp"
 
 #if NGEN_WITH_BMI_FORTRAN
 
@@ -29,7 +30,9 @@ Bmi_Fortran_Formulation::Bmi_Fortran_Formulation(std::string id, std::shared_ptr
 std::shared_ptr<Bmi_Adapter> Bmi_Fortran_Formulation::construct_model(const geojson::PropertyMap& properties) {
     auto library_file_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE);
     if (library_file_iter == properties.end()) {
-        Logger::logMsgAndThrowError("BMI C formulation requires path to library file, but none provided in config");
+        std::string msg = "BMI C formulation requires path to library file, but none provided in config.";
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
     std::string lib_file = library_file_iter->second.as_string();
     auto reg_func_itr = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__REGISTRATION_FUNC);
@@ -54,7 +57,7 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
     //  don't fit or might convert inappropriately
     std::string type = model->GetVarType(var_name);
     //Can cause a segfault here if GetValue returns an empty vector...a "fix" in bmi_utilities GetValue
-    //will throw a relevant runtime_error if the vector is empty, so this is safe to use this way for now...
+    //will throw a relevant std::runtime_error if the vector is empty, so this is safe to use this way for now...
     if (type == "long double")
         return (double) (models::bmi::GetValue<long double>(*model, var_name))[index];
 
@@ -88,8 +91,10 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
     if (type == "unsigned long long" || type == "unsigned long long int")
         return (double) (models::bmi::GetValue<unsigned long long>(*model, var_name))[index];
 
-    Logger::logMsgAndThrowError("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
-    " as double: no logic for converting variable type " + type);
+    std::string msg = "Unable to get value of variable " + var_name + " from " + get_model_type_name() +
+                      " as double: no logic for converting variable type " + type;
+    LOG(LogLevel::FATAL, msg);
+    throw std::runtime_error(msg);
     
     return 1.0;
 }
