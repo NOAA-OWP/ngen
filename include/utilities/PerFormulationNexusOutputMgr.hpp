@@ -651,7 +651,7 @@ namespace utils
             }
             // While I thought about retries, because things are serial in this scenario, if it doesn't work the
             // first time, it still won't for the second, etc.
-            int nc_status = nc_open(nexus_outfile.c_str(), NC_NETCDF4 | NC_NOCLOBBER, &netcdf_file_id);
+            int nc_status = nc_open(nexus_outfile.c_str(), NC_WRITE, &netcdf_file_id);
             if (nc_status != NC_NOERR) {
                 throw std::runtime_error("PerFormulationNexusOutputMgr obj_id " + std::to_string(obj_id) + " could not "
                                          + " open file '" + nexus_outfile + "': "
