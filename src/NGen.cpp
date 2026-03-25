@@ -496,11 +496,7 @@ int main(int argc, char *argv[]) {
         #endif
     }
     else {
-        #if NGEN_WITH_MPI
         nexus_outputs_mgr = std::make_shared<utils::PerNexusCsvOutputMgr>(nexus_ids, manager->get_output_root());
-        #else
-        nexus_outputs_mgr = std::make_shared<utils::PerNexusCsvOutputMgr>(nexus_ids, manager->get_output_root());
-        #endif
     }
 
     std::cout<<"Running Models"<<std::endl;
