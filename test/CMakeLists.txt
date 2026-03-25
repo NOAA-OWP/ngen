@@ -277,8 +277,9 @@ if (NGEN_WITH_MPI)
             utils/PerFormulationNexusOutputMgr_Test.cpp # Involved test files
     )
     # TODO: this might need more
-    target_include_directories(test_mpi_unit PUBLIC include/utils ${MPI_INCLUDE_PATH})
-    target_link_libraries(test_mpi_unit PUBLIC gtest NGen::core NGen::core_nexus NetCDF ${MPI_LIBRARIES})
+
+    target_include_directories(test_mpi_unit PUBLIC include/utils)
+    target_link_libraries(test_mpi_unit PUBLIC gtest NGen::core NGen::core_nexus NetCDF MPI::MPI_C)
     target_compile_definitions(test_mpi_unit PUBLIC NGEN_WITH_MPI NGEN_MPI_UNIT_TESTS)
 
     #set_target_properties(test_mpi_unit PROPERTIES CROSSCOMPILING_EMULATOR '${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2')
