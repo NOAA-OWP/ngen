@@ -328,7 +328,7 @@ namespace utils
                     + std::to_string(data_time_marker.epoch_time) + "'.");
             }
 
-            current_nexus_data[nexus_data_indices[nexus_id]] = flow_data_at_t;
+            current_nexus_data[nexus_data_indices.at(nexus_id)] = flow_data_at_t;
         }
 
     private:
