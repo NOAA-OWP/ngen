@@ -762,28 +762,6 @@ namespace utils
 
         #if NGEN_WITH_MPI && NGEN_WITH_PARALLEL_NETCDF
         /**
-         * Set the NetCDF variable with the given name to have ``NC_COLLECTIVE`` parallel access.
-         *
-         * @param var_name The variable name
-         */
-        void set_nc_var_parallel_collective(const std::string& var_name) {
-            int* nc_var_id;
-            if (var_name == nc_dim_name_nexus_id) {
-                nc_var_id = &nc_var_id_nexus_id;
-            }
-            else if (var_name == nc_dim_name_time) {
-                nc_var_id = &nc_var_id_time;
-            }
-            else if (var_name == nc_var_name_flow) {
-                nc_var_id = &nc_var_id_flow;
-            }
-            else {
-                throw std::runtime_error("Can't set NC_COLLECTIVE for invalid variable name '" + var_name + "'.");
-            }
-            set_nc_var_parallel_collective(*nc_var_id);
-        }
-
-        /**
          * Set the NetCDF variable with the given variable id to have ``NC_COLLECTIVE`` parallel access.
          *
          * @param nc_var_id The numeric NetCDF variable id
