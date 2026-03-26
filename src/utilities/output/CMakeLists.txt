@@ -22,4 +22,4 @@ target_include_directories(ngen_output PUBLIC
         ${PROJECT_SOURCE_DIR}/include/utilities/output
 )
 
-target_link_libraries(ngen_output PRIVATE NetCDF)
+target_link_libraries(ngen_output PUBLIC NetCDF)
