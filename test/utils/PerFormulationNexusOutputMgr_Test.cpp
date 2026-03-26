@@ -9,7 +9,7 @@
 #endif
 
 #include "gtest/gtest.h"
-#include "PerFormulationNexusOutputMgr.hpp"
+#include "output/PerFormulationNexusOutputMgr.hpp"
 #include "FileChecker.h"
 
 // Again non-Windows specific here

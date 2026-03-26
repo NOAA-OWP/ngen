@@ -61,10 +61,10 @@ int mpi_num_procs;
 #include <Layer.hpp>
 #include <SurfaceLayer.hpp>
 #include <DomainLayer.hpp>
-#include "utilities/NexusOutputsMgr.hpp"
-#include "utilities/PerNexusCsvOutputMgr.hpp"
+#include "utilities/output/NexusOutputsMgr.hpp"
+#include "utilities/output/PerNexusCsvOutputMgr.hpp"
 #if NGEN_WITH_NETCDF
-#include "utilities/PerFormulationNexusOutputMgr.hpp"
+#include "utilities/output/PerFormulationNexusOutputMgr.hpp"
 #endif
 
 void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept

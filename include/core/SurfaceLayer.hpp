@@ -2,7 +2,7 @@
 #define __NGEN_SURFACE_LAYER__
 
 #include "Layer.hpp"
-#include "NexusOutputsMgr.hpp"
+#include "utilities/output/NexusOutputsMgr.hpp"
 
 namespace ngen
 {
