@@ -81,6 +81,15 @@ namespace utils
                 obj_id(obj_id),
                 total_nexus_count(total_nexus_count)
         {
+            // This instance will later create a NetCDF variable for Time that is of type NC_INT64 and then subsequently
+            // put values into it using the nc_put_vara_longlong function.  Because NC_INT64 values appear to always be
+            // 8 bytes (https://docs.unidata.ucar.edu/nug/current/md_types.html#data_type), we are sanity checking up
+            // front:
+            if (sizeof(long long) != 8) {
+                throw std::runtime_error("Unsupported platform for PerFormulationNexusOutputMgr: `long long` values "
+                                         "are not the same size as an NC_INT64 var");
+            }
+
             // TODO: look at potentially making this configurable rather than static
             data_flush_interval = 100;
 
@@ -217,13 +226,13 @@ namespace utils
 
             // For just obj_id 0, write the time value
             if (obj_id == 0) {
-                long epoch_minutes = current_epoch_time / 60;
+                long long epoch_minutes = current_epoch_time / 60;
                 const size_t start_t = static_cast<size_t>(current_time_index);
                 const size_t count_t = 1;
                 // TODO: (later) consider if we need to sanity check that times are consistent across obj_ids (we were
                 // TODO:        effectively assuming this to be the case when not explicitly writing times).
 
-                nc_status = nc_put_vara_long(netcdf_file_id, nc_var_id_time, &start_t, &count_t, &epoch_minutes);
+                nc_status = nc_put_vara_longlong(netcdf_file_id, nc_var_id_time, &start_t, &count_t, &epoch_minutes);
                 if (nc_status != NC_NOERR) {
                     throw std::runtime_error("Error writing time value to nexus file '" + nexus_outfile + "' ("
                         + parse_netcdf_return_code(nc_status) + ") at time index " + std::to_string(current_time_index) + ".");
@@ -699,7 +708,7 @@ namespace utils
                 {"calendar", "gregorian"},
                 {"long_name", "Time"}
             };
-            add_variable(nc_dim_name_time, NC_UINT, {nc_time_dim_id}, time_var_attrs, &nc_var_id_time);
+            add_variable(nc_dim_name_time, NC_INT64, {nc_time_dim_id}, time_var_attrs, &nc_var_id_time);
 
             std::map<std::string, std::string> flow_var_attrs = {
                 {"units", "m3 s-1"},
