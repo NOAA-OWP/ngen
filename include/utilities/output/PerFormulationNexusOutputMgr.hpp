@@ -29,6 +29,7 @@ limitations under the License.
 #include "mpi.h"
 #endif
 #include <vector>
+#include <memory>
 #include <map>
 #include <unordered_map>
 #include <math.h>
