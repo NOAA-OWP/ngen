@@ -88,7 +88,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
             "LEFT JOIN flowpaths "
                 "ON nexus.dn_fp_id = flowpaths.fp_id";
     } else {
-        Logger::logMsgAndThrowError("Geopackage read only accepts layers `divides` and `nexus`. The layer entered was " + layer);
+        Logger::LogAndThrow("Geopackage read only accepts layers `divides` and `nexus`. The layer entered was " + layer);
     }
 
     std::string joined_ids = "";
@@ -107,7 +107,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
             }
             int id_num = std::atoi(filter_id.c_str() + sep_index);
             if (id_num <= 0)
-                Logger::logMsgAndThrowError("Could not convert input " + layer + " ID into a number: " + filter_id);
+                Logger::LogAndThrow("Could not convert input " + layer + " ID into a number: " + filter_id);
             filter << id_num;
         }
         filter << ')';
