@@ -328,6 +328,7 @@ add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
 add_subdirectory("src/utilities/logging")
 add_subdirectory("src/utilities/bmi")
+add_subdirectory("src/utilities/output")
 
 target_link_libraries(ngen
     PUBLIC
@@ -341,6 +342,7 @@ target_link_libraries(ngen
         NGen::core_mediator
         NGen::logging
         NGen::bmi_protocols
+        NGen::output
 )
 
 if(NGEN_WITH_SQLITE)
