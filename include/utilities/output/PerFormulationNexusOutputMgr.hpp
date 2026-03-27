@@ -19,6 +19,8 @@ limitations under the License.
 #ifndef NGEN_PERFORMULATIONNEXUSOUTPUTMGR_HPP
 #define NGEN_PERFORMULATIONNEXUSOUTPUTMGR_HPP
 
+#if NGEN_WITH_NETCDF
+
 #include "NexusOutputsMgr.hpp"
 #include "netcdf.h"
 #include <iostream>
@@ -365,5 +367,7 @@ namespace utils
 
     };
 } // utils
+
+#endif // #if NGEN_WITH_NETCDF
 
 #endif //NGEN_PERFORMULATIONNEXUSOUTPUTMGR_HPP
