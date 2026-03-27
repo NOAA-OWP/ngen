@@ -462,6 +462,22 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_c) {
     ASSERT_EQ(size_vector[1], 1);
 }
 
+/** Test that example 0 gets constructed and is immediately not marked as closed. */
+TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_d)
+{
+    std::string form_name = ex_0_form_0_nexus_ids[0];
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    ASSERT_FALSE(mgr.is_closed());
+}
+
 /** Test correct chunking setup for example 3 (single instance). */
 TEST_F(PerFormulationNexusOutputMgr_Test, construct_3_c) {
 
@@ -1022,6 +1038,80 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_3_b) {
         }
     }
 
+}
+
+/** Test that close works automatically after all time steps for example 0. */
+TEST_F(PerFormulationNexusOutputMgr_Test, is_closed_0_a) {
+
+    std::string form_name = ex_0_form_names->at(0);
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    for (size_t t = 0; t < ex_0_timestamps.size(); ++t) {
+        for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
+            mgr.receive_data_entry(form_name,
+                                   ex_0_form_0_nexus_ids[n],
+                                   utils::time_marker(t, ex_0_timestamps_seconds[t], ex_0_timestamps[t]),
+                                   ex_0_data[t][n]);
+        }
+        ASSERT_FALSE(mgr.is_closed());
+        mgr.commit_writes();
+    }
+    ASSERT_TRUE(mgr.is_closed());
+}
+
+/** Test that close does not work automatically if all time steps not gone through for example 0. */
+TEST_F(PerFormulationNexusOutputMgr_Test, is_closed_0_b) {
+
+    std::string form_name = ex_0_form_names->at(0);
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
+        mgr.receive_data_entry(form_name,
+                               ex_0_form_0_nexus_ids[n],
+                               utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]),
+                               ex_0_data[0][n]);
+    }
+    ASSERT_FALSE(mgr.is_closed());
+    mgr.commit_writes();
+    ASSERT_FALSE(mgr.is_closed());
+}
+
+/** Test that close works if called explicitly for example 0. */
+TEST_F(PerFormulationNexusOutputMgr_Test, is_closed_0_c) {
+
+    std::string form_name = ex_0_form_names->at(0);
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
+        mgr.receive_data_entry(form_name,
+                               ex_0_form_0_nexus_ids[n],
+                               utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]),
+                               ex_0_data[0][n]);
+    }
+    ASSERT_FALSE(mgr.is_closed());
+    mgr.close();
+    ASSERT_TRUE(mgr.is_closed());
 }
 
 /** Test that example 0 works with write_nexus_ids_once and has nexus id var values written to NetCDF file. */
