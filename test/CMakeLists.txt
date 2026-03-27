@@ -456,6 +456,7 @@ ngen_add_test(
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
+        NGen::output
     REQUIRES
         NGEN_WITH_BMI_C
         NGEN_WITH_BMI_FORTRAN
