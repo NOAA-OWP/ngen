@@ -606,10 +606,8 @@ int main(int argc, char *argv[]) {
 
     } //done time
 
-    // flush and close nexus
-    for (auto& output_file: nexus_outfiles) {
-        output_file.second.close();
-    }
+    // Close nexus output file(s)
+    nexus_outputs_mgr->close();
 
 #if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
