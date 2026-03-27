@@ -150,9 +150,15 @@ utils::PerFormulationNexusOutputMgr::~PerFormulationNexusOutputMgr() {
     }
 }
 
+void utils::PerFormulationNexusOutputMgr::close() {
+    if (is_closed()) return;
+    close_netcdf_file();
+}
+
 void utils::PerFormulationNexusOutputMgr::commit_writes() {
     // If no current formulation id set, that should mean there is nothing to write
-    if (current_formulation_id.empty()) {
+    // If closed, then assume we can no longer write, so do nothing and just return
+    if (current_formulation_id.empty() || is_closed()) {
         return;
     }
 
@@ -216,6 +222,10 @@ void utils::PerFormulationNexusOutputMgr::commit_writes() {
     }
 }
 
+bool utils::PerFormulationNexusOutputMgr::is_closed() {
+    return netcdf_file_id == -1;
+}
+
 std::shared_ptr<std::vector<std::string>> utils::PerFormulationNexusOutputMgr::get_filenames() {
     auto filenames = std::make_shared<std::vector<std::string>>();
     filenames->push_back(nexus_outfile);
@@ -226,6 +236,9 @@ void utils::PerFormulationNexusOutputMgr::receive_data_entry(const std::string& 
                                                              const std::string& nexus_id,
                                                              const time_marker& data_time_marker,
                                                              const double flow_data_at_t) {
+    if (is_closed()) {
+        throw std::runtime_error("Can't run PerFormulationNexusOutputMgr::receive_data_entry() if instance is closed");
+    }
     if (current_formulation_id.empty()) {
         current_formulation_id = formulation_id;
     }
