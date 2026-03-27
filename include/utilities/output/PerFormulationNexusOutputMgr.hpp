@@ -109,14 +109,42 @@ namespace utils
         ~PerFormulationNexusOutputMgr() override;
 
         /**
+         * Close this manager instance and the managed NetCDF file.
+         *
+         * Close the managed NetCDF file and (if successful) clear the corresponding file id by resetting
+         * @ref netcdf_file_id to `-1`.
+         *
+         * Once an instance is closed, it cannot receive new data. Subsequent calls to @ref receive_data_entry functions
+         * will result in an exception.
+         *
+         * Any data received since the last call to @ref commit_writes is not written to the managed file.  Subsequent
+         * calls to @ref commit_writes simply return immediately and perform no action.
+         *
+         * If this instance is already closed, the function will simply return.
+         */
+        void close() override;
+
+        /**
          * Write any received data entries that were not written immediately upon receipt to the managed data files.
          *
          * Function expects/requires data for all local nexus ids to have been received. Since it expects this, it also
          * increments the ::attribute:`current_time_index` value before exiting.
          *
          * Additionally, it clears the current ::attribute:`data_cache` and ::attribute:`current_formulation_id` values.
+         *
+         * If called when @ref is_closed is ``true``, the function simply returns immediately without performing any
+         * actions.
          */
         void commit_writes() override;
+
+        /**
+         * A test of whether this instance is closed.
+         *
+         * This type determines whether it is closed by whether it has a valid NetCDF file id.
+         *
+         * @return Whether this instance is closed.
+         */
+        bool is_closed() override;
 
         /**
          * Get a new vector containing the filenames for managed files for this instance.
@@ -128,10 +156,14 @@ namespace utils
         /**
          * Receive a data entry for this nexus, specifying details including the formulation id.
          *
+         * If this instance is closed (@ref is_closed) an exception will be raised.
+         *
          * @param formulation_id The id of the formulation involved in producing this data.
          * @param nexus_id The id for the nexus to which this data applies.
          * @param data_time_marker A marker for the current simulation time for the data.
          * @param flow_data_at_t The nexus flow contribution at this time index (the main data to write).
+         * @see close
+         * @see is_closed
          */
         void receive_data_entry(const std::string &formulation_id, const std::string &nexus_id,
                                 const time_marker &data_time_marker, double flow_data_at_t) override;
