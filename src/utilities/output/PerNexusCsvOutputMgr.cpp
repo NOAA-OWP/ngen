@@ -25,14 +25,31 @@ utils::PerNexusCsvOutputMgr::PerNexusCsvOutputMgr(const std::vector<std::string>
     }
 }
 
+void utils::PerNexusCsvOutputMgr::close() {
+    if (is_closed()) return;
+
+    for (auto& p: nexus_outfiles) {
+        p.second.close();
+    }
+    closed = true;
+}
+
 void utils::PerNexusCsvOutputMgr::commit_writes() {
+    if (is_closed()) return;
     for (auto &f : nexus_outfiles) {
         f.second.flush();
     }
 }
 
+bool utils::PerNexusCsvOutputMgr::is_closed() {
+    return closed;
+}
+
 void utils::PerNexusCsvOutputMgr::receive_data_entry(const std::string& formulation_id, const std::string& nexus_id,
                                                      const time_marker& data_time_marker, const double flow_data_at_t) {
+    if (is_closed()) {
+        throw std::runtime_error("Can't run PerNexusCsvOutputMgr::receive_data_entry() if instance is closed");
+    }
     if (formulation_id != get_default_formulation_id()) {
         throw std::runtime_error("Cannot write data entry for non-default formulation " + formulation_id + " for nexus " + nexus_id + " when per-nexus CSV output is enabled.");
     }

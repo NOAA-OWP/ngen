@@ -42,11 +42,30 @@ namespace utils
     {
 
     public:
+        /**
+         * Close down this manager, closing any and all open files.
+         *
+         * Once a manager is closed, it should not be able to receive new data. Subsequent calls to
+         * @ref receive_data_entry functions should result in an exception.
+         *
+         * Subtypes may choose how to handle any data received since the last call to @ref commit_writes.
+         *
+         * If an instance is already closed, implementations should simply return.
+         */
+        virtual void close() = 0;
 
         /**
          * Write any received data entries that were not written immediately upon receipt to the managed data files.
          */
         virtual void commit_writes() = 0;
+
+        /**
+         * A test of whether this instance is closed.
+         *
+         * @return Whether this instance is closed.
+         * @see close
+         */
+        virtual bool is_closed() = 0;
 
         /**
          * Receive a data entry for this nexus, specifying details including the formulation id.
