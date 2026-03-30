@@ -895,7 +895,7 @@ const std::string EXAMPLE_9 = "{ "
             "\"library_file\": \"{{EXTERN_LIB_DIR_PATH}}" BMI_TEST_CPP_LIB_NAME "\","
             "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
             "\"main_output_variable\": \"OUTPUT_VAR_2\","
-            "\"store_input_variable_metadata\": true,"
+            "\"cache_input_variable_metadata\": true,"
             "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
               "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
               "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
@@ -982,7 +982,7 @@ const std::string EXAMPLE_10 = "{ "
                 "\"library_file\": \"{{EXTERN_LIB_DIR_PATH}}" BMI_TEST_CPP_LIB_NAME "\","
                 "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
                 "\"main_output_variable\": \"OUTPUT_VAR_2\","
-                "\"store_input_variable_metadata\": true,"
+                "\"cache_input_variable_metadata\": true,"
                 "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
                   "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
                   "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
@@ -1014,7 +1014,7 @@ const std::string EXAMPLE_10 = "{ "
                 "\"library_file\": \"{{EXTERN_LIB_DIR_PATH}}" BMI_TEST_CPP_LIB_NAME "\","
                 "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
                 "\"main_output_variable\": \"OUTPUT_VAR_2\","
-                "\"store_input_variable_metadata\": true,"
+                "\"cache_input_variable_metadata\": true,"
                 "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
                   "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
                   "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
@@ -1339,7 +1339,7 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
 }
 
 /**
- * Testing config the same as EX 1 (like in basic_run_1) but with `store_input_variable_metadata` true for global
+ * Testing config the same as EX 1 (like in basic_run_1) but with `cache_input_variable_metadata` true for global
  * formulation config (which is all formulations).
  */
 TEST_F(Formulation_Manager_Test, basic_run_9) {
@@ -1378,7 +1378,7 @@ TEST_F(Formulation_Manager_Test, basic_run_9) {
 }
 
 /**
- * Testing config the same as EX 3 (like in basic_run_3) but with `store_input_variable_metadata` true for global and
+ * Testing config the same as EX 3 (like in basic_run_3) but with `cache_input_variable_metadata` true for global and
  * one catchment formulation config (but not the other).
  */
 TEST_F(Formulation_Manager_Test, basic_run_10) {
