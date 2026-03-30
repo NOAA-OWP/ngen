@@ -65,8 +65,8 @@ protected:
         return formulation.get_model_type_name();
     }
 
-    static bool get_friend_store_input_variable_metadata(Bmi_C_Formulation& formulation) {
-        return formulation.store_input_variable_metadata;
+    static bool get_friend_cache_input_variable_metadata(Bmi_C_Formulation& formulation) {
+        return formulation.cache_input_variable_metadata;
     }
 
     static std::set<Bmi_Var_Details>& get_friend_known_bmi_input_vars(Bmi_C_Formulation& formulation) {
@@ -214,7 +214,7 @@ void Bmi_C_Formulation_Test::SetUp() {
         // Add this substring with this key for even indices or if the value for it is true
         std::string store_metadata_substr = "";
         if (i % 2 == 0 || stores_input_variable_metadata[i]) {
-            store_metadata_substr = "\"" BMI_REALIZATION_CFG_PARAM_OPT__STORE_INPUT_VAR_METADATA "\": " ;
+            store_metadata_substr = "\"" BMI_REALIZATION_CFG_PARAM_OPT__CACHE_INPUT_VAR_METADATA "\": " ;
             store_metadata_substr += stores_input_variable_metadata[i] ? "true," : "false,";
         }
 
@@ -275,14 +275,14 @@ TEST_F(Bmi_C_Formulation_Test, Initialize_0_a) {
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variable[ex_index]);
 }
 
-/** Test example 0 (which should be explicitly configured) has `store_input_variable_metadata` as `false`. */
+/** Test example 0 (which should be explicitly configured) has `cache_input_variable_metadata` as `false`. */
 TEST_F(Bmi_C_Formulation_Test, Initialize_0_b) {
     int ex_index = 0;
 
     Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
-    ASSERT_FALSE(get_friend_store_input_variable_metadata(formulation));
+    ASSERT_FALSE(get_friend_cache_input_variable_metadata(formulation));
 }
 
 /** Test to make sure we can initialize multiple model instances with dynamic loading. */
@@ -300,14 +300,14 @@ TEST_F(Bmi_C_Formulation_Test, Initialize_1_a) {
     ASSERT_EQ(header_2, "OUTPUT_VAR_2,OUTPUT_VAR_1");
 }
 
-/** Test example 1 (which should not be explicitly configured) has `store_input_variable_metadata` as `false`. */
+/** Test example 1 (which should not be explicitly configured) has `cache_input_variable_metadata` as `false`. */
 TEST_F(Bmi_C_Formulation_Test, Initialize_1_b) {
     int ex_index = 1;
 
     Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
-    ASSERT_FALSE(get_friend_store_input_variable_metadata(formulation));
+    ASSERT_FALSE(get_friend_cache_input_variable_metadata(formulation));
 }
 
 /** Simple test to make sure the model initializes. */
@@ -322,14 +322,14 @@ TEST_F(Bmi_C_Formulation_Test, Initialize_2_a) {
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variable[ex_index]);
 }
 
-/** Test example 2 has `store_input_variable_metadata` as `true`. */
+/** Test example 2 has `cache_input_variable_metadata` as `true`. */
 TEST_F(Bmi_C_Formulation_Test, Initialize_2_b) {
     int ex_index = 2;
 
     Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
-    ASSERT_TRUE(get_friend_store_input_variable_metadata(formulation));
+    ASSERT_TRUE(get_friend_cache_input_variable_metadata(formulation));
 }
 
 /** Simple test of get response. */

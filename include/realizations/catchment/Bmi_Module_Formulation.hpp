@@ -439,7 +439,7 @@ namespace realization {
         /**
          * Set BMI input variable values for the model appropriately prior to calling its `BMI `update()``.
          *
-         * Depending on the value of @ref store_input_variable_metadata (`false` by default, but which can be controlled
+         * Depending on the value of @ref cache_input_variable_metadata (`false` by default, but which can be controlled
          * using @ref set_store_input_var_metadata), this will defer most of its execution to a call either to
          * @ref do_bmi_sets_from_stored_metadata or @ref do_bmi_sets_with_full_refetch.
          *
@@ -452,7 +452,7 @@ namespace realization {
         /**
          * Set member variable indicating whether @ref set_model_inputs_prior_to_update should store and reuse metadata.
          *
-         * Set the @ref store_input_variable_metadata member variable, which indicates whether
+         * Set the @ref cache_input_variable_metadata member variable, which indicates whether
          * @ref set_model_inputs_prior_to_update should store and reuse metadata, as opposed to refreshing such data
          * each time @ref set_model_inputs_prior_to_update is called.
          *
@@ -564,7 +564,7 @@ namespace realization {
         };
 
         /** Whether @ref set_model_inputs_prior_to_update should store and reuse metadata. */
-        bool store_input_variable_metadata = false;
+        bool cache_input_variable_metadata = false;
 
         /**
          * Set BMI input variables before `BMI update, using saved metadata rather than re-fetching or re-calculating.

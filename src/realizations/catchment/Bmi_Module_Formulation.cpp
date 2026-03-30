@@ -319,9 +319,9 @@ namespace realization {
                         properties.at(BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP).as_boolean());
             }
 
-            if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__STORE_INPUT_VAR_METADATA) != properties.end()) {
+            if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__CACHE_INPUT_VAR_METADATA) != properties.end()) {
                 set_store_input_var_metadata(
-                        properties.at(BMI_REALIZATION_CFG_PARAM_OPT__STORE_INPUT_VAR_METADATA).as_boolean());
+                        properties.at(BMI_REALIZATION_CFG_PARAM_OPT__CACHE_INPUT_VAR_METADATA).as_boolean());
             }
 
             auto std_names_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES);
@@ -635,7 +635,7 @@ namespace realization {
 
         void Bmi_Module_Formulation::set_model_inputs_prior_to_update(const double &model_time, time_step_t t_delta) {
             time_t forcing_start = convert_model_time(model_time) + get_bmi_model_start_time_forcing_offset_s();
-            if (store_input_variable_metadata) {
+            if (cache_input_variable_metadata) {
                 do_bmi_sets_from_stored_metadata(forcing_start, t_delta);
             }
             else {
@@ -644,7 +644,7 @@ namespace realization {
         }
 
         void Bmi_Module_Formulation::set_store_input_var_metadata(bool store_input_var_metadata) {
-            store_input_variable_metadata = store_input_var_metadata;
+            cache_input_variable_metadata = store_input_var_metadata;
         }
 
         void Bmi_Module_Formulation::do_bmi_sets_from_stored_metadata(const time_t &src_data_start, const time_step_t &t_delta) {
