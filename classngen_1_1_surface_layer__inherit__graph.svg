@@ -23,20 +23,20 @@
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title=" ">
-<polygon fill="#999999" stroke="none" points="106.75,-80.25 15.5,-80.25 15.5,0 106.75,0 106.75,-80.25"/>
+<polygon fill="#999999" stroke="none" points="112.5,-80.25 9.75,-80.25 9.75,0 112.5,0 112.5,-80.25"/>
 <text text-anchor="start" x="19.5" y="-66.75" font-family="Helvetica,sans-Serif" font-size="10.00">ngen::SurfaceLayer</text>
-<text text-anchor="start" x="21.31" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
-<text text-anchor="start" x="30.12" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">nexus_ids</text>
-<text text-anchor="start" x="21.31" y="-36.25" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
-<text text-anchor="start" x="30.12" y="-36.25" font-family="Helvetica,sans-Serif" font-size="10.00">nexus_outfiles</text>
-<text text-anchor="start" x="19.81" y="-21" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="30.12" y="-21" font-family="Helvetica,sans-Serif" font-size="10.00">SurfaceLayer()</text>
-<text text-anchor="start" x="19.81" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="30.12" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">update_models()</text>
-<polygon fill="#666666" stroke="#666666" points="15.5,-63 15.5,-63 106.75,-63 106.75,-63 15.5,-63"/>
-<polygon fill="#666666" stroke="#666666" points="15.5,-32.5 15.5,-32.5 28.12,-32.5 28.12,-32.5 15.5,-32.5"/>
-<polygon fill="#666666" stroke="#666666" points="28.12,-32.5 28.12,-32.5 106.75,-32.5 106.75,-32.5 28.12,-32.5"/>
-<polygon fill="none" stroke="#666666" points="15.5,0 15.5,-80.25 106.75,-80.25 106.75,0 15.5,0"/>
+<text text-anchor="start" x="15.25" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
+<text text-anchor="start" x="23.75" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">nexus_ids</text>
+<text text-anchor="start" x="15.25" y="-36.25" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
+<text text-anchor="start" x="23.75" y="-36.25" font-family="Helvetica,sans-Serif" font-size="10.00">nexus_outputs_mgr</text>
+<text text-anchor="start" x="13.75" y="-21" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="23.75" y="-21" font-family="Helvetica,sans-Serif" font-size="10.00">SurfaceLayer()</text>
+<text text-anchor="start" x="13.75" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="23.75" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">update_models()</text>
+<polygon fill="#666666" stroke="#666666" points="9.75,-63 9.75,-63 112.5,-63 112.5,-63 9.75,-63"/>
+<polygon fill="#666666" stroke="#666666" points="9.75,-32.5 9.75,-32.5 21.75,-32.5 21.75,-32.5 9.75,-32.5"/>
+<polygon fill="#666666" stroke="#666666" points="21.75,-32.5 21.75,-32.5 112.5,-32.5 112.5,-32.5 21.75,-32.5"/>
+<polygon fill="none" stroke="#666666" points="9.75,0 9.75,-80.25 112.5,-80.25 112.5,0 9.75,0"/>
 </a>
 </g>
 </g>

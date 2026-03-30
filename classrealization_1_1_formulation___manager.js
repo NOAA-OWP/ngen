@@ -22,6 +22,7 @@ var classrealization_1_1_formulation___manager =
     [ "has_domain_formulation", "classrealization_1_1_formulation___manager.html#aa9cf446b14425ae88c81a493fadcec8a", null ],
     [ "is_disable_catchment_output", "classrealization_1_1_formulation___manager.html#a12bcd6a0cfe1dfc23e7df61d2ddea27e", null ],
     [ "is_empty", "classrealization_1_1_formulation___manager.html#a7ff3d02eee65fbe7b7b0c41cbf5868d8", null ],
+    [ "is_using_per_formulation_nexus_files", "classrealization_1_1_formulation___manager.html#a06001f5a8e0ff3c9d1748b380cea5ba7", null ],
     [ "parse_external_model_params", "classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f", null ],
     [ "parse_external_model_params", "classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1", null ],
     [ "read", "classrealization_1_1_formulation___manager.html#a1c0de7b0d1ec26ec9ed6177c4413b6f3", null ],
@@ -32,5 +33,6 @@ var classrealization_1_1_formulation___manager =
     [ "routing_config", "classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a", null ],
     [ "Simulation_Time_Object", "classrealization_1_1_formulation___manager.html#a79ca23652bcd0704c02b1deec405d680", null ],
     [ "tree", "classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39", null ],
+    [ "use_per_formulation_nexus_files", "classrealization_1_1_formulation___manager.html#af9a07c95603388001ea7186789670249", null ],
     [ "using_routing", "classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b", null ]
 ];

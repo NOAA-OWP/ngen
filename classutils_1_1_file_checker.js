@@ -1,5 +1,6 @@
 var classutils_1_1_file_checker =
 [
+    [ "directory_exists", "classutils_1_1_file_checker.html#a70629fb833d1685c10e9e021d5d25871", null ],
     [ "file_can_be_written", "classutils_1_1_file_checker.html#a24dff5d8fd63c824311f95de1f033f03", null ],
     [ "file_is_empty", "classutils_1_1_file_checker.html#aca8646ab3d79fe76f6b1c95595a56673", null ],
     [ "file_is_readable", "classutils_1_1_file_checker.html#a22dea5e4128d47c50a6318a1c15fc52f", null ],

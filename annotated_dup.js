@@ -128,8 +128,11 @@ var annotated_dup =
     [ "utils", "namespaceutils.html", [
       [ "FileChecker", "classutils_1_1_file_checker.html", "classutils_1_1_file_checker" ],
       [ "FileStreamHandler", "classutils_1_1_file_stream_handler.html", "classutils_1_1_file_stream_handler" ],
+      [ "NexusOutputsMgr", "classutils_1_1_nexus_outputs_mgr.html", "classutils_1_1_nexus_outputs_mgr" ],
       [ "NullStream", "classutils_1_1_null_stream.html", "classutils_1_1_null_stream" ],
-      [ "StreamHandler", "classutils_1_1_stream_handler.html", "classutils_1_1_stream_handler" ]
+      [ "PerNexusCsvOutputMgr", "classutils_1_1_per_nexus_csv_output_mgr.html", "classutils_1_1_per_nexus_csv_output_mgr" ],
+      [ "StreamHandler", "classutils_1_1_stream_handler.html", "classutils_1_1_stream_handler" ],
+      [ "time_marker", "structutils_1_1time__marker.html", "structutils_1_1time__marker" ]
     ] ],
     [ "add_to_summed_nexus", "structadd__to__summed__nexus.html", "structadd__to__summed__nexus" ],
     [ "AORC_data", "struct_a_o_r_c__data.html", "struct_a_o_r_c__data" ],

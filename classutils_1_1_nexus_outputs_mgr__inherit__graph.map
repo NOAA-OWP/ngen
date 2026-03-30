@@ -1,0 +1,5 @@
+<map id="utils::NexusOutputsMgr" name="utils::NexusOutputsMgr">
+<area shape="rect" id="Node000001" title="Abstract class for managing and writing to nexus data files." alt="" coords="5,5,189,194"/>
+<area shape="rect" id="Node000002" href="$classutils_1_1_per_nexus_csv_output_mgr.html" title="Subtype that manages/writes per&#45;nexus data files in CSV format." alt="" coords="6,242,188,410"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,208,100,242,95,242,95,208"/>
+</map>

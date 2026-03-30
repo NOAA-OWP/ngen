@@ -128,6 +128,8 @@ Summary</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">NetCDF Libraries   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">&gt;= <code>4.7.4</code>   </td><td class="markdownTableBodyCenter">Enables NetCDF I/O support    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://docs.unidata.ucar.edu/netcdf-c/4.9.3/parallel_io.html">NetCDF-4 parallel support</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter"></td><td class="markdownTableBodyCenter">Optional, but required to use <a href="REALIZATION_CONFIGURATION.md#per_formulation_nexus_files">per-formulation NetCDF nexus output files</a> in ngen builds supporting MPI    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a href="https://www.sqlite.org/cintro.html">SQLite3</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">&gt; <code>3.7.17</code>   </td><td class="markdownTableBodyCenter">Enables GeoPackage reading support   </td></tr>
 </table>
 <h1><a class="anchor" id="autotoc_md152"></a>
@@ -268,14 +270,35 @@ Setup</h3>
 NetCDF Libraries</h2>
 <h3><a class="anchor" id="autotoc_md186"></a>
 Setup</h3>
-<p>First, check if your compute system already have a version that is up to date, usually in the sub-directories (include/ and lib64/) under /usr. If not, you will have to install your own version. For instructions on how to install netCDF, some randomly selected references are <a href="https://docs.unidata.ucar.edu/nug/current/getting_and_building_netcdf.html">here</a> and <a href="https://docs.geoserver.org/main/en/user/extensions/netcdf-out/nc4.html">here</a>. </p>
-</div></div><!-- contents -->
+<p>First, check if your compute system already have a version that is up to date, usually in the sub-directories (include/ and lib64/) under /usr. If not, you will have to install your own version. For instructions on how to install netCDF, some randomly selected references are <a href="https://docs.unidata.ucar.edu/nug/current/getting_and_building_netcdf.html">here</a> and <a href="https://docs.geoserver.org/main/en/user/extensions/netcdf-out/nc4.html">here</a>.</p>
+<h3><a class="anchor" id="autotoc_md187"></a>
+Parallel NetCDF</h3>
+<p>In order to make use of the per-formulation NetCDF nexus output files capabilities <a href="REALIZATION_CONFIGURATION.md#per_formulation_nexus_files">noted here</a> within installations of ngen that support parallel MPI execution, NetCDF-4 and its dependencies must have been built/installed with parallel I/O support. <a href="https://docs.unidata.ucar.edu/netcdf-c/4.9.3/parallel_io.html">See here</a> for further details in the NetCDF documentation. <br  />
+</p>
+<p>Without NetCDF Parallel I/O support, parallel builds of ngen will be limited to individual, per-nexus output files for nexus data in CSV format, and an error will occur if a realization config attempting to use per-formulation outputs is supplied.</p>
+<p>You can see if the NetCDF dependency found by CMake for ngen builds includes parallel support by looking for this part of the CMake output when you generate/regenerate the build system directory. Note specifically the <code>Parallel</code> sub-item at the end of the NetCDF details.</p>
+<div class="fragment"><div class="line">...</div>
+<div class="line">-- Environment summary:</div>
+<div class="line">--   Boost:</div>
+<div class="line">--     Version: 1.89.0</div>
+<div class="line">--     Include: /Users/rbartel/Developer/oss/boost/current</div>
+<div class="line">--   NetCDF:</div>
+<div class="line">--     Version: 4.9.3</div>
+<div class="line">--     Library: /opt/local/lib/libnetcdf.dylib</div>
+<div class="line">--     Library (CXX): /opt/local/lib/libnetcdf_c++4.dylib</div>
+<div class="line">--     Include: /opt/local/include</div>
+<div class="line">--     Include (CXX): /opt/local/include</div>
+<div class="line">--     Parallel: TRUE </div>
+<div class="line">--   SQLite:</div>
+<div class="line">--     Version: 3.49.1</div>
+<div class="line">...</div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Mar 26 2026 14:46:55 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Mar 30 2026 18:56:26 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

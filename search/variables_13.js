@@ -7,5 +7,6 @@ var searchData=
   ['update_5funtil_4',['update_until',['../struct_bmi.html#a192e680b533ced45941b163932514014',1,'Bmi']]],
   ['upper_5fcatchment_5',['upper_catchment',['../class_h_y___catchment.html#a8420468ac27e8ac940b80ff330683df3',1,'HY_Catchment']]],
   ['upstream_5fflows_6',['upstream_flows',['../class_h_y___point_hydro_nexus.html#a3540aaa4a8d10ce03e5f8a6a7cdd8a2d',1,'HY_PointHydroNexus']]],
-  ['using_5frouting_7',['using_routing',['../classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b',1,'realization::Formulation_Manager']]]
+  ['use_5fper_5fformulation_5fnexus_5ffiles_7',['use_per_formulation_nexus_files',['../classrealization_1_1_formulation___manager.html#af9a07c95603388001ea7186789670249',1,'realization::Formulation_Manager']]],
+  ['using_5frouting_8',['using_routing',['../classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b',1,'realization::Formulation_Manager']]]
 ];

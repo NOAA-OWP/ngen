@@ -190,7 +190,11 @@ var hierarchy =
     ] ],
     [ "UnitsHelper", "class_units_helper.html", null ],
     [ "utils::FileChecker", "classutils_1_1_file_checker.html", null ],
+    [ "utils::NexusOutputsMgr", "classutils_1_1_nexus_outputs_mgr.html", [
+      [ "utils::PerNexusCsvOutputMgr", "classutils_1_1_per_nexus_csv_output_mgr.html", null ]
+    ] ],
     [ "utils::StreamHandler", "classutils_1_1_stream_handler.html", [
       [ "utils::FileStreamHandler", "classutils_1_1_file_stream_handler.html", null ]
-    ] ]
+    ] ],
+    [ "utils::time_marker", "structutils_1_1time__marker.html", null ]
 ];
