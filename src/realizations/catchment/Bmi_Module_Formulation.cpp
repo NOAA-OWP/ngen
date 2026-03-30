@@ -653,16 +653,7 @@ namespace realization {
             }
 
             for (size_t i = 0; i < bmi_input_var_details->size(); i++) {
-                perform_set(
-                    src_data_start,
-                    t_delta,
-                    bmi_input_var_details->at(i)->get_num_items(),
-                    bmi_input_providers->at(i).get(),
-                    bmi_input_var_details->at(i)->get_mapped_alias(),
-                    bmi_input_var_details->at(i)->get_name(),
-                    bmi_input_var_details->at(i)->get_cpp_type(),
-                    bmi_input_var_details->at(i)->get_units()
-                    );
+                perform_set(src_data_start, t_delta, bmi_input_providers->at(i), bmi_input_var_details->at(i));
             }
         }
 
@@ -671,16 +662,17 @@ namespace realization {
                 int item_size = get_bmi_model()->GetVarItemsize(var_name);
                 std::string mapped_alias = get_config_mapped_variable_name(var_name);
 
-                perform_set(
-                    src_data_start,
-                    t_delta,
-                    get_bmi_model()->GetVarNbytes(var_name) / item_size,
-                    get_provider_for_input_var(var_name, mapped_alias).get(),
-                    mapped_alias,
+                // Create a local Bmi_Var_Details object for this variable
+                Bmi_Var_Details var_details(
                     var_name,
+                    mapped_alias,
+                    item_size,
+                    get_bmi_model()->GetVarNbytes(var_name) / item_size,
                     get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name), item_size),
                     get_bmi_model()->GetVarUnits(var_name)
-                    );
+                );
+
+                perform_set(src_data_start, t_delta, get_provider_for_input_var(var_name, mapped_alias), &var_details);
             }
         }
 
@@ -724,38 +716,43 @@ namespace realization {
             }
         }
 
-        void Bmi_Module_Formulation::perform_set(const time_t &src_data_start, const time_step_t& t_delta,
-                                                 const int num_items, data_access::GenericDataProvider* provider, const std::string& mapped_alias,
-                                                 const std::string& var_name, const std::string& cpp_type, const std::string& units) const {
+        void Bmi_Module_Formulation::perform_set(const time_t& src_data_start,
+                                                 const time_step_t& t_delta,
+                                                 const std::shared_ptr<data_access::GenericDataProvider>& provider,
+                                                 const Bmi_Var_Details* var_details) const {
             std::shared_ptr<void> value_ptr;
-            if (num_items != 1) {
+            if (var_details->get_num_items() != 1) {
                 //more than a single value needed for var_name
                 std::vector<data_type> values = provider->get_values(
-                    CatchmentAggrDataSelector(get_catchment_id(), mapped_alias, src_data_start, t_delta, units)
+                    CatchmentAggrDataSelector(get_catchment_id(), var_details->get_mapped_alias(), src_data_start,
+                                              t_delta, var_details->get_units())
                 );
                 //need to marshal data types to the receiver as well
                 //this could be done a little more elegantly if the provider interface were
                 //"type aware", but for now, this will do (but requires yet another copy)
-                if(values.size() == 1){
+                if (values.size() == 1) {
                     //FIXME this isn't generic broadcasting, but works for scalar implementations
                     #ifndef NGEN_QUIET
-                    std::cerr << "WARN: broadcasting variable '" << var_name << "' from scalar to expected array\n";
+                    std::cerr << "WARN: broadcasting variable '" << var_details->get_name() <<
+                        "' from scalar to expected array\n";
                     #endif
-                    values.resize(num_items, values[0]);
+                    values.resize(var_details->get_num_items(), values[0]);
                 }
-                else if (values.size() != num_items) {
-                    throw std::runtime_error("Mismatch in item count for variable '" + var_name + "': model expects "
-                        + std::to_string(num_items) + ", provider returned "
+                else if (values.size() != var_details->get_num_items()) {
+                    throw std::runtime_error(
+                        "Mismatch in item count for variable '" + var_details->get_name() + "': model expects "
+                        + std::to_string(var_details->get_num_items()) + ", provider returned "
                         + std::to_string(values.size()) + " items\n");
                 }
-                value_ptr = get_values_as_type(cpp_type, values.begin(), values.end() );
-
+                value_ptr = get_values_as_type(var_details->get_cpp_type(), values.begin(), values.end());
             }
             else {
                 //scalar value
-                double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(), mapped_alias, src_data_start, t_delta, units));
-                value_ptr = get_value_as_type(cpp_type, value);
+                double value = provider->get_value(CatchmentAggrDataSelector(
+                    this->get_catchment_id(), var_details->get_mapped_alias(), src_data_start, t_delta,
+                    var_details->get_units()));
+                value_ptr = get_value_as_type(var_details->get_cpp_type(), value);
             }
-            get_bmi_model()->SetValue(var_name, value_ptr.get());
+            get_bmi_model()->SetValue(var_details->get_name(), value_ptr.get());
         }
 }

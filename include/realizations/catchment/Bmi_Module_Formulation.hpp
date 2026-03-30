@@ -641,7 +641,10 @@ namespace realization {
          */
         void initialize_bmi_input_var_metadata();
 
-        void perform_set(const time_t &src_data_start, const time_step_t &t_delta, const int num_items, data_access::GenericDataProvider *provider, const std::string &mapped_alias, const std::string &var_name, const std::string &cpp_type, const std::string &units) const;
+        void perform_set(const time_t &src_data_start,
+                         const time_step_t &t_delta,
+                         const std::shared_ptr<data_access::GenericDataProvider>& provider,
+                         const Bmi_Var_Details *var_details) const;
     };
 /*
     template<class M>
