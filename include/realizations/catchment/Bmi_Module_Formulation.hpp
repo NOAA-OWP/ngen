@@ -641,6 +641,16 @@ namespace realization {
          */
         void initialize_bmi_input_var_metadata();
 
+        /**
+         * Do the action of retrieving data and setting values for an input variable ahead of advancing the model.
+         *
+         * @param src_data_start The start time (in seconds) to use when retrieving data from the appropriate provider
+         *                       to use for setting the model's variables.
+         * @param t_delta The size of the time step over which the formulation is going to update the model, which might
+         *                be different than the model's internal time step.
+         * @param provider The data provider from which to source the data to use to set the variable.
+         * @param var_details Variable details struct containing the remainder of information required (e.g., var name).
+         */
         void perform_set(const time_t &src_data_start,
                          const time_step_t &t_delta,
                          const std::shared_ptr<data_access::GenericDataProvider>& provider,
