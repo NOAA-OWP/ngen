@@ -122,7 +122,7 @@ protected:
     std::vector<std::string> config_json;
     std::vector<std::string> catchment_ids;
     std::vector<std::string> model_type_name;
-    std::vector<bool> stores_input_variable_metadata;
+    std::vector<bool> caches_input_variable_metadata;
     std::vector<std::string> forcing_file;
     std::vector<std::string> lib_file;
     std::vector<std::string> init_config;
@@ -160,7 +160,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     lib_file = std::vector<std::string>(EX_COUNT);
     init_config = std::vector<std::string>(EX_COUNT);
     main_output_variable  = std::vector<std::string>(EX_COUNT);
-    stores_input_variable_metadata = std::vector<bool>(EX_COUNT);
+    caches_input_variable_metadata = std::vector<bool>(EX_COUNT);
     registration_functions  = std::vector<std::string>(EX_COUNT);
     uses_forcing_file = std::vector<bool>(EX_COUNT);
     // tries_mass_balance = std::vector<bool>(EX_COUNT);
@@ -175,7 +175,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     lib_file[0] = find_file(lib_dir_opts, BMI_TEST_C_LOCAL_LIB_NAME);
     init_config[0] = find_file(bmi_init_cfg_dir_opts, "test_bmi_c_config_0.txt");
     main_output_variable[0] = "OUTPUT_VAR_1";
-    stores_input_variable_metadata[0] = false;
+    caches_input_variable_metadata[0] = false;
     registration_functions[0] = "register_bmi";
     uses_forcing_file[0] = false;
     // tries_mass_balance[0] = true;
@@ -186,7 +186,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     lib_file[1] = find_file(lib_dir_opts, BMI_TEST_C_LOCAL_LIB_NAME);
     init_config[1] = find_file(bmi_init_cfg_dir_opts, "test_bmi_c_config_1.txt");
     main_output_variable[1] = "OUTPUT_VAR_1";
-    stores_input_variable_metadata[1] = false;
+    caches_input_variable_metadata[1] = false;
     registration_functions[1] = "register_bmi";
     uses_forcing_file[1] = false;
     // tries_mass_balance[1] = false;
@@ -197,7 +197,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     lib_file[2] = find_file(lib_dir_opts, BMI_TEST_C_LOCAL_LIB_NAME);
     init_config[2] = find_file(bmi_init_cfg_dir_opts, "test_bmi_c_config_1.txt");
     main_output_variable[2] = "OUTPUT_VAR_1";
-    stores_input_variable_metadata[2] = true;
+    caches_input_variable_metadata[2] = true;
     registration_functions[2] = "register_bmi";
     uses_forcing_file[2] = false;
     // tries_mass_balance[1] = false;
@@ -212,10 +212,10 @@ void Bmi_C_Formulation_Test::SetUp() {
         std::string variables_line = (i == 1) ? variables_with_rain_rate : "";
 
         // Add this substring with this key for even indices or if the value for it is true
-        std::string store_metadata_substr = "";
-        if (i % 2 == 0 || stores_input_variable_metadata[i]) {
-            store_metadata_substr = "\"" BMI_REALIZATION_CFG_PARAM_OPT__CACHE_INPUT_VAR_METADATA "\": " ;
-            store_metadata_substr += stores_input_variable_metadata[i] ? "true," : "false,";
+        std::string cache_metadata_substr = "";
+        if (i % 2 == 0 || caches_input_variable_metadata[i]) {
+            cache_metadata_substr = "\"" BMI_REALIZATION_CFG_PARAM_OPT__CACHE_INPUT_VAR_METADATA "\": " ;
+            cache_metadata_substr += caches_input_variable_metadata[i] ? "true," : "false,";
         }
 
         forcing_params_examples[i] = params;
@@ -230,7 +230,7 @@ void Bmi_C_Formulation_Test::SetUp() {
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
 
                          // Add this predetermined substring from above (which could be empty)
-                         + store_metadata_substr +
+                         + cache_metadata_substr +
 
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
