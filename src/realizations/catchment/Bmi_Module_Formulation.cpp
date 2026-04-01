@@ -320,7 +320,7 @@ namespace realization {
             }
 
             if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__CACHE_INPUT_VAR_METADATA) != properties.end()) {
-                set_store_input_var_metadata(
+                set_cache_input_var_metadata(
                         properties.at(BMI_REALIZATION_CFG_PARAM_OPT__CACHE_INPUT_VAR_METADATA).as_boolean());
             }
 
@@ -643,8 +643,8 @@ namespace realization {
             }
         }
 
-        void Bmi_Module_Formulation::set_store_input_var_metadata(bool store_input_var_metadata) {
-            cache_input_variable_metadata = store_input_var_metadata;
+        void Bmi_Module_Formulation::set_cache_input_var_metadata(bool cache_input_var_metadata) {
+            cache_input_variable_metadata = cache_input_var_metadata;
         }
 
         void Bmi_Module_Formulation::do_bmi_sets_from_stored_metadata(const time_t &src_data_start, const time_step_t &t_delta) {

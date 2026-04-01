@@ -440,7 +440,7 @@ namespace realization {
          * Set BMI input variable values for the model appropriately prior to calling its `BMI `update()``.
          *
          * Depending on the value of @ref cache_input_variable_metadata (`false` by default, but which can be controlled
-         * using @ref set_store_input_var_metadata), this will defer most of its execution to a call either to
+         * using @ref set_cache_input_var_metadata), this will defer most of its execution to a call either to
          * @ref do_bmi_sets_from_stored_metadata or @ref do_bmi_sets_with_full_refetch.
          *
          * @param model_time The model's time prior to the update, in its internal units and representation.
@@ -456,9 +456,9 @@ namespace realization {
          * @ref set_model_inputs_prior_to_update should store and reuse metadata, as opposed to refreshing such data
          * each time @ref set_model_inputs_prior_to_update is called.
          *
-         * @param store_input_var_metadata Whether @ref set_model_inputs_prior_to_update should store and reuse metadata
+         * @param cache_input_var_metadata Whether @ref set_model_inputs_prior_to_update should store and reuse metadata
          */
-        void set_store_input_var_metadata(bool store_input_var_metadata);
+        void set_cache_input_var_metadata(bool cache_input_var_metadata);
 
         /** The delta of the last model update execution (typically, this is time step size). */
         time_step_t last_model_response_delta = 0;
