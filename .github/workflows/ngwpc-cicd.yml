@@ -55,6 +55,8 @@ jobs:
       alias_tag: ${{ steps.vars.outputs.alias_tag }}
       build_date: ${{ steps.vars.outputs.build_date }}
       clean_ref: ${{ steps.vars.outputs.clean_ref }}
+      ngen_forcing_digest: ${{ steps.vars.outputs.ngen_forcing_digest }}
+      ngen_forcing_revision: ${{ steps.vars.outputs.ngen_forcing_revision }}
     steps:
       - name: Compute image vars
         id: vars
@@ -107,6 +109,19 @@ jobs:
             ALIAS="${TIMESTAMP}-${CLEAN_REF}"
           fi
 
+          # skopeo is needed to inspect the base image
+          if ! command -v skopeo >/dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y --no-install-recommends skopeo
+          fi
+
+          # base image (ngen-forcing) metadata for ngen Dockerfile labels
+          NGEN_FORCING_IMAGE_TAG="${{ inputs.NGEN_FORCING_IMAGE_TAG || 'latest' }}"
+          NGEN_FORCING_IMAGE="ghcr.io/${ORG}/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG}"
+          NGEN_FORCING_INSPECT=$(skopeo inspect "docker://${NGEN_FORCING_IMAGE}" 2>/dev/null || echo '{}')
+          NGEN_FORCING_DIGEST=$(echo "$NGEN_FORCING_INSPECT" | jq -r '.Digest // "unknown"')
+          NGEN_FORCING_REVISION=$(echo "$NGEN_FORCING_INSPECT" | jq -r '.Labels["org.opencontainers.image.revision"] // "unknown"')
+
           # save outputs
           echo "org=${ORG}" >> "$GITHUB_OUTPUT"
           echo "image_base=${IMAGE_BASE}" >> "$GITHUB_OUTPUT"
@@ -116,6 +131,8 @@ jobs:
           echo "commit_sha=${REAL_SHA}" >> "$GITHUB_OUTPUT"
           echo "commit_sha_short=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
           echo "clean_ref=${CLEAN_REF}" >> "$GITHUB_OUTPUT"
+          echo "ngen_forcing_digest=${NGEN_FORCING_DIGEST}" >> "$GITHUB_OUTPUT"
+          echo "ngen_forcing_revision=${NGEN_FORCING_REVISION}" >> "$GITHUB_OUTPUT"
 
   # CodeQL scan
   codeql-scan:
@@ -270,6 +287,8 @@ jobs:
           build-args: |
             ORG=${{ needs.setup.outputs.org }}
             NGEN_FORCING_IMAGE_TAG=${{ inputs.NGEN_FORCING_IMAGE_TAG || 'latest' }}
+            BASE_IMAGE_DIGEST=${{ needs.setup.outputs.ngen_forcing_digest }}
+            BASE_IMAGE_REVISION=${{ needs.setup.outputs.ngen_forcing_revision }}
             EWTS_ORG=${{ inputs.EWTS_ORG || 'NGWPC' }}
             EWTS_REF=${{ inputs.EWTS_REF || 'development' }}
             IMAGE_SOURCE=https://github.com/${{ github.repository }}
