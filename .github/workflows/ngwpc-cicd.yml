@@ -53,7 +53,6 @@ jobs:
       commit_sha_short: ${{ steps.vars.outputs.commit_sha_short }}
       test_image_tag: ${{ steps.vars.outputs.test_image_tag }}
       alias_tag: ${{ steps.vars.outputs.alias_tag }}
-      build_date: ${{ steps.vars.outputs.build_date }}
       clean_ref: ${{ steps.vars.outputs.clean_ref }}
       ngen_forcing_digest: ${{ steps.vars.outputs.ngen_forcing_digest }}
       ngen_forcing_revision: ${{ steps.vars.outputs.ngen_forcing_revision }}
@@ -71,9 +70,6 @@ jobs:
 
           # one datetime for all time variables
           NOW=$(date -u +'%Y-%m-%d %H:%M:%S')
-
-          # for OCI labels
-          BUILD_DATE=$(date -u -d "$NOW" +'%Y-%m-%dT%H:%M:%SZ')
 
           # for Docker image tags
           TIMESTAMP=$(date -u -d "$NOW" +'%Y%m%d%H%M%SZ')
@@ -125,7 +121,6 @@ jobs:
           # save outputs
           echo "org=${ORG}" >> "$GITHUB_OUTPUT"
           echo "image_base=${IMAGE_BASE}" >> "$GITHUB_OUTPUT"
-          echo "build_date=${BUILD_DATE}" >> "$GITHUB_OUTPUT"
           echo "test_image_tag=${TEST_TAG}" >> "$GITHUB_OUTPUT"
           echo "alias_tag=${ALIAS}" >> "$GITHUB_OUTPUT"
           echo "commit_sha=${REAL_SHA}" >> "$GITHUB_OUTPUT"
@@ -295,7 +290,6 @@ jobs:
             IMAGE_VENDOR=${{ github.repository_owner }}
             IMAGE_VERSION=${{ needs.setup.outputs.clean_ref }}
             IMAGE_REVISION=${{ needs.setup.outputs.commit_sha }}
-            IMAGE_CREATED=${{ needs.setup.outputs.build_date }}
             CI_COMMIT_REF_NAME=${{ needs.setup.outputs.clean_ref }}
 
 # run unit tests inside the built Docker image
