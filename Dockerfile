@@ -20,7 +20,6 @@ ARG IMAGE_SOURCE="unknown"
 ARG IMAGE_VENDOR="unknown"
 ARG IMAGE_VERSION="unknown"
 ARG IMAGE_REVISION="unknown"
-ARG IMAGE_CREATED="unknown"
 
 # OCI Standard Labels
 LABEL org.opencontainers.image.base.name="${NGEN_FORCING_IMAGE}" \
@@ -30,7 +29,8 @@ LABEL org.opencontainers.image.base.name="${NGEN_FORCING_IMAGE}" \
     org.opencontainers.image.vendor="${IMAGE_VENDOR}" \
     org.opencontainers.image.version="${IMAGE_VERSION}" \
     org.opencontainers.image.revision="${IMAGE_REVISION}" \
-    org.opencontainers.image.created="${IMAGE_CREATED}"
+    org.opencontainers.image.title="Next Generation Water Modeling Engine and Framework Prototype" \
+    org.opencontainers.image.description="Docker image for the NGEN application"
 
 # cannot remove LANG even though https://bugs.python.org/issue19846 is fixed
 # last attempted removal of LANG broke many users:
