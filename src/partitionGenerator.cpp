@@ -437,7 +437,8 @@ int main(int argc, char* argv[])
         } catch (std::exception &e) {
             // Handle all exceptions
             std::string msg = "Geopackage error occurred reading divides: " + catchmentDataFile;
-            LOG(msg,LogLevel::FATAL, msg);
+            LOG(LogLevel::FATAL, msg);
+            LOG(LogLevel::FATAL, e.what());
             throw std::runtime_error(msg);
         }
 #else
