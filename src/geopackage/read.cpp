@@ -106,9 +106,15 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
                 sep_index++;
             }
             int id_num = std::atoi(filter_id.c_str() + sep_index);
-            if (id_num <= 0)
-                Logger::LogAndThrow("Could not convert input " + layer + " ID into a number: " + filter_id);
-            filter << id_num;
+            if (id_num <= 0) {
+                // check if the failed item is a fake terminal and igore if it is
+                std::string terminal = "wb-TERMINAL_SENTINEL-";
+                if (strncmp(filter_id.c_str(), terminal.c_str(), terminal.length()) != 0) {
+                    Logger::LogAndThrow("Could not convert input " + layer + " ID into a number: " + filter_id);
+                }
+            } else {
+                filter << id_num;
+            }
         }
         filter << ')';
         joined_ids = filter.str();
