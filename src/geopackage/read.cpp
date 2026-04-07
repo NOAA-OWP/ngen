@@ -93,12 +93,10 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
 
     std::string joined_ids = "";
     if (!ids.empty()) {
+        bool non_sentinel_found = false;
         std::stringstream filter;
         filter << " WHERE " << layer << '.' << id_column << " IN (";
-        for (size_t i = 0; i < ids.size(); ++i) {
-            if (i != 0)
-                filter << ',';
-            auto &filter_id = ids[i];
+        for (const auto &filter_id : ids) {
             size_t sep_index = filter_id.find('-');
             if (sep_index == std::string::npos) {
                 sep_index = 0;
@@ -113,11 +111,19 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
                     Logger::LogAndThrow("Could not convert input " + layer + " ID into a number: " + filter_id);
                 }
             } else {
+                if (non_sentinel_found) // only add comma after finding at least one non-sentinel
+                    filter << ',';
+                non_sentinel_found = true;
                 filter << id_num;
             }
         }
-        filter << ')';
-        joined_ids = filter.str();
+        if (non_sentinel_found) {
+            filter << ')';
+            joined_ids = filter.str();
+        } else {
+            // if all IDs were sentinels, just make the query return nothing
+            joined_ids = " WHERE 1=0";
+        }
     }
 
     // Get number of features
