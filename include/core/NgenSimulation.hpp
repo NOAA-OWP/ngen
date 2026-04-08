@@ -83,6 +83,15 @@ public:
 private:
     void advance_models_one_output_step();
 
+    // Set T-route input that may require merging results from other MPI processes
+    std::pair<std::vector<double>*, std::unordered_map<std::string, int>*> set_troute_inputs(
+        const NgenSimulation::hy_features_t &features,
+        const std::vector<double> *simulation_values,
+        const std::unordered_map<std::string, int> *feature_indexes,
+        const std::string id_var_name,
+        const std::string value_var_name
+    );
+
     int simulation_step_;
 
     std::shared_ptr<Simulation_Time> sim_time_;

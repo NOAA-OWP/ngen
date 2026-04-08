@@ -46,10 +46,6 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
                         +" at feature id "+id;
             throw std::runtime_error(msg);
         }
-#if NGEN_WITH_ROUTING
-        int results_index = catchment_indexes[id];
-        catchment_outflows[results_index] += response;
-#endif // NGEN_WITH_ROUTING
         if (r_c->get_output_header_count() > 0) {
             // only write output if config specifies output values
             std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
@@ -64,6 +60,17 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
         catch(std::invalid_argument &e) {
             area = catchment_data->get_feature(id)->get_property("area_sqkm").as_real_number();
         }
+#if NGEN_WITH_ROUTING
+        // t-route NHF takes in catchment results in m^3/s
+        int results_index = catchment_indexes[id];
+        catchment_outflows[results_index] += 
+            // response is meters per timestep
+            response
+            // divide by timestamp seconds to get to (m/s)
+            / simulation_time.get_output_interval_seconds()
+            // multiply by (m^2) area to get to (m^3/s)
+            * (area * 1'000'000);
+#endif // NGEN_WITH_ROUTING
         double response_m_s = response * (area * 1000000);
         //TODO put this somewhere else as well, for now, an implicit assumption is that a module's get_response returns
         //m/timestep
