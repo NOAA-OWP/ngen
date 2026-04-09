@@ -260,6 +260,7 @@ SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
 
 ARG EWTS_ORG=NGWPC
 ARG EWTS_REF=development
+ARG EWTS_CACHE_BUST=0
 
 # Install path for the built EWTS libraries, headers, cmake config, and
 # Fortran .mod files.  /opt/ewts follows the FHS convention for add-on
@@ -276,6 +277,7 @@ ENV EWTS_PY_ROOT=/tmp/nwm-ewts/runtime/python/ewts
 # Try shallow clone by branch/tag name first; fall back to full clone + checkout
 # for bare commit SHAs (which git clone -b doesn't support).
 RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ewts \
+    echo "EWTS cache bust: ${EWTS_CACHE_BUST}" && \
     set -eux && \
     (git clone --depth 1 -b "${EWTS_REF}" \
         "https://github.com/${EWTS_ORG}/nwm-ewts.git" /tmp/nwm-ewts \
