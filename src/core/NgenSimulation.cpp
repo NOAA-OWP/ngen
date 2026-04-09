@@ -218,12 +218,12 @@ double NgenSimulation::get_nexus_outflow(int nexus_index, int timestep_index) co
     return nexus_downstream_flows_[timestep_index * nexus_indexes_.size() + nexus_index];
 }
 
-std::pair<std::vector<double>*, std::unordered_map<std::string, int>*> NgenSimulation::set_troute_inputs(
-    const NgenSimulation::hy_features_t &features,
+void NgenSimulation::set_troute_inputs(
     const std::vector<double> *simulation_values,
     const std::unordered_map<std::string, int> *feature_indexes,
     const std::string id_var_name,
-    const std::string value_var_name
+    const std::string value_var_name,
+    const NgenSimulation::hy_features_t &features
 ) {
 #if NGEN_WITH_MPI
     std::vector<double> all_values;
@@ -269,7 +269,7 @@ std::pair<std::vector<double>*, std::unordered_map<std::string, int>*> NgenSimul
             }
             MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
             if (this->mpi_rank_ == 0) {
-                // copy reduce values to a combined downflows vector
+                // copy reduce values to a combined values vector
                 all_indexes[current_id] = i;
                 for (int step = 0; step < number_of_timesteps; ++step) {
                     int offset = step * all_ids.size() + i;
@@ -280,7 +280,7 @@ std::pair<std::vector<double>*, std::unordered_map<std::string, int>*> NgenSimul
         }
 
         if (this->mpi_rank_ == 0) {
-            // update root's local data for running t-route below
+            // change rank 0's indexes and values to the MPI merged results for setting below
             simulation_values = &all_values;
             feature_indexes = &all_indexes;
         }
@@ -340,18 +340,18 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::s
     }
     // set the inputs from catchment and nexus results
     this->set_troute_inputs(
-        features,
         &this->nexus_downstream_flows_,
         &this->nexus_indexes_,
         "land_surface_water_source__id",
-        "land_surface_water_source__volume_flow_rate"
+        "land_surface_water_source__volume_flow_rate",
+        features
     );
     this->set_troute_inputs(
-        features,
         &this->catchment_outflows_,
         &this->catchment_indexes_,
         "catchment_water_source__id",
-        "catchment_water_source__volume_flow_rate"
+        "catchment_water_source__volume_flow_rate",
+        features
     );
     if (this->mpi_rank_ == 0)
         this->py_troute_->Update();

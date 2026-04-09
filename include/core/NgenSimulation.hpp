@@ -83,13 +83,21 @@ public:
 private:
     void advance_models_one_output_step();
 
-    // Set T-route input that may require merging results from other MPI processes
-    std::pair<std::vector<double>*, std::unordered_map<std::string, int>*> set_troute_inputs(
-        const NgenSimulation::hy_features_t &features,
+    /** Set T-route input that may require merging results from other MPI processes. The T-route values will only be set for the MPI rank 0 process.
+     * 
+     * If MPI is running with multiple processes, blocking MPI calls will be made to merge the results.
+     * @param simulation_values Pointer to vector of simulation results
+     * @param feature_indexes Pointer to the map between feature IDs and the relative timestep index
+     * @param id_var_name T-route BMI var name for the feature IDs. `feature_indexes` will be converted to a list and passed to this variable
+     * @param value_var_name T-route BMI var name for the simulation results
+     * @param features Features colection used to filter out remote sender nexuses when merging values
+     */ 
+    void set_troute_inputs(
         const std::vector<double> *simulation_values,
         const std::unordered_map<std::string, int> *feature_indexes,
         const std::string id_var_name,
-        const std::string value_var_name
+        const std::string value_var_name,
+        const NgenSimulation::hy_features_t &features
     );
 
     int simulation_step_;
