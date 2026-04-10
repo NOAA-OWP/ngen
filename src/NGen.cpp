@@ -203,15 +203,6 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     ss.str("");
     std::ios::sync_with_stdio(false);
 
-#if NGEN_WITH_PYTHON
-    // Start Python interpreter via the manager singleton
-    // Need to bind to a variable so that the underlying reference count
-    // is incremented, this essentially becomes the global reference to keep
-    // the interpreter alive till the end of `main`
-    auto _interp = utils::ngenPy::InterpreterUtil::getInstance();
-// utils::ngenPy::InterpreterUtil::getInstance();
-#endif // NGEN_WITH_PYTHON
-
     // Pull a few "options" form the cli input, this is a temporary solution to CLI parsing!
     // Use "positional args"
     // arg 0 is program name

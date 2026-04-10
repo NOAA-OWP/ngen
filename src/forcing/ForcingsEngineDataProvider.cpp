@@ -26,9 +26,8 @@ void assert_forcings_engine_requirements()
 {
     // Check that the python module is installed.
     {
-        auto interpreter_ = utils::ngenPy::InterpreterUtil::getInstance();
         try {
-            auto mod = interpreter_->getModule(forcings_engine_python_module);
+            auto mod = utils::ngenPy::InterpreterUtil::getPyModule(forcings_engine_python_module);
             auto cls = mod.attr(forcings_engine_python_class).cast<py::object>();
         } catch(std::exception& e) {
             std::string msg = "Failed to initialize ForcingsEngine: ForcingsEngine python module is not installed or is not properly configured. (" + 
