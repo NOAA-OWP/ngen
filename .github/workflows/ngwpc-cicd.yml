@@ -396,3 +396,29 @@ jobs:
               --all \
               "docker://${IMAGE_BASE}:${TEST_TAG}" "docker://${IMAGE_BASE}:latest"
           fi
+
+  # trigger downstream CI/CD pipelines
+  trigger-downstream:
+    name: trigger-downstream
+    if: success()
+    runs-on: ubuntu-latest
+    needs:
+      - promote-tags
+    steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.PIPELINE_APP_ID }}
+          private-key: ${{ secrets.PIPELINE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - name: Trigger nwm-cal-mgr CI/CD
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          gh workflow run ci-cd.yml --repo NGWPC/nwm-cal-mgr --ref development
+      - name: Trigger nwm-fcst-mgr CI/CD
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          gh workflow run ci-cd.yml --repo NGWPC/nwm-fcst-mgr --ref development
