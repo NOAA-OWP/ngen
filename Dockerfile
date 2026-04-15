@@ -7,10 +7,10 @@ ARG ORG=ngwpc
 ARG NGEN_FORCING_IMAGE_TAG=latest
 ARG NGEN_FORCING_IMAGE=ghcr.io/${ORG}/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG}
 
-#FROM ${NGEN_FORCING_IMAGE} AS base
+FROM ${NGEN_FORCING_IMAGE} AS base
 
 # Uncomment when building locally
-FROM ngen-bmi-forcing AS base
+# FROM ngen-bmi-forcing AS base
 
 # OCI Metadata Arguments
 ARG NGEN_FORCING_IMAGE
