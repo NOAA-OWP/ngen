@@ -339,8 +339,11 @@ namespace realization {
                         int result = mkdir(dir, 0755);      
                         if (result == 0)
                             return str;
-                        else
-                            throw std::runtime_error("failed to create directory '" + str + "': " + std::strerror(errno));
+                        // Another process/MPI rank may have created the directory between this rank's stat and
+                        // mkdir calls, so consider EEXIST as success as long as the path is a directory.
+                        if (errno == EEXIST && stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode))
+                            return str;
+                        throw std::runtime_error("failed to create directory '" + str + "': " + std::strerror(errno));
                     }
                 }
  
