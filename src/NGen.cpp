@@ -840,6 +840,11 @@ int main(int argc, char* argv[]) {
     }
     // explicitly destroy the interpreter before calling MPI_Finalize
     interp.reset();
+#if NGEN_WITH_MPI
+    // ensure all interpreters are fully closed between MPI ranks before calling MPI_Finalize below
+    // this is needed if any python atexit registered functions would interact with MPI
+    MPI_Barrier(MPI_COMM_WORLD);
+#endif // NGEN_WITH_MPI
 #else
     result = run_ngen(argc, argv, mpi_num_procs, mpi_rank);
 #endif // NGEN_WITH_PYTHON
