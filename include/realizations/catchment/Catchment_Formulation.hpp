@@ -49,11 +49,11 @@ namespace realization {
             }
 
             std::string value = it->second.as_string();
-            size_t id_index = value.find(pattern);
+            auto id_index = value.find(pattern);
 
             if (id_index != std::string::npos) {
                 do {
-                    value = value.replace(id_index, sizeof(pattern.c_str()) - 2, replacement);
+                    value.replace(id_index, pattern.size(), replacement);
                     id_index = value.find(pattern);
                 } while (id_index != std::string::npos);
 
