@@ -472,7 +472,7 @@ namespace realization {
 
                 std::string filepattern = forcing_prop_map.at("file_pattern").as_string();
                 std::string id_pattern = "{{id}}";
-                int id_index = filepattern.find(id_pattern);
+                auto id_index = filepattern.find(id_pattern);
 
                 // If an index for '{{id}}' was found, we can count on that being where the id for this realization can be found.
                 //     For instance, if we have a pattern of '.*{{id}}_14_15.csv' and this is named 'cat-87',
