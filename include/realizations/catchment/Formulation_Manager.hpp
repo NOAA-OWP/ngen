@@ -382,7 +382,7 @@ namespace realization {
             std::shared_ptr<Catchment_Formulation> construct_formulation_from_config(
                 simulation_time_params &simulation_time_config,
                 std::string identifier,
-                const realization::config::Config& catchment_formulation,
+                realization::config::Config& catchment_formulation,
                 utils::StreamHandler output_stream
             ) {
                 if(!formulation_exists(catchment_formulation.formulation.type)){
@@ -417,6 +417,10 @@ namespace realization {
                 forcing_params forcing_config = this->get_forcing_params(catchment_formulation.forcing.parameters, identifier, simulation_time_config);
                 std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(catchment_formulation.formulation.type, identifier, forcing_config, output_stream);
                 //, geometry);
+
+                Catchment_Formulation::config_pattern_substitution(catchment_formulation.formulation.parameters,
+                                                                   BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG, "{{id}}",
+                                                                   identifier);
 
                 constructed_formulation->create_formulation(catchment_formulation.formulation.parameters);
                 return constructed_formulation;

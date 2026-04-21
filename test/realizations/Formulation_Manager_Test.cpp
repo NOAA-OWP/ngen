@@ -820,6 +820,67 @@ const std::string EXAMPLE_7 = "{ "
     "\"disable_catchment_output\": true"
 "}";
 
+const std::string EXAMPLE_8 = "{ "
+    "\"global\": { "
+      "\"formulations\": [ "
+        "{"
+          "\"name\":\"bmi_c++\","
+          "\"params\": {"
+            "\"model_type_name\": \"test_bmi_cpp\","
+            "\"library_file\": \"{{EXTERN_LIB_DIR_PATH}}" BMI_TEST_CPP_LIB_NAME "\","
+            "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/GARBAGE.txt\","
+            "\"main_output_variable\": \"OUTPUT_VAR_2\","
+            "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+              "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+              "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+            "},"
+            "\"create_function\": \"bmi_model_create\","
+            "\"destroy_function\": \"bmi_model_destroy\","
+            "\"uses_forcing_file\": false"
+          "} "
+        "} "
+      "], "
+      "\"forcing\": { "
+          "\"file_pattern\": \".*{{id}}.*.csv\", "
+          "\"path\": \"./data/forcing/\", "
+          "\"provider\": \"CsvPerFeature\" "
+      "} "
+    "}, "
+    "\"time\": { "
+        "\"start_time\": \"2015-12-01 00:00:00\", "
+        "\"end_time\": \"2015-12-30 23:00:00\", "
+        "\"output_interval\": 3600 "
+    "}, "
+  "\"disable_catchment_output\": true,"
+    "\"catchments\": { "
+        "\"cat-67\": { "
+        "\"formulations\": [ "
+            "{"
+              "\"name\":\"bmi_c++\","
+              "\"params\": {"
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_LIB_DIR_PATH}}" BMI_TEST_CPP_LIB_NAME "\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_{{id}}.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
+              "} "
+            "} "
+          "], "
+          "\"forcing\": { "
+              "\"file_pattern\": \".*{{id}}.*.csv\", "
+              "\"path\": \"./data/forcing/\", "
+              "\"provider\": \"CsvPerFeature\" "
+          "} "
+        "} "
+    "} "
+"}";
+
 
 TEST_F(Formulation_Manager_Test, basic_reading_1) {
     std::stringstream stream;
@@ -957,9 +1018,28 @@ TEST_F(Formulation_Manager_Test, read_extra) {
     ASSERT_TRUE(manager.contains("cat-67"));
 }
 
-TEST_F(Formulation_Manager_Test, init_config_pattern_match) {
+TEST_F(Formulation_Manager_Test, init_config_pattern_match_global) {
     std::stringstream stream;
     stream << fix_paths(EXAMPLE_7);
+
+    std::ostream* raw_pointer = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
+
+    ASSERT_TRUE(manager.is_empty());
+
+    this->add_feature("cat-67");
+    manager.read(this->fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 1);
+    ASSERT_TRUE(manager.contains("cat-67"));
+}
+
+TEST_F(Formulation_Manager_Test, init_config_pattern_match_specific) {
+    std::stringstream stream;
+    stream << fix_paths(EXAMPLE_8);
 
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
