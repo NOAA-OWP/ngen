@@ -438,7 +438,7 @@ namespace realization {
                 // geojson::JSONProperty::print_property(global_config.formulation.parameters.at("modules"));
 
                 //Make a copy of the global configuration so parameters don't clash when linking to external data
-                auto formulation =  realization::config::Formulation(global_config.formulation);
+                auto formulation =  realization::config::Formulation(global_copy.formulation);
                 formulation.link_external(feature);
                 missing_formulation->create_formulation(formulation.parameters);
 
