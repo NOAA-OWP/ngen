@@ -478,7 +478,7 @@ namespace realization {
                 //     For instance, if we have a pattern of '.*{{id}}_14_15.csv' and this is named 'cat-87',
                 //     this will match on 'stuff_example_cat-87_14_15.csv'
                 if (id_index != std::string::npos) {
-                    filepattern = filepattern.replace(id_index, id_pattern.size(), identifier);
+                    filepattern.replace(id_index, id_pattern.size(), identifier);
                 }
 
                 // Create a regular expression used to identify proper file names
