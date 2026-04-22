@@ -478,6 +478,35 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_d)
     ASSERT_FALSE(mgr.is_closed());
 }
 
+/**
+ * Test that a second manager instance targeting an already-existing nexus NetCDF output file overwrites
+ * the existing file rather than throwing.
+ */
+TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_e)
+{
+    // Use a dedicated formulation name so this test's output file does not collide with other tests
+    auto test_form_names = std::make_shared<std::vector<std::string>>(
+        std::vector<std::string>{"form-0-overwrite"});
+
+    std::string expected_file = output_root + "/formulation_" + test_form_names->at(0) + "_nexuses.nc";
+    files_to_cleanup.push_back(expected_file);
+
+    // First construction creates the file
+    {
+        utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, test_form_names, output_root, 2);
+        mgr.close();
+    }
+    ASSERT_TRUE(utils::FileChecker::file_is_readable(expected_file));
+
+    // Second construction with same output location should overwrite (not throw) now that NC_CLOBBER is used
+    ASSERT_NO_THROW({
+        utils::PerFormulationNexusOutputMgr mgr2(ex_0_form_0_nexus_ids, test_form_names, output_root, 2);
+        ASSERT_EQ(friend_get_nexus_outfile(&mgr2), expected_file);
+        mgr2.close();
+    });
+    ASSERT_TRUE(utils::FileChecker::file_is_readable(expected_file));
+}
+
 /** Test correct chunking setup for example 3 (single instance). */
 TEST_F(PerFormulationNexusOutputMgr_Test, construct_3_c) {
 
