@@ -32,12 +32,12 @@ namespace realization {
         Bmi_Var_Details(const std::string& name, const std::string& alias, const int item_size, const int num_items, const std::string& cpp_type, const std::string& units)
             : name(name), mapped_alias(alias), cpp_type(cpp_type), units(units), item_size(item_size), num_items(num_items) { }
 
-        Bmi_Var_Details(const Bmi_Var_Details& source) : Bmi_Var_Details(source.name, source.mapped_alias, source.item_size, source.num_items, source.cpp_type, source.units) { }
+        Bmi_Var_Details(const Bmi_Var_Details& source) = default;
 
         friend bool operator<(const Bmi_Var_Details& lhs, const Bmi_Var_Details& rhs) {
-            return std::tie(lhs.name, lhs.mapped_alias, lhs.cpp_type, lhs.units, lhs.item_size,
-                            lhs.num_items) < std::tie(rhs.name, rhs.mapped_alias, rhs.cpp_type, rhs.units,
-                                                      rhs.item_size, rhs.num_items);
+            return std::tie(lhs.name, lhs.mapped_alias, lhs.cpp_type, lhs.units, lhs.item_size, lhs.num_items)
+                   <
+                   std::tie(rhs.name, rhs.mapped_alias, rhs.cpp_type, rhs.units, rhs.item_size, rhs.num_items);
         }
 
         const std::string& get_name() const {
