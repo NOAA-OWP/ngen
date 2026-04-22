@@ -1,6 +1,7 @@
 #include <Layer.hpp>
 #include <Catchment_Formulation.hpp>
 #include <Bmi_Formulation.hpp>
+#include <string>
 
 #if NGEN_WITH_MPI
 #include "HY_Features_MPI.hpp"
@@ -16,9 +17,20 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
 {
     auto idx = simulation_time.next_timestep_index();
     auto step = simulation_time.get_output_interval_seconds();
-            
+
     //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
-    if(output_time_index%1000 == 0) std::cout<<"Running timestep " << output_time_index <<std::endl;
+
+#if NGEN_WITH_MPI
+    if (output_time_index%1000 == 0) {
+        int rank = 0;
+        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+        std::string msg = "[rank " + std::to_string(rank) + "] Running timestep " + std::to_string(output_time_index);
+        std::cout << msg << std::endl;
+    }
+#else
+    if (output_time_index%1000 == 0) std::cout << "Running timestep " << output_time_index << std::endl;
+#endif
+
     std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
     for(const auto& id : processing_units) {
         int sub_time = output_time_index;
