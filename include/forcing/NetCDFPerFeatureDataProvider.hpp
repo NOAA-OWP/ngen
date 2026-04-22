@@ -13,6 +13,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <set>
 #include <sstream>
 #include <exception>
 #include <mutex>
@@ -56,12 +57,17 @@ namespace data_access
         static std::shared_ptr<NetCDFPerFeatureDataProvider> get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s);
 
         /**
+         * @brief Tell provider an id it is expected to provide.
+         */
+        void hint_shared_provider_id(const std::string& id);
+
+        /**
          * @brief Cleanup the shared providers cache, ensuring that the files get closed.
          */
         static void cleanup_shared_providers();
 
         NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s);
-
+        NetCDFPerFeatureDataProvider() = delete;
         // Default implementation defined in the .cpp file so that
         // client code doesn't need to have the full definition of
         // NcFile visible for the compiler to implicitly generate
@@ -122,7 +128,9 @@ namespace data_access
         std::vector<std::string> variable_names;
         std::vector<std::string> loc_ids;
         std::vector<double> time_vals;
-        std::map<std::string, std::size_t> id_pos;
+        std::set<std::string> hinted_ids;
+        std::map<std::string, std::size_t> id_pos;      // map from cat-id to position in vec of nc var values; accounts for chunking
+        std::vector<std::pair<size_t, size_t>> chunks;  // a chunk is the start and length of a span in the "catchment-id" dim of a nc variable
         double start_time;                              // the begining of the first time for which data is stored
         double stop_time;                               // the end of the last time for which data is stored
         TimeUnit time_unit;                             // the unit that time was stored as in the file
@@ -135,13 +143,45 @@ namespace data_access
         std::map<std::string,netCDF::NcVar> ncvar_cache;
         std::map<std::string,std::string> units_cache;
         boost::compute::detail::lru_cache<std::string, std::shared_ptr<std::vector<double>>> value_cache;
-        size_t cache_slice_t_size = 1;
+        // number of time slices per cache entry
+        // this is a tunable parameter; your mileage may vary
+        // NOTE: it would be nice if this were divisible by 2 and 4
+        size_t cache_slice_t_size = 18;
         size_t cache_slice_c_size = 1;
 
         const netCDF::NcVar& get_ncvar(const std::string& name);
 
         const std::string& get_ncvar_units(const std::string& name);
 
+        /**
+         * @brief Check all variables can be read from the source file
+         * 
+         * This is also useful for warming up the netcdf/hdf5 caches.
+         * 
+         * @throws std::runtime_error if any variable cannot be read
+         * 
+         */
+        void test_data_is_readable();
+
+        /**
+         * @brief Attempts to align the internal cache size with the chunking parameters of
+         * the underlying netCDF variables.
+         * If no chunking is present, the default cache size is used.
+         * 
+         * This can have some significant performance implications.
+         * both in terms of memory use and speed of access.
+         * If the variables are chunked too large, then the cache will hold
+         * a lot of data in memory.  If they are too small, then we end up
+         * doing a lot of small reads from the netCDF file.
+         */
+        void align_cache_with_chunks();
+
+        /**
+         * @brief If applicable, update chunk spans.
+         * Note, no hint_shared_provider_id() calls should be made afterwards.
+         * Note, additional calls have no effect.
+         */
+        void maybe_update_chunks_with_hints();
     };
 }
 
