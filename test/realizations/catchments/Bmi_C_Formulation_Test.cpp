@@ -65,6 +65,18 @@ protected:
         return formulation.get_model_type_name();
     }
 
+    static bool get_friend_cache_input_variable_metadata(Bmi_C_Formulation& formulation) {
+        return formulation.cache_input_variable_metadata;
+    }
+
+    static std::set<Bmi_Var_Details>& get_friend_known_bmi_input_vars(Bmi_C_Formulation& formulation) {
+        return formulation.known_bmi_input_vars;
+    }
+
+    static std::vector<Bmi_Var_Details*>* get_friend_bmi_input_var_details(Bmi_C_Formulation& formulation) {
+        return formulation.bmi_input_var_details.get();
+    }
+
     static double get_friend_var_value_as_double(Bmi_C_Formulation& formulation, const std::string& var_name) {
         return formulation.get_var_value_as_double(0, var_name);
     }
@@ -110,6 +122,7 @@ protected:
     std::vector<std::string> config_json;
     std::vector<std::string> catchment_ids;
     std::vector<std::string> model_type_name;
+    std::vector<bool> caches_input_variable_metadata;
     std::vector<std::string> forcing_file;
     std::vector<std::string> lib_file;
     std::vector<std::string> init_config;
@@ -126,7 +139,7 @@ protected:
 void Bmi_C_Formulation_Test::SetUp() {
     testing::Test::SetUp();
 
-#define EX_COUNT 2
+#define EX_COUNT 3
 
     forcing_dir_opts = {"./data/forcing/", "../data/forcing/", "../../data/forcing/"};
     bmi_init_cfg_dir_opts = {
@@ -147,6 +160,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     lib_file = std::vector<std::string>(EX_COUNT);
     init_config = std::vector<std::string>(EX_COUNT);
     main_output_variable  = std::vector<std::string>(EX_COUNT);
+    caches_input_variable_metadata = std::vector<bool>(EX_COUNT);
     registration_functions  = std::vector<std::string>(EX_COUNT);
     uses_forcing_file = std::vector<bool>(EX_COUNT);
     // tries_mass_balance = std::vector<bool>(EX_COUNT);
@@ -161,6 +175,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     lib_file[0] = find_file(lib_dir_opts, BMI_TEST_C_LOCAL_LIB_NAME);
     init_config[0] = find_file(bmi_init_cfg_dir_opts, "test_bmi_c_config_0.txt");
     main_output_variable[0] = "OUTPUT_VAR_1";
+    caches_input_variable_metadata[0] = false;
     registration_functions[0] = "register_bmi";
     uses_forcing_file[0] = false;
     // tries_mass_balance[0] = true;
@@ -171,8 +186,20 @@ void Bmi_C_Formulation_Test::SetUp() {
     lib_file[1] = find_file(lib_dir_opts, BMI_TEST_C_LOCAL_LIB_NAME);
     init_config[1] = find_file(bmi_init_cfg_dir_opts, "test_bmi_c_config_1.txt");
     main_output_variable[1] = "OUTPUT_VAR_1";
+    caches_input_variable_metadata[1] = false;
     registration_functions[1] = "register_bmi";
     uses_forcing_file[1] = false;
+    // tries_mass_balance[1] = false;
+
+    catchment_ids[2] = "cat-27";
+    model_type_name[2] = "test_bmi_c";
+    forcing_file[2] = find_file(forcing_dir_opts, "cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv");
+    lib_file[2] = find_file(lib_dir_opts, BMI_TEST_C_LOCAL_LIB_NAME);
+    init_config[2] = find_file(bmi_init_cfg_dir_opts, "test_bmi_c_config_1.txt");
+    main_output_variable[2] = "OUTPUT_VAR_1";
+    caches_input_variable_metadata[2] = true;
+    registration_functions[2] = "register_bmi";
+    uses_forcing_file[2] = false;
     // tries_mass_balance[1] = false;
 
     std::string variables_with_rain_rate = "                \"output_variables\": [\"OUTPUT_VAR_2\",\n"
@@ -183,6 +210,14 @@ void Bmi_C_Formulation_Test::SetUp() {
         std::shared_ptr<forcing_params> params = std::make_shared<forcing_params>(
                 forcing_params(forcing_file[i], "legacy", "2015-12-01 00:00:00", "2015-12-30 23:00:00"));
         std::string variables_line = (i == 1) ? variables_with_rain_rate : "";
+
+        // Add this substring with this key for even indices or if the value for it is true
+        std::string cache_metadata_substr = "";
+        if (i % 2 == 0 || caches_input_variable_metadata[i]) {
+            cache_metadata_substr = "\"" BMI_REALIZATION_CFG_PARAM_OPT__CACHE_INPUT_VAR_METADATA "\": " ;
+            cache_metadata_substr += caches_input_variable_metadata[i] ? "true," : "false,";
+        }
+
         forcing_params_examples[i] = params;
         config_json[i] = "{"
                          "    \"global\": {},"
@@ -193,6 +228,10 @@ void Bmi_C_Formulation_Test::SetUp() {
                          "                \"library_file\": \"" + lib_file[i] + "\","
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
+
+                         // Add this predetermined substring from above (which could be empty)
+                         + cache_metadata_substr +
+
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
                          "                      \"INPUT_VAR_2\": \"" + AORC_FIELD_NAME_TEMP_2M_AG + "\","
@@ -236,6 +275,16 @@ TEST_F(Bmi_C_Formulation_Test, Initialize_0_a) {
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variable[ex_index]);
 }
 
+/** Test example 0 (which should be explicitly configured) has `cache_input_variable_metadata` as `false`. */
+TEST_F(Bmi_C_Formulation_Test, Initialize_0_b) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    ASSERT_FALSE(get_friend_cache_input_variable_metadata(formulation));
+}
+
 /** Test to make sure we can initialize multiple model instances with dynamic loading. */
 TEST_F(Bmi_C_Formulation_Test, Initialize_1_a) {
     Bmi_C_Formulation form_1(catchment_ids[0], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[0]), utils::StreamHandler());
@@ -249,6 +298,38 @@ TEST_F(Bmi_C_Formulation_Test, Initialize_1_a) {
 
     ASSERT_EQ(header_1, "OUTPUT_VAR_1,OUTPUT_VAR_2");
     ASSERT_EQ(header_2, "OUTPUT_VAR_2,OUTPUT_VAR_1");
+}
+
+/** Test example 1 (which should not be explicitly configured) has `cache_input_variable_metadata` as `false`. */
+TEST_F(Bmi_C_Formulation_Test, Initialize_1_b) {
+    int ex_index = 1;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    ASSERT_FALSE(get_friend_cache_input_variable_metadata(formulation));
+}
+
+/** Simple test to make sure the model initializes. */
+TEST_F(Bmi_C_Formulation_Test, Initialize_2_a) {
+    int ex_index = 2;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    ASSERT_EQ(get_friend_model_type_name(formulation), model_type_name[ex_index]);
+    ASSERT_EQ(get_friend_bmi_init_config(formulation), init_config[ex_index]);
+    ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variable[ex_index]);
+}
+
+/** Test example 2 has `cache_input_variable_metadata` as `true`. */
+TEST_F(Bmi_C_Formulation_Test, Initialize_2_b) {
+    int ex_index = 2;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    ASSERT_TRUE(get_friend_cache_input_variable_metadata(formulation));
 }
 
 /** Simple test of get response. */
@@ -296,6 +377,22 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_b) {
     ASSERT_EQ(expected, response);
 }
 
+/** Test of get response of example 0 (store metadata is `false`) to make sure no metadata stored. */
+TEST_F(Bmi_C_Formulation_Test, GetResponse_0_c) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    double response;
+    for (int i = 0; i < 39; i++) {
+        response = formulation.get_response(i, 3600);
+    }
+
+    ASSERT_EQ(get_friend_known_bmi_input_vars(formulation).size(), 0);
+    ASSERT_EQ(get_friend_bmi_input_var_details(formulation), nullptr);
+}
+
 /** Test to make sure we can execute multiple model instances with dynamic loading. */
 TEST_F(Bmi_C_Formulation_Test, GetResponse_1_a) {
     Bmi_C_Formulation form_1(catchment_ids[0], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[0]), utils::StreamHandler());
@@ -310,6 +407,149 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_1_a) {
         response_1 = form_1.get_response(0, 3600);
         response_2 = form_2.get_response(0, 3600);
         ASSERT_EQ(response_1, response_2);
+    }
+}
+
+/** Test of get response for example 2 (using stored metadata) after several iterations. */
+TEST_F(Bmi_C_Formulation_Test, GetResponse_2_b) {
+    int ex_index = 2;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    double response;
+    for (int i = 0; i < 39; i++) {
+        response = formulation.get_response(i, 3600);
+    }
+    double expected = 2.7809780039160068e-08;
+    ASSERT_EQ(expected, response);
+}
+
+
+/** Test of get response of example 2 (store metadata is `true`) to make sure metadata stored. */
+TEST_F(Bmi_C_Formulation_Test, GetResponse_2_c) {
+    int ex_index = 2;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    double response;
+    for (int i = 0; i < 39; i++) {
+        response = formulation.get_response(i, 3600);
+    }
+
+    std::vector<Bmi_Var_Details*>* instance_metadata = get_friend_bmi_input_var_details(formulation);
+    std::set<Bmi_Var_Details> global_metadata = get_friend_known_bmi_input_vars(formulation);
+
+    ASSERT_NE(instance_metadata, nullptr);
+    ASSERT_EQ(instance_metadata->size(), 2);
+    ASSERT_EQ(global_metadata.size(), 2);
+}
+
+/** Test of `bmi_input_var_details` is populated correctly for example 2. */
+TEST_F(Bmi_C_Formulation_Test, bmi_input_var_details_2_a) {
+    int ex_index = 2;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    double response;
+    for (int i = 0; i < 39; i++) {
+        response = formulation.get_response(i, 3600);
+    }
+
+    std::vector<Bmi_Var_Details*>* input_metadata = get_friend_bmi_input_var_details(formulation);
+
+    Bmi_Var_Details* var_metadata = input_metadata->at(0);
+    ASSERT_EQ(var_metadata->get_name(), "INPUT_VAR_1");
+    ASSERT_EQ(var_metadata->get_mapped_alias(), AORC_FIELD_NAME_PRECIP_RATE);
+    ASSERT_EQ(var_metadata->get_units(), "m");
+    ASSERT_EQ(var_metadata->get_item_size(), 8);
+    ASSERT_EQ(var_metadata->get_num_items(), 1);
+
+    var_metadata = input_metadata->at(1);
+    ASSERT_EQ(var_metadata->get_name(), "INPUT_VAR_2");
+    ASSERT_EQ(var_metadata->get_mapped_alias(), AORC_FIELD_NAME_TEMP_2M_AG);
+    ASSERT_EQ(var_metadata->get_units(), "m/s");
+    ASSERT_EQ(var_metadata->get_item_size(), 8);
+    ASSERT_EQ(var_metadata->get_num_items(), 1);
+}
+
+/** Test of `bmi_input_var_details` values come from same static object in example 2. */
+TEST_F(Bmi_C_Formulation_Test, bmi_input_var_details_2_b) {
+    int ex_index = 2;
+
+    Bmi_C_Formulation formulation_1(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation_1.create_formulation(config_prop_ptree[ex_index]);
+
+    Bmi_C_Formulation formulation_2(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation_2.create_formulation(config_prop_ptree[ex_index]);
+
+    // Advance only one to start with
+    formulation_1.get_response(0, 3600);
+
+    std::vector<Bmi_Var_Details*>* instance_metadata_1 = get_friend_bmi_input_var_details(formulation_1);
+    std::vector<Bmi_Var_Details*>* instance_metadata_2 = get_friend_bmi_input_var_details(formulation_2);
+
+    // So, only the first of the instances has actually advanced and populated metadata objects
+    ASSERT_NE(instance_metadata_1, nullptr);
+    ASSERT_EQ(instance_metadata_2, nullptr);
+    ASSERT_EQ(instance_metadata_1->size(), 2);
+
+    // But the static member should be populated
+    std::set<Bmi_Var_Details> global_metadata_1 = get_friend_known_bmi_input_vars(formulation_1);
+    std::set<Bmi_Var_Details> global_metadata_2 = get_friend_known_bmi_input_vars(formulation_2);
+    ASSERT_EQ(global_metadata_1.size(), 2);
+    ASSERT_EQ(global_metadata_1.size(), global_metadata_2.size());
+
+    // Now advance formulation 2, and see that it has two var metadata objects
+    formulation_2.get_response(0, 3600);
+    instance_metadata_2 = get_friend_bmi_input_var_details(formulation_2);
+    ASSERT_NE(instance_metadata_2, nullptr);
+    ASSERT_EQ(instance_metadata_2->size(), 2);
+
+    // But the static metadata collections won't have grown ...
+    ASSERT_EQ(global_metadata_1.size(), 2);
+    ASSERT_EQ(global_metadata_1.size(), global_metadata_2.size());
+
+    // And the instance metadata pointers across the two instances (with different collection objects) will be the same
+    ASSERT_NE(&instance_metadata_1, &instance_metadata_2);
+    for (size_t i = 0; i < instance_metadata_1->size(); i++) {
+        Bmi_Var_Details* inst_1_obj_ptr = instance_metadata_1->at(i);
+        Bmi_Var_Details* inst_2_obj_ptr = instance_metadata_2->at(i);
+        ASSERT_EQ(inst_1_obj_ptr, inst_2_obj_ptr);
+    }
+}
+
+/** Test of `bmi_input_var_details` values are same objects for two objects with same config based on example 2. */
+TEST_F(Bmi_C_Formulation_Test, bmi_input_var_details_2_c) {
+    int ex_index = 2;
+
+    Bmi_C_Formulation formulation_1(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation_1.create_formulation(config_prop_ptree[ex_index]);
+
+    Bmi_C_Formulation formulation_2(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation_2.create_formulation(config_prop_ptree[ex_index]);
+
+    for (int i = 0; i < 10; i++) {
+        formulation_1.get_response(i, 3600);
+        formulation_2.get_response(i, 3600);
+    }
+
+    std::vector<Bmi_Var_Details*>* instance_metadata_1 = get_friend_bmi_input_var_details(formulation_1);
+    std::vector<Bmi_Var_Details*>* instance_metadata_2 = get_friend_bmi_input_var_details(formulation_2);
+
+    std::set<Bmi_Var_Details> global_metadata_1 = get_friend_known_bmi_input_vars(formulation_1);
+    std::set<Bmi_Var_Details> global_metadata_2 = get_friend_known_bmi_input_vars(formulation_2);
+
+
+    ASSERT_EQ(instance_metadata_1->size(), 2);
+    ASSERT_EQ(instance_metadata_1->size(), instance_metadata_2->size());
+    ASSERT_EQ(global_metadata_1.size(), 2);
+    ASSERT_EQ(global_metadata_1.size(), global_metadata_2.size());
+
+    for (size_t i = 0; i < instance_metadata_1->size(); i++) {
+        ASSERT_EQ(instance_metadata_1->at(i), instance_metadata_2->at(i));
     }
 }
 
@@ -354,6 +594,21 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
     formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
     EXPECT_THAT(output, MatchesRegex("580.799988,0.000001"));
+}
+
+/** Simple test of output, picking time step when there was non-zero rain rate. */
+TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_2_b) {
+    int ex_index = 2;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    int i = 0;
+    while (i < 542)
+        formulation.get_response(i++, 3600);
+    formulation.get_response(i, 3600);
+    std::string output = formulation.get_output_line_for_timestep(i, ",");
+    EXPECT_THAT(output, MatchesRegex("0.000001,580.799988"));
 }
 
 TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_a) {
