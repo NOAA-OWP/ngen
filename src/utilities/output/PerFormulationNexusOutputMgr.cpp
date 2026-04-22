@@ -17,6 +17,7 @@ limitations under the License.
 */
 
 #include "PerFormulationNexusOutputMgr.hpp"
+#include "FileChecker.h"
 
 utils::PerFormulationNexusOutputMgr::PerFormulationNexusOutputMgr(
     const std::vector<std::string>& nexus_ids,
@@ -392,8 +393,12 @@ void utils::PerFormulationNexusOutputMgr::create_netcdf_file() {
     if (netcdf_file_id != -1) {
         throw std::runtime_error("Cannot create netCDF file after already created and have nc_id set.");
     }
+    if (utils::FileChecker::file_is_readable(nexus_outfile)) {
+        std::cout << "WARN: Existing nexus NetCDF file '" << nexus_outfile
+                  << "' will be overwritten." << std::endl;
+    }
     std::cout << "Creating nexus NetCDF file '" << nexus_outfile << "' for regular access." << std::endl;
-    int nc_status = nc_create(nexus_outfile.c_str(), NC_NETCDF4 | NC_NOCLOBBER, &netcdf_file_id);
+    int nc_status = nc_create(nexus_outfile.c_str(), NC_NETCDF4 | NC_CLOBBER, &netcdf_file_id);
     if (nc_status != NC_NOERR) {
         throw std::runtime_error("PerFormulationNexusOutputMgr id " + std::to_string(obj_id) + " could not "
             + "create file '" + nexus_outfile + "' for regular access: " + parse_netcdf_return_code(nc_status));
@@ -406,8 +411,13 @@ void utils::PerFormulationNexusOutputMgr::create_netcdf_file_parallel(MPI_Comm m
     if (netcdf_file_id != -1) {
         throw std::runtime_error("Cannot (parallel) create netCDF file after already created and have nc_id set.");
     }
+    // Only rank 0 emits the overwrite warning, so a collective call won't produce duplicated log lines.
+    if (obj_id == 0 && utils::FileChecker::file_is_readable(nexus_outfile)) {
+        std::cout << "WARN: Existing nexus NetCDF file '" << nexus_outfile
+                  << "' will be overwritten." << std::endl;
+    }
     std::cout << "Creating nexus NetCDF file '" << nexus_outfile << "' for parallel access." << std::endl;
-    int nc_status = nc_create_par(nexus_outfile.c_str(), NC_NETCDF4 | NC_NOCLOBBER, mpi_comm, MPI_INFO_NULL, &netcdf_file_id);
+    int nc_status = nc_create_par(nexus_outfile.c_str(), NC_NETCDF4 | NC_CLOBBER, mpi_comm, MPI_INFO_NULL, &netcdf_file_id);
     if (nc_status != NC_NOERR) {
         throw std::runtime_error("PerFormulationNexusOutputMgr id " + std::to_string(obj_id) + " could not "
             + "create file '" + nexus_outfile + "' for parallel access: " + parse_netcdf_return_code(nc_status));

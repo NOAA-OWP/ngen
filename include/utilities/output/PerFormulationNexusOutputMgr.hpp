@@ -324,6 +324,9 @@ namespace utils
          * In any successful execution, this function will have the side effect of setting the @ref netcdf_file_id
          * member variable.
          *
+         * If a file already exists at @ref nexus_outfile, it will be overwritten and a warning will be printed to
+         * standard output.
+         *
          * Note this function is expected to only be called at most once by an instance, during the constructor (though
          * after the @ref nexus_outfile and @ref obj_id member variables are properly set).  An exception will be thrown
          * if the @ref netcdf_file_id member variable is already set (to something other than ``-1``) when this function
@@ -337,6 +340,9 @@ namespace utils
          *
          * In any successful execution, this function will have the side effect of setting the @ref netcdf_file_id
          * member variable.
+         *
+         * If a file already exists at @ref nexus_outfile, it will be overwritten and a warning will be printed to
+         * standard output by obj_id ``0`` (so the message is not duplicated across ranks).
          *
          * Note this function is expected to only be called at most once by an instance, during the constructor (though
          * after the @ref nexus_outfile and @ref obj_id member variables are properly set).  An exception will be thrown
