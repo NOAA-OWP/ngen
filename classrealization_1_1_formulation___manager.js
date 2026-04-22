@@ -6,7 +6,7 @@ var classrealization_1_1_formulation___manager =
     [ "~Formulation_Manager", "classrealization_1_1_formulation___manager.html#afbb8fd26cb697649d9d4a71bd79c8c86", null ],
     [ "add_formulation", "classrealization_1_1_formulation___manager.html#a3868b41241493dd336e5e124c4d436ad", null ],
     [ "begin", "classrealization_1_1_formulation___manager.html#abcc1668bbbdcdb541a0bfb0f6a70faf4", null ],
-    [ "construct_formulation_from_config", "classrealization_1_1_formulation___manager.html#a4f21958f41bb6ef3dfe4fc82ac9c192d", null ],
+    [ "construct_formulation_from_config", "classrealization_1_1_formulation___manager.html#ab6c3389e1fb554d55f4fd36693efee4d", null ],
     [ "construct_missing_formulation", "classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823", null ],
     [ "contains", "classrealization_1_1_formulation___manager.html#abe1de5766287584a045e3bb7cbee0ba2", null ],
     [ "end", "classrealization_1_1_formulation___manager.html#a6a88df7abd663f3072425abffb6501ef", null ],
