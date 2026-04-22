@@ -1,16 +1,37 @@
 # syntax=docker/dockerfile:1.4
 
-##############################
-# Stage: Base – Common Setup
-##############################
-ARG ORG=ngwpc
+############################################################################
+# Change/Verify these values when adopting this Dockerfile into another org:
+#   GH_ORG, GHCR_ORG, IMAGE_NAMESPACE,
+#   EWTS_ORG, EWTS_REF
+############################################################################
+
+# Ownership / branding overrides
+ARG GH_ORG=NGWPC
+ARG GHRC_ORG=ngwpc
+ARG IMAGE_NAMESPACE=ngwpc
+
+# External repository sources (org and ref/branch overrides)
+ARG EWTS_ORG=${GH_ORG}
+ARG EWTS_REF=development
+############################################################################
+
+# Image selection
 ARG NGEN_FORCING_IMAGE_TAG=latest
-ARG NGEN_FORCING_IMAGE=ghcr.io/${ORG}/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG}
+ARG NGEN_FORCING_IMAGE=ghcr.io/${GHRC_ORG}/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG}
 
 FROM ${NGEN_FORCING_IMAGE} AS base
 
 # Uncomment when building locally
 #FROM ngen-bmi-forcing AS base
+
+# Re-expose args after FROM for the remaining build stage
+# Keeps whatever value was already set
+ARG GH_ORG
+ARG GHCR_ORG
+ARG IMAGE_NAMESPACE
+ARG EWTS_ORG
+ARG EWTS_REF
 
 # OCI Metadata Arguments
 ARG NGEN_FORCING_IMAGE
@@ -24,7 +45,7 @@ ARG IMAGE_REVISION="unknown"
 # OCI Standard Labels
 LABEL org.opencontainers.image.base.name="${NGEN_FORCING_IMAGE}" \
     org.opencontainers.image.base.digest="${BASE_IMAGE_DIGEST}" \
-    io.ngwpc.image.base.revision="${BASE_IMAGE_REVISION}" \
+    io.${IMAGE_NAMESPACE}.image.base.revision="${BASE_IMAGE_REVISION}" \
     org.opencontainers.image.source="${IMAGE_SOURCE}" \
     org.opencontainers.image.vendor="${IMAGE_VENDOR}" \
     org.opencontainers.image.version="${IMAGE_VERSION}" \
@@ -229,7 +250,7 @@ WORKDIR /ngen-app/
 #   - It is cached independently from ngen source changes (COPY . /ngen-app/ngen/
 #     happens later in the submodules stage).
 #   - Iterative ngen/submodule development doesn't re-trigger the EWTS clone+build.
-#   - EWTS_ORG / EWTS_REF can be pinned without affecting other stages' caches.
+#   - EWTS_REF can be pinned without affecting other stages' caches.
 #
 # EWTS provides a unified logging framework used by ngen core and ALL C, C++, Fortran,
 # and Python submodules. Libraries are created for C, C++ and Fortran submodules
@@ -258,8 +279,6 @@ FROM base AS ewts-build
 
 SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
 
-ARG EWTS_ORG=NGWPC
-ARG EWTS_REF=development
 ARG EWTS_CACHE_BUST=0
 
 # Install path for the built EWTS libraries, headers, cmake config, and
@@ -574,3 +593,4 @@ SHELL ["/bin/bash", "-c"]
 
 ENTRYPOINT [ "/ngen-app/bin/run-ngen.sh" ]
 CMD [ "--info" ]
+
