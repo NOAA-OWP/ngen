@@ -623,6 +623,37 @@ TEST_F(Bmi_C_Formulation_Test, check_mass_balance_frequency_1) {
     ASSERT_THROW(formulation.check_mass_balance(2, 2, "t2"), ProtocolError);
 }
 
+TEST_F(Bmi_C_Formulation_Test, Initialize_0_with_empty_variables_names_map){
+    int i = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[i], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[i]), utils::StreamHandler());
+    std::string realization_config = "{"
+                         "    \"global\": {},"
+                         "    \"catchments\": {"
+                         "        \"" + catchment_ids[i] + "\": {"
+                         "            \"bmi_c\": {"
+                         "                \"model_type_name\": \"" + model_type_name[i] + "\","
+                         "                \"library_file\": \"" + lib_file[i] + "\","
+                         "                \"init_config\": \"" + init_config[i] + "\","
+                         "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
+                         "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
+                         "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": {},"
+                         "                \"registration_function\": \"" + registration_functions[i] + "\","
+                         "                \"uses_forcing_file\": " + (uses_forcing_file[i] ? "true" : "false") + ","
+                         "                \"model_params\": { \"PARAM_VAR_1\": 42, \"PARAM_VAR_2\": 4.2, \"PARAM_VAR_3\": [4, 2]}" +
+                         "            },"
+                         "            \"forcing\": { \"path\": \"" + forcing_file[i] + "\", \"provider\": \"CsvPerFeature\"}"
+                         "        }"
+                         "    }"
+                         "}";
+    std::stringstream stream;
+    stream << realization_config;
+    boost::property_tree::ptree loaded_tree;
+    boost::property_tree::json_parser::read_json(stream, loaded_tree);
+    boost::property_tree::ptree ptree = loaded_tree.get_child("catchments").get_child(catchment_ids[i]).get_child("bmi_c");
+    formulation.create_formulation(ptree);
+}
+
 #endif  // NGEN_BMI_C_LIB_TESTS_ACTIVE
 
 #endif // NGEN_BMI_C_FORMULATION_TEST_CPP
