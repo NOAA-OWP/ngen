@@ -635,7 +635,7 @@ namespace realization {
         /**
          * Initialize the metadata as needed for @ref do_bmi_sets_from_stored_metadata.
          *
-         * This will populate the @ref bmi_input_var_details member.  As metadata is gather into @ref Bmi_Var_Details
+         * This will populate the @ref bmi_input_var_details member.  As metadata is gathered into @ref Bmi_Var_Details
          * objects, these will be inserted into to the @ref known_bmi_input_vars static member.  Pointers to the values
          * in that set are then added to @ref bmi_input_var_details.
          */
