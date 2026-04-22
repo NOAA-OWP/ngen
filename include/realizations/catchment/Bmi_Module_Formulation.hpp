@@ -22,7 +22,7 @@ class Bmi_Cpp_Multi_Array_Test;
 
 namespace realization {
 
-    /** Type to hold some certain details about a BMI module variable that the framework will need used repeatedly. */
+    /** Type to hold some certain details about a BMI module variable that the framework will need to use repeatedly. */
     class Bmi_Var_Details {
 
     public:
