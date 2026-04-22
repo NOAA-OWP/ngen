@@ -1175,7 +1175,7 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
 
 /**
  * Testing config the same as EX 1 (like in basic_run_1) but with `cache_input_variable_metadata` true for global
- * formulation config (which is all formulations).
+ * formulation config (which is not all formulations for that configuration, as there are two independently specified).
  */
 TEST_F(Formulation_Manager_Test, basic_run_9) {
     std::stringstream stream;
