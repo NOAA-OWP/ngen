@@ -1,5 +1,4 @@
 module bmitestbmi
-  
 #ifdef NGEN_ACTIVE
   use bmif_2_0_iso
 #else
@@ -16,6 +15,11 @@ module bmitestbmi
   type, extends (bmi) :: bmi_test_bmi
      private
      type (test_bmi_model) :: model
+     ! Serialization support
+     integer, allocatable :: serialized_state(:)
+     integer :: serialized_size = 0
+     integer :: input_trigger_create = 0
+     integer :: input_trigger_free = 0
    contains
      procedure :: get_component_name => test_component_name
      procedure :: get_input_item_count => test_input_item_count
@@ -88,6 +92,9 @@ module bmitestbmi
           set_value_at_indices_int, &
           set_value_at_indices_float, &
           set_value_at_indices_double
+     procedure :: create_serialization => test_create_serialization
+     procedure :: free_serialization => test_free_serialization
+     procedure :: deserialize_state => test_deserialize_state
 !      procedure :: print_model_info
   end type bmi_test_bmi
 
@@ -133,6 +140,46 @@ module bmitestbmi
 
   character (len=BMI_MAX_LOCATION_NAME) :: &
     input_location(4) = [character(BMI_MAX_LOCATION_NAME):: 'node', 'node', 'node', 'node']
+
+  ! Serialization protocol variables — queryable by name but not advertised via get_input_var_names/get_output_var_names.
+  ! Intentionally no location array: these are trigger signals, a byte
+  ! count, and an opaque byte buffer — none has spatial semantics and
+  ! the protocol never queries get_var_location for them. The
+  ! get_var_location implementation below leaves these names to the
+  ! BMI_FAILURE fall-through on purpose.
+  character (len=BMI_MAX_VAR_NAME) :: &
+    serialization_items(4) = [character(BMI_MAX_VAR_NAME):: 'ngen::serialization_create', 'ngen::serialization_free', &
+                                                            'ngen::serialization_size', 'ngen::serialization_state']
+
+  ! NOTE on 'integer' for 'ngen::serialization_state': the protocol's
+  ! on-disk wire format is a byte buffer, but the Fortran BMI adapter on
+  ! the ngen side only wires integer / real / double type variants for
+  ! get_value / set_value — there is no byte variant to bind STATE to.
+  ! Declaring STATE as 'integer' lets the existing adapter path work;
+  ! the bytes round-trip faithfully because `serialized_size` (40) is a
+  ! whole number of default integers (10). The protocol's check_support
+  ! validates units ('ngen::opaque'), not type, so this Fortran-only
+  ! pragmatic choice doesn't conflict with the cross-model contract.
+  character (len=BMI_MAX_TYPE_NAME) :: &
+    serialization_type(4) = [character(BMI_MAX_TYPE_NAME):: 'integer', 'integer', 'integer', 'integer']
+
+  character (len=BMI_MAX_UNITS_NAME) :: &
+    serialization_units(4) = [character(BMI_MAX_UNITS_NAME):: 'ngen::trigger', 'ngen::trigger', 'bytes', 'ngen::opaque']
+
+  ! Single source of truth for this test model's on-disk state layout.
+  ! Bump alongside test_create_serialization / test_deserialize_state
+  ! when the layout grows; deserialize validates the incoming array
+  ! length against this value.
+  !   Fields (in order): current_model_time (real(8) = 8 bytes),
+  !                      input_var_1 (real(8) = 8),
+  !                      input_var_2 (real(4) = 4),
+  !                      input_var_3 (integer = 4),
+  !                      output_var_1 (real(8) = 8),
+  !                      output_var_2 (real(4) = 4),
+  !                      output_var_3 (integer = 4)
+  ! Total = 40 bytes = 10 default integers.
+  integer, parameter :: SERIALIZED_STATE_BYTES = 40
+  integer, parameter :: SERIALIZED_STATE_INTS  = 10
 
 contains
 
@@ -353,7 +400,16 @@ end function test_finalize
         return
       endif
     end do
-  
+
+    !check serialization protocol vars
+    do i = 1, size(serialization_items)
+      if( serialization_items(i) .eq. trim(name) ) then
+        type = serialization_type(i)
+        bmi_status = BMI_SUCCESS
+        return
+      endif
+    end do
+
     !check any other vars???
 
     !no matches
@@ -385,7 +441,16 @@ end function test_finalize
         return
       endif
     end do
-  
+
+    !check serialization protocol vars
+    do i = 1, size(serialization_items)
+      if( serialization_items(i) .eq. trim(name) ) then
+        units = serialization_units(i)
+        bmi_status = BMI_SUCCESS
+        return
+      endif
+    end do
+
     !check any other vars???
 
     !no matches
@@ -417,7 +482,11 @@ end function test_finalize
         return
       endif
     end do
-  
+
+    ! Serialization reserved names are deliberately NOT handled here:
+    ! they have no spatial semantics and the protocol never queries
+    ! get_var_location. Fall through to the BMI_FAILURE path.
+
     !check any other vars???
 
     !no matches
@@ -772,6 +841,9 @@ end function test_finalize
     case("OUTPUT_VAR_3")
        size = sizeof(this%model%output_var_3)
        bmi_status = BMI_SUCCESS
+    case("ngen::serialization_size", "ngen::serialization_create", "ngen::serialization_free", "ngen::serialization_state")
+       size = sizeof(this%serialized_size) ! 4 bytes (default integer)
+       bmi_status = BMI_SUCCESS
     case default
        size = -1
        bmi_status = BMI_FAILURE
@@ -793,6 +865,35 @@ end function test_finalize
       nbytes = item_size*grids(2)%rank
       bmi_status = BMI_SUCCESS
       return !FIXME refactor the rest of this function
+    case("ngen::serialization_state")
+      ! Always report the fixed-layout size, not the dynamic
+      ! `serialized_size` field (which is 0 outside a CREATE/FREE
+      ! scope). The iso_c_fortran_bmi SetValue shim computes a slice
+      ! length from `num_bytes / item_size` *before* dispatching to
+      ! test_set_int on restore, so reporting 0 here would cause the
+      ! shim to marshal an empty array across the language boundary
+      ! and `test_deserialize_state` would silently never receive
+      ! the on-disk payload. SERIALIZED_STATE_BYTES is the same
+      ! constant create_serialization uses, so the two sides agree
+      ! on the byte count regardless of the current buffer state.
+      nbytes = SERIALIZED_STATE_BYTES
+      bmi_status = BMI_SUCCESS
+      return
+    case("ngen::serialization_create", "ngen::serialization_free", "ngen::serialization_size")
+      ! Unlike the C/C++ test models (which can fail `get_var_nbytes`
+      ! for triggers since their adapters hand the raw void* straight
+      ! to the model), the iso_c_fortran_bmi SetValue shim computes
+      ! a slice length from `num_bytes / item_size` BEFORE dispatching
+      ! to the model's `set_value_int`. Returning BMI_FAILURE here
+      ! would short-circuit every SetValue(trigger) call before it
+      ! ever reaches `test_set_int`. Report a single int's worth of
+      ! bytes so the shim's arithmetic resolves to a 1-element slice
+      ! — the trigger value is still ignored by `test_set_int`, the
+      ! "triggers carry no meaningful stored value" semantic is
+      ! preserved at the Fortran side, and the shim dispatches.
+      nbytes = item_size
+      bmi_status = BMI_SUCCESS
+      return
     case("grid_2_shape", "grid_2_spacing", "grid_2_units", "grid_2_origin")
       nbytes = item_size*grids(3)%rank
       bmi_status = BMI_SUCCESS
@@ -850,6 +951,15 @@ end function test_finalize
       bmi_status = BMI_SUCCESS
     case("INPUT_VAR_3")
        this%model%input_var_3 = src(1)
+       bmi_status = BMI_SUCCESS
+    case("ngen::serialization_create")
+       call this%create_serialization()
+       bmi_status = BMI_SUCCESS
+    case("ngen::serialization_free")
+       call this%free_serialization()
+       bmi_status = BMI_SUCCESS
+    case("ngen::serialization_state")
+       call this%deserialize_state(src)
        bmi_status = BMI_SUCCESS
     case default
        bmi_status = BMI_FAILURE
@@ -966,6 +1076,16 @@ end function test_finalize
     case("OUTPUT_VAR_3")
       dest = [this%model%output_var_3]
       bmi_status = BMI_SUCCESS
+    case("ngen::serialization_size")
+      dest = [this%serialized_size]
+      bmi_status = BMI_SUCCESS
+    case("ngen::serialization_state")
+      if (allocated(this%serialized_state)) then
+        dest(1:size(this%serialized_state)) = this%serialized_state
+        bmi_status = BMI_SUCCESS
+      else
+        bmi_status = BMI_FAILURE
+      endif
     case default
        dest(:) = -1
        bmi_status = BMI_FAILURE
@@ -1198,4 +1318,76 @@ end function test_finalize
    endif
  end function register_bmi
 #endif
+
+  subroutine test_create_serialization(this)
+    class(bmi_test_bmi), intent(inout) :: this
+    integer :: offset
+
+    ! See SERIALIZED_STATE_BYTES / SERIALIZED_STATE_INTS at module scope
+    ! for the layout inventory and the single source of truth for size.
+    if (allocated(this%serialized_state)) deallocate(this%serialized_state)
+    allocate(this%serialized_state(SERIALIZED_STATE_INTS))
+    this%serialized_size = SERIALIZED_STATE_BYTES
+
+    ! `transfer(source, mold)` reinterprets `source` as an array whose
+    ! element type matches `mold`. Using a 2-element integer slice as
+    ! the mold makes the result shape explicit — the 8-byte doubles
+    ! pack into two default integers; 4-byte reals pack into one.
+    offset = 1
+    this%serialized_state(offset:offset+1) = transfer(this%model%current_model_time, this%serialized_state(1:2))
+    offset = offset + 2
+    this%serialized_state(offset:offset+1) = transfer(this%model%input_var_1, this%serialized_state(1:2))
+    offset = offset + 2
+    this%serialized_state(offset:offset)   = transfer(this%model%input_var_2, [0])
+    offset = offset + 1
+    this%serialized_state(offset:offset)   = [this%model%input_var_3]
+    offset = offset + 1
+    this%serialized_state(offset:offset+1) = transfer(this%model%output_var_1, this%serialized_state(1:2))
+    offset = offset + 2
+    this%serialized_state(offset:offset)   = transfer(this%model%output_var_2, [0])
+    offset = offset + 1
+    this%serialized_state(offset:offset)   = [this%model%output_var_3]
+
+  end subroutine test_create_serialization
+
+  subroutine test_free_serialization(this)
+    class(bmi_test_bmi), intent(inout) :: this
+    if (allocated(this%serialized_state)) deallocate(this%serialized_state)
+    this%serialized_size = 0
+  end subroutine test_free_serialization
+
+  subroutine test_deserialize_state(this, src)
+    class(bmi_test_bmi), intent(inout) :: this
+    integer, intent(in) :: src(:)
+    integer :: offset
+
+    ! Validate the caller's array length against this model version's
+    ! fixed layout. A mismatch is a hard error: callers should be
+    ! restoring a record produced by the same model, and the BMI
+    ! adapter path we rely on (integer variant) assumes a whole number
+    ! of default integers — SERIALIZED_STATE_INTS of them.
+    if (size(src) /= SERIALIZED_STATE_INTS) then
+       write (0, *) "test_deserialize_state: src has ", size(src), &
+            " integers but the declared layout is ", SERIALIZED_STATE_INTS, &
+            " integers (", SERIALIZED_STATE_BYTES, " bytes) — aborting restore."
+       return
+    endif
+
+    offset = 1
+    this%model%current_model_time = transfer(src(offset:offset+1), this%model%current_model_time)
+    offset = offset + 2
+    this%model%input_var_1 = transfer(src(offset:offset+1), this%model%input_var_1)
+    offset = offset + 2
+    this%model%input_var_2 = transfer(src(offset:offset), this%model%input_var_2)
+    offset = offset + 1
+    this%model%input_var_3 = src(offset)
+    offset = offset + 1
+    this%model%output_var_1 = transfer(src(offset:offset+1), this%model%output_var_1)
+    offset = offset + 2
+    this%model%output_var_2 = transfer(src(offset:offset), this%model%output_var_2)
+    offset = offset + 1
+    this%model%output_var_3 = src(offset)
+
+  end subroutine test_deserialize_state
+
 end module bmitestbmi
