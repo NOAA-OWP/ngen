@@ -29,7 +29,8 @@ namespace models{ namespace bmi{ namespace protocols{
 
 auto operator<<(std::ostream& os, Protocol p) -> std::ostream& {
     switch(p) {
-    case Protocol::MASS_BALANCE: os << "MASS_BALANCE"; break;
+    case Protocol::MASS_BALANCE:  os << "MASS_BALANCE";  break;
+    case Protocol::SERIALIZATION: os << "SERIALIZATION"; break;
     default: os << "UNKNOWN_PROTOCOL"; break;
     }
     return os;
@@ -37,13 +38,14 @@ auto operator<<(std::ostream& os, Protocol p) -> std::ostream& {
 
 NgenBmiProtocols::NgenBmiProtocols()
     : model(nullptr) {
-        protocols[Protocol::MASS_BALANCE] = std::make_unique<NgenMassBalance>();
+        protocols[Protocol::MASS_BALANCE]  = std::make_unique<NgenMassBalance>();
+        protocols[Protocol::SERIALIZATION] = std::make_unique<NgenSerializationProtocol>();
 }
 
 NgenBmiProtocols::NgenBmiProtocols(ModelPtr model, const geojson::PropertyMap& properties)
     : model(model) {
-    //Create and initialize mass balance configurable properties
-    protocols[Protocol::MASS_BALANCE] = std::make_unique<NgenMassBalance>(model, properties);
+    protocols[Protocol::MASS_BALANCE]  = std::make_unique<NgenMassBalance>(model, properties);
+    protocols[Protocol::SERIALIZATION] = std::make_unique<NgenSerializationProtocol>(model, properties);
 }
 
 auto NgenBmiProtocols::run(const Protocol& protocol_name, const Context& ctx) const -> expected<void, ProtocolError> {
@@ -52,6 +54,10 @@ auto NgenBmiProtocols::run(const Protocol& protocol_name, const Context& ctx) co
     switch(protocol_name){
         case Protocol::MASS_BALANCE:
             return protocols.at(Protocol::MASS_BALANCE)->run(model, ctx)
+            .or_else( NgenBmiProtocol::error_or_warning );
+            break;
+        case Protocol::SERIALIZATION:
+            return protocols.at(Protocol::SERIALIZATION)->run(model, ctx)
             .or_else( NgenBmiProtocol::error_or_warning );
             break;
         default:
