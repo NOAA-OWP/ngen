@@ -14,7 +14,7 @@
 # Library Version 0.1
 # BMI mass balance checking protocol
 
-add_library(ngen_bmi_protocols protocols.cpp mass_balance.cpp serialization.cpp)
+add_library(ngen_bmi_protocols protocols.cpp mass_balance.cpp serialization.cpp deserialization.cpp)
 add_library(NGen::bmi_protocols ALIAS ngen_bmi_protocols)
 
 # Record format (serialization_record.hpp) uses boost::serialization binary

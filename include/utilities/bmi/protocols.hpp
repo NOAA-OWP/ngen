@@ -39,13 +39,15 @@ Container and management for abstract BMI protocols
 
 #include "mass_balance.hpp"
 #include "serialization.hpp"
+#include "deserialization.hpp"
 
 
 namespace models{ namespace bmi{ namespace protocols{
 
 enum class Protocol {
     MASS_BALANCE,
-    SERIALIZATION
+    SERIALIZATION,
+    DESERIALIZATION
 };
 
 auto operator<<(std::ostream& os, Protocol p) -> std::ostream&;
