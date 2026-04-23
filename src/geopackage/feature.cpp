@@ -13,9 +13,14 @@ inline void build_point_bbox(const geojson::geometry& geom, std::vector<double>&
 geojson::Feature ngen::geopackage::build_feature(
   const ngen::sqlite::database::iterator& row,
   const std::string& id_col,
-  const std::string& geom_col
+  const std::string& geom_col,
+  ngen::geopackage::HydrofabricVersion version
 )
 {
+    // `version` is threaded here so v3.0-specific property aliasing can be
+    // applied in subsequent migration tasks; this task only wires the plumbing.
+    (void)version;
+
     std::vector<double> bounding_box(4);
     std::string id                   = row.get<std::string>(id_col);
     geojson::PropertyMap properties  = build_properties(row, geom_col);

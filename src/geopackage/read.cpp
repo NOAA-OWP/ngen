@@ -26,6 +26,30 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
 
     ngen::sqlite::database db{gpkg_path};
 
+    // Detect hydrofabric schema version once per file load. Non-hydrofabric
+    // GPKGs (e.g. synthetic test fixtures) have no `nexus` table; treat the
+    // detection failure as "not a hydrofabric" and default to V2_2 so the
+    // pre-existing legacy code paths remain intact.
+    ngen::geopackage::HydrofabricVersion version =
+        ngen::geopackage::HydrofabricVersion::V2_2;
+    bool version_detected = false;
+    try {
+        version = ngen::geopackage::detect_version(db.connection());
+        version_detected = true;
+    } catch (const std::runtime_error&) {
+        // swallow: this GPKG does not carry a hydrofabric `nexus` table
+    }
+
+    #ifndef NGEN_QUIET
+    if (version_detected) {
+        std::cout << "INFO: hydrofabric detected: "
+                  << (version == ngen::geopackage::HydrofabricVersion::V3_0
+                          ? "v3.0"
+                          : "v2.2")
+                  << std::endl;
+    }
+    #endif
+
     // Check if layer exists
     if (!db.contains(layer)) {
         // Since the layer doesn't exist, we need to output some additional
@@ -57,7 +81,10 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
         catch (const std::exception& e){
             #ifndef NGEN_QUIET
             // output debug info on what is read exactly
-            std::cout << "WARN: Using legacy ID column \"id\" in layer " << layer << " is DEPRECATED and may stop working at any time." << std::endl;
+            std::cout << "WARN: Using legacy ID column \"id\" in layer " << layer
+                      << " is DEPRECATED and may stop working at any time."
+                      << " Hydrofabric v2.2 is deprecated; please migrate to v3.0."
+                      << std::endl;
             #endif
         }
     }
@@ -112,7 +139,8 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
         geojson::Feature feature = build_feature(
             query_get_layer,
             id_column,
-            layer_geometry_column
+            layer_geometry_column,
+            version
         );
 
         features.push_back(feature);
