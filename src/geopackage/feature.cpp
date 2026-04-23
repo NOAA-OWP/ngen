@@ -1,6 +1,9 @@
 #include "geopackage.hpp"
+#include "JSONProperty.hpp"
 
-// Points don't have a bounding box, so we can say its bbox is itself    
+#include <cassert>
+
+// Points don't have a bounding box, so we can say its bbox is itself
 inline void build_point_bbox(const geojson::geometry& geom, std::vector<double>& bbox)
 {
     const auto& pt = boost::get<geojson::coordinate_t>(geom);
@@ -17,14 +20,28 @@ geojson::Feature ngen::geopackage::build_feature(
   ngen::geopackage::HydrofabricVersion version
 )
 {
-    // `version` is threaded here so v3.0-specific property aliasing can be
-    // applied in subsequent migration tasks; this task only wires the plumbing.
-    (void)version;
-
     std::vector<double> bounding_box(4);
     std::string id                   = row.get<std::string>(id_col);
     geojson::PropertyMap properties  = build_properties(row, geom_col);
     geojson::geometry geometry       = build_geometry(row, geom_col, bounding_box);
+
+    // v3.0 renamed nexus.id -> nexus.nexus_id and nexus.toid -> nexus.nexus_toid.
+    // Downstream consumers still key on "id" / "toid", so alias the v3.0 columns
+    // into those names. The originals remain in the map (additive) so any future
+    // consumer that prefers the schema names keeps working.
+    if (version == ngen::geopackage::HydrofabricVersion::V3_0 && id_col == "nexus_id") {
+        auto it_nid = properties.find("nexus_id");
+        if (it_nid != properties.end()) {
+            properties.emplace("id", geojson::JSONProperty("id", it_nid->second));
+        }
+        auto it_ntoid = properties.find("nexus_toid");
+        if (it_ntoid != properties.end()) {
+            properties.emplace("toid", geojson::JSONProperty("toid", it_ntoid->second));
+        }
+        assert(properties.count("id") > 0);
+        assert(properties.count("toid") > 0);
+        assert(!id.empty());
+    }
 
     // Convert variant type (0-based) to FeatureType
     const auto wkb_type = static_cast<geojson::FeatureType>(geometry.which() + 1);
