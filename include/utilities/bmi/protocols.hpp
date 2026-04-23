@@ -38,12 +38,14 @@ Container and management for abstract BMI protocols
 #include "JSONProperty.hpp"
 
 #include "mass_balance.hpp"
+#include "serialization.hpp"
 
 
 namespace models{ namespace bmi{ namespace protocols{
 
 enum class Protocol {
-    MASS_BALANCE
+    MASS_BALANCE,
+    SERIALIZATION
 };
 
 auto operator<<(std::ostream& os, Protocol p) -> std::ostream&;
