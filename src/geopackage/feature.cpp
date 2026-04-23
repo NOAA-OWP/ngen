@@ -17,7 +17,8 @@ geojson::Feature ngen::geopackage::build_feature(
   const ngen::sqlite::database::iterator& row,
   const std::string& id_col,
   const std::string& geom_col,
-  ngen::geopackage::HydrofabricVersion version
+  ngen::geopackage::HydrofabricVersion version,
+  const std::unordered_map<std::string, std::string>* divide_toid_lookup
 )
 {
     std::vector<double> bounding_box(4);
@@ -45,12 +46,29 @@ geojson::Feature ngen::geopackage::build_feature(
 
     // v3.0 divides carry flowpath_id as the foreign key into flowpaths.
     // build_properties already copies it verbatim (it is a non-geometry
-    // column); guard that invariant here so the upcoming toid-synthesis
-    // step can rely on it without re-introspecting the schema. v2.2
-    // divides are intentionally not asserted: flowpath_id is a v3.0 column.
+    // column); guard that invariant here so the toid-synthesis lookup
+    // below can rely on it. v2.2 divides are intentionally not asserted:
+    // flowpath_id is a v3.0 column.
     if (version == ngen::geopackage::HydrofabricVersion::V3_0 && id_col == "divide_id") {
         assert(properties.count("flowpath_id") > 0);
         assert(!id.empty());
+
+        // v3.0 divides have no native toid column: synthesize it by looking
+        // up this divide's id in the precomputed divide_id -> flowpath_toid
+        // cache (built in read.cpp from divides JOIN flowpaths). If the
+        // cache is null or the lookup misses (e.g., flowpath_id was null
+        // or the join did not resolve), leave "toid" unset — that matches
+        // v2.2 terminal-divide semantics and lets read.cpp count the
+        // unlinked divides once, after the full feature build.
+        if (divide_toid_lookup != nullptr) {
+            auto it = divide_toid_lookup->find(id);
+            if (it != divide_toid_lookup->end()) {
+                properties.emplace(
+                    "toid",
+                    geojson::JSONProperty("toid", it->second)
+                );
+            }
+        }
     }
 
     // Convert variant type (0-based) to FeatureType
