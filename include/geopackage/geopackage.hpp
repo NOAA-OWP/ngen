@@ -2,6 +2,7 @@
 #define NGEN_GEOPACKAGE_H
 
 #include "FeatureCollection.hpp"
+#include "HydrofabricVersion.hpp"
 #include "ngen_sqlite.hpp"
 
 namespace ngen {
@@ -35,15 +36,20 @@ geojson::PropertyMap build_properties(
 
 /**
  * Build a feature from a GPKG table row
- * 
+ *
  * @param[in] row SQLite iterator at the row to build a feature from
+ * @param[in] id_col Name of the column to use as the feature id
  * @param[in] geom_col Name of geometry column containing GPKG WKB
+ * @param[in] version Detected hydrofabric version (drives v3.0-specific
+ *            property aliasing for the nexus/divides layers; ignored for
+ *            non-hydrofabric GPKGs, where V2_2 is passed as a benign default)
  * @return geojson::Feature Feature containing geometry and properties from the given row
  */
 geojson::Feature build_feature(
     const ngen::sqlite::database::iterator& row,
     const std::string& id_col,
-    const std::string& geom_col
+    const std::string& geom_col,
+    HydrofabricVersion version
 );
 
 /**
