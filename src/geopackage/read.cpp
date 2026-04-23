@@ -2,6 +2,7 @@
 
 #include <numeric>
 #include <regex>
+#include <unordered_map>
 
 void check_table_name(const std::string& table)
 {
@@ -141,6 +142,31 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     query_get_layer_geom_meta.next();
     const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
 
+    // v3.0 divides carry no native toid column; instead, every divide points
+    // at a flowpath via flowpath_id, and that flowpath's flowpath_toid is the
+    // downstream nexus. Precompute the divide_id -> flowpath_toid map once,
+    // before the per-row build loop, by joining divides and flowpaths. The
+    // WHERE guard drops any rows whose flowpath_toid is NULL so the cache
+    // only contains well-formed links; unlinked divides (null flowpath_id,
+    // or flowpath present but with a null toid) naturally miss the lookup
+    // and leave "toid" unset on the resulting feature.
+    std::unordered_map<std::string, std::string> divide_toid_lookup;
+    const bool synthesize_divides_toid =
+        (version == ngen::geopackage::HydrofabricVersion::V3_0 && layer == "divides");
+    if (synthesize_divides_toid) {
+        auto q = db.query(
+            "SELECT d.divide_id, f.flowpath_toid "
+            "FROM divides d "
+            "JOIN flowpaths f ON d.flowpath_id = f.flowpath_id "
+            "WHERE f.flowpath_toid IS NOT NULL"
+        );
+        q.next();
+        while (!q.done()) {
+            divide_toid_lookup.emplace(q.get<std::string>(0), q.get<std::string>(1));
+            q.next();
+        }
+    }
+
     // Get layer
     auto query_get_layer = db.query("SELECT * FROM " + layer + joined_ids, ids);
     query_get_layer.next();
@@ -153,11 +179,33 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
             query_get_layer,
             id_column,
             layer_geometry_column,
-            version
+            version,
+            synthesize_divides_toid ? &divide_toid_lookup : nullptr
         );
 
         features.push_back(feature);
         query_get_layer.next();
+    }
+
+    // Summary WARN for v3.0 divides whose toid could not be synthesized via
+    // the divides -> flowpaths join (null flowpath_id, or join miss). A
+    // single aggregate line avoids flooding logs when a large subset is
+    // terminal.
+    if (synthesize_divides_toid) {
+        std::size_t unlinked = 0;
+        for (const auto& f : features) {
+            if (!f->has_property("toid")) {
+                ++unlinked;
+            }
+        }
+        #ifndef NGEN_QUIET
+        if (unlinked > 0) {
+            std::cout << "WARN: " << unlinked
+                      << " v3.0 divide(s) have no toid (flowpath_id null or"
+                      << " join miss on divides -> flowpaths); treated as"
+                      << " terminal." << std::endl;
+        }
+        #endif
     }
 
     // get layer bounding box from features
