@@ -34,6 +34,14 @@ struct test_bmi_c_model {
 
     double mass_stored; // Mass balance variable, for testing purposes
     double mass_leaked; //Mass balance variable, for testing purposes
+
+    // Serialization support. No storage for the create/free trigger
+    // variables — they're action signals with no stored state; the
+    // SetValue dispatch short-circuits to the respective helper
+    // without touching any field, and Get_value_ptr deliberately
+    // does not handle them.
+    char* serialized_state;
+    int serialized_size;
 };
 typedef struct test_bmi_c_model test_bmi_c_model;
 

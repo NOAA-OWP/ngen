@@ -68,3 +68,52 @@ class MassBalanceMock {
     private:
         boost::property_tree::ptree properties;
 };
+
+/**
+ * @brief Config builder for the save-side serialization protocol.
+ *
+ * Produces a `serialization` block with a shared top-level `path` and a
+ * `save` sub-block.
+ */
+class SerializationMock {
+    public:
+
+        SerializationMock(const std::string& path, bool fatal = true, int frequency = 1, bool check = true)
+            : properties() {
+            boost::property_tree::ptree top;
+            top.put("path", path);
+            boost::property_tree::ptree save;
+            save.put("check", check);
+            save.put("fatal", fatal);
+            save.put("frequency", frequency);
+            top.add_child("save", save);
+            properties.add_child("serialization", top);
+        }
+
+        // Variant producing a config with no "path" at the top-level — lets
+        // tests exercise the "path required but missing" branch.
+        static SerializationMock without_path(bool fatal = true, int frequency = 1, bool check = true) {
+            SerializationMock m{};
+            boost::property_tree::ptree top;
+            boost::property_tree::ptree save;
+            save.put("check", check);
+            save.put("fatal", fatal);
+            save.put("frequency", frequency);
+            top.add_child("save", save);
+            m.properties.add_child("serialization", top);
+            return m;
+        }
+
+        const boost::property_tree::ptree& get() const {
+            return properties.get_child("serialization");
+        }
+
+        const geojson::PropertyMap as_json_property() const {
+            auto props = geojson::JSONProperty("serialization", properties);
+            return props.get_values();
+        }
+
+    private:
+        SerializationMock() = default;
+        boost::property_tree::ptree properties;
+};
