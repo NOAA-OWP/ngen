@@ -88,6 +88,12 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
             #endif
         }
     }
+    else if (layer == "nexus" && version == ngen::geopackage::HydrofabricVersion::V3_0) {
+        // v3.0 renames nexus.id -> nexus.nexus_id; point id_column at the
+        // new primary key so the WHERE-IN subset clause and the per-row id
+        // lookup in build_feature both resolve against the right column.
+        id_column = "nexus_id";
+    }
 
     // Layer exists, getting statement for it
     //
