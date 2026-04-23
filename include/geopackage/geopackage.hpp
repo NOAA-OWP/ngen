@@ -1,6 +1,9 @@
 #ifndef NGEN_GEOPACKAGE_H
 #define NGEN_GEOPACKAGE_H
 
+#include <string>
+#include <unordered_map>
+
 #include "FeatureCollection.hpp"
 #include "HydrofabricVersion.hpp"
 #include "ngen_sqlite.hpp"
@@ -43,13 +46,19 @@ geojson::PropertyMap build_properties(
  * @param[in] version Detected hydrofabric version (drives v3.0-specific
  *            property aliasing for the nexus/divides layers; ignored for
  *            non-hydrofabric GPKGs, where V2_2 is passed as a benign default)
+ * @param[in] divide_toid_lookup Optional cache mapping v3.0 divide_id ->
+ *            flowpath_toid. When non-null and the row is a v3.0 divide, the
+ *            built feature's "toid" property is populated from the cache.
+ *            Missing keys leave "toid" unset, matching v2.2 terminal-divide
+ *            behavior. Pass nullptr for all non-v3.0-divides code paths.
  * @return geojson::Feature Feature containing geometry and properties from the given row
  */
 geojson::Feature build_feature(
     const ngen::sqlite::database::iterator& row,
     const std::string& id_col,
     const std::string& geom_col,
-    HydrofabricVersion version
+    HydrofabricVersion version,
+    const std::unordered_map<std::string, std::string>* divide_toid_lookup = nullptr
 );
 
 /**
