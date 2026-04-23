@@ -43,6 +43,16 @@ geojson::Feature ngen::geopackage::build_feature(
         assert(!id.empty());
     }
 
+    // v3.0 divides carry flowpath_id as the foreign key into flowpaths.
+    // build_properties already copies it verbatim (it is a non-geometry
+    // column); guard that invariant here so the upcoming toid-synthesis
+    // step can rely on it without re-introspecting the schema. v2.2
+    // divides are intentionally not asserted: flowpath_id is a v3.0 column.
+    if (version == ngen::geopackage::HydrofabricVersion::V3_0 && id_col == "divide_id") {
+        assert(properties.count("flowpath_id") > 0);
+        assert(!id.empty());
+    }
+
     // Convert variant type (0-based) to FeatureType
     const auto wkb_type = static_cast<geojson::FeatureType>(geometry.which() + 1);
 

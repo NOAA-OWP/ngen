@@ -73,19 +73,26 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     // Introspect if the layer is divides to see which ID field is in use
     std::string id_column = "id";
     if(layer == "divides"){
-        try {
-            //TODO: A bit primitive. Actually introspect the schema somehow? https://www.sqlite.org/c3ref/funclist.html
-            auto query_get_first_row = db.query("SELECT divide_id FROM " + layer + " LIMIT 1");
+        if (version == ngen::geopackage::HydrofabricVersion::V3_0) {
+            // v3.0 always exposes divides.divide_id; no runtime introspection
+            // needed. The flowpath_id column (used by the upcoming toid
+            // synthesis step) is carried verbatim through build_properties.
             id_column = "divide_id";
-        }
-        catch (const std::exception& e){
-            #ifndef NGEN_QUIET
-            // output debug info on what is read exactly
-            std::cout << "WARN: Using legacy ID column \"id\" in layer " << layer
-                      << " is DEPRECATED and may stop working at any time."
-                      << " Hydrofabric v2.2 is deprecated; please migrate to v3.0."
-                      << std::endl;
-            #endif
+        } else {
+            try {
+                //TODO: A bit primitive. Actually introspect the schema somehow? https://www.sqlite.org/c3ref/funclist.html
+                auto query_get_first_row = db.query("SELECT divide_id FROM " + layer + " LIMIT 1");
+                id_column = "divide_id";
+            }
+            catch (const std::exception& e){
+                #ifndef NGEN_QUIET
+                // output debug info on what is read exactly
+                std::cout << "WARN: Using legacy ID column \"id\" in layer " << layer
+                          << " is DEPRECATED and may stop working at any time."
+                          << " Hydrofabric v2.2 is deprecated; please migrate to v3.0."
+                          << std::endl;
+                #endif
+            }
         }
     }
     else if (layer == "nexus" && version == ngen::geopackage::HydrofabricVersion::V3_0) {
