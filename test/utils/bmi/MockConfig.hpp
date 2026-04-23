@@ -117,3 +117,101 @@ class SerializationMock {
         SerializationMock() = default;
         boost::property_tree::ptree properties;
 };
+
+/**
+ * @brief Config builder for the restore-side deserialization protocol.
+ *
+ * Produces a `serialization` block with a shared top-level `path` and a
+ * `restore` sub-block. Save config (for integration tests that drive both
+ * sides from one config) can be grafted on with `with_save()`.
+ */
+class DeserializationMock {
+    public:
+        DeserializationMock(const std::string& path,
+                            const std::string& step = "latest",
+                            bool fatal = true,
+                            bool check = true)
+            : properties() {
+            boost::property_tree::ptree top;
+            top.put("path", path);
+            boost::property_tree::ptree restore;
+            restore.put("check", check);
+            restore.put("fatal", fatal);
+            restore.put("step", step);
+            top.add_child("restore", restore);
+            properties.add_child("serialization", top);
+        }
+
+        // Build a restore config keyed by timestamp instead of step.
+        static DeserializationMock by_timestamp(const std::string& path,
+                                                const std::string& timestamp,
+                                                bool fatal = true,
+                                                bool check = true) {
+            DeserializationMock m{};
+            boost::property_tree::ptree top;
+            top.put("path", path);
+            boost::property_tree::ptree restore;
+            restore.put("check", check);
+            restore.put("fatal", fatal);
+            restore.put("timestamp", timestamp);
+            top.add_child("restore", restore);
+            m.properties.add_child("serialization", top);
+            return m;
+        }
+
+        // Build a restore config that specifies BOTH step and timestamp,
+        // so tests can exercise the precedence rule (timestamp wins).
+        static DeserializationMock both(const std::string& path,
+                                        const std::string& step,
+                                        const std::string& timestamp,
+                                        bool fatal = true,
+                                        bool check = true) {
+            DeserializationMock m{};
+            boost::property_tree::ptree top;
+            top.put("path", path);
+            boost::property_tree::ptree restore;
+            restore.put("check", check);
+            restore.put("fatal", fatal);
+            restore.put("step", step);
+            restore.put("timestamp", timestamp);
+            top.add_child("restore", restore);
+            m.properties.add_child("serialization", top);
+            return m;
+        }
+
+        DeserializationMock& with_save(int frequency = 1, bool check = true, bool fatal = true) {
+            boost::property_tree::ptree save;
+            save.put("check", check);
+            save.put("fatal", fatal);
+            save.put("frequency", frequency);
+            properties.get_child("serialization").add_child("save", save);
+            return *this;
+        }
+
+        // Inject an `id_subset` array onto the restore block. Each id is
+        // appended as an unkeyed child element, matching the ptree
+        // representation of a JSON array of strings.
+        DeserializationMock& with_id_subset(const std::vector<std::string>& ids) {
+            boost::property_tree::ptree subset;
+            for (const auto& id : ids) {
+                boost::property_tree::ptree leaf;
+                leaf.put("", id);
+                subset.push_back(std::make_pair("", leaf));
+            }
+            properties.get_child("serialization.restore").add_child("id_subset", subset);
+            return *this;
+        }
+
+        const boost::property_tree::ptree& get() const {
+            return properties.get_child("serialization");
+        }
+
+        const geojson::PropertyMap as_json_property() const {
+            auto props = geojson::JSONProperty("serialization", properties);
+            return props.get_values();
+        }
+
+    private:
+        DeserializationMock() = default;
+        boost::property_tree::ptree properties;
+};

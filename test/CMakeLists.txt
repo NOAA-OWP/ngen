@@ -227,6 +227,7 @@ ngen_add_test(
         utils/bmi/mass_balance_Test.cpp
         utils/bmi/serialization_record_Test.cpp
         utils/bmi/serialization_Test.cpp
+        utils/bmi/deserialization_Test.cpp
         utils/bmi/bmi_utilities_Test.cpp
     LIBRARIES
         NGen::bmi_protocols
