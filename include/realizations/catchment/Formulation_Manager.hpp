@@ -19,6 +19,7 @@
 #include "realizations/config/output.hpp"
 #include "realizations/config/global_config.hpp"
 #include "realizations/config/serialization_helper.hpp"
+#include "path_tokens.hpp"
 
 namespace realization {
 
