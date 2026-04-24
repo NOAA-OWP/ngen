@@ -39,6 +39,23 @@ void Formulation_Manager::read(simulation_time_params &simulation_time_config,
         global_config = realization::config::Config(*possible_global_config);
     }
 
+    // Parse realization-level inheritable config blocks from the
+    // top-level JSON (see realization::config::GlobalConfigKey).
+    // Each recognized block is stored in `global_configs` and
+    // later merged into every formulation's params via
+    // `realization::config::apply_config`. Per-formulation
+    // entries still win — the parsed block is a default.
+    for (auto which : { realization::config::GlobalConfigKey::SERIALIZATION }) {
+        const char* key = realization::config::to_key_string(which);
+        auto possible_block = tree.get_child_optional(key);
+        if (possible_block) {
+            global_configs.emplace(
+                key,
+                geojson::JSONProperty(key, *possible_block)
+            );
+        }
+    }
+
     /**
      * Read the layer descriptions
     */
@@ -98,7 +115,27 @@ void Formulation_Manager::read(simulation_time_params &simulation_time_config,
 
     /**
      * Read catchment configurations from configuration file
-     */
+    */
+    // With the global-config map populated and the hydrofabric
+    // already loaded for this manager, fill in a default
+    // `serialization.restore.id_subset` from the set of ids
+    // this run will actually touch. A no-op when the user
+    // supplied their own id_subset, or when no restore block
+    // is configured. See
+    // `realization::config::apply_serialization_restore_subset_default`
+    // for the precise no-op cases.
+    {
+        std::vector<std::string> known_ids;
+        if (fabric) {
+            known_ids.reserve(fabric->get_size());
+            for (const geojson::Feature& location : *fabric) {
+                known_ids.push_back(location->get_id());
+            }
+        }
+        realization::config::apply_serialization_restore_subset_default(
+            global_configs, known_ids);
+    }
+
     auto possible_catchment_configs = tree.get_child_optional("catchments");
 
     // For now at least, this isn't allowed

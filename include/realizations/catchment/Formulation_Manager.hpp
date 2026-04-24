@@ -17,6 +17,8 @@
 #include "realizations/config/config.hpp"
 #include "realizations/config/layer.hpp"
 #include "realizations/config/output.hpp"
+#include "realizations/config/global_config.hpp"
+#include "realizations/config/serialization_helper.hpp"
 
 namespace realization {
 
@@ -121,6 +123,12 @@ namespace realization {
             boost::property_tree::ptree tree;
 
             realization::config::Config global_config;
+
+            /** Parsed realization-level config blocks that should be
+             *  inherited into every formulation's params unless the
+             *  formulation declares its own. Keyed by the JSON key
+             *  string (see realization::config::GlobalConfigKey). */
+            geojson::PropertyMap global_configs;
 
             std::map<std::string, std::shared_ptr<Catchment_Formulation>> formulations;
 
