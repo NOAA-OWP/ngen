@@ -471,6 +471,7 @@ TEST_F(GeoPackage_DetectVersion_Test, geopackage_detect_version_throws_on_bad_sc
     // Build a temporary SQLite database with a malformed nexus table.
     const std::string path = std::string(testing::TempDir()) + "/malformed_nexus.gpkg";
     {
+        std::remove(path.c_str()); // delete any leftover from a prior run
         sqlite3* raw = nullptr;
         ASSERT_EQ(sqlite3_open(path.c_str(), &raw), SQLITE_OK);
         // Nexus table present but with neither 'id' nor 'nexus_id' columns.
