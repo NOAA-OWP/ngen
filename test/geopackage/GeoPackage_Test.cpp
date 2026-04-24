@@ -259,6 +259,100 @@ TEST_F(GeoPackage_NexusRemap_Test, geopackage_v2_2_nexus_id_toid_from_columns)
     EXPECT_EQ(gpkg->get_feature(idx2)->get_property("toid").as_string(), "coastal-000001");
 }
 
+// Fixture for v3.0 divides toid-synthesis tests.
+// Uses example_v3_0.gpkg (3 divides, all flowpath_ids resolve) and
+// example_v3_0_dangling.gpkg (2 divides: one resolves, one has a
+// flowpath_id not present in flowpaths).
+class GeoPackage_DividesToidSynthesis_Test : public ::testing::Test
+{
+  protected:
+    void SetUp() override
+    {
+        this->v3_0_path = utils::FileChecker::find_first_readable({
+            "test/data/geopackage/example_v3_0.gpkg",
+            "../test/data/geopackage/example_v3_0.gpkg",
+            "../../test/data/geopackage/example_v3_0.gpkg"
+        });
+        if (this->v3_0_path.empty()) {
+            FAIL() << "can't find test/data/geopackage/example_v3_0.gpkg";
+        }
+
+        this->dangling_path = utils::FileChecker::find_first_readable({
+            "test/data/geopackage/example_v3_0_dangling.gpkg",
+            "../test/data/geopackage/example_v3_0_dangling.gpkg",
+            "../../test/data/geopackage/example_v3_0_dangling.gpkg"
+        });
+        if (this->dangling_path.empty()) {
+            FAIL() << "can't find test/data/geopackage/example_v3_0_dangling.gpkg";
+        }
+    }
+
+    void TearDown() override {}
+
+    std::string v3_0_path;
+    std::string dangling_path;
+};
+
+// All 3 divides in example_v3_0.gpkg resolve via the divides -> flowpaths
+// join, so every feature must carry a non-empty 'toid'. Check the exact
+// mapping: cat-1 -> fp-1 -> nex-1, cat-2 -> fp-2 -> nex-2, cat-3 -> fp-3 -> nex-1.
+TEST_F(GeoPackage_DividesToidSynthesis_Test, geopackage_v3_divides_toid_all_resolved)
+{
+    const auto gpkg = ngen::geopackage::read(this->v3_0_path, "divides", {});
+    ASSERT_EQ(gpkg->get_size(), 3);
+
+    for (int i = 0; i < gpkg->get_size(); ++i) {
+        const auto& feat = gpkg->get_feature(i);
+        ASSERT_NE(feat, nullptr) << "divide feature " << i << " is null";
+        EXPECT_TRUE(feat->has_property("toid"))
+            << "divide " << feat->get_id() << " missing synthesized 'toid'";
+        EXPECT_FALSE(feat->get_property("toid").as_string().empty())
+            << "divide " << feat->get_id() << " has empty 'toid'";
+    }
+
+    const int idx1 = gpkg->find("cat-1");
+    ASSERT_NE(idx1, -1);
+    EXPECT_EQ(gpkg->get_feature(idx1)->get_property("toid").as_string(), "nex-1");
+
+    const int idx2 = gpkg->find("cat-2");
+    ASSERT_NE(idx2, -1);
+    EXPECT_EQ(gpkg->get_feature(idx2)->get_property("toid").as_string(), "nex-2");
+
+    const int idx3 = gpkg->find("cat-3");
+    ASSERT_NE(idx3, -1);
+    EXPECT_EQ(gpkg->get_feature(idx3)->get_property("toid").as_string(), "nex-1");
+}
+
+// example_v3_0_dangling.gpkg has cat-1 (flowpath_id=fp-1, resolves to nex-1)
+// and cat-2 (flowpath_id=fp-DANGLING, not present in flowpaths). The loader
+// must succeed; cat-1 must have toid="nex-1"; cat-2 must have no 'toid'.
+// Exactly 1 divide is unlinked, which is what the summary WARN line counts.
+TEST_F(GeoPackage_DividesToidSynthesis_Test, geopackage_v3_divides_dangling_flowpath_no_toid)
+{
+    const auto gpkg = ngen::geopackage::read(this->dangling_path, "divides", {});
+    ASSERT_EQ(gpkg->get_size(), 2);
+
+    const int idx1 = gpkg->find("cat-1");
+    ASSERT_NE(idx1, -1) << "cat-1 not found";
+    EXPECT_TRUE(gpkg->get_feature(idx1)->has_property("toid"));
+    EXPECT_EQ(gpkg->get_feature(idx1)->get_property("toid").as_string(), "nex-1");
+
+    const int idx2 = gpkg->find("cat-2");
+    ASSERT_NE(idx2, -1) << "cat-2 not found";
+    EXPECT_FALSE(gpkg->get_feature(idx2)->has_property("toid"))
+        << "cat-2 has a dangling flowpath_id and must not receive a synthesized toid";
+
+    std::size_t unlinked = 0;
+    for (int i = 0; i < gpkg->get_size(); ++i) {
+        const auto& f = gpkg->get_feature(i);
+        if (f && !f->has_property("toid")) {
+            ++unlinked;
+        }
+    }
+    EXPECT_EQ(unlinked, std::size_t(1))
+        << "expected exactly 1 unlinked divide (the WARN count should be 1)";
+}
+
 // Fixture for detect_version unit tests.
 // Uses example_v2_2.gpkg (v2.2 nexus schema: 'id' column) and
 // example_v3_0.gpkg (v3.0 nexus schema: 'nexus_id' column).
