@@ -5,6 +5,7 @@
 
 #if NGEN_WITH_PYTHON
 
+#include <cstdint>
 #include <cstring>
 #include <exception>
 #include <memory>
@@ -537,11 +538,17 @@ namespace models {
                 } else if (cxx_type == "long") {
                     set_value<long>(name, (long *) src);
                 } else if (cxx_type == "long long") {
-                    //FIXME this gets dicey -- if a python numpy array is of type np.int64 (long long), 
+                    //FIXME this gets dicey -- if a python numpy array is of type np.int64 (long long),
                     //but a c++ int* is passed to this function as src, it will fail in undefined ways...
-                    //the template type overload may be perferred for doing SetValue from framework components
+                    //the template type overload may be preferred for doing SetValue from framework components
                     //such as forcing providers...
                     set_value<long long>(name, (long long *) src);
+                } else if (cxx_type == "uint8_t") {
+                    // Byte-typed payload (e.g. the BMI serialization protocol's
+                    // `ngen::serialization_state` opaque buffer). `src` is
+                    // already a raw byte pointer — hand it to the
+                    // uint8_t-instantiated template.
+                    set_value<uint8_t>(name, (uint8_t *) src);
                 } else if (cxx_type == "float") {
                     set_value<float>(name, (float *) src);
                 } else if (cxx_type == "double") {
