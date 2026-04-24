@@ -189,6 +189,19 @@ A BMI module wishing to support the protocol must:
    buffer size in bytes. Before any `create` has been performed, report
    `0`. The protocol uses this to allocate the read destination before
    `GetValue(state, ...)`.
+
+   Models whose language adapter marshals the `SetValue(state, ...)`
+   buffer through a pre-sized container — `Bmi_Py_Adapter` wraps raw
+   bytes in a numpy array sized by `GetVarNbytes` — need
+   `GetVarNbytes(ngen::serialization_state)` to return a valid length
+   even before any `create` has fired, because the adapter queries it
+   at restore time to decide how many bytes to marshal across the
+   language boundary. Such models should compute the size of a
+   snapshot of the current model state on demand (e.g. by running the
+   same serialize routine that `create` would run and measuring its
+   output). Adapters that pass the raw `SetValue(state, ...)` pointer
+   straight through to the model (C, C++, Fortran) don't need this —
+   the model reads whatever the caller provides.
 4. **`GetValue(ngen::serialization_state, dst)`**: copy the captured bytes
    from the internal buffer into `dst`. `dst` is sized to `size` bytes
    (as reported by `GetValue(size, ...)`).
