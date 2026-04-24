@@ -139,6 +139,51 @@ namespace realization {
         }
 
         /**
+         * Get this formulation instance's compound identity.
+         *
+         * Engine-level concept usable wherever a unique per-formulation key
+         * is needed (e.g. tagging records in the serialization protocol's
+         * shared file). Not specific to any one protocol.
+         *
+         * Default composition for a single-BMI formulation:
+         *   "<this->id>:<model_type_name>"             e.g. "cat-1:bmi_c_cfe"
+         *
+         * For a Bmi_Multi_Formulation submodule, `Bmi_Multi_Formulation`
+         * injects a three-part compound via `set_compound_id()` before
+         * `create_formulation()` runs:
+         *   "<this->id>:<submodule-mtn>:<multi-mtn>"   e.g. "cat-1.0:bmi_c_cfe:bmi_multi_noahowp_cfe"
+         *
+         * Uniqueness, today and tomorrow
+         * ------------------------------
+         * Today the composition is unique in practice: single-BMI keys are
+         * unique because `id` is a catchment identifier and one catchment
+         * has at most one realization; multi-submodule keys are unique
+         * because the submodule index suffix in `this->id` (e.g. the `.0`
+         * in `cat-1.0`) already disambiguates siblings even when two
+         * submodules share a `model_type_name`. So we don't need a
+         * collision-avoidance mechanism in this release.
+         *
+         * One scenario that could break that assumption in the future:
+         * if the engine ever instantiates two *different* multi
+         * formulations for the same `id` (e.g. A/B comparison runs on
+         * the same catchment within a single process), the outer
+         * `<multi-mtn>` suffix becomes the sole discriminator and must
+         * actually differ. Callers taking this path should set distinct
+         * `model_type_name` values on the two multi formulations, or
+         * pass a caller-chosen string via `set_compound_id()`. Tagged
+         * here rather than coded around because the pattern hasn't been
+         * requested yet — see doc/BMI_SERIALIZATION_PROTOCOL.md for the
+         * public-facing version of this note.
+         *
+         * @return The compound identity string, or the default composition
+         *         when `set_compound_id` was never called.
+         */
+        std::string compound_id() const {
+            if (!compound_id_.empty()) return compound_id_;
+            return id + ":" + model_type_name;
+        }
+
+        /**
          * Get the values making up the header line from get_output_header_line(), but organized as a vector of strings.
          *
          * @return The values making up the header line from get_output_header_line() organized as a vector.
@@ -248,6 +293,19 @@ namespace realization {
             model_type_name = std::move(type_name);
         }
 
+        /**
+         * Override this formulation's compound identity.
+         *
+         * Callable by the engine (notably `Bmi_Multi_Formulation` during
+         * submodule setup) when the default `compound_id()` composition
+         * isn't appropriate — e.g., to prepend multi-formulation context
+         * so each submodule's records key by the full catchment + multi +
+         * submodule triple. An empty string restores the default.
+         */
+        void set_compound_id(std::string id_string) {
+            compound_id_ = std::move(id_string);
+        }
+
         void set_output_header_fields(const std::vector<std::string> &output_headers) {
             output_header_fields = output_headers;
         }
@@ -268,6 +326,9 @@ namespace realization {
 
         std::string bmi_main_output_var;
         std::string model_type_name;
+        /** Explicit compound identity override. Empty → use default
+         *  `<id>:<model_type_name>` in `compound_id()`. */
+        std::string compound_id_;
         /**
          * Output header field strings corresponding to the variables output by the realization, as defined in
          * `output_variable_names`.
