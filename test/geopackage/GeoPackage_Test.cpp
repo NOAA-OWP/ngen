@@ -164,3 +164,82 @@ TEST_F(GeoPackage_ExtraCol_Test, geopackage_v3_divides_toid_synthesized)
     ASSERT_TRUE(feat->has_property("toid"));
     EXPECT_EQ(feat->get_property("toid").as_string(), "nex-1");
 }
+
+// Fixture for detect_version unit tests.
+// Uses example_v2_2.gpkg (v2.2 nexus schema: 'id' column) and
+// example_v3_0.gpkg (v3.0 nexus schema: 'nexus_id' column).
+class GeoPackage_DetectVersion_Test : public ::testing::Test
+{
+  protected:
+    void SetUp() override
+    {
+        this->v2_2_path = utils::FileChecker::find_first_readable({
+            "test/data/geopackage/example_v2_2.gpkg",
+            "../test/data/geopackage/example_v2_2.gpkg",
+            "../../test/data/geopackage/example_v2_2.gpkg"
+        });
+        if (this->v2_2_path.empty()) {
+            FAIL() << "can't find test/data/geopackage/example_v2_2.gpkg";
+        }
+
+        this->v3_0_path = utils::FileChecker::find_first_readable({
+            "test/data/geopackage/example_v3_0.gpkg",
+            "../test/data/geopackage/example_v3_0.gpkg",
+            "../../test/data/geopackage/example_v3_0.gpkg"
+        });
+        if (this->v3_0_path.empty()) {
+            FAIL() << "can't find test/data/geopackage/example_v3_0.gpkg";
+        }
+    }
+
+    void TearDown() override {}
+
+    std::string v2_2_path;
+    std::string v3_0_path;
+};
+
+// Open example_v2_2.gpkg; detect_version must return V2_2.
+TEST_F(GeoPackage_DetectVersion_Test, geopackage_detect_version_v2_2)
+{
+    ngen::sqlite::database db{this->v2_2_path};
+    EXPECT_EQ(
+        ngen::geopackage::detect_version(db.connection()),
+        ngen::geopackage::HydrofabricVersion::V2_2
+    );
+}
+
+// Open example_v3_0.gpkg; detect_version must return V3_0.
+TEST_F(GeoPackage_DetectVersion_Test, geopackage_detect_version_v3_0)
+{
+    ngen::sqlite::database db{this->v3_0_path};
+    EXPECT_EQ(
+        ngen::geopackage::detect_version(db.connection()),
+        ngen::geopackage::HydrofabricVersion::V3_0
+    );
+}
+
+// A nexus table whose columns are unrecognized (neither 'id' nor 'nexus_id')
+// must cause detect_version to throw std::runtime_error with a message
+// containing "nexus".
+TEST_F(GeoPackage_DetectVersion_Test, geopackage_detect_version_throws_on_bad_schema)
+{
+    // Build a temporary SQLite database with a malformed nexus table.
+    const std::string path = std::string(testing::TempDir()) + "/malformed_nexus.gpkg";
+    {
+        sqlite3* raw = nullptr;
+        ASSERT_EQ(sqlite3_open(path.c_str(), &raw), SQLITE_OK);
+        // Nexus table present but with neither 'id' nor 'nexus_id' columns.
+        ASSERT_EQ(sqlite3_exec(raw, "CREATE TABLE nexus (junk TEXT)",
+                               nullptr, nullptr, nullptr), SQLITE_OK);
+        sqlite3_close(raw);
+    }
+
+    ngen::sqlite::database db{path};
+    try {
+        ngen::geopackage::detect_version(db.connection());
+        FAIL() << "Expected std::runtime_error from detect_version";
+    } catch (const std::runtime_error& e) {
+        EXPECT_NE(std::string(e.what()).find("nexus"), std::string::npos)
+            << "exception message: " << e.what();
+    }
+}
