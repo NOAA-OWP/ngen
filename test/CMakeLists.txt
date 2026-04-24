@@ -245,6 +245,16 @@ ngen_add_test(
 
 )
 
+########################## Path-Tokens Unit Tests
+ngen_add_test(
+    test_path_tokens
+    OBJECTS
+        utils/path_tokens_Test.cpp
+    LIBRARIES
+        NGen::path_tokens
+
+)
+
 ########################## Nexus Tests
 ngen_add_test(
     test_nexus
@@ -567,6 +577,7 @@ ngen_add_test(
         utils/PerFormulationNexusOutputMgr_Test.cpp
         utils/Partition_Test.cpp
         utils/logging_Test.cpp
+        utils/path_tokens_Test.cpp
     LIBRARIES
         gmock
         NGen::core
@@ -576,6 +587,7 @@ ngen_add_test(
         NGen::geojson
         NGen::realizations_catchment
         NGen::logging
+        NGen::path_tokens
         NGen::ngen_bmi
         NGen::output
         testbmicppmodel
