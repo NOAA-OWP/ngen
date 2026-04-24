@@ -26,6 +26,7 @@
 #include "realizations/config/config.hpp"
 #include "realizations/config/layer.hpp"
 #include "realizations/config/global_config.hpp"
+#include "path_tokens.hpp"
 
 namespace realization {
 
@@ -88,6 +89,22 @@ namespace realization {
                     const char* key = realization::config::to_key_string(which);
                     auto possible_block = tree.get_child_optional(key);
                     if (possible_block) {
+                        // Resolve `{{rank}}`/`{{pid}}`/`{{host}}`/`{{date}}`
+                        // tokens in the block's `path` field before it
+                        // propagates into every formulation. This is the
+                        // seam that keeps the protocol layer MPI-agnostic —
+                        // the resolved path is a concrete, caller-scoped
+                        // string by the time any protocol instance sees it.
+                        // Extend to additional inheritable blocks with a
+                        // file path if/when they arrive.
+                        if (which == realization::config::GlobalConfigKey::SERIALIZATION) {
+                            auto path_val = possible_block->get_optional<std::string>("path");
+                            if (path_val) {
+                                possible_block->put(
+                                    "path",
+                                    utilities::resolve_path_tokens(*path_val));
+                            }
+                        }
                         global_configs.emplace(
                             key,
                             geojson::JSONProperty(key, *possible_block)

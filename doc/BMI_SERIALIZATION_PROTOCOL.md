@@ -710,6 +710,68 @@ identical to the pre-feature behavior of ngen. The engine's
 `checkpoint_state` and `create_model` restore calls still fire, but
 the protocols inside are silently disabled and return immediately.
 
+### Path templating
+
+The realization-level `serialization.path` is passed through
+`utilities::resolve_path_tokens` before being injected into any
+formulation's params. The following tokens, written with exact
+double-brace syntax and no whitespace, are expanded at config-load
+time:
+
+| Token       | Resolves to                                         |
+| ----------- | --------------------------------------------------- |
+| `{{rank}}`  | MPI rank (0 for non-MPI builds or uninitialized MPI)|
+| `{{pid}}`   | POSIX process id                                    |
+| `{{host}}`  | First label of the host name (max 63 chars)         |
+| `{{date}}`  | Local date at startup, `YYYYMMDD`                   |
+
+Unknown `{{...}}` tokens are left untouched so a typo doesn't silently
+vanish.
+
+Example — per-rank, per-day checkpoint file:
+
+```json
+{
+    "serialization": {
+        "path": "/scratch/run_{{date}}/ckpt.rank_{{rank}}.bin",
+        "save":    { "check": true, "frequency": 1 },
+        "restore": { "check": true, "step": "latest" }
+    }
+}
+```
+
+Templating happens on the **realization layer**, not inside the
+protocol. The protocol is deliberately MPI-agnostic: it sees only the
+concrete resolved string and neither knows nor cares that `{{rank}}`
+was involved.
+
+### MPI-per-rank guidance
+
+The recommended pattern for multi-process runs is **one checkpoint
+file per MPI rank**, obtained by embedding `{{rank}}` in the path.
+Per-rank files:
+
+- Sidestep cross-process coordination entirely (no shared-file
+  append races, no shared-filesystem atomicity concerns).
+- Let each rank's `CheckpointIndex` stay small and rank-local; there
+  is no cross-rank index merging inside the protocol.
+- Compose naturally with the auto-derived `id_subset`, because each
+  rank's hydrofabric partition already lists only the features that
+  rank owns.
+
+If a single shared file is required (e.g. for a post-run
+visualization tool that wants one path), layer a merge step **above**
+the protocol — don't ask the protocol to coordinate writers across
+processes. See *Thread and process safety* for the hard boundary the
+protocol draws.
+
+For single-process threaded runs, `{{pid}}` is not useful as a
+discriminator (the pid is one value for the whole process). Rely on
+the per-instance `io_mutex_` guard instead; multiple protocol
+instances pointed at the same path within one process need that mutex
+layer plus careful caller coordination, and the protocol only
+provides the former.
+
 ---
 
 ## Scaling Considerations
