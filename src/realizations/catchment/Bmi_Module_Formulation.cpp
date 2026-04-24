@@ -385,6 +385,22 @@ namespace realization {
                 //Initialize all NgenBmiProtocols with the valid adapter pointer and any properties
                 //provided in the read configuration.
                 bmi_protocols = models::bmi::protocols::NgenBmiProtocols(get_bmi_model(), properties);
+
+                // Engine-driven restore: if a `serialization.restore` block is
+                // configured AND the model supports the protocol, the container
+                // will locate the matching record in the shared file and write
+                // its bytes back via SetValue(ngen::serialization_state, ...).
+                // When restore is unconfigured, disabled, or unsupported by the
+                // model, run() short-circuits and no mutation occurs. The Context
+                // carries `compound_id()` so the lookup keys by the same identity
+                // the save hook (checkpoint_state) will later use.
+                models::bmi::protocols::Context restore_ctx{
+                    /*current_time_step*/ 0,
+                    /*total_steps*/       0,
+                    /*timestamp*/         "create_model",
+                    /*id*/                compound_id()
+                };
+                bmi_protocols.run(models::bmi::protocols::Protocol::DESERIALIZATION, restore_ctx);
             }
         }
         /**
