@@ -422,12 +422,14 @@ ngen_add_test(
         bmi/Bmi_Py_Adapter_Test.cpp
         realizations/catchments/Bmi_Py_Formulation_Test.cpp
         utils/python/InterpreterUtil_Test.cpp
+        utils/bmi/py_serialization_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
+        NGen::bmi_protocols
     REQUIRES
         NGEN_WITH_PYTHON
 )
