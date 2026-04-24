@@ -16,6 +16,19 @@ void check_table_name(const std::string& table)
     }
 }
 
+// Required tables for hydrofabric GeoPackages:
+//   nexus      — read for v2.2 and v3.0 (id/toid vs nexus_id/nexus_toid)
+//   divides    — read for v2.2 and v3.0 (divide_id / id fallback)
+//   flowpaths  — read only for v3.0 divides toid synthesis (JOIN); optional
+//
+// Metadata tables always read by SQLite / geopackage infrastructure:
+//   gpkg_geometry_columns — geometry column name lookup
+//   sqlite_master         — table-existence checks (db.contains / PRAGMA table_info)
+//
+// Auxiliary tables that MUST NOT be touched by this loader:
+//   network, flowlines, flowline_endpoints, hydrolocations, pois,
+//   incremental_areas, lakes, divide-attributes, flowpath-attributes,
+//   flowpath-attributes-ml
 std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     const std::string& gpkg_path,
     const std::string& layer = "",
@@ -31,8 +44,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     // GPKGs (e.g. synthetic test fixtures) have no `nexus` table; treat the
     // detection failure as "not a hydrofabric" and default to V2_2 so the
     // pre-existing legacy code paths remain intact.
-    ngen::geopackage::HydrofabricVersion version =
-        ngen::geopackage::HydrofabricVersion::V2_2;
+    ngen::geopackage::HydrofabricVersion version = ngen::geopackage::HydrofabricVersion::V2_2;
     bool version_detected = false;
     try {
         version = ngen::geopackage::detect_version(db.connection());
@@ -44,9 +56,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     #ifndef NGEN_QUIET
     if (version_detected) {
         std::cout << "INFO: hydrofabric detected: "
-                  << (version == ngen::geopackage::HydrofabricVersion::V3_0
-                          ? "v3.0"
-                          : "v2.2")
+                  << (version == ngen::geopackage::HydrofabricVersion::V3_0 ? "v3.0" : "v2.2")
                   << std::endl;
     }
     #endif
@@ -126,7 +136,8 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
 
     #ifndef NGEN_QUIET
     // output debug info on what is read exactly
-    std::cout << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"<< id_column << "`";
+    std::cout << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"
+              << id_column << "`";
     if (!ids.empty()) {
         std::cout << " (id subset:";
         for (auto& id : ids) {
@@ -154,16 +165,23 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     const bool synthesize_divides_toid =
         (version == ngen::geopackage::HydrofabricVersion::V3_0 && layer == "divides");
     if (synthesize_divides_toid) {
-        auto q = db.query(
-            "SELECT d.divide_id, f.flowpath_toid "
-            "FROM divides d "
-            "JOIN flowpaths f ON d.flowpath_id = f.flowpath_id "
-            "WHERE f.flowpath_toid IS NOT NULL"
-        );
-        q.next();
-        while (!q.done()) {
-            divide_toid_lookup.emplace(q.get<std::string>(0), q.get<std::string>(1));
+        if (!db.contains("flowpaths")) {
+            #ifndef NGEN_QUIET
+            std::cout << "WARN: v3.0 divides loaded without a 'flowpaths' table; "
+                      << "all divides will be treated as terminal (no toid)." << std::endl;
+            #endif
+        } else {
+            auto q = db.query(
+                "SELECT d.divide_id, f.flowpath_toid "
+                "FROM divides d "
+                "JOIN flowpaths f ON d.flowpath_id = f.flowpath_id "
+                "WHERE f.flowpath_toid IS NOT NULL"
+            );
             q.next();
+            while (!q.done()) {
+                divide_toid_lookup.emplace(q.get<std::string>(0), q.get<std::string>(1));
+                q.next();
+            }
         }
     }
 
