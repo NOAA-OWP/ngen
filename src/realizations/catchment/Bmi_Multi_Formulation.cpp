@@ -11,6 +11,7 @@
 #include "Bmi_C_Formulation.hpp"
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Bmi_Py_Formulation.hpp"
+#include "realizations/config/global_config.hpp"
 
 using namespace realization;
 
@@ -55,12 +56,24 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         nested_module_ptr module = nullptr;
         bool inactive_type_requested = false;
         module_types[i] = type_name;
+
+        // Build the submodule's params map, inheriting any realization-
+        // level defaults (e.g. `serialization`) from the multi's own
+        // params when the submodule doesn't declare its own. Each
+        // submodule owns its own NgenBmiProtocols container so these
+        // blocks must reach every leaf of the formulation tree.
+        geojson::PropertyMap submodule_params = formulation_config.at("params").get_values();
+        realization::config::apply_config(
+            submodule_params, properties,
+            realization::config::GlobalConfigKey::SERIALIZATION
+        );
+
         if (type_name == "bmi_c++") {
-            module = init_nested_module<Bmi_Cpp_Formulation>(i, identifier, formulation_config.at("params").get_values());
+            module = init_nested_module<Bmi_Cpp_Formulation>(i, identifier, submodule_params);
         }
         if (type_name == "bmi_c") {
             #if NGEN_WITH_BMI_C
-            module = init_nested_module<Bmi_C_Formulation>(i, identifier, formulation_config.at("params").get_values());
+            module = init_nested_module<Bmi_C_Formulation>(i, identifier, submodule_params);
             #else
             inactive_type_requested = true;
             #endif
@@ -68,14 +81,14 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         if (type_name == "bmi_fortran") {
 
             #if NGEN_WITH_BMI_FORTRAN
-            module = init_nested_module<Bmi_Fortran_Formulation>(i, identifier, formulation_config.at("params").get_values());
+            module = init_nested_module<Bmi_Fortran_Formulation>(i, identifier, submodule_params);
             #else
             inactive_type_requested = true;
             #endif
         }
         if (type_name == "bmi_python") {
             #if NGEN_WITH_PYTHON
-            module = init_nested_module<Bmi_Py_Formulation>(i, identifier, formulation_config.at("params").get_values());
+            module = init_nested_module<Bmi_Py_Formulation>(i, identifier, submodule_params);
             #else // NGEN_WITH_PYTHON
             inactive_type_requested = true;
             #endif // NGEN_WITH_PYTHON
