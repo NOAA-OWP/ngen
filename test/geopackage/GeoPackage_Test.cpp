@@ -353,6 +353,63 @@ TEST_F(GeoPackage_DividesToidSynthesis_Test, geopackage_v3_divides_dangling_flow
         << "expected exactly 1 unlinked divide (the WARN count should be 1)";
 }
 
+// Fixture for subset-tolerance regression test.
+// Uses example_v3_0_minimal.gpkg, which contains only nexus, divides, and
+// flowpaths (no auxiliary tables). The test verifies that both layers load
+// and that a combined collection links all 3 divides to their target nexuses.
+class GeoPackage_SubsetTolerance_Test : public ::testing::Test
+{
+  protected:
+    void SetUp() override
+    {
+        this->path = utils::FileChecker::find_first_readable({
+            "test/data/geopackage/example_v3_0_minimal.gpkg",
+            "../test/data/geopackage/example_v3_0_minimal.gpkg",
+            "../../test/data/geopackage/example_v3_0_minimal.gpkg"
+        });
+
+        if (this->path.empty()) {
+            FAIL() << "can't find test/data/geopackage/example_v3_0_minimal.gpkg";
+        }
+    }
+
+    void TearDown() override {}
+
+    std::string path;
+};
+
+// Both layers of a GPKG that contains only nexus/divides/flowpaths (no
+// auxiliary tables) must load successfully with the expected feature counts.
+// Merging both collections and running link_features_from_property must
+// resolve all 3 divide->nexus edges (cat-1->nex-1, cat-2->nex-2,
+// cat-3->nex-1), confirming end-to-end connectivity without auxiliary tables.
+TEST_F(GeoPackage_SubsetTolerance_Test, geopackage_v3_minimal_loads_and_links_end_to_end)
+{
+    const auto divides = ngen::geopackage::read(this->path, "divides", {});
+    const auto nexus   = ngen::geopackage::read(this->path, "nexus",   {});
+
+    ASSERT_EQ(divides->get_size(), 3);
+    ASSERT_EQ(nexus->get_size(),   2);
+
+    // Merge both layers into a single collection so link_features_from_property
+    // can resolve divide toid -> nexus id lookups across both layers.
+    geojson::FeatureCollection combined;
+    for (int i = 0; i < divides->get_size(); ++i) {
+        combined.add_feature(divides->get_feature(i));
+    }
+    for (int i = 0; i < nexus->get_size(); ++i) {
+        combined.add_feature(nexus->get_feature(i));
+    }
+
+    std::string toid_key = "toid";
+    const int links = combined.link_features_from_property(nullptr, &toid_key);
+
+    // All 3 divides have a synthesized toid that resolves to a nexus in the
+    // combined collection; nexus toids (fp-2, coastal-000001) are absent from
+    // the collection so they do not add to the link count.
+    EXPECT_EQ(links, 3);
+}
+
 // Fixture for detect_version unit tests.
 // Uses example_v2_2.gpkg (v2.2 nexus schema: 'id' column) and
 // example_v3_0.gpkg (v3.0 nexus schema: 'nexus_id' column).
