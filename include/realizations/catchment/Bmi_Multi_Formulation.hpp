@@ -51,6 +51,19 @@ namespace realization {
             }
         };
 
+        /** @brief Per-timestep save hook — dispatches to each submodule.
+         *
+         * The enclosing multi has no state of its own to checkpoint; each
+         * submodule's `checkpoint_state` writes a record tagged with its
+         * compound id (already populated with the three-part key by
+         * `init_nested_module`).
+         */
+        virtual void checkpoint_state(const int& iteration, const int& total_steps, const std::string& timestamp) const final {
+            for (const auto& module : modules) {
+                module->checkpoint_state(iteration, total_steps, timestamp);
+            }
+        }
+
         /**
          * Convert a time value from the model to an epoch time in seconds.
          *

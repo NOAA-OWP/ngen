@@ -45,6 +45,18 @@ namespace realization {
             virtual void create_formulation(geojson::PropertyMap properties) = 0;
 
             virtual void check_mass_balance(const int& iteration, const int& total_steps, const std::string& timestamp) const = 0;
+
+            /**
+             * @brief Invoke the state-save side of the ngen BMI Serialization Protocol.
+             *
+             * Called from the per-timestep driver (see `core/Layer.hpp`) alongside
+             * `check_mass_balance`. Implementations build a protocol Context from
+             * the arguments and the formulation's own compound identity, then
+             * forward to the `NgenBmiProtocols` container. Non-BMI formulations
+             * may implement as a no-op; unconfigured save protocols short-circuit
+             * inside `run()` so the cost is just the virtual dispatch.
+             */
+            virtual void checkpoint_state(const int& iteration, const int& total_steps, const std::string& timestamp) const = 0;
         protected:
 
             virtual const std::vector<std::string>& get_required_parameters() const = 0;
