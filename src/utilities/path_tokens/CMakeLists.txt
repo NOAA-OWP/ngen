@@ -1,0 +1,7 @@
+add_library(path_tokens path_tokens.cpp)
+add_library(NGen::path_tokens ALIAS path_tokens)
+target_include_directories(path_tokens PUBLIC ${PROJECT_SOURCE_DIR}/include/utilities)
+target_link_libraries(path_tokens PUBLIC NGen::config_header)
+if(NGEN_WITH_MPI)
+    target_link_libraries(path_tokens PUBLIC MPI::MPI_CXX)
+endif()
