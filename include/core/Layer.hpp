@@ -121,6 +121,8 @@ namespace ngen
                     response = r_c->get_response(output_time_index, simulation_time.get_output_interval_seconds());
                     // Check mass balance if able
                     r_c->check_mass_balance(output_time_index, simulation_time.get_total_output_times(), current_timestamp);
+                    // Checkpoint state via the serialization protocol (no-op when unconfigured)
+                    r_c->checkpoint_state(output_time_index, simulation_time.get_total_output_times(), current_timestamp);
                 }
                 catch(models::external::State_Exception& e){
                     std::string msg = e.what();

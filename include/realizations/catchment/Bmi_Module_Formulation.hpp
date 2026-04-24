@@ -257,6 +257,19 @@ namespace realization {
             bmi_protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, ctx);
         }
 
+        /** @brief Per-timestep save hook — see Formulation::checkpoint_state.
+         *
+         * Uses `compound_id()` (not raw `id`) for the Context so records land
+         * in the shared checkpoint file keyed by the full engine-level
+         * identity — single-BMI formulations tag with
+         * `<catchment>:<model_type_name>`, multi submodules with the
+         * three-part compound injected during submodule construction.
+         */
+        virtual void checkpoint_state(const int& iteration, const int& total_steps, const std::string& timestamp) const override {
+            models::bmi::protocols::Context ctx{iteration, total_steps, timestamp, compound_id()};
+            bmi_protocols.run(models::bmi::protocols::Protocol::SERIALIZATION, ctx);
+        }
+
     protected:
 
         /**
