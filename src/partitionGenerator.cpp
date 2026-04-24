@@ -506,6 +506,31 @@ int main(int argc, char* argv[])
         global_nexus_collection->add_feature(sentinel);
     }
 
+    // Handle subwatershed boundary catchments: catchments whose toid references
+    // a nexus outside this collection (e.g. a gage subset GPKG).
+    // Without this, generate_partitions errors "has no destination nexus" for
+    // every outlet catchment.  Synthesize a terminal sentinel per catchment so
+    // each one has exactly one destination and can be assigned to a partition.
+    std::vector<std::shared_ptr<geojson::FeatureBase>> outlet_sentinels;
+    for (auto& feature : *global_nexus_collection)
+    {
+        auto id = feature->get_id();
+        auto type = id.substr(0, id.find(hy_features::identifiers::seperator));
+        if (hy_features::identifiers::isCatchment(type) &&
+            id.find("SENTINEL") == std::string::npos &&
+            feature->get_number_of_destination_features() == 0)
+        {
+            std::string sentinel_id = "wb-OUTLET_SENTINEL-" + id;
+            geojson::Feature sentinel_feature = std::make_shared<geojson::SentinelFeature>(sentinel_id);
+            outlet_sentinels.push_back(sentinel_feature);
+            feature->add_destination_feature(sentinel_feature.get());
+        }
+    }
+    for (auto& sentinel : outlet_sentinels)
+    {
+        global_nexus_collection->add_feature(sentinel);
+    }
+
     // make a global network
     Network global_network(global_nexus_collection);
 
