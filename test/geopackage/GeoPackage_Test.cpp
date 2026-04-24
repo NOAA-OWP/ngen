@@ -165,6 +165,100 @@ TEST_F(GeoPackage_ExtraCol_Test, geopackage_v3_divides_toid_synthesized)
     EXPECT_EQ(feat->get_property("toid").as_string(), "nex-1");
 }
 
+// Fixture for v3.0 nexus remap tests.
+// Verifies that 'id' and 'toid' are correctly aliased from 'nexus_id' /
+// 'nexus_toid' on v3.0 loads, and that v2.2 loads continue to populate
+// 'id' and 'toid' directly from their original columns.
+class GeoPackage_NexusRemap_Test : public ::testing::Test
+{
+  protected:
+    void SetUp() override
+    {
+        this->v2_2_path = utils::FileChecker::find_first_readable({
+            "test/data/geopackage/example_v2_2.gpkg",
+            "../test/data/geopackage/example_v2_2.gpkg",
+            "../../test/data/geopackage/example_v2_2.gpkg"
+        });
+        if (this->v2_2_path.empty()) {
+            FAIL() << "can't find test/data/geopackage/example_v2_2.gpkg";
+        }
+
+        this->v3_0_path = utils::FileChecker::find_first_readable({
+            "test/data/geopackage/example_v3_0.gpkg",
+            "../test/data/geopackage/example_v3_0.gpkg",
+            "../../test/data/geopackage/example_v3_0.gpkg"
+        });
+        if (this->v3_0_path.empty()) {
+            FAIL() << "can't find test/data/geopackage/example_v3_0.gpkg";
+        }
+    }
+
+    void TearDown() override {}
+
+    std::string v2_2_path;
+    std::string v3_0_path;
+};
+
+// Every v3.0 nexus feature must expose 'id' == nexus_id and 'toid' ==
+// nexus_toid after the loader aliases them at the load boundary. The original
+// 'nexus_id' / 'nexus_toid' properties are also preserved (additive aliasing).
+TEST_F(GeoPackage_NexusRemap_Test, geopackage_v3_nexus_id_toid_aliased)
+{
+    const auto gpkg = ngen::geopackage::read(this->v3_0_path, "nexus", {});
+    ASSERT_EQ(gpkg->get_size(), 2);
+
+    for (int i = 0; i < gpkg->get_size(); ++i) {
+        const auto& feat = gpkg->get_feature(i);
+        ASSERT_NE(feat, nullptr) << "feature " << i << " is null";
+        EXPECT_TRUE(feat->has_property("id"))   << "nexus feature missing 'id'";
+        EXPECT_TRUE(feat->has_property("toid")) << "nexus feature missing 'toid'";
+        EXPECT_FALSE(feat->get_property("id").as_string().empty())
+            << "nexus feature 'id' is empty";
+        EXPECT_FALSE(feat->get_property("toid").as_string().empty())
+            << "nexus feature 'toid' is empty";
+    }
+
+    // nex-1: nexus_id="nex-1", nexus_toid="fp-2"
+    const int idx1 = gpkg->find("nex-1");
+    ASSERT_NE(idx1, -1);
+    const auto& nex1 = gpkg->get_feature(idx1);
+    EXPECT_EQ(nex1->get_property("id").as_string(),   "nex-1");
+    EXPECT_EQ(nex1->get_property("toid").as_string(), "fp-2");
+
+    // nex-2: nexus_id="nex-2", nexus_toid="coastal-000001"
+    const int idx2 = gpkg->find("nex-2");
+    ASSERT_NE(idx2, -1);
+    const auto& nex2 = gpkg->get_feature(idx2);
+    EXPECT_EQ(nex2->get_property("id").as_string(),   "nex-2");
+    EXPECT_EQ(nex2->get_property("toid").as_string(), "coastal-000001");
+}
+
+// Regression guard: v2.2 nexus features must still get 'id' and 'toid' from
+// their original schema columns without the v3.0 alias logic firing.
+TEST_F(GeoPackage_NexusRemap_Test, geopackage_v2_2_nexus_id_toid_from_columns)
+{
+    const auto gpkg = ngen::geopackage::read(this->v2_2_path, "nexus", {});
+    ASSERT_EQ(gpkg->get_size(), 2);
+
+    for (int i = 0; i < gpkg->get_size(); ++i) {
+        const auto& feat = gpkg->get_feature(i);
+        ASSERT_NE(feat, nullptr) << "feature " << i << " is null";
+        EXPECT_TRUE(feat->has_property("id"))   << "v2.2 nexus missing 'id'";
+        EXPECT_TRUE(feat->has_property("toid")) << "v2.2 nexus missing 'toid'";
+    }
+
+    // v2.2 fixture: nex-1 (toid=wb-2), nex-2 (toid=coastal-000001)
+    const int idx1 = gpkg->find("nex-1");
+    ASSERT_NE(idx1, -1);
+    EXPECT_EQ(gpkg->get_feature(idx1)->get_property("id").as_string(),   "nex-1");
+    EXPECT_EQ(gpkg->get_feature(idx1)->get_property("toid").as_string(), "wb-2");
+
+    const int idx2 = gpkg->find("nex-2");
+    ASSERT_NE(idx2, -1);
+    EXPECT_EQ(gpkg->get_feature(idx2)->get_property("id").as_string(),   "nex-2");
+    EXPECT_EQ(gpkg->get_feature(idx2)->get_property("toid").as_string(), "coastal-000001");
+}
+
 // Fixture for detect_version unit tests.
 // Uses example_v2_2.gpkg (v2.2 nexus schema: 'id' column) and
 // example_v3_0.gpkg (v3.0 nexus schema: 'nexus_id' column).
