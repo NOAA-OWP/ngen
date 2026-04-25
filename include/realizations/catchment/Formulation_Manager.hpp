@@ -28,6 +28,16 @@
 #include "realizations/config/global_config.hpp"
 #include "path_tokens.hpp"
 
+// Forward-declaration instead of pulling in `bmi/deserialization.hpp`
+// — that header transitively includes `<nonstd/expected.hpp>` and
+// other bmi-protocols-only paths that aren't on every consumer's
+// include path (core/ includes us but doesn't link the bmi tree).
+// This header has exactly one call into the deserialization module
+// (see `read()` below), which is all we need from it.
+namespace models { namespace bmi { namespace protocols {
+    void clear_checkpoint_indexes();
+}}}
+
 namespace realization {
 
     class Formulation_Manager {
@@ -261,6 +271,19 @@ namespace realization {
                         this->add_formulation(missing_formulation);
                     }
                 }
+
+                // Every formulation has now been constructed, which
+                // means every restore-side BMI protocol run() call has
+                // fired at least once — restores are a one-shot
+                // init-phase operation bound to the formulation's own
+                // construction path (see `Bmi_Module_Formulation::inner_create_formulation`).
+                // The process-global `CheckpointIndex` cache used by
+                // `NgenDeserializationProtocol` is dead weight from
+                // this point for long-running simulations; release it
+                // now rather than let it live until process exit. Any
+                // later restore against a freed path would lazily
+                // rebuild on next access.
+                models::bmi::protocols::clear_checkpoint_indexes();
             }
 
             void add_formulation(std::shared_ptr<Catchment_Formulation> formulation) {
