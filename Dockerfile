@@ -390,7 +390,7 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ngen \
           -DNGEN_WITH_BMI_FORTRAN=ON \
           -DNGEN_WITH_BMI_C=ON \
           -DNGEN_WITH_PYTHON=ON \
-          -DNGEN_WITH_TESTS=ON \
+          -DNGEN_WITH_TESTS=OFF \
           -DNGEN_WITH_ROUTING=ON \
           -DNGEN_QUIET=ON \
           -DNGEN_UPDATE_GIT_SUBMODULES=OFF \
