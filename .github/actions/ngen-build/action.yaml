@@ -115,13 +115,33 @@ runs:
           uses: actions/cache@v4
           with:
             path: boost_1_86_0
-            key: unix-boost-dep
+            # Key includes `serialization` so an old cache containing
+            # a source-only tree (pre-compiled-library addition) is
+            # invalidated, and `${{ runner.os }}` so Linux and macOS
+            # runners don't share ABI-specific compiled libraries.
+            key: unix-boost-dep-serialization-${{ runner.os }}
 
         - name: Get Boost Dependency
           if: steps.cache-boost-dep.outputs.cache-hit != 'true'
           run: |
             curl -L -o boost_1_86_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.86.0/boost_1_86_0.tar.bz2/download
             tar xjf boost_1_86_0.tar.bz2
+          shell: bash
+
+        - name: Build Boost Serialization
+          # Boost.serialization is not header-only; the BMI protocols
+          # library links against libboost_serialization. Builds once,
+          # then the compiled libraries are cached alongside the source
+          # tree under boost_1_86_0/stage/lib/ for subsequent runs
+          # (see the Cache Boost Dependency step above). CMake's
+          # FindBoost picks them up automatically when BOOST_ROOT is
+          # set to the extracted directory — no CMake-side change
+          # required.
+          if: steps.cache-boost-dep.outputs.cache-hit != 'true'
+          run: |
+            cd boost_1_86_0
+            ./bootstrap.sh --with-libraries=serialization
+            ./b2 --with-serialization
           shell: bash
 
         - name: Set Pip Constraints
