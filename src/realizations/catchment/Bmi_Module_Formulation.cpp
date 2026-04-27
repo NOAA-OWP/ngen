@@ -26,7 +26,7 @@ namespace realization {
             static bool no_conversion_message_logged = false;
             if (!no_conversion_message_logged) {
                 no_conversion_message_logged = true;
-                LOG("Output variables do not have unit conversion. Capability not yet implemented in ngen.", LogLevel::WARNING);
+                logging::warning("Output variables do not have unit conversion. Capability not yet implemented in ngen.");
             }
 
             std::string output_str;
@@ -727,7 +727,7 @@ namespace realization {
                                << " provider {'" << uce.provider_model_name << "' source variable '" << uce.provider_bmi_var_name << "'"
                                << " raw value " << uce.unconverted_values[0] << "}"
                                << " message \"" << uce.what() << "\"";
-                            LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                            logging::warning(ss.str().c_str()); ss.str("");
                         }
                         value_ptr = get_value_as_type(type, uce.unconverted_values[0]);
                     }

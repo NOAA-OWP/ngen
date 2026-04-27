@@ -10,6 +10,7 @@
 #include "OptionalWrappedDataProvider.hpp"
 #include "ConfigurationException.hpp"
 #include "ExternalIntegrationException.hpp"
+#include "utilities/logging_utils.h"
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"
@@ -579,7 +580,7 @@ namespace realization {
                 static bool no_conversion_message_logged = false;
                 if (!no_conversion_message_logged) {
                     no_conversion_message_logged = true;
-                    LOG("Output variables do not have unit conversion. Capability not yet implemented in ngen.", LogLevel::WARNING);
+                    logging::warning("Output variables do not have unit conversion. Capability not yet implemented in ngen.");
                 }
                 return uce.unconverted_values[0];
             }
