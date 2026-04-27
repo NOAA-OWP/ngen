@@ -1,5 +1,6 @@
 # Need these for BMI
 # This is needed for get_var_bytes
+import pickle
 from pathlib import Path
 
 # import data_tools
@@ -13,6 +14,16 @@ from bmipy import Bmi
 from .bmi_grid import Grid, GridType
 # Here is the model we want to run
 from .model import ngen_model
+
+# ngen BMI Serialization Protocol reserved variable names.  See
+# doc/BMI_SERIALIZATION_PROTOCOL.md for the full contract; this model
+# implements the protocol with a plain `pickle` byte blob as the
+# opaque payload, which is enough to round-trip the handful of fields
+# the test model actually holds.
+NGEN_SERIALIZATION_CREATE = 'ngen::serialization_create'
+NGEN_SERIALIZATION_FREE   = 'ngen::serialization_free'
+NGEN_SERIALIZATION_SIZE   = 'ngen::serialization_size'
+NGEN_SERIALIZATION_STATE  = 'ngen::serialization_state'
 
 class UnknownBMIVariable(RuntimeError):
     pass
@@ -80,6 +91,14 @@ class bmi_model(Bmi):
                            'OUTPUT_VAR_3':['OUTPUT_VAR_3','-'],
                            'GRID_VAR_1':['OUTPUT_VAR_1','-'],
                            'GRID_VAR_2':['GRID_VAR_2','-'],
+                           # Serialization protocol reserved variables.
+                           # The unit strings are validated by the
+                           # protocol's check_support() probe; they must
+                           # match these exact values.
+                           NGEN_SERIALIZATION_CREATE:[NGEN_SERIALIZATION_CREATE,'ngen::trigger'],
+                           NGEN_SERIALIZATION_FREE  :[NGEN_SERIALIZATION_FREE,  'ngen::trigger'],
+                           NGEN_SERIALIZATION_SIZE  :[NGEN_SERIALIZATION_SIZE,  'bytes'],
+                           NGEN_SERIALIZATION_STATE :[NGEN_SERIALIZATION_STATE, 'ngen::opaque'],
                             }
 
     #------------------------------------------------------
@@ -146,6 +165,18 @@ class bmi_model(Bmi):
         # ------------- Initialize a model ------------------------------#
         #self._model = ngen_model(self._values.keys())
         self._model = ngen_model()
+
+        # ------------- BMI Serialization Protocol backing storage -----#
+        # Triggers are 1-element int32 arrays (numpy dtype 'int32' with
+        # itemsize 4 maps through Bmi_Py_Adapter's 'int' branch). Size is
+        # a 1-element int32 as well. State is a uint8 numpy array whose
+        # length tracks the current pickle byte count — starts empty,
+        # grows on create_serialization, resizes on SetValue(size, ...)
+        # during restore.
+        self._values[NGEN_SERIALIZATION_CREATE] = np.zeros(1, dtype=np.int32)
+        self._values[NGEN_SERIALIZATION_FREE]   = np.zeros(1, dtype=np.int32)
+        self._values[NGEN_SERIALIZATION_SIZE]   = np.zeros(1, dtype=np.int32)
+        self._values[NGEN_SERIALIZATION_STATE]  = np.zeros(0, dtype=np.uint8)
 
     #------------------------------------------------------------ 
     def update(self):
@@ -368,6 +399,44 @@ class bmi_model(Bmi):
 
         return self.get_attribute( 'time_units' ) 
        
+    # ---------- BMI Serialization Protocol helpers --------------------
+    #
+    # The test model round-trips its scalar state and one output array
+    # through `pickle`. The exact set of fields is arbitrary — any
+    # future field added to _values can be picked up here without
+    # changing the protocol contract — but the pickle bytes are the
+    # opaque payload the protocol persists.
+    _SERIALIZED_FIELDS = (
+        'current_model_time',
+        'time_step_size',
+        'INPUT_VAR_1',
+        'INPUT_VAR_2',
+        'OUTPUT_VAR_1',
+        'OUTPUT_VAR_2',
+    )
+
+    def _create_serialization(self):
+        payload = {f: self._values[f] for f in self._SERIALIZED_FIELDS
+                   if f in self._values}
+        blob = pickle.dumps(payload, protocol=pickle.HIGHEST_PROTOCOL)
+        self._values[NGEN_SERIALIZATION_STATE] = np.frombuffer(blob, dtype=np.uint8).copy()
+        self._values[NGEN_SERIALIZATION_SIZE][0] = self._values[NGEN_SERIALIZATION_STATE].nbytes
+
+    def _free_serialization(self):
+        self._values[NGEN_SERIALIZATION_STATE] = np.zeros(0, dtype=np.uint8)
+        self._values[NGEN_SERIALIZATION_SIZE][0] = 0
+
+    def _deserialize_state(self, blob: np.ndarray):
+        payload = pickle.loads(blob.tobytes())
+        for field, value in payload.items():
+            target = self._values.get(field)
+            if isinstance(target, np.ndarray) and target.shape == np.asarray(value).shape:
+                # Preserve the ndarray buffer in-place for BMI variables
+                # the adapter might hold pointers to.
+                target[...] = value
+            else:
+                self._values[field] = value
+
     #-------------------------------------------------------------------
     def set_value(self, var_name, values: np.ndarray):
         """
@@ -379,7 +448,24 @@ class bmi_model(Bmi):
             Name of model variable for which to set values.
         values : np.ndarray
               Array of new values.
-        """ 
+        """
+        # Serialization protocol: CREATE snapshots state, FREE releases
+        # it, STATE hands in the pickle bytes on restore. The trigger
+        # value is ignored. Note that the receive-buffer sizing for the
+        # restore-side SetValue(STATE, ...) is handled by
+        # `get_var_nbytes` below, which dynamically reports what a
+        # current-state snapshot would pickle to; the protocol does not
+        # need to announce the payload length separately.
+        if var_name == NGEN_SERIALIZATION_CREATE:
+            self._create_serialization()
+            return
+        if var_name == NGEN_SERIALIZATION_FREE:
+            self._free_serialization()
+            return
+        if var_name == NGEN_SERIALIZATION_STATE:
+            self._deserialize_state(np.asarray(values, dtype=np.uint8))
+            return
+
         if( var_name == 'grid_1_shape' ):
             self.grid_1.shape = values
             for var, grid in self._grid_map.items():
@@ -429,7 +515,7 @@ class bmi_model(Bmi):
             bmi_var_value_index = indices[i]
             self.get_value_ptr(var_name)[bmi_var_value_index] = src[i]
 
-    #------------------------------------------------------------ 
+    #------------------------------------------------------------
     def get_var_nbytes(self, var_name) -> int:
         """
         Get the number of bytes required for a variable.
@@ -442,6 +528,26 @@ class bmi_model(Bmi):
         int
             Size of data array in bytes.
         """
+        # Serialization STATE: the storage-backed `_values` entry is
+        # empty outside of a CREATE/FREE scope, which would cause
+        # Bmi_Py_Adapter's restore-time `SetValue(state, ...)` to
+        # marshal zero bytes across the language boundary. Report the
+        # length that a snapshot of the *current* model state would
+        # pickle to instead. Pickle output size is stable for this
+        # model's schema (numpy arrays of fixed dtype+shape + Python
+        # floats, which pickle to fixed-width opcodes), so the live
+        # size equals the on-disk record's size for any record
+        # produced by the same model version — which is what the
+        # adapter needs in order to wrap the incoming byte buffer
+        # correctly. After a CREATE the actual buffer is sized and
+        # matches; this probe only matters before the first CREATE.
+        if var_name == NGEN_SERIALIZATION_STATE:
+            current = self._values.get(NGEN_SERIALIZATION_STATE)
+            if current is not None and current.nbytes > 0:
+                return int(current.nbytes)
+            payload = {f: self._values[f] for f in self._SERIALIZED_FIELDS
+                       if f in self._values}
+            return len(pickle.dumps(payload, protocol=pickle.HIGHEST_PROTOCOL))
         return self.get_value_ptr(var_name).nbytes
 
     #------------------------------------------------------------ 

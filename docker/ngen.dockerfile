@@ -8,12 +8,23 @@ RUN dnf update -y \
     && dnf clean all
 
 ARG BOOST_VERSION="1.86.0"
+# Boost is mostly used header-only in this project, but the BMI
+# serialization protocol library links against `libboost_serialization`
+# (the first compiled-Boost dependency). Building it here against the
+# extracted source tree leaves the libraries under
+# `<BOOST_ROOT>/stage/lib/` where CMake's FindBoost picks them up
+# automatically — no CMake-side change is required when BOOST_ROOT is
+# already pointed at this directory below.
 RUN export BOOST_ARCHIVE="boost_$(echo ${BOOST_VERSION} | tr '\.' '_').tar.gz" \
+    && export BOOST_DIR="boost_$(echo ${BOOST_VERSION} | tr '\.' '_')" \
     && export BOOST_URL="https://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/${BOOST_ARCHIVE}/download" \
     && cd / \
     && curl -L -o "${BOOST_ARCHIVE}" "${BOOST_URL}" \
     && tar -xzf "${BOOST_ARCHIVE}" \
-    && rm ${BOOST_ARCHIVE}
+    && rm ${BOOST_ARCHIVE} \
+    && cd "${BOOST_DIR}" \
+    && ./bootstrap.sh --with-libraries=serialization \
+    && ./b2 --with-serialization
 
 COPY . /ngen
 WORKDIR /ngen

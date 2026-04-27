@@ -14,10 +14,16 @@
 # Library Version 0.1
 # BMI mass balance checking protocol
 
-add_library(ngen_bmi_protocols protocols.cpp mass_balance.cpp)
+add_library(ngen_bmi_protocols protocols.cpp mass_balance.cpp serialization.cpp deserialization.cpp)
 add_library(NGen::bmi_protocols ALIAS ngen_bmi_protocols)
 
-target_include_directories(ngen_bmi_protocols PUBLIC 
+# Record format (serialization_record.hpp) uses boost::serialization binary
+# archives, which are not header-only. Re-invoke find_package to pull in the
+# component; CMake caches the result so this does not disturb the top-level
+# Boost target.
+find_package(Boost 1.86.0 REQUIRED COMPONENTS serialization)
+
+target_include_directories(ngen_bmi_protocols PUBLIC
     ${PROJECT_SOURCE_DIR}/include/bmi
     ${PROJECT_SOURCE_DIR}/include/utilities/bmi
     ${PROJECT_SOURCE_DIR}/include/geojson
@@ -27,7 +33,8 @@ target_include_directories(ngen_bmi_protocols PUBLIC
 target_link_libraries(ngen_bmi_protocols
   PUBLIC
     ${CMAKE_DL_LIBS}
-    Boost::boost # Headers-only Boost
+    Boost::boost           # Headers-only Boost
+    Boost::serialization   # Archive support for SerializationRecord
 )
 
 target_sources(ngen_bmi_protocols

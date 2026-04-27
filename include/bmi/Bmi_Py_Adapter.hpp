@@ -5,6 +5,7 @@
 
 #if NGEN_WITH_PYTHON
 
+#include <cstdint>
 #include <cstring>
 #include <exception>
 #include <memory>
@@ -246,6 +247,13 @@ namespace models {
                     return "long long";
                 } else if (py_type_name == "longlong" && item_size == sizeof(long long)) {
                     return "long long"; //numpy type
+                } else if ((py_type_name == "uint8" || py_type_name == "int8" || py_type_name == "byte") && item_size == 1) {
+                    // Byte-typed numpy arrays. Used for opaque byte payloads
+                    // such as the `ngen::serialization_state` buffer in the
+                    // BMI serialization protocol; the exact signedness doesn't
+                    // matter at the byte level so both uint8 and int8 route to
+                    // the same `uint8_t` C++ path.
+                    return "uint8_t";
                 } else if ( (py_type_name == "float" || py_type_name == "float32" || py_type_name == "np.float32" ||
                            py_type_name == "numpy.float32" || py_type_name == "np.single" ||  py_type_name == "numpy.single") && item_size == sizeof(float)) {
                     return "float";
@@ -532,11 +540,17 @@ namespace models {
                 } else if (cxx_type == "long") {
                     set_value<long>(name, (long *) src);
                 } else if (cxx_type == "long long") {
-                    //FIXME this gets dicey -- if a python numpy array is of type np.int64 (long long), 
+                    //FIXME this gets dicey -- if a python numpy array is of type np.int64 (long long),
                     //but a c++ int* is passed to this function as src, it will fail in undefined ways...
                     //the template type overload may be perferred for doing SetValue from framework components
                     //such as forcing providers...
                     set_value<long long>(name, (long long *) src);
+                } else if (cxx_type == "uint8_t") {
+                    // Byte-typed payload (e.g. the BMI serialization protocol's
+                    // `ngen::serialization_state` opaque buffer). `src` is
+                    // already a raw byte pointer — hand it to the
+                    // uint8_t-instantiated template.
+                    set_value<uint8_t>(name, (uint8_t *) src);
                 } else if (cxx_type == "float") {
                     set_value<float>(name, (float *) src);
                 } else if (cxx_type == "double") {

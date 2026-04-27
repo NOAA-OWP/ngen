@@ -327,6 +327,7 @@ add_subdirectory("src/forcing")
 add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
 add_subdirectory("src/utilities/logging")
+add_subdirectory("src/utilities/path_tokens")
 add_subdirectory("src/utilities/bmi")
 add_subdirectory("src/utilities/output")
 

@@ -25,6 +25,18 @@
 #include "realizations/config/routing.hpp"
 #include "realizations/config/config.hpp"
 #include "realizations/config/layer.hpp"
+#include "realizations/config/global_config.hpp"
+#include "path_tokens.hpp"
+
+// Forward-declaration instead of pulling in `bmi/deserialization.hpp`
+// — that header transitively includes `<nonstd/expected.hpp>` and
+// other bmi-protocols-only paths that aren't on every consumer's
+// include path (core/ includes us but doesn't link the bmi tree).
+// This header has exactly one call into the deserialization module
+// (see `read()` below), which is all we need from it.
+namespace models { namespace bmi { namespace protocols {
+    void clear_checkpoint_indexes();
+}}}
 
 namespace realization {
 
@@ -75,6 +87,39 @@ namespace realization {
 
                 if (possible_global_config) {
                     global_config = realization::config::Config(*possible_global_config);
+                }
+
+                // Parse realization-level inheritable config blocks from the
+                // top-level JSON (see realization::config::GlobalConfigKey).
+                // Each recognized block is stored in `global_configs` and
+                // later merged into every formulation's params via
+                // `realization::config::apply_config`. Per-formulation
+                // entries still win — the parsed block is a default.
+                for (auto which : { realization::config::GlobalConfigKey::SERIALIZATION }) {
+                    const char* key = realization::config::to_key_string(which);
+                    auto possible_block = tree.get_child_optional(key);
+                    if (possible_block) {
+                        // Resolve `{{rank}}`/`{{pid}}`/`{{host}}`/`{{date}}`
+                        // tokens in the block's `path` field before it
+                        // propagates into every formulation. This is the
+                        // seam that keeps the protocol layer MPI-agnostic —
+                        // the resolved path is a concrete, caller-scoped
+                        // string by the time any protocol instance sees it.
+                        // Extend to additional inheritable blocks with a
+                        // file path if/when they arrive.
+                        if (which == realization::config::GlobalConfigKey::SERIALIZATION) {
+                            auto path_val = possible_block->get_optional<std::string>("path");
+                            if (path_val) {
+                                possible_block->put(
+                                    "path",
+                                    utilities::resolve_path_tokens(*path_val));
+                            }
+                        }
+                        global_configs.emplace(
+                            key,
+                            geojson::JSONProperty(key, *possible_block)
+                        );
+                    }
                 }
 
                 auto possible_simulation_time = tree.get_child_optional("time");
@@ -154,6 +199,26 @@ namespace realization {
                 /**
                  * Read catchment configurations from configuration file
                  */
+                // With the global-config map populated and the hydrofabric
+                // already loaded for this manager, fill in a default
+                // `serialization.restore.id_subset` from the set of ids
+                // this run will actually touch. A no-op when the user
+                // supplied their own id_subset, or when no restore block
+                // is configured. See
+                // `realization::config::apply_serialization_restore_subset_default`
+                // for the precise no-op cases.
+                {
+                    std::vector<std::string> known_ids;
+                    if (fabric) {
+                        known_ids.reserve(fabric->get_size());
+                        for (const geojson::Feature& location : *fabric) {
+                            known_ids.push_back(location->get_id());
+                        }
+                    }
+                    realization::config::apply_serialization_restore_subset_default(
+                        global_configs, known_ids);
+                }
+
                 auto possible_catchment_configs = tree.get_child_optional("catchments");
 
                 // For now at least, this isn't allowed
@@ -206,6 +271,19 @@ namespace realization {
                         this->add_formulation(missing_formulation);
                     }
                 }
+
+                // Every formulation has now been constructed, which
+                // means every restore-side BMI protocol run() call has
+                // fired at least once — restores are a one-shot
+                // init-phase operation bound to the formulation's own
+                // construction path (see `Bmi_Module_Formulation::inner_create_formulation`).
+                // The process-global `CheckpointIndex` cache used by
+                // `NgenDeserializationProtocol` is dead weight from
+                // this point for long-running simulations; release it
+                // now rather than let it live until process exit. Any
+                // later restore against a freed path would lazily
+                // rebuild on next access.
+                models::bmi::protocols::clear_checkpoint_indexes();
             }
 
             void add_formulation(std::shared_ptr<Catchment_Formulation> formulation) {
@@ -422,6 +500,15 @@ namespace realization {
                                                                    BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG, "{{id}}",
                                                                    identifier);
 
+                // Inherit realization-level default config blocks into the
+                // per-catchment formulation params. Per-catchment entries
+                // win; the global is only a default. Extend for each
+                // additional inheritable key.
+                realization::config::apply_config(
+                    catchment_formulation.formulation.parameters, global_configs,
+                    realization::config::GlobalConfigKey::SERIALIZATION
+                );
+
                 constructed_formulation->create_formulation(catchment_formulation.formulation.parameters);
                 return constructed_formulation;
             }
@@ -444,6 +531,14 @@ namespace realization {
                 //Make a copy of the global configuration so parameters don't clash when linking to external data
                 auto formulation =  realization::config::Formulation(global_copy.formulation);
                 formulation.link_external(feature);
+
+                // Inherit realization-level default config blocks for the
+                // global-fallback construction path too.
+                realization::config::apply_config(
+                    formulation.parameters, global_configs,
+                    realization::config::GlobalConfigKey::SERIALIZATION
+                );
+
                 missing_formulation->create_formulation(formulation.parameters);
 
                 return missing_formulation;
@@ -716,6 +811,12 @@ namespace realization {
             boost::property_tree::ptree tree;
 
             realization::config::Config global_config;
+
+            /** Parsed realization-level config blocks that should be
+             *  inherited into every formulation's params unless the
+             *  formulation declares its own. Keyed by the JSON key
+             *  string (see realization::config::GlobalConfigKey). */
+            geojson::PropertyMap global_configs;
 
             std::map<std::string, std::shared_ptr<Catchment_Formulation>> formulations;
 

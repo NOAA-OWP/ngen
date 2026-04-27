@@ -217,6 +217,9 @@ ngen_add_test(
     test_bmi_protocols
     OBJECTS
         utils/bmi/mass_balance_Test.cpp
+        utils/bmi/serialization_record_Test.cpp
+        utils/bmi/serialization_Test.cpp
+        utils/bmi/deserialization_Test.cpp
     LIBRARIES
         NGen::bmi_protocols
         NGen::ngen_bmi
@@ -246,6 +249,16 @@ ngen_add_test(
         utils/logging_Test.cpp
     LIBRARIES
         NGen::logging
+
+)
+
+########################## Path-Tokens Unit Tests
+ngen_add_test(
+    test_path_tokens
+    OBJECTS
+        utils/path_tokens_Test.cpp
+    LIBRARIES
+        NGen::path_tokens
 
 )
 
@@ -388,12 +401,14 @@ ngen_add_test(
     OBJECTS
         bmi/Bmi_Fortran_Adapter_Test.cpp
         realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
+        utils/bmi/fortran_serialization_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
+        NGen::bmi_protocols
     REQUIRES
         NGEN_WITH_BMI_FORTRAN
     DEPENDS
@@ -406,12 +421,14 @@ ngen_add_test(
     OBJECTS
         bmi/Bmi_Py_Adapter_Test.cpp
         realizations/catchments/Bmi_Py_Formulation_Test.cpp
+        utils/bmi/py_serialization_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
+        NGen::bmi_protocols
     REQUIRES
         NGEN_WITH_PYTHON
 )
@@ -542,6 +559,7 @@ ngen_add_test(
         utils/mdframe_netcdf_Test.cpp
         utils/mdframe_csv_Test.cpp
         utils/logging_Test.cpp
+        utils/path_tokens_Test.cpp
     LIBRARIES
         gmock
         NGen::core
@@ -553,6 +571,7 @@ ngen_add_test(
         NGen::mdarray
         NGen::mdframe
         NGen::logging
+        NGen::path_tokens
         NGen::ngen_bmi
         NGen::output
         testbmicppmodel

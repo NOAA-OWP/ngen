@@ -6,6 +6,11 @@
 #define NGEN_MASS_STORED "ngen::mass_stored"
 #define NGEN_MASS_LEAKED "ngen::mass_leaked"
 
+#define NGEN_SERIALIZATION_CREATE "ngen::serialization_create"
+#define NGEN_SERIALIZATION_FREE   "ngen::serialization_free"
+#define NGEN_SERIALIZATION_SIZE   "ngen::serialization_size"
+#define NGEN_SERIALIZATION_STATE  "ngen::serialization_state"
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
