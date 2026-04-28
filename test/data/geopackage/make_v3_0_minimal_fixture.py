@@ -31,6 +31,20 @@ Schema (v3.0):
 Join invariant (toid synthesis):
   divide.flowpath_id -> flowpaths.flowpath_id -> flowpaths.flowpath_toid
   All three divides resolve to a nexus via this join.
+
+Usage:
+    python3 make_v3_0_minimal_fixture.py
+
+Output: example_v3_0_minimal.gpkg (sibling of this script).
+Dependencies: Python 3.6+, stdlib only (os, sqlite3, struct). The CPython
+`_sqlite3` extension is required; every standard CPython build has it.
+
+Regenerating ALWAYS produces a tracked diff: gpkg_contents.last_change is
+written via SQLite's datetime('now'), so the new file's timestamp differs
+from whatever is committed. Bytes can also drift across SQLite library
+versions for the same logical SQL. Treat regeneration as a deliberate,
+maintainer-only action and verify intent with diff_fixture.py before
+committing — see test/data/geopackage/README.md for the workflow.
 """
 
 import os
@@ -145,7 +159,7 @@ def main():
     )
     cur.execute(
         "INSERT INTO gpkg_contents VALUES"
-        " ('nexus','features','nexus','','2026-01-01 00:00:00',-82.0,29.0,-80.0,31.0,4326)"
+        " ('nexus','features','nexus','',datetime('now'),-82.0,29.0,-80.0,31.0,4326)"
     )
     cur.execute(
         "INSERT INTO gpkg_geometry_columns VALUES ('nexus','geom','POINT',4326,0,0)"
@@ -180,7 +194,7 @@ def main():
     )
     cur.execute(
         "INSERT INTO gpkg_contents VALUES"
-        " ('divides','features','divides','','2026-01-01 00:00:00',-82.0,29.0,-80.0,31.0,4326)"
+        " ('divides','features','divides','',datetime('now'),-82.0,29.0,-80.0,31.0,4326)"
     )
     cur.execute(
         "INSERT INTO gpkg_geometry_columns VALUES ('divides','geom','POLYGON',4326,0,0)"
@@ -211,7 +225,7 @@ def main():
     )
     cur.execute(
         "INSERT INTO gpkg_contents VALUES"
-        " ('flowpaths','features','flowpaths','','2026-01-01 00:00:00',-81.5,29.5,-80.0,30.5,4326)"
+        " ('flowpaths','features','flowpaths','',datetime('now'),-81.5,29.5,-80.0,30.5,4326)"
     )
     cur.execute(
         "INSERT INTO gpkg_geometry_columns"
