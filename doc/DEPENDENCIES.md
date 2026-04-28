@@ -49,17 +49,17 @@ If CMake is unable to find a compiler automatically, the CMake `CMAKE_C_COMPILER
 
 ### Version Requirements
 
-Project C++ code needs to be compliant with the C++ 14 standard.  Supported compilers need to be of a recent enough version to be compatible.  
+Project C++ code needs to be compliant with the C++ 17 standard.  Supported compilers need to be of a recent enough version to be compatible.  
 
 Additionally, C++ compilers needs to be compatible (ideally officially *tested* as such) with other project C++ dependencies.
 
 #### GCC
 
-Based on [this page](https://gcc.gnu.org/projects/cxx-status.html#cxx14), the C++ 14 support requirement probably equates to a version of GCC \>= version `5.0.0`.
+Based on [this page](https://gcc.gnu.org/projects/cxx-status.html#cxx17), the C++ 17 support requirement probably equates to some GCC version `7` release or later.
 
 #### Clang
 
-The Clang versioning scheme is a little convoluted.  Using the official scheme, Clang 3.4 and later should support all C++ 14 features.
+The Clang versioning scheme is a little convoluted.  Using the official scheme, Clang 5 and later should support all C++ 17 features.
 
 However, Apple likes to apply their own versioning to Clang and LLVM.  The `Apple LLVM version 10.0.1 (clang-1001.0.46.4)` version released with MacOS 10.14.x should do fine.  Recent, earlier version likely will as well, but YMMV.
 
