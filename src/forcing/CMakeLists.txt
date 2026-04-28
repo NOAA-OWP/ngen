@@ -36,4 +36,4 @@ if(NGEN_WITH_PYTHON)
     target_link_libraries(forcing PUBLIC pybind11::embed NGen::ngen_bmi)
 endif()
 
-#target_compile_options(forcing PUBLIC -std=c++14 -Wall)
+#target_compile_options(forcing PUBLIC -std=c++17 -Wall)

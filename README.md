@@ -14,7 +14,7 @@ As we attempt to apply hydrological modeling at different scales, the traditiona
 This framework includes an encapsulation strategy which focuses on the hydrologic data first, and then builds a functional abstraction of hydrologic behavior.  This abstraction is naturally recursive, and unlocks a higher level of modeling and reasoning using computational modeling for hydrology.  This is done by organizing model components along well-defined flow boundaries, and then implementing strict API’s to define the movement of water amongst these components.  This organization also allows control and orchestration of first-class model components to leverage more sophisticated programming techniques and data structures.
 
 
-  - **Technology stack**: Core Framework using C++ (minimum standard c++14) to provide polymorphic interfaces with reasonable systems integration.
+  - **Technology stack**: Core Framework using C++ (minimum standard c++17) to provide polymorphic interfaces with reasonable systems integration.
   - **Status**:  Version 0.1.0 in initial development including interfaces, logical data model, and framework structure.  See  [CHANGELOG](CHANGELOG.md) for revision details.
 
 ## Structural Diagrams
