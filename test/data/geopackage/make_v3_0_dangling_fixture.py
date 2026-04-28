@@ -124,7 +124,7 @@ def main():
     )
     cur.execute(
         "INSERT INTO gpkg_contents VALUES"
-        " ('nexus','features','nexus','',datetime('now'),-81.0,30.0,-81.0,30.0,4326)"
+        " ('nexus','features','nexus','','2026-01-01 00:00:00',-81.0,30.0,-81.0,30.0,4326)"
     )
     cur.execute(
         "INSERT INTO gpkg_geometry_columns VALUES ('nexus','geom','POINT',4326,0,0)"
@@ -154,7 +154,7 @@ def main():
     )
     cur.execute(
         "INSERT INTO gpkg_contents VALUES"
-        " ('divides','features','divides','',datetime('now'),-82.0,29.0,-80.0,30.0,4326)"
+        " ('divides','features','divides','','2026-01-01 00:00:00',-82.0,29.0,-80.0,30.0,4326)"
     )
     cur.execute(
         "INSERT INTO gpkg_geometry_columns VALUES ('divides','geom','POLYGON',4326,0,0)"
@@ -176,7 +176,7 @@ def main():
     )
     cur.execute(
         "INSERT INTO gpkg_contents VALUES"
-        " ('flowpaths','features','flowpaths','',datetime('now'),-81.5,29.5,-81.0,30.0,4326)"
+        " ('flowpaths','features','flowpaths','','2026-01-01 00:00:00',-81.5,29.5,-81.0,30.0,4326)"
     )
     cur.execute(
         "INSERT INTO gpkg_geometry_columns VALUES ('flowpaths','geom','MULTILINESTRING',4326,0,0)"
