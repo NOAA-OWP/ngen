@@ -62,14 +62,102 @@ to V2_2 silently.
 
 ---
 
-## Regenerating fixtures
+## Modifying fixtures
 
-The committed `.gpkg` files for `example_v2_2`, `example_v3_0`,
-`example_v3_0_minimal`, `example_v3_0_dangling`, and `example_v3_0_extra_col`
-are byte-deterministic. Re-running any `make_*.py` against an unchanged
-generator produces an identical file (verifiable with `md5`).
+The five v2.2 / v3.0 `.gpkg` files in this directory are committed
+binaries produced by the matching `make_*_fixture.py` scripts. Tests
+read the committed binaries directly; the scripts are **maintainer-only
+tools** for changing what those binaries contain.
 
-This relies on `gpkg_contents.last_change` being pinned to the literal
-string `'2026-01-01 00:00:00'` in every generator (rather than
-`datetime('now')`). Do not revert that pin: every regeneration would then
-produce a spurious working-tree diff even when nothing meaningful changed.
+### When to regenerate
+
+Regenerate a fixture **only when you have edited its generator script**
+(topology, schema, feature IDs, geometry, properties, etc.). The
+committed `.gpkg` and the script's docstring should always describe the
+same artifact.
+
+Do not regenerate "to verify it still works" or "to refresh the
+timestamp" — every regen produces a tracked diff (see *Why regen always
+shows a diff* below), and committing those diffs without an actual
+content change is the bookkeeping noise we are trying to avoid.
+
+### How to regenerate
+
+```
+python3 make_v2_2_fixture.py            # → example_v2_2.gpkg
+python3 make_v3_0_fixture.py            # → example_v3_0.gpkg
+python3 make_v3_0_minimal_fixture.py    # → example_v3_0_minimal.gpkg
+python3 make_v3_0_dangling_fixture.py   # → example_v3_0_dangling.gpkg
+python3 make_v3_0_extra_col_fixture.py  # → example_v3_0_extra_col.gpkg
+```
+
+Each script writes its `.gpkg` next to itself. No project venv
+activation is needed — the generators use only Python stdlib (`os`,
+`sqlite3`, `struct`), so any Python 3.6+ interpreter with the standard
+`_sqlite3` extension works.
+
+After writing, each generator runs self-verification asserts (e.g.,
+"Join invariant verified: all 3 divides resolve to a nexus."). An
+`AssertionError` means the script's intent and the data it produces have
+disagreed; fix the script before doing anything else.
+
+### Why regen always shows a diff
+
+Two unavoidable sources of byte-level drift:
+
+1. **Timestamp.** Each generator writes the current wall-clock time into
+   `gpkg_contents.last_change` via SQLite's `datetime('now')`. Every
+   regen therefore writes a different timestamp and produces a tracked
+   diff even when nothing else changed. This is intentional — the
+   timestamp records when the committed fixture was last regenerated.
+2. **SQLite library version.** Different versions of the SQLite library
+   write subtly different bytes for the same logical SQL (page-level
+   metadata, internal counters, etc.). A regen on system Python 3.9
+   (SQLite 3.43) and a regen on a venv Python 3.12 (SQLite 3.49) will
+   produce different files even with identical scripts and identical
+   timestamps.
+
+Neither affects test correctness — the SQLite on-disk format is stable
+and backward/forward compatible, and the C++ loader doesn't care which
+library wrote the file. They affect only the maintainer regen workflow.
+
+### Verifying intent before committing: `diff_fixture.py`
+
+`git diff` on a `.gpkg` reports only "Binary files differ", which is
+useless. Use the colocated diff tool:
+
+```
+python3 diff_fixture.py example_v3_0.gpkg
+```
+
+This compares your working-tree fixture against the committed (HEAD)
+version table-by-table and prints a structured summary: schema changes
+plus added / modified / removed rows per table, keyed by primary key.
+
+The default mode shows changes in user feature tables AND GeoPackage
+metadata tables — including `gpkg_contents.last_change`, so the
+timestamp drift mentioned above is visible. Flags:
+
+- `--flat` — fall back to a flat unified diff of `sqlite3 .dump` output.
+- `--aggressive` — also hide `gpkg_contents.last_change` rows when the
+  rest of the row is unchanged (useful when you know the timestamp
+  drift is just regen noise).
+- `--all` — include SQLite internal tables (`sqlite_*`, `rtree_*`).
+
+The expected workflow for a fixture change:
+
+1. Edit the relevant `make_*_fixture.py`.
+2. Run that generator. The `.gpkg` is overwritten.
+3. `python3 diff_fixture.py example_*.gpkg` — confirm the diff matches
+   your intent (correct rows added, correct columns changed, no
+   surprises in tables you didn't mean to touch).
+4. If it matches, commit the script change AND the regenerated `.gpkg`.
+   If it doesn't, fix the script and go back to step 2.
+
+If you regenerate by accident with no script change, just discard:
+`git checkout HEAD -- example_*.gpkg`.
+
+### Non-hydrofabric fixtures
+
+`example.gpkg` and `example_3857.gpkg` predate this branch and have no
+generator. They are opaque committed blobs.
