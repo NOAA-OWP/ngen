@@ -59,3 +59,17 @@ Auxiliary tables present (never read by the loader):
 Non-hydrofabric test fixtures used by the original GeoPackage read tests.
 These have no `nexus` table; `detect_version` throws and the loader defaults
 to V2_2 silently.
+
+---
+
+## Regenerating fixtures
+
+The committed `.gpkg` files for `example_v2_2`, `example_v3_0`,
+`example_v3_0_minimal`, `example_v3_0_dangling`, and `example_v3_0_extra_col`
+are byte-deterministic. Re-running any `make_*.py` against an unchanged
+generator produces an identical file (verifiable with `md5`).
+
+This relies on `gpkg_contents.last_change` being pinned to the literal
+string `'2026-01-01 00:00:00'` in every generator (rather than
+`datetime('now')`). Do not revert that pin: every regeneration would then
+produce a spurious working-tree diff even when nothing meaningful changed.
