@@ -726,7 +726,7 @@ namespace realization {
                                << " units '" << get_bmi_model()->GetVarUnits(var_name) << "'}"
                                << " provider {'" << uce.provider_model_name << "' source variable '" << uce.provider_bmi_var_name << "'"
                                << " raw value " << uce.unconverted_values[0] << "}"
-                               << " message \"" << uce.what() << "\"";
+                               << " message \"" << uce.what() << "\"\n";
                             logging::warning(ss.str().c_str()); ss.str("");
                         }
                         value_ptr = get_value_as_type(type, uce.unconverted_values[0]);
