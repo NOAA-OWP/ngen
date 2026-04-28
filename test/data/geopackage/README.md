@@ -79,7 +79,7 @@ same artifact.
 Do not regenerate "to verify it still works" or "to refresh the
 timestamp" — every regen produces a tracked diff (see *Why regen always
 shows a diff* below), and committing those diffs without an actual
-content change is the bookkeeping noise we are trying to avoid.
+content change is the bookkeeping noise we'd prefer to avoid.
 
 ### How to regenerate
 
@@ -116,6 +116,9 @@ Two unavoidable sources of byte-level drift:
    (SQLite 3.43) and a regen on a venv Python 3.12 (SQLite 3.49) will
    produce different files even with identical scripts and identical
    timestamps.
+
+> [!NOTE]
+> The **Timestamp** drift is unavoidable by choice.  Since the **SQLite library version** drift is not, but is also not as obvious, it seemed better to avoid leading people to think regenerating the fixtures, even with no other local changes, would never have any side effects. 
 
 Neither affects test correctness — the SQLite on-disk format is stable
 and backward/forward compatible, and the C++ loader doesn't care which
