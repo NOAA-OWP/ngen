@@ -1,7 +1,7 @@
 #include "geopackage.hpp"
 #include "JSONProperty.hpp"
 
-#include <cassert>
+#include <stdexcept>
 
 // Points don't have a bounding box, so we can say its bbox is itself
 inline void build_point_bbox(const geojson::geometry& geom, std::vector<double>& bbox)
@@ -39,9 +39,19 @@ geojson::Feature ngen::geopackage::build_feature(
         if (it_ntoid != properties.end()) {
             properties.emplace("toid", geojson::JSONProperty("toid", it_ntoid->second));
         }
-        assert(properties.count("id") > 0);
-        assert(properties.count("toid") > 0);
-        assert(!id.empty());
+        if (properties.count("id") == 0) {
+            throw std::runtime_error(
+                "v3.0 nexus row missing required 'nexus_id' column"
+            );
+        }
+        if (properties.count("toid") == 0) {
+            throw std::runtime_error(
+                "v3.0 nexus row missing required 'nexus_toid' column"
+            );
+        }
+        if (id.empty()) {
+            throw std::runtime_error("v3.0 nexus row has empty 'id' value");
+        }
     }
 
     // v3.0 divides carry flowpath_id as the foreign key into flowpaths.
@@ -50,8 +60,14 @@ geojson::Feature ngen::geopackage::build_feature(
     // below can rely on it. v2.2 divides are intentionally not asserted:
     // flowpath_id is a v3.0 column.
     if (version == ngen::geopackage::HydrofabricVersion::V3_0 && id_col == "divide_id") {
-        assert(properties.count("flowpath_id") > 0);
-        assert(!id.empty());
+        if (properties.count("flowpath_id") == 0) {
+            throw std::runtime_error(
+                "v3.0 divides row missing required 'flowpath_id' column"
+            );
+        }
+        if (id.empty()) {
+            throw std::runtime_error("v3.0 divides row has empty 'id' value");
+        }
 
         // v3.0 divides have no native toid column: synthesize it by looking
         // up this divide's id in the precomputed divide_id -> flowpath_toid
