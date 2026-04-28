@@ -10,6 +10,7 @@
 #include "OptionalWrappedDataProvider.hpp"
 #include "ConfigurationException.hpp"
 #include "ExternalIntegrationException.hpp"
+#include "utilities/logging_utils.h"
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"
@@ -570,9 +571,18 @@ namespace realization {
             try {
                 auto const& nested_module = data_provider_iter->second;
                 long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
-                auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"1");
+                auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"");
                 //TODO: After merge PR#405, try re-adding support for index
                 return nested_module->get_value(selector);
+            }
+            catch (data_access::unit_conversion_exception &uce) {
+                // We asked for it as a dimensionless quantity, "1", just above
+                static bool no_conversion_message_logged = false;
+                if (!no_conversion_message_logged) {
+                    no_conversion_message_logged = true;
+                    logging::warning("Output variables do not have unit conversion. Capability not yet implemented in ngen.");
+                }
+                return uce.unconverted_values[0];
             }
             // If there was any problem with the cast and extraction of the value, throw runtime error
             catch (std::exception &e) {

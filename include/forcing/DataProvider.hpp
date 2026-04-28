@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <set>
+#include <tuple>
 #include <boost/core/span.hpp>
 
 namespace data_access
@@ -101,6 +103,33 @@ namespace data_access
         private:
     };
 
+    struct unit_error_log_key {
+        std::string requester_name;
+        std::string requester_variable;
+        std::string provider_name;
+        std::string provider_variable;
+        std::string failure_message;
+
+        bool operator<(unit_error_log_key const& rhs) const {
+            return std::tie(requester_name, requester_variable, provider_name, provider_variable, failure_message)
+                 < std::tie(rhs.requester_name, rhs.requester_variable, rhs.provider_name, rhs.provider_variable, rhs.failure_message);
+        }
+
+        bool operator==(unit_error_log_key const& rhs) const {
+            return std::tie(requester_name, requester_variable, provider_name, provider_variable, failure_message)
+                == std::tie(rhs.requester_name, rhs.requester_variable, rhs.provider_name, rhs.provider_variable, rhs.failure_message);
+        }
+    };
+
+    extern std::set<unit_error_log_key> unit_errors_reported;
+
+    struct unit_conversion_exception : public std::runtime_error {
+        unit_conversion_exception(std::string message) : std::runtime_error(message) {}
+        std::string provider_model_name;
+        std::string provider_bmi_var_name;
+        std::string provider_units;
+        std::vector<double> unconverted_values;
+    };
 }
 
 
