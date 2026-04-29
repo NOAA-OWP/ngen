@@ -8,7 +8,7 @@
 
 # Ownership / branding overrides
 ARG GH_ORG=NGWPC
-ARG GHRC_ORG=ngwpc
+ARG GHCR_ORG=ngwpc
 ARG IMAGE_NAMESPACE=ngwpc
 
 # External repository sources (org and ref/branch overrides)
@@ -18,7 +18,7 @@ ARG EWTS_REF=development
 
 # Image selection
 ARG NGEN_FORCING_IMAGE_TAG=latest
-ARG NGEN_FORCING_IMAGE=ghcr.io/${GHRC_ORG}/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG}
+ARG NGEN_FORCING_IMAGE=ghcr.io/${GHCR_ORG}/ngen-bmi-forcing:${NGEN_FORCING_IMAGE_TAG}
 
 FROM ${NGEN_FORCING_IMAGE} AS base
 
