@@ -31,6 +31,19 @@ on:
         description: 'EWTS_REF'
         required: false
         type: string
+      TRIGGER_DOWNSTREAM:
+        description: 'Trigger downstream repos'
+        required: false
+        default: false
+        type: boolean
+      NWM_CAL_MGR_REF:
+        description: 'NWM_CAL_MGR_REF'
+        required: false
+        type: string
+      NWM_FCST_MGR_REF:
+        description: 'NWM_FCST_MGR_REF'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -237,7 +250,7 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
 
-# build ngen Docker image
+  # build ngen Docker image
   build:
     name: build
     if: |
@@ -273,7 +286,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build & push image
         id: build_image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           # file: Dockerfile.test # comment out when done testing
@@ -292,7 +305,7 @@ jobs:
             IMAGE_REVISION=${{ needs.setup.outputs.commit_sha }}
             CI_COMMIT_REF_NAME=${{ needs.setup.outputs.clean_ref }}
 
-# run unit tests inside the built Docker image
+  # run unit tests inside the built Docker image
   unit-test:
     name: unit-test
     if: |
@@ -317,7 +330,7 @@ jobs:
             exit 1;
           }
 
-# run container security scan using Trivy
+  # run container security scan using Trivy
   container-scanning:
     name: container-scanning
     if: |
@@ -351,7 +364,7 @@ jobs:
             --timeout 45m \
             ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.test_image_tag }}
 
-# promote Docker image tags after successful tests
+  # promote Docker image tags after successful tests
   promote-tags:
     name: Promote Tags
     if: |
@@ -397,28 +410,35 @@ jobs:
               "docker://${IMAGE_BASE}:${TEST_TAG}" "docker://${IMAGE_BASE}:latest"
           fi
 
-  # trigger downstream CI/CD pipelines
+  # trigger downstream repos, nwm-cal-mgr and nwm-fcst-mgr
   trigger-downstream:
-    name: trigger-downstream
-    if: success()
+    name: trigger-downstream (${{ matrix.repo }})
+    if: |
+      success() && (
+        (github.event_name == 'push' && github.ref_name == 'development') ||
+        (github.event_name == 'workflow_dispatch' && inputs.TRIGGER_DOWNSTREAM)
+      )
     runs-on: ubuntu-latest
     needs:
       - promote-tags
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - repo: nwm-cal-mgr
+            ref: ${{ inputs.NWM_CAL_MGR_REF || 'development' }}
+          - repo: nwm-fcst-mgr
+            ref: ${{ inputs.NWM_FCST_MGR_REF || 'development' }}
     steps:
       - name: Generate GitHub App token
         id: app-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ secrets.PIPELINE_APP_ID }}
+          client-id: ${{ secrets.PIPELINE_APP_ID }}
           private-key: ${{ secrets.PIPELINE_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - name: Trigger nwm-cal-mgr CI/CD
+      - name: Trigger ${{ matrix.repo }}@${{ matrix.ref }}
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          gh workflow run ci-cd.yml --repo NGWPC/nwm-cal-mgr --ref development
-      - name: Trigger nwm-fcst-mgr CI/CD
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          gh workflow run ci-cd.yml --repo NGWPC/nwm-fcst-mgr --ref development
+          gh workflow run ci-cd.yml --repo ${{ github.repository_owner }}/${{ matrix.repo }} --ref ${{ matrix.ref }}
