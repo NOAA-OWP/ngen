@@ -458,6 +458,7 @@ jobs:
           MSW_MGR_ORG: ${{ inputs.MSW_MGR_ORG || github.repository_owner }}
           MSW_MGR_REF: ${{ inputs.MSW_MGR_REF || 'development' }}
           GHCR_ORG: ${{ inputs.GHCR_ORG || needs.setup.outputs.org }}
+          NGEN_IMAGE_TAG: ${{ needs.setup.outputs.alias_tag }}
         run: |
           gh workflow run ci-cd.yml \
             --repo ${{ github.repository_owner }}/${{ matrix.repo }} \
@@ -466,4 +467,5 @@ jobs:
             -f EWTS_REF="$EWTS_REF" \
             -f MSW_MGR_ORG="$MSW_MGR_ORG" \
             -f MSW_MGR_REF="$MSW_MGR_REF" \
-            -f GHCR_ORG="$GHCR_ORG"
+            -f GHCR_ORG="$GHCR_ORG" \
+            -f NGEN_IMAGE_TAG="$NGEN_IMAGE_TAG"
