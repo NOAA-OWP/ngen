@@ -32,12 +32,6 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     // Check for malicious/invalid layer input
     check_table_name(layer);
     std::vector<geojson::Feature> features;
-    if (ids.size() > 0)
-        features.reserve(ids.size());
-    double min_x = std::numeric_limits<double>::infinity();
-    double min_y = std::numeric_limits<double>::infinity();
-    double max_x = -std::numeric_limits<double>::infinity();
-    double max_y = -std::numeric_limits<double>::infinity();
 
     LOG(LogLevel::DEBUG, "Establishing connection to geopackage %s.", gpkg_path.c_str());
     ngen::sqlite::database db{gpkg_path};
@@ -62,103 +56,137 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
         throw std::runtime_error(errmsg);
     }
 
-    // Introspect if the layer is divides to see which ID field is in use
-    std::string id_column = "id";
-    if(layer == "divides"){
-        try {
-            //TODO: A bit primitive. Actually introspect the schema somehow? https://www.sqlite.org/c3ref/funclist.html
-            auto query_get_first_row = db.query("SELECT divide_id FROM " + layer + " LIMIT 1");
-            id_column = "divide_id";
+    std::string id_column;
+    std::string feature_query;
+    if (layer == "divides") {
+        id_column = "div_id";
+        feature_query = 
+            "SELECT "
+                "('cat-' || divides.div_id) AS id, "
+                "('nex-' || flowpaths.dn_nex_id) AS toid, "
+                "flowpaths.slope AS So, "
+                "divides.area_sqkm AS areasqkm, " // faster for later code to rename the field here
+                "divides.geom AS geom "
+            "FROM divides "
+            "LEFT JOIN flowpaths "
+                "ON divides.div_id = flowpaths.div_id";
+    } else if (layer == "nexus") {
+        id_column = "nex_id";
+        feature_query = 
+            "SELECT "
+                "('nex-' || nexus.nex_id) AS id, "
+                "CASE "
+                    "WHEN flowpaths.div_id IS NULL THEN 'terminal' "
+                    "ELSE ('cat-' || flowpaths.div_id) "
+                "END AS toid, "
+                "CASE "
+                    "WHEN flowpaths.slope IS NULL THEN 0.0 "
+                    "ELSE flowpaths.slope "
+                "END AS So, "
+                "nexus.geom AS geom "
+            "FROM nexus "
+            "LEFT JOIN flowpaths "
+                "ON nexus.dn_fp_id = flowpaths.fp_id";
+    } else {
+        std::string msg = "Geopackage read only accepts layers `divides` and `nexus`. The layer entered was " + layer;
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
+    }
+
+    std::string joined_ids = "";
+    if (!ids.empty()) {
+        bool non_sentinel_found = false;
+        std::stringstream filter;
+        filter << " WHERE " << layer << '.' << id_column << " IN (";
+        for (const auto &filter_id : ids) {
+            size_t sep_index = filter_id.find('-');
+            if (sep_index == std::string::npos) {
+                sep_index = 0;
+            } else {
+                sep_index++;
+            }
+            int id_num = std::atoi(filter_id.c_str() + sep_index);
+            if (id_num <= 0) {
+                // check if the failed item is a fake terminal and igore if it is
+                std::string terminal = "wb-TERMINAL_SENTINEL-";
+                if (strncmp(filter_id.c_str(), terminal.c_str(), terminal.length()) != 0) {
+                    std::string msg = "Could not convert input " + layer + " ID into a number: " + filter_id;
+                    LOG(LogLevel::FATAL, msg);
+                    throw std::runtime_error(msg);
+                }
+            } else {
+                if (non_sentinel_found) // only add comma after finding at least one non-sentinel
+                    filter << ',';
+                non_sentinel_found = true;
+                filter << id_num;
+            }
         }
-        catch (const std::exception& e){
-            #ifndef NGEN_QUIET
-            // output debug info on what is read exactly
-            read_ss << "WARN: Using legacy ID column \"id\" in layer " << layer << " is DEPRECATED and may stop working at any time." << std::endl;
-            LOG(read_ss.str(), LogLevel::WARNING); read_ss.str("");
-            #endif
+        if (non_sentinel_found) {
+            filter << ')';
+            joined_ids = filter.str();
+        } else {
+            // if all IDs were sentinels, just make the query return nothing
+            joined_ids = " WHERE 1=0";
         }
     }
 
-    // execute sub-queries if the number of IDs gets too long or once if ids.size() == 0
-    int bind_limit = 900;
-    boost::span<const std::string> id_span(ids);
-    for (int i = 0; i < ids.size() || (i == 0 && ids.size() == 0); i += bind_limit) {
-        int span_size = (i + bind_limit >= ids.size()) ? (ids.size() - i) : bind_limit;
-        boost::span<const std::string> sub_ids = id_span.subspan(i, span_size);
+    // Get number of features
+    auto query_get_layer_count = db.query("SELECT COUNT(*) FROM " + layer + joined_ids);
+    query_get_layer_count.next();
+    const int layer_feature_count = query_get_layer_count.get<int>(0);
+    features.reserve(layer_feature_count);
+    if (!ids.empty() && ids.size() != layer_feature_count) {
+        LOG(LogLevel::WARNING, "The number of input IDs (%d) does not equal the number of features with those IDs in the geopackage (%d) for layer %s.",
+            ids.size(), layer_feature_count, layer.c_str());
+    }
 
-        // Layer exists, getting statement for it
-        //
-        // this creates a string in the form:
-        //     WHERE id IN (?, ?, ?, ...)
-        // so that it can be bound by SQLite.
-        // This is safer than trying to concatenate
-        // the IDs together.
-        std::string joined_ids = "";
-        if (!sub_ids.empty()) {
-            joined_ids = " WHERE "+id_column+" IN (?";
-            for (size_t i = 1; i < sub_ids.size(); i++) {
-                joined_ids += ", ?";
-            }
-            joined_ids += ")";
+    #ifndef NGEN_QUIET
+    // output debug info on what is read exactly
+    read_ss << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"<< id_column << "`";
+    if (!ids.empty()) {
+        read_ss << " (id subset:";
+        for (auto& id : ids) {
+            read_ss << " " << id;
         }
+        read_ss << ")";
+    }
+    read_ss << std::endl;
+    LOG(read_ss.str(), LogLevel::DEBUG); read_ss.str("");
+    #endif
 
-        // Get number of features
-        auto query_get_layer_count = db.query("SELECT COUNT(*) FROM " + layer + joined_ids, sub_ids);
-        query_get_layer_count.next();
-        const int layer_feature_count = query_get_layer_count.get<int>(0);
+    // Get layer
+    LOG(LogLevel::DEBUG, "Reading %d features from layer %s.", layer_feature_count, layer.c_str());
+    auto query_get_layer = db.query(feature_query + joined_ids);
+    query_get_layer.next();
 
-        #ifndef NGEN_QUIET
-        // output debug info on what is read exactly
-        read_ss << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"<< id_column << "`";
-        if (!sub_ids.empty()) {
-            read_ss << " (id subset:";
-            for (auto& id : sub_ids) {
-                read_ss << " " << id;
-            }
-            read_ss << ")";
-        }
-        read_ss << std::endl;
-        LOG(read_ss.str(), LogLevel::DEBUG); read_ss.str("");
-        #endif
+    // build features out of layer query
+    while(!query_get_layer.done()) {
+        geojson::Feature feature = build_feature(
+            query_get_layer,
+            "id",
+            "geom"
+        );
 
-        // Get layer feature metadata (geometry column name + type)
-        auto query_get_layer_geom_meta = db.query("SELECT column_name FROM gpkg_geometry_columns WHERE table_name = ?", layer);
-        query_get_layer_geom_meta.next();
-        const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
-
-        // Get layer
-        LOG(LogLevel::DEBUG, "Reading %d features from layer %s.", layer_feature_count, layer.c_str());
-        auto query_get_layer = db.query("SELECT * FROM " + layer + joined_ids, sub_ids);
+        features.push_back(feature);
         query_get_layer.next();
+    }
 
-        // build features out of layer query
-        if (ids.size() == 0)
-            features.reserve(layer_feature_count);
-        while(!query_get_layer.done()) {
-            geojson::Feature feature = build_feature(
-                query_get_layer,
-                id_column,
-                layer_geometry_column
-            );
-
-            features.push_back(feature);
-            query_get_layer.next();
-        }
-
-        // get layer bounding box from features
-        //
-        // GeoPackage contains a bounding box in the SQLite DB,
-        // however, it is in the SRS of the GPKG. By creating
-        // the bbox after the features are built, the projection
-        // is already done. This also should be fairly cheap to do.
-        for (const auto& feature : features) {
-            const auto& bbox = feature->get_bounding_box();
-            min_x = bbox[0] < min_x ? bbox[0] : min_x;
-            min_y = bbox[1] < min_y ? bbox[1] : min_y;
-            max_x = bbox[2] > max_x ? bbox[2] : max_x;
-            max_y = bbox[3] > max_y ? bbox[3] : max_y;
-        }
-
+    // get layer bounding box from features
+    //
+    // GeoPackage contains a bounding box in the SQLite DB,
+    // however, it is in the SRS of the GPKG. By creating
+    // the bbox after the features are built, the projection
+    // is already done. This also should be fairly cheap to do.
+    double min_x = std::numeric_limits<double>::infinity();
+    double min_y = std::numeric_limits<double>::infinity();
+    double max_x = -std::numeric_limits<double>::infinity();
+    double max_y = -std::numeric_limits<double>::infinity();
+    for (const auto& feature : features) {
+        const auto& bbox = feature->get_bounding_box();
+        min_x = bbox[0] < min_x ? bbox[0] : min_x;
+        min_y = bbox[1] < min_y ? bbox[1] : min_y;
+        max_x = bbox[2] > max_x ? bbox[2] : max_x;
+        max_y = bbox[3] > max_y ? bbox[3] : max_y;
     }
 
     auto fc = std::make_shared<geojson::FeatureCollection>(

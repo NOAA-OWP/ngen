@@ -7,8 +7,6 @@
 #include "Bmi_Adapter.hpp"
 #include <DataProvider.hpp>
 #include "bmi_utilities.hpp"
-
-#include <boost/core/span.hpp>
 #include "bmi/protocols.hpp"
 
 using data_access::MEAN;
@@ -59,11 +57,6 @@ namespace realization {
 
         /**
          * Get the collection of forcing output property names this instance can provide.
-         *
-         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
-         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
-         * (i.e., one of its forcings) a data property output from this object.
-         *
          * For this type, this is the collection of BMI output variables, plus any aliases included in the formulation
          * config's output variable mapping.
          *

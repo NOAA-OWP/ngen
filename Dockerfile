@@ -23,7 +23,7 @@ ARG NGEN_FORCING_IMAGE=ghcr.io/${GHRC_ORG}/ngen-bmi-forcing:${NGEN_FORCING_IMAGE
 FROM ${NGEN_FORCING_IMAGE} AS base
 
 # Uncomment when building locally
-#FROM ngen-bmi-forcing AS base
+# FROM ngen-bmi-forcing AS base
 
 # Re-expose args after FROM for the remaining build stage
 # Keeps whatever value was already set
@@ -485,6 +485,11 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ueb-bmi \
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
     set -eux; \
     cd extern/lstm; \
+    pip install .
+
+RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
+    set -eux; \
+    cd extern/topoflow-glacier; \
     pip install .
 
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \

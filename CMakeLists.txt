@@ -372,7 +372,6 @@ target_link_libraries(ngen
         NGen::parallel
         NGen::state_save_restore
         NGen::bmi_protocols
-        NGen::state_save_restore
 )
 
 if(NGEN_WITH_SQLITE)

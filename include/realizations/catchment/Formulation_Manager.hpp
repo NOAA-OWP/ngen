@@ -170,13 +170,18 @@ namespace realization {
                     for (std::pair<std::string, boost::property_tree::ptree> catchment_config : *possible_catchment_configs) {
                         ss.str(""); ss << "Processing catchment: " << catchment_config.first << std::endl;
                         LOG(ss.str(), LogLevel::DEBUG);
+                        // ensure catchment's ID starts with "cat-" so it can be found in the fabric
+                        std::string catchment_id = catchment_config.first;
+                        if (strncmp(catchment_id.c_str(), "cat-", 4) != 0) {
+                            catchment_id = "cat-" + catchment_id;
+                        }
 
-                        int catchment_index = fabric->find(catchment_config.first);
+                        int catchment_index = fabric->find(catchment_id);
                         if (catchment_index == -1) {
                             #ifndef NGEN_QUIET
                                 ss.str("");
                                 ss << "Formulation_Manager::read: Cannot create formulation for catchment "
-                                   << catchment_config.first
+                                   << catchment_id
                                    << " that isn't identified in the hydrofabric or requested subset" << std::endl;
                                 LOG(ss.str(), LogLevel::WARNING);
                             #endif
@@ -200,7 +205,7 @@ namespace realization {
                         this->add_formulation(
                             this->construct_formulation_from_config(
                                 simulation_time_config,
-                                catchment_config.first,
+                                catchment_id,
                                 catchment_formulation,
                                 output_stream
                             )
@@ -553,7 +558,7 @@ namespace realization {
                                 global_copy.formulation.parameters,
                                 BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
                                 "{{id}}",
-                                identifier
+                                Catchment_Formulation::config_pattern_id_replacement(identifier)
                             );
                         } else {
                             ss.str(""); ss << "init_config is present but empty for identifier: " << identifier << std::endl;
@@ -665,7 +670,9 @@ namespace realization {
 
                 // Replace {{id}} if present
                 if (id_index != std::string::npos) {
-                    filepattern = filepattern.replace(id_index, sizeof("{{id}}") - 1, identifier);
+                    // account generate the regex to search for the ID with or without a prefix
+                    std::string pattern_id = Catchment_Formulation::config_pattern_id_replacement(identifier);
+                    filepattern = filepattern.replace(id_index, sizeof("{{id}}") - 1, pattern_id);
                 }
 
                 // Compile the file pattern as a regex

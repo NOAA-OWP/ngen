@@ -433,11 +433,12 @@ int main(int argc, char* argv[])
     {
 #if NGEN_WITH_SQLITE3
         try {
-        catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
-        } catch (...) {
+            catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
+        } catch (std::exception &e) {
             // Handle all exceptions
             std::string msg = "Geopackage error occurred reading divides: " + catchmentDataFile;
-            LOG(msg,LogLevel::FATAL, msg);
+            LOG(LogLevel::FATAL, msg);
+            LOG(LogLevel::FATAL, e.what());
             throw std::runtime_error(msg);
         }
 #else
@@ -474,14 +475,15 @@ int main(int argc, char* argv[])
 #if NGEN_WITH_SQLITE3
         try {
             global_nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
-        } catch (...) {
+        } catch (std::exception &e) {
             // Handle all exceptions
             std::string msg = "Geopackage error occurred reading nexuses: " + nexusDataFile;
             LOG(msg,LogLevel::FATAL);
-            throw std::runtime_error(msg);
+            LOG(LogLevel::FATAL, e.what());
+            throw;
         } 
 #else
-        LOG(msg,LogLevel::FATAL, "SQLite3 support required to read GeoPackage files.");
+        LOG(LogLevel::FATAL, "SQLite3 support required to read GeoPackage files.");
         throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
 #endif
     } 
