@@ -88,7 +88,9 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
             "LEFT JOIN flowpaths "
                 "ON nexus.dn_fp_id = flowpaths.fp_id";
     } else {
-        Logger::LogAndThrow("Geopackage read only accepts layers `divides` and `nexus`. The layer entered was " + layer);
+        std::string msg = "Geopackage read only accepts layers `divides` and `nexus`. The layer entered was " + layer;
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
 
     std::string joined_ids = "";
@@ -108,7 +110,9 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
                 // check if the failed item is a fake terminal and igore if it is
                 std::string terminal = "wb-TERMINAL_SENTINEL-";
                 if (strncmp(filter_id.c_str(), terminal.c_str(), terminal.length()) != 0) {
-                    Logger::LogAndThrow("Could not convert input " + layer + " ID into a number: " + filter_id);
+                    std::string msg = "Could not convert input " + layer + " ID into a number: " + filter_id;
+                    LOG(LogLevel::FATAL, msg);
+                    throw std::runtime_error(msg);
                 }
             } else {
                 if (non_sentinel_found) // only add comma after finding at least one non-sentinel
