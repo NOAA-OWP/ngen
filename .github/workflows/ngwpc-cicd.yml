@@ -23,12 +23,37 @@ on:
         description: 'NGEN_FORCING_IMAGE_TAG'
         required: false
         type: string
+      GHCR_ORG:
+        description: 'GHCR_ORG'
+        required: false
+        type: string
       EWTS_ORG:
         description: 'EWTS_ORG'
         required: false
         type: string
       EWTS_REF:
         description: 'EWTS_REF'
+        required: false
+        type: string
+      TRIGGER_DOWNSTREAM:
+        description: 'Trigger downstream repos'
+        required: false
+        default: false
+        type: boolean
+      NWM_CAL_MGR_REF:
+        description: 'NWM_CAL_MGR_REF'
+        required: false
+        type: string
+      NWM_FCST_MGR_REF:
+        description: 'NWM_FCST_MGR_REF'
+        required: false
+        type: string
+      MSW_MGR_ORG:
+        description: 'MSW_MGR_ORG'
+        required: false
+        type: string
+      MSW_MGR_REF:
+        description: 'MSW_MGR_REF'
         required: false
         type: string
 
@@ -194,7 +219,7 @@ jobs:
       - name: Build and install EWTS
         run: |
           set -euo pipefail
-          EWTS_ORG="${{ inputs.EWTS_ORG || 'NGWPC' }}"
+          EWTS_ORG="${{ inputs.EWTS_ORG || github.repository_owner }}"
           EWTS_REF="${{ inputs.EWTS_REF || 'development' }}"
           EWTS_PREFIX=/opt/ewts
 
@@ -237,7 +262,7 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
 
-# build ngen Docker image
+  # build ngen Docker image
   build:
     name: build
     if: |
@@ -266,25 +291,25 @@ jobs:
             ls -l
           '
       - name: Log in to registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build & push image
         id: build_image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           # file: Dockerfile.test # comment out when done testing
           push: true
           tags: ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.test_image_tag }}
           build-args: |
-            ORG=${{ needs.setup.outputs.org }}
+            GHCR_ORG=${{ inputs.GHCR_ORG || needs.setup.outputs.org }}
             NGEN_FORCING_IMAGE_TAG=${{ inputs.NGEN_FORCING_IMAGE_TAG || 'latest' }}
             BASE_IMAGE_DIGEST=${{ needs.setup.outputs.ngen_forcing_digest }}
             BASE_IMAGE_REVISION=${{ needs.setup.outputs.ngen_forcing_revision }}
-            EWTS_ORG=${{ inputs.EWTS_ORG || 'NGWPC' }}
+            EWTS_ORG=${{ inputs.EWTS_ORG || github.repository_owner }}
             EWTS_REF=${{ inputs.EWTS_REF || 'development' }}
             IMAGE_SOURCE=https://github.com/${{ github.repository }}
             IMAGE_VENDOR=${{ github.repository_owner }}
@@ -292,7 +317,7 @@ jobs:
             IMAGE_REVISION=${{ needs.setup.outputs.commit_sha }}
             CI_COMMIT_REF_NAME=${{ needs.setup.outputs.clean_ref }}
 
-# run unit tests inside the built Docker image
+  # run unit tests inside the built Docker image
   unit-test:
     name: unit-test
     if: |
@@ -317,7 +342,7 @@ jobs:
             exit 1;
           }
 
-# run container security scan using Trivy
+  # run container security scan using Trivy
   container-scanning:
     name: container-scanning
     if: |
@@ -351,7 +376,7 @@ jobs:
             --timeout 45m \
             ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.test_image_tag }}
 
-# promote Docker image tags after successful tests
+  # promote Docker image tags after successful tests
   promote-tags:
     name: Promote Tags
     if: |
@@ -396,3 +421,51 @@ jobs:
               --all \
               "docker://${IMAGE_BASE}:${TEST_TAG}" "docker://${IMAGE_BASE}:latest"
           fi
+
+  # trigger downstream repos, nwm-cal-mgr and nwm-fcst-mgr
+  trigger-downstream:
+    name: trigger-downstream (${{ matrix.repo }})
+    if: |
+      success() && (
+        (github.event_name == 'push' && github.ref_name == 'development') ||
+        (github.event_name == 'workflow_dispatch' && inputs.TRIGGER_DOWNSTREAM)
+      )
+    runs-on: ubuntu-latest
+    needs:
+      - setup
+      - promote-tags
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - repo: nwm-cal-mgr
+            ref: ${{ inputs.NWM_CAL_MGR_REF || 'development' }}
+          - repo: nwm-fcst-mgr
+            ref: ${{ inputs.NWM_FCST_MGR_REF || 'development' }}
+    steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.PIPELINE_APP_ID }}
+          private-key: ${{ secrets.PIPELINE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - name: Trigger ${{ matrix.repo }}@${{ matrix.ref }}
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          EWTS_ORG: ${{ inputs.EWTS_ORG || github.repository_owner }}
+          EWTS_REF: ${{ inputs.EWTS_REF || 'development' }}
+          MSW_MGR_ORG: ${{ inputs.MSW_MGR_ORG || github.repository_owner }}
+          MSW_MGR_REF: ${{ inputs.MSW_MGR_REF || 'development' }}
+          GHCR_ORG: ${{ inputs.GHCR_ORG || needs.setup.outputs.org }}
+          NGEN_IMAGE_TAG: ${{ needs.setup.outputs.alias_tag }}
+        run: |
+          gh workflow run ci-cd.yml \
+            --repo ${{ github.repository_owner }}/${{ matrix.repo }} \
+            --ref ${{ matrix.ref }} \
+            -f EWTS_ORG="$EWTS_ORG" \
+            -f EWTS_REF="$EWTS_REF" \
+            -f MSW_MGR_ORG="$MSW_MGR_ORG" \
+            -f MSW_MGR_REF="$MSW_MGR_REF" \
+            -f GHCR_ORG="$GHCR_ORG" \
+            -f NGEN_IMAGE_TAG="$NGEN_IMAGE_TAG"
