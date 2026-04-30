@@ -398,28 +398,20 @@ namespace realization {
         double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
         {
             std::string output_name = selector.get_variable_name();
-            time_t init_time = selector.get_init_time();
-            long duration_s = selector.get_duration_secs();
-            std::string output_units = selector.get_output_units();
-            
             // If not found ...
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
                 throw std::runtime_error(get_formulation_type() + " cannot get output value for unknown " + output_name + SOURCE_LOC);
             }
-            return availableData[output_name]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
+            return availableData[output_name]->get_value(selector, m);
         }
 
         std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
         {
             std::string output_name = selector.get_variable_name();
-            time_t init_time = selector.get_init_time();
-            long duration_s = selector.get_duration_secs();
-            std::string output_units = selector.get_output_units();
-
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
                 throw std::runtime_error(get_formulation_type() + " cannot get output values for unknown " + output_name + SOURCE_LOC);
             }
-            return availableData[output_name]->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
+            return availableData[output_name]->get_values(selector, m);
         }
 
         bool is_bmi_input_variable(const std::string &var_name) const override;
@@ -526,6 +518,8 @@ namespace realization {
                 }
             }
         }
+
+        void update(time_step_t t_index, time_step_t t_delta) override;
 
     protected:
 

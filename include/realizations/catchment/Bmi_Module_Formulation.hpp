@@ -120,6 +120,8 @@ namespace realization {
          */
         double get_response(time_step_t t_index, time_step_t t_delta) override;
 
+        void update(time_step_t t_index, time_step_t t_delta) override;
+
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
          *
