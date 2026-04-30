@@ -126,7 +126,7 @@ namespace data_access
     struct unit_conversion_exception : public std::runtime_error {
         unit_conversion_exception(std::string message) : std::runtime_error(message) {}
         std::string provider_model_name;
-        std::string provider_bmi_var_name;
+        std::string provider_var_name;
         std::string provider_units;
         std::vector<double> unconverted_values;
     };
