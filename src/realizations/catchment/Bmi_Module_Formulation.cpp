@@ -83,7 +83,7 @@ namespace realization {
                 var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
             }
             catch(data_access::unit_conversion_exception &uce){
-                data_access::unit_error_log_key key{"Bmi_Module_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                data_access::unit_error_log_key key{"Bmi_Module_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_var_name, uce.what()};
                 auto ret = data_access::unit_errors_reported.insert(key);
                 bool new_error = ret.second;
                 if (new_error) {
@@ -94,7 +94,7 @@ namespace realization {
                         << "' variable '" << get_bmi_main_output_var()
                         << "' units 'm'}"
                         << " provider {'" << uce.provider_model_name
-                        << "' source variable '" << uce.provider_bmi_var_name << "'"
+                        << "' source variable '" << uce.provider_var_name << "'"
                         << " raw value " << uce.unconverted_values[0] << "}"
                         << " message \"" << uce.what() << "\"";
                     logging::warning(ss.str().c_str()); ss.str("");
@@ -198,7 +198,7 @@ namespace realization {
                 catch (const std::runtime_error& e) {
                     data_access::unit_conversion_exception uce(e.what());
                     uce.provider_model_name = get_bmi_model()->get_model_name();
-                    uce.provider_bmi_var_name = bmi_var_name;
+                    uce.provider_var_name = bmi_var_name;
                     uce.provider_units = native_units; // keep original for diagnostics
                     uce.unconverted_values = std::move(values);
                     throw uce;
@@ -253,7 +253,7 @@ namespace realization {
                 catch (const std::runtime_error& e){
                     data_access::unit_conversion_exception uce(e.what());
                     uce.provider_model_name = get_bmi_model()->get_model_name();
-                    uce.provider_bmi_var_name = bmi_var_name;
+                    uce.provider_var_name = bmi_var_name;
                     uce.provider_units = native_units; // keep original for diagnostics
                     uce.unconverted_values.push_back(value);
                     throw uce;
@@ -738,7 +738,7 @@ namespace realization {
                                                                                      consumer_units));
                         value_ptr = get_value_as_type(type, value);
                     } catch (data_access::unit_conversion_exception &uce) {
-                        data_access::unit_error_log_key key{get_id(), var_map_alias, uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                        data_access::unit_error_log_key key{get_id(), var_map_alias, uce.provider_model_name, uce.provider_var_name, uce.what()};
                         auto ret = data_access::unit_errors_reported.insert(key);
                         bool new_error = ret.second;
                         if (new_error) {
@@ -747,7 +747,7 @@ namespace realization {
                                << " requester {'" << get_bmi_model()->get_model_name() << "' catchment '" << get_catchment_id()
                                << "' variable '" << var_name << "'" << " (alias '" << var_map_alias << "')"
                                << " units '" << get_bmi_model()->GetVarUnits(var_name) << "'}"
-                               << " provider {'" << uce.provider_model_name << "' source variable '" << uce.provider_bmi_var_name << "'"
+                               << " provider {'" << uce.provider_model_name << "' source variable '" << uce.provider_var_name << "'"
                                << " raw value " << uce.unconverted_values[0] << "}"
                                << " message \"" << uce.what() << "\"\n";
                             logging::warning(ss.str().c_str()); ss.str("");

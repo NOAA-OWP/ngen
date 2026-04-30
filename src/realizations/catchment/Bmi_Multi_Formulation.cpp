@@ -394,7 +394,7 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
         var_value = modules[index]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"), MEAN);
     }
     catch(data_access::unit_conversion_exception &uce){
-        data_access::unit_error_log_key key{"Bmi_Multi_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+        data_access::unit_error_log_key key{"Bmi_Multi_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_var_name, uce.what()};
         auto ret = data_access::unit_errors_reported.insert(key);
         bool new_error = ret.second;
         if (new_error) {
@@ -405,7 +405,7 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
                 << "' variable '" << get_bmi_main_output_var()
                 << "' units 'm'}"
                 << " provider {'" << uce.provider_model_name
-                << "' source variable '" << uce.provider_bmi_var_name << "'"
+                << "' source variable '" << uce.provider_var_name << "'"
                 << " raw value " << uce.unconverted_values[0] << "}"
                 << " message \"" << uce.what() << "\"";
             logging::warning(ss.str().c_str()); ss.str("");

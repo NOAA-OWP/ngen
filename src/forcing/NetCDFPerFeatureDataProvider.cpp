@@ -432,7 +432,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     {
         data_access::unit_conversion_exception uce(e.what());
         uce.provider_model_name = "NetCDFPerFeatureDataProvider(" + file_path + ")";
-        uce.provider_bmi_var_name = selector.get_variable_name();
+        uce.provider_var_name = selector.get_variable_name();
         uce.provider_units = native_units;
         uce.unconverted_values.push_back(rvalue);
         throw uce;
