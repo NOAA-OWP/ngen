@@ -203,15 +203,6 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     ss.str("");
     std::ios::sync_with_stdio(false);
 
-#if NGEN_WITH_PYTHON
-    // Start Python interpreter via the manager singleton
-    // Need to bind to a variable so that the underlying reference count
-    // is incremented, this essentially becomes the global reference to keep
-    // the interpreter alive till the end of `main`
-    auto _interp = utils::ngenPy::InterpreterUtil::getInstance();
-// utils::ngenPy::InterpreterUtil::getInstance();
-#endif // NGEN_WITH_PYTHON
-
     // Pull a few "options" form the cli input, this is a temporary solution to CLI parsing!
     // Use "positional args"
     // arg 0 is program name
@@ -821,6 +812,8 @@ int main(int argc, char* argv[]) {
     int mpi_num_procs = 1;
     // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
     int mpi_rank = 0;
+    // exit code result of the simulation run
+    int result;
 
 #if NGEN_WITH_MPI
     // initialize MPI if needed
@@ -834,15 +827,27 @@ int main(int argc, char* argv[]) {
     // Need to bind to a variable so that the underlying reference count
     // is incremented, this essentially becomes the global reference to keep
     // the interpreter alive till the end of `main`
-    auto _interp = utils::ngenPy::InterpreterUtil::getInstance();
-#endif // NGEN_WITH_PYTHON
-
-    int result = run_ngen(argc, argv, mpi_num_procs, mpi_rank);
-
-#if NGEN_WITH_PYTHON
+    auto interp = utils::ngenPy::InterpreterUtil::getInstance();
+    try {
+        result = run_ngen(argc, argv, mpi_num_procs, mpi_rank);
+    } catch (...) {
+        // If any uncaught exception happens,
+        // explictly destroy the interpreter to ensure any
+        // python atexit registered actions will trigger.
+        interp.reset();
+        // Then, throw the original error.
+        throw;
+    }
     // explicitly destroy the interpreter before calling MPI_Finalize
-    _interp.reset();
-#endif
+    interp.reset();
+#if NGEN_WITH_MPI
+    // ensure all interpreters are fully closed between MPI ranks before calling MPI_Finalize below
+    // this is needed if any python atexit registered functions would interact with MPI
+    MPI_Barrier(MPI_COMM_WORLD);
+#endif // NGEN_WITH_MPI
+#else
+    result = run_ngen(argc, argv, mpi_num_procs, mpi_rank);
+#endif // NGEN_WITH_PYTHON
 
 #if NGEN_WITH_MPI
     MPI_Finalize();
