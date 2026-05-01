@@ -183,7 +183,7 @@ auto NgenMassBalance::initialize(const ModelPtr& model, const Properties& proper
     }
     if ( check ) {
         //Ensure the model is capable of mass balance using the protocol
-        (void) check_support(model).or_else( error_or_warning );
+        return check_support(model).or_else( error_or_warning );
     }
     return {}; // important to return for the expected to be properly created!
 }
