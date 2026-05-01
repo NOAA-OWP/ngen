@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "geopackage.hpp"
+#include "HydrofabricVersion.hpp"
 #include "FileChecker.h"
 
 class GeoPackage_Test : public ::testing::Test
@@ -448,7 +449,7 @@ TEST_F(GeoPackage_DetectVersion_Test, geopackage_detect_version_v2_2)
 {
     ngen::sqlite::database db{this->v2_2_path};
     EXPECT_EQ(
-        ngen::geopackage::detect_version(db.connection()),
+        ngen::geopackage::detect_version(db),
         ngen::geopackage::HydrofabricVersion::V2_2
     );
 }
@@ -458,7 +459,7 @@ TEST_F(GeoPackage_DetectVersion_Test, geopackage_detect_version_v3_0)
 {
     ngen::sqlite::database db{this->v3_0_path};
     EXPECT_EQ(
-        ngen::geopackage::detect_version(db.connection()),
+        ngen::geopackage::detect_version(db),
         ngen::geopackage::HydrofabricVersion::V3_0
     );
 }
@@ -482,7 +483,7 @@ TEST_F(GeoPackage_DetectVersion_Test, geopackage_detect_version_throws_on_bad_sc
 
     ngen::sqlite::database db{path};
     try {
-        ngen::geopackage::detect_version(db.connection());
+        ngen::geopackage::detect_version(db);
         FAIL() << "Expected std::runtime_error from detect_version";
     } catch (const std::runtime_error& e) {
         EXPECT_NE(std::string(e.what()).find("nexus"), std::string::npos)
