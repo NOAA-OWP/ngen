@@ -5,7 +5,7 @@ add_library(geopackage proj.cpp
                        read.cpp
                        wkb.cpp
                        ngen_sqlite.cpp
-                       detect_version.cpp
+                       HydrofabricVersion.cpp
 )
 add_library(NGen::geopackage ALIAS geopackage)
 target_include_directories(geopackage PUBLIC ${PROJECT_SOURCE_DIR}/include/geopackage)
