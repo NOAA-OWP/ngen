@@ -1,4 +1,6 @@
 #include "geopackage.hpp"
+#include "HydrofabricVersion.hpp"
+#include "JSONProperty.hpp"
 
 #include <numeric>
 #include <regex>
@@ -40,26 +42,12 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
 
     ngen::sqlite::database db{gpkg_path};
 
-    // Detect hydrofabric schema version once per file load. Non-hydrofabric
-    // GPKGs (e.g. synthetic test fixtures) have no `nexus` table; treat the
-    // detection failure as "not a hydrofabric" and default to V2_2 so the
-    // pre-existing legacy code paths remain intact.
-    ngen::geopackage::HydrofabricVersion version = ngen::geopackage::HydrofabricVersion::V2_2;
-    bool version_detected = false;
-    try {
-        version = ngen::geopackage::detect_version(db.connection());
-        version_detected = true;
-    } catch (const std::runtime_error&) {
-        // swallow: this GPKG does not carry a hydrofabric `nexus` table
-    }
-
-    #ifndef NGEN_QUIET
-    if (version_detected) {
-        std::cout << "INFO: hydrofabric detected: "
-                  << (version == ngen::geopackage::HydrofabricVersion::V3_0 ? "v3.0" : "v2.2")
-                  << std::endl;
-    }
-    #endif
+    // Detect the hydrofabric schema version once per file load and reuse the
+    // result for every per-row decision below. The "guaranteed" variant
+    // collapses the not-a-hydrofabric case (no `nexus` table, e.g. synthetic
+    // test fixtures) into HydrofabricVersion::V2_2 so the pre-v3.0 legacy
+    // code paths remain intact.
+    HydrofabricVersion version = guaranteed_get_hydrofabric_version(db);
 
     // Check if layer exists
     if (!db.contains(layer)) {
@@ -82,36 +70,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     }
 
     // Introspect if the layer is divides to see which ID field is in use
-    std::string id_column = "id";
-    if(layer == "divides"){
-        if (version == ngen::geopackage::HydrofabricVersion::V3_0) {
-            // v3.0 always exposes divides.divide_id; no runtime introspection
-            // needed. The flowpath_id column (used by the upcoming toid
-            // synthesis step) is carried verbatim through build_properties.
-            id_column = "divide_id";
-        } else {
-            try {
-                //TODO: A bit primitive. Actually introspect the schema somehow? https://www.sqlite.org/c3ref/funclist.html
-                auto query_get_first_row = db.query("SELECT divide_id FROM " + layer + " LIMIT 1");
-                id_column = "divide_id";
-            }
-            catch (const std::exception& e){
-                #ifndef NGEN_QUIET
-                // output debug info on what is read exactly
-                std::cout << "WARN: Using legacy ID column \"id\" in layer " << layer
-                          << " is DEPRECATED and may stop working at any time."
-                          << " Hydrofabric v2.2 is deprecated; please migrate to v3.0."
-                          << std::endl;
-                #endif
-            }
-        }
-    }
-    else if (layer == "nexus" && version == ngen::geopackage::HydrofabricVersion::V3_0) {
-        // v3.0 renames nexus.id -> nexus.nexus_id; point id_column at the
-        // new primary key so the WHERE-IN subset clause and the per-row id
-        // lookup in build_feature both resolve against the right column.
-        id_column = "nexus_id";
-    }
+    std::string id_column = get_layer_id_column(version, layer, db);
 
     // Layer exists, getting statement for it
     //
@@ -153,55 +112,38 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     query_get_layer_geom_meta.next();
     const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
 
-    // v3.0 divides carry no native toid column; instead, every divide points
-    // at a flowpath via flowpath_id, and that flowpath's flowpath_toid is the
-    // downstream nexus. Precompute the divide_id -> flowpath_toid map once,
-    // before the per-row build loop, by joining divides and flowpaths. The
-    // WHERE guard drops any rows whose flowpath_toid is NULL so the cache
-    // only contains well-formed links; unlinked divides (null flowpath_id,
-    // or flowpath present but with a null toid) naturally miss the lookup
-    // and leave "toid" unset on the resulting feature.
-    std::unordered_map<std::string, std::string> divide_toid_lookup;
-    const bool synthesize_divides_toid =
-        (version == ngen::geopackage::HydrofabricVersion::V3_0 && layer == "divides");
-    if (synthesize_divides_toid) {
-        if (!db.contains("flowpaths")) {
-            #ifndef NGEN_QUIET
-            std::cout << "WARN: v3.0 divides loaded without a 'flowpaths' table; "
-                      << "all divides will be treated as terminal (no toid)." << std::endl;
-            #endif
-        } else {
-            auto q = db.query(
-                "SELECT d.divide_id, f.flowpath_toid "
-                "FROM divides d "
-                "JOIN flowpaths f ON d.flowpath_id = f.flowpath_id "
-                "WHERE f.flowpath_toid IS NOT NULL"
-            );
-            q.next();
-            while (!q.done()) {
-                divide_toid_lookup.emplace(q.get<std::string>(0), q.get<std::string>(1));
-                q.next();
-            }
-        }
-    }
+    // Precompute the v3.0 divide_id -> flowpath_toid map once before the
+    // per-row loop, so update_property_map_for_version can attribute "toid"
+    // via a hashtable lookup. Empty map for any (version, layer) other than
+    // (V3_0, "divides"), or when the GPKG has no flowpaths table.
+    std::unordered_map<std::string, std::string> divide_toid_lookup = build_divide_toid_lookup(version, layer, db);
 
     // Get layer
     auto query_get_layer = db.query("SELECT * FROM " + layer + joined_ids, ids);
     query_get_layer.next();
 
     // build features out of layer query
+    //
+    // All schema-specific work happens here so that build_feature() can
+    // remain version-agnostic: the per-row body resolves the id, builds
+    // the property map, applies any v3.0 column aliasing or synthesis,
+    // and only then hands the prepared inputs to build_feature().
     std::vector<geojson::Feature> features;
     features.reserve(layer_feature_count);
     while(!query_get_layer.done()) {
-        geojson::Feature feature = build_feature(
-            query_get_layer,
-            id_column,
-            layer_geometry_column,
-            version,
-            synthesize_divides_toid ? &divide_toid_lookup : nullptr
-        );
+        std::string id = query_get_layer.get<std::string>(id_column);
+        geojson::PropertyMap properties = build_properties(query_get_layer, layer_geometry_column);
 
-        features.push_back(feature);
+        // No-op for v2.2; for v3.0, aliases nexus_id/nexus_toid to id/toid and
+        // injects the synthesized "toid" on divides rows from divide_toid_lookup.
+        update_property_map_for_version(properties, version, layer, id, divide_toid_lookup);
+
+        features.push_back(build_feature(
+            query_get_layer,
+            id,
+            layer_geometry_column,
+            std::move(properties)
+        ));
         query_get_layer.next();
     }
 
@@ -209,7 +151,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     // the divides -> flowpaths join (null flowpath_id, or join miss). A
     // single aggregate line avoids flooding logs when a large subset is
     // terminal.
-    if (synthesize_divides_toid) {
+    if (version == HydrofabricVersion::V3_0 && layer == "divides") {
         std::size_t unlinked = 0;
         for (const auto& f : features) {
             if (!f->has_property("toid")) {
