@@ -188,14 +188,6 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderParsing)
         {"U2D", "m s-1", "cm s-1"},
         {"V2D", "m/s", "cm s-1"},
         {"TEST", "kg", "g"},
-        // Disable the cases where units won't be parsed and
-        // conversion was previously not expected. The non-conversion
-        // is now being treated as an error, per NGWPC-7604
-#if 0
-        {"PSFC[Pa)", "Pa", "bar"},
-        {"SWDOWN(W m-2]", "W m-2", "langley"},
-        {"LWDOWN [alt]", "W m-2", "langley"}
-#endif
     };
 
     for (auto ite = expected.begin(); ite != expected.end(); ite++) {
@@ -215,15 +207,52 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderParsing)
 
         // make sure each expected column name is within varnames
         EXPECT_NE(std::find(varnames.begin(), varnames.end(), expected_name), varnames.end());
-        
+
         // make sure units are correctly mapped
-        if (ite - expected.begin() < 6) {
-            // conversion expected
-            EXPECT_NE(in_value, out_value);
-        } else {
-            // conversion is not expected, since there is no mapping
-            EXPECT_NEAR(in_value, out_value, 0.00001);
+        EXPECT_NE(in_value, out_value);
+    }
+}
+
+TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderNonParsing)
+{
+    const time_t t = Forcing_Object_3->get_data_start_time() + (8 * 3600);
+    const auto& varnames = this->Forcing_Object_3->get_available_variable_names();
+    const std::vector<std::tuple<std::string, std::string, std::string>>& expected = {
+        {"PSFC[Pa)", "Pa", "bar"},
+        {"SWDOWN(W m-2]", "W m-2", "langley"},
+        {"LWDOWN [alt]", "W m-2", "langley"}
+    };
+
+    for (auto ite = expected.begin(); ite != expected.end(); ite++) {
+        const auto expected_name = std::get<0>(*ite);
+        const auto expected_in_units = std::get<1>(*ite);
+        const auto expected_out_units = std::get<2>(*ite);
+
+        double in_value;
+        double out_value;
+
+        try {
+            const double in_value = this->Forcing_Object_3->get_value(
+                                                                      CatchmentAggrDataSelector("", expected_name, t, 3600, expected_in_units),
+                                                                      data_access::SUM
+                                                                      );
+        } catch (UnitsHelper::unit_conversion_exception const& uce) {
+            in_value = uce.unconverted_values[0];
         }
+
+        try {
+            const double out_value = this->Forcing_Object_3->get_value(
+                                                                       CatchmentAggrDataSelector("", expected_name, t, 3600, expected_out_units),
+                                                                       data_access::SUM
+                                                                       );
+        } catch (UnitsHelper::unit_conversion_exception const& uce) {
+            out_value = uce.unconverted_values[0];
+        }
+
+        // make sure each expected column name is within varnames
+        EXPECT_NE(std::find(varnames.begin(), varnames.end(), expected_name), varnames.end());
         
+        // conversion is not expected, since there is no mapping
+        EXPECT_EQ(in_value, out_value);
     }
 }
