@@ -18,8 +18,8 @@
 
 #include <cstring>
 #include <map>
+#include <memory>
 #include <mutex>
-#include <string>
 
 // Theoretically thread-safe. //TODO: Test?
 static ut_system* unit_system;
