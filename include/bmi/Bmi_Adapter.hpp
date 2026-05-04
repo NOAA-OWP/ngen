@@ -1,6 +1,7 @@
 #ifndef NGEN_BMI_ADAPTER_HPP
 #define NGEN_BMI_ADAPTER_HPP
 
+#include <memory>
 #include <string>
 #include <vector>
 
