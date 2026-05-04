@@ -20,7 +20,6 @@
 #include <iomanip>
 #include <boost/compute/detail/lru_cache.hpp>
 
-#include <UnitsHelper.hpp>
 #include <StreamHandler.hpp>
 
 #include "AorcForcing.hpp"

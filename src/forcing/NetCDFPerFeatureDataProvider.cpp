@@ -2,6 +2,7 @@
 
 #if NGEN_WITH_NETCDF
 #include "NetCDFPerFeatureDataProvider.hpp"
+#include <core/mediator/UnitsHelper.hpp>
 
 #include <netcdf>
 
@@ -428,14 +429,11 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     {
         return UnitsHelper::get_converted_value(native_units, rvalue, selector.get_output_units());
     }
-    catch (const std::runtime_error& e)
+    catch (UnitsHelper::unit_conversion_exception& uce)
     {
-        UnitsHelper::unit_conversion_exception uce(e.what());
         uce.provider_model_name = "NetCDFPerFeatureDataProvider(" + file_path + ")";
         uce.provider_var_name = selector.get_variable_name();
-        uce.provider_units = native_units;
-        uce.unconverted_values.push_back(rvalue);
-        throw uce;
+        throw;
     }
 
     return rvalue;
