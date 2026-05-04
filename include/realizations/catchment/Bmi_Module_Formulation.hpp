@@ -267,7 +267,7 @@ namespace realization {
          * @param name
          * @param bmi_var_name
          */
-        void get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name);
+        void get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name) const;
 
         /**
          * Construct model and its shared pointer, potentially supplying input variable values from config.

@@ -267,7 +267,7 @@ namespace realization {
             return get_bmi_model()->GetOutputVarNames();
         }
 
-        void Bmi_Module_Formulation::get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name)
+        void Bmi_Module_Formulation::get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name) const
         {
             //check standard output names first
             std::vector<std::string> output_names = get_bmi_model()->GetOutputVarNames();
@@ -278,7 +278,7 @@ namespace realization {
             {
                 //check mapped names
                 std::string mapped_name;
-                for (auto & iter : bmi_var_names_map) {
+                for (auto const& iter : bmi_var_names_map) {
                     if (iter.second == name) {
                         mapped_name = iter.first;
                         break;
