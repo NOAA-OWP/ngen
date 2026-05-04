@@ -195,13 +195,11 @@ namespace realization {
                     UnitsHelper::convert_values(in_units_norm, values.data(), out_units_norm, values.data(), values.size());
                     return values;
                 }
-                catch (const std::runtime_error& e) {
-                    UnitsHelper::unit_conversion_exception uce(e.what());
+                catch (UnitsHelper::unit_conversion_exception& uce) {
                     uce.provider_model_name = get_bmi_model()->get_model_name();
                     uce.provider_var_name = bmi_var_name;
-                    uce.provider_units = native_units; // keep original for diagnostics
                     uce.unconverted_values = std::move(values);
-                    throw uce;
+                    throw;
                 }
             }
             //This is unlikely (impossible?) to throw since a pre-check on available names is done above. Assert instead?
@@ -250,13 +248,10 @@ namespace realization {
                 try {
                     return UnitsHelper::get_converted_value(in_units_norm, value, out_units_norm);
                 }
-                catch (const std::runtime_error& e){
-                    UnitsHelper::unit_conversion_exception uce(e.what());
+                catch (UnitsHelper::unit_conversion_exception& uce){
                     uce.provider_model_name = get_bmi_model()->get_model_name();
                     uce.provider_var_name = bmi_var_name;
-                    uce.provider_units = native_units; // keep original for diagnostics
-                    uce.unconverted_values.push_back(value);
-                    throw uce;
+                    throw;
                 }
             }
 

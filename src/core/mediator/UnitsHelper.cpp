@@ -1,6 +1,7 @@
 #include "UnitsHelper.hpp"
 #include <cstring>
 #include <mutex>
+#include <string>
 
 ut_system* UnitsHelper::unit_system;
 std::once_flag UnitsHelper::unit_system_inited;
@@ -8,8 +9,14 @@ std::map<std::string, std::shared_ptr<cv_converter>> UnitsHelper::converters;
 std::mutex UnitsHelper::converters_mutex;
 
 std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_units, const std::string& out_units, utEncoding in_encoding, utEncoding out_encoding ){
-    if(in_units == "" || out_units == ""){
-        throw std::runtime_error("Unable to process empty units value for pairing \"" + in_units + "\" \"" + out_units + "\"");
+    if(in_units == "") {
+        unit_conversion_exception uce{"Requested conversion from empty input units string", in_units, out_units};
+        throw uce;
+    }
+
+    if(out_units == "") {
+        unit_conversion_exception uce{"Requested conversion to empty output units string", in_units, out_units};
+        throw uce;
     }
 
     const std::lock_guard<std::mutex> lock(converters_mutex);
@@ -17,29 +24,36 @@ std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_u
     std::string key = in_units + "|" + out_units; //Better solution? Good enough? Bother with nested maps?
     if(converters.count(key) == 1){
         if(converters[key] == nullptr){
-            // same as last throw below
-            throw std::runtime_error("Unable to convert " + in_units + " to " + out_units);
+            // Recurrence of last throw case below
+            unit_conversion_exception uce{"Unable to convert as requested (repeated)", in_units, out_units};
+            throw uce;
         }
         return converters[key];
     } else {
         ut_unit* from = ut_parse(unit_system, in_units.c_str(), in_encoding);
         if (from == NULL)
         {
-            throw std::runtime_error("Unable to parse in_units value " + in_units);
+            unit_conversion_exception uce{"Unable to parse in_units", in_units, out_units};
+            throw uce;
         }
         ut_unit* to = ut_parse(unit_system, out_units.c_str(), out_encoding);
         if (to == NULL)
         {
             ut_free(from);
-            throw std::runtime_error("Unable to parse out_units value " + out_units);
+
+            unit_conversion_exception uce{"Unable to parse out_units", in_units, out_units};
+            throw uce;
         }
+
         cv_converter* conv = ut_get_converter(from, to);
         if (conv == NULL)
         {
             ut_free(from);
             ut_free(to);
             converters[key] = nullptr;
-            throw std::runtime_error("Unable to convert " + in_units + " to " + out_units);
+
+            unit_conversion_exception uce{"Unable to convert as requested", in_units, out_units};
+            throw uce;
         }
         auto c = std::shared_ptr<cv_converter>(
             conv,
@@ -60,12 +74,17 @@ double UnitsHelper::get_converted_value(const std::string &in_units, const doubl
     if(in_units == out_units){
         return value; // Early-out optimization
     }
+
     std::call_once(unit_system_inited, init_unit_system);
 
-    auto converter = get_converter(in_units, out_units);
-
-    double r = cv_convert_double(converter.get(), value);
-    return r;
+    try {
+        auto converter = get_converter(in_units, out_units);
+        double r = cv_convert_double(converter.get(), value);
+        return r;
+    } catch (unit_conversion_exception& uce) {
+        uce.unconverted_values.push_back(value);
+        throw;
+    }
 }
 
 double* UnitsHelper::convert_values(const std::string &in_units, double* in_values, const std::string &out_units, double* out_values, const size_t& count)
@@ -101,8 +120,6 @@ double* UnitsHelper::convert_values(const std::string &in_units, double* in_valu
     std::call_once(unit_system_inited, init_unit_system);
 
     auto converter = get_converter(in_norm, out_norm);
-
     cv_convert_doubles(converter.get(), in_values, count, out_values);
-
     return out_values;
 }

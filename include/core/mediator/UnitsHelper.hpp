@@ -33,9 +33,16 @@ class UnitsHelper {
 
     struct unit_conversion_exception : public std::runtime_error {
         unit_conversion_exception(std::string message) : std::runtime_error(message) {}
+        unit_conversion_exception(std::string const& message, std::string const& in_units, std::string const& out_units)
+            : std::runtime_error(message)
+            , provider_units(in_units)
+            , to_units(out_units)
+        {}
+
         std::string provider_model_name;
         std::string provider_var_name;
         std::string provider_units;
+        std::string to_units;
         std::vector<double> unconverted_values;
     };
 
