@@ -1,7 +1,6 @@
 #ifndef NGEN_UNITSHELPER_H
 #define NGEN_UNITSHELPER_H
 
-#include <memory>
 #include <stdexcept>
 #include <string>
 #include <vector>
