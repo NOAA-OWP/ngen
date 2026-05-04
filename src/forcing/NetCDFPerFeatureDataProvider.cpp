@@ -430,7 +430,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     }
     catch (const std::runtime_error& e)
     {
-        data_access::unit_conversion_exception uce(e.what());
+        UnitsHelper::unit_conversion_exception uce(e.what());
         uce.provider_model_name = "NetCDFPerFeatureDataProvider(" + file_path + ")";
         uce.provider_var_name = selector.get_variable_name();
         uce.provider_units = native_units;

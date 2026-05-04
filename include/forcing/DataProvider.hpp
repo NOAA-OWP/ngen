@@ -122,14 +122,6 @@ namespace data_access
     };
 
     extern std::set<unit_error_log_key> unit_errors_reported;
-
-    struct unit_conversion_exception : public std::runtime_error {
-        unit_conversion_exception(std::string message) : std::runtime_error(message) {}
-        std::string provider_model_name;
-        std::string provider_var_name;
-        std::string provider_units;
-        std::vector<double> unconverted_values;
-    };
 }
 
 

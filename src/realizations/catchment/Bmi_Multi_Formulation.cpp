@@ -1,4 +1,5 @@
 #include <NGenConfig.h>
+#include <all.h>
 
 #include "Bmi_Multi_Formulation.hpp"
 #include "Formulation_Constructors.hpp"
@@ -393,7 +394,7 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
     try{
         var_value = modules[index]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"), MEAN);
     }
-    catch(data_access::unit_conversion_exception &uce){
+    catch(UnitsHelper::unit_conversion_exception &uce){
         data_access::unit_error_log_key key{"Bmi_Multi_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_var_name, uce.what()};
         auto ret = data_access::unit_errors_reported.insert(key);
         bool new_error = ret.second;

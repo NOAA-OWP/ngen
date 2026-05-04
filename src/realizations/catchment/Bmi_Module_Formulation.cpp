@@ -82,7 +82,7 @@ namespace realization {
             try{
                 var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
             }
-            catch(data_access::unit_conversion_exception &uce){
+            catch(UnitsHelper::unit_conversion_exception &uce){
                 data_access::unit_error_log_key key{"Bmi_Module_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_var_name, uce.what()};
                 auto ret = data_access::unit_errors_reported.insert(key);
                 bool new_error = ret.second;
@@ -196,7 +196,7 @@ namespace realization {
                     return values;
                 }
                 catch (const std::runtime_error& e) {
-                    data_access::unit_conversion_exception uce(e.what());
+                    UnitsHelper::unit_conversion_exception uce(e.what());
                     uce.provider_model_name = get_bmi_model()->get_model_name();
                     uce.provider_var_name = bmi_var_name;
                     uce.provider_units = native_units; // keep original for diagnostics
@@ -251,7 +251,7 @@ namespace realization {
                     return UnitsHelper::get_converted_value(in_units_norm, value, out_units_norm);
                 }
                 catch (const std::runtime_error& e){
-                    data_access::unit_conversion_exception uce(e.what());
+                    UnitsHelper::unit_conversion_exception uce(e.what());
                     uce.provider_model_name = get_bmi_model()->get_model_name();
                     uce.provider_var_name = bmi_var_name;
                     uce.provider_units = native_units; // keep original for diagnostics
@@ -737,7 +737,7 @@ namespace realization {
                         double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
                                                                                      consumer_units));
                         value_ptr = get_value_as_type(type, value);
-                    } catch (data_access::unit_conversion_exception &uce) {
+                    } catch (UnitsHelper::unit_conversion_exception &uce) {
                         data_access::unit_error_log_key key{get_id(), var_map_alias, uce.provider_model_name, uce.provider_var_name, uce.what()};
                         auto ret = data_access::unit_errors_reported.insert(key);
                         bool new_error = ret.second;
