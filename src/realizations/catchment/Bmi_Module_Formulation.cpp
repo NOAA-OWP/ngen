@@ -683,15 +683,10 @@ namespace realization {
                 std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name),
                                                                            varItemSize);
 
-                // Minimal change: normalize requested units (treat ""/none as dimensionless "1")
-                std::string consumer_units = get_bmi_model()->GetVarUnits(var_name);
-                if (consumer_units.empty() || consumer_units == "none")
-                    consumer_units = "1";
-
                 if (numItems != 1) {
                     //more than a single value needed for var_name
                     auto values = provider->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                   consumer_units));
+                                                   get_bmi_model()->GetVarUnits(var_name)));
                     //need to marshal data types to the receiver as well
                     //this could be done a little more elegantly if the provider interface were
                     //"type aware", but for now, this will do (but requires yet another copy)
@@ -712,7 +707,7 @@ namespace realization {
                     try {
                         //scalar value
                         double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                                                     consumer_units));
+                                                                                     get_bmi_model()->GetVarUnits(var_name)));
                         value_ptr = get_value_as_type(type, value);
                     } catch (UnitsHelper::unit_conversion_exception &uce) {
                         data_access::unit_error_log_key key{get_id(), var_map_alias, uce.provider_model_name, uce.provider_var_name, uce.what()};
