@@ -182,7 +182,6 @@ namespace realization {
 
                 // Convert units
                 std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
-
                 try {
                     UnitsHelper::convert_values(native_units, values.data(), output_units, values.data(), values.size());
                     return values;
@@ -228,7 +227,6 @@ namespace realization {
 
                 // Convert units
                 std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
-
                 try {
                     return UnitsHelper::get_converted_value(native_units, value, output_units);
                 }
