@@ -1,21 +1,57 @@
 #include "UnitsHelper.hpp"
+
+// FIXME: Workaround to handle UDUNITS2 includes with differing paths.
+//        Not exactly sure why CMake can't handle this, but even with
+//        verifying the search paths, the correct header can't be found.
+//
+//        See PR #725 for context on this issue.
+
+#if defined(__has_include)
+#  if __has_include(<udunits2/udunits2.h>)
+#    include <udunits2/udunits2.h>
+#  else
+#    include <udunits2.h>
+#  endif
+#else
+#  include <udunits2.h>
+#endif
+
 #include <cstring>
+#include <map>
 #include <mutex>
 #include <string>
 
-ut_system* UnitsHelper::unit_system;
-std::once_flag UnitsHelper::unit_system_inited;
-std::map<std::string, std::shared_ptr<cv_converter>> UnitsHelper::converters;
-std::mutex UnitsHelper::converters_mutex;
+// Theoretically thread-safe. //TODO: Test?
+static ut_system* unit_system;
 
-std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_units, const std::string& out_units, utEncoding in_encoding, utEncoding out_encoding ){
+static std::map<std::string, std::shared_ptr<cv_converter>> converters;
+static std::mutex converters_mutex;
+
+static std::once_flag unit_system_inited;
+static void init_unit_system(){
+#ifdef NGEN_UDUNITS2_XML_PATH
+    unit_system = ut_read_xml(NGEN_UDUNITS2_XML_PATH);
+#else
+    unit_system = ut_read_xml(NULL);
+#endif
+    if (unit_system == NULL) 
+        {
+            throw std::runtime_error("Unable to create UDUNITS2 Unit System." SOURCE_LOC);
+        }
+#ifndef UDUNITS_QUIET
+    ut_set_error_message_handler(ut_ignore);
+#endif
+}
+
+
+static std::shared_ptr<cv_converter> get_converter(const std::string& in_units, const std::string& out_units, utEncoding in_encoding = UT_UTF8, utEncoding out_encoding = UT_UTF8 ){
     if(in_units == "") {
-        unit_conversion_exception uce{"Requested conversion from empty input units string", in_units, out_units};
+        UnitsHelper::unit_conversion_exception uce{"Requested conversion from empty input units string", in_units, out_units};
         throw uce;
     }
 
     if(out_units == "") {
-        unit_conversion_exception uce{"Requested conversion to empty output units string", in_units, out_units};
+        UnitsHelper::unit_conversion_exception uce{"Requested conversion to empty output units string", in_units, out_units};
         throw uce;
     }
 
@@ -25,7 +61,7 @@ std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_u
     if(converters.count(key) == 1){
         if(converters[key] == nullptr){
             // Recurrence of last throw case below
-            unit_conversion_exception uce{"Unable to convert as requested (repeated)", in_units, out_units};
+            UnitsHelper::unit_conversion_exception uce{"Unable to convert as requested (repeated)", in_units, out_units};
             throw uce;
         }
         return converters[key];
@@ -33,7 +69,7 @@ std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_u
         ut_unit* from = ut_parse(unit_system, in_units.c_str(), in_encoding);
         if (from == NULL)
         {
-            unit_conversion_exception uce{"Unable to parse in_units", in_units, out_units};
+            UnitsHelper::unit_conversion_exception uce{"Unable to parse in_units", in_units, out_units};
             throw uce;
         }
         ut_unit* to = ut_parse(unit_system, out_units.c_str(), out_encoding);
@@ -41,7 +77,7 @@ std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_u
         {
             ut_free(from);
 
-            unit_conversion_exception uce{"Unable to parse out_units", in_units, out_units};
+            UnitsHelper::unit_conversion_exception uce{"Unable to parse out_units", in_units, out_units};
             throw uce;
         }
 
@@ -52,7 +88,7 @@ std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_u
             ut_free(to);
             converters[key] = nullptr;
 
-            unit_conversion_exception uce{"Unable to convert as requested", in_units, out_units};
+            UnitsHelper::unit_conversion_exception uce{"Unable to convert as requested", in_units, out_units};
             throw uce;
         }
         auto c = std::shared_ptr<cv_converter>(
