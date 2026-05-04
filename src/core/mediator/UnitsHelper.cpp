@@ -69,16 +69,40 @@ std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_u
     }
 }
 
+static bool is_noneish(std::string const& u) {
+    return u.empty() || u == "none" || u == "unitless" || u == "dimensionless" || u == "-";
+}
+
+static void normalize_units(std::string& in, std::string& out) {
+    // Normalize input units: map none-ish → "1"
+    if (is_noneish(in))
+        in = "1";
+
+    // Normalize requested units:
+    //  - none-ish → "1" if input is "1"; otherwise "" (unspecified → skip conversion)
+    if (is_noneish(out)) {
+        out = (in == "1") ? std::string("1") : std::string("");
+    }
+}
+
+static bool short_circuit_conversion(std::string const& in, std::string const& out) {
+    return out.empty() || in == out;
+}
+
 double UnitsHelper::get_converted_value(const std::string &in_units, const double &value, const std::string &out_units)
 {
-    if(in_units == out_units){
-        return value; // Early-out optimization
+    std::string in_norm = in_units;
+    std::string out_norm = out_units;
+    normalize_units(in_norm, out_norm);
+
+    if (short_circuit_conversion(in_norm, out_norm)) {
+        return value;
     }
 
     std::call_once(unit_system_inited, init_unit_system);
 
     try {
-        auto converter = get_converter(in_units, out_units);
+        auto converter = get_converter(in_norm, out_norm);
         double r = cv_convert_double(converter.get(), value);
         return r;
     } catch (unit_conversion_exception& uce) {
@@ -89,26 +113,11 @@ double UnitsHelper::get_converted_value(const std::string &in_units, const doubl
 
 double* UnitsHelper::convert_values(const std::string &in_units, double* in_values, const std::string &out_units, double* out_values, const size_t& count)
 {
-    auto is_noneish = [](const std::string& u)->bool {
-        return u.empty() || u == "none" || u == "unitless" || u == "dimensionless" || u == "-";
-    };
+    std::string in_norm = in_units;
+    std::string out_norm = out_units;
+    normalize_units(in_norm, out_norm);
 
-    // Normalize input units: map none-ish → "1"
-    const std::string in_norm = is_noneish(in_units) ? std::string("1") : in_units;
-
-    // Normalize requested units:
-    //  - none-ish → "1" if input is "1"; otherwise "" (unspecified → skip conversion)
-    std::string out_norm;
-    if (is_noneish(out_units)) {
-        out_norm = (in_norm == "1") ? std::string("1") : std::string("");
-    }
-    else {
-        out_norm = out_units;
-    }
-
-    // Early outs (no UDUNITS parsing or converter creation)
-    if (out_norm.empty() || in_norm == out_norm) {
-        // Pass-through
+    if (short_circuit_conversion(in_norm, out_norm)) {
         if (in_values == out_values) {
             return in_values;
         } else {
@@ -119,6 +128,8 @@ double* UnitsHelper::convert_values(const std::string &in_units, double* in_valu
 
     std::call_once(unit_system_inited, init_unit_system);
 
+    // Don't catch the UCE here to fill in uce.unconverted_values,
+    // because the caller may be able to more efficiently std::move it
     auto converter = get_converter(in_norm, out_norm);
     cv_convert_doubles(converter.get(), in_values, count, out_values);
     return out_values;
