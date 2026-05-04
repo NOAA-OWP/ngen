@@ -11,6 +11,8 @@
 #include "State_Exception.hpp"
 #include "utilities/ExternalIntegrationException.hpp"
 
+#include <stdexcept>
+
 // Forward declaration to provide access to protected items in testing
 class Bmi_Fortran_Adapter_Test;
 
