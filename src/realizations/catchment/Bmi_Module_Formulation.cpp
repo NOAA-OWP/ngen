@@ -183,16 +183,8 @@ namespace realization {
                 // Convert units
                 std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
 
-                // --- minimal addition: normalize "none"/"" to "1" and skip conversion if equal ---
-                std::string in_units_norm  = (native_units.empty() || native_units == "none") ? "1" : native_units;
-                std::string out_units_norm = (output_units.empty() || output_units == "none") ? "1" : output_units;
-                if (in_units_norm == out_units_norm) {
-                    return values;
-                }
-                // -------------------------------------------------------------------------------
-
                 try {
-                    UnitsHelper::convert_values(in_units_norm, values.data(), out_units_norm, values.data(), values.size());
+                    UnitsHelper::convert_values(native_units, values.data(), output_units, values.data(), values.size());
                     return values;
                 }
                 catch (UnitsHelper::unit_conversion_exception& uce) {
@@ -237,16 +229,8 @@ namespace realization {
                 // Convert units
                 std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
 
-                // --- minimal addition: normalize "none"/"" to "1" and skip conversion if equal ---
-                std::string in_units_norm  = (native_units.empty() || native_units == "none") ? "1" : native_units;
-                std::string out_units_norm = (output_units.empty() || output_units == "none") ? "1" : output_units;
-                if (in_units_norm == out_units_norm) {
-                    return value;
-                }
-                // -------------------------------------------------------------------------------
-
                 try {
-                    return UnitsHelper::get_converted_value(in_units_norm, value, out_units_norm);
+                    return UnitsHelper::get_converted_value(native_units, value, output_units);
                 }
                 catch (UnitsHelper::unit_conversion_exception& uce){
                     uce.provider_model_name = get_bmi_model()->get_model_name();
