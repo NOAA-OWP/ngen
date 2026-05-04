@@ -164,7 +164,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
             return UnitsHelper::get_converted_value(available_forcings_units[output_name], value, output_units);
         }
         catch (const std::runtime_error& e) {
-            data_access::unit_conversion_exception uce(e.what());
+            UnitsHelper::unit_conversion_exception uce(e.what());
             uce.provider_model_name = "CsvPerFeatureProvider " + std::to_string(catchment_id);
             uce.provider_var_name = output_name;
             uce.provider_units = available_forcings_units[output_name];
