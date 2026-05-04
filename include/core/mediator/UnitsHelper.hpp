@@ -31,6 +31,14 @@ class UnitsHelper {
 
     static double* convert_values(const std::string &in_units, double* values, const std::string &out_units, double* out_values, const size_t & count);
 
+    struct unit_conversion_exception : public std::runtime_error {
+        unit_conversion_exception(std::string message) : std::runtime_error(message) {}
+        std::string provider_model_name;
+        std::string provider_var_name;
+        std::string provider_units;
+        std::vector<double> unconverted_values;
+    };
+
     private:
      
     // Theoretically thread-safe. //TODO: Test?
@@ -56,7 +64,6 @@ class UnitsHelper {
     }
 
     static std::shared_ptr<cv_converter> get_converter(const std::string& in_units, const std::string& out_units, utEncoding in_encoding = UT_UTF8, utEncoding out_encoding = UT_UTF8 );
-
 };
 
 #endif //NGEN_UNITSHELPER_H

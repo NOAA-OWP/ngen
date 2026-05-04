@@ -11,6 +11,7 @@
 #include "ConfigurationException.hpp"
 #include "ExternalIntegrationException.hpp"
 #include "utilities/logging_utils.h"
+#include <core/mediator/UnitsHelper.hpp>
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"
@@ -569,7 +570,7 @@ namespace realization {
                 //TODO: After merge PR#405, try re-adding support for index
                 return nested_module->get_value(selector);
             }
-            catch (data_access::unit_conversion_exception &uce) {
+            catch (UnitsHelper::unit_conversion_exception &uce) {
                 // We asked for it as a dimensionless quantity, "1", just above
                 static bool no_conversion_message_logged = false;
                 if (!no_conversion_message_logged) {

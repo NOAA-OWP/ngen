@@ -6,8 +6,6 @@
 
 #include "bmi.hpp"
 
-#include "core/mediator/UnitsHelper.hpp"
-
 namespace models {
     namespace bmi {
         /**
