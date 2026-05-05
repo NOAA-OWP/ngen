@@ -299,23 +299,14 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
 
     // Start by first checking whether we are NOT just using the last module's values
     if (!is_out_vars_from_last_mod) {
-
-        // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
-        // Clear anything currently in the multi formulation's stream buffer
-        output_text_stream->str(std::string());
-
-        const std::vector<std::string> &output_var_names = get_output_variable_names();
-        // This almost certainly should never happen, but just to be safe ...
-        if (output_var_names.empty()) { return ""; }
-
-        // Do the first separately, without the leading comma
-        *output_text_stream << get_var_value_as_double(0, output_var_names[0]);
-
-        // Do the rest with a leading comma
-        for (int i = 1; i < output_var_names.size(); ++i) {
-            *output_text_stream << delimiter << get_var_value_as_double(0, output_var_names[i]);
+        std::string output_str;
+        for (const std::string& name : get_output_variable_names()) {
+            // Placeholder to request no conversion
+            std::string output_units = "";
+            double value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units), MEAN);
+            output_str += (output_str.empty() ? "" : ",") + std::to_string(value);
         }
-        return output_text_stream->str();
+        return output_str;
     }
     // Otherwise, use the default behavior, which means we either
     //   - were originally set to use the default of getting the output of the last module
