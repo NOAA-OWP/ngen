@@ -31,7 +31,10 @@ namespace realization {
 
             std::string output_str;
             for (const std::string& name : get_output_variable_names()) {
-                output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_value_as_double(0, name));
+                // Placeholder to request no conversion
+                std::string output_units = "";
+                double value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units), MEAN);
+                output_str += (output_str.empty() ? "" : ",") + std::to_string(value);
             }
             return output_str;
         }
