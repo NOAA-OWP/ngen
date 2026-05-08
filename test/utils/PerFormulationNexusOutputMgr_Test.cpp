@@ -247,7 +247,12 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_2_a)
         }
     }
 
+    mgr.close();
+    MPI_Barrier(MPI_COMM_WORLD);
+
     ASSERT_TRUE(utils::FileChecker::file_can_be_written(mgr.get_filenames()->at(0)));
+
+    MPI_Barrier(MPI_COMM_WORLD);
 }
 
 
@@ -303,6 +308,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_a)
         mgr.commit_writes();
     }
 
+    mgr.close();
+
     // When done writing everything, another barrier before any checks/asserts
     MPI_Barrier(MPI_COMM_WORLD);
 
@@ -325,6 +332,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_a)
                 << "Full timestep data for this timestep is: \n" << values << "\n ***** \n";
         }
     }
+
+    MPI_Barrier(MPI_COMM_WORLD);
 }
 
 /** Test example 2 writes feature ids correctly using multiple simultaneous writes via MPI. */
@@ -373,6 +382,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
                                group_data->at(t)[n]);
     }
     mgr.commit_writes();
+    mgr.close();
 
     // When done writing, another barrier before any checks/asserts
     MPI_Barrier(MPI_COMM_WORLD);
@@ -395,6 +405,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
         nex_id_strs[i] = "nex-" + std::to_string(nex_id_numeric[i]);
     }
     ASSERT_EQ(nex_id_strs, ex_2_form_0_all_nexus_id);
+
+    MPI_Barrier(MPI_COMM_WORLD);
 }
 
 #else
