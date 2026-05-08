@@ -478,10 +478,10 @@ int main(int argc, char *argv[]) {
             total_nexus_count = local_nexus_write_offset + local_nexus_count;
         MPI_Bcast(&total_nexus_count, 1, MPI_INT, mpi_num_procs - 1, MPI_COMM_WORLD);
 
-        #if NGEN_WITH_NETCDF and NGEN_WITH_PARALLEL_NETCDF
+        #if NGEN_WITH_NETCDF
         nexus_outputs_mgr = std::make_shared<utils::PerFormulationNexusOutputMgr>(nexus_ids, formulation_ids, manager->get_output_root(), timesteps, mpi_rank, local_nexus_write_offset, mpi_num_procs, total_nexus_count);
         #else
-        throw std::runtime_error("Parallel NetCDF support required to use per-formulation nexus files.");
+        throw std::runtime_error("NetCDF support required to use per-formulation nexus files.");
         #endif
 
         // One more barrier here to make sure other ranks wait while rank 0 creates the per-formulation nexus file

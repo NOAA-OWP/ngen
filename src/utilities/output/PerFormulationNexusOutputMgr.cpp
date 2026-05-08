@@ -106,6 +106,38 @@ utils::PerFormulationNexusOutputMgr::PerFormulationNexusOutputMgr(
         open_netcdf_file();
         lookup_netcdf_metadata();
     }
+#elif NGEN_WITH_MPI && !NGEN_WITH_PARALLEL_NETCDF
+    // Gather-to-rank-0 path: only rank 0 ever touches the NetCDF file; non-root ranks send their data to
+    // rank 0 each commit and rank 0 issues serial NetCDF C API writes covering the full global array.
+    if (instance_count > 1 && isMpiInitialized()) {
+        gather_to_root = true;
+
+        // Cache per-rank counts and write offsets so commit_writes can drive MPI_Gatherv without recomputing
+        // per timestep.  Both must be int (the type required by MPI_Gatherv), and total_nexus_count is already
+        // int upstream so size-fitness matches the existing assumptions.
+        gather_recvcounts.resize(instance_count);
+        gather_displs.resize(instance_count);
+        const int local_nexus_count = static_cast<int>(nexus_ids.size());
+        const int local_offset_int = static_cast<int>(this->local_offset);
+        MPI_Allgather(&local_nexus_count, 1, MPI_INT, gather_recvcounts.data(), 1, MPI_INT, MPI_COMM_WORLD);
+        MPI_Allgather(&local_offset_int, 1, MPI_INT, gather_displs.data(), 1, MPI_INT, MPI_COMM_WORLD);
+
+        if (obj_id == 0) {
+            create_netcdf_file();
+            setup_netcdf_metadata();
+            gather_flow_buffer.assign(total_nexus_count, flow_var_fill_value);
+        }
+    }
+    // No MPI run in progress (e.g., in-process tests): use the same multi-instance fallback as the parallel
+    // build path - rank/obj_id 0 creates and sets up, others open and look up metadata.
+    else if (instance_count == 1 || obj_id == 0) {
+        create_netcdf_file();
+        setup_netcdf_metadata();
+    }
+    else {
+        open_netcdf_file();
+        lookup_netcdf_metadata();
+    }
 #else
 
     // As with MPI-case code above, to support testing, support possibility of multiple instances opened,
@@ -121,11 +153,16 @@ utils::PerFormulationNexusOutputMgr::PerFormulationNexusOutputMgr(
     }
 #endif
 
-    int nc_status = nc_sync(netcdf_file_id);
-    if (nc_status != NC_NOERR) {
-        throw std::runtime_error("Could not sync metadata during setup of '" + nexus_outfile + "': "
-            + parse_netcdf_return_code(nc_status));
+    if (netcdf_file_id != -1) {
+        int nc_status = nc_sync(netcdf_file_id);
+        if (nc_status != NC_NOERR) {
+            throw std::runtime_error("Could not sync metadata during setup of '" + nexus_outfile + "': "
+                + parse_netcdf_return_code(nc_status));
+        }
     }
+
+    // Reaching here means setup completed without throwing; flip from the default closed state to open.
+    is_file_open = true;
 }
 
 utils::PerFormulationNexusOutputMgr::PerFormulationNexusOutputMgr(
@@ -152,7 +189,10 @@ utils::PerFormulationNexusOutputMgr::~PerFormulationNexusOutputMgr() {
 
 void utils::PerFormulationNexusOutputMgr::close() {
     if (is_closed()) return;
-    close_netcdf_file();
+    if (netcdf_file_id != -1) {
+        close_netcdf_file();
+    }
+    is_file_open = false;
 }
 
 void utils::PerFormulationNexusOutputMgr::commit_writes() {
@@ -167,33 +207,59 @@ void utils::PerFormulationNexusOutputMgr::commit_writes() {
     // On the first write, also write the nexus id variable values
     write_nexus_ids_once();
 
-    // For just obj_id 0, write the time value
-    if (obj_id == 0) {
-        long long epoch_minutes = current_epoch_time / 60;
-        const size_t start_t = static_cast<size_t>(current_time_index);
-        const size_t count_t = 1;
-        // TODO: (later) consider if we need to sanity check that times are consistent across obj_ids (we were
-        // TODO:        effectively assuming this to be the case when not explicitly writing times).
-
-        nc_status = nc_put_vara_longlong(netcdf_file_id, nc_var_id_time, &start_t, &count_t, &epoch_minutes);
-        if (nc_status != NC_NOERR) {
-            throw std::runtime_error("Error writing time value to nexus file '" + nexus_outfile + "' ("
-                + parse_netcdf_return_code(nc_status) + ") at time index " + std::to_string(current_time_index) + ".");
-        }
-    }
-
-    // Assume base on how constructor was set up (imply for conciseness)
+    // Default: this instance writes its own local slice straight from current_nexus_data.
     //size_t nexus_dim_index = 0;
     //size_t time_dim_index = 1;
-    const size_t start_f[2] = {local_offset, static_cast<size_t>(current_time_index)};
-    const size_t count_f[2] = {nexus_ids.size(), 1};
+    size_t start_f[2] = {SIZE_MAX, static_cast<size_t>(current_time_index)};
+    size_t count_f[2] = {SIZE_MAX, 1};
+    const double* flow_data = nullptr;
 
-    // TODO: perhaps later a configurable option about whether we should thrown an exception if any nexuses
-    //  didn't have a data value set (i.e., are still set to fill value)
-    nc_status = nc_put_vara_double(netcdf_file_id, nc_var_id_flow, start_f, count_f, current_nexus_data.data());
-    if (nc_status != NC_NOERR) {
-        throw std::runtime_error("Error writing flow value to nexus file '" + nexus_outfile + "' ("
-            + parse_netcdf_return_code(nc_status) + ") at time index " + std::to_string(current_time_index) + ".");
+#if NGEN_WITH_MPI && !NGEN_WITH_PARALLEL_NETCDF
+    if (gather_to_root) {
+        // All ranks contribute via MPI_Gatherv; on rank 0 the slice covers the full nexus dimension and the
+        // data buffer is the consolidated rank-0 receive buffer rather than this rank's local data.
+        MPI_Gatherv(current_nexus_data.data(), static_cast<int>(current_nexus_data.size()), MPI_DOUBLE,
+                    gather_flow_buffer.data(), gather_recvcounts.data(), gather_displs.data(), MPI_DOUBLE,
+                    0, MPI_COMM_WORLD);
+        start_f[0] = 0;
+        count_f[0] = static_cast<size_t>(total_nexus_count);
+        flow_data = gather_flow_buffer.data();
+    }
+    else
+#endif
+    {
+        start_f[0] = local_offset;
+        count_f[0] = nexus_ids.size();
+        flow_data = current_nexus_data.data();
+    }
+
+    // Only instances that own the file (i.e., have a valid netcdf_file_id) issue NetCDF calls.  This
+    // distinguishes gather-mode non-root ranks (which have netcdf_file_id == -1 and only participate in the
+    // MPI_Gatherv above) from every other configuration, where each instance opened or created the file and
+    // writes its own slice.
+    if (netcdf_file_id != -1) {
+        // For just obj_id 0, write the time value
+        if (obj_id == 0) {
+            long long epoch_minutes = current_epoch_time / 60;
+            const size_t start_t = static_cast<size_t>(current_time_index);
+            const size_t count_t = 1;
+            // TODO: (later) consider if we need to sanity check that times are consistent across obj_ids (we were
+            // TODO:        effectively assuming this to be the case when not explicitly writing times).
+
+            nc_status = nc_put_vara_longlong(netcdf_file_id, nc_var_id_time, &start_t, &count_t, &epoch_minutes);
+            if (nc_status != NC_NOERR) {
+                throw std::runtime_error("Error writing time value to nexus file '" + nexus_outfile + "' ("
+                    + parse_netcdf_return_code(nc_status) + ") at time index " + std::to_string(current_time_index) + ".");
+            }
+        }
+
+        // TODO: perhaps later a configurable option about whether we should throw an exception if any nexuses
+        //  didn't have a data value set (i.e., are still set to flow_var_fill_value)
+        nc_status = nc_put_vara_double(netcdf_file_id, nc_var_id_flow, start_f, count_f, flow_data);
+        if (nc_status != NC_NOERR) {
+            throw std::runtime_error("Error writing flow value to nexus file '" + nexus_outfile + "' ("
+                + parse_netcdf_return_code(nc_status) + ") at time index " + std::to_string(current_time_index) + ".");
+        }
     }
 
     current_time_index++;
@@ -201,7 +267,7 @@ void utils::PerFormulationNexusOutputMgr::commit_writes() {
     // Trigger a flush to disk every so often
     // It might be nice to utilize NetCDF's built-in chunk caching, but with MPI it looks like we can't:
     //  https://support.hdfgroup.org/documentation/hdf5/latest/group___f_a_p_l.html#ga034a5fc54d9b05296555544d8dd9fe89
-    if (current_time_index % data_flush_interval == 0) {
+    if (netcdf_file_id != -1 && current_time_index % data_flush_interval == 0) {
         nc_status = nc_sync(netcdf_file_id);
         if (nc_status != NC_NOERR) {
             throw std::runtime_error("Error syncing/flushing data to nexus file '" + nexus_outfile + "' after "
@@ -218,12 +284,12 @@ void utils::PerFormulationNexusOutputMgr::commit_writes() {
     current_formulation_id.clear();
 
     if (current_time_index == total_timesteps) {
-        close_netcdf_file();
+        close();
     }
 }
 
 bool utils::PerFormulationNexusOutputMgr::is_closed() {
-    return netcdf_file_id == -1;
+    return !is_file_open;
 }
 
 std::shared_ptr<std::vector<std::string>> utils::PerFormulationNexusOutputMgr::get_filenames() {
@@ -506,6 +572,31 @@ void utils::PerFormulationNexusOutputMgr::write_nexus_ids_once() const {
         }
         numeric_nex_ids[i] = std::stoi(nexus_ids[i].substr(pos + 1));
     }
+
+#if NGEN_WITH_MPI && !NGEN_WITH_PARALLEL_NETCDF
+    if (gather_to_root) {
+        // Gather every rank's numeric nexus ids to rank 0, then rank 0 writes the full vector once.
+        std::vector<unsigned int> all_numeric_nex_ids;
+        if (obj_id == 0) {
+            all_numeric_nex_ids.resize(total_nexus_count);
+        }
+        MPI_Gatherv(numeric_nex_ids.data(), static_cast<int>(numeric_nex_ids.size()), MPI_UNSIGNED,
+                    all_numeric_nex_ids.data(), gather_recvcounts.data(), gather_displs.data(), MPI_UNSIGNED,
+                    0, MPI_COMM_WORLD);
+        if (obj_id != 0) {
+            return;
+        }
+        std::vector<size_t> start{0};
+        std::vector<size_t> count{static_cast<size_t>(total_nexus_count)};
+        int nc_status = nc_put_vara_uint(netcdf_file_id, nc_var_id_nexus_id, start.data(), count.data(),
+                                         all_numeric_nex_ids.data());
+        if (nc_status != NC_NOERR) {
+            throw std::runtime_error("Error writing nexus ids to netcdf for nexus output manager: "
+                + parse_netcdf_return_code(nc_status));
+        }
+        return;
+    }
+#endif
 
     std::vector<size_t> start{this->local_offset};
     std::vector<size_t> count{numeric_nex_ids.size()};
