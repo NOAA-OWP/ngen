@@ -238,6 +238,20 @@ namespace utils
         int netcdf_file_id = -1;
 
         /**
+         * Whether this instance is still operating on (or, on non-root gather-mode ranks, participating around) an
+         * open managed file.
+         *
+         * Defaults to ``false`` and is flipped to ``true`` only at the end of a successful constructor; this way a
+         * partially-constructed instance correctly reports as already-closed.
+         *
+         * Tracked separately from @ref netcdf_file_id because, in the gather-to-rank-0 path, non-root ranks never
+         * open a NetCDF file and so cannot use file id state to represent their open/closed status; without this
+         * flag they would falsely report as already-closed and bail out of @ref receive_data_entry and
+         * @ref commit_writes before participating in the per-timestep MPI gather.
+         */
+        bool is_file_open = false;
+
+        /**
          * The instance id for this instance, which should be the MPI rank if using MPI.
          *
          * For non-MPI use cases, there must always be an id 0, and it is assumed each new id is incremented by 1.
@@ -395,6 +409,42 @@ namespace utils
          * @param nc_var_id The numeric NetCDF variable id
          */
         void set_nc_var_parallel_collective(const int nc_var_id) const;
+        #endif
+
+        #if NGEN_WITH_MPI && !NGEN_WITH_PARALLEL_NETCDF
+        /**
+         * Whether this instance is participating in MPI gather-to-rank-0 output.
+         *
+         * Set during construction when MPI is initialized and there is more than one instance.  When ``false`` the
+         * instance follows the in-process multi-instance code path (rank/obj_id 0 creates the file; others open it),
+         * which is used by tests that don't initialize MPI.
+         */
+        bool gather_to_root = false;
+
+        /**
+         * Per-rank counts of nexus ids, indexed by rank.  Used as the ``recvcounts`` argument to ``MPI_Gatherv`` calls.
+         *
+         * Populated on every rank during construction via ``MPI_Allgather`` of each rank's local nexus count.  Only
+         * meaningful when @ref gather_to_root is ``true``.
+         */
+        std::vector<int> gather_recvcounts;
+
+        /**
+         * Per-rank write offsets into the global nexus array, indexed by rank.  Used as the ``displs`` argument to
+         * ``MPI_Gatherv`` calls.
+         *
+         * Populated on every rank during construction via ``MPI_Allgather`` of each rank's @ref local_offset.  Only
+         * meaningful when @ref gather_to_root is ``true``.
+         */
+        std::vector<int> gather_displs;
+
+        /**
+         * Rank-0 receive buffer for gathered flow values across all ranks for a single time step.
+         *
+         * Sized to @ref total_nexus_count and only allocated on rank 0; non-zero ranks leave it empty.  Reused on
+         * every call to @ref commit_writes.
+         */
+        std::vector<double> gather_flow_buffer;
         #endif
 
     };

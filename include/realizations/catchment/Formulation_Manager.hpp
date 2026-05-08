@@ -61,9 +61,7 @@ namespace realization {
                 if (per_formulation_setting) {
                     #if !NGEN_WITH_NETCDF
                     throw std::runtime_error("ERROR: per_formulation_nexus_files is set to true, but NGEN was built without NetCDF support.");
-                    #elif NGEN_WITH_MPI and !NGEN_WITH_PARALLEL_NETCDF
-                    throw std::runtime_error("ERROR: per_formulation_nexus_files is set to true, but parallel NGEN was built without **parallel** NetCDF support.");
-                    #else // Implies either (NGEN_WITH_MPI and NGEN_WITH_PARALLEL_NETCDF) or (NGEN_WITH_NETCDF and !NGEN_WITH_MPI)
+                    #else
                     use_per_formulation_nexus_files = per_formulation_setting->get_value<bool>();
                     #endif
                 }
