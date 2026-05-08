@@ -17,7 +17,7 @@
 
 #include "NGenConfig.h"
 
-#include <Logger.hpp>
+#include "ewts_ngen/logger.hpp"
 
 #include <FileChecker.h>
 #include <boost/algorithm/string.hpp>
@@ -53,6 +53,8 @@
 #include <DomainLayer.hpp>
 #include <Layer.hpp>
 #include <SurfaceLayer.hpp>
+
+#include <state_save_restore/State_Save_Restore.hpp>
 
 void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
     stream << "Runtime configuration summary:\n";
@@ -200,15 +202,6 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     LOG(ss.str(), LogLevel::INFO);
     ss.str("");
     std::ios::sync_with_stdio(false);
-
-#if NGEN_WITH_PYTHON
-    // Start Python interpreter via the manager singleton
-    // Need to bind to a variable so that the underlying reference count
-    // is incremented, this essentially becomes the global reference to keep
-    // the interpreter alive till the end of `main`
-    auto _interp = utils::ngenPy::InterpreterUtil::getInstance();
-// utils::ngenPy::InterpreterUtil::getInstance();
-#endif // NGEN_WITH_PYTHON
 
     // Pull a few "options" form the cli input, this is a temporary solution to CLI parsing!
     // Use "positional args"
@@ -446,14 +439,16 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
 #if NGEN_WITH_SQLITE3
         try {
             nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
-        } catch (...) {
+        } catch (std::exception &e) {
             // Handle all exceptions
             std::string msg = "Geopackage error occurred reading nexuses: " + nexusDataFile;
             LOG(msg,LogLevel::FATAL);
-            throw std::runtime_error(msg);
+            LOG(LogLevel::FATAL, e.what());
+            throw;
         }
 #else
-        Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
+        LOG(LogLevel::FATAL, "SQLite3 support required to read GeoPackage files.");
+        throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
 #endif
     } else {
         nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
@@ -477,15 +472,17 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
         try {
         catchment_collection =
             ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
-        } catch (...) {
+        } catch (std::exception &e) {
             // Handle all exceptions
             std::string msg = "Geopackage error occurred reading divides: " + catchmentDataFile;
             LOG(msg,LogLevel::FATAL);
-            throw std::runtime_error(msg);
+            LOG(LogLevel::FATAL, e.what());
+            throw;
         }
 
 #else
-        Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
+        LOG(LogLevel::FATAL, "SQLite3 support required to read GeoPackage files.");
+        throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
 #endif
     } else {
         catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
@@ -514,8 +511,9 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     }
 
     auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
-
     sim_time = std::make_shared<Simulation_Time>(simulation_time_config);
+
+    auto state_saving_config = State_Save_Config(realization_config);
 
     ss << "Initializing formulations" << std::endl;
     LOG(ss.str(), LogLevel::INFO);
@@ -696,6 +694,15 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
     LOG("[TIMING]: Init: " + std::to_string(time_elapsed_init.count()), LogLevel::INFO);
 
+    { // optionally run hot start loader if set in state saving config
+        auto hot_start_loader = state_saving_config.hot_start();
+        if (hot_start_loader) {
+            LOG(LogLevel::INFO, "Loading hot start data from prior snapshot.");
+            std::shared_ptr<State_Snapshot_Loader> snapshot_loader = hot_start_loader->initialize_snapshot();
+            simulation->load_hot_start(snapshot_loader, manager->get_t_route_config_file_with_path());
+        }
+    }
+
     simulation->run_catchments();
 
 #if NGEN_WITH_MPI
@@ -733,8 +740,6 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     std::chrono::duration<double> time_elapsed_nexus_output = time_done_nexus_output - time_done_simulation;
     LOG("[TIMING]: Nexus outflow file writing: " + std::to_string(time_elapsed_nexus_output.count()), LogLevel::INFO);
 
-    manager->finalize();
-
 #if NGEN_WITH_MPI
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
@@ -760,6 +765,16 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     std::chrono::duration<double> time_elapsed_coastal = time_done_coastal - time_done_routing;
     LOG("[TIMING]: Coastal: " + std::to_string(time_elapsed_coastal.count()), LogLevel::INFO);
 #endif
+
+    // run any end-of-run state saving after T-Route has finished but before starting to tear down data structures
+    for (const auto& end_saver : state_saving_config.end_of_run_savers()) {
+        LOG(LogLevel::INFO, "Saving end of run simulation data for state saving config " + end_saver.first);
+        std::shared_ptr<State_Snapshot_Saver> snapshot = end_saver.second->initialize_snapshot(State_Saver::State_Durability::strict);
+        simulation->save_end_of_run(snapshot);
+    }
+
+    simulation->finalize();
+    manager->finalize();
 
     auto time_done_total                               = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_total   = time_done_total - time_start;
@@ -797,6 +812,8 @@ int main(int argc, char* argv[]) {
     int mpi_num_procs = 1;
     // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
     int mpi_rank = 0;
+    // exit code result of the simulation run
+    int result;
 
 #if NGEN_WITH_MPI
     // initialize MPI if needed
@@ -810,15 +827,27 @@ int main(int argc, char* argv[]) {
     // Need to bind to a variable so that the underlying reference count
     // is incremented, this essentially becomes the global reference to keep
     // the interpreter alive till the end of `main`
-    auto _interp = utils::ngenPy::InterpreterUtil::getInstance();
-#endif // NGEN_WITH_PYTHON
-
-    int result = run_ngen(argc, argv, mpi_num_procs, mpi_rank);
-
-#if NGEN_WITH_PYTHON
+    auto interp = utils::ngenPy::InterpreterUtil::getInstance();
+    try {
+        result = run_ngen(argc, argv, mpi_num_procs, mpi_rank);
+    } catch (...) {
+        // If any uncaught exception happens,
+        // explictly destroy the interpreter to ensure any
+        // python atexit registered actions will trigger.
+        interp.reset();
+        // Then, throw the original error.
+        throw;
+    }
     // explicitly destroy the interpreter before calling MPI_Finalize
-    _interp.reset();
-#endif
+    interp.reset();
+#if NGEN_WITH_MPI
+    // ensure all interpreters are fully closed between MPI ranks before calling MPI_Finalize below
+    // this is needed if any python atexit registered functions would interact with MPI
+    MPI_Barrier(MPI_COMM_WORLD);
+#endif // NGEN_WITH_MPI
+#else
+    result = run_ngen(argc, argv, mpi_num_procs, mpi_rank);
+#endif // NGEN_WITH_PYTHON
 
 #if NGEN_WITH_MPI
     MPI_Finalize();

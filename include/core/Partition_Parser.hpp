@@ -17,7 +17,7 @@
 #include <FeatureCollection.hpp>
 #include "JSONProperty.hpp"
 #include "Partition_Data.hpp"
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 class Partitions_Parser {
 

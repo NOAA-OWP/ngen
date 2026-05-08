@@ -1,5 +1,5 @@
 #include <fstream>
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 #include "mdframe/mdframe.hpp"
 
 #include <boost/core/span.hpp>
@@ -41,9 +41,10 @@ void cartesian_indices(const boost::span<const std::size_t> shape, std::vector<s
 void mdframe::to_csv(const std::string& path, bool header) const
 {
     std::ofstream output(path);
-    if (!output)
-        Logger::logMsgAndThrowError("failed to open file " + path);
-    
+    if (!output) {
+        LOG(LogLevel::FATAL, "failed to open file " + path);
+        throw std::runtime_error("failed to open file " + path);
+    }    
     std::string header_line = "";
 
     std::vector<variable> variable_subset;
@@ -65,7 +66,8 @@ void mdframe::to_csv(const std::string& path, bool header) const
     }
 
     if (variable_subset.empty()) {
-        Logger::logMsgAndThrowError("cannot output CSV with no output variables");
+        LOG(LogLevel::FATAL, "cannot output CSV with no output variables");
+        throw std::runtime_error("cannot output CSV with no output variables");
     }
 
     // Calculate total number of rows across all subdimensions (not including header)

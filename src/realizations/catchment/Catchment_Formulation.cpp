@@ -59,6 +59,17 @@ namespace realization {
 //            LOG(ss.str(), LogLevel::DEBUG);
     }
 
+    std::string Catchment_Formulation::config_pattern_id_replacement(const std::string &id) {
+        size_t index = id.find_last_of('-');
+        if (index != std::string::npos && ++index < id.length()) {
+            // check if first character after the last hyphen is a number
+            if (static_cast<unsigned char>(id[index]) - static_cast<unsigned char>('0') <= 9) {
+                return id.substr(index);
+            }
+        }
+        return id;
+    }
+
     std::string Catchment_Formulation::get_output_header_line(std::string delimiter) const {
         return "Total Discharge";
     }

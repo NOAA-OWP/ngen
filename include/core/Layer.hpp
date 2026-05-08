@@ -2,7 +2,7 @@
 #define __NGEN_LAYER__
 
 #include <NGenConfig.h>
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include "LayerData.hpp"
 #include "Simulation_Time.hpp"
@@ -15,6 +15,9 @@ namespace hy_features
     class HY_Features;
     class HY_Features_MPI;
 }
+
+class State_Snapshot_Saver;
+class State_Snapshot_Loader;
 
 namespace ngen
 {
@@ -109,6 +112,10 @@ namespace ngen
                                    boost::span<double> nexus_downstream_flows,
                                    std::unordered_map<std::string, int> &nexus_indexes,
                                    int current_step);
+
+        virtual void save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> snapshot_saver);
+        virtual void load_state_snapshot(std::shared_ptr<State_Snapshot_Loader> snapshot_loader);
+        virtual void load_hot_start(std::shared_ptr<State_Snapshot_Loader> snapshot_loader);
 
         protected:
 

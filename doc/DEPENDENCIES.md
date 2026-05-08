@@ -7,7 +7,7 @@
 | [Google Test](#google-test) | submodule  | `release-1.10.0` | |
 | [C/C++ Compiler](#c-and-c-compiler) | external | see below |  |
 | [CMake](#cmake) | external | \>= `3.17` | |
-| [Boost (Headers Only)](#boost-headers-only) | external | `1.79.0` | headers only library |
+| [Boost (Headers Only)](#boost-headers-only) | external | `1.86.0` | headers only library |
 | [Udunits libraries](https://www.unidata.ucar.edu/software/udunits) | external | >= 2.0 | Can be installed via package manager or from source |
 | [MPI](https://www.mpi-forum.org) | external | No current implementation or version requirements | Required for [multi-process distributed execution](DISTRIBUTED_PROCESSING.md) |
 | [Python 3 Libraries](#python-3-libraries) | external | \>= `3.8.0` | Can be [excluded](#overriding-python-dependency). |
@@ -78,7 +78,7 @@ Currently, a version of CMake >= `3.14.0` is required.
 
 ## Boost (Headers Only)
 
-Boost libraries are used by this project.  In particular, [Boost.Geometry](https://www.boost.org/doc/libs/1_79_0/libs/geometry/doc/html/geometry/compilation.html) is used, but others are also.
+Boost libraries are used by this project.  In particular, [Boost.Geometry](https://www.boost.org/doc/libs/1_86_0/libs/geometry/doc/html/geometry/compilation.html) is used, but others are also.
 
 Currently, only headers-only Boost libraries are utilized.  As such, they are not exhaustively listed here since getting one essentially gets them all.
 
@@ -88,7 +88,7 @@ Since only headers-only libraries are needed, the Boost headers simply need to b
 
 There are a variety of different ways to get the Boost headers locally.  Various OS may have packages specifically to install them, though one should take note of whether such packages provide a version of Boost that meets this project's requirements.  
 
-Alternatively, the Boost distribution itself can be manually downloaded and unpacked, as described for both [Unix-variants](https://www.boost.org/doc/libs/1_79_0/more/getting_started/unix-variants.html) and [Windows](https://www.boost.org/doc/libs/1_79_0/more/getting_started/windows.html) on the Boost website.
+Alternatively, the Boost distribution itself can be manually downloaded and unpacked, as described for both [Unix-variants](https://www.boost.org/doc/libs/1_86_0/more/getting_started/unix-variants.html) and [Windows](https://www.boost.org/doc/libs/1_86_0/more/getting_started/windows.html) on the Boost website.
 
 #### Setting **BOOST_ROOT**
 
@@ -96,11 +96,11 @@ If necessary, the project's CMake config is able to use the value of the **BOOST
   
 However, it will often be necessary to set **BOOST_ROOT** if Boost was manually set up by downloading the distribution.
 
-The variable should be set to the value of the **boost root directory**, which is something like `<some_path>/boost_1_79_0`.
+The variable should be set to the value of the **boost root directory**, which is something like `<some_path>/boost_1_86_0`.
 
 ### Version Requirements
 
-At present, a version >= `1.79.0` is required.
+At present, a version >= `1.86.0` is required.
 
 ## Udunits
 

@@ -11,4 +11,8 @@ target_include_directories(geojson PUBLIC
 target_link_libraries(geojson PUBLIC
         Boost::boost                # Headers-only Boost
         NGen::logging
+        ewts::ewts_ngen_bridge
         )
+
+
+

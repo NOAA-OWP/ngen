@@ -2,7 +2,7 @@
 #define NGEN_BMI_PY_ADAPTER_H
 
 #include <NGenConfig.h>
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #if NGEN_WITH_PYTHON
 
@@ -541,33 +541,30 @@ namespace models {
                 int itemSize = GetVarItemsize(name);
                 std::string py_type = GetVarType(name);
                 std::string cxx_type = get_analogous_cxx_type(py_type, (size_t) itemSize);
-
-                if (cxx_type == "short") {
-                    set_value<short>(name, (short *) src);
-                } else if (cxx_type == "int") {
-                    set_value<int>(name, (int *) src);
-                } else if (cxx_type == "long") {
-                    set_value<long>(name, (long *) src);
-                } else if (cxx_type == "long long") {
-                    //FIXME this gets dicey -- if a python numpy array is of type np.int64 (long long), 
-                    //but a c++ int* is passed to this function as src, it will fail in undefined ways...
-                    //the template type overload may be perferred for doing SetValue from framework components
-                    //such as forcing providers...
-                    set_value<long long>(name, (long long *) src);
-                } else if (cxx_type == "float") {
-                    set_value<float>(name, (float *) src);
-                } else if (cxx_type == "double") {
-                    set_value<double>(name, (double *) src);
-                } else if (cxx_type == "long double") {
-                    set_value<long double>(name, (long double *) src);
-                } else {
+                // macro for checking type and setting value
+                #define BMI_PY_SET_VALUE(type) if (cxx_type == #type) {\
+                                                this->set_value<type>(name, static_cast<type *>(src)); }
+                BMI_PY_SET_VALUE(signed char)
+                else BMI_PY_SET_VALUE(unsigned char)
+                else BMI_PY_SET_VALUE(short)
+                else BMI_PY_SET_VALUE(unsigned short)
+                else BMI_PY_SET_VALUE(int)
+                else BMI_PY_SET_VALUE(unsigned int)
+                else BMI_PY_SET_VALUE(long)
+                else BMI_PY_SET_VALUE(unsigned long)
+                else BMI_PY_SET_VALUE(long long)
+                else BMI_PY_SET_VALUE(unsigned long long)
+                else BMI_PY_SET_VALUE(float)
+                else BMI_PY_SET_VALUE(double)
+                else BMI_PY_SET_VALUE(long double)
+                else {
                     std::string throw_msg; throw_msg.assign("Bmi_Py_Adapter cannot set values for variable '" + name +
                                              "' that has unrecognized C++ type '" + cxx_type + "'");
                     LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
+                #undef BMI_PY_SET_VALUE
             }
-
             /**
              * Set the values of the given BMI variable for the model, sourcing new data from the provided vector.
              *
@@ -595,6 +592,24 @@ namespace models {
                 for (size_t i = 0; i < length; ++i) {
                     mutable_unchecked_proxy(i) = src[i];
                 }
+            }
+
+            /**
+             * Set the value of a variable. This version of setting a variable will send an array with the `size` specified instead of checking the BMI for its current size of the variable.
+             * Ownership of the pointer will remain in C++, so the consuming BMI should not maintain a reference to the values beyond the scope of its `set_value` method.
+             * 
+             * @param name The name of the BMI variable.
+             * @param src Pointer to the data that will be sent to the BMI.
+             * @param size The number of items represented by the pointer.
+             */
+            template <typename T>
+            void set_value_unchecked(const std::string &name, T *src, size_t size) {
+                // declare readonly array info with the pointer and size
+                py::buffer_info info(src, static_cast<py::ssize_t>(size), true);
+                // create the array with the info and NULL handler so python doesn't take ownership
+                py::array_t<T> src_array(info, nullptr);
+                // pass the array to python to read; the BMI should not attempt to maintain a reference beyond the scope of this function to prevent trying to use freed memory
+                bmi_model->attr("set_value")(name, src_array);
             }
 
             /**

@@ -3,6 +3,15 @@ dynamic_sourced_cxx_library(realizations_catchment "${CMAKE_CURRENT_SOURCE_DIR}"
 
 add_library(NGen::realizations_catchment ALIAS realizations_catchment)
 
+# -----------------------------------------------------------------------------
+# Find the Boost library and configure usage
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost 1.79.0 REQUIRED COMPONENTS serialization)
+
+target_link_libraries(realizations_catchment PRIVATE Boost::serialization)
+
 target_include_directories(realizations_catchment PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core
         ${PROJECT_SOURCE_DIR}/include/core/catchment
@@ -13,7 +22,7 @@ target_include_directories(realizations_catchment PUBLIC
         ${PROJECT_SOURCE_DIR}/include/geojson
         ${PROJECT_SOURCE_DIR}/include/bmi
         )
-        
+
 target_link_libraries(realizations_catchment PUBLIC
         ${CMAKE_DL_LIBS}
         NGen::config_header
@@ -21,5 +30,9 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::geojson
         NGen::logging
         NGen::ngen_bmi
+        NGen::bmi_protocols
         )
+
+target_link_libraries(realizations_catchment PUBLIC ewts::ewts_ngen_bridge)
+
 

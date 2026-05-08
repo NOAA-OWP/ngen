@@ -1,6 +1,6 @@
 #ifndef NGEN_CSVPERFEATUREFORCING_H
 #define NGEN_CSVPERFEATUREFORCING_H
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include <vector>
 #include <set>

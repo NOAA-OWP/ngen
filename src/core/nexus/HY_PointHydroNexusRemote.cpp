@@ -6,6 +6,7 @@
 
 #include <HY_Features_Ids.hpp>
 #include <chrono>
+#include <stdexcept>
 #include <thread>
 
 // TODO add loggin to this function
@@ -126,7 +127,8 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
         //because the `add_upstream_flow` call triggers a `send` which removes from the local accounting
         //all available water and sends it to the remote counterpart for this nexus.
         std::string msg = "Nexus "+id+" attempted to get_downstream_flow, but its communicator type is sender only.";
-        Logger::logMsgAndThrowError(msg);
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
     else if ( type == receiver || type == sender_receiver )
     {
