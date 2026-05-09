@@ -15,7 +15,7 @@
 | [dmod.subsetservice](#the-dmodsubsetservice-package)                                       | external   |                    `>= 0.3.0`                     |           Only required to perform integrated [hydrofabric file subdividing](DISTRIBUTED_PROCESSING.md#subdivided-hydrofabric) for distributed processing .           |
 | [t-route](#t-route)                                                                        | submodule  |                     see below                     |                                                Module required to enable channel-routing.  Requires pybind11 to enable                                                |
 | [NetCDF Libraries](#netcdf-libraries)                                                      | external   |                    \>= `4.7.4`                    |                                                                      Enables NetCDF I/O support                                                                       |
-| [NetCDF-4 parallel support](https://docs.unidata.ucar.edu/netcdf-c/4.9.3/parallel_io.html) | external   |                                                   |   Optional, but required to use [per-formulation NetCDF nexus output files](REALIZATION_CONFIGURATION.md#per_formulation_nexus_files) in ngen builds supporting MPI   |
+| [NetCDF-4 parallel support](https://docs.unidata.ucar.edu/netcdf-c/4.9.3/parallel_io.html) | external   |                                                   |   Optional; opt in via `-DNGEN_WITH_PARALLEL_NETCDF=ON` so MPI ranks write [per-formulation NetCDF nexus output files](REALIZATION_CONFIGURATION.md#per_formulation_nexus_files) directly in parallel. Otherwise rank 0 gathers and writes serially.   |
 | [SQLite3](https://www.sqlite.org/cintro.html)                                              | external   |                    \> `3.7.17`                    |                                                                  Enables GeoPackage reading support                                                                   |
 # Details
 
@@ -230,11 +230,15 @@ First, check if your compute system already have a version that is up to date, u
 
 ### Parallel NetCDF
 
-In order to make use of the per-formulation NetCDF nexus output files capabilities [noted here](REALIZATION_CONFIGURATION.md#per_formulation_nexus_files) within installations of ngen that support parallel MPI execution, NetCDF-4 and its dependencies must have been built/installed with parallel I/O support.  [See here](https://docs.unidata.ucar.edu/netcdf-c/4.9.3/parallel_io.html) for further details in the NetCDF documentation.  
+[Per-formulation NetCDF nexus output files](REALIZATION_CONFIGURATION.md#per_formulation_nexus_files) work in any ngen build with NetCDF support, including MPI builds, without requiring NetCDF-4 parallel I/O. In MPI builds, every non-root rank gathers its per-timestep nexus data to rank 0, which writes the full row through the standard (serial) NetCDF C API.
 
-Without NetCDF Parallel I/O support, parallel builds of ngen will be limited to individual, per-nexus output files for nexus data in CSV format, and an error will occur if a realization config attempting to use per-formulation outputs is supplied.
+To have each MPI rank write its own slice of the file directly via HDF5-parallel I/O, opt in at CMake configure time:
 
-You can see if the NetCDF dependency found by CMake for ngen builds includes parallel support by looking for this part of the CMake output when you generate/regenerate the build system directory.  Note specifically the `Parallel` sub-item at the end of the NetCDF details.
+    -DNGEN_WITH_PARALLEL_NETCDF=ON
+
+This option defaults to `OFF`. When set to `ON` it requires that the NetCDF-4 library located by CMake was itself built with parallel I/O support; CMake will fail with a `FATAL_ERROR` at configure time if the library does not provide it. [See here](https://docs.unidata.ucar.edu/netcdf-c/4.9.3/parallel_io.html) for details on parallel I/O in the NetCDF documentation.
+
+You can see both whether the NetCDF library found by CMake supports parallel I/O and whether `NGEN_WITH_PARALLEL_NETCDF` is enabled for this build by examining the CMake configure-time summary. Note the `Parallel` sub-item at the end of the NetCDF details and the `NGEN_WITH_PARALLEL_NETCDF` line under `Flags`.
 
 ```
 ...
@@ -248,8 +252,13 @@ You can see if the NetCDF dependency found by CMake for ngen builds includes par
 --     Library (CXX): /opt/local/lib/libnetcdf_c++4.dylib
 --     Include: /opt/local/include
 --     Include (CXX): /opt/local/include
---     Parallel: TRUE 
+--     Parallel: TRUE
 --   SQLite:
 --     Version: 3.49.1
 ...
+--   Flags:
+--     NGEN_WITH_MPI: ON
+--     NGEN_WITH_NETCDF: ON
+--     NGEN_WITH_PARALLEL_NETCDF: OFF
+--     ...
 ```
