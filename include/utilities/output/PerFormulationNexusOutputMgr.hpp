@@ -423,18 +423,15 @@ namespace utils
 
         /**
          * Per-rank counts of nexus ids, indexed by rank.  Used as the ``recvcounts`` argument to ``MPI_Gatherv`` calls.
-         *
-         * Populated on every rank during construction via ``MPI_Allgather`` of each rank's local nexus count.  Only
-         * meaningful when @ref gather_to_root is ``true``.
+         * Populated and held only on rank 0; empty on non-root ranks.  Only meaningful when @ref gather_to_root is
+         * ``true``.
          */
         std::vector<int> gather_recvcounts;
 
         /**
          * Per-rank write offsets into the global nexus array, indexed by rank.  Used as the ``displs`` argument to
-         * ``MPI_Gatherv`` calls.
-         *
-         * Populated on every rank during construction via ``MPI_Allgather`` of each rank's @ref local_offset.  Only
-         * meaningful when @ref gather_to_root is ``true``.
+         * ``MPI_Gatherv`` calls.  Populated and held only on rank 0; empty on non-root ranks.  Only meaningful when
+         * @ref gather_to_root is ``true``.
          */
         std::vector<int> gather_displs;
 
