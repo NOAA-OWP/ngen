@@ -113,14 +113,15 @@ utils::PerFormulationNexusOutputMgr::PerFormulationNexusOutputMgr(
         gather_to_root = true;
 
         // Cache per-rank counts and write offsets so commit_writes can drive MPI_Gatherv without recomputing
-        // per timestep.  Both must be int (the type required by MPI_Gatherv), and total_nexus_count is already
-        // int upstream so size-fitness matches the existing assumptions.
-        gather_recvcounts.resize(instance_count);
-        gather_displs.resize(instance_count);
+        // per timestep.
+        if (obj_id == 0) {
+            gather_recvcounts.resize(instance_count);
+            gather_displs.resize(instance_count);
+        }
         const int local_nexus_count = static_cast<int>(nexus_ids.size());
         const int local_offset_int = static_cast<int>(this->local_offset);
-        MPI_Allgather(&local_nexus_count, 1, MPI_INT, gather_recvcounts.data(), 1, MPI_INT, MPI_COMM_WORLD);
-        MPI_Allgather(&local_offset_int, 1, MPI_INT, gather_displs.data(), 1, MPI_INT, MPI_COMM_WORLD);
+        MPI_Gather(&local_nexus_count, 1, MPI_INT, gather_recvcounts.data(), 1, MPI_INT, 0, MPI_COMM_WORLD);
+        MPI_Gather(&local_offset_int, 1, MPI_INT, gather_displs.data(), 1, MPI_INT, 0, MPI_COMM_WORLD);
 
         if (obj_id == 0) {
             create_netcdf_file();
