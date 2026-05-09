@@ -57,6 +57,7 @@ option(NGEN_QUIET            "Silence output"                     OFF)
 cmake_dependent_option(NGEN_WITH_ROUTING "Build with t-route integration" ON "NGEN_WITH_PYTHON" OFF)
 cmake_dependent_option(NGEN_UPDATE_GIT_SUBMODULES "Update submodules on configure" ON "GIT_FOUND;NGEN_HAS_GIT_DIR" OFF)
 cmake_dependent_option(NGEN_WITH_COVERAGE "Build with test coverage" OFF "NGEN_WITH_TESTS" OFF)
+cmake_dependent_option(NGEN_WITH_PARALLEL_NETCDF "Build with NetCDF using HDF5-parallel support" OFF "NGEN_WITH_NETCDF" OFF)
 
 option(BMI_FORTRAN_ISO_C_LIB_DIR "Directory hint for middleware Fortran shared lib handling iso_c_binding" "${NGEN_ROOT_DIR}/extern/iso_c_fortran_bmi/cmake_build")
 option(BMI_FORTRAN_ISO_C_LIB_NAME "Name for middleware Fortran shared lib handling iso_c_binding" "iso_c_bmi")
@@ -198,10 +199,13 @@ if(NGEN_WITH_NETCDF)
         target_link_libraries(NetCDF INTERFACE netcdf-cxx4)
     endif()
 
-    if(NetCDF_HAS_PARALLEL)
-        add_compile_definitions(NGEN_WITH_PARALLEL_NETCDF)
+    if(NGEN_WITH_PARALLEL_NETCDF)
+        if(NetCDF_HAS_PARALLEL)
+            add_compile_definitions(NGEN_WITH_PARALLEL_NETCDF)
+        else()
+            message(FATAL_ERROR "Asked for NGEN_WITH_PARALLEL_NETCDF, but using a NetCDF installation that doesn't support it")
+        endif()
     endif()
-
 endif()
 
 if(NGEN_WITH_EXTERN_SLOTH)
@@ -425,6 +429,7 @@ ngen_multiline_message(
 "  Flags:"
 "    NGEN_WITH_MPI: ${NGEN_WITH_MPI}"
 "    NGEN_WITH_NETCDF: ${NGEN_WITH_NETCDF}"
+"    NGEN_WITH_PARALLEL_NETCDF: ${NGEN_WITH_PARALLEL_NETCDF}"
 "    NGEN_WITH_SQLITE: ${NGEN_WITH_SQLITE}"
 "    NGEN_WITH_UDUNITS: ${NGEN_WITH_UDUNITS}"
 "    NGEN_WITH_BMI_FORTRAN: ${NGEN_WITH_BMI_FORTRAN}"
