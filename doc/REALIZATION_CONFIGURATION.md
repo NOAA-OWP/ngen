@@ -34,7 +34,7 @@ The configuration may optionally contain a `per_formulation_nexus_files` key wit
 > [!IMPORTANT]
 > NetCDF support must be turned on for the ngen build to use this option for per-formulation NetCDF file.  This is done by including the `-DNGEN_WITH_NETCDF=ON` arg to CMake on the command line when generating a build directory.
 > 
-> Additionally, for ngen builds that also support MPI (i.e., `-DNGEN_WITH_MPI=ON`), using per-formulation NetCDF files also requires that NetCDF include [parallel I/O support](DEPENDENCIES.md#parallel-netcdf).
+> In MPI builds (i.e., `-DNGEN_WITH_MPI=ON`), per-formulation NetCDF files are written by gathering each timestep's nexus data to rank 0, which writes the file via the standard NetCDF C API. To instead have every rank write its own slice in parallel via HDF5-parallel I/O, opt in with `-DNGEN_WITH_PARALLEL_NETCDF=ON`; this additionally requires the NetCDF library itself to provide [parallel I/O support](DEPENDENCIES.md#parallel-netcdf).
 
 ### `catchments`
 The configuration may optionally contain a `catchments` key with a list of individual catchments that define their own formulations.  See [more details below](#catchments).

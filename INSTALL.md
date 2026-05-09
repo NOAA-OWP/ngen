@@ -61,6 +61,7 @@ In addition to normal CMake options, the following `ngen` configuration options 
 Option                | Description
 --------------------- | -----------
 NGEN_WITH_NETCDF      | Include NetCDF support
+NGEN_WITH_PARALLEL_NETCDF | Use HDF5-parallel I/O for per-formulation nexus output (requires `NGEN_WITH_NETCDF` and a NetCDF library built with parallel I/O); without this, MPI builds gather per-timestep nexus data to rank 0 for serial writing
 NGEN_WITH_SQLITE3     | Include SQLite3 support (GeoPackage support)
 NGEN_WITH_UDUNITS     | Include UDUNITS support
 NGEN_WITH_MPI         | Include MPI (Parallel Execuation) support
