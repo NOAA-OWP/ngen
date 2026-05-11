@@ -288,7 +288,7 @@ ARG EWTS_CACHE_BUST=0
 ENV EWTS_PREFIX=/opt/ewts
 
 # Point the development fallback to the cloned source tree so that
-# compiler.sh can pip-install EWTS from source if the wheel is missing.
+# compiler_bmi.sh can pip-install EWTS from source if the wheel is missing.
 ENV EWTS_PY_ROOT=/tmp/nwm-ewts/runtime/python/ewts
 
 # Clone nwm-ewts, build, install, capture git metadata for provenance,
@@ -327,7 +327,7 @@ RUN --mount=type=cache,target=/root/.cache/cmake,id=cmake-ewts \
       --arg build_date "$(date -u +'%Y-%m-%d %H:%M:%S UTC')" \
       '{"nwm-ewts": {commit_hash: $commit_hash, branch: $branch, tags: $tags, author: $author, commit_date: $commit_date, message: $message, build_date: $build_date}}' \
       > /ngen-app/nwm-ewts_git_info.json && \
-    # ── Cleanup source (keep Python source as fallback for compiler.sh) ──
+    # ── Cleanup source (keep Python source as fallback for compiler_bmi.sh) ──
     cd / && \
     rm -rf /tmp/nwm-ewts/cmake_build /tmp/nwm-ewts/.git
 
@@ -383,9 +383,9 @@ ENV LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
 RUN --mount=type=cache,target=/root/.cache/t-route,id=t-route-build \
     set -eux && \
     cd extern/t-route && \
-    echo "Running compiler.sh" && \
+    echo "Running compiler_bmi.sh" && \
     LDFLAGS='-Wl,-L/usr/local/lib64/,-L/usr/local/lib/,-rpath,/usr/local/lib64/,-rpath,/usr/local/lib/' && \
-    ./compiler.sh no-e && \
+    ./compiler_bmi.sh no-e && \
     rm -rf /ngen-app/ngen/extern/t-route/test/LowerColorado_TX_v4 && \
     find /ngen-app/ngen/extern/t-route -name "*.o" -exec rm -f {} + && \
     find /ngen-app/ngen/extern/t-route -name "*.a" -exec rm -f {} +
