@@ -134,7 +134,7 @@ Optional Top-Level Keys</h2>
 <p>The configuration may optionally contain a <code>per_formulation_nexus_files</code> key with a boolean value to indicate per-formulation, NetCDF files should be used for writing nexus data, rather than the default of per-nexus CSV files. Note that if <code>per_formulation_nexus_files</code> is set to <code>true</code>, the <code>catchments</code> cannot be used to define formulations for individual catchments, and the global formulation config must be used for all catchments.</p>
 <dl class="section important"><dt>Important</dt><dd>NetCDF support must be turned on for the ngen build to use this option for per-formulation NetCDF file. This is done by including the <code>-DNGEN_WITH_NETCDF=ON</code> arg to CMake on the command line when generating a build directory. <br  />
 <br  />
- Additionally, for ngen builds that also support MPI (i.e., <code>-DNGEN_WITH_MPI=ON</code>), using per-formulation NetCDF files also requires that NetCDF include <a href="DEPENDENCIES.md#parallel-netcdf">parallel I/O support</a>.</dd></dl>
+ In MPI builds (i.e., <code>-DNGEN_WITH_MPI=ON</code>), per-formulation NetCDF files are written by gathering each timestep's nexus data to rank 0, which writes the file via the standard NetCDF C API. To instead have every rank write its own slice in parallel via HDF5-parallel I/O, opt in with <code>-DNGEN_WITH_PARALLEL_NETCDF=ON</code>; this additionally requires the NetCDF library itself to provide <a href="DEPENDENCIES.md#parallel-netcdf">parallel I/O support</a>.</dd></dl>
 <h3><a class="anchor" id="autotoc_md257"></a>
 <code>catchments</code></h3>
 <p>The configuration may optionally contain a <code>catchments</code> key with a list of individual catchments that define their own formulations. See more details below.</p>
@@ -294,7 +294,7 @@ A Note on BMI Models</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon May 4 2026 15:54:45 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Tue May 12 2026 18:56:30 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

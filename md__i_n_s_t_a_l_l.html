@@ -133,22 +133,24 @@ Building manually:</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">NGEN_WITH_NETCDF   </td><td class="markdownTableBodyNone">Include NetCDF support    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">NGEN_WITH_PARALLEL_NETCDF   </td><td class="markdownTableBodyNone">Use HDF5-parallel I/O for per-formulation nexus output (requires <code>NGEN_WITH_NETCDF</code> and a NetCDF library built with parallel I/O); without this, MPI builds gather per-timestep nexus data to rank 0 for serial writing    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">NGEN_WITH_SQLITE3   </td><td class="markdownTableBodyNone">Include SQLite3 support (GeoPackage support)    </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">NGEN_WITH_UDUNITS   </td><td class="markdownTableBodyNone">Include UDUNITS support    </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">NGEN_WITH_MPI   </td><td class="markdownTableBodyNone">Include MPI (Parallel Execuation) support    </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">NGEN_WITH_BMI_FORTRAN   </td><td class="markdownTableBodyNone">Include Fortran BMI support    </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">NGEN_WITH_BMI_C   </td><td class="markdownTableBodyNone">Include C BMI support    </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">NGEN_WITH_PYTHON   </td><td class="markdownTableBodyNone">Include Python support    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">NGEN_WITH_ROUTING   </td><td class="markdownTableBodyNone">Include <code>t-route</code> integration    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">NGEN_WITH_TESTS   </td><td class="markdownTableBodyNone">Include unit and integration tests    </td></tr>
+<td class="markdownTableBodyNone">NGEN_WITH_ROUTING   </td><td class="markdownTableBodyNone">Include <code>t-route</code> integration    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">NGEN_WITH_TESTS   </td><td class="markdownTableBodyNone">Include unit and integration tests    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">NGEN_QUIET   </td><td class="markdownTableBodyNone">Include suppressing unwanted message output   </td></tr>
 </table>
 <blockquote class="doxtable">
@@ -178,7 +180,7 @@ Building manually:</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon May 4 2026 15:54:45 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Tue May 12 2026 18:56:30 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
