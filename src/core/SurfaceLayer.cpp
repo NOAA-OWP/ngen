@@ -65,7 +65,7 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
 
 #if NGEN_WITH_ROUTING
         int nexus_index = nexus_indexes[id];
-        nexus_downstream_flows[nexus_index] = contribution_at_t;
+        nexus_downstream_flows[nexus_index] += contribution_at_t;
 #endif // NGEN_WITH_ROUTING
 
         // TODO: (later) eventually may want to use this form, if we support multiple formulations per catchment
