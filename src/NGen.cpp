@@ -451,11 +451,14 @@ int main(int argc, char* argv[]) {
     // T-ROUTE data storage
     std::unordered_map<std::string, int> nexus_indexes;
 #if NGEN_WITH_ROUTING
-    size_t nexus_collection_size = nexus_collection->get_size();
-    for (int i = 0; i < nexus_collection_size; ++i) {
+    int nexus_index = 0;
+    for (int i = 0; i < nexus_collection->get_size(); ++i) {
         auto feature = nexus_collection->get_feature(i);
         std::string feature_id = feature->get_id();
-        nexus_indexes[feature_id] = i;
+        if (feature_id.compare(0, 4, "nex-") == 0) {
+            nexus_indexes[feature_id] = nexus_index;
+            ++nexus_index;
+        }
     }
 #endif // NGEN_WITH_ROUTING
 
@@ -597,7 +600,7 @@ int main(int argc, char* argv[]) {
         std::string feature_id = feature->get_id();
         catchment_indexes[feature_id] = i;
     }
-    nexus_downstream_flows.resize(nexus_collection_size * num_times);
+    nexus_downstream_flows.resize(nexus_indexes.size() * num_times, 0.0);
 #endif // NGEN_WITH_ROUTING
 
     for (int count = 0; count < num_times; count++) {
