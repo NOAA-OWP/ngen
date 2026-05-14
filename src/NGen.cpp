@@ -594,7 +594,7 @@ int main(int argc, char* argv[]) {
     std::vector<double> nexus_downstream_flows;
 #if NGEN_WITH_ROUTING
     size_t catchment_collection_size = catchment_collection->get_size();
-    catchment_outflows.resize(catchment_collection_size * num_times);
+    catchment_outflows.resize(catchment_collection_size * num_times, 0.0);
     for (int i = 0; i < catchment_collection_size; ++i) {
         auto feature = catchment_collection->get_feature(i);
         std::string feature_id = feature->get_id();
