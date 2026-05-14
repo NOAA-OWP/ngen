@@ -38,7 +38,7 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
                 +" at feature id "+id;
             throw std::runtime_error(msg);
         }
-#if NGEN_WITH_ROUTING
+#if NGEN_WITH_ROUTING && false
         int results_index = catchment_indexes[id];
         catchment_outflows[results_index] += response;
 #endif // NGEN_WITH_ROUTING
