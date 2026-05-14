@@ -592,7 +592,7 @@ int main(int argc, char* argv[]) {
     std::vector<double> catchment_outflows;
     std::unordered_map<std::string, int> catchment_indexes;
     std::vector<double> nexus_downstream_flows;
-#if NGEN_WITH_ROUTING
+#if NGEN_WITH_ROUTING && false
     size_t catchment_collection_size = catchment_collection->get_size();
     catchment_outflows.resize(catchment_collection_size * num_times, 0.0);
     for (int i = 0; i < catchment_collection_size; ++i) {
@@ -631,7 +631,7 @@ int main(int argc, char* argv[]) {
                     if (count % 100 == 0) {
 		      std::cout << "Updating layer: " << layer->get_name() << "\n";
                     }
-#if NGEN_WITH_ROUTING
+#if NGEN_WITH_ROUTING && false
                     boost::span<double> catchment_span(catchment_outflows.data() + (count * catchment_indexes.size()),
                                                        catchment_indexes.size());
                     boost::span<double> nexus_span(nexus_downstream_flows.data() + (count * nexus_indexes.size()),
