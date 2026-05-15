@@ -837,8 +837,6 @@ int main(int argc, char* argv[]) {
         // we cannot rethrow the execption after destroying the interpreter (doing so sometimes caused MPI runs to hang)
         // First, copy the python error message so it an be reraised as a runtime_error
         std::string error_msg = std::string("Uncaught python error: ") + e.what();
-        // direct the exception's full stack trace to be printed to stderr
-        e.discard_as_unraisable("Passing python error before tearing down interpreter.");
         // destroy the interpreter to let python atexit actions trigger
         interp.reset();
         // throw the copied error to ensure MPI acknowledges the termination
