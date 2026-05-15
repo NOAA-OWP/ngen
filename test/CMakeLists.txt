@@ -406,6 +406,7 @@ ngen_add_test(
     OBJECTS
         bmi/Bmi_Py_Adapter_Test.cpp
         realizations/catchments/Bmi_Py_Formulation_Test.cpp
+        utils/python/InterpreterUtil_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
