@@ -5,6 +5,7 @@ target_include_directories(ngen_python PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 
 target_link_libraries(ngen_python PUBLIC
                           NGen::config_header
+                          NGen::logging
                       )
 
 if (NGEN_WITH_PYTHON)

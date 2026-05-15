@@ -4,7 +4,7 @@
 #if NGEN_WITH_PYTHON
 
 #include <utilities/python/InterpreterUtil.hpp>
-#include <utilities/Logger.hpp>
+#include <utilities/logging_utils.h>
 
 #include <pybind11/embed.h>
 #include <pybind11/stl.h>
@@ -201,7 +201,8 @@ namespace utils {
                     for (const auto& module : importedTopLevelModules) {
                         ss << module.first << ", ";
                     }
-                    LOG(ss.str(), LogLevel::WARNING);
+                    ss << std::endl;
+                    logging::warning(ss.str().c_str());
                     throw;
                 }
             }
