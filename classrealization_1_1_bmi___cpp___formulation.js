@@ -5,7 +5,7 @@ var classrealization_1_1_bmi___cpp___formulation =
     [ "time_step_t", "classrealization_1_1_bmi___cpp___formulation.html#aedb7c17dc4527613c7411229a2dc9fff", null ],
     [ "Bmi_Cpp_Formulation", "classrealization_1_1_bmi___cpp___formulation.html#ac236d280681cc9a31053f505a562d087", null ],
     [ "check_mass_balance", "classrealization_1_1_bmi___cpp___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301", null ],
-    [ "config_pattern_substitution", "classrealization_1_1_bmi___cpp___formulation.html#a17f32257b65c7930f8b3570ab43fd58c", null ],
+    [ "config_pattern_substitution", "classrealization_1_1_bmi___cpp___formulation.html#a1de265980481ff42242990ede3b4689f", null ],
     [ "construct_model", "classrealization_1_1_bmi___cpp___formulation.html#a6b4dbeb33e8d3c85ad89d7555dfeb9b3", null ],
     [ "convert_model_time", "classrealization_1_1_bmi___cpp___formulation.html#a6b136f45d5a43bbb0ed672203bf56bcb", null ],
     [ "create_formulation", "classrealization_1_1_bmi___cpp___formulation.html#a3e910719332db1e221c4ef4dd3bb9eb1", null ],

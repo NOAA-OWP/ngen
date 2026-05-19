@@ -9,7 +9,7 @@ var classngen_1_1_domain_layer =
     [ "get_time_step", "classngen_1_1_domain_layer.html#a07242d4bd693ca8b32fa20134b5bc8e4", null ],
     [ "get_time_step_units", "classngen_1_1_domain_layer.html#a3cda46167a3ae4a09baf0ba36e01161b", null ],
     [ "next_timestep_epoch_time", "classngen_1_1_domain_layer.html#abd1389469be1b1bf1e39001edde2d14f", null ],
-    [ "update_models", "classngen_1_1_domain_layer.html#ad07ca7f0d57c4a1857b1dec91c1cae48", null ],
+    [ "update_models", "classngen_1_1_domain_layer.html#a64b0ecc8c75ee888e556064a664e6dc3", null ],
     [ "catchment_data", "classngen_1_1_domain_layer.html#a5689db4f3999584bea58d99aa9ff8b15", null ],
     [ "description", "classngen_1_1_domain_layer.html#a681d5a55c86a8d1f6d6f9f5fc57b6c63", null ],
     [ "features", "classngen_1_1_domain_layer.html#a2529e511bb8f0091ff321652988a3290", null ],

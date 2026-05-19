@@ -153,9 +153,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3cda46167a3ae4a09baf0ba36e01161b" id="r_a3cda46167a3ae4a09baf0ba36e01161b"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3cda46167a3ae4a09baf0ba36e01161b">get_time_step_units</a> () const</td></tr>
 <tr class="memdesc:a3cda46167a3ae4a09baf0ba36e01161b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the units for the time_step value of this layer.  <br /></td></tr>
 <tr class="separator:a3cda46167a3ae4a09baf0ba36e01161b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9804d4feed2aaf37de65b077ee41aec" id="r_ae9804d4feed2aaf37de65b077ee41aec"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae9804d4feed2aaf37de65b077ee41aec">update_models</a> ()</td></tr>
-<tr class="memdesc:ae9804d4feed2aaf37de65b077ee41aec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run one simulation timestep for each model in this layer.  <br /></td></tr>
-<tr class="separator:ae9804d4feed2aaf37de65b077ee41aec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab370469dad5631205a9089aea8eae9a1" id="r_ab370469dad5631205a9089aea8eae9a1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab370469dad5631205a9089aea8eae9a1">update_models</a> (boost::span&lt; double &gt; catchment_outflows, std::unordered_map&lt; std::string, int &gt; &amp;catchment_indexes, boost::span&lt; double &gt; nexus_downstream_flows, std::unordered_map&lt; std::string, int &gt; &amp;nexus_indexes, int current_step)</td></tr>
+<tr class="memdesc:ab370469dad5631205a9089aea8eae9a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run one simulation timestep for each model in this layer.  <br /></td></tr>
+<tr class="separator:ab370469dad5631205a9089aea8eae9a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -487,8 +487,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae9804d4feed2aaf37de65b077ee41aec" name="ae9804d4feed2aaf37de65b077ee41aec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae9804d4feed2aaf37de65b077ee41aec">&#9670;&#160;</a></span>update_models()</h2>
+<a id="ab370469dad5631205a9089aea8eae9a1" name="ab370469dad5631205a9089aea8eae9a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab370469dad5631205a9089aea8eae9a1">&#9670;&#160;</a></span>update_models()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -497,26 +497,45 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void ngen::Layer::update_models </td>
+          <td class="memname">void ngen::Layer::update_models </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">boost::span&lt; double &gt;</td>          <td class="paramname"><span class="paramname"><em>catchment_outflows</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::unordered_map&lt; std::string, int &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>catchment_indexes</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boost::span&lt; double &gt;</td>          <td class="paramname"><span class="paramname"><em>nexus_downstream_flows</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::unordered_map&lt; std::string, int &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>nexus_indexes</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>current_step</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Run one simulation timestep for each model in this layer. </p>
 
-<p>Reimplemented in <a class="el" href="classngen_1_1_domain_layer.html#ad07ca7f0d57c4a1857b1dec91c1cae48">ngen::DomainLayer</a>, and <a class="el" href="classngen_1_1_surface_layer.html#a6e1fa5b6f015bbb4d83170c5fe102857">ngen::SurfaceLayer</a>.</p>
+<p>Reimplemented in <a class="el" href="classngen_1_1_domain_layer.html#a64b0ecc8c75ee888e556064a664e6dc3">ngen::DomainLayer</a>, and <a class="el" href="classngen_1_1_surface_layer.html#a181d2664a22562b6da70ae438aa6c61f">ngen::SurfaceLayer</a>.</p>
 
 <p class="reference">References <a class="el" href="class_simulation___time.html#a642130d5225e58078097a954aae2a236">Simulation_Time::advance_timestep()</a>, <a class="el" href="classhy__features_1_1_h_y___features.html#aad70a7ffe0b57fefeb8328c6b2fd8176">hy_features::HY_Features::catchment_at()</a>, <a class="el" href="#a5689db4f3999584bea58d99aa9ff8b15">catchment_data</a>, <a class="el" href="classhy__features_1_1_h_y___features.html#a90cabae67b3e22e7d3801432154cb6e1">hy_features::HY_Features::destination_nexuses()</a>, <a class="el" href="#a2529e511bb8f0091ff321652988a3290">features</a>, <a class="el" href="class_simulation___time.html#a25ec4421aac064d6173070f552471669">Simulation_Time::get_output_interval_seconds()</a>, <a class="el" href="class_simulation___time.html#ac31cb33120a3f3c69d5ac73d6f95a949">Simulation_Time::get_timestamp()</a>, <a class="el" href="class_simulation___time.html#a52e16cffa6ca3281f06e1c216ec39414">Simulation_Time::get_total_output_times()</a>, <a class="el" href="class_simulation___time.html#ac5fa7aa8ad4994609c44ce5e57a139a1">Simulation_Time::next_timestep_index()</a>, <a class="el" href="#a1d1dbf9050ac23f56ac06e9e3dffc176">output_time_index</a>, <a class="el" href="#a5cb15eea3711606ced64504aa3ea1749">processing_units</a>, <a class="el" href="#a96c3fed503f10d2b2f9ab00c229a5b91">simulation_time</a>, and <a class="el" href="classmodels_1_1external_1_1_state___exception.html#a499127c21c967df24bff1a8fc0a8c450">models::external::State_Exception::what()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classngen_1_1_surface_layer.html#a6e1fa5b6f015bbb4d83170c5fe102857">ngen::SurfaceLayer::update_models()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_surface_layer.html#a181d2664a22562b6da70ae438aa6c61f">ngen::SurfaceLayer::update_models()</a>.</p>
 
 </div>
 </div>
@@ -541,7 +560,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#ae9804d4feed2aaf37de65b077ee41aec">update_models()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#ab370469dad5631205a9089aea8eae9a1">update_models()</a>.</p>
 
 </div>
 </div>
@@ -565,7 +584,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#acd4f99d80cbcac7f64c4b5211ba58f8c">get_id()</a>, <a class="el" href="#acda7ee56e91a6c395b9c25c74bf0494b">get_name()</a>, <a class="el" href="#a07242d4bd693ca8b32fa20134b5bc8e4">get_time_step()</a>, <a class="el" href="#a3cda46167a3ae4a09baf0ba36e01161b">get_time_step_units()</a>, and <a class="el" href="classngen_1_1_domain_layer.html#ad07ca7f0d57c4a1857b1dec91c1cae48">ngen::DomainLayer::update_models()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#acd4f99d80cbcac7f64c4b5211ba58f8c">get_id()</a>, <a class="el" href="#acda7ee56e91a6c395b9c25c74bf0494b">get_name()</a>, <a class="el" href="#a07242d4bd693ca8b32fa20134b5bc8e4">get_time_step()</a>, <a class="el" href="#a3cda46167a3ae4a09baf0ba36e01161b">get_time_step_units()</a>, and <a class="el" href="classngen_1_1_domain_layer.html#a64b0ecc8c75ee888e556064a664e6dc3">ngen::DomainLayer::update_models()</a>.</p>
 
 </div>
 </div>
@@ -589,7 +608,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#ae9804d4feed2aaf37de65b077ee41aec">update_models()</a>, and <a class="el" href="classngen_1_1_surface_layer.html#a6e1fa5b6f015bbb4d83170c5fe102857">ngen::SurfaceLayer::update_models()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#ab370469dad5631205a9089aea8eae9a1">update_models()</a>, and <a class="el" href="classngen_1_1_surface_layer.html#a181d2664a22562b6da70ae438aa6c61f">ngen::SurfaceLayer::update_models()</a>.</p>
 
 </div>
 </div>
@@ -613,7 +632,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classngen_1_1_domain_layer.html#ad07ca7f0d57c4a1857b1dec91c1cae48">ngen::DomainLayer::update_models()</a>, <a class="el" href="#ae9804d4feed2aaf37de65b077ee41aec">update_models()</a>, and <a class="el" href="classngen_1_1_surface_layer.html#a6e1fa5b6f015bbb4d83170c5fe102857">ngen::SurfaceLayer::update_models()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_domain_layer.html#a64b0ecc8c75ee888e556064a664e6dc3">ngen::DomainLayer::update_models()</a>, <a class="el" href="#ab370469dad5631205a9089aea8eae9a1">update_models()</a>, and <a class="el" href="classngen_1_1_surface_layer.html#a181d2664a22562b6da70ae438aa6c61f">ngen::SurfaceLayer::update_models()</a>.</p>
 
 </div>
 </div>
@@ -637,7 +656,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#ae9804d4feed2aaf37de65b077ee41aec">update_models()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#ab370469dad5631205a9089aea8eae9a1">update_models()</a>.</p>
 
 </div>
 </div>
@@ -661,12 +680,13 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a178444ad250c0c8faaefa6c5263c618c">current_timestep_epoch_time()</a>, <a class="el" href="#abd1389469be1b1bf1e39001edde2d14f">next_timestep_epoch_time()</a>, <a class="el" href="classngen_1_1_domain_layer.html#ad07ca7f0d57c4a1857b1dec91c1cae48">ngen::DomainLayer::update_models()</a>, <a class="el" href="#ae9804d4feed2aaf37de65b077ee41aec">update_models()</a>, and <a class="el" href="classngen_1_1_surface_layer.html#a6e1fa5b6f015bbb4d83170c5fe102857">ngen::SurfaceLayer::update_models()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a178444ad250c0c8faaefa6c5263c618c">current_timestep_epoch_time()</a>, <a class="el" href="#abd1389469be1b1bf1e39001edde2d14f">next_timestep_epoch_time()</a>, <a class="el" href="classngen_1_1_domain_layer.html#a64b0ecc8c75ee888e556064a664e6dc3">ngen::DomainLayer::update_models()</a>, <a class="el" href="#ab370469dad5631205a9089aea8eae9a1">update_models()</a>, and <a class="el" href="classngen_1_1_surface_layer.html#a181d2664a22562b6da70ae438aa6c61f">ngen::SurfaceLayer::update_models()</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/core/<a class="el" href="core_2_layer_8hpp_source.html">Layer.hpp</a></li>
+<li>src/core/<b>Layer.cpp</b></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -674,7 +694,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacengen.html">ngen</a></li><li class="navelem"><a class="el" href="classngen_1_1_layer.html">Layer</a></li>
-    <li class="footer">Generated on Tue May 19 2026 17:21:03 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Tue May 19 2026 17:47:20 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

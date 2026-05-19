@@ -135,9 +135,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0ef879abdc4b2e6a9ecc8b2d5bf2bafb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae20086b1dc436b0a42f149b3d9de1009" id="r_ae20086b1dc436b0a42f149b3d9de1009"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae20086b1dc436b0a42f149b3d9de1009">Catchment_Formulation</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>)</td></tr>
 <tr class="separator:ae20086b1dc436b0a42f149b3d9de1009"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9db1e9470c3a96daff649474d64d8d4" id="r_aa9db1e9470c3a96daff649474d64d8d4"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9db1e9470c3a96daff649474d64d8d4">get_output_header_line</a> (std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER) const</td></tr>
-<tr class="memdesc:aa9db1e9470c3a96daff649474d64d8d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a header line appropriate for a file made up of entries from this type's implementation of <code>get_output_line_for_timestep</code>.  <br /></td></tr>
-<tr class="separator:aa9db1e9470c3a96daff649474d64d8d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a192341f9d9ce4b020417e09a32efb5a8" id="r_a192341f9d9ce4b020417e09a32efb5a8"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a192341f9d9ce4b020417e09a32efb5a8">get_output_header_line</a> (std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER) const</td></tr>
+<tr class="memdesc:a192341f9d9ce4b020417e09a32efb5a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a header line appropriate for a file made up of entries from this type's implementation of <code>get_output_line_for_timestep</code>.  <br /></td></tr>
+<tr class="separator:a192341f9d9ce4b020417e09a32efb5a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af841ea78bf8db37c4d4a43724eea8e28" id="r_af841ea78bf8db37c4d4a43724eea8e28"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af841ea78bf8db37c4d4a43724eea8e28">get_output_line_for_timestep</a> (int timestep, std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER)=0</td></tr>
 <tr class="memdesc:af841ea78bf8db37c4d4a43724eea8e28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a formatted line of output values for the given time step as a delimited string.  <br /></td></tr>
 <tr class="separator:af841ea78bf8db37c4d4a43724eea8e28"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,8 +150,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4fb8ec9b08820c29d88627ee9781d579"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a2ac83503092d24da0ee4e4c6eeaa25" id="r_a2a2ac83503092d24da0ee4e4c6eeaa25"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a2ac83503092d24da0ee4e4c6eeaa25">create_formulation</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> properties) override=0</td></tr>
 <tr class="separator:a2a2ac83503092d24da0ee4e4c6eeaa25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1efe9c78511cf0cc5d9b79dc99e9881" id="r_ab1efe9c78511cf0cc5d9b79dc99e9881"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1efe9c78511cf0cc5d9b79dc99e9881">~Catchment_Formulation</a> ()</td></tr>
-<tr class="separator:ab1efe9c78511cf0cc5d9b79dc99e9881"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3f6844bf377c6483b744b94dcbbc3fc" id="r_af3f6844bf377c6483b744b94dcbbc3fc"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3f6844bf377c6483b744b94dcbbc3fc">~Catchment_Formulation</a> ()=default</td></tr>
+<tr class="separator:af3f6844bf377c6483b744b94dcbbc3fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92b6ca5352dd98640d7c320f7c6c3333" id="r_a92b6ca5352dd98640d7c320f7c6c3333"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92b6ca5352dd98640d7c320f7c6c3333">finalize</a> ()</td></tr>
 <tr class="memdesc:a92b6ca5352dd98640d7c320f7c6c3333"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release resources of the given forcing provider.  <br /></td></tr>
 <tr class="separator:a92b6ca5352dd98640d7c320f7c6c3333"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,9 +168,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a17f32257b65c7930f8b3570ab43fd58c" id="r_a17f32257b65c7930f8b3570ab43fd58c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17f32257b65c7930f8b3570ab43fd58c">config_pattern_substitution</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;properties, const std::string &amp;key, const std::string &amp;pattern, const std::string &amp;replacement)</td></tr>
-<tr class="memdesc:a17f32257b65c7930f8b3570ab43fd58c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform in-place substitution on the given config property item, if the item and the pattern are present.  <br /></td></tr>
-<tr class="separator:a17f32257b65c7930f8b3570ab43fd58c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1de265980481ff42242990ede3b4689f" id="r_a1de265980481ff42242990ede3b4689f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1de265980481ff42242990ede3b4689f">config_pattern_substitution</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;properties, const std::string &amp;key, const std::string &amp;pattern, const std::string &amp;replacement)</td></tr>
+<tr class="memdesc:a1de265980481ff42242990ede3b4689f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform in-place substitution on the given config property item, if the item and the pattern are present.  <br /></td></tr>
+<tr class="separator:a1de265980481ff42242990ede3b4689f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -232,9 +232,6 @@ Private Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">realization::Catchment_Formulation::Catchment_Formulation </td>
@@ -252,11 +249,6 @@ Private Attributes</h2></td></tr>
           <td class="paramtype"><a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a></td>          <td class="paramname"><span class="paramname"><em>output_stream</em></span>&#160;)</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="#a2cce2b5b18eaa0ed7e0df10db57da144">set_catchment_id()</a>.</p>
@@ -268,9 +260,6 @@ Private Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">realization::Catchment_Formulation::Catchment_Formulation </td>
@@ -279,19 +268,14 @@ Private Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="#a2cce2b5b18eaa0ed7e0df10db57da144">set_catchment_id()</a>.</p>
 
 </div>
 </div>
-<a id="ab1efe9c78511cf0cc5d9b79dc99e9881" name="ab1efe9c78511cf0cc5d9b79dc99e9881"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab1efe9c78511cf0cc5d9b79dc99e9881">&#9670;&#160;</a></span>~Catchment_Formulation()</h2>
+<a id="af3f6844bf377c6483b744b94dcbbc3fc" name="af3f6844bf377c6483b744b94dcbbc3fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3f6844bf377c6483b744b94dcbbc3fc">&#9670;&#160;</a></span>~Catchment_Formulation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -308,7 +292,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -352,8 +336,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a17f32257b65c7930f8b3570ab43fd58c" name="a17f32257b65c7930f8b3570ab43fd58c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17f32257b65c7930f8b3570ab43fd58c">&#9670;&#160;</a></span>config_pattern_substitution()</h2>
+<a id="a1de265980481ff42242990ede3b4689f" name="a1de265980481ff42242990ede3b4689f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1de265980481ff42242990ede3b4689f">&#9670;&#160;</a></span>config_pattern_substitution()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -362,7 +346,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void realization::Catchment_Formulation::config_pattern_substitution </td>
+          <td class="memname">void realization::Catchment_Formulation::config_pattern_substitution </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>properties</em></span>, </td>
         </tr>
@@ -384,7 +368,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -474,9 +458,6 @@ Private Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void realization::Catchment_Formulation::finalize </td>
@@ -485,11 +466,6 @@ Private Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Release resources of the given forcing provider. </p>
@@ -585,8 +561,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa9db1e9470c3a96daff649474d64d8d4" name="aa9db1e9470c3a96daff649474d64d8d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9db1e9470c3a96daff649474d64d8d4">&#9670;&#160;</a></span>get_output_header_line()</h2>
+<a id="a192341f9d9ce4b020417e09a32efb5a8" name="a192341f9d9ce4b020417e09a32efb5a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a192341f9d9ce4b020417e09a32efb5a8">&#9670;&#160;</a></span>get_output_header_line()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -595,7 +571,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::string realization::Catchment_Formulation::get_output_header_line </td>
+          <td class="memname">std::string realization::Catchment_Formulation::get_output_header_line </td>
           <td>(</td>
           <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>delimiter</em></span><span class="paramdefsep"> = </span><span class="paramdefval">DEFAULT_FORMULATION_OUTPUT_DELIMITER</span></td><td>)</td>
           <td> const</td>
@@ -603,7 +579,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -661,7 +637,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab948ab5f81dd06ee7df04f6619271b5d">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a1424a0e0d1cee27c32ce3cae5879f77b">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classngen_1_1_domain_layer.html#ad07ca7f0d57c4a1857b1dec91c1cae48">ngen::DomainLayer::update_models()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_domain_layer.html#a64b0ecc8c75ee888e556064a664e6dc3">ngen::DomainLayer::update_models()</a>.</p>
 
 </div>
 </div>
@@ -737,7 +713,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0108d3ee83f95ad2eb0733a237078e89">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a0b66d3f5f51b4b414e08965e15d7bff7">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classngen_1_1_domain_layer.html#ad07ca7f0d57c4a1857b1dec91c1cae48">ngen::DomainLayer::update_models()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_domain_layer.html#a64b0ecc8c75ee888e556064a664e6dc3">ngen::DomainLayer::update_models()</a>.</p>
 
 </div>
 </div>
@@ -763,7 +739,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -850,7 +826,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -886,7 +862,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="class_h_y___catchment_area.html#a55857dc16551760ff59487991fc525fe">HY_CatchmentArea::output</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classngen_1_1_domain_layer.html#a4bad59ecfd5dfade771b6ea708a7f10e">ngen::DomainLayer::DomainLayer()</a>, and <a class="el" href="classngen_1_1_domain_layer.html#ad07ca7f0d57c4a1857b1dec91c1cae48">ngen::DomainLayer::update_models()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_domain_layer.html#a4bad59ecfd5dfade771b6ea708a7f10e">ngen::DomainLayer::DomainLayer()</a>, and <a class="el" href="classngen_1_1_domain_layer.html#a64b0ecc8c75ee888e556064a664e6dc3">ngen::DomainLayer::update_models()</a>.</p>
 
 </div>
 </div>
@@ -1053,8 +1029,9 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/realizations/catchment/<a class="el" href="_catchment___formulation_8hpp_source.html">Catchment_Formulation.hpp</a></li>
+<li>src/realizations/catchment/<b>Catchment_Formulation.cpp</b></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -1062,7 +1039,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a></li>
-    <li class="footer">Generated on Tue May 19 2026 17:21:03 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Tue May 19 2026 17:47:21 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

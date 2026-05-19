@@ -9,7 +9,7 @@ var classrealization_1_1_bmi___multi___formulation =
     [ "~Bmi_Multi_Formulation", "classrealization_1_1_bmi___multi___formulation.html#a6ef8f446a1fcece399fb72532e854363", null ],
     [ "check_mass_balance", "classrealization_1_1_bmi___multi___formulation.html#a53a61d1d8911c96bdb3af81992472dc4", null ],
     [ "check_output_var_names", "classrealization_1_1_bmi___multi___formulation.html#a5663cca69cb8f68f38899a031a19fc43", null ],
-    [ "config_pattern_substitution", "classrealization_1_1_bmi___multi___formulation.html#a17f32257b65c7930f8b3570ab43fd58c", null ],
+    [ "config_pattern_substitution", "classrealization_1_1_bmi___multi___formulation.html#a1de265980481ff42242990ede3b4689f", null ],
     [ "convert_model_time", "classrealization_1_1_bmi___multi___formulation.html#ae867f9a3aa14a30541162165066faaf8", null ],
     [ "convert_model_time", "classrealization_1_1_bmi___multi___formulation.html#a9883f4ed769e6bb3f41ff2a3d4e2788b", null ],
     [ "create_formulation", "classrealization_1_1_bmi___multi___formulation.html#acb4534a0030f794320625be0313fe825", null ],

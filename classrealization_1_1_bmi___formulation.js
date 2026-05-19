@@ -6,7 +6,7 @@ var classrealization_1_1_bmi___formulation =
     [ "Bmi_Formulation", "classrealization_1_1_bmi___formulation.html#ad23e2ac461a34855b320e2c81cc1e2f6", null ],
     [ "~Bmi_Formulation", "classrealization_1_1_bmi___formulation.html#af04ef53959ce9c63da57f1f767740401", null ],
     [ "check_mass_balance", "classrealization_1_1_bmi___formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d", null ],
-    [ "config_pattern_substitution", "classrealization_1_1_bmi___formulation.html#a17f32257b65c7930f8b3570ab43fd58c", null ],
+    [ "config_pattern_substitution", "classrealization_1_1_bmi___formulation.html#a1de265980481ff42242990ede3b4689f", null ],
     [ "convert_model_time", "classrealization_1_1_bmi___formulation.html#a93fab1a9af5c9d1917219528bec89894", null ],
     [ "create_formulation", "classrealization_1_1_bmi___formulation.html#a4fb8ec9b08820c29d88627ee9781d579", null ],
     [ "create_formulation", "classrealization_1_1_bmi___formulation.html#a2a2ac83503092d24da0ee4e4c6eeaa25", null ],
