@@ -69,7 +69,10 @@ jobs:
       - name: Build Ngen
         uses: ./.github/actions/ngen-build
         with:
-          targets: "test_routing_pybind"
+          # Build `ngen` alongside `test_routing_pybind` so this job covers
+          # the routing-enabled compilation of src/NGen.cpp — pybind-only
+          # builds skip everything gated by NGEN_WITH_ROUTING.
+          targets: "test_routing_pybind ngen"
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
           #is this required for this test?
           use_python: 'ON'
