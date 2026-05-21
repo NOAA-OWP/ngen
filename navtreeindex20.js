@@ -1,7 +1,5 @@
 var NAVTREEINDEX20 =
 {
-"namespacengen.html#a2058d2d378fb0c46a66cbd95f49c4d6d":[23,0,8,12],
-"namespacengen.html#ad51f53c85438741923d4d083365d6bbf":[23,0,8,13],
 "namespacengen_1_1detail.html":[23,0,8,0],
 "namespacengen_1_1detail_1_1visitors.html":[23,0,8,0,0],
 "namespacengen_1_1geopackage.html":[23,0,8,1],
@@ -249,5 +247,7 @@ var NAVTREEINDEX20 =
 "structnetwork_1_1preorder__visitor.html#a47ca6df72bbd19eb6af537c0844ae3cf":[24,0,6,1,0],
 "structnetwork_1_1preorder__visitor.html#a86ea1b3077ec3a0689a5a9a5852d32bc":[23,0,7,1,2],
 "structnetwork_1_1preorder__visitor.html#a86ea1b3077ec3a0689a5a9a5852d32bc":[24,0,6,1,2],
-"structnetwork_1_1preorder__visitor.html#aafa30c5f3851cc919b9609401e238eed":[23,0,7,1,1]
+"structnetwork_1_1preorder__visitor.html#aafa30c5f3851cc919b9609401e238eed":[23,0,7,1,1],
+"structnetwork_1_1preorder__visitor.html#aafa30c5f3851cc919b9609401e238eed":[24,0,6,1,1],
+"structnetwork_1_1preorder__visitor.html#aba261774f75ea486a5602cfff798cf63":[23,0,7,1,3]
 };

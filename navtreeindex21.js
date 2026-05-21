@@ -1,7 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"structnetwork_1_1preorder__visitor.html#aafa30c5f3851cc919b9609401e238eed":[24,0,6,1,1],
-"structnetwork_1_1preorder__visitor.html#aba261774f75ea486a5602cfff798cf63":[23,0,7,1,3],
 "structnetwork_1_1preorder__visitor.html#aba261774f75ea486a5602cfff798cf63":[24,0,6,1,3],
 "structngen_1_1_layer_description.html":[23,0,8,8],
 "structngen_1_1_layer_description.html":[24,0,7,8],
@@ -249,5 +247,7 @@ var NAVTREEINDEX21 =
 "structngen_1_1sqlite_1_1database_1_1iterator.html#a6264a931fd47e5afa56db2c77a40a232":[24,0,7,2,0,1,8],
 "structngen_1_1sqlite_1_1database_1_1iterator.html#a651bce7eb2e56732fb3c33dcfc57c70e":[23,0,8,2,0,1,0],
 "structngen_1_1sqlite_1_1database_1_1iterator.html#a651bce7eb2e56732fb3c33dcfc57c70e":[24,0,7,2,0,1,0],
-"structngen_1_1sqlite_1_1database_1_1iterator.html#a675a7559d402dc2579e006fdbf8a410a":[23,0,8,2,0,1,3]
+"structngen_1_1sqlite_1_1database_1_1iterator.html#a675a7559d402dc2579e006fdbf8a410a":[23,0,8,2,0,1,3],
+"structngen_1_1sqlite_1_1database_1_1iterator.html#a675a7559d402dc2579e006fdbf8a410a":[24,0,7,2,0,1,3],
+"structngen_1_1sqlite_1_1database_1_1iterator.html#a6c3b0d6cb4ca0421cc85ce2f20789cb9":[23,0,8,2,0,1,10]
 };
