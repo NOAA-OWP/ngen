@@ -1388,7 +1388,7 @@
           <topic label="flowpath" href="namespacehy__features_1_1identifiers.html#ab42cf9ae9ac9c6b671487119969250a4"/>
           <topic label="inland" href="namespacehy__features_1_1identifiers.html#a0bf768e8b20b543cb14aa174eceb9844"/>
           <topic label="nexus" href="namespacehy__features_1_1identifiers.html#ab5df6247e598cd1aca30116b3aa9dbd3"/>
-          <topic label="seperator" href="namespacehy__features_1_1identifiers.html#a7ef7f5a74b881bed09f88f8c048f773f"/>
+          <topic label="separator" href="namespacehy__features_1_1identifiers.html#a702251e489d818962d14ae99b9ab4d55"/>
           <topic label="terminal" href="namespacehy__features_1_1identifiers.html#a65cdb974c26c338f2bc3956a84239826"/>
         </topic>
         <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html">
@@ -2866,7 +2866,7 @@
         <topic label="get_values_as_type" href="namespacerealization.html#a4b923a22dda92a7191b3f277e754884d"/>
         <topic label="is_var_name_in_collection" href="namespacerealization.html#a0dcefe582566b875b127ff489f423300"/>
         <topic label="valid_formulation_keys" href="namespacerealization.html#a6b6d6d33a273c0a3de61473e05881ef6"/>
-        <topic label="formulations" href="namespacerealization.html#a64fd571493f5bc103daa302fcfbd30f9"/>
+        <topic label="formulation_constructors" href="namespacerealization.html#af60e0abfbd9fa40024373e9012cb7769"/>
       </topic>
       <topic label="std" href="namespacestd.html">
         <topic label="hash&lt; nonstd::expected&lt; T &amp;, E &gt; &gt;" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html">

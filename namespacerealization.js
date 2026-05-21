@@ -20,5 +20,5 @@ var namespacerealization =
     [ "get_values_as_type", "namespacerealization.html#a4b923a22dda92a7191b3f277e754884d", null ],
     [ "is_var_name_in_collection", "namespacerealization.html#a0dcefe582566b875b127ff489f423300", null ],
     [ "valid_formulation_keys", "namespacerealization.html#a6b6d6d33a273c0a3de61473e05881ef6", null ],
-    [ "formulations", "namespacerealization.html#a64fd571493f5bc103daa302fcfbd30f9", null ]
+    [ "formulation_constructors", "namespacerealization.html#af60e0abfbd9fa40024373e9012cb7769", null ]
 ];

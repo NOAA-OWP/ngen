@@ -10,7 +10,7 @@ var namespacehy__features =
       [ "flowpath", "namespacehy__features_1_1identifiers.html#ab42cf9ae9ac9c6b671487119969250a4", null ],
       [ "inland", "namespacehy__features_1_1identifiers.html#a0bf768e8b20b543cb14aa174eceb9844", null ],
       [ "nexus", "namespacehy__features_1_1identifiers.html#ab5df6247e598cd1aca30116b3aa9dbd3", null ],
-      [ "seperator", "namespacehy__features_1_1identifiers.html#a7ef7f5a74b881bed09f88f8c048f773f", null ],
+      [ "separator", "namespacehy__features_1_1identifiers.html#a702251e489d818962d14ae99b9ab4d55", null ],
       [ "terminal", "namespacehy__features_1_1identifiers.html#a65cdb974c26c338f2bc3956a84239826", null ]
     ] ],
     [ "HY_Features", "classhy__features_1_1_h_y___features.html", "classhy__features_1_1_h_y___features" ]
