@@ -1,7 +1,7 @@
 var classngen_1_1_surface_layer =
 [
     [ "feature_type", "classngen_1_1_surface_layer.html#ad1ec52c5a456f72aa02e7a0c5d711449", null ],
-    [ "SurfaceLayer", "classngen_1_1_surface_layer.html#aefe7cce469f3764d115471a031766a0b", null ],
+    [ "SurfaceLayer", "classngen_1_1_surface_layer.html#a2b532e2f2fd62f5b624d353dc05613e1", null ],
     [ "current_timestep_epoch_time", "classngen_1_1_surface_layer.html#a178444ad250c0c8faaefa6c5263c618c", null ],
     [ "get_id", "classngen_1_1_surface_layer.html#acd4f99d80cbcac7f64c4b5211ba58f8c", null ],
     [ "get_name", "classngen_1_1_surface_layer.html#acda7ee56e91a6c395b9c25c74bf0494b", null ],
@@ -12,7 +12,6 @@ var classngen_1_1_surface_layer =
     [ "catchment_data", "classngen_1_1_surface_layer.html#a5689db4f3999584bea58d99aa9ff8b15", null ],
     [ "description", "classngen_1_1_surface_layer.html#a681d5a55c86a8d1f6d6f9f5fc57b6c63", null ],
     [ "features", "classngen_1_1_surface_layer.html#a2529e511bb8f0091ff321652988a3290", null ],
-    [ "nexus_ids", "classngen_1_1_surface_layer.html#a24c913d31621f15c52c05ceaeabd2d03", null ],
     [ "nexus_outputs_mgr", "classngen_1_1_surface_layer.html#a2a9db2399700b8dcb7c3f22ccffcca13", null ],
     [ "output_time_index", "classngen_1_1_surface_layer.html#a1d1dbf9050ac23f56ac06e9e3dffc176", null ],
     [ "processing_units", "classngen_1_1_surface_layer.html#a5cb15eea3711606ced64504aa3ea1749", null ],

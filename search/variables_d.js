@@ -12,7 +12,7 @@ var searchData=
   ['nexus_9',['nexus',['../namespacehy__features_1_1identifiers.html#ab5df6247e598cd1aca30116b3aa9dbd3',1,'hy_features::identifiers']]],
   ['nexus_5fcollection_10',['nexus_collection',['../class_multi_layer_parser_test.html#ad50a645c562bdf330f0fb3060f68cabb',1,'MultiLayerParserTest']]],
   ['nexus_5fdata_5fpath_11',['nexus_data_path',['../class_multi_layer_parser_test.html#a8ee6190260a9e8fe19abb7feef65e57d',1,'MultiLayerParserTest']]],
-  ['nexus_5fids_12',['nexus_ids',['../struct_partition_data.html#ace7481bdd629019f1f88b883932e69c9',1,'PartitionData::nexus_ids'],['../class_partitions___parser.html#a6a46163b60b747bae3140e7a0725012b',1,'Partitions_Parser::nexus_ids'],['../classngen_1_1_surface_layer.html#a24c913d31621f15c52c05ceaeabd2d03',1,'ngen::SurfaceLayer::nexus_ids']]],
+  ['nexus_5fids_12',['nexus_ids',['../struct_partition_data.html#ace7481bdd629019f1f88b883932e69c9',1,'PartitionData::nexus_ids'],['../class_partitions___parser.html#a6a46163b60b747bae3140e7a0725012b',1,'Partitions_Parser::nexus_ids']]],
   ['nexus_5foutfiles_13',['nexus_outfiles',['../classutils_1_1_per_nexus_csv_output_mgr.html#af76ee3e66e12b4fcc66a5f6557d8f937',1,'utils::PerNexusCsvOutputMgr']]],
   ['nexus_5foutputs_5fmgr_14',['nexus_outputs_mgr',['../classngen_1_1_surface_layer.html#a2a9db2399700b8dcb7c3f22ccffcca13',1,'ngen::SurfaceLayer']]],
   ['nexuses_15',['nexuses',['../class_network___test.html#ae789eeaf0218215360e2c2b7f3f60d8d',1,'Network_Test']]],

@@ -89,20 +89,18 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="classngen_1_1_surface_layer.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="none" points="211.62,-80.25 108.88,-80.25 108.88,0 211.62,0 211.62,-80.25"/>
-<text text-anchor="start" x="118.62" y="-66.75" font-family="Helvetica,sans-Serif" font-size="10.00">ngen::SurfaceLayer</text>
-<text text-anchor="start" x="114.38" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
-<text text-anchor="start" x="122.88" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">nexus_ids</text>
-<text text-anchor="start" x="114.38" y="-36.25" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
-<text text-anchor="start" x="122.88" y="-36.25" font-family="Helvetica,sans-Serif" font-size="10.00">nexus_outputs_mgr</text>
-<text text-anchor="start" x="112.88" y="-21" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="122.88" y="-21" font-family="Helvetica,sans-Serif" font-size="10.00">SurfaceLayer()</text>
-<text text-anchor="start" x="112.88" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="122.88" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">update_models()</text>
-<polygon fill="#666666" stroke="#666666" points="108.88,-63 108.88,-63 211.62,-63 211.62,-63 108.88,-63"/>
-<polygon fill="#666666" stroke="#666666" points="108.88,-32.5 108.88,-32.5 120.88,-32.5 120.88,-32.5 108.88,-32.5"/>
-<polygon fill="#666666" stroke="#666666" points="120.88,-32.5 120.88,-32.5 211.62,-32.5 211.62,-32.5 120.88,-32.5"/>
-<polygon fill="none" stroke="#666666" points="108.88,0 108.88,-80.25 211.62,-80.25 211.62,0 108.88,0"/>
+<polygon fill="white" stroke="none" points="211.62,-72.62 108.88,-72.62 108.88,-7.62 211.62,-7.62 211.62,-72.62"/>
+<text text-anchor="start" x="118.62" y="-59.12" font-family="Helvetica,sans-Serif" font-size="10.00">ngen::SurfaceLayer</text>
+<text text-anchor="start" x="114.38" y="-43.88" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
+<text text-anchor="start" x="122.88" y="-43.88" font-family="Helvetica,sans-Serif" font-size="10.00">nexus_outputs_mgr</text>
+<text text-anchor="start" x="112.88" y="-28.62" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="122.88" y="-28.62" font-family="Helvetica,sans-Serif" font-size="10.00">SurfaceLayer()</text>
+<text text-anchor="start" x="112.88" y="-13.38" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="122.88" y="-13.38" font-family="Helvetica,sans-Serif" font-size="10.00">update_models()</text>
+<polygon fill="#666666" stroke="#666666" points="108.88,-55.38 108.88,-55.38 211.62,-55.38 211.62,-55.38 108.88,-55.38"/>
+<polygon fill="#666666" stroke="#666666" points="108.88,-40.12 108.88,-40.12 120.88,-40.12 120.88,-40.12 108.88,-40.12"/>
+<polygon fill="#666666" stroke="#666666" points="120.88,-40.12 120.88,-40.12 211.62,-40.12 211.62,-40.12 120.88,-40.12"/>
+<polygon fill="none" stroke="#666666" points="108.88,-7.62 108.88,-72.62 211.62,-72.62 211.62,-7.62 108.88,-7.62"/>
 </a>
 </g>
 </g>
@@ -110,7 +108,7 @@
 <g id="edge2_Node000001_Node000003" class="edge">
 <title>Node1&#45;&gt;Node3</title>
 <g id="a_edge2_Node000001_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M143.05,-105.48C145.49,-96.34 147.8,-87.71 149.88,-79.91"/>
+<path fill="none" stroke="#63b8ff" d="M143.06,-105.45C146.32,-93.23 149.35,-81.9 151.93,-72.27"/>
 <polygon fill="none" stroke="#63b8ff" points="139.72,-104.39 140.52,-114.95 146.48,-106.19 139.72,-104.39"/>
 </a>
 </g>
