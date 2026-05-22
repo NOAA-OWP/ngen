@@ -17,6 +17,14 @@ inputs:
     mod-dir:
       required: true
       description: 'Path to the submodule with CMakeLists.txt to build'
+    initialize:
+      description: 'Initialize the ngen submodule, default'
+      required: false
+      default: 'true'
+    cmake-flags:
+      desciption: 'Options to pass to the cmake build configuration, e.g. -D<var> defines'
+      required: false
+      default: ''
 outputs:
   build-dir:
     description: "Directory build was performed in"
@@ -26,6 +34,7 @@ runs:
     steps:
         #This may be redundant
         - name: Init Submodules
+          if: ${{ inputs.initialize == 'true' }} #not true is false, don't init
           run: git submodule update --init --recursive -- ${{ inputs.mod-dir }}
           shell: bash
 
@@ -33,13 +42,23 @@ runs:
           if: |
             runner.os == 'macOS'
           run: |
-            echo "FC=gfortran-11" >> $GITHUB_ENV
+            # see macOS image readmes for supported versions
+            # https://github.com/actions/runner-images/tree/main/images/macos
+            echo FC="gfortran-12" >> $GITHUB_ENV
           shell: bash
 
         - name: Cmake Initialization
           id: cmake_init
           run: |
-            cmake -B ${{ inputs.mod-dir}}/${{ inputs.build-dir }} -S ${{ inputs.mod-dir }}
+            if [ ${{ runner.os }} == 'macOS' ]
+            then
+                export OPT_LEVEL_FLAG="-O0"
+            else
+                export OPT_LEVEL_FLAG="-O1"
+            fi
+            echo CFLAGS="-fsanitize=address ${OPT_LEVEL_FLAG:?Optimization flag var not set} -g -fno-omit-frame-pointer -Werror" >> $GITHUB_ENV
+            echo CXXFLAGS="-fsanitize=address ${OPT_LEVEL_FLAG:?Optimization flag var not set} -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override" >> $GITHUB_ENV
+            cmake -B ${{ inputs.mod-dir}}/${{ inputs.build-dir }} -S ${{ inputs.mod-dir }} ${{ inputs.cmake-flags }}
             echo "build-dir=$(echo ${{ inputs.mod-dir}}/${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
           shell: bash
 

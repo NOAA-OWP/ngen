@@ -32,7 +32,7 @@ tasks:
       ./compiler.sh
       popd
       pip install pyyaml bmipy
-      cmake -S . -B cmake_build -DBMI_C_LIB_ACTIVE=1 -DBMI_FORTRAN_ACTIVE=1 -DNGEN_ACTIVATE_ROUTING=1
+      cmake -S . -B cmake_build -DNGEN_WITH_BMI_C=ON -DNGEN_WITH_BMI_FORTRAN=ON -DNGEN_ACTIVATE_ROUTING=1
       cmake --build cmake_build --target all
   - name: Workshell
     before: |

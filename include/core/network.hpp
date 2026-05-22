@@ -17,7 +17,12 @@
 #include <features/Features.hpp>
 #include <FeatureBuilder.hpp>
 
+#include "HY_Features_Ids.hpp"
+
 namespace network {
+
+  const static int DEFAULT_LAYER_ID = 0;
+
   /**
    * @brief Selector for using different traversal orders for linear return
    */
@@ -157,7 +162,7 @@ namespace network {
          * @brief Construct a new Network object from features in fabric, creating edges between feature properties defined by link_key
          * 
          * @param features a geojson::GeoJSON collection of features to add as nodes to the graph
-         * @param link_key the property to read from features to determie edge linking, i.e. 'toid'
+         * @param link_key the property to read from features to determine edge linking, i.e. 'toid'
          */
         Network( geojson::GeoJSON features, std::string* link_key);
 
@@ -197,7 +202,7 @@ namespace network {
          * @param order What order to return results in
          * @return auto 
          */
-        auto filter(std::string type, SortOrder order = SortOrder::Topological)
+        auto filter(std::string type, SortOrder order = SortOrder::Topological) const
         {
           //todo need to worry about validating input???
           //if type isn't found as a prefix, this iterator range should be empty,
@@ -205,12 +210,64 @@ namespace network {
           return get_sorted_index(order) | boost::adaptors::reversed
                         | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
                         | boost::adaptors::filtered([type](std::string const& s) { 
-                          if(type == "nex"){
-                            return s.substr(0,3) == type || s.substr(0,3) == "tnx";
+                          //seperate the prefix from the numeric id
+                          std::string id_type = s.substr(0, s.find(hy_features::identifiers::separator) );
+                          //Allow subtypes, e.g. inx, tnx, cnx, to be pass the filter for a generic nexus type
+                          if(type == hy_features::identifiers::nexus){
+                            return hy_features::identifiers::isNexus(id_type);
                           }
-                          return s.substr(0,3) == type; 
+                          //Allow subtypes, e.g. wb to be pass the filter for a generic catchment type
+                          if(type == hy_features::identifiers::catchment){
+                            return hy_features::identifiers::isCatchment(id_type);
+                          }
+                          //any other subtype filter gets only exact matches
+                          return id_type == type; 
                         });
 
+        }
+
+        /**
+         * @brief Provides a boost transform_iterator, filtered by @p type , to the topologically ordered graph vertex string id's
+         * 
+         * This function is useful when only interested in a single type of feature.
+         * It returns the a topologically ordered set of feature ids.  For example, to print all catchments
+         * in the network:
+         * @code {.cpp}
+         * for( auto catchment : network.filter('cat') ){
+         *    std::cout << catchment;
+         * }
+         * @endcode
+         * 
+         * @param type The type of feature to filter for, i.e. 'cat', 'nex'
+         * @param target_layer The layer that filtered results should be in
+         * @param order What order to return results in
+         * @return auto 
+         */
+        auto filter(std::string type, int target_layer, SortOrder order = SortOrder::Topological) const
+        {
+          //todo need to worry about valivdating input???
+          //if type isn't found as a prefix, this iterator range should be empty,
+          //which is a reasonable semantic
+          return get_sorted_index(order) | boost::adaptors::reversed
+                        | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
+                        | boost::adaptors::filtered([this,type,target_layer](std::string const& s) { 
+                          //seperate the prefix from the numeric id
+                          std::string id_type = s.substr(0, s.find(hy_features::identifiers::separator) );
+
+                          bool type_matches;
+
+                          if (type == hy_features::identifiers::nexus) type_matches = hy_features::identifiers::isNexus(id_type);
+                          else if (type == hy_features::identifiers::catchment) type_matches = hy_features::identifiers::isCatchment(id_type);
+                          else type_matches = (id_type == type);
+
+                          if (!type_matches) return false;
+
+                          auto iter = this->layer_map.find(s);
+                          if (iter == this->layer_map.end()) return false;
+
+                          auto const& layer = iter->second;
+                          return layer == target_layer;
+                        });
         }
         /**
          * @brief Get the string id of a given graph vertex_descriptor @p idx
@@ -220,7 +277,7 @@ namespace network {
          * 
          * @throw std::invalid_argument if @p idx is not in the range of valid vertex descriptors [0, num_verticies)
          */
-        std::string get_id( Graph::vertex_descriptor idx);
+        std::string get_id( Graph::vertex_descriptor idx) const;
 
         /**
          * @brief Get the origination (upstream) ids (immediate neighbors) of all vertices with an edge connecting to @p id
@@ -228,7 +285,7 @@ namespace network {
          * @param id 
          * @return std::vector<std::string> 
          */
-        std::vector<std::string> get_origination_ids(std::string id);
+        std::vector<std::string> get_origination_ids(const std::string& id);
 
         /**
          * @brief Get the destination (downstream) ids (immediate neighbors) of all vertices with an edge from @p id
@@ -236,7 +293,7 @@ namespace network {
          * @param id 
          * @return std::vector<std::string> 
          */
-        std::vector<std::string> get_destination_ids(std::string id);
+        std::vector<std::string> get_destination_ids(const std::string& id);
 
         /**
          * @brief The number of features in the network (number of vertices)
@@ -285,7 +342,7 @@ namespace network {
          */
         NetworkIndexT topo_order;
 
-        NetworkIndexT tdfp_order;
+        mutable NetworkIndexT tdfp_order;
 
         /**
          * @brief Vector of headwater features
@@ -299,7 +356,7 @@ namespace network {
          */
         NetworkIndexT tailwaters_idx;
 
-        //There are "classes" of tailwater to consider, "Free" "Coastal" "Internal" ect
+        //There are "classes" of tailwater to consider, "Free" "Coastal" "Internal" etc
         //Really the same is true for head waters in the "Free" and "Internal" sense where
         //there are interactions of boundary conditions
         //TODO Distributary network??? Has topological "wildcard"
@@ -316,13 +373,19 @@ namespace network {
          * 
          */
         std::unordered_map<std::string, Graph::vertex_descriptor> descriptor_map;
+
+        /**
+         * @brief Mapping of identifier to hydrofabric layer
+         * 
+        */
+        std::unordered_map<std::string, long> layer_map;
         
         /**
          * @brief Get an index of the graph in a particular order.
          * @param order The desired order
          * @param cache NOT YET IMPLEMENTED. Whether to cache the generated index. Default is true.
          */
-        const NetworkIndexT& get_sorted_index(SortOrder order = SortOrder::Topological, bool cache = true);
+        const NetworkIndexT& get_sorted_index(SortOrder order = SortOrder::Topological, bool cache = true) const;
 
     };
 }

@@ -133,7 +133,7 @@ public:
 class Network_Test2 : public Network_Test, public ::testing::Test{
 public:
   Network_Test2(){}
-  void SetUp(){
+  void SetUp() override {
     this->add_catchment("cat-0", "nex-0");
     this->add_catchment("cat-1", "nex-0");
     this->add_nexus("nex-0", "cat-2");
@@ -167,7 +167,7 @@ TEST_P(Network_Test1, TestNetworkHeadwaterIndex)
   for(auto it = begin; it != end; ++it)
   {
     std::string id =  n.get_id(*it);
-    ASSERT_TRUE( id  ==  "cat-0" | id ==  "cat-1");
+    ASSERT_TRUE( id  ==  "cat-0" || id ==  "cat-1");
   }
 }
 

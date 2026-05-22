@@ -6,6 +6,8 @@
 #include <iostream>
 #include <memory>
 
+#include "NullStream.hpp"
+
 namespace utils
 {
     /** This class provides a copyable interface to a std::ostream or std::ostream like object that may not support being copied. */
@@ -14,13 +16,23 @@ namespace utils
     {
         public:
 
-            /** Default constructor intended for use by containers that need an empty constructor */
+            /**
+             * @brief Get a reference to a singleton StreamHandler that manages a null stream.
+             * Anything written to this stream will be discarded.
+             * 
+             */
+            static StreamHandler& getNullStream() {
+                static utils::NullStream null_stream;
+                static StreamHandler singleton(std::shared_ptr<std::ostream>(&null_stream, [](void*) {}));
+                return singleton;
+            }
 
-            StreamHandler() : output_stream(std::shared_ptr<std::ostream>()), sep(", ")
+            /** Default constructor intended for use by containers that need an empty constructor */
+            StreamHandler() : output_stream(getNullStream().output_stream), sep(", ")
             {
             }
 
-            /** Create a Stream Handler given a pointer to a ostream object and the seperator to be used in serialization */
+            /** Create a Stream Handler given a pointer to a ostream object and the separator to be used in serialization */
 
             StreamHandler(std::shared_ptr<std::ostream> s) : sep(", ")
             {
@@ -95,7 +107,7 @@ namespace utils
         protected:
 
         std::shared_ptr<std::ostream> output_stream;    /**< The shared pointer to the managed stream object*/
-        std::string sep;                                /**< The seperator string to be used in serialization */
+        std::string sep;                                /**< The separator string to be used in serialization */
 
 
     };

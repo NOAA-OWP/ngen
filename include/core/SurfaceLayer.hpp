@@ -1,0 +1,41 @@
+#ifndef __NGEN_SURFACE_LAYER__
+#define __NGEN_SURFACE_LAYER__
+
+#include "Layer.hpp"
+#include "utilities/output/NexusOutputsMgr.hpp"
+
+namespace ngen
+{
+    class SurfaceLayer : public Layer
+    {
+        public:
+        
+        SurfaceLayer(
+                const LayerDescription& desc, 
+                const std::vector<std::string>& p_u, 
+                const Simulation_Time& s_t, 
+                feature_type& f, 
+                geojson::GeoJSON cd, 
+                long idx,
+                const std::shared_ptr<utils::NexusOutputsMgr> &nexus_outputs_mgr) :
+                    Layer(desc,p_u,s_t,f,cd,idx), 
+                    nexus_outputs_mgr(nexus_outputs_mgr)
+        {
+
+        }
+
+        /***
+         * @brief Run one simulation timestep for each model in this layer
+        */
+        void update_models(boost::span<double> catchment_outflows, 
+                           std::unordered_map<std::string, int> &catchment_indexes,
+                           boost::span<double> nexus_downstream_flows,
+                           std::unordered_map<std::string, int> &nexus_indexes,
+                           int current_step) override;
+
+        private:
+        std::shared_ptr<utils::NexusOutputsMgr> nexus_outputs_mgr;
+    };
+}
+
+#endif

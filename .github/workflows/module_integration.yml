@@ -3,9 +3,9 @@ name: Module Integration Tests
 # Controls when the action will run.
 on:
   push:
-    branches: [ master, dev, notreal ]
+    branches: [ master, dev, notreal, release-* ]
   pull_request:
-    branches: [ master, dev, notreal ]
+    branches: [ master, dev, notreal, release-* ]
   workflow_dispatch:
 
 env:
@@ -13,6 +13,7 @@ env:
   # TODO: add something later that can check the runners for hyperthreading
   LINUX_NUM_PROC_CORES: 2
   MACOS_NUM_PROC_CORES: 3
+  ASAN_OPTIONS: detect_leaks=false
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -21,55 +22,20 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
     
-      - name: Build Surfacebmi
-        id: submod_build_1
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: " extern/noah-owp-modular/"
-          targets: "surfacebmi"
-      
-      - name: Build ISO C Fortran BMI
-        id: submod_build_2
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/iso_c_fortran_bmi/"
-      
-      - name: Build CFE
-        id: submod_build_3
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/cfe/"
-          targets: "cfebmi"
-
-      - name: Build PET
-        id: submod_build_5
-        uses: ./.github/actions/ngen-submod-build
-        with:
-          mod-dir: "extern/evapotranspiration/evapotranspiration"
-          targets: "petbmi"
-
-      - name: Build SLoTH
-        id: submod_build_6
-        uses: ./.github/actions/ngen-submod-build
-        with:
-          mod-dir: "extern/sloth/"
-          targets: "slothmodel"
-
-      - name: Build Ngen
+      - name: Build NGen
         uses: ./.github/actions/ngen-build
         with:
           targets: "ngen"
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
-          #is this required for this test?
           bmi_c: 'ON'
           bmi_fortran: 'ON'
         timeout-minutes: 15
@@ -77,11 +43,13 @@ jobs:
       - name: Run surfacebmi plus cfebmi
         run: |
           inputfile='data/example_bmi_multi_realization_config.json'
+          ./cmake_build/ngen || true
           ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" $inputfile
 
       - name: Run surfacebmi, cfebmi and petbmi
         run: |
           inputfile='data/example_bmi_multi_realization_config_w_noah_pet_cfe.json'
+          ./cmake_build/ngen || true
           ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" $inputfile
 
 # Run t-route/pybind integration test
@@ -89,19 +57,22 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-22.04] # [ubuntu-latest, macos-12] #TODO: Fix #505
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build Ngen
         uses: ./.github/actions/ngen-build
         with:
-          targets: "test_routing_pybind"
+          # Build `ngen` alongside `test_routing_pybind` so this job covers
+          # the routing-enabled compilation of src/NGen.cpp — pybind-only
+          # builds skip everything gated by NGEN_WITH_ROUTING.
+          targets: "test_routing_pybind ngen"
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
           #is this required for this test?
           use_python: 'ON'
@@ -142,23 +113,19 @@ jobs:
           python3 -m venv .venv
           . .venv/bin/activate
           cd t-route
-          pip install -U pip
+          pip install 'pip>=23.0,<23.1'
           pip install -U setuptools
           pip install -r requirements.txt
-          pip install deprecated pyarrow tables geopandas
+          pip install deprecated 'pyarrow==11.0.0' tables geopandas numpy
           if [ ${{ runner.os }} == 'macOS' ] 
           then
             export LIBRARY_PATH=/usr/local/lib/gcc/11/
             export LD_LIBRARY_PATH=/usr/local/lib/gcc/11/
           fi
-          sed -i.bak 's/NETCDF}"/NETCDF}\/include"/' compiler.sh
+          export NETCDFALTERNATIVE=${NETCDF}/include
           export FC=gfortran
           export F90=gfortran 
-          ./compiler.sh
-          cd src
-          pip install troute-nwm/
-          pip install --install-option="--use-cython" troute-network/
-          pip install --install-option="--use-cython" troute-routing/
+          ./compiler.sh no-e
           
           deactivate
 

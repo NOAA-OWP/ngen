@@ -1,17 +1,15 @@
 #ifdef ROUTING_PYBIND_TESTS_ACTIVE
 #include "gtest/gtest.h"
 #include "Routing_Py_Adapter.hpp"
+#include "FileChecker.h"
 #include <string>
 #include <pybind11/embed.h>
 #include <pybind11/stl.h>
 namespace py = pybind11;
 
-//using namespace std;
-
-
 class RoutingPyBindTest : public ::testing::Test {
 private:
-  static std::shared_ptr<utils::ngenPy::InterpreterUtil> interperter;
+  static std::shared_ptr<utils::ngenPy::InterpreterUtil> interpreter;
 
 protected:
 
@@ -23,8 +21,8 @@ protected:
 
     }
 };
-//Make sure the interperter is instansiated and lives throught the test class
-std::shared_ptr<utils::ngenPy::InterpreterUtil> RoutingPyBindTest::interperter = utils::ngenPy::InterpreterUtil::getInstance();
+//Make sure the interpreter is instantiated and lives throughout the test class
+std::shared_ptr<utils::ngenPy::InterpreterUtil> RoutingPyBindTest::interpreter = utils::ngenPy::InterpreterUtil::getInstance();
 
 TEST_F(RoutingPyBindTest, TestRoutingPyBind)
 {
@@ -33,8 +31,12 @@ TEST_F(RoutingPyBindTest, TestRoutingPyBind)
   //std::vector<double> nexus_values_vec{1.1, 2.2, 3.3, 4.4, 5.5};
 
   //SET THESE AS INPUTS
-  std::string t_route_config_file_with_path = "./test/data/routing/ngen_routing_config_unit_test.yaml";
-
+  std::vector<std::string> paths = {
+          "./test/data/routing/ngen_routing_config_unit_test.yaml",
+          "../test/data/routing/ngen_routing_config_unit_test.yaml",
+          "../../test/data/routing/ngen_routing_config_unit_test.yaml"
+  };
+  std::string t_route_config_file_with_path = utils::FileChecker::find_first_readable(paths);
   //Note: Currently, delta_time is set in the t-route yaml configuration file, and the
   //number_of_timesteps is determined from the total number of nexus outputs in t-rout
   //It is recommended to still pass these values to the routing_py_adapter object in

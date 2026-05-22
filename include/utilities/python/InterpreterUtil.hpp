@@ -1,9 +1,10 @@
 #ifndef NGEN_INTERPRETERUTIL_HPP
 #define NGEN_INTERPRETERUTIL_HPP
 
-#ifdef ACTIVATE_PYTHON
+#include <NGenConfig.h>
 
-#include <cstdlib>
+#if NGEN_WITH_PYTHON
+
 #include <map>
 #include <pybind11/embed.h>
 #include <pybind11/stl.h>
@@ -30,18 +31,17 @@ namespace utils {
         class InterpreterUtil {
 
         public:
-            static std::shared_ptr<InterpreterUtil> getInstance() {
                 /**
-                 * @brief Singleton instance of embdedded python interpreter.
+                 * @brief Singleton instance of embedded python interpreter.
                  * 
-                 * Note that if no client holds a currernt reference to this singleton, it will get destroyed
+                 * Note that if no client holds a current reference to this singleton, it will get destroyed
                  * and the next call to getInstance will create and initialize a new scoped interpreter
                  * 
                  * This is required for the simple reason that a traditional static singleton instance has no guarantee
-                 * about the destrutction order of resources across multiple compliation units,
+                 * about the destruction order of resources across multiple compilation units,
                  * and this will cause seg faults if the python interpreter is torn down before the destruction of bound modules
                  * (such as this class' Path module).  If the interpreter is not available when those destructors are called,
-                 * a seg fault will occur.  With this implementaiton, the interpreter is guarnateed to exist as long as anything 
+                 * a seg fault will occur.  With this implementation, the interpreter is guaranteed to exist as long as anything
                  * referencing it needs it, and then can cleanly clean up internal references before the `py::scoped_interpreter`
                  * guard is destroyed, removing the python interpreter.
                  * 
@@ -52,20 +52,7 @@ namespace utils {
                  * https://github.com/pybind/pybind11/issues/1598
                  * 
                  */
-                //Functionally, a global instance variable
-                //This can be made a class attribute, but would need to find a place to put a single definition
-                //e.g. make a .cpp file
-                static std::weak_ptr<InterpreterUtil> _instance;
-                std::shared_ptr<InterpreterUtil> instance = _instance.lock();
-                if(!instance){
-                    //instance is null
-                    InterpreterUtil* pt = new InterpreterUtil();
-                    instance = std::shared_ptr<InterpreterUtil>(pt, Deleter{});
-                    //update the weak ref
-                    _instance = instance;
-                }
-                return instance;
-            }
+            static std::shared_ptr<InterpreterUtil> getInstance();
 
             struct Deleter {
                 /**
@@ -80,20 +67,7 @@ namespace utils {
             friend Deleter;
 
         private:
-            InterpreterUtil() {
-                guardPtr = std::make_shared<py::scoped_interpreter>();
-                // Go ahead and do these
-                importTopLevelModule("pathlib");
-                importTopLevelModule("sys");
-                Path = importedTopLevelModules["pathlib"].attr("Path");
-
-                py::list venv_package_dirs = getVenvPackagesDirOptions();
-                // Add any found options
-                for (auto &opt : venv_package_dirs) {
-                    addToPath(std::string(py::str(opt.attr("parent"))));
-                    addToPath(std::string(py::str(opt)));
-                }
-            }
+            InterpreterUtil();
 
             ~InterpreterUtil() = default;
 
@@ -108,31 +82,14 @@ namespace utils {
              *
              * @param directoryPath The desired directory to add to the Python system path.
              */
-            static void addToPyPath(const std::string &directoryPath) {
-                getInstance()->addToPath(directoryPath);
-            }
+            static void addToPyPath(const std::string &directoryPath);
 
             /**
              * Add to the Python system path of this instance.
              *
              * @param directoryPath The desired directory to add to the Python system path.
              */
-            void addToPath(const std::string &directoryPath) {
-                std::tuple<py::list, std::vector<std::string>> sysPathTuple = getSystemPath();
-                py::list sys_path = std::get<0>(sysPathTuple);
-                std::vector<std::string> sys_path_vector = std::get<1>(sysPathTuple);
-
-                py::object requestedDirPath = Path(directoryPath);
-                if (py::bool_(requestedDirPath.attr("is_dir")())) {
-                    if (std::find(sys_path_vector.begin(), sys_path_vector.end(), directoryPath) == sys_path_vector.end()) {
-                        sys_path.attr("insert")(sys_path_vector.size(), py::str(directoryPath));
-                    }
-                }
-                else {
-                    std::string dirPath = py::str(requestedDirPath);
-                    throw std::runtime_error("Cannot add non-existing directory '" + dirPath + "' to Python PATH");
-                }
-            }
+            void addToPath(const std::string &directoryPath);
 
             /**
              * Return bound Python top level module handle from the singleton instance, importing the module if needed.
@@ -144,9 +101,7 @@ namespace utils {
              * @param name Name of the desired top level module or package.
              * @return Handle to the desired top level Python module.
              */
-            static py::object getPyModule(const std::string &name) {
-                return getInstance()->getModule(name);
-            }
+            static py::object getPyModule(const std::string &name);
 
             /**
              * Return bound Python module handle from the singleton instance, importing a top-level module if necessary.
@@ -162,9 +117,7 @@ namespace utils {
              *                         and (when applicable) submodules.
              * @return Handle to the desired Python module or type.
              */
-            static py::object getPyModule(const std::vector<std::string> &moduleLevelNames) {
-                return getInstance()->getModule(moduleLevelNames);
-            }
+            static py::object getPyModule(const std::vector<std::string> &moduleLevelNames);
 
             /**
              * Return a bound handle to a top-level Python module, importing the module if necessary.
@@ -176,12 +129,7 @@ namespace utils {
              * @param name Name of the desired top level module or namespace package.
              * @return Handle to the desired top level Python module.
              */
-            py::object getModule(const std::string &name) {
-                if (!isImported(name)) {
-                    importTopLevelModule(name);
-                }
-                return importedTopLevelModules.find(name)->second;
-            }
+            py::object getModule(const std::string &name);
 
             /**
              * Return a bound handle to a Python module or type, importing the top-level module if necessary.
@@ -193,66 +141,16 @@ namespace utils {
              *                         and (when applicable) submodules.
              * @return Handle to the desired Python module or type.
              */
-            py::object getModule(const std::vector<std::string> &moduleLevelNames) {
-                // Start with top-level module name, then descend through attributes as needed
-                py::object module = getModule(moduleLevelNames[0]);
-                for (size_t i = 1; i < moduleLevelNames.size(); ++i) {
-                    module = module.attr(moduleLevelNames[i].c_str());
-                }
-                return module;
-            }
+            py::object getModule(const std::vector<std::string> &moduleLevelNames);
 
         protected:
-
-            /**
-             * Search for and return a recognized virtual env directory.
-             *
-             * Both ``.venv`` and ``venv`` will be recognized.  Search locations are the current working directory, one
-             * level up (parent directory), and two levels up, with the first find being return.
-             *
-             * A Python ``None`` object is returned if no existing directory is found in the search locations.
-             *
-             * @return A Python Path object for a found venv dir, or a Python ``None`` object.
-             */
-            py::object searchForVenvDir() {
-                py::object current_dir = Path.attr("cwd")();
-                std::vector<py::object> parent_options = {
-                        current_dir,
-                        current_dir.attr("parent"),
-                        current_dir.attr("parent").attr("parent")
-                };
-                std::vector<std::string> dir_name_options = {".venv", "venv"};
-                for (py::object &parent_option : parent_options) {
-                    for (const std::string &dir_name_option : dir_name_options) {
-                        py::object venv_dir_candidate = parent_option.attr("joinpath")(dir_name_option);
-                        if (py::bool_(venv_dir_candidate.attr("is_dir")())) {
-                            return venv_dir_candidate;
-                        }
-                    }
-                }
-                return py::none();
-            }
 
             /**
              * Find any virtual environment site packages directory, starting from options under the current directory.
              *
              * @return The absolute path of the site packages directory, as a string.
              */
-            py::list getVenvPackagesDirOptions() {
-                // Look for a local virtual environment directory also, if there is one
-                const char* env_var_venv = std::getenv("VIRTUAL_ENV");
-                py::object venv_dir = env_var_venv != nullptr ? Path(env_var_venv): searchForVenvDir();
-
-                if (!venv_dir.is_none() && py::bool_(venv_dir.attr("is_dir")())) {
-                    // Resolve the full path
-                    venv_dir = venv_dir.attr("resolve")();
-                    // Get options for the packages dir
-                    py::list site_packages_options = py::list(venv_dir.attr("glob")("**/site-packages/"));
-                    return site_packages_options;
-                }
-
-                return py::list();
-            }
+            py::list getVenvPackagesDirOptions();
 
         public:
             /**
@@ -261,40 +159,14 @@ namespace utils {
              * @return A tuple containing the Python list object and a C++ vector of strings, each representing the
              *         current Python system path.
              */
-            inline std::tuple<py::list, std::vector<std::string>> getSystemPath() {
-                py::list sys_path = importedTopLevelModules.find("sys")->second.attr("path");
-                std::vector<std::string> sys_path_vector(sys_path.size());
-                size_t i = 0;
-                for (auto item : sys_path) {
-                    sys_path_vector[i++] = py::str(item);
-                }
-                return std::make_tuple(sys_path, sys_path_vector);
-            }
+            std::tuple<py::list, std::vector<std::string>> getSystemPath();
+
             /**
              * Find any virtual environment site packages directory, starting from options under the current directory.
              *
              * @return The absolute path of the site packages directory, as a string.
              */
-            std::string getDiscoveredVenvPath() {
-                // Look for a local virtual environment directory also, if there is one
-                const char* env_var_venv = std::getenv("VIRTUAL_ENV");
-                if(env_var_venv != nullptr){
-                    //std::string r(env_var_venv);
-                    return std::string(env_var_venv);
-                }
-                py::object venv_dir;
-                venv_dir = searchForVenvDir();
-                if(venv_dir.is_none()){
-                    return std::string("None");
-                }
-                if(py::bool_(venv_dir.attr("is_dir")())) {
-                    // Probably better to not resolve symlinks so you can see where it was found...
-                    //venv_dir = venv_dir.attr("resolve")();
-                    return py::str(venv_dir);
-                }
-                assert("Unexpected value of venv_dir in InterpreterUtil::getDiscoveredVenvPath()!");
-                return ""; // silence warning
-            }
+            std::string getDiscoveredVenvPath();
 
         protected:
             /**
@@ -308,9 +180,7 @@ namespace utils {
              *                         and (when applicable) submodules.
              * @return Whether an Python module is imported.
              */
-            inline bool isImported(const std::vector<std::string> &moduleLevelNames) {
-                return isImported(moduleLevelNames[0]);
-            }
+            bool isImported(const std::vector<std::string> &moduleLevelNames);
 
             /**
              * Get whether a top level Python module is imported.
@@ -318,9 +188,7 @@ namespace utils {
              * @param name The name of the module/package.
              * @return Whether an Python module is imported.
              */
-            inline bool isImported(const std::string &name) {
-                return importedTopLevelModules.find(name) != importedTopLevelModules.end();
-            }
+            bool isImported(const std::string &name);
 
         private:
             //List this FIRST, to ensure it isn't destroyed before anything else (e.g. Path) that might
@@ -332,6 +200,14 @@ namespace utils {
 
             py::object Path;
 
+            static const int python_major;
+            static const int python_minor;
+            static const int python_patch;
+            static const char* python_version;
+
+            // NumPy version is not broken down by CMake
+            static const char* numpy_version;
+
             /**
              * Import a specified top level module.
              *
@@ -339,14 +215,11 @@ namespace utils {
              *
              * @param topLevelName The name of the desired top level Python module to import.
              */
-            inline void importTopLevelModule(const std::string &topLevelName) {
-                importedTopLevelModules[topLevelName] = py::module_::import(topLevelName.c_str());
-            }
-
-        };
+            void importTopLevelModule(const std::string &topLevelName);
+        }; // class InterpreterUtil
     }
 }
 
-#endif // ACTIVATE_PYTHON
+#endif // NGEN_WITH_PYTHON
 
 #endif // NGEN_INTERPRETERUTIL_HPP

@@ -38,7 +38,7 @@ namespace geojson {
                 return boost::get<coordinate_t>(this->geom);
             }
 
-            void visit(FeatureVisitor& visitor) {
+            void visit(FeatureVisitor& visitor) override {
                 visitor.visit(this);
             }
     };

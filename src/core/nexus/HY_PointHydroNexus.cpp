@@ -6,27 +6,27 @@ typedef boost::error_info<struct tag_errmsg, std::string> errmsg_info;
 
 struct invalid_downstream_request : public boost::exception, public std::exception
 {
-  const char *what() const noexcept { return "All downstream catchments can not request more than 100% of flux in total"; }
+  const char *what() const noexcept override { return "All downstream catchments can not request more than 100% of flux in total"; }
 };
 
 struct add_to_summed_nexus : public boost::exception, public std::exception
 {
-  const char *what() const noexcept { return "Can not add water to a summed point nexus"; }
+  const char *what() const noexcept override { return "Can not add water to a summed point nexus"; }
 };
 
 struct request_from_empty_nexus : public boost::exception, public std::exception
 {
-  const char *what() const noexcept { return "Can not release water from an empty nexus"; }
+  const char *what() const noexcept override { return "Can not release water from an empty nexus"; }
 };
 
 struct completed_time_step : public boost::exception, public std::exception
 {
-  const char *what() const noexcept { return "Can not operate on a completed time step"; }
+  const char *what() const noexcept override { return "Can not operate on a completed time step"; }
 };
 
 struct invalid_time_step : public boost::exception, public std::exception
 {
-  const char *what() const noexcept { return "Time step before minimum time step requested"; }
+  const char *what() const noexcept override { return "Time step before minimum time step requested"; }
 };
 
 HY_PointHydroNexus::HY_PointHydroNexus(std::string nexus_id, Catchments receiving_catchments) : HY_HydroNexus( nexus_id, receiving_catchments), upstream_flows()
@@ -54,14 +54,24 @@ double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_st
 
     if ( percent_flow > 100.0)
     {
-        // no downstream may ever recieve more than 100% of flows
+        // no downstream may ever receive more than 100% of flows
 
         BOOST_THROW_EXCEPTION(invalid_downstream_request());
     }
+
+    if ( get_contributing_catchments().size() == 0 ) {
+        // there are no contributing catchments so there is no flow to release
+        return 0.0;
+    }
+
     else if ( s1 == upstream_flows.end() )
     {
         // there are no recorded flows for this time.
         // throw exception
+
+        std::cerr << "No recorded flows for time step " << t << "\n";
+        std::cerr << "catchment id requesting flow: " << catchment_id << "\n";
+        std::cerr << "Nex id: " << id << std::endl;
 
         BOOST_THROW_EXCEPTION(request_from_empty_nexus() );
     }

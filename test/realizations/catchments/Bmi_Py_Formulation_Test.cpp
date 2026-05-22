@@ -1,7 +1,5 @@
 #ifdef NGEN_BMI_PY_TESTS_ACTIVE
 
-#ifdef ACTIVATE_PYTHON
-
 #include "gtest/gtest.h"
 #include <boost/date_time.hpp>
 #include <boost/property_tree/ptree.hpp>
@@ -13,6 +11,7 @@
 #include "Bmi_Py_Formulation.hpp"
 #include "python/InterpreterUtil.hpp"
 #include <CsvPerFeatureForcingProvider.hpp>
+#include "utilities/FileChecker.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
@@ -35,7 +34,7 @@ typedef struct py_formulation_example_scenario {
 
 class Bmi_Py_Formulation_Test : public ::testing::Test {
 private:
-    static std::shared_ptr<InterpreterUtil> interperter;
+    static std::shared_ptr<InterpreterUtil> interpreter;
 protected:
     
     py::object Path;
@@ -52,7 +51,7 @@ protected:
     }
 
     static std::shared_ptr<models::bmi::Bmi_Py_Adapter> get_friend_bmi_model(Bmi_Py_Formulation& formulation) {
-        return formulation.get_bmi_model();
+        return std::dynamic_pointer_cast<models::bmi::Bmi_Py_Adapter>(formulation.get_bmi_model());
     }
 
     static time_t get_friend_bmi_model_start_time_forcing_offset_s(Bmi_Py_Formulation& formulation) {
@@ -63,24 +62,16 @@ protected:
     //    return formulation.forcing.get_value_for_param_name(param_name);
     //}
 
-    static std::string get_friend_forcing_file_path(const Bmi_Py_Formulation& formulation) {
-        return formulation.get_forcing_file_path();
-    }
-
     static time_t get_friend_forcing_start_time(Bmi_Py_Formulation& formulation) {
         return formulation.forcing->get_data_start_time();
-    }
-
-    static bool get_friend_is_bmi_using_forcing_file(const Bmi_Py_Formulation& formulation) {
-        return formulation.is_bmi_using_forcing_file();
     }
 
     static std::string get_friend_model_type_name(Bmi_Py_Formulation& formulation) {
         return formulation.get_model_type_name();
     }
 
-    static double get_friend_var_value_as_double(Bmi_Py_Formulation& formulation, const string& var_name) {
-        return formulation.get_var_value_as_double(var_name);
+    static double get_friend_var_value_as_double(Bmi_Py_Formulation& formulation, const std::string& var_name) {
+        return formulation.get_var_value_as_double(0, var_name);
     }
 
     static time_t parse_forcing_time(const std::string& date_time_str) {
@@ -96,13 +87,6 @@ protected:
         boost::posix_time::time_duration diff = pt - timet_start;
         return diff.ticks() / boost::posix_time::time_duration::rep_type::ticks_per_second;
     }
-
-    /**
-     * Find the repo root directory, starting from the current directory and working upward.
-     *
-     * @return The absolute path of the repo root, as a string.
-     */
-    static std::string py_find_repo_root();
 
     /**
      * Search for and return the first existing example of a collection of directories, using Python to perform search.
@@ -176,19 +160,18 @@ protected:
                                    const std::vector<std::string> &file_basenames);
 
 };
-//Make sure the interperter is instansiated and lives throught the test class
-std::shared_ptr<InterpreterUtil> Bmi_Py_Formulation_Test::interperter = InterpreterUtil::getInstance();
+//Make sure the interpreter is instansiated and lives throught the test class
+std::shared_ptr<InterpreterUtil> Bmi_Py_Formulation_Test::interpreter = InterpreterUtil::getInstance();
 
 void Bmi_Py_Formulation_Test::SetUp() {
     Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
     
-    std::string repo_root = py_find_repo_root();
-    std::string forcing_data_dir = repo_root + "/data/forcing/";
+    std::string forcing_data_dir = "./data/forcing/";
 
     py_formulation_example_scenario template_ex_struct;
     // These should be safe for all examples
     template_ex_struct.module_name = "test_bmi_py.bmi_model";
-    template_ex_struct.module_directory = repo_root + "/extern/";
+    template_ex_struct.module_directory = "./extern/";
     template_ex_struct.main_output_variable = "OUTPUT_VAR_1";
     template_ex_struct.uses_forcing_file = false;
 
@@ -205,7 +188,7 @@ void Bmi_Py_Formulation_Test::SetUp() {
     // We can handle setting the rest up in a loop
     std::string forcing_file;
     for (size_t i = 0; i < examples.size(); ++i) {
-        examples[i].bmi_init_config = repo_root + "/test/data/bmi/test_bmi_python/test_bmi_python_config_"
+        examples[i].bmi_init_config = "./test/data/bmi/test_bmi_python/test_bmi_python_config_"
                                       + std::to_string(i) + ".yml";
         forcing_file = forcing_data_dir + examples[i].catchment_id + "_2015-12-01 00_00_00_2015-12-30 23_00_00.csv";
         examples[i].forcing_params = std::make_shared<forcing_params>(forcing_file, "legacy", "2015-12-01 00:00:00",
@@ -226,18 +209,9 @@ void Bmi_Py_Formulation_Test::SetUp() {
 }
 
 void Bmi_Py_Formulation_Test::SetUpTestSuite() {
-    std::string repo_root = py_find_repo_root();
-    std::string module_directory = repo_root + "/extern/";
-
-    // Add the package dir from a local virtual environment directory also, if there is one
-    std::string venv_dir = py_dir_search({repo_root + "/.venv", repo_root + "/venv"});
-    if (!venv_dir.empty()) {
-        InterpreterUtil::addToPyPath(py_find_venv_site_packages_dir(venv_dir));
-    }
-    // Also add the extern dir with our test lib to Python system path
+    // Add the extern dir with our test lib to Python system path
+    std::string module_directory = "./extern/";
     InterpreterUtil::addToPyPath(module_directory);
-
-
 }
 
 void Bmi_Py_Formulation_Test::TearDown() {
@@ -268,12 +242,11 @@ void Bmi_Py_Formulation_Test::generate_realization_config(int ex_idx) {
               "            \"bmi_python\": {"
               "                \"model_type_name\": \"" + examples[ex_idx].module_name + "\","
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME + "\": \"" + examples[ex_idx].module_name + "\","
-              "                \"forcing_file\": \"" + examples[ex_idx].forcing_params->path + "\","
               "                \"init_config\": \"" + examples[ex_idx].bmi_init_config + "\","
               "                \"main_output_variable\": \"" + examples[ex_idx].main_output_variable + "\","
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
-              "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
+              "                      \"INPUT_VAR_2\": \"" + AORC_FIELD_NAME_TEMP_2M_AG + "\","
               "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\","
               "                      \"GRID_VAR_1\": \""  + AORC_FIELD_NAME_PRECIP_RATE +"\""
               "                },"
@@ -303,7 +276,7 @@ void Bmi_Py_Formulation_Test::generate_realization_config(int ex_idx) {
  * @param file_basename The basename of the desired file.
  * @return The path (as a string) of the first found existing file, or empty string of no existing file was found.
  */
-std::string Bmi_Py_Formulation_Test::file_search(const vector<std::string> &parent_dir_options, const string &file_basename) {
+std::string Bmi_Py_Formulation_Test::file_search(const std::vector<std::string> &parent_dir_options, const std::string &file_basename) {
     // Build vector of paths by building combinations of the path and basename options
     std::vector<std::string> path_possibilities(parent_dir_options.size());
     for (int i = 0; i < parent_dir_options.size(); ++i)
@@ -322,8 +295,8 @@ std::string Bmi_Py_Formulation_Test::file_search(const vector<std::string> &pare
  * @param file_basename The collection of possible basenames for a sought file.
  * @return The path (as a string) of the first found existing file, or empty string of no existing file was found.
  */
-std::string Bmi_Py_Formulation_Test::file_search(const vector<std::string> &parent_dir_options,
-                                                 const vector<std::string> &file_basenames) {
+std::string Bmi_Py_Formulation_Test::file_search(const std::vector<std::string> &parent_dir_options,
+                                                 const std::vector<std::string> &file_basenames) {
     std::string foundPathForBasename;
     for (const std::string &basename : file_basenames) {
         foundPathForBasename = file_search(parent_dir_options, basename);
@@ -352,26 +325,6 @@ std::string Bmi_Py_Formulation_Test::py_dir_search(const std::vector<std::string
 }
 
 /**
- * Find the repo root directory, starting from the current directory and working upward.
- *
- * @return The absolute path of the repo root, as a string.
- */
-std::string Bmi_Py_Formulation_Test::py_find_repo_root() {
-    py::object Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
-    py::object dir = Path(".").attr("resolve")();
-    while (!dir.equal(dir.attr("parent"))) {
-        // If there is a child .git dir and a child .github dir, then dir is the root
-        py::bool_ is_git_dir = py::bool_(dir.attr("joinpath")(".git").attr("is_dir")());
-        py::bool_ is_github_dir = py::bool_(dir.attr("joinpath")(".github").attr("is_dir")());
-        if (is_git_dir && is_github_dir) {
-            return py::str(dir);
-        }
-        dir = dir.attr("parent");
-    }
-    throw std::runtime_error("Can't find repo root starting at " + std::string(py::str(Path(".").attr("resolve")())));
-}
-
-/**
  * Find the virtual environment site packages directory, starting from an assumed valid venv directory.
  *
  * @param venv_dir The virtual environment directory.
@@ -394,10 +347,8 @@ TEST_F(Bmi_Py_Formulation_Test, Initialize_0_a) {
     int ex_index = 0;
 
     ASSERT_EQ(get_friend_model_type_name(*examples[ex_index].formulation), examples[ex_index].module_name);
-    ASSERT_EQ(get_friend_forcing_file_path(*examples[ex_index].formulation), examples[ex_index].forcing_params->path);
     ASSERT_EQ(get_friend_bmi_init_config(*examples[ex_index].formulation), examples[ex_index].bmi_init_config);
     ASSERT_EQ(get_friend_bmi_main_output_var(*examples[ex_index].formulation), examples[ex_index].main_output_variable);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(*examples[ex_index].formulation), examples[ex_index].uses_forcing_file);
 }
 
 /**
@@ -441,7 +392,7 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_0_a) {
     double response = examples[ex_index].formulation->get_response(0, 3600);
     std::string output = examples[ex_index].formulation->get_output_line_for_timestep(0, ",");
     //NOTE the last two values are simply the FIRST element of the grid vars
-    ASSERT_EQ(output, "0.000000,0.000000,1.000000,2.000000,3.000000");
+    ASSERT_EQ(output, "0.000000,571.600037,1.000000,2.000000,3.000000");
 }
 
 /**
@@ -457,7 +408,7 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_0_b) {
     double response = examples[ex_index].formulation->get_response(543, 3600);
     std::string output = examples[ex_index].formulation->get_output_line_for_timestep(543, ",");
     //NOTE the last two values are simply the FIRST element of the grid vars
-    std::regex expected ("0.000001,(-?)0.000000,544.000000,2.000001,3.000001");
+    std::regex expected ("0.000001,582.000000,544.000000,2.000001,3.000001");
     ASSERT_TRUE(std::regex_match(output, expected));
 }
 
@@ -493,7 +444,5 @@ TEST_F(Bmi_Py_Formulation_Test, get_var_value_as_double_0_a) {
 
     ASSERT_EQ(value, retrieved);
 }
-
-#endif // ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_PY_TESTS_ACTIVE

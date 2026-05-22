@@ -9,11 +9,11 @@ RUN yum update -y \
     && dnf clean all \
   	&& rm -rf /var/cache/yum
 
-RUN curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2 \
-    && tar -xjf boost_1_72_0.tar.bz2 \
-    && rm boost_1_72_0.tar.bz2
+RUN curl -L -o boost_1_86_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.86.0/boost_1_86_0.tar.bz2/download \
+    && tar -xjf boost_1_86_0.tar.bz2 \
+    && rm boost_1_86_0.tar.bz2
 
-ENV BOOST_ROOT="/boost_1_72_0"
+ENV BOOST_ROOT="/boost_1_86_0"
 
 ENV CXX=/usr/bin/g++
 
@@ -30,7 +30,9 @@ RUN git submodule update --init --recursive -- extern/pybind11
 
 WORKDIR /ngen
 
-RUN cmake -B /ngen -S .
+RUN cmake -DNGEN_WITH_NETCDF:BOOL=OFF \
+          -DNGEN_WITH_SQLITE:BOOL=OFF \
+          -B /ngen -S .
 
 RUN cmake --build . --target ngen
 

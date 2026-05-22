@@ -10,7 +10,6 @@
 #include <HY_Catchment.hpp>
 #include <HY_HydroLocation.hpp>
 
-using namespace hy_features::hydrolocation;
 class HY_HydroNexus
 {
     public:
@@ -19,7 +18,7 @@ class HY_HydroNexus
 
     //using Catchments = std::vector<std::shared_ptr<HY_Catchment>>;
     using Catchments = std::vector<std::string>;
-    using HydroLocation = std::shared_ptr<HY_HydroLocation>;
+    using HydroLocation = std::shared_ptr<hy_features::hydrolocation::HY_HydroLocation>;
 
     HY_HydroNexus(std::string nexus_id, Catchments receiving_catchments);
     HY_HydroNexus(std::string nexus_id, Catchments receiving_catchments, Catchments contributing_catchments);

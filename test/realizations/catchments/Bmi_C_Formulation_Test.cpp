@@ -24,7 +24,7 @@
 #include "FileChecker.h"
 #include "Formulation_Manager.hpp"
 #include <boost/date_time.hpp>
-
+#include "../../utils/bmi/MockConfig.hpp"
 using ::testing::MatchesRegex;
 using namespace realization;
 
@@ -50,31 +50,23 @@ protected:
     }
 
     static std::shared_ptr<models::bmi::Bmi_C_Adapter> get_friend_bmi_model(Bmi_C_Formulation& formulation) {
-        return formulation.get_bmi_model();
+        return std::dynamic_pointer_cast<models::bmi::Bmi_C_Adapter>(formulation.get_bmi_model());
     }
 
     static time_t get_friend_bmi_model_start_time_forcing_offset_s(Bmi_C_Formulation& formulation) {
         return formulation.get_bmi_model_start_time_forcing_offset_s();
     }
 
-    static std::string get_friend_forcing_file_path(const Bmi_C_Formulation& formulation) {
-        return formulation.get_forcing_file_path();
-    }
-
     static time_t get_friend_forcing_start_time(Bmi_C_Formulation& formulation) {
         return formulation.forcing->get_data_start_time();
-    }
-
-    static bool get_friend_is_bmi_using_forcing_file(const Bmi_C_Formulation& formulation) {
-        return formulation.is_bmi_using_forcing_file();
     }
 
     static std::string get_friend_model_type_name(Bmi_C_Formulation& formulation) {
         return formulation.get_model_type_name();
     }
 
-    static double get_friend_var_value_as_double(Bmi_C_Formulation& formulation, const string& var_name) {
-        return formulation.get_var_value_as_double(var_name);
+    static double get_friend_var_value_as_double(Bmi_C_Formulation& formulation, const std::string& var_name) {
+        return formulation.get_var_value_as_double(0, var_name);
     }
 
     static time_t parse_forcing_time(const std::string& date_time_str) {
@@ -124,6 +116,7 @@ protected:
     std::vector<std::string> main_output_variable;
     std::vector<std::string> registration_functions;
     std::vector<bool> uses_forcing_file;
+    // std::vector<bool> tries_mass_balance;
     std::vector<std::shared_ptr<forcing_params>> forcing_params_examples;
     std::vector<geojson::GeoJSON> config_properties;
     std::vector<boost::property_tree::ptree> config_prop_ptree;
@@ -156,6 +149,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     main_output_variable  = std::vector<std::string>(EX_COUNT);
     registration_functions  = std::vector<std::string>(EX_COUNT);
     uses_forcing_file = std::vector<bool>(EX_COUNT);
+    // tries_mass_balance = std::vector<bool>(EX_COUNT);
     forcing_params_examples = std::vector<std::shared_ptr<forcing_params>>(EX_COUNT);
     config_properties = std::vector<geojson::GeoJSON>(EX_COUNT);
     config_prop_ptree = std::vector<boost::property_tree::ptree>(EX_COUNT);
@@ -169,6 +163,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     main_output_variable[0] = "OUTPUT_VAR_1";
     registration_functions[0] = "register_bmi";
     uses_forcing_file[0] = false;
+    // tries_mass_balance[0] = true;
 
     catchment_ids[1] = "cat-27";
     model_type_name[1] = "test_bmi_c";
@@ -178,6 +173,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     main_output_variable[1] = "OUTPUT_VAR_1";
     registration_functions[1] = "register_bmi";
     uses_forcing_file[1] = false;
+    // tries_mass_balance[1] = false;
 
     std::string variables_with_rain_rate = "                \"output_variables\": [\"OUTPUT_VAR_2\",\n"
                                            "                    \"OUTPUT_VAR_1\"],\n";
@@ -195,18 +191,20 @@ void Bmi_C_Formulation_Test::SetUp() {
                          "            \"bmi_c\": {"
                          "                \"model_type_name\": \"" + model_type_name[i] + "\","
                          "                \"library_file\": \"" + lib_file[i] + "\","
-                         "                \"forcing_file\": \"" + forcing_file[i] + "\","
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
-                         "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
+                         "                      \"INPUT_VAR_2\": \"" + AORC_FIELD_NAME_TEMP_2M_AG + "\","
                          "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
                          "                },"
                          "                \"registration_function\": \"" + registration_functions[i] + "\","
                          + variables_line +
                          "                \"uses_forcing_file\": " + (uses_forcing_file[i] ? "true" : "false") + ","
                          "                \"model_params\": { \"PARAM_VAR_1\": 42, \"PARAM_VAR_2\": 4.2, \"PARAM_VAR_3\": [4, 2]}" +
+                        //  (tries_mass_balance[i] ? \
+                        //  ",               \"mass_balance\": {\"tolerance\": 1e-12, \"fatal\":true}" \
+                        // :"" )+
                          "            },"
                          "            \"forcing\": { \"path\": \"" + forcing_file[i] + "\", \"provider\": \"CsvPerFeature\"}"
                          "        }"
@@ -234,10 +232,8 @@ TEST_F(Bmi_C_Formulation_Test, Initialize_0_a) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     ASSERT_EQ(get_friend_model_type_name(formulation), model_type_name[ex_index]);
-    ASSERT_EQ(get_friend_forcing_file_path(formulation), forcing_file[ex_index]);
     ASSERT_EQ(get_friend_bmi_init_config(formulation), init_config[ex_index]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variable[ex_index]);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
 /** Test to make sure we can initialize multiple model instances with dynamic loading. */
@@ -326,7 +322,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
 
     formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    EXPECT_THAT(output, MatchesRegex("0.000000,0.000000"));
+    EXPECT_THAT(output, MatchesRegex("0.000000,571.600037"));
 }
 
 /** Simple test of output with modified variables. */
@@ -342,7 +338,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_a) {
     // OUTPUT_VAR_1 first.
     formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    EXPECT_THAT(output, MatchesRegex("0.000000,0.000000"));
+    EXPECT_THAT(output, MatchesRegex("571.600037,0.000000"));
 }
 
 /** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
@@ -357,7 +353,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    EXPECT_THAT(output, MatchesRegex("0.000000,0.000001"));
+    EXPECT_THAT(output, MatchesRegex("580.799988,0.000001"));
 }
 
 TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_a) {
@@ -396,6 +392,235 @@ TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_c) {
     auto expected_offset = (time_t) 1448928000;
 
     ASSERT_EQ(get_friend_bmi_model_start_time_forcing_offset_s(formulation), expected_offset);
+}
+
+using models::bmi::protocols::INPUT_MASS_NAME;
+using models::bmi::protocols::OUTPUT_MASS_NAME;
+using models::bmi::protocols::STORED_MASS_NAME;
+using models::bmi::protocols::LEAKED_MASS_NAME;
+using models::bmi::protocols::ProtocolError;
+
+TEST_F(Bmi_C_Formulation_Test, check_mass_balance) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    auto ptree = config_prop_ptree[ex_index];
+    // mass balance failure will throw an exception
+    ptree.put_child("mass_balance", MassBalanceMock(true).get());
+    formulation.create_formulation(ptree);
+    formulation.check_mass_balance(0, 2, "t0");
+    formulation.get_response(1, 3600);
+    formulation.check_mass_balance(1, 2, "t1");
+}
+
+TEST_F(Bmi_C_Formulation_Test, check_mass_balance_warns) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    auto ptree = config_prop_ptree[ex_index];
+    ptree.put_child("mass_balance", MassBalanceMock(false).get());
+    formulation.create_formulation(ptree);
+    //formulation.check_mass_balance(0, 1, "t0");
+    formulation.get_response(1, 3600);
+    double mass_error = 100;
+    get_friend_bmi_model(formulation)->SetValue(STORED_MASS_NAME, &mass_error); // Force a mass balance error
+    //ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), MassBalanceWarning);
+    testing::internal::CaptureStderr();
+    formulation.check_mass_balance(0, 1, "t0");
+    std::string output = testing::internal::GetCapturedStderr();
+    std::cerr << output;
+    EXPECT_THAT(output, testing::HasSubstr("Warning(Protocol)::mass_balance:"));
+}
+
+TEST_F(Bmi_C_Formulation_Test, check_mass_balance_stored_fails) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    auto ptree = config_prop_ptree[ex_index];
+    ptree.put_child("mass_balance", MassBalanceMock(true).get());
+    formulation.create_formulation(ptree);
+    //formulation.check_mass_balance(0, 1, "t0");
+    formulation.get_response(1, 3600);
+    double mass_error = 100;
+    get_friend_bmi_model(formulation)->SetValue(STORED_MASS_NAME, &mass_error); // Force a mass balance error
+    //formulation.check_mass_balance(0, 1, "t0");
+    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), ProtocolError);
+    try{
+        formulation.check_mass_balance(0, 1, "t0");
+    }
+    catch (ProtocolError& e) {
+        std::cerr << e.to_string() << std::endl;
+        EXPECT_THAT(e.to_string(), MatchesRegex("Error\\(Protocol\\)::mass_balance:.*"));
+    }
+}
+
+TEST_F(Bmi_C_Formulation_Test, check_mass_balance_in_fails_a) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    auto ptree = config_prop_ptree[ex_index];
+    ptree.put_child("mass_balance", MassBalanceMock(true, 1e-5).get());
+    formulation.create_formulation(ptree);
+    formulation.get_response(1, 3600);
+    double mass_error = 2;
+    get_friend_bmi_model(formulation)->SetValue(INPUT_MASS_NAME, &mass_error); // Force a mass balance error
+    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), ProtocolError);
+    try{
+        formulation.check_mass_balance(0, 1, "t0");
+    }
+    catch (ProtocolError& e) {
+        std::cerr << e.to_string() << std::endl;
+        EXPECT_THAT(e.to_string(), MatchesRegex("Error\\(Protocol\\)::mass_balance:.*"));
+    }
+}
+
+TEST_F(Bmi_C_Formulation_Test, check_mass_balance_out_fails) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    auto ptree = config_prop_ptree[ex_index];
+    ptree.put_child("mass_balance", MassBalanceMock(true).get());
+    formulation.create_formulation(ptree);
+    formulation.get_response(1, 3600);
+    double mass_error = 2;
+    get_friend_bmi_model(formulation)->SetValue(OUTPUT_MASS_NAME, &mass_error); // Force a mass balance error
+    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), ProtocolError);
+    try{
+        formulation.check_mass_balance(0, 1, "t0");
+    }
+    catch (ProtocolError& e) {
+        std::cerr << e.to_string() << std::endl;
+        EXPECT_THAT(e.to_string(), MatchesRegex("Error\\(Protocol\\)::mass_balance:.*"));
+    }
+}
+
+TEST_F(Bmi_C_Formulation_Test, check_mass_balance_leaked_fails) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    auto ptree = config_prop_ptree[ex_index];
+    ptree.put_child("mass_balance", MassBalanceMock(true).get());
+    formulation.create_formulation(ptree);
+    formulation.get_response(1, 3600);
+    double mass_error = 2;
+    get_friend_bmi_model(formulation)->SetValue(LEAKED_MASS_NAME, &mass_error); // Force a mass balance error
+    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), ProtocolError);
+    try{
+        formulation.check_mass_balance(0, 1, "t0");
+    }
+    catch (ProtocolError& e) {
+        std::cerr << e.to_string() << std::endl;
+        EXPECT_THAT(e.to_string(), MatchesRegex("Error\\(Protocol\\)::mass_balance:.*"));
+    }
+}
+
+TEST_F(Bmi_C_Formulation_Test, check_mass_balance_tolerance) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    auto ptree = config_prop_ptree[ex_index];
+    ptree.put_child("mass_balance", MassBalanceMock(true, 1e-5).get());
+    formulation.create_formulation(ptree);
+    //formulation.check_mass_balance(0, "t0");
+    formulation.get_response(1, 3600);
+    double mass_error;
+    get_friend_bmi_model(formulation)->GetValue(INPUT_MASS_NAME, &mass_error);
+    mass_error += 1e-4; // Force a mass balance error not within tolerance
+    get_friend_bmi_model(formulation)->SetValue(INPUT_MASS_NAME, &mass_error); // Force a mass balance error
+    ASSERT_THROW(formulation.check_mass_balance(0, 1, "t0"), ProtocolError);
+    try{
+        formulation.check_mass_balance(0, 1, "t0");
+    }
+    catch (ProtocolError& e) {
+        std::cerr << e.to_string() << std::endl;
+        EXPECT_THAT(e.to_string(), MatchesRegex("Error\\(Protocol\\)::mass_balance:.*"));
+    }
+}
+
+TEST_F(Bmi_C_Formulation_Test, check_mass_balance_tolerance_a) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    auto ptree = config_prop_ptree[ex_index];
+    ptree.put_child("mass_balance", MassBalanceMock(true, 1e-5).get());
+    formulation.create_formulation(ptree);
+    //formulation.check_mass_balance(0, 1, "t0");
+    formulation.get_response(1, 3600);
+    double mass_error;
+    get_friend_bmi_model(formulation)->GetValue(INPUT_MASS_NAME, &mass_error);
+    mass_error += 1e-6; // Force a mass balance error within tolerance
+    get_friend_bmi_model(formulation)->SetValue(INPUT_MASS_NAME, &mass_error); // Force a mass balance error
+    formulation.check_mass_balance(0, 1, "t0"); // Should not throw an error
+}
+
+TEST_F(Bmi_C_Formulation_Test, check_mass_balance_off) {
+    int ex_index = 1;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+    formulation.check_mass_balance(0, 2, "t0");
+    formulation.get_response(1, 3600);
+    formulation.check_mass_balance(1, 2, "t1");
+}
+
+TEST_F(Bmi_C_Formulation_Test, check_mass_balance_missing) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    auto ptree = config_prop_ptree[ex_index];
+ 
+    std::string catchment_path = "catchments." + catchment_ids[ex_index] + ".bmi_c";
+    ptree.erase("mass_balance");
+    formulation.create_formulation(ptree);
+    formulation.check_mass_balance(0, 2, "t0");
+    formulation.get_response(1, 3600);
+    double mass_error = 100;
+    double more_mass_error = 99;
+    get_friend_bmi_model(formulation)->SetValue(OUTPUT_MASS_NAME, &mass_error); // Force a mass balance error
+    get_friend_bmi_model(formulation)->SetValue(INPUT_MASS_NAME, &more_mass_error); // Force a mass balance error
+    formulation.check_mass_balance(1, 2, "t1");
+
+}
+
+TEST_F(Bmi_C_Formulation_Test, check_mass_balance_frequency) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    auto ptree = config_prop_ptree[ex_index];
+    ptree.put_child("mass_balance", MassBalanceMock(true, 1e-5, 2).get());
+    formulation.create_formulation(ptree);
+    double mass_error;
+    mass_error += 10; // Force a mass balance error above tolerance
+    get_friend_bmi_model(formulation)->SetValue(OUTPUT_MASS_NAME, &mass_error); //
+    //Check initial mass balance -- should error which indicates it was propoerly checked
+    //per frequency setting
+    ASSERT_THROW(formulation.check_mass_balance(0, 2, "t0"), ProtocolError);
+    // Call mass balance check again, this should NOT error, since the actual check
+    // should be skipped due to the frequency setting
+    formulation.check_mass_balance(1, 2, "t1");
+    // Check mass balance again, this SHOULD error since the previous mass balance
+    // will propagate, and it should now be checked based on the frequency
+    ASSERT_THROW(formulation.check_mass_balance(2, 2, "t2"), ProtocolError);
+}
+
+TEST_F(Bmi_C_Formulation_Test, check_mass_balance_frequency_1) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    auto ptree = config_prop_ptree[ex_index];
+    ptree.put_child("mass_balance", MassBalanceMock(true, 1e-5, -1).get());
+    formulation.create_formulation(ptree);
+    double mass_error;
+    mass_error += 10; // Force a mass balance error above tolerance
+    get_friend_bmi_model(formulation)->SetValue(OUTPUT_MASS_NAME, &mass_error); //
+    //Check initial mass balance -- should NOT error
+    formulation.check_mass_balance(0, 2, "t0");
+    // Call mass balance check again, this should NOT error, since the actual check
+    // should be skipped due to the frequency setting
+    formulation.check_mass_balance(1, 2, "t1");
+    // Check mass balance again, this SHOULD error since the this is step 2/2
+    // and it will now be checked based on the frequency (-1, check at end)
+    ASSERT_THROW(formulation.check_mass_balance(2, 2, "t2"), ProtocolError);
 }
 
 #endif  // NGEN_BMI_C_LIB_TESTS_ACTIVE

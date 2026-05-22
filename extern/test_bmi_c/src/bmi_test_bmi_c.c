@@ -9,6 +9,7 @@
 #define INPUT_VAR_NAME_COUNT 2
 #define OUTPUT_VAR_NAME_COUNT 2
 #define PARAM_VAR_NAME_COUNT 3
+#define MASS_BALANCE_VAR_NAME_COUNT 4
 
 // Don't forget to update Get_value/Get_value_at_indices (and setter) implementation if these are adjusted
 static const char *output_var_names[OUTPUT_VAR_NAME_COUNT] = { "OUTPUT_VAR_1", "OUTPUT_VAR_2" };
@@ -34,6 +35,13 @@ static const int param_var_item_count[PARAM_VAR_NAME_COUNT] = { 1, 1, 2 };
 static const char *param_var_grids[PARAM_VAR_NAME_COUNT] = { 0, 0, 0 };
 static const char *param_var_locations[PARAM_VAR_NAME_COUNT] = { "node", "node", "node" };
 
+static const char *mass_balance_var_names[MASS_BALANCE_VAR_NAME_COUNT] = { NGEN_MASS_IN, NGEN_MASS_OUT, NGEN_MASS_STORED, NGEN_MASS_LEAKED};
+static const char *mass_balance_var_types[MASS_BALANCE_VAR_NAME_COUNT] = { "double", "double", "double", "double"};
+static const char *mass_balance_var_units[MASS_BALANCE_VAR_NAME_COUNT] = { "m", "m", "m", "m" };
+static const int mass_balance_var_item_count[MASS_BALANCE_VAR_NAME_COUNT] = { 1, 1, 1, 1};
+static const char *mass_balance_var_grids[MASS_BALANCE_VAR_NAME_COUNT] = { 0, 0, 0, 0 };
+static const char *mass_balance_var_locations[MASS_BALANCE_VAR_NAME_COUNT] = { "node", "node", "node", "node" };
+
 static int Finalize (Bmi *self)
 {
     // Function assumes everything that is needed is retrieved from the model before Finalize is called.
@@ -58,7 +66,7 @@ static int Finalize (Bmi *self)
 
 static int Get_component_name (Bmi *self, char * name)
 {
-    strncpy (name, "Testing BMI C Model", BMI_MAX_COMPONENT_NAME);
+    snprintf(name, BMI_MAX_COMPONENT_NAME, "%s", "Testing BMI C Model");
     return BMI_SUCCESS;
 }
 
@@ -178,7 +186,7 @@ static int Get_grid_type (Bmi *self, int grid, char * type)
     int status = BMI_FAILURE;
 
     if (grid == 0) {
-        strncpy(type, "scalar", BMI_MAX_TYPE_NAME);
+        snprintf(type, BMI_MAX_TYPE_NAME, "%s", "scalar");
         status = BMI_SUCCESS;
     }
     else {
@@ -210,7 +218,7 @@ static int Get_grid_z(Bmi *self, int grid, double *z)
 static int Get_input_var_names (Bmi *self, char ** names)
 {
     for (size_t i = 0; i < INPUT_VAR_NAME_COUNT; i++)
-        strncpy (names[i], input_var_names[i], BMI_MAX_VAR_NAME);
+        snprintf(names[i], BMI_MAX_VAR_NAME, "%s", input_var_names[i]);
     return BMI_SUCCESS;
 }
 
@@ -232,7 +240,7 @@ static int Get_output_item_count (Bmi *self, int * count)
 static int Get_output_var_names (Bmi *self, char ** names)
 {
     for (size_t i = 0; i < OUTPUT_VAR_NAME_COUNT; i++)
-        strncpy (names[i], output_var_names[i], BMI_MAX_VAR_NAME);
+        snprintf(names[i], BMI_MAX_VAR_NAME, "%s", output_var_names[i]);
     return BMI_SUCCESS;
 }
 
@@ -274,7 +282,7 @@ static int Get_time_step (Bmi *self, double * dt)
  */
 static int Get_time_units (Bmi *self, char * units)
 {
-    strncpy (units, "s", BMI_MAX_UNITS_NAME);
+    snprintf(units, BMI_MAX_UNITS_NAME, "%s", "s");
     return BMI_SUCCESS;
 }
 
@@ -387,6 +395,23 @@ static int Get_value_ptr (Bmi *self, const char *name, void **dest)
         *dest = ((test_bmi_c_model *)(self->data))->param_var_3;
         return BMI_SUCCESS;
     }
+
+    if (strcmp (name, NGEN_MASS_IN) == 0) {
+        *dest = ((test_bmi_c_model *)(self->data))->input_var_1;
+        return BMI_SUCCESS;
+    }
+    if (strcmp (name, NGEN_MASS_OUT) == 0) {
+        *dest = ((test_bmi_c_model *)(self->data))->output_var_1;
+        return BMI_SUCCESS;
+    }
+    if (strcmp (name, NGEN_MASS_STORED) == 0) {
+        *dest = &((test_bmi_c_model *)(self->data))->mass_stored;
+        return BMI_SUCCESS;
+    }
+    if (strcmp (name, NGEN_MASS_LEAKED) == 0) {
+        *dest = &((test_bmi_c_model *)(self->data))->mass_leaked;
+        return BMI_SUCCESS;
+    }
     return BMI_FAILURE;
 }
 
@@ -436,14 +461,14 @@ static int Get_var_location (Bmi *self, const char *name, char * location)
     // Check to see if in output array first
     for (i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, output_var_names[i]) == 0) {
-            strncpy(location, output_var_locations[i], BMI_MAX_LOCATION_NAME);
+            snprintf(location, BMI_MAX_LOCATION_NAME, "%s", output_var_locations[i]);
             return BMI_SUCCESS;
         }
     }
     // Then check to see if in input array
     for (i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, input_var_names[i]) == 0) {
-            strncpy(location, input_var_locations[i], BMI_MAX_LOCATION_NAME);
+            snprintf(location, BMI_MAX_LOCATION_NAME, "%s", input_var_locations[i]);
             return BMI_SUCCESS;
         }
     }
@@ -483,6 +508,14 @@ static int Get_var_nbytes (Bmi *self, const char *name, int * nbytes)
             }
         }
     }
+    if (item_count < 1) {
+        for (i = 0; i < MASS_BALANCE_VAR_NAME_COUNT; i++) {
+            if (strcmp(name, mass_balance_var_names[i]) == 0) {
+                item_count = mass_balance_var_item_count[i];
+                break;
+            }
+        }
+    }
     if (item_count < 1)
         item_count = ((test_bmi_c_model *) self->data)->num_time_steps;
 
@@ -497,21 +530,28 @@ static int Get_var_type (Bmi *self, const char *name, char * type)
     // Check to see if in output array first
     for (i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, output_var_names[i]) == 0) {
-            strncpy(type, output_var_types[i], BMI_MAX_TYPE_NAME);
+            snprintf(type, BMI_MAX_TYPE_NAME, "%s", output_var_types[i]);
             return BMI_SUCCESS;
         }
     }
     // Then check to see if in input array
     for (i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, input_var_names[i]) == 0) {
-            strncpy(type, input_var_types[i], BMI_MAX_TYPE_NAME);
+            snprintf(type, BMI_MAX_TYPE_NAME, "%s", input_var_types[i]);
             return BMI_SUCCESS;
         }
     }
     // Finally check to see if in param array
     for (i = 0; i < PARAM_VAR_NAME_COUNT; i++) {
         if (strcmp(name, param_var_names[i]) == 0) {
-            strncpy(type, param_var_types[i], BMI_MAX_TYPE_NAME);
+            snprintf(type, BMI_MAX_TYPE_NAME, "%s", param_var_types[i]);
+            return BMI_SUCCESS;
+        }
+    }
+    // Finally check to see if in mass balance array
+    for (i = 0; i < MASS_BALANCE_VAR_NAME_COUNT; i++) {
+        if (strcmp(name, mass_balance_var_names[i]) == 0) {
+            snprintf(type, BMI_MAX_TYPE_NAME, "%s", mass_balance_var_types[i]);
             return BMI_SUCCESS;
         }
     }
@@ -527,14 +567,21 @@ static int Get_var_units (Bmi *self, const char *name, char * units)
     // Check to see if in output array first
     for (i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, output_var_names[i]) == 0) {
-            strncpy(units, output_var_units[i], BMI_MAX_UNITS_NAME);
+            snprintf(units, BMI_MAX_UNITS_NAME, "%s", output_var_units[i]);
             return BMI_SUCCESS;
         }
     }
     // Then check to see if in input array
     for (i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, input_var_names[i]) == 0) {
-            strncpy(units, input_var_units[i], BMI_MAX_UNITS_NAME);
+            snprintf(units, BMI_MAX_UNITS_NAME, "%s", input_var_units[i]);
+            return BMI_SUCCESS;
+        }
+    }
+    //Check for mass balance
+    for (i = 0; i < MASS_BALANCE_VAR_NAME_COUNT; i++) {
+        if (strcmp(name, mass_balance_var_names[i]) == 0) {
+            snprintf(units, BMI_MAX_UNITS_NAME, "%s", mass_balance_var_units[i]);
             return BMI_SUCCESS;
         }
     }
@@ -559,6 +606,9 @@ static int Initialize (Bmi *self, const char *file)
         return BMI_FAILURE;
     else
         model = (test_bmi_c_model *) self->data;
+
+    model->mass_stored = 0.0;
+    model->mass_leaked = 0.0;
 
     if (read_init_config(file, model) == BMI_FAILURE)
         return BMI_FAILURE;
@@ -729,7 +779,11 @@ int read_file_line_counts(const char* file_name, int* line_count, int* max_line_
         return -1;
     }
     int seen_non_whitespace = 0;
-    char c;
+    int c; //EOF is a negative constant...and char may be either signed OR unsigned
+    //depending on the compiler, system, achitectured, ect.  So there are cases
+    //where this loop could go infinite comparing EOF to unsigned char
+    //the return of fgetc is int, and should be stored as such!
+    //https://stackoverflow.com/questions/35356322/difference-between-int-and-char-in-getchar-fgetc-and-putchar-fputc
     for (c = fgetc(fp); c != EOF; c = fgetc(fp)) {
         // keep track if this line has seen any char other than space or tab
         if (c != ' ' && c != '\t' && c != '\n')
@@ -790,7 +844,9 @@ int read_init_config(const char* config_file, test_bmi_c_model* model)
 
     for (size_t i = 0; i < config_line_count; i++) {
         char *param_key, *param_value;
-        fgets(config_line, max_config_line_length + 1, fp);
+        char *ret = fgets(config_line, max_config_line_length + 1, fp);
+        if (ret == NULL)
+            return BMI_FAILURE;
 
         char* config_line_ptr = config_line;
         config_line_ptr = strsep(&config_line_ptr, "\n");

@@ -40,16 +40,21 @@ namespace geojson {
 
     /**
      *  Describes a type of features
+     *
+     *  These are numbered in accordance with the GeoPackage
+     *  'well-known binary' (WKB) feature types, other than the
+     *  additional 'Sentinel' value defined here
      */
     enum class FeatureType {
-        None,                   /*!< Represents an empty feature with no sort of geometry */
-        Point,                  /*!< Represents a feature that contains a single Point geometry */
-        LineString,             /*!< Represents a feature that is represented by a series of interconnected points */
-        Polygon,                /*!< Represents a feature that is represented by a defined area */
-        MultiPoint,             /*!< Represents a feature that is represented by many points */
-        MultiLineString,        /*!< Represents a feature that is represented by multiple series of interconnected points */
-        MultiPolygon,           /*!< Represents a feature that is represented by multiple areas */
-        GeometryCollection      /*!< Represents a feature that contains a collection of different types of geometry */
+        None                 = 0,  /*!< Represents an empty feature with no sort of geometry */
+        Point                = 1,  /*!< Represents a feature that contains a single Point geometry */
+        LineString           = 2,  /*!< Represents a feature that is represented by a series of interconnected points */
+        Polygon              = 3,  /*!< Represents a feature that is represented by a defined area */
+        MultiPoint           = 4,  /*!< Represents a feature that is represented by many points */
+        MultiLineString      = 5,  /*!< Represents a feature that is represented by multiple series of interconnected points */
+        MultiPolygon         = 6,  /*!< Represents a feature that is represented by multiple areas */
+        GeometryCollection   = 7,  /*!< Represents a feature that contains a collection of different types of geometry */
+        Sentinel             = 100 /*!< Represents a 'dummy' feature included for computational consistency */
     };
 
     /**
@@ -209,7 +214,7 @@ namespace geojson {
              * @param key The name of the property to get
              * @return The property identified by the key
              */
-            virtual JSONProperty get_property(std::string key) const {
+            virtual JSONProperty get_property(const std::string& key) const {
                 if (properties.find(key) == properties.end()) {
                     std::string error_message = "JSON Property '" + key + "' not found."; 
                     throw std::invalid_argument(error_message);
@@ -223,7 +228,7 @@ namespace geojson {
              * 
              * @param new_id The new identifier for this feature
              */
-            virtual void set_id(std::string new_id) {
+            virtual void set_id(const std::string& new_id) {
                 id = new_id;
             }
 
@@ -233,7 +238,7 @@ namespace geojson {
              * @param key The name of the foreign member whose value to look for
              * @return The member value identified by the key
              */
-            virtual JSONProperty get(std::string key) const {
+            virtual JSONProperty get(const std::string& key) const {
                 return foreign_members.at(key);
             }
 
@@ -243,7 +248,7 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, short value) {
+            virtual void set(const std::string& key, short value) {
                 foreign_members.emplace(key, JSONProperty(key, value));
             }
 
@@ -253,7 +258,7 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, int value) {
+            virtual void set(const std::string& key, int value) {
                 foreign_members.emplace(key, JSONProperty(key, value));
             }
 
@@ -263,7 +268,7 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, long value) {
+            virtual void set(const std::string& key, long value) {
                 foreign_members.emplace(key, JSONProperty(key, value));
             }
 
@@ -273,7 +278,7 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, float value) {
+            virtual void set(const std::string& key, float value) {
                 foreign_members.emplace(key, JSONProperty(key, value));
             }
 
@@ -283,7 +288,7 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, double value) {
+            virtual void set(const std::string& key, double value) {
                 foreign_members.emplace(key, JSONProperty(key, value));
             }
 
@@ -293,7 +298,7 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, std::string value) {
+            virtual void set(const std::string& key, std::string value) {
                 foreign_members.emplace(key, JSONProperty(key, value));
             }
 
@@ -303,11 +308,11 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, JSONProperty property) {
+            virtual void set(const std::string& key, JSONProperty property) {
                 foreign_members.emplace(key, property);
             }
 
-            virtual bool has_key(std::string key) {
+            virtual bool has_key(const std::string& key) {
                 std::vector<std::string> all_keys = this->keys();
 
                 for(auto member_key : all_keys) {
@@ -384,12 +389,29 @@ namespace geojson {
                 return bounding_box;
             }
 
-            PropertyMap get_properties() const {
+            const PropertyMap& get_properties() const {
+                return properties;
+            }
+
+            PropertyMap& get_properties() {
                 return properties;
             }
 
             std::string get_id() const {
                 return id;
+            }
+
+            std::string get_id(std::string alt_id) const {
+                std::string tmp = id;
+                try{
+                    tmp = get_property(alt_id).as_string();
+                    //if the property exists, but its value is NaN/null
+                    if(tmp == "null") tmp = id;
+                }
+                catch(...){
+                    tmp = id;
+                }
+                return tmp;
             }
 
             int get_number_of_destination_features() {
@@ -510,7 +532,7 @@ namespace geojson {
                 try {
                     return boost::get<T>(this->geom);
                 }
-                catch (boost::bad_get exception) {
+                catch (boost::bad_get &exception) {
                     std::string template_name = boost::typeindex::type_id<T>().pretty_name();
                     std::string expected_name = get_geometry_type(this->geom);
                     std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
@@ -527,7 +549,7 @@ namespace geojson {
                 try {
                     return boost::get<T>(this->geometry_collection[index]);
                 }
-                catch (boost::bad_get exception) {
+                catch (boost::bad_get &exception) {
                     std::string template_name = boost::typeindex::type_id<T>().pretty_name();
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
                     std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;

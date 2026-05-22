@@ -5,7 +5,7 @@
 #include <map>
 #include <vector>
 #include <iostream>
-
+#include <iomanip>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/variant.hpp>
@@ -215,12 +215,12 @@ namespace geojson {
                     for (auto &property : property_tree) {
                         if (property.first.empty()) {
                             type = PropertyType::List;
-                            value_list.push_back(std::move(JSONProperty(value_key, property.second)));
+                            value_list.push_back(JSONProperty(value_key, property.second));
                             data = List(& value_list );
                         }
                         else {
                             type = PropertyType::Object;
-                            values.emplace(property.first, std::move(JSONProperty(property.first, property.second)));
+                            values.emplace(property.first, JSONProperty(property.first, property.second));
                             data = Object( & values );
                         }
                     }
@@ -389,6 +389,16 @@ namespace geojson {
             }
 
             /**
+             * @brief Copy construct a JSONProperty, but use a new key value for the property
+             * 
+             * @param value_key 
+             * @param original 
+             */
+            JSONProperty(const std::string& value_key, const JSONProperty&original):JSONProperty(original){
+                key = value_key;
+            }
+
+            /**
              * A basic destructor
              */
             virtual ~JSONProperty(){};
@@ -417,6 +427,65 @@ namespace geojson {
                     values(value)
             {   
                 data = Object( &values );
+            }
+
+            /**
+             * @brief Pretty print the property to standard out stream.
+             * 
+             * Recurses through the property to tab/print nested objects/lists.
+             * 
+             * @param p Property to print
+             * @param tab (optional) Additional starting tab to indent (default 0)
+             * @param newline (optional) Add a new line to the end of the print (default true)
+             */
+            static void print_property(const geojson::JSONProperty& p, int tab=0, bool newline = true){
+                char end = '\0';
+                if(newline)  end = '\n';
+                std::cout<<std::setw(tab);
+                switch( p.get_type() ){
+                    case geojson::PropertyType::String:
+                        std::cout<<p.as_string()<<end;
+                        break;
+                    case geojson::PropertyType::Real:
+                        std::cout<<p.as_real_number()<<end;
+                        break;
+                    case geojson::PropertyType::Natural:
+                        std::cout<<p.as_natural_number()<<end;
+                        break;
+                    case geojson::PropertyType::Boolean:
+                        if(p.as_boolean())
+                            std::cout<<"true"<<end;
+                        else
+                            std::cout<<"false"<<end;
+                        break;   
+                    case geojson::PropertyType::List:
+                        std::cout<<std::setw(tab)<<"[";
+                        tab += 5;
+                        for( const auto& lp : p.as_list() ){
+                            //This is a little harder to align nicely without knowing
+                            //the length of the property as a string first...so for now,
+                            //just try to get a little bit in to make it easier to read
+                            std::cout<<std::setw(tab);
+                            print_property(lp, tab, false);
+                            std::cout<<","<<end;
+                        }
+                        tab -= 5;
+                        std::cout<<std::setw(tab)<<" ]"<<end;
+                        
+                        break;
+                    case geojson::PropertyType::Object:
+                        //tab += 5;
+                        std::cout<<std::setw(tab)<<"{\n";
+                        tab += 5;
+                        for( auto pair : p.get_values() ){
+                            std::cout<<std::setw(tab + pair.first.length())<<pair.first<<" : ";
+                            print_property(pair.second, tab, false);
+                            std::cout<<",\n";
+                        }
+                        tab -= 5;
+                        std::cout<<std::setw(tab)<<"}"<<end;
+                        tab -= 5;
+                };
             }
 
             /**

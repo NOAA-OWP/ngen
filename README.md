@@ -14,7 +14,7 @@ As we attempt to apply hydrological modeling at different scales, the traditiona
 This framework includes an encapsulation strategy which focuses on the hydrologic data first, and then builds a functional abstraction of hydrologic behavior.  This abstraction is naturally recursive, and unlocks a higher level of modeling and reasoning using computational modeling for hydrology.  This is done by organizing model components along well-defined flow boundaries, and then implementing strict API’s to define the movement of water amongst these components.  This organization also allows control and orchestration of first-class model components to leverage more sophisticated programming techniques and data structures.
 
 
-  - **Technology stack**: Core Framework using C++ (minimum standard c++14) to provide polymorphic interfaces with reasonable systems integration.
+  - **Technology stack**: Core Framework using C++ (minimum standard c++17) to provide polymorphic interfaces with reasonable systems integration.
   - **Status**:  Version 0.1.0 in initial development including interfaces, logical data model, and framework structure.  See  [CHANGELOG](CHANGELOG.md) for revision details.
 
 ## Structural Diagrams
@@ -41,7 +41,8 @@ See [INSTALL](INSTALL.md).
 
 ## Configuration
 
-If the software is configurable, describe it in detail, either here or in other documentation to which you link.
+To view the compile-time configuration of an pre-compiled NextGen binary use the `--info` flag, as in `ngen --info`.
+for more info see: https://github.com/NOAA-OWP/ngen/pull/679
 
 ## Usage
 
@@ -76,11 +77,11 @@ For example:
 Or, if the build system has not yet been properly generated:
 
     git submodule update --init --recursive -- test/googletest
-    cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -S .
+    cmake -DCMAKE_BUILD_TYPE=Debug -DNGEN_WITH_TESTS:BOOL=ON -B cmake-build-debug -S .
     cmake --build cmake-build-debug --target test_all -- -j 4
     ./cmake-build-debug/test/test_all
 
-See the [Testing ReadMe](test/README.md) file for a more thorough discussion of testing.
+See the [Testing ReadMe](test/README.md) file and [wiki/Quickstart](https://github.com/NOAA-OWP/ngen/wiki/NGen-Tutorial) for a more thorough discussion of testing.
 
 ## How to debug the software
 

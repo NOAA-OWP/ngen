@@ -46,7 +46,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      *
      * @return The inclusive beginning of the period of time over which this instance can provide this data.
      */
-    long get_data_start_time() override {
+    long get_data_start_time() const override {
         //FIXME: Trace this back and you will find that it is the simulation start time, not having anything to do with the forcing at all.
         // Apparently this "worked", but at a minimum the description above is false.
         return start_date_time_epoch;
@@ -57,7 +57,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      *
      * @return The exclusive ending of the period of time over which this instance can provide this data.
      */
-    long get_data_stop_time() override {
+    long get_data_stop_time() const override {
         return end_date_time_epoch;
     }
 
@@ -66,7 +66,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      *
      * @return The duration of one record of this forcing source
      */
-    long record_duration() override {
+    long record_duration() const override {
         return time_epoch_vector[1] - time_epoch_vector[0];
     }
 
@@ -79,7 +79,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      * @return The index of the forcing time step that contains the given point in time.
      * @throws std::out_of_range If the given point is not in any time step.
      */
-    size_t get_ts_index_for_time(const time_t &epoch_time) override {
+    size_t get_ts_index_for_time(const time_t &epoch_time) const override {
         if (epoch_time < start_date_time_epoch) {
             throw std::out_of_range("Forcing had bad pre-start time for index query: " + std::to_string(epoch_time));
         }
@@ -190,7 +190,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      * @param name The name of the forcing param for which the current value is desired.
      * @return Whether the param's value is an aggregate sum.
      */
-    inline bool is_param_sum_over_time_step(const std::string& name) {
+    inline bool is_param_sum_over_time_step(const std::string& name) const {
         if (name == CSDMS_STD_NAME_RAIN_VOLUME_FLUX) {
             return true;
         }
@@ -218,11 +218,11 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      * @param name The name of the forcing property for which the current value is desired.
      * @return Whether the property's value is an aggregate sum.
      */
-    inline bool is_property_sum_over_time_step(const std::string& name) override {
+    inline bool is_property_sum_over_time_step(const std::string& name) const override {
         return is_param_sum_over_time_step(name);
     }
 
-    const std::vector<std::string> &get_avaliable_variable_names() override {
+    boost::span<const std::string> get_available_variable_names() const override {
         return available_forcings;
     }
 
@@ -307,7 +307,23 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
                 std::string var_name = col_head;
                 std::string units = "";
 
-                //TODO: parse units in parens and/or square brackets?
+                boost::trim(var_name); // remove leading/trailing ws
+                const auto var_name_close = var_name.back();
+                if (var_name_close == ']' || var_name_close == ')') {
+                    // found closing bracket/parenth
+
+                    const bool is_bracket = var_name_close == ']';
+                    const size_t var_name_open = is_bracket ? var_name.rfind('[') : var_name.rfind('(');
+                    if (var_name_open != std::string::npos) {
+                        // found matching opening bracket/parenth
+
+                        units = var_name.substr(var_name_open + 1);
+                        units.pop_back(); // remove closing bracket
+
+                        var_name = var_name.substr(0, var_name_open);
+                        boost::trim(var_name); // trim again in case of ws between name and units
+                    }
+                }
 
                 auto wkf = data_access::WellKnownFields.find(var_name);
                 if(wkf != data_access::WellKnownFields.end()){
@@ -398,9 +414,6 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
     int catchment_id;
     int day_of_year;
     std::string forcing_file_name;
-
-    std::shared_ptr<time_type> start_date_time;
-    std::shared_ptr<time_type> end_date_time;
 
     time_t start_date_time_epoch;
     time_t end_date_time_epoch;

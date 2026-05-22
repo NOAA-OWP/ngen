@@ -5,9 +5,9 @@ name: Testing and Validation
 # Controls when the action will run.
 on:
   push:
-    branches: [ master, dev, notreal ]
+    branches: [ master, dev, notreal, release-* ]
   pull_request:
-    branches: [ master, dev, notreal ]
+    branches: [ master, dev, notreal, release-* ]
   workflow_dispatch:
 
 env:
@@ -15,6 +15,7 @@ env:
   # TODO: add something later that can check the runners for hyperthreading
   LINUX_NUM_PROC_CORES: 2
   MACOS_NUM_PROC_CORES: 3
+  ASAN_OPTIONS: detect_leaks=false
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -23,23 +24,31 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     - name: Checkout the commit
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     
     - name: Build Unit Tests
       uses: ./.github/actions/ngen-build
       with:
-        targets: "test_unit"
+        targets: "test_unit test_geopackage"
         build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
     - name: Run Tests
       run: ./cmake_build/test/test_unit
+      timeout-minutes: 15
+
+    - name: Run GeoPackage Tests
+      run: |
+        # Container underflow report is a false positive, from a build with instrumentation
+        # disabled in one file where it hangs the compiler (ngen#567)
+        export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_container_overflow=0
+        ./cmake_build/test/test_geopackage
       timeout-minutes: 15
     
     - name: Clean Up
@@ -50,30 +59,26 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: Build PET Submodule
-        id: submod_build_5
-        uses: ./.github/actions/ngen-submod-build
-        with:
-          mod-dir: "extern/evapotranspiration/evapotranspiration"
-          targets: "petbmi"
+      - uses: actions/checkout@v4
 
       - name: Build PET Tests
         uses: ./.github/actions/ngen-build
         with:
           targets: "compare_pet"
+          bmi_c: on
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
       - name: Run Tests
-        run: ./cmake_build/test/compare_pet
+        run: |
+          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
+          ./cmake_build/test/compare_pet
         timeout-minutes: 15
 
       - name: Clean Up
@@ -84,14 +89,14 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
@@ -101,7 +106,7 @@ jobs:
           use_mpi: 'ON'
 
       - name: run_tests
-        run: mpirun --allow-run-as-root -np 2 ./cmake_build/test/test_remote_nexus
+        run: mpirun --allow-run-as-root --oversubscribe -np 4 ./cmake_build/test/test_remote_nexus
         timeout-minutes: 15
 
       - name: Clean Up
@@ -113,26 +118,19 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       #make sure cxx bmi is initialized/ready
       - uses: ./.github/actions/ngen-submod-build
         with: 
           mod-dir: "extern/bmi-cxx/"
-
-      - name: Build Submodules
-        id: submod_build
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/test_bmi_cpp/"
-          targets: "testbmicppmodel"
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
@@ -143,6 +141,7 @@ jobs:
       - name: Run Tests
         run: |
           cd ./cmake_build/test/
+          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test_bmi_cpp
           cd ../../
         timeout-minutes: 15
@@ -150,31 +149,19 @@ jobs:
       - name: Clean Up Unit Test Build
         uses: ./.github/actions/clean-build
 
-      - name: Clean Up Submodule Build
-        uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build.outputs.build-dir }}
-
   # Run BMI C tests in linux environment, and separating to isolate
   test_bmi_c:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: Build Submodules
-        id: submod_build
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/test_bmi_c"
-          targets: "testbmicmodel"
+      - uses: actions/checkout@v4
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
@@ -182,11 +169,10 @@ jobs:
           targets: "test_bmi_c"
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
           bmi_c: 'ON'
-          #Is this required for this test???
-          use_python: 'ON'
 
       - name: run_bmi_c_tests
         run: |
+          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0,suppressions=$(pwd)/test/asan_suppressions.txt
           cd ./cmake_build/test/
           ./test_bmi_c
           cd ../../
@@ -195,36 +181,19 @@ jobs:
       - name: Clean Up Unit Test Build
         uses: ./.github/actions/clean-build
 
-      - name: Clean Up Submodule Build
-        uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build.outputs.build-dir }}
-
   # As with the BMI C ubuntu job, separate Fortran in linux tests to keep setups clean and cause of failures clear.
   test_bmi_fortran:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: Build Submodules
-        id: submod_build_1
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/test_bmi_fortran/"
-      
-      - name: Build Submodules
-        id: submod_build_2
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/iso_c_fortran_bmi/"
+      - uses: actions/checkout@v4
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
@@ -245,28 +214,19 @@ jobs:
       - name: Clean Up Unit Test Build
         uses: ./.github/actions/clean-build
 
-      - name: Clean Up Submodule Build
-        uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_1.outputs.build-dir }}
-
-      - uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_2.outputs.build-dir }}
-
   # As with the BMI C ubuntu job, separate Python in linux tests to keep setups clean and cause of failures clear.
   test_bmi_python:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out repository under $GITHUB_WORKSPACE, so job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
@@ -280,8 +240,9 @@ jobs:
 
       - name: run_bmi_python_tests
         run: |
-          cd ./cmake_build/test/
-          ./test_bmi_python
+          . .venv/bin/activate
+          cd ./cmake_build/
+          ./test/test_bmi_python
           cd ../../
         timeout-minutes: 15
 
@@ -293,45 +254,14 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-22.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: Build Submodules
-        id: submod_build_1
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/test_bmi_fortran/"
-
-      - name: Build Submodules
-        id: submod_build_2
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/iso_c_fortran_bmi/"
-
-      - name: Build Submodules
-        id: submod_build_3
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/test_bmi_c/"
-          targets: "testbmicmodel"
-
-      #make sure cxx bmi is initialized/ready
-      - uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/bmi-cxx/"
-
-      - name: Build Submodules
-        id: submod_build_4
-        uses: ./.github/actions/ngen-submod-build
-        with:
-          mod-dir: "extern/test_bmi_cpp/"
-          targets: "testbmicppmodel"
+      - uses: actions/checkout@v4
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
@@ -344,26 +274,45 @@ jobs:
           additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
 
       - name: Run Unit Tests
-        run: ./cmake_build/test/test_bmi_multi
+        run: |
+          . .venv/bin/activate
+          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
+          ./cmake_build/test/test_bmi_multi
         timeout-minutes: 15
 
       - name: Clean Up Unit Test Build
         uses: ./.github/actions/clean-build
 
-      - name: Clean Up Submodule Build
-        uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_1.outputs.build-dir }}
-      - uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_2.outputs.build-dir }}
-      - uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_3.outputs.build-dir }}
-      - uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_4.outputs.build-dir }}
+  # Run BMI protocol tests in linux/unix environment
+  test_bmi_protocols:
+    # The type of runner that the job will run on
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, macos-15]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
 
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      - name: Build BMI Protocol Unit Tests
+        uses: ./.github/actions/ngen-build
+        with:
+          targets: "test_bmi_protocols"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+
+      - name: run_bmi_protocol_tests
+        run: |
+          cd ./cmake_build/test/
+          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
+          ./test_bmi_protocols
+          cd ../../
+        timeout-minutes: 15
+
+      - name: Clean Up BMI Protocol Unit Test Build
+        uses: ./.github/actions/clean-build
 
   # TODO: fails due to compilation error, at least in large part due to use of POSIX functions not supported on Windows.
   # TODO: Need to determine whether Windows support (in particular, development environment support) is necessary.
@@ -374,7 +323,7 @@ jobs:
 #    # Steps represent a sequence of tasks that will be executed as part of the job
 #    steps:
 #      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-#      - uses: actions/checkout@v2
+#      - uses: actions/checkout@v3
 #
 #      - name: git submodule
 #        run: git submodule update --init --recursive -- test/googletest

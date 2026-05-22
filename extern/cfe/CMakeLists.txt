@@ -13,16 +13,16 @@ set(CFE_LIB_DESC_CMAKE "OWP CFE BMI Module Shared Library")
 add_compile_definitions(BMI_ACTIVE)
 
 if(WIN32)
-    add_library(cfebmi cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c)
+    add_library(cfebmi cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c cfe/src/conceptual_reservoir.c)
 else()
-    add_library(cfebmi SHARED cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c)
+    add_library(cfebmi SHARED cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c cfe/src/conceptual_reservoir.c)
 endif()
 
 target_include_directories(cfebmi PRIVATE cfe/include)
 
 set_target_properties(cfebmi PROPERTIES VERSION ${PROJECT_VERSION})
 
-set_target_properties(cfebmi PROPERTIES PUBLIC_HEADER cfe/bmi_cfe.h)
+set_target_properties(cfebmi PROPERTIES PUBLIC_HEADER cfe/include/bmi_cfe.h)
 
 # Code requires minimum of C99 standard to compile
 set_target_properties(cfebmi PROPERTIES C_STANDARD 99 C_STANDARD_REQUIRED ON)

@@ -1,17 +1,20 @@
 #ifndef HY_POINTHDRONEXUSREMOTE_H
 #define HY_POINTHDRONEXUSREMOTE_H
 
-#ifdef NGEN_MPI_ACTIVE
+#include <NGenConfig.h>
+#if NGEN_WITH_MPI
 
 #include <HY_PointHydroNexus.hpp>
+#include <HY_Features_Ids.hpp>
 #include <mpi.h>
 #include <vector>
 
 #include <unordered_map>
 #include <string>
+#include <list>
+#include <exception>
 
-
-/** This class representa a point nexus that can have both upstream and downstream connections to catments that are
+/** This class represents a point nexus that can have both upstream and downstream connections to catchments that are
 *   in seperate MPI processes.
 *
 *   When attempting to add upstream flows from a remote catchment a MPI_Irecv call will be generated
@@ -32,14 +35,14 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         virtual ~HY_PointHydroNexusRemote();
 
         /** get the request percentage of downstream flow through this nexus at timestep t. If the indicated catchment is not local a async send will be
-            created. Will attempt to process all async recieves currently queued before processing flows*/
-        double get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow);
+            created. Will attempt to process all async receives currently queued before processing flows*/
+        double get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow) override;
 
         /** add flow to this nexus for timestep t. If the indicated catchment is not local an async receive will be started*/
-        void add_upstream_flow(double val, std::string catchment_id, time_step_t t);
+        void add_upstream_flow(double val, std::string catchment_id, time_step_t t) override;
 
         /** extract a numeric id from the catchment id for use as a mpi tag */
-        static long extract(std::string s) {  return std::stoi(s.substr(4)); }
+        static long extract(std::string s) {  return std::stoi( s.substr( s.find(hy_features::identifiers::separator)+1 ) ); }
         
         const Catchments& get_local_contributing_catchments(){
             return local_contributers;
@@ -68,6 +71,7 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
 		communication_type get_communicator_type() { return type; }
 
     private:
+        void post_receives();
         void process_communications();
 
         int world_rank;
@@ -93,7 +97,7 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
             MPI_Request mpi_request;
         };
 
-        std::list<async_request> stored_recieves;
+        std::list<async_request> stored_receives;
         std::list<async_request> stored_sends;
 
         std::string nexus_prefix = "cat-";
@@ -155,8 +159,9 @@ namespace std
 			return std::string("sender_receiver");
 			break;
 		}
+		throw std::runtime_error("Unhandled value of communication_type");
 	}
 }
 
-#endif // NGEN_MPI_ACTIVE
+#endif // NGEN_WITH_MPI
 #endif // HY_POINTHYDRONEXUSREMOTEDOWNSTREAM_H

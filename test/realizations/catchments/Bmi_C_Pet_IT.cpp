@@ -43,20 +43,12 @@ protected:
         return formulation.get_bmi_main_output_var();
     }
 
-    static std::string get_friend_forcing_file_path(const Bmi_C_Formulation& formulation) {
-        return formulation.get_forcing_file_path();
-    }
-
-    static bool get_friend_is_bmi_using_forcing_file(const Bmi_C_Formulation& formulation) {
-        return formulation.is_bmi_using_forcing_file();
-    }
-
     static std::string get_friend_model_type_name(Bmi_C_Formulation& formulation) {
         return formulation.get_model_type_name();
     }
 
     static double get_friend_var_value_as_double(Bmi_C_Formulation& formulation, const string& var_name) {
-        return formulation.get_var_value_as_double(var_name);
+        return formulation.get_var_value_as_double(0, var_name);
     }
 
     void SetUp() override;
@@ -89,7 +81,8 @@ void Bmi_C_Pet_IT::SetUp() {
 
     forcing_dir_opts = {"./data/forcing/", "../data/forcing/", "../../data/forcing/"};
     bmi_init_cfg_dir_opts = {"./data/bmi/c/pet/", "../data/bmi/c/pet/", "../../data/bmi/c/pet/"};
-    lib_dir_opts = {"./extern/evapotranspiration/evapotranspiration/cmake_build/", "../extern/evapotranspiration/evapotranspiration/cmake_build/", "../../extern/evapotranspiration/evapotranspiration/cmake_build/"};
+    lib_dir_opts = {"./extern/evapotranspiration/evapotranspiration/cmake_build/", "../extern/evapotranspiration/evapotranspiration/cmake_build/", "../../extern/evapotranspiration/evapotranspiration/cmake_build/"
+                    "./extern/evapotranspiration/cmake_build/", "../extern/evapotranspiration/cmake_build/", "../../extern/evapotranspiration/cmake_build/"};
 
     config_json = std::vector<std::string>(EX_COUNT);
     catchment_ids = std::vector<std::string>(EX_COUNT);
@@ -112,7 +105,7 @@ void Bmi_C_Pet_IT::SetUp() {
     registration_functions[0] = "register_bmi_pet";
     init_config[0] = find_file(bmi_init_cfg_dir_opts, "cat-27_bmi_config.ini");
     main_output_variable[0] = "water_potential_evaporation_flux";
-    uses_forcing_file[0] = true;
+    uses_forcing_file[0] = false;
 
     catchment_ids[1] = "cat-67";
     model_type_name[1] = "bmi_c_pet";
@@ -121,7 +114,7 @@ void Bmi_C_Pet_IT::SetUp() {
     registration_functions[1] = "register_bmi_pet";
     init_config[1] = find_file(bmi_init_cfg_dir_opts, "cat-67_bmi_config.ini");
     main_output_variable[1] = "water_potential_evaporation_flux";
-    uses_forcing_file[1] = true;
+    uses_forcing_file[1] = false;
 
     std::string output_variables = "                \"output_variables\": [\"water_potential_evaporation_flux\"],\n";
 
@@ -139,7 +132,6 @@ void Bmi_C_Pet_IT::SetUp() {
                          "            \"bmi_c\": {"
                          "                \"model_type_name\": \"" + model_type_name[i] + "\","
                          "                \"library_file\": \"" + lib_file[i] + "\","
-                         "                \"forcing_file\": \"" + forcing_file[i] + "\","
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 9, "
@@ -162,7 +154,7 @@ void Bmi_C_Pet_IT::SetUp() {
                          "}";
         std::stringstream stream;
         stream << config_json[i];
-        //cout << stream.str();
+        //std::cout << stream.str();
         boost::property_tree::ptree loaded_tree;
         boost::property_tree::json_parser::read_json(stream, loaded_tree);
         config_prop_ptree[i] = loaded_tree.get_child("catchments").get_child(catchment_ids[i]).get_child("bmi_c");
@@ -180,10 +172,8 @@ TEST_F(Bmi_C_Pet_IT, Test_InitModel) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     ASSERT_EQ(get_friend_model_type_name(formulation), model_type_name[ex_index]);
-    ASSERT_EQ(get_friend_forcing_file_path(formulation), forcing_file[ex_index]);
     ASSERT_EQ(get_friend_bmi_init_config(formulation), init_config[ex_index]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variable[ex_index]);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
 /** Test of get response. */

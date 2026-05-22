@@ -15,6 +15,7 @@
 
 #include "Bmi_Module_Formulation.hpp"
 #include "Bmi_Fortran_Formulation.hpp"
+#include "Bmi_Fortran_Adapter.hpp"
 #include "gtest/gtest.h"
 #include <iostream>
 #include <vector>
@@ -48,31 +49,23 @@ protected:
     }
 
     static std::shared_ptr<models::bmi::Bmi_Fortran_Adapter> get_friend_bmi_model(Bmi_Fortran_Formulation& formulation) {
-        return formulation.get_bmi_model();
+        return std::dynamic_pointer_cast<models::bmi::Bmi_Fortran_Adapter>(formulation.get_bmi_model());
     }
 
     static time_t get_friend_bmi_model_start_time_forcing_offset_s(Bmi_Fortran_Formulation& formulation) {
         return formulation.get_bmi_model_start_time_forcing_offset_s();
     }
 
-    static std::string get_friend_forcing_file_path(const Bmi_Fortran_Formulation& formulation) {
-        return formulation.get_forcing_file_path();
-    }
-
     static time_t get_friend_forcing_start_time(Bmi_Fortran_Formulation& formulation) {
         return formulation.forcing->get_data_start_time();
-    }
-
-    static bool get_friend_is_bmi_using_forcing_file(const Bmi_Fortran_Formulation& formulation) {
-        return formulation.is_bmi_using_forcing_file();
     }
 
     static std::string get_friend_model_type_name(Bmi_Fortran_Formulation& formulation) {
         return formulation.get_model_type_name();
     }
 
-    static double get_friend_var_value_as_double(Bmi_Fortran_Formulation& formulation, const string& var_name) {
-        return formulation.get_var_value_as_double(var_name);
+    static double get_friend_var_value_as_double(Bmi_Fortran_Formulation& formulation, const std::string& var_name) {
+        return formulation.get_var_value_as_double(0, var_name);
     }
 
     static std::string get_friend_output_header_line(Bmi_Fortran_Formulation& formulation, std::string delim) {
@@ -201,14 +194,14 @@ void Bmi_Fortran_Formulation_Test::SetUp() {
                          "            \"bmi_fortran\": {"
                          "                \"model_type_name\": \"" + model_type_name[i] + "\","
                          "                \"library_file\": \"" + lib_file[i] + "\","
-                         "                \"forcing_file\": \"" + forcing_file[i] + "\","
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
                          "                      \"INPUT_VAR_3\": \"" + AORC_FIELD_NAME_PRESSURE_SURFACE + "\","
                          "                      \"INPUT_VAR_2\": \"" + AORC_FIELD_NAME_SPEC_HUMID_2M_AG + "\","
-                         "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
+                         "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\","
+                         "                      \"GRID_VAR_1\": \""  + AORC_FIELD_NAME_PRECIP_RATE +"\"\n"
                          "                },"
                          "                \"registration_function\": \"" + registration_functions[i] + "\","
                          + variables_line +
@@ -242,10 +235,8 @@ TEST_F(Bmi_Fortran_Formulation_Test, Initialize_0_a) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     ASSERT_EQ(get_friend_model_type_name(formulation), model_type_name[ex_index]);
-    ASSERT_EQ(get_friend_forcing_file_path(formulation), forcing_file[ex_index]);
     ASSERT_EQ(get_friend_bmi_init_config(formulation), init_config[ex_index]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variable[ex_index]);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
 /** Test to make sure we can initialize multiple model instances with dynamic loading. */
@@ -259,7 +250,7 @@ TEST_F(Bmi_Fortran_Formulation_Test, Initialize_1_a) {
     std::string header_1 = get_friend_output_header_line(form_1,",");
     std::string header_2 = get_friend_output_header_line(form_2,",");
 
-    ASSERT_EQ(header_1, "OUTPUT_VAR_1,OUTPUT_VAR_2,OUTPUT_VAR_3");
+    ASSERT_EQ(header_1, "OUTPUT_VAR_1,OUTPUT_VAR_2,OUTPUT_VAR_3,GRID_VAR_2,GRID_VAR_3,GRID_VAR_4");
     ASSERT_EQ(header_2, "OUTPUT_VAR_2,OUTPUT_VAR_1,OUTPUT_VAR_3");
 }
 
@@ -312,11 +303,17 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetOutputLineForTimestep_0_a) {
 
     Bmi_Fortran_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
-
+    //Init the test grids
+    std::shared_ptr<models::bmi::Bmi_Fortran_Adapter> model_adapter = get_friend_bmi_model(formulation);
+    std::vector<int> shape = {2,3};
+    model_adapter->SetValue("grid_1_shape", shape.data());
+    shape = {2,2,3};
+    model_adapter->SetValue("grid_2_shape", shape.data());
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
     //NOTE these answers are dependent on the INPUT vars selected and the data in the forcing file
-    ASSERT_EQ(output, "0.000000,0.018600,0.000000");
+    //Also, for grid vars, just gets the first value in the returned flattened array...
+    ASSERT_EQ(output, "0.000000,0.018600,0.000000,2.000000,10.000000,10.000000");
 }
 
 /** Simple test of output with modified variables. */

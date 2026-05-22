@@ -1,7 +1,7 @@
-//#ifndef ROUTING_PARAMS
-//#define ROUTING_PARAMS
+#ifndef NGEN_ROUTING_ROUTING_PARAMS
+#define NGEN_ROUTING_ROUTING_PARAMS
 
-using namespace std;
+#include <string>
 
 /**
  * @brief routing_params providing configuration information for routing.
@@ -28,4 +28,4 @@ struct routing_params
 };
 
 
-//#endif // ROUTING_PARAMS
+#endif // NGEN_ROUTING_ROUTING_PARAMS

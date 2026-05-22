@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 # Uncomment this and rebuild artifacts to enable debugging
 set(CMAKE_BUILD_TYPE Debug)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(testbmicppmodel VERSION 1.0.0 DESCRIPTION "BMI C++ Testing Model Shared Library")
@@ -27,6 +27,7 @@ target_include_directories(testbmicppmodel PRIVATE ../bmi-cxx/ )
 set_target_properties(testbmicppmodel PROPERTIES VERSION ${PROJECT_VERSION})
 
 set_target_properties(testbmicppmodel PROPERTIES PUBLIC_HEADER include/test_bmi_cpp.hpp)
+set_target_properties(testbmicppmodel PROPERTIES CXX_VISIBILITY_PRESET default)
 
 include(GNUInstallDirs)
 

@@ -7,16 +7,14 @@
 #include <algorithm>
 #include "WrappedDataProvider.hpp"
 
-using namespace std;
-
 namespace data_access {
 
     /**
      * A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps.
      *
-     * This type wraps another @ref ForcingProvider, similarly to its parent.  This is "optimistic," however, in that it
-     * is constructed without the backing data source it will wrap.  It only requires the data output names it expects
-     * to eventually be able to provide.
+     * This type wraps another @ref GenericDataProvider, similarly to its parent.  This is "optimistic," however, in
+     * that it is constructed without the backing data source it will wrap.  It only requires the data output names it
+     * expects to eventually be able to provide.
      *
      * This type allows for deferring reconciling of whether a provider for some data output is available.  This is
      * useful for situations when a required provider is not currently known, but is expected, and there will be ample
@@ -41,14 +39,14 @@ namespace data_access {
          *
          * @param providedOutputs The collection of the names of outputs this instance will need to provide.
          */
-        explicit DeferredWrappedProvider(vector<string> providedOutputs) : WrappedDataProvider(nullptr), providedOutputs(std::move(providedOutputs)) { }
+        explicit DeferredWrappedProvider(std::vector<std::string> providedOutputs) : WrappedDataProvider(nullptr), providedOutputs(std::move(providedOutputs)) { }
 
         /**
          * Convenience constructor for when there is only one provided output name.
          *
          * @param outputName The name of the single output this instance will need to provide.
          */
-        explicit DeferredWrappedProvider(const string& outputName) : DeferredWrappedProvider(vector<string>(1)) {
+        explicit DeferredWrappedProvider(const std::string& outputName) : DeferredWrappedProvider(std::vector<std::string>(1)) {
             providedOutputs[0] = outputName;
         }
 
@@ -72,7 +70,7 @@ namespace data_access {
          * @return The names of the outputs for which this instance is (or will be) able to provide values.
          */
 
-        const std::vector<std::string> &get_avaliable_variable_names() {
+        boost::span<const std::string> get_available_variable_names() const override {
             return providedOutputs;
         }
 
@@ -85,7 +83,7 @@ namespace data_access {
          *
          * @return The message string for the last call to @ref setWrappedProvider.
          */
-        inline const string &getSetMessage() {
+        inline const std::string &getSetMessage() {
             return setMessage;
         }
 
@@ -93,6 +91,10 @@ namespace data_access {
          * Get whether the instance is initialized such that it can handle requests to provide data.
          *
          * For this type, this is equivalent to whether the wrapped provider member has been set.
+         *
+         * Note that readiness is subject only to the result of @ref isWrappedProviderSet, which for this type (and
+         * generally) does not reflect the readiness state of the inner, wrapped provider. This effectively assumes it
+         * is ready prior to or immediately upon being set.
          *
          * @return Whether the instance is initialized such that it can handle requests to provide data.
          */
@@ -139,8 +141,8 @@ namespace data_access {
             }
 
             // Confirm this will provide everything needed
-            const vector<string> &available = provider->get_avaliable_variable_names();
-            for (const string &requiredName : providedOutputs) {
+            const auto available = provider->get_available_variable_names();
+            for (const std::string &requiredName : providedOutputs) {
                 if (std::find(available.begin(), available.end(), requiredName) == available.end()) {
                     setMessage = "Given provider does not provide the required " + requiredName;
                     return false;
@@ -155,7 +157,7 @@ namespace data_access {
 
     protected:
         /** The collection of names of the outputs this type can/will be able to provide from its wrapped source. */
-        vector<string> providedOutputs;
+        std::vector<std::string> providedOutputs;
 
         /**
          * A message providing information from the last @ref setWrappedProvider call.
@@ -163,7 +165,7 @@ namespace data_access {
          * The value will be empty if the function returned ``true``.  If it returned ``false``, this will have an
          * info message set explaining more detail on the failure.
          */
-        string setMessage;
+        std::string setMessage;
     };
 
 }

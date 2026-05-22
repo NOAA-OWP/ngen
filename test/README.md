@@ -28,9 +28,9 @@ The CMake buildsystem will need to either be generated or regenerated after the 
 
 Regenerating just requires an initial step of removing the/an existing CMake build directory (frequently something like `cmake-build-debug/` in the project root). 
  
-If/once the desired build directory does not exist, use an appropriate CMake command to generate the buildsystem.  E.g.:
+If/once the desired build directory does not exist, use an appropriate CMake command to generate the buildsystem (see [wiki/Quickstart](https://github.com/NOAA-OWP/ngen/wiki/NGen-Tutorial)) for more detailed description.  E.g.:
 
-    cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -S .
+    cmake -DCMAKE_BUILD_TYPE=Debug -DNGEN_WITH_TESTS:BOOL=ON -B cmake-build-debug -S .
 
 # Executing Automated Tests
 

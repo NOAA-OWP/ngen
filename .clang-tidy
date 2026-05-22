@@ -1,0 +1,32 @@
+---
+Checks: |
+  clang-diagnostic-*,
+  clang-analyzer-*,
+  cppcoreguidelines-*,
+  modernize-*,
+  mpi-*,
+  bugprone-*,
+  boost-*,
+  performance-*,
+  hicpp-*,
+  google-*,
+  readability-*,
+  misc-confusable-identifiers,
+  misc-const-correctness,
+  -modernize-use-trailing-return-type,
+  -cppcoreguidelines-special-member-functions
+AnalyzeTemporaryDtors: false
+FormatStyle: file
+CheckOptions:
+  - key: cppcoreguidelines-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
+    value: "1"
+  - key: modernize-loop-convert.MaxCopySize
+    value: "16"
+  - key: modernize-loop-convert.MinConfidence
+    value: reasonable
+  - key: modernize-pass-by-value.IncludeStyle
+    value: google
+  - key: modernize-use-nullptr.NullMacros
+    value: "NULL"
+---
+

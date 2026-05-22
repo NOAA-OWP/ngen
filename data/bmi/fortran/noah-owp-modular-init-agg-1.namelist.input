@@ -1,0 +1,68 @@
+&timing ! and output
+  dt               = 1800.0   ! timestep [seconds]
+  startdate        = "199801010630" ! UTC time start of simulation (YYYYMMDDhhmm)
+  enddate          = "199901010630" ! UTC time end of simulation (YYYYMMDDhhmm)
+  forcing_filename = "data/config/bmi/sugar_creek/noah-mp-modular.dat" ! change filename to match your forcing data
+  output_filename  = "data/config/bmi/sugar_creek/output.nc"
+/
+
+&parameters
+  parameter_dir      = "extern/noah-owp-modular/noah-owp-modular/parameters/"
+  general_table      = "GENPARM.TBL"                    ! general param tables and misc params
+  soil_table         = "SOILPARM.TBL"                   ! soil param table
+  noahowp_table      = "MPTABLE.TBL"                    ! noah-mp related param tables
+  soil_class_name    = "STAS"                           ! soil class data source - "STAS" or "STAS-RUC"
+  veg_class_name     = "MODIFIED_IGBP_MODIS_NOAH"       ! vegetation class data source - "MODIFIED_IGBP_MODIS_NOAH" or "USGS" 
+/
+
+&location ! for point runs, needs to be modified for gridded
+  lat                = 40.01                        ! latitude [degrees]
+  lon                = -88.37                       ! longitude [degrees]
+  terrain_slope      = 0.0                          ! terrain slope [degrees]
+  azimuth            = 0.0                          ! terrain azimuth or aspect [degrees clockwise from north]
+/
+
+&forcing
+  ZREF               = 10.0    ! measurment height for wind speed
+  rain_snow_thresh   = 1.0     ! rain-snow temperature threshold (degrees Celcius)  
+/
+
+&model_options
+  precip_phase_option               = 2
+  snow_albedo_option                = 2 ! 1 = BATS, 2 = CLASS
+  dynamic_veg_option                = 1
+  runoff_option                     = 8
+  drainage_option                   = 8
+  frozen_soil_option                = 1
+  dynamic_vic_option                = 1
+  radiative_transfer_option         = 3
+  sfc_drag_coeff_option             = 1
+  canopy_stom_resist_option         = 1
+  crop_model_option                 = 0
+  snowsoil_temp_time_option         = 3
+  soil_temp_boundary_option         = 2
+  supercooled_water_option          = 1
+  stomatal_resistance_option        = 1
+  evap_srfc_resistance_option       = 1
+  subsurface_option                 = 1 
+/
+
+&structure
+ isltyp           = 1       ! soil texture class
+ nsoil            = 4       ! number of soil levels
+ nsnow            = 3       ! number of snow levels
+ nveg             = 20      ! number of vegetation types
+ vegtyp           = 1       ! vegetation type modis
+ croptype         = 0       ! crop type (0 = no crops)
+ sfctyp           = 1       ! land surface type, 1:soil, 2:lake
+ soilcolor        = 4       ! soil color code
+/
+
+&initial_values
+ dzsnso    =  0.0,  0.0,  0.0,  0.1,  0.3,  0.6,  1.0  ! level thickness [m]
+ sice      =  0.0,  0.0,  0.0,  0.0  ! initial soil ice profile [vol]
+ sh2o      =  0.3,  0.3,  0.3,  0.3  ! initial soil liquid profile [vol]
+ zwt       =  -2.0                   ! initial water table depth below surface [m]
+/
+
+

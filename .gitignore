@@ -98,6 +98,10 @@ CMakeCache.txt
 /cmake_build
 /build
 /cmake_build*
+compile_commands.json
+
+# Prevent ignoring cmake modules
+!cmake/**/*.cmake
 
 # Static Headers
 include/bmi.hpp
@@ -123,7 +127,6 @@ data/hydrofabric/huc01_demo/
 # NGen build-related items
 .venv
 boost_*
-include/NGenConfig.h
 
 # Large Example Datasets for certain tests #
 ############################################

@@ -9,12 +9,10 @@
 #include "GenericDataProvider.hpp"
 #include "OptionalWrappedDataProvider.hpp"
 #include "ConfigurationException.hpp"
+#include "ExternalIntegrationException.hpp"
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"
-#define DEFAULT_ET_FORMULATION_INDEX 0
-
-using namespace std;
 
 class Bmi_Multi_Formulation_Test;
 class Bmi_Cpp_Multi_Array_Test;
@@ -39,22 +37,19 @@ namespace realization {
          * @param forcing_config
          * @param output_stream
          */
-        Bmi_Multi_Formulation(string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
+        Bmi_Multi_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
                 : Bmi_Formulation(std::move(id), forcing_provider, output_stream) { };
 
         virtual ~Bmi_Multi_Formulation() {};
 
-        /**
-         * Perform ET (or PET) calculations.
-         *
-         * This function defers to the analogous function of the appropriate nested submodule, using
-         * @ref determine_et_formulation_index to determine which one that is.
-         *
-         * @return The ET calculation from the appropriate module from this instance's collection of BMI nested modules.
-         */
-        double calc_et() override {
-            return modules[determine_et_formulation_index()]->calc_et();
-        }
+        virtual void check_mass_balance(const int& iteration, const int& total_steps, const std::string& timestamp) const final {
+            for( const auto &module : modules ) {
+                // TODO may need to check on outputs form each module indepdently???
+                // Right now, the assumption is that if each component is mass balanced
+                // then the entire formulation is mass balanced
+                module->check_mass_balance(iteration, total_steps, timestamp);
+            }
+        };
 
         /**
          * Convert a time value from the model to an epoch time in seconds.
@@ -70,7 +65,7 @@ namespace realization {
          * @param model_time The time value in a model's representation that is to be converted.
          * @return The equivalent epoch time.
          */
-        time_t convert_model_time(const double &model_time) override {
+        time_t convert_model_time(const double &model_time) const override {
             return convert_model_time(model_time, get_index_for_primary_module());
         }
 
@@ -87,7 +82,7 @@ namespace realization {
          * @param model_time The time value in a model's representation that is to be converted.
          * @return The equivalent epoch time.
          */
-        inline time_t convert_model_time(const double &model_time, int module_index) {
+        inline time_t convert_model_time(const double &model_time, int module_index) const {
             return modules[module_index]->convert_model_time(model_time);
         }
 
@@ -98,54 +93,6 @@ namespace realization {
 
         void create_formulation(geojson::PropertyMap properties) override {
             create_multi_formulation(properties, true);
-        }
-
-        /**
-         * Determine the index of the correct sub-module formulation from which ET values should be obtain.
-         *
-         * This is primarily used to determine the correct module in the multi-module collection for getting the ET
-         * value when calls to @ref calc_et are made on this "outer" multi-module formulation.
-         *
-         * The function first attempts to find the nested module that makes available either
-         * ``NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP`` or ``CSDMS_STD_NAME_POTENTIAL_ET`` available, if any does.  It
-         * then provides the index of this module.
-         *
-         * Otherwise, the function iterates through the nested modules in order performing a search for one that
-         * provides a value with either the name defined in ``NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP`` or defined in
-         * ``CSDMS_STD_NAME_POTENTIAL_ET``.  It return the index of the first having either.
-         *
-         * If neither means finds the appropriate module, at default value ``DEFAULT_ET_FORMULATION_INDEX`` is returned.
-         *
-         * @return The index of correct sub-module formulation from which ET values should be obtain.
-         */
-        size_t determine_et_formulation_index() {
-            std::shared_ptr<data_access::GenericDataProvider> et_provider = nullptr;
-            if (availableData.find(NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP) != availableData.end()) {
-                et_provider = availableData[NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP];
-            }
-            else if (availableData.find(CSDMS_STD_NAME_POTENTIAL_ET) != availableData.end()) {
-                et_provider = availableData[CSDMS_STD_NAME_POTENTIAL_ET];
-            }
-            // The pointers in availableData and modules should be the same, based on create_multi_formulation()
-            // So, if an et_provider was found from availableData, we can compare to determine the right index.
-            if (et_provider != nullptr) {
-                for (size_t i = 0; i < modules.size(); ++i) {
-                    if (et_provider == modules[i]) {
-                        return i;
-                    }
-                }
-            }
-            // Otherwise, check the modules directly for the standard ET output variable names.
-            for (size_t i = 0; i < modules.size(); ++i) {
-                std::vector<std::string> values = modules[i]->get_avaliable_variable_names();
-                if (std::find(values.begin(), values.end(), NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP) != values.end()) {
-                    return i;
-                }
-                if (std::find(values.begin(), values.end(), CSDMS_STD_NAME_POTENTIAL_ET) != values.end()) {
-                    return i;
-                }
-            }
-            return DEFAULT_ET_FORMULATION_INDEX;
         }
 
         /**
@@ -179,9 +126,7 @@ namespace realization {
          * @return The collection of forcing output property names this instance can provide.
          * @see ForcingProvider
          */
-        //const vector<std::string> &get_available_forcing_outputs();
-        //const vector<std::string> &get_avaliable_variable_names() override { return get_available_forcing_outputs(); }
-        const vector<std::string> &get_avaliable_variable_names() override;
+        boost::span <const std::string> get_available_variable_names() const override;
 
         /**
         * Get the input variables of 
@@ -189,18 +134,18 @@ namespace realization {
         *
         * @return The input variables of the first nested BMI model.
         */
-        const vector<string> get_bmi_input_variables() override {
+        const std::vector<std::string> get_bmi_input_variables() const override {
             return modules[0]->get_bmi_input_variables();
         }
 
-        const time_t &get_bmi_model_start_time_forcing_offset_s() override;
+        const time_t &get_bmi_model_start_time_forcing_offset_s() const override;
 
         /**
          * Get the output variables of the last nested BMI model.
          *
          * @return The output variables of the last nested BMI model.
          */
-        const vector<string> get_bmi_output_variables() override {
+        const std::vector<std::string> get_bmi_output_variables() const override {
             return modules.back()->get_bmi_output_variables();
         }
 
@@ -224,7 +169,7 @@ namespace realization {
          * @see get_config_mapped_variable_name(string, bool, bool)
          * @see get_config_mapped_variable_name(string, shared_ptr, shared_ptr)
          */
-        const string &get_config_mapped_variable_name(const string &model_var_name) override;
+        const std::string &get_config_mapped_variable_name(const std::string &model_var_name) const override;
 
         /**
          * When possible, translate a variable name for the first or last BMI model to an internally recognized name.
@@ -242,7 +187,7 @@ namespace realization {
          * @param check_last Whether an output variable mapping for the last module should sought.
          * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
          */
-        const string &get_config_mapped_variable_name(const string &model_var_name, bool check_first, bool check_last);
+        const std::string &get_config_mapped_variable_name(const std::string &model_var_name, bool check_first, bool check_last) const;
 
         /**
          * When possible, translate the name of an output variable for one BMI model to an input variable for another.
@@ -268,11 +213,9 @@ namespace realization {
          * @param in_module The module needing a translation of ``output_var_name`` to one of its input variable names.
          * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
          */
-        const string &get_config_mapped_variable_name(const string &output_var_name,
-                                                      const shared_ptr<Bmi_Formulation>& out_module,
-                                                      const shared_ptr<Bmi_Formulation>& in_module);
-
-        const string &get_forcing_file_path() const override;
+        const std::string &get_config_mapped_variable_name(const std::string &output_var_name,
+                                                           const std::shared_ptr<Bmi_Formulation>& out_module,
+                                                           const std::shared_ptr<Bmi_Formulation>& in_module) const;
 
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
@@ -285,7 +228,7 @@ namespace realization {
          */
 
 
-        long get_data_start_time() override
+        long get_data_start_time() const override
         {
             return get_variable_time_begin("");
         }
@@ -300,30 +243,18 @@ namespace realization {
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
 
-        time_t get_variable_time_begin(const std::string &variable_name) {
+        time_t get_variable_time_begin(const std::string &variable_name) const {
             std::string var_name = variable_name;
+            // when unspecified, assume all data is available for the same range.
+            // If no var_name, use forcing ...
             if(var_name == "*" || var_name == ""){
-                // when unspecified, assume all data is available for the same range.
-                // Find one that successfully returns...
-                for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
-                {
-                    var_name = iter->first;
-                    //TODO: Find a probably more performant way than trial and exception here.
-                    try {
-                        time_t rv = availableData[var_name]->get_data_start_time();
-                        return rv;
-                    }
-                    catch (...){
-                        continue;
-                    }
-                    break;
-                }
+                return forcing->get_data_start_time();
             }
             // If not found ...
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
+                throw std::runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
             }
-            return availableData[var_name]->get_data_start_time();
+            return availableData.at(var_name)->get_data_start_time();
         }
 
         /**
@@ -336,7 +267,7 @@ namespace realization {
          * @return The exclusive ending of the period of time over which this instance can provide this data.
          */
 
-        long get_data_stop_time() override
+        long get_data_stop_time() const override
         {
             return get_variable_time_end("");
         }
@@ -351,42 +282,29 @@ namespace realization {
          * @return The exclusive ending of the period of time over which this instance can provide this data.
          */
         //time_t get_forcing_output_time_end(const std::string &forcing_name) {
-        time_t get_variable_time_end(const std::string &variable_name) {
-            // If not found ...
+        time_t get_variable_time_end(const std::string &variable_name) const {
+            // when unspecified, assume all data is available for the same range.
+            // If no var_name, use forcing ...
             std::string var_name = variable_name;
             if(var_name == "*" || var_name == ""){
-                // when unspecified, assume all data is available for the same range.
-                // Find one that successfully returns...
-                for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
-                {
-                    var_name = iter->first;
-                    //TODO: Find a probably more performant way than trial and exception here.
-                    try {
-                        time_t rv = availableData[var_name]->get_data_stop_time();
-                        return rv;
-                    }
-                    catch (...){
-                        continue;
-                    }
-                    break;
-                }
+                return forcing->get_data_stop_time();
             }
             // If not found ...
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
+                throw std::runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
             }
-            return availableData[var_name]->get_data_stop_time();
+            return availableData.at(var_name)->get_data_stop_time();
         }
 
-        long record_duration() override
+        long record_duration() const override
         {
             std::string var_name;
-            for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
+            for(auto iter = availableData.begin(); iter != availableData.end(); ++iter)
             {
                 var_name = iter->first;
                 //TODO: Find a probably more performant way than trial and exception here.
                 try {
-                    time_t rv = availableData[var_name]->record_duration();
+                    time_t rv = availableData.at(var_name)->record_duration();
                     return rv;
                 }
                 catch (...){
@@ -397,12 +315,12 @@ namespace realization {
 
             // If not found ...
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output record duration for unknown \"" + var_name + "\"");
+                throw std::runtime_error(get_formulation_type() + " cannot get output record duration for unknown \"" + var_name + "\"");
             }
-            return availableData[var_name]->record_duration();
+            return availableData.at(var_name)->record_duration();
         }
 
-        std::string get_formulation_type() override {
+        std::string get_formulation_type() const override {
             return "bmi_multi";
         }
 
@@ -411,7 +329,7 @@ namespace realization {
          *
          * @return The current time for the primary nested BMI model in its native format and units.
          */
-        const double get_model_current_time() override {
+        const double get_model_current_time() const override {
             return modules[get_index_for_primary_module()]->get_model_current_time();
         }
 
@@ -420,7 +338,7 @@ namespace realization {
          *
          * @return The end time for the primary nested BMI model in its native format and units.
          */
-        const double get_model_end_time() override {
+        const double get_model_end_time() const override {
             return modules[get_index_for_primary_module()]->get_model_end_time();
         }
 
@@ -433,7 +351,7 @@ namespace realization {
             return modules[get_index_for_primary_module()]->get_data_start_time();
         }
 
-        string get_output_line_for_timestep(int timestep, std::string delimiter) override;
+        std::string get_output_line_for_timestep(int timestep, std::string delimiter) override;
 
         double get_response(time_step_t t_index, time_step_t t_delta) override;
 
@@ -450,9 +368,9 @@ namespace realization {
          * @return The index of the forcing time step that contains the given point in time.
          * @throws std::out_of_range If the given point is not in any time step.
          */
-        size_t get_ts_index_for_time(const time_t &epoch_time) override {
+        size_t get_ts_index_for_time(const time_t &epoch_time) const override {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Multi_Formulation does not yet implement get_ts_index_for_time");
+            throw std::runtime_error("Bmi_Multi_Formulation does not yet implement get_ts_index_for_time");
         }
 
         /**
@@ -485,7 +403,7 @@ namespace realization {
             
             // If not found ...
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output value for unknown " + output_name + SOURCE_LOC);
+                throw std::runtime_error(get_formulation_type() + " cannot get output value for unknown " + output_name + SOURCE_LOC);
             }
             return availableData[output_name]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
         }
@@ -498,30 +416,28 @@ namespace realization {
             std::string output_units = selector.get_output_units();
 
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output values for unknown " + output_name + SOURCE_LOC);
+                throw std::runtime_error(get_formulation_type() + " cannot get output values for unknown " + output_name + SOURCE_LOC);
             }
             return availableData[output_name]->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
         }
 
-        bool is_bmi_input_variable(const string &var_name) override;
+        bool is_bmi_input_variable(const std::string &var_name) const override;
 
         /**
          * Test whether all backing models have fixed time step size.
          *
          * @return Whether all backing models has fixed time step size.
          */
-        bool is_bmi_model_time_step_fixed() override;
+        bool is_bmi_model_time_step_fixed() const override;
 
-        bool is_bmi_output_variable(const string &var_name) override;
-
-        bool is_bmi_using_forcing_file() const override;
+        bool is_bmi_output_variable(const std::string &var_name) const override;
 
         /**
          * Test whether all backing models have been initialize using the BMI standard ``Initialize`` function.
          *
          * @return Whether all backing models have been initialize using the BMI standard ``Initialize`` function.
          */
-        bool is_model_initialized() override;
+        bool is_model_initialized() const override;
 
         /**
          * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
@@ -541,12 +457,12 @@ namespace realization {
          * @param name The name of the forcing property for which the current value is desired.
          * @return Whether the property's value is an aggregate sum.
          */
-        bool is_property_sum_over_time_step(const string &name) override {
+        bool is_property_sum_over_time_step(const std::string &name) const override {
             if (availableData.empty() || availableData.find(name) == availableData.end()) {
-                throw runtime_error(
+                throw std::runtime_error(
                         get_formulation_type() + " cannot get whether unknown property " + name + " is summation");
             }
-            return availableData[name]->is_property_sum_over_time_step(name);
+            return availableData.at(name)->is_property_sum_over_time_step(name);
         }
 
         /**
@@ -562,7 +478,7 @@ namespace realization {
          *
          * @return The index of the primary module.
          */
-        inline int get_index_for_primary_module() {
+        inline int get_index_for_primary_module() const {
             return primary_module_index;
         }
 
@@ -580,6 +496,36 @@ namespace realization {
             }
         }
 
+        /** 
+         * Check that the output variable names in the global bmi_multi are valid names
+         */
+        void check_output_var_names() {
+            // variable already checked
+            if (is_out_vars_from_last_mod) {
+                return;
+            }
+
+            // get bmi_multi global output variable names
+            const std::vector<std::string> &output_var_names = get_output_variable_names();
+
+            // store variable names in avaialbleData in the valid output variable name list
+            std::vector<std::string> available_var_names;
+            std::string var_name;
+            for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
+            {
+                var_name = iter->first;
+                available_var_names.push_back(var_name);
+            }
+
+            // check if an output variable listed in the bmi_multi global is a valid variable
+            for (int i = 0; i < output_var_names.size(); ++i) {
+                auto it = std::find(available_var_names.begin(), available_var_names.end(), output_var_names[i]);
+                if (it == available_var_names.end()) {
+                    throw std::runtime_error(output_var_names[i] + " does not exist in the output name list" + SOURCE_LOC);
+                }
+            }
+        }
+
     protected:
 
         /**
@@ -589,26 +535,6 @@ namespace realization {
          * @param needs_param_validation
          */
         void create_multi_formulation(geojson::PropertyMap properties, bool needs_param_validation);
-
-        template<class T>
-        double get_module_var_value_as_double(const std::string &var_name, std::shared_ptr<Bmi_Formulation> mod) {
-            std::shared_ptr<T> module = std::static_pointer_cast<T>(mod);
-            return module->get_var_value_as_double(var_name);
-        }
-
-        /**
-         * Get value for some BMI model variable.
-         *
-         * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
-         * is actual a single, scalar value.  Thus, it returns what is at index 0 of the array reference.
-         *
-         * @param index
-         * @param var_name
-         * @return
-         */
-        double get_var_value_as_double(const std::string &var_name) {
-            return get_var_value_as_double(0, var_name);
-        }
 
         /**
          * Get value for some BMI model variable at a specific index.
@@ -634,7 +560,7 @@ namespace realization {
          * @param var_name
          * @return
          */
-        double get_var_value_as_double(const int& index, const std::string& var_name) {
+        double get_var_value_as_double(const int& index, const std::string& var_name) override {
             auto data_provider_iter = availableData.find(var_name);
             if (data_provider_iter == availableData.end()) {
                 throw external::ExternalIntegrationException(
@@ -642,8 +568,7 @@ namespace realization {
             }
             // Otherwise, we have a provider, and we can cast it based on the documented assumptions
             try {
-                std::shared_ptr <data_access::GenericDataProvider> nested_module =
-                        std::dynamic_pointer_cast<data_access::GenericDataProvider>(data_provider_iter->second);
+                auto const& nested_module = data_provider_iter->second;
                 long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
                 auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"1");
                 //TODO: After merge PR#405, try re-adding support for index
@@ -691,10 +616,10 @@ namespace realization {
                                       "provider to satisfy set of deferred provisions for nested module at index "
                                       + std::to_string(deferredProviderModuleIndices[d]) + ": {";
                     // There must always be at least 1; get manually to help with formatting
-                    msg += deferredProvider->get_avaliable_variable_names()[0];
+                    msg += deferredProvider->get_available_variable_names()[0];
                     // And here make sure to start at 1 instead of 0
-                    for (int i = 1; i < deferredProvider->get_avaliable_variable_names().size(); ++i)
-                        msg += ", " + deferredProvider->get_avaliable_variable_names()[i];
+                    for (int i = 1; i < deferredProvider->get_available_variable_names().size(); ++i)
+                        msg += ", " + deferredProvider->get_available_variable_names()[i];
                     msg += "}";
                     throw realization::ConfigurationException(msg);
                 }

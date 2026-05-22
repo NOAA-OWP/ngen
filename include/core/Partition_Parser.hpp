@@ -1,10 +1,6 @@
 #ifndef PARTITION_PARSER_H
 #define PARTITION_PARSER_H
 
-#ifdef NGEN_MPI_ACTIVE
-
-//#include <mpi.h>
-
 #include <memory>
 #include <sstream>
 #include <tuple>
@@ -20,18 +16,7 @@
 #include "features/Features.hpp"
 #include <FeatureCollection.hpp>
 #include "JSONProperty.hpp"
-
-using Tuple = std::tuple<int, std::string, std::string, std::string>;
-
-//This struct is moved from private section to here so that the unit test function can access it
-struct PartitionData
-{
-    int mpi_world_rank;
-    std::unordered_set<std::string> catchment_ids;
-    std::unordered_set<std::string> nexus_ids;
-    std::vector<Tuple> remote_connections;
-};
-
+#include "Partition_Data.hpp"
 
 class Partitions_Parser {
 
@@ -63,8 +48,8 @@ class Partitions_Parser {
             std::string remote_nex_id;
             std::string remote_cat_id;
             std::string direction;
-            Tuple tmp_tuple;
-            std::vector<Tuple> remote_conn_vec;
+            PartitionData::Tuple tmp_tuple;
+            std::vector<PartitionData::Tuple> remote_conn_vec;
             int part_counter = 0;
             for(auto &partition: tree.get_child("partitions"))  {
                 //Get partition id
@@ -93,29 +78,37 @@ class Partitions_Parser {
                 }
                 part_data.nexus_ids = nexus_ids;
                 nexus_ids.clear();
-                if( part.at("remote-connections").get_type() == geojson::PropertyType::List ) {
+
+                if( part.at("remote-connections").get_type() == geojson::PropertyType::List ) 
+                {
                     //It is valid to have no remote connections, but the backend property tree parser
-                    //can't represent empty lists/objects, so it turns into an ampty string (which is iterable)
+                    //can't represent empty lists/objects, so it turns into an empty string (which is iterable)
                     //so we check to ensure the remote connections are a list type (not string) before we attempt
                     //to process the remote-connections.  If they are empty, this step gets skipped entirely.
                     //Get remote-connections and set the corresponding part_data struct member
+                    
                     for (auto &remote_conn : part.at("remote-connections").as_list())
                     {
-                        remote_mpi_rank = remote_conn.at("mpi-rank").as_natural_number();
-                        remote_nex_id = remote_conn.at("nex-id").as_string();
-                        remote_cat_id = remote_conn.at("cat-id").as_string();
-                        direction = remote_conn.at("cat-direction").as_string();
-                        tmp_tuple = std::make_tuple(remote_mpi_rank, remote_nex_id, remote_cat_id, direction);
-                        remote_conn_vec.push_back(tmp_tuple);
+                        if ( remote_conn.get_type() != geojson::PropertyType::String )
+                        {
+                            remote_mpi_rank = remote_conn.at("mpi-rank").as_natural_number();
+                            remote_nex_id = remote_conn.at("nex-id").as_string();
+                            remote_cat_id = remote_conn.at("cat-id").as_string();
+                            direction = remote_conn.at("cat-direction").as_string();
+                            tmp_tuple = std::make_tuple(remote_mpi_rank, remote_nex_id, remote_cat_id, direction);
+                            remote_conn_vec.push_back(tmp_tuple);
+                        }
                     }
                 }
+                
                 part_data.remote_connections = remote_conn_vec;
                 remote_conn_vec.clear();
 
                 //Push part_data struct the vector
                 partition_ranks.push_back(part_data);
 
-                part_counter++;       
+                part_counter++;   
+                
             }
         };
 
@@ -158,7 +151,7 @@ class Partitions_Parser {
             */
 
             return part_data;
-        };
+        }
 
         //This example function shows how to get a specific member of the struct
         int get_mpi_rank(int part_id)
@@ -170,7 +163,7 @@ class Partitions_Parser {
 
             std::cout << "mpi_world_rank: " << mpi_world_rank << std::endl;
             return mpi_world_rank;
-        };
+        }
 
         // partition_ranks is a vector of struct: PartitionData
         std::vector<PartitionData> partition_ranks;
@@ -185,5 +178,4 @@ class Partitions_Parser {
         boost::property_tree::ptree tree;
 };
 
-#endif // NGEN_MPI_ACTIVE
 #endif // PARTITION_PARSER_H

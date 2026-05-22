@@ -48,31 +48,23 @@ protected:
     }
 
     static std::shared_ptr<models::bmi::Bmi_Cpp_Adapter> get_friend_bmi_model(Bmi_Cpp_Formulation& formulation) {
-        return formulation.get_bmi_model();
+        return std::dynamic_pointer_cast<models::bmi::Bmi_Cpp_Adapter>(formulation.get_bmi_model());
     }
 
     static time_t get_friend_bmi_model_start_time_forcing_offset_s(Bmi_Cpp_Formulation& formulation) {
         return formulation.get_bmi_model_start_time_forcing_offset_s();
     }
 
-    static std::string get_friend_forcing_file_path(const Bmi_Cpp_Formulation& formulation) {
-        return formulation.get_forcing_file_path();
-    }
-
     static time_t get_friend_forcing_start_time(Bmi_Cpp_Formulation& formulation) {
         return formulation.forcing->get_data_start_time();
-    }
-
-    static bool get_friend_is_bmi_using_forcing_file(const Bmi_Cpp_Formulation& formulation) {
-        return formulation.is_bmi_using_forcing_file();
     }
 
     static std::string get_friend_model_type_name(Bmi_Cpp_Formulation& formulation) {
         return formulation.get_model_type_name();
     }
 
-    static double get_friend_var_value_as_double(Bmi_Cpp_Formulation& formulation, const string& var_name) {
-        return formulation.get_var_value_as_double(var_name);
+    static double get_friend_var_value_as_double(Bmi_Cpp_Formulation& formulation, const std::string& var_name) {
+        return formulation.get_var_value_as_double(0, var_name);
     }
 
     static time_t parse_forcing_time(const std::string& date_time_str) {
@@ -194,11 +186,10 @@ void Bmi_Cpp_Formulation_Test::SetUp() {
                          "            \"bmi_c++\": {"
                          "                \"model_type_name\": \"" + model_type_name[i] + "\","
                          "                \"library_file\": \"" + lib_file[i] + "\","
-                         "                \"forcing_file\": \"" + forcing_file[i] + "\","
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
-                         "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
+                         "                      \"INPUT_VAR_2\": \"" + AORC_FIELD_NAME_TEMP_2M_AG  + "\","
                          "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
                          "                },"
                          + variables_line + function_names_lines +
@@ -230,10 +221,8 @@ TEST_F(Bmi_Cpp_Formulation_Test, Initialize_0_a) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     ASSERT_EQ(get_friend_model_type_name(formulation), model_type_name[ex_index]);
-    ASSERT_EQ(get_friend_forcing_file_path(formulation), forcing_file[ex_index]);
     ASSERT_EQ(get_friend_bmi_init_config(formulation), init_config[ex_index]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variable[ex_index]);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
 /** Test to make sure we can initialize multiple model instances with dynamic loading. */
@@ -303,7 +292,7 @@ TEST_F(Bmi_Cpp_Formulation_Test, GetOutputLineForTimestep_0_a) {
 
     formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000");
+    ASSERT_EQ(output, "0.000000,571.600037");
 }
 
 /** Simple test of output with modified variables. */
@@ -319,7 +308,7 @@ TEST_F(Bmi_Cpp_Formulation_Test, GetOutputLineForTimestep_1_a) {
     // OUTPUT_VAR_1 first.
     formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000");
+    ASSERT_EQ(output, "571.600037,0.000000");
 }
 
 /** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
@@ -334,7 +323,7 @@ TEST_F(Bmi_Cpp_Formulation_Test, GetOutputLineForTimestep_1_b) {
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.000000,0.000001");
+    ASSERT_EQ(output, "580.799988,0.000001");
 }
 
 TEST_F(Bmi_Cpp_Formulation_Test, determine_model_time_offset_0_a) {

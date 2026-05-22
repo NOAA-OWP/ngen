@@ -9,6 +9,7 @@
 #include <vector>
 #include "gtest/gtest.h"
 #include "Bmi_Multi_Formulation.hpp"
+#include "Bmi_Cpp_Formulation.hpp"
 #include "Bmi_Module_Formulation.hpp"
 #include "CsvPerFeatureForcingProvider.hpp"
 #include "ConfigurationException.hpp"
@@ -46,7 +47,7 @@ protected:
     static double get_friend_nested_var_value(const Bmi_Multi_Formulation& formulation, const int mod_index,
                                          const std::string& var_name) {
         std::shared_ptr<N> nested = std::static_pointer_cast<N>(formulation.modules[mod_index]);
-        return nested->get_var_value_as_double(var_name);
+        return nested->get_var_value_as_double(0, var_name);
     }
 
     template <class N, class M>
@@ -71,14 +72,6 @@ protected:
 
     static time_t get_friend_bmi_model_start_time_forcing_offset_s(Bmi_Multi_Formulation& formulation) {
         return formulation.get_bmi_model_start_time_forcing_offset_s();
-    }
-
-    static std::string get_friend_forcing_file_path(const Bmi_Multi_Formulation& formulation) {
-        return formulation.get_forcing_file_path();
-    }
-
-    static bool get_friend_is_bmi_using_forcing_file(const Bmi_Multi_Formulation& formulation) {
-        return formulation.is_bmi_using_forcing_file();
     }
 
     static std::string get_friend_nested_module_model_type_name(Bmi_Multi_Formulation& formulation,
@@ -318,7 +311,6 @@ TEST_F(Bmi_Cpp_Multi_Array_Test, Initialize_0_a) {
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 0), nested_module_main_output_variables[ex_index][0]);
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 1), nested_module_main_output_variables[ex_index][1]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
-    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
 /** Test to make sure the model config from example 0 initializes no deferred providers. */

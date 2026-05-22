@@ -150,6 +150,34 @@ void* TestBmiCpp::GetValuePtr(std::string name){
     return this->output_var_3.get();
   }
 
+  if (use_model_params) {
+    if (name == "OUTPUT_VAR_4") {
+      return this->output_var_4.get();
+    }
+    if (name == "OUTPUT_VAR_5") {
+      return this->output_var_5.get();
+    }
+    if (name == "MODEL_VAR_1") {
+      return this->model_var_1.get();
+    }
+    if (name == "MODEL_VAR_2") {
+      return this->model_var_2.get();
+    }
+  }
+
+  if (name == NGEN_MASS_STORED) {
+    return &this->mass_stored;
+  }
+  if (name == NGEN_MASS_LEAKED) {
+    return &this->mass_leaked;
+  }
+  if (name == NGEN_MASS_IN) {
+    return this->input_var_1.get();
+  }
+  if (name == NGEN_MASS_OUT) {
+    return this->output_var_1.get();
+  }
+
   throw std::runtime_error("GetValuePtr called for unknown variable: "+name);
 }
 
@@ -171,6 +199,10 @@ std::string TestBmiCpp::GetVarLocation(std::string name){
   if(iter != this->input_var_names.end()){
     return this->input_var_locations[iter - this->input_var_names.begin()];
   }
+  iter = std::find(this->model_var_names.begin(), this->model_var_names.end(), name);
+  if(iter != this->model_var_names.end()){
+    return this->model_var_locations[iter - this->model_var_names.begin()];
+  }
   throw std::runtime_error("GetVarLocation called for non-existent variable: "+name+"" SOURCE_LOC);
 }
 
@@ -189,6 +221,14 @@ int TestBmiCpp::GetVarNbytes(std::string name){
   if(iter != this->input_var_names.end()){
     item_count = this->input_var_item_count[iter - this->input_var_names.begin()];
   }
+  iter = std::find(this->model_var_names.begin(), this->model_var_names.end(), name);
+  if(iter != this->model_var_names.end()){
+    item_count = this->model_var_item_count[iter - this->model_var_names.begin()];
+  }
+  iter = std::find(this->mass_balance_var_names.begin(), this->mass_balance_var_names.end(), name);
+  if(iter != this->mass_balance_var_names.end()){
+    item_count = 1;
+  }
   if(item_count == -1){
     // This is probably impossible to reach--the same conditions above failing will cause a throw
     // in GetVarItemSize --> GetVarType (called earlier) instead.
@@ -206,6 +246,14 @@ std::string TestBmiCpp::GetVarType(std::string name){
   if(iter != this->input_var_names.end()){
     return this->input_var_types[iter - this->input_var_names.begin()];
   }
+  iter = std::find(this->model_var_names.begin(), this->model_var_names.end(), name);
+  if(iter != this->model_var_names.end()){
+    return this->model_var_types[iter - this->model_var_names.begin()];
+  }
+  iter = std::find(this->mass_balance_var_names.begin(), this->mass_balance_var_names.end(), name);
+  if(iter != this->mass_balance_var_names.end()){
+    return this->mass_balance_var_types[iter - this->mass_balance_var_names.begin()];
+  }
   throw std::runtime_error("GetVarType called for non-existent variable: "+name+"" SOURCE_LOC );
 }
 
@@ -217,6 +265,14 @@ std::string TestBmiCpp::GetVarUnits(std::string name){
   iter = std::find(this->input_var_names.begin(), this->input_var_names.end(), name);
   if(iter != this->input_var_names.end()){
     return this->input_var_units[iter - this->input_var_names.begin()];
+  }
+  iter = std::find(this->model_var_names.begin(), this->model_var_names.end(), name);
+  if(iter != this->model_var_names.end()){
+    return this->model_var_types[iter - this->model_var_names.begin()];
+  }
+  iter = std::find(this->mass_balance_var_names.begin(), this->mass_balance_var_names.end(), name);
+  if(iter != this->mass_balance_var_names.end()){
+    return this->mass_balance_var_units[iter - this->mass_balance_var_names.begin()];
   }
   throw std::runtime_error("GetVarUnits called for non-existent variable: "+name+"" SOURCE_LOC);
 }
@@ -356,7 +412,7 @@ void TestBmiCpp::read_init_config(std::string config_file)
   if (fp == NULL)
     throw std::runtime_error("Invalid config file \""+config_file+"\"" SOURCE_LOC);
 
-  char config_line[max_config_line_length + 1];
+  std::vector<char> config_line(max_config_line_length + 1);
 
   // TODO: may need to add other variables to track that everything that was required was properly set
 
@@ -365,9 +421,11 @@ void TestBmiCpp::read_init_config(std::string config_file)
 
   for (size_t i = 0; i < config_line_count; i++) {
     char *param_key, *param_value;
-    fgets(config_line, max_config_line_length + 1, fp);
+    char* ret = fgets(config_line.data(), max_config_line_length + 1, fp);
+    if (ret == nullptr)
+        throw std::runtime_error("Error or EOF when reading '" + config_file + "'");
 
-    char* config_line_ptr = config_line;
+    char* config_line_ptr = config_line.data();
     config_line_ptr = strsep(&config_line_ptr, "\n");
     param_key = strsep(&config_line_ptr, "=");
     param_value = strsep(&config_line_ptr, "=");
@@ -399,6 +457,9 @@ void TestBmiCpp::read_init_config(std::string config_file)
     if( strcmp(param_key, "use_output_array") == 0) {
       this->use_output_array = true;
     }
+    if( strcmp(param_key, "use_model_params") == 0) {
+      this->use_model_params = true;
+    }
   }
 
   if (is_epoch_start_time_set == FALSE) {
@@ -410,8 +471,8 @@ void TestBmiCpp::read_init_config(std::string config_file)
 #endif
 
   //dynamic creation/usage of optional var 3
-  if(use_input_array || use_output_array ){
-    set_usage(use_input_array, use_output_array);
+  if(use_input_array || use_output_array || use_model_params){
+    set_usage(use_input_array, use_output_array, use_model_params);
   }
 }
 
@@ -426,7 +487,11 @@ void TestBmiCpp::read_file_line_counts(std::string file_name, int* line_count, i
     throw std::runtime_error("Configuration file does not exist." SOURCE_LOC);
   }
   int seen_non_whitespace = 0;
-  char c;
+  int c; //EOF is a negative constant...and char may be either signed OR unsigned
+  //depending on the compiler, system, achitectured, ect.  So there are cases
+  //where this loop could go infinite comparing EOF to unsigned char
+  //the return of fgetc is int, and should be stored as such!
+  //https://stackoverflow.com/questions/35356322/difference-between-int-and-char-in-getchar-fgetc-and-putchar-fputc
   for (c = fgetc(fp); c != EOF; c = fgetc(fp)) {
     // keep track if this line has seen any char other than space or tab
     if (c != ' ' && c != '\t' && c != '\n')
@@ -458,7 +523,7 @@ void TestBmiCpp::read_file_line_counts(std::string file_name, int* line_count, i
 
 
 void TestBmiCpp::run(long dt)
-{
+{  
     if (dt == this->time_step_size) {
         *this->output_var_1 = *this->input_var_1;
         *this->output_var_2 = 2.0 * *this->input_var_2;
@@ -472,5 +537,11 @@ void TestBmiCpp::run(long dt)
       this->output_var_3.get()[1] += 2;
       this->output_var_3.get()[2] += 3;
     }
+    if (this->use_model_params) {
+        *this->output_var_4 = *this->model_var_1;
+        *this->output_var_5 = *this->model_var_2 * 1.0;
+    }
     this->current_model_time += (double)dt;
+    this->mass_stored = *this->output_var_1 - *this->input_var_1;
+    this->mass_leaked = 0;
 }
