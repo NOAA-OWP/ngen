@@ -47,7 +47,7 @@ TEST(WireFormatPrefix, round_trip) {
     EXPECT_EQ(ss.str().size(), wf::RecordPrefix::PREFIX_BYTES);
 
     wf::RecordPrefix in;
-    ASSERT_TRUE(wf::read_record_prefix(ss, in));
+    ASSERT_EQ(wf::read_record_prefix(ss, in), wf::Status::Ok);
     EXPECT_EQ(in.magic,                out.magic);
     EXPECT_EQ(in.wire_version,         out.wire_version);
     EXPECT_EQ(in.time_step,            out.time_step);
@@ -70,7 +70,7 @@ TEST(WireFormatPrefix, timestamp_fields_handle_pre_unix_epoch) {
     wf::write_record_prefix(ss, out);
 
     wf::RecordPrefix in;
-    ASSERT_TRUE(wf::read_record_prefix(ss, in));
+    ASSERT_EQ(wf::read_record_prefix(ss, in), wf::Status::Ok);
     EXPECT_EQ(in.simulation_timestamp, int64_t{-3786825600});
     EXPECT_EQ(in.checkpoint_epoch,     int64_t{1779580800});
 }
@@ -102,16 +102,16 @@ TEST(WireFormatPrefix, magic_disk_bytes_spell_NGSR) {
     EXPECT_EQ(bytes[3], 'R');
 }
 
-TEST(WireFormatPrefix, empty_stream_returns_false) {
+TEST(WireFormatPrefix, empty_stream_returns_eof) {
     std::stringstream ss(std::ios::in | std::ios::out | std::ios::binary);
     wf::RecordPrefix p;
-    EXPECT_FALSE(wf::read_record_prefix(ss, p));
+    EXPECT_EQ(wf::read_record_prefix(ss, p), wf::Status::Eof);
 }
 
-TEST(WireFormatPrefix, truncated_prefix_returns_false) {
+TEST(WireFormatPrefix, truncated_prefix_returns_eof) {
     // Write a full prefix then truncate the bytes mid-prefix at every
-    // boundary. Each truncation must surface as false (clean EOF) rather
-    // than as a partially-populated prefix or a throw.
+    // boundary. Each truncation must surface as Status::Eof (clean EOF)
+    // rather than as a partially-populated prefix.
     wf::RecordPrefix out;
     out.time_step            = 7;
     out.simulation_timestamp = 1448982000;
@@ -128,7 +128,7 @@ TEST(WireFormatPrefix, truncated_prefix_returns_false) {
         std::stringstream ss(std::string(complete.data(), cut),
                              std::ios::in | std::ios::binary);
         wf::RecordPrefix in;
-        EXPECT_FALSE(wf::read_record_prefix(ss, in))
+        EXPECT_EQ(wf::read_record_prefix(ss, in), wf::Status::Eof)
             << "truncation at " << cut << " unexpectedly succeeded";
     }
 }
@@ -140,7 +140,7 @@ TEST(WireFormatPrefix, max_id_length_round_trip) {
     wf::write_record_prefix(ss, out);
 
     wf::RecordPrefix in;
-    ASSERT_TRUE(wf::read_record_prefix(ss, in));
+    ASSERT_EQ(wf::read_record_prefix(ss, in), wf::Status::Ok);
     EXPECT_EQ(in.id_length, std::numeric_limits<uint16_t>::max());
 }
 
@@ -159,6 +159,6 @@ TEST(WireFormatPrefix, max_payload_length_field_round_trip) {
     wf::write_record_prefix(ss, out);
 
     wf::RecordPrefix in;
-    ASSERT_TRUE(wf::read_record_prefix(ss, in));
+    ASSERT_EQ(wf::read_record_prefix(ss, in), wf::Status::Ok);
     EXPECT_EQ(in.payload_length, std::numeric_limits<uint64_t>::max());
 }

@@ -44,52 +44,82 @@ protocol (`save.check: false` / `restore.check: false`) or clear
 
 ---
 
-## Wire Format: `SerializationRecord`
+## Wire Format
 
-A checkpoint file is a concatenation of **length-prefixed** Boost binary
-archives, each holding one `SerializationRecord`:
+A checkpoint file is a concatenation of records, each laid out as a
+fixed-size prefix followed by raw id bytes and raw payload bytes:
 
 ```
-[ uint64_t record_length ][ <record_length> bytes of boost binary archive ]
-[ uint64_t record_length ][ <record_length> bytes of boost binary archive ]
+[ 39-byte prefix ][ id_length bytes of raw id ][ payload_length bytes of opaque payload ]
+[ 39-byte prefix ][ id_length bytes of raw id ][ payload_length bytes of opaque payload ]
 ...
 ```
 
-The record struct itself:
+External tooling can identify a checkpoint file by inspection: every
+record begins with the four ASCII bytes `N`, `G`, `S`, `R`. A hex dump
+or `file(1)` matcher needs nothing else to recognize the format.
+
+The prefix layout for `wire_version = 1` (39 bytes, little-endian,
+no compiler padding — each field is written byte-by-byte; see
+`src/utilities/bmi/wire_format.hpp` for the field-level
+implementation):
+
+```
+offset    size  field                  type    notes
+--------  ----  ---------------------  ------  --------------------------------
+[0..4)      4   magic                  uint32  'NGSR' bytes-on-disk (N,G,S,R)
+[4..5)      1   wire_version           uint8   prefix-layout version (= 1)
+[5..13)     8   time_step              int64   simulation step counter
+[13..21)    8   simulation_timestamp   int64   simulated time, signed seconds
+                                                since the Unix epoch (1970-01-01 UTC)
+[21..29)    8   checkpoint_epoch       int64   wall-clock time of the save event,
+                                                signed seconds since Unix epoch
+[29..31)    2   id_length              uint16  bytes of id that follow
+[31..39)    8   payload_length         uint64  bytes of payload that follow
+```
+
+The in-memory record value type mirrors the wire fields:
 
 ```cpp
 struct SerializationRecord {
-    static constexpr uint8_t CURRENT_VERSION = 1;
-
-    uint8_t           version;    // schema version; CURRENT_VERSION at write time
-    std::string       id;         // Context::id (e.g. catchment id)
-    int               time_step;  // simulation time step at capture
-    int64_t           timestamp;  // Context::timestamp parsed to an integer
-                                  // (typically seconds since the Unix epoch,
-                                  // or any monotone encoding the caller
-                                  // emits consistently)
-    std::vector<char> payload;    // bytes from GetValue(ngen::serialization_state)
+    std::string       id;                       // Context::id (e.g. catchment compound id)
+    int64_t           time_step            = 0; // simulation step counter
+    int64_t           simulation_timestamp = 0; // sim time, signed seconds since Unix epoch
+    int64_t           checkpoint_epoch     = 0; // wall-clock time of the save event
+    std::vector<char> payload;                  // bytes from GetValue(ngen::serialization_state)
 };
 ```
 
-### Two kinds of version number, kept independent
+### Two timestamps, not one
 
-Each record carries its schema version as its very first field so a
-reader can inspect `rec.version` directly without relying on the archive
-format it came from. A separate number — `BOOST_CLASS_VERSION` — drives
-`boost::serialization`'s own archive wire format. The two are
-**independent** and track orthogonal concerns:
+`simulation_timestamp` is the moment in the model's universe being
+captured. `checkpoint_epoch` is the wall-clock time at which the
+operator triggered the save event. The two values diverge in every
+nontrivial run: a reanalysis modeling 1950 saved in 2026 has
+`simulation_timestamp` in the past and `checkpoint_epoch` in the
+present; a forecast run sees the reverse; a restart re-run shares
+`simulation_timestamp` with the original records but carries a later
+`checkpoint_epoch`. Storing both per-record makes any single record
+self-describing — it can answer both "what simulated moment is this?"
+and "when did the operator save this?" without consulting the
+surrounding filesystem layout (which not every backend preserves
+identically across copy, concatenation, or format migration).
 
-- **Bump `BOOST_CLASS_VERSION`** when the archive representation
-  changes — new or reordered fields, for example — and branch on the
-  `archive_version` argument inside `serialize()` to read older
-  archives.
-- **Bump `CURRENT_VERSION`** when record *semantics* change — a new
-  payload interpretation, a different timestamp encoding convention,
-  or a compatibility rule with older restore logic.
+### Wire-format version
 
-Either may advance without the other. The protocol does not attempt to
-tie them together with a macro.
+The prefix carries exactly one version field, `wire_version`, covering
+the prefix-layout itself. Any change to the prefix's fields, widths,
+or field semantics (e.g. switching `simulation_timestamp` from seconds
+to milliseconds) bumps `wire_version` and readers branch on it to
+select the appropriate parser. Currently `wire_version == 1`.
+
+The wire format does **not** carry a payload-schema version. The
+payload is opaque to the protocol library — the library never
+interprets the bytes, so it cannot enforce or detect a payload-schema
+mismatch on behalf of the model. Model authors who want payload
+versioning embed their own header inside the payload bytes; see the
+"Recommended: defensive payload format" section of
+`BMI_SERIALIZATION_PROTOCOL.md`.
 
 ### Key properties
 
@@ -98,35 +128,51 @@ tie them together with a macro.
   coordination (threads or MPI ranks writing to one file) is not the
   protocol's responsibility — see the Thread and Process Safety
   discussion in the Scaling Considerations section.
-- **Self-contained records.** Each `write_record()` call produces one
-  complete boost binary archive prefixed by its `uint64_t` byte
-  length. Readers use `read_next_record()` (which in turn uses
-  `read_record_length()`) to consume one record at a time via a fresh
-  `binary_iarchive` per record.
-- **Truncation tolerance.** A partially-written trailing record — from
-  a crashed writer or a torn filesystem append — is detected via a
-  short read on the payload bytes (or a short read on the length
-  prefix itself) and surfaces as a clean end-of-stream, not as an
-  exception. Every complete record preceding the tear is readable.
+- **Self-contained records.** Each `write_record()` call produces
+  one prefix + id + payload sequence. The prefix's length fields
+  tell a reader exactly how many bytes belong to this record, so the
+  next record's prefix is always at a known offset from the current
+  one.
+- **Truncation tolerance.** A partially-written trailing record —
+  from a crashed writer or a torn filesystem append — is detected via
+  a short read at any field boundary (anywhere inside the prefix, the
+  id bytes, or the payload bytes) and surfaces as a clean
+  end-of-stream, not as an exception. Every complete record preceding
+  the tear is readable.
+- **Magic-byte file identification.** The four bytes "NGSR" at offset 0
+  of every prefix make checkpoint files identifiable by external
+  tooling without any library dependency. A reader encountering a
+  non-NGSR magic at a record boundary throws with a clear "this is not
+  a v0.2 record stream" diagnostic — corruption is distinguished from
+  truncation.
+- **Cross-host portability.** The prefix's integer fields are written
+  byte-by-byte in little-endian order, so the bytes on disk are
+  identical regardless of host endianness or word size. The signed
+  fields assume two's-complement representation; two canary tests in
+  `test_bmi_protocols` verify this at run time on each deployment
+  host. Payload portability is the model's responsibility — see
+  `BMI_SERIALIZATION_PROTOCOL.md`.
 - **Uniqueness is a caller convention, not a protocol guarantee.** The
-  save protocol does not check for, or prevent, duplicate `(id,
-  time_step)` records — callers that fire `run()` twice at the same
-  step for the same id will write two records. Well-behaved drivers
-  are expected to produce exactly one record per `(id, time_step)`
-  pair; restore tooling that encounters duplicates will return the
-  first match found (for fixed-step and timestamp modes) or the
-  highest step seen (for "latest" mode).
-- **Timestamp matching.** Restore may key on `timestamp` instead of
-  `time_step`; the match is numeric (not string), done against the
-  `int64_t` value parsed from `Context::timestamp`. The save and
-  restore sides both parse their respective `timestamp` configuration
-  strings through the same rule (`std::stoll`, with unparseable
-  strings mapping to 0), so as long as the caller emits the same
-  encoding on both sides, the round-trip is exact.
+  save protocol does not check for, or prevent, duplicate
+  `(id, time_step)` records — callers that fire `run()` twice at the
+  same step for the same id will write two records. Well-behaved
+  drivers produce exactly one record per `(id, time_step)` pair;
+  restore tooling that encounters duplicates returns the first match
+  found (for fixed-step and timestamp modes) or the highest step seen
+  (for "latest" mode).
+- **Timestamp matching.** Restore may key on `simulation_timestamp`
+  instead of `time_step`; the match is numeric (not string), done
+  against the `int64_t` value parsed from `Context::timestamp`. The
+  save and restore sides both parse their respective `timestamp`
+  configuration strings through the same rule (`std::stoll`, with
+  unparseable strings mapping to 0), so as long as the caller emits
+  the same encoding on both sides, the round-trip is exact.
 
 See `include/utilities/bmi/serialization_record.hpp` for the
 `SerializationRecord` definition and the `write_record` /
-`read_next_record` / `read_record_length` helpers.
+`read_next_record` / `read_record_length` / `read_record_metadata`
+helpers. The prefix layout itself lives in the library-internal
+header `src/utilities/bmi/wire_format.hpp`.
 
 ---
 
@@ -636,39 +682,54 @@ was involved.
 
 ## Scaling Considerations
 
-The v0.1 protocol is designed to handle a checkpoint file shared by up
-to the low millions of features per simulation. This section documents
+The protocol is designed to handle a checkpoint file shared by up to
+the low millions of features per simulation. This section documents
 where the ceiling is, what wins at each scale tier, and what is
 explicitly not solved in-protocol.
 
 ### On-disk format
 
-Each record is a length-prefixed, self-contained boost binary archive:
+Each record is a fixed-size prefix followed by raw id and payload
+bytes (see *Wire Format* above for the field-level layout):
 
 ```
-[ uint64_t record_length ][ <record_length> bytes of boost binary archive ]
+[ 39-byte prefix ][ id_length bytes ][ payload_length bytes ]
 ```
 
-The length prefix exists for three reasons:
+The fixed-prefix layout exists for three reasons:
 
-1. **Truncation tolerance.** A crashed writer can leave a torn trailing
-   record; the reader detects the short tail and stops cleanly at the
-   last intact record rather than throwing. Checkpoint files remain
+1. **Truncation tolerance.** A crashed writer can leave a torn
+   trailing record; the reader detects the short tail at any field
+   boundary (prefix, id, or payload) and stops cleanly at the last
+   intact record rather than throwing. Checkpoint files remain
    usable after an unclean shutdown.
-2. **Fast index skipping.** The restore-side `CheckpointIndex` uses the
-   prefix to walk the file and extract record metadata in one pass,
-   independent of payload sizes. See *Restore cost model* below.
+2. **Fast index skipping.** The restore-side `CheckpointIndex` walks
+   the file via `read_record_metadata` — read the prefix and id,
+   `seekg` past the payload, never read payload bytes. Per-record
+   cost is O(prefix + id_size) regardless of payload size. The v0.1
+   format required reading and parsing the full boost archive
+   (payload included) to extract metadata; the v0.2 separation makes
+   index builds independent of payload sizes. For multi-MB or
+   multi-GB ML-state payloads, this is orders of magnitude faster.
 3. **Append-only safety.** Records are individually complete, so
    multiple save protocol instances can append to the same file
    without format-level coordination. Writer-level coordination (for
    intra-process threads or inter-process MPI ranks) is not the
    protocol's responsibility — see *Thread and process safety*.
 
-Timestamps on disk are stored as `int64_t` (typically seconds since
-the Unix epoch, though any monotone integer encoding the caller
-emits consistently will round-trip). The fixed 8-byte width keeps
-record headers predictable, saves ~20 MB per million records versus
-formatted strings, and makes `CheckpointIndex` entries compact.
+Both timestamps on disk (`simulation_timestamp` and
+`checkpoint_epoch`) are stored as `int64_t` signed seconds since the
+Unix epoch. The fixed 8-byte width keeps record headers predictable
+and makes `CheckpointIndex` entries compact.
+
+The format does not use `boost::serialization` — every field is
+written byte-by-byte in little-endian order via the library-internal
+`byte_io` primitives. This makes the bytes identical across hosts
+(no host-endian or word-size assumptions embedded in the file) and
+removes any boost dependency from the I/O path. The two's-complement
+assumption for the three signed fields is verified at run time by
+two canary tests in `test_bmi_protocols` (see
+`src/utilities/bmi/wire_format.hpp` for the full discussion).
 
 ### Save cost model
 
@@ -781,12 +842,12 @@ See the path templating section in *Configuration* for the
 - **More features than can be indexed in memory.** At ~80 bytes per
   index entry (id string + metadata), 100 M records ≈ 8 GB of index.
   Above that, callers want a tiered or on-disk index — not something
-  v0.1 attempts.
+  the current protocol attempts.
 - **Concurrent writers to one file across hosts.** POSIX append-mode
   semantics on shared filesystems (NFS, Lustre) do not guarantee
   atomicity for large writes. Either use per-rank files or layer a
   durable object store in front.
-- **Per-record compression or encryption.** Not addressed by v0.1. The
-  payload bytes written are the bytes the model's BMI adapter handed
-  back from `GetValue(state)`; any transformation is the adapter's
-  responsibility.
+- **Per-record compression or encryption.** Not addressed by the
+  current protocol. The payload bytes written are the bytes the
+  model's BMI adapter handed back from `GetValue(state)`; any
+  transformation is the adapter's responsibility.

@@ -115,12 +115,12 @@ namespace models{ namespace bmi{ namespace protocols{
 
       private:
         std::string path;
-        // Match mode. When `by_timestamp` is true, `target_timestamp_epoch`
-        // is the sole matching criterion. Otherwise `step_latest` (if true)
-        // finds the highest step for the id, else `target_step` must match
-        // exactly.
+        // Match mode. When `by_timestamp` is true,
+        // `target_simulation_timestamp` is the sole matching criterion.
+        // Otherwise `step_latest` (if true) finds the highest step for
+        // the id, else `target_step` must match exactly.
         bool        by_timestamp = false;
-        int64_t     target_timestamp_epoch = 0;
+        int64_t     target_simulation_timestamp = 0;
         bool        step_latest = true;
         int         target_step = 0;
         // Optional: ids the caller intends to restore. Passed to the shared
