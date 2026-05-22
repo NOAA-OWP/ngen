@@ -66,7 +66,15 @@ endif()
 add_executable(test_all)
 target_link_libraries(test_all PRIVATE gtest gtest_main)
 set_target_properties(test_all PROPERTIES FOLDER test)
-target_include_directories(test_all PRIVATE ${CMAKE_CURRENT_LIST_DIR}/bmi)
+# `test_all` aggregates every test target's object files, including
+# `byte_io_Test.cpp` and `wire_format_Test.cpp` which include internal
+# headers (`byte_io.hpp`, `wire_format.hpp`) from the BMI library's
+# PRIVATE include path. Same rationale as `test_bmi_protocols` below
+# — first-party tests need explicit opt-in to compile.
+target_include_directories(test_all PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/bmi
+    ${PROJECT_SOURCE_DIR}/src/utilities/bmi
+)
 
 # =============================================================================
 
@@ -217,6 +225,8 @@ ngen_add_test(
     test_bmi_protocols
     OBJECTS
         utils/bmi/mass_balance_Test.cpp
+        utils/bmi/byte_io_Test.cpp
+        utils/bmi/wire_format_Test.cpp
         utils/bmi/serialization_record_Test.cpp
         utils/bmi/serialization_Test.cpp
         utils/bmi/deserialization_Test.cpp
@@ -226,6 +236,15 @@ ngen_add_test(
         gmock
     DEPENDS
         testbmicppmodel
+)
+# Internal-headers opt-in for the BMI protocol library. wire_format.hpp
+# and any future src/utilities/bmi/*.hpp live next to the .cpp files and
+# are intentionally NOT on NGen::bmi_protocols' PUBLIC include path. The
+# test target exercises them directly, so it opts in here. External
+# consumers of NGen::bmi_protocols do not get this path and therefore
+# cannot reach the wire primitives — that's the point.
+target_include_directories(test_bmi_protocols PRIVATE
+    ${PROJECT_SOURCE_DIR}/src/utilities/bmi
 )
 
 ########################## Series Unit Tests
@@ -415,6 +434,18 @@ ngen_add_test(
         testbmifortranmodel
 )
 
+# `fortran_serialization_Test.cpp` includes `serialization_record.hpp`,
+# which transitively pulls in the internal `wire_format.hpp`. The
+# BMI library keeps `wire_format.hpp` on its PRIVATE include path so
+# external consumers can't bypass the record layer (see comment on
+# `test_bmi_protocols` below). First-party tests like this one need
+# explicit opt-in to compile.
+if(TARGET test_bmi_fortran)
+    target_include_directories(test_bmi_fortran PRIVATE
+        ${PROJECT_SOURCE_DIR}/src/utilities/bmi
+    )
+endif()
+
 ########################## BMI Python Tests
 ngen_add_test(
     test_bmi_python
@@ -433,6 +464,16 @@ ngen_add_test(
     REQUIRES
         NGEN_WITH_PYTHON
 )
+
+# Same rationale as `test_bmi_fortran` above: `py_serialization_Test.cpp`
+# includes `serialization_record.hpp` and needs the BMI library's
+# PRIVATE include path to resolve the transitively-included
+# `wire_format.hpp`.
+if(TARGET test_bmi_python)
+    target_include_directories(test_bmi_python PRIVATE
+        ${PROJECT_SOURCE_DIR}/src/utilities/bmi
+    )
+endif()
 
 ########################## BMI Multi Tests
 ngen_add_test(
