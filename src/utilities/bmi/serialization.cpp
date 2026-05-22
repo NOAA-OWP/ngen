@@ -23,6 +23,7 @@ Version 0.1 (see serialization.hpp)
 #include <cerrno>
 #include <cstdint>
 #include <cstring>
+#include <ctime>
 #include <exception>
 #include <fstream>
 #include <memory>
@@ -208,17 +209,35 @@ auto NgenSerializationProtocol::run(const ModelPtr& model, const Context& ctx) c
         payload_buffer_.resize(static_cast<size_t>(size));
         model->GetValue(SERIALIZATION_STATE_NAME, payload_buffer_.data());
 
-        // Move the payload into a temporary record to drive the archive,
-        // then move it back. Zero copies in the happy path.
-        // The move dance preserves the vector's capacity for reuse
+        // Move the payload into a temporary record to write, then
+        // move it back. Zero copies in the happy path; the move dance
+        // preserves the vector's capacity for reuse across timesteps.
+        //
+        // checkpoint_epoch is stamped per-record with the writing
+        // host's wall-clock time. A future Coordinator design will
+        // plumb a coordinator-supplied epoch through so all records
+        // in one save event share a single value; that change happens
+        // at this call site, not in write_record itself.
         SerializationRecord rec(
             ctx.id,
-            ctx.current_time_step,
+            static_cast<int64_t>(ctx.current_time_step),
             parse_timestamp(ctx.timestamp),
-            std::move(payload_buffer_)
+            std::move(payload_buffer_),
+            static_cast<int64_t>(std::time(nullptr))
         );
-        write_record(*out_, rec);
+        auto wrote = write_record(*out_, rec);
         payload_buffer_ = std::move(rec.payload);
+        if (!wrote) {
+            std::stringstream ss;
+            ss << "serialization: " << wrote.error()
+               << " for '" << model->GetComponentName()
+               << "' at timestep " << ctx.current_time_step
+               << " (" << ctx.timestamp << ") to '" << path << "'";
+            return make_unexpected<ProtocolError>( ProtocolError(
+                is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING,
+                ss.str()
+            ));
+        }
 
         // Flush per record so the file is tailable in real time and a
         // crash between records loses at most the last in-flight record,
@@ -229,7 +248,7 @@ auto NgenSerializationProtocol::run(const ModelPtr& model, const Context& ctx) c
         out_->flush();
         if (!*out_) {
             std::stringstream ss;
-            ss << "serialization: failed to write record for '" << model->GetComponentName()
+            ss << "serialization: failed to flush record for '" << model->GetComponentName()
                << "' at timestep " << ctx.current_time_step
                << " (" << ctx.timestamp << ") to '" << path << "'";
             return make_unexpected<ProtocolError>( ProtocolError(

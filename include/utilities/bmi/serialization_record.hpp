@@ -14,120 +14,114 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
-Version 0.1
+Version 0.2
 Shared on-disk record format for ngen BMI state serialization.
+
+This header is the public API for producing and consuming
+serialization records. The on-disk layout is the responsibility of
+the internal `wire_format.hpp`, which lives under
+`src/utilities/bmi/` and is not exported. External code calls into
+this header's functions:
+
+    write_record(out, rec)               — append a record
+    read_next_record(in, rec)            — read the next record
+    read_record_length(in, body_out)     — read prefix; report body length
+    read_record_metadata(in, prefix, id) — read prefix + id; skip payload
+
+Plus the value type `SerializationRecord` itself.
 
 On-disk layout
 --------------
-A checkpoint file is a concatenation of length-prefixed records:
+A checkpoint file is a concatenation of records. Each record is:
 
-    [ uint64_t record_length ][ <record_length> bytes of boost binary archive ]
-    [ uint64_t record_length ][ <record_length> bytes of boost binary archive ]
-    ...
+    [ fixed-size prefix ][ id_length bytes of id ][ payload_length bytes of payload ]
 
-The length prefix enables three things that matter at scale:
-  1. Truncation tolerance — a torn final record (length header present but
-     fewer than record_length bytes following) is detected and treated as
-     end-of-stream, not as a corrupt file.
-  2. Cheap skipping when building an index — `CheckpointIndex` (see
-     deserialization.cpp) can seek past record payloads without running a
-     boost archive read, which turns the index build from O(N * payload)
-     into O(N * sizeof(header) + N * seek).
-  3. Append-only multi-writer safety — because each record is a self-
-     contained boost archive, and the length prefix lets a reader locate
-     the next record without reconstructing archive state, multiple writers
-     can append independently without file-level coordination. Writers
-     must still serialize their writes relative to each other — see
-     NgenSerializationProtocol for the per-instance mutex policy.
+The prefix layout is defined in `wire_format.hpp` and includes the
+magic bytes "NGSR" (which identify the file format), a wire-format
+version, simulation step / timestamp / wall-clock-epoch metadata,
+and the two body-length fields. Anyone with a hex editor can
+identify a checkpoint file by its "NGSR..." prefix.
 
-Schema versioning — two concerns, two mechanisms
-------------------------------------------------
-There are two orthogonal "version" numbers in play; keep them straight
-when the format changes:
+Replaces the v0.1 design where each record was a length-prefixed
+boost::serialization archive. See `wire_format.hpp` for the
+rationale behind the change (cross-host portability, library
+independence, index-build performance, etc.).
 
-  * BOOST_CLASS_VERSION (below) drives the boost::serialization library's
-    own wire-format evolution. Bumping it and branching inside serialize()
-    on `archive_version` lets us read old archives written before a
-    library-level change (e.g. adding or reordering fields in this
-    struct). Boost writes this version into each archive header — it's
-    archive-scoped, not record-scoped.
-  * SerializationRecord::CURRENT_VERSION is our application-level schema
-    stamp. It's serialized as the first field of every record, so a
-    reader can inspect it directly without relying on boost archive
-    internals. Use this when changing record *semantics* that boost
-    alone can't describe — e.g. payload interpretation rules, timestamp
-    encoding conventions, or compatibility with older restore logic.
-
-The two version numbers are independent — either may advance without
-the other. Bump `BOOST_CLASS_VERSION` for wire-format changes (new
-fields, reordering), and bump `CURRENT_VERSION` for semantic changes
-the wire-format version can't describe. Branch explicitly on
-`archive_version` inside `serialize()` or on `rec.version` at the
-read site, whichever matches the kind of change you're making.
+Truncation tolerance
+--------------------
+A torn final record (writer crashed mid-write, leaving fewer than
+the expected bytes on disk) is detected and treated as
+end-of-stream rather than as a corrupt file. The read functions
+return `false` on a short read at any field boundary — the prefix,
+the id bytes, or the payload bytes. This matches the v0.1 behavior
+and is what restart-from-crash workflows depend on.
 
 Uniqueness
 ----------
-Each (id, time_step) pair is unique within a file. One entity may write
-multiple records at different time steps, but only one record per step.
+Each `(id, time_step)` pair is unique within a file. One entity may
+write multiple records at different time steps, but only one
+record per step.
 */
 #pragma once
 
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/serialization/string.hpp>
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/version.hpp>
+#include "wire_format.hpp"
+
+#include <nonstd/expected.hpp>
 
 #include <cstdint>
 #include <exception>
 #include <istream>
 #include <ostream>
-#include <sstream>
 #include <string>
 #include <vector>
 
 namespace models{ namespace bmi{ namespace protocols{
 
-/** @brief Size, in bytes, of the per-record length prefix on disk.
- *
- * Single source of truth for the record header layout — every place in
- * the code that seeks past or otherwise accounts for the prefix reads
- * this constant rather than inlining `sizeof(uint64_t)`. If the header
- * ever grows (e.g. gains a magic number or a flags word), update this
- * one value and both the writer and the index-based readers will stay
- * in sync.
- */
-constexpr std::size_t RECORD_LENGTH_PREFIX_BYTES = sizeof(uint64_t);
+using nonstd::expected;
+using nonstd::make_unexpected;
 
-/** @brief Sanity cap on a single record's archive body size.
- *
- * Defense in depth against corrupted or tampered on-disk length
- * prefixes: a byte-flipped `uint64_t` could otherwise drive
- * `read_next_record` into a multi-gigabyte allocation. Real BMI
- * state blobs are nowhere near this bound — 1 GiB is already far
- * larger than any plausible single-entity state — so false positives
- * are not a concern; the value exists to reject obvious garbage.
- *
- * Readers that hit this cap raise an exception rather than return
- * cleanly: the condition is "the file says something impossible",
- * not "end of legitimate content".
- */
-constexpr uint64_t MAX_RECORD_ARCHIVE_BYTES = 1ULL << 30;  // 1 GiB
+// Bring wire_format::Status into this namespace so call sites of
+// the read helpers below can write `Status::Ok` / `Status::Eof`
+// without the long `serialization::wire_format::` prefix.
+using serialization::wire_format::Status;
 
-/** @brief Parse a `Context::timestamp` string into the on-disk `int64_t`
- * timestamp slot.
+/** @brief Sanity cap on a single record's payload size.
  *
- * The engine hands BMI protocol code simulation timestamps as opaque
- * strings; the record layer wants compact fixed-width integers.
- * Callers whose strings are already `strtoll`-parseable (e.g. seconds
- * since epoch) get a one-to-one mapping; callers with formatted strings
- * that don't parse cleanly get 0, and the record is still written —
- * restore-by-timestamp just won't work against those records unless
- * the caller matches on the same "0" sentinel. This is a deliberate
- * policy: a parse failure is not fatal to save.
+ * Defense in depth against corrupted or tampered on-disk
+ * `payload_length` fields: a byte-flipped uint64 could otherwise
+ * drive `read_next_record` into a multi-gigabyte allocation. Real
+ * BMI state blobs are nowhere near this bound — 1 GiB is already
+ * far larger than any plausible single-entity state — so false
+ * positives are not a concern; the value exists to reject obvious
+ * garbage.
  *
- * Kept here, next to the record struct that ultimately stores the
- * value, so the save and restore protocols use the exact same rule.
+ * Readers that hit this cap surface the failure on the error arm
+ * of their returned `expected<>` rather than reporting `Status::Eof`:
+ * the condition is "the file says something impossible", not "end
+ * of legitimate content".
+ *
+ * Build-time override via `-DNGEN_BMI_MAX_RECORD_PAYLOAD_BYTES=...`
+ * for deployments with multi-GiB ML-state payloads. The default is
+ * 1 GiB; the wire-format field type (uint64) supports values up to
+ * ~18 EiB.
+ */
+#ifndef NGEN_BMI_MAX_RECORD_PAYLOAD_BYTES
+#  define NGEN_BMI_MAX_RECORD_PAYLOAD_BYTES (1ULL << 30)  // 1 GiB
+#endif
+constexpr uint64_t MAX_RECORD_PAYLOAD_BYTES = NGEN_BMI_MAX_RECORD_PAYLOAD_BYTES;
+
+/** @brief Parse a `Context::timestamp` string into the on-disk
+ * int64 timestamp slot.
+ *
+ * The engine hands BMI protocol code simulation timestamps as
+ * opaque strings; the record layer wants compact fixed-width
+ * integers. Callers whose strings are already `strtoll`-parseable
+ * (e.g. seconds since epoch) get a one-to-one mapping; callers
+ * with formatted strings that don't parse cleanly get 0, and the
+ * record is still written — restore-by-timestamp just won't work
+ * against those records unless the caller matches on the same "0"
+ * sentinel. This is a deliberate policy: a parse failure is not
+ * fatal to save.
  */
 inline int64_t parse_timestamp(const std::string& s) {
     if (s.empty()) return 0;
@@ -144,182 +138,243 @@ inline int64_t parse_timestamp(const std::string& s) {
     }
 }
 
-/** @brief One checkpoint record: a BMI model's state bytes tagged with its
- * feature id, the simulation time step, and the simulation timestamp (as
- * seconds since the Unix epoch) at capture.
+/** @brief One checkpoint record: a BMI model's state bytes tagged
+ * with its feature id, the simulation step counter, the simulated
+ * moment the state represents, and the wall-clock moment the
+ * operator triggered the save.
  *
- * The `timestamp` field is an `int64_t` rather than a formatted string:
- * the protocol is not concerned with human readability at the storage
- * layer, and a fixed 8-byte timestamp keeps record headers predictable
- * enough to support fast index scans over files containing millions of
- * records. Callers whose upstream `Context::timestamp` is a formatted
- * string are responsible for parsing it to an epoch value (or any other
- * monotone integer encoding they choose) before record construction;
- * see `NgenSerializationProtocol` for the reference conversion.
+ * Fields mirror the on-disk wire format defined in
+ * `wire_format.hpp`. `simulation_timestamp` and `checkpoint_epoch`
+ * are signed seconds since the Unix epoch
+ * (1970-01-01T00:00:00 UTC); see `wire_format.hpp`'s "Timestamp
+ * encoding convention" for the full spec.
+ *
+ * `checkpoint_epoch` defaults to 0 in the constructor. The
+ * production write path (serialization.cpp) stamps it with the
+ * current wall-clock at save time; a future `Coordinator` design
+ * will plumb a coordinator-supplied epoch through so all records
+ * in one save event share the same value.
  */
 struct SerializationRecord {
-    /** Current application-level schema version. Bump and wire a branch
-     *  in `serialize()` (keyed on `rec.version`, not `archive_version`)
-     *  when record semantics change. `uint8_t` is portable across
-     *  platforms and generous — 255 schema revisions will outlast us. */
-    static constexpr uint8_t CURRENT_VERSION = 1;
-
-    // Field order below is chosen for readability ("version, then id,
-    // then when / what") rather than for alignment-minimal padding.
-    // The struct is materialized one at a time during save/restore and
-    // is never held in bulk — the process-global state lives in
-    // CheckpointIndex's flat IndexEntry (no std::string). The on-disk
-    // format is controlled entirely by `serialize()` below and is
-    // unaffected by whatever padding the compiler chooses here.
-    uint8_t           version   = CURRENT_VERSION;
     std::string       id;
-    int               time_step = 0;
-    int64_t           timestamp = 0;
+    int64_t           time_step            = 0;
+    int64_t           simulation_timestamp = 0;
+    int64_t           checkpoint_epoch     = 0;
     std::vector<char> payload;
 
     SerializationRecord() = default;
     SerializationRecord(std::string id_,
-                        int time_step_,
-                        int64_t timestamp_,
-                        std::vector<char> payload_)
+                        int64_t time_step_,
+                        int64_t simulation_timestamp_,
+                        std::vector<char> payload_,
+                        int64_t checkpoint_epoch_ = 0)
         : id(std::move(id_))
         , time_step(time_step_)
-        , timestamp(timestamp_)
+        , simulation_timestamp(simulation_timestamp_)
+        , checkpoint_epoch(checkpoint_epoch_)
         , payload(std::move(payload_)) {}
-
-    template <class Archive>
-    void serialize(Archive& ar, const unsigned int archive_version) {
-        ar & version;
-        ar & id;
-        ar & time_step;
-        ar & timestamp;
-        ar & payload;
-    }
 };
 
-/** @brief Append a length-prefixed, self-contained boost binary archive
- * holding @p rec to @p out.
- *
- * The record is serialized into a memory buffer first so the exact byte
- * length is known before any bytes hit @p out. The length is written as
- * a little-endian-on-little-endian-hosts (natively written) `uint64_t`;
- * on-disk portability is assumed between hosts with matching endianness,
- * which matches the boost archive's own assumption. The archive
- * destructor flushes its header + payload into the memory buffer before
- * the length is measured and emitted.
- *
- * @throws boost::archive::archive_exception if serialization fails.
- */
-inline void write_record(std::ostream& out, const SerializationRecord& rec) {
-    std::stringstream buf(std::ios::out | std::ios::in | std::ios::binary);
-    {
-        boost::archive::binary_oarchive oa(buf);
-        oa << rec;
-    } // archive destructor flushes here — buf now holds the complete archive
-    const std::string bytes = buf.str();
-    const uint64_t length = static_cast<uint64_t>(bytes.size());
-    static_assert(sizeof(length) == RECORD_LENGTH_PREFIX_BYTES,
-                  "length-prefix width must match RECORD_LENGTH_PREFIX_BYTES");
-    out.write(reinterpret_cast<const char*>(&length), RECORD_LENGTH_PREFIX_BYTES);
-    out.write(bytes.data(), bytes.size());
+// Internal helper shared by read_next_record, read_record_length,
+// and read_record_metadata. Reads the prefix and validates the
+// magic, the wire_version, and the payload_length cap. Returns
+// `Status::Ok` on a fully-read valid prefix, `Status::Eof` on a
+// clean short-read (EOF or torn prefix), or an error-arm string
+// on any validation failure of a fully-read prefix. Internal —
+// callers in this header always check the return value, so no
+// nodiscard.
+inline auto read_validated_prefix(
+    std::istream& in,
+    serialization::wire_format::RecordPrefix& prefix)
+    -> expected<Status, std::string>
+{
+    if (const auto s = serialization::wire_format::read_record_prefix(in, prefix);
+        s == Status::Eof) {
+        return s;  // EOF or torn prefix — clean stop, propagate
+    }
+    if (prefix.magic != serialization::wire_format::RecordPrefix::MAGIC) {
+        return make_unexpected(
+            "serialization_record: bad magic 0x" +
+            std::to_string(prefix.magic) +
+            " — file is not a v0.2 record stream or is corrupted "
+            "at the record boundary");
+    }
+    if (prefix.wire_version != serialization::wire_format::RecordPrefix::VERSION) {
+        return make_unexpected(
+            "serialization_record: unsupported wire_version " +
+            std::to_string(prefix.wire_version) +
+            " (this reader supports v" +
+            std::to_string(serialization::wire_format::RecordPrefix::VERSION) + ")");
+    }
+    if (prefix.payload_length > MAX_RECORD_PAYLOAD_BYTES) {
+        return make_unexpected(
+            "serialization_record: payload_length " +
+            std::to_string(prefix.payload_length) +
+            " exceeds MAX_RECORD_PAYLOAD_BYTES sanity cap");
+    }
+    return Status::Ok;
 }
 
-/** @brief Read a length prefix and return the record's payload length
- * without deserializing the archive.
+/** @brief Append a record to @p out using the v0.2 wire format
+ *  (fixed-size prefix + id bytes + payload bytes).
  *
- * Used by index builders that need to walk the file quickly to record
- * (offset, id) pairs, and internally by `read_next_record` to keep the
- * EOF / torn-header policy in one place.
+ *  Field mapping at the write site is identity: every prefix
+ *  field comes directly from the matching `SerializationRecord`
+ *  field. Callers who want a wall-clock stamp on
+ *  `checkpoint_epoch` set it themselves (typically via
+ *  `std::time(nullptr)`) before calling; default-constructed
+ *  records carry `checkpoint_epoch = 0`.
  *
- * @param in  Input stream positioned at the start of a length prefix or
- *            at EOF.
- * @param length_out Output parameter populated on success with the
- *                   payload length (not including the 8-byte header).
- * @return true if a full length header was read; false on EOF or a
- *         truncated header.
+ *  Returns the error arm if the stream ends up in a fail state
+ *  after the prefix / id / payload bytes are issued. The check
+ *  is post-write — the caller doesn't need to inspect the stream
+ *  itself.
  */
-inline bool read_record_length(std::istream& in, uint64_t& length_out) {
-    if (in.peek() == std::istream::traits_type::eof()) {
-        return false;
+nsel_NODISCARD inline auto write_record(std::ostream& out,
+                                        const SerializationRecord& rec)
+    -> expected<void, std::string>
+{
+    serialization::wire_format::RecordPrefix prefix;
+    prefix.time_step            = rec.time_step;
+    prefix.simulation_timestamp = rec.simulation_timestamp;
+    prefix.checkpoint_epoch     = rec.checkpoint_epoch;
+    prefix.id_length            = static_cast<uint16_t>(rec.id.size());
+    prefix.payload_length       = static_cast<uint64_t>(rec.payload.size());
+    // (magic and wire_version come from the struct's default values.)
+
+    serialization::wire_format::write_record_prefix(out, prefix);
+    if (!rec.id.empty()) {
+        out.write(rec.id.data(), static_cast<std::streamsize>(rec.id.size()));
     }
-    static_assert(sizeof(length_out) == RECORD_LENGTH_PREFIX_BYTES,
-                  "length-prefix width must match RECORD_LENGTH_PREFIX_BYTES");
-    return static_cast<bool>(in.read(reinterpret_cast<char*>(&length_out),
-                                     RECORD_LENGTH_PREFIX_BYTES));
+    if (!rec.payload.empty()) {
+        out.write(rec.payload.data(),
+                  static_cast<std::streamsize>(rec.payload.size()));
+    }
+    if (!out) {
+        return make_unexpected(std::string(
+            "serialization_record: stream failed during record write"));
+    }
+    return {};
 }
 
 /** @brief Read the next record from @p in.
  *
- * @param in  Input stream positioned at the start of a length prefix (or
- *            at EOF).
- * @param rec Output parameter populated on success.
- * @return true if a record was read; false if the stream was at EOF
- *         before reading began, OR if the stream ended mid-record
- *         (truncation). Torn files therefore stop cleanly at the last
- *         intact record rather than throwing — an important property
- *         for restart-from-crash workflows.
- *
- * @throws std::runtime_error if the length prefix reports a byte count
- *         larger than `MAX_RECORD_ARCHIVE_BYTES` — that means the file
- *         is corrupted or tampered with, not merely torn.
- * @throws boost::archive::archive_exception if a full record was read
- *         but failed to deserialize (corruption rather than truncation).
+ *  @return `Status::Ok` if a full record was read; `Status::Eof`
+ *          if the stream was at EOF before reading began OR if
+ *          the stream ended mid-record (truncation in the prefix,
+ *          the id, or the payload) — torn files therefore stop
+ *          cleanly at the last intact record. Error arm if the
+ *          prefix's magic bytes are wrong, the wire_version is
+ *          unsupported, or payload_length exceeds
+ *          MAX_RECORD_PAYLOAD_BYTES.
  */
-inline bool read_next_record(std::istream& in, SerializationRecord& rec) {
-    // Shared helper with index builders: single source of truth for how
-    // the 8-byte length prefix is read and how EOF / torn-header is
-    // distinguished from a valid zero-length prefix. Returning false here
-    // covers both clean end-of-stream and a half-written header.
-    uint64_t length = 0;
-    if (!read_record_length(in, length)) {
-        return false;
-    }
-    // Reject pathologically-large lengths before attempting to allocate
-    // or read that many bytes. See MAX_RECORD_ARCHIVE_BYTES above.
-    if (length > MAX_RECORD_ARCHIVE_BYTES) {
-        throw std::runtime_error(
-            "serialization_record: length prefix " + std::to_string(length) +
-            " exceeds MAX_RECORD_ARCHIVE_BYTES sanity cap");
-    }
-    // Read the exact number of archive bytes into a buffer. A short read
-    // means the tail of the file was truncated; surface that as
-    // end-of-stream rather than an archive exception, so a partially-
-    // written file from a crashed writer still yields every record that
-    // was fully flushed before the crash.
-    std::string bytes;
-    bytes.resize(static_cast<size_t>(length));
-    if (length > 0) {
-        in.read(&bytes[0], static_cast<std::streamsize>(length));
-        if (static_cast<uint64_t>(in.gcount()) != length) {
-            return false;
+nsel_NODISCARD inline auto read_next_record(std::istream& in,
+                                            SerializationRecord& rec)
+    -> expected<Status, std::string>
+{
+    serialization::wire_format::RecordPrefix prefix;
+    auto p = read_validated_prefix(in, prefix);
+    // Propagate any non-Ok outcome unchanged — error arm or Eof.
+    if (!p || p.value() == Status::Eof) return p;
+
+    // id body
+    std::string id;
+    id.resize(prefix.id_length);
+    if (prefix.id_length > 0) {
+        in.read(&id[0], static_cast<std::streamsize>(prefix.id_length));
+        if (static_cast<uint64_t>(in.gcount()) != prefix.id_length) {
+            return Status::Eof;  // torn id — clean stop
         }
     }
-    // At this point a valid record always contains a non-empty boost
-    // archive (header + payload). length == 0 means the file reported
-    // no archive body — constructing the binary_iarchive on an empty
-    // stringstream throws a `boost::archive::archive_exception` when
-    // it tries to read the archive's own header signature, which the
-    // caller surfaces as a corrupted-record error.
-    std::stringstream buf(bytes, std::ios::in | std::ios::binary);
-    boost::archive::binary_iarchive ia(buf);
-    ia >> rec;
-    return true;
+
+    // payload body
+    std::vector<char> payload;
+    payload.resize(static_cast<size_t>(prefix.payload_length));
+    if (prefix.payload_length > 0) {
+        in.read(payload.data(),
+                static_cast<std::streamsize>(prefix.payload_length));
+        if (static_cast<uint64_t>(in.gcount()) != prefix.payload_length) {
+            return Status::Eof;  // torn payload — clean stop
+        }
+    }
+
+    rec.id                   = std::move(id);
+    rec.time_step            = prefix.time_step;
+    rec.simulation_timestamp = prefix.simulation_timestamp;
+    rec.checkpoint_epoch     = prefix.checkpoint_epoch;
+    rec.payload              = std::move(payload);
+    return Status::Ok;
+}
+
+/** @brief Read the prefix at the current stream position and
+ *  report the record's body length (id bytes + payload bytes)
+ *  without reading either.
+ *
+ *  @param in       Input stream positioned at the start of a
+ *                  record (a fixed-size prefix), or at EOF.
+ *  @param body_out On `Status::Ok`, populated with the number of
+ *                  bytes remaining in this record after the
+ *                  prefix — i.e. `id_length + payload_length`.
+ *                  A caller that wants to skip past the record
+ *                  without reading any of its contents calls
+ *                  `in.seekg(body_out, std::ios::cur)`.
+ *  @return `Status::Ok` if a full prefix was read; `Status::Eof`
+ *          on EOF or a truncated prefix; error arm on bad magic,
+ *          unsupported wire_version, or payload_length exceeding
+ *          MAX_RECORD_PAYLOAD_BYTES.
+ */
+nsel_NODISCARD inline auto read_record_length(std::istream& in,
+                                              uint64_t& body_out)
+    -> expected<Status, std::string>
+{
+    serialization::wire_format::RecordPrefix prefix;
+    auto p = read_validated_prefix(in, prefix);
+    // Propagate any non-Ok outcome unchanged — error arm or Eof.
+    if (!p || p.value() == Status::Eof) return p;
+    body_out = static_cast<uint64_t>(prefix.id_length) + prefix.payload_length;
+    return Status::Ok;
+}
+
+/** @brief Read the prefix and id at the current stream position
+ *  and skip past the payload, leaving @p in positioned at the
+ *  start of the next record (or at EOF).
+ *
+ *  This is the fast walker `CheckpointIndex` uses to build an
+ *  in-memory index without ever reading payload bytes — the cost
+ *  per record is `O(prefix + id_size)` regardless of payload
+ *  size.
+ *
+ *  @return `Status::Ok` if metadata was read AND the payload was
+ *          successfully skipped; `Status::Eof` on EOF or any
+ *          truncation; error arm on bad magic, unsupported
+ *          wire_version, or payload_length exceeding
+ *          MAX_RECORD_PAYLOAD_BYTES.
+ */
+nsel_NODISCARD inline auto read_record_metadata(
+    std::istream& in,
+    serialization::wire_format::RecordPrefix& prefix_out,
+    std::string& id_out)
+    -> expected<Status, std::string>
+{
+    auto p = read_validated_prefix(in, prefix_out);
+    // Propagate any non-Ok outcome unchanged — error arm or Eof.
+    if (!p || p.value() == Status::Eof) return p;
+
+    id_out.resize(prefix_out.id_length);
+    if (prefix_out.id_length > 0) {
+        in.read(&id_out[0],
+                static_cast<std::streamsize>(prefix_out.id_length));
+        if (static_cast<uint64_t>(in.gcount()) != prefix_out.id_length) {
+            return Status::Eof;  // torn id — clean stop
+        }
+    }
+
+    if (prefix_out.payload_length > 0) {
+        in.seekg(static_cast<std::streamoff>(prefix_out.payload_length),
+                 std::ios::cur);
+        if (!in) return Status::Eof;  // stream went bad while seeking
+    }
+    return Status::Ok;
 }
 
 }}} // end namespace models::bmi::protocols
-
-// BOOST_CLASS_VERSION and CURRENT_VERSION are intentionally independent.
-// They track orthogonal concerns (see the file header's "Schema
-// versioning" section for the full story):
-//
-//   * BOOST_CLASS_VERSION drives boost::serialization's archive wire
-//     format. Bump it when adding, removing, or reordering fields on
-//     the struct and branch on `archive_version` inside serialize() to
-//     read old archives.
-//
-//   * CURRENT_VERSION stamps every record with the application schema
-//     in use at write time. Bump it when record *semantics* change —
-//     e.g. a new payload interpretation, a different timestamp encoding
-//     convention, or compatibility rules with older restore logic.
-
-BOOST_CLASS_VERSION(models::bmi::protocols::SerializationRecord, 1)

@@ -80,7 +80,12 @@ namespace {
         std::ifstream in(path, std::ios::binary);
         if (!in) return out;
         SerializationRecord scratch;
-        while (read_next_record(in, scratch)) out.push_back(scratch);
+        for (;;) {
+            auto r = read_next_record(in, scratch);
+            if (!r) break;  // error arm — treat as end of readable content
+            if (r.value() == models::bmi::protocols::Status::Eof) break;
+            out.push_back(scratch);
+        }
         return out;
     }
 

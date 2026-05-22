@@ -66,7 +66,12 @@ namespace {
         std::ifstream in(path, std::ios::binary);
         if (!in) return out;
         SerializationRecord scratch;
-        while (read_next_record(in, scratch)) out.push_back(scratch);
+        for (;;) {
+            auto r = read_next_record(in, scratch);
+            if (!r) break;  // error arm — treat as end of readable content
+            if (r.value() == models::bmi::protocols::Status::Eof) break;
+            out.push_back(scratch);
+        }
         return out;
     }
 }
@@ -229,10 +234,10 @@ TEST_F(Bmi_Serialization_Test, check_writes_record) {
     ASSERT_EQ(records.size(), 2u);
     EXPECT_EQ(records[0].id, model_name);
     EXPECT_EQ(records[0].time_step, 0);
-    EXPECT_EQ(records[0].timestamp, int64_t{0});
+    EXPECT_EQ(records[0].simulation_timestamp, int64_t{0});
     EXPECT_EQ(records[1].id, model_name);
     EXPECT_EQ(records[1].time_step, 1);
-    EXPECT_EQ(records[1].timestamp, int64_t{3600});
+    EXPECT_EQ(records[1].simulation_timestamp, int64_t{3600});
     // test_bmi_cpp serializes time + 4 doubles == 40 bytes of payload
     EXPECT_EQ(records[0].payload.size(), 40u);
     EXPECT_EQ(records[1].payload.size(), 40u);

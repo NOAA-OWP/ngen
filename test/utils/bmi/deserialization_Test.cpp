@@ -87,7 +87,7 @@ namespace {
     void append_record(const std::string& path, const SerializationRecord& rec) {
         std::ofstream out(path, std::ios::binary | std::ios::app);
         ASSERT_TRUE(out.good());
-        write_record(out, rec);
+        ASSERT_TRUE(write_record(out, rec).has_value());
     }
 }
 

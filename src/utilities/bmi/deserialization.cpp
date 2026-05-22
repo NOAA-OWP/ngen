@@ -44,8 +44,8 @@ namespace {
     // on demand, avoiding a duplicated source of truth and shrinking
     // this struct by 8 bytes per record.
     struct IndexEntry {
-        int      time_step       = 0;
-        int64_t  timestamp_epoch = 0;
+        int64_t  time_step       = 0;
+        int64_t  simulation_timestamp = 0;
         uint64_t file_offset     = 0;
     };
 
@@ -125,25 +125,21 @@ namespace {
                 if (pos_stream == std::streampos(-1)) break;
                 const uint64_t pos = static_cast<uint64_t>(pos_stream);
 
-                // Delegate the prefix + body + archive parse to the
-                // shared record helper — single source of truth for
-                // the on-disk framing. We still pay the payload's
-                // deserialization cost (boost::serialization has no
-                // "stop partway" primitive) but the payload is
-                // immediately discarded, so the memory cost stays
-                // flat in the number of indexed records rather than
-                // total payload bytes. Malformed records inside an
-                // otherwise intact file are treated the same as
-                // truncation: stop the walk cleanly; any records
-                // already indexed remain usable.
-                SerializationRecord rec;
-                try {
-                    if (!read_next_record(in, rec)) break;  // EOF / torn
-                } catch (const std::exception&) {
-                    break;  // corrupt record — stop the walk here
-                }
+                // Read the fixed-size prefix + id and seekg past the
+                // payload — never touch payload bytes during an
+                // index build. Cost per record is O(prefix +
+                // id_size), regardless of payload size. Malformed
+                // records inside an otherwise intact file are
+                // treated the same as truncation: stop the walk
+                // cleanly; any records already indexed remain
+                // usable.
+                serialization::wire_format::RecordPrefix prefix;
+                std::string id;
+                auto r = read_record_metadata(in, prefix, id);
+                // Any non-Ok outcome — corrupt record or EOF — stops the walk.
+                if (!r || r.value() == Status::Eof) break;
 
-                if (have_subset && subset_hash.count(primary_prefix(rec.id)) == 0) {
+                if (have_subset && subset_hash.count(primary_prefix(id)) == 0) {
                     // Skip: this record's primary-identity prefix is not in
                     // the caller's subset of interest. See `primary_prefix`
                     // above for the normalization rationale.
@@ -151,10 +147,10 @@ namespace {
                 }
 
                 IndexEntry entry;
-                entry.time_step       = rec.time_step;
-                entry.timestamp_epoch = rec.timestamp;
+                entry.time_step       = prefix.time_step;
+                entry.simulation_timestamp = prefix.simulation_timestamp;
                 entry.file_offset     = pos;
-                by_id_[std::move(rec.id)].push_back(entry);
+                by_id_[std::move(id)].push_back(entry);
             }
 
             built_ = true;
@@ -168,7 +164,7 @@ namespace {
         // match.
         auto find(const std::string& id,
                   bool by_timestamp,
-                  int64_t target_timestamp_epoch,
+                  int64_t target_simulation_timestamp,
                   bool step_latest,
                   int target_step) const -> boost::optional<IndexEntry>
         {
@@ -179,7 +175,7 @@ namespace {
 
             if (by_timestamp) {
                 for (const auto& e : entries) {
-                    if (e.timestamp_epoch == target_timestamp_epoch) return e;
+                    if (e.simulation_timestamp == target_simulation_timestamp) return e;
                 }
                 return boost::none;
             }
@@ -201,15 +197,13 @@ namespace {
         // restores of distinct features don't lock each other out on a
         // shared file handle.
         //
-        // The record-format layer owns the seek-past-prefix + read-body
-        // + parse-archive sequence via `read_next_record`; we seek to
-        // the *start* of the record (its length prefix) and let the
-        // helper do the rest. `read_next_record` itself enforces
-        // `MAX_RECORD_ARCHIVE_BYTES` (throws on an absurd on-disk
-        // length) and treats `length == 0` as a malformed record
-        // because a valid archive always contains at least a
-        // boost-library header — the empty-archive case surfaces here
-        // as a "failed to parse" error.
+        // The record-format layer owns the prefix + id + payload
+        // read sequence via `read_next_record`; we seek to the start
+        // of the record (its fixed-size prefix) and let the helper do
+        // the rest. `read_next_record` itself validates the magic
+        // bytes, the wire_version, and enforces
+        // `MAX_RECORD_PAYLOAD_BYTES`, surfacing any invariant
+        // violation on the error arm of its returned `expected<>`.
         auto load(const IndexEntry& entry) const
             -> expected<SerializationRecord, std::string>
         {
@@ -225,15 +219,15 @@ namespace {
             }
 
             SerializationRecord rec;
-            try {
-                if (!read_next_record(in, rec)) {
-                    return make_unexpected(
-                        "checkpoint index: record missing or truncated at offset "
-                        + std::to_string(entry.file_offset) + " in '" + path_ + "'");
-                }
-            } catch (const std::exception& e) {
+            auto r = read_next_record(in, rec);
+            if (!r) {
                 return make_unexpected(
-                    std::string("checkpoint index: failed to parse record body: ") + e.what());
+                    std::string("checkpoint index: failed to parse record body: ") + r.error());
+            }
+            if (r.value() == Status::Eof) {
+                return make_unexpected(
+                    "checkpoint index: record missing or truncated at offset "
+                    + std::to_string(entry.file_offset) + " in '" + path_ + "'");
             }
             return rec;
         }
@@ -319,13 +313,13 @@ auto NgenDeserializationProtocol::run(const ModelPtr& model, const Context& ctx)
         index.ensure_built(id_subset);
 
         auto entry = index.find(
-            ctx.id, by_timestamp, target_timestamp_epoch,
+            ctx.id, by_timestamp, target_simulation_timestamp,
             step_latest, target_step);
         if (!entry) {
             std::stringstream ss;
             ss << "deserialization: no matching record for id '" << ctx.id << "'";
             if (by_timestamp) {
-                ss << " at timestamp '" << target_timestamp_epoch << "'";
+                ss << " at timestamp '" << target_simulation_timestamp << "'";
             } else if (!step_latest) {
                 ss << " at step " << target_step;
             }
@@ -475,7 +469,7 @@ auto NgenDeserializationProtocol::initialize(const ModelPtr& model, const Proper
     auto ts_it = restore.find(DESERIALIZATION_TIMESTAMP_KEY);
     if (ts_it != restore.end()) {
         by_timestamp = true;
-        target_timestamp_epoch = parse_timestamp(ts_it->second.as_string());
+        target_simulation_timestamp = parse_timestamp(ts_it->second.as_string());
     } else {
         by_timestamp = false;
         _it = restore.find(DESERIALIZATION_STEP_KEY);
