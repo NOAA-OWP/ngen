@@ -58,6 +58,7 @@ cmake_dependent_option(NGEN_WITH_ROUTING "Build with t-route integration" ON "NG
 cmake_dependent_option(NGEN_UPDATE_GIT_SUBMODULES "Update submodules on configure" ON "GIT_FOUND;NGEN_HAS_GIT_DIR" OFF)
 cmake_dependent_option(NGEN_WITH_COVERAGE "Build with test coverage" OFF "NGEN_WITH_TESTS" OFF)
 cmake_dependent_option(NGEN_WITH_PARALLEL_NETCDF "Build with NetCDF using HDF5-parallel support" OFF "NGEN_WITH_NETCDF" OFF)
+cmake_dependent_option(NGEN_WITH_ROUTING_TROUTE_BMI "Build with t-route integration called through a BMI implementation" OFF "NGEN_WITH_ROUTING" OFF)
 
 option(BMI_FORTRAN_ISO_C_LIB_DIR "Directory hint for middleware Fortran shared lib handling iso_c_binding" "${NGEN_ROOT_DIR}/extern/iso_c_fortran_bmi/cmake_build")
 option(BMI_FORTRAN_ISO_C_LIB_NAME "Name for middleware Fortran shared lib handling iso_c_binding" "iso_c_bmi")
@@ -439,6 +440,7 @@ ngen_multiline_message(
 "    NGEN_WITH_BMI_C: ${NGEN_WITH_BMI_C}"
 "    NGEN_WITH_PYTHON: ${NGEN_WITH_PYTHON}"
 "    NGEN_WITH_ROUTING: ${NGEN_WITH_ROUTING}"
+"    NGEN_WITH_ROUTING_TROUTE_BMI: ${NGEN_WITH_ROUTING_TROUTE_BMI}"
 "    NGEN_WITH_TESTS: ${NGEN_WITH_TESTS}"
 "    NGEN_WITH_COVERAGE: ${NGEN_WITH_COVERAGE}"
 "    NGEN_QUIET: ${NGEN_QUIET}"

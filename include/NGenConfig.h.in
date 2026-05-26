@@ -17,6 +17,7 @@
 #cmakedefine01 NGEN_WITH_BMI_C
 #cmakedefine01 NGEN_WITH_PYTHON
 #cmakedefine01 NGEN_WITH_ROUTING
+#cmakedefine01 NGEN_WITH_ROUTING_TROUTE_BMI
 #cmakedefine01 NGEN_WITH_TESTS
 #cmakedefine01 NGEN_QUIET
 
@@ -32,15 +33,16 @@ namespace exec_info
 
     // Compile-time feature flags
 
-    static constexpr bool with_mpi         = NGEN_WITH_MPI;
-    static constexpr bool with_netcdf      = NGEN_WITH_NETCDF;
-    static constexpr bool with_sqlite      = NGEN_WITH_SQLITE;
-    static constexpr bool with_udunits     = NGEN_WITH_UDUNITS;
-    static constexpr bool with_bmi_fortran = NGEN_WITH_BMI_FORTRAN;
-    static constexpr bool with_bmi_c       = NGEN_WITH_BMI_C;
-    static constexpr bool with_python      = NGEN_WITH_PYTHON;
-    static constexpr bool with_routing     = NGEN_WITH_ROUTING;
-    static constexpr bool with_quiet       = NGEN_QUIET;
+    static constexpr bool with_mpi                 = NGEN_WITH_MPI;
+    static constexpr bool with_netcdf              = NGEN_WITH_NETCDF;
+    static constexpr bool with_sqlite              = NGEN_WITH_SQLITE;
+    static constexpr bool with_udunits             = NGEN_WITH_UDUNITS;
+    static constexpr bool with_bmi_fortran         = NGEN_WITH_BMI_FORTRAN;
+    static constexpr bool with_bmi_c               = NGEN_WITH_BMI_C;
+    static constexpr bool with_python              = NGEN_WITH_PYTHON;
+    static constexpr bool with_routing             = NGEN_WITH_ROUTING;
+    static constexpr bool with_routing_troute_bmi  = NGEN_WITH_ROUTING_TROUTE_BMI;
+    static constexpr bool with_quiet               = NGEN_QUIET;
 
     //! Compile-time build summary
     static constexpr const char* build_summary = R"(@NGEN_CONF_SUMMARY@)";
