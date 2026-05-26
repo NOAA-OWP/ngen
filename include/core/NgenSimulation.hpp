@@ -12,6 +12,13 @@ namespace hy_features
     class HY_Features_MPI;
 }
 
+class State_Snapshot_Saver;
+class State_Snapshot_Loader;
+
+#if NGEN_WITH_ROUTING
+#include "bmi/Bmi_Py_Adapter.hpp"
+#endif // NGEN_WITH_ROUTING
+
 #include <memory>
 #include <vector>
 #include <unordered_map>
@@ -48,6 +55,9 @@ public:
      */
     void run_catchments();
 
+    // Tear down of any items stored on the NgenSimulation object that could throw errors and, thus, should be kept separate from the deconstructor.
+    void finalize();
+
     /**
      * Run t-route on the stored nexus outflow values for the full configured duration of the simulation
      */
@@ -59,8 +69,36 @@ public:
     size_t get_num_output_times() const;
     std::string get_timestamp_for_step(int step) const;
 
+    void save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> snapshot_saver);
+    void load_state_snapshot(std::shared_ptr<State_Snapshot_Loader> snapshot_loader);
+    /**
+     * Saves a snapshot state that's intended to be run at the end of a simulation.
+     * 
+     * This version of saving will include T-Route BMI data and exclude the nexus outflow data stored during the catchment processing.
+    */
+    void save_end_of_run(std::shared_ptr<State_Snapshot_Saver> snapshot_saver);
+    // Load a snapshot of the end of a previous run. This will create a T-Route python adapter if the loader finds a unit for it and the config path is not empty.
+    void load_hot_start(std::shared_ptr<State_Snapshot_Loader> snapshot_loader, const std::string &t_route_config_file_with_path);
+
 private:
     void advance_models_one_output_step();
+
+    /** Set T-route input that may require merging results from other MPI processes. The T-route values will only be set for the MPI rank 0 process.
+     * 
+     * If MPI is running with multiple processes, blocking MPI calls will be made to merge the results.
+     * @param simulation_values Pointer to vector of simulation results
+     * @param feature_indexes Pointer to the map between feature IDs and the relative timestep index
+     * @param id_var_name T-route BMI var name for the feature IDs. `feature_indexes` will be converted to a list and passed to this variable
+     * @param value_var_name T-route BMI var name for the simulation results
+     * @param features Features colection used to filter out remote sender nexuses when merging values
+     */ 
+    void set_troute_inputs(
+        const std::vector<double> *simulation_values,
+        const std::unordered_map<std::string, int> *feature_indexes,
+        const std::string id_var_name,
+        const std::string value_var_name,
+        const NgenSimulation::hy_features_t &features
+    );
 
     int simulation_step_;
 
@@ -74,6 +112,12 @@ private:
     std::vector<double> catchment_outflows_;
     std::unordered_map<std::string, int> nexus_indexes_;
     std::vector<double> nexus_downstream_flows_;
+#if NGEN_WITH_ROUTING
+    std::unique_ptr<models::bmi::Bmi_Py_Adapter> py_troute_;
+#endif // NGEN_WITH_ROUTING
+    void make_troute(const std::string &t_route_config_file_with_path);
+
+    std::string unit_name() const;
 
     int mpi_rank_;
     int mpi_num_procs_;

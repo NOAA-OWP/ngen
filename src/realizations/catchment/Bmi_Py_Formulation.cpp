@@ -1,5 +1,7 @@
 #include <NGenConfig.h>
-#include "Logger.hpp"
+#include <stdexcept>
+#include "ewts_ngen/logger.hpp"
+#include "state_save_restore/State_Save_Utils.hpp"
 
 #if NGEN_WITH_PYTHON
 
@@ -16,7 +18,9 @@ Bmi_Py_Formulation::Bmi_Py_Formulation(std::string id, std::shared_ptr<data_acce
 std::shared_ptr<Bmi_Adapter> Bmi_Py_Formulation::construct_model(const geojson::PropertyMap &properties) {
     auto python_type_name_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME);
     if (python_type_name_iter == properties.end()) {
-        Logger::logMsgAndThrowError("BMI Python formulation requires Python model class type, but none given in config");
+        std::string msg = "BMI Python formulation requires Python model class type, but none given in config";
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
     //Load a custom module path, if provided
     auto python_module_path_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_MODULE_PATH);
@@ -53,52 +57,34 @@ double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const std::
 
     std::string val_type = model->GetVarType(var_name);
     size_t val_item_size = (size_t)model->GetVarItemsize(var_name);
+    std::string cxx_type = model->get_analogous_cxx_type(val_type, val_item_size);
 
     //void *dest;
     int indices[1];
     indices[0] = index;
-
-    // The available types and how they are handled here should match what is in SetValueAtIndices
-    if (val_type == "int" && val_item_size == sizeof(short)) {
-        short dest;
-        model->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
-    }
-    if (val_type == "int" && val_item_size == sizeof(int)) {
-        int dest;
-        model->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
-    }
-    if (val_type == "int" && val_item_size == sizeof(long)) {
-        long dest;
-        model->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
-    }
-    if (val_type == "int" && val_item_size == sizeof(long long)) {
-        long long dest;
-        model->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
-    }
-    if (val_type == "float" || val_type == "float16" || val_type == "float32" || val_type == "float64") {
-        if (val_item_size == sizeof(float)) {
-            float dest;
-            model->get_value_at_indices(var_name, &dest, indices, 1, false);
-            return (double) dest;
-        }
-        if (val_item_size == sizeof(double)) {
-            double dest;
-            model->get_value_at_indices(var_name, &dest, indices, 1, false);
-            return dest;
-        }
-        if (val_item_size == sizeof(long double)) {
-            long double dest;
-            model->get_value_at_indices(var_name, &dest, indices, 1, false);
-            return (double) dest;
-        }
-    }
-
-    Logger::logMsgAndThrowError("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
-    " as double: no logic for converting variable type " + val_type);
+    // macro for both checking and converting based on type from get_analogous_cxx_type
+#define PY_BMI_DOUBLE_AT_INDEX(type) if (cxx_type == #type) {\
+                                        type dest;\
+                                        model->get_value_at_indices(var_name, &dest, indices, 1, false);\
+                                        return static_cast<double>(dest);}
+    PY_BMI_DOUBLE_AT_INDEX(signed char)
+    else PY_BMI_DOUBLE_AT_INDEX(unsigned char)
+    else PY_BMI_DOUBLE_AT_INDEX(short)
+    else PY_BMI_DOUBLE_AT_INDEX(unsigned short)
+    else PY_BMI_DOUBLE_AT_INDEX(int)
+    else PY_BMI_DOUBLE_AT_INDEX(unsigned int)
+    else PY_BMI_DOUBLE_AT_INDEX(long)
+    else PY_BMI_DOUBLE_AT_INDEX(unsigned long)
+    else PY_BMI_DOUBLE_AT_INDEX(long long)
+    else PY_BMI_DOUBLE_AT_INDEX(unsigned long long)
+    else PY_BMI_DOUBLE_AT_INDEX(float)
+    else PY_BMI_DOUBLE_AT_INDEX(double)
+    else PY_BMI_DOUBLE_AT_INDEX(long double)
+#undef PY_BMI_DOUBLE_AT_INDEX
+    std::string msg = "Unable to get value of variable " + var_name + " from " + get_model_type_name() +
+                      " as double: no logic for converting variable type " + val_type;
+    LOG(LogLevel::FATAL, msg);
+    throw std::runtime_error(msg);
 
     return 1.0;
 }
@@ -115,6 +101,12 @@ bool Bmi_Py_Formulation::is_bmi_output_variable(const std::string &var_name) con
 
 bool Bmi_Py_Formulation::is_model_initialized() const {
     return get_bmi_model()->is_model_initialized();
+}
+
+void Bmi_Py_Formulation::load_serialization_state(const boost::span<char> state) {
+    auto bmi = std::dynamic_pointer_cast<models::bmi::Bmi_Py_Adapter>(get_bmi_model());
+    // load the state through the set value function that does not enforce the input size is the same as the current BMI's size
+    bmi->set_value_unchecked<char>(StateSaveNames::STATE, state.data(), state.size());
 }
 
 #endif //NGEN_WITH_PYTHON

@@ -19,6 +19,7 @@ target_link_libraries(forcing PUBLIC
         NGen::config_header
         Threads::Threads
 )
+target_link_libraries(forcing PUBLIC ewts::ewts_ngen_bridge)
 
 target_sources(forcing PRIVATE "${CMAKE_CURRENT_LIST_DIR}/NullForcingProvider.cpp")
 

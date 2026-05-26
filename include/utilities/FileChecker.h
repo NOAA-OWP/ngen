@@ -6,7 +6,8 @@
 #include <vector>
 #include <iostream>
 #include <cerrno>
-#include "Logger.hpp"
+#include <sstream>
+#include "ewts_ngen/logger.hpp"
 
 namespace utils {
 
@@ -122,7 +123,7 @@ namespace utils {
             else {
                 std::stringstream ss;
                 ss << description << " path " << path << " not readable" << std::endl;
-                LOG(ss.str(), LogLevel::INFO); ss.str("");
+                LOG(LogLevel::INFO, ss.str()); ss.str("");
                 return false;
             }
         }

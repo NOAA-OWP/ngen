@@ -3,7 +3,8 @@
 
 #include <ctime> // timegm
 #include <iomanip> // std::get_time
-#include "Logger.hpp"
+#include <stdexcept>
+#include "ewts_ngen/logger.hpp"
 
 namespace data_access {
 namespace detail {
@@ -25,14 +26,14 @@ void assert_forcings_engine_requirements()
 {
     // Check that the python module is installed.
     {
-        auto interpreter_ = utils::ngenPy::InterpreterUtil::getInstance();
         try {
-            auto mod = interpreter_->getModule(forcings_engine_python_module);
+            auto mod = utils::ngenPy::InterpreterUtil::getPyModule(forcings_engine_python_module);
             auto cls = mod.attr(forcings_engine_python_class).cast<py::object>();
         } catch(std::exception& e) {
-            Logger::logMsgAndThrowError(
-                "Failed to initialize ForcingsEngine: ForcingsEngine python module is not installed or is not properly configured. (" + std::string{e.what()} + ")"
-            );
+            std::string msg = "Failed to initialize ForcingsEngine: ForcingsEngine python module is not installed or is not properly configured. (" + 
+                              std::string{e.what()} + ")";
+            LOG(LogLevel::FATAL, msg);
+            throw std::runtime_error(msg);
         }
     }
 
@@ -40,7 +41,9 @@ void assert_forcings_engine_requirements()
     {
         const auto* wgrib2_exec = std::getenv("WGRIB2");
         if (wgrib2_exec == nullptr) {
-            Logger::logMsgAndThrowError("Failed to initialize ForcingsEngine: $WGRIB2 is not defined");
+            std::string msg = "Failed to initialize ForcingsEngine: $WGRIB2 is not defined";
+            LOG(LogLevel::FATAL, msg);
+            throw std::runtime_error(msg);
         }
     }
 }

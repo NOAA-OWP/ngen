@@ -5,7 +5,7 @@
 #include <vector>
 
 #include <boost/core/span.hpp>
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 namespace ngen {
 
