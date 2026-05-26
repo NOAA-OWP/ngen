@@ -64,7 +64,7 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
         //std::cerr << "Requesting water from nexus, id = " << id << " at time = " <<current_time_index << ",  percent = 100, destination = " << cat_id << std::endl;
         double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, current_time_index, 100.0);
 
-#if NGEN_WITH_ROUTING && false
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
         int nexus_index = nexus_indexes[id];
         nexus_downstream_flows[nexus_index] += contribution_at_t;
 #endif // NGEN_WITH_ROUTING

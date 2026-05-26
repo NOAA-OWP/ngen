@@ -45,7 +45,7 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
                 +" at feature id "+id;
             throw std::runtime_error(msg);
         }
-#if NGEN_WITH_ROUTING && false
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
         int results_index = catchment_indexes[id];
 	// XXX: This is currently accumulating in meters of depth, which may not be desirable
         catchment_outflows[results_index] += response;

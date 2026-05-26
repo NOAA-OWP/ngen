@@ -643,7 +643,11 @@ int main(int argc, char* argv[]) {
 
     if (manager->get_using_routing()) {
         std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
+#if NGEN_WITH_ROUTING_TROUTE_BMI
+        simulation->run_routing_bmi(features, t_route_config_file_with_path);
+#else
         simulation->run_routing(t_route_config_file_with_path);
+#endif // NGEN_WITH_ROUTING_TROUTE_BMI
     }
 
     auto time_done_routing = std::chrono::steady_clock::now();
