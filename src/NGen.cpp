@@ -601,14 +601,14 @@ int main(int argc, char* argv[]) {
 
     // T-ROUTE data storage
     std::unordered_map<std::string, int> catchment_indexes;
-#if NGEN_WITH_ROUTING && false
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
     size_t catchment_collection_size = catchment_collection->get_size();
     for (int i = 0; i < catchment_collection_size; ++i) {
         auto feature = catchment_collection->get_feature(i);
         std::string feature_id = feature->get_id();
         catchment_indexes[feature_id] = i;
     }
-#endif // NGEN_WITH_ROUTING
+#endif // NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
 
     auto simulation = std::make_unique<NgenSimulation>(*sim_time,
                                                        layers,
@@ -641,7 +641,11 @@ int main(int argc, char* argv[]) {
 
     if (manager->get_using_routing()) {
         std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
+#if NGEN_WITH_ROUTING_TROUTE_BMI
+        simulation->run_routing_bmi(features, t_route_config_file_with_path);
+#else
         simulation->run_routing(t_route_config_file_with_path);
+#endif // NGEN_WITH_ROUTING_TROUTE_BMI
     }
 
     auto time_done_routing = std::chrono::steady_clock::now();

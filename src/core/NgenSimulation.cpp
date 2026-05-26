@@ -28,8 +28,10 @@ NgenSimulation::NgenSimulation(
     , nexus_indexes_(std::move(nexus_indexes))
     , mpi_rank_(mpi_rank)
 {
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
     catchment_outflows_.reserve(catchment_indexes_.size() * get_num_output_times());
     nexus_downstream_flows_.reserve(nexus_indexes_.size() * get_num_output_times());
+#endif
 }
 
 NgenSimulation::~NgenSimulation() = default;
@@ -40,9 +42,11 @@ void NgenSimulation::run_catchments()
     auto num_times = get_num_output_times();
 
     for (; simulation_step_ < num_times; simulation_step_++) {
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
         // Make room for this output step's results
         catchment_outflows_.resize(catchment_outflows_.size() + catchment_indexes_.size(), 0.0);
         nexus_downstream_flows_.resize(nexus_downstream_flows_.size() + nexus_indexes_.size(), 0.0);
+#endif
 
         advance_models_one_output_step();
 
@@ -82,7 +86,7 @@ void NgenSimulation::advance_models_one_output_step()
                     std::cout << "Updating layer: '" + layer->get_name() + "' at output step " + std::to_string(simulation_step_) << std::endl;
                 }
 
-#if NGEN_WITH_ROUTING && false
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
                 boost::span<double> catchment_span(catchment_outflows_.data() + (simulation_step_ * catchment_indexes_.size()),
                                                    catchment_indexes_.size());
                 boost::span<double> nexus_span(nexus_downstream_flows_.data() + (simulation_step_ * nexus_indexes_.size()),
@@ -144,7 +148,7 @@ void NgenSimulation::run_routing(std::string const& t_route_config_file_with_pat
 
 void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, std::string const& t_route_config_file_with_path)
 {
-#if NGEN_WITH_ROUTING
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
     std::vector<double> *routing_nexus_downflows = &nexus_downstream_flows_;
     std::unordered_map<std::string, int> *routing_nexus_indexes = &nexus_indexes_;
 
@@ -250,7 +254,7 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
         // Finalize will write the output file
         py_troute.Finalize();
     }
-#endif // NGEN_WITH_ROUTING
+#endif // NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
 }
 
 size_t NgenSimulation::get_num_output_times() const
