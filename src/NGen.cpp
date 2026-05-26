@@ -438,8 +438,6 @@ int main(int argc, char* argv[]) {
     { // Run t-route from single process
     if(manager->get_using_routing()) {
       std::cout<<"Using Routing"<<std::endl;
-      std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
-      router = std::make_unique<routing_py_adapter::Routing_Py_Adapter>(t_route_config_file_with_path);
     }
     else {
       std::cout<<"Not Using Routing"<<std::endl;
@@ -642,7 +640,8 @@ int main(int argc, char* argv[]) {
 #endif
 
     if (manager->get_using_routing()) {
-        simulation->run_routing(features, manager->get_t_route_config_file_with_path());
+        std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
+        simulation->run_routing(t_route_config_file_with_path);
     }
 
     auto time_done_routing = std::chrono::steady_clock::now();

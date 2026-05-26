@@ -11,6 +11,9 @@ namespace hy_features
     class HY_Features;
     class HY_Features_MPI;
 }
+namespace routing_py_adapter {
+    class Routing_Py_Adapter;
+}
 
 #include <memory>
 #include <vector>
@@ -41,16 +44,23 @@ public:
     /**
      * Run the catchment formulations for the full configured duration of the simulation
      *
-     * Captures calculated runoff values in `catchment_outflows_` and
+     * Can be configured to capture calculated runoff values in `catchment_outflows_` and
      * `nexus_downstream_flows_` for subsequent output and consumption
-     * by `run_routing()`
+     * by `run_routing_bmi()`
      */
     void run_catchments();
 
     /**
-     * Run t-route on the stored nexus outflow values for the full configured duration of the simulation
+     * Run t-route on nexus outflow values written to files during
+     * run_catchments() for the full configured duration of the
+     * simulation
      */
-    void run_routing(hy_features_t &features, std::string const& t_route_config_file_with_path);
+    void run_routing(std::string const& t_route_config_file_with_path);
+
+    /**
+     * Run t-route via BMI on the stored nexus outflow values for the full configured duration of the simulation
+     */
+    void run_routing_bmi(hy_features_t &features, std::string const& t_route_config_file_with_path);
 
     int get_nexus_index(std::string const& nexus_id) const;
     double get_nexus_outflow(int nexus_index, int timestep_index) const;
@@ -75,6 +85,10 @@ private:
     std::vector<double> nexus_downstream_flows_;
 
     int mpi_rank_;
+
+#if NGEN_WITH_ROUTING
+    std::unique_ptr<routing_py_adapter::Routing_Py_Adapter> router_;
+#endif
 
     // Serialization template will be defined and instantiated in the .cpp file
     template <class Archive>
