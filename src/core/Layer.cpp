@@ -47,7 +47,7 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
         }
 #if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
         int results_index = catchment_indexes[id];
-	// XXX: This is currently accumulating in meters of depth, which may not be desirable
+        // XXX: This is currently accumulating in meters of depth, which may not be desirable
         catchment_outflows[results_index] += response;
 #endif // NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
         std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
