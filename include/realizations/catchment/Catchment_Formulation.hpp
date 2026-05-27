@@ -7,7 +7,7 @@
 #include <HY_CatchmentArea.hpp>
 #include "GenericDataProvider.hpp"
 
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #define DEFAULT_FORMULATION_OUTPUT_DELIMITER ","
 
@@ -31,6 +31,12 @@ namespace realization {
              */
             static void config_pattern_substitution(geojson::PropertyMap &properties, const std::string &key,
                                                     const std::string &pattern, const std::string &replacement);
+
+            /**Remove leading non-numeric characters from the ID string.
+             * 
+             * This may be needed to correct NGEN adding an identifying prefix to the ID with system file names without the prefix.
+             */ 
+            static std::string config_pattern_id_replacement(const std::string &id);
 
             /**
              * Get a header line appropriate for a file made up of entries from this type's implementation of

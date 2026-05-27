@@ -20,7 +20,7 @@
 #endif
 
 #include "core/Partition_Parser.hpp"
-#include <Logger.hpp>
+#include "ewts_ngen/logger.hpp"
 
 std::stringstream partgen_ss("");
 
@@ -218,7 +218,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, P
  * @param catchment_partitions The global set of partitions
  * @return int partition number containing the id
  * 
- * @throws runtime_error if no partition contains the requested id
+ * @throws std::runtime_error if no partition contains the requested id
  */
 int find_remote_rank(const std::string& id, const PartitionVSet& catchment_partitions)
 {
@@ -237,7 +237,8 @@ int find_remote_rank(const std::string& id, const PartitionVSet& catchment_parti
     }
     if(pos < 0){
         std::string msg = "find_remote_rank: Could not find feature id "+id+" in any partition";
-        Logger::logMsgAndThrowError(msg);
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
     return pos;
 }
@@ -430,18 +431,20 @@ int main(int argc, char* argv[])
     geojson::GeoJSON catchment_collection;
     if (boost::algorithm::ends_with(catchmentDataFile, "gpkg"))
     {
-        #if NGEN_WITH_SQLITE3
+#if NGEN_WITH_SQLITE3
         try {
-        catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
-        } catch (...) {
+            catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
+        } catch (std::exception &e) {
             // Handle all exceptions
             std::string msg = "Geopackage error occurred reading divides: " + catchmentDataFile;
-            LOG(msg,LogLevel::FATAL);
+            LOG(LogLevel::FATAL, msg);
+            LOG(LogLevel::FATAL, e.what());
             throw std::runtime_error(msg);
         }
-    #else
-        Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
-        #endif
+#else
+        LOG(LogLevel::FATAL, "SQLite3 support required to read GeoPackage files");
+        throw std::runtime_error("SQLite3 support required to read GeoPackage files");
+#endif
     }
     else
     {
@@ -453,8 +456,10 @@ int main(int argc, char* argv[])
 
     //Check that the number of partitions is less or equal to the number of catchment
     if (num_catchments < num_partitions) {
-        Logger::logMsgAndThrowError("Input error: total number of catchments: " + std::to_string(num_catchments) + \
-                                 ", cannot be less than the number of partitions: " + std::to_string(num_partitions));
+        std::string msg = "Input error: total number of catchments: " + std::to_string(num_catchments) + \
+                                 ", cannot be less than the number of partitions: " + std::to_string(num_partitions);
+        LOG(msg,LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
 
     std::string link_key = "toid";
@@ -467,18 +472,20 @@ int main(int argc, char* argv[])
     geojson::GeoJSON global_nexus_collection;
     if (boost::algorithm::ends_with(nexusDataFile, "gpkg")) 
     {
-    #if NGEN_WITH_SQLITE3
+#if NGEN_WITH_SQLITE3
         try {
             global_nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
-        } catch (...) {
+        } catch (std::exception &e) {
             // Handle all exceptions
             std::string msg = "Geopackage error occurred reading nexuses: " + nexusDataFile;
             LOG(msg,LogLevel::FATAL);
-            throw std::runtime_error(msg);
+            LOG(LogLevel::FATAL, e.what());
+            throw;
         } 
-    #else
-        Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
-    #endif
+#else
+        LOG(LogLevel::FATAL, "SQLite3 support required to read GeoPackage files.");
+        throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
+#endif
     } 
     else 
     {

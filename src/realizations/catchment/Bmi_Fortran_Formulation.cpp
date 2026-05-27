@@ -1,11 +1,13 @@
 #include <NGenConfig.h>
-#include "Logger.hpp"
+#include <stdexcept>
+#include "ewts_ngen/logger.hpp"
 
 #if NGEN_WITH_BMI_FORTRAN
 
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Bmi_Fortran_Adapter.hpp"
 #include "Constants.h"
+#include "state_save_restore/State_Save_Utils.hpp"
 
 using namespace realization;
 using namespace models::bmi;
@@ -28,7 +30,9 @@ Bmi_Fortran_Formulation::Bmi_Fortran_Formulation(std::string id, std::shared_ptr
 std::shared_ptr<Bmi_Adapter> Bmi_Fortran_Formulation::construct_model(const geojson::PropertyMap& properties) {
     auto library_file_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE);
     if (library_file_iter == properties.end()) {
-        Logger::logMsgAndThrowError("BMI C formulation requires path to library file, but none provided in config");
+        std::string msg = "BMI C formulation requires path to library file, but none provided in config.";
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
     std::string lib_file = library_file_iter->second.as_string();
     auto reg_func_itr = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__REGISTRATION_FUNC);
@@ -53,7 +57,7 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
     //  don't fit or might convert inappropriately
     std::string type = model->GetVarType(var_name);
     //Can cause a segfault here if GetValue returns an empty vector...a "fix" in bmi_utilities GetValue
-    //will throw a relevant runtime_error if the vector is empty, so this is safe to use this way for now...
+    //will throw a relevant std::runtime_error if the vector is empty, so this is safe to use this way for now...
     if (type == "long double")
         return (double) (models::bmi::GetValue<long double>(*model, var_name))[index];
 
@@ -87,10 +91,54 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
     if (type == "unsigned long long" || type == "unsigned long long int")
         return (double) (models::bmi::GetValue<unsigned long long>(*model, var_name))[index];
 
-    Logger::logMsgAndThrowError("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
-    " as double: no logic for converting variable type " + type);
+    std::string msg = "Unable to get value of variable " + var_name + " from " + get_model_type_name() +
+                      " as double: no logic for converting variable type " + type;
+    LOG(LogLevel::FATAL, msg);
+    throw std::runtime_error(msg);
     
     return 1.0;
+}
+
+const boost::span<char> Bmi_Fortran_Formulation::get_serialization_state() {
+    auto model = this->get_bmi_model();
+    // create the serialized state on the Fortran BMI
+    int size_int = 0;
+    model->SetValue(StateSaveNames::CREATE, &size_int);
+    model->GetValue(StateSaveNames::SIZE, &size_int);
+    // resize the state to the array to the size of the Fortran's backing array
+    this->serialized_state.resize(size_int);
+    // since GetValuePtr on the Fortran BMI does not work currently, store the data on the formulation
+    model->GetValue(StateSaveNames::STATE, this->serialized_state.data());
+    // the BMI can have its state freed immediately since the data is now stored on the formulation
+    model->SetValue(StateSaveNames::FREE, &size_int);
+    // return a span of the data stored on the formulation
+    const boost::span<char> span(this->serialized_state.data(), this->serialized_state.size());
+    return span;
+}
+
+void Bmi_Fortran_Formulation::load_serialization_state(const boost::span<char> state) {
+    auto model = this->get_bmi_model();
+    int item_size = model->GetVarItemsize(StateSaveNames::STATE);
+    // assert the number of chars aligns with the storage array to prevent reading out of bounds
+    if (state.size() % item_size != 0) {
+        std::string error = "Fortran Deserialization: The number of bytes in the state (" + std::to_string(state.size())
+            + ") must be a multiple of the size of the storage unit (" + std::to_string(item_size) + ")";
+        LOG(LogLevel::SEVERE, error);
+        throw std::runtime_error(error);
+    }
+    // setting size is a workaround for loading the state.
+    // The BMI Fortran interface shapes the incoming pointer to the same size as the data currently backing the BMI's variable.
+    // By setting the size, the BMI can lie about the size of its state variable to that interface.
+    int false_nbytes = state.size();
+    model->SetValue(StateSaveNames::SIZE, &false_nbytes);
+    model->SetValue(StateSaveNames::STATE, state.data());
+}
+
+void Bmi_Fortran_Formulation::free_serialization_state() {
+    // The serialized data needs to be stored on the formluation since GetValuePtr is not available on Fortran BMIs.
+    // The backing BMI's serialization data should already be freed during `get_serialization_state`, so clearing the formulation's data is all that is needed.
+    this->serialized_state.clear();
+    this->serialized_state.shrink_to_fit();
 }
 
 #endif // NGEN_WITH_BMI_FORTRAN

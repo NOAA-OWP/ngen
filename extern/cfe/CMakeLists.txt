@@ -22,9 +22,9 @@ find_package(Boost 1.79.0 REQUIRED COMPONENTS serialization)
 
 if(WIN32)
 
-    add_library(cfebmi cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c cfe/src/logger.c cfe/src/conceptual_reservoir.c cfe/src/nash_cascade.c cfe/src/bmi_serialization.cxx)
+    add_library(cfebmi cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c cfe/src/conceptual_reservoir.c cfe/src/nash_cascade.c cfe/src/bmi_serialization.cxx)
 else()
-    add_library(cfebmi SHARED cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c cfe/src/logger.c cfe/src/conceptual_reservoir.c cfe/src/nash_cascade.c cfe/src/bmi_serialization.cxx)
+    add_library(cfebmi SHARED cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c cfe/src/conceptual_reservoir.c cfe/src/nash_cascade.c cfe/src/bmi_serialization.cxx)
 endif()
 
 target_include_directories(cfebmi PRIVATE cfe/include)
@@ -34,6 +34,17 @@ set_target_properties(cfebmi PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(cfebmi PROPERTIES PUBLIC_HEADER cfe/include/bmi_cfe.h)
 
 target_link_libraries(cfebmi PRIVATE Boost::serialization)
+
+# --- EWTS (installed from nwm-ewts) ---
+find_package(ewts CONFIG REQUIRED)
+
+# Always use EWTS runtime logger for C
+target_link_libraries(cfebmi PRIVATE ewts::ewts_c)
+
+# Built with ngen bridge
+target_link_libraries(cfebmi PRIVATE ewts::ewts_ngen_bridge)
+target_compile_definitions(cfebmi PRIVATE EWTS_HAVE_NGEN_BRIDGE)
+
 
 # Code requires minimum of C99 standard to compile
 set_target_properties(cfebmi PROPERTIES C_STANDARD 99 C_STANDARD_REQUIRED ON)

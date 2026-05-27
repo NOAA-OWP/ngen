@@ -1,3 +1,7 @@
+#
+# ngen/extern/sac-sma/CMakeLists.txt
+#
+
 cmake_minimum_required(VERSION 3.12)
 enable_language( Fortran )
 add_subdirectory(../iso_c_fortran_bmi ${CMAKE_BINARY_DIR}/iso_c_bmi)
@@ -83,7 +87,17 @@ target_link_libraries( sacbmi PUBLIC iso_c_bmi )
 set_target_properties(sacbmi PROPERTIES VERSION ${PROJECT_VERSION})
 
 #TODO is this needed for fortran?
-#set_target_properties(surfacebmi PROPERTIES PUBLIC_HEADER ${BMI_SOURCE})
+#set_target_properties(sacbmi PROPERTIES PUBLIC_HEADER ${BMI_SOURCE})
+
+# --- EWTS (installed from nwm-ewts) ---
+find_package(ewts CONFIG REQUIRED)
+
+# Always use EWTS runtime logger for Fortran
+target_link_libraries(sacbmi PRIVATE ewts::ewts_fortran)
+
+# Built with ngen bridge
+target_link_libraries(sacbmi PRIVATE ewts::ewts_ngen_bridge)
+target_compile_definitions(sacbmi PRIVATE EWTS_HAVE_NGEN_BRIDGE)
 
 include(GNUInstallDirs)
 

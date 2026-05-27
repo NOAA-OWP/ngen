@@ -35,6 +35,13 @@ namespace realization {
 
         bool is_bmi_output_variable(const std::string &var_name) const override;
 
+        /**
+         * Requests the BMI to load data from a previously saved state. This has a side effect of freeing a current state if it currently exists.
+         * 
+         * The python BMI requires additional messaging for pre-allocating memory for load
+         */
+        void load_serialization_state(const boost::span<char> state) override;
+
     protected:
 
         std::shared_ptr<models::bmi::Bmi_Adapter> construct_model(const geojson::PropertyMap &properties) override;

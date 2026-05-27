@@ -1,6 +1,6 @@
 #ifndef NGEN_BMI_MULTI_FORMULATION_HPP
 #define NGEN_BMI_MULTI_FORMULATION_HPP
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include <map>
 #include <vector>
@@ -15,6 +15,7 @@
 #include "ConfigurationException.hpp"
 #include "ExternalIntegrationException.hpp"
 
+#include <boost/serialization/access.hpp>
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"
@@ -46,6 +47,21 @@ namespace realization {
                 : Bmi_Formulation(std::move(id), forcing_provider, output_stream) { };
 
         virtual ~Bmi_Multi_Formulation() {};
+
+        virtual void check_mass_balance(const int& iteration, const int& total_steps, const std::string& timestamp) const final {
+            for( const auto &module : modules ) {
+                // TODO may need to check on outputs form each module indepdently???
+                // Right now, the assumption is that if each component is mass balanced
+                // then the entire formulation is mass balanced
+                module->check_mass_balance(iteration, total_steps, timestamp);
+            }
+        };
+
+        void save_state(std::shared_ptr<State_Snapshot_Saver> saver) override;
+
+        void load_state(std::shared_ptr<State_Snapshot_Loader> loader) override;
+
+        void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) override;
 
         /**
          * Convert a time value from the model to an epoch time in seconds.
@@ -611,7 +627,7 @@ namespace realization {
 
             // Since this is a nested formulation, support usage of the '{{id}}' syntax for init config file paths.
             Catchment_Formulation::config_pattern_substitution(properties, BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
-                                                               "{{id}}", id);
+                                                               "{{id}}", Catchment_Formulation::config_pattern_id_replacement(id));
 
             // Call create_formulation to perform the rest of the typical initialization steps for the formulation.
             mod->create_formulation(properties);
@@ -665,6 +681,7 @@ namespace realization {
         bool is_realization_legacy_format() const;
 
     private:
+        friend class boost::serialization::access;
 
         /**
          * Setup a deferred provider for a nested module, tracking the class as needed.
@@ -764,6 +781,8 @@ namespace realization {
         friend Bmi_Multi_Formulation_Test;
         friend class ::Bmi_Cpp_Multi_Array_Test;
 
+        template<class Archive>
+        void serialize(Archive& ar, const unsigned int version);
     };
 }
 

@@ -1,6 +1,6 @@
 #ifndef HY_POINTHDRONEXUSREMOTE_H
 #define HY_POINTHDRONEXUSREMOTE_H
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include <NGenConfig.h>
 #if NGEN_WITH_MPI

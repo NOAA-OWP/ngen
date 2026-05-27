@@ -16,7 +16,7 @@
 
 #include "DataProvider.hpp"
 #include "bmi/Bmi_Py_Adapter.hpp"
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 namespace data_access {
 

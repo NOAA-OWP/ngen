@@ -7,7 +7,7 @@ RUN dnf update -y \
     && dnf install -y --allowerasing tar git gcc-c++ gcc make cmake udunits2-devel coreutils \
     && dnf clean all
 
-ARG BOOST_VERSION="1.79.0"
+ARG BOOST_VERSION="1.86.0"
 RUN export BOOST_ARCHIVE="boost_$(echo ${BOOST_VERSION} | tr '\.' '_').tar.gz" \
     && export BOOST_URL="https://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/${BOOST_ARCHIVE}/download" \
     && cd / \

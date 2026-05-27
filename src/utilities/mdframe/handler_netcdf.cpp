@@ -82,7 +82,8 @@ void mdframe::to_netcdf(const std::string& path) const
 namespace ngen {
     void mdframe::to_netcdf(const std::string& path) const
     {
-        Logger::logMsgAndThrowError("This functionality isn't available. Compile NGen with NGEN_WITH_NETCDF=ON to enable NetCDF support");
+        LOG(LogLevel::FATAL, "This functionality isn't available. Compile NGen with NGEN_WITH_NETCDF=ON to enable NetCDF support");
+        throw std::runtime_error("This functionality isn't available. Compile NGen with NGEN_WITH_NETCDF=ON to enable NetCDF support");
     }
 }
 
