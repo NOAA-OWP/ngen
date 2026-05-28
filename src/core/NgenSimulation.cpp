@@ -207,7 +207,7 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
             local_nexus_ids.push_back(nexus.first);
         }
         // MPI_Gather all nexus IDs into a single vector
-        std::vector<std::string> all_nexus_ids = parallel::gather_strings(local_nexus_ids, MPI_COMM_WORLD);
+        std::vector<std::string> all_nexus_ids = parallel::gather_strings(local_nexus_ids, mpi_comm_);
         if (mpi_rank_ == 0) {
             // filter to only the unique IDs
             std::sort(all_nexus_ids.begin(), all_nexus_ids.end());
@@ -217,7 +217,7 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
             );
         }
         // MPI_Broadcast so all processes share the nexus IDs
-        all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, MPI_COMM_WORLD));
+        all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, mpi_comm_));
 
         // MPI_Reduce to collect the results from processes
         if (mpi_rank_ == 0) {
