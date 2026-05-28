@@ -516,6 +516,15 @@ ngen_add_test(
         NGen::ngen_bmi
 )
 
+########################## exec_info Reporting Tests
+ngen_add_test(
+    test_exec_info
+    OBJECTS
+        core/ExecInfoTests.cpp
+    LIBRARIES
+        NGen::core
+)
+
 ########################### Netcdf Forcing Tests
 ngen_add_test(
     test_netcdf_forcing
