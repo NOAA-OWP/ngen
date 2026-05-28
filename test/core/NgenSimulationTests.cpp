@@ -10,9 +10,12 @@ TEST(NgenSimulation_Test, Construction)
     std::vector<std::shared_ptr<ngen::Layer>> layers;
     std::unordered_map<std::string, int> catchment_indexes;
     std::unordered_map<std::string, int> nexus_indexes;
+#if NGEN_WITH_MPI
     int mpi_rank = 0;
     int mpi_num_procs = 1;
 
+    // Use the explicit rank/process-count constructor, which owns no
+    // communicator and so needs no MPI runtime initialization.
     std::unique_ptr<NgenSimulation> simulation{
         new NgenSimulation(
                            sim_time,
@@ -22,4 +25,13 @@ TEST(NgenSimulation_Test, Construction)
                            mpi_rank,
                            mpi_num_procs
                            )};
+#else
+    std::unique_ptr<NgenSimulation> simulation{
+        new NgenSimulation(
+                           sim_time,
+                           layers,
+                           catchment_indexes,
+                           nexus_indexes
+                           )};
+#endif
 }
