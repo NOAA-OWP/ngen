@@ -238,7 +238,7 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
                 // if this process does not have the id, fill with 0 to make sure it doesn't affect reduce sum
                 std::fill(local_buffer.begin(), local_buffer.end(), 0.0);
             }
-            MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+            MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, mpi_comm_);
             if (mpi_rank_ == 0) {
                 // copy reduce values to a combined downflows vector
                 all_nexus_indexes[nexus_id] = i;

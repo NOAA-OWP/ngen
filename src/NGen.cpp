@@ -609,12 +609,20 @@ int main(int argc, char* argv[]) {
     }
 #endif // NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
 
+#if NGEN_WITH_MPI
+    auto simulation = std::make_unique<NgenSimulation>(*sim_time,
+                                                       layers,
+                                                       std::move(catchment_indexes),
+                                                       std::move(nexus_indexes),
+                                                       MPI_COMM_WORLD);
+#else
     auto simulation = std::make_unique<NgenSimulation>(*sim_time,
                                                        layers,
                                                        std::move(catchment_indexes),
                                                        std::move(nexus_indexes),
                                                        mpi_rank,
                                                        mpi_num_procs);
+#endif
 
     auto time_done_init                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
@@ -665,6 +673,9 @@ int main(int argc, char* argv[]) {
   manager->finalize();
 
 #if NGEN_WITH_MPI
+    // Destroy the simulation, freeing its duplicated MPI communicator, while
+    // MPI is still active.
+    simulation.reset();
     MPI_Finalize();
 #endif
 
