@@ -28,15 +28,6 @@ namespace routing_py_adapter {
 class NgenSimulation
 {
 public:
-    NgenSimulation(
-                   Simulation_Time const& sim_time,
-                   std::vector<std::shared_ptr<ngen::Layer>> layers,
-                   std::unordered_map<std::string, int> catchment_indexes,
-                   std::unordered_map<std::string, int> nexus_indexes,
-                   int mpi_rank,
-                   int mpi_num_procs
-                   );
-
 #if NGEN_WITH_MPI
     /**
      * Construct from an MPI communicator, deriving the rank and process
@@ -53,6 +44,32 @@ public:
                    std::unordered_map<std::string, int> catchment_indexes,
                    std::unordered_map<std::string, int> nexus_indexes,
                    MPI_Comm comm
+                   );
+
+    /**
+     * Construct with an explicit MPI rank and process count, without owning a
+     * communicator (the internal communicator is left MPI_COMM_NULL). Routing
+     * collective operations are unavailable through such an instance; this is
+     * intended for single-process and test use where no communicator is needed.
+     */
+    NgenSimulation(
+                   Simulation_Time const& sim_time,
+                   std::vector<std::shared_ptr<ngen::Layer>> layers,
+                   std::unordered_map<std::string, int> catchment_indexes,
+                   std::unordered_map<std::string, int> nexus_indexes,
+                   int mpi_rank,
+                   int mpi_num_procs
+                   );
+#else
+    /**
+     * Construct for a serial (non-MPI) run; the simulation behaves as rank 0
+     * of a single process.
+     */
+    NgenSimulation(
+                   Simulation_Time const& sim_time,
+                   std::vector<std::shared_ptr<ngen::Layer>> layers,
+                   std::unordered_map<std::string, int> catchment_indexes,
+                   std::unordered_map<std::string, int> nexus_indexes
                    );
 #endif // NGEN_WITH_MPI
 
