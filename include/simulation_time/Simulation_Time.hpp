@@ -119,8 +119,7 @@ class Simulation_Time
         const char* time_format = "%Y-%m-%d %T";
 
         if (strftime(current_timestamp, sizeof(current_timestamp), time_format, temp_gmtime_struct) == 0) { 
-            fprintf(stderr, "ERROR: strftime returned 0");
-            exit(EXIT_FAILURE); 
+            throw std::runtime_error("ERROR: strftime returned 0");
         }
 
         return current_timestamp;
