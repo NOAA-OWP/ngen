@@ -20,6 +20,7 @@
 #define NGEN_MPI_PROTOCOL_TAG 101
 #endif
 
+#include <mpi.h>
 #include <string>
 #include <vector>
 
@@ -38,24 +39,22 @@ namespace parallel {
      * Finally, the value indicated by this global status is returned.
      *
      * @param status The initial individual state for the current MPI rank.
-     * @param mpi_rank The rank of the current process.
-     * @param mpi_num_procs The total number of MPI processes.
+     * @param comm The MPI communicator across whose ranks to synchronize the status.
      * @param taskDesc A description of the related task, used by rank 0 to print a message when included for any rank that
      *                 is not in the success/ready state.
      * @return Whether all ranks coordinating status had a success/ready status value.
      */
-    bool mpiSyncStatusAnd(bool status, int mpi_rank, int mpi_num_procs, const std::string &taskDesc);
+    bool mpiSyncStatusAnd(bool status, MPI_Comm comm, const std::string &taskDesc);
 
     /**
      * Convenience method for overloaded function when no message is needed, and thus no description param provided.
      *
      * @param status The initial individual state for the current MPI rank.
-     * @param mpi_rank The rank of the current process.
-     * @param mpi_num_procs The total number of MPI processes.
+     * @param comm The MPI communicator across whose ranks to synchronize the status.
      * @return Whether all ranks coordinating status had a success/ready status value.
      * @see mpiSyncStatusAnd(bool, const std::string&)
      */
-    bool mpiSyncStatusAnd(bool status, int mpi_rank, int mpi_num_procs);
+    bool mpiSyncStatusAnd(bool status, MPI_Comm comm);
 
     /**
      * Check whether the parameter hydrofabric files have been subdivided into appropriate per partition files.
@@ -64,19 +63,17 @@ namespace parallel {
      * ``/dirname/catchment_data.geojson`` and two MPI processes, checks if both ``/dirname/catchment_data.geojson.0``
      * and ``/dirname/catchment_data.geojson.1 `` exist.
      *
-     * This check is performed for both the catchment and nexus hydrofabric base file names, as stored in the global
-     * ``catchmentDataFile`` and ``nexusDataFile`` variables respectively.  The number of MPI processes is obtained from
-     * the global ``mpi_rank`` variable.
+     * This check is performed for the catchment hydrofabric base file name given by ``catchmentDataFile``.  The number
+     * of MPI processes is obtained from the passed communicator ``comm``.
      *
      * @param catchmentDataFile The path to the catchment data file for the hydrofabric.
-     * @param mpi_rank The rank of the current process.
-     * @param mpi_num_procs The total number of MPI processes.
+     * @param comm The MPI communicator across whose ranks the hydrofabric is shared.
      * @param printMessage Whether a supplemental message should be printed to standard out indicating status.
      *
      * @return Whether proprocessing has already been performed to divide the main hydrofabric into existing, individual
      *         sub-hydrofabric files for each partition/process.
      */
-    bool is_hydrofabric_subdivided(const std::string &catchmentDataFile, int mpi_rank, int mpi_num_procs, bool printMsg);
+    bool is_hydrofabric_subdivided(const std::string &catchmentDataFile, MPI_Comm comm, bool printMsg);
 
     /**
      * Set each rank's host "id" value in a provided host array.
@@ -89,11 +86,10 @@ namespace parallel {
      * This array is then broadcast by rank 0 back to to the other ranks, allowing them to set their analogous arrays.
      * It is expected all ranks run this function at the same time.
      *
-     * @param mpi_rank The current rank.
-     * @param mpi_num_procs The number of ranks.
-     * @param host_array A pointer to an allocated array of size ``mpi_num_procs``.
+     * @param comm The MPI communicator whose ranks' hosts are to be identified.
+     * @param host_array A pointer to an allocated array of size equal to the number of ranks in ``comm``.
      */
-    void get_hosts_array(int mpi_rank, int mpi_num_procs, int *host_array);
+    void get_hosts_array(MPI_Comm comm, int *host_array);
 
     /**
      * Send the contents of a text file to another MPI rank.
@@ -101,11 +97,11 @@ namespace parallel {
      * Note that the file is read with ``fgets``.
      *
      * @param fileName The text file to read and send its contents.
-     * @param mpi_rank The current MPI rank.
+     * @param comm The MPI communicator over which the file data should be sent.
      * @param destRank The MPI rank to which the file data should be sent.
      * @return Whether sending was successful.
      */
-    bool mpi_send_text_file(const char *fileName, const int mpi_rank, const int destRank);
+    bool mpi_send_text_file(const char *fileName, MPI_Comm comm, const int destRank);
 
     /**
      * Receive text data from another MPI rank and write the contents to a text file.
@@ -115,11 +111,11 @@ namespace parallel {
      * Note that the file is written with ``fputs``.
      *
      * @param fileName The text file to which data should be written.
-     * @param mpi_rank The current MPI rank.
-     * @param destRank The MPI rank to which the file data should be sent.
-     * @return Whether sending was successful.
+     * @param comm The MPI communicator over which the file data should be received.
+     * @param srcRank The MPI rank from which the file data should be received.
+     * @return Whether receiving was successful.
      */
-    bool mpi_recv_text_file(const char *fileName, const int mpi_rank, const int srcRank);
+    bool mpi_recv_text_file(const char *fileName, MPI_Comm comm, const int srcRank);
 
     /**
      * Distribute subdivided hydrofabric files to ranks on other hosts as needed.
@@ -161,9 +157,8 @@ namespace parallel {
      * @param baseCatchmentFile The base catchment data file from which the rank-specific files are derived.
      * @param baseNexusFile The base nexus data file from which the rank-specific files are derived.
      * @param sendingRank The rank that will be the source and send data to ranks on different hosts.
-     * @param mpi_rank The rank of the current process.
-     * @param mpi_num_procs The number of MPI ranks.
-     * @param hostIdForRank Pointer to array of size ``mpi_num_procs`` that maps ranks (index) to hosts, with each
+     * @param comm The MPI communicator over whose ranks files are distributed.
+     * @param hostIdForRank Pointer to array of size equal to the number of ranks in ``comm`` that maps ranks (index) to hosts, with each
      *                      distinct host having some identifier value uniquely representing it within the array
      *                      (e.g., if hostIdForRank[0] == hostIdForRank[1] then rank 0 and rank 1 are on the same host).
      * @param syncReturnStatus Whether all ranks should AND-sync their return status before returning.
@@ -171,7 +166,7 @@ namespace parallel {
      * @return
      */
     bool distribute_subdivided_hydrofabric_files(const std::string &baseCatchmentFile, const std::string &baseNexusFile,
-                                                 const int sendingRank, const int mpi_rank, const int mpi_num_procs,
+                                                 const int sendingRank, MPI_Comm comm,
                                                  const int *hostIdForRank, bool syncReturnStatus, bool blockAll);
 
     /**
@@ -181,35 +176,32 @@ namespace parallel {
      * and associated files.  As a result, if there are any other subdivided hydrofabric files present having the same
      * names as the files the function will write, then those preexisting files are considered stale and overwritten.
      *
-     * @param mpi_rank The rank of the current process.
-     * @param mpi_num_procs The total number of MPI processes.
+     * @param comm The MPI communicator across whose ranks the hydrofabric is subdivided.
      * @param catchmentDataFile The path to the catchment data file for the hydrofabric.
      * @param nexusDataFile The path to the nexus data file for the hydrofabric.
      * @param partitionConfigFile The path to distributed processing hydrofabric partitioning config.
      * @return Whether subdividing was successful.
      */
-    bool subdivide_hydrofabric(int mpi_rank, int mpi_num_procs, const std::string &catchmentDataFile,
+    bool subdivide_hydrofabric(MPI_Comm comm, const std::string &catchmentDataFile,
                                const std::string &nexusDataFile, const std::string &partitionConfigFile);
 
     /**
      * MPI_Gather vector<string> values from all processes. The result may include duplicate values.
      * 
      * @param local_strings Vector of strings from the current process
-     * @param mpi_rank Rank of the current process
-     * @param mpi_num_procs Number of processes
-     * @return A vector of the gathered strings from all processes. This will only be populated if mpi_rank == 0
+     * @param comm The MPI communicator over which to gather
+     * @return A vector of the gathered strings from all processes. This will only be populated on the root rank (rank 0)
      */
-    std::vector<std::string> gather_strings(const std::vector<std::string>& local_strings, int mpi_rank, int mpi_num_procs);
+    std::vector<std::string> gather_strings(const std::vector<std::string>& local_strings, MPI_Comm comm);
 
     /**
      * Send a vector<string> from root to all other processes.
      * 
-     * @param strings If mpi_rank == 0, the strings that will be broadcasted. Unused for other processes.
-     * @param mpi_rank Rank of the current process
-     * @param mpi_num_procs Number of processes
-     * @return vector<string> of the broadcasted strings from mpi_rank == 0
+     * @param strings If on the root rank (rank 0), the strings that will be broadcasted. Unused for other processes.
+     * @param comm The MPI communicator over which to broadcast
+     * @return vector<string> of the broadcasted strings from the root rank (rank 0)
      */
-    std::vector<std::string> broadcast_strings(const std::vector<std::string>& strings, int mpi_rank, int mpi_num_procs);
+    std::vector<std::string> broadcast_strings(const std::vector<std::string>& strings, MPI_Comm comm);
 }
 
 #endif // NGEN_WITH_MPI

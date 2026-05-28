@@ -311,10 +311,9 @@ int main(int argc, char* argv[]) {
         if (is_subdivided_hydrofabric_wanted) {
             // Ensure the hydrofabric is subdivided (either already or by doing it now), and then
             // adjust these paths
-            if (parallel::is_hydrofabric_subdivided(catchmentDataFile, mpi_rank, mpi_num_procs, true) ||
+            if (parallel::is_hydrofabric_subdivided(catchmentDataFile, MPI_COMM_WORLD, true) ||
                 parallel::subdivide_hydrofabric(
-                    mpi_rank,
-                    mpi_num_procs,
+                    MPI_COMM_WORLD,
                     catchmentDataFile,
                     nexusDataFile,
                     PARTITION_PATH
