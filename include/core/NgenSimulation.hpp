@@ -3,6 +3,10 @@
 
 #include <NGenConfig.h>
 
+#if NGEN_WITH_MPI
+#include <mpi.h>
+#endif
+
 #include <Simulation_Time.hpp>
 #include <Layer.hpp>
 
@@ -32,6 +36,26 @@ public:
                    int mpi_rank,
                    int mpi_num_procs
                    );
+
+#if NGEN_WITH_MPI
+    /**
+     * Construct from an MPI communicator, deriving the rank and process
+     * count from it.
+     *
+     * The communicator is duplicated (MPI_Comm_dup), giving the simulation a
+     * private communication context for its collective operations that is
+     * insulated from any other use of the caller's communicator. The
+     * duplicate is freed when the simulation is destroyed.
+     */
+    NgenSimulation(
+                   Simulation_Time const& sim_time,
+                   std::vector<std::shared_ptr<ngen::Layer>> layers,
+                   std::unordered_map<std::string, int> catchment_indexes,
+                   std::unordered_map<std::string, int> nexus_indexes,
+                   MPI_Comm comm
+                   );
+#endif // NGEN_WITH_MPI
+
     NgenSimulation() = delete;
 
     ~NgenSimulation();
@@ -87,6 +111,12 @@ private:
 
     int mpi_rank_;
     int mpi_num_procs_;
+#if NGEN_WITH_MPI
+    // Private, duplicated communicator owned by this simulation. Set to
+    // MPI_COMM_NULL when constructed without a communicator (rank/size given
+    // explicitly), in which case the destructor leaves it alone.
+    MPI_Comm mpi_comm_;
+#endif
 
 #if NGEN_WITH_ROUTING
     std::unique_ptr<routing_py_adapter::Routing_Py_Adapter> router_;

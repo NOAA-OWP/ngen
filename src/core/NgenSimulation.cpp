@@ -30,13 +30,51 @@ NgenSimulation::NgenSimulation(
     , mpi_rank_(mpi_rank)
     , mpi_num_procs_(mpi_num_procs)
 {
+#if NGEN_WITH_MPI
+    // This constructor does not own an MPI communicator; mark it so the
+    // destructor leaves it alone.
+    mpi_comm_ = MPI_COMM_NULL;
+#endif
+
 #if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
     catchment_outflows_.reserve(catchment_indexes_.size() * get_num_output_times());
     nexus_downstream_flows_.reserve(nexus_indexes_.size() * get_num_output_times());
 #endif
 }
 
-NgenSimulation::~NgenSimulation() = default;
+#if NGEN_WITH_MPI
+NgenSimulation::NgenSimulation(
+    Simulation_Time const& sim_time,
+    std::vector<std::shared_ptr<ngen::Layer>> layers,
+    std::unordered_map<std::string, int> catchment_indexes,
+    std::unordered_map<std::string, int> nexus_indexes,
+    MPI_Comm comm
+                               )
+    : simulation_step_(0)
+    , sim_time_(std::make_shared<Simulation_Time>(sim_time))
+    , layers_(std::move(layers))
+    , catchment_indexes_(std::move(catchment_indexes))
+    , nexus_indexes_(std::move(nexus_indexes))
+{
+    // Duplicate the caller's communicator so this simulation has a private
+    // context for its collective operations, then derive rank and size.
+    MPI_Comm_dup(comm, &mpi_comm_);
+    MPI_Comm_rank(mpi_comm_, &mpi_rank_);
+    MPI_Comm_size(mpi_comm_, &mpi_num_procs_);
+
+    catchment_outflows_.reserve(catchment_indexes_.size() * get_num_output_times());
+    nexus_downstream_flows_.reserve(nexus_indexes_.size() * get_num_output_times());
+}
+#endif // NGEN_WITH_MPI
+
+NgenSimulation::~NgenSimulation()
+{
+#if NGEN_WITH_MPI
+    if (mpi_comm_ != MPI_COMM_NULL) {
+        MPI_Comm_free(&mpi_comm_);
+    }
+#endif
+}
 
 void NgenSimulation::run_catchments()
 {
