@@ -19,7 +19,8 @@ NgenSimulation::NgenSimulation(
     std::vector<std::shared_ptr<ngen::Layer>> layers,
     std::unordered_map<std::string, int> catchment_indexes,
     std::unordered_map<std::string, int> nexus_indexes,
-    int mpi_rank
+    int mpi_rank,
+    int mpi_num_procs
                                )
     : simulation_step_(0)
     , sim_time_(std::make_shared<Simulation_Time>(sim_time))
@@ -27,6 +28,7 @@ NgenSimulation::NgenSimulation(
     , catchment_indexes_(std::move(catchment_indexes))
     , nexus_indexes_(std::move(nexus_indexes))
     , mpi_rank_(mpi_rank)
+    , mpi_num_procs_(mpi_num_procs)
 {
 #if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
     catchment_outflows_.reserve(catchment_indexes_.size() * get_num_output_times());
@@ -167,8 +169,8 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
             local_nexus_ids.push_back(nexus.first);
         }
         // MPI_Gather all nexus IDs into a single vector
-        std::vector<std::string> all_nexus_ids = parallel::gather_strings(local_nexus_ids, mpi_rank, mpi_num_procs);
-        if (mpi_rank == 0) {
+        std::vector<std::string> all_nexus_ids = parallel::gather_strings(local_nexus_ids, mpi_rank_, mpi_num_procs_);
+        if (mpi_rank_ == 0) {
             // filter to only the unique IDs
             std::sort(all_nexus_ids.begin(), all_nexus_ids.end());
             all_nexus_ids.erase(
@@ -177,7 +179,7 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
             );
         }
         // MPI_Broadcast so all processes share the nexus IDs
-        all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, mpi_rank, mpi_num_procs));
+        all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, mpi_rank_, mpi_num_procs_));
 
         // MPI_Reduce to collect the results from processes
         if (mpi_rank_ == 0) {
@@ -199,7 +201,7 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
                 std::fill(local_buffer.begin(), local_buffer.end(), 0.0);
             }
             MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-            if (mpi_rank == 0) {
+            if (mpi_rank_ == 0) {
                 // copy reduce values to a combined downflows vector
                 all_nexus_indexes[nexus_id] = i;
                 for (int step = 0; step < number_of_timesteps; ++step) {
@@ -210,7 +212,7 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
             }
         }
 
-        if (mpi_rank == 0) {
+        if (mpi_rank_ == 0) {
             // update root's local data for running t-route below
             routing_nexus_indexes = &all_nexus_indexes;
             routing_nexus_downflows = &all_nexus_downflows;

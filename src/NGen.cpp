@@ -614,7 +614,8 @@ int main(int argc, char* argv[]) {
                                                        layers,
                                                        std::move(catchment_indexes),
                                                        std::move(nexus_indexes),
-                                                       mpi_rank);
+                                                       mpi_rank,
+                                                       mpi_num_procs);
 
     auto time_done_init                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
