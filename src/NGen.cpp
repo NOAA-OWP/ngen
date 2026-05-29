@@ -23,6 +23,7 @@
 
 #include <NgenSimulation.hpp>
 #include <ParallelEnvironment.hpp>
+#include <CommandLine.hpp>
 
 #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
 #include <unistd.h>
@@ -38,10 +39,6 @@
 #endif // NGEN_WITH_ROUTING
 
 #if NGEN_WITH_MPI
-
-#ifndef MPI_HF_SUB_CLI_FLAG
-#define MPI_HF_SUB_CLI_FLAG "--subdivided-hydrofabric"
-#endif
 
 #include <mpi.h>
 #include "parallel_utils.h"
@@ -62,39 +59,28 @@
 #endif
 
 int main(int argc, char* argv[]) {
-    std::string catchmentDataFile         = "";
-    std::string nexusDataFile             = "";
-    std::string REALIZATION_CONFIG_PATH   = "";
-    bool is_subdivided_hydrofabric_wanted = false;
-    std::string PARTITION_PATH = "";
+    std::optional<ngen::driver::ParallelEnvironment> parallel_env;
+    parallel_env.emplace();
 
-    // This default value should lead to behavior matching the single-process case in the standalone or non-MPI case
-    // Read only in MPI-guarded code; in non-MPI builds the serial NgenSimulation
-    // constructor takes no rank/size, so mark this to avoid an unused warning there.
-    [[maybe_unused]] int mpi_num_procs = 1;
-    // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
-    int mpi_rank = 0;
+    const ngen::driver::CommandLineParse cli_parse =
+        ngen::driver::parse(argc, argv, parallel_env->size());
 
-    if (argc > 1 && std::string{argv[1]} == "--info") {
-        { // Scope the parallel environment so MPI is finalized before exit().
-            ngen::driver::ParallelEnvironment parallel_env;
-
-            if (parallel_env.rank() == 0)
-            {
-                std::ostringstream output;
-                output << ngen::exec_info::build_summary;
-                ngen::exec_info::runtime_summary(output);
+    // "--info": report build and runtime configuration, then stop.
+    if (cli_parse.action == ngen::driver::CommandLineAction::show_info) {
+        if (parallel_env->rank() == 0)
+        {
+            std::ostringstream output;
+            output << ngen::exec_info::build_summary;
+            ngen::exec_info::runtime_summary(output);
 #if NGEN_WITH_MPI
-                output << "  MPI:\n"
-                       << "    Rank: " << parallel_env.rank() << "\n"
-                       << "    Processors: " << parallel_env.size() << "\n";
+            output << "  MPI:\n"
+                   << "    Rank: " << parallel_env->rank() << "\n"
+                   << "    Processors: " << parallel_env->size() << "\n";
 #endif // NGEN_WITH_MPI
 
-                std::cout << output.str() << std::endl;
-            } // if (parallel_env.rank() == 0)
+            std::cout << output.str() << std::endl;
         }
-
-        exit(1);
+        return 1;
     }
 
     auto time_start = std::chrono::steady_clock::now();
@@ -113,26 +99,8 @@ int main(int argc, char* argv[]) {
     //utils::ngenPy::InterpreterUtil::getInstance();
     #endif // NGEN_WITH_PYTHON
 
-    //Pull a few "options" form the cli input, this is a temporary solution to CLI parsing!
-    //Use "positional args"
-    //arg 0 is program name
-    //arg 1 is catchment_data file path
-    //arg 2 is catchment subset ids, comma seperated string of ids (no spaces!), "all" for all
-    //arg 3 is nexus_data file path
-    //arg 4 is nexus subset ids, comma seperated string of ids (no spaces!), "all" for all
-    //arg 5 is realization config path
-    //arg 7 is the partition file path
-    //arg 8 is an optional flag that driver should, if not already preprocessed this way, subdivided the hydrofabric
-
-    std::vector<std::string> catchment_subset_ids;
-    std::vector<std::string> nexus_subset_ids;
-
-    // Owns the parallel (MPI) runtime for the duration of a run. Left unset on
-    // the usage/error paths below (which exit() without running a full run);
-    // engaged once we are committed to running.
-    std::optional<ngen::driver::ParallelEnvironment> parallel_env;
-
-    if( argc < 2) {
+    // No arguments: print usage plus build and environment information, then stop.
+    if (cli_parse.action == ngen::driver::CommandLineAction::show_usage) {
         // Usage
         ngen::exec_info::runtime_usage(argv[0], std::cout);
 
@@ -172,8 +140,11 @@ int main(int argc, char* argv[]) {
         }
         #endif
         std::cout<<std::endl;
-        exit(0); // Unsure if this path should have a non-zero exit code?
-    } else if( argc < 6) {
+        return 0; // Unsure if this path should have a non-zero exit code?
+    }
+
+    // Too few arguments: report and stop.
+    if (cli_parse.action == ngen::driver::CommandLineAction::missing_arguments) {
         std::cout << "Missing required args:" << std::endl;
         std::cout << argv[0] << " <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids>"
                   << " <realization_config_path>" << std::endl;
@@ -183,99 +154,75 @@ int main(int argc, char* argv[]) {
                       << "Use \"all\" as explicit argument when no subset is needed." << std::endl;
         }
 
-        exit(-1);
+        return -1;
     }
-    else {
-        catchmentDataFile = argv[1];
-        nexusDataFile = argv[3];
-        REALIZATION_CONFIG_PATH = argv[5];
 
-        // Initialize the parallel runtime now that we are committed to a run.
-        parallel_env.emplace();
-        mpi_rank = parallel_env->rank();
-        mpi_num_procs = parallel_env->size();
+    // Malformed or inconsistent arguments: report and stop.
+    if (cli_parse.action == ngen::driver::CommandLineAction::invalid_arguments) {
+        std::cout << cli_parse.message << std::endl;
+        return -1;
+    }
 
-        #if NGEN_WITH_MPI
-        if (argc >= 7) {
-            PARTITION_PATH = argv[6];
+    // cli_parse.action == run: gather the inputs needed to set up and run.
+    const ngen::driver::CommandLine& command_line = cli_parse.command_line;
+    std::string catchmentDataFile = command_line.catchment_data_path;
+    std::string nexusDataFile = command_line.nexus_data_path;
+    std::string REALIZATION_CONFIG_PATH = command_line.realization_config_path;
+    std::string PARTITION_PATH = command_line.partition_path;
+    [[maybe_unused]] bool is_subdivided_hydrofabric_wanted = command_line.subdivided_hydrofabric_requested;
+    std::vector<std::string> catchment_subset_ids = command_line.catchment_subset_ids;
+    std::vector<std::string> nexus_subset_ids = command_line.nexus_subset_ids;
+    int mpi_rank = parallel_env->rank();
+    [[maybe_unused]] int mpi_num_procs = parallel_env->size();
+
+    #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
+    std::string pid_file_name = "./.ngen_pid";
+    #if NGEN_WITH_MPI
+    pid_file_name += "." + std::to_string(mpi_rank);
+    #endif // NGEN_WITH_MPI
+    ofstream outfile;
+    outfile.open(pid_file_name, ios::out | ios::trunc );
+    outfile << getpid();
+    outfile.close();
+    int total_time = 0;
+    while (utils::FileChecker::file_is_readable(pid_file_name) && total_time < 180) {
+        total_time += 30;
+        sleep(30);
+    }
+    #endif // WRITE_PID_FILE_FOR_GDB_SERVER
+
+    bool error = !utils::FileChecker::file_is_readable(catchmentDataFile, "Catchment data") ||
+            !utils::FileChecker::file_is_readable(nexusDataFile, "Nexus data") ||
+            !utils::FileChecker::file_is_readable(REALIZATION_CONFIG_PATH, "Realization config");
+
+    #if NGEN_WITH_MPI
+    if (!PARTITION_PATH.empty()) {
+        error = error || !utils::FileChecker::file_is_readable(PARTITION_PATH, "Partition config");
+    }
+
+    // Do some extra steps if we expect to load a subdivided hydrofabric
+    if (is_subdivided_hydrofabric_wanted) {
+        // Ensure the hydrofabric is subdivided (either already or by doing it now), and then
+        // adjust these paths
+        if (parallel::is_hydrofabric_subdivided(catchmentDataFile, MPI_COMM_WORLD, true) ||
+            parallel::subdivide_hydrofabric(
+                MPI_COMM_WORLD,
+                catchmentDataFile,
+                nexusDataFile,
+                PARTITION_PATH
+            )) {
+            catchmentDataFile += "." + std::to_string(mpi_rank);
+            nexusDataFile += "." + std::to_string(mpi_rank);
         }
-        else if (mpi_num_procs > 1) {
-            std::cout << "Missing required argument for partition file path." << std::endl;
-            exit(-1);
+        // If subdivided was needed, subdividing was not already done, and we could not subdivide just now ...
+        else {
+            std::cout << "Unable to successfully preprocess hydrofabric files into subdivided files per partition.";
+            error = true;
         }
+    }
+    #endif // NGEN_WITH_MPI
 
-        if (argc >= 8) {
-            if (strcmp(argv[7], MPI_HF_SUB_CLI_FLAG) == 0) {
-                is_subdivided_hydrofabric_wanted = true;
-            }
-            else if (mpi_num_procs > 1) {
-                std::cout << "Unexpected arg '" << argv[7] << "'; try " << MPI_HF_SUB_CLI_FLAG << std::endl;
-                exit(-1);
-            }
-        }
-        #endif // NGEN_WITH_MPI
-
-        #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
-        std::string pid_file_name = "./.ngen_pid";
-        #if NGEN_WITH_MPI
-        pid_file_name += "." + std::to_string(mpi_rank);
-        #endif // NGEN_WITH_MPI
-        ofstream outfile;
-        outfile.open(pid_file_name, ios::out | ios::trunc );
-        outfile << getpid();
-        outfile.close();
-        int total_time = 0;
-        while (utils::FileChecker::file_is_readable(pid_file_name) && total_time < 180) {
-            total_time += 30;
-            sleep(30);
-        }
-        #endif // WRITE_PID_FILE_FOR_GDB_SERVER
-
-        bool error = !utils::FileChecker::file_is_readable(catchmentDataFile, "Catchment data") ||
-                !utils::FileChecker::file_is_readable(nexusDataFile, "Nexus data") ||
-                !utils::FileChecker::file_is_readable(REALIZATION_CONFIG_PATH, "Realization config");
-
-        #if NGEN_WITH_MPI
-        if (!PARTITION_PATH.empty()) {
-            error = error || !utils::FileChecker::file_is_readable(PARTITION_PATH, "Partition config");
-        }
-
-        // Do some extra steps if we expect to load a subdivided hydrofabric
-        if (is_subdivided_hydrofabric_wanted) {
-            // Ensure the hydrofabric is subdivided (either already or by doing it now), and then
-            // adjust these paths
-            if (parallel::is_hydrofabric_subdivided(catchmentDataFile, MPI_COMM_WORLD, true) ||
-                parallel::subdivide_hydrofabric(
-                    MPI_COMM_WORLD,
-                    catchmentDataFile,
-                    nexusDataFile,
-                    PARTITION_PATH
-                )) {
-                catchmentDataFile += "." + std::to_string(mpi_rank);
-                nexusDataFile += "." + std::to_string(mpi_rank);
-            }
-            // If subdivided was needed, subdividing was not already done, and we could not subdivide just now ...
-            else {
-                std::cout << "Unable to successfully preprocess hydrofabric files into subdivided files per partition.";
-                error = true;
-            }
-        }
-        #endif // NGEN_WITH_MPI
-
-        if(error) exit(-1);
-
-        //split the subset strings into vectors
-        boost::split(catchment_subset_ids, argv[2], [](char c){return c == ','; } );
-        if( catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "all")
-          catchment_subset_ids.pop_back();
-        boost::split(nexus_subset_ids, argv[4], [](char c){return c == ','; } );
-        if( nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "all")
-          nexus_subset_ids.pop_back();
-        //If a single id or no id is passed, the subset vector will have size 1 and be the id or the ""
-        //if we get an empy string, pop it from the subset list.
-        if(nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "") nexus_subset_ids.pop_back();
-        if(catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "") catchment_subset_ids.pop_back();
-    } // end else if (argc < 6)
+    if(error) return -1;
 
     //Read the collection of nexus
     std::cout << "Building Nexus collection" << std::endl;

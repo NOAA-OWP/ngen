@@ -534,6 +534,15 @@ ngen_add_test(
         NGen::core
 )
 
+########################## CommandLine Parsing Tests
+ngen_add_test(
+    test_command_line
+    OBJECTS
+        core/CommandLineTests.cpp
+    LIBRARIES
+        NGen::core
+)
+
 ########################### Netcdf Forcing Tests
 ngen_add_test(
     test_netcdf_forcing
