@@ -219,6 +219,27 @@ if(TARGET test_forcings_engine)
     add_compile_definitions(NGEN_LUMPED_CONFIG_PATH="${CMAKE_CURRENT_BINARY_DIR}/config_aorc.yml")
 endif()
 
+########################## ngen_serialization Unit Tests
+
+ngen_add_test(
+    test_serialization
+    OBJECTS
+        utils/serialization/id_predicates_Test.cpp
+        utils/serialization/backend_writer_Test.cpp
+        utils/serialization/backend_reader_Test.cpp
+        utils/serialization/backend_lifetime_Test.cpp
+    LIBRARIES
+        NGen::serialization
+)
+# The mocks header is shared across the four test files above. It
+# lives next to them under test/utils/serialization/; ngen_add_test
+# already adds test/utils/bmi to the include path for the BMI tests,
+# but our mocks include each other via plain `"mocks.hpp"`, which
+# resolves against the per-source directory automatically.
+target_include_directories(test_serialization PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/utils/serialization
+)
+
 ########################## BMI Protocol Unit Tests
 
 ngen_add_test(

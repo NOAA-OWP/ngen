@@ -40,6 +40,7 @@ target_link_libraries(ngen_bmi_protocols
   PUBLIC
     ${CMAKE_DL_LIBS}
     Boost::boost           # Headers-only Boost (for boost::optional, etc.)
+    NGen::serialization    # SerializationRecord value type, RecordBackend abstraction
 )
 
 target_sources(ngen_bmi_protocols

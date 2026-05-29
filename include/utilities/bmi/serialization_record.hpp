@@ -28,7 +28,12 @@ this header's functions:
     read_record_length(in, body_out)     — read prefix; report body length
     read_record_metadata(in, prefix, id) — read prefix + id; skip payload
 
-Plus the value type `SerializationRecord` itself.
+The value type `SerializationRecord` itself lives in the engine-
+agnostic `ngen::serialization` library (see
+`include/utilities/serialization/record.hpp`) and is
+re-exported under `models::bmi::protocols` for source compatibility
+with existing call sites. Future storage backends share the same
+value type without depending on the BMI library.
 
 On-disk layout
 --------------
@@ -65,11 +70,11 @@ record per step.
 #pragma once
 
 #include "wire_format.hpp"
+#include "utilities/serialization/record.hpp"
 
 #include <nonstd/expected.hpp>
 
 #include <cstdint>
-#include <exception>
 #include <istream>
 #include <ostream>
 #include <string>
@@ -84,6 +89,13 @@ using nonstd::make_unexpected;
 // the read helpers below can write `Status::Ok` / `Status::Eof`
 // without the long `serialization::wire_format::` prefix.
 using serialization::wire_format::Status;
+
+// Re-export the engine-agnostic value type and timestamp parser
+// from ngen::serialization so existing call sites continue to use
+// `models::bmi::protocols::SerializationRecord` / `parse_timestamp`
+// unchanged.
+using SerializationRecord = ::ngen::serialization::Record;
+using ::ngen::serialization::parse_timestamp;
 
 /** @brief Sanity cap on a single record's payload size.
  *
@@ -109,71 +121,6 @@ using serialization::wire_format::Status;
 #  define NGEN_BMI_MAX_RECORD_PAYLOAD_BYTES (1ULL << 30)  // 1 GiB
 #endif
 constexpr uint64_t MAX_RECORD_PAYLOAD_BYTES = NGEN_BMI_MAX_RECORD_PAYLOAD_BYTES;
-
-/** @brief Parse a `Context::timestamp` string into the on-disk
- * int64 timestamp slot.
- *
- * The engine hands BMI protocol code simulation timestamps as
- * opaque strings; the record layer wants compact fixed-width
- * integers. Callers whose strings are already `strtoll`-parseable
- * (e.g. seconds since epoch) get a one-to-one mapping; callers
- * with formatted strings that don't parse cleanly get 0, and the
- * record is still written — restore-by-timestamp just won't work
- * against those records unless the caller matches on the same "0"
- * sentinel. This is a deliberate policy: a parse failure is not
- * fatal to save.
- */
-inline int64_t parse_timestamp(const std::string& s) {
-    if (s.empty()) return 0;
-    try {
-        std::size_t consumed = 0;
-        const long long v = std::stoll(s, &consumed);
-        // Require at least one digit to have been consumed — a "t0"-
-        // style label stops at 'not a digit' after consuming zero
-        // characters, which we treat as unparseable.
-        if (consumed == 0) return 0;
-        return static_cast<int64_t>(v);
-    } catch (const std::exception&) {
-        return 0;
-    }
-}
-
-/** @brief One checkpoint record: a BMI model's state bytes tagged
- * with its feature id, the simulation step counter, the simulated
- * moment the state represents, and the wall-clock moment the
- * operator triggered the save.
- *
- * Fields mirror the on-disk wire format defined in
- * `wire_format.hpp`. `simulation_timestamp` and `checkpoint_epoch`
- * are signed seconds since the Unix epoch
- * (1970-01-01T00:00:00 UTC); see `wire_format.hpp`'s "Timestamp
- * encoding convention" for the full spec.
- *
- * `checkpoint_epoch` defaults to 0 in the constructor. The
- * production write path (serialization.cpp) stamps it with the
- * current wall-clock at save time; a future `Coordinator` design
- * will plumb a coordinator-supplied epoch through so all records
- * in one save event share the same value.
- */
-struct SerializationRecord {
-    std::string       id;
-    int64_t           time_step            = 0;
-    int64_t           simulation_timestamp = 0;
-    int64_t           checkpoint_epoch     = 0;
-    std::vector<char> payload;
-
-    SerializationRecord() = default;
-    SerializationRecord(std::string id_,
-                        int64_t time_step_,
-                        int64_t simulation_timestamp_,
-                        std::vector<char> payload_,
-                        int64_t checkpoint_epoch_ = 0)
-        : id(std::move(id_))
-        , time_step(time_step_)
-        , simulation_timestamp(simulation_timestamp_)
-        , checkpoint_epoch(checkpoint_epoch_)
-        , payload(std::move(payload_)) {}
-};
 
 // Internal helper shared by read_next_record, read_record_length,
 // and read_record_metadata. Reads the prefix and validates the
