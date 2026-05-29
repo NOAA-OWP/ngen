@@ -42,11 +42,8 @@
 #if NGEN_WITH_MPI
 
 #include <mpi.h>
-#include "parallel_utils.h"
-#include "core/Partition_Parser.hpp"
 #include <HY_Features_MPI.hpp>
-
-#include "core/Partition_One.hpp"
+#include <PartitionAcquisition.hpp>
 
 #endif // NGEN_WITH_MPI
 
@@ -205,20 +202,10 @@ int main(int argc, char* argv[]) {
     #if NGEN_WITH_MPI
     PartitionData local_data;
     if (mpi_num_procs > 1) {
-        Partitions_Parser partition_parser(PARTITION_PATH);
-        // TODO: add something here to make sure this step worked for every rank, and maybe to checksum the file
-        partition_parser.parse_partition_file();
-
-        std::vector<PartitionData> &partitions = partition_parser.partition_ranks;
-        local_data = std::move(partitions[mpi_rank]);
-        if (!nexus_subset_ids.empty()) {
-            std::cerr << "Warning: CLI provided nexus subset will be ignored when using partition config";
-        }
-        if (!catchment_subset_ids.empty()) {
-            std::cerr << "Warning: CLI provided catchment subset will be ignored when using partition config";
-        }
-        nexus_subset_ids = std::vector<std::string>(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
-        catchment_subset_ids = std::vector<std::string>(local_data.catchment_ids.begin(), local_data.catchment_ids.end());
+        // Parse the partition config; this governs the subset ids, so it must
+        // happen before the hydrofabric collections are read below.
+        local_data = ngen::driver::load_partition_assignment(
+            PARTITION_PATH, parallel_env->rank(), catchment_subset_ids, nexus_subset_ids);
     }
     #endif // NGEN_WITH_MPI
 
@@ -305,9 +292,7 @@ int main(int argc, char* argv[]) {
     #if NGEN_WITH_MPI
     //mpirun with one processor without partition file
     if (mpi_num_procs == 1) {
-        Partition_One partition_one;
-        partition_one.generate_partition(catchment_collection);
-        local_data = std::move(partition_one.partition_data);
+        local_data = ngen::driver::single_process_partition(catchment_collection);
     }
     hy_features::HY_Features_MPI features = hy_features::HY_Features_MPI(local_data, nexus_collection, manager, mpi_rank, mpi_num_procs);
     #else

@@ -553,6 +553,17 @@ ngen_add_test(
         NGen::parallel
 )
 
+########################## Partition Acquisition Tests
+ngen_add_test(
+    test_partition_acquisition
+    OBJECTS
+        core/PartitionAcquisitionTests.cpp
+    LIBRARIES
+        NGen::core
+        NGen::geojson
+        NGen::logging
+)
+
 ########################### Netcdf Forcing Tests
 ngen_add_test(
     test_netcdf_forcing
