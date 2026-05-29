@@ -10,6 +10,9 @@ For the protocol spec itself — reserved BMI variables, unit conventions,
 and what a model implementer needs to provide — see
 [`BMI_SERIALIZATION_PROTOCOL.md`](BMI_SERIALIZATION_PROTOCOL.md).
 
+For backend implementation details, see
+[`include/utilities/serialization/README.md`](../include/utilities/serialization/README.md).
+
 ---
 
 ## Engine behavior with non-conforming models
