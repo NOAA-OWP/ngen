@@ -525,6 +525,15 @@ ngen_add_test(
         NGen::core
 )
 
+########################## ParallelEnvironment Tests
+ngen_add_test(
+    test_parallel_environment
+    OBJECTS
+        core/ParallelEnvironmentTests.cpp
+    LIBRARIES
+        NGen::core
+)
+
 ########################### Netcdf Forcing Tests
 ngen_add_test(
     test_netcdf_forcing

@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <chrono>
+#include <optional>
 
 #include <boost/core/span.hpp>
 
@@ -21,6 +22,7 @@
 #include <boost/range/algorithm/sort.hpp>
 
 #include <NgenSimulation.hpp>
+#include <ParallelEnvironment.hpp>
 
 #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
 #include <unistd.h>
@@ -74,32 +76,26 @@ int main(int argc, char* argv[]) {
     int mpi_rank = 0;
 
     if (argc > 1 && std::string{argv[1]} == "--info") {
-        #if NGEN_WITH_MPI
-        MPI_Init(nullptr, nullptr);
-        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-        MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
-        #endif
+        { // Scope the parallel environment so MPI is finalized before exit().
+            ngen::driver::ParallelEnvironment parallel_env;
 
-        if (mpi_rank == 0)
-        {
-            std::ostringstream output;
-            output << ngen::exec_info::build_summary;
-            ngen::exec_info::runtime_summary(output);
+            if (parallel_env.rank() == 0)
+            {
+                std::ostringstream output;
+                output << ngen::exec_info::build_summary;
+                ngen::exec_info::runtime_summary(output);
 #if NGEN_WITH_MPI
-            output << "  MPI:\n"
-                   << "    Rank: " << mpi_rank << "\n"
-                   << "    Processors: " << mpi_num_procs << "\n";
+                output << "  MPI:\n"
+                       << "    Rank: " << parallel_env.rank() << "\n"
+                       << "    Processors: " << parallel_env.size() << "\n";
 #endif // NGEN_WITH_MPI
 
-            std::cout << output.str() << std::endl;
-        } // if (mpi_rank == 0)
-
-        #if NGEN_WITH_MPI
-        MPI_Finalize();
-        #endif
+                std::cout << output.str() << std::endl;
+            } // if (parallel_env.rank() == 0)
+        }
 
         exit(1);
-    } 
+    }
 
     auto time_start = std::chrono::steady_clock::now();
 
@@ -130,6 +126,11 @@ int main(int argc, char* argv[]) {
 
     std::vector<std::string> catchment_subset_ids;
     std::vector<std::string> nexus_subset_ids;
+
+    // Owns the parallel (MPI) runtime for the duration of a run. Left unset on
+    // the usage/error paths below (which exit() without running a full run);
+    // engaged once we are committed to running.
+    std::optional<ngen::driver::ParallelEnvironment> parallel_env;
 
     if( argc < 2) {
         // Usage
@@ -189,13 +190,12 @@ int main(int argc, char* argv[]) {
         nexusDataFile = argv[3];
         REALIZATION_CONFIG_PATH = argv[5];
 
+        // Initialize the parallel runtime now that we are committed to a run.
+        parallel_env.emplace();
+        mpi_rank = parallel_env->rank();
+        mpi_num_procs = parallel_env->size();
+
         #if NGEN_WITH_MPI
-
-        // Initalize MPI
-        MPI_Init(NULL, NULL);
-        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-        MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
-
         if (argc >= 7) {
             PARTITION_PATH = argv[6];
         }
@@ -563,9 +563,7 @@ int main(int argc, char* argv[]) {
     // Close nexus output file(s)
     nexus_outputs_mgr->close();
 
-#if NGEN_WITH_MPI
-    MPI_Barrier(MPI_COMM_WORLD);
-#endif
+    parallel_env->barrier();
 
     if (mpi_rank == 0) {
         std::cout << "Finished " << sim_time->get_total_output_times() << " timesteps." << std::endl;
@@ -574,9 +572,7 @@ int main(int argc, char* argv[]) {
     auto time_done_simulation = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_simulation = time_done_simulation - time_done_init;
 
-#if NGEN_WITH_MPI
-    MPI_Barrier(MPI_COMM_WORLD);
-#endif
+    parallel_env->barrier();
 
     manager->finalize();
 
@@ -605,12 +601,14 @@ int main(int argc, char* argv[]) {
 
   manager->finalize();
 
-#if NGEN_WITH_MPI
-    // Destroy the simulation, freeing its duplicated MPI communicator, while
-    // MPI is still active.
+    // Release the simulation (freeing its duplicated MPI communicator, in MPI
+    // builds) before finalizing the parallel runtime.
     simulation.reset();
-    MPI_Finalize();
-#endif
+
+    // Finalize the parallel runtime here, after the simulation has been
+    // released, so that MPI is finalized before main()'s remaining locals (the
+    // formulation manager, feature graph, and so on) are destroyed.
+    parallel_env.reset();
 
     return 0;
 }
