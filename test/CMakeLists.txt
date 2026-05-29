@@ -543,6 +543,16 @@ ngen_add_test(
         NGen::core
 )
 
+########################## Input Preparation Tests
+ngen_add_test(
+    test_input_preparation
+    OBJECTS
+        core/InputPreparationTests.cpp
+    LIBRARIES
+        NGen::core
+        NGen::parallel
+)
+
 ########################### Netcdf Forcing Tests
 ngen_add_test(
     test_netcdf_forcing

@@ -24,6 +24,7 @@
 #include <NgenSimulation.hpp>
 #include <ParallelEnvironment.hpp>
 #include <CommandLine.hpp>
+#include <InputPreparation.hpp>
 
 #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
 #include <unistd.h>
@@ -165,11 +166,8 @@ int main(int argc, char* argv[]) {
 
     // cli_parse.action == run: gather the inputs needed to set up and run.
     const ngen::driver::CommandLine& command_line = cli_parse.command_line;
-    std::string catchmentDataFile = command_line.catchment_data_path;
-    std::string nexusDataFile = command_line.nexus_data_path;
     std::string REALIZATION_CONFIG_PATH = command_line.realization_config_path;
     std::string PARTITION_PATH = command_line.partition_path;
-    [[maybe_unused]] bool is_subdivided_hydrofabric_wanted = command_line.subdivided_hydrofabric_requested;
     std::vector<std::string> catchment_subset_ids = command_line.catchment_subset_ids;
     std::vector<std::string> nexus_subset_ids = command_line.nexus_subset_ids;
     int mpi_rank = parallel_env->rank();
@@ -191,38 +189,15 @@ int main(int argc, char* argv[]) {
     }
     #endif // WRITE_PID_FILE_FOR_GDB_SERVER
 
-    bool error = !utils::FileChecker::file_is_readable(catchmentDataFile, "Catchment data") ||
-            !utils::FileChecker::file_is_readable(nexusDataFile, "Nexus data") ||
-            !utils::FileChecker::file_is_readable(REALIZATION_CONFIG_PATH, "Realization config");
-
-    #if NGEN_WITH_MPI
-    if (!PARTITION_PATH.empty()) {
-        error = error || !utils::FileChecker::file_is_readable(PARTITION_PATH, "Partition config");
+    // Validate the input files and, when requested, subdivide the hydrofabric
+    // per partition; this yields the (possibly rank-specific) data file paths.
+    const ngen::driver::PreparedInputs prepared =
+        ngen::driver::prepare_inputs(command_line, *parallel_env);
+    if (!prepared.ok) {
+        return -1;
     }
-
-    // Do some extra steps if we expect to load a subdivided hydrofabric
-    if (is_subdivided_hydrofabric_wanted) {
-        // Ensure the hydrofabric is subdivided (either already or by doing it now), and then
-        // adjust these paths
-        if (parallel::is_hydrofabric_subdivided(catchmentDataFile, MPI_COMM_WORLD, true) ||
-            parallel::subdivide_hydrofabric(
-                MPI_COMM_WORLD,
-                catchmentDataFile,
-                nexusDataFile,
-                PARTITION_PATH
-            )) {
-            catchmentDataFile += "." + std::to_string(mpi_rank);
-            nexusDataFile += "." + std::to_string(mpi_rank);
-        }
-        // If subdivided was needed, subdividing was not already done, and we could not subdivide just now ...
-        else {
-            std::cout << "Unable to successfully preprocess hydrofabric files into subdivided files per partition.";
-            error = true;
-        }
-    }
-    #endif // NGEN_WITH_MPI
-
-    if(error) return -1;
+    std::string catchmentDataFile = prepared.catchment_data_path;
+    std::string nexusDataFile = prepared.nexus_data_path;
 
     //Read the collection of nexus
     std::cout << "Building Nexus collection" << std::endl;
