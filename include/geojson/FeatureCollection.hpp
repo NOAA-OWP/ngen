@@ -87,12 +87,12 @@ namespace geojson {
             /**
              * @return The number of elements within the collection
              */
-            int get_size();
+            int get_size() const;
 
             /**
              * @return Whether or not the collection is empty
              */
-            bool is_empty();
+            bool is_empty() const;
 
             std::vector<double> get_bounding_box() const;
 
@@ -110,7 +110,7 @@ namespace geojson {
              * @param feature The feature to look for
              * @return -1 if the feature isn't in the collection, the numerical index otherwise
              */
-            int find(Feature feature);
+            int find(Feature feature) const;
 
             /**
              * Finds the index of a Feature with the given ID
@@ -118,7 +118,7 @@ namespace geojson {
              * @param ID The ID of the Feature to look for
              * @return -1 if the feature isn't in the collection, the numerical index otherwise
              */
-            int find(std::string ID);
+            int find(std::string ID) const;
 
             /**
              * Removes a feature from the collection based on index
