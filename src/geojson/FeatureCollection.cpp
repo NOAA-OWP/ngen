@@ -10,7 +10,7 @@ Feature FeatureCollection::get_feature(int index) const {
       return nullptr;
 }
 
-int FeatureCollection::find(Feature feature) {
+int FeatureCollection::find(Feature feature) const {
     for(int feature_index = 0; feature_index < this->get_size(); feature_index++) {
         if (*this->features[feature_index] == *feature) {
             return feature_index;
@@ -20,7 +20,7 @@ int FeatureCollection::find(Feature feature) {
     return -1;
 }
 
-int FeatureCollection::find(std::string ID) {
+int FeatureCollection::find(std::string ID) const {
     for (int feature_index = 0; feature_index < this->get_size(); feature_index++) {
         if (this->features[feature_index]->get_id() == ID) {
             return feature_index;
@@ -62,11 +62,11 @@ Feature FeatureCollection::remove_feature_by_id(std::string ID) {
     return popped_feature;
 }
 
-int FeatureCollection::get_size() {
+int FeatureCollection::get_size() const {
     return features.size();
 }
 
-bool FeatureCollection::is_empty() {
+bool FeatureCollection::is_empty() const {
     return features.size() == 0;
 }
 
