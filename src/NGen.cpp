@@ -56,6 +56,70 @@
 #include "utilities/output/PerFormulationNexusOutputMgr.hpp"
 #endif
 
+geojson::GeoJSON load_feature_set(
+                                  std::string const& file,
+                                  std::string const& table,
+                                  std::vector<std::string> subset_ids
+                                  ) {
+    if (boost::algorithm::ends_with(file, "gpkg")) {
+#if NGEN_WITH_SQLITE3
+        return ngen::geopackage::read(file, table, subset_ids);
+#else
+        throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
+#endif
+    } else {
+        geojson::read(file, subset_ids);
+    }
+}
+
+geojson::GeoJSON load_fabric(
+                             std::string const& catchmentDataFile,
+                             std::string const& nexusDataFile,
+                             std::string const& partitionFile,
+                             int rank,
+                             std::vector<std::string> catchment_subset_ids,
+                             std::vector<std::string> nexus_subset_ids
+                             ) {
+    #if NGEN_WITH_MPI
+    PartitionData local_data;
+    if (mpi_num_procs > 1) {
+        // Parse the partition config; this governs the subset ids, so it must
+        // happen before the hydrofabric collections are read below.
+        local_data = ngen::driver::load_partition_assignment(
+            PARTITION_PATH, parallel_env->rank(), catchment_subset_ids, nexus_subset_ids);
+    }
+    #endif // NGEN_WITH_MPI
+
+    // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
+    geojson::GeoJSON nexus_collection = load_feature_set(nexusDataFile, "nexus", nexus_subset_ids);
+
+    // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
+    geojson::GeoJSON catchment_collection = load_feature_set(catchmentDataFile, "divides", catchment_subset_ids);
+
+    // As part of the fix for NOAA-OWP/ngen#284 / NGWPC-6553,
+    // partitioning may insert sentinel flowpaths downstream of
+    // terminal nexuses. Those sentinels will not exist in the
+    // catchmentDataFile. Their listing in catchment_subset_ids works
+    // because the respective geoFOO::read() functions return the
+    // intersection of features in the file and the specified subset,
+    // rather than erroring on missing features.
+    
+    for(auto& feature: *catchment_collection)
+    {
+        //feature->set_id(feature->get_property("id").as_string());
+        nexus_collection->add_feature(feature);
+        //std::cout<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toid").as_string()<<std::endl;
+    }
+    //Update the feature ids for the combined collection, using the alternative property 'id'
+    //to map features to their primary id as well as the alternative property
+    nexus_collection->update_ids("id");
+
+    std::string link_key = "toid";
+    nexus_collection->link_features_from_property(nullptr, &link_key);
+
+    return nexus_collection;
+}
+
 int main(int argc, char* argv[]) {
     std::optional<ngen::driver::ParallelEnvironment> parallel_env;
     parallel_env.emplace();
@@ -196,6 +260,17 @@ int main(int argc, char* argv[]) {
     std::string catchmentDataFile = prepared.catchment_data_path;
     std::string nexusDataFile = prepared.nexus_data_path;
 
+    std::shared_ptr<Simulation_Time> sim_time;
+
+    auto possible_simulation_time = realization_config.get_child_optional("time");
+    if (!possible_simulation_time) {
+        throw std::runtime_error("ERROR: No simulation time period defined.");
+    }
+
+    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+
+    sim_time = std::make_shared<Simulation_Time>(simulation_time_config);
+
     //Read the collection of nexus
     std::cout << "Building Nexus collection" << std::endl;
     
@@ -210,20 +285,11 @@ int main(int argc, char* argv[]) {
     #endif // NGEN_WITH_MPI
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
-    geojson::GeoJSON nexus_collection;
-    if (boost::algorithm::ends_with(nexusDataFile, "gpkg")) {
-      #if NGEN_WITH_SQLITE3
-      nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
-      #else
-      throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
-      #endif
-    } else {
-      nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
-    }
-    std::cout << "Building Catchment collection" << std::endl;
+    geojson::GeoJSON nexus_collection = load_feature_set(nexusDataFile, "nexus", nexus_subset_ids);
 
+    std::cout << "Building Catchment collection" << std::endl;
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
-    geojson::GeoJSON catchment_collection;
+    geojson::GeoJSON catchment_collection = load_feature_set(catchmentDataFile, "divides", catchment_subset_ids);
     // As part of the fix for NOAA-OWP/ngen#284 / NGWPC-6553,
     // partitioning may insert sentinel flowpaths downstream of
     // terminal nexuses. Those sentinels will not exist in the
@@ -231,15 +297,6 @@ int main(int argc, char* argv[]) {
     // because the respective geoFOO::read() functions return the
     // intersection of features in the file and the specified subset,
     // rather than erroring on missing features.
-    if (boost::algorithm::ends_with(catchmentDataFile, "gpkg")) {
-      #if NGEN_WITH_SQLITE3
-      catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
-      #else
-      throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
-      #endif
-    } else {
-      catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
-    }
     
     for(auto& feature: *catchment_collection)
     {
@@ -254,37 +311,12 @@ int main(int argc, char* argv[]) {
     boost::property_tree::ptree realization_config;
     boost::property_tree::json_parser::read_json(REALIZATION_CONFIG_PATH, realization_config);
 
-    std::shared_ptr<Simulation_Time> sim_time;
-
-    auto possible_simulation_time = realization_config.get_child_optional("time");
-    if (!possible_simulation_time) {
-        throw std::runtime_error("ERROR: No simulation time period defined.");
-    }
-
-    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
-
-    sim_time = std::make_shared<Simulation_Time>(simulation_time_config);
-
     std::cout<<"Initializing formulations" << std::endl;
 
     std::shared_ptr<realization::Formulation_Manager> manager =
         std::make_shared<realization::Formulation_Manager>(realization_config);
     manager->read(simulation_time_config, catchment_collection, utils::getStdOut());
 
-    //TODO refactor manager->read so certain configs can be queried before the entire
-    //realization collection is created
-    #if NGEN_WITH_ROUTING
-    std::unique_ptr<routing_py_adapter::Routing_Py_Adapter> router;
-    if( mpi_rank == 0 )
-    { // Run t-route from single process
-    if(manager->get_using_routing()) {
-      std::cout<<"Using Routing"<<std::endl;
-    }
-    else {
-      std::cout<<"Not Using Routing"<<std::endl;
-    }
-    }
-    #endif //NGEN_WITH_ROUTING
     std::cout<<"Building Feature Index" <<std::endl;;
     std::string link_key = "toid";
     nexus_collection->link_features_from_property(nullptr, &link_key);
