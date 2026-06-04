@@ -135,6 +135,7 @@ var hierarchy =
     [ "ngen::srs::epsg", "structngen_1_1srs_1_1epsg.html", null ],
     [ "ngen::traits::bool_pack<... >", "structngen_1_1traits_1_1bool__pack.html", null ],
     [ "ngen::traits::type_list< Ts >", "structngen_1_1traits_1_1type__list.html", null ],
+    [ "NgenSimulation", "class_ngen_simulation.html", null ],
     [ "nonstd::detail::in_place_index_tag< K >", "structnonstd_1_1detail_1_1in__place__index__tag.html", null ],
     [ "nonstd::detail::in_place_type_tag< T >", "structnonstd_1_1detail_1_1in__place__type__tag.html", null ],
     [ "nonstd::in_place_t", "structnonstd_1_1in__place__t.html", null ],

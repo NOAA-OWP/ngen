@@ -2867,6 +2867,7 @@
         <topic label="valid_formulation_keys" href="namespacerealization.html#a6b6d6d33a273c0a3de61473e05881ef6"/>
         <topic label="formulation_constructors" href="namespacerealization.html#af60e0abfbd9fa40024373e9012cb7769"/>
       </topic>
+      <topic label="routing_py_adapter" href="namespacerouting__py__adapter.html"/>
       <topic label="std" href="namespacestd.html">
         <topic label="hash&lt; nonstd::expected&lt; T &amp;, E &gt; &gt;" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html">
           <topic label="argument_type" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_01_6_00_01_e_01_4_01_4.html#a1a157479d41b7cd0d185315998736930"/>
@@ -5816,6 +5817,30 @@
         <topic label="complete_json_file" href="class_nexus___test.html#a141e0165625e2647bbe2af0a005ac59a"/>
         <topic label="id_map_json_file" href="class_nexus___test.html#a70dffa3db4d3de7aa35fd42e7f15164c"/>
       </topic>
+      <topic label="NgenSimulation" href="class_ngen_simulation.html">
+        <topic label="hy_features_t" href="class_ngen_simulation.html#a463e451d1ae4f392518aea22055f03b9"/>
+        <topic label="NgenSimulation" href="class_ngen_simulation.html#a8cf729ebc31f210e9889a16f1e600f29"/>
+        <topic label="NgenSimulation" href="class_ngen_simulation.html#a4071b542efdd11b2fa258d6346bed743"/>
+        <topic label="~NgenSimulation" href="class_ngen_simulation.html#a016457898cba0537366d2153d18183e6"/>
+        <topic label="advance_models_one_output_step" href="class_ngen_simulation.html#a92cd36ea9aeb2b475ad7a94d791123f8"/>
+        <topic label="get_nexus_index" href="class_ngen_simulation.html#ab065277e2398cb66e8a8c878a65d8641"/>
+        <topic label="get_nexus_outflow" href="class_ngen_simulation.html#a0c6d9e9f88537c1650077a40be8134e6"/>
+        <topic label="get_num_output_times" href="class_ngen_simulation.html#ac4aa716aea81477f20d264293daf80eb"/>
+        <topic label="get_timestamp_for_step" href="class_ngen_simulation.html#aa664bc41b651d51d93a96952aee40be0"/>
+        <topic label="run_catchments" href="class_ngen_simulation.html#abe49f6911a9117ae53f5b5e51d286502"/>
+        <topic label="run_routing" href="class_ngen_simulation.html#a5e0c495e05c77e5104118d1802b51968"/>
+        <topic label="run_routing_bmi" href="class_ngen_simulation.html#ad0347748947b0c4fc60891892a63340d"/>
+        <topic label="serialize" href="class_ngen_simulation.html#a68d63adc9f74c69cbcf7c8314639c346"/>
+        <topic label="catchment_indexes_" href="class_ngen_simulation.html#af5487d3fff667f4b7245c22066f48eb0"/>
+        <topic label="catchment_outflows_" href="class_ngen_simulation.html#a2061efbe8bbc24c0f3224c07c5df058b"/>
+        <topic label="layers_" href="class_ngen_simulation.html#aa6c75b32c292738104faaec3e8bda4da"/>
+        <topic label="mpi_num_procs_" href="class_ngen_simulation.html#a4a59792fc65d70a7f18c8083621c318a"/>
+        <topic label="mpi_rank_" href="class_ngen_simulation.html#a6c9fc27fc72183b14ef715192542dc34"/>
+        <topic label="nexus_downstream_flows_" href="class_ngen_simulation.html#a92db5bb0d32bf8ca3e65fb50c1203283"/>
+        <topic label="nexus_indexes_" href="class_ngen_simulation.html#a6a81cfc85c71834ae9fe3986fa68e057"/>
+        <topic label="sim_time_" href="class_ngen_simulation.html#a7865c97843e4b81cb812edf8156b21ab"/>
+        <topic label="simulation_step_" href="class_ngen_simulation.html#ad4b135efbc9d2350f361da71ffbb00ea"/>
+      </topic>
       <topic label="NullForcingProvider" href="class_null_forcing_provider.html">
         <topic label="data_type" href="class_null_forcing_provider.html#a0d14bbf2549386ef2baefc87248ae3ad"/>
         <topic label="selection_type" href="class_null_forcing_provider.html#ab0b1614239c57ead01efc4f45bf7d719"/>
@@ -6142,6 +6167,7 @@
       <topic label="ngen::srs::epsg" href="structngen_1_1srs_1_1epsg.html"/>
       <topic label="ngen::traits::bool_pack&lt;... &gt;" href="structngen_1_1traits_1_1bool__pack.html"/>
       <topic label="ngen::traits::type_list&lt; Ts &gt;" href="structngen_1_1traits_1_1type__list.html"/>
+      <topic label="NgenSimulation" href="class_ngen_simulation.html"/>
       <topic label="nonstd::detail::in_place_index_tag&lt; K &gt;" href="structnonstd_1_1detail_1_1in__place__index__tag.html"/>
       <topic label="nonstd::detail::in_place_type_tag&lt; T &gt;" href="structnonstd_1_1detail_1_1in__place__type__tag.html"/>
       <topic label="nonstd::in_place_t" href="structnonstd_1_1in__place__t.html"/>

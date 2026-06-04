@@ -172,6 +172,7 @@ var annotated_dup =
     [ "Network_Test2", "class_network___test2.html", "class_network___test2" ],
     [ "Nexus_Remote_Test", "class_nexus___remote___test.html", "class_nexus___remote___test" ],
     [ "Nexus_Test", "class_nexus___test.html", "class_nexus___test" ],
+    [ "NgenSimulation", "class_ngen_simulation.html", "class_ngen_simulation" ],
     [ "NullForcingProvider", "class_null_forcing_provider.html", "class_null_forcing_provider" ],
     [ "Partition_One", "class_partition___one.html", "class_partition___one" ],
     [ "PartitionData", "struct_partition_data.html", "struct_partition_data" ],

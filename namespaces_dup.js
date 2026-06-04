@@ -17,6 +17,7 @@ var namespaces_dup =
     [ "ngen", "namespacengen.html", "namespacengen" ],
     [ "nonstd", "namespacenonstd.html", "namespacenonstd" ],
     [ "realization", "namespacerealization.html", "namespacerealization" ],
+    [ "routing_py_adapter", "namespacerouting__py__adapter.html", null ],
     [ "std", "namespacestd.html", "namespacestd" ],
     [ "utils", "namespaceutils.html", "namespaceutils" ]
 ];

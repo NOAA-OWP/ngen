@@ -51,8 +51,9 @@ var searchData=
   ['_7enexusoutputsmgr_48',['~NexusOutputsMgr',['../classutils_1_1_nexus_outputs_mgr.html#a2d87d034c26bf83787668cf50f704256',1,'utils::NexusOutputsMgr']]],
   ['_7engenbmiprotocol_49',['~NgenBmiProtocol',['../classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html#ac38bd9b1e5f1fb5062e155caab0f6ad5',1,'models::bmi::protocols::NgenBmiProtocol']]],
   ['_7engenmassbalance_50',['~NgenMassBalance',['../classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a94f2988c778a6e1bf035d3738a16823c',1,'models::bmi::protocols::NgenMassBalance']]],
-  ['_7epartitions_5fparser_51',['~Partitions_Parser',['../class_partitions___parser.html#a31cd926a275c0d00b45b14d076231234',1,'Partitions_Parser']]],
-  ['_7eprotocolerror_52',['~ProtocolError',['../classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#afb080ed99f118e6d5cac63c630810c50',1,'models::bmi::protocols::ProtocolError']]],
-  ['_7estreamhandler_53',['~StreamHandler',['../classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354',1,'utils::StreamHandler']]],
-  ['_7eunitshelper_5ftest_54',['~UnitsHelper_Test',['../class_units_helper___test.html#ac342c365275e4173691ab84e9b76b5a5',1,'UnitsHelper_Test']]]
+  ['_7engensimulation_51',['~NgenSimulation',['../class_ngen_simulation.html#a016457898cba0537366d2153d18183e6',1,'NgenSimulation']]],
+  ['_7epartitions_5fparser_52',['~Partitions_Parser',['../class_partitions___parser.html#a31cd926a275c0d00b45b14d076231234',1,'Partitions_Parser']]],
+  ['_7eprotocolerror_53',['~ProtocolError',['../classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#afb080ed99f118e6d5cac63c630810c50',1,'models::bmi::protocols::ProtocolError']]],
+  ['_7estreamhandler_54',['~StreamHandler',['../classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354',1,'utils::StreamHandler']]],
+  ['_7eunitshelper_5ftest_55',['~UnitsHelper_Test',['../class_units_helper___test.html#ac342c365275e4173691ab84e9b76b5a5',1,'UnitsHelper_Test']]]
 ];
