@@ -112,6 +112,33 @@ jobs:
       - name: Clean Up
         uses: ./.github/actions/clean-build
 
+  # Build all code with MPI enabled in linux
+  build_mpi_all:
+    # The type of runner that the job will run on
+    strategy:
+      matrix:
+        os: [ubuntu-22.04]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      - name: Build Everything
+        uses: ./.github/actions/ngen-build
+        with:
+          targets: "all"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+          use_mpi: 'ON'
+          use_python: 'ON'
+          bmi_c: 'ON'
+          bmi_fortran: 'ON'
+
+      - name: Clean Up
+        uses: ./.github/actions/clean-build
+
 
   # Run BMI C++ tests in linux environment
   test_bmi_cpp:
