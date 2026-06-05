@@ -79,76 +79,19 @@ namespace parallel {
         MPI_Comm_rank(comm, &mpi_rank);
         MPI_Comm_size(comm, &mpi_num_procs);
 
-        const int ROOT_RANK = 0;
-        // These are the lengths of the (trimmed) C-string representations of the hostname for each rank
-        std::vector<int> actualHostnameCStrLength(mpi_num_procs);
-        // Initialize to -1 to represent unknown
-        for (int i = 0; i < mpi_num_procs; ++i) {
-            actualHostnameCStrLength[i] = -1;
-        }
+        MPI_Comm split_by_host;
+        MPI_Comm_split_type(comm, MPI_COMM_TYPE_SHARED, mpi_rank, MPI_INFO_NULL, &split_by_host);
 
-        // Get this rank's hostname (things should never be longer than 256)
-        char myhostname[256];
-        gethostname(myhostname, 256);
+        // Use the global rank of the process with rank 0 in each
+        // per-host subcommunicator as the common identifier for that
+        // host, and broadcast it to all processes on each host
+        int host_id = mpi_rank;
+        MPI_Bcast(&host_id, 1, MPI_INT, 0, split_by_host);
 
-        // Set the one for this rank
-        actualHostnameCStrLength[mpi_rank] = std::strlen(myhostname);
+        // Distribute the view of which processes reside on which host globally
+        MPI_Allgather(&host_id, 1, MPI_INT, host_array, 1, MPI_INT, comm);
 
-        // First, gather the hostname string lengths
-        MPI_Gather(&actualHostnameCStrLength[mpi_rank], 1, MPI_INT, actualHostnameCStrLength.data(), 1, MPI_INT, ROOT_RANK,
-                   comm);
-        // Per-rank start offsets/displacements in our hostname strings gather buffer.
-        std::vector<int> recvDisplacements(mpi_num_procs);
-        int totalLength = 0;
-        for (int i = 0; i < mpi_num_procs; ++i) {
-            // Displace each rank's string by the sum of the length of the previous rank strings
-            recvDisplacements[i] = totalLength;
-            // Adding the extra to make space for the \0
-            actualHostnameCStrLength[i] += 1;
-            // Then update the total length
-            totalLength += actualHostnameCStrLength[i];
-
-        }
-        // Now we can create our buffer array and gather the hostname strings into it
-        char hostnames[totalLength];
-        MPI_Gatherv(myhostname, actualHostnameCStrLength[mpi_rank], MPI_CHAR, hostnames, actualHostnameCStrLength.data(),
-                    recvDisplacements.data(), MPI_CHAR, ROOT_RANK, comm);
-
-        if (mpi_rank == ROOT_RANK) {
-            host_array[0] = 0;
-            int next_host_id = 1;
-
-            int rank_with_matching_hostname;
-            char *checked_rank_hostname, *known_rank_hostname;
-
-            for (int rank_being_check = 0; rank_being_check < mpi_num_procs; ++rank_being_check) {
-                // Set this as negative initially for each rank check to indicate no match found (at least yet)
-                rank_with_matching_hostname = -1;
-                // Get a C-string pointer for this rank's hostname, offset by the appropriate displacement
-                checked_rank_hostname = &hostnames[recvDisplacements[rank_being_check]];
-
-                // Assume that hostnames for any ranks less than the current rank being check are already known
-                for (int known_rank = 0; known_rank < rank_being_check; ++known_rank) {
-                    // Get the right C-string pointer for the current known rank's hostname also
-                    known_rank_hostname = &hostnames[recvDisplacements[known_rank]];
-                    // Compare the hostnames, setting and breaking if a match is found
-                    if (std::strcmp(known_rank_hostname, checked_rank_hostname) == 0) {
-                        rank_with_matching_hostname = known_rank;
-                        break;
-                    }
-                }
-                // This indicates this rank had no earlier rank with a matching hostname.
-                if (rank_with_matching_hostname < 0) {
-                    // Assign new host id, then increment what the next id will be
-                    host_array[rank_being_check] = next_host_id++;
-                }
-                else {
-                    host_array[rank_being_check] = host_array[rank_with_matching_hostname];
-                }
-            }
-        }
-        // Now, broadcast the results out
-        MPI_Bcast(host_array, mpi_num_procs, MPI_INT, 0, comm);
+        MPI_Comm_free(&split_by_host);
     }
 
     bool mpi_send_text_file(const char *fileName, MPI_Comm comm, const int destRank) {
