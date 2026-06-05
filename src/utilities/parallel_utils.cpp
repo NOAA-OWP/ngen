@@ -374,6 +374,9 @@ namespace parallel {
 
         }
         #endif // NGEN_WITH_PYTHON
+
+        // This is not actually reachable, but it quiets a compiler warning
+        return false;
     }
 
     std::vector<std::string> gather_strings(const std::vector<std::string>& local_strings, MPI_Comm comm) {
