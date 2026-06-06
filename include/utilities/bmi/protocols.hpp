@@ -30,75 +30,77 @@ Container and management for abstract BMI protocols
 */
 #pragma once
 
-#include <string>
-#include <vector>
-#include <boost/type_index.hpp>
-#include <unordered_map>
 #include "Bmi_Adapter.hpp"
 #include "JSONProperty.hpp"
+#include <boost/type_index.hpp>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
+#include "deserialization.hpp"
 #include "mass_balance.hpp"
 #include "serialization.hpp"
-#include "deserialization.hpp"
 
+namespace models {
+namespace bmi {
+namespace protocols {
 
-namespace models{ namespace bmi{ namespace protocols{
-
-enum class Protocol {
-    MASS_BALANCE,
-    SERIALIZATION,
-    DESERIALIZATION
-};
+enum class Protocol { MASS_BALANCE, SERIALIZATION, DESERIALIZATION };
 
 auto operator<<(std::ostream& os, Protocol p) -> std::ostream&;
 
 class NgenBmiProtocols {
     /**
      * @brief Container and management interface for BMI protocols for use in ngen
-     * 
+     *
      */
 
-    public:
-        /**
-         * @brief Construct a new Ngen Bmi Protocols object with a null model
-         * 
-         */
-        NgenBmiProtocols();
+  public:
+    /**
+     * @brief Construct a new Ngen Bmi Protocols object with a null model
+     *
+     */
+    NgenBmiProtocols();
 
-        /**
-         * @brief Construct a new Ngen Bmi Protocols object for use with a known model
-         * 
-         * @param model An initialized BMI model
-         * @param properties Properties for each protocol being initialized
-         */
-        NgenBmiProtocols(std::shared_ptr<models::bmi::Bmi_Adapter> model, const geojson::PropertyMap& properties);
-        
-        /**
-         * @brief Run a specific BMI protocol by name with a given context
-         * 
-         * @param protocol_name The name of the protocol to run
-         * @param ctx The context of the current protocol run
-         * 
-         * @return expected<void, ProtocolError> May contain a ProtocolError if
-         *         the protocol fails for any reason.
-         */
-        auto run(const Protocol& protocol_name, const Context& ctx) const -> expected<void, ProtocolError>; 
+    /**
+     * @brief Construct a new Ngen Bmi Protocols object for use with a known model
+     *
+     * @param model An initialized BMI model
+     * @param properties Properties for each protocol being initialized
+     */
+    NgenBmiProtocols(
+        std::shared_ptr<models::bmi::Bmi_Adapter> model,
+        const geojson::PropertyMap& properties
+    );
 
-        private:
+    /**
+     * @brief Run a specific BMI protocol by name with a given context
+     *
+     * @param protocol_name The name of the protocol to run
+     * @param ctx The context of the current protocol run
+     *
+     * @return expected<void, ProtocolError> May contain a ProtocolError if
+     *         the protocol fails for any reason.
+     */
+    auto run(const Protocol& protocol_name, const Context& ctx) const
+        -> expected<void, ProtocolError>;
 
-        /**
-         * @brief All protocols managed by this container will utilize the same model
-         * 
-         * This reduces the amount of pointer copying and references across a large simulation
-         * and it ensures that all protocols see the same model state.
-         * 
-         */
-        std::shared_ptr<models::bmi::Bmi_Adapter> model;
-        /**
-         * @brief Map of protocol name to protocol instance
-         * 
-         */
-        std::unordered_map<Protocol, std::unique_ptr<NgenBmiProtocol>> protocols;
-    };
+  private:
+    /**
+     * @brief All protocols managed by this container will utilize the same model
+     *
+     * This reduces the amount of pointer copying and references across a large simulation
+     * and it ensures that all protocols see the same model state.
+     *
+     */
+    std::shared_ptr<models::bmi::Bmi_Adapter> model;
+    /**
+     * @brief Map of protocol name to protocol instance
+     *
+     */
+    std::unordered_map<Protocol, std::unique_ptr<NgenBmiProtocol>> protocols;
+};
 
-}}}
+} // namespace protocols
+} // namespace bmi
+} // namespace models

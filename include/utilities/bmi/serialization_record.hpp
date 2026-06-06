@@ -69,8 +69,8 @@ record per step.
 */
 #pragma once
 
-#include "wire_format.hpp"
 #include "utilities/serialization/record.hpp"
+#include "wire_format.hpp"
 
 #include <nonstd/expected.hpp>
 
@@ -80,7 +80,9 @@ record per step.
 #include <string>
 #include <vector>
 
-namespace models{ namespace bmi{ namespace protocols{
+namespace models {
+namespace bmi {
+namespace protocols {
 
 using nonstd::expected;
 using nonstd::make_unexpected;
@@ -118,7 +120,7 @@ using ::ngen::serialization::parse_timestamp;
  * ~18 EiB.
  */
 #ifndef NGEN_BMI_MAX_RECORD_PAYLOAD_BYTES
-#  define NGEN_BMI_MAX_RECORD_PAYLOAD_BYTES (1ULL << 30)  // 1 GiB
+#define NGEN_BMI_MAX_RECORD_PAYLOAD_BYTES (1ULL << 30) // 1 GiB
 #endif
 constexpr uint64_t MAX_RECORD_PAYLOAD_BYTES = NGEN_BMI_MAX_RECORD_PAYLOAD_BYTES;
 
@@ -130,34 +132,32 @@ constexpr uint64_t MAX_RECORD_PAYLOAD_BYTES = NGEN_BMI_MAX_RECORD_PAYLOAD_BYTES;
 // on any validation failure of a fully-read prefix. Internal —
 // callers in this header always check the return value, so no
 // nodiscard.
-inline auto read_validated_prefix(
-    std::istream& in,
-    serialization::wire_format::RecordPrefix& prefix)
-    -> expected<Status, std::string>
-{
+inline auto
+read_validated_prefix(std::istream& in, serialization::wire_format::RecordPrefix& prefix)
+    -> expected<Status, std::string> {
     if (const auto s = serialization::wire_format::read_record_prefix(in, prefix);
         s == Status::Eof) {
-        return s;  // EOF or torn prefix — clean stop, propagate
+        return s; // EOF or torn prefix — clean stop, propagate
     }
     if (prefix.magic != serialization::wire_format::RecordPrefix::MAGIC) {
         return make_unexpected(
-            "serialization_record: bad magic 0x" +
-            std::to_string(prefix.magic) +
-            " — file is not a v0.2 record stream or is corrupted "
-            "at the record boundary");
+            "serialization_record: bad magic 0x" + std::to_string(prefix.magic)
+            + " — file is not a v0.2 record stream or is corrupted "
+              "at the record boundary"
+        );
     }
     if (prefix.wire_version != serialization::wire_format::RecordPrefix::VERSION) {
         return make_unexpected(
-            "serialization_record: unsupported wire_version " +
-            std::to_string(prefix.wire_version) +
-            " (this reader supports v" +
-            std::to_string(serialization::wire_format::RecordPrefix::VERSION) + ")");
+            "serialization_record: unsupported wire_version " + std::to_string(prefix.wire_version)
+            + " (this reader supports v"
+            + std::to_string(serialization::wire_format::RecordPrefix::VERSION) + ")"
+        );
     }
     if (prefix.payload_length > MAX_RECORD_PAYLOAD_BYTES) {
         return make_unexpected(
-            "serialization_record: payload_length " +
-            std::to_string(prefix.payload_length) +
-            " exceeds MAX_RECORD_PAYLOAD_BYTES sanity cap");
+            "serialization_record: payload_length " + std::to_string(prefix.payload_length)
+            + " exceeds MAX_RECORD_PAYLOAD_BYTES sanity cap"
+        );
     }
     return Status::Ok;
 }
@@ -177,10 +177,8 @@ inline auto read_validated_prefix(
  *  is post-write — the caller doesn't need to inspect the stream
  *  itself.
  */
-nsel_NODISCARD inline auto write_record(std::ostream& out,
-                                        const SerializationRecord& rec)
-    -> expected<void, std::string>
-{
+nsel_NODISCARD inline auto write_record(std::ostream& out, const SerializationRecord& rec)
+    -> expected<void, std::string> {
     serialization::wire_format::RecordPrefix prefix;
     prefix.time_step            = rec.time_step;
     prefix.simulation_timestamp = rec.simulation_timestamp;
@@ -194,12 +192,12 @@ nsel_NODISCARD inline auto write_record(std::ostream& out,
         out.write(rec.id.data(), static_cast<std::streamsize>(rec.id.size()));
     }
     if (!rec.payload.empty()) {
-        out.write(rec.payload.data(),
-                  static_cast<std::streamsize>(rec.payload.size()));
+        out.write(rec.payload.data(), static_cast<std::streamsize>(rec.payload.size()));
     }
     if (!out) {
-        return make_unexpected(std::string(
-            "serialization_record: stream failed during record write"));
+        return make_unexpected(
+            std::string("serialization_record: stream failed during record write")
+        );
     }
     return {};
 }
@@ -215,10 +213,8 @@ nsel_NODISCARD inline auto write_record(std::ostream& out,
  *          unsupported, or payload_length exceeds
  *          MAX_RECORD_PAYLOAD_BYTES.
  */
-nsel_NODISCARD inline auto read_next_record(std::istream& in,
-                                            SerializationRecord& rec)
-    -> expected<Status, std::string>
-{
+nsel_NODISCARD inline auto read_next_record(std::istream& in, SerializationRecord& rec)
+    -> expected<Status, std::string> {
     serialization::wire_format::RecordPrefix prefix;
     auto p = read_validated_prefix(in, prefix);
     // Propagate any non-Ok outcome unchanged — error arm or Eof.
@@ -230,7 +226,7 @@ nsel_NODISCARD inline auto read_next_record(std::istream& in,
     if (prefix.id_length > 0) {
         in.read(&id[0], static_cast<std::streamsize>(prefix.id_length));
         if (static_cast<uint64_t>(in.gcount()) != prefix.id_length) {
-            return Status::Eof;  // torn id — clean stop
+            return Status::Eof; // torn id — clean stop
         }
     }
 
@@ -238,10 +234,9 @@ nsel_NODISCARD inline auto read_next_record(std::istream& in,
     std::vector<char> payload;
     payload.resize(static_cast<size_t>(prefix.payload_length));
     if (prefix.payload_length > 0) {
-        in.read(payload.data(),
-                static_cast<std::streamsize>(prefix.payload_length));
+        in.read(payload.data(), static_cast<std::streamsize>(prefix.payload_length));
         if (static_cast<uint64_t>(in.gcount()) != prefix.payload_length) {
-            return Status::Eof;  // torn payload — clean stop
+            return Status::Eof; // torn payload — clean stop
         }
     }
 
@@ -270,10 +265,8 @@ nsel_NODISCARD inline auto read_next_record(std::istream& in,
  *          unsupported wire_version, or payload_length exceeding
  *          MAX_RECORD_PAYLOAD_BYTES.
  */
-nsel_NODISCARD inline auto read_record_length(std::istream& in,
-                                              uint64_t& body_out)
-    -> expected<Status, std::string>
-{
+nsel_NODISCARD inline auto read_record_length(std::istream& in, uint64_t& body_out)
+    -> expected<Status, std::string> {
     serialization::wire_format::RecordPrefix prefix;
     auto p = read_validated_prefix(in, prefix);
     // Propagate any non-Ok outcome unchanged — error arm or Eof.
@@ -300,28 +293,27 @@ nsel_NODISCARD inline auto read_record_length(std::istream& in,
 nsel_NODISCARD inline auto read_record_metadata(
     std::istream& in,
     serialization::wire_format::RecordPrefix& prefix_out,
-    std::string& id_out)
-    -> expected<Status, std::string>
-{
+    std::string& id_out
+) -> expected<Status, std::string> {
     auto p = read_validated_prefix(in, prefix_out);
     // Propagate any non-Ok outcome unchanged — error arm or Eof.
     if (!p || p.value() == Status::Eof) return p;
 
     id_out.resize(prefix_out.id_length);
     if (prefix_out.id_length > 0) {
-        in.read(&id_out[0],
-                static_cast<std::streamsize>(prefix_out.id_length));
+        in.read(&id_out[0], static_cast<std::streamsize>(prefix_out.id_length));
         if (static_cast<uint64_t>(in.gcount()) != prefix_out.id_length) {
-            return Status::Eof;  // torn id — clean stop
+            return Status::Eof; // torn id — clean stop
         }
     }
 
     if (prefix_out.payload_length > 0) {
-        in.seekg(static_cast<std::streamoff>(prefix_out.payload_length),
-                 std::ios::cur);
-        if (!in) return Status::Eof;  // stream went bad while seeking
+        in.seekg(static_cast<std::streamoff>(prefix_out.payload_length), std::ios::cur);
+        if (!in) return Status::Eof; // stream went bad while seeking
     }
     return Status::Ok;
 }
 
-}}} // end namespace models::bmi::protocols
+} // namespace protocols
+} // namespace bmi
+} // namespace models

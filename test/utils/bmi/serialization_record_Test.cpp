@@ -29,10 +29,10 @@ regressions are caught without pulling in the adapter stack.
 #include <string>
 #include <vector>
 
-using models::bmi::protocols::SerializationRecord;
-using models::bmi::protocols::write_record;
 using models::bmi::protocols::read_next_record;
+using models::bmi::protocols::SerializationRecord;
 using models::bmi::protocols::Status;
+using models::bmi::protocols::write_record;
 
 namespace {
 // Local helpers — wire-format reads now return
@@ -43,13 +43,19 @@ namespace {
 inline bool ok(const nonstd::expected<Status, std::string>& r) {
     return r.has_value() && r.value() == Status::Ok;
 }
+
 inline bool eof(const nonstd::expected<Status, std::string>& r) {
     return r.has_value() && r.value() == Status::Eof;
 }
-}  // namespace
+} // namespace
 
 TEST(SerializationRecordTest, round_trip_single) {
-    SerializationRecord out{"cat-1", 7, int64_t{1448982000}, {'a', 'b', 'c', '\0', 'x'}};
+    SerializationRecord out{
+        "cat-1",
+        7,
+        int64_t{1448982000},
+        {'a', 'b', 'c', '\0', 'x'}
+    };
     std::stringstream ss(std::ios::in | std::ios::out | std::ios::binary);
     ASSERT_TRUE(write_record(ss, out).has_value());
 
@@ -66,9 +72,9 @@ TEST(SerializationRecordTest, round_trip_multiple_records) {
     // allow reading them back one at a time.
     std::stringstream ss(std::ios::in | std::ios::out | std::ios::binary);
     std::vector<SerializationRecord> written = {
-        {"cat-1", 0, int64_t{0},   {'A'}},
-        {"cat-2", 0, int64_t{0},   {'B', 'B'}},
-        {"cat-1", 1, int64_t{60},  {'A', 'A', 'A'}},
+        {"cat-1", 0, int64_t{0}, {'A'}},
+        {"cat-2", 0, int64_t{0}, {'B', 'B'}},
+        {"cat-1", 1, int64_t{60}, {'A', 'A', 'A'}},
         {"cat-3", 5, int64_t{1452009600}, std::vector<char>(1024, 0x42)},
     };
     for (const auto& rec : written) ASSERT_TRUE(write_record(ss, rec).has_value());
@@ -112,14 +118,14 @@ TEST(SerializationRecordTest, file_backed_append_mode) {
     // run(). Reproduce that exact sequence in a file to catch any interaction
     // between fresh archives and ios::app.
     const auto* info = ::testing::UnitTest::GetInstance()->current_test_info();
-    std::string dir = ::testing::TempDir();
+    std::string dir  = ::testing::TempDir();
     if (!dir.empty() && dir.back() != '/') dir.push_back('/');
     std::string path = dir + "ngen_serialization_record_" + info->name() + ".bin";
     std::remove(path.c_str());
 
     std::vector<SerializationRecord> written = {
-        {"cat-A", 0, int64_t{0},   {'A', 'A'}},
-        {"cat-B", 0, int64_t{0},   {'B'}},
+        {"cat-A", 0, int64_t{0},   {'A', 'A'}          },
+        {"cat-B", 0, int64_t{0},   {'B'}               },
         {"cat-A", 2, int64_t{120}, {'A', 'A', 'A', 'A'}},
     };
     for (const auto& rec : written) {
@@ -153,7 +159,7 @@ TEST(SerializationRecordTest, truncated_payload_stops_cleanly) {
     namespace wf = models::bmi::protocols::serialization::wire_format;
     std::stringstream ss(std::ios::in | std::ios::out | std::ios::binary);
     std::vector<SerializationRecord> written = {
-        {"cat-1", 0, int64_t{0},  {'A', 'A'}},
+        {"cat-1", 0, int64_t{0},  {'A', 'A'}     },
         {"cat-2", 1, int64_t{60}, {'B', 'B', 'B'}},
     };
     for (const auto& rec : written) ASSERT_TRUE(write_record(ss, rec).has_value());
@@ -208,16 +214,15 @@ TEST(SerializationRecordTest, magic_mismatch_returns_error) {
     // word. Subsequent fields are valid-looking but never reached —
     // the reader rejects on the magic check first.
     wf::RecordPrefix prefix;
-    prefix.magic        = 0xDEADBEEFu;  // not 'NGSR'
-    prefix.id_length    = 0;
+    prefix.magic          = 0xDEADBEEFu; // not 'NGSR'
+    prefix.id_length      = 0;
     prefix.payload_length = 0;
     wf::write_record_prefix(ss, prefix);
 
     SerializationRecord rec;
     auto r = read_next_record(ss, rec);
     ASSERT_FALSE(r.has_value());
-    EXPECT_NE(r.error().find("bad magic"), std::string::npos)
-        << "error message was: " << r.error();
+    EXPECT_NE(r.error().find("bad magic"), std::string::npos) << "error message was: " << r.error();
 }
 
 // Oversized payload_length — a byte-flipped or tampered prefix in an

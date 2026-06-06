@@ -9,14 +9,14 @@ the override path that surfaces fallible read-side teardown.
 */
 #include "gtest/gtest.h"
 
+#include "mocks.hpp"
 #include "utilities/serialization/id_predicates.hpp"
 #include "utilities/serialization/record_backend.hpp"
-#include "mocks.hpp"
 
 using namespace ngen::serialization;
-using ngen::serialization::test::TrackingBackend;
 using ngen::serialization::test::FailingBackend;
 using ngen::serialization::test::NoopBackend;
+using ngen::serialization::test::TrackingBackend;
 using Reader = RecordBackend::Reader;
 using Writer = RecordBackend::Writer;
 
@@ -36,7 +36,7 @@ TEST(RecordBackend_reader, multiple_readers_per_backend_are_allowed) {
     TrackingBackend be;
     auto r1 = be.reader(primary_prefix("cat-1"));
     auto r2 = be.reader(primary_prefix("cat-2"));
-    auto r3 = be.reader(IdPredicate{});  // empty / unscoped
+    auto r3 = be.reader(IdPredicate{}); // empty / unscoped
     ASSERT_TRUE(r1.has_value());
     ASSERT_TRUE(r2.has_value());
     ASSERT_TRUE(r3.has_value());
@@ -46,7 +46,7 @@ TEST(RecordBackend_reader, multiple_readers_per_backend_are_allowed) {
 TEST(RecordBackend_reader, factory_failure_propagates_on_error_arm) {
     FailingBackend be;
     be.reader_factory_fails = true;
-    auto r = be.reader(IdPredicate{});
+    auto r                  = be.reader(IdPredicate{});
     ASSERT_FALSE(r.has_value());
     EXPECT_EQ(r.error().kind, BackendError::Kind::IOError);
 }
@@ -68,7 +68,7 @@ TEST(RecordBackend_reader, find_returns_record_on_happy_path) {
 TEST(RecordBackend_reader, find_returns_NotFound_via_error_arm) {
     FailingBackend be;
     be.find_returns_not_found = true;
-    auto r = be.reader(IdPredicate{});
+    auto r                    = be.reader(IdPredicate{});
     ASSERT_TRUE(r.has_value());
 
     auto rec = r.value()->find_latest("missing");
@@ -79,7 +79,7 @@ TEST(RecordBackend_reader, find_returns_NotFound_via_error_arm) {
 TEST(RecordBackend_reader, find_returns_Corrupted_via_error_arm) {
     FailingBackend be;
     be.find_returns_corrupted = true;
-    auto r = be.reader(IdPredicate{});
+    auto r                    = be.reader(IdPredicate{});
     ASSERT_TRUE(r.has_value());
 
     auto rec = r.value()->find_at_step("garbage", 5);
@@ -134,7 +134,7 @@ TEST(RecordBackend_reader, overridden_close_can_succeed) {
 TEST(RecordBackend_reader, overridden_close_can_fail) {
     FailingBackend be;
     be.reader_close_fails = true;
-    auto r = be.reader(IdPredicate{});
+    auto r                = be.reader(IdPredicate{});
     ASSERT_TRUE(r.has_value());
 
     auto rc = r.value()->close();
@@ -149,9 +149,7 @@ TEST(RecordBackend_reader, overridden_close_can_fail) {
 
 TEST(RecordBackend_with_reader, calls_close_on_success_path) {
     TrackingBackend be;
-    auto rc = be.with_reader(IdPredicate{}, [](Reader& r) {
-        (void)r.find_latest("x");
-    });
+    auto rc = be.with_reader(IdPredicate{}, [](Reader& r) { (void)r.find_latest("x"); });
     ASSERT_TRUE(rc.has_value());
     EXPECT_EQ(be.reader_closes_called, 1);
     EXPECT_EQ(be.readers_destroyed, 1);
@@ -161,9 +159,7 @@ TEST(RecordBackend_with_reader, default_close_makes_wrapper_inexpensive) {
     NoopBackend be;
     // With the default no-op close, with_reader works seamlessly even
     // for backends that haven't overridden close().
-    auto rc = be.with_reader(IdPredicate{}, [](Reader& r) {
-        (void)r.find_latest("x");
-    });
+    auto rc = be.with_reader(IdPredicate{}, [](Reader& r) { (void)r.find_latest("x"); });
     EXPECT_TRUE(rc.has_value());
 }
 
@@ -172,7 +168,7 @@ TEST(RecordBackend_with_reader, factory_failure_propagates_without_calling_fn) {
     be.reader_factory_fails = true;
 
     int closure_calls = 0;
-    auto rc = be.with_reader(IdPredicate{}, [&](Reader&) { ++closure_calls; });
+    auto rc           = be.with_reader(IdPredicate{}, [&](Reader&) { ++closure_calls; });
     EXPECT_FALSE(rc.has_value());
     EXPECT_EQ(closure_calls, 0);
 }
@@ -182,28 +178,27 @@ TEST(RecordBackend_with_reader, close_failure_propagates_after_fn_ran) {
     be.reader_close_fails = true;
 
     int closure_calls = 0;
-    auto rc = be.with_reader(IdPredicate{}, [&](Reader& r) {
+    auto rc           = be.with_reader(IdPredicate{}, [&](Reader& r) {
         ++closure_calls;
         (void)r.find_latest("x");
     });
     EXPECT_FALSE(rc.has_value());
     EXPECT_EQ(rc.error().kind, BackendError::Kind::IOError);
-    EXPECT_EQ(closure_calls, 1);   // fn ran before close failed
+    EXPECT_EQ(closure_calls, 1); // fn ran before close failed
 }
 
 TEST(RecordBackend_with_reader, exception_from_fn_unwinds_through_destructor) {
     TrackingBackend be;
-    EXPECT_THROW({
-        (void)be.with_reader(IdPredicate{}, [](Reader&) {
-            throw std::runtime_error("boom");
-        });
-    }, std::runtime_error);
+    EXPECT_THROW(
+        { (void)be.with_reader(IdPredicate{}, [](Reader&) { throw std::runtime_error("boom"); }); },
+        std::runtime_error
+    );
 
     // Reader destroyed; close NOT called (we threw before it).
     EXPECT_EQ(be.readers_destroyed, 1);
     EXPECT_EQ(be.reader_closes_called, 0);
 
     // Backend still usable:
-    auto rc = be.with_reader(IdPredicate{}, [](Reader&){});
+    auto rc = be.with_reader(IdPredicate{}, [](Reader&) {});
     EXPECT_TRUE(rc.has_value());
 }

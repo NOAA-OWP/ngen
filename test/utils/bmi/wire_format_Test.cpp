@@ -37,8 +37,8 @@ namespace wf = models::bmi::protocols::serialization::wire_format;
 TEST(WireFormatPrefix, round_trip) {
     wf::RecordPrefix out;
     out.time_step            = 42;
-    out.simulation_timestamp = 1448982000;   // 2015-12-01T15:00:00 UTC
-    out.checkpoint_epoch     = 1779580800;   // 2026-05-22T15:20:00 UTC
+    out.simulation_timestamp = 1448982000; // 2015-12-01T15:00:00 UTC
+    out.checkpoint_epoch     = 1779580800; // 2026-05-22T15:20:00 UTC
     out.id_length            = 5;
     out.payload_length       = 1024;
 
@@ -48,13 +48,13 @@ TEST(WireFormatPrefix, round_trip) {
 
     wf::RecordPrefix in;
     ASSERT_EQ(wf::read_record_prefix(ss, in), wf::Status::Ok);
-    EXPECT_EQ(in.magic,                out.magic);
-    EXPECT_EQ(in.wire_version,         out.wire_version);
-    EXPECT_EQ(in.time_step,            out.time_step);
+    EXPECT_EQ(in.magic, out.magic);
+    EXPECT_EQ(in.wire_version, out.wire_version);
+    EXPECT_EQ(in.time_step, out.time_step);
     EXPECT_EQ(in.simulation_timestamp, out.simulation_timestamp);
-    EXPECT_EQ(in.checkpoint_epoch,     out.checkpoint_epoch);
-    EXPECT_EQ(in.id_length,            out.id_length);
-    EXPECT_EQ(in.payload_length,       out.payload_length);
+    EXPECT_EQ(in.checkpoint_epoch, out.checkpoint_epoch);
+    EXPECT_EQ(in.id_length, out.id_length);
+    EXPECT_EQ(in.payload_length, out.payload_length);
 }
 
 TEST(WireFormatPrefix, timestamp_fields_handle_pre_unix_epoch) {
@@ -63,7 +63,7 @@ TEST(WireFormatPrefix, timestamp_fields_handle_pre_unix_epoch) {
     // simulations (modeling 1850, 0001 BC, etc.) and any other
     // pre-1970 reference time.
     wf::RecordPrefix out;
-    out.simulation_timestamp = -3786825600;  // 1850-01-01T00:00:00 UTC
+    out.simulation_timestamp = -3786825600; // 1850-01-01T00:00:00 UTC
     out.checkpoint_epoch     = 1779580800;
 
     std::stringstream ss(std::ios::in | std::ios::out | std::ios::binary);
@@ -72,7 +72,7 @@ TEST(WireFormatPrefix, timestamp_fields_handle_pre_unix_epoch) {
     wf::RecordPrefix in;
     ASSERT_EQ(wf::read_record_prefix(ss, in), wf::Status::Ok);
     EXPECT_EQ(in.simulation_timestamp, int64_t{-3786825600});
-    EXPECT_EQ(in.checkpoint_epoch,     int64_t{1779580800});
+    EXPECT_EQ(in.checkpoint_epoch, int64_t{1779580800});
 }
 
 TEST(WireFormatPrefix, prefix_bytes_constant_matches_field_sum) {
@@ -80,10 +80,11 @@ TEST(WireFormatPrefix, prefix_bytes_constant_matches_field_sum) {
     // verify it equals the sum of the underlying field widths
     // (magic, wire_version, time_step, simulation_timestamp,
     //  checkpoint_epoch, id_length, payload_length).
-    EXPECT_EQ(wf::RecordPrefix::PREFIX_BYTES,
-              sizeof(uint32_t) + sizeof(uint8_t)  +
-              sizeof(int64_t)  + sizeof(int64_t)  + sizeof(int64_t) +
-              sizeof(uint16_t) + sizeof(uint64_t));
+    EXPECT_EQ(
+        wf::RecordPrefix::PREFIX_BYTES,
+        sizeof(uint32_t) + sizeof(uint8_t) + sizeof(int64_t) + sizeof(int64_t) + sizeof(int64_t)
+            + sizeof(uint16_t) + sizeof(uint64_t)
+    );
     EXPECT_EQ(wf::RecordPrefix::PREFIX_BYTES, 39u);
 }
 
@@ -92,7 +93,7 @@ TEST(WireFormatPrefix, magic_disk_bytes_spell_NGSR) {
     // ASCII text "NGSR" — usable as a file-type identifier outside
     // of this code (file(1), hex dumps, etc.).
     std::stringstream ss(std::ios::in | std::ios::out | std::ios::binary);
-    wf::RecordPrefix p;  // defaults: magic = MAGIC
+    wf::RecordPrefix p; // defaults: magic = MAGIC
     wf::write_record_prefix(ss, p);
     const std::string bytes = ss.str();
     ASSERT_GE(bytes.size(), 4u);
@@ -125,8 +126,7 @@ TEST(WireFormatPrefix, truncated_prefix_returns_eof) {
     ASSERT_EQ(complete.size(), wf::RecordPrefix::PREFIX_BYTES);
 
     for (std::size_t cut = 0; cut < complete.size(); ++cut) {
-        std::stringstream ss(std::string(complete.data(), cut),
-                             std::ios::in | std::ios::binary);
+        std::stringstream ss(std::string(complete.data(), cut), std::ios::in | std::ios::binary);
         wf::RecordPrefix in;
         EXPECT_EQ(wf::read_record_prefix(ss, in), wf::Status::Eof)
             << "truncation at " << cut << " unexpectedly succeeded";
