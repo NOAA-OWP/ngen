@@ -1,6 +1,6 @@
 # ngen BMI Serialization Protocol
 
-> **Status**: version 0.1.
+> **Status**: version 0.2.
 
 The **Serialization Protocol** is an opt-in convention that lets a BMI
 model participate in a caller's state checkpoint/restore workflow.
