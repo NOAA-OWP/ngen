@@ -27,6 +27,10 @@ set(NGEN_EXT_DIR  "${NGEN_ROOT_DIR}/extern")
 set(NGEN_MOD_DIR  "${NGEN_ROOT_DIR}/cmake")
 list(APPEND CMAKE_MODULE_PATH "${NGEN_MOD_DIR}")
 
+# Always emit compile_commands.json so editor tooling (clangd, etc.) can index
+# the tree regardless of which build configuration is used.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Provides:
 #   (1) finds Git package
 #   (2) Sets ${NGEN_HAS_GIT_DIR} to ON/OFF if ${NGEN_ROOT_DIR}/.git exists

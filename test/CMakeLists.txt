@@ -228,8 +228,10 @@ ngen_add_test(
         utils/serialization/backend_writer_Test.cpp
         utils/serialization/backend_reader_Test.cpp
         utils/serialization/backend_lifetime_Test.cpp
+        utils/serialization/file_backend_Test.cpp
     LIBRARIES
         NGen::serialization
+        NGen::bmi_protocols
 )
 # The mocks header is shared across the four test files above. It
 # lives next to them under test/utils/serialization/; ngen_add_test
@@ -238,6 +240,34 @@ ngen_add_test(
 # resolves against the per-source directory automatically.
 target_include_directories(test_serialization PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/utils/serialization
+)
+
+# Non-POSIX-simulated FileBackend test target. Compiles file_backend.cpp
+# directly (not via the production ngen_bmi_protocols library) with
+# `-DNGEN_HAVE_POSIX_FSYNC=0`, which exercises the same code path a
+# Windows / freestanding build would take. The standalone executable
+# avoids ODR conflicts with the production library's copy of
+# file_backend.cpp (which compiles with the macro set to 1 on POSIX).
+add_executable(test_file_backend_no_fsync
+    utils/serialization/file_backend_no_fsync_Test.cpp
+    ${PROJECT_SOURCE_DIR}/src/utilities/bmi/file_backend.cpp
+)
+target_compile_definitions(test_file_backend_no_fsync PRIVATE
+    NGEN_HAVE_POSIX_FSYNC=0
+)
+target_include_directories(test_file_backend_no_fsync PRIVATE
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/include/utilities/bmi
+    ${PROJECT_SOURCE_DIR}/src/utilities/bmi
+)
+target_link_libraries(test_file_backend_no_fsync PRIVATE
+    NGen::serialization
+    Boost::boost
+    gtest gtest_main
+)
+set_target_properties(test_file_backend_no_fsync PROPERTIES FOLDER test)
+gtest_discover_tests(test_file_backend_no_fsync
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
 )
 
 ########################## BMI Protocol Unit Tests

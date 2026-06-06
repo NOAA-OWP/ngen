@@ -14,20 +14,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
-Version 0.1 (see serialization.hpp)
+Version 0.2 (see serialization.hpp)
 */
 
 #include "serialization.hpp"
+#include "file_backend.hpp"
 #include "serialization_record.hpp"
 
-#include <cerrno>
+#include <chrono>
 #include <cstdint>
-#include <cstring>
 #include <ctime>
 #include <exception>
-#include <fstream>
 #include <memory>
-#include <mutex>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -44,11 +42,6 @@ namespace {
 // protocol instance is bound to one model whose state size is
 // stationary across timesteps.
 constexpr size_t INITIAL_PAYLOAD_BUFFER_BYTES = 4096;
-// Explicit streambuf size. std::ofstream defaults to an implementation-
-// defined (typically small) buffer. At 1M features writing tens of
-// bytes each, an explicit larger buffer amortizes the syscall rate
-// without pinning excessive memory per protocol instance.
-constexpr size_t STREAM_BUFFER_BYTES = 64 * 1024;
 
 // The reserved-variable table (`RESERVED_VARS`) and the
 // `parse_timestamp` helper are shared with the restore protocol
@@ -159,42 +152,10 @@ auto NgenSerializationProtocol::run(const ModelPtr& model, const Context& ctx) c
         return {};
     }
 
-    // Region (1) in the thread-safety map. Everything below this line
-    // touches `out_`, `payload_buffer_`, or the underlying file; a
-    // future threaded driver running `run()` concurrently for different
-    // feature ids on the same protocol instance would race on all
-    // three without this guard.
-    std::lock_guard<std::mutex> lock(io_mutex_);
-
-    // Lazy-open the persistent ofstream on first fire.
-    // Append mode is retained so restarts that reuse
-    // the same path don't clobber earlier records.
-    if (!out_) {
-        stream_buffer_.resize(STREAM_BUFFER_BYTES);
-        auto ofs = std::unique_ptr<std::ofstream>(new std::ofstream);
-        ofs->rdbuf()->pubsetbuf(
-            stream_buffer_.data(),
-            static_cast<std::streamsize>(stream_buffer_.size())
-        );
-        ofs->open(path, std::ios::binary | std::ios::app);
-        if (!ofs->is_open()) {
-            const int saved_errno = errno;
-            std::stringstream ss;
-            ss << "serialization: failed to open checkpoint path '" << path << "' for '"
-               << model->GetComponentName() << "' at timestep " << ctx.current_time_step << " ("
-               << ctx.timestamp << ") for feature id " << ctx.id << ": "
-               << std::strerror(saved_errno);
-            return make_unexpected<ProtocolError>(
-                ProtocolError(is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING, ss.str())
-            );
-        }
-        out_ = std::move(ofs);
-    }
-
     int size = 0;
     try {
-        // Region (2) — (create, free) scope is RAII-managed so any throw
-        // from GetValue, the archive path, or the file write still
+        // (create, free) scope is RAII-managed so any throw from
+        // GetValue, the record build, or the backend write still
         // releases the model-side capture. See ScopedCapture docstring.
         ScopedCapture capture(model);
 
@@ -212,54 +173,67 @@ auto NgenSerializationProtocol::run(const ModelPtr& model, const Context& ctx) c
         // Reusable per-instance buffer. Each protocol instance is bound
         // to exactly one model (each Bmi_Module_Formulation owns its
         // own NgenBmiProtocols), so the state size seen here is
-        // stationary across timesteps for any given instance. After
-        // the first growth to the model's state size, subsequent
-        // `resize()` calls are no-ops — vector::resize does not
-        // reallocate when the new size fits within capacity(). No
-        // explicit `if (size > capacity())` guard is needed.
+        // stationary across timesteps. After the first growth to the
+        // model's state size, subsequent `resize()` calls are no-ops.
         payload_buffer_.resize(static_cast<size_t>(size));
         model->GetValue(SERIALIZATION_STATE_NAME, payload_buffer_.data());
 
-        // Move the payload into a temporary record to write, then
-        // move it back. Zero copies in the happy path; the move dance
-        // preserves the vector's capacity for reuse across timesteps.
-        //
-        // checkpoint_epoch is stamped per-record with the writing
-        // host's wall-clock time. A future Coordinator design will
-        // plumb a coordinator-supplied epoch through so all records
-        // in one save event share a single value; that change happens
-        // at this call site, not in write_record itself.
-        SerializationRecord rec(
+        // Build the Record and hand it to the backend. The move-in /
+        // move-out dance keeps the payload buffer's capacity for
+        // reuse across timesteps. `checkpoint_epoch` is stamped per
+        // record with the writing host's wall-clock time;
+        ::ngen::serialization::Record rec(
             ctx.id,
             static_cast<int64_t>(ctx.current_time_step),
             parse_timestamp(ctx.timestamp),
             std::move(payload_buffer_),
             static_cast<int64_t>(std::time(nullptr))
         );
-        auto wrote      = write_record(*out_, rec);
-        payload_buffer_ = std::move(rec.payload);
-        if (!wrote) {
+
+        // Acquire a thin Writer handle, write, commit, drop. The
+        // backend owns the file descriptor and the write critical
+        // section's mutex; the Writer handle is just an intent
+        // carrier for durability + lifetime. Acquiring is cheap (no
+        // syscalls in the steady state — the fd was opened on first
+        // write and stays open for the backend's lifetime). The
+        // mutex inside the backend serializes records across all
+        // protocol instances sharing the same FileBackend.
+        auto wo = backend_->writer(
+            std::chrono::system_clock::now(),
+            ::ngen::serialization::Durability::relaxed
+        );
+        if (!wo) {
+            payload_buffer_ = std::move(rec.payload);
             std::stringstream ss;
-            ss << "serialization: " << wrote.error() << " for '" << model->GetComponentName()
-               << "' at timestep " << ctx.current_time_step << " (" << ctx.timestamp << ") to '"
-               << path << "'";
+            ss << "serialization: " << wo.error().message << " for '" << model->GetComponentName()
+               << "' at timestep " << ctx.current_time_step << " (" << ctx.timestamp << ")";
+            return make_unexpected<ProtocolError>(
+                ProtocolError(is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING, ss.str())
+            );
+        }
+        auto& writer = *wo.value();
+
+        auto write_outcome = writer.write(rec);
+        // Recover the payload buffer regardless of outcome (the move
+        // into the Record happened unconditionally above).
+        payload_buffer_ = std::move(rec.payload);
+
+        if (!write_outcome) {
+            std::stringstream ss;
+            ss << "serialization: " << write_outcome.error().message << " for '"
+               << model->GetComponentName() << "' at timestep " << ctx.current_time_step << " ("
+               << ctx.timestamp << ")";
             return make_unexpected<ProtocolError>(
                 ProtocolError(is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING, ss.str())
             );
         }
 
-        // Flush per record so the file is tailable in real time and a
-        // crash between records loses at most the last in-flight record,
-        // not a buffer's worth. The persistent-stream optimization still
-        // wins us the open/close syscall amortization — flush() triggers
-        // a write() but not an open(), and the OS coalesces contiguous
-        // writes into disk I/O asynchronously.
-        out_->flush();
-        if (!*out_) {
+        auto commit_outcome = writer.commit();
+        if (!commit_outcome) {
             std::stringstream ss;
-            ss << "serialization: failed to flush record for '" << model->GetComponentName()
-               << "' at timestep " << ctx.current_time_step << " (" << ctx.timestamp << ") to '"
-               << path << "'";
+            ss << "serialization: " << commit_outcome.error().message << " for '"
+               << model->GetComponentName() << "' at timestep " << ctx.current_time_step << " ("
+               << ctx.timestamp << ")";
             return make_unexpected<ProtocolError>(
                 ProtocolError(is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING, ss.str())
             );
@@ -339,7 +313,10 @@ auto NgenSerializationProtocol::initialize(const ModelPtr& model, const Properti
     }
     geojson::PropertyMap top = top_it->second.get_values();
 
-    // Shared path lives at the top level.
+    // Shared path lives at the top level. Local-only: the string is
+    // handed to the backend factory below and the backend owns it
+    // thereafter — the protocol does not need its own copy.
+    std::string path;
     auto path_it = top.find(SERIALIZATION_PATH_KEY);
     if (path_it != top.end()) {
         path = path_it->second.as_string();
@@ -406,6 +383,23 @@ auto NgenSerializationProtocol::initialize(const ModelPtr& model, const Properti
             return error_or_warning(probe.error());
         }
     }
+    // All other initialization is good, build the file backend.
+    // Construction can fail (e.g. corrupted index walk on an
+    // existing file); we surface that as a protocol-level error
+    // and disable rather than register a half-broken backend.
+    // Future work may swap this via a set_backend() setter for
+    // testing or non-file storage.
+    auto be = ::ngen::serialization::FileBackend::create(path);
+    if (!be) {
+        check = false;
+        std::stringstream ss;
+        ss << "serialization: failed to construct backend at '" << path
+           << "': " << be.error().message;
+        return error_or_warning(
+            ProtocolError(is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING, ss.str())
+        );
+    }
+    backend_ = std::move(be.value());
     return {};
 }
 

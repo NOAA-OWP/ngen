@@ -279,10 +279,10 @@ nsel_NODISCARD inline auto read_record_length(std::istream& in, uint64_t& body_o
  *  and skip past the payload, leaving @p in positioned at the
  *  start of the next record (or at EOF).
  *
- *  This is the fast walker `CheckpointIndex` uses to build an
- *  in-memory index without ever reading payload bytes — the cost
- *  per record is `O(prefix + id_size)` regardless of payload
- *  size.
+ *  This is the fast walker a `RecordBackend`'s index builder
+ *  uses to construct an in-memory index without ever reading
+ *  payload bytes — the cost per record is `O(prefix + id_size)`
+ *  regardless of payload size.
  *
  *  @return `Status::Ok` if metadata was read AND the payload was
  *          successfully skipped; `Status::Eof` on EOF or any

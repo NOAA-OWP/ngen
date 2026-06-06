@@ -14,23 +14,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
-Version 0.1 (see deserialization.hpp)
+Version 0.2 (see deserialization.hpp)
 */
 
 #include "deserialization.hpp"
+#include "file_backend.hpp"
 #include "serialization.hpp" // reserved variable name constants + keys
-#include "serialization_record.hpp"
+#include "serialization_record.hpp" // re-exports parse_timestamp into this namespace
+#include "utilities/serialization/id_predicates.hpp"
 
-#include <boost/optional.hpp>
-
-#include <cstdint>
-#include <fstream>
-#include <memory>
-#include <mutex>
 #include <sstream>
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 namespace models {
@@ -39,256 +33,24 @@ namespace protocols {
 
 namespace {
 
-// One record's metadata + where to find it on disk.
-// `file_offset` points at the start of the length prefix; the body
-// begins `RECORD_LENGTH_PREFIX_BYTES` later. The body's own length
-// is not cached here — `read_next_record` reads it back from disk
-// on demand, avoiding a duplicated source of truth and shrinking
-// this struct by 8 bytes per record.
-struct IndexEntry {
-    int64_t time_step            = 0;
-    int64_t simulation_timestamp = 0;
-    uint64_t file_offset         = 0;
-};
+// Translate the v0.1 `id_subset` (vector of primary-identity strings)
+// into the v0.2 IdPredicate the backend's reader() expects. An empty
+// subset becomes the default-constructed empty predicate, meaning
+// "no scope" — find any record. A non-empty subset becomes
+// `any_of({primary_prefix(s) for s in subset})` to preserve the v0.1
+// behavior where the subset matched on primary-identity prefix.
+::ngen::serialization::IdPredicate make_scope(const std::vector<std::string>& id_subset) {
+    if (id_subset.empty()) return {};
 
-// Process-global, per-path index of every record in a checkpoint file.
-// Built lazily on the first restore against a path; subsequent restores
-// against the same path reuse the index. Entries are grouped by id so
-// restoring one feature is O(entries-for-that-id), not O(file).
-//
-// Thread safety
-// -------------
-// The build is guarded by a per-instance mutex so concurrent "first
-// restore" calls against the same path serialize on construction.
-// After `built_` flips, all reads proceed lock-free against the
-// immutable map — the contract is that ids/entries never change
-// after the initial build completes. Callers that need to refresh
-// the index (e.g. because the file has grown) must construct a
-// fresh CheckpointIndex; we don't support in-place invalidation
-// because the target workload is one-restore-per-run.
-class CheckpointIndex {
-  public:
-    explicit CheckpointIndex(std::string path)
-        : path_(std::move(path)) {
+    std::vector<::ngen::serialization::IdPredicate> per_id;
+    per_id.reserve(id_subset.size());
+    for (const auto& s : id_subset) {
+        per_id.push_back(::ngen::serialization::primary_prefix(s));
     }
-
-    // Build the index if it hasn't been built yet. When @p id_subset
-    // is non-empty the build caps memory by retaining only records
-    // whose id is in that subset; an empty vector means "index
-    // every record" — that's the sole signal the method takes, no
-    // optional/pointer wrapper needed.
-    //
-    // Returns `void` by design: an unopenable file, a truncated
-    // record, and a corrupt record all resolve to "stop the walk
-    // cleanly and leave the index with whatever records were
-    // successfully read." The caller surfaces any subsequent
-    // "no matching record for id X" through the protocol's
-    // standard warning/error channel — there is no additional
-    // failure reason for `ensure_built` itself to report.
-    void ensure_built(const std::vector<std::string>& id_subset) {
-        std::lock_guard<std::mutex> lock(build_mutex_);
-        if (built_) return;
-
-        std::ifstream in(path_, std::ios::binary);
-        if (!in) {
-            // Missing or unreadable file: treat as "empty index". The
-            // downstream `find()` returns no match and the protocol's
-            // standard "no matching record" error is raised.
-            built_ = true;
-            return;
-        }
-
-        // Pre-hash the subset for O(1) membership tests during the walk.
-        //
-        // Matching is on the *primary-identity prefix*: the substring
-        // up to the first `:` or `.` in the id. Record ids are commonly
-        // composite — a primary identity followed by one or more
-        // qualifiers, e.g.
-        //   "primary:qualifier"
-        //   "primary.sub:qualifier1:qualifier2"
-        // while `id_subset` is typically authored in terms of just the
-        // primary identity, since callers don't necessarily know which
-        // qualifiers a given record producer will layer on. Normalizing
-        // both sides to the prefix lets a subset like {"primary"} match
-        // either composite form above. When neither side contains a
-        // delimiter the comparison falls back to plain equality.
-        auto primary_prefix = [](const std::string& s) -> std::string {
-            const auto d = s.find_first_of(":.");
-            return (d == std::string::npos) ? s : s.substr(0, d);
-        };
-        std::unordered_set<std::string> subset_hash;
-        if (!id_subset.empty()) {
-            subset_hash.reserve(id_subset.size());
-            for (const auto& s : id_subset) subset_hash.insert(primary_prefix(s));
-        }
-        const bool have_subset = !subset_hash.empty();
-
-        while (true) {
-            const auto pos_stream = in.tellg();
-            if (pos_stream == std::streampos(-1)) break;
-            const uint64_t pos = static_cast<uint64_t>(pos_stream);
-
-            // Read the fixed-size prefix + id and seekg past the
-            // payload — never touch payload bytes during an
-            // index build. Cost per record is O(prefix +
-            // id_size), regardless of payload size. Malformed
-            // records inside an otherwise intact file are
-            // treated the same as truncation: stop the walk
-            // cleanly; any records already indexed remain
-            // usable.
-            serialization::wire_format::RecordPrefix prefix;
-            std::string id;
-            auto r = read_record_metadata(in, prefix, id);
-            // Any non-Ok outcome — corrupt record or EOF — stops the walk.
-            if (!r || r.value() == Status::Eof) break;
-
-            if (have_subset && subset_hash.count(primary_prefix(id)) == 0) {
-                // Skip: this record's primary-identity prefix is not in
-                // the caller's subset of interest. See `primary_prefix`
-                // above for the normalization rationale.
-                continue;
-            }
-
-            IndexEntry entry;
-            entry.time_step            = prefix.time_step;
-            entry.simulation_timestamp = prefix.simulation_timestamp;
-            entry.file_offset          = pos;
-            by_id_[std::move(id)].push_back(entry);
-        }
-
-        built_ = true;
-    }
-
-    // Look up the single record matching @p id and the caller's
-    // match mode. Returns a copy of the matching `IndexEntry` (24
-    // bytes — cheap) rather than a pointer into the internal map,
-    // so callers don't have to reason about the entry's lifetime
-    // relative to the index. `boost::optional` is the C++14 way
-    // to express "zero or one" — an empty optional signals no
-    // match.
-    auto find(
-        const std::string& id,
-        bool by_timestamp,
-        int64_t target_simulation_timestamp,
-        bool step_latest,
-        int target_step
-    ) const -> boost::optional<IndexEntry> {
-        auto it = by_id_.find(id);
-        if (it == by_id_.end()) return boost::none;
-        const auto& entries = it->second;
-        if (entries.empty()) return boost::none;
-
-        if (by_timestamp) {
-            for (const auto& e : entries) {
-                if (e.simulation_timestamp == target_simulation_timestamp) return e;
-            }
-            return boost::none;
-        }
-        if (step_latest) {
-            boost::optional<IndexEntry> best;
-            for (const auto& e : entries) {
-                if (!best || e.time_step > best->time_step) best = e;
-            }
-            return best;
-        }
-        for (const auto& e : entries) {
-            if (e.time_step == target_step) return e;
-        }
-        return boost::none;
-    }
-
-    // Read the archive bytes for an entry and deserialize back to a
-    // SerializationRecord. Uses a fresh ifstream per call so concurrent
-    // restores of distinct features don't lock each other out on a
-    // shared file handle.
-    //
-    // The record-format layer owns the prefix + id + payload
-    // read sequence via `read_next_record`; we seek to the start
-    // of the record (its fixed-size prefix) and let the helper do
-    // the rest. `read_next_record` itself validates the magic
-    // bytes, the wire_version, and enforces
-    // `MAX_RECORD_PAYLOAD_BYTES`, surfacing any invariant
-    // violation on the error arm of its returned `expected<>`.
-    auto load(const IndexEntry& entry) const -> expected<SerializationRecord, std::string> {
-        std::ifstream in(path_, std::ios::binary);
-        if (!in) {
-            return make_unexpected(
-                "checkpoint index: unable to reopen '" + path_ + "' for payload read"
-            );
-        }
-        in.seekg(static_cast<std::streamoff>(entry.file_offset), std::ios::beg);
-        if (!in) {
-            return make_unexpected(
-                "checkpoint index: seek to record start failed in '" + path_ + "'"
-            );
-        }
-
-        SerializationRecord rec;
-        auto r = read_next_record(in, rec);
-        if (!r) {
-            return make_unexpected(
-                std::string("checkpoint index: failed to parse record body: ") + r.error()
-            );
-        }
-        if (r.value() == Status::Eof) {
-            return make_unexpected(
-                "checkpoint index: record missing or truncated at offset "
-                + std::to_string(entry.file_offset) + " in '" + path_ + "'"
-            );
-        }
-        return rec;
-    }
-
-  private:
-    std::string path_;
-    std::mutex build_mutex_;
-    bool built_ = false;
-    std::unordered_map<std::string, std::vector<IndexEntry>> by_id_;
-};
-
-// One CheckpointIndex per distinct file path, kept in a file-scope
-// cache so N protocol instances pointing at the same `path` share
-// the single index. If each instance owned its own, the restore-
-// time O(N) build would be paid N times, reintroducing the O(N²)
-// cost the index exists to avoid.
-//
-// The cache holds its entries until program exit by default. For
-// memory-sensitive runs where restores happen only during model
-// initialization — the common case — call
-// `clear_checkpoint_indexes()` (see deserialization.hpp) once the
-// last restore completes; that releases every cached index
-// immediately. Any subsequent restore against a freed path
-// rebuilds lazily on next access.
-//
-// The mutex + map live at namespace scope (not function-local) so
-// the eviction helper below can reach the same storage the lookup
-// uses. Both have internal linkage via the anonymous namespace.
-std::mutex g_index_cache_mu;
-std::unordered_map<std::string, std::unique_ptr<CheckpointIndex>> g_index_cache;
-
-CheckpointIndex& checkpoint_index_for(const std::string& path) {
-    std::lock_guard<std::mutex> lock(g_index_cache_mu);
-    // `operator[]` inserts a default (null) `unique_ptr` on first
-    // call for this `path` and returns a reference to the slot.
-    // On subsequent calls for the same `path` the slot is already
-    // populated, so the `if (!slot)` branch is skipped and we
-    // reuse the existing index.
-    auto& slot = g_index_cache[path];
-    if (!slot) {
-        slot = std::unique_ptr<CheckpointIndex>(new CheckpointIndex(path));
-    }
-    return *slot;
+    return ::ngen::serialization::any_of(std::move(per_id));
 }
 
 } // namespace
-
-void clear_checkpoint_indexes() {
-    // Reach into the anonymous-namespace cache; fine from a linkage
-    // standpoint since both this function and the cache live in the
-    // same translation unit.
-    std::lock_guard<std::mutex> lock(g_index_cache_mu);
-    g_index_cache.clear();
-}
 
 NgenDeserializationProtocol::NgenDeserializationProtocol(
     const ModelPtr& model,
@@ -319,33 +81,45 @@ auto NgenDeserializationProtocol::run(const ModelPtr& model, const Context& ctx)
     }
 
     try {
-        CheckpointIndex& index = checkpoint_index_for(path);
-        // `ensure_built` is a no-op after the first call per path, and
-        // never fails — an unopenable file leaves an empty index and
-        // the `find` below surfaces a standard "no matching record"
-        // warning. See `CheckpointIndex::ensure_built` docstring.
-        index.ensure_built(id_subset);
-
-        auto entry =
-            index.find(ctx.id, by_timestamp, target_simulation_timestamp, step_latest, target_step);
-        if (!entry) {
+        // Open a Reader scoped to exactly THIS feature's id. Two
+        // layers of filtering apply:
+        //   - Construction scope (on the FileBackend): bounds the
+        //     index to the realization's id_subset. Set once at
+        //     backend create-time.
+        //   - Read scope (on this Reader): bounds THIS lookup to
+        //     the one feature id the engine handed us via ctx.id.
+        //     Per-run, single-feature. A Reader scoped this way
+        //     cannot return any other id's record even if
+        //     accidentally asked.
+        // The Reader is short-lived: open, do one find_*, drop.
+        auto ro = backend_->reader(::ngen::serialization::exact_id(ctx.id));
+        if (!ro) {
             std::stringstream ss;
-            ss << "deserialization: no matching record for id '" << ctx.id << "'";
-            if (by_timestamp) {
-                ss << " at timestamp '" << target_simulation_timestamp << "'";
-            } else if (!step_latest) {
-                ss << " at step " << target_step;
-            }
-            ss << " in '" << path << "'";
+            ss << "deserialization: " << ro.error().message << " for feature id " << ctx.id;
             return make_unexpected<ProtocolError>(
                 ProtocolError(is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING, ss.str())
             );
         }
+        auto& reader = *ro.value();
 
-        auto loaded = index.load(*entry);
-        if (!loaded.has_value()) {
+        // Dispatch on match mode.
+        ::nonstd::expected<::ngen::serialization::Record, ::ngen::serialization::BackendError>
+            loaded;
+        if (by_timestamp) {
+            loaded = reader.find_at_simulation_timestamp(ctx.id, target_simulation_timestamp);
+        } else if (step_latest) {
+            loaded = reader.find_latest(ctx.id);
+        } else {
+            loaded = reader.find_at_step(ctx.id, target_step);
+        }
+
+        if (!loaded) {
+            // NotFound is the typical case (no matching record);
+            // Corrupted and IOError fall through to the same
+            // protocol-level error path. The backend's message
+            // already includes the lookup criteria and path.
             std::stringstream ss;
-            ss << "deserialization: " << loaded.error() << " for feature id " << ctx.id;
+            ss << "deserialization: " << loaded.error().message;
             return make_unexpected<ProtocolError>(
                 ProtocolError(is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING, ss.str())
             );
@@ -426,6 +200,10 @@ auto NgenDeserializationProtocol::initialize(const ModelPtr& model, const Proper
     }
     geojson::PropertyMap top = top_it->second.get_values();
 
+    // The path is local-only: handed to the backend factory below
+    // and owned by the backend thereafter. The protocol does not
+    // need its own copy.
+    std::string path;
     auto path_it = top.find(SERIALIZATION_PATH_KEY);
     if (path_it != top.end()) {
         path = path_it->second.as_string();
@@ -450,26 +228,33 @@ auto NgenDeserializationProtocol::initialize(const ModelPtr& model, const Proper
         is_fatal = _it->second.as_boolean();
     }
 
-    // Optional id_subset: scope the checkpoint index to a known set of ids.
-    // Callers that omit this key pay the full-file index cost on first
-    // restore but don't have to enumerate their features up front; callers
-    // that supply it get a smaller in-memory index proportional to the
-    // subset.
+    // Optional id_subset: scope the per-Reader index to a known set
+    // of ids. Callers that omit this key pay the full-file index cost
+    // on every restore but don't have to enumerate their features up
+    // front; callers that supply it get a smaller in-memory index
+    // proportional to the subset.
+    //
+    // We translate the parsed strings into the backend's IdPredicate
+    // here, once, and store the resulting predicate as `id_scope`.
+    // The predicate captures the necessary strings internally (one
+    // `primary_prefix(s)` per entry, composed via `any_of`), so the
+    // raw vector is not kept around.
     auto subset_it = restore.find(DESERIALIZATION_ID_SUBSET_KEY);
     if (subset_it != restore.end()) {
         try {
+            std::vector<std::string> entries_str;
             auto entries = subset_it->second.as_list();
-            id_subset.clear();
-            id_subset.reserve(entries.size());
+            entries_str.reserve(entries.size());
             for (const auto& e : entries) {
-                id_subset.push_back(e.as_string());
+                entries_str.push_back(e.as_string());
             }
+            id_scope = make_scope(entries_str);
         } catch (const std::exception&) {
             // A malformed id_subset is non-fatal — fall through to
             // "index everything" semantics. The property tree layer
             // throws on type mismatch; we'd rather surface that as a
             // warning than abort restore entirely.
-            id_subset.clear();
+            id_scope = {};
         }
     }
 
@@ -534,6 +319,23 @@ auto NgenDeserializationProtocol::initialize(const ModelPtr& model, const Proper
             return error_or_warning(probe.error());
         }
     }
+    // Default backend is FileBackend. Pass `id_scope` as the
+    // construction-time scope so the FIRST protocol that creates
+    // the path-keyed backend bounds the index to the configs
+    // intended subset. Subsequent protocols on the same path
+    // receive the cached backend (the scope arg they pass is
+    // ignored at the cache hit.
+    auto be = ::ngen::serialization::FileBackend::create(path, id_scope);
+    if (!be) {
+        check = false;
+        std::stringstream ss;
+        ss << "deserialization: failed to construct backend at '" << path
+           << "': " << be.error().message;
+        return error_or_warning(
+            ProtocolError(is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING, ss.str())
+        );
+    }
+    backend_ = std::move(be.value());
     return {};
 }
 

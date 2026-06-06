@@ -72,13 +72,15 @@ inline void apply_config(geojson::PropertyMap&       child,
  *        of catchment identifiers that this realization will actually
  *        instantiate, when the user hasn't supplied one.
  *
- * Why — at scale the `CheckpointIndex` memory footprint is proportional
- * to the number of records it indexes. A run that only needs records
- * for the local rank's partition shouldn't pay the memory cost of
- * indexing every record in the shared checkpoint file. The protocol
- * already honors `id_subset` as a manual knob; this helper fills it in
- * automatically so the optimization applies without requiring the
- * caller to enumerate features by hand.
+ * Why — at scale the restore-side backend's per-Reader in-memory
+ * index has a memory footprint proportional to the number of records
+ * it indexes. A run that only needs records for the local rank's
+ * partition shouldn't pay the memory cost of indexing every record
+ * in the shared checkpoint file. The protocol already honors
+ * `id_subset` as a manual knob (it is forwarded to the backend as an
+ * `IdPredicate` that filters at index-build time); this helper fills
+ * it in automatically so the optimization applies without requiring
+ * the caller to enumerate features by hand.
  *
  * No-op if any of the following hold (deliberately conservative):
  *   - no `serialization` block is present in @p global_configs;
