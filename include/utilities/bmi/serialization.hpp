@@ -14,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
-Version 0.1
+Version 0.2
 Interface of the save-side ngen BMI state serialization protocol. Pairs
 with NgenDeserializationProtocol (restore, see deserialization.hpp) and
 shares the on-disk SerializationRecord format (see serialization_record.hpp).
@@ -22,9 +22,8 @@ Record identity per run() call is taken from Context::id.
 */
 #pragma once
 
-#include <fstream>
+#include "utilities/serialization/record_backend.hpp"
 #include <memory>
-#include <mutex>
 #include <nonstd/expected.hpp>
 #include <protocol.hpp>
 #include <string>
@@ -82,34 +81,17 @@ class NgenSerializationProtocol : public NgenBmiProtocol {
      * file; one entity (id) may have at most one record per time step but
      * may have records at multiple steps.
      *
-     * Thread safety — three regions to reason about
-     * ---------------------------------------------
-     * Each region is documented at its point of use inside the .cpp; this
-     * header lists them as a map so readers can find the relevant comment.
+     * Storage I/O is delegated to a `RecordBackend`; concurrency
+     * and I/O sharing across instances are the backend's contract.
+     * The BMI capture scope (`SetValue(create) ... SetValue(free)`)
+     * is per-call and managed by an RAII `ScopedCapture` guard so
+     * an exception partway through still releases the model-side
+     * resources.
      *
-     *   (1) Per-instance I/O state (the persistent ofstream and the
-     *       reusable payload buffer): guarded by `io_mutex_` because a
-     *       future threaded driver may invoke `run()` for different ids
-     *       concurrently against the same protocol instance. Without the
-     *       mutex, two threads could interleave archive bytes on the
-     *       stream and corrupt the file.
-     *
-     *   (2) Per-instance BMI capture scope (`SetValue(create) ... SetValue(free)`):
-     *       the engine currently owns the single serial driver, so the
-     *       BMI model is not concurrently accessed across threads. Even
-     *       so, the RAII `ScopedCapture` guard makes the create/free
-     *       scope exception-safe and self-documenting — one (create,
-     *       free) pair per call, period.
-     *
-     *   (3) Cross-instance coordination: multiple NgenSerializationProtocol
-     *       instances pointed at the same `path` are NOT coordinated by
-     *       this class. Concurrent writers across instances would race
-     *       on the underlying file. If a driver ever fans out writes to
-     *       the same path across threads or processes, that driver must
-     *       introduce the coordination layer (e.g. a shared mutex for
-     *       threads, or per-rank file naming for MPI — see the
-     *       `{{rank}}` templating in the docs). The protocol stays out
-     *       of that business on purpose.
+     * Cross-process coordination (separate processes writing to
+     * the same file) is not this protocol's concern — engines
+     * that fan writes out across processes own that coordination,
+     * typically via per-rank file naming.
      */
   public:
     NgenSerializationProtocol(const ModelPtr& model, const Properties& properties);
@@ -148,22 +130,22 @@ class NgenSerializationProtocol : public NgenBmiProtocol {
     bool is_supported() const override final;
 
   private:
-    std::string path;
     int frequency;
     bool supported = false;
     bool check;
     bool is_fatal;
 
-    // See region (1) in the class-level thread-safety map. All four
-    // members below are mutated from the `const` override of `run()`
-    // via the `mutable` specifier; `io_mutex_` is the one that makes
-    // that mutation safe to do across threads.
-    mutable std::mutex io_mutex_;
-    mutable std::unique_ptr<std::ofstream> out_;
+    // Storage backend, acquired in initialize() via a
+    // `RecordBackend`-typed factory. `nullptr` means save is
+    // disabled / unconfigured.
+    std::shared_ptr<::ngen::serialization::RecordBackend> backend_;
+
+    // Reusable per-instance scratch for the model's GetValue
+    // payload. Lives across `run()` calls — once the model's
+    // state size has stabilized (which happens after the first
+    // call), subsequent resize() calls are no-ops and avoid
+    // re-allocation. Mutated from the const override of run().
     mutable std::vector<char> payload_buffer_;
-    // Explicit stream buffer sized for a "typical" record prefix —
-    // keeps ofstream from reallocating its internal buffer under load.
-    mutable std::vector<char> stream_buffer_;
 };
 
 } // namespace protocols
