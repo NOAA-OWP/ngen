@@ -1,6 +1,6 @@
 # ngen Serialization
 
-> **Status**: version 0.1 — both save (`NgenSerializationProtocol`) and restore (`NgenDeserializationProtocol`) are implemented and tested in `test_bmi_protocols`.
+> **Status**: version 0.2 — both save (`NgenSerializationProtocol`) and restore (`NgenDeserializationProtocol`) are implemented and tested in `test_bmi_protocols` and `test_serialization`. v0.2 introduces the engine-agnostic `ngen::serialization` library and routes both protocols through an abstract `RecordBackend` (default: `FileBackend`); the on-disk `wire_version=1` format is unchanged.
 
 This document covers ngen's **internals** for checkpoint/restore: the wire
 format the engine writes, how the protocol is configured in a realization,
@@ -63,9 +63,7 @@ record begins with the four ASCII bytes `N`, `G`, `S`, `R`. A hex dump
 or `file(1)` matcher needs nothing else to recognize the format.
 
 The prefix layout for `wire_version = 1` (39 bytes, little-endian,
-no compiler padding — each field is written byte-by-byte; see
-`src/utilities/bmi/wire_format.hpp` for the field-level
-implementation):
+no compiler padding):
 
 ```
 offset    size  field                  type    notes
@@ -149,9 +147,9 @@ versioning embed their own header inside the payload bytes; see the
   a v0.2 record stream" diagnostic — corruption is distinguished from
   truncation.
 - **Cross-host portability.** The prefix's integer fields are written
-  byte-by-byte in little-endian order, so the bytes on disk are
-  identical regardless of host endianness or word size. The signed
-  fields assume two's-complement representation; two canary tests in
+  in little-endian order, so the bytes on disk are identical
+  regardless of host endianness or word size. The signed fields
+  assume two's-complement representation; canary tests in
   `test_bmi_protocols` verify this at run time on each deployment
   host. Payload portability is the model's responsibility — see
   `BMI_SERIALIZATION_PROTOCOL.md`.
@@ -706,14 +704,10 @@ The fixed-prefix layout exists for three reasons:
    boundary (prefix, id, or payload) and stops cleanly at the last
    intact record rather than throwing. Checkpoint files remain
    usable after an unclean shutdown.
-2. **Fast index skipping.** The restore-side `CheckpointIndex` walks
-   the file via `read_record_metadata` — read the prefix and id,
-   `seekg` past the payload, never read payload bytes. Per-record
-   cost is O(prefix + id_size) regardless of payload size. The v0.1
-   format required reading and parsing the full boost archive
-   (payload included) to extract metadata; the v0.2 separation makes
-   index builds independent of payload sizes. For multi-MB or
-   multi-GB ML-state payloads, this is orders of magnitude faster.
+2. **Fast index skipping.** The restore-side backend's index builder
+   reads only the prefix and id per record and seeks past the
+   payload — per-record cost is O(prefix + id_size), independent of
+   payload size.
 3. **Append-only safety.** Records are individually complete, so
    multiple save protocol instances can append to the same file
    without format-level coordination. Writer-level coordination (for
@@ -723,16 +717,14 @@ The fixed-prefix layout exists for three reasons:
 Both timestamps on disk (`simulation_timestamp` and
 `checkpoint_epoch`) are stored as `int64_t` signed seconds since the
 Unix epoch. The fixed 8-byte width keeps record headers predictable
-and makes `CheckpointIndex` entries compact.
+and makes backend-side index entries compact.
 
-The format does not use `boost::serialization` — every field is
-written byte-by-byte in little-endian order via the library-internal
-`byte_io` primitives. This makes the bytes identical across hosts
-(no host-endian or word-size assumptions embedded in the file) and
-removes any boost dependency from the I/O path. The two's-complement
-assumption for the three signed fields is verified at run time by
-two canary tests in `test_bmi_protocols` (see
-`src/utilities/bmi/wire_format.hpp` for the full discussion).
+Every field is written in little-endian order, keeping the bytes
+on disk identical across hosts regardless of native endianness or
+word size. Two's-complement representation for the three signed
+fields is verified at run time by canary tests in
+`test_bmi_protocols`. See `src/utilities/bmi/wire_format.hpp` for
+the design rationale.
 
 ### Save cost model
 
@@ -755,32 +747,70 @@ within the budget of a single shared NFS volume for most workloads.
 
 ### Restore cost model
 
-The restore protocol uses a process-global `CheckpointIndex` keyed by
-file path. The first restore against a path builds an
-`id → [(time_step, timestamp, file_offset, length)]` map in a single
-O(records) pass. Subsequent restores are O(entries-for-that-id), which
-is O(1) in the common "one record per feature" case.
+`FileBackend` is **shared per path** via a process-static
+registry. The first protocol that calls
+`FileBackend::create(path, ...)` for a given path builds the
+backend, walks the file once to construct an in-memory index
+`id → [(time_step, simulation_timestamp, checkpoint_epoch, file_offset)]`,
+and registers the resulting `shared_ptr` under a `weak_ptr` slot.
+Subsequent protocols on the same realization (all configured
+against the same `serialization.path` by realization-level
+inheritance) receive the same `shared_ptr` and share the index
+without rebuilding. When the last protocol drops its handle, the
+backend is destroyed and the registry slot is opportunistically
+pruned.
 
-This matters because the naive "every feature scans the whole file"
-approach is O(features × records). At 1 M features with 1 M records in
-the file that's `1e12` record reads — unfeasible. The indexed approach
-is `1e6` reads for the build plus `1e6` O(1) lookups, total `2e6`
-record reads, which is ~six orders of magnitude better.
+Two-layer scope filtering applies:
 
-Payload bytes are not cached in memory: the index stores `(offset,
-length)` pairs and the restore issues a `seek + read` per feature.
-That keeps the index size proportional to the number of records
-rather than total payload bytes.
+1. **Construction scope** — passed to `FileBackend::create(path,
+   scope)`. The first caller's `id_subset` (or its auto-derived
+   equivalent — see `id_subset` for memory-bounded restores
+   below) bounds *which records enter the index*. Records outside
+   this scope are never indexed; backend memory is proportional
+   to the realization's subset, not the whole file.
 
-The cache survives every protocol instance by default — restores that
-happen mid-run (e.g. a multi-phase driver that restores and then
-keeps running against the same file) reuse the indexes without a
-second build. In memory-constrained runs where restores happen only
-during initialization and the index is dead weight afterward, call
-`models::bmi::protocols::clear_checkpoint_indexes()` (declared in
-`include/utilities/bmi/deserialization.hpp`) once the
-initialization-phase restore sequence completes. The cache is
-released immediately; any later restore relazily rebuilds from disk.
+2. **Read scope** — per-Reader, set per `run()` call to
+   `exact_id(ctx.id)`. Each `run()` opens a Reader scoped to the
+   single feature it's restoring. A Reader cannot return any
+   other id's record even if accidentally asked — defense in
+   depth against bugs where the wrong id flows to a find call.
+
+For N catchments restored from one file:
+
+- Index walks per path: **1** (at first `create()`).
+- Per-`run()` cost: O(log records-for-this-id) lookup on the
+  shared index + `seek+read` on a private ifstream + per-Reader
+  predicate check.
+- Total restore-phase walks across all N protocols: **1**, not
+  N — the file is scanned once when the shared backend is first
+  constructed, then per-`run()` calls hit the in-memory index.
+
+Payload bytes are not cached in memory: the index stores
+`(offset, record_metadata)` entries and Readers issue a `seek +
+read` per feature on their own private `ifstream`. That keeps
+the index size proportional to records-in-scope rather than
+total payload bytes.
+
+No process-global cache or explicit eviction hook is needed —
+backend lifetime is governed by `weak_ptr` reference counting in
+the registry. When all protocols on a realization drop their
+backends (typically end of run), the backend dies and its file
+descriptor is closed automatically.
+
+**Multi-phase restore (different target, not a rewind).** Calling
+`run()` twice on the *same* `NgenDeserializationProtocol` instance
+re-applies the same record — the match-mode (step / timestamp /
+latest) is set once in `initialize()` and the second call rewinds
+the model to the original restore point rather than progressing
+to a later checkpoint. To restore from a *different* record later
+in the run, construct a separate `NgenDeserializationProtocol`
+instance configured for the new target. Each instance carries its
+own match-mode state and its own backend handle and is
+independent of the others, so a multi-phase driver can hold
+multiple instances pointed at different (step/timestamp) targets
+and fire them in sequence. Reusing one instance with a different
+config in mind is not supported — there is no public API to
+re-configure a protocol after `initialize()`.
 
 ### `id_subset` for memory-bounded restores
 
@@ -799,10 +829,12 @@ present in the checkpoint file, set
 }
 ```
 
-The `CheckpointIndex` build drops records whose id is not in the
-subset, keeping the index size proportional to the subset size rather
-than the file size. For a run restoring 10 k features from a 10 M
-feature checkpoint, the subset cuts index memory by ~1000×.
+The backend's index builder drops records whose id is not in the
+subset (the protocol forwards `id_subset` to the backend as an
+`IdPredicate` that filters at index-build time), keeping the index
+size proportional to the subset size rather than the file size.
+For a run restoring 10 k features from a 10 M feature checkpoint,
+the subset cuts index memory by ~1000×.
 
 **Auto-derivation from the hydrofabric.** When `id_subset` is not
 supplied but a realization-level `serialization.restore` block *is*
