@@ -18,15 +18,15 @@ original holder of the backend has released its reference.
 */
 #include "gtest/gtest.h"
 
+#include "mocks.hpp"
 #include "utilities/serialization/id_predicates.hpp"
 #include "utilities/serialization/record_backend.hpp"
-#include "mocks.hpp"
 
 #include <memory>
 
 using namespace ngen::serialization;
-using ngen::serialization::test::SnapshotBackend;
 using ngen::serialization::test::SharedStateBackend;
+using ngen::serialization::test::SnapshotBackend;
 using Reader = RecordBackend::Reader;
 using Writer = RecordBackend::Writer;
 
@@ -55,11 +55,13 @@ TEST(SubHandleLifetime, snapshot_readers_with_different_tags_dont_alias) {
     std::unique_ptr<Reader> reader_a;
     std::unique_ptr<Reader> reader_b;
     {
-        SnapshotBackend be_a; be_a.tag = 1;
-        SnapshotBackend be_b; be_b.tag = 2;
+        SnapshotBackend be_a;
+        be_a.tag = 1;
+        SnapshotBackend be_b;
+        be_b.tag = 2;
         reader_a = std::move(be_a.reader(IdPredicate{}).value());
         reader_b = std::move(be_b.reader(IdPredicate{}).value());
-    }   // both backends destroyed
+    } // both backends destroyed
 
     EXPECT_EQ(reader_a->find_latest("x").value().id, "snapshot-tag-1");
     EXPECT_EQ(reader_b->find_latest("x").value().id, "snapshot-tag-2");
@@ -73,16 +75,15 @@ TEST(SubHandleLifetime, shared_state_reader_keeps_backend_alive_after_local_drop
     std::weak_ptr<SharedStateBackend> weak;
     std::unique_ptr<Reader> reader;
     {
-        auto be = std::make_shared<SharedStateBackend>();
+        auto be             = std::make_shared<SharedStateBackend>();
         be->shared_resource = "alive-after-local-drop";
-        weak = be;
-        reader = std::move(be->reader(IdPredicate{}).value());
+        weak                = be;
+        reader              = std::move(be->reader(IdPredicate{}).value());
         // `be` goes out of scope here; the Reader's shared_ptr is the
         // only ref left.
     }
     // Backend must still be alive (reader holds the only ref):
-    EXPECT_FALSE(weak.expired())
-        << "backend died despite a live Reader holding shared_ptr";
+    EXPECT_FALSE(weak.expired()) << "backend died despite a live Reader holding shared_ptr";
 
     // Reader can still read through the shared backend:
     auto rec = reader->find_latest("x");
@@ -91,8 +92,7 @@ TEST(SubHandleLifetime, shared_state_reader_keeps_backend_alive_after_local_drop
 
     // Drop the reader; backend must finally die.
     reader.reset();
-    EXPECT_TRUE(weak.expired())
-        << "backend leaked — no live sub-handles, no local ref";
+    EXPECT_TRUE(weak.expired()) << "backend leaked — no live sub-handles, no local ref";
 }
 
 TEST(SubHandleLifetime, shared_state_writer_also_keeps_backend_alive) {
@@ -103,9 +103,9 @@ TEST(SubHandleLifetime, shared_state_writer_also_keeps_backend_alive) {
     std::unique_ptr<Writer> writer;
     {
         auto be = std::make_shared<SharedStateBackend>();
-        weak = be;
-        writer = std::move(be->writer(std::chrono::system_clock::now(),
-                                      Durability::relaxed).value());
+        weak    = be;
+        writer =
+            std::move(be->writer(std::chrono::system_clock::now(), Durability::relaxed).value());
     }
     EXPECT_FALSE(weak.expired());
     EXPECT_TRUE(writer->write(Record{}).has_value());
@@ -119,9 +119,9 @@ TEST(SubHandleLifetime, shared_state_multiple_subhandles_share_backend_lifetime)
     std::unique_ptr<Reader> r1, r2;
     {
         auto be = std::make_shared<SharedStateBackend>();
-        weak = be;
-        r1 = std::move(be->reader(primary_prefix("cat-1")).value());
-        r2 = std::move(be->reader(primary_prefix("cat-2")).value());
+        weak    = be;
+        r1      = std::move(be->reader(primary_prefix("cat-1")).value());
+        r2      = std::move(be->reader(primary_prefix("cat-2")).value());
         EXPECT_EQ(be->live_subhandles, 2);
     }
     EXPECT_FALSE(weak.expired());

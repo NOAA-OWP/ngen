@@ -44,11 +44,16 @@ TEST(ByteIO, u16_round_trip) {
     bio::write_u16_le(ss, 0x1234);
 
     uint16_t v = 0;
-    ASSERT_TRUE(bio::read_u16_le(ss, v)); EXPECT_EQ(v, 0x0000);
-    ASSERT_TRUE(bio::read_u16_le(ss, v)); EXPECT_EQ(v, 0x00FF);
-    ASSERT_TRUE(bio::read_u16_le(ss, v)); EXPECT_EQ(v, 0xFF00);
-    ASSERT_TRUE(bio::read_u16_le(ss, v)); EXPECT_EQ(v, 0xFFFF);
-    ASSERT_TRUE(bio::read_u16_le(ss, v)); EXPECT_EQ(v, 0x1234);
+    ASSERT_TRUE(bio::read_u16_le(ss, v));
+    EXPECT_EQ(v, 0x0000);
+    ASSERT_TRUE(bio::read_u16_le(ss, v));
+    EXPECT_EQ(v, 0x00FF);
+    ASSERT_TRUE(bio::read_u16_le(ss, v));
+    EXPECT_EQ(v, 0xFF00);
+    ASSERT_TRUE(bio::read_u16_le(ss, v));
+    EXPECT_EQ(v, 0xFFFF);
+    ASSERT_TRUE(bio::read_u16_le(ss, v));
+    EXPECT_EQ(v, 0x1234);
 }
 
 TEST(ByteIO, u32_round_trip) {
@@ -58,9 +63,12 @@ TEST(ByteIO, u32_round_trip) {
     bio::write_u32_le(ss, 0xDEADBEEFu);
 
     uint32_t v = 0;
-    ASSERT_TRUE(bio::read_u32_le(ss, v)); EXPECT_EQ(v, 0u);
-    ASSERT_TRUE(bio::read_u32_le(ss, v)); EXPECT_EQ(v, std::numeric_limits<uint32_t>::max());
-    ASSERT_TRUE(bio::read_u32_le(ss, v)); EXPECT_EQ(v, 0xDEADBEEFu);
+    ASSERT_TRUE(bio::read_u32_le(ss, v));
+    EXPECT_EQ(v, 0u);
+    ASSERT_TRUE(bio::read_u32_le(ss, v));
+    EXPECT_EQ(v, std::numeric_limits<uint32_t>::max());
+    ASSERT_TRUE(bio::read_u32_le(ss, v));
+    EXPECT_EQ(v, 0xDEADBEEFu);
 }
 
 TEST(ByteIO, u64_round_trip) {
@@ -70,9 +78,12 @@ TEST(ByteIO, u64_round_trip) {
     bio::write_u64_le(ss, 0x0123456789ABCDEFull);
 
     uint64_t v = 0;
-    ASSERT_TRUE(bio::read_u64_le(ss, v)); EXPECT_EQ(v, 0ull);
-    ASSERT_TRUE(bio::read_u64_le(ss, v)); EXPECT_EQ(v, std::numeric_limits<uint64_t>::max());
-    ASSERT_TRUE(bio::read_u64_le(ss, v)); EXPECT_EQ(v, 0x0123456789ABCDEFull);
+    ASSERT_TRUE(bio::read_u64_le(ss, v));
+    EXPECT_EQ(v, 0ull);
+    ASSERT_TRUE(bio::read_u64_le(ss, v));
+    EXPECT_EQ(v, std::numeric_limits<uint64_t>::max());
+    ASSERT_TRUE(bio::read_u64_le(ss, v));
+    EXPECT_EQ(v, 0x0123456789ABCDEFull);
 }
 
 TEST(ByteIO, i32_round_trip_signed) {
@@ -84,11 +95,16 @@ TEST(ByteIO, i32_round_trip_signed) {
     bio::write_i32_le(ss, -1234567);
 
     int32_t v = 0;
-    ASSERT_TRUE(bio::read_i32_le(ss, v)); EXPECT_EQ(v, 0);
-    ASSERT_TRUE(bio::read_i32_le(ss, v)); EXPECT_EQ(v, std::numeric_limits<int32_t>::min());
-    ASSERT_TRUE(bio::read_i32_le(ss, v)); EXPECT_EQ(v, std::numeric_limits<int32_t>::max());
-    ASSERT_TRUE(bio::read_i32_le(ss, v)); EXPECT_EQ(v, -1);
-    ASSERT_TRUE(bio::read_i32_le(ss, v)); EXPECT_EQ(v, -1234567);
+    ASSERT_TRUE(bio::read_i32_le(ss, v));
+    EXPECT_EQ(v, 0);
+    ASSERT_TRUE(bio::read_i32_le(ss, v));
+    EXPECT_EQ(v, std::numeric_limits<int32_t>::min());
+    ASSERT_TRUE(bio::read_i32_le(ss, v));
+    EXPECT_EQ(v, std::numeric_limits<int32_t>::max());
+    ASSERT_TRUE(bio::read_i32_le(ss, v));
+    EXPECT_EQ(v, -1);
+    ASSERT_TRUE(bio::read_i32_le(ss, v));
+    EXPECT_EQ(v, -1234567);
 }
 
 TEST(ByteIO, i64_round_trip_signed) {
@@ -97,14 +113,19 @@ TEST(ByteIO, i64_round_trip_signed) {
     bio::write_i64_le(ss, std::numeric_limits<int64_t>::min());
     bio::write_i64_le(ss, std::numeric_limits<int64_t>::max());
     bio::write_i64_le(ss, int64_t{-1});
-    bio::write_i64_le(ss, int64_t{1448982000});  // a plausible epoch timestamp
+    bio::write_i64_le(ss, int64_t{1448982000}); // a plausible epoch timestamp
 
     int64_t v = 0;
-    ASSERT_TRUE(bio::read_i64_le(ss, v)); EXPECT_EQ(v, 0);
-    ASSERT_TRUE(bio::read_i64_le(ss, v)); EXPECT_EQ(v, std::numeric_limits<int64_t>::min());
-    ASSERT_TRUE(bio::read_i64_le(ss, v)); EXPECT_EQ(v, std::numeric_limits<int64_t>::max());
-    ASSERT_TRUE(bio::read_i64_le(ss, v)); EXPECT_EQ(v, int64_t{-1});
-    ASSERT_TRUE(bio::read_i64_le(ss, v)); EXPECT_EQ(v, int64_t{1448982000});
+    ASSERT_TRUE(bio::read_i64_le(ss, v));
+    EXPECT_EQ(v, 0);
+    ASSERT_TRUE(bio::read_i64_le(ss, v));
+    EXPECT_EQ(v, std::numeric_limits<int64_t>::min());
+    ASSERT_TRUE(bio::read_i64_le(ss, v));
+    EXPECT_EQ(v, std::numeric_limits<int64_t>::max());
+    ASSERT_TRUE(bio::read_i64_le(ss, v));
+    EXPECT_EQ(v, int64_t{-1});
+    ASSERT_TRUE(bio::read_i64_le(ss, v));
+    EXPECT_EQ(v, int64_t{1448982000});
 }
 
 // ---- Explicit byte layout -------------------------------------------------
