@@ -32,9 +32,9 @@ deserialization_Test.cpp; this file is the Python analog.
 */
 #ifdef NGEN_BMI_PY_TESTS_ACTIVE
 
-#include "gtest/gtest.h"
-#include "MockConfig.hpp"
 #include "FileChecker.h"
+#include "MockConfig.hpp"
+#include "gtest/gtest.h"
 
 #include <pybind11/embed.h>
 namespace py = pybind11;
@@ -53,33 +53,33 @@ using models::bmi::Bmi_Py_Adapter;
 using models::bmi::protocols::NgenBmiProtocols;
 using models::bmi::protocols::Protocol;
 using models::bmi::protocols::ProtocolError;
-using models::bmi::protocols::SerializationRecord;
 using models::bmi::protocols::read_next_record;
+using models::bmi::protocols::SerializationRecord;
 using utils::ngenPy::InterpreterUtil;
 
 namespace {
-    bool file_exists(const std::string& p) {
-        struct stat st{};
-        return ::stat(p.c_str(), &st) == 0 && S_ISREG(st.st_mode);
-    }
-
-    std::vector<SerializationRecord> read_all_records(const std::string& path) {
-        std::vector<SerializationRecord> out;
-        std::ifstream in(path, std::ios::binary);
-        if (!in) return out;
-        SerializationRecord scratch;
-        for (;;) {
-            auto r = read_next_record(in, scratch);
-            if (!r) break;  // error arm — treat as end of readable content
-            if (r.value() == models::bmi::protocols::Status::Eof) break;
-            out.push_back(scratch);
-        }
-        return out;
-    }
+bool file_exists(const std::string& p) {
+    struct stat st{};
+    return ::stat(p.c_str(), &st) == 0 && S_ISREG(st.st_mode);
 }
 
+std::vector<SerializationRecord> read_all_records(const std::string& path) {
+    std::vector<SerializationRecord> out;
+    std::ifstream in(path, std::ios::binary);
+    if (!in) return out;
+    SerializationRecord scratch;
+    for (;;) {
+        auto r = read_next_record(in, scratch);
+        if (!r) break; // error arm — treat as end of readable content
+        if (r.value() == models::bmi::protocols::Status::Eof) break;
+        out.push_back(scratch);
+    }
+    return out;
+}
+} // namespace
+
 class Bmi_Py_Serialization_Test : public ::testing::Test {
-protected:
+  protected:
     // Keep the embedded interpreter alive for the whole test suite —
     // InterpreterUtil returns a refcounted handle; the first test that
     // constructs one starts the interpreter, subsequent tests share it.
@@ -91,13 +91,17 @@ protected:
     }
 
     void SetUp() override {
-        model_name = "test_bmi_py.bmi_model";
+        model_name      = "test_bmi_py.bmi_model";
         bmi_init_config = "./test/data/bmi/test_bmi_python/test_bmi_python_config_0.yml";
-        model = std::make_shared<Bmi_Py_Adapter>(
-            model_name, bmi_init_config, model_name, /*allow_exceed_end_time*/ true);
+        model           = std::make_shared<Bmi_Py_Adapter>(
+            model_name,
+            bmi_init_config,
+            model_name,
+            /*allow_exceed_end_time*/ true
+        );
 
         const auto* info = ::testing::UnitTest::GetInstance()->current_test_info();
-        std::string dir = ::testing::TempDir();
+        std::string dir  = ::testing::TempDir();
         if (!dir.empty() && dir.back() != '/') dir.push_back('/');
         path = dir + "ngen_py_serialization_Test_" + info->name() + ".ckpt";
         std::remove(path.c_str());
@@ -114,7 +118,8 @@ protected:
 };
 
 // The interpreter lifetime spans every test in the suite.
-std::shared_ptr<InterpreterUtil> Bmi_Py_Serialization_Test::interpreter = InterpreterUtil::getInstance();
+std::shared_ptr<InterpreterUtil> Bmi_Py_Serialization_Test::interpreter =
+    InterpreterUtil::getInstance();
 
 // ---------------------------------------------------------------------
 // Support detection passes against a conforming Python model.
@@ -128,9 +133,8 @@ TEST_F(Bmi_Py_Serialization_Test, check_support_passes) {
     // check_support passed.
     auto properties = SerializationMock(path).as_json_property();
     EXPECT_NO_THROW({
-        auto protocols = NgenBmiProtocols(
-            std::static_pointer_cast<models::bmi::Bmi_Adapter>(model),
-            properties);
+        auto protocols =
+            NgenBmiProtocols(std::static_pointer_cast<models::bmi::Bmi_Adapter>(model), properties);
         (void)protocols;
     });
 }
@@ -141,11 +145,10 @@ TEST_F(Bmi_Py_Serialization_Test, check_support_passes) {
 
 TEST_F(Bmi_Py_Serialization_Test, save_writes_record) {
     auto properties = SerializationMock(path).as_json_property();
-    auto protocols = NgenBmiProtocols(
-        std::static_pointer_cast<models::bmi::Bmi_Adapter>(model), properties);
+    auto protocols =
+        NgenBmiProtocols(std::static_pointer_cast<models::bmi::Bmi_Adapter>(model), properties);
 
-    auto result = protocols.run(Protocol::SERIALIZATION,
-                                make_context(0, 2, "0", "py-cat-1"));
+    auto result = protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "0", "py-cat-1"));
     EXPECT_TRUE(result.has_value());
 
     // Byte-exact validation: rather than checking a weakly-true
@@ -159,7 +162,7 @@ TEST_F(Bmi_Py_Serialization_Test, save_writes_record) {
     // / float pickling is deterministic. Any adapter-layer byte
     // corruption or truncation between `GetValue(state, ...)` and
     // the record payload would light up here.
-    int trigger = 1;
+    int trigger       = 1;
     int expected_size = 0;
     model->SetValue("ngen::serialization_create", &trigger);
     model->GetValue("ngen::serialization_size", &expected_size);
@@ -185,11 +188,10 @@ TEST_F(Bmi_Py_Serialization_Test, save_writes_record) {
 TEST_F(Bmi_Py_Serialization_Test, save_restore_roundtrip) {
     // One config drives both directions; save fires every step,
     // restore picks the latest record found for this id.
-    auto properties = DeserializationMock(path, /*step*/ "latest")
-        .with_save(/*frequency*/ 1)
-        .as_json_property();
-    auto protocols = NgenBmiProtocols(
-        std::static_pointer_cast<models::bmi::Bmi_Adapter>(model), properties);
+    auto properties =
+        DeserializationMock(path, /*step*/ "latest").with_save(/*frequency*/ 1).as_json_property();
+    auto protocols =
+        NgenBmiProtocols(std::static_pointer_cast<models::bmi::Bmi_Adapter>(model), properties);
 
     // Prime the model with distinct input scalars so the pickle bytes
     // carry meaningful content we can later verify.
@@ -202,8 +204,7 @@ TEST_F(Bmi_Py_Serialization_Test, save_restore_roundtrip) {
     const double t_ref = model->GetCurrentTime();
 
     // Save at step 1.
-    auto save_r = protocols.run(Protocol::SERIALIZATION,
-                                make_context(1, 3, "3600", "py-cat-1"));
+    auto save_r = protocols.run(Protocol::SERIALIZATION, make_context(1, 3, "3600", "py-cat-1"));
     ASSERT_TRUE(save_r.has_value());
     ASSERT_TRUE(file_exists(path));
 
@@ -217,8 +218,8 @@ TEST_F(Bmi_Py_Serialization_Test, save_restore_roundtrip) {
     // measuring something real.
     const double bogus1 = -777.0;
     const double bogus2 = -888.0;
-    double bogus1_copy = bogus1;
-    double bogus2_copy = bogus2;
+    double bogus1_copy  = bogus1;
+    double bogus2_copy  = bogus2;
     model->SetValue("INPUT_VAR_1", &bogus1_copy);
     model->SetValue("INPUT_VAR_2", &bogus2_copy);
     model->Update();
@@ -235,8 +236,8 @@ TEST_F(Bmi_Py_Serialization_Test, save_restore_roundtrip) {
     }
 
     // Restore.
-    auto restore_r = protocols.run(Protocol::DESERIALIZATION,
-                                   make_context(0, 0, "restore", "py-cat-1"));
+    auto restore_r =
+        protocols.run(Protocol::DESERIALIZATION, make_context(0, 0, "restore", "py-cat-1"));
     ASSERT_TRUE(restore_r.has_value());
 
     // Verify every serialized field round-tripped. Because the inputs
@@ -251,4 +252,4 @@ TEST_F(Bmi_Py_Serialization_Test, save_restore_roundtrip) {
     EXPECT_EQ(i2, input2);
 }
 
-#endif  // NGEN_BMI_PY_TESTS_ACTIVE
+#endif // NGEN_BMI_PY_TESTS_ACTIVE
