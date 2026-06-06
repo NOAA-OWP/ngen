@@ -300,9 +300,11 @@ struct FailingBackend : RecordBackend {
 
     expected<void, std::vector<BackendError>> finalize() override {
         if (finalize_fails)
-            return make_unexpected(std::vector<BackendError>{
-                BackendError{BackendError::Kind::IOError, "forced finalize failure"}
-            });
+            return make_unexpected(
+                std::vector<BackendError>{
+                    BackendError{BackendError::Kind::IOError, "forced finalize failure"}
+            }
+            );
         return {};
     }
 };
