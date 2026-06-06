@@ -14,32 +14,26 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ------------------------------------------------------------------------
-Version 0.1
+Version 0.2
 Interface of the BMI state restore protocol. Pairs with
-NgenSerializationProtocol (save); shares the on-disk SerializationRecord
-format defined in serialization_record.hpp.
+`NgenSerializationProtocol` (save); shares the `Record` value type
+defined in `include/utilities/serialization/record.hpp`.
 
-Restore at scale: the protocol delegates the file walk to a process-
-global `CheckpointIndex` keyed by file path. The first restore against a
-given file builds an in-memory `id -> [(step, timestamp, file_offset)]`
-index in a single O(N) pass; subsequent restores are O(log k) per feature
-where k is the number of records for that feature. This turns a
-naive-O(features × records) scan into O(records + features) for the
-whole run. Optional `id_subset` further caps memory by keeping index
-entries only for ids the caller intends to restore.
+Storage is delegated to a `RecordBackend` acquired at `initialize()`
+time, optionally scoped by a caller-provided `id_subset` so that a
+run restoring only a known subset of features can give the backend
+a chance to build a smaller index.
 
-The cache survives beyond the lifetime of individual protocol
-instances. Callers running in memory-constrained contexts where
-restores happen only at initialization should invoke
-`clear_checkpoint_indexes()` (below) once the initialization-phase
-restore sequence completes, releasing the entire cache immediately.
+Each `run()` opens a short-lived `Reader` for the current
+`ctx.id` and asks the configured match mode (`latest`, by step, or
+by timestamp) for the corresponding record.
 */
 #pragma once
 
+#include "utilities/serialization/record_backend.hpp"
+#include <memory>
 #include <nonstd/expected.hpp>
 #include <protocol.hpp>
-#include <string>
-#include <vector>
 
 namespace models {
 namespace bmi {
@@ -67,27 +61,41 @@ constexpr const char* const DESERIALIZATION_ID_SUBSET_KEY = "id_subset";
 class NgenDeserializationProtocol : public NgenBmiProtocol {
     /** @brief Restore-side state deserialization protocol.
      *
-     * Sibling of NgenSerializationProtocol. At `run()`, looks up a
-     * SerializationRecord matching the Context's `id` in the shared
-     * `CheckpointIndex` for the configured path and writes the payload
-     * bytes to the model via `SetValue(ngen::serialization_state, ...)`.
+     * Sibling of NgenSerializationProtocol. At `run()`, opens a
+     * Reader on the protocol's `RecordBackend`, looks up a Record
+     * matching the Context's `id` and the configured step/timestamp
+     * selector, and writes the payload bytes to the model via
+     * `SetValue(ngen::serialization_state, ...)`.
      *
-     * The protocol does not care about the simulation's current time
-     * step — restore is a one-shot operation and the engine is expected
-     * to invoke it at whatever lifecycle point makes sense. Subsequent
-     * `run()` calls are idempotent but will re-read and re-apply the
-     * same record; callers that want "restore once" should run the
-     * protocol a single time.
+     * The protocol does not care about the simulation's current
+     * time step — restore is a one-shot operation and the caller
+     * decides at which lifecycle point to invoke it. The protocol
+     * does not track whether it has already fired: a second
+     * `run()` call re-opens a Reader, looks up the same record
+     * (the match-mode config is set once in `initialize()` and
+     * never changes), and re-applies the same payload bytes to
+     * the model — effectively rewinding it to the restore point.
+     * Callers that want "restore once" should invoke the protocol
+     * a single time.
      *
-     * Thread safety
-     * -------------
-     * The `CheckpointIndex` guards its build with a per-path mutex, so
-     * concurrent first-restores of different features sharing a path
-     * serialize on build but run lookups in parallel afterwards. The
-     * restore protocol itself holds no mutable per-instance I/O state;
-     * the per-call payload read goes through a local ifstream so two
-     * threads restoring distinct features can proceed without locking
-     * out each other's reads.
+     * To restore from a *different* record later in the run (e.g.
+     * a multi-phase driver advancing to a later checkpoint without
+     * rewinding), construct a separate
+     * `NgenDeserializationProtocol` instance configured for the
+     * new target step/timestamp. Each instance carries its own
+     * match-mode state and its own backend handle; they are
+     * independent. Reusing one instance with a different config in
+     * mind is not supported — `initialize()` is the only place the
+     * match mode is set.
+     *
+     * Scope filtering applies at two layers:
+     *   - Construction scope: an optional `id_subset` passed at
+     *     `initialize()` time bounds the backend's index to the
+     *     caller's intended subset. Records outside that subset
+     *     are never indexed.
+     *   - Read scope: each `run()` opens a Reader for the current
+     *     `ctx.id` — the one feature the caller is asking about.
+     *     The Reader cannot return any other id's record.
      */
   public:
     NgenDeserializationProtocol(const ModelPtr& model, const Properties& properties);
@@ -119,7 +127,6 @@ class NgenDeserializationProtocol : public NgenBmiProtocol {
     bool is_supported() const override final;
 
   private:
-    std::string path;
     // Match mode. When `by_timestamp` is true,
     // `target_simulation_timestamp` is the sole matching criterion.
     // Otherwise `step_latest` (if true) finds the highest step for
@@ -128,31 +135,28 @@ class NgenDeserializationProtocol : public NgenBmiProtocol {
     int64_t target_simulation_timestamp = 0;
     bool step_latest                    = true;
     int target_step                     = 0;
-    // Optional: ids the caller intends to restore. Passed to the shared
-    // CheckpointIndex at build time so unrelated records are skipped.
-    // Empty = "index everything"; see CheckpointIndex::ensure_built.
-    std::vector<std::string> id_subset;
+    // Optional set of ids the caller wants indexed, parsed from
+    // config in initialize() into an
+    // `any_of(primary_prefix(...))` predicate. Passed to the
+    // backend at construction as its **construction-time**
+    // filter — records whose id fails this predicate are not
+    // indexed.
+    //
+    // This is the *backend-level* scope. The *per-Reader* scope
+    // used inside `run()` is a tighter `exact_id(ctx.id)`
+    // predicate constructed per-call so each Reader returns
+    // exactly the one feature's record.
+    //
+    // Empty / default-constructed means "no filter".
+    ::ngen::serialization::IdPredicate id_scope;
     bool supported = false;
     bool check;
     bool is_fatal;
-};
 
-/** @brief Release every cached `CheckpointIndex` immediately.
- *
- * At scale each per-path index pins memory proportional to the
- * number of records it holds. In the common workflow where
- * restores happen only during model initialization, the indexes
- * are dead weight once every model has been restored — this
- * function frees them on demand rather than waiting for process
- * exit.
- *
- * Thread-safe. Safe to call at any time: any subsequent restore
- * against a freed path will lazily rebuild that path's index from
- * disk on next access. Expected to be called at most once per
- * run by the engine, after the initialization-phase restore
- * sequence completes.
- */
-void clear_checkpoint_indexes();
+    // Storage backend, acquired in initialize() via a
+    // `RecordBackend`-typed factory.
+    std::shared_ptr<::ngen::serialization::RecordBackend> backend_;
+};
 
 } // namespace protocols
 } // namespace bmi

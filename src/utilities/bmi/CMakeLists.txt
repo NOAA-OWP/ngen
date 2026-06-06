@@ -15,7 +15,7 @@
 # BMI protocols library — mass balance checking, state serialization,
 # state deserialization.
 
-add_library(ngen_bmi_protocols protocols.cpp mass_balance.cpp serialization.cpp deserialization.cpp)
+add_library(ngen_bmi_protocols protocols.cpp mass_balance.cpp serialization.cpp deserialization.cpp file_backend.cpp)
 add_library(NGen::bmi_protocols ALIAS ngen_bmi_protocols)
 
 target_include_directories(ngen_bmi_protocols PUBLIC
