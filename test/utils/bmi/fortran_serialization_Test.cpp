@@ -37,12 +37,12 @@ Fortran analog.
 */
 #ifdef NGEN_BMI_FORTRAN_LIB_TESTS_ACTIVE
 
-#include "gtest/gtest.h"
-#include "MockConfig.hpp"
-#include "FileChecker.h"
 #include "Bmi_Fortran_Adapter.hpp"
+#include "FileChecker.h"
+#include "MockConfig.hpp"
 #include "protocols.hpp"
 #include "serialization_record.hpp"
+#include "gtest/gtest.h"
 
 #include <cstdio>
 #include <fstream>
@@ -55,7 +55,7 @@ Fortran analog.
 #define BMI_TEST_FORTRAN_LOCAL_LIB_NAME "libtestbmifortranmodel.dylib"
 #else
 #ifdef __GNUC__
-    #define BMI_TEST_FORTRAN_LOCAL_LIB_NAME "libtestbmifortranmodel.so"
+#define BMI_TEST_FORTRAN_LOCAL_LIB_NAME "libtestbmifortranmodel.so"
 #endif
 #endif
 #endif
@@ -66,38 +66,38 @@ using models::bmi::Bmi_Fortran_Adapter;
 using models::bmi::protocols::NgenBmiProtocols;
 using models::bmi::protocols::Protocol;
 using models::bmi::protocols::ProtocolError;
-using models::bmi::protocols::SerializationRecord;
 using models::bmi::protocols::read_next_record;
+using models::bmi::protocols::SerializationRecord;
 
 namespace {
-    bool file_exists(const std::string& p) {
-        struct stat st{};
-        return ::stat(p.c_str(), &st) == 0 && S_ISREG(st.st_mode);
-    }
-
-    std::vector<SerializationRecord> read_all_records(const std::string& path) {
-        std::vector<SerializationRecord> out;
-        std::ifstream in(path, std::ios::binary);
-        if (!in) return out;
-        SerializationRecord scratch;
-        for (;;) {
-            auto r = read_next_record(in, scratch);
-            if (!r) break;  // error arm — treat as end of readable content
-            if (r.value() == models::bmi::protocols::Status::Eof) break;
-            out.push_back(scratch);
-        }
-        return out;
-    }
-
-    std::string file_search(const std::vector<std::string>& dirs, const std::string& basename) {
-        std::vector<std::string> combos;
-        for (auto& d : dirs) combos.push_back(d + basename);
-        return utils::FileChecker::find_first_readable(combos);
-    }
+bool file_exists(const std::string& p) {
+    struct stat st{};
+    return ::stat(p.c_str(), &st) == 0 && S_ISREG(st.st_mode);
 }
 
+std::vector<SerializationRecord> read_all_records(const std::string& path) {
+    std::vector<SerializationRecord> out;
+    std::ifstream in(path, std::ios::binary);
+    if (!in) return out;
+    SerializationRecord scratch;
+    for (;;) {
+        auto r = read_next_record(in, scratch);
+        if (!r) break; // error arm — treat as end of readable content
+        if (r.value() == models::bmi::protocols::Status::Eof) break;
+        out.push_back(scratch);
+    }
+    return out;
+}
+
+std::string file_search(const std::vector<std::string>& dirs, const std::string& basename) {
+    std::vector<std::string> combos;
+    for (auto& d : dirs) combos.push_back(d + basename);
+    return utils::FileChecker::find_first_readable(combos);
+}
+} // namespace
+
 class Bmi_Fortran_Serialization_Test : public ::testing::Test {
-protected:
+  protected:
     void SetUp() override {
         std::vector<std::string> cfg_paths = {
             "test/data/bmi/test_bmi_fortran/",
@@ -112,17 +112,21 @@ protected:
             "../extern/test_bmi_fortran/cmake_build/",
             "../../extern/test_bmi_fortran/cmake_build/"
         };
-        lib_file_name = file_search(lib_dirs, BMI_TEST_FORTRAN_LOCAL_LIB_NAME);
+        lib_file_name    = file_search(lib_dirs, BMI_TEST_FORTRAN_LOCAL_LIB_NAME);
         module_type_name = "test_bmi_fortran";
 
         auto adapter = std::make_shared<Bmi_Fortran_Adapter>(
-            module_type_name, lib_file_name, config_file_name,
-            /*allow_exceed_end_time*/ true, REGISTRATION_FUNC);
+            module_type_name,
+            lib_file_name,
+            config_file_name,
+            /*allow_exceed_end_time*/ true,
+            REGISTRATION_FUNC
+        );
         model_name = adapter->GetComponentName();
-        model = std::static_pointer_cast<models::bmi::Bmi_Adapter>(adapter);
+        model      = std::static_pointer_cast<models::bmi::Bmi_Adapter>(adapter);
 
         const auto* info = ::testing::UnitTest::GetInstance()->current_test_info();
-        std::string dir = ::testing::TempDir();
+        std::string dir  = ::testing::TempDir();
         if (!dir.empty() && dir.back() != '/') dir.push_back('/');
         path = dir + "ngen_fortran_serialization_Test_" + info->name() + ".ckpt";
         std::remove(path.c_str());
@@ -161,10 +165,9 @@ TEST_F(Bmi_Fortran_Serialization_Test, check_support_passes) {
 
 TEST_F(Bmi_Fortran_Serialization_Test, save_writes_record) {
     auto properties = SerializationMock(path).as_json_property();
-    auto protocols = NgenBmiProtocols(model, properties);
+    auto protocols  = NgenBmiProtocols(model, properties);
 
-    auto result = protocols.run(Protocol::SERIALIZATION,
-                                make_context(0, 2, "0", "fortran-cat-1"));
+    auto result = protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "0", "fortran-cat-1"));
     EXPECT_TRUE(result.has_value());
 
     auto records = read_all_records(path);
@@ -185,17 +188,16 @@ TEST_F(Bmi_Fortran_Serialization_Test, save_writes_record) {
 // ---------------------------------------------------------------------
 
 TEST_F(Bmi_Fortran_Serialization_Test, save_restore_roundtrip) {
-    auto properties = DeserializationMock(path, /*step*/ "latest")
-        .with_save(/*frequency*/ 1)
-        .as_json_property();
+    auto properties =
+        DeserializationMock(path, /*step*/ "latest").with_save(/*frequency*/ 1).as_json_property();
     auto protocols = NgenBmiProtocols(model, properties);
 
     // Prime with distinct inputs that the serialized layout will
     // carry — a double, a float, and an integer — covering each of
     // the Fortran value kinds the Fortran BMI adapter dispatches on.
-    double  input1 = 17.75;
-    float   input2 = 3.125f;
-    int     input3 = 42;
+    double input1 = 17.75;
+    float input2  = 3.125f;
+    int input3    = 42;
     model->SetValue("INPUT_VAR_1", &input1);
     model->SetValue("INPUT_VAR_2", &input2);
     model->SetValue("INPUT_VAR_3", &input3);
@@ -204,8 +206,8 @@ TEST_F(Bmi_Fortran_Serialization_Test, save_restore_roundtrip) {
     const double t_ref = model->GetCurrentTime();
 
     // Save at step 1.
-    auto save_r = protocols.run(Protocol::SERIALIZATION,
-                                make_context(1, 3, "3600", "fortran-cat-1"));
+    auto save_r =
+        protocols.run(Protocol::SERIALIZATION, make_context(1, 3, "3600", "fortran-cat-1"));
     ASSERT_TRUE(save_r.has_value());
     ASSERT_TRUE(file_exists(path));
 
@@ -218,8 +220,8 @@ TEST_F(Bmi_Fortran_Serialization_Test, save_restore_roundtrip) {
     // before restore ensures the round-trip assertion below is
     // measuring something real.
     double bogus1 = -777.0;
-    float  bogus2 = -8.5f;
-    int    bogus3 = -99;
+    float bogus2  = -8.5f;
+    int bogus3    = -99;
     model->SetValue("INPUT_VAR_1", &bogus1);
     model->SetValue("INPUT_VAR_2", &bogus2);
     model->SetValue("INPUT_VAR_3", &bogus3);
@@ -229,8 +231,8 @@ TEST_F(Bmi_Fortran_Serialization_Test, save_restore_roundtrip) {
 
     {
         double i1_diverged = 0.0;
-        float  i2_diverged = 0.0f;
-        int    i3_diverged = 0;
+        float i2_diverged  = 0.0f;
+        int i3_diverged    = 0;
         model->GetValue("INPUT_VAR_1", &i1_diverged);
         model->GetValue("INPUT_VAR_2", &i2_diverged);
         model->GetValue("INPUT_VAR_3", &i3_diverged);
@@ -240,8 +242,8 @@ TEST_F(Bmi_Fortran_Serialization_Test, save_restore_roundtrip) {
     }
 
     // Restore.
-    auto restore_r = protocols.run(Protocol::DESERIALIZATION,
-                                   make_context(0, 0, "restore", "fortran-cat-1"));
+    auto restore_r =
+        protocols.run(Protocol::DESERIALIZATION, make_context(0, 0, "restore", "fortran-cat-1"));
     ASSERT_TRUE(restore_r.has_value());
 
     // Verify every serialized field round-tripped. Because the inputs
@@ -250,8 +252,8 @@ TEST_F(Bmi_Fortran_Serialization_Test, save_restore_roundtrip) {
     // pre-save originals.
     EXPECT_EQ(model->GetCurrentTime(), t_ref);
     double i1 = 0.0;
-    float  i2 = 0.0f;
-    int    i3 = 0;
+    float i2  = 0.0f;
+    int i3    = 0;
     model->GetValue("INPUT_VAR_1", &i1);
     model->GetValue("INPUT_VAR_2", &i2);
     model->GetValue("INPUT_VAR_3", &i3);
@@ -260,4 +262,4 @@ TEST_F(Bmi_Fortran_Serialization_Test, save_restore_roundtrip) {
     EXPECT_EQ(i3, input3);
 }
 
-#endif  // NGEN_BMI_FORTRAN_LIB_TESTS_ACTIVE
+#endif // NGEN_BMI_FORTRAN_LIB_TESTS_ACTIVE
