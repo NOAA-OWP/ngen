@@ -8,20 +8,22 @@ the `Writer` interface, the single-in-flight rule, and the
 */
 #include "gtest/gtest.h"
 
-#include "utilities/serialization/record_backend.hpp"
 #include "mocks.hpp"
+#include "utilities/serialization/record_backend.hpp"
 
 #include <chrono>
 
 using namespace ngen::serialization;
-using ngen::serialization::test::TrackingBackend;
 using ngen::serialization::test::FailingBackend;
+using ngen::serialization::test::TrackingBackend;
 using Reader = RecordBackend::Reader;
 using Writer = RecordBackend::Writer;
 
 namespace {
-auto now() { return std::chrono::system_clock::now(); }
+auto now() {
+    return std::chrono::system_clock::now();
 }
+} // namespace
 
 // ---------------------------------------------------------------------
 // writer() factory
@@ -54,7 +56,7 @@ TEST(RecordBackend_writer, dropping_writer_clears_in_flight_flag) {
     {
         auto w = be.writer(now(), Durability::relaxed);
         ASSERT_TRUE(w.has_value());
-    }   // Writer destroyed here
+    } // Writer destroyed here
     EXPECT_EQ(be.writers_destroyed, 1);
     EXPECT_FALSE(be.writer_in_flight);
 
@@ -66,7 +68,7 @@ TEST(RecordBackend_writer, dropping_writer_clears_in_flight_flag) {
 TEST(RecordBackend_writer, factory_failure_propagates_on_error_arm) {
     FailingBackend be;
     be.writer_factory_fails = true;
-    auto w = be.writer(now(), Durability::relaxed);
+    auto w                  = be.writer(now(), Durability::relaxed);
     ASSERT_FALSE(w.has_value());
     EXPECT_EQ(w.error().kind, BackendError::Kind::IOError);
 }
@@ -92,7 +94,7 @@ TEST(RecordBackend_writer, write_and_commit_succeed) {
 TEST(RecordBackend_writer, write_failure_surfaces_on_error_arm) {
     FailingBackend be;
     be.write_fails = true;
-    auto w = be.writer(now(), Durability::relaxed);
+    auto w         = be.writer(now(), Durability::relaxed);
     ASSERT_TRUE(w.has_value());
 
     auto r = w.value()->write(Record{});
@@ -104,7 +106,7 @@ TEST(RecordBackend_writer, write_failure_surfaces_on_error_arm) {
 TEST(RecordBackend_writer, commit_failure_surfaces_on_error_arm) {
     FailingBackend be;
     be.writer_commit_fails = true;
-    auto w = be.writer(now(), Durability::strict);
+    auto w                 = be.writer(now(), Durability::strict);
     ASSERT_TRUE(w.has_value());
 
     auto r = w.value()->commit();
@@ -135,9 +137,7 @@ TEST(RecordBackend_with_writer, factory_failure_propagates_without_calling_fn) {
     be.writer_factory_fails = true;
 
     int closure_calls = 0;
-    auto rc = be.with_writer(now(), Durability::relaxed, [&](Writer&) {
-        ++closure_calls;
-    });
+    auto rc = be.with_writer(now(), Durability::relaxed, [&](Writer&) { ++closure_calls; });
     EXPECT_FALSE(rc.has_value());
     EXPECT_EQ(rc.error().kind, BackendError::Kind::IOError);
     EXPECT_EQ(closure_calls, 0);
@@ -148,36 +148,38 @@ TEST(RecordBackend_with_writer, commit_failure_propagates_after_fn_ran) {
     be.writer_commit_fails = true;
 
     int closure_calls = 0;
-    auto rc = be.with_writer(now(), Durability::strict, [&](Writer& w) {
+    auto rc           = be.with_writer(now(), Durability::strict, [&](Writer& w) {
         ++closure_calls;
         (void)w.write(Record{});
     });
     EXPECT_FALSE(rc.has_value());
     EXPECT_EQ(rc.error().kind, BackendError::Kind::IOError);
-    EXPECT_EQ(closure_calls, 1);  // fn ran before commit failed
+    EXPECT_EQ(closure_calls, 1); // fn ran before commit failed
 }
 
 TEST(RecordBackend_with_writer, sequential_calls_do_not_trip_single_in_flight) {
     TrackingBackend be;
     for (int i = 0; i < 5; ++i) {
-        auto rc = be.with_writer(now(), Durability::relaxed, [](Writer& w) {
-            (void)w.write(Record{});
-        });
+        auto rc =
+            be.with_writer(now(), Durability::relaxed, [](Writer& w) { (void)w.write(Record{}); });
         ASSERT_TRUE(rc.has_value()) << "iteration " << i;
     }
     EXPECT_EQ(be.writers_constructed, 5);
-    EXPECT_EQ(be.writers_destroyed,   5);
+    EXPECT_EQ(be.writers_destroyed, 5);
     EXPECT_EQ(be.writer_commits_called, 5);
     EXPECT_EQ(be.writes_called, 5);
 }
 
 TEST(RecordBackend_with_writer, exception_from_fn_unwinds_with_destructor_cleanup) {
     TrackingBackend be;
-    EXPECT_THROW({
-        (void)be.with_writer(now(), Durability::relaxed, [](Writer&) {
-            throw std::runtime_error("boom");
-        });
-    }, std::runtime_error);
+    EXPECT_THROW(
+        {
+            (void)be.with_writer(now(), Durability::relaxed, [](Writer&) {
+                throw std::runtime_error("boom");
+            });
+        },
+        std::runtime_error
+    );
 
     // Writer destructor must have run (in-flight flag cleared).
     EXPECT_EQ(be.writers_destroyed, 1);
@@ -186,6 +188,6 @@ TEST(RecordBackend_with_writer, exception_from_fn_unwinds_with_destructor_cleanu
     EXPECT_EQ(be.writer_commits_called, 0);
 
     // Next writer can proceed:
-    auto rc = be.with_writer(now(), Durability::relaxed, [](Writer&){});
+    auto rc = be.with_writer(now(), Durability::relaxed, [](Writer&) {});
     EXPECT_TRUE(rc.has_value());
 }
