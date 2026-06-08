@@ -15,7 +15,7 @@ target_link_libraries(ngen_parallel
 if(NGEN_WITH_MPI)
   target_link_libraries(ngen_parallel
     PUBLIC
-      MPI::MPI_C
+      MPI::MPI_CXX
       Boost::boost
   )
   if(NGEN_WITH_PYTHON)

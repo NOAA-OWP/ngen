@@ -28,7 +28,7 @@ if (NGEN_WITH_PYTHON)
 endif ()
 
 if(NGEN_WITH_MPI)
-    target_link_libraries(core PUBLIC MPI::MPI_C MPI::MPI_CXX)
+    target_link_libraries(core PUBLIC MPI::MPI_CXX)
 endif()
 
 add_subdirectory("catchment")

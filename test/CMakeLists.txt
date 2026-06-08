@@ -279,7 +279,7 @@ if (NGEN_WITH_MPI)
     # TODO: this might need more
 
     target_include_directories(test_mpi_unit PUBLIC include/utils)
-    target_link_libraries(test_mpi_unit PUBLIC gtest NGen::core NGen::core_nexus NGen::output NetCDF MPI::MPI_C)
+    target_link_libraries(test_mpi_unit PUBLIC gtest NGen::core NGen::core_nexus NGen::output NetCDF MPI::MPI_CXX)
     target_compile_definitions(test_mpi_unit PUBLIC NGEN_WITH_MPI NGEN_MPI_UNIT_TESTS)
 
     #set_target_properties(test_mpi_unit PROPERTIES CROSSCOMPILING_EMULATOR '${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2')

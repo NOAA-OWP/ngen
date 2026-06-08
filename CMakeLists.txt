@@ -141,7 +141,7 @@ endif()
 # -----------------------------------------------------------------------------
 # If MPI support is enabled, set the C++ compiler to "mpicxx"
 if(NGEN_WITH_MPI)
-    find_package(MPI REQUIRED)
+    find_package(MPI COMPONENTS CXX REQUIRED)
     add_compile_definitions(NGEN_WITH_MPI)
 endif()
 
@@ -460,11 +460,6 @@ ngen_dependent_multiline_message(INTEL_DPCPP
 "    Version: ${SYCL_LANGUAGE_VERSION}"
 "    Include: ${SYCL_INCLUDE_DIR}"
 "    Implmentation: ${SYCL_IMPLEMENTATION_ID}")
-ngen_dependent_multiline_message(NGEN_WITH_MPI
-"  MPI (C):"
-"    Version: ${MPI_C_VERSION}"
-"    Library: ${MPI_C_LIBRARIES}"
-"    Include: ${MPI_C_INCLUDE_DIRS}")
 ngen_dependent_multiline_message(NGEN_WITH_MPI
 "  MPI (CXX):"
 "    Version: ${MPI_CXX_VERSION}"
