@@ -380,27 +380,91 @@ TEST_F(Bmi_Mass_Balance_Test, frequency_zero) {
 }
 
 TEST_F(Bmi_Mass_Balance_Test, frequency_end) {
+    // Context contract: current_time_step is drawn from [0, total_steps - 1].
+    // For a 3-step run, indices 0 and 1 must skip the check (frequency=-1
+    // only fires at the end) and index 2 must fire, since
+    // total_steps - 1 == 2 is the last in-range index.
     auto properties = MassBalanceMock(true, 1e-5, -1).as_json_property();
-    auto context = make_context(0, 2, time, model_name);
     auto protocols = NgenBmiProtocols(model, properties);
     double mass_error = 10; // Force a mass balance error above tolerance
     model->SetValue(OUTPUT_MASS_NAME, &mass_error);
     //Check initial mass balance -- should not error due to frequency setting
-    auto result = protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, make_context(0, 2, time, model_name));
+    auto result = protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, make_context(0, 3, time, model_name));
     EXPECT_TRUE( result.has_value() ); // should pass
     time = "t1";
     model->Update(); // advance model
     model->SetValue(OUTPUT_MASS_NAME, &mass_error);
     // Call mass balance check again, this should NOT error, since the actual check
     // should be skipped due to the frequency setting
-    result = protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, make_context(1, 2, time, model_name));
+    result = protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, make_context(1, 3, time, model_name));
     EXPECT_TRUE( result.has_value() ); // should pass
     time = "t2";
     model->Update(); // advance model
     model->SetValue(OUTPUT_MASS_NAME, &mass_error);
-    // Check mass balance again, this SHOULD error since its the last timestep and the previous mass balance
-    // will propagate, and it should now be checked based on the frequency
-    ASSERT_THROW((void) protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, make_context(2, 2, time, model_name)), ProtocolError);
+    // Check mass balance again, this SHOULD error since its the last timestep
+    // (current_time_step == total_steps - 1) and the mass balance violation
+    // should now be observable.
+    ASSERT_THROW((void) protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, make_context(2, 3, time, model_name)), ProtocolError);
+}
+
+TEST_F(Bmi_Mass_Balance_Test, frequency_end_single_step) {
+    // Boundary case: N=1, where the first step is also the last.
+    // current_time_step=0 and total_steps=1, so the sentinel
+    // (current_time_step == total_steps - 1) is `0 == 0` and the check
+    // must fire. The pre-fix comparison `current == total` was `0 == 1`
+    // here — false — so a single-step run with frequency=-1 would have
+    // silently skipped the check, even though it's the only chance to
+    // verify mass balance.
+    auto properties = MassBalanceMock(true, 1e-5, -1).as_json_property();
+    auto protocols = NgenBmiProtocols(model, properties);
+    double mass_error = 10; // Force a mass balance error above tolerance
+    model->SetValue(OUTPUT_MASS_NAME, &mass_error);
+    ASSERT_THROW((void) protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, make_context(0, 1, time, model_name)), ProtocolError);
+}
+
+TEST_F(Bmi_Mass_Balance_Test, frequency_end_large_n) {
+    // Confirm that across a longer run the end-sentinel fires exactly once,
+    // on the last step, and not on any intermediate step. Steps [0, N-2)
+    // must not throw (check skipped); step N-1 must throw (violation
+    // observed).
+    auto properties = MassBalanceMock(true, 1e-5, -1).as_json_property();
+    auto protocols = NgenBmiProtocols(model, properties);
+    double mass_error = 10; // Force a mass balance error above tolerance
+
+    constexpr int N = 5;
+    for (int k = 0; k < N - 1; ++k) {
+        model->SetValue(OUTPUT_MASS_NAME, &mass_error);
+        auto r = protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE,
+                               make_context(k, N, "t" + std::to_string(k), model_name));
+        EXPECT_TRUE(r.has_value()) << "frequency=-1 must not fire at step " << k;
+        model->Update();
+    }
+    // Last step: violation must be observed.
+    model->SetValue(OUTPUT_MASS_NAME, &mass_error);
+    ASSERT_THROW((void) protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE,
+                                      make_context(N - 1, N, "t" + std::to_string(N - 1), model_name)),
+                 ProtocolError);
+}
+
+TEST_F(Bmi_Mass_Balance_Test, frequency_negative_other_than_minus_one) {
+    // Any negative frequency takes the same end-of-run branch — the protocol
+    // only special-cases the `frequency > 0` modulo path; the `else` branch
+    // is reached for all non-positive frequencies (and `frequency == 0` is
+    // disabled at initialize time, so it never reaches run()).
+    auto properties = MassBalanceMock(true, 1e-5, -100).as_json_property();
+    auto protocols = NgenBmiProtocols(model, properties);
+    double mass_error = 10;
+    // Intermediate step: should not fire.
+    model->SetValue(OUTPUT_MASS_NAME, &mass_error);
+    auto r = protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE,
+                           make_context(0, 2, time, model_name));
+    EXPECT_TRUE(r.has_value());
+    model->Update();
+    // Last step: must fire.
+    model->SetValue(OUTPUT_MASS_NAME, &mass_error);
+    ASSERT_THROW((void) protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE,
+                                      make_context(1, 2, time, model_name)),
+                 ProtocolError);
 }
 
 TEST_F(Bmi_Mass_Balance_Test, nan) {
