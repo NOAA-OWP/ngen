@@ -11,7 +11,7 @@ ARG GH_ORG=NGWPC
 ARG GHCR_ORG=ngwpc
 ARG IMAGE_NAMESPACE=ngwpc
 
-# External repository sources (org and ref/branch overrides)
+# External repository source and branch overrides
 ARG EWTS_ORG=${GH_ORG}
 ARG EWTS_REF=development
 ARG USE_EWTS=ON
@@ -21,7 +21,7 @@ ARG USE_EWTS=ON
 ############################################################################
 
 # Use the ngen-bmi-forcing image as the base. This already includes the
-# inherited Rocky-based compiled dependency stack plus the ngen-bmi-forcing
+# inherited Bookworm-based compiled dependency stack plus the ngen-bmi-forcing
 # Python package.
 #
 # Default build:
@@ -40,18 +40,12 @@ ARG FORCING_IMAGE=ghcr.io/${GHCR_ORG}/ngen-bmi-forcing:latest
 
 FROM ${FORCING_IMAGE} AS base
 
-# Re-expose args after FROM for the remaining build stage
+# Re-expose args after FROM for the remaining build stage.
 ARG GH_ORG
 ARG GHCR_ORG
 ARG IMAGE_NAMESPACE
 ARG EWTS_ORG
 ARG EWTS_REF
-
-# USE_EWTS defaults to ON globally, but this value is also passed into CMake as
-# a cached option. If a prior Docker build configured a module with USE_EWTS=OFF,
-# a reused CMake build directory may retain that OFF value. Keep the Docker ARG
-# default explicit in this stage and normalize/default it before passing it to
-# CMake so an unset or empty value never becomes -DUSE_EWTS=.
 ARG USE_EWTS=ON
 
 # OCI Metadata Arguments
@@ -68,28 +62,36 @@ ARG EWTS_REVISION="unknown"
 # Image Labels: OCI-spec annotations followed by custom source-repo metadata.
 LABEL org.opencontainers.image.base.name="${FORCING_IMAGE_NAME}" \
       org.opencontainers.image.base.digest="${FORCING_IMAGE_DIGEST}" \
-    org.opencontainers.image.source="${IMAGE_SOURCE}" \
-    org.opencontainers.image.vendor="${IMAGE_VENDOR}" \
-    org.opencontainers.image.version="${IMAGE_VERSION}" \
-    org.opencontainers.image.revision="${IMAGE_REVISION}" \
-    org.opencontainers.image.title="Next Generation Water Modeling Engine and Framework Prototype" \
-    org.opencontainers.image.description="Docker image for the NGEN application" \
-    io.${IMAGE_NAMESPACE}.image.base.revision="${FORCING_IMAGE_REVISION}" \
-    io.${IMAGE_NAMESPACE}.ewts.org="${EWTS_ORG}" \
-    io.${IMAGE_NAMESPACE}.ewts.ref="${EWTS_REF}" \
-    io.${IMAGE_NAMESPACE}.ewts.revision="${EWTS_REVISION}"
+      org.opencontainers.image.source="${IMAGE_SOURCE}" \
+      org.opencontainers.image.vendor="${IMAGE_VENDOR}" \
+      org.opencontainers.image.version="${IMAGE_VERSION}" \
+      org.opencontainers.image.revision="${IMAGE_REVISION}" \
+      org.opencontainers.image.title="Next Generation Water Modeling Engine and Framework Prototype" \
+      org.opencontainers.image.description="Docker image for the NGEN application" \
+      io.${IMAGE_NAMESPACE}.image.base.revision="${FORCING_IMAGE_REVISION}" \
+      io.${IMAGE_NAMESPACE}.ewts.org="${EWTS_ORG}" \
+      io.${IMAGE_NAMESPACE}.ewts.ref="${EWTS_REF}" \
+      io.${IMAGE_NAMESPACE}.ewts.revision="${EWTS_REVISION}"
 
-# ngen-specific build/runtime dependencies not already provided by ngen-bmi-forcing.
-RUN set -eux && \
-    dnf install -y \
-        ccache \
-        xz xz-devel \
-    && dnf clean all && rm -rf /var/cache/dnf
+############################################################################
+# Runtime/build environment inherited from ngen-bmi-forcing-bookworm
+############################################################################
 
-SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
+# Reuse the shared venv created by ngen-dependencies-bookworm and populated by
+# ngen-bmi-forcing-bookworm. Do not recreate it here.
+ENV VIRTUAL_ENV="/ngen-app/ngen-python"
+ENV PATH="${VIRTUAL_ENV}/bin:${PATH}"
 
+# ngen-specific runtime/build dependencies not already provided by the dependency image.
+RUN --mount=type=cache,target=/var/cache/apt,id=apt-cache-bookworm,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,id=apt-lib-bookworm,sharing=locked \
+    set -eux && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        findutils && \
+    rm -rf /var/lib/apt/lists/*
 
-# Use ccache so repeated Docker builds can reuse previously 
+# Use ccache so repeated Docker builds can reuse previously
 # compiled C/C++/Fortran objects even when a Docker layer 
 # containing source files is invalidated.
 # ccache computes a hash based on things like:
@@ -97,70 +99,53 @@ SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
 #   compiler flags
 #   compiler version
 #   included headers
-# If it has already compiled the exact same thing before, 
-# it returns the cached .o file instead of recompiling
 
-ENV CCACHE_DIR="/root/.cache/ccache" \
-    CCACHE_MAXSIZE="10G"
+SHELL ["/bin/bash", "-c"]
 
-# Fix OpenMPI support within container
+# Fix OpenMPI support within container.
 ENV PSM3_HAL=loopback \
     PSM3_DEVICES=self
-
-# Re-expose the Python virtual environment inherited from ngen-bmi-forcing.
-# The dependency image creates the venv and the unversioned `python` symlink.
-# ngen-bmi-forcing installs the forcing package into that venv.
-# ngen and downstream images should reuse it rather than recreating it.
-ENV VIRTUAL_ENV="/ngen-app/ngen-python" \
-    PATH="${VIRTUAL_ENV}/bin:${PATH}" \
-    PYTHONPATH="${VIRTUAL_ENV}/lib/python3.11/site-packages:/usr/local/lib64/python3.11/site-packages:${PYTHONPATH}"
-
-# Consolidated LD_LIBRARY_PATH for MPI
-ENV LD_LIBRARY_PATH="/usr/lib64/openmpi/lib:/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH}"
-
-RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache-rocky \
-    set -eux && \
-    python -m pip install --upgrade pip setuptools wheel && \
-    python -m pip install 'numpy==1.26.4' && \
-    python -m pip install 'netcdf4<=1.6.3' && \
-    python -m pip install 'bmipy' && \
-    python -m pip install 'pandas' && \
-    python -m pip install 'pyyml' && \
-    python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
 WORKDIR /ngen-app/
 
 ##############################
 # Stage: EWTS Build – Error, Warning and Trapping System
 ##############################
-# EWTS is installed in the ewts-build stage so the built libraries, CMake
-# package files, Python wheel, and provenance metadata can be inherited by
-# the later submodules stage and final ngen image.
-#
-# Downstream images inherit that same EWTS installation:
-#   ngen-dependencies-rocky8 -> ngen-bmi-forcing -> ngen -> forecast/calibration/etc.
-#
-# As a result, downstream images should not install EWTS themselves unless
-# they intentionally need a different version.
+# EWTS is built in its own stage so that:
+#   - It is cached independently from ngen source changes (COPY . /ngen-app/ngen/
+#     happens later in the submodules stage).
+#   - Iterative ngen/submodule development doesn't re-trigger the EWTS clone+build.
+#   - EWTS_REF can be pinned without affecting other stages' caches.
 #
 # When USE_EWTS is enabled, EWTS provides a unified logging framework used by
 # ngen and the C, C++, Fortran, and Python modules that have been wired to it.
-# When USE_EWTS is disabled, this stage removes EWTS artifacts and later CMake
-# builds receive -DUSE_EWTS=OFF.
+# When USE_EWTS is disabled, this stage removes EWTS artifacts and the later
+# CMake builds receive -DUSE_EWTS=OFF.
 #
-# EWTS provides:
-#   - C/C++/Fortran runtime libraries
-#   - ngen bridge library
-#   - CMake package files under /opt/ewts
-#   - Python wheel into the shared venv
+# Libraries are created for C, C++ and Fortran submodules
+# (cfe, evapotranspiration, LASAM, noah-owp-modular, snow17, sac-sma,
+# SoilFreezeThaw, SoilMoistureProfiles, topmodel, ueb-bmi) and a Python package is
+# used by Python submodules (lstm, topoflow-glacier and t-route).
 #
-# Build args can override the EWTS repo/ref:
-#   docker build --build-arg EWTS_REF=v1.2.3 ...
-#   docker build --build-arg EWTS_REF=abc123def456 ...
+# How the plumbing works:
+#   1. We build EWTS here and install it to /opt/ewts.
+#   2. Every cmake call in the submodules stage passes
+#      -DCMAKE_PREFIX_PATH=/opt/ewts so that
+#      find_package(ewts CONFIG REQUIRED) in each submodule's CMakeLists.txt
+#      can locate the ewtsConfig.cmake package file.
+#   3. The following gives each submodule access to the EWTS targets:
+#        ewts::ewts_c            – C runtime             (cfe, evapotranspiration, topmodel)
+#        ewts::ewts_cpp          – C++ runtime logger    (used by LASAM, SoilFreezeThaw, SoilMoistureProfiles)
+#        ewts::ewts_fortran      – Fortran runtime       (noah-owp-modular sac-sma,, snow17)
+#        ewts::ewts_ngen_bridge  – ngen↔EWTS bridge lib  (linked by ngen itself)
+#        EWTS Python wheel       – python -m pip installed package  (lstm, topoflow-glacier, t-route)
+#
+# Build args – override at build time to select a remote branch:
+#   docker build --build-arg EWTS_REF=development ...
 ##############################
 FROM base AS ewts-build
 
-SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
+SHELL ["/bin/bash", "-c"]
 
 # USE_EWTS defaults to ON globally, but this value is also passed into CMake as
 # a cached option. If a prior Docker build configured a module with USE_EWTS=OFF,
@@ -168,6 +153,7 @@ SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
 # default explicit in this stage and normalize/default it before passing it to
 # CMake so an unset or empty value never becomes -DUSE_EWTS=.
 ARG USE_EWTS=ON
+ARG GH_ORG
 ARG EWTS_ORG
 ARG EWTS_REF
 ARG EWTS_CACHE_BUST=0
@@ -186,9 +172,8 @@ RUN set -eux && \
     fi
 
 # Install path for the built EWTS libraries, headers, cmake config, and
-# Fortran .mod files.  /opt/ewts follows the FHS convention for add-on
-# packages (same pattern as /opt/boost already in this image) and avoids
-# /tmp which can be cleaned unexpectedly.
+# Fortran .mod files. /opt/ewts follows the FHS convention for add-on
+# packages and avoids /tmp which can be cleaned unexpectedly.
 ENV EWTS_PREFIX=/opt/ewts
 
 # EWTS_PY_ROOT records the EWTS Python source location used by the EWTS-enabled
@@ -196,12 +181,13 @@ ENV EWTS_PREFIX=/opt/ewts
 # when USE_EWTS is enabled.
 ENV EWTS_PY_ROOT=/tmp/nwm-ewts/runtime/python/ewts
 
-# Clone/build/install EWTS when enabled.
+# Clone the requested nwm-ewts branch, build and install EWTS, capture git
+# metadata for provenance, and then remove the build artifacts and Git metadata.
 #
-# The Docker layer is intentionally invalidated via EWTS_CACHE_BUST so we can
-# check the latest branch state. A persistent cache mount stores the EWTS source
-# tree and last-built commit SHA. If the branch HEAD has not changed, the cached
-# source/build tree is reused instead of recloning.
+# The shallow clone is expected to succeed because the validation above confirms
+# that EWTS_REF identifies an existing remote branch. The fallback clone and
+# checkout are retained to provide a clearer failure path if the shallow clone
+# cannot be completed.
 #
 # Ensures an unset or empty USE_EWTS defaults to ON.
 #
@@ -210,36 +196,35 @@ ENV EWTS_PY_ROOT=/tmp/nwm-ewts/runtime/python/ewts
 #
 # Everything else is treated as OFF.
 #
-RUN --mount=type=cache,target=/root/.cache/ewts,id=ewts-source-rocky \
-    --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
-    --mount=type=cache,target=/root/.cache/pip,id=pip-cache-rocky \
+RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-bookworm \
+    --mount=type=cache,target=/root/.cache/pip,id=pip-cache-bookworm \
     echo "USE_EWTS=${USE_EWTS}; EWTS cache bust: ${EWTS_CACHE_BUST}" && \
     set -eux && \
     USE_EWTS="${USE_EWTS:-ON}" && \
     USE_EWTS_NORMALIZED="$(echo "${USE_EWTS}" | tr '[:lower:]' '[:upper:]')" && \
     if [[ "${USE_EWTS_NORMALIZED}" =~ ^(ON|YES|TRUE|1)$ ]]; then \
-        # Current HEAD commit of the requested branch.
-        EWTS_REMOTE_SHA="$(git ls-remote "https://github.com/${EWTS_ORG}/nwm-ewts.git" "refs/heads/${EWTS_REF}" | awk '{print $1}')" && \
-        EWTS_CACHE_DIR="/root/.cache/ewts/nwm-ewts-${EWTS_REF}" && \
-        EWTS_SHA_FILE="/root/.cache/ewts/nwm-ewts-${EWTS_REF}.sha" && \
-        # Re-clone only when the branch HEAD has changed.
-        if [ ! -d "${EWTS_CACHE_DIR}" ] || [ ! -f "${EWTS_SHA_FILE}" ] || [ "$(cat "${EWTS_SHA_FILE}")" != "${EWTS_REMOTE_SHA}" ]; then \
-            echo "EWTS changed or missing; cloning ${EWTS_REF} at ${EWTS_REMOTE_SHA}"; \
-            rm -rf "${EWTS_CACHE_DIR}"; \
-            git clone --depth 1 -b "${EWTS_REF}" "https://github.com/${EWTS_ORG}/nwm-ewts.git" "${EWTS_CACHE_DIR}"; \
-            echo "${EWTS_REMOTE_SHA}" > "${EWTS_SHA_FILE}"; \
-        else \
-            echo "EWTS source unchanged at ${EWTS_REMOTE_SHA}; reusing cached source/build tree"; \
-        fi && \
-        cd "${EWTS_CACHE_DIR}" && \
+        echo "Building and installing EWTS"; \
+        rm -rf /tmp/nwm-ewts && \
+        git clone --depth 1 -b "${EWTS_REF}" \
+            "https://github.com/${EWTS_ORG}/nwm-ewts.git" /tmp/nwm-ewts \
+        || (git clone "https://github.com/${EWTS_ORG}/nwm-ewts.git" /tmp/nwm-ewts && \
+            cd /tmp/nwm-ewts && git checkout "${EWTS_REF}"); \
+        rm -rf /tmp/nwm-ewts/cmake_build && \
+        cd /tmp/nwm-ewts; \
+        export PATH="${VIRTUAL_ENV}/bin:${PATH}"; \
+        export PYTHONNOUSERSITE=1; \
+        export PYTHONPATH=; \
+        python -c "import sys, setuptools, wheel, build, packaging; print(sys.executable); print(setuptools.__version__)"; \
         cmake -S . -B cmake_build \
             -DCMAKE_BUILD_TYPE=Release \
             -DEWTS_WITH_NGEN=ON \
             -DEWTS_BUILD_SHARED=ON \
+            -DPython_EXECUTABLE="${VIRTUAL_ENV}/bin/python" \
+            -DPython3_EXECUTABLE="${VIRTUAL_ENV}/bin/python" \
             -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache && \
-        cmake --build cmake_build -j "$(nproc)" && \
-        cmake --install cmake_build --prefix "${EWTS_PREFIX}" && \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache; \
+        cmake --build cmake_build -j "$(nproc)"; \
+        cmake --install cmake_build --prefix "${EWTS_PREFIX}"; \
         jq -n \
             --arg commit_hash "$(git rev-parse HEAD)" \
             --arg branch "$(git branch -r --contains HEAD 2>/dev/null | grep -v '\->' | sed 's|origin/||' | head -n1 | xargs || echo "${EWTS_REF}")" \
@@ -249,12 +234,14 @@ RUN --mount=type=cache,target=/root/.cache/ewts,id=ewts-source-rocky \
             --arg message "$(git log -1 --pretty=format:'%s' | tr '\n' ';')" \
             --arg build_date "$(date -u +'%Y-%m-%d %H:%M:%S UTC')" \
             '{"nwm-ewts": {commit_hash: $commit_hash, branch: $branch, tags: $tags, author: $author, commit_date: $commit_date, message: $message, build_date: $build_date}}' \
-            > /ngen-app/nwm-ewts_git_info.json && \
+            > /ngen-app/nwm-ewts_git_info.json; \
         python -m pip install "${EWTS_PREFIX}"/python/dist/ewts-*.whl; \
+        cd /; \
+        rm -rf /tmp/nwm-ewts/cmake_build /tmp/nwm-ewts/.git; \
     else \
         echo "EWTS disabled; removing any EWTS artifacts"; \
         python -m pip uninstall -y ewts || true; \
-        rm -rf "${EWTS_PREFIX}" /ngen-app/nwm-ewts_git_info.json; \
+        rm -rf "${EWTS_PREFIX}" /tmp/nwm-ewts /ngen-app/nwm-ewts_git_info.json; \
     fi
 
 # When USE_EWTS=ON, make EWTS shared libraries (.so) discoverable at runtime.
@@ -283,9 +270,7 @@ ENV LD_LIBRARY_PATH="${EWTS_PREFIX}/lib:${EWTS_PREFIX}/lib64:${LD_LIBRARY_PATH}"
 ##############################
 FROM ewts-build AS submodules
 
-SHELL [ "/usr/bin/scl", "enable", "gcc-toolset-10" ]
-
-ENV LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
+SHELL ["/bin/bash", "-c"]
 
 # USE_EWTS defaults to ON globally, but this value is also passed into CMake as
 # a cached option. If a prior Docker build configured a module with USE_EWTS=OFF,
@@ -293,17 +278,19 @@ ENV LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
 # default explicit in this stage and normalize/default it before passing it to
 # CMake so an unset or empty value never becomes -DUSE_EWTS=.
 ARG USE_EWTS=ON
+ARG GH_ORG
+ARG EWTS_REF
 
 WORKDIR /ngen-app/
 
 # Copy only the requirements files first for dependency installation caching.
-# Changes to ngen source files will not invalidate this pip install layer unless
+# Changes to ngen source files will not invalidate this dependency install layer unless
 # one of these requirements files changes.
 COPY extern/test_bmi_py/requirements.txt /tmp/test_bmi_py_requirements.txt
 COPY extern/t-route/requirements.txt /tmp/t-route_requirements.txt
 
 # Install Python dependencies and remove the temporary requirements files.
-RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache-rocky \
+RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache-bookworm \
     set -eux && \
         python -m pip install -r /tmp/test_bmi_py_requirements.txt && \
         python -m pip install -r /tmp/t-route_requirements.txt && \
@@ -342,7 +329,7 @@ COPY extern/t-route extern/t-route
 # ──────────────────────────────────────────────────────────────────────────────
 
 ARG LASAM_CACHE_BUST=0
-RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
+RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-bookworm \
     set -eux && \
     USE_EWTS="${USE_EWTS:-ON}" && \
     echo "LASAM cache bust: ${LASAM_CACHE_BUST}" && \
@@ -360,7 +347,7 @@ RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
     find /ngen-app/ngen/extern/LASAM -name '*.o' -exec rm -f {} +
 
 ARG SNOW17_CACHE_BUST=0
-RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
+RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-bookworm \
     set -eux && \
     USE_EWTS="${USE_EWTS:-ON}" && \
     echo "SNOW17 cache bust: ${SNOW17_CACHE_BUST}" && \
@@ -377,7 +364,7 @@ RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
     find /ngen-app/ngen/extern/snow17 -name '*.o' -exec rm -f {} +
 
 ARG SACSMA_CACHE_BUST=0
-RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
+RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-bookworm \
     set -eux && \
     USE_EWTS="${USE_EWTS:-ON}" && \
     echo "SACSMA cache bust: ${SACSMA_CACHE_BUST}" && \
@@ -394,7 +381,7 @@ RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
     find /ngen-app/ngen/extern/sac-sma -name '*.o' -exec rm -f {} +
 
 ARG SMP_CACHE_BUST=0
-RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
+RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-bookworm \
     set -eux && \
     USE_EWTS="${USE_EWTS:-ON}" && \
     echo "SMP cache bust: ${SMP_CACHE_BUST}" && \
@@ -412,7 +399,7 @@ RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
     find /ngen-app/ngen/extern/SoilMoistureProfiles -name '*.o' -exec rm -f {} +
 
 ARG SFT_CACHE_BUST=0
-RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
+RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-bookworm \
     set -eux && \
     USE_EWTS="${USE_EWTS:-ON}" && \
     echo "SFT cache bust: ${SFT_CACHE_BUST}" && \
@@ -430,7 +417,7 @@ RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
     find /ngen-app/ngen/extern/SoilFreezeThaw -name '*.o' -exec rm -f {} +
 
 ARG UEB_CACHE_BUST=0
-RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
+RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-bookworm \
     set -eux && \
     USE_EWTS="${USE_EWTS:-ON}" && \
     echo "UEB cache bust: ${UEB_CACHE_BUST}" && \
@@ -439,7 +426,7 @@ RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
     rm -rf extern/ueb-bmi/cmake_build && \
     cmake -B extern/ueb-bmi/cmake_build -S extern/ueb-bmi/ \
       -DUEB_SUPPRESS_OUTPUTS=ON \
-      -DCMAKE_PREFIX_PATH="${EWTS_PREFIX};/usr/local" \
+      -DCMAKE_PREFIX_PATH="${EWTS_PREFIX}" \
       -DUSE_EWTS="${USE_EWTS_NORMALIZED}" \
       -DBMICXX_INCLUDE_DIRS=/ngen-app/ngen/extern/bmi-cxx/ \
       -DCMAKE_C_COMPILER_LAUNCHER=ccache \
@@ -448,7 +435,7 @@ RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
     cmake --build extern/ueb-bmi/cmake_build/ && \
     find /ngen-app/ngen/extern/ueb-bmi/ -name '*.o' -exec rm -f {} +
 
-RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache-rocky \
+RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache-bookworm \
     set -eux; \
     cd extern/lstm; \
     python -m pip install .
@@ -459,8 +446,8 @@ RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache-rocky \
 # separate t-route cache mount (e.g. /root/.cache/t-route) does not help unless
 # the scripts explicitly write build artifacts there. pip/uv caches are the
 # useful reusable caches here.
-RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache-rocky \
-    --mount=type=cache,target=/root/.cache/uv,id=uv-cache-rocky \
+RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache-bookworm \
+    --mount=type=cache,target=/root/.cache/uv,id=uv-cache-bookworm \
     set -eux && \
     export CC="gcc" && \
     export CXX="g++" && \
@@ -489,9 +476,9 @@ RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache-rocky \
 COPY . /ngen-app/ngen/
 
 # topoflow-glacier uses setuptools-scm/VCS versioning and requires Git
-# metadata to be available when `pip install .` runs. Therefore this must
+# metadata to be available when `python -m pip install .` runs. Therefore this must
 # be built after the full repository COPY step.
-RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache-rocky \
+RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache-bookworm \
     set -eux; \
     cd extern/topoflow-glacier; \
     python -m pip install .
@@ -501,7 +488,7 @@ RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache-rocky \
 # to find the ewtsConfig.cmake package file so that ngen's
 # CMakeLists.txt line find_package(ewts CONFIG REQUIRED) succeeds.
 # ngen links against ewts::ewts_ngen_bridge (the C++/MPI bridge).
-RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
+RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-bookworm \
     set -eux && \
     USE_EWTS="${USE_EWTS:-ON}" && \
     echo "ngen USE_EWTS=${USE_EWTS}" && \
@@ -511,7 +498,9 @@ RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-rocky \
     export CMAKE_Fortran_FLAGS="-fPIC" && \
     rm -rf cmake_build && \
     cmake -B cmake_build -S . \
-        -DCMAKE_PREFIX_PATH="${EWTS_PREFIX};/usr/local" \
+        -DCMAKE_PREFIX_PATH=${EWTS_PREFIX} \
+        -DPython_EXECUTABLE="${VIRTUAL_ENV}/bin/python" \
+        -DPython3_EXECUTABLE="${VIRTUAL_ENV}/bin/python" \
         -DUSE_EWTS="${USE_EWTS_NORMALIZED}" \
         -DNGEN_WITH_MPI=ON \
         -DNGEN_WITH_NETCDF=ON \
@@ -629,15 +618,14 @@ RUN set -eux && \
     mv /ngen-app/merged_git_info.json $GIT_INFO_PATH && \
     rm -rf /ngen-app/submodules-json /ngen-app/nwm-ewts_git_info.json
 
-# Extend PYTHONPATH for LSTM models (preserve venv path from ngen-bmi-forcing)
-ENV PYTHONPATH="${PYTHONPATH}:/ngen-app/ngen/extern/lstm:/ngen-app/ngen/extern/lstm/lstm"
+# Make LSTM source-tree modules importable at runtime.
+# Do not add venv site-packages; the active venv already handles installed packages.
+ENV PYTHONPATH="/ngen-app/ngen/extern/lstm:/ngen-app/ngen/extern/lstm/lstm"
 
-# Extend PYTHONPATH for Topoflow-Glacier
+# Make Topoflow-Glacier source-tree modules importable at runtime.
 ENV PYTHONPATH="${PYTHONPATH}:/ngen-app/ngen/extern/topoflow-glacier:/ngen-app/ngen/extern/topoflow-glacier/src/topoflow-glacier"
 
 WORKDIR /
-SHELL ["/bin/bash", "-c"]
 
 ENTRYPOINT [ "/ngen-app/bin/run-ngen.sh" ]
 CMD [ "--info" ]
-
