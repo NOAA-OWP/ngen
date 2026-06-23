@@ -76,8 +76,12 @@ TEST(FileBackendNoFsync, relaxed_durability_still_works) {
     {
         auto w = be->writer(std::chrono::system_clock::now(), Durability::relaxed);
         ASSERT_TRUE(w.has_value()) << w.error().message;
-        ngen::serialization::Record rec{"cat-1", 0, 0, std::vector<char>{'X'}, 0};
-        ASSERT_TRUE(w.value()->write(rec).has_value());
+        const std::vector<char> payload{'X'};
+        ASSERT_TRUE(w.value()->write(ngen::serialization::RecordView{
+            "cat-1", 0, 0,
+            boost::span<const char>{payload.data(), payload.size()},
+            0
+        }).has_value());
         ASSERT_TRUE(w.value()->commit().has_value());
     }
     auto r = be->reader();

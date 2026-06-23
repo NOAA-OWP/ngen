@@ -89,10 +89,13 @@ public:
     public:
         virtual ~Writer() = default;
 
-        /** Append a record to this checkpoint event. Error arm
+        /** Append a record to this checkpoint event. The caller
+         *  owns the `RecordView`'s payload bytes for the duration
+         *  of this call; the writer streams them to storage and
+         *  does not retain the pointer after returning. Error arm
          *  carries a backend-specific diagnostic if the append
          *  fails (I/O error, oversized payload, etc.). */
-        [[nodiscard]] virtual auto write(const Record& record)
+        [[nodiscard]] virtual auto write(const RecordView& rv)
             -> expected<void, BackendError> = 0;
 
         /** Commit the event: flush pending writes, make them

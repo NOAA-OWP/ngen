@@ -95,8 +95,13 @@ using serialization::wire_format::Status;
 // Re-export the engine-agnostic value type and timestamp parser
 // from ngen::serialization so existing call sites continue to use
 // `models::bmi::protocols::SerializationRecord` / `parse_timestamp`
-// unchanged.
-using SerializationRecord = ::ngen::serialization::Record;
+// unchanged. `SerializationRecordView` is the non-owning sibling
+// (payload is `boost::span<const char>` rather than
+// `std::vector<char>`); use it on the write path when the caller
+// already holds the payload bytes in a buffer it owns for the
+// duration of the call.
+using SerializationRecord     = ::ngen::serialization::Record;
+using SerializationRecordView = ::ngen::serialization::RecordView;
 using ::ngen::serialization::parse_timestamp;
 
 /** @brief Sanity cap on a single record's payload size.
@@ -163,19 +168,60 @@ read_validated_prefix(std::istream& in, serialization::wire_format::RecordPrefix
 }
 
 /** @brief Append a record to @p out using the v0.2 wire format
- *  (fixed-size prefix + id bytes + payload bytes).
+ *  (fixed-size prefix + id bytes + payload bytes). Canonical entry
+ *  point — takes a `SerializationRecordView` so callers can stream
+ *  a record whose payload bytes live in a buffer they already own,
+ *  without materializing a fresh owning copy.
  *
  *  Field mapping at the write site is identity: every prefix
- *  field comes directly from the matching `SerializationRecord`
- *  field. Callers who want a wall-clock stamp on
- *  `checkpoint_epoch` set it themselves (typically via
- *  `std::time(nullptr)`) before calling; default-constructed
- *  records carry `checkpoint_epoch = 0`.
+ *  field comes directly from the matching record field. Callers
+ *  who want a wall-clock stamp on `checkpoint_epoch` set it
+ *  themselves (typically via `std::time(nullptr)`) before calling;
+ *  default-constructed records carry `checkpoint_epoch = 0`.
  *
  *  Returns the error arm if the stream ends up in a fail state
  *  after the prefix / id / payload bytes are issued. The check
  *  is post-write — the caller doesn't need to inspect the stream
  *  itself.
+ *
+ *  See the overload below for the `SerializationRecord` (owning)
+ *  variant; both produce identical wire output.
+ */
+nsel_NODISCARD inline auto write_record(std::ostream& out, const SerializationRecordView& rec)
+    -> expected<void, std::string> {
+    serialization::wire_format::RecordPrefix prefix;
+    prefix.time_step            = rec.time_step;
+    prefix.simulation_timestamp = rec.simulation_timestamp;
+    prefix.checkpoint_epoch     = rec.checkpoint_epoch;
+    prefix.id_length            = static_cast<uint16_t>(rec.id.size());
+    prefix.payload_length       = static_cast<uint64_t>(rec.payload.size());
+    // (magic and wire_version come from the struct's default values.)
+
+    serialization::wire_format::write_record_prefix(out, prefix);
+    if (!rec.id.empty()) {
+        out.write(rec.id.data(), static_cast<std::streamsize>(rec.id.size()));
+    }
+    if (!rec.payload.empty()) {
+        out.write(rec.payload.data(), static_cast<std::streamsize>(rec.payload.size()));
+    }
+    if (!out) {
+        return make_unexpected(
+            std::string("serialization_record: stream failed during record write")
+        );
+    }
+    return {};
+}
+
+/** @brief Overload accepting an owning `SerializationRecord`.
+ *
+ *  Identical wire output to the `SerializationRecordView` overload
+ *  above. The body mirrors the View path because RecordView's `id`
+ *  field is itself an owning `std::string` — constructing a view
+ *  to delegate would force an unnecessary id-string copy. The
+ *  payload type is the only field where the two records diverge,
+ *  and `out.write(payload.data(), payload.size())` is the same
+ *  call shape for `std::vector<char>` and
+ *  `boost::span<const char>`.
  */
 nsel_NODISCARD inline auto write_record(std::ostream& out, const SerializationRecord& rec)
     -> expected<void, std::string> {
@@ -185,7 +231,6 @@ nsel_NODISCARD inline auto write_record(std::ostream& out, const SerializationRe
     prefix.checkpoint_epoch     = rec.checkpoint_epoch;
     prefix.id_length            = static_cast<uint16_t>(rec.id.size());
     prefix.payload_length       = static_cast<uint64_t>(rec.payload.size());
-    // (magic and wire_version come from the struct's default values.)
 
     serialization::wire_format::write_record_prefix(out, prefix);
     if (!rec.id.empty()) {

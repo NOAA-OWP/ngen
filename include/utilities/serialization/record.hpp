@@ -30,6 +30,8 @@ the fields however suits their storage.
 */
 #pragma once
 
+#include <boost/core/span.hpp>
+
 #include <cstdint>
 #include <exception>
 #include <string>
@@ -82,18 +84,25 @@ inline int64_t parse_timestamp(const std::string& s) {
  * to a backend; the BMI protocol library's save path uses
  * `std::time(nullptr)`.
  */
-struct Record {
+namespace detail {
+
+// Shared field set for the two public checkpoint-record types
+// (`Record` and `RecordView`, below). Implementation alignment
+// mechanism only — adding or changing a metadata field touches
+// one definition and both aliases inherit the change.
+template <typename PayloadT>
+struct RecordT {
     std::string       id;
     int64_t           time_step            = 0;
     int64_t           simulation_timestamp = 0;
     int64_t           checkpoint_epoch     = 0;
-    std::vector<char> payload;
+    PayloadT          payload{};
 
-    Record() = default;
-    Record(std::string id_,
+    RecordT() = default;
+    RecordT(std::string id_,
                         int64_t time_step_,
                         int64_t simulation_timestamp_,
-                        std::vector<char> payload_,
+                        PayloadT payload_,
                         int64_t checkpoint_epoch_ = 0)
         : id(std::move(id_))
         , time_step(time_step_)
@@ -101,5 +110,28 @@ struct Record {
         , checkpoint_epoch(checkpoint_epoch_)
         , payload(std::move(payload_)) {}
 };
+
+} // namespace detail
+
+/** @brief A checkpoint record that owns its payload.
+ *
+ *  `payload` is a `std::vector<char>` of opaque saved bytes —
+ *  neither this value type nor any consumer interprets them; the
+ *  producer chooses the byte format and the eventual consumer
+ *  parses them.
+ *
+ *  See `RecordView` for the non-owning payload-view.
+ */
+using Record     = detail::RecordT<std::vector<char>>;
+
+/** @brief A checkpoint record that views its payload (non-owning).
+ *
+ *  Same metadata field set as `Record`, but `payload` is a
+ *  `boost::span<const char>` rather than an owning vector. The
+ *  caller keeps the payload bytes alive elsewhere for the
+ *  lifetime of the view.
+ *
+ */
+using RecordView = detail::RecordT<boost::span<const char>>;
 
 }}  // namespace ngen::serialization
