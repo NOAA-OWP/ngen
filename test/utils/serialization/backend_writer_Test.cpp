@@ -82,9 +82,8 @@ TEST(RecordBackend_writer, write_and_commit_succeed) {
     auto w = be.writer(now(), Durability::strict);
     ASSERT_TRUE(w.has_value());
 
-    Record rec;
-    EXPECT_TRUE(w.value()->write(rec).has_value());
-    EXPECT_TRUE(w.value()->write(rec).has_value());
+    EXPECT_TRUE(w.value()->write(RecordView{}).has_value());
+    EXPECT_TRUE(w.value()->write(RecordView{}).has_value());
     EXPECT_EQ(be.writes_called, 2);
 
     EXPECT_TRUE(w.value()->commit().has_value());
@@ -97,7 +96,7 @@ TEST(RecordBackend_writer, write_failure_surfaces_on_error_arm) {
     auto w         = be.writer(now(), Durability::relaxed);
     ASSERT_TRUE(w.has_value());
 
-    auto r = w.value()->write(Record{});
+    auto r = w.value()->write(RecordView{});
     ASSERT_FALSE(r.has_value());
     EXPECT_EQ(r.error().kind, BackendError::Kind::IOError);
     EXPECT_EQ(r.error().message, "forced write failure");
@@ -121,8 +120,8 @@ TEST(RecordBackend_writer, commit_failure_surfaces_on_error_arm) {
 TEST(RecordBackend_with_writer, calls_commit_on_success_path) {
     TrackingBackend be;
     auto rc = be.with_writer(now(), Durability::relaxed, [](Writer& w) {
-        (void)w.write(Record{});
-        (void)w.write(Record{});
+        (void)w.write(RecordView{});
+        (void)w.write(RecordView{});
     });
     ASSERT_TRUE(rc.has_value());
     EXPECT_EQ(be.writes_called, 2);
@@ -150,7 +149,7 @@ TEST(RecordBackend_with_writer, commit_failure_propagates_after_fn_ran) {
     int closure_calls = 0;
     auto rc           = be.with_writer(now(), Durability::strict, [&](Writer& w) {
         ++closure_calls;
-        (void)w.write(Record{});
+        (void)w.write(RecordView{});
     });
     EXPECT_FALSE(rc.has_value());
     EXPECT_EQ(rc.error().kind, BackendError::Kind::IOError);
@@ -161,7 +160,7 @@ TEST(RecordBackend_with_writer, sequential_calls_do_not_trip_single_in_flight) {
     TrackingBackend be;
     for (int i = 0; i < 5; ++i) {
         auto rc =
-            be.with_writer(now(), Durability::relaxed, [](Writer& w) { (void)w.write(Record{}); });
+            be.with_writer(now(), Durability::relaxed, [](Writer& w) { (void)w.write(RecordView{}); });
         ASSERT_TRUE(rc.has_value()) << "iteration " << i;
     }
     EXPECT_EQ(be.writers_constructed, 5);

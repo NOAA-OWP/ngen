@@ -44,14 +44,26 @@ auto now() {
     return std::chrono::system_clock::now();
 }
 
-Record make_record(
-    std::string id,
-    int64_t step,
-    int64_t ts,
-    std::vector<char> payload,
-    int64_t checkpoint_epoch = 0
+// Test-side convenience: drive the writer with field-by-field args
+// and a span over caller-owned payload bytes, packed into a
+// `RecordView` per the v0.2 `Writer::write` signature. Used in place
+// of `writer.write(rec)` at every call site that built a `Record`
+// solely to immediately hand it to `write`.
+auto write_record(
+    Writer&                  w,
+    const std::string&       id,
+    int64_t                  step,
+    int64_t                  ts,
+    const std::vector<char>& payload,
+    int64_t                  checkpoint_epoch = 0
 ) {
-    return Record{std::move(id), step, ts, std::move(payload), checkpoint_epoch};
+    return w.write(RecordView{
+        id,
+        step,
+        ts,
+        boost::span<const char>{payload.data(), payload.size()},
+        checkpoint_epoch
+    });
 }
 
 // Convenience wrapper for tests that expect must_create() to
@@ -87,7 +99,7 @@ TEST(FileBackend, round_trip_single_record_via_factory_methods) {
     {
         auto w = be->writer(now(), Durability::relaxed);
         ASSERT_TRUE(w.has_value()) << w.error().message;
-        ASSERT_TRUE(w.value()->write(make_record("cat-1:cfe", 0, 60, {'A', 'B', 'C'})).has_value());
+        ASSERT_TRUE(write_record(*w.value(),"cat-1:cfe", 0, 60, {'A', 'B', 'C'}).has_value());
         ASSERT_TRUE(w.value()->commit().has_value());
     }
 
@@ -112,9 +124,9 @@ TEST(FileBackend, round_trip_via_scoped_wrappers) {
 
     // Save side via with_writer
     auto save = be->with_writer(now(), Durability::relaxed, [](Writer& w) {
-        (void)w.write(make_record("cat-1", 0, 0, {'X'}));
-        (void)w.write(make_record("cat-1", 1, 60, {'Y'}));
-        (void)w.write(make_record("cat-2", 0, 0, {'Z'}));
+        (void)write_record(w,"cat-1", 0, 0, {'X'});
+        (void)write_record(w,"cat-1", 1, 60, {'Y'});
+        (void)write_record(w,"cat-2", 0, 0, {'Z'});
     });
     ASSERT_TRUE(save.has_value()) << save.error().message;
 
@@ -139,9 +151,9 @@ TEST(FileBackend, multiple_entities_share_one_file) {
     auto be = must_create(path);
 
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
-                      (void)w.write(make_record("cat-A", 0, 0, {'1'}));
-                      (void)w.write(make_record("cat-B", 0, 0, {'2'}));
-                      (void)w.write(make_record("cat-A", 2, 120, {'3'}));
+                      (void)write_record(w,"cat-A", 0, 0, {'1'});
+                      (void)write_record(w,"cat-B", 0, 0, {'2'});
+                      (void)write_record(w,"cat-A", 2, 120, {'3'});
                   }).has_value());
 
     auto r = be->reader();
@@ -168,9 +180,9 @@ TEST(FileBackend, find_at_step_picks_exact_step) {
 
     auto be = must_create(path);
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
-                      (void)w.write(make_record("cat-1", 0, 0, {'a'}));
-                      (void)w.write(make_record("cat-1", 5, 300, {'b'}));
-                      (void)w.write(make_record("cat-1", 7, 420, {'c'}));
+                      (void)write_record(w,"cat-1", 0, 0, {'a'});
+                      (void)write_record(w,"cat-1", 5, 300, {'b'});
+                      (void)write_record(w,"cat-1", 7, 420, {'c'});
                   }).has_value());
 
     auto r   = be->reader();
@@ -191,9 +203,9 @@ TEST(FileBackend, find_at_simulation_timestamp_picks_exact_match) {
 
     auto be = must_create(path);
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
-                      (void)w.write(make_record("cat-1", 0, 1000, {'p'}));
-                      (void)w.write(make_record("cat-1", 1, 2000, {'q'}));
-                      (void)w.write(make_record("cat-1", 2, 3000, {'r'}));
+                      (void)write_record(w,"cat-1", 0, 1000, {'p'});
+                      (void)write_record(w,"cat-1", 1, 2000, {'q'});
+                      (void)write_record(w,"cat-1", 2, 3000, {'r'});
                   }).has_value());
 
     auto r   = be->reader();
@@ -228,7 +240,7 @@ TEST(FileBackend, large_record_payload_round_trips) {
 
     auto be = must_create(path);
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [&](Writer& w) {
-                      (void)w.write(make_record("big-1", 0, 0, big_payload));
+                      (void)write_record(w,"big-1", 0, 0, big_payload);
                   }).has_value());
 
     auto r   = be->reader();
@@ -262,7 +274,7 @@ TEST(FileBackend, strict_durability_commit_fsyncs_and_succeeds) {
     {
         auto w = be->writer(now(), Durability::strict);
         ASSERT_TRUE(w.has_value()) << w.error().message;
-        ASSERT_TRUE(w.value()->write(make_record("cat-1", 0, 0, {'D'})).has_value());
+        ASSERT_TRUE(write_record(*w.value(),"cat-1", 0, 0, {'D'}).has_value());
         auto rc = w.value()->commit();
         ASSERT_TRUE(rc.has_value()) << rc.error().message;
     }
@@ -319,7 +331,7 @@ TEST(FileBackend, registry_evicts_after_last_handle_drops) {
     EXPECT_NE(be2.get(), nullptr);
     auto w = be2->writer(now(), Durability::relaxed);
     ASSERT_TRUE(w.has_value()) << w.error().message;
-    ASSERT_TRUE(w.value()->write(make_record("post-reuse", 0, 0, {'X'})).has_value());
+    ASSERT_TRUE(write_record(*w.value(),"post-reuse", 0, 0, {'X'}).has_value());
 
     std::remove(path.c_str());
 }
@@ -346,8 +358,10 @@ TEST(FileBackend, concurrent_writers_serialize_records_via_backend_mutex) {
         std::vector<char> payload(payload_size, '\0');
         for (int i = 0; i < per_thread; ++i) {
             std::fill(payload.begin(), payload.end(), static_cast<char>('A' + (i % 26)));
-            Record rec{id_prefix + "-" + std::to_string(i), static_cast<int64_t>(i), 0, payload, 0};
-            ASSERT_TRUE(w.write(rec).has_value());
+            ASSERT_TRUE(
+                write_record(w, id_prefix + "-" + std::to_string(i),
+                             static_cast<int64_t>(i), 0, payload, 0).has_value()
+            );
         }
         ASSERT_TRUE(w.commit().has_value());
     };
@@ -396,7 +410,7 @@ TEST(FileBackend, writer_supports_multiple_write_commit_cycles) {
         ASSERT_TRUE(w.has_value());
         for (int64_t i = 0; i < 5; ++i) {
             ASSERT_TRUE(
-                w.value()->write(make_record("cat-1", i, i * 60, {char('a' + i)})).has_value()
+                write_record(*w.value(),"cat-1", i, i * 60, {char('a' + i)}).has_value()
             );
             ASSERT_TRUE(w.value()->commit().has_value());
         }
@@ -426,9 +440,9 @@ TEST(FileBackend, trailing_write_after_commit_is_flushed_on_destruction) {
     {
         auto w = be->writer(now(), Durability::relaxed);
         ASSERT_TRUE(w.has_value());
-        ASSERT_TRUE(w.value()->write(make_record("cat-1", 0, 0, {'A'})).has_value());
+        ASSERT_TRUE(write_record(*w.value(),"cat-1", 0, 0, {'A'}).has_value());
         ASSERT_TRUE(w.value()->commit().has_value());
-        ASSERT_TRUE(w.value()->write(make_record("cat-1", 1, 60, {'B'})).has_value());
+        ASSERT_TRUE(write_record(*w.value(),"cat-1", 1, 60, {'B'}).has_value());
         // No explicit commit; let the Writer destruct.
     }
 
@@ -449,7 +463,7 @@ TEST(FileBackend, sequential_with_writer_calls_dont_trip_single_in_flight) {
     auto be = must_create(path);
     for (int i = 0; i < 4; ++i) {
         auto rc = be->with_writer(now(), Durability::relaxed, [i](Writer& w) {
-            (void)w.write(make_record("cat-" + std::to_string(i), i, i * 60, {'x'}));
+            (void)write_record(w,"cat-" + std::to_string(i), i, i * 60, {'x'});
         });
         ASSERT_TRUE(rc.has_value()) << "iteration " << i;
     }
@@ -470,9 +484,9 @@ TEST(FileBackend, reader_with_scope_excludes_out_of_scope_ids) {
 
     auto be = must_create(path);
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
-                      (void)w.write(make_record("cat-1:cfe", 0, 0, {'1'}));
-                      (void)w.write(make_record("cat-2:cfe", 0, 0, {'2'}));
-                      (void)w.write(make_record("cat-3:cfe", 0, 0, {'3'}));
+                      (void)write_record(w,"cat-1:cfe", 0, 0, {'1'});
+                      (void)write_record(w,"cat-2:cfe", 0, 0, {'2'});
+                      (void)write_record(w,"cat-3:cfe", 0, 0, {'3'});
                   }).has_value());
 
     auto r = be->reader(primary_prefix("cat-1"));
@@ -500,7 +514,7 @@ TEST(FileBackend, reader_remains_valid_after_backend_destruction) {
     {
         auto be = must_create(path);
         ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
-                          (void)w.write(make_record("cat-1", 0, 0, {'A'}));
+                          (void)write_record(w,"cat-1", 0, 0, {'A'});
                       }).has_value());
     } // FileBackend destroyed
 
@@ -549,8 +563,8 @@ TEST(FileBackend, duplicate_key_warning_fires_at_index_build) {
     // with_writer call, but normally they'd come from cross-process
     // collision.
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
-                      (void)w.write(make_record("cat-1", 0, 0, {'A'}, /*epoch=*/100));
-                      (void)w.write(make_record("cat-1", 0, 0, {'B'}, /*epoch=*/100));
+                      (void)write_record(w,"cat-1", 0, 0, {'A'}, /*epoch=*/100);
+                      (void)write_record(w,"cat-1", 0, 0, {'B'}, /*epoch=*/100);
                   }).has_value());
 
     testing::internal::CaptureStderr();
