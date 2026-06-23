@@ -258,7 +258,7 @@ class FileBackend::Writer : public RecordBackend::Writer {
 
     ~Writer() override = default;
 
-    auto write(const Record& rec) -> expected<void, BackendError> override {
+    auto write(const RecordView& rec) -> expected<void, BackendError> override {
         // Validate body-size caps against the wire format before
         // touching the fd. Doing this outside the lock is fine —
         // the values don't depend on backend state.

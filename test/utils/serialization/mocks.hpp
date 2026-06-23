@@ -63,7 +63,7 @@ using Writer = RecordBackend::Writer;
 // ---------------------------------------------------------------------
 struct NoopBackend : RecordBackend {
     struct W : Writer {
-        expected<void, BackendError> write(const Record&) override {
+        expected<void, BackendError> write(const RecordView&) override {
             return {};
         }
 
@@ -133,7 +133,7 @@ struct TrackingBackend : RecordBackend {
             ++parent->writers_destroyed;
         }
 
-        expected<void, BackendError> write(const Record&) override {
+        expected<void, BackendError> write(const RecordView&) override {
             ++parent->writes_called;
             return {};
         }
@@ -222,7 +222,7 @@ struct FailingBackend : RecordBackend {
             : parent(p) {
         }
 
-        expected<void, BackendError> write(const Record&) override {
+        expected<void, BackendError> write(const RecordView&) override {
             if (parent->write_fails)
                 return make_unexpected(
                     BackendError{BackendError::Kind::IOError, "forced write failure"}
@@ -342,7 +342,7 @@ struct SnapshotBackend : RecordBackend {
     };
 
     struct W : Writer {
-        expected<void, BackendError> write(const Record&) override {
+        expected<void, BackendError> write(const RecordView&) override {
             return {};
         }
 
@@ -420,7 +420,7 @@ struct SharedStateBackend
             --parent->live_subhandles;
         }
 
-        expected<void, BackendError> write(const Record&) override {
+        expected<void, BackendError> write(const RecordView&) override {
             return {};
         }
 

@@ -30,6 +30,11 @@
 add_library(ngen_serialization INTERFACE)
 add_library(NGen::serialization ALIAS ngen_serialization)
 
+target_link_libraries(ngen_serialization INTERFACE
+    # Headers-only Boost.Core for `boost::span`
+    Boost::boost
+)
+
 target_include_directories(ngen_serialization INTERFACE
     ${PROJECT_SOURCE_DIR}/include
     # nonstd::expected currently lives under include/utilities/bmi/nonstd/.
