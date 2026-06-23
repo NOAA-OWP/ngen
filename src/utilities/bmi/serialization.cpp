@@ -35,14 +35,6 @@ namespace bmi {
 namespace protocols {
 
 namespace {
-// Starting capacity for the per-instance reusable payload buffer.
-// Chosen so the first `resize()` inside `run()` is almost never the
-// allocation-triggering one for realistic BMI state sizes. The
-// buffer only grows; it is never shrunk, which is fine because each
-// protocol instance is bound to one model whose state size is
-// stationary across timesteps.
-constexpr size_t INITIAL_PAYLOAD_BUFFER_BYTES = 4096;
-
 // The reserved-variable table (`RESERVED_VARS`) and the
 // `parse_timestamp` helper are shared with the restore protocol
 // and live in serialization.hpp / serialization_record.hpp
@@ -112,7 +104,6 @@ NgenSerializationProtocol::NgenSerializationProtocol(
     : frequency(1)
     , check(false)
     , is_fatal(true) {
-    payload_buffer_.reserve(INITIAL_PAYLOAD_BUFFER_BYTES);
     (void)initialize(model, properties);
 }
 
@@ -120,7 +111,6 @@ NgenSerializationProtocol::NgenSerializationProtocol()
     : frequency(1)
     , check(false)
     , is_fatal(true) {
-    payload_buffer_.reserve(INITIAL_PAYLOAD_BUFFER_BYTES);
 }
 
 NgenSerializationProtocol::~NgenSerializationProtocol() = default;
@@ -169,40 +159,18 @@ auto NgenSerializationProtocol::run(const ModelPtr& model, const Context& ctx) c
                 ProtocolError(is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING, ss.str())
             );
         }
-        // Reusable per-instance buffer. Each protocol instance is bound
-        // to exactly one model (each Bmi_Module_Formulation owns its
-        // own NgenBmiProtocols), so the state size seen here is
-        // stationary across timesteps. After the first growth to the
-        // model's state size, subsequent `resize()` calls are no-ops.
-        payload_buffer_.resize(static_cast<size_t>(size));
-        model->GetValue(SERIALIZATION_STATE_NAME, payload_buffer_.data());
-
-        // Build the Record and hand it to the backend. The move-in /
-        // move-out dance keeps the payload buffer's capacity for
-        // reuse across timesteps. `checkpoint_epoch` is stamped per
-        // record with the writing host's wall-clock time;
-        ::ngen::serialization::Record rec(
-            ctx.id,
-            static_cast<int64_t>(ctx.current_time_step),
-            parse_timestamp(ctx.timestamp),
-            std::move(payload_buffer_),
-            static_cast<int64_t>(std::time(nullptr))
-        );
-
-        // Acquire a thin Writer handle, write, commit, drop. The
-        // backend owns the file descriptor and the write critical
-        // section's mutex; the Writer handle is just an intent
-        // carrier for durability + lifetime. Acquiring is cheap (no
-        // syscalls in the steady state — the fd was opened on first
-        // write and stays open for the backend's lifetime). The
-        // mutex inside the backend serializes records across all
-        // protocol instances sharing the same FileBackend.
+        // Acquire a Writer, hand it a non-owning `RecordView` over
+        // the function-scoped payload buffer, write, commit, drop.
+        // The Writer handle is a thin intent carrier for
+        // durability + lifetime; the backend owns the underlying
+        // I/O resources and serializes writes across any
+        // concurrent Writers. See `file_backend.hpp` for the
+        // FileBackend-specific mechanics.
         auto wo = backend_->writer(
             std::chrono::system_clock::now(),
             ::ngen::serialization::Durability::relaxed
         );
         if (!wo) {
-            payload_buffer_ = std::move(rec.payload);
             std::stringstream ss;
             ss << "serialization: " << wo.error().message << " for '" << model->GetComponentName()
                << "' at timestep " << ctx.current_time_step << " (" << ctx.timestamp << ")";
@@ -212,10 +180,24 @@ auto NgenSerializationProtocol::run(const ModelPtr& model, const Context& ctx) c
         }
         auto& writer = *wo.value();
 
-        auto write_outcome = writer.write(rec);
-        // Recover the payload buffer regardless of outcome (the move
-        // into the Record happened unconditionally above).
-        payload_buffer_ = std::move(rec.payload);
+        // Payload buffer to serialize.  This is a defensive double buffer
+        // at the moment, ensuring a "snapshot" of model state without 
+        // concerns for pointer lifetime/validity.
+        // a pure zero-copy could try GetValuePtr and get a span over
+        // model-owned storage instead. At the moment, cost here is really
+        // just allocation per feature per checkpoint.
+        std::vector<char> buf(static_cast<size_t>(size));
+        model->GetValue(SERIALIZATION_STATE_NAME, buf.data());
+
+        // `checkpoint_epoch` is stamped per record with the writing
+        // host's wall-clock time.
+        auto write_outcome = writer.write(::ngen::serialization::RecordView{
+            ctx.id,
+            static_cast<int64_t>(ctx.current_time_step),
+            parse_timestamp(ctx.timestamp),
+            boost::span<const char>{buf.data(), buf.size()},
+            static_cast<int64_t>(std::time(nullptr))
+        });
 
         if (!write_outcome) {
             std::stringstream ss;
@@ -383,6 +365,13 @@ auto NgenSerializationProtocol::initialize(const ModelPtr& model, const Properti
         }
     }
     // All other initialization is good, build the file backend.
+    // `FileBackend::create(path)` is a path-keyed get-or-create:
+    // all protocol instances configured with the same path
+    // receive the same `shared_ptr<FileBackend>`, so they
+    // cooperate through one owned write fd and the mutex that
+    // serializes record writes across all Writer handles. See
+    // file_backend.hpp for the sharing mechanics.
+    //
     // Construction can fail (e.g. corrupted index walk on an
     // existing file); we surface that as a protocol-level error
     // and disable rather than register a half-broken backend.

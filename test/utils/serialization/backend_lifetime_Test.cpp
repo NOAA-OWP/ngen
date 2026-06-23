@@ -259,7 +259,7 @@ TYPED_TEST(SharedStateWriterPattern, writer_keeps_backend_alive_until_dropped) {
     EXPECT_FALSE(weak.expired()) << "backend died despite a live Writer holding shared_ptr";
 
     // Writer still functions through its retained shared_ptr.
-    EXPECT_TRUE(writer->write(Record{}).has_value());
+    EXPECT_TRUE(writer->write(ngen::serialization::RecordView{}).has_value());
     EXPECT_TRUE(writer->commit().has_value());
 
     // Drop the writer; backend must finally die.

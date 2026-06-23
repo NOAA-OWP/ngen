@@ -139,13 +139,6 @@ class NgenSerializationProtocol : public NgenBmiProtocol {
     // `RecordBackend`-typed factory. `nullptr` means save is
     // disabled / unconfigured.
     std::shared_ptr<::ngen::serialization::RecordBackend> backend_;
-
-    // Reusable per-instance scratch for the model's GetValue
-    // payload. Lives across `run()` calls — once the model's
-    // state size has stabilized (which happens after the first
-    // call), subsequent resize() calls are no-ops and avoid
-    // re-allocation. Mutated from the const override of run().
-    mutable std::vector<char> payload_buffer_;
 };
 
 } // namespace protocols
