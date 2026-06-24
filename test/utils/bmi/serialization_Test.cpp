@@ -150,7 +150,7 @@ class Bmi_Serialization_Test : public Bmi_Cpp_Test_Adapter_For_Serialization {
         std::remove(path.c_str());
     }
 
-    std::string time = "t0";
+    std::string time = "0";
     std::string model_name;
     std::shared_ptr<models::bmi::Bmi_Adapter> model;
     std::string path;
@@ -233,11 +233,12 @@ TEST_F(Bmi_Serialization_Test, check_writes_record) {
     testing::internal::CaptureStderr();
     auto protocols = NgenBmiProtocols(model, properties);
 
-    // Use numeric-string timestamps so the protocol's string->int64 parse
-    // has something to round-trip through to the record field. Non-numeric
-    // Context::timestamp values are valid but land as 0 on disk — that path
-    // is exercised by other tests below that don't assert on the numeric
-    // timestamp field.
+    // Use numeric-string timestamps so the protocol's string->int64
+    // parse round-trips them through to the record field. Formatted-
+    // string timestamps (e.g. "2015-12-01 01:00:00") would also parse
+    // cleanly via parse_formatted_time; the unparseable-input path
+    // (sentinel + PROTOCOL_WARNING) is exercised by
+    // `unparseable_timestamp_warns_and_uses_sentinel` below.
     auto result = protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "0", model_name));
     EXPECT_TRUE(result.has_value());
     model->Update();
@@ -258,6 +259,42 @@ TEST_F(Bmi_Serialization_Test, check_writes_record) {
     EXPECT_EQ(records[1].payload.size(), 40u);
 }
 
+// `ctx.timestamp` strings that don't parse as a numeric epoch and
+// don't match TIMESTAMP_STRPTIME_FORMAT (e.g. "t0", "garbage") must
+//   (1) NOT fail the save — restore-by-step still works,
+//   (2) stamp the record's `simulation_timestamp` with the documented
+//       `UNPARSEABLE_TIMESTAMP_SENTINEL` so a later lookup can't
+//       match against a real value,
+//   (3) emit a PROTOCOL_WARNING to stderr naming the failing input.
+TEST_F(Bmi_Serialization_Test, unparseable_timestamp_warns_and_uses_sentinel) {
+    auto properties = SerializationMock(path).as_json_property();
+    auto protocols  = NgenBmiProtocols(model, properties);
+
+    testing::internal::CaptureStderr();
+    auto result = protocols.run(
+        Protocol::SERIALIZATION,
+        make_context(0, 2, /*timestamp=*/"definitely-not-an-epoch", model_name)
+    );
+    const std::string captured = testing::internal::GetCapturedStderr();
+
+    // (1) Save succeeds — PROTOCOL_WARNING does not throw, and the
+    //     surrounding run() returns the success arm.
+    EXPECT_TRUE(result.has_value());
+
+    // (3) The warning surfaced via stderr and names the offending
+    //     input + protocol so an operator can find the source.
+    EXPECT_THAT(captured, MatchesRegex(".*serialization:.*"
+                                       "definitely-not-an-epoch.*did not parse.*"));
+
+    // (2) The on-disk record carries the sentinel.
+    auto records = read_all_records(path);
+    ASSERT_EQ(records.size(), 1u);
+    EXPECT_EQ(records[0].id, model_name);
+    EXPECT_EQ(records[0].time_step, 0);
+    EXPECT_EQ(records[0].simulation_timestamp,
+              ::ngen::serialization::UNPARSEABLE_TIMESTAMP_SENTINEL);
+}
+
 // The explicit motivation for the single-file design: two entities must be
 // able to share one file and each remain recoverable by id.
 TEST_F(Bmi_Serialization_Test, multiple_entities_share_one_file) {
@@ -265,10 +302,10 @@ TEST_F(Bmi_Serialization_Test, multiple_entities_share_one_file) {
     auto protocols  = NgenBmiProtocols(model, properties);
 
     // Fire three times with different ids; each record must be tagged by Context::id.
-    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "t0", "cat-A"));
-    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "t0", "cat-B"));
+    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "0", "cat-A"));
+    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "0", "cat-B"));
     model->Update();
-    (void)protocols.run(Protocol::SERIALIZATION, make_context(1, 2, "t1", "cat-A"));
+    (void)protocols.run(Protocol::SERIALIZATION, make_context(1, 2, "3600", "cat-A"));
 
     auto records = read_all_records(path);
     ASSERT_EQ(records.size(), 3u);
@@ -288,11 +325,11 @@ TEST_F(Bmi_Serialization_Test, frequency) {
     auto properties = SerializationMock(path, /*fatal*/ true, /*frequency*/ 2).as_json_property();
     auto protocols  = NgenBmiProtocols(model, properties);
 
-    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 4, "t0", model_name)); // fires
+    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 4, "0", model_name));    // fires
     model->Update();
-    (void)protocols.run(Protocol::SERIALIZATION, make_context(1, 4, "t1", model_name)); // skipped
+    (void)protocols.run(Protocol::SERIALIZATION, make_context(1, 4, "3600", model_name)); // skipped
     model->Update();
-    (void)protocols.run(Protocol::SERIALIZATION, make_context(2, 4, "t2", model_name)); // fires
+    (void)protocols.run(Protocol::SERIALIZATION, make_context(2, 4, "7200", model_name)); // fires
 
     auto records = read_all_records(path);
     ASSERT_EQ(records.size(), 2u);
@@ -304,7 +341,7 @@ TEST_F(Bmi_Serialization_Test, frequency_zero) {
     auto properties = SerializationMock(path, /*fatal*/ true, /*frequency*/ 0).as_json_property();
     auto protocols  = NgenBmiProtocols(model, properties);
 
-    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "t0", model_name));
+    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "0", model_name));
     EXPECT_FALSE(file_exists(path));
 }
 
@@ -315,9 +352,9 @@ TEST_F(Bmi_Serialization_Test, frequency_end) {
     auto properties = SerializationMock(path, /*fatal*/ true, /*frequency*/ -1).as_json_property();
     auto protocols  = NgenBmiProtocols(model, properties);
 
-    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "t0", model_name));
+    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "0", model_name));
     model->Update();
-    (void)protocols.run(Protocol::SERIALIZATION, make_context(1, 2, "t1", model_name));
+    (void)protocols.run(Protocol::SERIALIZATION, make_context(1, 2, "3600", model_name));
 
     auto records = read_all_records(path);
     ASSERT_EQ(records.size(), 1u);
@@ -333,7 +370,7 @@ TEST_F(Bmi_Serialization_Test, frequency_end_single_step) {
     auto properties = SerializationMock(path, /*fatal*/ true, /*frequency*/ -1).as_json_property();
     auto protocols  = NgenBmiProtocols(model, properties);
 
-    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 1, "t0", model_name));
+    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 1, "0", model_name));
 
     auto records = read_all_records(path);
     ASSERT_EQ(records.size(), 1u);
@@ -350,7 +387,7 @@ TEST_F(Bmi_Serialization_Test, frequency_end_large_n) {
     for (int k = 0; k < N; ++k) {
         (void)protocols.run(
             Protocol::SERIALIZATION,
-            make_context(k, N, "t" + std::to_string(k), model_name)
+            make_context(k, N, std::to_string(k * 3600), model_name)
         );
         model->Update();
     }
@@ -369,11 +406,11 @@ TEST_F(Bmi_Serialization_Test, frequency_negative_other_than_minus_one) {
         SerializationMock(path, /*fatal*/ true, /*frequency*/ -100).as_json_property();
     auto protocols = NgenBmiProtocols(model, properties);
 
-    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 3, "t0", model_name));
+    (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 3, "0", model_name));
     model->Update();
-    (void)protocols.run(Protocol::SERIALIZATION, make_context(1, 3, "t1", model_name));
+    (void)protocols.run(Protocol::SERIALIZATION, make_context(1, 3, "3600", model_name));
     model->Update();
-    (void)protocols.run(Protocol::SERIALIZATION, make_context(2, 3, "t2", model_name));
+    (void)protocols.run(Protocol::SERIALIZATION, make_context(2, 3, "7200", model_name));
 
     auto records = read_all_records(path);
     ASSERT_EQ(records.size(), 1u);
@@ -389,7 +426,7 @@ TEST_F(Bmi_Serialization_Test, write_error_warns) {
     auto properties          = SerializationMock(bad_dir_path, /*fatal*/ false).as_json_property();
     auto protocols           = NgenBmiProtocols(model, properties);
 
-    auto result = protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "t0", model_name));
+    auto result = protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "0", model_name));
     ASSERT_FALSE(result.has_value());
     EXPECT_THAT(
         result.error().to_string(),
@@ -403,7 +440,7 @@ TEST_F(Bmi_Serialization_Test, write_error_throws) {
     auto protocols           = NgenBmiProtocols(model, properties);
 
     ASSERT_THROW(
-        (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "t0", model_name)),
+        (void)protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "0", model_name)),
         ProtocolError
     );
 }
