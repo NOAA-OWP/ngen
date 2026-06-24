@@ -537,6 +537,47 @@ TEST_F(Bmi_Deserialization_Test, missing_timestamp_warns) {
     EXPECT_THAT(result.error().to_string(), testing::HasSubstr("at timestamp '1577836800'"));
 }
 
+// A `restore.timestamp` config value that doesn't parse as a numeric
+// epoch and doesn't match TIMESTAMP_STRPTIME_FORMAT is a configuration
+// error. With `fatal: false` the restore is disabled with a logged
+// PROTOCOL_WARNING; with `fatal: true` the protocol's `initialize`
+// throws out of construction.
+TEST_F(Bmi_Deserialization_Test, unparseable_timestamp_warns_when_non_fatal) {
+    auto properties = DeserializationMock::by_timestamp(
+                          path, /*timestamp=*/"definitely-not-an-epoch", /*fatal*/ false
+    )
+                          .as_json_property();
+
+    testing::internal::CaptureStderr();
+    auto              protocols = NgenBmiProtocols(model, properties);
+    const std::string captured  = testing::internal::GetCapturedStderr();
+
+    // The warning surfaced via stderr, named the protocol, the
+    // offending input, and pointed at the parser doc.
+    EXPECT_THAT(captured, testing::HasSubstr("Warning(Protocol)::deserialization:"));
+    EXPECT_THAT(captured, testing::HasSubstr("'definitely-not-an-epoch'"));
+    EXPECT_THAT(captured, testing::HasSubstr("is not parseable"));
+    EXPECT_THAT(captured, testing::HasSubstr("record.hpp::parse_timestamp"));
+
+    // Restore is disabled — subsequent run() is a no-op (no throw,
+    // no record lookup), returns the success arm.
+    auto result =
+        protocols.run(Protocol::DESERIALIZATION, make_context(0, 0, "unused", model_name));
+    EXPECT_TRUE(result.has_value());
+}
+
+TEST_F(Bmi_Deserialization_Test, unparseable_timestamp_throws_when_fatal) {
+    auto properties = DeserializationMock::by_timestamp(
+                          path, /*timestamp=*/"definitely-not-an-epoch", /*fatal*/ true
+    )
+                          .as_json_property();
+
+    // The throw lands inside `NgenDeserializationProtocol::initialize`,
+    // which is called from the protocol's constructor — so the
+    // NgenBmiProtocols container construction itself propagates.
+    EXPECT_THROW({ (void)NgenBmiProtocols(model, properties); }, ProtocolError);
+}
+
 // ---------------------------------------------------------------------
 // Integration: save -> restore round trip, one configuration, one file.
 // ---------------------------------------------------------------------
@@ -557,7 +598,7 @@ TEST_F(Bmi_Deserialization_Test, save_restore_roundtrip) {
     snapshot(t_ref, i1_ref, i2_ref, o1_ref, o2_ref);
 
     // Save at step 1.
-    auto save_r = protocols.run(Protocol::SERIALIZATION, make_context(1, 3, "t1", model_name));
+    auto save_r = protocols.run(Protocol::SERIALIZATION, make_context(1, 3, "3600", model_name));
     ASSERT_TRUE(save_r.has_value());
     ASSERT_TRUE(file_exists(path));
 
