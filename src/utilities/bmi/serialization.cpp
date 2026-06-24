@@ -200,11 +200,30 @@ auto NgenSerializationProtocol::run(const ModelPtr& model, const Context& ctx) c
         model->GetValue(SERIALIZATION_STATE_NAME, buf.data());
 
         // `checkpoint_epoch` is stamped per record with the writing
-        // host's wall-clock time.
+        // host's wall-clock time. `simulation_timestamp` is parsed
+        // from the engine-supplied `ctx.timestamp`; an unparseable
+        // value resolves to `UNPARSEABLE_TIMESTAMP_SENTINEL` and a
+        // PROTOCOL_WARNING is logged. The save still lands so
+        // callers that only restore-by-step are unaffected;
+        // restore-by-timestamp simply cannot match the sentinel.
+        const int64_t simulation_timestamp = parse_timestamp(ctx.timestamp);
+        if (simulation_timestamp == ::ngen::serialization::UNPARSEABLE_TIMESTAMP_SENTINEL) {
+            std::stringstream warn_ss;
+            warn_ss << "serialization: ctx.timestamp '" << ctx.timestamp << "' did not parse for '"
+                    << model->GetComponentName() << "' at timestep " << ctx.current_time_step
+                    << " for feature id " << ctx.id
+                    << "; record stored with sentinel `simulation_timestamp` "
+                    << "(restore-by-timestamp will not match). See `parse_timestamp` in "
+                    << "record.hpp for accepted forms.";
+            (void)NgenBmiProtocol::error_or_warning(
+                ProtocolError(Error::PROTOCOL_WARNING, warn_ss.str())
+            );
+        }
+
         auto write_outcome = writer.write(::ngen::serialization::RecordView{
             ctx.id,
             static_cast<int64_t>(ctx.current_time_step),
-            parse_timestamp(ctx.timestamp),
+            simulation_timestamp,
             boost::span<const char>{buf.data(), buf.size()},
             static_cast<int64_t>(std::time(nullptr))
         });

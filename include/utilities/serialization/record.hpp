@@ -32,39 +32,96 @@ the fields however suits their storage.
 
 #include <boost/core/span.hpp>
 
+#include <cctype>
 #include <cstdint>
+#include <ctime>
 #include <exception>
+#include <limits>
 #include <string>
 #include <vector>
 
 namespace ngen{ namespace serialization{
+/**
+ *  Tests in `parse_timestamp_Test.cpp` pin both
+ *  `TIMESTAMP_STRPTIME_FORMAT` and
+ *  `UNPARSEABLE_TIMESTAMP_SENTINEL`
+ *  so producer/consumer drift surfaces as a test failure.
+ */
 
-/** @brief Parse a timestamp string into the int64 second-since-epoch
- *  slot used by the record's timestamp fields.
+/** @brief `strptime` format used by `parse_timestamp`'s formatted-
+ *  string fallback.
+ */
+constexpr const char* TIMESTAMP_STRPTIME_FORMAT = "%Y-%m-%d %T";
+
+/** @brief Out-of-band value returned by `parse_timestamp` and its
+ *  helpers when the input string cannot be resolved to a Unix epoch.
  *
- *  The engine hands serialization code simulation timestamps as
- *  opaque strings; the record value type wants compact fixed-width
- *  integers. Callers whose strings are already `strtoll`-parseable
- *  (e.g. seconds since epoch) get a one-to-one mapping; callers with
- *  formatted strings that don't parse cleanly get 0, and the record
- *  is still produced — restore-by-timestamp just won't work against
- *  those records unless the caller matches on the same "0" sentinel.
- *  This is a deliberate policy: a parse failure is not fatal to
- *  save.
+ *  INT64_MIN interpreted as Unix epoch is roughly 9.2e18 seconds
+ *  before 1970 — far enough before any plausible simulated moment
+ */
+constexpr int64_t UNPARSEABLE_TIMESTAMP_SENTINEL
+    = (std::numeric_limits<int64_t>::min)();
+
+/** @brief Parse @p s as a whole-string signed integer interpreted
+ *  as Unix epoch seconds (e.g. "1448931600", "-3786825600",
+ *  "  42  "). Leading/trailing whitespace is stripped before
+ *  conversion. Any other form is considered unparseable.
+ *
+ *  Returns `UNPARSEABLE_TIMESTAMP_SENTINEL` on any failure
+ *  (partial match, empty, whitespace-only, non-numeric, integer
+ *  overflow). Never throws.
+ */
+inline int64_t parse_epoch_string(const std::string& s) {
+    try {
+        std::size_t     consumed = 0;
+        const long long v        = std::stoll(s, &consumed);
+        while (consumed < s.size()
+               && std::isspace(static_cast<unsigned char>(s[consumed]))) {
+            ++consumed;
+        }
+        if (consumed == s.size()) {
+            return static_cast<int64_t>(v);
+        }
+    } catch (const std::exception&) {
+        // std::out_of_range / std::invalid_argument — fall through
+        // to the sentinel.
+    }
+    return UNPARSEABLE_TIMESTAMP_SENTINEL;
+}
+
+/** @brief Parse @p s as a formatted timestamp matching
+ *  `TIMESTAMP_STRPTIME_FORMAT`. Interpreted in UTC via `timegm`.
+ *  White space is allowed and doesn't impact the match.
+ *
+ *  Returns `UNPARSEABLE_TIMESTAMP_SENTINEL` on any failure
+ *  (empty, whitespace-only, partial match, trailing non-whitespace).
+ */
+inline int64_t parse_formatted_time(const std::string& s) {
+    std::tm     tm  = {};
+    const char* end = ::strptime(s.c_str(), TIMESTAMP_STRPTIME_FORMAT, &tm);
+    if (end != nullptr) {
+        while (*end != '\0' && std::isspace(static_cast<unsigned char>(*end))) {
+            ++end;
+        }
+        if (*end == '\0') {
+            return static_cast<int64_t>(::timegm(&tm));
+        }
+    }
+    return UNPARSEABLE_TIMESTAMP_SENTINEL;
+}
+
+/** @brief Parse @p s as seconds-since-Unix-epoch.
+ *
+ *  Tries `parse_epoch_string` first, then attempts
+ *  `parse_formatted_time` (`TIMESTAMP_STRPTIME_FORMAT` match).
+ *  Returns `UNPARSEABLE_TIMESTAMP_SENTINEL` only when neither
+ *  parser can resolve the input.
  */
 inline int64_t parse_timestamp(const std::string& s) {
-    if (s.empty()) return 0;
-    try {
-        std::size_t consumed = 0;
-        const long long v = std::stoll(s, &consumed);
-        // Require at least one digit to have been consumed — a "t0"-
-        // style label stops at 'not a digit' after consuming zero
-        // characters, which we treat as unparseable.
-        if (consumed == 0) return 0;
-        return static_cast<int64_t>(v);
-    } catch (const std::exception&) {
-        return 0;
-    }
+    if (s.empty()) return UNPARSEABLE_TIMESTAMP_SENTINEL;
+    const int64_t epoch = parse_epoch_string(s);
+    if (epoch != UNPARSEABLE_TIMESTAMP_SENTINEL) return epoch;
+    return parse_formatted_time(s);
 }
 
 /** @brief One checkpoint record: a saved-state blob tagged with its

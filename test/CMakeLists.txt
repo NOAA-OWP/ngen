@@ -229,6 +229,7 @@ ngen_add_test(
         utils/serialization/backend_reader_Test.cpp
         utils/serialization/backend_lifetime_Test.cpp
         utils/serialization/file_backend_Test.cpp
+        utils/serialization/parse_timestamp_Test.cpp
     LIBRARIES
         NGen::serialization
         NGen::bmi_protocols

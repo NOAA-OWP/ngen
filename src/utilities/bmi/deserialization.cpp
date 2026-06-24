@@ -263,8 +263,22 @@ auto NgenDeserializationProtocol::initialize(const ModelPtr& model, const Proper
     // "latest" step for this id.
     auto ts_it = restore.find(DESERIALIZATION_TIMESTAMP_KEY);
     if (ts_it != restore.end()) {
+        const std::string ts_str = ts_it->second.as_string();
+        const int64_t     parsed = parse_timestamp(ts_str);
+        if (parsed == ::ngen::serialization::UNPARSEABLE_TIMESTAMP_SENTINEL) {
+            // User asked for restore-by-timestamp with a string we can't
+            // parse — refuse to enable restore rather than silently
+            // looking up a meaningless `simulation_timestamp` value.
+            check = false;
+            return error_or_warning(ProtocolError(
+                is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING,
+                "deserialization: 'timestamp' value '" + ts_str
+                    + "' is not parseable; disabling restore. See record.hpp::parse_timestamp "
+                      "for accepted forms."
+            ));
+        }
         by_timestamp                = true;
-        target_simulation_timestamp = parse_timestamp(ts_it->second.as_string());
+        target_simulation_timestamp = parsed;
     } else {
         by_timestamp = false;
         _it          = restore.find(DESERIALIZATION_STEP_KEY);
