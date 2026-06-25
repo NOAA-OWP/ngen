@@ -56,15 +56,14 @@ namespace data_access
         {
             TimeUnit unit;                  //the unit raw time values are stored in
             double scale_factor;            //multiplier converting a raw value to seconds
-            std::time_t epoch_start_time;   //reference epoch, in seconds since the Unix epoch
+            std::optional<std::time_t> epoch_start_time;   //reference epoch, in seconds since the Unix epoch, if specified
         };
 
         /**
          * @brief Interpret a NetCDF time `units` string as a time unit and scale factor.
          *
-         * The returned @ref TimeInfo carries the matched unit and scale factor; its
-         * @ref TimeInfo::epoch_start_time is left at the Unix epoch (0) since a bare units
-         * string does not, on its own, specify a reference epoch.
+         * Handles both bare units and the CF form "<unit> since <date>", in which case
+         * the parsed reference epoch is returned in the result.
          *
          * @param units_str the raw `units` attribute value (e.g. "ns", "hours")
          * @return the parsed @ref TimeInfo, or std::nullopt if @p units_str is unrecognized

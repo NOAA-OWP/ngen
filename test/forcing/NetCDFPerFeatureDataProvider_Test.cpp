@@ -140,8 +140,27 @@ TEST(NetCDFTimeMetadata, InterpretTimeUnitsRecognized)
         ASSERT_TRUE(info.has_value()) << "expected to recognize unit '" << c.str << "'";
         EXPECT_EQ(info->unit, c.unit) << "unit mismatch for '" << c.str << "'";
         EXPECT_DOUBLE_EQ(info->scale_factor, c.scale) << "scale mismatch for '" << c.str << "'";
-        EXPECT_EQ(info->epoch_start_time, 0) << "bare units must not set an epoch for '" << c.str << "'";
+        EXPECT_FALSE(info->epoch_start_time.has_value()) << "bare units must not set an epoch for '" << c.str << "'";
     }
+}
+
+// CF "<unit> since <date>" units yield the base unit plus the embedded reference epoch.
+TEST(NetCDFTimeMetadata, InterpretTimeUnitsCFSinceEpoch)
+{
+    using P = NetCDFPerFeatureDataProvider;
+    auto secs = P::interpret_time_units("seconds since 1970-01-01 00:00:00");
+    ASSERT_TRUE(secs.has_value());
+    EXPECT_EQ(secs->unit, P::TIME_SECONDS);
+    EXPECT_DOUBLE_EQ(secs->scale_factor, 1);
+    ASSERT_TRUE(secs->epoch_start_time.has_value());
+    EXPECT_EQ(*secs->epoch_start_time, 0);
+
+    auto hrs = P::interpret_time_units("hours since 2000-01-01 00:00:00");
+    ASSERT_TRUE(hrs.has_value());
+    EXPECT_EQ(hrs->unit, P::TIME_HOURS);
+    EXPECT_DOUBLE_EQ(hrs->scale_factor, 3600);
+    ASSERT_TRUE(hrs->epoch_start_time.has_value());
+    EXPECT_EQ(*hrs->epoch_start_time, 946684800);
 }
 
 // Unrecognized or empty unit strings yield no value, so callers keep their defaults.
