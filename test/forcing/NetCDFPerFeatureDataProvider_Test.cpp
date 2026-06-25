@@ -110,8 +110,58 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
 
     // read exactly one time step correctly aligned but with a incorrect variable
     EXPECT_THROW(
-        double val4 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], "T3D", start_time, duration, "K"), data_access::MEAN);, 
+        double val4 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], "T3D", start_time, duration, "K"), data_access::MEAN);,
         std::runtime_error);
-    
+
+}
+
+// Each recognized time `units` token maps to the expected unit and scale factor,
+// and a bare units string reports no reference epoch.
+TEST(NetCDFTimeMetadata, InterpretTimeUnitsRecognized)
+{
+    using P = NetCDFPerFeatureDataProvider;
+    struct Case { const char* str; P::TimeUnit unit; double scale; };
+    const std::vector<Case> cases = {
+        {"h",            P::TIME_HOURS,        3600},
+        {"hours",        P::TIME_HOURS,        3600},
+        {"m",            P::TIME_MINUTES,      60},
+        {"minutes",      P::TIME_MINUTES,      60},
+        {"s",            P::TIME_SECONDS,      1},
+        {"seconds",      P::TIME_SECONDS,      1},
+        {"ms",           P::TIME_MILLISECONDS, .001},
+        {"milliseconds", P::TIME_MILLISECONDS, .001},
+        {"us",           P::TIME_MICROSECONDS, .000001},
+        {"microseconds", P::TIME_MICROSECONDS, .000001},
+        {"ns",           P::TIME_NANOSECONDS,  .000000001},
+        {"nanoseconds",  P::TIME_NANOSECONDS,  .000000001},
+    };
+    for (const auto& c : cases) {
+        auto info = P::interpret_time_units(c.str);
+        ASSERT_TRUE(info.has_value()) << "expected to recognize unit '" << c.str << "'";
+        EXPECT_EQ(info->unit, c.unit) << "unit mismatch for '" << c.str << "'";
+        EXPECT_DOUBLE_EQ(info->scale_factor, c.scale) << "scale mismatch for '" << c.str << "'";
+        EXPECT_EQ(info->epoch_start_time, 0) << "bare units must not set an epoch for '" << c.str << "'";
+    }
+}
+
+// Unrecognized or empty unit strings yield no value, so callers keep their defaults.
+TEST(NetCDFTimeMetadata, InterpretTimeUnitsUnrecognized)
+{
+    using P = NetCDFPerFeatureDataProvider;
+    EXPECT_FALSE(P::interpret_time_units("").has_value());
+    EXPECT_FALSE(P::interpret_time_units("days").has_value());
+    EXPECT_FALSE(P::interpret_time_units("fortnights").has_value());
+}
+
+// parse_epoch converts a timestamp to UTC epoch seconds and honors the supplied format.
+TEST(NetCDFTimeMetadata, ParseEpoch)
+{
+    using P = NetCDFPerFeatureDataProvider;
+    // unambiguous 4-digit-year format
+    EXPECT_EQ(P::parse_epoch("1970-01-01 00:00:00", "%Y-%m-%d %H:%M:%S"), 0);
+    EXPECT_EQ(P::parse_epoch("1970-01-02 00:00:00", "%Y-%m-%d %H:%M:%S"), 86400);
+    EXPECT_EQ(P::parse_epoch("2000-01-01 00:00:00", "%Y-%m-%d %H:%M:%S"), 946684800);
+    // the provider's default epoch string and format
+    EXPECT_EQ(P::parse_epoch("01/01/1970 00:00:00", "%D %T"), 0);
 }
 #endif

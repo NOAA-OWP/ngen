@@ -18,6 +18,8 @@
 #include <mutex>
 #include "assert.h"
 #include <iomanip>
+#include <optional>
+#include <ctime>
 #include <boost/compute/detail/lru_cache.hpp>
 
 #include <UnitsHelper.hpp>
@@ -46,6 +48,37 @@ namespace data_access
             TIME_MICROSECONDS,
             TIME_NANOSECONDS
         };
+
+        /**
+         * @brief Time metadata for netcdf time units.
+         */
+        struct TimeInfo
+        {
+            TimeUnit unit;                  //the unit raw time values are stored in
+            double scale_factor;            //multiplier converting a raw value to seconds
+            std::time_t epoch_start_time;   //reference epoch, in seconds since the Unix epoch
+        };
+
+        /**
+         * @brief Interpret a NetCDF time `units` string as a time unit and scale factor.
+         *
+         * The returned @ref TimeInfo carries the matched unit and scale factor; its
+         * @ref TimeInfo::epoch_start_time is left at the Unix epoch (0) since a bare units
+         * string does not, on its own, specify a reference epoch.
+         *
+         * @param units_str the raw `units` attribute value (e.g. "ns", "hours")
+         * @return the parsed @ref TimeInfo, or std::nullopt if @p units_str is unrecognized
+         */
+        static std::optional<TimeInfo> interpret_time_units(const std::string& units_str);
+
+        /**
+         * @brief Parse a reference-epoch timestamp into seconds since the Unix epoch.
+         *
+         * @param epoch_str the timestamp text (e.g. "01/01/1970 00:00:00")
+         * @param format a std::get_time / strptime style format string
+         * @return seconds since the Unix epoch
+         */
+        static std::time_t parse_epoch(const std::string& epoch_str, const std::string& format);
 
         /**
          * @brief Factory method that creates or returns an existing provider for the provided path.
@@ -143,6 +176,19 @@ namespace data_access
         const std::string& get_ncvar_units(const std::string& name);
 
         void test_data_is_readable();
+
+        /**
+         * @brief Read the time unit, scale factor and reference epoch from a `Time` variable.
+         *
+         * Reads the `units` and `epoch_start` attributes and resolves them via
+         * @ref interpret_time_units and @ref parse_epoch, warning and falling back to
+         * sensible defaults (seconds, Unix epoch) when an attribute is absent or
+         * unrecognized.
+         *
+         * @param time_var the file's `Time` variable
+         * @return the resolved time metadata
+         */
+        TimeInfo get_time_metadata(const netCDF::NcVar& time_var);
 
     };
 }
