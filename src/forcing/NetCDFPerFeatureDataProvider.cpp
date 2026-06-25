@@ -114,6 +114,9 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     }
 
     auto num_ids = id_dim.getSize();
+    if (num_ids <= 0){
+        throw std::runtime_error("Provided NetCDF file has no features");
+    }
 
     //TODO: split into smaller slices if num_ids is large.
     cache_slice_c_size = num_ids;
