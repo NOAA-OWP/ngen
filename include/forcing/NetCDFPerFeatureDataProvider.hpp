@@ -142,6 +142,8 @@ namespace data_access
 
         const std::string& get_ncvar_units(const std::string& name);
 
+        void test_data_is_readable();
+
     };
 }
 
