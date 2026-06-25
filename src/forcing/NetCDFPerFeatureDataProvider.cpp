@@ -77,9 +77,10 @@ std::time_t NetCDFPerFeatureDataProvider::parse_epoch(const std::string& epoch_s
     std::tm tm{};
     std::stringstream s(epoch_str);
     s >> std::get_time(&tm, format.c_str());
-    //std::time_t epoch_start_time = mktime(&tm);
-    // See also comments in Simulation_Time.h .. timegm is not available on Windows at least (elsewhere?)
-    //TODO: Probably make the default string above explicit to UTC and interpret TZ from the string in all cases?
+    if (s.fail()) {
+        throw std::runtime_error("Could not parse epoch '" + epoch_str + "' with format '" + format + "'");
+    }
+    // timegm is not available on Windows; see Simulation_Time.h
     return timegm(&tm);
 }
 

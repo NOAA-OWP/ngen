@@ -163,5 +163,7 @@ TEST(NetCDFTimeMetadata, ParseEpoch)
     EXPECT_EQ(P::parse_epoch("2000-01-01 00:00:00", "%Y-%m-%d %H:%M:%S"), 946684800);
     // the provider's default epoch string and format
     EXPECT_EQ(P::parse_epoch("01/01/1970 00:00:00", "%D %T"), 0);
+    // a timestamp that doesn't match the format is an error, not a silent zero
+    EXPECT_THROW(P::parse_epoch("not a date", "%Y-%m-%d %H:%M:%S"), std::runtime_error);
 }
 #endif
