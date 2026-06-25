@@ -30,6 +30,120 @@ void NetCDFPerFeatureDataProvider::cleanup_shared_providers()
     shared_providers.clear();
 }
 
+std::optional<NetCDFPerFeatureDataProvider::TimeInfo>
+NetCDFPerFeatureDataProvider::interpret_time_units(const std::string& units_str)
+{
+    TimeInfo info;
+    info.epoch_start_time = 0; // a bare units string carries no reference epoch
+    if ( units_str == "h" || units_str == "hours" )
+    {
+        info.unit = TIME_HOURS;
+        info.scale_factor = 3600;
+    }
+    else if ( units_str == "m" || units_str == "minutes" )
+    {
+        info.unit = TIME_MINUTES;
+        info.scale_factor = 60;
+    }
+    else if ( units_str == "s" || units_str == "seconds" )
+    {
+        info.unit = TIME_SECONDS;
+        info.scale_factor = 1;
+    }
+    else if ( units_str == "ms" || units_str == "milliseconds" )
+    {
+        info.unit = TIME_MILLISECONDS;
+        info.scale_factor = .001;
+    }
+    else if ( units_str == "us" || units_str == "microseconds" )
+    {
+        info.unit = TIME_MICROSECONDS;
+        info.scale_factor = .000001;
+    }
+    else if ( units_str == "ns" || units_str == "nanoseconds" )
+    {
+        info.unit = TIME_NANOSECONDS;
+        info.scale_factor = .000000001;
+    }
+    else
+    {
+        return std::nullopt;
+    }
+    return info;
+}
+
+std::time_t NetCDFPerFeatureDataProvider::parse_epoch(const std::string& epoch_str, const std::string& format)
+{
+    std::tm tm{};
+    std::stringstream s(epoch_str);
+    s >> std::get_time(&tm, format.c_str());
+    //std::time_t epoch_start_time = mktime(&tm);
+    // See also comments in Simulation_Time.h .. timegm is not available on Windows at least (elsewhere?)
+    //TODO: Probably make the default string above explicit to UTC and interpret TZ from the string in all cases?
+    return timegm(&tm);
+}
+
+NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_metadata(const netCDF::NcVar& time_var)
+{
+    // read the meta data to get the time_unit
+    // if absent, assume seconds
+    TimeInfo info{TIME_SECONDS, 1, 0};
+    try {
+        auto time_unit_att = time_var.getAtt("units");
+
+        // if time att is not encoded
+        // TODO determine how this should be handled
+        std::string time_unit_str;
+
+        if ( time_unit_att.isNull() )
+        {
+            log_stream << "Warning using defualt time units\n";
+        }
+        else
+        {
+            time_unit_att.getValues(time_unit_str);
+        }
+
+        // set time unit and scale factor
+        if ( auto parsed = interpret_time_units(time_unit_str) )
+        {
+            info.unit = parsed->unit;
+            info.scale_factor = parsed->scale_factor;
+        }
+        else {
+            log_stream << "Warning using defualt time units\n";
+        }
+    }
+    catch(const netCDF::exceptions::NcException& e){
+        std::cerr<<e.what()<<std::endl;
+        log_stream << "Warning using defualt time units\n";
+    }
+    assert(info.scale_factor != 0); // This should not happen.
+
+    std::string epoch_start_str = "01/01/1970 00:00:00";
+    try {
+        // read the meta data to get the epoc start
+        auto epoch_att = time_var.getAtt("epoch_start");
+
+        if ( epoch_att.isNull() )
+        {
+            log_stream << "Warning using defualt epoc string\n";
+        }
+        else
+        {
+            epoch_att.getValues(epoch_start_str);
+        }
+    }
+    catch(const netCDF::exceptions::NcException& e) {
+        std::cerr<<e.what()<<std::endl;
+        log_stream << "Warning using defualt epoc string\n";
+    }
+
+    info.epoch_start_time = parse_epoch(epoch_start_str, "%D %T");
+
+    return info;
+}
+
 NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s) : log_stream(log_s), value_cache(20),
     sim_start_date_time_epoch(sim_start),
     sim_end_date_time_epoch(sim_end)
@@ -156,99 +270,15 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     count.push_back(num_times);
     time_var.getVar(start, count, &raw_time[0]);
 
-    // read the meta data to get the time_unit
-    // if absent, assume seconds
-    double time_scale_factor = 1;
-    time_unit = TIME_SECONDS;
-    try {
-        auto time_unit_att = time_var.getAtt("units");
-
-        // if time att is not encoded 
-        // TODO determine how this should be handled
-        std::string time_unit_str;
-
-        if ( time_unit_att.isNull() )
-        {
-            log_stream << "Warning using defualt time units\n";
-        }
-        else
-        {  
-            time_unit_att.getValues(time_unit_str);
-        }
-
-        // set time unit and scale factor
-        if ( time_unit_str == "h" || time_unit_str == "hours")
-        {
-            time_unit = TIME_HOURS;
-            time_scale_factor = 3600;
-        }
-        else if ( time_unit_str == "m" || time_unit_str == "minutes" )
-        {
-            time_unit = TIME_MINUTES;
-            time_scale_factor = 60;
-        }
-        else if ( time_unit_str ==  "s" || time_unit_str == "seconds" )
-        {
-            time_unit = TIME_SECONDS;
-            time_scale_factor = 1;
-        }
-        else if ( time_unit_str ==  "ms" || time_unit_str == "milliseconds" )
-        {
-            time_unit = TIME_MILLISECONDS;
-            time_scale_factor = .001;
-        }
-        else if ( time_unit_str ==  "us" || time_unit_str == "microseconds" )
-        {
-            time_unit = TIME_MICROSECONDS;
-            time_scale_factor = .000001;
-        }
-        else if ( time_unit_str ==  "ns" || time_unit_str == "nanoseconds" )
-        {
-            time_unit = TIME_NANOSECONDS;
-            time_scale_factor = .000000001;
-        }
-        else {
-            log_stream << "Warning using defualt time units\n";
-        }
-    }
-    catch(const netCDF::exceptions::NcException& e){
-        std::cerr<<e.what()<<std::endl;
-        log_stream << "Warning using defualt time units\n";
-    }
-    assert(time_scale_factor != 0); // This should not happen.
-
-    std::string epoch_start_str = "01/01/1970 00:00:00";
-    try {
-        // read the meta data to get the epoc start
-        auto epoch_att = time_var.getAtt("epoch_start");
-
-        if ( epoch_att.isNull() )
-        {
-            log_stream << "Warning using defualt epoc string\n";
-        }
-        else
-        {  
-            epoch_att.getValues(epoch_start_str);
-        }
-    }
-    catch(const netCDF::exceptions::NcException& e) {
-        std::cerr<<e.what()<<std::endl;
-        log_stream << "Warning using defualt epoc string\n";
-    }
-    
-    std::tm tm{};
-    std::stringstream s(epoch_start_str);
-    s >> std::get_time(&tm, "%D %T");
-    //std::time_t epoch_start_time = mktime(&tm);
-    // See also comments in Simulation_Time.h .. timegm is not available on Windows at least (elsewhere?)
-    //TODO: Probably make the default string above explicit to UTC and interpret TZ from the string in all cases?
-    std::time_t epoch_start_time = timegm(&tm);
+    // read the time metadata (unit, scale factor and reference epoch)
+    TimeInfo time_info = get_time_metadata(time_var);
+    time_unit = time_info.unit;
 
     // scale the time to account for time units and epoch_start
     // TODO make sure this happens with a FMA instruction
     time_vals.resize(raw_time.size());
-    std::transform(raw_time.begin(), raw_time.end(), time_vals.begin(), 
-        [&](const auto& n){return n * time_scale_factor + epoch_start_time; });
+    std::transform(raw_time.begin(), raw_time.end(), time_vals.begin(),
+        [&](const auto& n){return n * time_info.scale_factor + time_info.epoch_start_time; });
         
 
     // determine the stride of the time array
