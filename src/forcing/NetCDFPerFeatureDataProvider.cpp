@@ -243,7 +243,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
 
     if (id_dim.isNull() )
     {
-        throw std::runtime_error("Provided NetCDF file has a NuLL dimension for variable  \"ids\"");
+        throw std::runtime_error("Provided NetCDF file has a NULL dimension for variable  \"ids\"");
     }
 
     auto num_ids = id_dim.getSize();
@@ -260,7 +260,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     // read the id strings
     ids.getVar(string_buffers.data());
 
-    // initalize the map of catchment-name to offset location and free the strings allocated by the C library
+    // initialize the map of catchment-name to offset location and free the strings allocated by the C library
     size_t loc = 0;
     for_each( string_buffers.begin(), string_buffers.end(), [&](char* str)
     {
@@ -465,15 +465,15 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     // account for the resampling methods
     switch(m)
     {
-        case SUM:   // we allready have the sum so do nothing
+        case SUM:   // we already have the sum so do nothing
             ;
         break;
 
         case MEAN: 
         { 
             // This is getting a length weighted mean
-            // the data values where allready scaled for where there was only partial use of a data value
-            // so we just need to do a final scale to account for the differnce between time_stride and duration_s
+            // the data values where already scaled for where there was only partial use of a data value
+            // so we just need to do a final scale to account for the difference between time_stride and duration_s
 
             double scale_factor = (selector.get_duration_secs() > time_stride ) ? (time_stride / selector.get_duration_secs()) : (1.0 / (a + b));
             rvalue *= scale_factor;
@@ -554,7 +554,7 @@ void NetCDFPerFeatureDataProvider::test_data_is_readable() {
             }
         } catch (const netCDF::exceptions::NcException& e) {
             std::string err_str = e.what();
-            // libnetcxx puts a lot of noice in the error message
+            // libnetcdf puts a lot of noise in the error message
             // so filter it out for clarity...
             size_t file_pos = err_str.find("file:");
             if (file_pos != std::string::npos) {
