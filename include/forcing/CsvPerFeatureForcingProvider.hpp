@@ -163,11 +163,10 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         try {
             return UnitsHelper::get_converted_value(available_forcings_units[output_name], value, output_units);
         }
-        catch (const std::runtime_error& e){
-            #ifndef UDUNITS_QUIET
-            std::cerr<<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
-            #endif
-            return value;
+        catch (UnitsHelper::unit_conversion_exception& uce) {
+            uce.provider_model_name = "CsvPerFeatureProvider " + std::to_string(catchment_id);
+            uce.provider_var_name = output_name;
+            throw;
         }
     }
 
@@ -328,9 +327,10 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
                 auto wkf = data_access::WellKnownFields.find(var_name);
                 if(wkf != data_access::WellKnownFields.end()){
                     units = units.empty() ? std::get<1>(wkf->second) : units;
+                    auto wkf_name = std::get<0>(wkf->second);
                     available_forcings.push_back(var_name); // Allow lookup by non-canonical name
                     available_forcings_units[var_name] = units; // Allow lookup of units by non-canonical name
-                    var_name = std::get<0>(wkf->second); // Use the CSDMS name from here on
+                    var_name = wkf_name; // Use the CSDMS name from here on
                 }
 
                 forcing_vectors[var_name] = {};

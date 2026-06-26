@@ -1,12 +1,11 @@
 #ifndef NGEN_BMI_ADAPTER_HPP
 #define NGEN_BMI_ADAPTER_HPP
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include "bmi.hpp"
-
-#include "core/mediator/UnitsHelper.hpp"
 
 namespace models {
     namespace bmi {

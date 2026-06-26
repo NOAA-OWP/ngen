@@ -20,7 +20,6 @@
 #include <iomanip>
 #include <boost/compute/detail/lru_cache.hpp>
 
-#include <UnitsHelper.hpp>
 #include <StreamHandler.hpp>
 
 #include "AorcForcing.hpp"
@@ -128,7 +127,7 @@ namespace data_access
         TimeUnit time_unit;                             // the unit that time was stored as in the file
         double time_stride;                             // the amount of time between stored time values
         utils::StreamHandler log_stream;
-
+        std::string file_path;
 
         std::shared_ptr<netCDF::NcFile> nc_file;
 

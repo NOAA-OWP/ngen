@@ -52,7 +52,7 @@ protected:
     std::vector<std::string> expected_output_var_locations = { "node", "node", "node", "node", "node"};
     std::vector<int> expected_output_var_grids = { 0, 0, 0, 1, 2, 2 };
     std::vector<int> expected_input_var_grids = { 0, 0, 0, 1 };
-    std::vector<std::string> expected_output_var_units = { "m", "m", "s", "m", "m", "m" };
+    std::vector<std::string> expected_output_var_units = { "mm s^-1", "m", "s", "m", "m", "m" };
     std::vector<std::string> expected_output_var_types = { "double precision", "real", "integer", "double precision", "double precision", "double precision" };
     std::vector<int> expected_output_var_item_sizes = { 8, 4, 4, 8, 8, 8};
     std::vector<std::string> expected_input_var_types = { "double precision", "real", "integer", "double precision" };

@@ -120,6 +120,8 @@ namespace realization {
          */
         double get_response(time_step_t t_index, time_step_t t_delta) override;
 
+        void update(time_step_t t_index, time_step_t t_delta) override;
+
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
          *
@@ -225,6 +227,26 @@ namespace realization {
          */
         double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
+        /**
+         * Get value for some BMI model variable at a specific index.
+         *
+         * Function gets the value for a provided variable, returned from the backing model as an array, and returns the
+         * specific value at the desired index cast as a double type.
+         *
+         * The function makes several assumptions:
+         *
+         *     1. `index` is within array bounds
+         *     2. `var_name` is in the set of valid variable names for the model
+         *     3. the type for output variable allows the value to be cast to a `double` appropriately
+         *
+         * It falls to user (functions) of this function to ensure these assumptions hold before invoking.
+         *
+         * @param index
+         * @param var_name
+         * @return
+         */
+        virtual double get_var_value_as_double(const int& index, const std::string& var_name) = 0;
+
         bool is_bmi_input_variable(const std::string &var_name) const override;
         bool is_bmi_output_variable(const std::string &var_name) const override;
 
@@ -265,7 +287,7 @@ namespace realization {
          * @param name
          * @param bmi_var_name
          */
-        void get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name);
+        void get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name) const;
 
         /**
          * Construct model and its shared pointer, potentially supplying input variable values from config.

@@ -1,4 +1,5 @@
 #include <NGenConfig.h>
+#include <all.h>
 
 #include "Bmi_Multi_Formulation.hpp"
 #include "Formulation_Constructors.hpp"
@@ -298,23 +299,14 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
 
     // Start by first checking whether we are NOT just using the last module's values
     if (!is_out_vars_from_last_mod) {
-
-        // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
-        // Clear anything currently in the multi formulation's stream buffer
-        output_text_stream->str(std::string());
-
-        const std::vector<std::string> &output_var_names = get_output_variable_names();
-        // This almost certainly should never happen, but just to be safe ...
-        if (output_var_names.empty()) { return ""; }
-
-        // Do the first separately, without the leading comma
-        *output_text_stream << get_var_value_as_double(0, output_var_names[0]);
-
-        // Do the rest with a leading comma
-        for (int i = 1; i < output_var_names.size(); ++i) {
-            *output_text_stream << delimiter << get_var_value_as_double(0, output_var_names[i]);
+        std::string output_str;
+        for (const std::string& name : get_output_variable_names()) {
+            // Placeholder to request no conversion
+            std::string output_units = "";
+            double value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units), MEAN);
+            output_str += (output_str.empty() ? "" : ",") + std::to_string(value);
         }
-        return output_text_stream->str();
+        return output_str;
     }
     // Otherwise, use the default behavior, which means we either
     //   - were originally set to use the default of getting the output of the last module
@@ -322,7 +314,7 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
     return modules.back()->get_output_line_for_timestep(timestep, delimiter);
 }
 
-double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
+void Bmi_Multi_Formulation::update(time_step_t t_index, time_step_t t_delta) {
     if (modules.empty()) {
         throw std::runtime_error("Trying to get response of improperly created empty BMI multi-module formulation.");
     }
@@ -367,10 +359,14 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
     while (next_time_step_index <= t_index) {
         for (nested_module_ptr &module : modules) {
             // By setting up in create function, these will now have their own providers
-            module->get_response(t_index, t_delta);
+            module->update(t_index, t_delta);
         }
         next_time_step_index++;
     }
+}
+
+double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
+    update(t_index, t_delta);
     // Find the right module for the main output, checking primary first
     int index = get_index_for_primary_module();
     std::vector<std::string> out_var_names = modules[index]->get_output_variable_names();
@@ -385,8 +381,30 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
             }
         }
     }
-
-    return modules[index]->get_var_value_as_double(0, get_bmi_main_output_var());
+    double var_value;
+    try{
+        var_value = modules[index]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"), MEAN);
+    }
+    catch(UnitsHelper::unit_conversion_exception &uce){
+        data_access::unit_error_log_key key{"Bmi_Multi_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_var_name, uce.what()};
+        auto ret = data_access::unit_errors_reported.insert(key);
+        bool new_error = ret.second;
+        if (new_error) {
+            std::stringstream ss;
+            ss << "Unit conversion failure:"
+                << " requester {'Get Response (Multi Formulation)"
+                << "' catchment '" << get_catchment_id()
+                << "' variable '" << get_bmi_main_output_var()
+                << "' units 'm'}"
+                << " provider {'" << uce.provider_model_name
+                << "' source variable '" << uce.provider_var_name << "'"
+                << " raw value " << uce.unconverted_values[0] << "}"
+                << " message \"" << uce.what() << "\"";
+            logging::warning(ss.str().c_str()); ss.str("");
+        }
+        var_value = uce.unconverted_values[0];
+    }
+    return var_value;
 }
 
 bool Bmi_Multi_Formulation::is_bmi_input_variable(const std::string &var_name) const {

@@ -123,10 +123,10 @@ module bmitestbmi
   integer :: input_grid(4) = [0, 0, 0, 1]
 
   character (len=BMI_MAX_UNITS_NAME) :: &
-    output_units(6) = [character(BMI_MAX_UNITS_NAME):: 'm', 'm', 's', 'm', 'm', 'm']
+    output_units(6) = [character(BMI_MAX_UNITS_NAME):: 'mm s^-1', 'm', 's', 'm', 'm', 'm']
 
   character (len=BMI_MAX_UNITS_NAME) :: &
-    input_units(4) = [character(BMI_MAX_UNITS_NAME):: 'm', 'm', 's', 'm']
+    input_units(4) = [character(BMI_MAX_UNITS_NAME):: 'mm s^-1', 'Pa', 'K', 'mm s^-1']
 
   character (len=BMI_MAX_LOCATION_NAME) :: &
     output_location(6) = [character(BMI_MAX_LOCATION_NAME):: 'node', 'node', 'node', 'node', 'node', 'node']

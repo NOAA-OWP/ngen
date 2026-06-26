@@ -2,6 +2,7 @@
 #define NGEN_BMI_CPP_ADAPTER_H
 
 #include <memory>
+#include <stdexcept>
 #include <string>
 
 #include "bmi.hpp"
