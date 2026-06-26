@@ -522,12 +522,7 @@ ngen_add_test(
     OBJECTS
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
     LIBRARIES
-        NGen::core
-        NGen::core_nexus
-        NGen::core_mediator
         NGen::forcing
-        NGen::geojson
-        NGen::realizations_catchment
     REQUIRES
         NGEN_WITH_NETCDF
 )
