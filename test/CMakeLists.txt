@@ -209,6 +209,10 @@ if(TARGET test_forcings_engine)
     # Use global add instead of target add so that both `test_forcings_engine` and `test_all`
     # receive this compile definition.
     add_compile_definitions(NGEN_LUMPED_CONFIG_PATH="${CMAKE_CURRENT_BINARY_DIR}/config_aorc.yml")
+
+    if(NGEN_WITH_MPI)
+        target_link_libraries(test_forcings_engine PRIVATE MPI::MPI_CXX)
+    endif()
 endif()
 
 ########################## BMI Protocol Unit Tests
