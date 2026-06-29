@@ -48,6 +48,14 @@ protected:
         return obj->write_nexus_ids_once();
     }
 
+    static size_t friend_nexus_id_string_width() {
+        return utils::PerFormulationNexusOutputMgr::nexus_id_string_width;
+    }
+
+    static void friend_pack_nexus_id(const std::string& nexus_id, char* buffer) {
+        utils::PerFormulationNexusOutputMgr::pack_nexus_id(nexus_id, buffer);
+    }
+
     /*
     static void friend_open_file_for_writing_once(utils::PerFormulationNexusOutputMgr* obj) {
         obj->open_unopened_netcdf_file_via_c_api();
@@ -1200,6 +1208,50 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_1_a)
     }
 
     ASSERT_EQ(nex_id_strs, ex_1_form_0_all_nexus_id);
+}
+
+/** Test that pack_nexus_id packs a normal id verbatim and null-pads the rest of the fixed-width buffer. */
+TEST_F(PerFormulationNexusOutputMgr_Test, pack_nexus_id_a)
+{
+    const size_t width = friend_nexus_id_string_width();
+    // Pre-fill with a non-null sentinel so the null padding is actually verified (not just left-over zeros).
+    std::vector<char> buffer(width, 'X');
+    const std::string id = "tnx-1";
+
+    friend_pack_nexus_id(id, buffer.data());
+
+    // The id bytes are copied verbatim, prefix included.
+    for (size_t i = 0; i < id.size(); ++i) {
+        ASSERT_EQ(buffer[i], id[i]) << "Mismatch at byte " << i;
+    }
+    // Everything after the id is null padding.
+    for (size_t i = id.size(); i < width; ++i) {
+        ASSERT_EQ(buffer[i], '\0') << "Expected null padding at byte " << i;
+    }
+}
+
+/** Test that pack_nexus_id handles an id exactly the fixed width, filling every byte with no null terminator. */
+TEST_F(PerFormulationNexusOutputMgr_Test, pack_nexus_id_b)
+{
+    const size_t width = friend_nexus_id_string_width();
+    const std::string id(width, 'a'); // exactly the fixed width
+    std::vector<char> buffer(width, '\0');
+
+    friend_pack_nexus_id(id, buffer.data());
+
+    for (size_t i = 0; i < width; ++i) {
+        ASSERT_EQ(buffer[i], 'a') << "Expected full-width fill at byte " << i;
+    }
+}
+
+/** Test that pack_nexus_id throws when the id is longer than the fixed width (no silent truncation). */
+TEST_F(PerFormulationNexusOutputMgr_Test, pack_nexus_id_c)
+{
+    const size_t width = friend_nexus_id_string_width();
+    const std::string id(width + 1, 'a'); // one char too long to fit
+    std::vector<char> buffer(width, '\0');
+
+    ASSERT_THROW(friend_pack_nexus_id(id, buffer.data()), std::runtime_error);
 }
 
 #endif // #if NGEN_MPI_UNIT_TESTS ... #else
