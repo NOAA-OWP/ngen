@@ -220,7 +220,6 @@ RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-bookworm \
             -DEWTS_WITH_NGEN=ON \
             -DEWTS_BUILD_SHARED=ON \
             -DPython_EXECUTABLE="${VIRTUAL_ENV}/bin/python" \
-            -DPython3_EXECUTABLE="${VIRTUAL_ENV}/bin/python" \
             -DCMAKE_C_COMPILER_LAUNCHER=ccache \
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache; \
         cmake --build cmake_build -j "$(nproc)"; \
@@ -498,9 +497,8 @@ RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-bookworm \
     export CMAKE_Fortran_FLAGS="-fPIC" && \
     rm -rf cmake_build && \
     cmake -B cmake_build -S . \
-        -DCMAKE_PREFIX_PATH=${EWTS_PREFIX} \
+        -DCMAKE_PREFIX_PATH="${EWTS_PREFIX}" \
         -DPython_EXECUTABLE="${VIRTUAL_ENV}/bin/python" \
-        -DPython3_EXECUTABLE="${VIRTUAL_ENV}/bin/python" \
         -DUSE_EWTS="${USE_EWTS_NORMALIZED}" \
         -DNGEN_WITH_MPI=ON \
         -DNGEN_WITH_NETCDF=ON \

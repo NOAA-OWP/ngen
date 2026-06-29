@@ -5,7 +5,7 @@
 # Ensure CMake policies have defaults depending on the CMake version used
 # between the two versions specified. e.g. if 3.18 is used, then 3.18 defaults
 # will be used instead of 3.17 defaults.
-cmake_minimum_required(VERSION 3.17...3.26)
+cmake_minimum_required(VERSION 3.18...3.26)
 
 # Policies ====================================================================
 
@@ -348,23 +348,39 @@ add_dependencies(ngen surfacebmi)
 endif()
 
 if(NGEN_WITH_NETCDF)
-      set(HDF5_INSTALL "usr/local")
-      set(NETCDF_INSTALL "usr/local")
-      set(NETCDF_LIB_DIR "usr/local/lib")
-      set(HDF5_LIB_DIR   "usr/local/lib")
+    # Use CMake's HDF5 discovery so both conventional source installations
+    # and Debian's serial-HDF5 package layout are supported.
+    find_package(HDF5 REQUIRED COMPONENTS C HL)
 
-      find_library(NETCDF_LIB NAMES netcdf HINTS /usr/local/lib)
-      find_library(HDF5_STD NAMES hdf5 HINTS /usr/local/lib)
-      find_library(HDF5_HL NAMES hdf5_hl HINTS /usr/local/lib)
+    find_library(
+        NETCDF_LIB
+        NAMES netcdf
+        REQUIRED
+    )
+
+    find_path(
+        NETCDF_INCLUDE_DIR
+        NAMES netcdf.h
+        REQUIRED
+    )
 
     set(WRAPPER_SOURCES
         ${NGEN_SRC_DIR}/netcdf/NetCDFManager.cpp
         ${NGEN_SRC_DIR}/netcdf/NetCDFFile.cpp
         ${NGEN_SRC_DIR}/netcdf/NetCDFVar.cpp
     )
+
     add_library(NetCDFManager STATIC ${WRAPPER_SOURCES})
-    set_target_properties(NetCDFManager PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
-    target_include_directories(NetCDFManager PUBLIC
+
+    set_target_properties(
+        NetCDFManager
+        PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib
+    )
+
+    target_include_directories(
+        NetCDFManager
+        PUBLIC
         ${NGEN_INC_DIR}
         ${NGEN_INC_DIR}/netcdf
         ${NGEN_INC_DIR}/core
@@ -377,33 +393,47 @@ if(NGEN_WITH_NETCDF)
         ${NGEN_INC_DIR}/core/mediator
         ${Python_INCLUDE_DIRS}
         ${pybind11_INCLUDE_DIR}
-        ${NETCDF_INSTALL}/include
-        ${HDF5_INSTALL}/include
-    )
-    target_link_libraries(NetCDFManager PUBLIC 
-      NGen::config_header
-      NGen::core
-      NGen::core_catchment
-      NGen::core_nexus
-      NGen::geojson
-      NGen::realizations_catchment
-      NGen::forcing
-      NGen::core_mediator
-      NGen::logging
-      Python::Python
-   )
-    # the order for the custom netcdf and hdf5 libraries is important.
-    target_link_libraries(NetCDFManager PUBLIC
-        ${NETCDF_LIB}
-        ${HDF5_STD}
-        ${HDF5_HL}
+        ${NETCDF_INCLUDE_DIR}
+        ${HDF5_INCLUDE_DIRS}
     )
 
-    target_compile_definitions(NetCDFManager PUBLIC NGEN_WITH_NETCDF=1)
+    target_link_libraries(
+        NetCDFManager
+        PUBLIC
+        NGen::config_header
+        NGen::core
+        NGen::core_catchment
+        NGen::core_nexus
+        NGen::geojson
+        NGen::realizations_catchment
+        NGen::forcing
+        NGen::core_mediator
+        NGen::logging
+        Python::Python
+        ${NETCDF_LIB}
+        ${HDF5_LIBRARIES}
+        ${HDF5_HL_LIBRARIES}
+    )
+
+    target_compile_definitions(
+        NetCDFManager
+        PUBLIC
+        NGEN_WITH_NETCDF=1
+    )
+
     if(NGEN_WITH_MPI)
-      target_compile_definitions(NetCDFManager PUBLIC NGEN_WITH_MPI=1)
-      target_link_libraries(NetCDFManager PUBLIC MPI::MPI_CXX)
-    endif()   
+        target_compile_definitions(
+            NetCDFManager
+            PUBLIC
+            NGEN_WITH_MPI=1
+        )
+
+        target_link_libraries(
+            NetCDFManager
+            PUBLIC
+            MPI::MPI_CXX
+        )
+    endif()
 endif()
 
 target_include_directories(ngen PUBLIC "${NGEN_INC_DIR}")
@@ -567,13 +597,13 @@ ngen_dependent_multiline_message(NGEN_WITH_MPI
 "    Library: ${_MPI_CXX_LIBS}"
 "    Include: ${MPI_CXX_INCLUDE_DIRS}")
 ngen_dependent_multiline_message(NGEN_WITH_NETCDF
-"  NetCDF:"
-"    Version: ${NetCDF_VERSION}"
-"    Library: ${NetCDF_LIBRARY}"
-"    Library (CXX): ${NetCDF_CXX_LIBRARY}"
-"    Include: ${NetCDF_INCLUDE_DIR}"
-"    Include (CXX): ${NetCDF_CXX_INCLUDE_DIR}"
-"    Parallel: ${NetCDF_HAS_PARALLEL}")
+"  NetCDF/HDF5:"
+"    NetCDF library: ${NETCDF_LIB}"
+"    NetCDF include: ${NETCDF_INCLUDE_DIR}"
+"    HDF5 version: ${HDF5_VERSION}"
+"    HDF5 libraries: ${HDF5_LIBRARIES}"
+"    HDF5 HL libraries: ${HDF5_HL_LIBRARIES}"
+"    HDF5 includes: ${HDF5_INCLUDE_DIRS}")
 ngen_dependent_multiline_message(NGEN_WITH_SQLITE
 "  SQLite:"
 "    Version: ${SQLite3_VERSION}"

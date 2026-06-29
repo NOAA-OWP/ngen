@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>
+#include <vector>
 
 // Enum for model status mimicing Payload class in EWTS
 enum class ModelStatus {
