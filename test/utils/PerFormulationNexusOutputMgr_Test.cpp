@@ -17,6 +17,7 @@
 #include <sys/types.h>
 
 #include <cstring>
+#include <algorithm>
 
 #include "HY_HydroNexus.hpp"
 
@@ -131,6 +132,16 @@ protected:
     std::vector<std::vector<double>> ex_3_all_data;
 
     // TODO: Might also need EX 4 with 40396 nexuses but spread about real partitions (and tested exclusively via the MPI stuff)
+
+    // Example 5: hydrofabric v4.0 terminal-nexus id collision scenario. The same numeric suffix appears
+    // under both the regular "nex-" prefix and the terminal "tnx-" prefix (nex-1 alongside tnx-1), so the
+    // two physically distinct nexuses must be written as distinct, full string feature ids rather than
+    // collapsing to a single numeric id. Distinct flow values per id let the read-back verify each row.
+    std::shared_ptr<std::vector<std::string>> ex_5_form_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>{"form-0"});
+    std::vector<std::string> ex_5_form_0_all_nexus_id = {"nex-1", "tnx-1", "nex-2", "tnx-2"};
+    std::vector<std::vector<double>> ex_5_all_data = {{1.0, 101.0, 2.0, 102.0}, {11.0, 111.0, 12.0, 112.0}};
+    std::vector<std::string> ex_5_timestamps = {"2025-01-01T00:00:00Z", "2025-01-01T01:00:00Z"};
+    std::vector<std::time_t> ex_5_timestamps_seconds = {1735707600, 1735711200};
 
     std::vector<std::string> files_to_cleanup;
 
@@ -981,6 +992,71 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_c)
     std::vector<std::string> nex_id_strs = read_feature_id_strings(nexus_ids, ex_1_form_0_all_nexus_id.size());
 
     ASSERT_EQ(nex_id_strs, ex_1_form_0_all_nexus_id);
+}
+
+/**
+ * Regression test for the hydrofabric v4.0 terminal-nexus id collision (single instance, end-to-end).
+ *
+ * The nexus id set contains the colliding pair nex-1 and tnx-1, which share the numeric suffix 1. Under the
+ * old integer feature_id schema both collapsed to feature_id == 1, conflating two physically distinct
+ * nexuses; with the full-string id schema they must read back as two distinct rows ("nex-1" and "tnx-1"),
+ * each carrying its own flow data. tnx-2/nex-2 are included so the collision is not the only id present.
+ */
+TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_5_a)
+{
+    std::string form_name = ex_5_form_names->at(0);
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_5_form_0_all_nexus_id, ex_5_form_names, output_root, ex_5_timestamps.size());
+
+    // Make sure we know what files to clean up
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    for (size_t t = 0; t < ex_5_timestamps.size(); ++t) {
+        for (size_t n = 0; n < ex_5_form_0_all_nexus_id.size(); ++n) {
+            mgr.receive_data_entry(form_name,
+                                   ex_5_form_0_all_nexus_id[n],
+                                   utils::time_marker(t, ex_5_timestamps_seconds[t], ex_5_timestamps[t]),
+                                   ex_5_all_data[t][n]);
+        }
+        mgr.commit_writes();
+    }
+
+    // Should only be one filename
+    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+
+    // The feature_id char variable must contain every id as a distinct, exact full string (prefix included).
+    const netCDF::NcVar nexus_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr));
+    ASSERT_FALSE(nexus_ids.isNull());
+    ASSERT_EQ(nexus_ids.getDim(0).getSize(), ex_5_form_0_all_nexus_id.size());
+    // feature_id is a 2-D fixed-width char variable: nexus dimension then string-length dimension.
+    ASSERT_EQ(nexus_ids.getDim(1).getSize(), friend_nexus_id_string_width());
+
+    std::vector<std::string> nex_id_strs = read_feature_id_strings(nexus_ids, ex_5_form_0_all_nexus_id.size());
+    ASSERT_EQ(nex_id_strs, ex_5_form_0_all_nexus_id);
+
+    // Explicitly confirm the colliding pair is present as two distinct rows (the core of the bug).
+    auto nex1_it = std::find(nex_id_strs.begin(), nex_id_strs.end(), "nex-1");
+    auto tnx1_it = std::find(nex_id_strs.begin(), nex_id_strs.end(), "tnx-1");
+    ASSERT_NE(nex1_it, nex_id_strs.end());
+    ASSERT_NE(tnx1_it, nex_id_strs.end());
+    ASSERT_NE(nex1_it, tnx1_it) << "nex-1 and tnx-1 must occupy distinct rows, not a single collapsed id";
+
+    // Each row's flow data must match what was sent for that specific id across both time steps, so the
+    // distinct ids are not merely labels on swapped/merged data.
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+    ASSERT_FALSE(flow.isNull());
+    // Note that nexus feature_id dim comes before time dim, so have to order this way
+    double values[4][2];
+    flow.getVar(values);
+    for (size_t t = 0; t < ex_5_timestamps.size(); ++t) {
+        for (size_t n = 0; n < ex_5_form_0_all_nexus_id.size(); ++n) {
+            ASSERT_EQ(values[n][t], ex_5_all_data[t][n])
+                << "Flow mismatch for nexus id " << nex_id_strs[n] << " at time step " << t;
+        }
+    }
 }
 
 /** Make sure writes work for example 2 for multiple time steps, but using just a single instance. */
