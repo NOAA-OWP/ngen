@@ -213,6 +213,15 @@ namespace utils
         const std::string nc_dim_name_time = "time";
         const std::string nc_var_name_flow = "runoff_rate";
 
+        /**
+         * Name of the NetCDF dimension giving the fixed character length of each stored nexus feature id string.
+         *
+         * The ``feature_id`` variable is a 2-D character array dimensioned by the nexus dimension and this
+         * string-length dimension (whose size is @ref nexus_id_string_width), so the full id string is preserved
+         * verbatim rather than reduced to a numeric value.
+         */
+        const std::string nc_dim_name_id_str_len = "feature_id_str_len";
+
         const double flow_var_fill_value = nan("");
 
         /** Array of chunk sizes for  dimensions - nexus_id and time - of flow NetCDF variable, to set chunking. */
