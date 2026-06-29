@@ -16,6 +16,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include <cstring>
+
 #include "HY_HydroNexus.hpp"
 
 #include <netcdf>
@@ -54,6 +56,26 @@ protected:
 
     static void friend_pack_nexus_id(const std::string& nexus_id, char* buffer) {
         utils::PerFormulationNexusOutputMgr::pack_nexus_id(nexus_id, buffer);
+    }
+
+    /**
+     * Read the 2-D fixed-width char ``feature_id`` variable back and reconstruct the full string id for each
+     * nexus, taking the characters up to the first null (CF-style fixed-width char labels).
+     *
+     * @param var The ``feature_id`` NetCDF variable (dimensioned by nexus count then fixed string width).
+     * @param count The number of nexus id records to read.
+     * @return Vector of reconstructed full string ids, prefix included.
+     */
+    static std::vector<std::string> read_feature_id_strings(const netCDF::NcVar& var, size_t count) {
+        const size_t width = friend_nexus_id_string_width();
+        std::vector<char> chars(count * width);
+        var.getVar(chars.data());
+        std::vector<std::string> ids(count);
+        for (size_t i = 0; i < count; ++i) {
+            const char* start = chars.data() + i * width;
+            ids[i] = std::string(start, strnlen(start, width));
+        }
+        return ids;
     }
 
     /*
@@ -403,15 +425,10 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
 
     ASSERT_FALSE(nc_var_nex_ids.isNull());
     ASSERT_EQ(nc_var_nex_ids.getDim(0).getSize(), ex_2_form_0_all_nexus_id.size());
+    // feature_id is now a 2-D fixed-width char variable: nexus dimension then string-length dimension.
+    ASSERT_EQ(nc_var_nex_ids.getDim(1).getSize(), friend_nexus_id_string_width());
 
-    // Note that nexus feature_id dim comes before time dim, so have to order this way
-    std::vector<unsigned int> nex_id_numeric(ex_2_form_0_all_nexus_id.size());
-    nc_var_nex_ids.getVar(nex_id_numeric.data());
-
-    std::vector<std::string> nex_id_strs(nex_id_numeric.size());
-    for (size_t i = 0; i < nex_id_strs.size(); ++i) {
-        nex_id_strs[i] = "nex-" + std::to_string(nex_id_numeric[i]);
-    }
+    std::vector<std::string> nex_id_strs = read_feature_id_strings(nc_var_nex_ids, ex_2_form_0_all_nexus_id.size());
     ASSERT_EQ(nex_id_strs, ex_2_form_0_all_nexus_id);
 
     MPI_Barrier(MPI_COMM_WORLD);
@@ -799,14 +816,10 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_d)
 
     // These should all have size 4 for the current example, equal to the size of ex_0_form_0_nexus_ids
     ASSERT_EQ(nexus_ids.getDim(0).getSize(), 4);
+    // feature_id is now a 2-D fixed-width char variable: nexus dimension then string-length dimension.
+    ASSERT_EQ(nexus_ids.getDim(1).getSize(), friend_nexus_id_string_width());
 
-    std::vector<unsigned int> nex_id_numeric(4);
-    nexus_ids.getVar(nex_id_numeric.data());
-
-    std::vector<std::string> nex_id_strs(nex_id_numeric.size());
-    for (size_t i = 0; i < nex_id_strs.size(); ++i) {
-        nex_id_strs[i] = "nex-" + std::to_string(nex_id_numeric[i]);
-    }
+    std::vector<std::string> nex_id_strs = read_feature_id_strings(nexus_ids, ex_0_form_0_nexus_ids.size());
 
     ASSERT_EQ(nex_id_strs, ex_0_form_0_nexus_ids);
 }
@@ -962,13 +975,10 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_c)
 
     // These should all have size 8 for the current example, equal to the size of ex_1_form_0_all_nexus_id
     ASSERT_EQ(nexus_ids.getDim(0).getSize(), 8);
-    std::vector<unsigned int> nex_id_numeric(8);
-    nexus_ids.getVar(nex_id_numeric.data());
+    // feature_id is now a 2-D fixed-width char variable: nexus dimension then string-length dimension.
+    ASSERT_EQ(nexus_ids.getDim(1).getSize(), friend_nexus_id_string_width());
 
-    std::vector<std::string> nex_id_strs(nex_id_numeric.size());
-    for (size_t i = 0; i < nex_id_strs.size(); ++i) {
-        nex_id_strs[i] = "nex-" + std::to_string(nex_id_numeric[i]);
-    }
+    std::vector<std::string> nex_id_strs = read_feature_id_strings(nexus_ids, ex_1_form_0_all_nexus_id.size());
 
     ASSERT_EQ(nex_id_strs, ex_1_form_0_all_nexus_id);
 }
@@ -1156,14 +1166,10 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_0_a)
 
     // These should all have size 4 for the current example, equal to the size of ex_0_form_0_nexus_ids
     ASSERT_EQ(nexus_ids.getDim(0).getSize(), 4);
+    // feature_id is now a 2-D fixed-width char variable: nexus dimension then string-length dimension.
+    ASSERT_EQ(nexus_ids.getDim(1).getSize(), friend_nexus_id_string_width());
 
-    std::vector<unsigned int> nex_id_numeric(4);
-    nexus_ids.getVar(nex_id_numeric.data());
-
-    std::vector<std::string> nex_id_strs(nex_id_numeric.size());
-    for (size_t i = 0; i < nex_id_strs.size(); ++i) {
-        nex_id_strs[i] = "nex-" + std::to_string(nex_id_numeric[i]);
-    }
+    std::vector<std::string> nex_id_strs = read_feature_id_strings(nexus_ids, ex_0_form_0_nexus_ids.size());
 
     ASSERT_EQ(nex_id_strs, ex_0_form_0_nexus_ids);
 }
@@ -1199,13 +1205,10 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_1_a)
 
     // These should all have size 8 for the current example, equal to the size of ex_1_form_0_all_nexus_id
     ASSERT_EQ(nexus_ids.getDim(0).getSize(), 8);
-    std::vector<unsigned int> nex_id_numeric(8);
-    nexus_ids.getVar(nex_id_numeric.data());
+    // feature_id is now a 2-D fixed-width char variable: nexus dimension then string-length dimension.
+    ASSERT_EQ(nexus_ids.getDim(1).getSize(), friend_nexus_id_string_width());
 
-    std::vector<std::string> nex_id_strs(nex_id_numeric.size());
-    for (size_t i = 0; i < nex_id_strs.size(); ++i) {
-        nex_id_strs[i] = "nex-" + std::to_string(nex_id_numeric[i]);
-    }
+    std::vector<std::string> nex_id_strs = read_feature_id_strings(nexus_ids, ex_1_form_0_all_nexus_id.size());
 
     ASSERT_EQ(nex_id_strs, ex_1_form_0_all_nexus_id);
 }
