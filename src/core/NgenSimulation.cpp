@@ -28,8 +28,6 @@ NgenSimulation::NgenSimulation(
     , catchment_indexes_(std::move(catchment_indexes))
     , nexus_indexes_(std::move(nexus_indexes))
 {
-    // Duplicate the caller's communicator so this simulation has a private
-    // context for its collective operations, then derive rank and size.
     MPI_Comm_dup(comm, &mpi_comm_);
     MPI_Comm_rank(mpi_comm_, &mpi_rank_);
     MPI_Comm_size(mpi_comm_, &mpi_num_procs_);
