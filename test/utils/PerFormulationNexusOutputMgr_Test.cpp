@@ -143,6 +143,23 @@ protected:
     std::vector<std::string> ex_5_timestamps = {"2025-01-01T00:00:00Z", "2025-01-01T01:00:00Z"};
     std::vector<std::time_t> ex_5_timestamps_seconds = {1735707600, 1735711200};
 
+    // Example 6: the hydrofabric v4.0 terminal-nexus id collision exercised across MPI ranks. The colliding
+    // pair (nex-1 / tnx-1) is split one id per rank, so the single output file can only be correct if the
+    // MPI gather-to-root path assembles both ranks' fixed-width string ids (not just the in-process write).
+    // Rank 0 owns the regular "nex-" ids and rank 1 owns the terminal "tnx-" ids; the global file order is
+    // rank-contiguous (rank 0's block then rank 1's block). Distinct per-id flow values let the read-back
+    // verify each row and catch any cross-rank row mix-up.
+    std::shared_ptr<std::vector<std::string>> ex_6_form_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>{"form-0"});
+    std::vector<std::string> ex_6_form_0_group_a_nexus_ids = {"nex-1", "nex-2"};                      // rank 0
+    std::vector<std::string> ex_6_form_0_group_b_nexus_ids = {"tnx-1", "tnx-2"};                      // rank 1
+    std::vector<std::string> ex_6_form_0_all_nexus_id = {"nex-1", "nex-2", "tnx-1", "tnx-2"};         // global, rank-contiguous
+    std::vector<std::vector<double>> ex_6_group_a_data = {{1.0, 2.0}, {11.0, 12.0}};
+    std::vector<std::vector<double>> ex_6_group_b_data = {{101.0, 102.0}, {111.0, 112.0}};
+    std::vector<std::vector<double>> ex_6_all_data = {{1.0, 2.0, 101.0, 102.0}, {11.0, 12.0, 111.0, 112.0}};
+    std::vector<std::string> ex_6_timestamps = {"2025-01-01T00:00:00Z", "2025-01-01T01:00:00Z"};
+    std::vector<std::time_t> ex_6_timestamps_seconds = {1735707600, 1735711200};
+    size_t ex_6_num_time_steps = 2;
+
     std::vector<std::string> files_to_cleanup;
 
 };
@@ -441,6 +458,106 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
 
     std::vector<std::string> nex_id_strs = read_feature_id_strings(nc_var_nex_ids, ex_2_form_0_all_nexus_id.size());
     ASSERT_EQ(nex_id_strs, ex_2_form_0_all_nexus_id);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+}
+
+/**
+ * Test the MPI gather-to-root write path for the hydrofabric v4.0 terminal-nexus id collision.
+ *
+ * The colliding pair nex-1 / tnx-1 is split across ranks (rank 0 owns the regular "nex-" ids, rank 1 owns
+ * the terminal "tnx-" ids), so a correct single output file requires the fixed-width MPI_CHAR id gather to
+ * assemble both ranks' ids — the in-process single-instance write alone could never reproduce this. Asserts
+ * every rank's id is present as a distinct full string in the correct global (rank-contiguous) order, that
+ * the colliding pair occupies distinct rows, and that each row's flow data matches what was sent for that
+ * specific id, so a cross-rank row mix-up would be caught.
+ */
+TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_6_a)
+{
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    // Expect exactly two ranks (the colliding pair is split one id per rank)
+    ASSERT_LE(rank, 1);
+    ASSERT_EQ(size, 2);
+
+    // Pick the right nexus id and data group for this rank
+    std::vector<std::string> *nexus_ids;
+    std::vector<std::vector<double>> *group_data;
+    if (rank == 0) {
+        nexus_ids = &ex_6_form_0_group_a_nexus_ids;
+        group_data = &ex_6_group_a_data;
+    }
+    else {
+        nexus_ids = &ex_6_form_0_group_b_nexus_ids;
+        group_data = &ex_6_group_b_data;
+    }
+
+    // Create manager instance for this rank
+    const std::vector<int> nexus_per_rank = {
+        static_cast<int>(ex_6_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_6_form_0_group_b_nexus_ids.size())
+    };
+    std::vector<int> local_offsets = {0, nexus_per_rank[0]};
+    utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, ex_6_form_names, output_root, ex_6_num_time_steps, rank, local_offsets[rank], 2, ex_6_form_0_all_nexus_id.size());
+
+    // Add to files_to_clean_up, but only for rank 0 to deal with (they should be the same sets of files)
+    if (rank == 0) {
+        std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+        for (const std::string& f : *filenames) {
+            files_to_cleanup.push_back(f);
+        }
+    }
+
+    // Write for this rank's nexuses over both time steps
+    for (size_t t = 0; t < ex_6_timestamps.size(); ++t) {
+        for (size_t n = 0; n < nexus_ids->size(); ++n) {
+            mgr.receive_data_entry(ex_6_form_names->at(0),
+                                   nexus_ids->at(n),
+                                   utils::time_marker(t, ex_6_timestamps_seconds[t], ex_6_timestamps[t]),
+                                   group_data->at(t)[n]);
+        }
+        mgr.commit_writes();
+    }
+
+    mgr.close();
+
+    // When done writing everything, another barrier before any checks/asserts
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    // Read back the single assembled file and verify ids and flow together
+    const netCDF::NcFile ncf(mgr.get_filenames()->at(0), netCDF::NcFile::read);
+
+    // feature_id: every rank's id present as a distinct, exact full string in the correct global order
+    const netCDF::NcVar nc_var_nex_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr));
+    ASSERT_FALSE(nc_var_nex_ids.isNull());
+    ASSERT_EQ(nc_var_nex_ids.getDim(0).getSize(), ex_6_form_0_all_nexus_id.size());
+    // feature_id is a 2-D fixed-width char variable: nexus dimension then string-length dimension.
+    ASSERT_EQ(nc_var_nex_ids.getDim(1).getSize(), friend_nexus_id_string_width());
+
+    std::vector<std::string> nex_id_strs = read_feature_id_strings(nc_var_nex_ids, ex_6_form_0_all_nexus_id.size());
+    ASSERT_EQ(nex_id_strs, ex_6_form_0_all_nexus_id);
+
+    // The colliding pair, gathered from two different ranks, must occupy distinct rows (the core of the bug).
+    auto nex1_it = std::find(nex_id_strs.begin(), nex_id_strs.end(), "nex-1");
+    auto tnx1_it = std::find(nex_id_strs.begin(), nex_id_strs.end(), "tnx-1");
+    ASSERT_NE(nex1_it, nex_id_strs.end());
+    ASSERT_NE(tnx1_it, nex_id_strs.end());
+    ASSERT_NE(nex1_it, tnx1_it) << "nex-1 and tnx-1 must occupy distinct rows, not a single collapsed id";
+
+    // Each row's flow data must match what was sent for that specific id, so the distinct ids are not merely
+    // labels on data swapped/merged between ranks during the gather.
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+    ASSERT_FALSE(flow.isNull());
+    ASSERT_EQ(flow.getDim(0).getSize(), ex_6_form_0_all_nexus_id.size());
+    ASSERT_EQ(flow.getDim(1).getSize(), ex_6_num_time_steps);
+    // Note that nexus feature_id dim comes before time dim, so have to order this way
+    double values[4][2];
+    flow.getVar(values);
+    for (size_t t = 0; t < ex_6_timestamps.size(); ++t) {
+        for (size_t n = 0; n < ex_6_form_0_all_nexus_id.size(); ++n) {
+            ASSERT_EQ(values[n][t], ex_6_all_data[t][n])
+                << "Flow mismatch for nexus id " << nex_id_strs[n] << " at time step " << t;
+        }
+    }
 
     MPI_Barrier(MPI_COMM_WORLD);
 }
