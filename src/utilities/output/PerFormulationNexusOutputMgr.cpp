@@ -18,6 +18,9 @@ limitations under the License.
 
 #include "PerFormulationNexusOutputMgr.hpp"
 
+#include <cstdint>
+#include <cstring>
+
 utils::PerFormulationNexusOutputMgr::PerFormulationNexusOutputMgr(
     const std::vector<std::string>& nexus_ids,
     std::shared_ptr<std::vector<std::string>> formulation_ids,
@@ -397,6 +400,15 @@ std::string utils::PerFormulationNexusOutputMgr::parse_netcdf_return_code(const 
     default:
         return "unrecognized error code '" + std::to_string(nc_status) + "'";
     }
+}
+
+void utils::PerFormulationNexusOutputMgr::pack_nexus_id(const std::string& nexus_id, char* buffer) {
+    if (nexus_id.size() > nexus_id_string_width) {
+        throw std::runtime_error("Nexus id '" + nexus_id + "' length " + std::to_string(nexus_id.size())
+            + " exceeds the maximum NetCDF feature id width of " + std::to_string(nexus_id_string_width) + ".");
+    }
+    std::memcpy(buffer, nexus_id.data(), nexus_id.size());
+    std::memset(buffer + nexus_id.size(), '\0', nexus_id_string_width - nexus_id.size());
 }
 
 void utils::PerFormulationNexusOutputMgr::add_dimension(const std::string& dim_name, const size_t size,
