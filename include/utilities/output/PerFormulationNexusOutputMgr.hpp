@@ -185,11 +185,11 @@ namespace utils
         static std::string parse_netcdf_return_code(const int nc_status);
 
         /**
-         * Fixed character width used to store each nexus feature id string in the managed NetCDF file.
+         * Fixed character width used to store each nexus feature ID string in the managed NetCDF file.
          *
          * The nexus identity is written as a fixed-width, null-padded character representation rather than a numeric
-         * value, so that the full id string (prefix included, e.g. ``nex-1`` vs ``tnx-1``) is preserved and distinct
-         * ids never collapse together.  This same width sizes both the packing helper (@ref pack_nexus_id) and the
+         * value, so that the full ID string (prefix included, e.g. ``nex-1`` vs ``tnx-1``) is preserved and distinct
+         * IDs never collapse together.  This same width sizes both the packing helper (@ref pack_nexus_id) and the
          * NetCDF string-length dimension.
          */
         static constexpr size_t nexus_id_string_width = 32;
