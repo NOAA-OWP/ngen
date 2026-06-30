@@ -226,6 +226,18 @@ std::string HY_PointHydroNexus::get_flow_units()
     return std::string("m3/s");
 }
 
+void HY_PointHydroNexus::flush(bool clear_completed)
+{
+    // Release the memory held for all accumulated time steps.
+    upstream_flows.clear();
+    downstream_requests.clear();
+    summed_flows.clear();
+    total_requests.clear();
+    if (clear_completed) {
+        completed.clear();
+    }
+}
+
 void HY_PointHydroNexus::set_mintime(time_step_t t)
 {
     min_timestep = t;
