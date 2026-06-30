@@ -12,9 +12,9 @@ their intent.
 
 Usage:
     python3 diff_fixture.py <path-to-fixture.gpkg>
-    python3 diff_fixture.py example_v3_0.gpkg --aggressive
-    python3 diff_fixture.py example_v3_0.gpkg --flat
-    python3 diff_fixture.py example_v3_0.gpkg --all
+    python3 diff_fixture.py example_v4_0.gpkg --aggressive
+    python3 diff_fixture.py example_v4_0.gpkg --flat
+    python3 diff_fixture.py example_v4_0.gpkg --all
 
 Behavior:
     Default (structured) mode prints a per-table summary. For each table

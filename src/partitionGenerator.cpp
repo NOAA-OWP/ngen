@@ -508,9 +508,9 @@ int main(int argc, char* argv[])
 
     // Handle subwatershed / outlet catchments that have no resolvable
     // downstream feature in this collection. This can happen because:
-    //   1. (v2.2 and v3.0) the catchment's destination nexus is outside
+    //   1. (v2.2 and v4.0) the catchment's destination nexus is outside
     //      the GPKG subset, or
-    //   2. (v3.0 only) the catchment's flowpath_id refers to a flowpath
+    //   2. (v4.0 only) the catchment's flowpath_id refers to a flowpath
     //      not present in this GPKG, so the divides->flowpaths toid
     //      synthesis JOIN drops the row and divide.toid is never set.
     //
