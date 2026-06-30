@@ -28,6 +28,9 @@ class HY_PointHydroNexus : public HY_HydroNexus
         /** get the units that flows are represented in. */
         std::string get_flow_units() override;
 
+        /** @brief Release accumulated per-timestep nexus state (see HY_HydroNexus::flush). */
+        void flush(bool clear_completed = false) override;
+
         void set_mintime(time_step_t);
 
     protected:
