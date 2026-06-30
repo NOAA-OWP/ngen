@@ -259,9 +259,9 @@ jobs:
           tags: ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.test_image_tag }}
           build-args: |
             GHCR_ORG=${{ inputs.GHCR_ORG || needs.setup.outputs.org }}
-            NGEN_FORCING_IMAGE_TAG=${{ inputs.NGEN_FORCING_IMAGE_TAG || 'latest' }}
-            BASE_IMAGE_DIGEST=${{ needs.setup.outputs.ngen_forcing_digest }}
-            BASE_IMAGE_REVISION=${{ needs.setup.outputs.ngen_forcing_revision }}
+            FORCING_IMAGE=ghcr.io/${{ needs.setup.outputs.org }}/ngen-bmi-forcing:${{ inputs.NGEN_FORCING_IMAGE_TAG || 'latest' }}
+            FORCING_IMAGE_DIGEST=${{ needs.setup.outputs.ngen_forcing_digest }}
+            FORCING_IMAGE_REVISION=${{ needs.setup.outputs.ngen_forcing_revision }}
             EWTS_ORG=${{ inputs.EWTS_ORG || github.repository_owner }}
             EWTS_REF=${{ inputs.EWTS_REF || needs.setup.outputs.default_ref }}
             EWTS_REVISION=${{ needs.setup.outputs.ewts_revision }}

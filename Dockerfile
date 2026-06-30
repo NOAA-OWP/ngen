@@ -109,7 +109,7 @@ ENV PSM3_HAL=loopback \
 WORKDIR /ngen-app/
 
 ##############################
-# Stage: EWTS Build – Error, Warning and Trapping System
+# Stage: EWTS Build - Error, Warning and Trapping System
 ##############################
 # EWTS is built in its own stage so that:
 #   - It is cached independently from ngen source changes (COPY . /ngen-app/ngen/
@@ -134,13 +134,13 @@ WORKDIR /ngen-app/
 #      find_package(ewts CONFIG REQUIRED) in each submodule's CMakeLists.txt
 #      can locate the ewtsConfig.cmake package file.
 #   3. The following gives each submodule access to the EWTS targets:
-#        ewts::ewts_c            – C runtime             (cfe, evapotranspiration, topmodel)
-#        ewts::ewts_cpp          – C++ runtime logger    (used by LASAM, SoilFreezeThaw, SoilMoistureProfiles)
-#        ewts::ewts_fortran      – Fortran runtime       (noah-owp-modular sac-sma,, snow17)
-#        ewts::ewts_ngen_bridge  – ngen↔EWTS bridge lib  (linked by ngen itself)
-#        EWTS Python wheel       – python -m pip installed package  (lstm, topoflow-glacier, t-route)
+#        ewts::ewts_c            - C runtime             (cfe, evapotranspiration, topmodel)
+#        ewts::ewts_cpp          - C++ runtime logger    (used by LASAM, SoilFreezeThaw, SoilMoistureProfiles)
+#        ewts::ewts_fortran      - Fortran runtime       (noah-owp-modular sac-sma,, snow17)
+#        ewts::ewts_ngen_bridge  - ngen↔EWTS bridge lib  (linked by ngen itself)
+#        EWTS Python wheel       - python -m pip installed package  (lstm, topoflow-glacier, t-route)
 #
-# Build args – override at build time to select a remote branch:
+# Build args - override at build time to select a remote branch:
 #   docker build --build-arg EWTS_REF=development ...
 ##############################
 FROM base AS ewts-build
