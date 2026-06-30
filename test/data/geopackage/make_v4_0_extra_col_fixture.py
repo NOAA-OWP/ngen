@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate example_v3_0_extra_col.gpkg — a minimal v3.0 GeoPackage used by the
+Generate example_v4_0_extra_col.gpkg — a minimal v4.0 GeoPackage used by the
 extra-column tolerance regression test.
 
 Topology: cat-1 -> fp-1 -> nex-1 -> coastal-000001 (terminal)
@@ -18,9 +18,9 @@ flowlines and the GEOMETRY column type on pois verify that auxiliary-table
 schema drift does not break the nexus/divides load.
 
 Usage:
-    python3 make_v3_0_extra_col_fixture.py
+    python3 make_v4_0_extra_col_fixture.py
 
-Output: example_v3_0_extra_col.gpkg (sibling of this script).
+Output: example_v4_0_extra_col.gpkg (sibling of this script).
 Dependencies: Python 3.6+, stdlib only (os, sqlite3, struct). The CPython
 `_sqlite3` extension is required; every standard CPython build has it.
 
@@ -36,7 +36,7 @@ import os
 import sqlite3
 import struct
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "example_v3_0_extra_col.gpkg")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "example_v4_0_extra_col.gpkg")
 SRS_ID = 4326
 
 
@@ -131,7 +131,7 @@ def main():
         )
     """)
 
-    # nexus (v3.0 schema)
+    # nexus (v4.0 schema)
     cur.execute("""
         CREATE TABLE nexus (
             fid INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -153,7 +153,7 @@ def main():
         "INSERT INTO gpkg_geometry_columns VALUES ('nexus','geom','POINT',4326,0,0)"
     )
 
-    # divides (v3.0 schema)
+    # divides (v4.0 schema)
     ring = [
         (-82.0, 29.0), (-81.0, 29.0), (-81.0, 30.0),
         (-82.0, 30.0), (-82.0, 29.0),
@@ -184,7 +184,7 @@ def main():
         "INSERT INTO gpkg_geometry_columns VALUES ('divides','geom','POLYGON',4326,0,0)"
     )
 
-    # flowpaths (needed for v3.0 toid synthesis JOIN)
+    # flowpaths (needed for v4.0 toid synthesis JOIN)
     cur.execute("""
         CREATE TABLE flowpaths (
             fid INTEGER PRIMARY KEY AUTOINCREMENT,

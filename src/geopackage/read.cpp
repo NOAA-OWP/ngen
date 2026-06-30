@@ -19,9 +19,9 @@ void check_table_name(const std::string& table)
 }
 
 // Required tables for hydrofabric GeoPackages:
-//   nexus      — read for v2.2 and v3.0 (id/toid vs nexus_id/nexus_toid)
-//   divides    — read for v2.2 and v3.0 (divide_id / id fallback)
-//   flowpaths  — read only for v3.0 divides toid synthesis (JOIN); optional
+//   nexus      — read for v2.2 and v4.0 (id/toid vs nexus_id/nexus_toid)
+//   divides    — read for v2.2 and v4.0 (divide_id / id fallback)
+//   flowpaths  — read only for v4.0 divides toid synthesis (JOIN); optional
 //
 // Metadata tables always read by SQLite / geopackage infrastructure:
 //   gpkg_geometry_columns — geometry column name lookup
@@ -45,7 +45,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     // Detect the hydrofabric schema version once per file load and reuse the
     // result for every per-row decision below. The "guaranteed" variant
     // collapses the not-a-hydrofabric case (no `nexus` table, e.g. synthetic
-    // test fixtures) into HydrofabricVersion::V2_2 so the pre-v3.0 legacy
+    // test fixtures) into HydrofabricVersion::V2_2 so the pre-v4.0 legacy
     // code paths remain intact.
     HydrofabricVersion version = guaranteed_get_hydrofabric_version(db);
 
@@ -112,10 +112,10 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     query_get_layer_geom_meta.next();
     const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
 
-    // Precompute the v3.0 divide_id -> flowpath_toid map once before the
+    // Precompute the v4.0 divide_id -> flowpath_toid map once before the
     // per-row loop, so update_property_map_for_version can attribute "toid"
     // via a hashtable lookup. Empty map for any (version, layer) other than
-    // (V3_0, "divides"), or when the GPKG has no flowpaths table.
+    // (V4_0, "divides"), or when the GPKG has no flowpaths table.
     std::unordered_map<std::string, std::string> divide_toid_lookup = build_divide_toid_lookup(version, layer, db);
 
     // Get layer
@@ -126,7 +126,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     //
     // All schema-specific work happens here so that build_feature() can
     // remain version-agnostic: the per-row body resolves the id, builds
-    // the property map, applies any v3.0 column aliasing or synthesis,
+    // the property map, applies any v4.0 column aliasing or synthesis,
     // and only then hands the prepared inputs to build_feature().
     std::vector<geojson::Feature> features;
     features.reserve(layer_feature_count);
@@ -134,7 +134,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
         std::string id = query_get_layer.get<std::string>(id_column);
         geojson::PropertyMap properties = build_properties(query_get_layer, layer_geometry_column);
 
-        // No-op for v2.2; for v3.0, aliases nexus_id/nexus_toid to id/toid and
+        // No-op for v2.2; for v4.0, aliases nexus_id/nexus_toid to id/toid and
         // injects the synthesized "toid" on divides rows from divide_toid_lookup.
         update_property_map_for_version(properties, version, layer, id, divide_toid_lookup);
 
@@ -147,11 +147,11 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
         query_get_layer.next();
     }
 
-    // Summary WARN for v3.0 divides whose toid could not be synthesized via
+    // Summary WARN for v4.0 divides whose toid could not be synthesized via
     // the divides -> flowpaths join (null flowpath_id, or join miss). A
     // single aggregate line avoids flooding logs when a large subset is
     // terminal.
-    if (version == HydrofabricVersion::V3_0 && layer == "divides") {
+    if (version == HydrofabricVersion::V4_0 && layer == "divides") {
         std::size_t unlinked = 0;
         for (const auto& f : features) {
             if (!f->has_property("toid")) {
@@ -161,7 +161,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
         #ifndef NGEN_QUIET
         if (unlinked > 0) {
             std::cout << "WARN: " << unlinked
-                      << " v3.0 divide(s) have no toid (flowpath_id null or"
+                      << " v4.0 divide(s) have no toid (flowpath_id null or"
                       << " join miss on divides -> flowpaths); treated as"
                       << " terminal." << std::endl;
         }
