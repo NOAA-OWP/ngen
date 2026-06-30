@@ -21,6 +21,10 @@ limitations under the License.
 #include <cstdint>
 #include <cstring>
 
+#if NGEN_WITH_MPI && !NGEN_WITH_PARALLEL_NETCDF
+#include "utilities/parallel_utils.h"
+#endif
+
 utils::PerFormulationNexusOutputMgr::PerFormulationNexusOutputMgr(
     const std::vector<std::string>& nexus_ids,
     std::shared_ptr<std::vector<std::string>> formulation_ids,
@@ -587,26 +591,15 @@ void utils::PerFormulationNexusOutputMgr::write_nexus_ids_once() const {
 
 #if NGEN_WITH_MPI && !NGEN_WITH_PARALLEL_NETCDF
     if (gather_to_root) {
-        // Gather every rank's fixed-width char id records to rank 0, then rank 0 writes the full block once.
-        // The cached per-rank nexus counts/offsets are scaled by the fixed width to byte counts/offsets for the
-        // single MPI_CHAR gather.
-        std::vector<char> all_packed_nex_ids;
-        std::vector<int> char_recvcounts;
-        std::vector<int> char_displs;
-        if (obj_id == 0) {
-            all_packed_nex_ids.resize(static_cast<size_t>(total_nexus_count) * nexus_id_string_width);
-            char_recvcounts.resize(gather_recvcounts.size());
-            char_displs.resize(gather_displs.size());
-            for (size_t r = 0; r < gather_recvcounts.size(); ++r) {
-                char_recvcounts[r] = gather_recvcounts[r] * static_cast<int>(nexus_id_string_width);
-                char_displs[r] = gather_displs[r] * static_cast<int>(nexus_id_string_width);
-            }
-        }
-        MPI_Gatherv(packed_nex_ids.data(), static_cast<int>(packed_nex_ids.size()), MPI_CHAR,
-                    all_packed_nex_ids.data(), char_recvcounts.data(), char_displs.data(), MPI_CHAR,
-                    0, MPI_COMM_WORLD);
+        // Gather every rank's full nexus id strings to rank 0 (in rank-contiguous order), then rank 0 packs
+        // them into the fixed-width, null-padded char block and writes it once.
+        std::vector<std::string> all_nex_ids = parallel::gather_strings(nexus_ids, MPI_COMM_WORLD);
         if (obj_id != 0) {
             return;
+        }
+        std::vector<char> all_packed_nex_ids(static_cast<size_t>(total_nexus_count) * nexus_id_string_width);
+        for (size_t i = 0; i < all_nex_ids.size(); ++i) {
+            pack_nexus_id(all_nex_ids[i], all_packed_nex_ids.data() + i * nexus_id_string_width);
         }
         std::vector<size_t> start{0, 0};
         std::vector<size_t> count{static_cast<size_t>(total_nexus_count), nexus_id_string_width};
