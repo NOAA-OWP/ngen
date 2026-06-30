@@ -1,41 +1,23 @@
 #!/usr/bin/env python3
 """
-Generate example_v3_0_minimal.gpkg — a subset-tolerance v3.0 GeoPackage used by
-the subset-tolerance regression test.
+Generate example_v4_0_dangling.gpkg — a v4.0 GeoPackage used by the
+divides toid-synthesis unit test for the "join miss / dangling flowpath_id"
+case.
 
-Contains ONLY the three required hydrofabric tables (nexus, divides, flowpaths) plus
-the required GeoPackage metadata tables.  No auxiliary tables (flowlines, pois, etc.).
+Contains 2 divides:
+  cat-1  flowpath_id = fp-1  (fp-1 IS in flowpaths -> toid synthesized)
+  cat-2  flowpath_id = fp-DANGLING  (NOT in flowpaths -> no toid)
 
-Topology (3 catchments, 2 nexuses) — identical to example_v3_0.gpkg:
+Topology:
+  cat-1 (fp-1) --> nex-1
+  cat-2 (fp-DANGLING) --> [unresolvable]
 
-    cat-1 (fp-1) ─┐
-                    ├─> nex-1 ─> fp-2 ─> cat-2 (fp-2) ─> nex-2 ─> coastal-000001
-    cat-3 (fp-3) ─┘
-
-- cat-1 and cat-3 both drain to nex-1 (confluence), via fp-1 / fp-3.
-- nex-1 drains into cat-2 (nexus_toid = fp-2, the flowpath of cat-2).
-- cat-2 drains to nex-2 (via fp-2 -> nex-2).
-- nex-2 is terminal (nexus_toid = coastal-000001).
-
-Feature IDs:
-  Divides:   cat-1, cat-2, cat-3   (divide_id)
-  Nexuses:   nex-1, nex-2          (nexus_id)
-  Flowpaths: fp-1, fp-2, fp-3      (flowpath_id)
-
-Schema (v3.0):
-  nexus    (fid, geom POINT,          nexus_id, nexus_toid, vpuid)
-  divides  (fid, geom POLYGON,        divide_id, areasqkm, has_flowline, ds_id,
-                                       type, vpuid, flowpath_id)
-  flowpaths(fid, geom MULTILINESTRING, flowpath_id, flowpath_toid, divide_id, vpuid)
-
-Join invariant (toid synthesis):
-  divide.flowpath_id -> flowpaths.flowpath_id -> flowpaths.flowpath_toid
-  All three divides resolve to a nexus via this join.
+flowpaths table has only fp-1 (flowpath_toid = nex-1).
 
 Usage:
-    python3 make_v3_0_minimal_fixture.py
+    python3 make_v4_0_dangling_fixture.py
 
-Output: example_v3_0_minimal.gpkg (sibling of this script).
+Output: example_v4_0_dangling.gpkg (sibling of this script).
 Dependencies: Python 3.6+, stdlib only (os, sqlite3, struct). The CPython
 `_sqlite3` extension is required; every standard CPython build has it.
 
@@ -51,7 +33,7 @@ import os
 import sqlite3
 import struct
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "example_v3_0_minimal.gpkg")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "example_v4_0_dangling.gpkg")
 SRS_ID = 4326
 
 
@@ -140,7 +122,7 @@ def main():
         )
     """)
 
-    # ── nexus (v3.0 schema) ───────────────────────────────────────────────────
+    # ── nexus (v4.0 schema — provides the nexus_id column detect_version needs) ─
     cur.execute("""
         CREATE TABLE nexus (
             fid        INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -150,113 +132,86 @@ def main():
             vpuid      TEXT
         )
     """)
-    cur.executemany(
+    cur.execute(
         "INSERT INTO nexus (geom, nexus_id, nexus_toid, vpuid) VALUES (?,?,?,?)",
-        [
-            (point_blob(-81.0, 30.0), "nex-1", "fp-2",           "03"),
-            (point_blob(-80.0, 30.0), "nex-2", "coastal-000001", "03"),
-        ],
+        (point_blob(-81.0, 30.0), "nex-1", "coastal-000001", "03"),
     )
     cur.execute(
         "INSERT INTO gpkg_contents VALUES"
-        " ('nexus','features','nexus','',datetime('now'),-82.0,29.0,-80.0,31.0,4326)"
+        " ('nexus','features','nexus','',datetime('now'),-81.0,30.0,-81.0,30.0,4326)"
     )
     cur.execute(
         "INSERT INTO gpkg_geometry_columns VALUES ('nexus','geom','POINT',4326,0,0)"
     )
 
-    # ── divides (v3.0 schema) ─────────────────────────────────────────────────
+    # ── divides ──────────────────────────────────────────────────────────────
+    # cat-1: flowpath_id=fp-1  (fp-1 exists -> toid will be synthesized)
+    # cat-2: flowpath_id=fp-DANGLING  (not in flowpaths -> no toid)
     cat1 = [(-82.0, 29.0), (-81.0, 29.0), (-81.0, 30.0), (-82.0, 30.0), (-82.0, 29.0)]
-    cat2 = [(-81.0, 29.0), (-80.0, 29.0), (-80.0, 31.0), (-81.0, 31.0), (-81.0, 29.0)]
-    cat3 = [(-82.0, 30.0), (-81.0, 30.0), (-81.0, 31.0), (-82.0, 31.0), (-82.0, 30.0)]
+    cat2 = [(-81.0, 29.0), (-80.0, 29.0), (-80.0, 30.0), (-81.0, 30.0), (-81.0, 29.0)]
     cur.execute("""
         CREATE TABLE divides (
             fid          INTEGER PRIMARY KEY AUTOINCREMENT,
             geom         POLYGON,
             divide_id    TEXT NOT NULL,
             areasqkm     REAL,
-            has_flowline BOOLEAN,
-            ds_id        BOOLEAN,
-            type         TEXT,
             vpuid        TEXT,
             flowpath_id  TEXT
         )
     """)
     cur.executemany(
-        "INSERT INTO divides"
-        " (geom, divide_id, areasqkm, has_flowline, ds_id, type, vpuid, flowpath_id)"
-        " VALUES (?,?,?,?,?,?,?,?)",
+        "INSERT INTO divides (geom, divide_id, areasqkm, vpuid, flowpath_id) VALUES (?,?,?,?,?)",
         [
-            (polygon_blob([cat1]), "cat-1", 100.0, 1, 0, "divide", "03", "fp-1"),
-            (polygon_blob([cat2]), "cat-2", 200.0, 1, 0, "divide", "03", "fp-2"),
-            (polygon_blob([cat3]), "cat-3", 100.0, 1, 0, "divide", "03", "fp-3"),
+            (polygon_blob([cat1]), "cat-1", 100.0, "03", "fp-1"),
+            (polygon_blob([cat2]), "cat-2", 100.0, "03", "fp-DANGLING"),
         ],
     )
     cur.execute(
         "INSERT INTO gpkg_contents VALUES"
-        " ('divides','features','divides','',datetime('now'),-82.0,29.0,-80.0,31.0,4326)"
+        " ('divides','features','divides','',datetime('now'),-82.0,29.0,-80.0,30.0,4326)"
     )
     cur.execute(
         "INSERT INTO gpkg_geometry_columns VALUES ('divides','geom','POLYGON',4326,0,0)"
     )
 
-    # ── flowpaths (v3.0 schema, minimal columns) ─────────────────────────────
+    # ── flowpaths (only fp-1; fp-DANGLING intentionally absent) ─────────────
     cur.execute("""
         CREATE TABLE flowpaths (
             fid           INTEGER PRIMARY KEY AUTOINCREMENT,
             geom          MULTILINESTRING,
             flowpath_id   TEXT NOT NULL,
             flowpath_toid TEXT,
-            divide_id     TEXT,
             vpuid         TEXT
         )
     """)
-    cur.executemany(
-        "INSERT INTO flowpaths (geom, flowpath_id, flowpath_toid, divide_id, vpuid)"
-        " VALUES (?,?,?,?,?)",
-        [
-            (multilinestring_blob([[(-81.5, 29.5), (-81.0, 30.0)]]),
-             "fp-1", "nex-1", "cat-1", "03"),
-            (multilinestring_blob([[(-80.5, 30.0), (-80.0, 30.0)]]),
-             "fp-2", "nex-2", "cat-2", "03"),
-            (multilinestring_blob([[(-81.5, 30.5), (-81.0, 30.0)]]),
-             "fp-3", "nex-1", "cat-3", "03"),
-        ],
+    cur.execute(
+        "INSERT INTO flowpaths (geom, flowpath_id, flowpath_toid, vpuid) VALUES (?,?,?,?)",
+        (multilinestring_blob([[(-81.5, 29.5), (-81.0, 30.0)]]), "fp-1", "nex-1", "03"),
     )
     cur.execute(
         "INSERT INTO gpkg_contents VALUES"
-        " ('flowpaths','features','flowpaths','',datetime('now'),-81.5,29.5,-80.0,30.5,4326)"
+        " ('flowpaths','features','flowpaths','',datetime('now'),-81.5,29.5,-81.0,30.0,4326)"
     )
     cur.execute(
-        "INSERT INTO gpkg_geometry_columns"
-        " VALUES ('flowpaths','geom','MULTILINESTRING',4326,0,0)"
+        "INSERT INTO gpkg_geometry_columns VALUES ('flowpaths','geom','MULTILINESTRING',4326,0,0)"
     )
 
     db.commit()
     db.close()
     print(f"Written: {OUT}  ({os.path.getsize(OUT)} bytes)")
 
-    # Verify the toid-synthesis join resolves for all 3 divides
+    # Verify the toid-synthesis join
     db2 = sqlite3.connect(OUT)
     rows = list(db2.execute(
         "SELECT d.divide_id, f.flowpath_toid"
         " FROM divides d JOIN flowpaths f ON d.flowpath_id = f.flowpath_id"
+        " WHERE f.flowpath_toid IS NOT NULL"
     ))
-    # Verify no auxiliary tables exist
-    tables = {r[0] for r in db2.execute(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'gpkg_%'"
-        " AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'rtree_%'"
-    )}
     db2.close()
 
-    assert len(rows) == 3, f"Expected 3 join rows, got {len(rows)}"
-    expected = {("cat-1", "nex-1"), ("cat-2", "nex-2"), ("cat-3", "nex-1")}
-    assert set(rows) == expected, f"Unexpected join result: {rows}"
-    print("Join invariant verified: all 3 divides resolve to a nexus.")
-
-    assert tables == {"nexus", "divides", "flowpaths"}, \
-        f"Unexpected tables in minimal fixture: {tables}"
-    print("Table set verified: only nexus, divides, flowpaths present.")
+    assert len(rows) == 1, f"Expected 1 join row (cat-1 only), got {len(rows)}: {rows}"
+    assert rows[0] == ("cat-1", "nex-1"), f"Unexpected join result: {rows[0]}"
+    print("Join invariant verified: only cat-1 resolves; cat-2 (fp-DANGLING) has no match.")
 
 
 if __name__ == "__main__":

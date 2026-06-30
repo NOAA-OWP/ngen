@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """
-Generate example_v3_0.gpkg — a minimal v3.0 GeoPackage used by the
-detect_version, nexus-remap, toid-synthesis, and v3.0 regression tests.
+Generate example_v4_0_minimal.gpkg — a subset-tolerance v4.0 GeoPackage used by
+the subset-tolerance regression test.
 
-Topology (3 catchments, 2 nexuses) — mirrors example_v2_2.gpkg:
+Contains ONLY the three required hydrofabric tables (nexus, divides, flowpaths) plus
+the required GeoPackage metadata tables.  No auxiliary tables (flowlines, pois, etc.).
+
+Topology (3 catchments, 2 nexuses) — identical to example_v4_0.gpkg:
 
     cat-1 (fp-1) ─┐
                     ├─> nex-1 ─> fp-2 ─> cat-2 (fp-2) ─> nex-2 ─> coastal-000001
@@ -11,7 +14,7 @@ Topology (3 catchments, 2 nexuses) — mirrors example_v2_2.gpkg:
 
 - cat-1 and cat-3 both drain to nex-1 (confluence), via fp-1 / fp-3.
 - nex-1 drains into cat-2 (nexus_toid = fp-2, the flowpath of cat-2).
-- cat-2 drains to nex-2 (via fp-2 → nex-2).
+- cat-2 drains to nex-2 (via fp-2 -> nex-2).
 - nex-2 is terminal (nexus_toid = coastal-000001).
 
 Feature IDs:
@@ -19,24 +22,20 @@ Feature IDs:
   Nexuses:   nex-1, nex-2          (nexus_id)
   Flowpaths: fp-1, fp-2, fp-3      (flowpath_id)
 
-Schema (v3.0):
+Schema (v4.0):
   nexus    (fid, geom POINT,          nexus_id, nexus_toid, vpuid)
   divides  (fid, geom POLYGON,        divide_id, areasqkm, has_flowline, ds_id,
                                        type, vpuid, flowpath_id)
-  flowpaths(fid, geom MULTILINESTRING, flowpath_id, flowpath_toid, flowline_id,
-                                        divide_id, mainstem, hydroseq, lengthkm,
-                                        areasqkm, tot_drainage_areasqkm,
-                                        has_divide, vpuid, ibt, poi_id,
-                                        member_comid)
+  flowpaths(fid, geom MULTILINESTRING, flowpath_id, flowpath_toid, divide_id, vpuid)
 
 Join invariant (toid synthesis):
   divide.flowpath_id -> flowpaths.flowpath_id -> flowpaths.flowpath_toid
   All three divides resolve to a nexus via this join.
 
 Usage:
-    python3 make_v3_0_fixture.py
+    python3 make_v4_0_minimal_fixture.py
 
-Output: example_v3_0.gpkg (sibling of this script).
+Output: example_v4_0_minimal.gpkg (sibling of this script).
 Dependencies: Python 3.6+, stdlib only (os, sqlite3, struct). The CPython
 `_sqlite3` extension is required; every standard CPython build has it.
 
@@ -52,7 +51,7 @@ import os
 import sqlite3
 import struct
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "example_v3_0.gpkg")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "example_v4_0_minimal.gpkg")
 SRS_ID = 4326
 
 
@@ -141,9 +140,7 @@ def main():
         )
     """)
 
-    # ── nexus (v3.0 schema) ───────────────────────────────────────────────────
-    # nexus_id column (not 'id') is the v3.0 signature detected by detect_version.
-    # nexus_toid points to the downstream flowpath (or coastal-* for terminal).
+    # ── nexus (v4.0 schema) ───────────────────────────────────────────────────
     cur.execute("""
         CREATE TABLE nexus (
             fid        INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -168,9 +165,7 @@ def main():
         "INSERT INTO gpkg_geometry_columns VALUES ('nexus','geom','POINT',4326,0,0)"
     )
 
-    # ── divides (v3.0 schema) ─────────────────────────────────────────────────
-    # divide_id  = catchment identifier (cat-*)
-    # flowpath_id = associated flowpath; used by the toid-synthesis JOIN
+    # ── divides (v4.0 schema) ─────────────────────────────────────────────────
     cat1 = [(-82.0, 29.0), (-81.0, 29.0), (-81.0, 30.0), (-82.0, 30.0), (-82.0, 29.0)]
     cat2 = [(-81.0, 29.0), (-80.0, 29.0), (-80.0, 31.0), (-81.0, 31.0), (-81.0, 29.0)]
     cat3 = [(-82.0, 30.0), (-81.0, 30.0), (-81.0, 31.0), (-82.0, 31.0), (-82.0, 30.0)]
@@ -205,43 +200,27 @@ def main():
         "INSERT INTO gpkg_geometry_columns VALUES ('divides','geom','POLYGON',4326,0,0)"
     )
 
-    # ── flowpaths (v3.0 schema) ───────────────────────────────────────────────
-    # flowpath_id   = fp-* identifier
-    # flowpath_toid = downstream nexus (nex-*)
-    # divide_id     = back-reference to associated divide
+    # ── flowpaths (v4.0 schema, minimal columns) ─────────────────────────────
     cur.execute("""
         CREATE TABLE flowpaths (
-            fid                   INTEGER PRIMARY KEY AUTOINCREMENT,
-            geom                  MULTILINESTRING,
-            flowpath_id           TEXT NOT NULL,
-            flowpath_toid         TEXT,
-            flowline_id           TEXT,
-            divide_id             TEXT,
-            mainstem              MEDIUMINT,
-            hydroseq              MEDIUMINT,
-            lengthkm              REAL,
-            areasqkm              REAL,
-            tot_drainage_areasqkm REAL,
-            has_divide            BOOLEAN,
-            vpuid                 TEXT,
-            ibt                   BOOLEAN,
-            poi_id                REAL,
-            member_comid          TEXT
+            fid           INTEGER PRIMARY KEY AUTOINCREMENT,
+            geom          MULTILINESTRING,
+            flowpath_id   TEXT NOT NULL,
+            flowpath_toid TEXT,
+            divide_id     TEXT,
+            vpuid         TEXT
         )
     """)
     cur.executemany(
-        "INSERT INTO flowpaths"
-        " (geom, flowpath_id, flowpath_toid, flowline_id, divide_id, mainstem,"
-        "  hydroseq, lengthkm, areasqkm, tot_drainage_areasqkm, has_divide,"
-        "  vpuid, ibt, poi_id, member_comid)"
-        " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        "INSERT INTO flowpaths (geom, flowpath_id, flowpath_toid, divide_id, vpuid)"
+        " VALUES (?,?,?,?,?)",
         [
             (multilinestring_blob([[(-81.5, 29.5), (-81.0, 30.0)]]),
-             "fp-1", "nex-1", "fl-1", "cat-1", 0, 3, 10.0, 100.0, 200.0, 1, "03", 0, None, None),
+             "fp-1", "nex-1", "cat-1", "03"),
             (multilinestring_blob([[(-80.5, 30.0), (-80.0, 30.0)]]),
-             "fp-2", "nex-2", "fl-2", "cat-2", 1, 1, 15.0, 200.0, 200.0, 1, "03", 0, 1.0, None),
+             "fp-2", "nex-2", "cat-2", "03"),
             (multilinestring_blob([[(-81.5, 30.5), (-81.0, 30.0)]]),
-             "fp-3", "nex-1", "fl-3", "cat-3", 0, 2, 10.0, 100.0, 100.0, 1, "03", 0, None, None),
+             "fp-3", "nex-1", "cat-3", "03"),
         ],
     )
     cur.execute(
@@ -263,11 +242,21 @@ def main():
         "SELECT d.divide_id, f.flowpath_toid"
         " FROM divides d JOIN flowpaths f ON d.flowpath_id = f.flowpath_id"
     ))
+    # Verify no auxiliary tables exist
+    tables = {r[0] for r in db2.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'gpkg_%'"
+        " AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'rtree_%'"
+    )}
     db2.close()
+
     assert len(rows) == 3, f"Expected 3 join rows, got {len(rows)}"
     expected = {("cat-1", "nex-1"), ("cat-2", "nex-2"), ("cat-3", "nex-1")}
     assert set(rows) == expected, f"Unexpected join result: {rows}"
     print("Join invariant verified: all 3 divides resolve to a nexus.")
+
+    assert tables == {"nexus", "divides", "flowpaths"}, \
+        f"Unexpected tables in minimal fixture: {tables}"
+    print("Table set verified: only nexus, divides, flowpaths present.")
 
 
 if __name__ == "__main__":

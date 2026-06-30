@@ -103,7 +103,7 @@ TEST_F(GeoPackage_Test, geopackage_projection_test)
 }
 
 // Fixture for extra-column tolerance tests.
-// Uses example_v3_0_extra_col.gpkg which carries:
+// Uses example_v4_0_extra_col.gpkg which carries:
 //   - flowlines with an extra 'lengthkm' column (auxiliary table, never read)
 //   - pois with geom declared as GEOMETRY instead of POINT (auxiliary table, never read)
 class GeoPackage_ExtraCol_Test : public ::testing::Test
@@ -112,13 +112,13 @@ class GeoPackage_ExtraCol_Test : public ::testing::Test
     void SetUp() override
     {
         this->path = utils::FileChecker::find_first_readable({
-            "test/data/geopackage/example_v3_0_extra_col.gpkg",
-            "../test/data/geopackage/example_v3_0_extra_col.gpkg",
-            "../../test/data/geopackage/example_v3_0_extra_col.gpkg"
+            "test/data/geopackage/example_v4_0_extra_col.gpkg",
+            "../test/data/geopackage/example_v4_0_extra_col.gpkg",
+            "../../test/data/geopackage/example_v4_0_extra_col.gpkg"
         });
 
         if (this->path.empty()) {
-            FAIL() << "can't find test/data/geopackage/example_v3_0_extra_col.gpkg";
+            FAIL() << "can't find test/data/geopackage/example_v4_0_extra_col.gpkg";
         }
     }
 
@@ -127,11 +127,11 @@ class GeoPackage_ExtraCol_Test : public ::testing::Test
     std::string path;
 };
 
-// Loading nexus from a v3.0 GPKG that also contains flowlines with an extra
+// Loading nexus from a v4.0 GPKG that also contains flowlines with an extra
 // column and pois with a GEOMETRY-typed geom must succeed. The extra column
 // ('lengthkm') belongs only to flowlines, which the loader never opens, so
 // it must not appear in any nexus feature's properties.
-TEST_F(GeoPackage_ExtraCol_Test, geopackage_v3_nexus_extra_col_ignored)
+TEST_F(GeoPackage_ExtraCol_Test, geopackage_v4_nexus_extra_col_ignored)
 {
     const auto gpkg = ngen::geopackage::read(this->path, "nexus", {});
     ASSERT_EQ(gpkg->get_size(), 1);
@@ -139,7 +139,7 @@ TEST_F(GeoPackage_ExtraCol_Test, geopackage_v3_nexus_extra_col_ignored)
     const auto& feat = gpkg->get_feature(0);
     ASSERT_NE(feat, nullptr);
 
-    // v3.0 nexus_id aliased to id; nexus_toid aliased to toid
+    // v4.0 nexus_id aliased to id; nexus_toid aliased to toid
     EXPECT_EQ(feat->get_id(), "nex-1");
     ASSERT_TRUE(feat->has_property("id"));
     ASSERT_TRUE(feat->has_property("toid"));
@@ -153,7 +153,7 @@ TEST_F(GeoPackage_ExtraCol_Test, geopackage_v3_nexus_extra_col_ignored)
 
 // Loading divides from the same GPKG must also succeed and synthesize
 // 'toid' via the divides -> flowpaths join (cat-1 -> fp-1 -> nex-1).
-TEST_F(GeoPackage_ExtraCol_Test, geopackage_v3_divides_toid_synthesized)
+TEST_F(GeoPackage_ExtraCol_Test, geopackage_v4_divides_toid_synthesized)
 {
     const auto gpkg = ngen::geopackage::read(this->path, "divides", {});
     ASSERT_EQ(gpkg->get_size(), 1);
@@ -166,9 +166,9 @@ TEST_F(GeoPackage_ExtraCol_Test, geopackage_v3_divides_toid_synthesized)
     EXPECT_EQ(feat->get_property("toid").as_string(), "nex-1");
 }
 
-// Fixture for v3.0 nexus remap tests.
+// Fixture for v4.0 nexus remap tests.
 // Verifies that 'id' and 'toid' are correctly aliased from 'nexus_id' /
-// 'nexus_toid' on v3.0 loads, and that v2.2 loads continue to populate
+// 'nexus_toid' on v4.0 loads, and that v2.2 loads continue to populate
 // 'id' and 'toid' directly from their original columns.
 class GeoPackage_NexusRemap_Test : public ::testing::Test
 {
@@ -184,28 +184,28 @@ class GeoPackage_NexusRemap_Test : public ::testing::Test
             FAIL() << "can't find test/data/geopackage/example_v2_2.gpkg";
         }
 
-        this->v3_0_path = utils::FileChecker::find_first_readable({
-            "test/data/geopackage/example_v3_0.gpkg",
-            "../test/data/geopackage/example_v3_0.gpkg",
-            "../../test/data/geopackage/example_v3_0.gpkg"
+        this->v4_0_path = utils::FileChecker::find_first_readable({
+            "test/data/geopackage/example_v4_0.gpkg",
+            "../test/data/geopackage/example_v4_0.gpkg",
+            "../../test/data/geopackage/example_v4_0.gpkg"
         });
-        if (this->v3_0_path.empty()) {
-            FAIL() << "can't find test/data/geopackage/example_v3_0.gpkg";
+        if (this->v4_0_path.empty()) {
+            FAIL() << "can't find test/data/geopackage/example_v4_0.gpkg";
         }
     }
 
     void TearDown() override {}
 
     std::string v2_2_path;
-    std::string v3_0_path;
+    std::string v4_0_path;
 };
 
-// Every v3.0 nexus feature must expose 'id' == nexus_id and 'toid' ==
+// Every v4.0 nexus feature must expose 'id' == nexus_id and 'toid' ==
 // nexus_toid after the loader aliases them at the load boundary. The original
 // 'nexus_id' / 'nexus_toid' properties are also preserved (additive aliasing).
-TEST_F(GeoPackage_NexusRemap_Test, geopackage_v3_nexus_id_toid_aliased)
+TEST_F(GeoPackage_NexusRemap_Test, geopackage_v4_nexus_id_toid_aliased)
 {
-    const auto gpkg = ngen::geopackage::read(this->v3_0_path, "nexus", {});
+    const auto gpkg = ngen::geopackage::read(this->v4_0_path, "nexus", {});
     ASSERT_EQ(gpkg->get_size(), 2);
 
     for (int i = 0; i < gpkg->get_size(); ++i) {
@@ -235,7 +235,7 @@ TEST_F(GeoPackage_NexusRemap_Test, geopackage_v3_nexus_id_toid_aliased)
 }
 
 // Regression guard: v2.2 nexus features must still get 'id' and 'toid' from
-// their original schema columns without the v3.0 alias logic firing.
+// their original schema columns without the v4.0 alias logic firing.
 TEST_F(GeoPackage_NexusRemap_Test, geopackage_v2_2_nexus_id_toid_from_columns)
 {
     const auto gpkg = ngen::geopackage::read(this->v2_2_path, "nexus", {});
@@ -260,46 +260,46 @@ TEST_F(GeoPackage_NexusRemap_Test, geopackage_v2_2_nexus_id_toid_from_columns)
     EXPECT_EQ(gpkg->get_feature(idx2)->get_property("toid").as_string(), "coastal-000001");
 }
 
-// Fixture for v3.0 divides toid-synthesis tests.
-// Uses example_v3_0.gpkg (3 divides, all flowpath_ids resolve) and
-// example_v3_0_dangling.gpkg (2 divides: one resolves, one has a
+// Fixture for v4.0 divides toid-synthesis tests.
+// Uses example_v4_0.gpkg (3 divides, all flowpath_ids resolve) and
+// example_v4_0_dangling.gpkg (2 divides: one resolves, one has a
 // flowpath_id not present in flowpaths).
 class GeoPackage_DividesToidSynthesis_Test : public ::testing::Test
 {
   protected:
     void SetUp() override
     {
-        this->v3_0_path = utils::FileChecker::find_first_readable({
-            "test/data/geopackage/example_v3_0.gpkg",
-            "../test/data/geopackage/example_v3_0.gpkg",
-            "../../test/data/geopackage/example_v3_0.gpkg"
+        this->v4_0_path = utils::FileChecker::find_first_readable({
+            "test/data/geopackage/example_v4_0.gpkg",
+            "../test/data/geopackage/example_v4_0.gpkg",
+            "../../test/data/geopackage/example_v4_0.gpkg"
         });
-        if (this->v3_0_path.empty()) {
-            FAIL() << "can't find test/data/geopackage/example_v3_0.gpkg";
+        if (this->v4_0_path.empty()) {
+            FAIL() << "can't find test/data/geopackage/example_v4_0.gpkg";
         }
 
         this->dangling_path = utils::FileChecker::find_first_readable({
-            "test/data/geopackage/example_v3_0_dangling.gpkg",
-            "../test/data/geopackage/example_v3_0_dangling.gpkg",
-            "../../test/data/geopackage/example_v3_0_dangling.gpkg"
+            "test/data/geopackage/example_v4_0_dangling.gpkg",
+            "../test/data/geopackage/example_v4_0_dangling.gpkg",
+            "../../test/data/geopackage/example_v4_0_dangling.gpkg"
         });
         if (this->dangling_path.empty()) {
-            FAIL() << "can't find test/data/geopackage/example_v3_0_dangling.gpkg";
+            FAIL() << "can't find test/data/geopackage/example_v4_0_dangling.gpkg";
         }
     }
 
     void TearDown() override {}
 
-    std::string v3_0_path;
+    std::string v4_0_path;
     std::string dangling_path;
 };
 
-// All 3 divides in example_v3_0.gpkg resolve via the divides -> flowpaths
+// All 3 divides in example_v4_0.gpkg resolve via the divides -> flowpaths
 // join, so every feature must carry a non-empty 'toid'. Check the exact
 // mapping: cat-1 -> fp-1 -> nex-1, cat-2 -> fp-2 -> nex-2, cat-3 -> fp-3 -> nex-1.
-TEST_F(GeoPackage_DividesToidSynthesis_Test, geopackage_v3_divides_toid_all_resolved)
+TEST_F(GeoPackage_DividesToidSynthesis_Test, geopackage_v4_divides_toid_all_resolved)
 {
-    const auto gpkg = ngen::geopackage::read(this->v3_0_path, "divides", {});
+    const auto gpkg = ngen::geopackage::read(this->v4_0_path, "divides", {});
     ASSERT_EQ(gpkg->get_size(), 3);
 
     for (int i = 0; i < gpkg->get_size(); ++i) {
@@ -324,11 +324,11 @@ TEST_F(GeoPackage_DividesToidSynthesis_Test, geopackage_v3_divides_toid_all_reso
     EXPECT_EQ(gpkg->get_feature(idx3)->get_property("toid").as_string(), "nex-1");
 }
 
-// example_v3_0_dangling.gpkg has cat-1 (flowpath_id=fp-1, resolves to nex-1)
+// example_v4_0_dangling.gpkg has cat-1 (flowpath_id=fp-1, resolves to nex-1)
 // and cat-2 (flowpath_id=fp-DANGLING, not present in flowpaths). The loader
 // must succeed; cat-1 must have toid="nex-1"; cat-2 must have no 'toid'.
 // Exactly 1 divide is unlinked, which is what the summary WARN line counts.
-TEST_F(GeoPackage_DividesToidSynthesis_Test, geopackage_v3_divides_dangling_flowpath_no_toid)
+TEST_F(GeoPackage_DividesToidSynthesis_Test, geopackage_v4_divides_dangling_flowpath_no_toid)
 {
     const auto gpkg = ngen::geopackage::read(this->dangling_path, "divides", {});
     ASSERT_EQ(gpkg->get_size(), 2);
@@ -355,7 +355,7 @@ TEST_F(GeoPackage_DividesToidSynthesis_Test, geopackage_v3_divides_dangling_flow
 }
 
 // Fixture for subset-tolerance regression test.
-// Uses example_v3_0_minimal.gpkg, which contains only nexus, divides, and
+// Uses example_v4_0_minimal.gpkg, which contains only nexus, divides, and
 // flowpaths (no auxiliary tables). The test verifies that both layers load
 // and that a combined collection links all 3 divides to their target nexuses.
 class GeoPackage_SubsetTolerance_Test : public ::testing::Test
@@ -364,13 +364,13 @@ class GeoPackage_SubsetTolerance_Test : public ::testing::Test
     void SetUp() override
     {
         this->path = utils::FileChecker::find_first_readable({
-            "test/data/geopackage/example_v3_0_minimal.gpkg",
-            "../test/data/geopackage/example_v3_0_minimal.gpkg",
-            "../../test/data/geopackage/example_v3_0_minimal.gpkg"
+            "test/data/geopackage/example_v4_0_minimal.gpkg",
+            "../test/data/geopackage/example_v4_0_minimal.gpkg",
+            "../../test/data/geopackage/example_v4_0_minimal.gpkg"
         });
 
         if (this->path.empty()) {
-            FAIL() << "can't find test/data/geopackage/example_v3_0_minimal.gpkg";
+            FAIL() << "can't find test/data/geopackage/example_v4_0_minimal.gpkg";
         }
     }
 
@@ -384,7 +384,7 @@ class GeoPackage_SubsetTolerance_Test : public ::testing::Test
 // Merging both collections and running link_features_from_property must
 // resolve all 3 divide->nexus edges (cat-1->nex-1, cat-2->nex-2,
 // cat-3->nex-1), confirming end-to-end connectivity without auxiliary tables.
-TEST_F(GeoPackage_SubsetTolerance_Test, geopackage_v3_minimal_loads_and_links_end_to_end)
+TEST_F(GeoPackage_SubsetTolerance_Test, geopackage_v4_minimal_loads_and_links_end_to_end)
 {
     const auto divides = ngen::geopackage::read(this->path, "divides", {});
     const auto nexus   = ngen::geopackage::read(this->path, "nexus",   {});
@@ -413,7 +413,7 @@ TEST_F(GeoPackage_SubsetTolerance_Test, geopackage_v3_minimal_loads_and_links_en
 
 // Fixture for detect_version unit tests.
 // Uses example_v2_2.gpkg (v2.2 nexus schema: 'id' column) and
-// example_v3_0.gpkg (v3.0 nexus schema: 'nexus_id' column).
+// example_v4_0.gpkg (v4.0 nexus schema: 'nexus_id' column).
 class GeoPackage_DetectVersion_Test : public ::testing::Test
 {
   protected:
@@ -428,20 +428,20 @@ class GeoPackage_DetectVersion_Test : public ::testing::Test
             FAIL() << "can't find test/data/geopackage/example_v2_2.gpkg";
         }
 
-        this->v3_0_path = utils::FileChecker::find_first_readable({
-            "test/data/geopackage/example_v3_0.gpkg",
-            "../test/data/geopackage/example_v3_0.gpkg",
-            "../../test/data/geopackage/example_v3_0.gpkg"
+        this->v4_0_path = utils::FileChecker::find_first_readable({
+            "test/data/geopackage/example_v4_0.gpkg",
+            "../test/data/geopackage/example_v4_0.gpkg",
+            "../../test/data/geopackage/example_v4_0.gpkg"
         });
-        if (this->v3_0_path.empty()) {
-            FAIL() << "can't find test/data/geopackage/example_v3_0.gpkg";
+        if (this->v4_0_path.empty()) {
+            FAIL() << "can't find test/data/geopackage/example_v4_0.gpkg";
         }
     }
 
     void TearDown() override {}
 
     std::string v2_2_path;
-    std::string v3_0_path;
+    std::string v4_0_path;
 };
 
 // Open example_v2_2.gpkg; detect_version must return V2_2.
@@ -454,13 +454,13 @@ TEST_F(GeoPackage_DetectVersion_Test, geopackage_detect_version_v2_2)
     );
 }
 
-// Open example_v3_0.gpkg; detect_version must return V3_0.
-TEST_F(GeoPackage_DetectVersion_Test, geopackage_detect_version_v3_0)
+// Open example_v4_0.gpkg; detect_version must return V4_0.
+TEST_F(GeoPackage_DetectVersion_Test, geopackage_detect_version_v4_0)
 {
-    ngen::sqlite::database db{this->v3_0_path};
+    ngen::sqlite::database db{this->v4_0_path};
     EXPECT_EQ(
         ngen::geopackage::detect_version(db),
-        ngen::geopackage::HydrofabricVersion::V3_0
+        ngen::geopackage::HydrofabricVersion::V4_0
     );
 }
 

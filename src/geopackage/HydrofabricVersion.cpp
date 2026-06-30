@@ -20,7 +20,7 @@ HydrofabricVersion detect_version(const std::vector<std::string>& nexus_columns)
         std::find(nexus_columns.begin(), nexus_columns.end(), "nexus_id")
         != nexus_columns.end();
     if (has_nexus_id) {
-        return HydrofabricVersion::V3_0;
+        return HydrofabricVersion::V4_0;
     }
 
     const bool has_id =
@@ -32,7 +32,7 @@ HydrofabricVersion detect_version(const std::vector<std::string>& nexus_columns)
 
     std::ostringstream msg;
     msg << "hydrofabric detect_version: nexus table has neither 'nexus_id' "
-        << "(v3.0) nor 'id' (v2.2). Observed nexus columns: [";
+        << "(v4.0) nor 'id' (v2.2). Observed nexus columns: [";
     for (std::size_t i = 0; i < nexus_columns.size(); ++i) {
         if (i > 0) msg << ", ";
         msg << nexus_columns[i];
@@ -69,7 +69,7 @@ HydrofabricVersion guaranteed_get_hydrofabric_version(sqlite::database& db) {
     #ifndef NGEN_QUIET
     if (version_detected) {
         std::cout << "INFO: hydrofabric detected: "
-                  << (version == HydrofabricVersion::V3_0 ? "v3.0" : "v2.2")
+                  << (version == HydrofabricVersion::V4_0 ? "v4.0" : "v2.2")
                   << std::endl;
     }
     #endif
@@ -79,8 +79,8 @@ HydrofabricVersion guaranteed_get_hydrofabric_version(sqlite::database& db) {
 
 std::string get_layer_id_column(const HydrofabricVersion version, const std::string& layer, sqlite::database& db) {
 
-    if (layer == "divides" && version == HydrofabricVersion::V3_0) {
-        // v3.0 always exposes divides.divide_id; no runtime introspection
+    if (layer == "divides" && version == HydrofabricVersion::V4_0) {
+        // v4.0 always exposes divides.divide_id; no runtime introspection
         // needed. The flowpath_id column (used by the upcoming toid
         // synthesis step) is carried verbatim through build_properties.
         return "divide_id";
@@ -102,8 +102,8 @@ std::string get_layer_id_column(const HydrofabricVersion version, const std::str
         }
     }
 
-    if (layer == "nexus" && version == HydrofabricVersion::V3_0) {
-        // v3.0 renames nexus.id -> nexus.nexus_id; point id_column at the
+    if (layer == "nexus" && version == HydrofabricVersion::V4_0) {
+        // v4.0 renames nexus.id -> nexus.nexus_id; point id_column at the
         // new primary key so the WHERE-IN subset clause and the per-row id
         // lookup in build_feature both resolve against the right column.
         return "nexus_id";
@@ -124,13 +124,13 @@ std::unordered_map<std::string, std::string> build_divide_toid_lookup(
 {
     std::unordered_map<std::string, std::string> divide_toid_lookup;
 
-    if (version != HydrofabricVersion::V3_0 || layer != "divides") {
+    if (version != HydrofabricVersion::V4_0 || layer != "divides") {
         return divide_toid_lookup;
     }
 
     if (!db.contains("flowpaths")) {
 #ifndef NGEN_QUIET
-        std::cout << "WARN: v3.0 divides loaded without a 'flowpaths' table; "
+        std::cout << "WARN: v4.0 divides loaded without a 'flowpaths' table; "
                   << "all divides will be treated as terminal (no toid)." << std::endl;
 #endif
         return divide_toid_lookup;
@@ -160,14 +160,14 @@ void update_property_map_for_version(
     if (version == HydrofabricVersion::V2_2) {
         return;
     }
-    if (version != HydrofabricVersion::V3_0) {
+    if (version != HydrofabricVersion::V4_0) {
         throw std::runtime_error("Unexpected hydrofabric version " + std::to_string(static_cast<int>(version)));
     }
 
     if (layer == "nexus") {
-        // v3.0 renamed nexus.id -> nexus.nexus_id and nexus.toid ->
+        // v4.0 renamed nexus.id -> nexus.nexus_id and nexus.toid ->
         // nexus.nexus_toid. Downstream consumers still key on "id" /
-        // "toid", so alias the v3.0 columns into those names. The
+        // "toid", so alias the v4.0 columns into those names. The
         // originals remain in the map (additive) so any future consumer
         // that prefers the schema names keeps working.
         auto it_nid = properties.find("nexus_id");
@@ -180,32 +180,32 @@ void update_property_map_for_version(
         }
         if (properties.count("id") == 0) {
             throw std::runtime_error(
-                "v3.0 nexus row missing required 'nexus_id' column"
+                "v4.0 nexus row missing required 'nexus_id' column"
             );
         }
         if (properties.count("toid") == 0) {
             throw std::runtime_error(
-                "v3.0 nexus row missing required 'nexus_toid' column"
+                "v4.0 nexus row missing required 'nexus_toid' column"
             );
         }
         if (id.empty()) {
-            throw std::runtime_error("v3.0 nexus row has empty 'id' value");
+            throw std::runtime_error("v4.0 nexus row has empty 'id' value");
         }
     } else if (layer == "divides") {
-        // v3.0 divides carry flowpath_id as the foreign key into
+        // v4.0 divides carry flowpath_id as the foreign key into
         // flowpaths. build_properties already copies it verbatim (it is
         // a non-geometry column); guard that invariant here so the
         // toid-synthesis lookup below can rely on it.
         if (properties.count("flowpath_id") == 0) {
             throw std::runtime_error(
-                "v3.0 divides row missing required 'flowpath_id' column"
+                "v4.0 divides row missing required 'flowpath_id' column"
             );
         }
         if (id.empty()) {
-            throw std::runtime_error("v3.0 divides row has empty 'id' value");
+            throw std::runtime_error("v4.0 divides row has empty 'id' value");
         }
 
-        // v3.0 divides have no native toid column: synthesize it by
+        // v4.0 divides have no native toid column: synthesize it by
         // looking up this divide's id in the precomputed divide_id ->
         // flowpath_toid cache (built upstream from divides JOIN
         // flowpaths). If the lookup misses (e.g., flowpath_id was null,

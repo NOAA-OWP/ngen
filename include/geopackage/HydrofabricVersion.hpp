@@ -17,19 +17,19 @@ namespace geopackage {
 /**
  * Discrete hydrofabric schema versions supported by the loader.
  *
- * v2.2 identifies nexus rows via the `id` column; v3.0 renamed it
+ * v2.2 identifies nexus rows via the `id` column; v4.0 renamed it
  * to `nexus_id` (and uses `nexus_toid` as the downstream reference).
  */
 enum class HydrofabricVersion {
     V2_2,
-    V3_0
+    V4_0
 };
 
 /**
  * Detect the hydrofabric schema version of an open GeoPackage database.
  *
  * Inspects the `nexus` table via `PRAGMA table_info(nexus)`. If the
- * column `nexus_id` is present, this is a v3.0 hydrofabric. Otherwise,
+ * column `nexus_id` is present, this is a v4.0 hydrofabric. Otherwise,
  * if `id` is present, this is a v2.2 hydrofabric. If neither is
  * present (or if the `nexus` table is missing entirely), a
  * std::runtime_error is thrown with a message listing the observed
@@ -61,7 +61,7 @@ HydrofabricVersion detect_version(const std::vector<std::string>& nexus_columns)
  * — typically because the GPKG has no `nexus` table (e.g., a synthetic
  * test fixture or a non-hydrofabric GeoPackage) — the exception is
  * swallowed and HydrofabricVersion::V2_2 is returned. The default
- * preserves the pre-v3.0 legacy code paths for non-hydrofabric inputs,
+ * preserves the pre-v4.0 legacy code paths for non-hydrofabric inputs,
  * which is why this entry point is "guaranteed" to return a value
  * rather than propagate the missing-nexus error.
  *
@@ -85,13 +85,13 @@ HydrofabricVersion guaranteed_get_hydrofabric_version(sqlite::database& db);
  * read().
  *
  * Resolution rules:
- *   - layer == "divides", v3.0: "divide_id" (always exposed in v3.0).
+ *   - layer == "divides", v4.0: "divide_id" (always exposed in v4.0).
  *   - layer == "divides", v2.2: probes the database with
  *     `SELECT divide_id FROM divides LIMIT 1`. If the column exists,
  *     "divide_id" is returned; otherwise the function falls back to
  *     "id" and emits a deprecation warning to stdout (suppressed
  *     when NGEN_QUIET is defined).
- *   - layer == "nexus",   v3.0: "nexus_id" (renamed from "id" in v3.0).
+ *   - layer == "nexus",   v4.0: "nexus_id" (renamed from "id" in v4.0).
  *   - layer == "nexus",   v2.2: "id".
  *   - All other layer/version combinations: "id" (the historical
  *     default for non-hydrofabric or otherwise unhandled layers).
@@ -106,9 +106,9 @@ std::string get_layer_id_column(HydrofabricVersion version, const std::string& l
 
 /**
  * Precompute the divide_id -> flowpath_toid map used to synthesize a
- * "toid" property on v3.0 divides rows.
+ * "toid" property on v4.0 divides rows.
  *
- * v3.0 divides carry no native "toid" column; instead, every divide
+ * v4.0 divides carry no native "toid" column; instead, every divide
  * points at a flowpath via flowpath_id, and that flowpath's
  * flowpath_toid is the downstream nexus. Building the map once
  * up-front lets the per-row loop attribute toid via a hashtable
@@ -120,10 +120,10 @@ std::string get_layer_id_column(HydrofabricVersion version, const std::string& l
  * feature.
  *
  * Returns an empty map (no synthesis) for any (version, layer)
- * combination outside of (V3_0, "divides"), and also when the GPKG
+ * combination outside of (V4_0, "divides"), and also when the GPKG
  * does not contain a "flowpaths" table — in the latter case a one-line
  * WARN is logged to stdout (suppressed when NGEN_QUIET is defined)
- * since v3.0 divides without flowpaths means every divide will be
+ * since v4.0 divides without flowpaths means every divide will be
  * treated as terminal.
  *
  * @param[in] version Detected hydrofabric schema version
@@ -144,16 +144,16 @@ std::unordered_map<std::string, std::string> build_divide_toid_lookup(
  *
  * For HydrofabricVersion::V2_2 input, this is a no-op.
  *
- * For HydrofabricVersion::V3_0 input, the function dispatches on the
- * layer name and applies the v3.0 schema fixups:
- *   - layer == "nexus": v3.0 renamed nexus.id -> nexus.nexus_id and
+ * For HydrofabricVersion::V4_0 input, the function dispatches on the
+ * layer name and applies the v4.0 schema fixups:
+ *   - layer == "nexus": v4.0 renamed nexus.id -> nexus.nexus_id and
  *     nexus.toid -> nexus.nexus_toid. Downstream consumers still key
- *     on "id" / "toid", so the v3.0 column values are aliased into
+ *     on "id" / "toid", so the v4.0 column values are aliased into
  *     those names. The original "nexus_id" / "nexus_toid" entries
  *     remain in the map (additive). Throws std::runtime_error if
  *     either source column is missing or if `id` is empty.
- *   - layer == "divides": validates that the v3.0 foreign-key column
- *     "flowpath_id" is present and that `id` is non-empty. v3.0
+ *   - layer == "divides": validates that the v4.0 foreign-key column
+ *     "flowpath_id" is present and that `id` is non-empty. v4.0
  *     divides have no native "toid" column, so this function
  *     synthesizes one by looking up `id` in the precomputed
  *     `divide_toid_lookup` (built upstream from a divides JOIN
@@ -167,9 +167,9 @@ std::unordered_map<std::string, std::string> build_divide_toid_lookup(
  * @param[in] id Resolved feature id for the row; used for
  *               empty-string validation and as the lookup key into
  *               divide_toid_lookup
- * @param[in] divide_toid_lookup Precomputed v3.0 divide_id ->
+ * @param[in] divide_toid_lookup Precomputed v4.0 divide_id ->
  *               flowpath_toid map; consulted only for
- *               (V3_0, "divides") rows. Pass an empty map when
+ *               (V4_0, "divides") rows. Pass an empty map when
  *               synthesis is unavailable (e.g., no flowpaths table)
  *               or when the layer is not "divides".
  */

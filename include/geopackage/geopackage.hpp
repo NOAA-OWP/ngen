@@ -51,10 +51,10 @@ geojson::PropertyMap build_properties(
  * the map. Downstream geojson consumers commonly key on the property
  * map's "id" entry rather than the Feature's id field, so the map
  * should contain an "id" entry whose value matches the `id` parameter.
- * When the source id column is not named "id" (e.g. hydrofabric v3.0
+ * When the source id column is not named "id" (e.g. hydrofabric v4.0
  * nexus uses "nexus_id"), the caller is responsible for adding the
  * canonical "id" alias — and any related aliases such as "toid" —
- * before calling. Schema-specific field synthesis (e.g. v3.0 divides
+ * before calling. Schema-specific field synthesis (e.g. v4.0 divides
  * "toid" derived from a divides→flowpaths join) must likewise be
  * performed by the caller.
  *
