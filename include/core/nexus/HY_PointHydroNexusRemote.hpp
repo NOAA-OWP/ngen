@@ -70,6 +70,9 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         /** return the communicator type for this nexus */
 		communication_type get_communicator_type() { return type; }
 
+        /** @brief Release accumulated nexus state, draining in-flight MPI first. */
+        void flush(bool clear_completed = false) override;
+
     private:
         void post_receives();
         void process_communications();
