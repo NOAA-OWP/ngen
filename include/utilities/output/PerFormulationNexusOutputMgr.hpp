@@ -209,9 +209,9 @@ namespace utils
          */
         static void pack_nexus_id(const std::string& nexus_id, char* buffer);
 
-        const std::string nc_dim_name_nexus_id = "feature_id";
-        const std::string nc_dim_name_time = "time";
-        const std::string nc_var_name_flow = "runoff_rate";
+        inline static const std::string nc_dim_name_nexus_id = "feature_id";
+        inline static const std::string nc_dim_name_time = "time";
+        inline static const std::string nc_var_name_flow = "runoff_rate";
 
         /**
          * Name of the NetCDF dimension giving the fixed character length of each stored nexus feature id string.
@@ -220,7 +220,7 @@ namespace utils
          * string-length dimension (whose size is @ref nexus_id_string_width), so the full id string is preserved
          * verbatim rather than reduced to a numeric value.
          */
-        const std::string nc_dim_name_id_str_len = "feature_id_str_len";
+        inline static const std::string nc_dim_name_id_str_len = "feature_id_str_len";
 
         const double flow_var_fill_value = nan("");
 
