@@ -88,7 +88,7 @@ namespace realization {
             void finalize();
 
     protected:
-            std::string get_catchment_id() const override {
+            const std::string& get_catchment_id() const override {
                 return this->cat_id;
             }
 
