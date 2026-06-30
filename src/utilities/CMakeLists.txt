@@ -22,6 +22,7 @@ if(NGEN_WITH_MPI)
     target_link_libraries(ngen_parallel
       PUBLIC
         pybind11::embed
+        NGen::python
     )
   endif()
 endif()
