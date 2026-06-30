@@ -21,6 +21,20 @@
 #cmakedefine01 NGEN_WITH_TESTS
 #cmakedefine01 NGEN_QUIET
 
+// SQLite memory-mapped I/O window size (bytes) for read-only geopackage access;
+// set via the NGEN_SQLITE_MMAP_SIZE CMake cache variable. This caps how many
+// bytes (from the start of the file) are eligible for memory mapping -- it is a
+// maximum, NOT an allocation: resident memory only grows for pages actually
+// read (demand paging), and SQLite further clamps the value to the build's
+// SQLITE_MAX_MMAP_SIZE. Set it to ~the gpkg file size (CONUS ~4 GiB); 0 disables.
+#define NGEN_SQLITE_MMAP_SIZE @NGEN_SQLITE_MMAP_SIZE@
+
+// SQLite per-connection page cache for read-only geopackage access, as a raw
+// PRAGMA cache_size value (negative = KiB of memory, positive = pages). Buffers
+// pages served by conventional read() rather than mmap; size it to a rank's
+// working set. Set via the NGEN_SQLITE_CACHE_SIZE CMake cache variable.
+#define NGEN_SQLITE_CACHE_SIZE @NGEN_SQLITE_CACHE_SIZE@
+
 #include <string>
 
 namespace ngen {
@@ -43,6 +57,12 @@ namespace exec_info
     static constexpr bool with_routing             = NGEN_WITH_ROUTING;
     static constexpr bool with_routing_troute_bmi  = NGEN_WITH_ROUTING_TROUTE_BMI;
     static constexpr bool with_quiet               = NGEN_QUIET;
+
+    // SQLite memory-mapped I/O window size, in bytes (0 disables mmap I/O).
+    static constexpr long long sqlite_mmap_size    = NGEN_SQLITE_MMAP_SIZE;
+
+    // SQLite per-connection page cache (raw PRAGMA cache_size; <0 = KiB, >0 = pages).
+    static constexpr long long sqlite_cache_size   = NGEN_SQLITE_CACHE_SIZE;
 
     //! Compile-time build summary
     static constexpr const char* build_summary = R"(@NGEN_CONF_SUMMARY@)";

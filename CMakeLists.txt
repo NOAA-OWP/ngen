@@ -61,6 +61,49 @@ cmake_dependent_option(NGEN_WITH_COVERAGE "Build with test coverage" OFF "NGEN_W
 cmake_dependent_option(NGEN_WITH_PARALLEL_NETCDF "Build with NetCDF using HDF5-parallel support" OFF "NGEN_WITH_NETCDF" OFF)
 cmake_dependent_option(NGEN_WITH_ROUTING_TROUTE_BMI "Build with t-route integration called through a BMI implementation" OFF "NGEN_WITH_ROUTING" OFF)
 
+# Size, in bytes, of the SQLite memory-mapped I/O window used for read-only
+# geopackage access. Larger values let more of the file be served by mmap --
+# SQLite reads those pages directly from the shared OS page cache, skipping both
+# the per-page copy into a private buffer and the read() syscall; 0 disables
+# memory-mapped I/O. Default: 256 MiB.
+#
+# Max size vs. resident data: this is a CAP on how many bytes (from the start of
+# the file) are eligible for memory mapping -- NOT an allocation. The mapping is
+# lazy and the OS demand-pages, so resident memory only grows for the pages a
+# query actually touches; reading a couple tables from a 3.8 GiB CONUS gpkg with
+# a multi-GiB window still resides in ~10 MiB. Resident pages are also shared
+# read-only across reader processes via the OS page cache. So over-provisioning
+# the window costs virtual address space, not RAM -- err high.
+#
+# Bytes past the window are served by conventional read() syscalls. A rank's
+# features are scattered throughout the gpkg, NOT clustered at the front, so to
+# actually benefit the window must span (most of) the file. Size this by FILE
+# SIZE, not by how many features a rank reads:
+#   - Set it to ~the gpkg file size. The CONUS v2 hydrofabric is ~3.8 GiB, so
+#     use e.g. -DNGEN_SQLITE_MMAP_SIZE=4294967296 (~4 GiB); the 256 MiB default
+#     maps only its first ~7%.
+#   - SQLite clamps the request to the linked library's build-time
+#     SQLITE_MAX_MMAP_SIZE (often 1-2 GiB). ngen reads back the effective value
+#     and warns once if it was reduced; raising it requires rebuilding SQLite.
+#
+# The per-rank working set (distributed CONUS targets ~2048 features/core, ~8
+# MiB) is small; that is why sharing one whole-file mapping across a node's ranks
+# pays off, and it is the natural basis for the per-connection page cache
+# (NGEN_SQLITE_CACHE_SIZE), a separate knob from this whole-file mmap window.
+set(NGEN_SQLITE_MMAP_SIZE "268435456" CACHE STRING "SQLite mmap_size (bytes) for read-only gpkg; maps a window from file start, so set ~= gpkg file size (CONUS ~4 GiB), clamped to the library's SQLITE_MAX_MMAP_SIZE. 0 disables")
+
+# SQLite per-connection page cache for read-only geopackage access, as a raw
+# PRAGMA cache_size value: NEGATIVE = KiB of memory, POSITIVE = number of pages.
+# See https://www.sqlite.org/pragma.html#pragma_cache_size
+# This cache buffers pages served by conventional read() rather than mmap --
+# i.e. file offsets beyond the mmap window (see NGEN_SQLITE_MMAP_SIZE), which is
+# exactly where a large gpkg's tail lives when the library clamps mmap_size.
+# Size it to a rank's working set: distributed CONUS runs target ~2048
+# features/core (~8 MiB), so the default -16384 (16 MiB) holds a rank's reads
+# with headroom. The cache is per connection and lives only while a gpkg is
+# being read (init time), so it is not held for the whole run.
+set(NGEN_SQLITE_CACHE_SIZE "-16384" CACHE STRING "SQLite cache_size for read-only gpkg access (PRAGMA cache_size: negative=KiB, positive=pages)")
+
 option(BMI_FORTRAN_ISO_C_LIB_DIR "Directory hint for middleware Fortran shared lib handling iso_c_binding" "${NGEN_ROOT_DIR}/extern/iso_c_fortran_bmi/cmake_build")
 option(BMI_FORTRAN_ISO_C_LIB_NAME "Name for middleware Fortran shared lib handling iso_c_binding" "iso_c_bmi")
 
@@ -447,6 +490,8 @@ ngen_multiline_message(
 "    NGEN_WITH_PARALLEL_NETCDF: ${NGEN_WITH_PARALLEL_NETCDF}"
 "    NGEN_WITH_HDF5: ${NGEN_WITH_HDF5}"
 "    NGEN_WITH_SQLITE: ${NGEN_WITH_SQLITE}"
+"    NGEN_SQLITE_MMAP_SIZE: ${NGEN_SQLITE_MMAP_SIZE}"
+"    NGEN_SQLITE_CACHE_SIZE: ${NGEN_SQLITE_CACHE_SIZE}"
 "    NGEN_WITH_UDUNITS: ${NGEN_WITH_UDUNITS}"
 "    NGEN_WITH_BMI_FORTRAN: ${NGEN_WITH_BMI_FORTRAN}"
 "    NGEN_WITH_BMI_C: ${NGEN_WITH_BMI_C}"
