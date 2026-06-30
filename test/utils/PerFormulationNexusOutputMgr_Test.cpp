@@ -133,17 +133,19 @@ protected:
 
     // TODO: Might also need EX 4 with 40396 nexuses but spread about real partitions (and tested exclusively via the MPI stuff)
 
-    // Example 5: hydrofabric v4.0 terminal-nexus id collision scenario. The same numeric suffix appears
-    // under both the regular "nex-" prefix and the terminal "tnx-" prefix (nex-1 alongside tnx-1), so the
-    // two physically distinct nexuses must be written as distinct, full string feature ids rather than
-    // collapsing to a single numeric id. Distinct flow values per id let the read-back verify each row.
+    // Example 5: nexus feature id collision scenario. It is possible for the same numeric suffix to appear
+    // under more than one id prefix (here the regular "nex-" prefix alongside a "tnx-" prefix, nex-1
+    // alongside tnx-1); the collision is only of the numeric component, since the full ids remain distinct.
+    // The full string feature ids must therefore be written out so the two physically distinct nexuses stay
+    // distinct rather than collapsing to a single numeric id. Distinct flow values per id let the read-back
+    // verify each row.
     std::shared_ptr<std::vector<std::string>> ex_5_form_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>{"form-0"});
     std::vector<std::string> ex_5_form_0_all_nexus_id = {"nex-1", "tnx-1", "nex-2", "tnx-2"};
     std::vector<std::vector<double>> ex_5_all_data = {{1.0, 101.0, 2.0, 102.0}, {11.0, 111.0, 12.0, 112.0}};
     std::vector<std::string> ex_5_timestamps = {"2025-01-01T00:00:00Z", "2025-01-01T01:00:00Z"};
     std::vector<std::time_t> ex_5_timestamps_seconds = {1735707600, 1735711200};
 
-    // Example 6: the hydrofabric v4.0 terminal-nexus id collision exercised across MPI ranks. The colliding
+    // Example 6: the nexus feature id (numeric) collision exercised across MPI ranks. The colliding
     // pair (nex-1 / tnx-1) is split one id per rank, so the single output file can only be correct if the
     // MPI gather-to-root path assembles both ranks' fixed-width string ids (not just the in-process write).
     // Rank 0 owns the regular "nex-" ids and rank 1 owns the terminal "tnx-" ids; the global file order is
@@ -463,7 +465,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
 }
 
 /**
- * Test the MPI gather-to-root write path for the hydrofabric v4.0 terminal-nexus id collision.
+ * Test the MPI gather-to-root write path for a nexus feature id collision.
  *
  * The colliding pair nex-1 / tnx-1 is split across ranks (rank 0 owns the regular "nex-" ids, rank 1 owns
  * the terminal "tnx-" ids), so a correct single output file requires the fixed-width MPI_CHAR id gather to
@@ -1112,7 +1114,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_c)
 }
 
 /**
- * Regression test for the hydrofabric v4.0 terminal-nexus id collision (single instance, end-to-end).
+ * Regression test for a nexus feature id (numeric) collision (single instance, end-to-end).
  *
  * The nexus id set contains the colliding pair nex-1 and tnx-1, which share the numeric suffix 1. Under the
  * old integer feature_id schema both collapsed to feature_id == 1, conflating two physically distinct
