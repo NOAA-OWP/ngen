@@ -527,7 +527,7 @@ int main(int argc, char* argv[])
     for (auto& feature : *global_nexus_collection)
     {
         auto id = feature->get_id();
-        auto type = id.substr(0, id.find(hy_features::identifiers::seperator));
+        auto type = id.substr(0, id.find(hy_features::identifiers::separator));
         if (hy_features::identifiers::isCatchment(type) &&
             id.find("SENTINEL") == std::string::npos &&
             feature->get_number_of_destination_features() == 0)
