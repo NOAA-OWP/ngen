@@ -6,6 +6,8 @@
 
 #include <vector>
 #include <memory>
+#include <cmath>
+#include <string>
 
 #include <unistd.h>
 
@@ -121,6 +123,58 @@ TEST_F(Nexus_Remote_Test, TestInit0)
 
     ASSERT_TRUE(true);
 
+}
+
+// Exercise the production pattern: exchange a flow each timestep, then call
+// flush(true) on every rank (as SurfaceLayer does). flush() must release state
+// without deadlocking, including on the final timestep where no further send
+// follows. Run with `mpirun -np 2`.
+TEST_F(Nexus_Remote_Test, TestFlushPerTimestepNoDeadlock)
+{
+    if ( mpi_num_procs < 2 ) {
+        GTEST_SKIP();
+    }
+
+    HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
+    std::shared_ptr<HY_PointHydroNexusRemote> nexus;
+    std::vector<std::string> upstream_catchments = {"cat-26"};
+    std::vector<std::string> downstream_catchments = {"cat-27"};
+
+    // Only ranks 0 (sender) and 1 (receiver) take part in the exchange, but
+    // every rank MUST still reach the collective MPI_Barrier below. Returning
+    // early on the other ranks (e.g. GTEST_SKIP) would leave them out of the
+    // MPI_COMM_WORLD barrier, desynchronizing the world-collective sequence for
+    // the whole process set and deadlocking a later test.
+    if ( mpi_rank == 0 ) {
+        loc_map["cat-27"] = 1;
+        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-26", downstream_catchments, upstream_catchments, loc_map);
+    } else if ( mpi_rank == 1 ) {
+        loc_map["cat-26"] = 0;
+        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-26", downstream_catchments, upstream_catchments, loc_map);
+    }
+
+    if ( nexus )
+    {
+        long ts = 0;
+        for ( auto discharge : stored_discharge )
+        {
+            if ( mpi_rank == 0 ) {
+                nexus->add_upstream_flow(discharge, "cat-26", ts);
+            } else if ( mpi_rank == 1 ) {
+                double received = nexus->get_downstream_flow("cat-27", ts, 100);
+                // EXPECT (not ASSERT): a failure must not early-return past the
+                // collective barrier below and desynchronize the other ranks.
+                EXPECT_EQ(discharge, received);
+            }
+
+            // Production SurfaceLayer pattern: flush each nexus every timestep.
+            nexus->flush(true);
+            ++ts;
+        }
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    ASSERT_TRUE(true);
 }
 
 //Test sending data with MPI from an two upstream remote nexus
@@ -1109,9 +1163,87 @@ TEST_F(Nexus_Remote_Test, TestRemoteNexusDeadlockFree)
     
     senders.clear();
     receivers.clear();
-    
+
     MPI_Barrier(MPI_COMM_WORLD);
     std::cerr << "Rank " << mpi_rank << ": Test PASSED - no deadlock with remote nexus\n";
+}
+
+
+// Multi-timestep pipeline with timing skew, flushing every nexus every step.
+//
+// Chain of links r -> r+1 across ranks 0..3. Rank 1 deliberately lags each
+// timestep, so its upstream sender (rank 0) races ahead and future-timestep
+// messages pile up in MPI before rank 1 consumes/flushes the current step.
+// The flow on link L at time ts is (L+1)*1000 + ts; each receiver verifies it
+// gets exactly what was sent, every step through the last, with flush(true) on
+// every nexus every step. This exercises that flush() neither loses buffered
+// in-flight data nor deadlocks under skew. Run with `mpirun -np 4`.
+TEST_F(Nexus_Remote_Test, TestFlushUnderTimingSkew)
+{
+    if ( mpi_num_procs < 4 ) {
+        GTEST_SKIP();
+    }
+
+    const int N = 4;          // ranks participating in the chain
+    const long NUM_TS = 5;
+    auto flow_for = [](int link, long ts) { return (link + 1) * 1000.0 + ts; };
+
+    std::shared_ptr<HY_PointHydroNexusRemote> sender;   // link mpi_rank   -> mpi_rank+1
+    std::shared_ptr<HY_PointHydroNexusRemote> receiver; // link mpi_rank-1 -> mpi_rank
+
+    // This rank is the sender side of link mpi_rank -> mpi_rank+1
+    if ( mpi_rank < N - 1 ) {
+        int link = mpi_rank;
+        std::string up   = "cat-up-"   + std::to_string(link);
+        std::string down = "cat-down-" + std::to_string(link);
+        HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
+        loc_map[down] = mpi_rank + 1; // downstream catchment lives on the next rank
+        sender = std::make_shared<HY_PointHydroNexusRemote>(
+            "nex-" + std::to_string(link),
+            std::vector<std::string>{down}, std::vector<std::string>{up}, loc_map);
+    }
+
+    // This rank is the receiver side of link mpi_rank-1 -> mpi_rank
+    if ( mpi_rank > 0 && mpi_rank < N ) {
+        int link = mpi_rank - 1;
+        std::string up   = "cat-up-"   + std::to_string(link);
+        std::string down = "cat-down-" + std::to_string(link);
+        HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
+        loc_map[up] = mpi_rank - 1; // upstream catchment lives on the previous rank
+        receiver = std::make_shared<HY_PointHydroNexusRemote>(
+            "nex-" + std::to_string(link),
+            std::vector<std::string>{down}, std::vector<std::string>{up}, loc_map);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    for ( long ts = 0; ts < NUM_TS; ++ts )
+    {
+        // Skew: rank 1 lags so rank 0 races ahead and buffers future messages.
+        if ( mpi_rank == 1 ) {
+            volatile double dummy = 0.0;
+            for ( int i = 0; i < 20000000; ++i ) {
+                dummy += std::sin(i * 0.0001) * std::cos(i * 0.0002);
+            }
+        }
+
+        if ( sender ) {
+            sender->add_upstream_flow(flow_for(mpi_rank, ts), "cat-up-" + std::to_string(mpi_rank), ts);
+        }
+        if ( receiver ) {
+            int link = mpi_rank - 1;
+            double recv = receiver->get_downstream_flow("cat-down-" + std::to_string(link), ts, 100.0);
+            EXPECT_DOUBLE_EQ(recv, flow_for(link, ts))
+                << "rank " << mpi_rank << " link " << link << " timestep " << ts;
+        }
+
+        // Production SurfaceLayer pattern: flush every nexus every timestep.
+        if ( sender )   sender->flush(true);
+        if ( receiver ) receiver->flush(true);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    ASSERT_TRUE(true);
 }
 
 

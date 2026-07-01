@@ -39,6 +39,28 @@ class HY_HydroNexus
 
     /** get the units that the flows are described in */
     virtual std::string get_flow_units()=0;
+
+    /**
+     * @brief Release the internal per-timestep state of the nexus.
+     *
+     * A nexus accumulates flow state for each time step it sees. On long runs
+     * that growth is unbounded, so callers should release state once a time
+     * step's data has been consumed. The accumulator state is always released.
+     *
+     * Separately, the nexus records which time steps are "completed" (fully
+     * drained -- 100% of the flow requested). That record is a correctness
+     * guard: add/get on a completed time step throws rather than re-processing
+     * water that is already allocated. It only ever grows.
+     *
+     * @param clear_completed also drop the completed-time-step record.
+     *        - false: keep the guard, so a stray add/get on an already-drained
+     *          time step still throws (but the record keeps growing).
+     *        - true: bound that record too, at the cost of the guard -- a later
+     *          add/get on a dropped time step is silently re-accumulated, not
+     *          rejected. Safe only for a caller that advances strictly forward
+     *          and never revisits a flushed time step (e.g. SurfaceLayer).
+     */
+    virtual void flush(bool clear_completed = false) = 0;
     
     const Catchments& get_receiving_catchments() {
         return receiving_catchments;

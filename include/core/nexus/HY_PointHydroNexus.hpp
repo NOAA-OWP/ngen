@@ -28,7 +28,8 @@ class HY_PointHydroNexus : public HY_HydroNexus
         /** get the units that flows are represented in. */
         std::string get_flow_units() override;
 
-        void set_mintime(time_step_t);
+        /** @brief Release accumulated per-timestep nexus state (see HY_HydroNexus::flush). */
+        void flush(bool clear_completed = false) override;
 
     protected:
     using flows = std::pair<std::string, double>;
@@ -40,7 +41,6 @@ class HY_PointHydroNexus : public HY_HydroNexus
     std::unordered_map<time_step_t, double> summed_flows;
     std::unordered_map<time_step_t, double> total_requests;
 
-    time_step_t min_timestep{0};
     std::unordered_set<time_step_t> completed;
 
 };

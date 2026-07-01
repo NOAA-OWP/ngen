@@ -73,7 +73,11 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
         //nexus_outputs_mgr->receive_data_entry(form_id, id, current_time_index, current_timestamp, contribution_at_t);
         nexus_outputs_mgr->receive_data_entry(id, current_time_marker, contribution_at_t);
 
-        //std::cout<<"\tNexus "<<id<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
+        // Release this nexus's accumulated per-timestep state to bound memory on
+        // long runs. clear_completed=true is safe here: this nexus's contribution
+        // for the current time step has just been collected and committed, and
+        // nothing re-reads it afterward for this step.
+        nexus->flush(true);
     } //done nexuses
     nexus_outputs_mgr->commit_writes();
 }
