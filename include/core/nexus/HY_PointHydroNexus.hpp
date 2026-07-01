@@ -31,8 +31,6 @@ class HY_PointHydroNexus : public HY_HydroNexus
         /** @brief Release accumulated per-timestep nexus state (see HY_HydroNexus::flush). */
         void flush(bool clear_completed = false) override;
 
-        void set_mintime(time_step_t);
-
     protected:
     using flows = std::pair<std::string, double>;
     using flow_vector = std::vector< flows >;
@@ -43,7 +41,6 @@ class HY_PointHydroNexus : public HY_HydroNexus
     std::unordered_map<time_step_t, double> summed_flows;
     std::unordered_map<time_step_t, double> total_requests;
 
-    time_step_t min_timestep{0};
     std::unordered_set<time_step_t> completed;
 
 };

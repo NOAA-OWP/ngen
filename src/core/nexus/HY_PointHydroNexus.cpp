@@ -24,11 +24,6 @@ struct completed_time_step : public boost::exception, public std::exception
   const char *what() const noexcept override { return "Can not operate on a completed time step"; }
 };
 
-struct invalid_time_step : public boost::exception, public std::exception
-{
-  const char *what() const noexcept override { return "Time step before minimum time step requested"; }
-};
-
 HY_PointHydroNexus::HY_PointHydroNexus(std::string nexus_id, Catchments receiving_catchments) : HY_HydroNexus( nexus_id, receiving_catchments), upstream_flows()
 {
 
@@ -47,7 +42,6 @@ HY_PointHydroNexus::~HY_PointHydroNexus()
 double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
 {
 
-    if ( t < min_timestep ) BOOST_THROW_EXCEPTION(invalid_time_step());
     if ( completed.find(t) != completed.end() ) BOOST_THROW_EXCEPTION(completed_time_step());
 
     auto s1 = upstream_flows.find(t);
@@ -144,7 +138,6 @@ double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_st
 
 void HY_PointHydroNexus::add_upstream_flow(double val, std::string catchment_id, time_step_t t)
 {
-     if ( t < min_timestep ) BOOST_THROW_EXCEPTION(invalid_time_step());
     if ( completed.find(t) != completed.end() ) BOOST_THROW_EXCEPTION(completed_time_step());
 
     auto s1 = upstream_flows.find(t);
@@ -236,49 +229,4 @@ void HY_PointHydroNexus::flush(bool clear_completed)
     if (clear_completed) {
         completed.clear();
     }
-}
-
-void HY_PointHydroNexus::set_mintime(time_step_t t)
-{
-    min_timestep = t;
-
-    // remove expired time steps from completed
-    for( auto& t: completed)
-    {
-        if ( t < min_timestep )
-        {
-            completed.erase(t);
-        }
-    }
-
-    // C++ 2014 would allow this do be done with a single lambda
-    auto l1 = [](int min_v, std::unordered_map<long,flow_vector>& v)
-    {
-        for( auto& t: v)
-        {
-            if ( t.first < min_v )
-            {
-                v.erase(t.first);
-            }
-        }
-    };
-
-    // C++ 2014 would allow this do be done with a single lambda
-    auto l2 = [](int min_v, std::unordered_map<long,double>& v)
-    {
-        for( auto& t: v)
-        {
-            if ( t.first < min_v )
-            {
-                v.erase(t.first);
-            }
-        }
-    };
-
-    // remove expired time steps from all maps
-    l1(min_timestep,downstream_requests);
-    l1(min_timestep,upstream_flows);
-    l2(min_timestep,summed_flows);
-    l2(min_timestep,total_requests);
-
 }
