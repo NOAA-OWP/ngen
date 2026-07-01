@@ -64,8 +64,8 @@ protected:
         return max_len;
     }
 
-    static void friend_pack_nexus_id(const std::string& nexus_id, char* buffer, size_t width) {
-        utils::PerFormulationNexusOutputMgr::pack_nexus_id(nexus_id, buffer, width);
+    static void friend_pack_nexus_id(const std::string& nexus_id, boost::span<char> buffer) {
+        utils::PerFormulationNexusOutputMgr::pack_nexus_id(nexus_id, buffer);
     }
 
     /**
@@ -1583,12 +1583,12 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_1_a)
 /** Test that pack_nexus_id packs a normal ID verbatim and null-pads the rest of the fixed-width buffer. */
 TEST_F(PerFormulationNexusOutputMgr_Test, pack_nexus_id_a)
 {
-    const size_t width = 32; // pack helper is width-parameterized; exercise it at a representative width
+    const size_t width = 32; // pack helper derives the width from the buffer span; exercise it at a representative width
     // Pre-fill with a non-null sentinel so the null padding is actually verified (not just left-over zeros).
     std::vector<char> buffer(width, 'X');
     const std::string id = "tnx-1";
 
-    friend_pack_nexus_id(id, buffer.data(), width);
+    friend_pack_nexus_id(id, buffer);
 
     // The ID bytes are copied verbatim, prefix included.
     for (size_t i = 0; i < id.size(); ++i) {
@@ -1603,11 +1603,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, pack_nexus_id_a)
 /** Test that pack_nexus_id handles an ID exactly the fixed width, filling every byte with no null terminator. */
 TEST_F(PerFormulationNexusOutputMgr_Test, pack_nexus_id_b)
 {
-    const size_t width = 32; // pack helper is width-parameterized; exercise it at a representative width
+    const size_t width = 32; // pack helper derives the width from the buffer span; exercise it at a representative width
     const std::string id(width, 'a'); // exactly the fixed width
     std::vector<char> buffer(width, '\0');
 
-    friend_pack_nexus_id(id, buffer.data(), width);
+    friend_pack_nexus_id(id, buffer);
 
     for (size_t i = 0; i < width; ++i) {
         ASSERT_EQ(buffer[i], 'a') << "Expected full-width fill at byte " << i;
@@ -1617,11 +1617,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, pack_nexus_id_b)
 /** Test that pack_nexus_id throws when the ID is longer than the fixed width (no silent truncation). */
 TEST_F(PerFormulationNexusOutputMgr_Test, pack_nexus_id_c)
 {
-    const size_t width = 32; // pack helper is width-parameterized; exercise it at a representative width
+    const size_t width = 32; // pack helper derives the width from the buffer span; exercise it at a representative width
     const std::string id(width + 1, 'a'); // one char too long to fit
     std::vector<char> buffer(width, '\0');
 
-    ASSERT_THROW(friend_pack_nexus_id(id, buffer.data(), width), std::runtime_error);
+    ASSERT_THROW(friend_pack_nexus_id(id, buffer), std::runtime_error);
 }
 
 #endif // #if NGEN_MPI_UNIT_TESTS ... #else

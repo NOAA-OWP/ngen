@@ -35,6 +35,7 @@ limitations under the License.
 #include <map>
 #include <unordered_map>
 #include <math.h>
+#include <boost/core/span.hpp>
 
 // Forward declaration to provide access to protected items in testing
 class PerFormulationNexusOutputMgr_Test;
@@ -210,17 +211,16 @@ namespace utils
          * Pack a full nexus ID string into a caller-provided fixed-width, null-padded char buffer.
          *
          * The ID is stored verbatim (prefix included) in the first ``nexus_id.size()`` bytes of @p buffer, and any
-         * remaining bytes up to @p width are set to the null character.  An ID whose length exactly equals @p width
-         * fills the entire buffer with no null terminator.  To avoid silently truncating an unexpectedly long ID, an
-         * ID longer than @p width is a hard error (consistent with the manager's existing throw-on-malformed-ID
-         * behavior).
+         * remaining bytes up to ``buffer.size()`` are set to the null character.  An ID whose length exactly equals
+         * ``buffer.size()`` fills the entire buffer with no null terminator.  To avoid silently truncating an
+         * unexpectedly long ID, an ID longer than @p buffer is a hard error (consistent with the manager's existing
+         * throw-on-malformed-ID behavior).
          *
          * @param nexus_id The full nexus ID string (prefix included) to pack.
-         * @param buffer Pointer to a caller-provided buffer of at least @p width chars to pack into.
-         * @param width The fixed char width of the buffer/record to pack into.
-         * @throw std::runtime_error if the ID length exceeds @p width.
+         * @param buffer The fixed-width char record (of the NetCDF string-length width) to pack into.
+         * @throw std::runtime_error if the ID length exceeds ``buffer.size()``.
          */
-        static void pack_nexus_id(const std::string& nexus_id, char* buffer, size_t width);
+        static void pack_nexus_id(const std::string& nexus_id, boost::span<char> buffer);
 
         inline static const std::string nc_dim_name_nexus_id = "feature_id";
         inline static const std::string nc_dim_name_time = "time";

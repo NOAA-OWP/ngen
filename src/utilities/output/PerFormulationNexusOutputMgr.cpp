@@ -428,14 +428,13 @@ size_t utils::PerFormulationNexusOutputMgr::determine_nexus_id_string_width() co
     return local_max;
 }
 
-void utils::PerFormulationNexusOutputMgr::pack_nexus_id(const std::string& nexus_id, char* buffer,
-                                                        const size_t width) {
-    if (nexus_id.size() > width) {
+void utils::PerFormulationNexusOutputMgr::pack_nexus_id(const std::string& nexus_id, boost::span<char> buffer) {
+    if (nexus_id.size() > buffer.size()) {
         throw std::runtime_error("Nexus ID '" + nexus_id + "' length " + std::to_string(nexus_id.size())
-            + " exceeds the maximum NetCDF feature ID width of " + std::to_string(width) + ".");
+            + " exceeds the maximum NetCDF feature ID width of " + std::to_string(buffer.size()) + ".");
     }
-    std::memcpy(buffer, nexus_id.data(), nexus_id.size());
-    std::memset(buffer + nexus_id.size(), '\0', width - nexus_id.size());
+    std::memcpy(buffer.data(), nexus_id.data(), nexus_id.size());
+    std::memset(buffer.data() + nexus_id.size(), '\0', buffer.size() - nexus_id.size());
 }
 
 void utils::PerFormulationNexusOutputMgr::add_dimension(const std::string& dim_name, const size_t size,
@@ -609,7 +608,7 @@ void utils::PerFormulationNexusOutputMgr::write_nexus_ids_once() const {
     // null-padded char records (one record of nexus_id_string_width chars per nexus).
     std::vector<char> packed_nex_ids(nexus_ids.size() * nexus_id_string_width);
     for (size_t i = 0; i < nexus_ids.size(); ++i) {
-        pack_nexus_id(nexus_ids[i], packed_nex_ids.data() + i * nexus_id_string_width, nexus_id_string_width);
+        pack_nexus_id(nexus_ids[i], boost::span<char>(packed_nex_ids).subspan(i * nexus_id_string_width, nexus_id_string_width));
     }
 
 #if NGEN_WITH_MPI && !NGEN_WITH_PARALLEL_NETCDF
@@ -622,7 +621,7 @@ void utils::PerFormulationNexusOutputMgr::write_nexus_ids_once() const {
         }
         std::vector<char> all_packed_nex_ids(static_cast<size_t>(total_nexus_count) * nexus_id_string_width);
         for (size_t i = 0; i < all_nex_ids.size(); ++i) {
-            pack_nexus_id(all_nex_ids[i], all_packed_nex_ids.data() + i * nexus_id_string_width, nexus_id_string_width);
+            pack_nexus_id(all_nex_ids[i], boost::span<char>(all_packed_nex_ids).subspan(i * nexus_id_string_width, nexus_id_string_width));
         }
         std::vector<size_t> start{0, 0};
         std::vector<size_t> count{static_cast<size_t>(total_nexus_count), nexus_id_string_width};
