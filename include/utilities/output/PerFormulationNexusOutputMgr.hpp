@@ -48,9 +48,9 @@ namespace utils
      * Because it works with NetCDF files, this file does not write received data entries until ``commit_writes`` is
      * called.
      *
-     * While the constructor supports receiving a collection of formulation ids, the class itself can only deal with a
-     * single formulation.  As such, the current implementation expects the collection of formulation ids passed to the
-     * constructor to either be empty - in which case, a default formulation id is used - or of size 1.
+     * While the constructor supports receiving a collection of formulation IDs, the class itself can only deal with a
+     * single formulation.  As such, the current implementation expects the collection of formulation IDs passed to the
+     * constructor to either be empty - in which case, a default formulation ID is used - or of size 1.
      */
     class PerFormulationNexusOutputMgr : public NexusOutputsMgr
     {
@@ -60,19 +60,19 @@ namespace utils
         /**
          * Construct instance set for managing/writing nexus data files, creating the file(s) appropriately.
          *
-         * Note that the class is designed to be aware of its object id in the context of multiple instances operating
+         * Note that the class is designed to be aware of its object ID in the context of multiple instances operating
          * on the same managed output file (e.g., when there are multiple MPI ranks, in which case @ref obj_id and MPI
          * rank are synonymous) and supports multiple instances across one or many processes writing to the same file.
          * However, only obj_id `0` will initially create the nexus output file. Further, the instance relies on
          * users/callers to maintain any synchronization (i.e., call MPI_Barrier so other obj_ids don't get ahead of
          * obj_id `0` while it creates the file).
          *
-         * While the constructor supports receiving a collection of formulation ids, the class itself can only deal with
-         * a single formulation.  As such, the current implementation expects the collection of formulation ids passed
-         * to the constructor to either be empty - in which case, a default formulation id is used - or of size 1.
+         * While the constructor supports receiving a collection of formulation IDs, the class itself can only deal with
+         * a single formulation.  As such, the current implementation expects the collection of formulation IDs passed
+         * to the constructor to either be empty - in which case, a default formulation ID is used - or of size 1.
          *
-         * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
-         * @param formulation_ids Either ``null`` or pointer to vector with at most one formulation id (see above).
+         * @param nexus_ids Nexus IDs for which this instance manages data (in particular, local nexuses when using MPI).
+         * @param formulation_ids Either ``null`` or pointer to vector with at most one formulation ID (see above).
          * @param output_root The output root for written files (as a string).
          * @param total_timesteps The total number of timesteps that will be written to the managed file.
          * @param obj_id The obj_id of this instance when multiple instances may operate on the same file; same as rank
@@ -96,7 +96,7 @@ namespace utils
         /**
          * Construct instance set for managing/writing nexus data files when there is only one obj_id/instance.
          *
-         * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
+         * @param nexus_ids Nexus IDs for which this instance manages data (in particular, local nexuses when using MPI).
          * @param formulation_ids
          * @param output_root The output root for written files (as a string).
          * @param total_timesteps The total number of timesteps that will be written to the managed file.
@@ -111,7 +111,7 @@ namespace utils
         /**
          * Close this manager instance and the managed NetCDF file.
          *
-         * Close the managed NetCDF file and (if successful) clear the corresponding file id by resetting
+         * Close the managed NetCDF file and (if successful) clear the corresponding file ID by resetting
          * @ref netcdf_file_id to `-1`.
          *
          * Once an instance is closed, it cannot receive new data. Subsequent calls to @ref receive_data_entry functions
@@ -127,7 +127,7 @@ namespace utils
         /**
          * Write any received data entries that were not written immediately upon receipt to the managed data files.
          *
-         * Function expects/requires data for all local nexus ids to have been received. Since it expects this, it also
+         * Function expects/requires data for all local nexus IDs to have been received. Since it expects this, it also
          * increments the ::attribute:`current_time_index` value before exiting.
          *
          * Additionally, it clears the current ::attribute:`data_cache` and ::attribute:`current_formulation_id` values.
@@ -140,7 +140,7 @@ namespace utils
         /**
          * A test of whether this instance is closed.
          *
-         * This type determines whether it is closed by whether it has a valid NetCDF file id.
+         * This type determines whether it is closed by whether it has a valid NetCDF file ID.
          *
          * @return Whether this instance is closed.
          */
@@ -154,12 +154,12 @@ namespace utils
         std::shared_ptr<std::vector<std::string>> get_filenames();
 
         /**
-         * Receive a data entry for this nexus, specifying details including the formulation id.
+         * Receive a data entry for this nexus, specifying details including the formulation ID.
          *
          * If this instance is closed (@ref is_closed) an exception will be raised.
          *
-         * @param formulation_id The id of the formulation involved in producing this data.
-         * @param nexus_id The id for the nexus to which this data applies.
+         * @param formulation_id The ID of the formulation involved in producing this data.
+         * @param nexus_id The ID for the nexus to which this data applies.
          * @param data_time_marker A marker for the current simulation time for the data.
          * @param flow_data_at_t The nexus flow contribution at this time index (the main data to write).
          * @see close
@@ -207,18 +207,18 @@ namespace utils
         size_t determine_nexus_id_string_width() const;
 
         /**
-         * Pack a full nexus id string into a caller-provided fixed-width, null-padded char buffer.
+         * Pack a full nexus ID string into a caller-provided fixed-width, null-padded char buffer.
          *
-         * The id is stored verbatim (prefix included) in the first ``nexus_id.size()`` bytes of @p buffer, and any
-         * remaining bytes up to @p width are set to the null character.  An id whose length exactly equals @p width
-         * fills the entire buffer with no null terminator.  To avoid silently truncating an unexpectedly long id, an
-         * id longer than @p width is a hard error (consistent with the manager's existing throw-on-malformed-id
+         * The ID is stored verbatim (prefix included) in the first ``nexus_id.size()`` bytes of @p buffer, and any
+         * remaining bytes up to @p width are set to the null character.  An ID whose length exactly equals @p width
+         * fills the entire buffer with no null terminator.  To avoid silently truncating an unexpectedly long ID, an
+         * ID longer than @p width is a hard error (consistent with the manager's existing throw-on-malformed-ID
          * behavior).
          *
-         * @param nexus_id The full nexus id string (prefix included) to pack.
+         * @param nexus_id The full nexus ID string (prefix included) to pack.
          * @param buffer Pointer to a caller-provided buffer of at least @p width chars to pack into.
          * @param width The fixed char width of the buffer/record to pack into.
-         * @throw std::runtime_error if the id length exceeds @p width.
+         * @throw std::runtime_error if the ID length exceeds @p width.
          */
         static void pack_nexus_id(const std::string& nexus_id, char* buffer, size_t width);
 
@@ -227,10 +227,10 @@ namespace utils
         inline static const std::string nc_var_name_flow = "runoff_rate";
 
         /**
-         * Name of the NetCDF dimension giving the fixed character length of each stored nexus feature id string.
+         * Name of the NetCDF dimension giving the fixed character length of each stored nexus feature ID string.
          *
          * The ``feature_id`` variable is a 2-D character array dimensioned by the nexus dimension and this
-         * string-length dimension (whose size is @ref nexus_id_string_width), so the full id string is preserved
+         * string-length dimension (whose size is @ref nexus_id_string_width), so the full ID string is preserved
          * verbatim rather than reduced to a numeric value.
          */
         inline static const std::string nc_dim_name_id_str_len = "feature_id_str_len";
@@ -240,7 +240,7 @@ namespace utils
         /** Array of chunk sizes for  dimensions - nexus_id and time - of flow NetCDF variable, to set chunking. */
         size_t flow_var_chunk_size_per_dim[2];
 
-        /** Map of nexus id to corresponding index for that nexus in several data structures for this instance. */
+        /** Map of nexus ID to corresponding index for that nexus in several data structures for this instance. */
         std::unordered_map<std::string, size_t> nexus_data_indices;
 
         /**
@@ -258,10 +258,10 @@ namespace utils
          */
         std::vector<unsigned long>::size_type local_offset;
 
-        /** Nexus ids for which this instance/process will write data to the file (i.e., local when using MPI, all otherwise). */
+        /** Nexus IDs for which this instance/process will write data to the file (i.e., local when using MPI, all otherwise). */
         const std::vector<std::string> nexus_ids;
 
-        /** The current/last formulation id value received by `receive_data_entry`. */
+        /** The current/last formulation ID value received by `receive_data_entry`. */
         std::string current_formulation_id;
 
         std::string formulation_id;
@@ -281,7 +281,7 @@ namespace utils
         /** The total number of timesteps that will be written to the managed file. */
         size_t total_timesteps;
 
-        /** File id member variable for opening and writing to NetCDF file via the C API. */
+        /** File ID member variable for opening and writing to NetCDF file via the C API. */
         int netcdf_file_id = -1;
 
         /**
@@ -292,26 +292,26 @@ namespace utils
          * partially-constructed instance correctly reports as already-closed.
          *
          * Tracked separately from @ref netcdf_file_id because, in the gather-to-rank-0 path, non-root ranks never
-         * open a NetCDF file and so cannot use file id state to represent their open/closed status; without this
+         * open a NetCDF file and so cannot use file ID state to represent their open/closed status; without this
          * flag they would falsely report as already-closed and bail out of @ref receive_data_entry and
          * @ref commit_writes before participating in the per-timestep MPI gather.
          */
         bool is_file_open = false;
 
         /**
-         * The instance id for this instance, which should be the MPI rank if using MPI.
+         * The instance ID for this instance, which should be the MPI rank if using MPI.
          *
-         * For non-MPI use cases, there must always be an id 0, and it is assumed each new id is incremented by 1.
+         * For non-MPI use cases, there must always be an ID 0, and it is assumed each new ID is incremented by 1.
          */
         int obj_id;
 
-        /** Variable id for the ``nexus_id`` NetCDF variable. */
+        /** Variable ID for the ``nexus_id`` NetCDF variable. */
         int nc_var_id_nexus_id;
 
-        /** Variable id for the ``time`` NetCDF variable. */
+        /** Variable ID for the ``time`` NetCDF variable. */
         int nc_var_id_time;
 
-        /** Variable id for the ``flow`` NetCDF variable. */
+        /** Variable ID for the ``flow`` NetCDF variable. */
         int nc_var_id_flow;
 
         /** The total number of nexuses in this simulation, potentially across multiple instances and ranks. */
@@ -342,7 +342,7 @@ namespace utils
          *
          * @param dim_name The dimension name
          * @param size The dimension size
-         * @param dim_id_ptr A point to a location to hold the NetCDF dimension id for the added dimension
+         * @param dim_id_ptr A point to a location to hold the NetCDF dimension ID for the added dimension
          */
         void add_dimension(const std::string& dim_name, const size_t size, int* dim_id_ptr) const;
 
@@ -410,7 +410,7 @@ namespace utils
         #endif
 
         /**
-         * Close the (presumed open) NetCDF file and (if successful) clear the corresponding file id by resetting
+         * Close the (presumed open) NetCDF file and (if successful) clear the corresponding file ID by resetting
          * @ref netcdf_file_id to `-1`.
          */
         void close_netcdf_file();
@@ -424,7 +424,7 @@ namespace utils
          * Primarily intended to be run in constructor, in (somewhat less common) cases when there are multiple
          * instances all running in the same process (i.e., without MPI).  In such cases, parallel NetCDF capabilities
          * are not needed, so only one "create" function call is needed, but other instances still need a way to get
-         * the NetCDF id.
+         * the NetCDF ID.
          *
          */
         void open_netcdf_file();
@@ -432,28 +432,28 @@ namespace utils
         /**
          * For cases when only opening a NetCDF file/dataset, retrieve necessary variable metadata for execution.
          *
-         * Function will lookup and store the variable ids for the nexus_id, time, and flow/runoff variables.
+         * Function will lookup and store the variable IDs for the nexus_id, time, and flow/runoff variables.
          */
         void lookup_netcdf_metadata();
 
         /**
          * Setup the NetCDF metadata (dimensions and variables) for the managed NetCDF file/dataset.
          *
-         * Function will create and store the variable ids for the nexus_id, time, and flow/runoff variables.  To
-         * support those variables, it will also create the nexus_id and time dimensions, though not store those ids.
+         * Function will create and store the variable IDs for the nexus_id, time, and flow/runoff variables.  To
+         * support those variables, it will also create the nexus_id and time dimensions, though not store those IDs.
          */
         void setup_netcdf_metadata();
 
         /**
-         * On the first time step, write this instance's managed nexus ids to the NetCDF data.
+         * On the first time step, write this instance's managed nexus IDs to the NetCDF data.
          */
         void write_nexus_ids_once() const;
 
         #if NGEN_WITH_MPI && NGEN_WITH_PARALLEL_NETCDF
         /**
-         * Set the NetCDF variable with the given variable id to have ``NC_COLLECTIVE`` parallel access.
+         * Set the NetCDF variable with the given variable ID to have ``NC_COLLECTIVE`` parallel access.
          *
-         * @param nc_var_id The numeric NetCDF variable id
+         * @param nc_var_id The numeric NetCDF variable ID
          */
         void set_nc_var_parallel_collective(const int nc_var_id) const;
         #endif
@@ -469,7 +469,7 @@ namespace utils
         bool gather_to_root = false;
 
         /**
-         * Per-rank counts of nexus ids, indexed by rank.  Used as the ``recvcounts`` argument to ``MPI_Gatherv`` calls.
+         * Per-rank counts of nexus IDs, indexed by rank.  Used as the ``recvcounts`` argument to ``MPI_Gatherv`` calls.
          * Populated and held only on rank 0; empty on non-root ranks.  Only meaningful when @ref gather_to_root is
          * ``true``.
          */
