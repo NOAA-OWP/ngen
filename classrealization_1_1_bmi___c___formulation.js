@@ -22,7 +22,7 @@ var classrealization_1_1_bmi___c___formulation =
     [ "get_bmi_model_start_time_forcing_offset_s", "classrealization_1_1_bmi___c___formulation.html#abe1dcb8b91c143bb6c0ab67614ef92f1", null ],
     [ "get_bmi_output_var_name", "classrealization_1_1_bmi___c___formulation.html#a0347db4a6af7292fd6a3c3242dd36b29", null ],
     [ "get_bmi_output_variables", "classrealization_1_1_bmi___c___formulation.html#a5736279b7c5266934563a31afc3f6780", null ],
-    [ "get_catchment_id", "classrealization_1_1_bmi___c___formulation.html#acf81ecbebe4b598ac29825b88145f0f2", null ],
+    [ "get_catchment_id", "classrealization_1_1_bmi___c___formulation.html#af35f3bc6a07f8e01e1a25b99ffb2e939", null ],
     [ "get_config_mapped_variable_name", "classrealization_1_1_bmi___c___formulation.html#a9bf1db96b3ecb9b4ae5bc7b0c2e6c76b", null ],
     [ "get_data_start_time", "classrealization_1_1_bmi___c___formulation.html#a61f695665f81fc947e6e982753ad9263", null ],
     [ "get_data_stop_time", "classrealization_1_1_bmi___c___formulation.html#a3dcd8438c3c2236f69030ce4e6d2bad2", null ],
