@@ -612,9 +612,7 @@ int main(int argc, char* argv[]) {
     auto simulation = std::make_unique<NgenSimulation>(*sim_time,
                                                        layers,
                                                        std::move(catchment_indexes),
-                                                       std::move(nexus_indexes),
-                                                       mpi_rank,
-                                                       mpi_num_procs);
+                                                       std::move(nexus_indexes));
 
     auto time_done_init                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
@@ -642,9 +640,12 @@ int main(int argc, char* argv[]) {
     if (manager->get_using_routing()) {
         std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
 #if NGEN_WITH_ROUTING_TROUTE_BMI
-        simulation->run_routing_bmi(features, t_route_config_file_with_path);
+        simulation->run_routing_bmi(features, t_route_config_file_with_path, MPI_COMM_WORLD);
 #else
-        simulation->run_routing(t_route_config_file_with_path);
+        // Run t-route from single process
+        if (mpi_rank == 0) {
+            simulation->run_routing(t_route_config_file_with_path);
+        }
 #endif // NGEN_WITH_ROUTING_TROUTE_BMI
     }
 

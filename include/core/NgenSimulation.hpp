@@ -6,6 +6,10 @@
 #include <Simulation_Time.hpp>
 #include <Layer.hpp>
 
+#if NGEN_WITH_MPI
+#include <mpi.h>
+#endif
+
 namespace hy_features
 {
     class HY_Features;
@@ -28,9 +32,7 @@ public:
                    Simulation_Time const& sim_time,
                    std::vector<std::shared_ptr<ngen::Layer>> layers,
                    std::unordered_map<std::string, int> catchment_indexes,
-                   std::unordered_map<std::string, int> nexus_indexes,
-                   int mpi_rank,
-                   int mpi_num_procs
+                   std::unordered_map<std::string, int> nexus_indexes
                    );
     NgenSimulation() = delete;
 
@@ -58,10 +60,12 @@ public:
      */
     void run_routing(std::string const& t_route_config_file_with_path);
 
+#if NGEN_WITH_MPI
     /**
      * Run t-route via BMI on the stored nexus outflow values for the full configured duration of the simulation
      */
-    void run_routing_bmi(hy_features_t &features, std::string const& t_route_config_file_with_path);
+    void run_routing_bmi(hy_features_t &features, std::string const& t_route_config_file_with_path, MPI_Comm mpi_comm);
+#endif
 
     int get_nexus_index(std::string const& nexus_id) const;
     double get_nexus_outflow(int nexus_index, int timestep_index) const;
@@ -84,9 +88,6 @@ private:
     std::vector<double> catchment_outflows_;
     std::unordered_map<std::string, int> nexus_indexes_;
     std::vector<double> nexus_downstream_flows_;
-
-    int mpi_rank_;
-    int mpi_num_procs_;
 
 #if NGEN_WITH_ROUTING
     std::unique_ptr<routing_py_adapter::Routing_Py_Adapter> router_;
