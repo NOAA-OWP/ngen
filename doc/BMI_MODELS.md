@@ -183,6 +183,19 @@ There are some special BMI formulation config parameters which are required in c
 * `fixed_time_step`
   * boolean value to indicate whether this model has a fixed time step size
   * implied to be `true` by default
+* `cache_input_variable_metadata`
+  * boolean value, `false` by default
+  * indicates whether BMI input variable metadata should be saved in memory on first look-up and reused, thus optimizing execution
+    * BMI input variables have values set at each time step
+    * certain metadata is required when performing those set operations:
+      * name and mapped alias (if set)
+      * units
+      * memory size and type of individual items (e.g., `int`, `float`, `double`, etc.)
+      * whether the variable is an array, and if so, the number of individual items
+    * for BMI modules that will not change applicable metadata throughout a simulation, this can be saved in memory and reused
+  * the BMI specification does not expressly guarantee metadata values will not change, so configuration must consider the particular BMI module in use
+  * also, these optimizations do result in additional memory usage
+    * while relatively small, can scale significantly for larger simulations, so this may not be usable for situations when memory is constrained
   
 ## BMI Models Written in C
 

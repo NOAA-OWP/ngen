@@ -22,6 +22,63 @@ class Bmi_Cpp_Multi_Array_Test;
 
 namespace realization {
 
+    /** Type to hold some certain details about a BMI module variable that the framework will need to use repeatedly. */
+    class Bmi_Var_Details {
+
+    public:
+
+        //Bmi_Var_Details() : Bmi_Var_Details("", "", nullptr, -1, -1, "", "") { }
+
+        Bmi_Var_Details(const std::string& name, const std::string& alias, const int item_size, const int num_items, const std::string& cpp_type, const std::string& units)
+            : name(name), mapped_alias(alias), cpp_type(cpp_type), units(units), item_size(item_size), num_items(num_items) { }
+
+        Bmi_Var_Details(const Bmi_Var_Details& source) = default;
+
+        friend bool operator<(const Bmi_Var_Details& lhs, const Bmi_Var_Details& rhs) {
+            return std::tie(lhs.name, lhs.mapped_alias, lhs.cpp_type, lhs.units, lhs.item_size, lhs.num_items)
+                   <
+                   std::tie(rhs.name, rhs.mapped_alias, rhs.cpp_type, rhs.units, rhs.item_size, rhs.num_items);
+        }
+
+        const std::string& get_name() const {
+            return name;
+        }
+
+        const std::string& get_mapped_alias() const {
+            return mapped_alias;
+        }
+
+        const std::string& get_cpp_type() const {
+            return cpp_type;
+        }
+
+        const std::string& get_units() const {
+            return units;
+        }
+
+        int get_item_size() const {
+            return item_size;
+        }
+
+        int get_num_items() const {
+            return num_items;
+        }
+
+    private:
+        /** The module's publicized name for this variable. */
+        const std::string name;
+        /** The framework's configured alias for the variable. */
+        const std::string mapped_alias;
+        /** String for the C++ type corresponding to this variable's type. */
+        const std::string cpp_type;
+        /** String for variable's units. */
+        const std::string units;
+        /** The size of individual items for this variable. */
+        int item_size;
+        /** The number of items for this variable. */
+        int num_items;
+    };
+
     /**
      * Abstraction of a formulation with a single backing model object that implements the BMI.
      */
@@ -382,11 +439,26 @@ namespace realization {
         /**
          * Set BMI input variable values for the model appropriately prior to calling its `BMI `update()``.
          *
-         * @param model_initial_time The model's time prior to the update, in its internal units and representation.
+         * Depending on the value of @ref cache_input_variable_metadata (`false` by default, but which can be controlled
+         * using @ref set_cache_input_var_metadata), this will defer most of its execution to a call either to
+         * @ref do_bmi_sets_from_stored_metadata or @ref do_bmi_sets_with_full_refetch.
+         *
+         * @param model_time The model's time prior to the update, in its internal units and representation.
          * @param t_delta The size of the time step over which the formulation is going to update the model, which might
          *                be different than the model's internal time step.
          */
-        void set_model_inputs_prior_to_update(const double &model_init_time, time_step_t t_delta);
+        void set_model_inputs_prior_to_update(const double &model_time, time_step_t t_delta);
+
+        /**
+         * Set member variable indicating whether @ref set_model_inputs_prior_to_update should store and reuse metadata.
+         *
+         * Set the @ref cache_input_variable_metadata member variable, which indicates whether
+         * @ref set_model_inputs_prior_to_update should store and reuse metadata, as opposed to refreshing such data
+         * each time @ref set_model_inputs_prior_to_update is called.
+         *
+         * @param cache_input_var_metadata Whether @ref set_model_inputs_prior_to_update should store and reuse metadata
+         */
+        void set_cache_input_var_metadata(bool cache_input_var_metadata);
 
         /** The delta of the last model update execution (typically, this is time step size). */
         time_step_t last_model_response_delta = 0;
@@ -426,6 +498,33 @@ namespace realization {
         int next_time_step_index = 0;
 
     private:
+        /**
+         * BMI input variables details for all instances, cached to improve compute performance when setting values
+         * prior to updates.
+         */
+        static std::set<Bmi_Var_Details> known_bmi_input_vars;
+
+        /**
+         * BMI input variables details for this instance, cached to improve compute performance when setting values
+         * prior to updates.
+         *
+         * This will hold cached details on input variables needed by this instance during
+         * @ref do_bmi_sets_from_stored_metadata at each time step.  It will be populated lazily on the first time step,
+         * via a nested call to @ref initialize_bmi_input_var_metadata.
+         *
+         * These should be pointers to @ref Bmi_Var_Details instances in @ref known_bmi_input_vars.
+         */
+        std::unique_ptr<std::vector<Bmi_Var_Details*>> bmi_input_var_details;
+
+        /**
+         * Vector of data providers for BMI input vars, with the provider at an index corresponding to the var in
+         * @ref bmi_input_var_details at the same index.
+         *
+         * As with @ref bmi_input_var_details, these should be populated during the first call to
+         * @ref do_bmi_sets_from_stored_metadata via a nested call to @ref initialize_bmi_input_var_metadata.
+         */
+        std::unique_ptr<std::vector<std::shared_ptr<data_access::GenericDataProvider>>> bmi_input_providers;
+
         models::bmi::protocols::NgenBmiProtocols bmi_protocols;
         /**
          * Whether model ``Update`` calls are allowed and handled in some way by the backing model for time steps after
@@ -464,6 +563,98 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE,
         };
 
+        /** Whether @ref set_model_inputs_prior_to_update should store and reuse metadata. */
+        bool cache_input_variable_metadata = false;
+
+        /**
+         * Set BMI input variables before `BMI update, using saved metadata rather than re-fetching or re-calculating.
+         *
+         * This is one of two available execution paths used by @ref set_model_inputs_prior_to_update for the bulk of
+         * its behavior.  Certain metadata details about a BMI input variable must be available in order for the
+         * framework to execute a `set_value` call: e.g., the data provider that is the correct source of input values,
+         * the analogous C++ type, the number of items, etc.  In this execution option, that data is obtained once and
+         * stored for subsequent reuse, optimizing compute at each time step a bit at the expense of memory.
+         *
+         * References to objects containing these details are stored within the @ref bmi_input_var_details vector,
+         * populated on the first call to this function.  These are actually pointers to objects contained within the
+         * @ref known_bmi_input_vars static member variable.
+         *
+         * An important consideration is that this function is not strictly safe relying only on guarantees provided by
+         * BMI. Nothing within the BMI spec guarantees that, for example, a variable will not change the number of items
+         * it contains. It is therefore possible, in general, for stored data to become stale for a properly implemented
+         * BMI module.  In practice, however, any selected module's implementation details and behavior will be known
+         * by the user, so users can elect to only use this execution path for @ref set_model_inputs_prior_to_update
+         * when the BMI module itself guarantees such data cannot become stale.
+         *
+         * @param src_data_start The start time (in seconds) to use when retrieving data from the appropriate provider to
+         *                      use for setting the model's variables.
+         * @param t_delta The size of the time step over which the formulation is going to update the model, which might
+         *                be different than the model's internal time step.
+         */
+        void do_bmi_sets_from_stored_metadata(const time_t &src_data_start, const time_step_t &t_delta);
+
+        /**
+         * Set BMI input variables before `BMI update, re-fetching and re-calculating required metadata each time.
+         *
+         * This is one of two available execution paths used by @ref set_model_inputs_prior_to_update for the bulk of
+         * its behavior.  Certain metadata details about a BMI input variable must be available in order for the
+         * framework to execute a `set_value` call: e.g., the data provider that is the correct source of input values,
+         * the analogous C++ type, the number of items, etc.  In this execution option, that data is freshly obtained
+         * - either recalculated, redetermined, or refetched from the BMI module itself - on every call to this method.
+         * This results in less efficient compute but also reduced memory usage.
+         *
+         * An important consideration is that this function provides an execution option that is strictly safe relying
+         * only on guarantees provided by BMI. Nothing within the BMI spec guarantees that, for example, a variable will
+         * not change the number of items it contains.  If a configured module does (or may) change input variable
+         * metadata, or if it is possible for a module to change the set of input variables, then this execution path
+         * for @ref set_model_inputs_prior_to_update should be selected.
+         *
+         * BMI module.  In practice, however, any selected module's implementation details and behavior will be known
+         * by the user, so users can elect to only use this execution path for @ref set_model_inputs_prior_to_update
+         * when the BMI module itself guarantees such data cannot become stale.
+         * better memory and safe for no guarantees
+         *
+         * @param src_data_start The start time (in seconds) to use when retrieving data from the appropriate provider to
+         *                      use for setting the model's variables.
+         * @param t_delta The size of the time step over which the formulation is going to update the model, which might
+         *                be different than the model's internal time step.
+         */
+        void do_bmi_sets_with_full_refetch(const time_t &src_data_start, const time_step_t &t_delta);
+
+        /**
+         * Get the appropriate data provider to set inputs for this BMI variable.
+         *
+         * Get the appropriate data provider for setting values for this BMI variable from @ref input_forcing_providers.
+         *
+         * @param var_name The BMI variable name as retrievable directly via BMI.
+         * @param mapped_alias The framework's internal mapped alias for this variable.
+         * @return The appropriate data provider
+         */
+        std::shared_ptr<data_access::GenericDataProvider>& get_provider_for_input_var(const std::string& var_name, const std::string& mapped_alias);
+
+        /**
+         * Initialize the metadata as needed for @ref do_bmi_sets_from_stored_metadata.
+         *
+         * This will populate the @ref bmi_input_var_details member.  As metadata is gathered into @ref Bmi_Var_Details
+         * objects, these will be inserted into to the @ref known_bmi_input_vars static member.  Pointers to the values
+         * in that set are then added to @ref bmi_input_var_details.
+         */
+        void initialize_bmi_input_var_metadata();
+
+        /**
+         * Do the action of retrieving data and setting values for an input variable ahead of advancing the model.
+         *
+         * @param src_data_start The start time (in seconds) to use when retrieving data from the appropriate provider
+         *                       to use for setting the model's variables.
+         * @param t_delta The size of the time step over which the formulation is going to update the model, which might
+         *                be different than the model's internal time step.
+         * @param provider The data provider from which to source the data to use to set the variable.
+         * @param var_details Variable details struct containing the remainder of information required (e.g., var name).
+         */
+        void perform_set(const time_t &src_data_start,
+                         const time_step_t &t_delta,
+                         const std::shared_ptr<data_access::GenericDataProvider>& provider,
+                         const Bmi_Var_Details *var_details) const;
     };
 /*
     template<class M>
