@@ -132,7 +132,9 @@ int main(int argc, char* argv[]) {
     std::string PARTITION_PATH = "";
 
     // This default value should lead to behavior matching the single-process case in the standalone or non-MPI case
-    int mpi_num_procs = 1;
+    // Read only in MPI-guarded code; in non-MPI builds the serial NgenSimulation
+    // constructor takes no rank/size, so mark this to avoid an unused warning there.
+    [[maybe_unused]] int mpi_num_procs = 1;
     // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
     int mpi_rank = 0;
 
@@ -609,12 +611,18 @@ int main(int argc, char* argv[]) {
     }
 #endif // NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
 
+#if NGEN_WITH_MPI
     auto simulation = std::make_unique<NgenSimulation>(*sim_time,
                                                        layers,
                                                        std::move(catchment_indexes),
                                                        std::move(nexus_indexes),
-                                                       mpi_rank,
-                                                       mpi_num_procs);
+                                                       MPI_COMM_WORLD);
+#else
+    auto simulation = std::make_unique<NgenSimulation>(*sim_time,
+                                                       layers,
+                                                       std::move(catchment_indexes),
+                                                       std::move(nexus_indexes));
+#endif
 
     auto time_done_init                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
@@ -665,6 +673,9 @@ int main(int argc, char* argv[]) {
   manager->finalize();
 
 #if NGEN_WITH_MPI
+    // Destroy the simulation, freeing its duplicated MPI communicator, while
+    // MPI is still active.
+    simulation.reset();
     MPI_Finalize();
 #endif
 
