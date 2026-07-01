@@ -88,9 +88,9 @@ void Bmi_Fortran_Adapter_Test::SetUp() {
     config_file_name_0 = file_search(config_path_options, config_basename_0);
 
     std::vector<std::string> lib_dir_opts = {
-            "./extern/test_bmi_fortran/cmake_build/",
-            "../extern/test_bmi_fortran/cmake_build/",
-            "../../extern/test_bmi_fortran/cmake_build/"
+            "./test-libs/test_bmi_fortran/",
+            "../test-libs/test_bmi_fortran/",
+            "../../test-libs/test_bmi_fortran/"
     };
     lib_file_name_0 = file_search(lib_dir_opts, BMI_TEST_FORTRAN_LOCAL_LIB_NAME);
     bmi_module_type_name_0 = "test_bmi_fortran";

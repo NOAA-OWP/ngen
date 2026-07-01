@@ -14,7 +14,7 @@
                             "name": "bmi_fortran",
                             "params": {
                                 "model_type_name": "bmi_fortran_noahowp",
-                                "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi.dylib",
+                                "library_file": "./extern-libs/noah-owp-modular/libsurfacebmi.dylib",
                                 "forcing_file": "",
                                 "init_config": "./data/bmi/fortran/noah-owp-modular-init-{{id}}.namelist.input",
                                 "allow_exceed_end_time": true,
@@ -36,7 +36,7 @@
                             "name": "bmi_c",
                             "params": {
                                 "model_type_name": "bmi_c_cfe",
-                                "library_file": "./extern/cfe/cmake_build/libcfebmi.dylib",
+                                "library_file": "./extern-libs/cfe/libcfebmi.dylib",
                                 "forcing_file": "",
                                 "init_config": "./data/bmi/c/cfe/{{id}}_bmi_config.ini",
                                 "allow_exceed_end_time": true,
