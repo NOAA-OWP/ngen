@@ -592,15 +592,18 @@ TEST_F(Bmi_C_Formulation_Test, check_mass_balance_frequency) {
     double mass_error;
     mass_error += 10; // Force a mass balance error above tolerance
     get_friend_bmi_model(formulation)->SetValue(OUTPUT_MASS_NAME, &mass_error); //
+    // Context contract: current_time_step is drawn from [0, total_steps - 1].
+    // For a 3-step run with frequency=2, indices 0 and 2 fire (0 % 2 == 0,
+    // 2 % 2 == 0) and index 1 is skipped.
     //Check initial mass balance -- should error which indicates it was propoerly checked
     //per frequency setting
-    ASSERT_THROW(formulation.check_mass_balance(0, 2, "t0"), ProtocolError);
+    ASSERT_THROW(formulation.check_mass_balance(0, 3, "t0"), ProtocolError);
     // Call mass balance check again, this should NOT error, since the actual check
     // should be skipped due to the frequency setting
-    formulation.check_mass_balance(1, 2, "t1");
+    formulation.check_mass_balance(1, 3, "t1");
     // Check mass balance again, this SHOULD error since the previous mass balance
     // will propagate, and it should now be checked based on the frequency
-    ASSERT_THROW(formulation.check_mass_balance(2, 2, "t2"), ProtocolError);
+    ASSERT_THROW(formulation.check_mass_balance(2, 3, "t2"), ProtocolError);
 }
 
 TEST_F(Bmi_C_Formulation_Test, check_mass_balance_frequency_1) {
@@ -613,14 +616,19 @@ TEST_F(Bmi_C_Formulation_Test, check_mass_balance_frequency_1) {
     double mass_error;
     mass_error += 10; // Force a mass balance error above tolerance
     get_friend_bmi_model(formulation)->SetValue(OUTPUT_MASS_NAME, &mass_error); //
+    // Context contract: current_time_step is drawn from [0, total_steps - 1].
+    // For a 3-step run, indices 0 and 1 must skip the check (frequency=-1
+    // only fires at the end) and index 2 must fire, since
+    // total_steps - 1 == 2 is the last in-range index.
     //Check initial mass balance -- should NOT error
-    formulation.check_mass_balance(0, 2, "t0");
+    formulation.check_mass_balance(0, 3, "t0");
     // Call mass balance check again, this should NOT error, since the actual check
     // should be skipped due to the frequency setting
-    formulation.check_mass_balance(1, 2, "t1");
-    // Check mass balance again, this SHOULD error since the this is step 2/2
-    // and it will now be checked based on the frequency (-1, check at end)
-    ASSERT_THROW(formulation.check_mass_balance(2, 2, "t2"), ProtocolError);
+    formulation.check_mass_balance(1, 3, "t1");
+    // Check mass balance again, this SHOULD error since this is the last
+    // timestep (current_time_step == total_steps - 1) and the violation
+    // should now be observable.
+    ASSERT_THROW(formulation.check_mass_balance(2, 3, "t2"), ProtocolError);
 }
 
 #endif  // NGEN_BMI_C_LIB_TESTS_ACTIVE

@@ -33,11 +33,13 @@ Virtual interface for BMI protocols
 #include "JSONProperty.hpp"
 #include <nonstd/expected.hpp>
 
-namespace models{ namespace bmi{ namespace protocols{
+namespace models {
+namespace bmi {
+namespace protocols {
 using nonstd::expected;
 using nonstd::make_unexpected;
 
-enum class Error{
+enum class Error {
     UNITIALIZED_MODEL,
     UNSUPPORTED_PROTOCOL,
     INTEGRATION_ERROR,
@@ -45,116 +47,132 @@ enum class Error{
     PROTOCOL_WARNING
 };
 
-class ProtocolError: public std::exception {
+class ProtocolError : public std::exception {
   public:
-    ProtocolError () = delete;
-    ProtocolError(Error err, const std::string& message="") : err(std::move(err)), message(std::move(message)) {}
-    ProtocolError(const ProtocolError& other) = default;
-    ProtocolError(ProtocolError&& other) noexcept = default;
-    ProtocolError& operator=(const ProtocolError& other) = default;
+    ProtocolError() = delete;
+
+    ProtocolError(Error err, const std::string& message = "")
+        : err(std::move(err))
+        , message(std::move(message)) {
+    }
+
+    ProtocolError(const ProtocolError& other)                = default;
+    ProtocolError(ProtocolError&& other) noexcept            = default;
+    ProtocolError& operator=(const ProtocolError& other)     = default;
     ProtocolError& operator=(ProtocolError&& other) noexcept = default;
-    ~ProtocolError() = default;
+    ~ProtocolError()                                         = default;
 
     auto to_string() const -> std::string {
         switch (err) {
-            case Error::UNITIALIZED_MODEL: return "Error(Uninitialized Model)::" + message;
-            case Error::UNSUPPORTED_PROTOCOL: return "Warning(Unsupported Protocol)::" + message;
-            case Error::INTEGRATION_ERROR: return "Error(Integration)::" + message;
-            case Error::PROTOCOL_ERROR: return "Error(Protocol)::" + message;
-            case Error::PROTOCOL_WARNING: return "Warning(Protocol)::" + message;
-            default: return "Unknown Error: " + message;
+        case Error::UNITIALIZED_MODEL:
+            return "Error(Uninitialized Model)::" + message;
+        case Error::UNSUPPORTED_PROTOCOL:
+            return "Warning(Unsupported Protocol)::" + message;
+        case Error::INTEGRATION_ERROR:
+            return "Error(Integration)::" + message;
+        case Error::PROTOCOL_ERROR:
+            return "Error(Protocol)::" + message;
+        case Error::PROTOCOL_WARNING:
+            return "Warning(Protocol)::" + message;
+        default:
+            return "Unknown Error: " + message;
         }
     }
 
-  auto error_code() const -> const Error&  { return err; }
-  auto get_message() const -> const std::string&  { return message; }
+    auto error_code() const -> const Error& {
+        return err;
+    }
 
-  char const *what() const noexcept override {
-      message = to_string();
-      return message.c_str();
-  }
+    auto get_message() const -> const std::string& {
+        return message;
+    }
+
+    const char* what() const noexcept override {
+        message = to_string();
+        return message.c_str();
+    }
 
   private:
     Error err;
     mutable std::string message;
 };
 
-struct Context{
+struct Context {
     const int current_time_step;
     const int total_steps;
     const std::string& timestamp;
     const std::string& id;
 };
 
-using ModelPtr = std::shared_ptr<models::bmi::Bmi_Adapter>;
+using ModelPtr   = std::shared_ptr<models::bmi::Bmi_Adapter>;
 using Properties = geojson::PropertyMap;
 
-class NgenBmiProtocol{
-  /**
-   * @brief Abstract interface for a generic BMI protocol
-   * 
-   */
+class NgenBmiProtocol {
+    /**
+     * @brief Abstract interface for a generic BMI protocol
+     *
+     */
 
   public:
-
     virtual ~NgenBmiProtocol() = default;
 
   protected:
     /**
      * @brief Handle a ProtocolError by either throwing it or logging it as a warning
-     * 
+     *
      * @param err The ProtocolError to handle
-     * @return expected<void, ProtocolError> Returns an empty expected if the error was logged as a warning,
-     *         otherwise throws the ProtocolError.
-     * 
+     * @return expected<void, ProtocolError> Returns an empty expected if the error was logged as a
+     * warning, otherwise throws the ProtocolError.
+     *
      * @throws ProtocolError if the error is of type PROTOCOL_ERROR
      */
     static auto error_or_warning(const ProtocolError& err) -> expected<void, ProtocolError> {
         // Log warnings, but throw errors
-        switch(err.error_code()){
-            case Error::PROTOCOL_ERROR:
-                throw err;
-                break;
-            case Error::INTEGRATION_ERROR:
-            case Error::UNITIALIZED_MODEL:
-            case Error::UNSUPPORTED_PROTOCOL:
-            case Error::PROTOCOL_WARNING:
-                std::cerr << err.to_string() << std::endl;
-                return make_unexpected<ProtocolError>( ProtocolError(std::move(err) ) );
-            default:
-                throw err;
+        switch (err.error_code()) {
+        case Error::PROTOCOL_ERROR:
+            throw err;
+            break;
+        case Error::INTEGRATION_ERROR:
+        case Error::UNITIALIZED_MODEL:
+        case Error::UNSUPPORTED_PROTOCOL:
+        case Error::PROTOCOL_WARNING:
+            std::cerr << err.to_string() << std::endl;
+            return make_unexpected<ProtocolError>(ProtocolError(std::move(err)));
+        default:
+            throw err;
         }
-        assert (false && "Unreachable code reached in error_or_warning");
+        assert(false && "Unreachable code reached in error_or_warning");
     }
 
     /**
      * @brief Run the BMI protocol against the given model
-     * 
+     *
      * Execute the logic of the protocol with the provided context and model.
      * It is the caller's responsibility to ensure that the model provided is
      * consistent with the model provided to the object's initialize() and
      * check_support() methods, hence the protected nature of this function.
-     * 
+     *
      * @param ctx Contextual information for the protocol run
      * @param model A shared pointer to a Bmi_Adapter object which should be
      * initialized before being passed to this method.
-     * 
+     *
      * @return expected<void, ProtocolError> May contain a ProtocolError if
      *         the protocol fails for any reason.  Errors of ProtocolError::PROTOCOL_WARNING
      *         severity should be logged as warnings, but not cause the simulation to fail.
      */
-    nsel_NODISCARD virtual auto run(const ModelPtr& model, const Context& ctx) const -> expected<void, ProtocolError> = 0;
+    nsel_NODISCARD virtual auto run(const ModelPtr& model, const Context& ctx) const
+        -> expected<void, ProtocolError> = 0;
 
     /**
      * @brief Check if the BMI protocol is supported by the model
-     * 
+     *
      * It is the caller's responsibility to ensure that the model provided is
      * consistent with the model provided to the object's initialize() and
      * run() methods, hence the protected nature of this function.
-     * 
+     *
      * @param model A shared pointer to a Bmi_Adapter object which should be
      * initialized before being passed to this method.
-     * 
+     *
      * @return expected<void, ProtocolError> May contain a ProtocolError if
      *         the protocol is not supported by the model.
      */
@@ -162,38 +180,41 @@ class NgenBmiProtocol{
 
     /**
      * @brief Initialize the BMI protocol from a set of key/value properties
-     * 
+     *
      * It is the caller's responsibility to ensure that the model provided is
      * consistent with the model provided to the object's run() and
      * check_support() methods, hence the protected nature of this function.
-     * 
+     *
      * @param properties key/value pairs for initializing the protocol
      * @param model A shared pointer to a Bmi_Adapter object which should be
      * initialized before being passed to this method.
-     * 
+     *
      * @return expected<void, ProtocolError> May contain a ProtocolError if
      *         initialization fails for any reason, since the protocol must
      *         be effectively "optional", failed initialization results in
      *         the protocol being disabled for the duration of the simulation.
      */
-    virtual auto initialize(const ModelPtr& model, const Properties& properties) -> expected<void, ProtocolError> = 0;
+    virtual auto initialize(const ModelPtr& model, const Properties& properties)
+        -> expected<void, ProtocolError> = 0;
 
     /**
      * @brief Whether the protocol is supported by the model
-     * 
+     *
      */
     virtual bool is_supported() const = 0;
 
     /**
      * @brief Friend class for managing one or more protocols
-     * 
+     *
      * This allows the NgenBmiProtocols container class to access the protected `run()`
      * method. This allows the container to ensure consistent application of the
      * protocol with a particular bmi model instance throughout the lifecycle of a given
      * protocol.
-     * 
+     *
      */
     friend class NgenBmiProtocols;
-}; 
+};
 
-}}}
+} // namespace protocols
+} // namespace bmi
+} // namespace models

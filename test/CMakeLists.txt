@@ -66,7 +66,15 @@ endif()
 add_executable(test_all)
 target_link_libraries(test_all PRIVATE gtest gtest_main)
 set_target_properties(test_all PROPERTIES FOLDER test)
-target_include_directories(test_all PRIVATE ${CMAKE_CURRENT_LIST_DIR}/bmi)
+# `test_all` aggregates every test target's object files, including
+# `byte_io_Test.cpp` and `wire_format_Test.cpp` which include internal
+# headers (`byte_io.hpp`, `wire_format.hpp`) from the BMI library's
+# PRIVATE include path. Same rationale as `test_bmi_protocols` below
+# — first-party tests need explicit opt-in to compile.
+target_include_directories(test_all PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/bmi
+    ${PROJECT_SOURCE_DIR}/src/utilities/bmi
+)
 
 # =============================================================================
 
@@ -215,18 +223,84 @@ if(TARGET test_forcings_engine)
     endif()
 endif()
 
+########################## ngen_serialization Unit Tests
+
+ngen_add_test(
+    test_serialization
+    OBJECTS
+        utils/serialization/id_predicates_Test.cpp
+        utils/serialization/backend_writer_Test.cpp
+        utils/serialization/backend_reader_Test.cpp
+        utils/serialization/backend_lifetime_Test.cpp
+        utils/serialization/file_backend_Test.cpp
+        utils/serialization/parse_timestamp_Test.cpp
+    LIBRARIES
+        NGen::serialization
+        NGen::bmi_protocols
+)
+# The mocks header is shared across the four test files above. It
+# lives next to them under test/utils/serialization/; ngen_add_test
+# already adds test/utils/bmi to the include path for the BMI tests,
+# but our mocks include each other via plain `"mocks.hpp"`, which
+# resolves against the per-source directory automatically.
+target_include_directories(test_serialization PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/utils/serialization
+)
+
+# Non-POSIX-simulated FileBackend test target. Compiles file_backend.cpp
+# directly (not via the production ngen_bmi_protocols library) with
+# `-DNGEN_HAVE_POSIX_FSYNC=0`, which exercises the same code path a
+# Windows / freestanding build would take. The standalone executable
+# avoids ODR conflicts with the production library's copy of
+# file_backend.cpp (which compiles with the macro set to 1 on POSIX).
+add_executable(test_file_backend_no_fsync
+    utils/serialization/file_backend_no_fsync_Test.cpp
+    ${PROJECT_SOURCE_DIR}/src/utilities/bmi/file_backend.cpp
+)
+target_compile_definitions(test_file_backend_no_fsync PRIVATE
+    NGEN_HAVE_POSIX_FSYNC=0
+)
+target_include_directories(test_file_backend_no_fsync PRIVATE
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/include/utilities/bmi
+    ${PROJECT_SOURCE_DIR}/src/utilities/bmi
+)
+target_link_libraries(test_file_backend_no_fsync PRIVATE
+    NGen::serialization
+    Boost::boost
+    gtest gtest_main
+)
+set_target_properties(test_file_backend_no_fsync PROPERTIES FOLDER test)
+gtest_discover_tests(test_file_backend_no_fsync
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+)
+
 ########################## BMI Protocol Unit Tests
 
 ngen_add_test(
     test_bmi_protocols
     OBJECTS
         utils/bmi/mass_balance_Test.cpp
+        utils/bmi/byte_io_Test.cpp
+        utils/bmi/wire_format_Test.cpp
+        utils/bmi/serialization_record_Test.cpp
+        utils/bmi/serialization_Test.cpp
+        utils/bmi/deserialization_Test.cpp
     LIBRARIES
         NGen::bmi_protocols
         NGen::ngen_bmi
         gmock
     DEPENDS
         testbmicppmodel
+)
+# Internal-headers opt-in for the BMI protocol library. wire_format.hpp
+# and any future src/utilities/bmi/*.hpp live next to the .cpp files and
+# are intentionally NOT on NGen::bmi_protocols' PUBLIC include path. The
+# test target exercises them directly, so it opts in here. External
+# consumers of NGen::bmi_protocols do not get this path and therefore
+# cannot reach the wire primitives — that's the point.
+target_include_directories(test_bmi_protocols PRIVATE
+    ${PROJECT_SOURCE_DIR}/src/utilities/bmi
 )
 
 ########################## Series Unit Tests
@@ -250,6 +324,16 @@ ngen_add_test(
         utils/logging_Test.cpp
     LIBRARIES
         NGen::logging
+
+)
+
+########################## Path-Tokens Unit Tests
+ngen_add_test(
+    test_path_tokens
+    OBJECTS
+        utils/path_tokens_Test.cpp
+    LIBRARIES
+        NGen::path_tokens
 
 )
 
@@ -392,17 +476,31 @@ ngen_add_test(
     OBJECTS
         bmi/Bmi_Fortran_Adapter_Test.cpp
         realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
+        utils/bmi/fortran_serialization_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
+        NGen::bmi_protocols
     REQUIRES
         NGEN_WITH_BMI_FORTRAN
     DEPENDS
         testbmifortranmodel
 )
+
+# `fortran_serialization_Test.cpp` includes `serialization_record.hpp`,
+# which transitively pulls in the internal `wire_format.hpp`. The
+# BMI library keeps `wire_format.hpp` on its PRIVATE include path so
+# external consumers can't bypass the record layer (see comment on
+# `test_bmi_protocols` below). First-party tests like this one need
+# explicit opt-in to compile.
+if(TARGET test_bmi_fortran)
+    target_include_directories(test_bmi_fortran PRIVATE
+        ${PROJECT_SOURCE_DIR}/src/utilities/bmi
+    )
+endif()
 
 ########################## BMI Python Tests
 ngen_add_test(
@@ -411,15 +509,27 @@ ngen_add_test(
         bmi/Bmi_Py_Adapter_Test.cpp
         realizations/catchments/Bmi_Py_Formulation_Test.cpp
         utils/python/InterpreterUtil_Test.cpp
+        utils/bmi/py_serialization_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
+        NGen::bmi_protocols
     REQUIRES
         NGEN_WITH_PYTHON
 )
+
+# Same rationale as `test_bmi_fortran` above: `py_serialization_Test.cpp`
+# includes `serialization_record.hpp` and needs the BMI library's
+# PRIVATE include path to resolve the transitively-included
+# `wire_format.hpp`.
+if(TARGET test_bmi_python)
+    target_include_directories(test_bmi_python PRIVATE
+        ${PROJECT_SOURCE_DIR}/src/utilities/bmi
+    )
+endif()
 
 ########################## BMI Multi Tests
 ngen_add_test(
@@ -555,6 +665,7 @@ ngen_add_test(
         utils/mdframe_netcdf_Test.cpp
         utils/mdframe_csv_Test.cpp
         utils/logging_Test.cpp
+        utils/path_tokens_Test.cpp
     LIBRARIES
         gmock
         NGen::core
@@ -566,6 +677,7 @@ ngen_add_test(
         NGen::mdarray
         NGen::mdframe
         NGen::logging
+        NGen::path_tokens
         NGen::ngen_bmi
         NGen::output
         testbmicppmodel
