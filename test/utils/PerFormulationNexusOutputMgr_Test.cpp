@@ -51,12 +51,21 @@ protected:
         return obj->write_nexus_ids_once();
     }
 
-    static size_t friend_nexus_id_string_width() {
-        return utils::PerFormulationNexusOutputMgr::nexus_id_string_width;
+    static size_t friend_nexus_id_string_width(const utils::PerFormulationNexusOutputMgr* obj) {
+        return obj->nexus_id_string_width;
     }
 
-    static void friend_pack_nexus_id(const std::string& nexus_id, char* buffer) {
-        utils::PerFormulationNexusOutputMgr::pack_nexus_id(nexus_id, buffer);
+    /** Longest string length among the given IDs; the expected feature_id string-length dimension. */
+    static size_t longest_id_length(const std::vector<std::string>& ids) {
+        size_t max_len = 0;
+        for (const std::string& id : ids) {
+            max_len = std::max(max_len, id.size());
+        }
+        return max_len;
+    }
+
+    static void friend_pack_nexus_id(const std::string& nexus_id, char* buffer, size_t width) {
+        utils::PerFormulationNexusOutputMgr::pack_nexus_id(nexus_id, buffer, width);
     }
 
     /**
@@ -68,7 +77,7 @@ protected:
      * @return Vector of reconstructed full string ids, prefix included.
      */
     static std::vector<std::string> read_feature_id_strings(const netCDF::NcVar& var, size_t count) {
-        const size_t width = friend_nexus_id_string_width();
+        const size_t width = var.getDim(1).getSize();
         std::vector<char> chars(count * width);
         var.getVar(chars.data());
         std::vector<std::string> ids(count);
@@ -161,6 +170,31 @@ protected:
     std::vector<std::string> ex_6_timestamps = {"2025-01-01T00:00:00Z", "2025-01-01T01:00:00Z"};
     std::vector<std::time_t> ex_6_timestamps_seconds = {1735707600, 1735711200};
     size_t ex_6_num_time_steps = 2;
+
+    // Example 7: a single-instance nexus set whose IDs differ in length to exercise the dynamically-sized
+    // feature_id string-length dimension. The stored width must equal the longest ID, and every shorter ID
+    // must round-trip exactly (null-padded), not truncated.
+    std::shared_ptr<std::vector<std::string>> ex_7_form_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>{"form-0"});
+    std::vector<std::string> ex_7_form_0_all_nexus_id = {
+        "nx-2", "nex-1", "cat-1000012", "a-very-long-nexus-identifier-000000042"
+    };
+    std::vector<std::vector<double>> ex_7_all_data = {{1.0, 2.0, 3.0, 4.0}, {11.0, 12.0, 13.0, 14.0}};
+    std::vector<std::string> ex_7_timestamps = {"2025-01-01T00:00:00Z", "2025-01-01T01:00:00Z"};
+    std::vector<std::time_t> ex_7_timestamps_seconds = {1735707600, 1735711200};
+
+    // Example 8: differing per-rank ID lengths across the MPI write. Rank 0 owns only short IDs while rank 1
+    // owns a much longer ID, so the feature_id string-length dimension is correct only if the maximum ID
+    // length is reduced across ranks rather than taken from the (rank 0) writing rank's local IDs.
+    std::shared_ptr<std::vector<std::string>> ex_8_form_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>{"form-0"});
+    std::vector<std::string> ex_8_form_0_group_a_nexus_ids = {"nex-1", "nex-2"};                                 // rank 0 (local max 5)
+    std::vector<std::string> ex_8_form_0_group_b_nexus_ids = {"terminal-nexus-1234567890123", "tnx-2"};          // rank 1 (local max 28)
+    std::vector<std::string> ex_8_form_0_all_nexus_id = {"nex-1", "nex-2", "terminal-nexus-1234567890123", "tnx-2"};
+    std::vector<std::vector<double>> ex_8_group_a_data = {{1.0, 2.0}, {11.0, 12.0}};
+    std::vector<std::vector<double>> ex_8_group_b_data = {{101.0, 102.0}, {111.0, 112.0}};
+    std::vector<std::vector<double>> ex_8_all_data = {{1.0, 2.0, 101.0, 102.0}, {11.0, 12.0, 111.0, 112.0}};
+    std::vector<std::string> ex_8_timestamps = {"2025-01-01T00:00:00Z", "2025-01-01T01:00:00Z"};
+    std::vector<std::time_t> ex_8_timestamps_seconds = {1735707600, 1735711200};
+    size_t ex_8_num_time_steps = 2;
 
     std::vector<std::string> files_to_cleanup;
 
@@ -456,7 +490,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
     ASSERT_FALSE(nc_var_nex_ids.isNull());
     ASSERT_EQ(nc_var_nex_ids.getDim(0).getSize(), ex_2_form_0_all_nexus_id.size());
     // feature_id is now a 2-D fixed-width char variable: nexus dimension then string-length dimension.
-    ASSERT_EQ(nc_var_nex_ids.getDim(1).getSize(), friend_nexus_id_string_width());
+    ASSERT_EQ(nc_var_nex_ids.getDim(1).getSize(), longest_id_length(ex_2_form_0_all_nexus_id));
 
     std::vector<std::string> nex_id_strs = read_feature_id_strings(nc_var_nex_ids, ex_2_form_0_all_nexus_id.size());
     ASSERT_EQ(nex_id_strs, ex_2_form_0_all_nexus_id);
@@ -533,7 +567,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_6_a)
     ASSERT_FALSE(nc_var_nex_ids.isNull());
     ASSERT_EQ(nc_var_nex_ids.getDim(0).getSize(), ex_6_form_0_all_nexus_id.size());
     // feature_id is a 2-D fixed-width char variable: nexus dimension then string-length dimension.
-    ASSERT_EQ(nc_var_nex_ids.getDim(1).getSize(), friend_nexus_id_string_width());
+    ASSERT_EQ(nc_var_nex_ids.getDim(1).getSize(), longest_id_length(ex_6_form_0_all_nexus_id));
 
     std::vector<std::string> nex_id_strs = read_feature_id_strings(nc_var_nex_ids, ex_6_form_0_all_nexus_id.size());
     ASSERT_EQ(nex_id_strs, ex_6_form_0_all_nexus_id);
@@ -557,6 +591,101 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_6_a)
     for (size_t t = 0; t < ex_6_timestamps.size(); ++t) {
         for (size_t n = 0; n < ex_6_form_0_all_nexus_id.size(); ++n) {
             ASSERT_EQ(values[n][t], ex_6_all_data[t][n])
+                << "Flow mismatch for nexus id " << nex_id_strs[n] << " at time step " << t;
+        }
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+}
+
+/**
+ * Test cross-rank sizing of the feature_id string-length dimension when ranks own IDs of differing lengths.
+ *
+ * Rank 0 owns only short IDs and rank 1 owns a much longer ID, so the single assembled output file is correct
+ * only if the maximum ID length is reduced across ranks (MPI_Allreduce) rather than taken from the writing
+ * rank's local IDs. Asserts the stored width equals the global longest ID length, that both ranks' managers
+ * report that same global width (so the reduction reached every rank, including the shorter-ID rank 0 that
+ * sizes the dimension), that rank 0's short IDs round-trip exactly at the larger global width, and that all
+ * IDs and their flow data land in the correct rows.
+ */
+TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_8_a)
+{
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    ASSERT_LE(rank, 1);
+    ASSERT_EQ(size, 2);
+
+    std::vector<std::string> *nexus_ids;
+    std::vector<std::vector<double>> *group_data;
+    if (rank == 0) {
+        nexus_ids = &ex_8_form_0_group_a_nexus_ids;
+        group_data = &ex_8_group_a_data;
+    }
+    else {
+        nexus_ids = &ex_8_form_0_group_b_nexus_ids;
+        group_data = &ex_8_group_b_data;
+    }
+
+    // The global longest ID (owned by rank 1) must exceed rank 0's local longest, so a rank-local width would
+    // be wrong for the assembled file.
+    const size_t global_width = longest_id_length(ex_8_form_0_all_nexus_id);
+    ASSERT_GT(global_width, longest_id_length(ex_8_form_0_group_a_nexus_ids));
+
+    const std::vector<int> nexus_per_rank = {
+        static_cast<int>(ex_8_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_8_form_0_group_b_nexus_ids.size())
+    };
+    std::vector<int> local_offsets = {0, nexus_per_rank[0]};
+    utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, ex_8_form_names, output_root, ex_8_num_time_steps, rank, local_offsets[rank], 2, ex_8_form_0_all_nexus_id.size());
+
+    if (rank == 0) {
+        std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+        for (const std::string& f : *filenames) {
+            files_to_cleanup.push_back(f);
+        }
+    }
+
+    // Every rank must have reduced to the same global width, not its own local maximum.
+    ASSERT_EQ(friend_nexus_id_string_width(&mgr), global_width);
+
+    for (size_t t = 0; t < ex_8_timestamps.size(); ++t) {
+        for (size_t n = 0; n < nexus_ids->size(); ++n) {
+            mgr.receive_data_entry(ex_8_form_names->at(0),
+                                   nexus_ids->at(n),
+                                   utils::time_marker(t, ex_8_timestamps_seconds[t], ex_8_timestamps[t]),
+                                   group_data->at(t)[n]);
+        }
+        mgr.commit_writes();
+    }
+
+    mgr.close();
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    const netCDF::NcFile ncf(mgr.get_filenames()->at(0), netCDF::NcFile::read);
+
+    const netCDF::NcVar nc_var_nex_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr));
+    ASSERT_FALSE(nc_var_nex_ids.isNull());
+    ASSERT_EQ(nc_var_nex_ids.getDim(0).getSize(), ex_8_form_0_all_nexus_id.size());
+    // String-length dimension sized to the global longest ID, verified independently of the manager's width.
+    ASSERT_EQ(nc_var_nex_ids.getDim(1).getSize(), global_width);
+
+    std::vector<std::string> nex_id_strs = read_feature_id_strings(nc_var_nex_ids, ex_8_form_0_all_nexus_id.size());
+    ASSERT_EQ(nex_id_strs, ex_8_form_0_all_nexus_id);
+
+    // Rank 0's short IDs must survive verbatim at the (larger) global width, i.e. correctly null-padded.
+    ASSERT_NE(std::find(nex_id_strs.begin(), nex_id_strs.end(), "nex-1"), nex_id_strs.end());
+    ASSERT_NE(std::find(nex_id_strs.begin(), nex_id_strs.end(), "terminal-nexus-1234567890123"), nex_id_strs.end());
+
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+    ASSERT_FALSE(flow.isNull());
+    ASSERT_EQ(flow.getDim(0).getSize(), ex_8_form_0_all_nexus_id.size());
+    ASSERT_EQ(flow.getDim(1).getSize(), ex_8_num_time_steps);
+    // Note that nexus feature_id dim comes before time dim, so have to order this way
+    double values[4][2];
+    flow.getVar(values);
+    for (size_t t = 0; t < ex_8_timestamps.size(); ++t) {
+        for (size_t n = 0; n < ex_8_form_0_all_nexus_id.size(); ++n) {
+            ASSERT_EQ(values[n][t], ex_8_all_data[t][n])
                 << "Flow mismatch for nexus id " << nex_id_strs[n] << " at time step " << t;
         }
     }
@@ -947,7 +1076,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_d)
     // These should all have size 4 for the current example, equal to the size of ex_0_form_0_nexus_ids
     ASSERT_EQ(nexus_ids.getDim(0).getSize(), 4);
     // feature_id is now a 2-D fixed-width char variable: nexus dimension then string-length dimension.
-    ASSERT_EQ(nexus_ids.getDim(1).getSize(), friend_nexus_id_string_width());
+    ASSERT_EQ(nexus_ids.getDim(1).getSize(), longest_id_length(ex_0_form_0_nexus_ids));
 
     std::vector<std::string> nex_id_strs = read_feature_id_strings(nexus_ids, ex_0_form_0_nexus_ids.size());
 
@@ -1106,7 +1235,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_c)
     // These should all have size 8 for the current example, equal to the size of ex_1_form_0_all_nexus_id
     ASSERT_EQ(nexus_ids.getDim(0).getSize(), 8);
     // feature_id is now a 2-D fixed-width char variable: nexus dimension then string-length dimension.
-    ASSERT_EQ(nexus_ids.getDim(1).getSize(), friend_nexus_id_string_width());
+    ASSERT_EQ(nexus_ids.getDim(1).getSize(), longest_id_length(ex_1_form_0_all_nexus_id));
 
     std::vector<std::string> nex_id_strs = read_feature_id_strings(nexus_ids, ex_1_form_0_all_nexus_id.size());
 
@@ -1151,7 +1280,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_5_a)
     ASSERT_FALSE(nexus_ids.isNull());
     ASSERT_EQ(nexus_ids.getDim(0).getSize(), ex_5_form_0_all_nexus_id.size());
     // feature_id is a 2-D fixed-width char variable: nexus dimension then string-length dimension.
-    ASSERT_EQ(nexus_ids.getDim(1).getSize(), friend_nexus_id_string_width());
+    ASSERT_EQ(nexus_ids.getDim(1).getSize(), longest_id_length(ex_5_form_0_all_nexus_id));
 
     std::vector<std::string> nex_id_strs = read_feature_id_strings(nexus_ids, ex_5_form_0_all_nexus_id.size());
     ASSERT_EQ(nex_id_strs, ex_5_form_0_all_nexus_id);
@@ -1176,6 +1305,49 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_5_a)
                 << "Flow mismatch for nexus id " << nex_id_strs[n] << " at time step " << t;
         }
     }
+}
+
+/**
+ * Test that a single-instance nexus set with differing ID lengths (including one longer than the former
+ * fixed width of 32) is written with a feature_id string-length dimension sized to the longest ID, and that
+ * every shorter ID round-trips exactly with correct null padding rather than being truncated or over-padded.
+ */
+TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_7_a)
+{
+    std::string form_name = ex_7_form_names->at(0);
+
+    // Guard the premise: the set really mixes lengths and its longest ID exceeds the former fixed width.
+    const size_t expected_width = longest_id_length(ex_7_form_0_all_nexus_id);
+    ASSERT_GT(expected_width, 32u);
+    ASSERT_GT(expected_width, ex_7_form_0_all_nexus_id.front().size());
+
+    utils::PerFormulationNexusOutputMgr mgr(ex_7_form_0_all_nexus_id, ex_7_form_names, output_root, ex_7_timestamps.size());
+
+    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    for (const std::string& f : *filenames) {
+        files_to_cleanup.push_back(f);
+    }
+
+    for (size_t t = 0; t < ex_7_timestamps.size(); ++t) {
+        for (size_t n = 0; n < ex_7_form_0_all_nexus_id.size(); ++n) {
+            mgr.receive_data_entry(form_name,
+                                   ex_7_form_0_all_nexus_id[n],
+                                   utils::time_marker(t, ex_7_timestamps_seconds[t], ex_7_timestamps[t]),
+                                   ex_7_all_data[t][n]);
+        }
+        mgr.commit_writes();
+    }
+
+    const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
+    const netCDF::NcVar nexus_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr));
+    ASSERT_FALSE(nexus_ids.isNull());
+    ASSERT_EQ(nexus_ids.getDim(0).getSize(), ex_7_form_0_all_nexus_id.size());
+    // String-length dimension sized to the longest ID, verified independently of the manager's own width.
+    ASSERT_EQ(nexus_ids.getDim(1).getSize(), expected_width);
+    ASSERT_EQ(friend_nexus_id_string_width(&mgr), expected_width);
+
+    std::vector<std::string> nex_id_strs = read_feature_id_strings(nexus_ids, ex_7_form_0_all_nexus_id.size());
+    ASSERT_EQ(nex_id_strs, ex_7_form_0_all_nexus_id);
 }
 
 /** Make sure writes work for example 2 for multiple time steps, but using just a single instance. */
@@ -1362,7 +1534,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_0_a)
     // These should all have size 4 for the current example, equal to the size of ex_0_form_0_nexus_ids
     ASSERT_EQ(nexus_ids.getDim(0).getSize(), 4);
     // feature_id is now a 2-D fixed-width char variable: nexus dimension then string-length dimension.
-    ASSERT_EQ(nexus_ids.getDim(1).getSize(), friend_nexus_id_string_width());
+    ASSERT_EQ(nexus_ids.getDim(1).getSize(), longest_id_length(ex_0_form_0_nexus_ids));
 
     std::vector<std::string> nex_id_strs = read_feature_id_strings(nexus_ids, ex_0_form_0_nexus_ids.size());
 
@@ -1401,7 +1573,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_1_a)
     // These should all have size 8 for the current example, equal to the size of ex_1_form_0_all_nexus_id
     ASSERT_EQ(nexus_ids.getDim(0).getSize(), 8);
     // feature_id is now a 2-D fixed-width char variable: nexus dimension then string-length dimension.
-    ASSERT_EQ(nexus_ids.getDim(1).getSize(), friend_nexus_id_string_width());
+    ASSERT_EQ(nexus_ids.getDim(1).getSize(), longest_id_length(ex_1_form_0_all_nexus_id));
 
     std::vector<std::string> nex_id_strs = read_feature_id_strings(nexus_ids, ex_1_form_0_all_nexus_id.size());
 
@@ -1411,12 +1583,12 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_1_a)
 /** Test that pack_nexus_id packs a normal id verbatim and null-pads the rest of the fixed-width buffer. */
 TEST_F(PerFormulationNexusOutputMgr_Test, pack_nexus_id_a)
 {
-    const size_t width = friend_nexus_id_string_width();
+    const size_t width = 32; // pack helper is width-parameterized; exercise it at a representative width
     // Pre-fill with a non-null sentinel so the null padding is actually verified (not just left-over zeros).
     std::vector<char> buffer(width, 'X');
     const std::string id = "tnx-1";
 
-    friend_pack_nexus_id(id, buffer.data());
+    friend_pack_nexus_id(id, buffer.data(), width);
 
     // The id bytes are copied verbatim, prefix included.
     for (size_t i = 0; i < id.size(); ++i) {
@@ -1431,11 +1603,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, pack_nexus_id_a)
 /** Test that pack_nexus_id handles an id exactly the fixed width, filling every byte with no null terminator. */
 TEST_F(PerFormulationNexusOutputMgr_Test, pack_nexus_id_b)
 {
-    const size_t width = friend_nexus_id_string_width();
+    const size_t width = 32; // pack helper is width-parameterized; exercise it at a representative width
     const std::string id(width, 'a'); // exactly the fixed width
     std::vector<char> buffer(width, '\0');
 
-    friend_pack_nexus_id(id, buffer.data());
+    friend_pack_nexus_id(id, buffer.data(), width);
 
     for (size_t i = 0; i < width; ++i) {
         ASSERT_EQ(buffer[i], 'a') << "Expected full-width fill at byte " << i;
@@ -1445,11 +1617,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, pack_nexus_id_b)
 /** Test that pack_nexus_id throws when the id is longer than the fixed width (no silent truncation). */
 TEST_F(PerFormulationNexusOutputMgr_Test, pack_nexus_id_c)
 {
-    const size_t width = friend_nexus_id_string_width();
+    const size_t width = 32; // pack helper is width-parameterized; exercise it at a representative width
     const std::string id(width + 1, 'a'); // one char too long to fit
     std::vector<char> buffer(width, '\0');
 
-    ASSERT_THROW(friend_pack_nexus_id(id, buffer.data()), std::runtime_error);
+    ASSERT_THROW(friend_pack_nexus_id(id, buffer.data(), width), std::runtime_error);
 }
 
 #endif // #if NGEN_MPI_UNIT_TESTS ... #else

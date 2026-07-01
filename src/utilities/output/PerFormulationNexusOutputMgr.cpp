@@ -18,6 +18,7 @@ limitations under the License.
 
 #include "PerFormulationNexusOutputMgr.hpp"
 
+#include <algorithm>
 #include <cstdint>
 #include <cstring>
 
@@ -82,6 +83,8 @@ utils::PerFormulationNexusOutputMgr::PerFormulationNexusOutputMgr(
     }
 
     nexus_outfile = output_root + "/formulation_" + this->formulation_id + "_nexuses.nc";
+
+    nexus_id_string_width = determine_nexus_id_string_width();
 
     // To support unit testing when not running via MPI, but when MPI and parallel netcdf are compiled in, we
     // have to detect things.
@@ -406,13 +409,33 @@ std::string utils::PerFormulationNexusOutputMgr::parse_netcdf_return_code(const 
     }
 }
 
-void utils::PerFormulationNexusOutputMgr::pack_nexus_id(const std::string& nexus_id, char* buffer) {
-    if (nexus_id.size() > nexus_id_string_width) {
+size_t utils::PerFormulationNexusOutputMgr::determine_nexus_id_string_width() const {
+    // Never let the string-length dimension be zero-sized (e.g., an instance with no local nexus IDs).
+    size_t local_max = 1;
+    for (const std::string& id : nexus_ids) {
+        local_max = std::max(local_max, id.size());
+    }
+
+#if NGEN_WITH_MPI
+    if (isMpiInitialized()) {
+        int local = static_cast<int>(local_max);
+        int global = 0;
+        MPI_Allreduce(&local, &global, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
+        local_max = static_cast<size_t>(global);
+    }
+#endif
+
+    return local_max;
+}
+
+void utils::PerFormulationNexusOutputMgr::pack_nexus_id(const std::string& nexus_id, char* buffer,
+                                                        const size_t width) {
+    if (nexus_id.size() > width) {
         throw std::runtime_error("Nexus id '" + nexus_id + "' length " + std::to_string(nexus_id.size())
-            + " exceeds the maximum NetCDF feature id width of " + std::to_string(nexus_id_string_width) + ".");
+            + " exceeds the maximum NetCDF feature id width of " + std::to_string(width) + ".");
     }
     std::memcpy(buffer, nexus_id.data(), nexus_id.size());
-    std::memset(buffer + nexus_id.size(), '\0', nexus_id_string_width - nexus_id.size());
+    std::memset(buffer + nexus_id.size(), '\0', width - nexus_id.size());
 }
 
 void utils::PerFormulationNexusOutputMgr::add_dimension(const std::string& dim_name, const size_t size,
@@ -586,7 +609,7 @@ void utils::PerFormulationNexusOutputMgr::write_nexus_ids_once() const {
     // null-padded char records (one record of nexus_id_string_width chars per nexus).
     std::vector<char> packed_nex_ids(nexus_ids.size() * nexus_id_string_width);
     for (size_t i = 0; i < nexus_ids.size(); ++i) {
-        pack_nexus_id(nexus_ids[i], packed_nex_ids.data() + i * nexus_id_string_width);
+        pack_nexus_id(nexus_ids[i], packed_nex_ids.data() + i * nexus_id_string_width, nexus_id_string_width);
     }
 
 #if NGEN_WITH_MPI && !NGEN_WITH_PARALLEL_NETCDF
@@ -599,7 +622,7 @@ void utils::PerFormulationNexusOutputMgr::write_nexus_ids_once() const {
         }
         std::vector<char> all_packed_nex_ids(static_cast<size_t>(total_nexus_count) * nexus_id_string_width);
         for (size_t i = 0; i < all_nex_ids.size(); ++i) {
-            pack_nexus_id(all_nex_ids[i], all_packed_nex_ids.data() + i * nexus_id_string_width);
+            pack_nexus_id(all_nex_ids[i], all_packed_nex_ids.data() + i * nexus_id_string_width, nexus_id_string_width);
         }
         std::vector<size_t> start{0, 0};
         std::vector<size_t> count{static_cast<size_t>(total_nexus_count), nexus_id_string_width};
