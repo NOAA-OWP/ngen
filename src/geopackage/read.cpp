@@ -1,7 +1,10 @@
 #include "geopackage.hpp"
+#include "HydrofabricVersion.hpp"
+#include "JSONProperty.hpp"
 
 #include <numeric>
 #include <regex>
+#include <unordered_map>
 
 void check_table_name(const std::string& table)
 {
@@ -15,6 +18,19 @@ void check_table_name(const std::string& table)
     }
 }
 
+// Required tables for hydrofabric GeoPackages:
+//   nexus      — read for v2.2 and v4.0 (id/toid vs nexus_id/nexus_toid)
+//   divides    — read for v2.2 and v4.0 (divide_id / id fallback)
+//   flowpaths  — read only for v4.0 divides toid synthesis (JOIN); optional
+//
+// Metadata tables always read by SQLite / geopackage infrastructure:
+//   gpkg_geometry_columns — geometry column name lookup
+//   sqlite_master         — table-existence checks (db.contains / PRAGMA table_info)
+//
+// Auxiliary tables that MUST NOT be touched by this loader:
+//   network, flowlines, flowline_endpoints, hydrolocations, pois,
+//   incremental_areas, lakes, divide-attributes, flowpath-attributes,
+//   flowpath-attributes-ml
 std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     const std::string& gpkg_path,
     const std::string& layer = "",
@@ -25,6 +41,13 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     check_table_name(layer);
 
     ngen::sqlite::database db{gpkg_path};
+
+    // Detect the hydrofabric schema version once per file load and reuse the
+    // result for every per-row decision below. The "guaranteed" variant
+    // collapses the not-a-hydrofabric case (no `nexus` table, e.g. synthetic
+    // test fixtures) into HydrofabricVersion::V2_2 so the pre-v4.0 legacy
+    // code paths remain intact.
+    HydrofabricVersion version = guaranteed_get_hydrofabric_version(db);
 
     // Check if layer exists
     if (!db.contains(layer)) {
@@ -47,20 +70,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     }
 
     // Introspect if the layer is divides to see which ID field is in use
-    std::string id_column = "id";
-    if(layer == "divides"){
-        try {
-            //TODO: A bit primitive. Actually introspect the schema somehow? https://www.sqlite.org/c3ref/funclist.html
-            auto query_get_first_row = db.query("SELECT divide_id FROM " + layer + " LIMIT 1");
-            id_column = "divide_id";
-        }
-        catch (const std::exception& e){
-            #ifndef NGEN_QUIET
-            // output debug info on what is read exactly
-            std::cout << "WARN: Using legacy ID column \"id\" in layer " << layer << " is DEPRECATED and may stop working at any time." << std::endl;
-            #endif
-        }
-    }
+    std::string id_column = get_layer_id_column(version, layer, db);
 
     // Layer exists, getting statement for it
     //
@@ -85,7 +95,8 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
 
     #ifndef NGEN_QUIET
     // output debug info on what is read exactly
-    std::cout << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"<< id_column << "`";
+    std::cout << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"
+              << id_column << "`";
     if (!ids.empty()) {
         std::cout << " (id subset:";
         for (auto& id : ids) {
@@ -101,22 +112,60 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     query_get_layer_geom_meta.next();
     const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
 
+    // Precompute the v4.0 divide_id -> flowpath_toid map once before the
+    // per-row loop, so update_property_map_for_version can attribute "toid"
+    // via a hashtable lookup. Empty map for any (version, layer) other than
+    // (V4_0, "divides"), or when the GPKG has no flowpaths table.
+    std::unordered_map<std::string, std::string> divide_toid_lookup = build_divide_toid_lookup(version, layer, db);
+
     // Get layer
     auto query_get_layer = db.query("SELECT * FROM " + layer + joined_ids, ids);
     query_get_layer.next();
 
     // build features out of layer query
+    //
+    // All schema-specific work happens here so that build_feature() can
+    // remain version-agnostic: the per-row body resolves the id, builds
+    // the property map, applies any v4.0 column aliasing or synthesis,
+    // and only then hands the prepared inputs to build_feature().
     std::vector<geojson::Feature> features;
     features.reserve(layer_feature_count);
     while(!query_get_layer.done()) {
-        geojson::Feature feature = build_feature(
-            query_get_layer,
-            id_column,
-            layer_geometry_column
-        );
+        std::string id = query_get_layer.get<std::string>(id_column);
+        geojson::PropertyMap properties = build_properties(query_get_layer, layer_geometry_column);
 
-        features.push_back(feature);
+        // No-op for v2.2; for v4.0, aliases nexus_id/nexus_toid to id/toid and
+        // injects the synthesized "toid" on divides rows from divide_toid_lookup.
+        update_property_map_for_version(properties, version, layer, id, divide_toid_lookup);
+
+        features.push_back(build_feature(
+            query_get_layer,
+            id,
+            layer_geometry_column,
+            std::move(properties)
+        ));
         query_get_layer.next();
+    }
+
+    // Summary WARN for v4.0 divides whose toid could not be synthesized via
+    // the divides -> flowpaths join (null flowpath_id, or join miss). A
+    // single aggregate line avoids flooding logs when a large subset is
+    // terminal.
+    if (version == HydrofabricVersion::V4_0 && layer == "divides") {
+        std::size_t unlinked = 0;
+        for (const auto& f : features) {
+            if (!f->has_property("toid")) {
+                ++unlinked;
+            }
+        }
+        #ifndef NGEN_QUIET
+        if (unlinked > 0) {
+            std::cout << "WARN: " << unlinked
+                      << " v4.0 divide(s) have no toid (flowpath_id null or"
+                      << " join miss on divides -> flowpaths); treated as"
+                      << " terminal." << std::endl;
+        }
+        #endif
     }
 
     // get layer bounding box from features

@@ -506,6 +506,43 @@ int main(int argc, char* argv[])
         global_nexus_collection->add_feature(sentinel);
     }
 
+    // Handle subwatershed / outlet catchments that have no resolvable
+    // downstream feature in this collection. This can happen because:
+    //   1. (v2.2 and v4.0) the catchment's destination nexus is outside
+    //      the GPKG subset, or
+    //   2. (v4.0 only) the catchment's flowpath_id refers to a flowpath
+    //      not present in this GPKG, so the divides->flowpaths toid
+    //      synthesis JOIN drops the row and divide.toid is never set.
+    //
+    // Both produce a 0-destination catchment, which `generate_partitions`
+    // rejects with "Catchment X has no destination nexus" and exit(1).
+    //
+    // Mirroring the terminal-nexus sentinel loop above, synthesize a
+    // per-catchment 'wb-OUTLET_SENTINEL-<cat_id>' SentinelFeature and
+    // attach it as the catchment's destination so partitioning can run.
+    // Sentinels live in global_nexus_collection but are not picked up by
+    // network.filter("cat", ...), so they never appear as features ngen
+    // is asked to simulate.
+    std::vector<std::shared_ptr<geojson::FeatureBase>> outlet_sentinels;
+    for (auto& feature : *global_nexus_collection)
+    {
+        auto id = feature->get_id();
+        auto type = id.substr(0, id.find(hy_features::identifiers::separator));
+        if (hy_features::identifiers::isCatchment(type) &&
+            id.find("SENTINEL") == std::string::npos &&
+            feature->get_number_of_destination_features() == 0)
+        {
+            std::string sentinel_id = "wb-OUTLET_SENTINEL-" + id;
+            geojson::Feature sentinel_feature = std::make_shared<geojson::SentinelFeature>(sentinel_id);
+            outlet_sentinels.push_back(sentinel_feature);
+            feature->add_destination_feature(sentinel_feature.get());
+        }
+    }
+    for (auto& sentinel : outlet_sentinels)
+    {
+        global_nexus_collection->add_feature(sentinel);
+    }
+
     // make a global network
     Network global_network(global_nexus_collection);
 
