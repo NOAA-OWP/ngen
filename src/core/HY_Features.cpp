@@ -36,6 +36,9 @@ HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_M
 
           if (!formulations->is_disable_catchment_output()) {
             formulation->set_output_stream(formulations->get_output_root() + feat_id + ".csv");
+          } else {
+            // Route to the null sink so disabled catchment output is discarded, not dumped to stdout
+            formulation->set_output_stream("");
           }
 
           // TODO: add command line or config option to have this be omitted
