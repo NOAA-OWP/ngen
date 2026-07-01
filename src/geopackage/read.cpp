@@ -15,6 +15,50 @@ void check_table_name(const std::string& table)
     }
 }
 
+namespace {
+//! Warn (advisory) when `id_column` in `layer` has no supporting index. Without
+//! one, the "WHERE <id_column> IN (?, ?, ...)" subset queries in read() degrade
+//! to full table scans, which is very slow on large hydrofabrics.
+void warn_if_id_column_unindexed(
+    ngen::sqlite::database& db,
+    const std::string& layer,
+    const std::string& id_column
+) {
+    try {
+        auto idx_list = db.query("PRAGMA index_list('" + layer + "')");
+        bool found_index = false;
+        idx_list.next();
+        while (!idx_list.done()) {
+            // PRAGMA index_list columns: seq(0), name(1), unique(2), ...
+            const std::string idx_name = idx_list.get<std::string>(1);
+            auto idx_info = db.query("PRAGMA index_info('" + idx_name + "')");
+            idx_info.next();
+            while (!idx_info.done()) {
+                // PRAGMA index_info columns: seqno(0), cid(1), name(2)
+                if (idx_info.get<std::string>(2) == id_column) {
+                    found_index = true;
+                    break;
+                }
+                idx_info.next();
+            }
+            if (found_index) break;
+            idx_list.next();
+        }
+        if (!found_index) {
+            #ifndef NGEN_QUIET
+            std::cerr << "WARNING: No index found on column '" << id_column << "' in layer '"
+                      << layer << "'. Subset queries may be slow." << std::endl;
+            #endif
+        }
+    } catch (const std::exception& e) {
+        #ifndef NGEN_QUIET
+        std::cerr << "WARNING: unable to check for an index on column '" << id_column
+                  << "': " << e.what() << std::endl;
+        #endif
+    }
+}
+} // namespace
+
 std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     const std::string& gpkg_path,
     const std::string& layer = "",
@@ -24,6 +68,8 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     // Check for malicious/invalid layer input
     check_table_name(layer);
 
+    // Opened read-only and immutable with read-tuning pragmas applied; see
+    // ngen::sqlite::database.
     ngen::sqlite::database db{gpkg_path};
 
     // Check if layer exists
@@ -61,6 +107,8 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
             #endif
         }
     }
+
+    warn_if_id_column_unindexed(db, layer, id_column);
 
     // Layer exists, getting statement for it
     //
