@@ -14,6 +14,7 @@
 
 add_library(ngen_output
         PerNexusCsvOutputMgr.cpp
+        CatchmentCsvOutputMgr.cpp
 )
 add_library(NGen::output ALIAS ngen_output)
 
