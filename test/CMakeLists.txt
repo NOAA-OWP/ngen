@@ -265,6 +265,15 @@ ngen_add_test(
         NGen::core_nexus
 )
 
+########################## Nexus CSV Output Manager Tests
+ngen_add_test(
+    test_nexus_output
+    OBJECTS
+        utilities/output/PerNexusCsvOutputMgr_Test.cpp
+    LIBRARIES
+        NGen::output
+)
+
 ########################## Catchment CSV Output Manager Tests
 ngen_add_test(
     test_catchment_output_mgr

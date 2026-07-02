@@ -523,6 +523,13 @@ int main(int argc, char* argv[]) {
     nexus_collection.reset();
 
     std::shared_ptr<utils::NexusOutputsMgr> nexus_outputs_mgr;
+    const auto& nexus_output = manager->get_output_config().nexus;
+    // Routing consumes nexus output, so a routing run with nexus output disabled cannot work.
+    if (manager->get_using_routing() && !nexus_output.enable) {
+        throw std::runtime_error(
+            "Routing is enabled but nexus output is disabled (output.nexus.enable = false); "
+            "the routing run has no nexus output to consume.");
+    }
     #if NGEN_WITH_MPI
     std::vector<std::string> nexus_ids;
     std::copy_if(features.nexuses().begin(), features.nexuses().end(), std::back_inserter(nexus_ids),
@@ -535,7 +542,7 @@ int main(int argc, char* argv[]) {
     std::vector<std::string> nexus_ids(features.nexuses().begin(), features.nexuses().end());
     #endif
 
-    if (manager->get_output_config().nexus.format == realization::config::OutputFormat::netcdf) {
+    if (nexus_output.enable && nexus_output.format == realization::config::OutputFormat::netcdf) {
         // TODO: (later) use nullptr for now, until full support for multiple formulations per catchment is available
         std::shared_ptr<std::vector<std::string>> formulation_ids = nullptr;
 
@@ -572,11 +579,15 @@ int main(int argc, char* argv[]) {
 
         #endif
     }
-    else {
-        // CSV nexus output: one file per nexus.
-        nexus_outputs_mgr = std::make_shared<utils::PerNexusCsvOutputMgr>(
-            nexus_ids, manager->get_output_config().root);
+    else if (nexus_output.enable && nexus_output.format == realization::config::OutputFormat::csv) {
+        // CSV nexus output: one file per nexus. Under MPI, when the domain sets rank_subdir, each
+        // rank's files go in a rank_<N>/ subdirectory to cut filesystem contention from many ranks
+        // sharing a directory. Resolved once into the root here (same helper as catchment output).
+        const std::string nexus_root = realization::config::rank_output_root(
+            manager->get_output_config().root, nexus_output, mpi_rank, mpi_num_procs);
+        nexus_outputs_mgr = std::make_shared<utils::PerNexusCsvOutputMgr>(nexus_ids, nexus_root);
     }
+    // else: nexus output disabled -- nexus_outputs_mgr stays null.
 
     std::cout<<"Running Models"<<std::endl;
 
@@ -669,7 +680,9 @@ int main(int argc, char* argv[]) {
 
     // Close output file(s). close() flushes and commits everything received, so no separate
     // end-of-run commit_writes() is needed (writes buffer normally during the run).
-    nexus_outputs_mgr->close();
+    if (nexus_outputs_mgr) {
+        nexus_outputs_mgr->close();
+    }
     if (catchment_outputs_mgr) {
         catchment_outputs_mgr->close();
     }
