@@ -262,6 +262,15 @@ ngen_add_test(
         NGen::core_nexus
 )
 
+########################## Catchment CSV Output Manager Tests
+ngen_add_test(
+    test_catchment_output_mgr
+    OBJECTS
+        utilities/output/CatchmentCsvOutputMgr_Test.cpp
+    LIBRARIES
+        NGen::output
+)
+
 ########################## MPI Remote Nexus Tests
 ngen_add_test(
     test_remote_nexus

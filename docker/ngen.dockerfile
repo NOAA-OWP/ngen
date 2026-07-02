@@ -33,7 +33,10 @@ RUN cmake -S . \
           -DNGEN_WITH_PYTHON:BOOL=OFF \
           -DNGEN_WITH_TESTS:BOOL=ON \
           -DNGEN_QUIET:BOOL=ON \
-          -DNGEN_WITH_EXTERN_SLOTH:BOOL=ON
+          -DNGEN_WITH_EXTERN_SLOTH:BOOL=ON \
+          `# Rocky 8 ships GCC 8, whose std::filesystem lives in a separate library; link it` \
+          `# explicitly. --start-group avoids ordering issues with the static libstdc++fs.` \
+          -DCMAKE_EXE_LINKER_FLAGS="-Wl,--start-group -lstdc++fs"
 
 RUN cmake --build /ngen_build \
           --target testbmicppmodel ngen \
