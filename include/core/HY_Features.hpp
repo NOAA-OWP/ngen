@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <set>
+#include <memory>
 
 #include <HY_Catchment.hpp>
 #include <HY_HydroNexus.hpp>
@@ -35,9 +36,10 @@ namespace hy_features {
      *     auto r = features.catchment_at(id);
      *     auto r_c = dynamic_pointer_cast<realization::Catchment_Formulation>(r);
      *     double response = r_c->get_response(time_index, 3600.0);
-     *     std::string output = std::to_string(time_index)+", examlpe_time_stamp,"+
-     *                          r_c->get_output_line_for_timestep(time_index)+"\n";
-     *     r_c->write_output(output);
+     *     // outputs for the timestep as a vector<double> of values,
+     *     // in the order the output fields are defined.
+     *     auto fields = r_c->get_output_fields();
+     *     auto values = r_c->get_output_values_for_timestep(time_index);
      * }
      * @endcode
      */

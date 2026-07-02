@@ -61,28 +61,46 @@ namespace realization {
         boost::span<const std::string> get_available_variable_names() const override;
 
         /**
-         * Get a delimited string with all the output variable values for the given time step.
+         * Get the output variable values for the given time step, one per output column and positionally aligned
+         * with @ref get_output_fields.
          *
-         * This method is useful for preparing calculated data in a representation useful for output files, such as
-         * CSV files.
+         * The values are the model's calculated outputs for the time step; the time step index itself is not
+         * included.
          *
-         * The resulting string contains only the calculated output values for the time step, and not the time step
-         * index itself.
-         *
-         * An empty string is returned if the time step value is not in the range of valid time steps for which there
-         * are calculated values for all variables.
-         *
-         * The default delimiter is a comma.
-         *
-         * Implementations will throw `invalid_argument` exceptions if data for the provided time step parameter is not
-         * accessible.  Note that, for this type, only the last processed time step is accessible, because formulations
-         * do not save results from previous time steps.  This also has the consequence of there being no valid set of
-         * arguments before a least one call to @ref get_response has been made.
+         * Only the last processed time step is accessible, because formulations do not save results from previous
+         * time steps; there is thus no valid time step before at least one call to @ref update has been made.
+         * Throws `std::invalid_argument` if @p timestep is not the current (last processed) time step.
          *
          * @param timestep The time step for which data is desired.
-         * @return A delimited string with all the output variable values for the given time step.
+         * @return The output values for the given time step, one per output column.
          */
-        std::string get_output_line_for_timestep(int timestep, std::string delimiter) override;
+        std::vector<double> get_output_values_for_timestep(int timestep) override;
+
+        /**
+         * Get this formulation's output fields (header name + units) in output order. Units come
+         * straight from the backing BMI model (@c GetVarUnits) per output variable; std::nullopt when
+         * the model reports none (GetVarUnits fails / BMI_FAILURE) rather than failing the run.
+         */
+        std::vector<utils::OutputField> get_output_fields() const override {
+            // The output variables and their header (output) names are 1:1 and positionally aligned
+            // (enforced at construction) -- variable i is written under header i. Build one field per
+            // variable: units come from the model for that variable; the output name is its header
+            // (which defaults to the variable name, or is a configured alias).
+            const std::vector<std::string> &variables = get_output_variable_names();
+            boost::span<const std::string> headers = get_output_header_field_names();
+            std::vector<utils::OutputField> fields;
+            fields.reserve(variables.size());
+            for (std::size_t i = 0; i < variables.size(); ++i) {
+                std::optional<std::string> units;
+                try {
+                    units = get_bmi_model()->GetVarUnits(variables[i]);
+                } catch (...) {
+                    units = std::nullopt;
+                }
+                fields.emplace_back(variables[i], headers[i], std::move(units));
+            }
+            return fields;
+        }
 
         /**
          * Get the model response for a time step.
@@ -441,7 +459,7 @@ namespace realization {
          * The member serves as an implicit marker of how many time steps have been processed so far.  Knowing this is
          * required to maintain valid behavior in certain things, such as @ref get_response (we may want to process
          * multiple time steps forward to a particular index other than the next, but it would not be valid to receive
-         * a ``t_index`` earlier than the last processed time step) and @ref get_output_line_for_timestep (because
+         * a ``t_index`` earlier than the last processed time step) and @ref get_output_values_for_timestep (because
          * formulations do not save results from previous time steps, only the results from the last processed time step
          * can be used to generate output).
          */

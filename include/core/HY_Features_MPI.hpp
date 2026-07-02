@@ -7,6 +7,7 @@
 
 #include <unordered_map>
 #include <set>
+#include <memory>
 
 #include <HY_Catchment.hpp>
 #include <HY_PointHydroNexusRemote.hpp>

@@ -71,9 +71,13 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
 
         // TODO: (later) eventually may want to use this form, if we support multiple formulations per catchment
         //nexus_outputs_mgr->receive_data_entry(form_id, id, current_time_index, current_timestamp, contribution_at_t);
-        nexus_outputs_mgr->receive_data_entry(id, current_time_marker, contribution_at_t);
+        if (nexus_outputs_mgr) {
+            nexus_outputs_mgr->receive_data_entry(id, current_time_marker, contribution_at_t);
+        }
 
         //std::cout<<"\tNexus "<<id<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
     } //done nexuses
-    nexus_outputs_mgr->commit_writes();
+    if (nexus_outputs_mgr) {
+        nexus_outputs_mgr->commit_writes();
+    }
 }

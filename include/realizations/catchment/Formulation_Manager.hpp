@@ -36,6 +36,7 @@ namespace realization {
                 boost::property_tree::ptree loaded_tree;
                 boost::property_tree::json_parser::read_json(data, loaded_tree);
                 this->tree = loaded_tree;
+                initialize_output_config();
             }
 
             Formulation_Manager(const std::string &file_path) {
@@ -215,63 +216,6 @@ namespace realization {
              */
             bool is_empty() {
                 return this->formulations.empty();
-            }
-
-            /**
-             * @brief Get the formatted output root: check the existence of the output_root directory defined
-             * in realization. If true, return the directory name. Otherwise, try to create the directory
-             * or throw an error on failure.
-             *
-             * @return std::string of the output root directory
-             */
-            std::string get_output_root() const {
-                const auto output_root = this->tree.get_optional<std::string>("output_root");
-                if (output_root != boost::none && *output_root != "") {
-                    // Check if the path ends with a trailing slash, otherwise add it.
-                    std::string str = output_root->back() == '/'
-                           ? *output_root
-                           : *output_root + "/";
-
-                    const char* dir = str.c_str();
-
-                    //use C++ system function to check if there is a dir match that defined in realization
-                    struct stat sb;
-                    if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode)) {
-                        return str;
-                    } else {
-                        errno = 0;
-                        int result = mkdir(dir, 0755);
-                        if (result == 0)
-                            return str;
-                        // Another process/MPI rank may have created the directory between this rank's stat and
-                        // mkdir calls, so consider EEXIST as success as long as the path is a directory.
-                        if (errno == EEXIST && stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode))
-                            return str;
-                        throw std::runtime_error("failed to create directory '" + str + "': " + std::strerror(errno));
-                    }
-                }
-
-                //for case where there is no output_root in the realization file
-                return "./";
-            }
-
-            /**
-             * Check if the formulation has catchment output writing disabled.
-             *
-             * @return bool
-             */
-            bool is_disable_catchment_output() const {
-                return tree.get_optional<bool>("disable_catchment_output").get_value_or(false);
-            }
-
-            /**
-             * Whether nexus output is written as per-formulation NetCDF files (the deprecated
-             * per_formulation_nexus_files mode, now expressed as nexus format == netcdf).
-             *
-             * @return bool
-             */
-            bool is_using_per_formulation_nexus_files() const {
-                return output_config.nexus.format == realization::config::OutputFormat::netcdf;
             }
 
             //! The parsed output configuration block.

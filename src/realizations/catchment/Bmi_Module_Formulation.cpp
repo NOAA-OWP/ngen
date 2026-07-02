@@ -16,27 +16,28 @@ namespace realization {
             return available_forcings;
         }
 
-        std::string Bmi_Module_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
+        std::vector<double> Bmi_Module_Formulation::get_output_values_for_timestep(int timestep) {
             // TODO: something must be added to store values if more than the current time step is wanted
             // TODO: if such a thing is added, it should probably be configurable to turn it off
             if (timestep != (next_time_step_index - 1)) {
                 throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
             }
-
             static bool no_conversion_message_logged = false;
             if (!no_conversion_message_logged) {
                 no_conversion_message_logged = true;
                 logging::warning("Output variables do not have unit conversion. Capability not yet implemented in ngen.");
             }
 
-            std::string output_str;
-            for (const std::string& name : get_output_variable_names()) {
-                // Placeholder to request no conversion
+            auto const & names = get_output_variable_names();
+            std::vector<double> values;
+            values.reserve(names.size());
+            // Fetch values through the unit-checked/converting get_value path; output_units is empty,
+            // so values are returned unconverted, positionally aligned with the names.
+            for (const std::string& name : names) {
                 std::string output_units = "";
-                double value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units), MEAN);
-                output_str += (output_str.empty() ? "" : ",") + std::to_string(value);
+                values.push_back(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units), MEAN));
             }
-            return output_str;
+            return values;
         }
 
         void Bmi_Module_Formulation::update(time_step_t t_index, time_step_t t_delta) {
@@ -381,7 +382,9 @@ namespace realization {
                 set_output_variable_names(get_bmi_model()->GetOutputVarNames());
             }
 
-            // Output header fields, if present
+            // Output header fields, if present. These label the output columns and must be 1:1 with
+            // the output variables (header i names variable i); on a count mismatch, warn and fall
+            // back to the variable names so the two stay positionally aligned.
             auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
             if (out_headers_it != properties.end()) {
                 std::vector<geojson::JSONProperty> out_headers_json_list = out_headers_it->second.as_list();
@@ -389,7 +392,15 @@ namespace realization {
                 for (int i = 0; i < out_headers_json_list.size(); ++i) {
                     out_headers[i] = out_headers_json_list[i].as_string();
                 }
-                set_output_header_fields(out_headers);
+                if (get_output_variable_names().size() == out_headers.size()) {
+                    set_output_header_fields(out_headers);
+                }
+                else {
+                    std::cerr << "WARN: configured output headers have " << out_headers.size()
+                              << " fields, but there are " << get_output_variable_names().size()
+                              << " output variables" << std::endl;
+                    set_output_header_fields(get_output_variable_names());
+                }
             }
             else {
                 set_output_header_fields(get_output_variable_names());

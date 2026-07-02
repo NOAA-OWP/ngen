@@ -17,8 +17,9 @@ namespace ngen
                 feature_type& f, 
                 geojson::GeoJSON cd, 
                 long idx,
-                const std::shared_ptr<utils::NexusOutputsMgr> &nexus_outputs_mgr) :
-                    Layer(desc,p_u,s_t,f,cd,idx), 
+                const std::shared_ptr<utils::NexusOutputsMgr> &nexus_outputs_mgr,
+                std::shared_ptr<utils::CatchmentOutputsMgr> catchment_output_mgr) :
+                    Layer(desc,p_u,s_t,f,cd,idx,catchment_output_mgr),
                     nexus_outputs_mgr(nexus_outputs_mgr)
         {
 

@@ -12,6 +12,7 @@
 #include <map>
 #include <vector>
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 #include "Bmi_Multi_Formulation.hpp"
 #include "Bmi_Module_Formulation.hpp"
 #include "Bmi_Fortran_Formulation.hpp"
@@ -615,7 +616,9 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_output_header_fields) {
     Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(props);
 
-    EXPECT_EQ(formulation.get_output_header_line(","), "h0,h1,h2,h3,h4,h5");
+    std::vector<std::string> names;
+    for (const auto& f : formulation.get_output_fields()) names.push_back(f.output_name);
+    EXPECT_EQ(names, labels);
 }
 
 /** Test to make sure the a non-existent variable name is not allowed in `output_variables` (see issue #535). */
@@ -776,8 +779,8 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_0_a) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     formulation.get_response(0, 3600);
-    std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,200620.000000");
+    std::vector<double> output = formulation.get_output_values_for_timestep(0);
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{0.0, 200620.0}));
 }
 
 /**
@@ -793,8 +796,8 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_0_b) {
     while (i < 542)
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
-    std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.000001,199280.000000");
+    std::vector<double> output = formulation.get_output_values_for_timestep(i);
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{1.1124674593096233e-06, 199280.0}));
 }
 
 /**
@@ -816,11 +819,11 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
     std::vector<int> shape = {2,3};
     model_adapter->SetValue("grid_1_shape", shape.data());
     formulation.get_response(0, 3600);
-    std::string output = formulation.get_output_line_for_timestep(0, ",");
+    std::vector<double> output = formulation.get_output_values_for_timestep(0);
     //FIXME the last two outputs are the first value from the GRID_VAR in the python module...couldn't get the output variables
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.
-    ASSERT_EQ(output, "0.000000,200620.000000,1.000000,2.000000,3.000000");
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{0.0, 200620.0, 1.0, 2.0, 3.0}));
 #endif // NGEN_WITH_PYTHON
 }
 
@@ -846,11 +849,11 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
     while (i < 542)
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
-    std::string output = formulation.get_output_line_for_timestep(i, ",");
+    std::vector<double> output = formulation.get_output_values_for_timestep(i);
     //FIXME the last two outputs are the first value from the GRID_VAR in the python module...couldn't get the output variables
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.
-    ASSERT_EQ(output, "0.000001,199280.000000,543.000000,2.000001,3.000001");
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{1.1124674593096233e-06, 199280.0, 543.0, 2.0000011124674595, 3.0000011124674595}));
 #endif // NGEN_WITH_PYTHON
 }
 
@@ -867,8 +870,21 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_3_a) {
     while (i < 542)
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
-    std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.000001,199280.000000,199240.000000,199280.000000,0.000000,0.000001");
+    std::vector<double> output = formulation.get_output_values_for_timestep(i);
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{1.1124674593096233e-06, 199280.0, 199240.0, 199280.0, 0.0, 1.001327023947647e-06}));
+}
+
+/** The output header fields line up positionally with get_output_values_for_timestep -- i.e. they
+ *  match the configured output_variables in the same order (guards multi-module output ordering). */
+TEST_F(Bmi_Multi_Formulation_Test, OutputHeaderFieldsMatchConfiguredOrder_3) {
+    int ex_index = 3;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    std::vector<std::string> names;
+    for (const auto& f : formulation.get_output_fields()) names.push_back(f.output_name);
+    EXPECT_EQ(names, specified_output_variables[ex_index]);
 }
 
 /**

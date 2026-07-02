@@ -8,12 +8,15 @@
 #include "State_Exception.hpp"
 #include "geojson/FeatureBuilder.hpp"
 #include <boost/core/span.hpp>
+#include <memory>
 
 namespace hy_features
 {
     class HY_Features;
     class HY_Features_MPI;
 }
+
+namespace utils { class CatchmentOutputsMgr; }
 
 namespace ngen
 {
@@ -32,41 +35,46 @@ namespace ngen
                 const LayerDescription& desc, 
                 const std::vector<std::string>& p_u, 
                 const Simulation_Time& s_t, 
-                feature_type& f, 
-                geojson::GeoJSON cd, 
-                long idx) :
+                feature_type& f,
+                geojson::GeoJSON cd,
+                long idx,
+                std::shared_ptr<utils::CatchmentOutputsMgr> cat_output_mgr) :
             description(desc),
             processing_units(p_u),
             simulation_time(s_t),
             features(f),
             catchment_data(cd),
-            output_time_index(idx)
+            output_time_index(idx),
+            catchment_output_mgr(cat_output_mgr)
         {
 
         }
 
         /**
          * @brief Construct a minimum layer object
-         * 
-         * @param desc 
-         * @param s_t 
-         * @param f 
-         * @param idx 
+         *
+         * @param desc
+         * @param s_t
+         * @param f
+         * @param idx
+         * @param cat_output_mgr Catchment output sink for this layer (may be null when output is disabled)
          */
         Layer(
-                const LayerDescription& desc, 
-                const Simulation_Time& s_t, 
+                const LayerDescription& desc,
+                const Simulation_Time& s_t,
                 feature_type& f,
-                long idx) :
+                long idx,
+                std::shared_ptr<utils::CatchmentOutputsMgr> cat_output_mgr) :
             description(desc),
             simulation_time(s_t),
             features(f),
-            output_time_index(idx)
+            output_time_index(idx),
+            catchment_output_mgr(cat_output_mgr)
         {
 
         }
 
-        virtual ~Layer() {}
+        virtual ~Layer();   // out-of-line; see Layer.cpp
 
         /***
          * @brief Return the next timestep that will be processed by this layer in epoch time units
@@ -119,7 +127,9 @@ namespace ngen
         feature_type& features;
         //TODO is this really required at the top level? or can this be moved to SurfaceLayer?
         const geojson::GeoJSON catchment_data;
-        long output_time_index;       
+        long output_time_index;
+        //! Catchment output sink for this layer's per-timestep push; null when output is disabled.
+        std::shared_ptr<utils::CatchmentOutputsMgr> catchment_output_mgr = nullptr;
 
     };
 }

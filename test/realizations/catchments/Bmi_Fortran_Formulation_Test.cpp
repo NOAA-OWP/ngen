@@ -17,6 +17,7 @@
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Bmi_Fortran_Adapter.hpp"
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 #include <iostream>
 #include <vector>
 #include <boost/property_tree/ptree.hpp>
@@ -66,10 +67,6 @@ protected:
 
     static double get_friend_var_value_as_double(Bmi_Fortran_Formulation& formulation, const std::string& var_name) {
         return formulation.get_var_value_as_double(0, var_name);
-    }
-
-    static std::string get_friend_output_header_line(Bmi_Fortran_Formulation& formulation, std::string delim) {
-        return formulation.get_output_header_line(delim);
     }
 
     static time_t parse_forcing_time(const std::string& date_time_str) {
@@ -247,11 +244,12 @@ TEST_F(Bmi_Fortran_Formulation_Test, Initialize_1_a) {
     Bmi_Fortran_Formulation form_2(catchment_ids[1], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[1]), utils::StreamHandler());
     form_2.create_formulation(config_prop_ptree[1]);
 
-    std::string header_1 = get_friend_output_header_line(form_1,",");
-    std::string header_2 = get_friend_output_header_line(form_2,",");
+    std::vector<std::string> header_1, header_2;
+    for (const auto& f : form_1.get_output_fields()) header_1.push_back(f.output_name);
+    for (const auto& f : form_2.get_output_fields()) header_2.push_back(f.output_name);
 
-    ASSERT_EQ(header_1, "OUTPUT_VAR_1,OUTPUT_VAR_2,OUTPUT_VAR_3,GRID_VAR_2,GRID_VAR_3,GRID_VAR_4");
-    ASSERT_EQ(header_2, "OUTPUT_VAR_2,OUTPUT_VAR_1,OUTPUT_VAR_3");
+    EXPECT_THAT(header_1, ::testing::ElementsAre("OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3", "GRID_VAR_2", "GRID_VAR_3", "GRID_VAR_4"));
+    EXPECT_THAT(header_2, ::testing::ElementsAre("OUTPUT_VAR_2", "OUTPUT_VAR_1", "OUTPUT_VAR_3"));
 }
 
 /** Simple test of get response. */
@@ -310,10 +308,10 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetOutputLineForTimestep_0_a) {
     shape = {2,2,3};
     model_adapter->SetValue("grid_2_shape", shape.data());
     double response = formulation.get_response(0, 3600);
-    std::string output = formulation.get_output_line_for_timestep(0, ",");
+    std::vector<double> output = formulation.get_output_values_for_timestep(0);
     //NOTE these answers are dependent on the INPUT vars selected and the data in the forcing file
     //Also, for grid vars, just gets the first value in the returned flattened array...
-    ASSERT_EQ(output, "0.000000,0.018600,0.000000,2.000000,10.000000,10.000000");
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{0.0, 0.018600000068545341, 0.0, 2.0, 10.0, 10.0}));
 }
 
 /** Simple test of output with modified variables. */
@@ -324,9 +322,9 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetOutputLineForTimestep_1_a) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     double response = formulation.get_response(0, 3600);
-    std::string output = formulation.get_output_line_for_timestep(0, ",");
+    std::vector<double> output = formulation.get_output_values_for_timestep(0);
     //NOTE these answers are dependent on the INPUT vars selected and the data in the forcing file
-    ASSERT_EQ(output, "0.018600,0.000000,0.000000");
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{0.018600000068545341, 0.0, 0.0}));
 }
 
 /** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
@@ -340,9 +338,9 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetOutputLineForTimestep_1_b) {
     while (i < 542)
         formulation.get_response(i++, 3600);
     double response = formulation.get_response(i, 3600);
-    std::string output = formulation.get_output_line_for_timestep(i, ",");
+    std::vector<double> output = formulation.get_output_values_for_timestep(i);
     //NOTE these answers are dependent on the INPUT vars selected and the data in the forcing file
-    ASSERT_EQ(output, "0.025400,0.000001,0.000000");
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{0.025399999693036079, 1.1124674593096233e-06, 0.0}));
 }
 
 TEST_F(Bmi_Fortran_Formulation_Test, determine_model_time_offset_0_a) {

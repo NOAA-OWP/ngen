@@ -1,11 +1,16 @@
 #include <Layer.hpp>
 #include <Catchment_Formulation.hpp>
+#include <CatchmentOutputsMgr.hpp>
 
 #if NGEN_WITH_MPI
 #include "HY_Features_MPI.hpp"
 #else
 #include "HY_Features.hpp"
 #endif
+
+// Out-of-line so the shared_ptr members are destroyed where their (possibly forward-declared) types
+// are complete.
+ngen::Layer::~Layer() = default;
 
 void ngen::Layer::update_models(boost::span<double> catchment_outflows,
                                 std::unordered_map<std::string, int> &catchment_indexes,
@@ -19,6 +24,11 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
     //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
     if(output_time_index%1000 == 0) std::cout<<"Running timestep " << output_time_index <<std::endl;
     std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
+    // Catchment output (if enabled) is pushed to this layer's output manager, which owns the
+    // sinks and decides formatting/aggregation. Build the time marker once for all catchments
+    // in this timestep (mirrors SurfaceLayer).
+    utils::time_marker current_time_marker(
+        output_time_index, simulation_time.get_current_epoch_time(), current_timestamp);
     for(const auto& id : processing_units) {
         int sub_time = output_time_index;
         //std::cout<<"Running cat "<<id<<std::endl;
@@ -50,9 +60,10 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
         // XXX: This is currently accumulating in meters of depth, which may not be desirable
         catchment_outflows[results_index] += response;
 #endif // NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
-        std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
-            r_c->get_output_line_for_timestep(output_time_index)+"\n";
-        r_c->write_output(output);
+        if (catchment_output_mgr) {
+            catchment_output_mgr->receive_data_entry(
+                id, current_time_marker, r_c->get_output_values_for_timestep(output_time_index));
+        }
         //TODO put this somewhere else.  For now, just trying to ensure we get m^3/s into nexus output
         double area;
         try {
