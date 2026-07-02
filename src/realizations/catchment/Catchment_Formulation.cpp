@@ -47,10 +47,6 @@ namespace realization {
         }
     }
 
-    std::string Catchment_Formulation::get_output_header_line(std::string delimiter) const {
-        return "Total Discharge";
-    }
-
     void Catchment_Formulation::finalize()
     {
         if (forcing) {

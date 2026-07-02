@@ -370,6 +370,7 @@ ngen_add_test(
         bmi/Bmi_Cpp_Adapter_Test.cpp
         realizations/catchments/Bmi_Cpp_Formulation_Test.cpp
     LIBRARIES
+        gmock
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
@@ -405,6 +406,7 @@ ngen_add_test(
         bmi/Bmi_Fortran_Adapter_Test.cpp
         realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
     LIBRARIES
+        gmock
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
@@ -424,6 +426,7 @@ ngen_add_test(
         realizations/catchments/Bmi_Py_Formulation_Test.cpp
         utils/python/InterpreterUtil_Test.cpp
     LIBRARIES
+        gmock
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
@@ -440,6 +443,7 @@ ngen_add_test(
         realizations/catchments/Bmi_Multi_Formulation_Test.cpp
         realizations/catchments/Bmi_Cpp_Multi_Array_Test.cpp
     LIBRARIES
+        gmock
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator

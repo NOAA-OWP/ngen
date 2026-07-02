@@ -11,9 +11,12 @@
 #include <features/Features.hpp>
 #include <JSONGeometry.hpp>
 #include <JSONProperty.hpp>
+#include <HY_Features.hpp>
+#include "realizations/config/catchment_output.hpp"
 
 #include <iostream>
 #include <memory>
+#include <filesystem>
 
 #include <iostream>
 
@@ -913,7 +916,7 @@ TEST_F(Formulation_Manager_Test, basic_reading_1) {
 
     ASSERT_TRUE(manager.contains("cat-52"));
     ASSERT_TRUE(manager.contains("cat-67"));
-    ASSERT_EQ(manager.get_output_root(), "./");
+    ASSERT_EQ(manager.get_output_config().root, "./");
 }
 
 TEST_F(Formulation_Manager_Test, basic_reading_2) {
@@ -946,7 +949,129 @@ TEST_F(Formulation_Manager_Test, basic_reading_2) {
 
     ASSERT_TRUE(manager.contains("cat-52"));
     ASSERT_TRUE(manager.contains("cat-67"));
-    ASSERT_EQ(manager.get_output_root(), "./output_dir/");
+    ASSERT_EQ(manager.get_output_config().root, "./output_dir/");
+}
+
+namespace {
+    realization::Formulation_Manager manager_from_json(const std::string& json) {
+        boost::property_tree::ptree tree;
+        std::stringstream ss(json);
+        boost::property_tree::json_parser::read_json(ss, tree);
+        return realization::Formulation_Manager(tree);
+    }
+}
+
+// Output config parsing (grouping / enable / root / legacy keys) is covered by Output_Test, and
+// the factory's config->mode selection by CatchmentOutput_Test. What remains genuinely FM's is that
+// it parses the output config at construction and validates it against build support:
+
+// netcdf nexus output maps to per-formulation files when supported, and is
+// rejected at construction when NGEN was built without NetCDF.
+TEST_F(Formulation_Manager_Test, nexus_netcdf_format_respects_build_support)
+{
+    const std::string json = R"({ "output": { "nexus": { "format": "netcdf" } } })";
+#if NGEN_WITH_NETCDF
+    auto manager = manager_from_json(json);
+    EXPECT_EQ(manager.get_output_config().nexus.format, realization::config::OutputFormat::netcdf);
+#else
+    EXPECT_THROW(manager_from_json(json), std::runtime_error);
+#endif
+}
+
+// ---------------------------------------------------------------------------
+// Integration: a real (BMI C++) formulation built by Formulation_Manager feeds the catchment
+// output manager the driver builds via the factory. This is the one place the full composition
+// (Formulation_Manager -> formulation -> factory -> manager -> file) is exercised end to end; the
+// factory's mode selection lives in CatchmentOutput_Test and the CSV layout in
+// CatchmentCsvOutputMgr_Test. A mocked (programmatic) hydrofabric avoids on-disk geojson data; the
+// manager is scoped so its streams flush/close before the file is read.
+// ---------------------------------------------------------------------------
+
+namespace {
+    const std::string MOCK_LINK_KEY = "toid";
+
+    // Catchment-only collection (each draining to nexus_id), as manager.read()
+    // expects -- read() builds a formulation for every feature it is given.
+    geojson::GeoJSON build_catchments(const std::vector<std::string>& catchment_ids,
+                                      const std::string& nexus_id)
+    {
+        geojson::three_dimensional_coordinates coords{
+            {{1.0,2.0},{3.0,4.0},{5.0,6.0}}, {{7.0,8.0},{9.0,10.0},{11.0,12.0}}
+        };
+        auto fabric = std::make_shared<geojson::FeatureCollection>();
+        for (const auto& id : catchment_ids) {
+            geojson::PropertyMap props{ {MOCK_LINK_KEY, geojson::JSONProperty(MOCK_LINK_KEY, nexus_id)} };
+            fabric->add_feature(std::make_shared<geojson::PolygonFeature>(
+                geojson::PolygonFeature(geojson::polygon(coords), id, props)));
+        }
+        return fabric;
+    }
+
+    std::vector<std::string> read_lines(const std::string& path) {
+        std::vector<std::string> lines;
+        std::ifstream f(path);
+        std::string line;
+        while (std::getline(f, line)) lines.push_back(line);
+        return lines;
+    }
+
+    // A global test-BMI-C++ realization config with an output block, driven
+    // through fix_paths() by the caller.
+    std::string bmi_cpp_output_config(const std::string& output_root, const std::string& catchment_grouping) {
+        return std::string("{ ")
+          + "\"global\": { \"formulations\": [ { \"name\":\"bmi_c++\", \"params\": {"
+          +   "\"model_type_name\": \"test_bmi_cpp\","
+          +   "\"library_file\": \"{{EXTERN_LIB_DIR_PATH}}" BMI_TEST_CPP_LIB_NAME "\","
+          +   "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+          +   "\"main_output_variable\": \"OUTPUT_VAR_2\","
+          +   "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { \"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG "\", \"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\" },"
+          +   "\"create_function\": \"bmi_model_create\", \"destroy_function\": \"bmi_model_destroy\", \"uses_forcing_file\": false"
+          + "} } ], \"forcing\": { \"file_pattern\": \".*{{id}}.*.csv\", \"path\": \"./data/forcing/\", \"provider\": \"CsvPerFeature\" } }, "
+          + "\"time\": { \"start_time\": \"2015-12-01 00:00:00\", \"end_time\": \"2015-12-30 23:00:00\", \"output_interval\": 3600 }, "
+          + "\"output\": { \"root\": \"" + output_root + "\", \"catchment\": { \"grouping\": \"" + catchment_grouping + "\" } } "
+          + "}";
+    }
+}
+
+TEST_F(Formulation_Manager_Test, aggregated_catchment_output_writes_single_file)
+{
+    namespace fs = std::filesystem;
+    const std::string out_dir = "./test_agg_output_agg";
+    fs::remove_all(out_dir);
+
+    std::stringstream stream;
+    stream << fix_paths(bmi_cpp_output_config(out_dir, "per_formulation"));
+    boost::property_tree::ptree cfg;
+    boost::property_tree::json_parser::read_json(stream, cfg);
+    auto sim_time = realization::config::Time(*cfg.get_child_optional("time")).make_params();
+
+    std::ostream* raw = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(raw, [](void*){});
+    utils::StreamHandler out(s_ptr);
+
+    {
+        auto manager = std::make_shared<realization::Formulation_Manager>(cfg);
+        manager->read(sim_time, build_catchments({"cat-52", "cat-67"}, "nex-1"), out);
+        // Mirror the driver's per_formulation wiring: gather every catchment's columns, then
+        // construct the manager with the full set (output is owned by the driver, not HY_Features);
+        // the aggregated file name defaults.
+        std::vector<utils::FeatureDescriptor> registrations;
+        for (const std::string id : {"cat-52", "cat-67"}) {
+            registrations.emplace_back(id, manager->get_formulation(id)->get_output_fields());
+        }
+        auto mgr = realization::config::make_catchment_output_mgr(
+            manager->get_output_config(), std::move(registrations));
+    } // streams flush/close on destruction
+
+    const std::string agg_file = out_dir + "/cat_output.csv";
+    ASSERT_TRUE(fs::exists(agg_file));
+    auto lines = read_lines(agg_file);
+    ASSERT_EQ(lines.size(), 1u);                              // header written exactly once
+    EXPECT_EQ(lines[0].rfind("catchment_id,Time Step,Time,", 0), 0u);
+    EXPECT_FALSE(fs::exists(out_dir + "/cat-52.csv"));        // not per-feature
+    EXPECT_FALSE(fs::exists(out_dir + "/cat-67.csv"));
+
+    fs::remove_all(out_dir);
 }
 
 TEST_F(Formulation_Manager_Test, basic_run_1) {
@@ -1182,8 +1307,6 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
     utils::StreamHandler catchment_output(s_ptr);
 
     time_step_t ts = 2;
-    std::array<double, 5> values;
-    std::vector<std::string> str_values;
 
     /**
      * Lambda to add a feature to the fabric, and then assert that its properties exists.
@@ -1203,24 +1326,18 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
      * 
      * Assertions:
      * - Asserts that the formulation manager contains the given catchment ID.
-     * - Asserts that the expected values are contained within the output line at
-     *   timestep `ts`.
+     * - Asserts that each expected value appears in the formulation's output
+     *   values vector at timestep `ts`.
      *
-     * @note The output line is checked by splitting it along its delimiter,
-     *       and parsing the resulting strings to doubles. Then, `std::find`
-     *       is used to check for the existence of the expected doubles.
+     * @note The output values are retrieved as a vector of doubles
+     *       (get_output_values_for_timestep) and checked directly with
+     *       `std::find` -- no line formatting or string parsing.
      */
     auto check_formulation_values = [&](auto fm, const std::string& id, std::initializer_list<double> expected) {
         ASSERT_TRUE(fm.contains(id));
         auto formulation = fm.get_formulation(id);
         formulation->get_response(ts, 3600);
-        boost::algorithm::split(str_values, formulation->get_output_line_for_timestep(ts), [](auto c) -> bool { return c == ','; });
-        auto values_it = values.begin();
-        for (auto& str : str_values) {
-          auto end = &str[0] + str.size();
-          *values_it = strtod(str.c_str(), &end);
-          values_it++;
-        }
+        std::vector<double> values = formulation->get_output_values_for_timestep(ts);
 
         for (auto& expect : expected) {
             ASSERT_NE(std::find(values.begin(), values.end(), expect), values.end());
@@ -1296,97 +1413,4 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
     
     check_formulation_values(manager, "cat-27",    { 3.00000, 18.0 });
     check_formulation_values(manager, "cat-67", { 7.41722, 9231 });
-}
-
-/** Test that is_disable_catchment_output works properly when explicitly set to ``true`` in config. */
-TEST_F(Formulation_Manager_Test, test_is_disable_catchment_output_1_a) {
-    std::stringstream stream;
-
-    stream << fix_paths(EXAMPLE_1);
-
-    boost::property_tree::ptree realization_config;
-    boost::property_tree::json_parser::read_json(stream, realization_config);
-
-    auto possible_simulation_time = realization_config.get_child_optional("time");
-    if (!possible_simulation_time) {
-        throw std::runtime_error("ERROR: No simulation time period defined.");
-    }
-
-    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
-
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
-
-    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
-
-    ASSERT_TRUE(manager.is_empty());
-
-    this->add_feature("cat-52");
-    this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
-
-    ASSERT_TRUE(manager.is_disable_catchment_output());
-}
-
-/** Test that is_disable_catchment_output works properly (``false``) when not explicitly set in config. */
-TEST_F(Formulation_Manager_Test, test_is_disable_catchment_output_2_a) {
-    std::stringstream stream;
-
-    stream << fix_paths(EXAMPLE_2);
-
-    boost::property_tree::ptree realization_config;
-    boost::property_tree::json_parser::read_json(stream, realization_config);
-
-    auto possible_simulation_time = realization_config.get_child_optional("time");
-    if (!possible_simulation_time) {
-        throw std::runtime_error("ERROR: No simulation time period defined.");
-    }
-
-    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
-
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
-
-    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
-
-    ASSERT_TRUE(manager.is_empty());
-
-    this->add_feature("cat-52");
-    this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
-
-    ASSERT_FALSE(manager.is_disable_catchment_output());
-}
-
-/** Test that is_disable_catchment_output works properly when explicitly set to ``false`` in config. */
-TEST_F(Formulation_Manager_Test, test_is_disable_catchment_output_6_a) {
-    std::stringstream stream;
-
-    stream << fix_paths(EXAMPLE_6);
-
-    boost::property_tree::ptree realization_config;
-    boost::property_tree::json_parser::read_json(stream, realization_config);
-
-    auto possible_simulation_time = realization_config.get_child_optional("time");
-    if (!possible_simulation_time) {
-        throw std::runtime_error("ERROR: No simulation time period defined.");
-    }
-
-    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
-
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
-
-    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
-
-    ASSERT_TRUE(manager.is_empty());
-
-    this->add_feature("cat-52");
-    this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
-
-    ASSERT_FALSE(manager.is_disable_catchment_output());
 }

@@ -8,6 +8,7 @@
 #include <map>
 #include <vector>
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 #include "Bmi_Multi_Formulation.hpp"
 #include "Bmi_Cpp_Formulation.hpp"
 #include "Bmi_Module_Formulation.hpp"
@@ -377,8 +378,8 @@ TEST_F(Bmi_Cpp_Multi_Array_Test, GetOutputLineForTimestep_0_a) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     formulation.get_response(0, 3600);
-    std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,200620.000000");
+    std::vector<double> output = formulation.get_output_values_for_timestep(0);
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{0.0, 200620.0}));
 }
 
 /**
@@ -394,8 +395,8 @@ TEST_F(Bmi_Cpp_Multi_Array_Test, GetOutputLineForTimestep_0_b) {
     while (i < 542)
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
-    std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.000001,199280.000000");
+    std::vector<double> output = formulation.get_output_values_for_timestep(i);
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{1.1124674593096233e-06, 199280.0}));
 }
 
 

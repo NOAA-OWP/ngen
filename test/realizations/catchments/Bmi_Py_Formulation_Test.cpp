@@ -1,6 +1,7 @@
 #ifdef NGEN_BMI_PY_TESTS_ACTIVE
 
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 #include <boost/date_time.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -390,9 +391,9 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_0_a) {
     int ex_index = 0;
 
     double response = examples[ex_index].formulation->get_response(0, 3600);
-    std::string output = examples[ex_index].formulation->get_output_line_for_timestep(0, ",");
+    std::vector<double> output = examples[ex_index].formulation->get_output_values_for_timestep(0);
     //NOTE the last two values are simply the FIRST element of the grid vars
-    ASSERT_EQ(output, "0.000000,571.600037,1.000000,2.000000,3.000000");
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{0.0, 571.60003662109375, 1.0, 2.0, 3.0}));
 }
 
 /**
@@ -406,10 +407,10 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_0_b) {
         examples[ex_index].formulation->get_response(i++, 3600);
 
     double response = examples[ex_index].formulation->get_response(543, 3600);
-    std::string output = examples[ex_index].formulation->get_output_line_for_timestep(543, ",");
+    std::vector<double> output = examples[ex_index].formulation->get_output_values_for_timestep(543);
     //NOTE the last two values are simply the FIRST element of the grid vars
-    std::regex expected ("0.000001,582.000000,544.000000,2.000001,3.000001");
-    ASSERT_TRUE(std::regex_match(output, expected));
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15),
+                std::vector<double>{1.001327023947647e-06, 582.0, 544.0, 2.000001001327024, 3.000001001327024}));
 }
 
 /**

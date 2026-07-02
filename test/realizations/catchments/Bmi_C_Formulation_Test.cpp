@@ -244,11 +244,12 @@ TEST_F(Bmi_C_Formulation_Test, Initialize_1_a) {
     Bmi_C_Formulation form_2(catchment_ids[1], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[1]), utils::StreamHandler());
     form_2.create_formulation(config_prop_ptree[1]);
 
-    std::string header_1 = form_1.get_output_header_line(",");
-    std::string header_2 = form_2.get_output_header_line(",");
+    std::vector<std::string> header_1, header_2;
+    for (const auto& f : form_1.get_output_fields()) header_1.push_back(f.output_name);
+    for (const auto& f : form_2.get_output_fields()) header_2.push_back(f.output_name);
 
-    ASSERT_EQ(header_1, "OUTPUT_VAR_1,OUTPUT_VAR_2");
-    ASSERT_EQ(header_2, "OUTPUT_VAR_2,OUTPUT_VAR_1");
+    EXPECT_THAT(header_1, ::testing::ElementsAre("OUTPUT_VAR_1", "OUTPUT_VAR_2"));
+    EXPECT_THAT(header_2, ::testing::ElementsAre("OUTPUT_VAR_2", "OUTPUT_VAR_1"));
 }
 
 /** Simple test of get response. */
@@ -321,8 +322,8 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     formulation.get_response(0, 3600);
-    std::string output = formulation.get_output_line_for_timestep(0, ",");
-    EXPECT_THAT(output, MatchesRegex("0.000000,571.600037"));
+    std::vector<double> output = formulation.get_output_values_for_timestep(0);
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{0.0, 571.60003662109375}));
 }
 
 /** Simple test of output with modified variables. */
@@ -332,13 +333,12 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_a) {
     Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
-    // Notably--this test could fail if both output vars were not the same. get_output_line_for_timestep assumes
-    // the return order of get_output_variable_names() is consistent but it apparently is not. In tracing this
-    // test, it was actually outputing OUTPUT_VAR_2 first, while the other two comparable tests are outputting
-    // OUTPUT_VAR_1 first.
+    // ex_index=1 configures output_variables as [OUTPUT_VAR_2, OUTPUT_VAR_1], so the values come out in
+    // that order (OUTPUT_VAR_2's value first) — the same order asserted for header_2 in Initialize_1_a.
+
     formulation.get_response(0, 3600);
-    std::string output = formulation.get_output_line_for_timestep(0, ",");
-    EXPECT_THAT(output, MatchesRegex("571.600037,0.000000"));
+    std::vector<double> output = formulation.get_output_values_for_timestep(0);
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{571.60003662109375, 0.0}));
 }
 
 /** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
@@ -352,8 +352,8 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
     while (i < 542)
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
-    std::string output = formulation.get_output_line_for_timestep(i, ",");
-    EXPECT_THAT(output, MatchesRegex("580.799988,0.000001"));
+    std::vector<double> output = formulation.get_output_values_for_timestep(i);
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{580.79998779296875, 1.1124674593096233e-06}));
 }
 
 TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_a) {

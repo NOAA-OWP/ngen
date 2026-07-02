@@ -6,8 +6,7 @@
 #include "Formulation.hpp"
 #include <HY_CatchmentArea.hpp>
 #include "GenericDataProvider.hpp"
-
-#define DEFAULT_FORMULATION_OUTPUT_DELIMITER ","
+#include "utilities/output/CatchmentOutputsMgr.hpp"   // utils::OutputField
 
 namespace realization {
 
@@ -31,36 +30,26 @@ namespace realization {
                                                     const std::string &pattern, const std::string &replacement);
 
             /**
-             * Get a header line appropriate for a file made up of entries from this type's implementation of
-             * ``get_output_line_for_timestep``.
+             * Get this formulation's output fields -- name plus metadata (units, ...) -- in the same
+             * order as the values returned by @ref get_output_values_for_timestep.
              *
-             * Note that like the output generating function, this line does not include anything for time step.
+             * The name is the output header field (configured, or defaulting to the output variable
+             * name); the units come from the same source that produces each value. So each field is
+             * positionally aligned with, and describes, the corresponding value.
              *
-             * A default implementation is provided for inheritors of this type, which includes only "Total Discharge."
-             *
-             * @return An appropriate header line for this type.
+             * @return The ordered output fields.
              */
-            virtual std::string get_output_header_line(std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER) const;
+            virtual std::vector<utils::OutputField> get_output_fields() const = 0;
 
             /**
-             * Get a formatted line of output values for the given time step as a delimited string.
+             * Get the output values for the given time step, positionally aligned with @ref get_output_fields.
              *
-             * This method is useful for preparing calculated data in a representation useful for output files, such as
-             * CSV files.
+             * Values are returned as raw doubles, with no formatting or precision applied by the formulation.
              *
-             * The resulting string will contain calculated values for applicable output variables for the particular
-             * formulation, as determined for the given time step.  However, the string will not contain any
-             * representation of the time step itself.
-             *
-             * An empty string is returned if the time step value is not in the range of valid time steps for which there
-             * are calculated values for all variables.
-             *
-             * @param timestep The time step for which data is desired.
-             * @param delimiter The value delimiter for the string.
-             * @return A delimited string with all the output variable values for the given time step.
+             * @param timestep The time step for which values are desired.
+             * @return The output values for @p timestep, one per output column.
              */
-            virtual std::string get_output_line_for_timestep(int timestep,
-                                                             std::string delimiter = DEFAULT_FORMULATION_OUTPUT_DELIMITER) = 0;
+            virtual std::vector<double> get_output_values_for_timestep(int timestep) = 0;
 
             /**
              * Execute the backing model formulation for the given time step, where it is of the specified size, and

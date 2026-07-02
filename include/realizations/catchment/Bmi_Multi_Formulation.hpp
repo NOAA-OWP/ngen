@@ -353,7 +353,14 @@ namespace realization {
             return modules[get_index_for_primary_module()]->get_data_start_time();
         }
 
-        std::string get_output_line_for_timestep(int timestep, std::string delimiter) override;
+        std::vector<double> get_output_values_for_timestep(int timestep) override;
+
+        /**
+         * Get this formulation's output fields (header name + units) in output order. The units come
+         * from the submodule that produces each variable -- the same source its value comes from --
+         * by reusing the submodules' own output fields.
+         */
+        std::vector<utils::OutputField> get_output_fields() const override;
 
         double get_response(time_step_t t_index, time_step_t t_delta) override;
 

@@ -6,6 +6,7 @@
 #include <utility>
 #include <vector>
 #include <memory>
+#include <boost/core/span.hpp>
 #include "Catchment_Formulation.hpp"
 #include "GenericDataProvider.hpp"
 
@@ -139,27 +140,6 @@ namespace realization {
         }
 
         /**
-         * Get the values making up the header line from get_output_header_line(), but organized as a vector of strings.
-         *
-         * @return The values making up the header line from get_output_header_line() organized as a vector.
-         */
-        const std::vector<std::string> &get_output_header_fields() const {
-            return output_header_fields;
-        }
-
-        /**
-         * Get a header line appropriate for a file made up of entries from this type's implementation of
-         * ``get_output_line_for_timestep``.
-         *
-         * Note that like the output generating function, this line does not include anything for time step.
-         *
-         * @return An appropriate header line for this type.
-         */
-        std::string get_output_header_line(std::string delimiter) const override {
-            return boost::algorithm::join(get_output_header_fields(), delimiter);
-        }
-
-        /**
          * Get the names of variables in formulation output.
          *
          * Get the names of the variables to include in the output from this formulation, which should be some ordered
@@ -232,6 +212,15 @@ namespace realization {
 
         void set_output_header_fields(const std::vector<std::string> &output_headers) {
             output_header_fields = output_headers;
+        }
+
+        /**
+         * The configured/derived output header (display) field names, positionally parallel to
+         * @ref get_output_variable_names -- header i is the output name for variable i. A concrete
+         * subclass uses these as each column's output_name when building @ref get_output_fields.
+         */
+        boost::span<const std::string> get_output_header_field_names() const {
+            return output_header_fields;
         }
 
         /**

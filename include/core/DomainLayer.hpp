@@ -4,6 +4,10 @@
 #include "Catchment_Formulation.hpp"
 #include "Layer.hpp"
 #include "State_Exception.hpp"
+#include "CatchmentOutputsMgr.hpp"
+
+#include <memory>
+#include <string>
 
 namespace ngen
 {
@@ -34,16 +38,22 @@ namespace ngen
          * @param features collection of HY_Features associated with the domain
          * @param idx index of the layer
          * @param formulation Formulation associated with the domain
+         * @param output_mgr Shared, driver-owned catchment output manager (may be null when output is
+         *        disabled). The layer registers as its own feature (formulation id "layer_<id>",
+         *        feature id = the layer name) in that manager, so its output honors the configured
+         *        format/grouping and lands in its own file alongside the surface catchments.
          */
         DomainLayer(
                 const LayerDescription& desc,
                 const Simulation_Time& s_t,
                 feature_type& features,
                 long idx,
-                std::shared_ptr<realization::Catchment_Formulation> formulation):
-                    Layer(desc, s_t, features, idx), formulation(formulation)
+                std::shared_ptr<realization::Catchment_Formulation> formulation,
+                std::shared_ptr<utils::CatchmentOutputsMgr> output_mgr):
+                    Layer(desc, s_t, features, idx, std::move(output_mgr)), formulation(formulation),
+                    output_formulation_id("layer_" + std::to_string(desc.id)),
+                    output_catchment_id(desc.name)
         {
-            formulation->write_output("Time Step,""Time,"+formulation->get_output_header_line(",")+"\n");
         }
 
         /***
@@ -73,9 +83,12 @@ namespace ngen
                             +" (layer id: "+std::to_string(description.id)+")";
                 throw models::external::State_Exception(msg);
             } 
-            std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
-            formulation->get_output_line_for_timestep(output_time_index)+"\n";
-            formulation->write_output(output);
+            if (catchment_output_mgr) {
+                catchment_output_mgr->receive_data_entry(
+                    output_formulation_id, output_catchment_id,
+                    utils::time_marker(output_time_index, simulation_time.get_current_epoch_time(), current_timestamp),
+                    formulation->get_output_values_for_timestep(output_time_index));
+            }
             ++output_time_index;
             if ( output_time_index < simulation_time.get_total_output_times() )
             {
@@ -86,6 +99,9 @@ namespace ngen
 
         private:
         std::shared_ptr<realization::Catchment_Formulation> formulation;
+        //! This layer's identity in the shared manager, split into its (formulation, catchment) key.
+        std::string output_formulation_id;
+        std::string output_catchment_id;
     };
 }
 
