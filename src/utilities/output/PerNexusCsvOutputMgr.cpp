@@ -18,8 +18,16 @@ limitations under the License.
 
 #include "PerNexusCsvOutputMgr.hpp"
 
+#include <filesystem>
+#include <stdexcept>
+
 utils::PerNexusCsvOutputMgr::PerNexusCsvOutputMgr(const std::vector<std::string>& nexus_ids,
                                                   const std::string& output_root) {
+    // output_root is the effective directory this manager writes to;
+    // ensure it exists, then open one file per nexus directly in it.
+    if (!output_root.empty()) {
+        std::filesystem::create_directories(output_root);
+    }
     for(const auto& id : nexus_ids) {
         nexus_outfiles[id].open(output_root + id + "_output.csv", std::ios::trunc);
     }

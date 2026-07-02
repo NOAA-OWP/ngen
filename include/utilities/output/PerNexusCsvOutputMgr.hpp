@@ -36,7 +36,10 @@ namespace utils
          * Construct instance set for managing/writing nexus data files.
          *
          * @param nexus_ids Nexus ids for which this instance manages data (in particular, local nexuses when using MPI).
-         * @param output_root The output root for written files (as a string).
+         * @param output_root The effective output directory for written files. The caller folds in any
+         *        per-rank subdirectory (e.g. via @c realization::config::rank_output_root), so this is
+         *        the final directory; it is created here if it does not already exist. Mirrors how the
+         *        catchment CSV manager takes an already-resolved root.
          */
         PerNexusCsvOutputMgr(const std::vector<std::string>& nexus_ids, const std::string &output_root);
 
