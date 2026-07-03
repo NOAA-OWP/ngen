@@ -240,6 +240,29 @@ TEST_F(Bmi_Cpp_Formulation_Test, Initialize_1_a) {
     ASSERT_EQ(header_2, "OUTPUT_VAR_2,OUTPUT_VAR_1");
 }
 
+/** When output_header_fields is set, the header must use those labels, not the output variable names. */
+TEST_F(Bmi_Cpp_Formulation_Test, Initialize_output_header_fields) {
+    const std::string config =
+        "{ \"bmi_c++\": {"
+        "    \"model_type_name\": \"" + model_type_name[0] + "\","
+        "    \"library_file\": \"" + lib_file[0] + "\","
+        "    \"init_config\": \"" + init_config[0] + "\","
+        "    \"main_output_variable\": \"" + main_output_variable[0] + "\","
+        "    \"output_variables\": [\"OUTPUT_VAR_1\", \"OUTPUT_VAR_2\"],"
+        "    \"output_header_fields\": [\"custom_1\", \"custom_2\"],"
+        "    \"uses_forcing_file\": false"
+        "} }";
+    std::stringstream stream;
+    stream << config;
+    boost::property_tree::ptree tree;
+    boost::property_tree::json_parser::read_json(stream, tree);
+
+    Bmi_Cpp_Formulation form(catchment_ids[0], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[0]), utils::StreamHandler());
+    form.create_formulation(tree.get_child("bmi_c++"));
+
+    EXPECT_EQ(form.get_output_header_line(","), "custom_1,custom_2");
+}
+
 /** Simple test of get response. */
 TEST_F(Bmi_Cpp_Formulation_Test, GetResponse_0_a) {
     int ex_index = 0;
