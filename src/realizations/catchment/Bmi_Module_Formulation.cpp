@@ -355,7 +355,7 @@ namespace realization {
             // Output header fields, if present
             auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
             if (out_headers_it != properties.end()) {
-                std::vector<geojson::JSONProperty> out_headers_json_list = out_var_it->second.as_list();
+                std::vector<geojson::JSONProperty> out_headers_json_list = out_headers_it->second.as_list();
                 std::vector<std::string> out_headers(out_headers_json_list.size());
                 for (int i = 0; i < out_headers_json_list.size(); ++i) {
                     out_headers[i] = out_headers_json_list[i].as_string();
