@@ -224,6 +224,7 @@ RUN --mount=type=cache,target=/root/.cache/ccache,id=ccache-bookworm \
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache; \
         cmake --build cmake_build -j "$(nproc)"; \
         cmake --install cmake_build --prefix "${EWTS_PREFIX}"; \
+        git fetch --force --tags origin '+refs/tags/*:refs/tags/*'; \
         jq -n \
             --arg commit_hash "$(git rev-parse HEAD)" \
             --arg branch "$(git branch -r --contains HEAD 2>/dev/null | grep -v '\->' | sed 's|origin/||' | head -n1 | xargs || echo "${EWTS_REF}")" \
@@ -534,6 +535,8 @@ WORKDIR /ngen-app/ngen
 ARG CI_COMMIT_REF_NAME
 
 RUN set -eux && \
+    # Ensure local tag metadata includes all remote tags before creating git_info.
+    git fetch --force --tags origin '+refs/tags/*:refs/tags/*'; \
     # Get the remote URL from Git configuration
     repo_url=$(git config --get remote.origin.url); \
     # Remove trailing slash if present
@@ -562,6 +565,7 @@ RUN set -eux && \
     # Process each submodule listed in .gitmodules (skipping unwanted ones)
     for sub in $(git config --file .gitmodules --get-regexp path | awk '{print $2}'); do \
       cd "$sub"; \
+      git fetch --force --tags origin '+refs/tags/*:refs/tags/*'; \
       # Derive submodule key from its remote URL
       subrepo_url=$(git config --get remote.origin.url); \
       # Remove trailing slash if present
