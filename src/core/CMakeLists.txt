@@ -22,6 +22,13 @@ target_include_directories(core PUBLIC
         ${PROJECT_SOURCE_DIR}/include/bmi
         )
 
+# Layer.cpp routes through the abstract CatchmentOutputsMgr interface (header-only), so core needs
+# the output headers on its include path -- but must NOT link ngen_output. Linking it would pull the
+# concrete managers (and their NetCDF/MPI dependencies) into every core consumer, including the
+# routing tests. PRIVATE keeps this to core's own translation units; Layer.hpp only forward-declares
+# the type, and consumers that use the concrete backends link NGen::output directly.
+target_include_directories(core PRIVATE ${PROJECT_SOURCE_DIR}/include/utilities/output)
+
 if (NGEN_WITH_PYTHON)
     target_link_libraries(core PUBLIC NGen::python)
 endif ()
