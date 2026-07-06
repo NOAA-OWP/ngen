@@ -20,6 +20,7 @@ limitations under the License.
 
 #include <cstdint>
 #include <cstring>
+#include <filesystem>
 
 #if NGEN_WITH_MPI && !NGEN_WITH_PARALLEL_NETCDF
 #include "utilities/parallel_utils.h"
@@ -82,6 +83,13 @@ utils::PerFormulationNexusOutputMgr::PerFormulationNexusOutputMgr(
     }
 
     nexus_outfile = output_root + "/formulation_" + this->formulation_id + "_nexuses.nc";
+
+    // Ensure the output directory exists before creating files in it. Like the sibling output
+    // managers, this class owns creating what it writes into -- config parsing only normalizes the
+    // root and no caller is required to pre-create it.
+    if (!output_root.empty()) {
+        std::filesystem::create_directories(output_root);
+    }
 
     // To support unit testing when not running via MPI, but when MPI and parallel netcdf are compiled in, we
     // have to detect things.
