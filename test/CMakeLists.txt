@@ -168,6 +168,7 @@ ngen_add_test(
     test_realization_config
     OBJECTS
         realizations/Formulation_Manager_Test.cpp
+        realizations/config/Output_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
