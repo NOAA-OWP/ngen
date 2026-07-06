@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <string>
+#include <iostream>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -25,6 +26,7 @@
 #include "realizations/config/routing.hpp"
 #include "realizations/config/config.hpp"
 #include "realizations/config/layer.hpp"
+#include "realizations/config/output.hpp"
 
 namespace realization {
 
@@ -40,10 +42,12 @@ namespace realization {
                 boost::property_tree::ptree loaded_tree;
                 boost::property_tree::json_parser::read_json(file_path, loaded_tree);
                 this->tree = loaded_tree;
+                initialize_output_config();
             }
 
             Formulation_Manager(boost::property_tree::ptree &loaded_tree) {
                 this->tree = loaded_tree;
+                initialize_output_config();
             }
 
             ~Formulation_Manager() = default;
@@ -54,18 +58,8 @@ namespace realization {
                 //and routing and other non feature specific tasks from this main function
                 //which has to iterate the entire hydrofabric.
 
-                // TODO: (later) consider whether this really belongs inside the global formulation
-                auto per_formulation_setting = tree.get_child_optional("per_formulation_nexus_files");
-                if (per_formulation_setting) {
-                    #if !NGEN_WITH_NETCDF
-                    throw std::runtime_error("ERROR: per_formulation_nexus_files is set to true, but NGEN was built without NetCDF support.");
-                    #else
-                    use_per_formulation_nexus_files = per_formulation_setting->get_value<bool>();
-                    #endif
-                }
-                else {
-                    use_per_formulation_nexus_files = false;
-                }
+                // Output configuration (output_config) is parsed at construction
+                // so get_output_config() is valid before read().
 
                 auto possible_global_config = tree.get_child_optional("global");
 
@@ -104,7 +98,6 @@ namespace realization {
                                 output_stream
                                 )
                             );
-                            domain_formulations.at(layer_desc.id)->set_output_stream(get_output_root() + layer_desc.name + "_layer_"+std::to_string(layer_desc.id) + ".csv");
                         }
                         //TODO for each layer, create deferred providers for use by other layers
                         //VERY SIMILAR TO NESTED MODULE INIT
@@ -137,7 +130,8 @@ namespace realization {
                 auto possible_catchment_configs = tree.get_child_optional("catchments");
 
                 // For now at least, this isn't allowed
-                if (possible_catchment_configs && use_per_formulation_nexus_files) {
+                if (possible_catchment_configs &&
+                    output_config.nexus.format == realization::config::OutputFormat::netcdf) {
                     std::string msg = "ERROR: Individual catchment formulation configs are not allowed when using "
                                       "per-formulation nexus files.";
                     std::cerr << msg;
@@ -223,8 +217,66 @@ namespace realization {
                 return this->formulations.empty();
             }
 
+            /**
+             * @brief Get the formatted output root: check the existence of the output_root directory defined
+             * in realization. If true, return the directory name. Otherwise, try to create the directory
+             * or throw an error on failure.
+             *
+             * @return std::string of the output root directory
+             */
+            std::string get_output_root() const {
+                const auto output_root = this->tree.get_optional<std::string>("output_root");
+                if (output_root != boost::none && *output_root != "") {
+                    // Check if the path ends with a trailing slash, otherwise add it.
+                    std::string str = output_root->back() == '/'
+                           ? *output_root
+                           : *output_root + "/";
+
+                    const char* dir = str.c_str();
+
+                    //use C++ system function to check if there is a dir match that defined in realization
+                    struct stat sb;
+                    if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode)) {
+                        return str;
+                    } else {
+                        errno = 0;
+                        int result = mkdir(dir, 0755);
+                        if (result == 0)
+                            return str;
+                        // Another process/MPI rank may have created the directory between this rank's stat and
+                        // mkdir calls, so consider EEXIST as success as long as the path is a directory.
+                        if (errno == EEXIST && stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode))
+                            return str;
+                        throw std::runtime_error("failed to create directory '" + str + "': " + std::strerror(errno));
+                    }
+                }
+
+                //for case where there is no output_root in the realization file
+                return "./";
+            }
+
+            /**
+             * Check if the formulation has catchment output writing disabled.
+             *
+             * @return bool
+             */
+            bool is_disable_catchment_output() const {
+                return tree.get_optional<bool>("disable_catchment_output").get_value_or(false);
+            }
+
+            /**
+             * Whether nexus output is written as per-formulation NetCDF files (the deprecated
+             * per_formulation_nexus_files mode, now expressed as nexus format == netcdf).
+             *
+             * @return bool
+             */
             bool is_using_per_formulation_nexus_files() const {
-                return use_per_formulation_nexus_files;
+                return output_config.nexus.format == realization::config::OutputFormat::netcdf;
+            }
+
+            //! The parsed output configuration block.
+            const realization::config::Output& get_output_config() const {
+                return output_config;
             }
 
             typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator begin() const {
@@ -283,72 +335,25 @@ namespace realization {
             }
 
             /**
-             * @brief Get the formatted output root: check the existence of the output_root directory defined
-             * in realization. If true, return the directory name. Otherwise, try to create the directory
-             * or throw an error on failure.
-             *
-             * @code{.cpp}
-             * // Example config:
-             * // ...
-             * // "output_root": "/path/to/dir/"
-             * // ...
-             * const auto manager = Formulation_Manger(CONFIG);
-             * manager.get_output_root();
-             * //> "/path/to/dir/"
-             * @endcode
-             * 
-             * @return std::string of the output root directory
+             * Parse the output configuration from the realization tree (preferring
+             * the "output" block, falling back to the deprecated top-level keys),
+             * warn on deprecated usage, and validate build support. Called once at
+             * construction so output accessors are valid before read().
              */
-            std::string get_output_root() const {
-                const auto output_root = this->tree.get_optional<std::string>("output_root");
-                if (output_root != boost::none && *output_root != "") {
-                    // Check if the path ends with a trailing slash,
-                    // otherwise add it.
-                    std::string str = output_root->back() == '/'
-                           ? *output_root
-                           : *output_root + "/";
-
-                    const char* dir = str.c_str();
-
-                    //use C++ system function to check if there is a dir match that defined in realization
-                    struct stat sb;
-                    if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode)) {
-                        return str;
-                    } else {
-                        errno = 0;
-                        int result = mkdir(dir, 0755);      
-                        if (result == 0)
-                            return str;
-                        // Another process/MPI rank may have created the directory between this rank's stat and
-                        // mkdir calls, so consider EEXIST as success as long as the path is a directory.
-                        if (errno == EEXIST && stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode))
-                            return str;
-                        throw std::runtime_error("failed to create directory '" + str + "': " + std::strerror(errno));
-                    }
+            void initialize_output_config() {
+                output_config = realization::config::Output::from_realization(tree);
+                #if !NGEN_QUIET
+                if (output_config.from_legacy_keys) {
+                    std::cerr << "WARNING: top-level 'output_root', 'disable_catchment_output', and "
+                                 "'per_formulation_nexus_files' keys are deprecated; prefer an 'output' "
+                                 "config block (output.root / output.catchment / output.nexus)." << std::endl;
                 }
- 
-                //for case where there is no output_root in the realization file
-                return "./";
-
-            }
-
-             /**
-             * Check if the formulation has catchment output writing disabled.
-             *
-             * @code{.cpp}
-             * // Example config:
-             * // ...
-             * // "disable_catchment_output": true
-             * // ...
-             * const auto manager = Formulation_Manger(CONFIG);
-             * manager.is_disable_catchment_output();
-             * //> true
-             * @endcode
-             * 
-             * @return bool
-             */
-            bool is_disable_catchment_output() const {
-                return tree.get_optional<bool>("disable_catchment_output").get_value_or(false);
+                #endif
+                #if !NGEN_WITH_NETCDF
+                if (output_config.nexus.format == realization::config::OutputFormat::netcdf) {
+                    throw std::runtime_error("ERROR: nexus output format 'netcdf' requested, but NGEN was built without NetCDF support.");
+                }
+                #endif
             }
 
             /**
@@ -706,7 +711,7 @@ namespace realization {
 
             bool using_routing = false;
 
-            bool use_per_formulation_nexus_files;
+            realization::config::Output output_config;
 
             ngen::LayerDataStorage layer_storage;
 

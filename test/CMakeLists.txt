@@ -169,12 +169,14 @@ ngen_add_test(
     OBJECTS
         realizations/Formulation_Manager_Test.cpp
         realizations/config/Output_Test.cpp
+        realizations/config/CatchmentOutput_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
+        NGen::output
     DEPENDS
         testbmicppmodel
 )
