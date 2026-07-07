@@ -29,8 +29,8 @@ namespace realization {
 
         //Bmi_Var_Details() : Bmi_Var_Details("", "", nullptr, -1, -1, "", "") { }
 
-        Bmi_Var_Details(const std::string& name, const std::string& alias, const int item_size, const int num_items, const std::string& cpp_type, const std::string& units)
-            : name(name), mapped_alias(alias), cpp_type(cpp_type), units(units), item_size(item_size), num_items(num_items) { }
+        Bmi_Var_Details(std::string name, std::string alias, const int item_size, const int num_items, std::string cpp_type, std::string units)
+            : name(std::move(name)), mapped_alias(std::move(alias)), cpp_type(std::move(cpp_type)), units(std::move(units)), item_size(item_size), num_items(num_items) { }
 
         Bmi_Var_Details(const Bmi_Var_Details& source) = default;
 
