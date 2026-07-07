@@ -69,6 +69,10 @@ protected:
         return formulation.cache_input_variable_metadata;
     }
 
+    static void set_friend_cache_input_variable_metadata(Bmi_C_Formulation& formulation, bool value) {
+        formulation.set_cache_input_var_metadata(value);
+    }
+
     static std::set<Bmi_Var_Details>& get_friend_known_bmi_input_vars(Bmi_C_Formulation& formulation) {
         return formulation.known_bmi_input_vars;
     }
@@ -551,6 +555,35 @@ TEST_F(Bmi_C_Formulation_Test, bmi_input_var_details_2_c) {
 
     for (size_t i = 0; i < instance_metadata_1->size(); i++) {
         ASSERT_EQ(instance_metadata_1->at(i), instance_metadata_2->at(i));
+    }
+}
+
+/**
+ * Test that caching input variable metadata yields responses identical to the default refetch path.
+ *
+ * Two formulations are built from the same example 2 config, differing only in whether
+ * `cache_input_variable_metadata` is enabled.  This guards against behavioral divergence between the two
+ * execution paths of `set_model_inputs_prior_to_update` (i.e., `do_bmi_sets_from_stored_metadata` versus
+ * `do_bmi_sets_with_full_refetch`), including any unintended side effect from how `Bmi_Var_Details`
+ * instances are constructed in either path.
+ */
+TEST_F(Bmi_C_Formulation_Test, cache_matches_refetch_2_a) {
+    int ex_index = 2;
+
+    // Cached formulation directly from the example 2 config (which enables caching).
+    Bmi_C_Formulation cached(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    cached.create_formulation(config_prop_ptree[ex_index]);
+    ASSERT_TRUE(get_friend_cache_input_variable_metadata(cached));
+
+    // Same config, but with caching disabled so the full-refetch path is exercised instead.  The flag is
+    // overridden before the first response, since metadata is initialized lazily on that first call.
+    Bmi_C_Formulation refetch(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    refetch.create_formulation(config_prop_ptree[ex_index]);
+    set_friend_cache_input_variable_metadata(refetch, false);
+    ASSERT_FALSE(get_friend_cache_input_variable_metadata(refetch));
+
+    for (int i = 0; i < 39; i++) {
+        ASSERT_EQ(cached.get_response(i, 3600), refetch.get_response(i, 3600));
     }
 }
 
