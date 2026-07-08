@@ -612,6 +612,10 @@ namespace realization {
             return model_initialized;
         }
 
+        bool Bmi_Module_Formulation::is_input_variable_metadata_cached() const {
+            return cache_input_variable_metadata;
+        }
+
         void Bmi_Module_Formulation::set_allow_model_exceed_end_time(bool allow_exceed_end) {
             allow_model_exceed_end_time = allow_exceed_end;
         }

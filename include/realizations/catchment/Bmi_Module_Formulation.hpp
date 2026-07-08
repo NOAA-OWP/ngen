@@ -326,6 +326,15 @@ namespace realization {
         bool is_bmi_output_variable(const std::string &var_name) const override;
 
         /**
+         * Test whether @ref set_model_inputs_prior_to_update caches and reuses input variable metadata.
+         *
+         * See @ref cache_input_variable_metadata and @ref set_cache_input_var_metadata for details.
+         *
+         * @return Whether input variable metadata is cached and reused across time steps, rather than re-fetched.
+         */
+        bool is_input_variable_metadata_cached() const;
+
+        /**
          * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
          *
          * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
