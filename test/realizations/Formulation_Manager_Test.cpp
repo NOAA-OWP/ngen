@@ -1085,6 +1085,43 @@ const std::string EXAMPLE_10 = "{ "
     "} "
 "}";
 
+// Like EXAMPLE_9, but with no catchment-specific formulations, so added features fall through to the global
+// formulation and thus inherit its `cache_input_variable_metadata` value of `true`.
+const std::string EXAMPLE_11 = "{ "
+    "\"global\": { "
+      "\"formulations\": [ "
+        "{"
+          "\"name\":\"bmi_c++\","
+          "\"params\": {"
+            "\"model_type_name\": \"test_bmi_cpp\","
+            "\"library_file\": \"{{EXTERN_LIB_DIR_PATH}}" BMI_TEST_CPP_LIB_NAME "\","
+            "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+            "\"main_output_variable\": \"OUTPUT_VAR_2\","
+            "\"cache_input_variable_metadata\": true,"
+            "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+              "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+              "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+            "},"
+            "\"create_function\": \"bmi_model_create\","
+            "\"destroy_function\": \"bmi_model_destroy\","
+            "\"uses_forcing_file\": false"
+          "} "
+        "} "
+      "], "
+      "\"forcing\": { "
+          "\"file_pattern\": \".*{{id}}.*.csv\", "
+          "\"path\": \"./data/forcing/\", "
+          "\"provider\": \"CsvPerFeature\" "
+      "} "
+    "}, "
+    "\"time\": { "
+        "\"start_time\": \"2015-12-01 00:00:00\", "
+        "\"end_time\": \"2015-12-30 23:00:00\", "
+        "\"output_interval\": 3600 "
+    "}, "
+    "\"disable_catchment_output\": true "
+"}";
+
 TEST_F(Formulation_Manager_Test, basic_reading_1) {
     std::stringstream stream;
 
@@ -1416,6 +1453,145 @@ TEST_F(Formulation_Manager_Test, basic_run_10) {
         double expected = expected_results[i];
         double diff = actual > expected ? actual - expected : expected - actual;
         ASSERT_LE(diff, error_margin);
+    }
+}
+
+/**
+ * Verify BMI input variable metadata caching is disabled by default when nothing configures it (EX 1).
+ *
+ * EXAMPLE_1 sets `cache_input_variable_metadata` nowhere (neither globally nor for either catchment's own
+ * formulation), so both catchments should resolve to the default of `false`.
+ */
+TEST_F(Formulation_Manager_Test, cache_bmi_var_metadata_1) {
+    std::stringstream stream;
+    stream << fix_paths(EXAMPLE_1);
+
+    boost::property_tree::ptree realization_config;
+    simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
+
+    std::ostream* raw_pointer = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
+
+    this->add_feature("cat-52");
+    this->add_feature("cat-67");
+    manager.read(simulation_time_config, this->fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 2);
+
+    for (const std::pair<std::string, bool>& expected : {std::make_pair(std::string("cat-52"), false),
+                                                         std::make_pair(std::string("cat-67"), false)}) {
+        std::shared_ptr<realization::Bmi_Module_Formulation> mod =
+            std::dynamic_pointer_cast<realization::Bmi_Module_Formulation>(manager.get_formulation(expected.first));
+        ASSERT_NE(mod, nullptr) << expected.first << " should be a BMI module formulation";
+        ASSERT_EQ(mod->is_input_variable_metadata_cached(), expected.second) << expected.first;
+    }
+}
+
+/**
+ * Verify a global `cache_input_variable_metadata` of `true` is not inherited by catchments with their own
+ * formulations (EX 9).
+ *
+ * EXAMPLE_1 config but with `cache_input_variable_metadata` `true` for the global formulation only.  Because both
+ * catchments independently specify their own formulations (which omit the option), neither inherits the global
+ * value, so both should resolve to the default of `false`.
+ */
+TEST_F(Formulation_Manager_Test, cache_bmi_var_metadata_9) {
+    std::stringstream stream;
+    stream << fix_paths(EXAMPLE_9);
+
+    boost::property_tree::ptree realization_config;
+    simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
+
+    std::ostream* raw_pointer = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
+
+    this->add_feature("cat-52");
+    this->add_feature("cat-67");
+    manager.read(simulation_time_config, this->fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 2);
+
+    for (const std::pair<std::string, bool>& expected : {std::make_pair(std::string("cat-52"), false),
+                                                         std::make_pair(std::string("cat-67"), false)}) {
+        std::shared_ptr<realization::Bmi_Module_Formulation> mod =
+            std::dynamic_pointer_cast<realization::Bmi_Module_Formulation>(manager.get_formulation(expected.first));
+        ASSERT_NE(mod, nullptr) << expected.first << " should be a BMI module formulation";
+        ASSERT_EQ(mod->is_input_variable_metadata_cached(), expected.second) << expected.first;
+    }
+}
+
+/**
+ * Verify `cache_input_variable_metadata` resolves independently per catchment formulation (EX 10).
+ *
+ * EXAMPLE_10 enables the option globally and for cat-52's own formulation, but not for cat-67's own formulation.
+ * So cat-52 should resolve to `true` and cat-67 to `false`, demonstrating the option is honored per catchment.
+ */
+TEST_F(Formulation_Manager_Test, cache_bmi_var_metadata_10) {
+    std::stringstream stream;
+    stream << fix_paths(EXAMPLE_10);
+
+    boost::property_tree::ptree realization_config;
+    simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
+
+    std::ostream* raw_pointer = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
+
+    this->add_feature("cat-52");
+    this->add_feature("cat-67");
+    manager.read(simulation_time_config, this->fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 2);
+
+    for (const std::pair<std::string, bool>& expected : {std::make_pair(std::string("cat-52"), true),
+                                                         std::make_pair(std::string("cat-67"), false)}) {
+        std::shared_ptr<realization::Bmi_Module_Formulation> mod =
+            std::dynamic_pointer_cast<realization::Bmi_Module_Formulation>(manager.get_formulation(expected.first));
+        ASSERT_NE(mod, nullptr) << expected.first << " should be a BMI module formulation";
+        ASSERT_EQ(mod->is_input_variable_metadata_cached(), expected.second) << expected.first;
+    }
+}
+
+/**
+ * Verify a global `cache_input_variable_metadata` of `true` is inherited by catchments without their own
+ * formulations (EX 11).
+ *
+ * EXAMPLE_11 enables the option only on the global formulation and specifies no catchment formulations.  Both
+ * added features therefore fall through to the global formulation and should inherit its value of `true`.
+ */
+TEST_F(Formulation_Manager_Test, cache_bmi_var_metadata_11) {
+    std::stringstream stream;
+    stream << fix_paths(EXAMPLE_11);
+
+    boost::property_tree::ptree realization_config;
+    simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
+
+    std::ostream* raw_pointer = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
+
+    this->add_feature("cat-52");
+    this->add_feature("cat-67");
+    manager.read(simulation_time_config, this->fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 2);
+
+    for (const std::pair<std::string, bool>& expected : {std::make_pair(std::string("cat-52"), true),
+                                                         std::make_pair(std::string("cat-67"), true)}) {
+        std::shared_ptr<realization::Bmi_Module_Formulation> mod =
+            std::dynamic_pointer_cast<realization::Bmi_Module_Formulation>(manager.get_formulation(expected.first));
+        ASSERT_NE(mod, nullptr) << expected.first << " should be a BMI module formulation";
+        ASSERT_EQ(mod->is_input_variable_metadata_cached(), expected.second) << expected.first;
     }
 }
 
