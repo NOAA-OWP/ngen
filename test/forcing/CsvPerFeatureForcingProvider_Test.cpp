@@ -232,19 +232,19 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderNonParsing)
         double out_value;
 
         try {
-            const double in_value = this->Forcing_Object_3->get_value(
-                                                                      CatchmentAggrDataSelector("", expected_name, t, 3600, expected_in_units),
-                                                                      data_access::SUM
-                                                                      );
+            in_value = this->Forcing_Object_3->get_value(
+                                                          CatchmentAggrDataSelector("", expected_name, t, 3600, expected_in_units),
+                                                          data_access::SUM
+                                                          );
         } catch (UnitsHelper::unit_conversion_exception const& uce) {
             in_value = uce.unconverted_values[0];
         }
 
         try {
-            const double out_value = this->Forcing_Object_3->get_value(
-                                                                       CatchmentAggrDataSelector("", expected_name, t, 3600, expected_out_units),
-                                                                       data_access::SUM
-                                                                       );
+            out_value = this->Forcing_Object_3->get_value(
+                                                           CatchmentAggrDataSelector("", expected_name, t, 3600, expected_out_units),
+                                                           data_access::SUM
+                                                           );
         } catch (UnitsHelper::unit_conversion_exception const& uce) {
             out_value = uce.unconverted_values[0];
         }
