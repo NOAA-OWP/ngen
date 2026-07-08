@@ -36,6 +36,7 @@
 #if NGEN_WITH_PYTHON
 #include "python/InterpreterUtil.hpp"
 #include <pybind11/embed.h>
+#include <pybind11/pybind11.h>
 #endif // NGEN_WITH_PYTHON
 
 #if NGEN_WITH_MPI
@@ -877,6 +878,20 @@ int main(int argc, char* argv[]) {
     auto interp = utils::ngenPy::InterpreterUtil::getInstance();
     try {
         result = run_ngen(argc, argv, mpi_num_procs, mpi_rank);
+
+    } catch (pybind11::error_already_set &e) {
+        // If the error comes from python,
+        // we cannot rethrow the execption after destroying the interpreter (doing so sometimes caused MPI runs to hang)
+        // First, copy the python error message so it an be reraised as a runtime_error
+        std::string error_msg = std::string("Uncaught python error: ") + e.what();
+        // Log as a fatal error since it will end the program.
+        // This may result in double logging, but better to make sure it gets logged.
+        LOG(LogLevel::FATAL, error_msg);
+        // destroy the interpreter to let python atexit actions trigger
+        interp.reset();
+        // throw the copied error to ensure MPI acknowledges the termination
+        throw std::runtime_error(error_msg);
+
     } catch (...) {
         // If any uncaught exception happens,
         // explictly destroy the interpreter to ensure any
@@ -892,7 +907,7 @@ int main(int argc, char* argv[]) {
     // this is needed if any python atexit registered functions would interact with MPI
     MPI_Barrier(MPI_COMM_WORLD);
 #endif // NGEN_WITH_MPI
-#else
+#else // not NGEN_WITH_PYTHON
     result = run_ngen(argc, argv, mpi_num_procs, mpi_rank);
 #endif // NGEN_WITH_PYTHON
 
