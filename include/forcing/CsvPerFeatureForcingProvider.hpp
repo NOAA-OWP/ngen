@@ -19,7 +19,7 @@
 #include "GenericDataProvider.hpp"
 #include "DataProviderSelectors.hpp"
 #include <exception>
-#include <UnitsHelper.hpp>
+#include <mediator/UnitsHelper.hpp>
 
 /**
  * @brief Forcing class providing time-series precipiation forcing data to the model.

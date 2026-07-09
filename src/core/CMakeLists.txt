@@ -14,7 +14,6 @@ target_include_directories(core PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core/catchment
         ${PROJECT_SOURCE_DIR}/include/core/nexus
         ${PROJECT_SOURCE_DIR}/include/core/hydrolocation
-        ${PROJECT_SOURCE_DIR}/include/core/mediator
         ${PROJECT_SOURCE_DIR}/include/realizations/catchment
         ${PROJECT_SOURCE_DIR}/include/geojson
         ${PROJECT_SOURCE_DIR}/include/forcing
@@ -34,4 +33,3 @@ endif()
 add_subdirectory("catchment")
 add_subdirectory("nexus")
 add_subdirectory("hydrolocation")
-add_subdirectory("mediator")
