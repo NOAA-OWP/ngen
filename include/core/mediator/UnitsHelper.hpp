@@ -31,6 +31,11 @@ class UnitsHelper {
         std::vector<double> unconverted_values;
     };
 
+    /** Record the observation of a failed unit conversion attempt, and report whether it's new */
+    static bool record_unit_conversion_fault(unit_conversion_exception const& uce, std::string const& requester_name, std::string const& requester_variable);
+
+    private:
+
     struct unit_error_log_key {
         std::string requester_name;
         std::string requester_variable;

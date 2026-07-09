@@ -172,3 +172,12 @@ double* UnitsHelper::convert_values(const std::string &in_units, double* in_valu
 }
 
 std::set<UnitsHelper::unit_error_log_key> UnitsHelper::unit_errors_reported;
+
+bool UnitsHelper::record_unit_conversion_fault(unit_conversion_exception const& uce, std::string const& requester_name, std::string const& requester_variable)
+{
+    // TODO: If we want this to be thread-safe, add a mutex on a static lock here
+    unit_error_log_key key{requester_name, requester_variable, uce.provider_model_name, uce.provider_var_name, uce.what()};
+    auto ret = unit_errors_reported.insert(key);
+    bool new_error = ret.second;
+    return new_error;
+}
