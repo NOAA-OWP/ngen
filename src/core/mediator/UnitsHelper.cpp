@@ -170,3 +170,5 @@ double* UnitsHelper::convert_values(const std::string &in_units, double* in_valu
     cv_convert_doubles(converter.get(), in_values, count, out_values);
     return out_values;
 }
+
+std::set<UnitsHelper::unit_error_log_key> UnitsHelper::unit_errors_reported;
