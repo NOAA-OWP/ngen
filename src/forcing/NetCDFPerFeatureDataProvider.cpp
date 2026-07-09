@@ -494,18 +494,86 @@ size_t NetCDFPerFeatureDataProvider::get_ts_index_for_time(const time_t &epoch_t
     }
 }
 
+namespace cache {
+    std::size_t page_count(std::size_t c_size, std::size_t line_size) {
+        return (c_size / line_size) + std::min<std::size_t>(1, c_size % line_size);
+    }
+
+    std::size_t page_p_idx(std::size_t c_idx, std::size_t line_size) {
+        return c_idx / line_size;
+    }
+
+    std::size_t page_c_idx(std::size_t c_idx, std::size_t line_size) {
+        std::size_t p_idx = page_p_idx(c_idx, line_size);
+        return p_idx * line_size;
+    }
+
+    std::size_t page_p_idx_to_c_idx(std::size_t p_idx, std::size_t line_size) {
+        return p_idx * line_size;
+    }
+
+    std::size_t page_entry_j_idx(std::size_t c_idx, std::size_t line_size) {
+        return c_idx - page_c_idx(c_idx, line_size);
+    }
+
+    std::size_t page_cache_line_size(std::size_t c_idx, std::size_t c_size, std::size_t line_size) {
+        std::size_t ps = page_count(c_size, line_size);
+        std::size_t p_idx = page_p_idx(c_idx, line_size);
+        assert(p_idx < ps);
+        if (p_idx < ps - 1) {
+            return line_size;
+        }
+        std::size_t ts = page_c_idx(c_idx, line_size);
+        return c_size - ts;
+    }
+
+    std::size_t page_entry_idx(std::size_t i_idx, std::size_t c_idx, std::size_t c_size, std::size_t line_size) {
+        std::size_t pls = page_cache_line_size(c_idx, c_size, line_size);
+        // NOTE: this is relative to the default line size
+        std::size_t pj_idx = page_entry_j_idx(c_idx, line_size);
+        return (pls * i_idx) + pj_idx;
+    }
+}
+
+
 double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m) 
 {
+    /*
+     * this cache is made up of pages.
+     * each page contains cache lines.
+     * a page is a flattened 2d array with dimensions catchment-id, time (i, j).
+     * connecting pages contiguously along cache lines (left-to-right), forms the time series.
+     * this implicit dimension is named the 'c' dimension.
+     * the 'c' dimension is the (page idx + page relative cache line j idx) * cache line size.
+     * 'c' is a forcing time step idx.
+     *
+     * each line, dim i, contains forcing data for a cache line sized time period for a single catchment.
+     * there are n cache lines in a page.
+     * n is the number of catchments a single ngen process is responsible for.
+     * pages are divided by _cache line size_ (index p).
+     * cache line size equates to n forcing time steps.
+     * a page only contains data for a single forcing variable.
+     *
+     * if the forcing time dim size is not divisible by the cache line size,
+     * the last cache page will have a cache line length = forcing time dim size % cache line size.
+     *
+     * dimensions and index naming conventions:
+     * i dim: cache line index (rows)
+     * j dim: cache line columns relative to page
+     * c dim: columns across all cache lines (not relative to page)
+     * p dim: page index
+     */
+
     auto init_time = selector.get_init_time();
     auto stop_time = init_time + selector.get_duration_secs(); // scope hiding! BAD JUJU!
     
-    size_t idx1 = get_ts_index_for_time(init_time);
-    size_t idx2;
+    size_t c_idx1 = get_ts_index_for_time(init_time);
+    size_t c_idx2;
     try {
-        idx2 = get_ts_index_for_time(stop_time-1); // Don't include next timestep when duration % timestep = 0
+        c_idx2 = get_ts_index_for_time(stop_time-1); // Don't include next timestep when duration % timestep = 0
     }
     catch(const std::out_of_range &e){
-        idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
+        c_idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
     }
 
     // update chunks during the first timestep
@@ -515,14 +583,14 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         maybe_update_chunks_with_hints();
     }
 
-    auto stride = idx2 - idx1;
+    auto stride = c_idx2 - c_idx1;
 
     std::vector<std::size_t> start, count;
 
-    auto cat_idx = id_pos[selector.get_id()];
+    auto i_idx = id_pos[selector.get_id()];
 
-    double t1 = time_vals[idx1];
-    double t2 = time_vals[idx2];
+    double t1 = time_vals[c_idx1];
+    double t2 = time_vals[c_idx2];
 
     double rvalue = 0.0;
     
@@ -530,43 +598,36 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
     std::string native_units = get_ncvar_units(selector.get_variable_name());
 
-    const std::size_t read_len = idx2 - idx1 + 1;
+    const std::size_t read_len = c_idx2 - c_idx1 + 1;
 
     std::vector<double> raw_values;
     raw_values.reserve(read_len);
 
-    std::size_t idx1_cache_slice_start = idx1 - (idx1 % cache_slice_t_size);
-    std::size_t time_idx = idx1 % cache_slice_t_size;
+    std::size_t cache_line_size = cache_slice_t_size;
+    std::size_t p_idx = cache::page_p_idx(c_idx1, cache_line_size);
+    // pages spanned by [c_idx1, c_idx2]; ceil(read_len / line_size) undercounts
+    // when the range starts mid-page and crosses a page boundary
+    std::size_t n_page_accesses = cache::page_p_idx(c_idx2, cache_line_size) - p_idx + 1;
 
-    std::size_t n_cache_slices = (read_len / cache_slice_t_size) + std::min(read_len % cache_slice_t_size, std::size_t(1));
-    size_t value_idx = idx1;
+    std::size_t c_idx = c_idx1;
     // For reference: https://stackoverflow.com/a/72030286
-    for( size_t i = 0; i < n_cache_slices; i++ ) {
+    for( size_t i = 0; i < n_page_accesses; i++ ) {
         // rows: catchments; columns: time;
-        // stride between rows is 'cache_slice_t_size'
+        // stride between rows is 'cache_line_size'
         std::shared_ptr<std::vector<double>> cached;
 
-        std::size_t cache_slice_start = idx1_cache_slice_start + (i * cache_slice_t_size);
-        std::size_t adjusted_size = cache_slice_t_size;
-        // Read up to the end of the data, but not beyond
-        if(cache_slice_start + cache_slice_t_size > time_vals.size() ){
-            adjusted_size = time_vals.size() - cache_slice_start;
-        }
-        std::string key = ncvar.getName() + "|" + std::to_string(cache_slice_start);
+	std::size_t ith_p_idx = p_idx + i;
+	std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
+	std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
+
+        std::string key = ncvar.getName() + "|" + std::to_string(page_c_idx);
         if(value_cache.contains(key)){
             cached = value_cache.get(key).get();
         } else {
-            // NOTE: aaraney: I am leaning towards just 'over allocating'
-            /* size_t last_bucket = get_ts_index_for_time(this->stop_time-1) / bucket_size; */
-            /* assert(bucket_idx <= last_bucket); */
-            /* size_t n_time = bucket_size; */
-            /* if (bucket_idx == last_bucket){ */
-            /*     n_time = (get_ts_index_for_time(this->stop_time-1) % bucket_size) + 1; */
-            /* } */
-            cached = std::make_shared<std::vector<double>>(get_ids().size() *  cache_slice_t_size);
+            cached = std::make_shared<std::vector<double>>(get_ids().size() * page_cache_line_size);
 
             // read each chunk and add it to "cached"
-            std::size_t next_cache_idx = 0;
+            std::size_t idx = 0;
             for(auto const& chunk: chunks){
                 // chunk start index = chunk.first;
                 // chunk length      = chunk.second;
@@ -575,27 +636,29 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
                 // NOTE: in the first iteration, we might read more data in the Time
                 // dimension than we 'need'. b.c. we read from:
-                // 'idx1 - (idx1 % cache_slice_t_size)' to the end of the cache line.
-                // so, if 'idx1 % cache_slice_t_size > 0' we will read
-                // 'idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
-                start.push_back(cache_slice_start);
+                // 'c_idx1 - (c_idx1 % cache_slice_t_size)' to the end of the cache line.
+                // so, if 'c_idx1 % cache_slice_t_size > 0' we will read
+                // 'c_idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
+                start.push_back(page_c_idx);
 
                 count.clear();
                 count.push_back(chunk.second);
 
-                count.push_back(adjusted_size);
-                ncvar.getVar(start,count,&(*cached)[next_cache_idx]);
-                next_cache_idx += chunk.second * adjusted_size;
+                count.push_back(page_cache_line_size);
+                ncvar.getVar(start,count,&(*cached)[idx]);
+                idx += chunk.second * page_cache_line_size;
             }
 
             value_cache.insert(key, cached);
         }
         // Find all values in the current cache slice and push them onto raw_values
-        while(value_idx >= cache_slice_start && 
-              value_idx < cache_slice_start + cache_slice_t_size &&
-              value_idx <= idx2){
-            raw_values.push_back(cached->at((cat_idx * cache_slice_t_size) + (value_idx % cache_slice_t_size)));
-            value_idx++;
+        while(c_idx >= page_c_idx &&
+              c_idx < page_c_idx + page_cache_line_size &&
+              c_idx <= c_idx2){
+            std::size_t idx = cache::page_entry_idx(i_idx, c_idx, time_vals.size(), cache_line_size);
+            double value = cached->at(idx);
+            raw_values.push_back(value);
+            c_idx++;
         }
     }
 
