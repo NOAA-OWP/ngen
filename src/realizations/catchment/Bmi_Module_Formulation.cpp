@@ -86,8 +86,8 @@ namespace realization {
                 var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
             }
             catch(UnitsHelper::unit_conversion_exception &uce){
-                data_access::unit_error_log_key key{"Bmi_Module_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_var_name, uce.what()};
-                auto ret = data_access::unit_errors_reported.insert(key);
+                UnitsHelper::unit_error_log_key key{"Bmi_Module_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_var_name, uce.what()};
+                auto ret = UnitsHelper::unit_errors_reported.insert(key);
                 bool new_error = ret.second;
                 if (new_error) {
                     std::stringstream ss;
@@ -712,8 +712,8 @@ namespace realization {
                                                                                      get_bmi_model()->GetVarUnits(var_name)));
                         value_ptr = get_value_as_type(type, value);
                     } catch (UnitsHelper::unit_conversion_exception &uce) {
-                        data_access::unit_error_log_key key{get_id(), var_map_alias, uce.provider_model_name, uce.provider_var_name, uce.what()};
-                        auto ret = data_access::unit_errors_reported.insert(key);
+                        UnitsHelper::unit_error_log_key key{get_id(), var_map_alias, uce.provider_model_name, uce.provider_var_name, uce.what()};
+                        auto ret = UnitsHelper::unit_errors_reported.insert(key);
                         bool new_error = ret.second;
                         if (new_error) {
                             std::stringstream ss;

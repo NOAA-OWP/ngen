@@ -1,8 +1,10 @@
 #ifndef NGEN_UNITSHELPER_H
 #define NGEN_UNITSHELPER_H
 
+#include <set>
 #include <stdexcept>
 #include <string>
+#include <tuple>
 #include <vector>
 #include "all.h"
 
@@ -28,6 +30,26 @@ class UnitsHelper {
         std::string to_units;
         std::vector<double> unconverted_values;
     };
+
+    struct unit_error_log_key {
+        std::string requester_name;
+        std::string requester_variable;
+        std::string provider_name;
+        std::string provider_variable;
+        std::string failure_message;
+
+        bool operator<(unit_error_log_key const& rhs) const {
+            return std::tie(requester_name, requester_variable, provider_name, provider_variable, failure_message)
+                 < std::tie(rhs.requester_name, rhs.requester_variable, rhs.provider_name, rhs.provider_variable, rhs.failure_message);
+        }
+
+        bool operator==(unit_error_log_key const& rhs) const {
+            return std::tie(requester_name, requester_variable, provider_name, provider_variable, failure_message)
+                == std::tie(rhs.requester_name, rhs.requester_variable, rhs.provider_name, rhs.provider_variable, rhs.failure_message);
+        }
+    };
+
+    static std::set<unit_error_log_key> unit_errors_reported;
 };
 
 #endif //NGEN_UNITSHELPER_H
