@@ -2,7 +2,7 @@
 #include "bmi/State_Exception.hpp"
 #include "utilities/FileChecker.h"
 #include "utilities/logging_utils.h"
-#include "core/mediator/UnitsHelper.hpp"
+#include "mediator/UnitsHelper.hpp"
 
 namespace models {
 namespace bmi {

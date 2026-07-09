@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "core/mediator/UnitsHelper.hpp"
+#include "mediator/UnitsHelper.hpp"
 
 class UnitsHelper_Test : public ::testing::Test {
 

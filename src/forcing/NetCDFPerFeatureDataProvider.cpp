@@ -2,7 +2,7 @@
 
 #if NGEN_WITH_NETCDF
 #include "NetCDFPerFeatureDataProvider.hpp"
-#include <core/mediator/UnitsHelper.hpp>
+#include <mediator/UnitsHelper.hpp>
 
 #include <netcdf>
 
