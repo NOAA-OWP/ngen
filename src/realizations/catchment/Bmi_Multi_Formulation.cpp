@@ -300,10 +300,11 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
     // Start by first checking whether we are NOT just using the last module's values
     if (!is_out_vars_from_last_mod) {
         std::string output_str;
+        time_t model_time = convert_model_time(get_model_current_time()) + get_bmi_model_start_time_forcing_offset_s();
         for (const std::string& name : get_output_variable_names()) {
             // Placeholder to request no conversion
             std::string output_units = "";
-            double value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units), MEAN);
+            double value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, model_time, 3600, output_units), MEAN);
             output_str += (output_str.empty() ? "" : ",") + std::to_string(value);
         }
         return output_str;
