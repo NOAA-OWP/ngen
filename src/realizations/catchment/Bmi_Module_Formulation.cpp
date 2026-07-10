@@ -710,7 +710,7 @@ namespace realization {
                                                                                      get_bmi_model()->GetVarUnits(var_name)));
                         value_ptr = get_value_as_type(type, value);
                     } catch (UnitsHelper::unit_conversion_exception &uce) {
-                        bool new_error = UnitsHelper::record_unit_conversion_fault(uce, get_id(), var_map_alias);
+                        bool new_error = UnitsHelper::record_unit_conversion_fault(uce, "Bmi_Module_Formulation::set_model_inputs_prior_to_update", var_map_alias);
                         if (new_error) {
                             std::stringstream ss;
                             ss << "Unit conversion failure:"
