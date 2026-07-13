@@ -65,7 +65,7 @@
 <text text-anchor="start" x="68.5" y="-119.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="78.5" y="-119.75" font-family="Helvetica,sans-Serif" font-size="10.00">set_output_precision()</text>
 <text text-anchor="start" x="68.5" y="-104.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="78.5" y="-104.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_var_value_as_double()</text>
+<text text-anchor="start" x="78.5" y="-104.5" font-family="Helvetica,sans-Serif" font-size="10.00">update()</text>
 <text text-anchor="start" x="68.88" y="-89.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
 <text text-anchor="start" x="78.5" y="-89.25" font-family="Helvetica,sans-Serif" font-size="10.00">get_output_precision()</text>
 <text text-anchor="start" x="68.88" y="-74" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>

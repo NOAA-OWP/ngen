@@ -167,6 +167,7 @@ var hierarchy =
       [ "realization::ConfigurationException", "classrealization_1_1_configuration_exception.html", null ],
       [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", null ],
       [ "std::runtime_error", null, [
+        [ "UnitsHelper::unit_conversion_exception", "struct_units_helper_1_1unit__conversion__exception.html", null ],
         [ "ngen::sqlite::sqlite_error", "structngen_1_1sqlite_1_1sqlite__error.html", null ]
       ] ]
     ] ],
@@ -190,6 +191,7 @@ var hierarchy =
       [ "Network_Test1", "class_network___test1.html", null ]
     ] ],
     [ "UnitsHelper", "class_units_helper.html", null ],
+    [ "UnitsHelper::unit_error_log_key", "struct_units_helper_1_1unit__error__log__key.html", null ],
     [ "utils::FileChecker", "classutils_1_1_file_checker.html", null ],
     [ "utils::NexusOutputsMgr", "classutils_1_1_nexus_outputs_mgr.html", [
       [ "utils::PerNexusCsvOutputMgr", "classutils_1_1_per_nexus_csv_output_mgr.html", null ]

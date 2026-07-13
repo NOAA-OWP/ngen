@@ -1,0 +1,17 @@
+<map id="UnitsHelper::unit_conversion_exception" name="UnitsHelper::unit_conversion_exception">
+<area shape="rect" id="Node000001" title=" " alt="" coords="67,453,252,555"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,279,116,345"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,357,136,452,131,455,82,360"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="12,142,102,208"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="61,223,62,279,57,279,55,223"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="143,279,210,345"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="169,346,164,370,160,437,154,436,159,369,164,345"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="126,135,238,216"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="183,231,181,279,175,279,177,231"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="263,279,394,345"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="330,346,322,388,314,411,301,431,268,462,264,458,297,428,309,408,317,387,325,345"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="278,142,379,208"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="331,223,331,279,326,279,326,223"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="319,5,338,72"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="331,72,331,125,326,125,326,72"/>
+</map>

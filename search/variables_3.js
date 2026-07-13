@@ -26,8 +26,6 @@ var searchData=
   ['contained_5fcatchments_23',['contained_catchments',['../class_h_y___catchment.html#a4dd4f1031bac54385a3755f60d5b6f87',1,'HY_Catchment']]],
   ['containing_5fcatchment_24',['containing_catchment',['../class_h_y___catchment.html#ab468ea39a19ade8d47b2eb7ca42f3a1e',1,'HY_Catchment']]],
   ['contributing_5fcatchments_25',['contributing_catchments',['../class_h_y___hydro_nexus.html#ac9f670d94708c8987cff99e8bae94728',1,'HY_HydroNexus']]],
-  ['converters_26',['converters',['../class_units_helper.html#aa4b358c65c746a1abd2097a3e626937c',1,'UnitsHelper']]],
-  ['converters_5fmutex_27',['converters_mutex',['../class_units_helper.html#a9ff8aebf7a7507c44ad1d903bca04563',1,'UnitsHelper']]],
-  ['current_5fdate_5ftime_5fepoch_28',['current_date_time_epoch',['../class_csv_per_feature_forcing_provider.html#a5fee10512c1561e3b7c60f01572e9674',1,'CsvPerFeatureForcingProvider::current_date_time_epoch'],['../class_simulation___time.html#a05ca6222ff0dc9174a2bbfa5e7908541',1,'Simulation_Time::current_date_time_epoch']]],
-  ['current_5ftime_5fstep_29',['current_time_step',['../structmodels_1_1bmi_1_1protocols_1_1_context.html#aace653cfd38c514210cdd61b218378d8',1,'models::bmi::protocols::Context']]]
+  ['current_5fdate_5ftime_5fepoch_26',['current_date_time_epoch',['../class_csv_per_feature_forcing_provider.html#a5fee10512c1561e3b7c60f01572e9674',1,'CsvPerFeatureForcingProvider::current_date_time_epoch'],['../class_simulation___time.html#a05ca6222ff0dc9174a2bbfa5e7908541',1,'Simulation_Time::current_date_time_epoch']]],
+  ['current_5ftime_5fstep_27',['current_time_step',['../structmodels_1_1bmi_1_1protocols_1_1_context.html#aace653cfd38c514210cdd61b218378d8',1,'models::bmi::protocols::Context']]]
 ];
