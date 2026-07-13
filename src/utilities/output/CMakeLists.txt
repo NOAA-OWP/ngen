@@ -24,7 +24,7 @@ target_include_directories(ngen_output PUBLIC
 if(NGEN_WITH_NETCDF)
     target_compile_definitions(ngen_output PUBLIC NGEN_WITH_NETCDF)
     target_sources(ngen_output PRIVATE "${CMAKE_CURRENT_LIST_DIR}/PerFormulationNexusOutputMgr.cpp")
-    target_link_libraries(ngen_output PUBLIC NetCDF)
+    target_link_libraries(ngen_output PUBLIC NetCDF Boost::boost)
     if (NGEN_WITH_MPI)
        target_link_libraries(ngen_output PUBLIC MPI::MPI_CXX)
        if (NOT NGEN_WITH_PARALLEL_NETCDF)
