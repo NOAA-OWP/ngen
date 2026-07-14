@@ -229,20 +229,6 @@ ngen_add_test(
         testbmicppmodel
 )
 
-########################## Series Unit Tests
-ngen_add_test(
-    test_mdarray
-    OBJECTS
-        utils/mdarray_Test.cpp
-        utils/mdframe_Test.cpp
-        utils/mdframe_netcdf_Test.cpp
-        utils/mdframe_csv_Test.cpp
-    LIBRARIES
-        NGen::mdarray
-        NGen::mdframe
-        
-)
-
 ########################## Logging Unit Tests
 ngen_add_test(
     test_logging
@@ -550,10 +536,6 @@ ngen_add_test(
         realizations/Formulation_Manager_Test.cpp
         utils/PerFormulationNexusOutputMgr_Test.cpp
         utils/Partition_Test.cpp
-        utils/mdarray_Test.cpp
-        utils/mdframe_Test.cpp
-        utils/mdframe_netcdf_Test.cpp
-        utils/mdframe_csv_Test.cpp
         utils/logging_Test.cpp
     LIBRARIES
         gmock
@@ -563,8 +545,6 @@ ngen_add_test(
         NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
-        NGen::mdarray
-        NGen::mdframe
         NGen::logging
         NGen::ngen_bmi
         NGen::output
