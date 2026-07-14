@@ -196,6 +196,7 @@ There are some special BMI formulation config parameters which are required in c
   * the BMI specification does not expressly guarantee metadata values will not change, so configuration must consider the particular BMI module in use
   * also, these optimizations do result in additional memory usage
     * while relatively small, can scale significantly for larger simulations, so this may not be usable for situations when memory is constrained
+  * for a multi-BMI formulation, this option is configured on the individual nested modules (i.e., within each nested module's `params`) rather than at the top level of the multi-BMI formulation, so it can be enabled or disabled per nested module
   
 ## BMI Models Written in C
 
