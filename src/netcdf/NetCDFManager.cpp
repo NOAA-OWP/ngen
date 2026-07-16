@@ -240,7 +240,7 @@ static std::vector<double> string_split(std::string str, char delimiter)
     return res;
 }
 
-void NetCDFManager::write_simulations_response_from_formulation(size_t time_index, std::map<std::string, std::string> catchment_output_values)
+void NetCDFManager::write_simulations_response_from_formulation(size_t time_index, const std::map<std::string, std::string>& catchment_output_values)
 {
     std::map<int64_t, std::string> output_values;
     try{

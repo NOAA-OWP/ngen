@@ -132,7 +132,7 @@ namespace ngen
         std::string unit_name() const;
         virtual std::vector<std::string> required_checkpoint_units() const;
 
-        virtual std::map<std::string, std::string> get_catchment_output_data_for_timestep();
+        virtual const std::map<std::string, std::string>& get_catchment_output_data_for_timestep();
         virtual void set_simulations_output_format(std::vector<std::string> out_formats);
         virtual std::vector<std::string> get_simulations_output_format();
         protected:

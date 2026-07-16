@@ -70,7 +70,7 @@ public:
     void add_output_variable_data_from_formulation();
 
     // Add catchment output data to the file (for writing)
-    void write_simulations_response_from_formulation(size_t time_index, std::map<std::string, std::string> catchment_output_values);
+    void write_simulations_response_from_formulation(size_t time_index, const std::map<std::string, std::string>& catchment_output_values);
     void primary_netcdf_writer(size_t time_index, const std::map<int64_t, std::string>& catchment_output_values);
     void secondary_netcdf_worker(const std::map<int64_t, std::string>& catchment_output_values);
 
