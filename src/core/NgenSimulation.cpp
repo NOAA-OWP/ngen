@@ -524,10 +524,10 @@ void NgenSimulation::serialize(Archive& ar, const unsigned int version) {
 #endif //NGEN_WITH_NEXUSES
 }
 
-void NgenSimulation::create_netcdf_writer(std::shared_ptr<realization::Formulation_Manager> manager, std::string nc_output_file_name)
+void NgenSimulation::create_netcdf_writer(std::shared_ptr<realization::Formulation_Manager> manager, std::string nc_output_file_name, NetCDFOpenMode open_mode)
 {
 #if NGEN_WITH_NETCDF
-    this->nc_manager_ = std::make_unique<NetCDFManager>(manager, nc_output_file_name, *sim_time_, mpi_rank_, mpi_num_procs_);
+    this->nc_manager_ = std::make_unique<NetCDFManager>(manager, nc_output_file_name, *sim_time_, open_mode, mpi_rank_, mpi_num_procs_);
 #endif
 }
 

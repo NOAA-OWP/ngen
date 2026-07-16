@@ -10,10 +10,9 @@
 #include <NGenConfig.h>
 
 NetCDFManager::NetCDFManager(std::shared_ptr<realization::Formulation_Manager> manager, 
-        const std::string& output_name, Simulation_Time const& sim_time, int mpi_rank, int mpi_num_procs)
+        const std::string& output_name, Simulation_Time const& sim_time, NetCDFOpenMode open_mode, int mpi_rank, int mpi_num_procs)
+    : manager_{manager}
 {
-    manager_ = manager;
-    sim_time_ = std::make_shared<Simulation_Time>(sim_time);
     std::filesystem::path check_path(output_name);
     if(check_path.is_absolute()){
         nc_filename_ = output_name;
@@ -47,8 +46,8 @@ NetCDFManager::NetCDFManager(std::shared_ptr<realization::Formulation_Manager> m
     }
     gather_all_catchments(catchments_in_proc);
     if (rank_ == 0){
-        nc_file_ = std::make_unique<NetCDFFile>(nc_filename_, true, is_mpi_);
-        define_catchment_netcdf_components();
+        nc_file_ = std::make_unique<NetCDFFile>(nc_filename_, open_mode, is_mpi_);
+        define_catchment_netcdf_components(sim_time);
     }
 #if NGEN_WITH_MPI
     if (comm_ != MPI_COMM_NULL) //This check is important if the user runs MPI with a single process.
@@ -130,7 +129,7 @@ void NetCDFManager::gather_all_catchments(const std::vector<int64_t>& catchments
 #endif
 }
 
-void NetCDFManager::define_catchment_netcdf_components()
+void NetCDFManager::define_catchment_netcdf_components(Simulation_Time sim_time)
 {
     std::string name;
     int dim_id;
@@ -141,7 +140,7 @@ void NetCDFManager::define_catchment_netcdf_components()
     try
     {
         name = "time";
-        int num_timesteps = sim_time_->get_total_output_times();
+        int num_timesteps = sim_time.get_total_output_times();
         dim_id = add_dimension(name, num_timesteps);
         dim_ids = {dim_id};
         names = {name};
@@ -149,11 +148,11 @@ void NetCDFManager::define_catchment_netcdf_components()
         
         //add timestep values and attributes for time
         std::vector<int> time_epoch_seconds(num_timesteps);
-        time_epoch_seconds[0] = sim_time_->get_current_epoch_time();
+        time_epoch_seconds[0] = sim_time.get_current_epoch_time();
         for(int time_index = 1; time_index < num_timesteps; time_index++)
         {
-            sim_time_->advance_timestep();
-            time_epoch_seconds[time_index] = sim_time_->get_current_epoch_time();
+            sim_time.advance_timestep();
+            time_epoch_seconds[time_index] = sim_time.get_current_epoch_time();
         }
         nc_file_->write_variable_data(name, time_epoch_seconds);
         nc_file_->write_attribute_to_ncvar(name, "units", "Seconds since 1970-01-01 00:00:00");

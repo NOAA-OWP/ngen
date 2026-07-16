@@ -714,11 +714,6 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
                                                        std::move(nexus_indexes),
                                                        mpi_rank,
                                                        mpi_num_procs);
-    #if NGEN_WITH_NETCDF
-        if (std::find(output_formats.begin(), output_formats.end(), "netcdf") != output_formats.end()){
-            simulation->create_netcdf_writer(manager, "catchment_output");
-        }
-    #endif //NGEN_WITH_NETCDF
     auto time_done_init                             = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
     LOG("[TIMING]: Init: " + std::to_string(time_elapsed_init.count()), LogLevel::INFO);
@@ -732,6 +727,9 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
         }
     }
 
+#if NGEN_WITH_NETCDF
+    NetCDFOpenMode netcdf_open_mode = NetCDFOpenMode::CREATE;
+#endif // NGEN_WITH_NETCDF
     { // optionally load a checkpoint if configured
         auto checkpoint_loader = state_saving_config.checkpoint_loader();
         if (checkpoint_loader) {
@@ -740,8 +738,16 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
             std::shared_ptr<State_Snapshot_Loader> snapshot_loader
                 = checkpoint_loader->initialize_checkpoint_snapshot(required_units);
             simulation->load_checkpoint(snapshot_loader);
+#if NGEN_WITH_NETCDF
+            netcdf_open_mode = NetCDFOpenMode::OPEN_WRITE;
+#endif //NGEN_WITH_NETCDF
         }
     }
+#if NGEN_WITH_NETCDF
+    if (std::find(output_formats.begin(), output_formats.end(), "netcdf") != output_formats.end()) {
+        simulation->create_netcdf_writer(manager, "catchment_output", netcdf_open_mode);
+    }
+#endif //NGEN_WITH_NETCDF
 
     if (state_saving_config.has_checkpoint_saver()) {
         int checkpoint_frequency;

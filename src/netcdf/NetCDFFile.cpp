@@ -23,19 +23,27 @@
     } while (0)
 
 
-NetCDFFile::NetCDFFile(const std::string& filename, bool write_only, bool is_mpi)
+NetCDFFile::NetCDFFile(const std::string& filename, NetCDFOpenMode open_mode, bool is_mpi)
     : nc_file_name_(filename), is_mpi_(is_mpi)
 {
-    int mode = NC_NETCDF4;
-    if(write_only){
-        read_only_ = false;
-        NC_CHECK(nc_create(nc_file_name_.c_str(), NC_NETCDF4 | NC_CLOBBER, &ncid_), "Creating NetCDF file failed");
+    switch (open_mode) {
+        case NetCDFOpenMode::OPEN_READ:
+            read_only_ = true;
+            NC_CHECK(nc_open(nc_file_name_.c_str(), NC_NOWRITE, &ncid_), "Opening NetCDF file in read-only mode failed.");
+            break;
+        case NetCDFOpenMode::OPEN_WRITE:
+            read_only_ = false;
+            NC_CHECK(nc_open(nc_file_name_.c_str(), NC_WRITE, &ncid_), "Opening NetCDF file in write mode failed.");
+            break;
+        case NetCDFOpenMode::CREATE:
+            read_only_ = false;
+            NC_CHECK(nc_create(nc_file_name_.c_str(), NC_NETCDF4 | NC_CLOBBER, &ncid_), "Creating NetCDF file failed");
+            break;
+        default:
+            std::string err_msg = "Invalid open mode for NetCDFFile";
+            LOG(LogLevel::FATAL, err_msg);
+            throw std::runtime_error(err_msg);
     }
-    else{
-        read_only_ = true;
-        NC_CHECK(nc_open(nc_file_name_.c_str(), NC_NOWRITE, &ncid_), "Opening NetCDF file failed");
-    }
-//    }
     if(read_only_){
         load_variables(); //load all netcdf data to objects.
     } 

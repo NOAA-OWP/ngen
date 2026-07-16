@@ -16,10 +16,17 @@
 #endif
 #include "NetCDFVar.hpp"
 
+
+enum class NetCDFOpenMode {
+    OPEN_READ,
+    OPEN_WRITE,
+    CREATE
+};
+
 class NetCDFFile {
 public:
 
-    NetCDFFile(const std::string& filename, bool write_only, bool is_mpi);
+    NetCDFFile(const std::string& filename, NetCDFOpenMode open_mode, bool is_mpi);
     ~NetCDFFile();
 
     void load_attributes(std::shared_ptr<NetCDFVar> nc_var) ;
