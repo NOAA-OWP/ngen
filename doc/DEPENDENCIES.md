@@ -55,7 +55,9 @@ Additionally, C++ compilers needs to be compatible (ideally officially *tested* 
 
 #### GCC
 
-Based on [this page](https://gcc.gnu.org/projects/cxx-status.html#cxx17), the C++ 17 support requirement probably equates to some GCC version `7` release or later.
+Based on [this page](https://gcc.gnu.org/projects/cxx-status.html#cxx17), C++ 17 *language* support alone equates to some GCC version `7` release or later. However, the project also relies on a complete C++ 17 `<filesystem>` implementation (e.g. `std::hash<std::filesystem::path>`), which GCC `8`'s libstdc++ does not fully provide, so the effective minimum is GCC `9` or later.
+
+On RHEL/Rocky/AlmaLinux `8`, whose system compiler is GCC `8`, install and enable a newer [`gcc-toolset`](https://developers.redhat.com/products/developertoolset/overview) rather than the base `gcc` (the project's container image, `docker/ngen.dockerfile`, uses `gcc-toolset-12`).
 
 #### Clang
 
