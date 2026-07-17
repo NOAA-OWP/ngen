@@ -31,7 +31,7 @@ public:
         const std::string& output_name, Simulation_Time const& sim_time, NetCDFOpenMode open_mode, int mpi_rank, int mpi_num_procs);
 
     // Constructor for read-only NetCDF (no MPI needed)
-    NetCDFManager(const std::string& filename, bool read_only);
+    NetCDFManager(const std::string& filename, NetCDFOpenMode open_mode);
 
     // Default constructor for mdframe tests 
     NetCDFManager();
@@ -77,7 +77,7 @@ private:
     /* Set up netcdf dimensions and variables.
        Note: A copy of Simulation_Time is passed because the object is expected to be modified and discarded at the end of the function. */
     void define_catchment_netcdf_components(Simulation_Time sim_time);
-    bool read_only_;
+    NetCDFOpenMode open_mode_;
     std::string nc_filename_;
     std::unique_ptr<NetCDFFile> nc_file_;
     std::vector<NetCDFVar> vars_;

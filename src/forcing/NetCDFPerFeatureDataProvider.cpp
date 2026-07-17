@@ -53,7 +53,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     //nc_set_chunk_cache(sizep, nelemsp, preemptionp);
 
     //open the file
-    nc_manager = std::make_shared<NetCDFManager>(input_path, true);
+    nc_manager = std::make_shared<NetCDFManager>(input_path, NetCDFOpenMode::OPEN_READ);
     nc_manager->open_file();
  
     //nc_get_chunk_cache(&sizep, &nelemsp, &preemptionp);

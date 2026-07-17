@@ -11,7 +11,7 @@
 
 NetCDFManager::NetCDFManager(std::shared_ptr<realization::Formulation_Manager> manager, 
         const std::string& output_name, Simulation_Time const& sim_time, NetCDFOpenMode open_mode, int mpi_rank, int mpi_num_procs)
-    : manager_{manager}
+    : manager_{manager}, open_mode_{open_mode}
 {
     std::filesystem::path check_path(output_name);
     if(check_path.is_absolute()){
@@ -55,14 +55,14 @@ NetCDFManager::NetCDFManager(std::shared_ptr<realization::Formulation_Manager> m
 #endif
 }
 
-NetCDFManager::NetCDFManager(const std::string& filename, bool read_only)
-    : read_only_(true)
+NetCDFManager::NetCDFManager(const std::string& filename, NetCDFOpenMode open_mode)
+    : open_mode_{open_mode}
 {
-    if (read_only_){
-        nc_file_ = std::make_unique<NetCDFFile>(filename, !read_only, false);
+    if (open_mode_ == NetCDFOpenMode::OPEN_READ) {
+        nc_file_ = std::make_unique<NetCDFFile>(filename, open_mode, false);
     }
     else{
-        throw std::runtime_error("Write only non-MPI function not implemented.");
+        throw std::runtime_error("Write non-MPI function not implemented.");
     }
 #if NGEN_WITH_MPI
     comm_ = MPI_COMM_NULL;
@@ -80,13 +80,13 @@ int NetCDFManager::create_file(const std::string& filename)
     if (num_procs_ > 1) {
         // MPI-enabled NetCDF
         is_mpi_ = true;
-        nc_file_ = std::make_unique<NetCDFFile>(filename, true, is_mpi_);
+        nc_file_ = std::make_unique<NetCDFFile>(filename, NetCDFOpenMode::CREATE, is_mpi_);
     }else{
         is_mpi_ = false;
     }
 #endif
     nc_filename_ = filename;
-    nc_file_ = std::make_unique<NetCDFFile>(nc_filename_, true, is_mpi_);
+    nc_file_ = std::make_unique<NetCDFFile>(nc_filename_, NetCDFOpenMode::CREATE, is_mpi_);
     if (!nc_file_) {
         throw std::runtime_error("Failed to create NetCDF file: " + filename);
     }
