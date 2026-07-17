@@ -28,7 +28,7 @@ class NetCDFManager
 {
 public:
      NetCDFManager(std::shared_ptr<realization::Formulation_Manager> manager, 
-        const std::string& output_name, Simulation_Time const& sim_time, NetCDFOpenMode open_mode, int mpi_rank, int mpi_num_procs);
+        const std::string& output_name, Simulation_Time const& sim_time, bool create_new_file, int mpi_rank, int mpi_num_procs);
 
     // Constructor for read-only NetCDF (no MPI needed)
     NetCDFManager(const std::string& filename, NetCDFOpenMode open_mode);

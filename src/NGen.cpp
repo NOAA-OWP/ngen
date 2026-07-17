@@ -728,7 +728,7 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     }
 
 #if NGEN_WITH_NETCDF
-    NetCDFOpenMode netcdf_open_mode = NetCDFOpenMode::CREATE;
+    bool create_new_netcdf_file = true;
 #endif // NGEN_WITH_NETCDF
     { // optionally load a checkpoint if configured
         auto checkpoint_loader = state_saving_config.checkpoint_loader();
@@ -739,13 +739,15 @@ int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
                 = checkpoint_loader->initialize_checkpoint_snapshot(required_units);
             simulation->load_checkpoint(snapshot_loader);
 #if NGEN_WITH_NETCDF
-            netcdf_open_mode = NetCDFOpenMode::OPEN_WRITE;
+            create_new_netcdf_file = false;
 #endif //NGEN_WITH_NETCDF
         }
     }
 #if NGEN_WITH_NETCDF
     if (std::find(output_formats.begin(), output_formats.end(), "netcdf") != output_formats.end()) {
-        simulation->create_netcdf_writer(manager, "catchment_output", netcdf_open_mode);
+        if (!create_new_netcdf_file)
+            LOG(LogLevel::INFO, "Attempting to open the output of the prior checkpoint run's netCDF output file. The prior file must be located in the default output location to be correctly read.");
+        simulation->create_netcdf_writer(manager, "catchment_output", create_new_netcdf_file);
     }
 #endif //NGEN_WITH_NETCDF
 

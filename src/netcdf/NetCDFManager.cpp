@@ -10,8 +10,8 @@
 #include <NGenConfig.h>
 
 NetCDFManager::NetCDFManager(std::shared_ptr<realization::Formulation_Manager> manager, 
-        const std::string& output_name, Simulation_Time const& sim_time, NetCDFOpenMode open_mode, int mpi_rank, int mpi_num_procs)
-    : manager_{manager}, open_mode_{open_mode}
+        const std::string& output_name, Simulation_Time const& sim_time, bool create_new_file, int mpi_rank, int mpi_num_procs)
+    : manager_{manager}, open_mode_{create_new_file ? NetCDFOpenMode::CREATE : NetCDFOpenMode::OPEN_WRITE}
 {
     std::filesystem::path check_path(output_name);
     if(check_path.is_absolute()){
@@ -46,8 +46,9 @@ NetCDFManager::NetCDFManager(std::shared_ptr<realization::Formulation_Manager> m
     }
     gather_all_catchments(catchments_in_proc);
     if (rank_ == 0){
-        nc_file_ = std::make_unique<NetCDFFile>(nc_filename_, open_mode, is_mpi_);
-        define_catchment_netcdf_components(sim_time);
+        nc_file_ = std::make_unique<NetCDFFile>(nc_filename_, this->open_mode_, is_mpi_);
+        if (create_new_file)
+            define_catchment_netcdf_components(sim_time);
     }
 #if NGEN_WITH_MPI
     if (comm_ != MPI_COMM_NULL) //This check is important if the user runs MPI with a single process.
