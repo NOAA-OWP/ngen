@@ -4,8 +4,16 @@ FROM rockylinux:${ROCKYLINUX_TAG}
 RUN dnf update -y \
     && dnf install -y dnf-plugins-core epel-release \
     && dnf repolist \
-    && dnf install -y --allowerasing tar git gcc-c++ gcc make cmake udunits2-devel coreutils \
+    && dnf install -y --allowerasing tar git gcc-toolset-12 make cmake udunits2-devel coreutils \
     && dnf clean all
+
+# Rocky 8's system compiler is GCC 8, whose libstdc++ lacks complete C++17 <filesystem>
+# support (notably std::hash<std::filesystem::path>). Build with the gcc-toolset-12 SCL
+# toolchain instead, and point the runtime loader at its libstdc++.
+ENV PATH="/opt/rh/gcc-toolset-12/root/usr/bin:${PATH}" \
+    LD_LIBRARY_PATH="/opt/rh/gcc-toolset-12/root/usr/lib64:/opt/rh/gcc-toolset-12/root/usr/lib" \
+    CC="/opt/rh/gcc-toolset-12/root/usr/bin/gcc" \
+    CXX="/opt/rh/gcc-toolset-12/root/usr/bin/g++"
 
 ARG BOOST_VERSION="1.86.0"
 RUN export BOOST_ARCHIVE="boost_$(echo ${BOOST_VERSION} | tr '\.' '_').tar.gz" \
@@ -33,10 +41,7 @@ RUN cmake -S . \
           -DNGEN_WITH_PYTHON:BOOL=OFF \
           -DNGEN_WITH_TESTS:BOOL=ON \
           -DNGEN_QUIET:BOOL=ON \
-          -DNGEN_WITH_EXTERN_SLOTH:BOOL=ON \
-          `# Rocky 8 ships GCC 8, whose std::filesystem lives in a separate library; link it` \
-          `# explicitly. --start-group avoids ordering issues with the static libstdc++fs.` \
-          -DCMAKE_EXE_LINKER_FLAGS="-Wl,--start-group -lstdc++fs"
+          -DNGEN_WITH_EXTERN_SLOTH:BOOL=ON
 
 RUN cmake --build /ngen_build \
           --target testbmicppmodel ngen \
