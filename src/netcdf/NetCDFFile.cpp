@@ -57,6 +57,13 @@ int NetCDFFile::add_dimension(const std::string& name, size_t len) {
     return dimid;
 }
 
+int NetCDFFile::read_dimension_definition(const std::string& name) {
+    int dimid;
+    NC_CHECK(nc_inq_dimid(ncid_, name.c_str(), &dimid), "NetCDF dimension " + name + " could not be found.");
+    dims_id_map_[name] = dimid;
+    return dimid;
+}
+
 void NetCDFFile::add_variable(const std::string& name, nc_type type, const std::vector<int>& dim_ids, const std::vector<std::string>& dim_names) {
     int varid;
     NC_CHECK(nc_def_var(ncid_, name.c_str(), type, dim_ids.size(), dim_ids.data(), &varid), "NetCDF variable definition failed");
@@ -68,6 +75,29 @@ void NetCDFFile::add_variable(const std::string& name, nc_type type, const std::
     }
     auto var = std::make_shared<NetCDFVar>(name, type, dim_ids, dim_names, varid, ncid_);
     add_ncvar(var);
+}
+
+std::shared_ptr<NetCDFVar> NetCDFFile::read_variable_definition(const std::string& name) {
+    int varid, n_dim_ids;
+    nc_type type;
+    NC_CHECK(nc_inq_varid(ncid_, name.c_str(), &varid), "NetCDF variable " + name + " could not be found.");
+    NC_CHECK(nc_inq_vartype(ncid_, varid, &type), "NetCDF variable " + name + " type read failed.");
+    // get the variable's dimensions
+    std::vector<std::string> dim_names;
+    std::vector<int> dim_ids;
+    NC_CHECK(nc_inq_varndims(ncid_, varid, &n_dim_ids), "NetCDF variable " + name + " associated dimensions count read failed.");
+    dim_ids.resize(n_dim_ids);
+    dim_names.reserve(n_dim_ids);
+    NC_CHECK(nc_inq_vardimid(ncid_, varid, dim_ids.data()), "NetCDF variable " + name + " associated dimensions IDs read failed.");
+    char dim_name[NC_MAX_NAME + 1];
+    for (const int dim_id : dim_ids) {
+        NC_CHECK(nc_inq_dimname(ncid_, dim_id, dim_name), "NetCDF dimension name query failed.");
+        std::string dim_str(dim_name);
+        dim_names.push_back(dim_str);
+    }
+    auto var = std::make_shared<NetCDFVar>(name, type, dim_ids, dim_names, varid, ncid_);
+    add_ncvar(var);
+    return var;
 }
 
 // Get dimension length by name

@@ -49,6 +49,8 @@ NetCDFManager::NetCDFManager(std::shared_ptr<realization::Formulation_Manager> m
         nc_file_ = std::make_unique<NetCDFFile>(nc_filename_, this->open_mode_, is_mpi_);
         if (create_new_file)
             define_catchment_netcdf_components(sim_time);
+        else
+            read_catchment_netcdf_components();
     }
 #if NGEN_WITH_MPI
     if (comm_ != MPI_COMM_NULL) //This check is important if the user runs MPI with a single process.
@@ -197,6 +199,26 @@ void NetCDFManager::define_catchment_netcdf_components(Simulation_Time sim_time)
     nc_file_->end_def_mode();
 }
 
+void NetCDFManager::read_catchment_netcdf_components() {
+    try {
+        this->nc_file_->read_dimension_definition("time");
+        this->nc_file_->read_variable_definition("time");
+        this->nc_file_->read_dimension_definition("catchments");
+        this->nc_file_->read_variable_definition("catchments");
+    } catch (const std::exception& e) {
+        LOG(LogLevel::FATAL, "The existing netCDF file must have existing dimensions and variables for 'time' and 'catchments'.");
+        LOG(LogLevel::FATAL, e.what());
+        throw;
+    }
+    try {
+        this->read_output_variable_data_from_formulation();
+    } catch (const std::exception& e) {
+        LOG(LogLevel::FATAL, "Failed to match netCDF output variables to forumation output variables.");
+        LOG(LogLevel::FATAL, e.what());
+        throw;
+    }
+}
+
 int NetCDFManager::add_dimension(const std::string& name, size_t len){
     return nc_file_->add_dimension(name, len);
 }
@@ -224,6 +246,29 @@ void NetCDFManager::add_output_variable_data_from_formulation()
             nc_file_->write_attribute_to_ncvar(output_headers[index], "variable units", output_units[index]);
             nc_file_->write_attribute_to_ncvar(output_headers[index], "_FillValue", "-1.0");
             nc_file_->write_attribute_to_ncvar(output_headers[index], "missing_value", "-1.0");
+            nc_output_variables_.push_back(output_headers[index]);
+        }
+    }
+}
+
+void NetCDFManager::read_output_variable_data_from_formulation() {
+    typename std::map<std::string, std::shared_ptr<realization::Catchment_Formulation>>::const_iterator it = manager_->begin();
+    const auto& catchment_info = *it;
+    auto r_c = std::dynamic_pointer_cast<realization::Bmi_Formulation>(catchment_info.second);
+    if(r_c->get_output_header_count() > 0){
+        std::vector<std::string>output_variables = r_c->get_output_variable_names();
+        std::vector<std::string>output_headers = r_c->get_output_header_fields();
+        nc_output_variables_.reserve(output_variables.size());
+        std::vector<std::string> dim_names{"time", "catchments"};
+
+        for (int index = 0; index < output_variables.size(); index ++){
+            auto var = nc_file_->read_variable_definition(output_headers[index]);
+            const auto& var_dim_names = var->get_dim_names();
+            for (const std::string& var_dim : dim_names)
+                if (std::find(var_dim_names.begin(), var_dim_names.end(), var_dim) == var_dim_names.end())
+                    throw std::runtime_error("NetCDF output variable " + var->get_name() + " does not use dimension " + var_dim);
+            if (var->get_type() != NC_DOUBLE)
+                throw std::runtime_error("NetCDF output variable " + var->get_name() + " is not of type double.");
             nc_output_variables_.push_back(output_headers[index]);
         }
     }

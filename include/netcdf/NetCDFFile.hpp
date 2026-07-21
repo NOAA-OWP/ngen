@@ -35,6 +35,7 @@ public:
 
     // Dimension handling
     int add_dimension(const std::string& name, size_t len);
+    int read_dimension_definition(const std::string& name);
     size_t get_dim_size(const std::string& name) const;
     int get_dim_id(const std::string& name) const;
 
@@ -43,6 +44,7 @@ public:
     std::vector<std::string> list_variables() const;
     void add_ncvar(std::shared_ptr<NetCDFVar> var);
     void add_variable(const std::string& name, nc_type type, const std::vector<int>& dims, const std::vector<std::string>& dim_names);
+    std::shared_ptr<NetCDFVar> read_variable_definition(const std::string& name);
 
     // Write data to a variable
     template<typename T>

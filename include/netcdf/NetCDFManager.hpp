@@ -65,6 +65,7 @@ public:
 
     // Add variables to the file (for writing)
     void add_output_variable_data_from_formulation();
+    void read_output_variable_data_from_formulation();
 
     // Add catchment output data to the file (for writing)
     void write_simulations_response_from_formulation(size_t time_index, const std::map<std::string, std::string>& catchment_output_values);
@@ -77,6 +78,7 @@ private:
     /* Set up netcdf dimensions and variables.
        Note: A copy of Simulation_Time is passed because the object is expected to be modified and discarded at the end of the function. */
     void define_catchment_netcdf_components(Simulation_Time sim_time);
+    void read_catchment_netcdf_components();
     NetCDFOpenMode open_mode_;
     std::string nc_filename_;
     std::unique_ptr<NetCDFFile> nc_file_;
