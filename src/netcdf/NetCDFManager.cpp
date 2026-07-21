@@ -200,13 +200,25 @@ void NetCDFManager::define_catchment_netcdf_components(Simulation_Time sim_time)
 }
 
 void NetCDFManager::read_catchment_netcdf_components() {
+    int cat_id;
+    std::shared_ptr<NetCDFVar> cat_var;
     try {
         this->nc_file_->read_dimension_definition("time");
         this->nc_file_->read_variable_definition("time");
-        this->nc_file_->read_dimension_definition("catchments");
-        this->nc_file_->read_variable_definition("catchments");
+        cat_id = this->nc_file_->read_dimension_definition("catchments");
+        cat_var = this->nc_file_->read_variable_definition("catchments");
     } catch (const std::exception& e) {
         LOG(LogLevel::FATAL, "The existing netCDF file must have existing dimensions and variables for 'time' and 'catchments'.");
+        LOG(LogLevel::FATAL, e.what());
+        throw;
+    }
+    try {
+        size_t cat_size = cat_var->get_dim_size(cat_id);
+        if (cat_size != this->catchments_.size())
+            throw std::runtime_error("The existing netCDF file has a different catchment dimension size than the run formulation.");
+        cat_var->build_catchments_index(cat_size);
+    } catch (const std::exception& e) {
+        LOG(LogLevel::FATAL, "NetCDF failed to build catchment output index.");
         LOG(LogLevel::FATAL, e.what());
         throw;
     }
