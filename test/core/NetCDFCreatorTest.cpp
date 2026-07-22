@@ -213,7 +213,7 @@ TEST_F(NetCDFCreatorTest, TestCatchmentIdentifiers)
 {
     std::filesystem::path full_file_path = std::filesystem::temp_directory_path() / "catchment_test.nc";
     std::string file_path = full_file_path.string();
-    nc_manager = std::make_unique<NetCDFManager>(manager_, file_path, *sim_time_, 0, 1);
+    nc_manager = std::make_unique<NetCDFManager>(manager_, file_path, *sim_time_, true, 0, 1);
     NetCDFFile* nc_file = nc_manager->get_file_handle();
     std::shared_ptr<NetCDFVar> catchments_var = nc_file->get_ncvar("catchments");
     size_t len = catchments_var->get_dim_size("catchments");
@@ -239,7 +239,7 @@ TEST_F(NetCDFCreatorTest, TestCatchmentOutputValues)
 {
     std::filesystem::path full_file_path = std::filesystem::temp_directory_path() / "catchment_test.nc";
     std::string file_path = full_file_path.string();
-    nc_manager = std::make_unique<NetCDFManager>(manager_, file_path, *sim_time_, 0, 1);
+    nc_manager = std::make_unique<NetCDFManager>(manager_, file_path, *sim_time_, true, 0, 1);
     NetCDFFile* nc_file = nc_manager->get_file_handle();
     std::map<std::string, std::string> catchment_output_values;
     auto c_form = std::dynamic_pointer_cast<realization::Catchment_Formulation>(manager_->get_formulation("cat-52"));

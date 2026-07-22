@@ -188,7 +188,7 @@ void ngen::Layer::load_hot_start(std::shared_ptr<State_Snapshot_Loader> snapshot
     }
 }
 
-std::map<std::string, std::string> ngen::Layer::get_catchment_output_data_for_timestep(){
+const std::map<std::string, std::string>& ngen::Layer::get_catchment_output_data_for_timestep(){
     return catchment_output_values;
 }
 

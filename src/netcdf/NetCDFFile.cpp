@@ -23,19 +23,27 @@
     } while (0)
 
 
-NetCDFFile::NetCDFFile(const std::string& filename, bool write_only, bool is_mpi)
+NetCDFFile::NetCDFFile(const std::string& filename, NetCDFOpenMode open_mode, bool is_mpi)
     : nc_file_name_(filename), is_mpi_(is_mpi)
 {
-    int mode = NC_NETCDF4;
-    if(write_only){
-        read_only_ = false;
-        NC_CHECK(nc_create(nc_file_name_.c_str(), NC_NETCDF4 | NC_CLOBBER, &ncid_), "Creating NetCDF file failed");
+    switch (open_mode) {
+        case NetCDFOpenMode::OPEN_READ:
+            read_only_ = true;
+            NC_CHECK(nc_open(nc_file_name_.c_str(), NC_NOWRITE, &ncid_), "Opening NetCDF file in read-only mode failed.");
+            break;
+        case NetCDFOpenMode::OPEN_WRITE:
+            read_only_ = false;
+            NC_CHECK(nc_open(nc_file_name_.c_str(), NC_WRITE, &ncid_), "Opening NetCDF file in write mode failed.");
+            break;
+        case NetCDFOpenMode::CREATE:
+            read_only_ = false;
+            NC_CHECK(nc_create(nc_file_name_.c_str(), NC_NETCDF4 | NC_CLOBBER, &ncid_), "Creating NetCDF file failed");
+            break;
+        default:
+            std::string err_msg = "Invalid open mode for NetCDFFile";
+            LOG(LogLevel::FATAL, err_msg);
+            throw std::runtime_error(err_msg);
     }
-    else{
-        read_only_ = true;
-        NC_CHECK(nc_open(nc_file_name_.c_str(), NC_NOWRITE, &ncid_), "Opening NetCDF file failed");
-    }
-//    }
     if(read_only_){
         load_variables(); //load all netcdf data to objects.
     } 
@@ -45,6 +53,13 @@ NetCDFFile::NetCDFFile(const std::string& filename, bool write_only, bool is_mpi
 int NetCDFFile::add_dimension(const std::string& name, size_t len) {
     int dimid;
     NC_CHECK(nc_def_dim(ncid_, name.c_str(), len, &dimid), "Defining dimension failed");
+    dims_id_map_[name] = dimid;
+    return dimid;
+}
+
+int NetCDFFile::read_dimension_definition(const std::string& name) {
+    int dimid;
+    NC_CHECK(nc_inq_dimid(ncid_, name.c_str(), &dimid), "NetCDF dimension " + name + " could not be found.");
     dims_id_map_[name] = dimid;
     return dimid;
 }
@@ -60,6 +75,29 @@ void NetCDFFile::add_variable(const std::string& name, nc_type type, const std::
     }
     auto var = std::make_shared<NetCDFVar>(name, type, dim_ids, dim_names, varid, ncid_);
     add_ncvar(var);
+}
+
+std::shared_ptr<NetCDFVar> NetCDFFile::read_variable_definition(const std::string& name) {
+    int varid, n_dim_ids;
+    nc_type type;
+    NC_CHECK(nc_inq_varid(ncid_, name.c_str(), &varid), "NetCDF variable " + name + " could not be found.");
+    NC_CHECK(nc_inq_vartype(ncid_, varid, &type), "NetCDF variable " + name + " type read failed.");
+    // get the variable's dimensions
+    std::vector<std::string> dim_names;
+    std::vector<int> dim_ids;
+    NC_CHECK(nc_inq_varndims(ncid_, varid, &n_dim_ids), "NetCDF variable " + name + " associated dimensions count read failed.");
+    dim_ids.resize(n_dim_ids);
+    dim_names.reserve(n_dim_ids);
+    NC_CHECK(nc_inq_vardimid(ncid_, varid, dim_ids.data()), "NetCDF variable " + name + " associated dimensions IDs read failed.");
+    char dim_name[NC_MAX_NAME + 1];
+    for (const int dim_id : dim_ids) {
+        NC_CHECK(nc_inq_dimname(ncid_, dim_id, dim_name), "NetCDF dimension name query failed.");
+        std::string dim_str(dim_name);
+        dim_names.push_back(dim_str);
+    }
+    auto var = std::make_shared<NetCDFVar>(name, type, dim_ids, dim_names, varid, ncid_);
+    add_ncvar(var);
+    return var;
 }
 
 // Get dimension length by name

@@ -28,10 +28,10 @@ class NetCDFManager
 {
 public:
      NetCDFManager(std::shared_ptr<realization::Formulation_Manager> manager, 
-        const std::string& output_name, Simulation_Time const& sim_time, int mpi_rank, int mpi_num_procs);
+        const std::string& output_name, Simulation_Time const& sim_time, bool create_new_file, int mpi_rank, int mpi_num_procs);
 
     // Constructor for read-only NetCDF (no MPI needed)
-    NetCDFManager(const std::string& filename, bool read_only);
+    NetCDFManager(const std::string& filename, NetCDFOpenMode open_mode);
 
     // Default constructor for mdframe tests 
     NetCDFManager();
@@ -42,9 +42,6 @@ public:
     void close_file();
 
     void gather_all_catchments(const std::vector<int64_t>& catchments_in_proc);
-
-    //set up netcdf dimensions and variables
-    void define_catchment_netcdf_components();
 
     // List variable names
     std::vector<std::string> list_variables() const;
@@ -68,21 +65,25 @@ public:
 
     // Add variables to the file (for writing)
     void add_output_variable_data_from_formulation();
+    void read_output_variable_data_from_formulation();
 
     // Add catchment output data to the file (for writing)
-    void write_simulations_response_from_formulation(size_t time_index, std::map<std::string, std::string> catchment_output_values);
+    void write_simulations_response_from_formulation(size_t time_index, const std::map<std::string, std::string>& catchment_output_values);
     void primary_netcdf_writer(size_t time_index, const std::map<int64_t, std::string>& catchment_output_values);
     void secondary_netcdf_worker(const std::map<int64_t, std::string>& catchment_output_values);
 
     ~NetCDFManager();
 
 private:
-    bool read_only_;
+    /* Set up netcdf dimensions and variables.
+       Note: A copy of Simulation_Time is passed because the object is expected to be modified and discarded at the end of the function. */
+    void define_catchment_netcdf_components(Simulation_Time sim_time);
+    void read_catchment_netcdf_components();
+    NetCDFOpenMode open_mode_;
     std::string nc_filename_;
     std::unique_ptr<NetCDFFile> nc_file_;
     std::vector<NetCDFVar> vars_;
     std::shared_ptr<realization::Formulation_Manager> manager_;
-    std::shared_ptr<Simulation_Time> sim_time_;
     size_t num_timesteps_;
     int num_catchments_ = 0;
     std::vector<int64_t> catchments_;

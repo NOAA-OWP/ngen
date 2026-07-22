@@ -101,7 +101,7 @@ public:
      * @param merge_all_ranks Whether to also get the units from other MPI ranks. This should only be `true` when calling blocking MPI processes is safe for the program.
      */
     std::vector<std::string> required_checkpoint_units(bool merge_all_ranks) const;
-    void create_netcdf_writer(std::shared_ptr<realization::Formulation_Manager> manager, std::string nc_output_file_name);
+    void create_netcdf_writer(std::shared_ptr<realization::Formulation_Manager> manager, std::string nc_output_file_name, bool create_new_file);
 
 private:
     void advance_models_one_output_step();
