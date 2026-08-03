@@ -58,6 +58,22 @@ on:
         description: 'MSW_MGR_REF'
         required: false
         type: string
+      EVAL_MGR_ORG:
+        description: 'EVAL_MGR_ORG'
+        required: false
+        type: string
+      EVAL_MGR_REF:
+        description: 'EVAL_MGR_REF'
+        required: false
+        type: string
+      NWM_METRICS_ORG:
+        description: 'NWM_METRICS_ORG'
+        required: false
+        type: string
+      NWM_METRICS_REF:
+        description: 'NWM_METRICS_REF'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -438,9 +454,23 @@ jobs:
           EWTS_REF: ${{ inputs.EWTS_REF || needs.setup.outputs.default_ref }}
           MSW_MGR_ORG: ${{ inputs.MSW_MGR_ORG || github.repository_owner }}
           MSW_MGR_REF: ${{ inputs.MSW_MGR_REF || needs.setup.outputs.default_ref }}
+          EVAL_MGR_ORG: ${{ inputs.EVAL_MGR_ORG || github.repository_owner }}
+          EVAL_MGR_REF: ${{ inputs.EVAL_MGR_REF || needs.setup.outputs.default_ref }}
+          NWM_METRICS_ORG: ${{ inputs.NWM_METRICS_ORG || github.repository_owner }}
+          NWM_METRICS_REF: ${{ inputs.NWM_METRICS_REF || needs.setup.outputs.default_ref }}
           GHCR_ORG: ${{ inputs.GHCR_ORG || needs.setup.outputs.org }}
           NGEN_IMAGE_TAG: ${{ needs.setup.outputs.alias_tag }}
         run: |
+          # nwm-cal-mgr also builds from nwm-eval-mgr, so it takes the eval/metrics
+          # source knobs; nwm-fcst-mgr does not declare those inputs and gh rejects
+          # undeclared inputs, so pass them to nwm-cal-mgr only
+          EXTRA_INPUTS=()
+          if [ "${{ matrix.repo }}" = "nwm-cal-mgr" ]; then
+            EXTRA_INPUTS+=(-f EVAL_MGR_ORG="$EVAL_MGR_ORG")
+            EXTRA_INPUTS+=(-f EVAL_MGR_REF="$EVAL_MGR_REF")
+            EXTRA_INPUTS+=(-f NWM_METRICS_ORG="$NWM_METRICS_ORG")
+            EXTRA_INPUTS+=(-f NWM_METRICS_REF="$NWM_METRICS_REF")
+          fi
           gh workflow run ci-cd.yml \
             --repo ${{ github.repository_owner }}/${{ matrix.repo }} \
             --ref ${{ matrix.ref }} \
@@ -449,4 +479,5 @@ jobs:
             -f MSW_MGR_ORG="$MSW_MGR_ORG" \
             -f MSW_MGR_REF="$MSW_MGR_REF" \
             -f GHCR_ORG="$GHCR_ORG" \
-            -f NGEN_IMAGE_TAG="$NGEN_IMAGE_TAG"
+            -f NGEN_IMAGE_TAG="$NGEN_IMAGE_TAG" \
+            "${EXTRA_INPUTS[@]}"
