@@ -25,6 +25,7 @@
 #include "Formulation_Manager.hpp"
 #include <boost/date_time.hpp>
 #include "../../utils/bmi/MockConfig.hpp"
+#include <forcing/CsvPerFeatureForcingProvider.hpp>
 using ::testing::MatchesRegex;
 using namespace realization;
 
