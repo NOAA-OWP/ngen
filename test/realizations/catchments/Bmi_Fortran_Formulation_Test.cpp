@@ -16,6 +16,7 @@
 #include "Bmi_Module_Formulation.hpp"
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Bmi_Fortran_Adapter.hpp"
+#include "CsvPerFeatureForcingProvider.hpp"
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include <iostream>

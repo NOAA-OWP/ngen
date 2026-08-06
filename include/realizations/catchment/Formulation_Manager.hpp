@@ -28,6 +28,10 @@
 #include "realizations/config/layer.hpp"
 #include "realizations/config/output.hpp"
 
+#if NGEN_WITH_NETCDF
+    #include "NetCDFPerFeatureDataProvider.hpp"
+#endif
+
 namespace realization {
 
     class Formulation_Manager {
