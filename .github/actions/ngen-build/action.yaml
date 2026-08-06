@@ -18,7 +18,7 @@ inputs:
     bmi_c:
       required: false
       description: 'Activate C BMI library support'
-      default: 'OFF'
+      default: 'ON'
     bmi_fortran:
       required: false
       description: 'Activate Fortran BMI library support'

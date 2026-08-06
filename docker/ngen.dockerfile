@@ -29,7 +29,7 @@ RUN cmake -S . \
           -DNGEN_WITH_SQLITE:BOOL=OFF \
           -DNGEN_WITH_UDUNITS:BOOL=ON \
           -DNGEN_WITH_BMI_FORTRAN:BOOL=OFF \
-          -DNGEN_WITH_BMI_C:BOOL=OFF \
+          -DNGEN_WITH_BMI_C:BOOL=ON \
           -DNGEN_WITH_PYTHON:BOOL=OFF \
           -DNGEN_WITH_TESTS:BOOL=ON \
           -DNGEN_QUIET:BOOL=ON \
