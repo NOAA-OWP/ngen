@@ -59,6 +59,8 @@
 #include "utilities/output/PerFormulationNexusOutputMgr.hpp"
 #endif
 
+#include <mediator/UnitsHelper.hpp>
+
 void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
 {
     stream << "Runtime configuration summary:\n";
