@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate example_v4_0_dangling.gpkg — a v4.0 GeoPackage used by the
+Generate example_v4_0beta1_dangling.gpkg — a v4.0beta1 GeoPackage used by the
 divides toid-synthesis unit test for the "join miss / dangling flowpath_id"
 case.
 
@@ -15,9 +15,9 @@ Topology:
 flowpaths table has only fp-1 (flowpath_toid = nex-1).
 
 Usage:
-    python3 make_v4_0_dangling_fixture.py
+    python3 make_v4_0beta1_dangling_fixture.py
 
-Output: example_v4_0_dangling.gpkg (sibling of this script).
+Output: example_v4_0beta1_dangling.gpkg (sibling of this script).
 Dependencies: Python 3.6+, stdlib only (os, sqlite3, struct). The CPython
 `_sqlite3` extension is required; every standard CPython build has it.
 
@@ -33,7 +33,7 @@ import os
 import sqlite3
 import struct
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "example_v4_0_dangling.gpkg")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "example_v4_0beta1_dangling.gpkg")
 SRS_ID = 4326
 
 
@@ -122,7 +122,7 @@ def main():
         )
     """)
 
-    # ── nexus (v4.0 schema — provides the nexus_id column detect_version needs) ─
+    # ── nexus (v4.0beta1 schema — provides the nexus_id column detect_version needs) ─
     cur.execute("""
         CREATE TABLE nexus (
             fid        INTEGER PRIMARY KEY AUTOINCREMENT,
