@@ -24,10 +24,7 @@ HydrofabricVersion detect_version(
         != nexus_columns.end();
     if (has_nexus_id) {
         // Both v4 variants rename nexus.id -> nexus.nexus_id; the divides
-        // layer is what tells them apart. A native flowpath_toid means the
-        // release schema, where "toid" is read directly off the divides row.
-        // Its absence (including an absent divides table) means beta1, where
-        // "toid" must be synthesized via divides JOIN flowpaths.
+        // layer's flowpath_toid column tells them apart (present == V4_0).
         const bool has_flowpath_toid =
             std::find(divides_columns.begin(), divides_columns.end(), "flowpath_toid")
             != divides_columns.end();
@@ -118,10 +115,7 @@ HydrofabricVersion guaranteed_get_hydrofabric_version(sqlite::database& db) {
 std::string get_layer_id_column(const HydrofabricVersion version, const std::string& layer, sqlite::database& db) {
 
     if (layer == "divides" && is_v4(version)) {
-        // Every v4 variant always exposes divides.divide_id; no runtime
-        // introspection needed. The downstream reference (flowpath_toid on
-        // V4_0, flowpath_id on V4_0_BETA1) is carried verbatim through
-        // build_properties for the toid step to use.
+        // Every v4 variant always exposes divides.divide_id.
         return "divide_id";
     }
 
@@ -142,9 +136,7 @@ std::string get_layer_id_column(const HydrofabricVersion version, const std::str
     }
 
     if (layer == "nexus" && is_v4(version)) {
-        // v4 renames nexus.id -> nexus.nexus_id; point id_column at the
-        // new primary key so the WHERE-IN subset clause and the per-row id
-        // lookup in build_feature both resolve against the right column.
+        // v4 renames nexus.id -> nexus.nexus_id.
         return "nexus_id";
     }
 
@@ -206,11 +198,8 @@ void update_property_map_for_version(
     }
 
     if (layer == "nexus") {
-        // v4 renamed nexus.id -> nexus.nexus_id and nexus.toid ->
-        // nexus.nexus_toid. Downstream consumers still key on "id" /
-        // "toid", so alias the v4 columns into those names. The
-        // originals remain in the map (additive) so any future consumer
-        // that prefers the schema names keeps working.
+        // v4 renamed nexus.id/toid -> nexus_id/nexus_toid; downstream
+        // consumers still key on "id"/"toid", so alias them (additive).
         auto it_nid = properties.find("nexus_id");
         if (it_nid != properties.end()) {
             properties.emplace("id", geojson::JSONProperty("id", it_nid->second));
@@ -238,12 +227,9 @@ void update_property_map_for_version(
         }
 
         if (version == HydrofabricVersion::V4_0) {
-            // v4.0 divides carry the downstream nexus natively, so "toid"
-            // is a straight alias of flowpath_toid — no join, and
-            // flowpath_id is not needed at all. A NULL in that column
-            // arrives here as the placeholder string "null" (see
-            // build_properties); treat it as absent so the divide is
-            // reported as terminal instead of linked to a bogus id.
+            // v4.0 divides carry flowpath_toid natively, aliased straight to
+            // "toid". NULL arrives as the placeholder string "null" (see
+            // build_properties); treat it as absent (terminal divide).
             auto it_toid = properties.find("flowpath_toid");
             if (it_toid == properties.end()) {
                 throw std::runtime_error(
@@ -254,24 +240,16 @@ void update_property_map_for_version(
                 properties.emplace("toid", geojson::JSONProperty("toid", it_toid->second));
             }
         } else {
-            // v4.0beta1 divides carry flowpath_id as the foreign key into
-            // flowpaths. build_properties already copies it verbatim (it is
-            // a non-geometry column); guard that invariant here so the
-            // toid-synthesis lookup below can rely on it.
             if (properties.count("flowpath_id") == 0) {
                 throw std::runtime_error(
                     "v4.0beta1 divides row missing required 'flowpath_id' column"
                 );
             }
 
-            // v4.0beta1 divides have no native toid column: synthesize it by
-            // looking up this divide's id in the precomputed divide_id ->
-            // flowpath_toid cache (built upstream from divides JOIN
-            // flowpaths). If the lookup misses (e.g., flowpath_id was null,
-            // the join did not resolve, or no flowpaths table exists and
-            // the cache is empty), leave "toid" unset — that matches v2.2
-            // terminal-divide semantics and lets any post-loop summary
-            // count the unlinked divides.
+            // No native toid column: synthesize it from the precomputed
+            // divide_id -> flowpath_toid cache. A miss (null flowpath_id,
+            // join miss, or no flowpaths table) leaves "toid" unset,
+            // matching v2.2 terminal-divide semantics.
             auto it = divide_toid_lookup.find(id);
             if (it != divide_toid_lookup.end()) {
                 properties.emplace("toid", geojson::JSONProperty("toid", it->second));

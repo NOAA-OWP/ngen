@@ -110,8 +110,7 @@ Dropped: `flowlines`, `flowline-attributes`, `flowpath-attributes`, `network`,
 
 This is the only fixture with genuine topology and geometry, and the only one
 carrying a terminal nexus. It is larger than the synthetic fixtures (~650 KB
-vs 8–48 KB) because real divide polygons in EPSG:5070 are heavy; that is the
-cost of having real v4.0 data in the corpus at all.
+vs 8–48 KB) because real divide polygons in EPSG:5070 are heavy.
 
 The prefixed identifiers are a dense 1..203 renumbering produced by the
 upstream subsetter, so they carry no trace of the parent VPU numbering.
@@ -146,8 +145,7 @@ same artifact.
 
 Do not regenerate "to verify it still works" or "to refresh the
 timestamp" — every regen produces a tracked diff (see *Why regen always
-shows a diff* below), and committing those diffs without an actual
-content change is the bookkeeping noise we'd prefer to avoid.
+shows a diff* below) even with no actual content change.
 
 ### How to regenerate
 
@@ -192,7 +190,9 @@ Two unavoidable sources of byte-level drift:
    timestamps.
 
 > [!NOTE]
-> The **Timestamp** drift is unavoidable by choice.  Since the **SQLite library version** drift is not, but is also not as obvious, it seemed better to avoid leading people to think regenerating the fixtures, even with no other local changes, would never have any side effects. 
+> The timestamp drift is unavoidable by design. The SQLite library version
+> drift is less obvious, so it's called out here: regenerating a fixture is
+> never a true no-op, even with no script changes.
 
 Neither affects test correctness — the SQLite on-disk format is stable
 and backward/forward compatible, and the C++ loader doesn't care which

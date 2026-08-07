@@ -18,21 +18,9 @@ void check_table_name(const std::string& table)
     }
 }
 
-// Required tables for hydrofabric GeoPackages:
-//   nexus      — read for v2.2 and v4 (id/toid vs nexus_id/nexus_toid)
-//   divides    — read for v2.2 and v4 (divide_id / id fallback); also
-//                inspected during detection to pick the v4 variant
-//   flowpaths  — read only for v4.0beta1 divides toid synthesis (JOIN);
-//                optional, and never read at all for v4.0
-//
-// Metadata tables always read by SQLite / geopackage infrastructure:
-//   gpkg_geometry_columns — geometry column name lookup
-//   sqlite_master         — table-existence checks (db.contains / PRAGMA table_info)
-//
-// Auxiliary tables that MUST NOT be touched by this loader:
-//   network, flowlines, flowline_endpoints, hydrolocations, pois,
-//   incremental_areas, lakes, divide-attributes, flowpath-attributes,
-//   flowpath-attributes-ml
+// Hydrofabric tables touched: nexus and divides always; flowpaths only for
+// v4.0beta1 divides->toid synthesis (never for v4.0). Auxiliary tables
+// (network, flowlines, pois, lakes, attribute tables, etc.) are left alone.
 std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     const std::string& gpkg_path,
     const std::string& layer = "",
@@ -44,11 +32,8 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
 
     ngen::sqlite::database db{gpkg_path};
 
-    // Detect the hydrofabric schema version once per file load and reuse the
-    // result for every per-row decision below. The "guaranteed" variant
-    // collapses the not-a-hydrofabric case (no `nexus` table, e.g. synthetic
-    // test fixtures) into HydrofabricVersion::V2_2 so the pre-v4 legacy
-    // code paths remain intact.
+    // Detected once per load and reused for every per-row decision below;
+    // falls back to V2_2 for non-hydrofabric input (e.g. synthetic fixtures).
     HydrofabricVersion version = guaranteed_get_hydrofabric_version(db);
 
     // Check if layer exists
@@ -114,10 +99,8 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     query_get_layer_geom_meta.next();
     const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
 
-    // Precompute the v4.0 divide_id -> flowpath_toid map once before the
-    // per-row loop, so update_property_map_for_version can attribute "toid"
-    // via a hashtable lookup. Empty map for any (version, layer) other than
-    // (V4_0, "divides"), or when the GPKG has no flowpaths table.
+    // Precomputed once so the per-row loop can attribute "toid" via a
+    // hashtable lookup instead of N queries; empty outside (V4_0_BETA1, "divides").
     std::unordered_map<std::string, std::string> divide_toid_lookup = build_divide_toid_lookup(version, layer, db);
 
     // Get layer
@@ -125,11 +108,6 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     query_get_layer.next();
 
     // build features out of layer query
-    //
-    // All schema-specific work happens here so that build_feature() can
-    // remain version-agnostic: the per-row body resolves the id, builds
-    // the property map, applies any v4.0 column aliasing or synthesis,
-    // and only then hands the prepared inputs to build_feature().
     std::vector<geojson::Feature> features;
     features.reserve(layer_feature_count);
     while(!query_get_layer.done()) {
@@ -149,11 +127,9 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
         query_get_layer.next();
     }
 
-    // Summary WARN for v4.0 divides whose toid could not be synthesized via
-    // the divides -> flowpaths join (null flowpath_id, or join miss). A
-    // single aggregate line avoids flooding logs when a large subset is
-    // terminal.
-    if (version == HydrofabricVersion::V4_0 && layer == "divides") {
+    // Aggregate WARN for divides whose toid could not be synthesized, rather
+    // than one line per row.
+    if (is_v4(version) && layer == "divides") {
         std::size_t unlinked = 0;
         for (const auto& f : features) {
             if (!f->has_property("toid")) {
@@ -163,8 +139,8 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
         #ifndef NGEN_QUIET
         if (unlinked > 0) {
             std::cout << "WARN: " << unlinked
-                      << " v4.0 divide(s) have no toid (flowpath_id null or"
-                      << " join miss on divides -> flowpaths); treated as"
+                      << " divide(s) have no toid (null downstream reference"
+                      << " or divides -> flowpaths join miss); treated as"
                       << " terminal." << std::endl;
         }
         #endif
