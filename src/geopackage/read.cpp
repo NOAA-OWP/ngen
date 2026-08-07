@@ -19,9 +19,11 @@ void check_table_name(const std::string& table)
 }
 
 // Required tables for hydrofabric GeoPackages:
-//   nexus      — read for v2.2 and v4.0 (id/toid vs nexus_id/nexus_toid)
-//   divides    — read for v2.2 and v4.0 (divide_id / id fallback)
-//   flowpaths  — read only for v4.0 divides toid synthesis (JOIN); optional
+//   nexus      — read for v2.2 and v4 (id/toid vs nexus_id/nexus_toid)
+//   divides    — read for v2.2 and v4 (divide_id / id fallback); also
+//                inspected during detection to pick the v4 variant
+//   flowpaths  — read only for v4.0beta1 divides toid synthesis (JOIN);
+//                optional, and never read at all for v4.0
 //
 // Metadata tables always read by SQLite / geopackage infrastructure:
 //   gpkg_geometry_columns — geometry column name lookup
@@ -45,7 +47,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     // Detect the hydrofabric schema version once per file load and reuse the
     // result for every per-row decision below. The "guaranteed" variant
     // collapses the not-a-hydrofabric case (no `nexus` table, e.g. synthetic
-    // test fixtures) into HydrofabricVersion::V2_2 so the pre-v4.0 legacy
+    // test fixtures) into HydrofabricVersion::V2_2 so the pre-v4 legacy
     // code paths remain intact.
     HydrofabricVersion version = guaranteed_get_hydrofabric_version(db);
 
