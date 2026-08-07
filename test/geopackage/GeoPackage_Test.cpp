@@ -102,8 +102,7 @@ TEST_F(GeoPackage_Test, geopackage_projection_test)
     ASSERT_TRUE(third == nullptr);
 }
 
-// Fixture for extra-column tolerance tests.
-// Uses example_v4_0beta1_extra_col.gpkg which carries:
+// Uses example_v4_0beta1_extra_col.gpkg, which carries:
 //   - flowlines with an extra 'lengthkm' column (auxiliary table, never read)
 //   - pois with geom declared as GEOMETRY instead of POINT (auxiliary table, never read)
 class GeoPackage_ExtraCol_Test : public ::testing::Test
@@ -127,10 +126,8 @@ class GeoPackage_ExtraCol_Test : public ::testing::Test
     std::string path;
 };
 
-// Loading nexus from a v4 GPKG that also contains flowlines with an extra
-// column and pois with a GEOMETRY-typed geom must succeed. The extra column
-// ('lengthkm') belongs only to flowlines, which the loader never opens, so
-// it must not appear in any nexus feature's properties.
+// Loading nexus from a v4 GPKG with an extra-column flowlines table and a
+// GEOMETRY-typed pois table must still succeed.
 TEST_F(GeoPackage_ExtraCol_Test, geopackage_v4_nexus_extra_col_ignored)
 {
     const auto gpkg = ngen::geopackage::read(this->path, "nexus", {});
@@ -146,8 +143,7 @@ TEST_F(GeoPackage_ExtraCol_Test, geopackage_v4_nexus_extra_col_ignored)
     EXPECT_EQ(feat->get_property("id").as_string(), "nex-1");
     EXPECT_EQ(feat->get_property("toid").as_string(), "coastal-000001");
 
-    // 'lengthkm' lives only on the flowlines auxiliary table; must not
-    // appear in nexus feature properties since flowlines is never read
+    // 'lengthkm' lives only on the (unread) flowlines table
     EXPECT_FALSE(feat->has_property("lengthkm"));
 }
 
@@ -166,10 +162,8 @@ TEST_F(GeoPackage_ExtraCol_Test, geopackage_v4_divides_toid_synthesized)
     EXPECT_EQ(feat->get_property("toid").as_string(), "nex-1");
 }
 
-// Fixture for v4 nexus remap tests.
-// Verifies that 'id' and 'toid' are correctly aliased from 'nexus_id' /
-// 'nexus_toid' on v4 loads, and that v2.2 loads continue to populate
-// 'id' and 'toid' directly from their original columns.
+// Covers 'id'/'toid' aliasing from 'nexus_id'/'nexus_toid' on v4 loads, and
+// direct population from the original columns on v2.2 loads.
 class GeoPackage_NexusRemap_Test : public ::testing::Test
 {
   protected:
@@ -201,8 +195,7 @@ class GeoPackage_NexusRemap_Test : public ::testing::Test
 };
 
 // Every v4 nexus feature must expose 'id' == nexus_id and 'toid' ==
-// nexus_toid after the loader aliases them at the load boundary. The original
-// 'nexus_id' / 'nexus_toid' properties are also preserved (additive aliasing).
+// nexus_toid; original 'nexus_id'/'nexus_toid' properties are also preserved.
 TEST_F(GeoPackage_NexusRemap_Test, geopackage_v4_nexus_id_toid_aliased)
 {
     const auto gpkg = ngen::geopackage::read(this->v4_0_path, "nexus", {});
@@ -260,12 +253,10 @@ TEST_F(GeoPackage_NexusRemap_Test, geopackage_v2_2_nexus_id_toid_from_columns)
     EXPECT_EQ(gpkg->get_feature(idx2)->get_property("toid").as_string(), "coastal-000001");
 }
 
-// Fixture for v4.0beta1 divides toid-synthesis tests. Synthesis is specific to
-// beta1; the v4.0 release variant reads flowpath_toid natively instead (see
-// GeoPackage_DividesNativeToid_Test).
-// Uses example_v4_0beta1.gpkg (3 divides, all flowpath_ids resolve) and
-// example_v4_0beta1_dangling.gpkg (2 divides: one resolves, one has a
-// flowpath_id not present in flowpaths).
+// beta1-only: toid is synthesized via a divides->flowpaths join (v4.0 reads
+// flowpath_toid natively instead; see GeoPackage_DividesNativeToid_Test).
+// example_v4_0beta1.gpkg: 3 divides, all resolve. example_v4_0beta1_dangling.gpkg:
+// 2 divides, one with a flowpath_id absent from flowpaths.
 class GeoPackage_DividesToidSynthesis_Test : public ::testing::Test
 {
   protected:
@@ -356,12 +347,9 @@ TEST_F(GeoPackage_DividesToidSynthesis_Test, geopackage_v4_divides_dangling_flow
         << "expected exactly 1 unlinked divide (the WARN count should be 1)";
 }
 
-// Fixture for v4.0 native-toid tests.
-// example_v4_0.gpkg carries divides.flowpath_toid natively and describes the
-// same topology as example_v4_0beta1.gpkg, so the two must agree on every
-// resulting 'toid' despite reaching it by different routes. The real-world
-// example_v4_0_real.gpkg is a stripped NOAA-OWP gage subset used to exercise
-// the same path against genuine data, including a terminal nexus.
+// example_v4_0.gpkg carries divides.flowpath_toid natively and shares its
+// topology with example_v4_0beta1.gpkg. example_v4_0_real.gpkg is a stripped
+// NOAA-OWP gage subset exercising the same path against genuine data.
 class GeoPackage_DividesNativeToid_Test : public ::testing::Test
 {
   protected:
@@ -422,9 +410,8 @@ TEST_F(GeoPackage_DividesNativeToid_Test, geopackage_v4_0_divides_native_toid)
     EXPECT_EQ(gpkg->get_feature(idx3)->get_property("toid").as_string(), "nex-1");
 }
 
-// The two variants describe identical topology, so reading each must yield the
-// same divide -> toid mapping. This is the guarantee that lets the loader drop
-// the join on v4.0 without changing results.
+// The two variants describe identical topology, so reading each must yield
+// the same divide -> toid mapping.
 TEST_F(GeoPackage_DividesNativeToid_Test, geopackage_v4_0_matches_beta1_toids)
 {
     const auto native = ngen::geopackage::read(this->v4_0_path, "divides", {});
@@ -471,10 +458,8 @@ TEST_F(GeoPackage_DividesNativeToid_Test, geopackage_v4_0_real_hydrofabric_loads
     EXPECT_EQ(terminal, 1) << "expected exactly 1 terminal (tnx-) nexus";
 }
 
-// Fixture for subset-tolerance regression test.
-// Uses example_v4_0beta1_minimal.gpkg, which contains only nexus, divides, and
-// flowpaths (no auxiliary tables). The test verifies that both layers load
-// and that a combined collection links all 3 divides to their target nexuses.
+// Uses example_v4_0beta1_minimal.gpkg, which contains only nexus, divides,
+// and flowpaths (no auxiliary tables).
 class GeoPackage_SubsetTolerance_Test : public ::testing::Test
 {
   protected:
@@ -496,11 +481,9 @@ class GeoPackage_SubsetTolerance_Test : public ::testing::Test
     std::string path;
 };
 
-// Both layers of a GPKG that contains only nexus/divides/flowpaths (no
-// auxiliary tables) must load successfully with the expected feature counts.
-// Merging both collections and running link_features_from_property must
-// resolve all 3 divide->nexus edges (cat-1->nex-1, cat-2->nex-2,
-// cat-3->nex-1), confirming end-to-end connectivity without auxiliary tables.
+// Both layers must load with the expected feature counts, and linking a
+// combined collection must resolve all 3 divide->nexus edges
+// (cat-1->nex-1, cat-2->nex-2, cat-3->nex-1).
 TEST_F(GeoPackage_SubsetTolerance_Test, geopackage_v4_minimal_loads_and_links_end_to_end)
 {
     const auto divides = ngen::geopackage::read(this->path, "divides", {});
@@ -509,8 +492,8 @@ TEST_F(GeoPackage_SubsetTolerance_Test, geopackage_v4_minimal_loads_and_links_en
     ASSERT_EQ(divides->get_size(), 3);
     ASSERT_EQ(nexus->get_size(),   2);
 
-    // Merge both layers into a single collection so link_features_from_property
-    // can resolve divide toid -> nexus id lookups across both layers.
+    // Merge both layers so link_features_from_property can resolve
+    // divide toid -> nexus id lookups across them.
     geojson::FeatureCollection combined;
     for (int i = 0; i < divides->get_size(); ++i) {
         combined.add_feature(divides->get_feature(i));
@@ -522,16 +505,13 @@ TEST_F(GeoPackage_SubsetTolerance_Test, geopackage_v4_minimal_loads_and_links_en
     std::string toid_key = "toid";
     const int links = combined.link_features_from_property(nullptr, &toid_key);
 
-    // All 3 divides have a synthesized toid that resolves to a nexus in the
-    // combined collection; nexus toids (fp-2, coastal-000001) are absent from
-    // the collection so they do not add to the link count.
+    // nexus toids (fp-2, coastal-000001) are absent from the collection,
+    // so only the 3 divide->nexus edges count.
     EXPECT_EQ(links, 3);
 }
 
-// Fixture for detect_version unit tests.
-// Uses example_v2_2.gpkg (v2.2 nexus schema: 'id' column), and the two v4
-// variants, which share the 'nexus_id' nexus schema and are told apart by
-// whether divides carries a native flowpath_toid column:
+// Uses example_v2_2.gpkg ('id' nexus column) and the two v4 variants, which
+// share the 'nexus_id' schema and are told apart by divides.flowpath_toid:
 //   example_v4_0beta1.gpkg — no divides.flowpath_toid  -> V4_0_BETA1
 //   example_v4_0.gpkg      — has divides.flowpath_toid -> V4_0
 class GeoPackage_DetectVersion_Test : public ::testing::Test
@@ -632,10 +612,9 @@ TEST_F(GeoPackage_DetectVersion_Test, geopackage_detect_version_column_lists)
 // containing "nexus".
 TEST_F(GeoPackage_DetectVersion_Test, geopackage_detect_version_throws_on_bad_schema)
 {
-    // Build a temporary SQLite database with a malformed nexus table.
     const std::string path = std::string(testing::TempDir()) + "/malformed_nexus.gpkg";
     {
-        std::remove(path.c_str()); // delete any leftover from a prior run
+        std::remove(path.c_str());
         sqlite3* raw = nullptr;
         ASSERT_EQ(sqlite3_open(path.c_str(), &raw), SQLITE_OK);
         // Nexus table present but with neither 'id' nor 'nexus_id' columns.
