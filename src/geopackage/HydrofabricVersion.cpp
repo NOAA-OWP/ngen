@@ -94,19 +94,17 @@ static const char* version_label(const HydrofabricVersion version)
 }
 
 HydrofabricVersion guaranteed_get_hydrofabric_version(sqlite::database& db) {
-    HydrofabricVersion version = HydrofabricVersion::V2_2;
-    bool version_detected = false;
-    try {
-        version = detect_version(db);
-        version_detected = true;
-    } catch (const std::runtime_error&) {
-        // swallow: this GPKG does not carry a hydrofabric `nexus` table
+    if (!db.contains("nexus")) {
+        return HydrofabricVersion::V2_2;
     }
 
+    // A `nexus` table is present, so this is expected to be a hydrofabric
+    // GPKG; let detect_version() throw its detailed error if the schema
+    // doesn't match any known version, rather than masking it as V2_2.
+    HydrofabricVersion version = detect_version(db);
+
     #ifndef NGEN_QUIET
-    if (version_detected) {
-        std::cout << "INFO: hydrofabric detected: " << version_label(version) << std::endl;
-    }
+    std::cout << "INFO: hydrofabric detected: " << version_label(version) << std::endl;
     #endif
 
     return version;

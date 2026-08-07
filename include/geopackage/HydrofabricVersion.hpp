@@ -74,11 +74,13 @@ HydrofabricVersion detect_version(
 );
 
 /**
- * Detect the hydrofabric schema version, falling back to V2_2 when
- * detect_version() throws (typically no `nexus` table, e.g. a
- * synthetic fixture or non-hydrofabric GeoPackage), preserving the
- * pre-v4 legacy code paths for such input. Logs the detected version
- * to stdout on success, unless NGEN_QUIET is defined.
+ * Detect the hydrofabric schema version, falling back to V2_2 only when
+ * the GPKG has no `nexus` table at all (e.g. a synthetic fixture or
+ * non-hydrofabric GeoPackage), preserving the pre-v4 legacy code paths
+ * for such input. If a `nexus` table is present but its schema matches
+ * no known version, detect_version()'s error propagates rather than
+ * being masked as V2_2. Logs the detected version to stdout on success,
+ * unless NGEN_QUIET is defined.
  *
  * @param[in] db Open GeoPackage database
  * @return Detected hydrofabric version, or V2_2 if the GPKG has no nexus table
