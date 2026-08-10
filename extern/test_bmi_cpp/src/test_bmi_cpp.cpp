@@ -268,7 +268,7 @@ std::string TestBmiCpp::GetVarUnits(std::string name){
   }
   iter = std::find(this->model_var_names.begin(), this->model_var_names.end(), name);
   if(iter != this->model_var_names.end()){
-    return this->model_var_types[iter - this->model_var_names.begin()];
+    return this->model_var_units[iter - this->model_var_names.begin()];
   }
   iter = std::find(this->mass_balance_var_names.begin(), this->mass_balance_var_names.end(), name);
   if(iter != this->mass_balance_var_names.end()){
