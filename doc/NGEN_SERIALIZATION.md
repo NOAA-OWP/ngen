@@ -232,6 +232,7 @@ Each `run()` call gated by the configured frequency drives the capture
 sequence against the model:
 
 ```
+int64_t size = 0;
 SetValue(ngen::serialization_create, &trigger)
 GetValue(ngen::serialization_size,   &size)       // expect size > 0
 GetValue(ngen::serialization_state,  buffer)      // buffer.size() == size
@@ -246,6 +247,40 @@ keyed by their respective feature ids.
 On any BMI or I/O failure, control returns early with the appropriate
 `PROTOCOL_ERROR` / `PROTOCOL_WARNING`. A best-effort `SetValue(free)` is
 attempted to avoid leaking the internal buffer even in error paths.
+
+### Size variable width — how the engine composes with narrower models
+
+The engine always reads and writes `ngen::serialization_size` into an
+`int64_t`, regardless of what the model reports for `GetVarType`.
+The protocol spec's ["Width of the size variable"](BMI_SERIALIZATION_PROTOCOL.md#width-of-the-size-variable)
+section lists the per-language declarations model authors *should* use; However, in any of the supported language adapters, a model *could* use either 32 bit or 64 bit ints, and the zero initialization of the framework's `int64_t size` variable, and little endian systems, means the 32 bit int case still works correctly, up to the point the *model* code potentially overflows the 32 bit int value. 
+
+- **`int64`-typed models (C, C++, Python).** The adapter marshals
+  the full `sizeof(int64_t)` bytes verbatim in both directions.
+
+- **`integer`-typed Fortran models (simple path).** The
+  Bmi_Fortran_Adapter dispatches to `set_value_int` / `get_value_int`,
+  which move `c_int`-typed arrays across the language boundary. On
+  save, the engine's `int64_t size = 0` starts fully zeroed; the
+  shim writes exactly `sizeof(c_int)` bytes into the low end of
+  that slot. On little-endian systems those low bytes ARE the low
+  half of the int64, and the untouched high half stays zero — the
+  engine reads the correct int64 for any value the model could
+  express in its own `integer` type (i.e. up to `INT32_MAX`). On
+  restore the shim reads back the same low bytes of the engine's
+  int64, which is correct for any value the model could have
+  produced. The zero-init on the engine's side and the LE byte
+  layout on the system are required for this to work correctly.
+
+- **Wide-path Fortran models (launder).** Models should report the pair
+  `(GetVarItemsize = c_sizeof(0_c_int), GetVarNbytes = c_sizeof(0_c_int64_t))`,
+  which drives the shim to marshal two `c_int`s — the full 8 bytes
+  of the int64 across the boundary. See the protocol spec for the
+  `transfer` idiom on the model side.
+
+If a future BMI Fortran binding gains a `set_value_int64`
+method, the wide-path launder becomes unnecessary — Fortran models
+could then declare the size as `integer(kind=c_int64_t)` directly.
 
 ---
 
@@ -319,13 +354,18 @@ entity's `ctx.id` and the configured match mode:
 - **Fixed step** (when `step` is a numeric value): the record whose
   `time_step` exactly equals the value.
 
-On a match, the protocol calls:
+On a match, the protocol calls the restore-side ordered functions:
 
 ```
-SetValue(ngen::serialization_state, record.payload.data())
+int64_t nbytes = record.payload.size();
+SetValue(ngen::serialization_size,  &nbytes)                   // provide byte count
+SetValue(ngen::serialization_state, record.payload.data())     // deliver the bytes
 ```
 
-The model reads the bytes and restores its own computed state.
+The `SetValue(ngen::serialization_size)` step gives the model the incoming byte count
+before it has to accept the payload — see the save/restore
+symmetry described in the protocol spec's step 5. The model then
+reads the bytes and restores its own computed state.
 `ctx.current_time_step` is not used by this protocol; the step that
 matters is the one embedded in the record, controlled by
 `restore.step`.

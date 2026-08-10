@@ -50,7 +50,7 @@ static const char *mass_balance_var_locations[MASS_BALANCE_VAR_NAME_COUNT] = { "
 // calls to return BMI_FAILURE for these names so a caller reaching
 // for spatial metadata sees a real signal.
 static const char *serialization_var_names[SERIALIZATION_VAR_NAME_COUNT] = { NGEN_SERIALIZATION_CREATE, NGEN_SERIALIZATION_FREE, NGEN_SERIALIZATION_SIZE, NGEN_SERIALIZATION_STATE };
-static const char *serialization_var_types[SERIALIZATION_VAR_NAME_COUNT] = { "int", "int", "int", "char" };
+static const char *serialization_var_types[SERIALIZATION_VAR_NAME_COUNT] = { "int", "int", "int64", "char" };
 static const char *serialization_var_units[SERIALIZATION_VAR_NAME_COUNT] = { "ngen::trigger", "ngen::trigger", "bytes", "ngen::opaque" };
 static const int   serialization_var_item_count[SERIALIZATION_VAR_NAME_COUNT] = { 1, 1, 1, 0 };
 
@@ -59,7 +59,7 @@ static const int   serialization_var_item_count[SERIALIZATION_VAR_NAME_COUNT] = 
 // layout grows; deserialize_state validates the incoming byte count against
 // this value so a stale update here turns into a loud runtime signal
 // rather than a silent overread.
-#define SERIALIZED_STATE_BYTES ((int)(sizeof(double) * 5))
+#define SERIALIZED_STATE_BYTES ((int64_t)(sizeof(double) * 5))
 
 static int Finalize (Bmi *self)
 {
@@ -383,6 +383,13 @@ static int Get_value_at_indices (Bmi *self, const char *name, void *dest, int *i
         return BMI_SUCCESS;
     }
 
+    if (strcmp (var_type, "int64") == 0) {
+        for (size_t i = 0; i < len; ++i) {
+            ((int64_t*)dest)[i] = ((int64_t*)ptr)[inds[i]];
+        }
+        return BMI_SUCCESS;
+    }
+
     return BMI_FAILURE;
 }
 
@@ -454,6 +461,10 @@ static int Get_value_ptr (Bmi *self, const char *name, void **dest)
         *dest = ((test_bmi_c_model *)(self->data))->serialized_state;
         return BMI_SUCCESS;
     }
+    if (strcmp (name, "test::serialization_32bit") == 0) {
+        *dest = &((test_bmi_c_model *)(self->data))->serialized_size_32bit;
+        return BMI_SUCCESS;
+    }
     return BMI_FAILURE;
 }
 
@@ -497,6 +508,10 @@ static int Get_var_itemsize (Bmi *self, const char *name, int * size)
     }
     else if (strcmp (type, "long") == 0) {
         *size = sizeof(long);
+        return BMI_SUCCESS;
+    }
+    else if (strcmp (type, "int64") == 0) {
+        *size = sizeof(int64_t);
         return BMI_SUCCESS;
     }
     else if (strcmp (type, "char") == 0) {
@@ -602,6 +617,10 @@ static int Get_var_nbytes (Bmi *self, const char *name, int * nbytes)
         *nbytes = ((test_bmi_c_model *) self->data)->serialized_size;
         return BMI_SUCCESS;
     }
+    if (strcmp(name, "test::serialization_32bit") == 0) {
+        *nbytes = item_size;
+        return BMI_SUCCESS;
+    }
 
     if (item_count < 1)
         item_count = ((test_bmi_c_model *) self->data)->num_time_steps;
@@ -648,6 +667,10 @@ static int Get_var_type (Bmi *self, const char *name, char * type)
             snprintf(type, BMI_MAX_TYPE_NAME, "%s", serialization_var_types[i]);
             return BMI_SUCCESS;
         }
+    }
+    if (strcmp(name, "test::serialization_32bit") == 0) {
+        snprintf(type, BMI_MAX_TYPE_NAME, "%s", "int");
+        return BMI_SUCCESS;
     }
     // If we get here, it means the variable name wasn't recognized
     type[0] = '\0';
@@ -788,6 +811,13 @@ static int Set_value_at_indices (Bmi *self, const char *name, int * inds, int le
         return BMI_SUCCESS;
     }
 
+    if (strcmp (var_type, "int64") == 0) {
+        for (size_t i = 0; i < len; ++i) {
+            ((int64_t*)ptr)[inds[i]] = ((int64_t*)src)[i];
+        }
+        return BMI_SUCCESS;
+    }
+
     return BMI_FAILURE;
 }
 
@@ -817,12 +847,12 @@ static void free_serialization(test_bmi_c_model* model) {
  *  rather than silently overreading — the test model's wire layout is
  *  fixed, so a mismatch indicates a caller bug or a schema drift that
  *  hasn't been propagated to this helper. */
-static int deserialize_state(test_bmi_c_model* model, const char* src, int size) {
+static int deserialize_state(test_bmi_c_model* model, const char* src, int64_t size) {
     if (size != SERIALIZED_STATE_BYTES) {
         fprintf(stderr,
-                "deserialize_state: payload size %d does not match expected "
-                "layout size %d for this test model version.\n",
-                size, SERIALIZED_STATE_BYTES);
+                "deserialize_state: payload size %lld does not match expected "
+                "layout size %lld for this test model version.\n",
+                (long long)size, (long long)SERIALIZED_STATE_BYTES);
         return BMI_FAILURE;
     }
     const char* p = src;
@@ -844,12 +874,12 @@ static int Set_value (Bmi *self, const char *name, void *array) {
         return BMI_SUCCESS;
     }
     if (strcmp(name, NGEN_SERIALIZATION_STATE) == 0) {
-        // BMI SetValue doesn't carry a size, but this test model's layout
-        // is fixed at SERIALIZED_STATE_BYTES — future expansions only
-        // need to bump that constant and the read sequence together.
-        return deserialize_state((test_bmi_c_model*)self->data,
-                                 (const char*)array,
-                                 SERIALIZED_STATE_BYTES);
+        // A caller must provide the payload size via SetValue(NGEN_SERIALIZATION_SIZE, ...)
+        // before a deserialize_state trigger.
+        // deserialize_state validates against the fixed
+        // layout size internally in this test model
+        test_bmi_c_model* model = (test_bmi_c_model*)self->data;
+        return deserialize_state(model, (const char*)array, model->serialized_size);
     }
 
     void *dest = NULL;
@@ -918,6 +948,7 @@ test_bmi_c_model *new_bmi_model(void)
 
     data->serialized_state = NULL;
     data->serialized_size = 0;
+    data->serialized_size_32bit = 0;
 
     return data;
 }

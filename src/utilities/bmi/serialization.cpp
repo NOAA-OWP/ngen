@@ -141,7 +141,7 @@ auto NgenSerializationProtocol::run(const ModelPtr& model, const Context& ctx) c
         return {};
     }
 
-    int size = 0;
+    int64_t size = 0;
     try {
         // (create, free) scope is RAII-managed so any throw from
         // GetValue, the record build, or the backend write still

@@ -100,6 +100,9 @@ class bmi_model(Bmi):
                            NGEN_SERIALIZATION_FREE  :[NGEN_SERIALIZATION_FREE,  'ngen::trigger'],
                            NGEN_SERIALIZATION_SIZE  :[NGEN_SERIALIZATION_SIZE,  'bytes'],
                            NGEN_SERIALIZATION_STATE :[NGEN_SERIALIZATION_STATE, 'ngen::opaque'],
+                           # Test-only simple-path SIZE canary; see the corresponding
+                           # entry in _values below.
+                           'test::serialization_32bit':['test::serialization_32bit', 'bytes'],
                             }
 
     #------------------------------------------------------
@@ -176,8 +179,13 @@ class bmi_model(Bmi):
         # during restore.
         self._values[NGEN_SERIALIZATION_CREATE] = np.zeros(1, dtype=np.int32)
         self._values[NGEN_SERIALIZATION_FREE]   = np.zeros(1, dtype=np.int32)
-        self._values[NGEN_SERIALIZATION_SIZE]   = np.zeros(1, dtype=np.int32)
+        self._values[NGEN_SERIALIZATION_SIZE]   = np.zeros(1, dtype=np.int64)
         self._values[NGEN_SERIALIZATION_STATE]  = np.zeros(0, dtype=np.uint8)
+
+        # Used to verify that declaring SIZE as np.int32 (itemsize/
+        # nbytes = 4) still round-trips values up to INT32_MAX
+        # correctly through the framework's int64_t slot (on little-endian hosts)
+        self._values['test::serialization_32bit'] = np.zeros(1, dtype=np.int32)
 
     #------------------------------------------------------------ 
     def update(self):
@@ -529,26 +537,13 @@ class bmi_model(Bmi):
         int
             Size of data array in bytes.
         """
-        # Serialization STATE: the storage-backed `_values` entry is
-        # empty outside of a CREATE/FREE scope, which would cause
-        # Bmi_Py_Adapter's restore-time `SetValue(state, ...)` to
-        # marshal zero bytes across the language boundary. Report the
-        # length that a snapshot of the *current* model state would
-        # pickle to instead. Pickle output size is stable for this
-        # model's schema (numpy arrays of fixed dtype+shape + Python
-        # floats, which pickle to fixed-width opcodes), so the live
-        # size equals the on-disk record's size for any record
-        # produced by the same model version — which is what the
-        # adapter needs in order to wrap the incoming byte buffer
-        # correctly. After a CREATE the actual buffer is sized and
-        # matches; this probe only matters before the first CREATE.
+        # State-buffer length is provided via `ngen::serialization_size`
+        # This is either:
+        # set by `_create_serialization` during a requested CREATE
+        # or it is provided by an external caller
+        # immediately before a `SetValue(state, ...)` occurs.
         if var_name == NGEN_SERIALIZATION_STATE:
-            current = self._values.get(NGEN_SERIALIZATION_STATE)
-            if current is not None and current.nbytes > 0:
-                return int(current.nbytes)
-            payload = {f: self._values[f] for f in self._SERIALIZED_FIELDS
-                       if f in self._values}
-            return len(pickle.dumps(payload, protocol=pickle.HIGHEST_PROTOCOL))
+            return int(self._values[NGEN_SERIALIZATION_SIZE][0])
         return self.get_value_ptr(var_name).nbytes
 
     #------------------------------------------------------------ 
