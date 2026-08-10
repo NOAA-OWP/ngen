@@ -7,7 +7,7 @@ module bmitestbmi
 
   use test_model
   use bmi_grid
-  use, intrinsic :: iso_c_binding, only: c_ptr, c_loc, c_f_pointer
+  use, intrinsic :: iso_c_binding, only: c_ptr, c_loc, c_f_pointer, c_int, c_int64_t
   implicit none
   integer :: DEFAULT_TIME_STEP_SIZE = 3600
   integer :: DEFAULT_TIME_STEP_COUNT = 24
@@ -17,9 +17,18 @@ module bmitestbmi
      type (test_bmi_model) :: model
      ! Serialization support
      integer, allocatable :: serialized_state(:)
-     integer :: serialized_size = 0
+     integer(kind=c_int64_t) :: serialized_size = 0
      integer :: input_trigger_create = 0
      integer :: input_trigger_free = 0
+     ! Simple-path SIZE canary — see the "test::serialization_32bit"
+     ! case handlers below. Not part of the ngen protocol; exposed as
+     ! a test-only queryable variable so a first-party test can verify
+     ! that the doc's "declare a default-kind integer for SIZE" advice
+     ! still round-trips correctly through the framework's int64_t
+     ! slot on the host running the tests. On a little-endian host
+     ! the composition works up to INT32_MAX; on big-endian the same
+     ! test would fail loudly with a value read back as (written << 32).
+     integer :: serialized_size_32bit = 0
    contains
      procedure :: get_component_name => test_component_name
      procedure :: get_input_item_count => test_input_item_count
@@ -409,6 +418,13 @@ end function test_finalize
         return
       endif
     end do
+
+    !test-only canary — see the derived-type field's comment
+    if (trim(name) .eq. "test::serialization_32bit") then
+      type = "integer"
+      bmi_status = BMI_SUCCESS
+      return
+    endif
 
     !check any other vars???
 
@@ -841,8 +857,22 @@ end function test_finalize
     case("OUTPUT_VAR_3")
        size = sizeof(this%model%output_var_3)
        bmi_status = BMI_SUCCESS
-    case("ngen::serialization_size", "ngen::serialization_create", "ngen::serialization_free", "ngen::serialization_state")
-       size = sizeof(this%serialized_size) ! 4 bytes (default integer)
+    case("ngen::serialization_size")
+       ! Itemsize is c_int (4 bytes). The stored value is a
+       ! c_int64_t; the iso_c_fortran_bmi shim can only pass c_int
+       ! arrays across the boundary, so the 8-byte size is laundered
+       ! as two c_ints (little-endian assumption).
+       ! test_set_int / test_get_int use `transfer` to move between
+       ! the two forms; see also the matching nbytes = 8 case below.
+       ! If BMI 3.0 provides a get/set_int64 method, this case becomes
+       ! strictly explicit.
+       size = sizeof(this%input_trigger_create)
+       bmi_status = BMI_SUCCESS
+    case("ngen::serialization_create", "ngen::serialization_free", "ngen::serialization_state")
+       size = sizeof(this%input_trigger_create) ! 4 bytes (default integer)
+       bmi_status = BMI_SUCCESS
+    case("test::serialization_32bit")
+       size = sizeof(this%serialized_size_32bit)
        bmi_status = BMI_SUCCESS
     case default
        size = -1
@@ -866,20 +896,19 @@ end function test_finalize
       bmi_status = BMI_SUCCESS
       return !FIXME refactor the rest of this function
     case("ngen::serialization_state")
-      ! Always report the fixed-layout size, not the dynamic
-      ! `serialized_size` field (which is 0 outside a CREATE/FREE
-      ! scope). The iso_c_fortran_bmi SetValue shim computes a slice
-      ! length from `num_bytes / item_size` *before* dispatching to
-      ! test_set_int on restore, so reporting 0 here would cause the
-      ! shim to marshal an empty array across the language boundary
-      ! and `test_deserialize_state` would silently never receive
-      ! the on-disk payload. SERIALIZED_STATE_BYTES is the same
-      ! constant create_serialization uses, so the two sides agree
-      ! on the byte count regardless of the current buffer state.
-      nbytes = SERIALIZED_STATE_BYTES
+      ! The number of bytes computed when serialization_create is called
+      ! OR the number of bytes reported via set_value_int(ngen::serialization_size,...) 
+      ! before a set_value_int(ngen::serialization_state...). 
+      nbytes = int(this%serialized_size)
       bmi_status = BMI_SUCCESS
       return
-    case("ngen::serialization_create", "ngen::serialization_free", "ngen::serialization_size")
+    case("ngen::serialization_size")
+      ! 8 bytes total, laundered as two c_ints so num_items resolves
+      ! to 2 in the shim (see the itemsize note above).
+      nbytes = 2 * item_size
+      bmi_status = BMI_SUCCESS
+      return
+    case("ngen::serialization_create", "ngen::serialization_free", "test::serialization_32bit")
       ! Unlike the C/C++ test models (which can fail `get_var_nbytes`
       ! for triggers since their adapters hand the raw void* straight
       ! to the model), the iso_c_fortran_bmi SetValue shim computes
@@ -891,6 +920,8 @@ end function test_finalize
       ! — the trigger value is still ignored by `test_set_int`, the
       ! "triggers carry no meaningful stored value" semantic is
       ! preserved at the Fortran side, and the shim dispatches.
+      ! The "test::serialization_32bit" *does* carry a stored value (unlike the triggers),
+      ! but reports the same single-c_int slice
       nbytes = item_size
       bmi_status = BMI_SUCCESS
       return
@@ -958,8 +989,21 @@ end function test_finalize
     case("ngen::serialization_free")
        call this%free_serialization()
        bmi_status = BMI_SUCCESS
+    case("ngen::serialization_size")
+       ! A caller must provide the payload size via set_value_int(ngen::serialization_size, ...)
+       ! before a deserialize_state trigger.
+       ! The iso_c_fortran_bmi shim only marshals c_int arrays, so an
+       ! 8-byte size is delivered as src(1:2) — two little-endian
+       ! halves of the c_int64_t. `transfer` reinterprets those
+       ! 8 contiguous bytes as the wider integer.
+       this%serialized_size = transfer(src(1:2), 0_c_int64_t)
+       bmi_status = BMI_SUCCESS
     case("ngen::serialization_state")
        call this%deserialize_state(src)
+       bmi_status = BMI_SUCCESS
+    case("test::serialization_32bit")
+       ! Store only the low c_int the shim marshals
+       this%serialized_size_32bit = src(1)
        bmi_status = BMI_SUCCESS
     case default
        bmi_status = BMI_FAILURE
@@ -1077,7 +1121,11 @@ end function test_finalize
       dest = [this%model%output_var_3]
       bmi_status = BMI_SUCCESS
     case("ngen::serialization_size")
-      dest = [this%serialized_size]
+      ! Split the stored c_int64_t into its two little-endian halves
+      ! so the c_int-only iso_c_fortran_bmi shim can carry it across
+      ! the ABI. The caller reads the 8 contiguous bytes back as a
+      ! single int64_t
+      dest(1:2) = transfer(this%serialized_size, 0, 2)
       bmi_status = BMI_SUCCESS
     case("ngen::serialization_state")
       if (allocated(this%serialized_state)) then
@@ -1086,6 +1134,11 @@ end function test_finalize
       else
         bmi_status = BMI_FAILURE
       endif
+    case("test::serialization_32bit")
+      ! On a little-endian host the caller's zero-init int64_t
+      ! receives this in its low half;
+      dest(1) = this%serialized_size_32bit
+      bmi_status = BMI_SUCCESS
     case default
        dest(:) = -1
        bmi_status = BMI_FAILURE

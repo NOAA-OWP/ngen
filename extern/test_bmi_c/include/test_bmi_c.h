@@ -1,6 +1,7 @@
 #ifndef TEST_BMI_C_H
 #define TEST_BMI_C_H
 
+#include <stdint.h>
 #include <string.h>
 
 #define TRUE 1
@@ -41,7 +42,12 @@ struct test_bmi_c_model {
     // without touching any field, and Get_value_ptr deliberately
     // does not handle them.
     char* serialized_state;
-    int serialized_size;
+    int64_t serialized_size;
+
+    // Used to verify that declaring SIZE as int32_t
+    // (itemsize/nbytes = 4) still round-trips values up to
+    // INT32_MAX correctly through the framework's int64_t slot.
+    int32_t serialized_size_32bit;
 };
 typedef struct test_bmi_c_model test_bmi_c_model;
 
