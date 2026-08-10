@@ -67,9 +67,9 @@ namespace ngen
          * is not yet implemented in this class.
         */
         void update_models(boost::span<double> catchment_outflows, 
-                           std::unordered_map<std::string, int> &catchment_indexes,
+                           std::unordered_map<std::string, int> const& catchment_indexes,
                            boost::span<double> nexus_downstream_flows,
-                           std::unordered_map<std::string, int> &nexus_indexes,
+                           std::unordered_map<std::string, int> const& nexus_indexes,
                            int current_step) override {
             std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
             try{
