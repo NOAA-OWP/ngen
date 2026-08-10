@@ -247,7 +247,7 @@ std::string TestBmiCpp::GetVarUnits(std::string name){
   }
   iter = std::find(this->model_var_names.begin(), this->model_var_names.end(), name);
   if(iter != this->model_var_names.end()){
-    return this->model_var_types[iter - this->model_var_names.begin()];
+    return this->model_var_units[iter - this->model_var_names.begin()];
   }
   throw std::runtime_error("GetVarUnits called for non-existent variable: "+name+"" SOURCE_LOC);
 }
