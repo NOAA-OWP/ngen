@@ -41,9 +41,11 @@ Fortran analog.
 #include "FileChecker.h"
 #include "MockConfig.hpp"
 #include "protocols.hpp"
+#include "serialization.hpp"
 #include "serialization_record.hpp"
 #include "gtest/gtest.h"
 
+#include <cstdint>
 #include <cstdio>
 #include <fstream>
 #include <memory>
@@ -260,6 +262,49 @@ TEST_F(Bmi_Fortran_Serialization_Test, save_restore_roundtrip) {
     EXPECT_EQ(i1, input1);
     EXPECT_EQ(i2, input2);
     EXPECT_EQ(i3, input3);
+}
+
+// ---------------------------------------------------------------------
+// The Fortran test model launders int64 as two c_ints on both
+// directions (see the `transfer` calls in test_set_int / test_get_int).
+// This test drives verifies the full int64 value roundtrips correctly.
+// ---------------------------------------------------------------------
+
+TEST_F(Bmi_Fortran_Serialization_Test, serialization_size_roundtrips_full_int64) {
+    // distinct byte pattern, exceeds INT32_MAX.
+    const int64_t written  = INT64_C(0x0123456789ABCDEF);
+    int64_t       readback = 0;
+
+    model->SetValue(models::bmi::protocols::SERIALIZATION_SIZE_NAME,
+                    const_cast<int64_t*>(&written));
+    model->GetValue(models::bmi::protocols::SERIALIZATION_SIZE_NAME, &readback);
+    // verify the full 64-bit value roundtripped correctly.
+    EXPECT_EQ(readback, written);
+}
+
+// ---------------------------------------------------------------------
+// 32 bit ngen::serialization_size support. A Fortran model may declare
+// its SIZE variable as a plain `integer` (itemsize = nbytes =
+// c_sizeof(0_c_int)) and rely on the framework's zero-init int64_t
+// plus little-endian byte layout to receive values up to INT32_MAX
+// correctly. This is only supported on little-endian hosts.
+// ---------------------------------------------------------------------
+
+TEST_F(Bmi_Fortran_Serialization_Test, simple_path_narrow_int_size_roundtrips) {
+    const int64_t written  = INT32_MAX;
+    int64_t       readback = 0;
+
+    model->SetValue("test::serialization_32bit", const_cast<int64_t*>(&written));
+    model->GetValue("test::serialization_32bit", &readback);
+
+    EXPECT_EQ(readback, written)
+        << "32 bit int, with BMI itemsize = nbytes "
+           "= c_sizeof(0_c_int) did not round-trip on this host:" << std::endl <<
+           "SetValue: "<< written << ", GetValue returned: " << readback <<  std::endl <<
+           "Only Fortran models declaring ngen::serialization_size as "
+           "`integer(kind=c_int64_t)` and laundering via "
+           "the wide-path `transfer` idiom can properly serialize and "
+           "deserialize";
 }
 
 #endif // NGEN_BMI_FORTRAN_LIB_TESTS_ACTIVE

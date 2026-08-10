@@ -41,7 +41,7 @@ own physical inputs and outputs.
 |---|---|---|---|---|
 | `ngen::serialization_create` | `SetValue` | `int` | `ngen::trigger` | Action: capture current state into an internal buffer |
 | `ngen::serialization_free`   | `SetValue` | `int` | `ngen::trigger` | Action: release the internal buffer |
-| `ngen::serialization_size`   | `GetValue` | `int` | `bytes`         | Current internal buffer size in bytes. Populated by `create`; may be `0` before any `create` (in particular at restore time). |
+| `ngen::serialization_size`   | `GetValue` / `SetValue` | signed 64-bit integer | `bytes`         | Byte count of the internal buffer. Model reports the buffer size after `create` populates it; may be `0` before any `create` (in particular at restore time). The host engine writes this variable on the restore path to provide the incoming payload byte count before delivering the state bytes. See [Width of the size variable](#width-of-the-size-variable) for per-language declaration conventions. |
 | `ngen::serialization_state`  | `GetValue` / `SetValue` | `char` | `ngen::opaque` | Raw state bytes: read to serialize, write to restore |
 
 ### Item list behavior
@@ -100,53 +100,95 @@ A BMI module wishing to support the protocol must:
    BMI adapters on either side of the language boundary use these
    calls to marshal values into and out of `SetValue`/`GetValue` —
    so they're part of the protocol contract, not optional metadata.
-   In particular, `GetVarNbytes(ngen::serialization_state)` is what a
-   host engine queries to size the restore-side buffer (see step 5).
 2. **`SetValue(ngen::serialization_create, _)`**: snapshot the model's
    current state into an internal buffer. The value passed is a trigger
    signal only and MUST be ignored.
-3. **`GetValue(ngen::serialization_size, &int)`**: report the current
+3. **`GetValue(ngen::serialization_size, &int64)`**: report the current
    internal buffer size in bytes — the number of bytes a subsequent
    `GetValue(state, ...)` will deliver. The caller invokes this after
    `create` to size the read destination; the model is permitted to
    return `0` before any `create` has fired (the dynamic-memory case
    where the snapshot size isn't known until `create` runs the
-   serialize routine).
-
-   `GetVarNbytes(ngen::serialization_state)` plays a separate role:
-   BMI adapters that marshal `SetValue(state, ...)` through a
-   pre-sized container — for example, a Python adapter wrapping raw
-   bytes in a numpy array sized by `GetVarNbytes` — query it at
-   restore time to decide how many bytes to marshal across the
-   language boundary. Because restore happens before any `create`,
-   `GetVarNbytes(ngen::serialization_state)` MUST return a valid
-   length even when no buffer exists yet. Models in that situation
-   should compute the expected snapshot size on demand — e.g. by
-   running the same serialize routine `create` would run and
-   measuring its output. Adapters that pass the raw `SetValue(state,
-   ...)` pointer straight through to the model (C, C++, Fortran)
-   don't need this — the model reads whatever the caller provides.
+   serialize routine). The size should be a 64-bit signed integer;
+   see [Width of the size variable](#width-of-the-size-variable) for
+   how the four reference languages declare it (Fortran in particular
+   has a workaround worth understanding before adapting a model with
+   a serialized state larger than 2 GiB).
 4. **`GetValue(ngen::serialization_state, dst)`**: copy the captured bytes
    from the internal buffer into `dst`. `dst` is sized to `size` bytes
-   (as reported by `GetValue(size, ...)`).
-5. **`SetValue(ngen::serialization_state, src)`**: restore the model's
-   computed state from the `src` bytes. The protocol hands back the
-   exact byte sequence the model produced at save time
-   (`GetValue(state, ...)` after `create`); the model is responsible
-   for knowing how many bytes that is, since the model controls the
-   format. The BMI surface here does not pass a length argument — at
-   restore, `ngen::serialization_size` may still read 0 because no
-   `create` has fired (see step 3).
+   (as reported by `GetValue(ngen::serialization_size, ...)`).
+5. **Restore is an ordered sequence of calls:**
+   1. **`SetValue(ngen::serialization_size, &n)`**: the host engine
+      sets the byte count of the payload it is about to
+      deliver. The model uses this to pre-size any buffer its
+      subsequent `SetValue(ngen::serialization_state, ...)` handler will fill, and to
+      report the same value from `GetVarNbytes(ngen::serialization_state)`
+      until a later `create` overwrites it.
+   2. **`SetValue(ngen::serialization_state, src)`**: restore the
+      model's computed state from `src`. The protocol hands back
+      the exact byte sequence the model produced at save time
+      (`GetValue(ngen::serialization_state, ...)` after `create`). The byte count is
+      the value set immediately before via
+      `SetValue(ngen::serialization_size, &n)`.
 
-   In languages whose BMI adapter wraps `src` in a pre-sized container
-   (e.g. a Python adapter wrapping the bytes in a numpy array sized by
-   `GetVarNbytes(ngen::serialization_state)`), the model keeps the
-   correct length flowing through by making `GetVarNbytes` return the
-   snapshot size at all times. In languages whose adapter passes the
-   raw pointer through (C, C++, Fortran), the model simply reads its
-   own format directly from `src`.
+   Models can rely on knowing the incoming byte count
+   before receiving the state bytes.
 6. **`SetValue(ngen::serialization_free, _)`**: release the internal
    buffer. Value is a trigger signal only.
+
+### Width of the size variable
+
+The `ngen::serialization_size` reserved variable carries a **64-bit
+signed integer** — both when the model produces it (`GetValue` after
+`create` populates the buffer) and when the host engine hands one
+back (`SetValue` setting the incoming payload at restore).
+
+All four reference models under `extern/test_bmi_*` are conforming
+templates. Per-language declaration:
+
+- **C / C++.** Declare `int64_t`. Report
+  `GetVarType = "int64"`,
+  `GetVarItemsize = sizeof(int64_t)`,
+  `GetVarNbytes = sizeof(int64_t)`.
+
+- **Python.** Back the variable with a NumPy `int64` array
+  (`np.zeros(1, dtype=np.int64)`). Report
+  `GetVarType = "int64"`,
+  `GetVarItemsize = np.dtype(np.int64).itemsize`,
+  `GetVarNbytes = np.dtype(np.int64).itemsize`.
+
+- **Fortran.** The BMI Fortran binding exposes only
+  `set_value_int` / `get_value_int` (`c_int`-typed), so a 64-bit
+  value cannot be moved across the language boundary in a simple way. Two conforming choices:
+
+  - **Serialized state fits in `c_int` range (typically ~2 GiB) —
+    the simple path.** Declare `integer :: serialized_size = 0`.
+    Report `GetVarType = "integer"`,
+    `GetVarItemsize = c_sizeof(0_c_int)`,
+    `GetVarNbytes = c_sizeof(0_c_int)`. No special handling
+    required by the BMI model implementation. 
+    This *does* require a
+    little-endian host for correctness, since the ISO C bmi interface will write the 4-byte integer in the low
+    half of the engine's 64-bit wide integer type. On a big-endian
+    target it silently corrupts the round-trip. Confirm on a given host by running `Bmi_Fortran_Serialization_Test.simple_path_narrow_int_size_roundtrips`;
+    if that test fails, switch to the wide path.
+
+  - **Serialized state may exceed `c_int` range — the wide path.**
+    Declare `integer(kind=c_int64_t) :: serialized_size` and
+    launder across the shim as two `c_int` halves via the
+    `transfer` intrinsic. Report `GetVarType = "integer"`,
+    `GetVarItemsize = c_sizeof(0_c_int)`,
+    `GetVarNbytes = c_sizeof(serialized_size)`. See
+    `extern/test_bmi_fortran/` for a working reference.
+
+**Verifying on your host.** The reference implementations under
+`extern/test_bmi_*` each include a canary test named
+`simple_path_narrow_int_size_roundtrips` that exercises a
+narrow-int SIZE declaration end-to-end through the host engine's
+adapter. Model authors can port the pattern to their own test
+harness; if the canary fails on a target, the narrow-int simple
+path does not hold there — declare the model's SIZE variable as a
+full 64-bit integer type instead.
 
 ### Recommended: defensive payload format
 

@@ -123,8 +123,12 @@ auto NgenDeserializationProtocol::run(const ModelPtr& model, const Context& ctx)
             );
         }
 
-        // Feed the payload back through the reserved SetValue name; the model
-        // owns the exact inverse of its save() machinery.
+        // Set the size of bytes we are about to pass along.
+        // Note: *if* the payload size somehow got above std::numeric_limits<int64_t>::max()
+        // this static_cast wouldn't be valid, but that is not likely to happen anytime in
+        // the lifetime of this project, I suspect.
+        int64_t nbytes = static_cast<int64_t>(loaded.value().payload.size());
+        model->SetValue(SERIALIZATION_SIZE_NAME, &nbytes);
         model->SetValue(SERIALIZATION_STATE_NAME, loaded.value().payload.data());
     } catch (const std::exception& e) {
         std::stringstream ss;

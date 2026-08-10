@@ -203,7 +203,7 @@ class TestBmiCpp : public bmi::Bmi {
         // to throw for these names — reaching for them indicates a caller
         // bug, not a model deficiency.
         std::vector<std::string> serialization_var_names = { NGEN_SERIALIZATION_CREATE, NGEN_SERIALIZATION_FREE, NGEN_SERIALIZATION_SIZE, NGEN_SERIALIZATION_STATE };
-        std::vector<std::string> serialization_var_types = { "int", "int", "int", "char" };
+        std::vector<std::string> serialization_var_types = { "int", "int", "int64", "char" };
         std::vector<std::string> serialization_var_units = { "ngen::trigger", "ngen::trigger", "bytes", "ngen::opaque" };
 
         std::vector<int> input_var_item_count = { 1, 1 };
@@ -219,6 +219,7 @@ class TestBmiCpp : public bmi::Bmi {
             {BMI_TYPE_NAME_INT, sizeof(int)},
             {BMI_TYPE_NAME_SHORT, sizeof(short)},
             {BMI_TYPE_NAME_LONG, sizeof(long)},
+            {"int64", sizeof(int64_t)},
             {"char", sizeof(char)}
         };
 
@@ -260,7 +261,12 @@ class TestBmiCpp : public bmi::Bmi {
         // respective helper without touching any field, and
         // GetValuePtr deliberately does not handle them.
         std::vector<char> serialized_state_;
-        int serialized_size_var = 0;
+        int64_t serialized_size_var = 0;
+
+        // Used to verify that declaring SIZE as int32_t
+        // (itemsize/nbytes = 4) still round-trips values up to
+        // INT32_MAX correctly through the framework's int64_t slot.
+        int32_t serialized_size_32bit_var = 0;
 
         // Single source of truth for this test model's on-disk layout
         // size. If the layout grows (new fields in create_serialization /
@@ -295,7 +301,7 @@ class TestBmiCpp : public bmi::Bmi {
                     std::to_string(serialized_state_bytes()) +
                     " bytes — keep these in sync when adding fields.");
             }
-            serialized_size_var = static_cast<int>(serialized_state_.size());
+            serialized_size_var = static_cast<int64_t>(serialized_state_.size());
         }
 
         void free_serialization() {
@@ -303,12 +309,12 @@ class TestBmiCpp : public bmi::Bmi {
             serialized_size_var = 0;
         }
 
-        void deserialize_state(const char* data, size_t size) {
+        void deserialize_state(const char* data, int64_t size) {
             // Validate the caller's payload against the layout this
             // model version knows how to read. A mismatch is treated as
             // a hard error — callers should be restoring a record
             // produced by the same model version.
-            if (size != serialized_state_bytes()) {
+            if (size != static_cast<int64_t>(serialized_state_bytes())) {
                 throw std::runtime_error(
                     "deserialize_state: payload size " + std::to_string(size) +
                     " does not match expected layout size " +
