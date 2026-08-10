@@ -445,4 +445,28 @@ TEST_F(Bmi_Serialization_Test, write_error_throws) {
     );
 }
 
+// ---------------------------------------------------------------------
+// 32 bit ngen::serialization_size support. A model may declare its SIZE
+// variable as a narrower int (itemsize = nbytes = 4) and rely on the
+// framework's zero-init int64_t plus little-endian byte layout
+// to receive values up to INT32_MAX correctly.
+// This is only supported on little-endian hosts.
+// ---------------------------------------------------------------------
+
+TEST_F(Bmi_Serialization_Test, simple_path_narrow_int_size_roundtrips) {
+    const int64_t written  = INT32_MAX;
+    int64_t       readback = 0;
+
+    model->SetValue("test::serialization_32bit", const_cast<int64_t*>(&written));
+    model->GetValue("test::serialization_32bit", &readback);
+
+    EXPECT_EQ(readback, written)
+        << "32 bit int, with BMI itemsize = nbytes "
+           "= sizeof(int) did not round-trip on this host:" << std::endl <<
+           "SetValue: "<< written << ", GetValue returned: " << readback <<  std::endl <<
+           "Only models with ngen::serialization_size declared as `int64_t` "
+           "and reporting itemsize = nbytes = sizeof(int64_t) can properly "
+           "serialize and deserialize";
+}
+
 #endif // NGEN_BMI_CPP_LIB_TESTS_ACTIVE
