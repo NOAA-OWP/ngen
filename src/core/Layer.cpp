@@ -13,9 +13,9 @@
 ngen::Layer::~Layer() = default;
 
 void ngen::Layer::update_models(boost::span<double> catchment_outflows,
-                                std::unordered_map<std::string, int> &catchment_indexes,
+                                std::unordered_map<std::string, int> const & catchment_indexes,
                                 boost::span<double> nexus_downstream_flows,
-                                std::unordered_map<std::string, int> &nexus_indexes,
+                                std::unordered_map<std::string, int> const& nexus_indexes,
                                 int current_step)
 {
     auto idx = simulation_time.next_timestep_index();
@@ -56,7 +56,7 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
             throw std::runtime_error(msg);
         }
 #if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
-        int results_index = catchment_indexes[id];
+        int results_index = catchment_indexes.at(id);
         // XXX: This is currently accumulating in meters of depth, which may not be desirable
         catchment_outflows[results_index] += response;
 #endif // NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI

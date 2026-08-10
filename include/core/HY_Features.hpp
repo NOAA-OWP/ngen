@@ -77,21 +77,6 @@ namespace hy_features {
         HY_Features( geojson::GeoJSON catchments, std::string* link_key, std::shared_ptr<Formulation_Manager> formulations);
 
         /**
-         * @brief Get the HY_CatchmentRealization pointer identified by @p id
-         * 
-         * If no realization exists for @p id, a nullptr is returned.
-         * 
-         * @param id 
-         * @return std::shared_ptr<HY_CatchmentRealization> 
-         */
-        std::shared_ptr<HY_CatchmentRealization> catchment_at(std::string id)
-        {
-          if( _catchments.find(id) != _catchments.end() )
-            return _catchments[id]->realization;
-          return nullptr;
-        }
-
-        /**
          * @brief Construct a new HY_Features object from a Network and a set of formulations.
          * 
          * Constructs the HY_Catchment objects for each catchment feature in the network, and attaches tha formaulation
@@ -103,6 +88,22 @@ namespace hy_features {
         HY_Features( network::Network network, std::shared_ptr<Formulation_Manager> formulations, geojson::GeoJSON fabric);
 
         /**
+         * @brief Get the HY_CatchmentRealization pointer identified by @p id
+         * 
+         * If no realization exists for @p id, a nullptr is returned.
+         * 
+         * @param id 
+         * @return std::shared_ptr<HY_CatchmentRealization> 
+         */
+        std::shared_ptr<HY_CatchmentRealization> catchment_at(std::string id) const
+        {
+          auto iter = _catchments.find(id);
+          if( iter != _catchments.end() )
+            return iter->second->realization;
+          return nullptr;
+        }
+
+        /**
          * @brief Get the HY_HydroNexus pointer identifed by @p id
          * 
          * If no nexus exists for @p id, a nullptr is returned.
@@ -110,10 +111,11 @@ namespace hy_features {
          * @param id 
          * @return std::shared_ptr<HY_HydroNexus> 
          */
-        std::shared_ptr<HY_HydroNexus> nexus_at(const std::string& id)
+        std::shared_ptr<HY_HydroNexus> nexus_at(const std::string& id) const
         {
-          if( _nexuses.find(id) != _nexuses.end() )
-            return _nexuses[id];
+          auto iter = _nexuses.find(id);
+          if( iter != _nexuses.end() )
+            return iter->second;
           return nullptr;
         }
 
@@ -154,14 +156,16 @@ namespace hy_features {
          * @param id 
          * @return std::vector<std::shared_ptr<HY_HydroNexus>> 
          */
-        inline std::vector<std::shared_ptr<HY_HydroNexus>> destination_nexuses(const std::string&  id)
+        inline std::vector<std::shared_ptr<HY_HydroNexus>> destination_nexuses(const std::string&  id) const
         {
           std::vector<std::shared_ptr<HY_HydroNexus>> downstream;
-          if( _catchments.find(id) != _catchments.end())
+          auto iter = _catchments.find(id);
+          if( iter != _catchments.end())
           {
-            for(const auto& nex_id : _catchments[id]->get_outflow_nexuses())
+            auto const& catchment = iter->second;
+            for(const auto& nex_id : catchment->get_outflow_nexuses())
             {
-              downstream.push_back(_nexuses[nex_id]);
+              downstream.push_back(_nexuses.at(nex_id));
             }
           }
           return downstream;

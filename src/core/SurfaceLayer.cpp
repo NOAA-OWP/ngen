@@ -7,9 +7,9 @@
 #endif
 
 void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows, 
-                                       std::unordered_map<std::string, int> &catchment_indexes,
+                                       std::unordered_map<std::string, int> const& catchment_indexes,
                                        boost::span<double> nexus_downstream_flows,
-                                       std::unordered_map<std::string, int> &nexus_indexes,
+                                       std::unordered_map<std::string, int> const& nexus_indexes,
                                        int current_step)
 {
     long current_time_index = output_time_index;
@@ -65,7 +65,7 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
         double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, current_time_index, 100.0);
 
 #if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
-        int nexus_index = nexus_indexes[id];
+        int nexus_index = nexus_indexes.at(id);
         nexus_downstream_flows[nexus_index] += contribution_at_t;
 #endif // NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
 
