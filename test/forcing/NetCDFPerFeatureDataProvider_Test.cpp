@@ -2,6 +2,8 @@
 
 #if NGEN_WITH_NETCDF
 #include <vector>
+#include <cstdio>
+#include <netcdf>
 #include "gtest/gtest.h"
 #include "NetCDFPerFeatureDataProvider.hpp"
 #include "StreamHandler.hpp"
@@ -218,6 +220,155 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
         double val4 = nc_provider.get_value(CatchmentAggrDataSelector(ids[0], "T3D", start_time, duration, "K"), data_access::MEAN);,
         std::runtime_error);
 
+}
+
+// Regression tests for the paged value cache in get_value().
+// Files are generated on the fly so the time dimension size and the NetCDF
+// chunking (which determines the cache line size) can be controlled exactly.
+class NetCDFCacheLayoutTest : public ::testing::Test {
+  protected:
+    void TearDown() override {
+        for (const auto& p : temp_files) {
+            std::remove(p.c_str());
+        }
+    }
+
+    static double cellValue(std::size_t cat, std::size_t t) {
+        return 100.0 * cat + t;
+    }
+
+    // Creates a forcing file with n_cats catchments ("cat-0".."cat-N"), n_times
+    // hourly timesteps starting at kStartEpoch, and one variable "temp" (units K)
+    // holding cellValue(cat, t). time_chunk == 0 leaves the variable contiguous.
+    std::string makeForcing(const std::string& name, std::size_t n_cats, std::size_t n_times, std::size_t time_chunk) {
+        std::string path = "./" + name;
+        temp_files.push_back(path);
+
+        netCDF::NcFile out(path, netCDF::NcFile::replace, netCDF::NcFile::nc4);
+        auto cat_dim = out.addDim("catchment-id", n_cats);
+        auto time_dim = out.addDim("time", n_times);
+        std::vector<netCDF::NcDim> dims = {cat_dim, time_dim};
+
+        std::vector<std::string> id_strs;
+        std::vector<const char*> id_ptrs;
+        for (std::size_t i = 0; i < n_cats; ++i) {
+            id_strs.push_back("cat-" + std::to_string(i));
+        }
+        for (const auto& s : id_strs) {
+            id_ptrs.push_back(s.c_str());
+        }
+        auto ids_var = out.addVar("ids", netCDF::ncString, cat_dim);
+        ids_var.putVar(id_ptrs.data());
+
+        auto time_var = out.addVar("Time", netCDF::ncDouble, dims);
+        time_var.putAtt("units", "seconds since 1970-01-01 00:00:00");
+        std::vector<double> times(n_cats * n_times);
+        for (std::size_t i = 0; i < n_cats; ++i) {
+            for (std::size_t t = 0; t < n_times; ++t) {
+                times[i * n_times + t] = kStartEpoch + t * kStride;
+            }
+        }
+        time_var.putVar(times.data());
+
+        auto temp_var = out.addVar("temp", netCDF::ncDouble, dims);
+        temp_var.putAtt("units", "K");
+        if (time_chunk > 0) {
+            std::vector<std::size_t> chunk_sizes = {n_cats, time_chunk};
+            temp_var.setChunking(netCDF::NcVar::nc_CHUNKED, chunk_sizes);
+        }
+        std::vector<double> vals(n_cats * n_times);
+        for (std::size_t i = 0; i < n_cats; ++i) {
+            for (std::size_t t = 0; t < n_times; ++t) {
+                vals[i * n_times + t] = cellValue(i, t);
+            }
+        }
+        temp_var.putVar(vals.data());
+
+        return path;
+    }
+
+    static double readStep(NetCDFPerFeatureDataProvider& p, std::size_t cat, std::size_t t) {
+        CatchmentAggrDataSelector sel("cat-" + std::to_string(cat), "temp",
+                                      kStartEpoch + t * kStride, kStride, "K");
+        return p.get_value(sel, data_access::MEAN);
+    }
+
+    static constexpr time_t kStartEpoch = 1500000000;
+    static constexpr time_t kStride = 3600;
+    std::vector<std::string> temp_files;
+};
+
+// A file with fewer timesteps than the default cache line size (24) produces a
+// single page whose line length is the whole time dimension.
+TEST_F(NetCDFCacheLayoutTest, SinglePageShorterThanCacheLine)
+{
+    const std::size_t n_cats = 3, n_times = 10;
+    auto path = makeForcing("nc_cache_single_page.nc", n_cats, n_times, 0);
+    NetCDFPerFeatureDataProvider provider(path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+
+    for (std::size_t cat = 0; cat < n_cats; ++cat) {
+        for (std::size_t t = 0; t < n_times; ++t) {
+            EXPECT_DOUBLE_EQ(readStep(provider, cat, t), cellValue(cat, t))
+                << "cat=" << cat << " t=" << t;
+        }
+    }
+
+    // whole-range aggregate read within the single page
+    CatchmentAggrDataSelector all("cat-1", "temp", kStartEpoch, n_times * kStride, "K");
+    double expected_sum = 0;
+    for (std::size_t t = 0; t < n_times; ++t) {
+        expected_sum += cellValue(1, t);
+    }
+    EXPECT_DOUBLE_EQ(provider.get_value(all, data_access::SUM), expected_sum);
+}
+
+// A time dimension not divisible by the cache line size leaves a shorter final
+// page; per-catchment reads there must use the final page's row stride.
+TEST_F(NetCDFCacheLayoutTest, PartialLastPageRead)
+{
+    const std::size_t n_cats = 3, n_times = 50, chunk = 24; // pages: 24, 24, 2
+    auto path = makeForcing("nc_cache_partial_page.nc", n_cats, n_times, chunk);
+    NetCDFPerFeatureDataProvider provider(path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+
+    for (std::size_t cat = 0; cat < n_cats; ++cat) {
+        for (std::size_t t = 0; t < n_times; ++t) {
+            EXPECT_DOUBLE_EQ(readStep(provider, cat, t), cellValue(cat, t))
+                << "cat=" << cat << " t=" << t;
+        }
+    }
+}
+
+// A multi-timestep read whose range starts mid-page and crosses a page
+// boundary must access every page the range spans.
+TEST_F(NetCDFCacheLayoutTest, ReadStraddlesPageBoundary)
+{
+    const std::size_t n_cats = 3, n_times = 50, chunk = 24; // pages: 24, 24, 2
+    auto path = makeForcing("nc_cache_straddle.nc", n_cats, n_times, chunk);
+    NetCDFPerFeatureDataProvider provider(path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+
+    double tol = 1e-9;
+
+    // timesteps 23..24 straddle the boundary between pages 0 and 1
+    CatchmentAggrDataSelector two("cat-1", "temp", kStartEpoch + 23 * kStride, 2 * kStride, "K");
+    EXPECT_NEAR(provider.get_value(two, data_access::MEAN),
+                (cellValue(1, 23) + cellValue(1, 24)) / 2.0, tol);
+
+    // timesteps 44..49 span page 1 and the partial final page
+    CatchmentAggrDataSelector six("cat-2", "temp", kStartEpoch + 44 * kStride, 6 * kStride, "K");
+    double expected_mean = 0;
+    for (std::size_t t = 44; t < 50; ++t) {
+        expected_mean += cellValue(2, t);
+    }
+    expected_mean /= 6.0;
+    EXPECT_NEAR(provider.get_value(six, data_access::MEAN), expected_mean, tol);
+
+    // the whole series spans all three pages
+    CatchmentAggrDataSelector all("cat-0", "temp", kStartEpoch, n_times * kStride, "K");
+    double expected_sum = 0;
+    for (std::size_t t = 0; t < n_times; ++t) {
+        expected_sum += cellValue(0, t);
+    }
+    EXPECT_NEAR(provider.get_value(all, data_access::SUM), expected_sum, tol);
 }
 
 // Each recognized time `units` token maps to the expected unit and scale factor,
