@@ -479,6 +479,7 @@ ngen_add_test(
     OBJECTS
         bmi/Bmi_C_Adapter_Test.cpp
         realizations/catchments/Bmi_C_Formulation_Test.cpp
+        utils/bmi/c_serialization_Test.cpp
     LIBRARIES
         gmock
         NGen::core
@@ -486,11 +487,18 @@ ngen_add_test(
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
+        NGen::bmi_protocols
     REQUIRES
         NGEN_WITH_BMI_C
     DEPENDS
         testbmicmodel
 )
+
+if(TARGET test_bmi_c)
+    target_include_directories(test_bmi_c PRIVATE
+        ${PROJECT_SOURCE_DIR}/src/utilities/bmi
+    )
+endif()
 
 ########################## BMI Fortran Tests
 ngen_add_test(

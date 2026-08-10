@@ -129,6 +129,14 @@ void TestBmiCpp::GetValueAtIndices(std::string name, void* dest, int* inds, int 
     return;
   }
 
+  if (type == "int64") {
+    int64_t* out = static_cast<int64_t*>(dest);
+    for (size_t i = 0; i < count; ++i) {
+      out[i] = static_cast<int64_t*>(ptr)[inds[i]];
+    }
+    return;
+  }
+
   if (type == "char") {
     char* out = static_cast<char*>(dest);
     for (size_t i = 0; i < count; ++i) {
@@ -196,6 +204,11 @@ void* TestBmiCpp::GetValuePtr(std::string name){
   }
   if (name == NGEN_SERIALIZATION_STATE) {
     return this->serialized_state_.data();
+  }
+
+  // Simple-path SIZE canary — see the field's declaration comment.
+  if (name == "test::serialization_32bit") {
+    return &this->serialized_size_32bit_var;
   }
 
   throw std::runtime_error("GetValuePtr called for unknown variable: "+name);
@@ -275,6 +288,9 @@ int TestBmiCpp::GetVarNbytes(std::string name){
   if(iter != this->serialization_var_names.end()){
     item_count = 1;
   }
+  if (name == "test::serialization_32bit") {
+    item_count = 1;
+  }
   if(item_count == -1){
     // This is probably impossible to reach--the same conditions above failing will cause a throw
     // in GetVarItemSize --> GetVarType (called earlier) instead.
@@ -303,6 +319,10 @@ std::string TestBmiCpp::GetVarType(std::string name){
   iter = std::find(this->serialization_var_names.begin(), this->serialization_var_names.end(), name);
   if(iter != this->serialization_var_names.end()){
     return this->serialization_var_types[iter - this->serialization_var_names.begin()];
+  }
+  // Simple-path SIZE canary — see the field's declaration comment.
+  if (name == "test::serialization_32bit") {
+    return "int";
   }
   throw std::runtime_error("GetVarType called for non-existent variable: "+name+"" SOURCE_LOC );
 }
@@ -390,6 +410,11 @@ void TestBmiCpp::SetValueAtIndices(std::string name, int* inds, int len, void* s
     for (size_t i = 0; i < len; ++i) {
       in[inds[i]] = static_cast<long*>(src)[i];
     }
+  } else if (type == "int64") {
+    int64_t* in = static_cast<int64_t*>(ptr);
+    for (size_t i = 0; i < len; ++i) {
+      in[inds[i]] = static_cast<int64_t*>(src)[i];
+    }
   }
 }
 
@@ -403,12 +428,12 @@ void TestBmiCpp::SetValue(std::string name, void* src){
     return;
   }
   if (name == NGEN_SERIALIZATION_STATE) {
-    // The plain BMI SetValue signature doesn't carry a size, but this
-    // model knows its own layout. Pass the declared layout size so
-    // deserialize_state can validate and future expansions of the
-    // layout only need to bump the constant in one place.
+    // A caller must provide the payload size via SetValue(NGEN_SERIALIZATION_SIZE, ...)
+    // before a deserialize_state trigger.
+    // deserialize_state validates against the fixed
+    // layout size internally in this test model
     this->deserialize_state(static_cast<const char*>(src),
-                            this->serialized_state_bytes());
+                            this->serialized_size_var);
     return;
   }
 
