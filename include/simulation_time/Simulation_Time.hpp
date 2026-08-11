@@ -112,14 +112,14 @@ class Simulation_Time
             throw std::runtime_error("Simulation_Time misuse");
         }
             
-        struct tm *temp_gmtime_struct;
+        struct tm temp_gmtime_struct;
 
-        temp_gmtime_struct = gmtime(&current_date_time_epoch);
+        gmtime_r(&current_date_time_epoch, &temp_gmtime_struct);
 
         char current_timestamp[20];
         const char* time_format = "%Y-%m-%d %T";
 
-        if (strftime(current_timestamp, sizeof(current_timestamp), time_format, temp_gmtime_struct) == 0) { 
+        if (strftime(current_timestamp, sizeof(current_timestamp), time_format, &temp_gmtime_struct) == 0) {
             throw std::runtime_error("ERROR: strftime returned 0");
         }
 
