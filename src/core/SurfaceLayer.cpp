@@ -14,6 +14,12 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
 {
     long current_time_index = output_time_index;
     
+    // Grab time details (but only once since the output_time_index doesn't (and shouldn't) change
+    std::string current_timestamp = simulation_time.get_timestamp(current_time_index);
+    time_t current_date_time_epoch = simulation_time.get_current_epoch_time();
+
+    utils::time_marker current_time_marker(current_time_index, current_date_time_epoch, current_timestamp);
+
     Layer::update_models(catchment_outflows, catchment_indexes, nexus_downstream_flows, nexus_indexes, current_step);
 
     // On the first time step, check all the nexuses and warn user about ones have no contributing catchments
@@ -31,13 +37,6 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
             }
         }
     }
-
-    // Grab time details (but only once since the output_time_index doesn' (and shouldn't) change
-    std::string current_timestamp = simulation_time.get_timestamp(current_time_index);
-    // Remember: above call to simulation_time.get_timestamp(current_time_index) has to be made first (see those funcs)
-    time_t current_date_time_epoch = simulation_time.get_current_epoch_time();
-
-    utils::time_marker current_time_marker(current_time_index, current_date_time_epoch, current_timestamp);
 
     // Once contributing catchments are updated for this timestep, dump the nexus output
     for(const auto& id : features.nexuses()) 

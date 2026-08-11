@@ -106,10 +106,11 @@ class Simulation_Time
      * @brief Accessor to the current timestamp string
      * @return current_timestamp
      */ 
-    std::string get_timestamp(int current_output_time_index)
+    std::string get_timestamp(int current_output_time_index) const
     {
-        // "get" method mutates state!
-        current_date_time_epoch = start_date_time_epoch + current_output_time_index * output_interval_seconds;
+        if (start_date_time_epoch + current_output_time_index * output_interval_seconds != current_date_time_epoch) {
+            throw std::runtime_error("Simulation_Time misuse");
+        }
             
         struct tm *temp_gmtime_struct;
 
