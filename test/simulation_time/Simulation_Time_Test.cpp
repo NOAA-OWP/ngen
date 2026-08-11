@@ -58,8 +58,11 @@ TEST_F(SimulationTimeTest, TestSimulationTime)
 
     EXPECT_EQ(387, total_output_times);
 
-    std::string current_timestamp;
+    for (int i = 0; i < 5; ++i) {
+        Simulation_Time_Object1->advance_timestep();
+    }
 
+    std::string current_timestamp;
     current_timestamp = Simulation_Time_Object1->get_timestamp(5);
 
     std::string compare_timestamp = "2015-12-15 02:00:00";
