@@ -607,6 +607,17 @@ namespace realization {
             Catchment_Formulation::config_pattern_substitution(properties, BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
                                                                "{{id}}", id);
 
+            // Inject a three-part compound identity on the submodule BEFORE
+            // create_formulation runs, so that compound_id() is fully qualified
+            // during submodule construction with the following structure:
+            // "<catchment.submodule_index>:<submodule-mtn>:<multi-mtn>"
+            // Peek the submodule's own model_type_name from the config map —
+            // we cannot wait for create_formulation() to populate it on
+            // the submodule because we need the compound in place first.
+            std::string submodule_mtn =
+                properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE).as_string();
+            mod->set_compound_id(identifier + ":" + submodule_mtn + ":" + get_model_type_name());
+
             // Call create_formulation to perform the rest of the typical initialization steps for the formulation.
             mod->create_formulation(properties);
 
