@@ -78,7 +78,7 @@ class Simulation_Time
      * @brief Accessor to the total number of time steps
      * @return total_output_times
      */
-    int get_total_output_times()
+    int get_total_output_times() const
     {
         return total_output_times;
     }
@@ -87,7 +87,7 @@ class Simulation_Time
      * @brief Accessor to the output_interval_seconds
      * @return output_interval_seconds
      */
-    int get_output_interval_seconds()
+    int get_output_interval_seconds() const
     {
         return output_interval_seconds;
     }
@@ -97,7 +97,7 @@ class Simulation_Time
      * @return current_date_time_epoch
     */
 
-    time_t get_current_epoch_time()
+    time_t get_current_epoch_time() const
     {
         return current_date_time_epoch;
     }   
@@ -125,25 +125,28 @@ class Simulation_Time
         return current_timestamp;
     }
 
-    inline int next_timestep_index(int epoch_time_seconds)
+    inline int next_timestep_index(int epoch_time_seconds) const
     {
         return int(epoch_time_seconds - start_date_time_epoch) / output_interval_seconds;
     }
 
-    inline int next_timestep_index()
+    inline int next_timestep_index() const
     {
         return next_timestep_index(current_date_time_epoch);
     }
 
-    inline time_t next_timestep_epoch_time(int epoch_time_seconds){
+    inline time_t next_timestep_epoch_time(int epoch_time_seconds) const
+    {
         return start_date_time_epoch + ( next_timestep_index(epoch_time_seconds) * output_interval_seconds );
     }
 
-    inline time_t next_timestep_epoch_time(){
+    inline time_t next_timestep_epoch_time() const
+    {
         return next_timestep_epoch_time(current_date_time_epoch);
     }
 
-    inline int diff(const Simulation_Time& other){
+    inline int diff(const Simulation_Time& other) const
+    {
         return start_date_time_epoch - other.start_date_time_epoch;
     }
 
