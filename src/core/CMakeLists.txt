@@ -33,6 +33,10 @@ if (NGEN_WITH_PYTHON)
     target_link_libraries(core PUBLIC NGen::python)
 endif ()
 
+if (NGEN_WITH_ROUTING)
+    target_link_libraries(core PUBLIC NGen::routing)
+endif ()
+
 if(NGEN_WITH_MPI)
     target_link_libraries(core PUBLIC MPI::MPI_CXX)
 endif()
