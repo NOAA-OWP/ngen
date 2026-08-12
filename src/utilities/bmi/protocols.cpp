@@ -54,17 +54,21 @@ auto operator<<(std::ostream& os, Protocol p) -> std::ostream& {
 NgenBmiProtocols::NgenBmiProtocols()
     : model(nullptr) {
     protocols[Protocol::MASS_BALANCE]    = std::make_unique<NgenMassBalance>();
-    protocols[Protocol::SERIALIZATION]   = std::make_unique<NgenSerializationProtocol>();
     protocols[Protocol::DESERIALIZATION] = std::make_unique<NgenDeserializationProtocol>();
+    protocols[Protocol::SERIALIZATION]   = std::make_unique<NgenSerializationProtocol>();
 }
 
+// Deserialization is constructed before serialization so its
+// `id_scope` sizes the shared FileBackend index (via the
+// path-keyed cache in FileBackend::create). Save-side writes
+// append independently and aren't affected by the scope.
 NgenBmiProtocols::NgenBmiProtocols(ModelPtr model, const geojson::PropertyMap& properties)
     : model(model) {
     protocols[Protocol::MASS_BALANCE] = std::make_unique<NgenMassBalance>(model, properties);
-    protocols[Protocol::SERIALIZATION] =
-        std::make_unique<NgenSerializationProtocol>(model, properties);
     protocols[Protocol::DESERIALIZATION] =
         std::make_unique<NgenDeserializationProtocol>(model, properties);
+    protocols[Protocol::SERIALIZATION] =
+        std::make_unique<NgenSerializationProtocol>(model, properties);
 }
 
 auto NgenBmiProtocols::run(const Protocol& protocol_name, const Context& ctx) const
