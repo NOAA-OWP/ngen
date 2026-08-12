@@ -313,9 +313,11 @@ auto NgenSerializationProtocol::initialize(const ModelPtr& model, const Properti
     }
     geojson::PropertyMap top = top_it->second.get_values();
 
-    // Shared path lives at the top level. Local-only: the string is
-    // handed to the backend factory below and the backend owns it
-    // thereafter — the protocol does not need its own copy.
+    // Resolve path: the top-level `path` is a shared default; a `path`
+    // inside the `save` sub-block overrides it. Split paths let a run
+    // restore from one file and save into another. Local-only: the
+    // string is handed to the backend factory below and the backend
+    // owns it thereafter — the protocol does not need its own copy.
     std::string path;
     auto path_it = top.find(SERIALIZATION_PATH_KEY);
     if (path_it != top.end()) {
@@ -330,6 +332,11 @@ auto NgenSerializationProtocol::initialize(const ModelPtr& model, const Properti
         return {};
     }
     geojson::PropertyMap save = save_it->second.get_values();
+
+    auto save_path_it = save.find(SERIALIZATION_PATH_KEY);
+    if (save_path_it != save.end()) {
+        path = save_path_it->second.as_string();
+    }
 
     auto _it = save.find(SERIALIZATION_CHECK_KEY);
     if (_it != save.end()) {
@@ -357,8 +364,8 @@ auto NgenSerializationProtocol::initialize(const ModelPtr& model, const Properti
         check = false;
         return error_or_warning(ProtocolError(
             Error::PROTOCOL_WARNING,
-            "serialization: 'path' not specified at the top-level serialization block; disabling "
-            "save protocol."
+            "serialization: 'path' not specified in either the top-level serialization block or "
+            "the 'save' sub-block; disabling save protocol."
         ));
     }
 

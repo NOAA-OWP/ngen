@@ -3,12 +3,41 @@
 
 #include "JSONProperty.hpp"
 #include "global_config.hpp"
+#include "path_tokens.hpp"
+
+#include <boost/property_tree/ptree.hpp>
 
 #include <string>
 #include <vector>
 
 namespace realization {
 namespace config {
+
+/**
+ * @brief Resolve `{{rank}}`/`{{pid}}`/`{{host}}`/`{{date}}` tokens in
+ *        every path field the serialization block may carry.
+ *
+ * The serialization block accepts a shared top-level `path` plus two
+ * per-direction overrides — `save.path` and `restore.path`. Each may
+ * be absent; when present, its value goes through
+ * `utilities::resolve_path_tokens` so the protocol layer only ever
+ * sees concrete strings.
+ *
+ * Absent keys are skipped; ptree's dotted-path `put()` would otherwise
+ * fabricate the intermediate sub-block.
+ *
+ * @param block  The raw `serialization` sub-tree (mutated in place).
+ */
+inline void apply_serialization_path_token_resolution(
+    boost::property_tree::ptree& block)
+{
+    for (const auto* path_key : {"path", "save.path", "restore.path"}) {
+        auto path_val = block.get_optional<std::string>(path_key);
+        if (path_val) {
+            block.put(path_key, utilities::resolve_path_tokens(*path_val));
+        }
+    }
+}
 
 /**
  * @brief Auto-populate `serialization.restore.id_subset` with the set

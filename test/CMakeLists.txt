@@ -180,6 +180,7 @@ ngen_add_test(
         realizations/Formulation_Manager_Test.cpp
         realizations/config/Output_Test.cpp
         realizations/config/CatchmentOutput_Test.cpp
+        realizations/config/Serialization_Helper_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment

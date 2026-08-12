@@ -194,9 +194,13 @@ header `src/utilities/bmi/wire_format.hpp`.
 
 Keys:
 
-- `path` — *string, shared at the top level.* Output file into which
-  all protocol instances append their records. Required when
-  `save.check` is true.
+- `path` — *string, shared at the top level; optional.* Default output
+  file into which all protocol instances append their records. Used
+  when `save.path` is not set. Required (either here or under `save`)
+  when `save.check` is true.
+- `save.path` — *string, optional.* Overrides the top-level `path` for
+  the save direction. Lets a run restore from one file and save to
+  another (see [Split save/restore paths](#split-saverestore-paths)).
 - `save.check` — *bool, default true when the `save` block is present.*
   Master enable for the save-side protocol.
 - `save.frequency` — *int, default 1.*
@@ -302,8 +306,14 @@ could then declare the size as `integer(kind=c_int64_t)` directly.
 
 Keys:
 
-- `path` — *string, shared at the top level.* The same file the save
-  protocol writes into. Required when `restore.check` is true.
+- `path` — *string, shared at the top level; optional.* Default input
+  file (typically the same file the save protocol writes into). Used
+  when `restore.path` is not set. Required (either here or under
+  `restore`) when `restore.check` is true.
+- `restore.path` — *string, optional.* Overrides the top-level `path`
+  for the restore direction. Lets a run read a prior checkpoint from
+  one file and write its own to another (see
+  [Split save/restore paths](#split-saverestore-paths)).
 - `restore.check` — *bool, default true when the `restore` block is
   present.* Master enable for the restore-side protocol.
 - `restore.step` — *string, default `"latest"`.* Either the literal
@@ -323,8 +333,34 @@ Keys:
   `run()`, `true` raises a `PROTOCOL_ERROR` (fatal); `false` logs a
   `PROTOCOL_WARNING` and disables the protocol for that module.
 
-Both `save` and `restore` sub-blocks may appear together; they share
-the `path`. Either sub-block may be absent to disable that direction.
+Both `save` and `restore` sub-blocks may appear together; by default
+they share the top-level `path`. Either sub-block may be absent to
+disable that direction. When the two directions need different files,
+use per-direction `path` overrides — see below.
+
+### Split save/restore paths
+
+The top-level `path` is a shared default. A `path` inside either
+sub-block overrides it for that direction only:
+
+```json
+"serialization": {
+    "save":    { "check": true, "path": "/scratch/run_042.ckpt" },
+    "restore": { "check": true, "path": "/warm_starts/run_041.ckpt", "step": "latest" }
+}
+```
+
+Because `FileBackend::create` is a path-keyed get-or-create (see
+[Key properties](#key-properties)), split paths resolve to two
+independent `FileBackend` instances — the restore-side in-memory
+index reads the source file, and save-side appends land in the
+destination. Neither direction sees the other's file.
+
+If the top-level `path` is present *and* a sub-block also declares
+`path`, the sub-block value wins for that direction. A configuration
+may set only the top-level `path`, only one or both sub-block `path`s,
+or any combination — an enabled direction that ends up with no
+resolved path warns and disables (matching the pre-split behavior).
 
 ### Support detection
 

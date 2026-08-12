@@ -29,7 +29,6 @@
 #include "realizations/config/output.hpp"
 #include "realizations/config/global_config.hpp"
 #include "realizations/config/serialization_helper.hpp"
-#include "path_tokens.hpp"
 
 namespace realization {
 
@@ -69,20 +68,11 @@ namespace realization {
                     auto possible_block = tree.get_child_optional(key);
                     if (possible_block) {
                         // Resolve `{{rank}}`/`{{pid}}`/`{{host}}`/`{{date}}`
-                        // tokens in the block's `path` field before it
-                        // propagates into every formulation. This is the
-                        // seam that keeps the protocol layer MPI-agnostic —
-                        // the resolved path is a concrete, caller-scoped
-                        // string by the time any protocol instance sees it.
-                        // Extend to additional inheritable blocks with a
-                        // file path if/when they arrive.
+                        // tokens in the path related fields before they
+                        // propagate into every formulation.
                         if (which == realization::config::GlobalConfigKey::SERIALIZATION) {
-                            auto path_val = possible_block->get_optional<std::string>("path");
-                            if (path_val) {
-                                possible_block->put(
-                                    "path",
-                                    utilities::resolve_path_tokens(*path_val));
-                            }
+                            realization::config::apply_serialization_path_token_resolution(
+                                *possible_block);
                         }
                         global_configs.emplace(
                             key,

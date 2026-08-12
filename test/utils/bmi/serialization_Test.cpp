@@ -224,6 +224,49 @@ TEST_F(Bmi_Serialization_Test, missing_path) {
     EXPECT_TRUE(result.has_value());
 }
 
+// A `path` inside the `save` sub-block overrides the top-level `path`.
+// This lets a config restore from one file and save to another.
+TEST_F(Bmi_Serialization_Test, save_sub_block_path_overrides_top_level) {
+    const std::string top_path = path + ".top";
+    const std::string sub_path = path + ".sub";
+    std::remove(top_path.c_str());
+    std::remove(sub_path.c_str());
+
+    auto properties = SerializationMock(top_path).with_save_path(sub_path).as_json_property();
+    auto protocols  = NgenBmiProtocols(model, properties);
+    auto result = protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "0", model_name));
+    ASSERT_TRUE(result.has_value());
+
+    // The record must land in the sub-block path, not the top-level path.
+    EXPECT_TRUE(file_exists(sub_path));
+    EXPECT_FALSE(file_exists(top_path));
+    auto records = read_all_records(sub_path);
+    ASSERT_EQ(records.size(), 1u);
+    EXPECT_EQ(records[0].id, model_name);
+
+    std::remove(top_path.c_str());
+    std::remove(sub_path.c_str());
+}
+
+// A `path` under `save` alone (no top-level `path`) is sufficient to
+// enable the save protocol.
+TEST_F(Bmi_Serialization_Test, save_sub_block_path_only) {
+    auto properties = SerializationMock::without_path(/*fatal*/ true, /*frequency*/ 1, /*check*/ true)
+                          .with_save_path(path)
+                          .as_json_property();
+    testing::internal::CaptureStderr();
+    auto protocols = NgenBmiProtocols(model, properties);
+    // No "'path' not specified" warning must fire — sub-block path satisfies it.
+    EXPECT_EQ(testing::internal::GetCapturedStderr(), "");
+
+    auto result = protocols.run(Protocol::SERIALIZATION, make_context(0, 2, "0", model_name));
+    ASSERT_TRUE(result.has_value());
+    EXPECT_TRUE(file_exists(path));
+    auto records = read_all_records(path);
+    ASSERT_EQ(records.size(), 1u);
+    EXPECT_EQ(records[0].id, model_name);
+}
+
 // ---------------------------------------------------------------------
 // Core save behavior: one record per fired step, tagged with Context id.
 // ---------------------------------------------------------------------

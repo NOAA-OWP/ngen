@@ -202,9 +202,11 @@ auto NgenDeserializationProtocol::initialize(const ModelPtr& model, const Proper
     }
     geojson::PropertyMap top = top_it->second.get_values();
 
-    // The path is local-only: handed to the backend factory below
-    // and owned by the backend thereafter. The protocol does not
-    // need its own copy.
+    // Resolve path: the top-level `path` is a shared default; a `path`
+    // inside the `restore` sub-block overrides it. Split paths let a
+    // run restore from one file and save into another. Local-only:
+    // handed to the backend factory below and owned by the backend
+    // thereafter.
     std::string path;
     auto path_it = top.find(SERIALIZATION_PATH_KEY);
     if (path_it != top.end()) {
@@ -217,6 +219,11 @@ auto NgenDeserializationProtocol::initialize(const ModelPtr& model, const Proper
         return {};
     }
     geojson::PropertyMap restore = restore_it->second.get_values();
+
+    auto restore_path_it = restore.find(SERIALIZATION_PATH_KEY);
+    if (restore_path_it != restore.end()) {
+        path = restore_path_it->second.as_string();
+    }
 
     auto _it = restore.find(SERIALIZATION_CHECK_KEY);
     if (_it != restore.end()) {
@@ -309,8 +316,8 @@ auto NgenDeserializationProtocol::initialize(const ModelPtr& model, const Proper
         check = false;
         return error_or_warning(ProtocolError(
             Error::PROTOCOL_WARNING,
-            "deserialization: 'path' not specified at the top-level serialization block; disabling "
-            "restore protocol."
+            "deserialization: 'path' not specified in either the top-level serialization block or "
+            "the 'restore' sub-block; disabling restore protocol."
         ));
     }
 
