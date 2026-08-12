@@ -98,6 +98,8 @@ $(function(){initNavTree('namespacerealization_1_1config.html',''); initResizabl
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">realization::config Namespace Reference</div></div>
 </div><!--header-->
@@ -116,18 +118,403 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrealization_1_1config_1_1_layer.html">Layer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structrealization_1_1config_1_1_layer.html" title="Layer configuration information.">Layer</a> configuration information.  <a href="structrealization_1_1config_1_1_layer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrealization_1_1config_1_1_output.html">Output</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parsed representation of a realization config's output settings.  <a href="structrealization_1_1config_1_1_output.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrealization_1_1config_1_1_output_domain.html">OutputDomain</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Settings for one output domain (catchment or nexus).  <a href="structrealization_1_1config_1_1_output_domain.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrealization_1_1config_1_1_routing.html">Routing</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrealization_1_1config_1_1_time.html">Time</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple structure for holding time bounds and output interval (seconds)  <a href="structrealization_1_1config_1_1_time.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ab24879669387dcb7b2e65913b75e21bf" id="r_ab24879669387dcb7b2e65913b75e21bf"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab24879669387dcb7b2e65913b75e21bf">OutputFormat</a> { <br />
+&#160;&#160;<a class="el" href="#ab24879669387dcb7b2e65913b75e21bfa628cb5675ff524f3e719b7aa2e88fe3f">csv</a>
+, <br />
+&#160;&#160;<a class="el" href="#ab24879669387dcb7b2e65913b75e21bfac2e0f73e7b066a47b743d6ce8213e684">netcdf</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:ab24879669387dcb7b2e65913b75e21bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serialization format for an output domain.  <a href="#ab24879669387dcb7b2e65913b75e21bf">More...</a><br /></td></tr>
+<tr class="separator:ab24879669387dcb7b2e65913b75e21bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50f1a4acc522b75d352df1f4e84fa04c" id="r_a50f1a4acc522b75d352df1f4e84fa04c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04c">OutputGrouping</a> { <br />
+&#160;&#160;<a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04caa144e5e9277e3262602155c330f89a0b">per_feature</a>
+, <br />
+&#160;&#160;<a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04ca42ffd54bc4ba4c105461e8b3b4232295">per_formulation</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:a50f1a4acc522b75d352df1f4e84fa04c"><td class="mdescLeft">&#160;</td><td class="mdescRight">How a domain's records are distributed across files (the file-*granularity* axis): per_feature - one file per feature (one CSV per catchment / per nexus) per_formulation - the features of a formulation aggregate into one file (a feature-id column distinguishes their rows).  <a href="#a50f1a4acc522b75d352df1f4e84fa04c">More...</a><br /></td></tr>
+<tr class="separator:a50f1a4acc522b75d352df1f4e84fa04c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a9703c5b74ed2eb2cb69f7d6a05eccde5" id="r_a9703c5b74ed2eb2cb69f7d6a05eccde5"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classutils_1_1_catchment_outputs_mgr.html">utils::CatchmentOutputsMgr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9703c5b74ed2eb2cb69f7d6a05eccde5">make_catchment_output_mgr</a> (const <a class="el" href="structrealization_1_1config_1_1_output.html">Output</a> &amp;output_config, std::vector&lt; <a class="el" href="structutils_1_1_feature_descriptor.html">utils::FeatureDescriptor</a> &gt; descriptors, const std::string &amp;aggregated_filename=<a class="el" href="#ad2b7486f4da23f8b6c7e7c140b882853">DEFAULT_AGGREGATED_FILENAME</a>)</td></tr>
+<tr class="memdesc:a9703c5b74ed2eb2cb69f7d6a05eccde5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the catchment output manager from the parsed output configuration.  <br /></td></tr>
+<tr class="separator:a9703c5b74ed2eb2cb69f7d6a05eccde5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6f4c4de5326e76c91d995a77b610653" id="r_ae6f4c4de5326e76c91d995a77b610653"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ab24879669387dcb7b2e65913b75e21bf">OutputFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6f4c4de5326e76c91d995a77b610653">parse_output_format</a> (const std::string &amp;s)</td></tr>
+<tr class="separator:ae6f4c4de5326e76c91d995a77b610653"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a650a217cbb75c964f3a7e7d06ba0ab81" id="r_a650a217cbb75c964f3a7e7d06ba0ab81"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04c">OutputGrouping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a650a217cbb75c964f3a7e7d06ba0ab81">parse_output_grouping</a> (const std::string &amp;s)</td></tr>
+<tr class="separator:a650a217cbb75c964f3a7e7d06ba0ab81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab9f0b64835b2616f72d5eb4117543d2" id="r_aab9f0b64835b2616f72d5eb4117543d2"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab9f0b64835b2616f72d5eb4117543d2">rank_output_root</a> (const std::string &amp;base_root, const <a class="el" href="structrealization_1_1config_1_1_output_domain.html">OutputDomain</a> &amp;domain, int mpi_rank, int mpi_num_procs)</td></tr>
+<tr class="memdesc:aab9f0b64835b2616f72d5eb4117543d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The output root for a rank's files in this domain: appends "rank_&lt;N&gt;/" to <code>base_root</code> when the domain requests per-rank subdirectories, or when it aggregates per formulation (which requires per-rank separation so ranks don't write the same file).  <br /></td></tr>
+<tr class="separator:aab9f0b64835b2616f72d5eb4117543d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:ad2b7486f4da23f8b6c7e7c140b882853" id="r_ad2b7486f4da23f8b6c7e7c140b882853"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2b7486f4da23f8b6c7e7c140b882853">DEFAULT_AGGREGATED_FILENAME</a> = &quot;cat_output.csv&quot;</td></tr>
+<tr class="memdesc:ad2b7486f4da23f8b6c7e7c140b882853"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default file name for an aggregated (per_formulation) catchment file.  <br /></td></tr>
+<tr class="separator:ad2b7486f4da23f8b6c7e7c140b882853"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef5b1d3959183158c8909e4e4ee21098" id="r_aef5b1d3959183158c8909e4e4ee21098"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef5b1d3959183158c8909e4e4ee21098">OUTPUT_CONFIG_KEY</a> = &quot;output&quot;</td></tr>
+<tr class="memdesc:aef5b1d3959183158c8909e4e4ee21098"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key for the dedicated output configuration block in a realization config.  <br /></td></tr>
+<tr class="separator:aef5b1d3959183158c8909e4e4ee21098"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa62ced51c5055676f21301e815749911" id="r_aa62ced51c5055676f21301e815749911"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa62ced51c5055676f21301e815749911">LEGACY_OUTPUT_ROOT_KEY</a> = &quot;output_root&quot;</td></tr>
+<tr class="memdesc:aa62ced51c5055676f21301e815749911"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deprecated top-level keys this block replaces.  <br /></td></tr>
+<tr class="separator:aa62ced51c5055676f21301e815749911"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77d11909bf8a870e68199dd700c29b67" id="r_a77d11909bf8a870e68199dd700c29b67"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a77d11909bf8a870e68199dd700c29b67">LEGACY_DISABLE_CATCHMENT_KEY</a> = &quot;disable_catchment_output&quot;</td></tr>
+<tr class="separator:a77d11909bf8a870e68199dd700c29b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae48cbacb49a069033c5af2108530a4b9" id="r_ae48cbacb49a069033c5af2108530a4b9"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae48cbacb49a069033c5af2108530a4b9">LEGACY_PER_FORMULATION_KEY</a> = &quot;per_formulation_nexus_files&quot;</td></tr>
+<tr class="separator:ae48cbacb49a069033c5af2108530a4b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b47cec0634b4cbc2d53aeffb122c169" id="r_a4b47cec0634b4cbc2d53aeffb122c169"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b47cec0634b4cbc2d53aeffb122c169">ROUTING_CONFIG_KEY</a> = &quot;t_route_config_file_with_path&quot;</td></tr>
 <tr class="separator:a4b47cec0634b4cbc2d53aeffb122c169"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ab24879669387dcb7b2e65913b75e21bf" name="ab24879669387dcb7b2e65913b75e21bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab24879669387dcb7b2e65913b75e21bf">&#9670;&#160;</a></span>OutputFormat</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#ab24879669387dcb7b2e65913b75e21bf">realization::config::OutputFormat</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Serialization format for an output domain. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ab24879669387dcb7b2e65913b75e21bfa628cb5675ff524f3e719b7aa2e88fe3f" name="ab24879669387dcb7b2e65913b75e21bfa628cb5675ff524f3e719b7aa2e88fe3f"></a>csv&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab24879669387dcb7b2e65913b75e21bfac2e0f73e7b066a47b743d6ce8213e684" name="ab24879669387dcb7b2e65913b75e21bfac2e0f73e7b066a47b743d6ce8213e684"></a>netcdf&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a id="a50f1a4acc522b75d352df1f4e84fa04c" name="a50f1a4acc522b75d352df1f4e84fa04c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50f1a4acc522b75d352df1f4e84fa04c">&#9670;&#160;</a></span>OutputGrouping</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04c">realization::config::OutputGrouping</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>How a domain's records are distributed across files (the file-*granularity* axis): per_feature - one file per feature (one CSV per catchment / per nexus) per_formulation - the features of a formulation aggregate into one file (a feature-id column distinguishes their rows). </p>
+<p>Fewer, larger files; columns are uniform within a file by construction. Orthogonal to this is <a class="el" href="structrealization_1_1config_1_1_output_domain.html#a51411b1aab8facc4479e502388d42443">OutputDomain::rank_subdir</a>, the filesystem-*layout* axis. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a50f1a4acc522b75d352df1f4e84fa04caa144e5e9277e3262602155c330f89a0b" name="a50f1a4acc522b75d352df1f4e84fa04caa144e5e9277e3262602155c330f89a0b"></a>per_feature&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a50f1a4acc522b75d352df1f4e84fa04ca42ffd54bc4ba4c105461e8b3b4232295" name="a50f1a4acc522b75d352df1f4e84fa04ca42ffd54bc4ba4c105461e8b3b4232295"></a>per_formulation&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a9703c5b74ed2eb2cb69f7d6a05eccde5" name="a9703c5b74ed2eb2cb69f7d6a05eccde5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9703c5b74ed2eb2cb69f7d6a05eccde5">&#9670;&#160;</a></span>make_catchment_output_mgr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classutils_1_1_catchment_outputs_mgr.html">utils::CatchmentOutputsMgr</a> &gt; realization::config::make_catchment_output_mgr </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structrealization_1_1config_1_1_output.html">Output</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>output_config</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="structutils_1_1_feature_descriptor.html">utils::FeatureDescriptor</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>descriptors</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>aggregated_filename</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#ad2b7486f4da23f8b6c7e7c140b882853">DEFAULT_AGGREGATED_FILENAME</a></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Build the catchment output manager from the parsed output configuration. </p>
+<p>Grouping and precision come from <code>output_config</code>; the resolved root comes from <code>output_config.root</code>, which the caller is expected to have already adjusted for rank layout (see <a class="el" href="#aab9f0b64835b2616f72d5eb4117543d2">rank_output_root</a>) so any rank_&lt;N&gt;/ subdirectory is baked into the root.</p>
+<p>The manager is constructed with the full set of <code>descriptors</code> (every catchment and its columns), so the backend lays out its files up front and is ready to receive data on return.</p>
+<p>Side effect: constructing the manager creates the output directory tree it writes into (config parsing only normalizes the root &ndash; it does not touch the filesystem). Each output manager owns creating what it writes, so no caller need pre-create the directory.</p>
+<p>Only the CSV format is implemented today; any other configured format is rejected here (the branch on <code>output_config.catchment.format</code> is where an added format would slot in). Layout follows the grouping: <code>per_formulation</code> aggregates each formulation's catchments into one file (leading catchment_id column) named <code>aggregated_filename</code>; <code>per_feature</code> writes one file per catchment.</p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>if a catchment output format other than CSV is configured. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="structrealization_1_1config_1_1_output.html#a7e03c9b9ef21b1c7f8383adb6fc056c9">realization::config::Output::catchment</a>, <a class="el" href="#ab24879669387dcb7b2e65913b75e21bfa628cb5675ff524f3e719b7aa2e88fe3f">csv</a>, <a class="el" href="structrealization_1_1config_1_1_output_domain.html#aee34057c187100f9b5f5aeecc65dc7e2">realization::config::OutputDomain::format</a>, <a class="el" href="structrealization_1_1config_1_1_output_domain.html#a3a39eca4401c3582bd5c7562ad92b39a">realization::config::OutputDomain::grouping</a>, <a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04ca42ffd54bc4ba4c105461e8b3b4232295">per_formulation</a>, <a class="el" href="structrealization_1_1config_1_1_output.html#abc9e92961d687b838c400d4e103d579c">realization::config::Output::precision</a>, and <a class="el" href="structrealization_1_1config_1_1_output.html#a546f0aaa4998b80b0f1685a4e5ea7a45">realization::config::Output::root</a>.</p>
+
+</div>
+</div>
+<a id="ae6f4c4de5326e76c91d995a77b610653" name="ae6f4c4de5326e76c91d995a77b610653"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6f4c4de5326e76c91d995a77b610653">&#9670;&#160;</a></span>parse_output_format()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#ab24879669387dcb7b2e65913b75e21bf">OutputFormat</a> realization::config::parse_output_format </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="#ab24879669387dcb7b2e65913b75e21bfa628cb5675ff524f3e719b7aa2e88fe3f">csv</a>, and <a class="el" href="#ab24879669387dcb7b2e65913b75e21bfac2e0f73e7b066a47b743d6ce8213e684">netcdf</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="structrealization_1_1config_1_1_output_domain.html#a2790d4cf37828cdf11a0df599734cb53">realization::config::OutputDomain::OutputDomain()</a>.</p>
+
+</div>
+</div>
+<a id="a650a217cbb75c964f3a7e7d06ba0ab81" name="a650a217cbb75c964f3a7e7d06ba0ab81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a650a217cbb75c964f3a7e7d06ba0ab81">&#9670;&#160;</a></span>parse_output_grouping()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04c">OutputGrouping</a> realization::config::parse_output_grouping </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04caa144e5e9277e3262602155c330f89a0b">per_feature</a>, and <a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04ca42ffd54bc4ba4c105461e8b3b4232295">per_formulation</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="structrealization_1_1config_1_1_output_domain.html#a2790d4cf37828cdf11a0df599734cb53">realization::config::OutputDomain::OutputDomain()</a>.</p>
+
+</div>
+</div>
+<a id="aab9f0b64835b2616f72d5eb4117543d2" name="aab9f0b64835b2616f72d5eb4117543d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab9f0b64835b2616f72d5eb4117543d2">&#9670;&#160;</a></span>rank_output_root()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string realization::config::rank_output_root </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>base_root</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structrealization_1_1config_1_1_output_domain.html">OutputDomain</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>domain</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>mpi_rank</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>mpi_num_procs</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The output root for a rank's files in this domain: appends "rank_&lt;N&gt;/" to <code>base_root</code> when the domain requests per-rank subdirectories, or when it aggregates per formulation (which requires per-rank separation so ranks don't write the same file). </p>
+<p>Only distributed (<code>mpi_num_procs</code> &gt; 1) runs are affected; in serial <code>base_root</code> is returned unchanged. The directory is created lazily by the backend when it opens files. </p>
+
+<p class="reference">References <a class="el" href="structrealization_1_1config_1_1_output_domain.html#a3a39eca4401c3582bd5c7562ad92b39a">realization::config::OutputDomain::grouping</a>, <a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04ca42ffd54bc4ba4c105461e8b3b4232295">per_formulation</a>, and <a class="el" href="structrealization_1_1config_1_1_output_domain.html#a51411b1aab8facc4479e502388d42443">realization::config::OutputDomain::rank_subdir</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="ad2b7486f4da23f8b6c7e7c140b882853" name="ad2b7486f4da23f8b6c7e7c140b882853"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2b7486f4da23f8b6c7e7c140b882853">&#9670;&#160;</a></span>DEFAULT_AGGREGATED_FILENAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string realization::config::DEFAULT_AGGREGATED_FILENAME = &quot;cat_output.csv&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default file name for an aggregated (per_formulation) catchment file. </p>
+<p>The rank, when applicable, is carried in the resolved root (a rank_&lt;N&gt;/ subdirectory), not the file name. </p>
+
+</div>
+</div>
+<a id="a77d11909bf8a870e68199dd700c29b67" name="a77d11909bf8a870e68199dd700c29b67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77d11909bf8a870e68199dd700c29b67">&#9670;&#160;</a></span>LEGACY_DISABLE_CATCHMENT_KEY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string realization::config::LEGACY_DISABLE_CATCHMENT_KEY = &quot;disable_catchment_output&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structrealization_1_1config_1_1_output.html#a27f496c09095b7a0b0a01055905ddaa0">realization::config::Output::parse_legacy()</a>.</p>
+
+</div>
+</div>
+<a id="aa62ced51c5055676f21301e815749911" name="aa62ced51c5055676f21301e815749911"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa62ced51c5055676f21301e815749911">&#9670;&#160;</a></span>LEGACY_OUTPUT_ROOT_KEY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string realization::config::LEGACY_OUTPUT_ROOT_KEY = &quot;output_root&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Deprecated top-level keys this block replaces. </p>
+
+<p class="reference">Referenced by <a class="el" href="structrealization_1_1config_1_1_output.html#a27f496c09095b7a0b0a01055905ddaa0">realization::config::Output::parse_legacy()</a>.</p>
+
+</div>
+</div>
+<a id="ae48cbacb49a069033c5af2108530a4b9" name="ae48cbacb49a069033c5af2108530a4b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae48cbacb49a069033c5af2108530a4b9">&#9670;&#160;</a></span>LEGACY_PER_FORMULATION_KEY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string realization::config::LEGACY_PER_FORMULATION_KEY = &quot;per_formulation_nexus_files&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structrealization_1_1config_1_1_output.html#a27f496c09095b7a0b0a01055905ddaa0">realization::config::Output::parse_legacy()</a>.</p>
+
+</div>
+</div>
+<a id="aef5b1d3959183158c8909e4e4ee21098" name="aef5b1d3959183158c8909e4e4ee21098"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef5b1d3959183158c8909e4e4ee21098">&#9670;&#160;</a></span>OUTPUT_CONFIG_KEY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string realization::config::OUTPUT_CONFIG_KEY = &quot;output&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Key for the dedicated output configuration block in a realization config. </p>
+
+<p class="reference">Referenced by <a class="el" href="structrealization_1_1config_1_1_output.html#a0317e8701c2daf82cb7661835e7a0701">realization::config::Output::from_realization()</a>.</p>
+
+</div>
+</div>
 <a id="a4b47cec0634b4cbc2d53aeffb122c169" name="a4b47cec0634b4cbc2d53aeffb122c169"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4b47cec0634b4cbc2d53aeffb122c169">&#9670;&#160;</a></span>ROUTING_CONFIG_KEY</h2>
 
@@ -158,7 +545,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="namespacerealization_1_1config.html">config</a></li>
-    <li class="footer">Generated on Wed Aug 12 2026 15:05:42 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Aug 12 2026 15:06:13 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

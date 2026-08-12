@@ -300,84 +300,85 @@ var NAVTREE =
       [ "Description and Top-Level Structure", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md251", [
         [ "Required Top-Level Keys", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md252", null ],
         [ "Optional Top-Level Keys", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md253", [
-          [ "output_root", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md254", null ],
-          [ "disable_catchment_output", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md255", null ],
-          [ "per_formulation_nexus_files", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md256", null ],
-          [ "catchments", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md257", null ],
-          [ "routing", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md258", null ]
+          [ "output", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md254", null ],
+          [ "output_root", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md255", null ],
+          [ "disable_catchment_output", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md256", null ],
+          [ "per_formulation_nexus_files", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md257", null ],
+          [ "catchments", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md258", null ],
+          [ "routing", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md259", null ]
         ] ],
-        [ "Examples of Top-Level Structure", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md259", null ]
+        [ "Examples of Top-Level Structure", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md260", null ]
       ] ],
-      [ "The Global Section", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md260", null ],
-      [ "The Time Section", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md261", null ],
-      [ "Individual Catchments", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md262", null ],
-      [ "The Routing Section", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md263", null ],
-      [ "A Full Example", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md264", null ],
-      [ "A Note on BMI Models", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md265", null ]
+      [ "The Global Section", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md261", null ],
+      [ "The Time Section", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md262", null ],
+      [ "Individual Catchments", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md263", null ],
+      [ "The Routing Section", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md264", null ],
+      [ "A Full Example", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md265", null ],
+      [ "A Note on BMI Models", "md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md266", null ]
     ] ],
     [ "<a href=\"https://docs.opengeospatial.org/is/14-111r6/14-111r6.html\" >HY_Features</a>", "md_doc_2references.html", [
-      [ "BMI", "md_doc_2references.html#autotoc_md267", null ],
-      [ "Formulations", "md_doc_2references.html#autotoc_md268", null ],
-      [ "HYMOD", "md_doc_2references.html#autotoc_md269", null ],
-      [ "T-shirt", "md_doc_2references.html#autotoc_md270", null ],
-      [ "GIUH", "md_doc_2references.html#autotoc_md271", [
-        [ "Modeling References", "md_doc_2references.html#autotoc_md272", null ]
+      [ "BMI", "md_doc_2references.html#autotoc_md268", null ],
+      [ "Formulations", "md_doc_2references.html#autotoc_md269", null ],
+      [ "HYMOD", "md_doc_2references.html#autotoc_md270", null ],
+      [ "T-shirt", "md_doc_2references.html#autotoc_md271", null ],
+      [ "GIUH", "md_doc_2references.html#autotoc_md272", [
+        [ "Modeling References", "md_doc_2references.html#autotoc_md273", null ]
       ] ]
     ] ],
     [ "Release Management", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html", [
-      [ "The Release Process", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md274", [
-        [ "TL;DR", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md275", null ],
-        [ "Process Steps", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md276", null ]
+      [ "The Release Process", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md275", [
+        [ "TL;DR", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md276", null ],
+        [ "Process Steps", "md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md277", null ]
       ] ]
     ] ],
     [ "Installation instructions", "md__i_n_s_t_a_l_l.html", [
-      [ "Building and running with docker:", "md__i_n_s_t_a_l_l.html#autotoc_md279", null ],
-      [ "Building manually:", "md__i_n_s_t_a_l_l.html#autotoc_md280", null ]
+      [ "Building and running with docker:", "md__i_n_s_t_a_l_l.html#autotoc_md280", null ],
+      [ "Building manually:", "md__i_n_s_t_a_l_l.html#autotoc_md281", null ]
     ] ],
     [ "Guidance on How to Contribute", "md__c_o_n_t_r_i_b_u_t_i_n_g.html", [
-      [ "Using the Issue Tracker", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md283", null ],
-      [ "Changing the Code-Base", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md284", [
-        [ "Summary", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md285", null ],
-        [ "Getting Started", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md286", [
-          [ "Optional: Git Hooks", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md287", null ]
+      [ "Using the Issue Tracker", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md284", null ],
+      [ "Changing the Code-Base", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md285", [
+        [ "Summary", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md286", null ],
+        [ "Getting Started", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md287", [
+          [ "Optional: Git Hooks", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md288", null ]
         ] ],
-        [ "Developing Changes", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md288", [
-          [ "Work in a Dedicated Branch", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md289", null ],
-          [ "Pushing Incremental Commits", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md290", null ],
-          [ "Submitting Pull Requests", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md291", [
-            [ "Guidelines for Pull Requests", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md292", null ],
-            [ "PR Review and Requested Revisions", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md293", null ]
+        [ "Developing Changes", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md289", [
+          [ "Work in a Dedicated Branch", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md290", null ],
+          [ "Pushing Incremental Commits", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md291", null ],
+          [ "Submitting Pull Requests", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md292", [
+            [ "Guidelines for Pull Requests", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md293", null ],
+            [ "PR Review and Requested Revisions", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md294", null ]
           ] ]
         ] ],
-        [ "Keeping Forks Up to Date", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md294", [
-          [ "A Rebase Strategy", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md295", null ],
-          [ "Getting Remote Changes", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md296", [
-            [ "For production Too", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md297", null ]
+        [ "Keeping Forks Up to Date", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md295", [
+          [ "A Rebase Strategy", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md296", null ],
+          [ "Getting Remote Changes", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md297", [
+            [ "For production Too", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md298", null ]
           ] ],
-          [ "Rebasing Development Branches", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md298", [
-            [ "Interactive Rebasing", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md299", null ]
+          [ "Rebasing Development Branches", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md299", [
+            [ "Interactive Rebasing", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md300", null ]
           ] ],
-          [ "Fixing Diverging Development Branches", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md300", null ]
+          [ "Fixing Diverging Development Branches", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md301", null ]
         ] ]
       ] ]
     ] ],
     [ "Disclaimer", "md__t_e_r_m_s.html", [
-      [ "Exceptions", "md__t_e_r_m_s.html#autotoc_md303", null ]
+      [ "Exceptions", "md__t_e_r_m_s.html#autotoc_md304", null ]
     ] ],
     [ "Testing", "md_test_2_r_e_a_d_m_e.html", [
-      [ "Testing Frameworks", "md_test_2_r_e_a_d_m_e.html#autotoc_md305", [
-        [ "Google Test", "md_test_2_r_e_a_d_m_e.html#autotoc_md306", [
-          [ "(Re)generating CMake Project Buildsystem", "md_test_2_r_e_a_d_m_e.html#autotoc_md307", null ]
+      [ "Testing Frameworks", "md_test_2_r_e_a_d_m_e.html#autotoc_md306", [
+        [ "Google Test", "md_test_2_r_e_a_d_m_e.html#autotoc_md307", [
+          [ "(Re)generating CMake Project Buildsystem", "md_test_2_r_e_a_d_m_e.html#autotoc_md308", null ]
         ] ]
       ] ],
-      [ "Executing Automated Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md308", [
-        [ "C++ Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md309", [
-          [ "Test Targets and Executables", "md_test_2_r_e_a_d_m_e.html#autotoc_md310", null ]
+      [ "Executing Automated Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md309", [
+        [ "C++ Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md310", [
+          [ "Test Targets and Executables", "md_test_2_r_e_a_d_m_e.html#autotoc_md311", null ]
         ] ]
       ] ],
-      [ "Creating New Automated Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md311", [
-        [ "Adding Tests to CMake Builds", "md_test_2_r_e_a_d_m_e.html#autotoc_md312", null ],
-        [ "Test Creation Rules of Thumb", "md_test_2_r_e_a_d_m_e.html#autotoc_md313", null ]
+      [ "Creating New Automated Tests", "md_test_2_r_e_a_d_m_e.html#autotoc_md312", [
+        [ "Adding Tests to CMake Builds", "md_test_2_r_e_a_d_m_e.html#autotoc_md313", null ],
+        [ "Test Creation Rules of Thumb", "md_test_2_r_e_a_d_m_e.html#autotoc_md314", null ]
       ] ]
     ] ],
     [ "Todo List", "todo.html", null ],
@@ -412,28 +413,29 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_2github_2workspace_2include_2utilities_2mdarray_2mdarray_8hpp-example.html",
-"class_h_y___interior_catchment.html#a3b336576b1ce5f7257ea308095feec6b",
-"class_simulation___time.html",
-"classdata__access_1_1_optional_wrapped_data_provider.html#aad2d7cdeac16334c1477a65b46c77b4a",
-"classgeojson_1_1_feature_base.html#a30269e3419054d9f3e06e4d1c74b44e0",
-"classgeojson_1_1_j_s_o_n_property.html#aaa771ed1e1b210264bf8dad29ffcddc5",
-"classgeojson_1_1_multi_line_string_feature.html#adfb6ba4107e752620dcb9a04aeb4a158",
-"classgeojson_1_1_multi_polygon_feature.html#ae37036f3abfe71ca484d4f6885624020",
-"classgeojson_1_1_polygon_feature.html#ae9f41eadb72d21e31e17783fa4fb82a2",
-"classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2",
-"classmodels_1_1bmi_1_1_bmi___c___adapter.html#a1f24e8707912c9056dd300669785da73",
-"classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a841e084e84ba0325b77e1a868c7407d6",
+"class_h_y___interior_catchment.html#a55f00d5e5a6283c0051e73079335eaf8",
+"class_simulation___time.html#a08bb9078f55a6aa12cf040dba5fe03f0",
+"classdata__access_1_1_optional_wrapped_data_provider.html#ab0b1614239c57ead01efc4f45bf7d719",
+"classgeojson_1_1_feature_base.html#a3736c2f737da40c6e9ce032b1bc88779",
+"classgeojson_1_1_j_s_o_n_property.html#abc3fb5015f523acf462755a444896534",
+"classgeojson_1_1_multi_line_string_feature.html#ae37036f3abfe71ca484d4f6885624020",
+"classgeojson_1_1_multi_polygon_feature.html#ae3da4d699f37811a450985f094b45bf8",
+"classgeojson_1_1_polygon_feature.html#af289e5db1d2039bddd84bef755f0bab6",
+"classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4a7a884db6ccb6c892bd681f89ab6e17",
+"classmodels_1_1bmi_1_1_bmi___c___adapter.html#a1fa6c71c6683a4f49957206d078b2435",
+"classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a89ed729aade1ec00e5aee9f587168ea6",
 "classngen_1_1_domain_layer.html#a96c3fed503f10d2b2f9ab00c229a5b91",
-"classrealization_1_1_bmi___c___formulation.html#a0dd771991a46889d4bc299f8c13cb5e3",
-"classrealization_1_1_bmi___cpp___formulation.html#a3ea2f6ea46e2b71188aec7c6c2da4cc9",
-"classrealization_1_1_bmi___formulation.html#ab84b1e0762cab86130d88317d0e2cfc1",
-"classrealization_1_1_bmi___module___formulation.html#af9ad6e2aed1c37e6b695444ad81bf5e9",
-"classrealization_1_1_catchment___formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d",
-"functions_func_i.html",
-"md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md198",
-"namespacemodels_1_1bmi_1_1protocols.html#aa0aa8e7c2fca284c07c66b6186d9fb93",
-"structgeojson_1_1_object.html#aaefa12425c4e5fe8ff462a124eacc528",
-"structngen_1_1mdarray_1_1iterator.html#ade572a755c4bdaf14df5a1f4b70f2654"
+"classrealization_1_1_bmi___c___formulation.html#a043a34098a1c4c014b40f0b57ffacf39",
+"classrealization_1_1_bmi___cpp___formulation.html#a3e6136d3fde105fd835c8be24db7d1b7",
+"classrealization_1_1_bmi___formulation.html#abd0d3178a89234d538ab2a04bf3af3ef",
+"classrealization_1_1_bmi___multi___formulation.html#a02082f5077fee0a6e959640cf27a404d",
+"classrealization_1_1_configuration_exception.html",
+"classutils_1_1_stream_handler.html#a5f450a99693319a0ed096e0cb3b70a52",
+"md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md162",
+"namespacehy__features_1_1identifiers.html#a56a7f5d9e5bde39232a37f31dc7ca878",
+"struct_units_helper_1_1unit__error__log__key.html#a8c489eb5fbc8196f5e5c9b3750472bf2",
+"structngen_1_1geopackage_1_1wkb.html#af7c8a17f82860eb0ff37ba22ddc00b10",
+"structrealization_1_1config_1_1_time.html#a93a2e197f8841d39081be3caeedba65c"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

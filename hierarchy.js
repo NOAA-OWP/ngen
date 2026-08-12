@@ -146,6 +146,8 @@ var hierarchy =
     [ "realization::config::Forcing", "structrealization_1_1config_1_1_forcing.html", null ],
     [ "realization::config::Formulation", "structrealization_1_1config_1_1_formulation.html", null ],
     [ "realization::config::Layer", "structrealization_1_1config_1_1_layer.html", null ],
+    [ "realization::config::Output", "structrealization_1_1config_1_1_output.html", null ],
+    [ "realization::config::OutputDomain", "structrealization_1_1config_1_1_output_domain.html", null ],
     [ "realization::config::Routing", "structrealization_1_1config_1_1_routing.html", null ],
     [ "realization::config::Time", "structrealization_1_1config_1_1_time.html", null ],
     [ "realization::Formulation", "classrealization_1_1_formulation.html", [
@@ -192,10 +194,15 @@ var hierarchy =
     ] ],
     [ "UnitsHelper", "class_units_helper.html", null ],
     [ "UnitsHelper::unit_error_log_key", "struct_units_helper_1_1unit__error__log__key.html", null ],
+    [ "utils::CatchmentOutputsMgr", "classutils_1_1_catchment_outputs_mgr.html", [
+      [ "utils::CatchmentCsvOutputMgr", "classutils_1_1_catchment_csv_output_mgr.html", null ]
+    ] ],
+    [ "utils::FeatureDescriptor", "structutils_1_1_feature_descriptor.html", null ],
     [ "utils::FileChecker", "classutils_1_1_file_checker.html", null ],
     [ "utils::NexusOutputsMgr", "classutils_1_1_nexus_outputs_mgr.html", [
       [ "utils::PerNexusCsvOutputMgr", "classutils_1_1_per_nexus_csv_output_mgr.html", null ]
     ] ],
+    [ "utils::OutputField", "structutils_1_1_output_field.html", null ],
     [ "utils::StreamHandler", "classutils_1_1_stream_handler.html", [
       [ "utils::FileStreamHandler", "classutils_1_1_file_stream_handler.html", null ]
     ] ],

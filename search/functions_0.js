@@ -4,7 +4,7 @@ var searchData=
   ['add_5fcatchment_1',['add_catchment',['../class_network___test.html#a88d1baab2d7da420517593cc636db429',1,'Network_Test']]],
   ['add_5fdestination_5ffeature_2',['add_destination_feature',['../classgeojson_1_1_feature_base.html#aac23f8caae143de17e37ce091b3b069e',1,'geojson::FeatureBase']]],
   ['add_5fdimension_3',['add_dimension',['../classngen_1_1mdframe.html#ae0b2679d585e1714ed899960b943f566',1,'ngen::mdframe::add_dimension(const std::string &amp;name)'],['../classngen_1_1mdframe.html#a9845bc637ce0a75b6e61c2ec75d94e04',1,'ngen::mdframe::add_dimension(const std::string &amp;name, std::size_t size)']]],
-  ['add_5ffeature_4',['add_feature',['../classgeojson_1_1_feature_collection.html#a94257e07bb9115a6231d13672c92eb06',1,'geojson::FeatureCollection']]],
+  ['add_5ffeature_4',['add_feature',['../classgeojson_1_1_feature_collection.html#a94257e07bb9115a6231d13672c92eb06',1,'geojson::FeatureCollection::add_feature()'],['../classutils_1_1_catchment_csv_output_mgr.html#af31b61b13a31011fc24dc4e3406fbb50',1,'utils::CatchmentCsvOutputMgr::add_feature()']]],
   ['add_5ffeature_5fid_5',['add_feature_id',['../classgeojson_1_1_feature_collection.html#af81a82e4bc6a7f9293c6c64759d60245',1,'geojson::FeatureCollection']]],
   ['add_5fformulation_6',['add_formulation',['../classrealization_1_1_formulation___manager.html#a3868b41241493dd336e5e124c4d436ad',1,'realization::Formulation_Manager']]],
   ['add_5fneighbor_5ffeature_7',['add_neighbor_feature',['../classgeojson_1_1_feature_base.html#adfb6ba4107e752620dcb9a04aeb4a158',1,'geojson::FeatureBase']]],

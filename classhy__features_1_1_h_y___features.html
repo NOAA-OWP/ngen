@@ -193,13 +193,14 @@ Private Attributes</h2></td></tr>
 <div class="line">    <span class="keyword">auto</span> r = features.<a class="code hl_function" href="#aad70a7ffe0b57fefeb8328c6b2fd8176">catchment_at</a>(<span class="keywordtype">id</span>);</div>
 <div class="line">    <span class="keyword">auto</span> r_c = dynamic_pointer_cast&lt;realization::Catchment_Formulation&gt;(r);</div>
 <div class="line">    <span class="keywordtype">double</span> response = r_c-&gt;get_response(time_index, 3600.0);</div>
-<div class="line">    std::string output = std::to_string(time_index)+<span class="stringliteral">&quot;, examlpe_time_stamp,&quot;</span>+</div>
-<div class="line">                         r_c-&gt;get_output_line_for_timestep(time_index)+<span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line">    r_c-&gt;write_output(output);</div>
+<div class="line">    <span class="comment">// outputs for the timestep as a vector&lt;double&gt; of values,</span></div>
+<div class="line">    <span class="comment">// in the order the output fields are defined.</span></div>
+<div class="line">    <span class="keyword">auto</span> fields = r_c-&gt;get_output_fields();</div>
+<div class="line">    <span class="keyword">auto</span> values = r_c-&gt;get_output_values_for_timestep(time_index);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclasshy__features_1_1_h_y___features_html"><div class="ttname"><a href="classhy__features_1_1_h_y___features.html">hy_features::HY_Features</a></div><div class="ttdoc">Collection interface to HY_Features objects and their associated model formulations.</div><div class="ttdef"><b>Definition</b> HY_Features.hpp:44</div></div>
-<div class="ttc" id="aclasshy__features_1_1_h_y___features_html_aad70a7ffe0b57fefeb8328c6b2fd8176"><div class="ttname"><a href="#aad70a7ffe0b57fefeb8328c6b2fd8176">hy_features::HY_Features::catchment_at</a></div><div class="ttdeci">std::shared_ptr&lt; HY_CatchmentRealization &gt; catchment_at(std::string id)</div><div class="ttdoc">Get the HY_CatchmentRealization pointer identified by id.</div><div class="ttdef"><b>Definition</b> HY_Features.hpp:85</div></div>
-<div class="ttc" id="aclasshy__features_1_1_h_y___features_html_af4f58bd66959ab0a06999ea5b14be0bd"><div class="ttname"><a href="#af4f58bd66959ab0a06999ea5b14be0bd">hy_features::HY_Features::catchments</a></div><div class="ttdeci">auto catchments()</div><div class="ttdoc">An iterator of only the catchment feature ids.</div><div class="ttdef"><b>Definition</b> HY_Features.hpp:123</div></div>
+<div class="ttc" id="aclasshy__features_1_1_h_y___features_html"><div class="ttname"><a href="classhy__features_1_1_h_y___features.html">hy_features::HY_Features</a></div><div class="ttdoc">Collection interface to HY_Features objects and their associated model formulations.</div><div class="ttdef"><b>Definition</b> HY_Features.hpp:46</div></div>
+<div class="ttc" id="aclasshy__features_1_1_h_y___features_html_aad70a7ffe0b57fefeb8328c6b2fd8176"><div class="ttname"><a href="#aad70a7ffe0b57fefeb8328c6b2fd8176">hy_features::HY_Features::catchment_at</a></div><div class="ttdeci">std::shared_ptr&lt; HY_CatchmentRealization &gt; catchment_at(std::string id)</div><div class="ttdoc">Get the HY_CatchmentRealization pointer identified by id.</div><div class="ttdef"><b>Definition</b> HY_Features.hpp:87</div></div>
+<div class="ttc" id="aclasshy__features_1_1_h_y___features_html_af4f58bd66959ab0a06999ea5b14be0bd"><div class="ttname"><a href="#af4f58bd66959ab0a06999ea5b14be0bd">hy_features::HY_Features::catchments</a></div><div class="ttdeci">auto catchments()</div><div class="ttdoc">An iterator of only the catchment feature ids.</div><div class="ttdef"><b>Definition</b> HY_Features.hpp:125</div></div>
 <div class="ttc" id="anamespacegeojson_html_a0575056bcdcce0ccba81e6875591b702"><div class="ttname"><a href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">geojson::GeoJSON</a></div><div class="ttdeci">std::shared_ptr&lt; FeatureCollection &gt; GeoJSON</div><div class="ttdoc">Easy short-hand for a smart pointer to a FeatureCollection.</div><div class="ttdef"><b>Definition</b> FeatureBuilder.hpp:21</div></div>
 <div class="ttc" id="anamespacegeojson_html_aa9d243ef2a01cd361aa02917e4151d1d"><div class="ttname"><a href="namespacegeojson.html#aa9d243ef2a01cd361aa02917e4151d1d">geojson::read</a></div><div class="ttdeci">static GeoJSON read(const std::string &amp;file_path, const std::vector&lt; std::string &gt; &amp;ids={})</div><div class="ttdef"><b>Definition</b> FeatureBuilder.hpp:444</div></div>
 <div class="ttc" id="anamespaceutils_html_a36dea491674f3e0b6b11591f976a88cb"><div class="ttname"><a href="namespaceutils.html#a36dea491674f3e0b6b11591f976a88cb">utils::getStdOut</a></div><div class="ttdeci">static StreamHandler getStdOut()</div><div class="ttdef"><b>Definition</b> StreamHandler.hpp:115</div></div>
@@ -770,7 +771,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacehy__features.html">hy_features</a></li><li class="navelem"><a class="el" href="classhy__features_1_1_h_y___features.html">HY_Features</a></li>
-    <li class="footer">Generated on Wed Aug 12 2026 15:05:41 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Aug 12 2026 15:06:13 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

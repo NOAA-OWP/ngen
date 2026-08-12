@@ -1,0 +1,5 @@
+<map id="utils::CatchmentOutputsMgr" name="utils::CatchmentOutputsMgr">
+<area shape="rect" id="Node000001" title="Abstract class for managing and writing to catchment data files." alt="" coords="13,5,185,194"/>
+<area shape="rect" id="Node000002" href="$classutils_1_1_catchment_csv_output_mgr.html" title="CSV backend for catchment output." alt="" coords="5,242,193,572"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,209,102,242,96,242,96,209"/>
+</map>

@@ -1,0 +1,16 @@
+<map id="utils::OutputField" name="utils::OutputField">
+<area shape="rect" id="Node000001" title="One output column: the mapping from a source variable to its output, positionally aligned with the va..." alt="" coords="158,438,265,505"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="176,150,242,216"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,215,251,239,265,287,269,327,264,367,251,415,248,425,243,423,246,414,259,366,263,327,259,288,246,241,234,217"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="89,294,220,375"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="197,217,187,241,174,278,169,277,182,239,192,215"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="152,5,265,87"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="212,102,212,150,206,150,206,102"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="171,374,186,413,190,422,185,424,181,415,166,376"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,150,111,216"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="63,230,68,250,76,269,96,292,92,296,72,271,63,252,58,232"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="23,13,43,79"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="34,79,37,125,39,133,34,134,32,126,28,79"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="93,13,112,79"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="95,77,76,134,71,133,90,75"/>
+</map>

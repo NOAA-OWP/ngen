@@ -124,45 +124,63 @@ Required Top-Level Keys</h2>
 <h2><a class="anchor" id="autotoc_md253"></a>
 Optional Top-Level Keys</h2>
 <h3><a class="anchor" id="autotoc_md254"></a>
-<code>output_root</code></h3>
-<p>The configuration may optionally contain an <code>output_root</code> key with a user-defined root output directory as the key, for nexus and catchment outputs.</p>
+<code>output</code></h3>
+<p>The configuration may optionally contain an <code>output</code> object that controls where and how catchment and nexus output are written. All fields are optional:</p>
+<ul>
+<li><code>root</code> — root output directory for both catchment and nexus output; created if it does not already exist (default: the working directory, <code>./</code>).</li>
+<li><code>precision</code> — number of significant digits used when a text (CSV) backend renders values (default: <code>9</code>).</li>
+<li><code>catchment</code> and <code>nexus</code> — per-domain settings, each an object with:<ul>
+<li><code>enable</code> — whether this domain's output is written (default: <code>true</code>; set <code>catchment.enable</code> to <code>false</code> to skip catchment files).</li>
+<li><code>format</code> — serialization format, <code>"csv"</code> (default) or <code>"netcdf"</code>. NetCDF is currently supported for nexus output only.</li>
+<li><code>grouping</code> — how a domain's records are distributed across files (the file-*granularity* axis):<ul>
+<li><code>"per_feature"</code> (default) — one file per catchment / per nexus.</li>
+<li><code>"per_formulation"</code> — the catchments of a formulation aggregate into one file with a leading <code>catchment_id</code> column (one file per formulation). Fewer, larger files, with columns uniform within each file by construction. (Nexus CSV aggregation is not yet implemented.)</li>
+</ul>
+</li>
+<li><code>rank_subdir</code> — whether an MPI rank's files are placed under a <code>rank_&lt;N&gt;/</code> subdirectory (the filesystem-*layout* axis, orthogonal to <code>grouping</code>; default <code>false</code>). Only affects distributed (multi-rank) runs — a no-op in serial — and reduces filesystem contention when many ranks share a directory. For <code>per_formulation</code> under MPI it is applied automatically regardless of this setting, since each rank must write its own file to avoid collisions.</li>
+</ul>
+</li>
+</ul>
+<div class="fragment"><div class="line">&quot;output&quot;: {</div>
+<div class="line">    &quot;root&quot;: &quot;/path/to/output/&quot;,</div>
+<div class="line">    &quot;catchment&quot;: { &quot;enable&quot;: true, &quot;format&quot;: &quot;csv&quot;, &quot;grouping&quot;: &quot;per_formulation&quot;, &quot;rank_subdir&quot;: true },</div>
+<div class="line">    &quot;nexus&quot;:     { &quot;enable&quot;: true, &quot;format&quot;: &quot;csv&quot;, &quot;grouping&quot;: &quot;per_feature&quot;,     &quot;rank_subdir&quot;: true }</div>
+<div class="line">}</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The <code>output</code> object supersedes the top-level <code>output_root</code>, <code>disable_catchment_output</code>, and <code>per_formulation_nexus_files</code> keys documented below. Those remain supported for backward compatibility and are honored only when no <code>output</code> object is present (with a deprecation warning); new configurations should use <code>output</code>.</dd></dl>
 <h3><a class="anchor" id="autotoc_md255"></a>
-<code>disable_catchment_output</code></h3>
-<p>The configuration may optionally contain a <code>disable_catchment_output</code> key, with a boolean value. When set to <code>true</code>, catchment output data files will not be written (default: <code>false</code>).</p>
+<code>output_root</code></h3>
+<p><em>Deprecated: prefer <code>output.root</code>.</em> The configuration may optionally contain an <code>output_root</code> key with a user-defined root output directory as the key, for nexus and catchment outputs.</p>
 <h3><a class="anchor" id="autotoc_md256"></a>
+<code>disable_catchment_output</code></h3>
+<p><em>Deprecated: prefer <code>output.catchment.enable</code> set to <code>false</code>.</em> The configuration may optionally contain a <code>disable_catchment_output</code> key, with a boolean value. When set to <code>true</code>, catchment output data files will not be written (default: <code>false</code>).</p>
+<h3><a class="anchor" id="autotoc_md257"></a>
 <code>per_formulation_nexus_files</code></h3>
-<p>The configuration may optionally contain a <code>per_formulation_nexus_files</code> key with a boolean value to indicate per-formulation, NetCDF files should be used for writing nexus data, rather than the default of per-nexus CSV files. Note that if <code>per_formulation_nexus_files</code> is set to <code>true</code>, the <code>catchments</code> cannot be used to define formulations for individual catchments, and the global formulation config must be used for all catchments.</p>
+<p><em>Deprecated: prefer <code>output.nexus.format</code> set to <code>"netcdf"</code>.</em> The configuration may optionally contain a <code>per_formulation_nexus_files</code> key with a boolean value to indicate per-formulation, NetCDF files should be used for writing nexus data, rather than the default of per-nexus CSV files. Note that if <code>per_formulation_nexus_files</code> is set to <code>true</code>, the <code>catchments</code> cannot be used to define formulations for individual catchments, and the global formulation config must be used for all catchments.</p>
 <dl class="section important"><dt>Important</dt><dd>NetCDF support must be turned on for the ngen build to use this option for per-formulation NetCDF file. This is done by including the <code>-DNGEN_WITH_NETCDF=ON</code> arg to CMake on the command line when generating a build directory. <br  />
 <br  />
  In MPI builds (i.e., <code>-DNGEN_WITH_MPI=ON</code>), per-formulation NetCDF files are written by gathering each timestep's nexus data to rank 0, which writes the file via the standard NetCDF C API. To instead have every rank write its own slice in parallel via HDF5-parallel I/O, opt in with <code>-DNGEN_WITH_PARALLEL_NETCDF=ON</code>; this additionally requires the NetCDF library itself to provide <a href="DEPENDENCIES.md#parallel-netcdf">parallel I/O support</a>.</dd></dl>
-<h3><a class="anchor" id="autotoc_md257"></a>
+<h3><a class="anchor" id="autotoc_md258"></a>
 <code>catchments</code></h3>
 <p>The configuration may optionally contain a <code>catchments</code> key with a list of individual catchments that define their own formulations. See more details below.</p>
-<h3><a class="anchor" id="autotoc_md258"></a>
+<h3><a class="anchor" id="autotoc_md259"></a>
 <code>routing</code></h3>
 <p>The configuration may optionally contain a <code>routing</code> key with a subobject that defines the path to the t-route config file (<code>t_route_config_file_with_path</code>). It also optionally may contain a path to the t-route source code (<code>t_route_connection_path</code>), but this is reserved for advanced usage; generally, t-route should be installed as a package in the normal Python environment.</p>
-<h2><a class="anchor" id="autotoc_md259"></a>
+<h2><a class="anchor" id="autotoc_md260"></a>
 Examples of Top-Level Structure</h2>
 <p>Note that these are not exhaustive examples.</p>
 <div class="fragment"><div class="line">{</div>
 <div class="line">   &quot;global&quot;: {},</div>
 <div class="line">   &quot;time&quot;: {},</div>
 <div class="line">   &quot;catchments&quot;: {},</div>
-<div class="line">   &quot;output_root&quot;: &quot;/path/to/output/&quot;</div>
+<div class="line">   &quot;output&quot;: { &quot;root&quot;: &quot;/path/to/output/&quot; }</div>
 <div class="line">} </div>
-</div><!-- fragment --><p> or </p><div class="fragment"><div class="line">{</div>
+</div><!-- fragment --><p> or, using the deprecated top-level keys (still supported when no <code>output</code> object is present): </p><div class="fragment"><div class="line">{</div>
 <div class="line">   &quot;global&quot;: {},</div>
 <div class="line">   &quot;time&quot;: {},</div>
 <div class="line">   &quot;output_root&quot;: &quot;/path/to/output/&quot;,</div>
 <div class="line">   &quot;per_formulation_nexus_files&quot;: true|false</div>
 <div class="line">} </div>
-</div><!-- fragment --><p> or </p><div class="fragment"><div class="line">{</div>
-<div class="line">   &quot;global&quot;: {},</div>
-<div class="line">   &quot;time&quot;: {},</div>
-<div class="line">   &quot;output_root&quot;: &quot;/path/to/output/&quot;,</div>
-<div class="line">   &quot;write_catchment_output&quot;: true|false</div>
-<div class="line">} </div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md260"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md261"></a>
 The Global Section</h1>
 <p>The <code>global</code> key-value object must contain the following two object keys:</p><ul>
 <li><code>formulations</code><ul>
@@ -192,7 +210,7 @@ The Global Section</h1>
 <div class="line">      &quot;path&quot;: &quot;./data/forcing/&quot;</div>
 <div class="line">  }</div>
 <div class="line">},  </div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md261"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md262"></a>
 The Time Section</h1>
 <p>The <code>time</code> key-value object must contain the following three keys:</p><ul>
 <li><code>start_time</code><ul>
@@ -213,7 +231,7 @@ The Time Section</h1>
 <div class="line">    &quot;end_time&quot;: &quot;2015-12-30 23:00:00&quot;,</div>
 <div class="line">    &quot;output_interval&quot;: 3600</div>
 <div class="line">},</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md262"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md263"></a>
 Individual Catchments</h1>
 <p>The <code>catchments</code> key-value object must contain a list of all of the catchment object keys that will have defined formulations, and each catchment key will have the following format:</p><ul>
 <li><code>cat-</code><ul>
@@ -277,15 +295,15 @@ Individual Catchments</h1>
 <div class="line">        &quot;path&quot;: &quot;./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv&quot;</div>
 <div class="line">      }</div>
 <div class="line">    },</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md263"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md264"></a>
 The Routing Section</h1>
 <div class="fragment"><div class="line">&quot;routing&quot;: {</div>
 <div class="line">    &quot;t_route_config_file_with_path&quot;: &quot;extern/t-route/test/input/yaml/ngen.yaml&quot;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md264"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md265"></a>
 A Full Example</h1>
 <p>An <a href="https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config.json">example realization configuration</a>.</p>
-<h1><a class="anchor" id="autotoc_md265"></a>
+<h1><a class="anchor" id="autotoc_md266"></a>
 A Note on BMI Models</h1>
 <p>BMI is a commonly used model interface and formulation type used in ngen. <a href="https://github.com/NOAA-OWP/ngen/blob/master/doc/BMI_MODELS.md">BMI documenation</a> with an example <a href="https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config_w_bmi_c__lin_mac.json">for both Linux and macOS realizations</a>. </p>
 </div></div><!-- contents -->
@@ -294,7 +312,7 @@ A Note on BMI Models</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Aug 12 2026 15:05:41 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Aug 12 2026 15:06:12 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

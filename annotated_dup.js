@@ -107,6 +107,8 @@ var annotated_dup =
         [ "Forcing", "structrealization_1_1config_1_1_forcing.html", "structrealization_1_1config_1_1_forcing" ],
         [ "Formulation", "structrealization_1_1config_1_1_formulation.html", "structrealization_1_1config_1_1_formulation" ],
         [ "Layer", "structrealization_1_1config_1_1_layer.html", "structrealization_1_1config_1_1_layer" ],
+        [ "Output", "structrealization_1_1config_1_1_output.html", "structrealization_1_1config_1_1_output" ],
+        [ "OutputDomain", "structrealization_1_1config_1_1_output_domain.html", "structrealization_1_1config_1_1_output_domain" ],
         [ "Routing", "structrealization_1_1config_1_1_routing.html", "structrealization_1_1config_1_1_routing" ],
         [ "Time", "structrealization_1_1config_1_1_time.html", "structrealization_1_1config_1_1_time" ]
       ] ],
@@ -126,10 +128,14 @@ var annotated_dup =
       [ "hash< nonstd::expected< void, E > >", "structstd_1_1hash_3_01nonstd_1_1expected_3_01void_00_01_e_01_4_01_4.html", null ]
     ] ],
     [ "utils", "namespaceutils.html", [
+      [ "CatchmentCsvOutputMgr", "classutils_1_1_catchment_csv_output_mgr.html", "classutils_1_1_catchment_csv_output_mgr" ],
+      [ "CatchmentOutputsMgr", "classutils_1_1_catchment_outputs_mgr.html", "classutils_1_1_catchment_outputs_mgr" ],
+      [ "FeatureDescriptor", "structutils_1_1_feature_descriptor.html", "structutils_1_1_feature_descriptor" ],
       [ "FileChecker", "classutils_1_1_file_checker.html", "classutils_1_1_file_checker" ],
       [ "FileStreamHandler", "classutils_1_1_file_stream_handler.html", "classutils_1_1_file_stream_handler" ],
       [ "NexusOutputsMgr", "classutils_1_1_nexus_outputs_mgr.html", "classutils_1_1_nexus_outputs_mgr" ],
       [ "NullStream", "classutils_1_1_null_stream.html", "classutils_1_1_null_stream" ],
+      [ "OutputField", "structutils_1_1_output_field.html", "structutils_1_1_output_field" ],
       [ "PerNexusCsvOutputMgr", "classutils_1_1_per_nexus_csv_output_mgr.html", "classutils_1_1_per_nexus_csv_output_mgr" ],
       [ "StreamHandler", "classutils_1_1_stream_handler.html", "classutils_1_1_stream_handler" ],
       [ "time_marker", "structutils_1_1time__marker.html", "structutils_1_1time__marker" ]

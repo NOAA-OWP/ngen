@@ -1,9 +1,13 @@
 var namespaceutils =
 [
+    [ "CatchmentCsvOutputMgr", "classutils_1_1_catchment_csv_output_mgr.html", "classutils_1_1_catchment_csv_output_mgr" ],
+    [ "CatchmentOutputsMgr", "classutils_1_1_catchment_outputs_mgr.html", "classutils_1_1_catchment_outputs_mgr" ],
+    [ "FeatureDescriptor", "structutils_1_1_feature_descriptor.html", "structutils_1_1_feature_descriptor" ],
     [ "FileChecker", "classutils_1_1_file_checker.html", "classutils_1_1_file_checker" ],
     [ "FileStreamHandler", "classutils_1_1_file_stream_handler.html", "classutils_1_1_file_stream_handler" ],
     [ "NexusOutputsMgr", "classutils_1_1_nexus_outputs_mgr.html", "classutils_1_1_nexus_outputs_mgr" ],
     [ "NullStream", "classutils_1_1_null_stream.html", "classutils_1_1_null_stream" ],
+    [ "OutputField", "structutils_1_1_output_field.html", "structutils_1_1_output_field" ],
     [ "PerNexusCsvOutputMgr", "classutils_1_1_per_nexus_csv_output_mgr.html", "classutils_1_1_per_nexus_csv_output_mgr" ],
     [ "StreamHandler", "classutils_1_1_stream_handler.html", "classutils_1_1_stream_handler" ],
     [ "time_marker", "structutils_1_1time__marker.html", "structutils_1_1time__marker" ],

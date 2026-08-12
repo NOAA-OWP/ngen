@@ -184,7 +184,7 @@ Private Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">nexus_ids</td><td>Nexus ids for which this instance manages data (in particular, local nexuses when using MPI). </td></tr>
-    <tr><td class="paramname">output_root</td><td>The output root for written files (as a string). </td></tr>
+    <tr><td class="paramname">output_root</td><td>The effective output directory for written files. The caller folds in any per-rank subdirectory (e.g. via <code><a class="el" href="namespacerealization_1_1config.html#aab9f0b64835b2616f72d5eb4117543d2" title="The output root for a rank&#39;s files in this domain: appends &quot;rank_&lt;N&gt;/&quot; to base_root when the domain r...">realization::config::rank_output_root</a></code>), so this is the final directory; it is created here if it does not already exist. Mirrors how the catchment CSV manager takes an already-resolved root. </td></tr>
   </table>
   </dd>
 </dl>
@@ -479,7 +479,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceutils.html">utils</a></li><li class="navelem"><a class="el" href="classutils_1_1_per_nexus_csv_output_mgr.html">PerNexusCsvOutputMgr</a></li>
-    <li class="footer">Generated on Wed Aug 12 2026 15:05:42 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Aug 12 2026 15:06:13 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

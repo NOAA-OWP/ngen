@@ -1,5 +1,10 @@
 var namespaces_dup =
 [
+    [ "anonymous_namespace{CatchmentCsvOutputMgr.cpp}", "namespaceanonymous__namespace_02_catchment_csv_output_mgr_8cpp_03.html", [
+      [ "catchment_output_header_line", "namespaceanonymous__namespace_02_catchment_csv_output_mgr_8cpp_03.html#abf2bbb4a9c210d4d01ab561bfae4095d", null ],
+      [ "join_columns", "namespaceanonymous__namespace_02_catchment_csv_output_mgr_8cpp_03.html#a1a3199fb29befeec9dc01bd22785dd8e", null ],
+      [ "DELIMITER", "namespaceanonymous__namespace_02_catchment_csv_output_mgr_8cpp_03.html#a6bd63aeee9e705a60c34076f9973146d", null ]
+    ] ],
     [ "bmi", "namespacebmi.html", "namespacebmi" ],
     [ "data_access", "namespacedata__access.html", "namespacedata__access" ],
     [ "external", "namespaceexternal.html", "namespaceexternal" ],

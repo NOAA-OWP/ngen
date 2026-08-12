@@ -8,7 +8,10 @@ var searchData=
   ['layer_5fstorage_5',['layer_storage',['../classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe',1,'realization::Formulation_Manager']]],
   ['layers_5f_6',['layers_',['../class_ngen_simulation.html#aa6c75b32c292738104faaec3e8bda4da',1,'NgenSimulation']]],
   ['leaked_5fmass_5fname_7',['LEAKED_MASS_NAME',['../namespacemodels_1_1bmi_1_1protocols.html#a3ab87da893c45d154218c925d01037b0',1,'models::bmi::protocols']]],
-  ['link_5fkey_8',['link_key',['../class_network___test.html#ae02d327028f826a5e29bff896ec30232',1,'Network_Test']]],
-  ['longitude_9',['longitude',['../class_csv_per_feature_forcing_provider.html#ac884269b16a45322c1b089fb29288012',1,'CsvPerFeatureForcingProvider']]],
-  ['lower_5fcatchment_10',['lower_catchment',['../class_h_y___catchment.html#ac6c37362d4f55aed074b02a0ae6d8a3d',1,'HY_Catchment']]]
+  ['legacy_5fdisable_5fcatchment_5fkey_8',['LEGACY_DISABLE_CATCHMENT_KEY',['../namespacerealization_1_1config.html#a77d11909bf8a870e68199dd700c29b67',1,'realization::config']]],
+  ['legacy_5foutput_5froot_5fkey_9',['LEGACY_OUTPUT_ROOT_KEY',['../namespacerealization_1_1config.html#aa62ced51c5055676f21301e815749911',1,'realization::config']]],
+  ['legacy_5fper_5fformulation_5fkey_10',['LEGACY_PER_FORMULATION_KEY',['../namespacerealization_1_1config.html#ae48cbacb49a069033c5af2108530a4b9',1,'realization::config']]],
+  ['link_5fkey_11',['link_key',['../class_network___test.html#ae02d327028f826a5e29bff896ec30232',1,'Network_Test']]],
+  ['longitude_12',['longitude',['../class_csv_per_feature_forcing_provider.html#ac884269b16a45322c1b089fb29288012',1,'CsvPerFeatureForcingProvider']]],
+  ['lower_5fcatchment_13',['lower_catchment',['../class_h_y___catchment.html#ac6c37362d4f55aed074b02a0ae6d8a3d',1,'HY_Catchment']]]
 ];

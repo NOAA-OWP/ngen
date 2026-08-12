@@ -6,8 +6,6 @@ var class_h_y___catchment_area =
     [ "get_catchment_id", "class_h_y___catchment_area.html#a326f75ca2d9eb329548e1b52bfbbac91", null ],
     [ "get_response", "class_h_y___catchment_area.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b", null ],
     [ "set_catchment_id", "class_h_y___catchment_area.html#a86a05a47bfa53a6feb4ef14e117b1928", null ],
-    [ "set_output_stream", "class_h_y___catchment_area.html#a9d02de255937deb8f6169ef20f5a07d6", null ],
-    [ "write_output", "class_h_y___catchment_area.html#aa989be0629ecaa29a2410f7588404ff9", null ],
     [ "bounds", "class_h_y___catchment_area.html#aaebc4992c38cb5db68e859e0487ad929", null ],
     [ "id_number", "class_h_y___catchment_area.html#af996a3e50eaf51c63865f1fdbe4f8661", null ],
     [ "output", "class_h_y___catchment_area.html#a55857dc16551760ff59487991fc525fe", null ],

@@ -1,0 +1,32 @@
+<map id="utils::CatchmentCsvOutputMgr" name="utils::CatchmentCsvOutputMgr">
+<area shape="rect" id="Node000001" title="CSV backend for catchment output." alt="" coords="140,1052,328,1342"/>
+<area shape="rect" id="Node000002" href="$classutils_1_1_catchment_outputs_mgr.html" title="Abstract class for managing and writing to catchment data files." alt="" coords="5,800,177,989"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,1001,168,1051,163,1053,139,1003"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="200,861,267,928"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="236,927,236,1035,231,1035,231,927"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="170,656,282,737"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="231,752,235,862,230,862,225,752"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="299,839,438,950"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="352,951,320,1029,316,1037,312,1035,315,1027,347,949"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="306,656,431,737"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="371,737,371,822,366,822,366,737"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="196,519,282,586"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="270,584,323,642,319,645,266,587"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="177,367,301,449"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="242,464,242,519,236,519,236,464"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="179,237,299,318"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="242,333,242,367,236,367,236,333"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="170,121,308,187"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="242,202,242,237,236,237,236,202"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="196,5,282,72"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="242,87,242,121,236,121,236,87"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="306,519,431,586"/>
+<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="371,601,371,656,366,656,366,601"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="388,375,407,441"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="391,427,373,473,370,503,364,502,368,472,386,425"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="456,512,580,593"/>
+<area shape="poly" id="edge15_Node000014_Node000013" title=" " alt="" coords="409,424,452,486,463,498,459,501,448,489,405,427"/>
+<area shape="poly" id="edge13_Node000005_Node000014" title=" " alt="" coords="504,608,477,689,440,777,406,840,401,838,435,775,472,687,499,606"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="511,375,530,441"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="523,441,522,495,516,495,517,441"/>
+</map>

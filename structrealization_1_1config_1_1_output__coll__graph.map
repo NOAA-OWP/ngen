@@ -1,0 +1,9 @@
+<map id="realization::config::Output" name="realization::config::Output">
+<area shape="rect" id="Node000001" title="Parsed representation of a realization config&#39;s output settings." alt="" coords="38,377,200,580"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="28,184,95,250"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,250,96,360,91,361,66,251"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,118,87"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="64,101,64,184,59,184,59,101"/>
+<area shape="rect" id="Node000004" href="$structrealization_1_1config_1_1_output_domain.html" title="Settings for one output domain (catchment or nexus)." alt="" coords="119,136,234,299"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="161,299,148,361,142,360,156,298"/>
+</map>

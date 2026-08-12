@@ -105,12 +105,14 @@ x.y.z - YYYY-MM-DD</h2>
 <h3><a class="anchor" id="autotoc_md46"></a>
 Added</h3>
 <ul>
-<li>Lorem ipsum dolor sit amet</li>
+<li>An <code>output</code> configuration block for realization configs: <code>root</code>, per-domain (<code>catchment</code>/<code>nexus</code>) <code>enable</code>/<code>format</code>/<code>grouping</code>/<code>rank_subdir</code>, and a global value <code>precision</code>. See <a href="doc/REALIZATION_CONFIGURATION.md#output">Realization Configuration</a>.</li>
+<li>Catchment output routed through a pluggable output manager (CSV backend), with an optional <code>grouping: per_formulation</code> that aggregates a formulation's catchments into one file with a leading <code>catchment_id</code> column (columns uniform per file by construction).</li>
+<li>Per-domain <code>rank_subdir</code> option placing each MPI rank's CSV output under a <code>rank_&lt;N&gt;/</code> subdirectory (applied automatically for <code>per_formulation</code> under MPI).</li>
 </ul>
 <h3><a class="anchor" id="autotoc_md47"></a>
 Deprecated</h3>
 <ul>
-<li>Nothing.</li>
+<li>Top-level realization config keys <code>output_root</code>, <code>disable_catchment_output</code>, and <code>per_formulation_nexus_files</code>, superseded by the <code>output</code> block (still honored when no <code>output</code> block is present).</li>
 </ul>
 <h3><a class="anchor" id="autotoc_md48"></a>
 Removed</h3>
@@ -128,7 +130,7 @@ Fixed</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Aug 12 2026 15:05:41 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Aug 12 2026 15:06:12 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

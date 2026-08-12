@@ -1,0 +1,24 @@
+<map id="utils::FeatureDescriptor" name="utils::FeatureDescriptor">
+<area shape="rect" id="Node000001" title="One feature&#39;s output schema, supplied to a manager at construction." alt="" coords="5,748,149,835"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="84,150,150,216"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,217,74,286,63,327,58,370,58,646,61,690,67,732,62,732,56,690,53,646,53,370,58,327,68,284,97,215"/>
+<area shape="rect" id="Node000005" href="$structutils_1_1_output_field.html" title="One output column: the mapping from a source variable to its output, positionally aligned with the va..." alt="" coords="187,475,295,541"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="114,216,110,257,109,307,115,360,132,410,151,439,176,463,172,466,147,442,127,413,110,361,104,307,104,257,109,216"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="228,330,358,412"/>
+<area shape="poly" id="edge7_Node000006_Node000002" title=" " alt="" coords="139,214,169,259,208,304,223,318,219,321,205,308,165,262,134,217"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="61,5,174,87"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="120,102,120,150,114,150,114,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="188,604,294,685"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="199,687,139,740,135,736,195,683"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="244,541,244,587,238,587,238,541"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="280,412,262,460,257,458,275,411"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="231,150,337,216"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="281,231,281,240,279,273,281,306,285,330,280,331,276,307,274,273,276,240,276,230"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="262,13,282,79"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="274,79,276,125,277,132,272,133,271,126,269,79"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="378,13,397,79"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="381,61,321,138,317,135,376,58"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="386,240,486,306"/>
+<area shape="poly" id="edge12_Node000010_Node000009" title=" " alt="" coords="400,78,408,110,430,223,425,224,403,111,394,79"/>
+<area shape="poly" id="edge11_Node000004_Node000010" title=" " alt="" coords="426,321,409,377,385,444,353,515,313,582,292,606,288,603,308,578,348,512,380,442,404,375,421,320"/>
+</map>
