@@ -30,16 +30,9 @@ Container and management for abstract BMI protocols
 */
 #pragma once
 
-#include "Bmi_Adapter.hpp"
-#include "JSONProperty.hpp"
-#include <boost/type_index.hpp>
-#include <string>
+#include "protocol.hpp"
+#include <nonstd/expected.hpp>
 #include <unordered_map>
-#include <vector>
-
-#include "deserialization.hpp"
-#include "mass_balance.hpp"
-#include "serialization.hpp"
 
 namespace models {
 namespace bmi {
