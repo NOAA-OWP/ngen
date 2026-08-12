@@ -102,10 +102,10 @@ std::filesystem::path CatchmentCsvOutputMgr::output_path(const std::string &form
     return output_root_ + formulation_id + "/" + filename;
 }
 
-std::ofstream* CatchmentCsvOutputMgr::stream_for(const std::string &formulation_id, const std::string &catchment_id)
+std::pair<std::ofstream*, std::mutex*> CatchmentCsvOutputMgr::stream_for(const std::string &formulation_id, const std::string &catchment_id)
 {
     const auto it = streams_.find(output_path(formulation_id, catchment_id));
-    return it == streams_.end() ? nullptr : it->second.get();
+    return {it == streams_.end() ? nullptr : it->second.get(), &all_streams_mutex_};
 }
 
 void CatchmentCsvOutputMgr::add_feature(const FeatureDescriptor &feature)
@@ -136,10 +136,11 @@ void CatchmentCsvOutputMgr::receive_data_entry(const std::string &formulation_id
         throw std::runtime_error("Can't receive data on a closed CatchmentCsvOutputMgr");
     }
 
-    std::ofstream* out = stream_for(formulation_id, catchment_id);
+    auto [out, mutex] = stream_for(formulation_id, catchment_id);
     if (out == nullptr) {
         throw std::runtime_error("CatchmentCsvOutputMgr received data for an unknown catchment '" + catchment_id + "'");
     }
+    std::lock_guard stream_lock(*mutex);
     // In aggregated output each row carries the (full) catchment id so rows stay attributable.
     if( aggregated_filename_.has_value() ) {
         (*out) << catchment_id << DELIMITER;
