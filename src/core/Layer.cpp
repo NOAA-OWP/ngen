@@ -19,14 +19,15 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
                                 int current_step)
 {
     //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
-    if(output_time_index%1000 == 0) std::cout<<"Running timestep " << output_time_index <<std::endl;
+    if(output_time_index%1 == 0) std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) << " Running timestep " << output_time_index <<std::endl;
     std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
     // Catchment output (if enabled) is pushed to this layer's output manager, which owns the
     // sinks and decides formatting/aggregation. Build the time marker once for all catchments
     // in this timestep (mirrors SurfaceLayer).
     utils::time_marker current_time_marker(
         output_time_index, simulation_time.get_current_epoch_time(), current_timestamp);
-    for(const auto& id : processing_units) {
+
+    auto process_unit = [&](const std::string& id) {
         //std::cout<<"Running cat "<<id<<std::endl;
         auto r = features.catchment_at(id);
         //TODO redesign to avoid this cast
@@ -88,8 +89,12 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
               << response << ", ID = " << id << ", time-index = " << output_time_index << std::endl; */
             break;
         }
-                
-    } //done catchments
+    }; // lambda process_unit
+
+    #pragma omp parallel for
+    for(const std::string& id : processing_units) {
+      process_unit(id);
+    }
 
     ++output_time_index;
     if ( output_time_index < simulation_time.get_total_output_times() ) {
