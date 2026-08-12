@@ -99,7 +99,8 @@ class SerializationMock {
     }
 
     // Variant producing a config with no "path" at the top-level — lets
-    // tests exercise the "path required but missing" branch.
+    // tests exercise the "path required but missing" branch, and
+    // the sub-block-only override case using with_save_path().
     static SerializationMock without_path(bool fatal = true, int frequency = 1, bool check = true) {
         SerializationMock m{};
         boost::property_tree::ptree top;
@@ -110,6 +111,14 @@ class SerializationMock {
         top.add_child("save", save);
         m.properties.add_child("serialization", top);
         return m;
+    }
+
+    // Inject a `path` under the `save` sub-block. Overrides the
+    // top-level `path` per the resolution rule in
+    // NgenSerializationProtocol::initialize.
+    SerializationMock& with_save_path(const std::string& sub_path) {
+        properties.get_child("serialization.save").put("path", sub_path);
+        return *this;
     }
 
     const boost::property_tree::ptree& get() const {
@@ -150,6 +159,25 @@ class DeserializationMock {
         restore.put("step", step);
         top.add_child("restore", restore);
         properties.add_child("serialization", top);
+    }
+
+    // Variant producing a config with no "path" at the top-level — lets
+    // tests exercise the "path required but missing" branch, and
+    // the sub-block-only override case using with_restore_path().
+    static DeserializationMock without_path(
+        const std::string& step = "latest",
+        bool fatal              = true,
+        bool check              = true
+    ) {
+        DeserializationMock m{};
+        boost::property_tree::ptree top;
+        boost::property_tree::ptree restore;
+        restore.put("check", check);
+        restore.put("fatal", fatal);
+        restore.put("step", step);
+        top.add_child("restore", restore);
+        m.properties.add_child("serialization", top);
+        return m;
     }
 
     // Build a restore config keyed by timestamp instead of step.
@@ -199,6 +227,21 @@ class DeserializationMock {
         save.put("fatal", fatal);
         save.put("frequency", frequency);
         properties.get_child("serialization").add_child("save", save);
+        return *this;
+    }
+
+    // Inject a `path` under the `restore` sub-block. Overrides the
+    // top-level `path` per the resolution rule in
+    // NgenDeserializationProtocol::initialize.
+    DeserializationMock& with_restore_path(const std::string& sub_path) {
+        properties.get_child("serialization.restore").put("path", sub_path);
+        return *this;
+    }
+
+    // Inject a `path` under the `save` sub-block (for integration
+    // tests that drive both directions from a single config).
+    DeserializationMock& with_save_path(const std::string& sub_path) {
+        properties.get_child("serialization.save").put("path", sub_path);
         return *this;
     }
 
