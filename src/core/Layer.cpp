@@ -8,6 +8,9 @@
 #include "HY_Features.hpp"
 #endif
 
+#include <algorithm>
+#include <execution>
+
 // Out-of-line so the shared_ptr members are destroyed where their (possibly forward-declared) types
 // are complete.
 ngen::Layer::~Layer() = default;
@@ -26,7 +29,9 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
     // in this timestep (mirrors SurfaceLayer).
     utils::time_marker current_time_marker(
         output_time_index, simulation_time.get_current_epoch_time(), current_timestamp);
-    for(const auto& id : processing_units) {
+    auto b = begin(processing_units);
+    auto e = end(processing_units);
+    std::for_each(std::execution::par, b, e, [&](const std::string& id) {
         //std::cout<<"Running cat "<<id<<std::endl;
         auto r = features.catchment_at(id);
         //TODO redesign to avoid this cast
@@ -89,7 +94,7 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
             break;
         }
                 
-    } //done catchments
+    }); //done catchments
 
     ++output_time_index;
     if ( output_time_index < simulation_time.get_total_output_times() ) {
