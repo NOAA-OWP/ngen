@@ -15,6 +15,7 @@
 
 #include "Bmi_Module_Formulation.hpp"
 #include "Bmi_C_Formulation.hpp"
+#include "utilities/bmi/mass_balance.hpp"
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include <iostream>

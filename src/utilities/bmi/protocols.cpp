@@ -25,6 +25,10 @@ Container and management for abstract BMI protocols
 
 #include "protocols.hpp"
 
+#include "deserialization.hpp"
+#include "mass_balance.hpp"
+#include "serialization.hpp"
+
 namespace models {
 namespace bmi {
 namespace protocols {
