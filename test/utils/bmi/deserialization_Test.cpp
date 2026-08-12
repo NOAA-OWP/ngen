@@ -255,6 +255,65 @@ TEST_F(Bmi_Deserialization_Test, missing_path) {
     );
 }
 
+// A `path` inside the `restore` sub-block overrides the top-level `path`.
+// The restore side reads from the sub-block path; the top-level path is
+// ignored even if it also exists on disk.
+TEST_F(Bmi_Deserialization_Test, restore_sub_block_path_overrides_top_level) {
+    const std::string top_path = path + ".top";
+    const std::string sub_path = path + ".sub";
+    std::remove(top_path.c_str());
+    std::remove(sub_path.c_str());
+
+    // Prime each file with a *different* payload so we can tell which
+    // file the restore actually read from.
+    append_record(
+        top_path,
+        SerializationRecord{model_name, 0, int64_t{0}, make_payload(111.0, 1.0, 1.0, 1.0, 1.0)}
+    );
+    append_record(
+        sub_path,
+        SerializationRecord{model_name, 0, int64_t{0}, make_payload(222.0, 2.0, 2.0, 2.0, 2.0)}
+    );
+
+    auto properties =
+        DeserializationMock(top_path, /*step*/ "0").with_restore_path(sub_path).as_json_property();
+    auto protocols = NgenBmiProtocols(model, properties);
+    auto result = protocols.run(Protocol::DESERIALIZATION, make_context(0, 2, "t0", model_name));
+    ASSERT_TRUE(result.has_value());
+
+    // The sub-block path's payload (222.0) must win, not the top-level (111.0).
+    double t, i1, i2, o1, o2;
+    snapshot(t, i1, i2, o1, o2);
+    EXPECT_EQ(t, 222.0);
+    EXPECT_EQ(i1, 2.0);
+
+    std::remove(top_path.c_str());
+    std::remove(sub_path.c_str());
+}
+
+// A `path` under `restore` alone (no top-level `path`) is sufficient to
+// enable the restore protocol.
+TEST_F(Bmi_Deserialization_Test, restore_sub_block_path_only) {
+    append_record(
+        path,
+        SerializationRecord{model_name, 0, int64_t{0}, make_payload(9.0, 1.5, 2.5, 3.5, 4.5)}
+    );
+
+    auto properties = DeserializationMock::without_path(/*step*/ "0").with_restore_path(path).as_json_property();
+    testing::internal::CaptureStderr();
+    auto protocols = NgenBmiProtocols(model, properties);
+    // No "'path' not specified" warning must fire — the sub-block path satisfies it.
+    EXPECT_EQ(testing::internal::GetCapturedStderr(), "");
+
+    auto result = protocols.run(Protocol::DESERIALIZATION, make_context(0, 2, "t0", model_name));
+    ASSERT_TRUE(result.has_value());
+
+    double t, i1, i2, o1, o2;
+    snapshot(t, i1, i2, o1, o2);
+    EXPECT_EQ(t, 9.0);
+    EXPECT_EQ(i1, 1.5);
+}
+
 // ---------------------------------------------------------------------
 // Restore semantics.
 // ---------------------------------------------------------------------
@@ -660,6 +719,69 @@ TEST_F(Bmi_Deserialization_Test, save_restore_roundtrip_by_timestamp) {
     EXPECT_EQ(t, t_ref);
     EXPECT_EQ(i1, i1_ref);
     EXPECT_EQ(i2, i2_ref);
+}
+
+// Integration: restore from one file, save to a different file. This
+// is the write-forward pattern — the run is seeded from a prior
+// checkpoint and its own outputs go somewhere new. Verifies the two
+// sub-block paths resolve to distinct FileBackend instances.
+TEST_F(Bmi_Deserialization_Test, save_restore_roundtrip_split_paths) {
+    const std::string restore_path = path + ".restore_from";
+    const std::string save_path    = path + ".save_to";
+    std::remove(restore_path.c_str());
+    std::remove(save_path.c_str());
+
+    // Pre-populate the restore file only; the save file starts empty.
+    append_record(
+        restore_path,
+        SerializationRecord{model_name, 0, int64_t{0}, make_payload(9.0, 1.5, 2.5, 3.5, 4.5)}
+    );
+
+    // No top-level `path` — both directions carry their own.
+    auto properties = DeserializationMock::without_path(/*step*/ "0")
+                          .with_restore_path(restore_path)
+                          .with_save(/*frequency*/ 1)
+                          .with_save_path(save_path)
+                          .as_json_property();
+    auto protocols = NgenBmiProtocols(model, properties);
+
+    // Restore from restore_path.
+    auto restore_r =
+        protocols.run(Protocol::DESERIALIZATION, make_context(0, 2, "t0", model_name));
+    ASSERT_TRUE(restore_r.has_value());
+    double t, i1, i2, o1, o2;
+    snapshot(t, i1, i2, o1, o2);
+    EXPECT_EQ(t, 9.0);
+    EXPECT_EQ(i1, 1.5);
+
+    // Step and save — the save must land in save_path, not restore_path.
+    model->Update();
+    auto save_r = protocols.run(Protocol::SERIALIZATION, make_context(1, 2, "3600", model_name));
+    ASSERT_TRUE(save_r.has_value());
+    EXPECT_TRUE(file_exists(save_path));
+
+    // restore_path must not have been appended to.
+    std::ifstream restore_in(restore_path, std::ios::binary | std::ios::ate);
+    ASSERT_TRUE(restore_in.good());
+    const std::streamsize restore_size = restore_in.tellg();
+    // A single test_bmi_cpp SerializationRecord serializes to a known
+    // fixed length (prefix + id + 40-byte payload). Two records would be
+    // exactly double the single-record size. We assert the file did not
+    // grow: whatever size it had after the seed append, that's what it
+    // has now.
+    restore_in.seekg(0);
+    SerializationRecord scratch;
+    auto r = models::bmi::protocols::read_next_record(restore_in, scratch);
+    ASSERT_TRUE(r.has_value());
+    ASSERT_EQ(r.value(), models::bmi::protocols::Status::Ok);
+    // Next read must be EOF — only the seeded record is present.
+    r = models::bmi::protocols::read_next_record(restore_in, scratch);
+    ASSERT_TRUE(r.has_value());
+    EXPECT_EQ(r.value(), models::bmi::protocols::Status::Eof);
+    (void)restore_size;
+
+    std::remove(restore_path.c_str());
+    std::remove(save_path.c_str());
 }
 
 #endif // NGEN_BMI_CPP_LIB_TESTS_ACTIVE
