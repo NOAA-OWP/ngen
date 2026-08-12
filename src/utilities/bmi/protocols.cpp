@@ -69,32 +69,30 @@ NgenBmiProtocols::NgenBmiProtocols(ModelPtr model, const geojson::PropertyMap& p
 
 auto NgenBmiProtocols::run(const Protocol& protocol_name, const Context& ctx) const
     -> expected<void, ProtocolError> {
-    // Consider using find() vs switch, especially if the number of protocols grows
-    expected<void, ProtocolError> result_or_err;
+    // Consider using find() vs switch, especially if the number of protocols grows.
     switch (protocol_name) {
     case Protocol::MASS_BALANCE:
         return protocols.at(Protocol::MASS_BALANCE)
             ->run(model, ctx)
             .or_else(NgenBmiProtocol::error_or_warning);
-        break;
     case Protocol::SERIALIZATION:
         return protocols.at(Protocol::SERIALIZATION)
             ->run(model, ctx)
             .or_else(NgenBmiProtocol::error_or_warning);
-        break;
     case Protocol::DESERIALIZATION:
         return protocols.at(Protocol::DESERIALIZATION)
             ->run(model, ctx)
             .or_else(NgenBmiProtocol::error_or_warning);
-        break;
     default:
+        // Reached only when an invalid integer is cast to `Protocol`
+        // (e.g., a call-site bug). Return a diagnostic error rather
+        // than fall through with undefined behavior.
         std::stringstream ss;
         ss << "Error: Request for unsupported protocol: '" << protocol_name << "'.";
         return NgenBmiProtocol::error_or_warning(
             ProtocolError(Error::UNSUPPORTED_PROTOCOL, ss.str())
         );
     }
-    return {};
 }
 
 } // namespace protocols
