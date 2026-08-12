@@ -28,6 +28,7 @@ limitations under the License.
 #include <vector>
 // Interface under test
 #include "protocols.hpp"
+#include "mass_balance.hpp"
 
 using ::testing::MatchesRegex;
 // protocol symbols
