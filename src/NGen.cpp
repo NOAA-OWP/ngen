@@ -895,6 +895,9 @@ int main(int argc, char* argv[]) {
         // Log as a fatal error since it will end the program.
         // This may result in double logging, but better to make sure it gets logged.
         LOG(LogLevel::FATAL, error_msg);
+        // restore python's state to ensure it can do any necessary shutdown
+        e.restore();
+        PyErr_Clear();
         // destroy the interpreter to let python atexit actions trigger
         interp.reset();
         // throw the copied error to ensure MPI acknowledges the termination

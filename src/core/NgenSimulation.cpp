@@ -492,11 +492,15 @@ void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::s
         );
         if (this->mpi_rank_ == 0)
             this->py_troute_->Update();
-    } catch (const py::error_already_set &e) {
+    } catch (py::error_already_set &e) {
+        std::string msg = e.what();
         LOG(LogLevel::FATAL, "A python error occurred when attempting to run T-Route.");
-        LOG(LogLevel::FATAL, e.what());
+        LOG(LogLevel::FATAL, msg);
+        // restore the python state to allow teardown
+        e.restore();
+        PyErr_Clear();
         // convert to runtime_error to make shutting down the interpreter easier
-        throw std::runtime_error(e.what());
+        throw std::runtime_error(msg);
 
     } catch (const std::exception &e) {
         LOG(LogLevel::FATAL, "An error occurred when attempting to run T-Route.");
