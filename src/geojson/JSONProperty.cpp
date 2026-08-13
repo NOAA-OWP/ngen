@@ -2,6 +2,14 @@
 
 using namespace geojson;
 
+void List::push_back(const JSONProperty& property) {
+    values->push_back(property);
+}
+
+bool List::operator==(const List& other) const {
+    return *values == *(other.values);
+}
+
 /**
  * @brief Attempt to get the natural numeric value stored within the property
  * 

@@ -61,9 +61,7 @@ namespace geojson {
          * 
          * @param property JSONProperty to add to the back of the List
          */
-        void push_back(const JSONProperty& property){
-            values->push_back(property);
-        }
+        void push_back(const JSONProperty& property);
 
         /**
          * @brief A stream overload to represent this type as a LIST
@@ -84,9 +82,7 @@ namespace geojson {
          * @return true If the JSONProperty vector \ref values is equal to \ref other vector of JSONProperty.
          * @return false If the JSONProperty vectors are not equivalent.
          */
-        bool inline operator==(const List& other) const{
-            return *values == *(other.values);
-        }
+        bool operator==(const List& other) const;
     };
 
     /**
