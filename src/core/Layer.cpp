@@ -27,7 +27,6 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
     utils::time_marker current_time_marker(
         output_time_index, simulation_time.get_current_epoch_time(), current_timestamp);
     for(const auto& id : processing_units) {
-        int sub_time = output_time_index;
         //std::cout<<"Running cat "<<id<<std::endl;
         auto r = features.catchment_at(id);
         //TODO redesign to avoid this cast
