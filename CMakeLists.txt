@@ -51,6 +51,7 @@ option(NGEN_WITH_BMI_FORTRAN "Build with Fortran BMI support"     OFF)
 option(NGEN_WITH_BMI_C       "Build with C BMI support"           ON)
 option(NGEN_WITH_PYTHON      "Build with embedded Python support" ON)
 option(NGEN_WITH_TESTS       "Build with unit tests"              ON)
+option(NGEN_WITH_THREADING   "Build with thread parallelism"      OFF)
 option(NGEN_QUIET            "Silence output"                     OFF)
 
 # These options require dependency on some of the above options
@@ -112,7 +113,7 @@ endif()
 
 # -----------------------------------------------------------------------------
 # Set global C++ options
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
@@ -151,6 +152,15 @@ endif()
 # https://www.intel.com/content/www/us/en/develop/documentation/oneapi-dpcpp-cpp-compiler-dev-guide-and-reference/top/compiler-setup/use-the-command-line/use-cmake-with-the-compiler.html
 if(INTEL_DPCPP)
     find_package(IntelDPCPP REQUIRED)
+endif()
+
+if(NGEN_WITH_THREADING)
+    find_package(TBB REQUIRED)
+    add_compile_definitions(NGEN_WITH_THREADING)
+
+    if(NGEN_WITH_MPI)
+        message(FATAL_ERROR "Threading and MPI are currently incompatible")
+    endif()
 endif()
 
 # -----------------------------------------------------------------------------
