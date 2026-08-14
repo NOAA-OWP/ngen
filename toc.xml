@@ -5671,7 +5671,6 @@
         <topic label="get_nexus_index" href="class_ngen_simulation.html#ab065277e2398cb66e8a8c878a65d8641"/>
         <topic label="get_nexus_outflow" href="class_ngen_simulation.html#a0c6d9e9f88537c1650077a40be8134e6"/>
         <topic label="get_num_output_times" href="class_ngen_simulation.html#ac4aa716aea81477f20d264293daf80eb"/>
-        <topic label="get_timestamp_for_step" href="class_ngen_simulation.html#aa664bc41b651d51d93a96952aee40be0"/>
         <topic label="run_catchments" href="class_ngen_simulation.html#abe49f6911a9117ae53f5b5e51d286502"/>
         <topic label="run_routing" href="class_ngen_simulation.html#a5e0c495e05c77e5104118d1802b51968"/>
         <topic label="run_routing_bmi" href="class_ngen_simulation.html#ad0347748947b0c4fc60891892a63340d"/>
@@ -5825,7 +5824,7 @@
         <topic label="diff" href="class_simulation___time.html#a49be658d7b2234200121eef60516c279"/>
         <topic label="get_current_epoch_time" href="class_simulation___time.html#a8313b4485e8ffbcf5aeb050a7adfdf7b"/>
         <topic label="get_output_interval_seconds" href="class_simulation___time.html#a7adf9c6535be6ecf8d115f8dcd1ac8dc"/>
-        <topic label="get_timestamp" href="class_simulation___time.html#ac31cb33120a3f3c69d5ac73d6f95a949"/>
+        <topic label="get_timestamp" href="class_simulation___time.html#a79682a4463f327c96360db243043c182"/>
         <topic label="get_total_output_times" href="class_simulation___time.html#a40e450687c6111b16b43edb7c6a6a702"/>
         <topic label="next_timestep_epoch_time" href="class_simulation___time.html#aef034363a9e6b5579c9b9e5eca2ca883"/>
         <topic label="next_timestep_epoch_time" href="class_simulation___time.html#a2a837cc1f07062ba0ae4a99401f11e76"/>

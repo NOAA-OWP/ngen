@@ -132,9 +132,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8313b4485e8ffbcf5aeb050a7adfdf7b" id="r_a8313b4485e8ffbcf5aeb050a7adfdf7b"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8313b4485e8ffbcf5aeb050a7adfdf7b">get_current_epoch_time</a> () const</td></tr>
 <tr class="memdesc:a8313b4485e8ffbcf5aeb050a7adfdf7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor to the the current simulation time.  <br /></td></tr>
 <tr class="separator:a8313b4485e8ffbcf5aeb050a7adfdf7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac31cb33120a3f3c69d5ac73d6f95a949" id="r_ac31cb33120a3f3c69d5ac73d6f95a949"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac31cb33120a3f3c69d5ac73d6f95a949">get_timestamp</a> (int current_output_time_index)</td></tr>
-<tr class="memdesc:ac31cb33120a3f3c69d5ac73d6f95a949"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor to the current timestamp string.  <br /></td></tr>
-<tr class="separator:ac31cb33120a3f3c69d5ac73d6f95a949"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79682a4463f327c96360db243043c182" id="r_a79682a4463f327c96360db243043c182"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a79682a4463f327c96360db243043c182">get_timestamp</a> (int current_output_time_index) const</td></tr>
+<tr class="memdesc:a79682a4463f327c96360db243043c182"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor to the current timestamp string.  <br /></td></tr>
+<tr class="separator:a79682a4463f327c96360db243043c182"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a146f72d2860c22c14a220406e59d7bcd" id="r_a146f72d2860c22c14a220406e59d7bcd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a146f72d2860c22c14a220406e59d7bcd">next_timestep_index</a> (int epoch_time_seconds) const</td></tr>
 <tr class="separator:a146f72d2860c22c14a220406e59d7bcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e376cc0acc6868e58794d357200078f" id="r_a8e376cc0acc6868e58794d357200078f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e376cc0acc6868e58794d357200078f">next_timestep_index</a> () const</td></tr>
@@ -360,8 +360,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac31cb33120a3f3c69d5ac73d6f95a949" name="ac31cb33120a3f3c69d5ac73d6f95a949"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac31cb33120a3f3c69d5ac73d6f95a949">&#9670;&#160;</a></span>get_timestamp()</h2>
+<a id="a79682a4463f327c96360db243043c182" name="a79682a4463f327c96360db243043c182"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79682a4463f327c96360db243043c182">&#9670;&#160;</a></span>get_timestamp()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -373,7 +373,7 @@ Private Attributes</h2></td></tr>
           <td class="memname">std::string Simulation_Time::get_timestamp </td>
           <td>(</td>
           <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>current_output_time_index</em></span></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -388,7 +388,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="#a05ca6222ff0dc9174a2bbfa5e7908541">current_date_time_epoch</a>, <a class="el" href="#aca840918d55535a52110f4c3132c4df0">output_interval_seconds</a>, and <a class="el" href="#a834cd7b87455af43576181ea7c858dc9">start_date_time_epoch</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="class_ngen_simulation.html#aa664bc41b651d51d93a96952aee40be0">NgenSimulation::get_timestamp_for_step()</a>, <a class="el" href="classngen_1_1_domain_layer.html#a3d4a8a547fdc915f4b9a49ed7026dc7a">ngen::DomainLayer::update_models()</a>, <a class="el" href="classngen_1_1_layer.html#a0faf7ccfd5d8cd8a5c39564293db15fc">ngen::Layer::update_models()</a>, and <a class="el" href="classngen_1_1_surface_layer.html#afb6d1cc8b2c19b4024b07999ea6a0788">ngen::SurfaceLayer::update_models()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_domain_layer.html#a3d4a8a547fdc915f4b9a49ed7026dc7a">ngen::DomainLayer::update_models()</a>, <a class="el" href="classngen_1_1_layer.html#a0faf7ccfd5d8cd8a5c39564293db15fc">ngen::Layer::update_models()</a>, and <a class="el" href="classngen_1_1_surface_layer.html#afb6d1cc8b2c19b4024b07999ea6a0788">ngen::SurfaceLayer::update_models()</a>.</p>
 
 </div>
 </div>
@@ -559,7 +559,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a642130d5225e58078097a954aae2a236">advance_timestep()</a>, <a class="el" href="#a8313b4485e8ffbcf5aeb050a7adfdf7b">get_current_epoch_time()</a>, <a class="el" href="#ac31cb33120a3f3c69d5ac73d6f95a949">get_timestamp()</a>, <a class="el" href="#aef034363a9e6b5579c9b9e5eca2ca883">next_timestep_epoch_time()</a>, and <a class="el" href="#a8e376cc0acc6868e58794d357200078f">next_timestep_index()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a642130d5225e58078097a954aae2a236">advance_timestep()</a>, <a class="el" href="#a8313b4485e8ffbcf5aeb050a7adfdf7b">get_current_epoch_time()</a>, <a class="el" href="#a79682a4463f327c96360db243043c182">get_timestamp()</a>, <a class="el" href="#aef034363a9e6b5579c9b9e5eca2ca883">next_timestep_epoch_time()</a>, and <a class="el" href="#a8e376cc0acc6868e58794d357200078f">next_timestep_index()</a>.</p>
 
 </div>
 </div>
@@ -607,7 +607,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a08bb9078f55a6aa12cf040dba5fe03f0">Simulation_Time()</a>, <a class="el" href="#a1b29c199f0fd9e0995f369c40fd7aaa0">Simulation_Time()</a>, <a class="el" href="#a642130d5225e58078097a954aae2a236">advance_timestep()</a>, <a class="el" href="#a7adf9c6535be6ecf8d115f8dcd1ac8dc">get_output_interval_seconds()</a>, <a class="el" href="#ac31cb33120a3f3c69d5ac73d6f95a949">get_timestamp()</a>, <a class="el" href="#a2a837cc1f07062ba0ae4a99401f11e76">next_timestep_epoch_time()</a>, and <a class="el" href="#a146f72d2860c22c14a220406e59d7bcd">next_timestep_index()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a08bb9078f55a6aa12cf040dba5fe03f0">Simulation_Time()</a>, <a class="el" href="#a1b29c199f0fd9e0995f369c40fd7aaa0">Simulation_Time()</a>, <a class="el" href="#a642130d5225e58078097a954aae2a236">advance_timestep()</a>, <a class="el" href="#a7adf9c6535be6ecf8d115f8dcd1ac8dc">get_output_interval_seconds()</a>, <a class="el" href="#a79682a4463f327c96360db243043c182">get_timestamp()</a>, <a class="el" href="#a2a837cc1f07062ba0ae4a99401f11e76">next_timestep_epoch_time()</a>, and <a class="el" href="#a146f72d2860c22c14a220406e59d7bcd">next_timestep_index()</a>.</p>
 
 </div>
 </div>
@@ -655,7 +655,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a1b29c199f0fd9e0995f369c40fd7aaa0">Simulation_Time()</a>, <a class="el" href="#a49be658d7b2234200121eef60516c279">diff()</a>, <a class="el" href="#ac31cb33120a3f3c69d5ac73d6f95a949">get_timestamp()</a>, <a class="el" href="#a2a837cc1f07062ba0ae4a99401f11e76">next_timestep_epoch_time()</a>, and <a class="el" href="#a146f72d2860c22c14a220406e59d7bcd">next_timestep_index()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a1b29c199f0fd9e0995f369c40fd7aaa0">Simulation_Time()</a>, <a class="el" href="#a49be658d7b2234200121eef60516c279">diff()</a>, <a class="el" href="#a79682a4463f327c96360db243043c182">get_timestamp()</a>, <a class="el" href="#a2a837cc1f07062ba0ae4a99401f11e76">next_timestep_epoch_time()</a>, and <a class="el" href="#a146f72d2860c22c14a220406e59d7bcd">next_timestep_index()</a>.</p>
 
 </div>
 </div>
@@ -692,7 +692,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_simulation___time.html">Simulation_Time</a></li>
-    <li class="footer">Generated on Fri Aug 14 2026 17:51:40 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Aug 14 2026 21:14:59 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

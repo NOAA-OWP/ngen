@@ -6,7 +6,7 @@ var class_simulation___time =
     [ "diff", "class_simulation___time.html#a49be658d7b2234200121eef60516c279", null ],
     [ "get_current_epoch_time", "class_simulation___time.html#a8313b4485e8ffbcf5aeb050a7adfdf7b", null ],
     [ "get_output_interval_seconds", "class_simulation___time.html#a7adf9c6535be6ecf8d115f8dcd1ac8dc", null ],
-    [ "get_timestamp", "class_simulation___time.html#ac31cb33120a3f3c69d5ac73d6f95a949", null ],
+    [ "get_timestamp", "class_simulation___time.html#a79682a4463f327c96360db243043c182", null ],
     [ "get_total_output_times", "class_simulation___time.html#a40e450687c6111b16b43edb7c6a6a702", null ],
     [ "next_timestep_epoch_time", "class_simulation___time.html#aef034363a9e6b5579c9b9e5eca2ca883", null ],
     [ "next_timestep_epoch_time", "class_simulation___time.html#a2a837cc1f07062ba0ae4a99401f11e76", null ],

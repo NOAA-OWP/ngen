@@ -8,7 +8,6 @@ var class_ngen_simulation =
     [ "get_nexus_index", "class_ngen_simulation.html#ab065277e2398cb66e8a8c878a65d8641", null ],
     [ "get_nexus_outflow", "class_ngen_simulation.html#a0c6d9e9f88537c1650077a40be8134e6", null ],
     [ "get_num_output_times", "class_ngen_simulation.html#ac4aa716aea81477f20d264293daf80eb", null ],
-    [ "get_timestamp_for_step", "class_ngen_simulation.html#aa664bc41b651d51d93a96952aee40be0", null ],
     [ "run_catchments", "class_ngen_simulation.html#abe49f6911a9117ae53f5b5e51d286502", null ],
     [ "run_routing", "class_ngen_simulation.html#a5e0c495e05c77e5104118d1802b51968", null ],
     [ "run_routing_bmi", "class_ngen_simulation.html#ad0347748947b0c4fc60891892a63340d", null ],
