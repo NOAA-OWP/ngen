@@ -25,12 +25,6 @@ var hierarchy =
     ] ],
     [ "boost::static_visitor", null, [
       [ "geojson::JSONProperty::AsVectorVisitor< T >", "structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html", null ],
-      [ "ngen::detail::visitors::mdarray_at< SupportedTypes >", "structngen_1_1detail_1_1visitors_1_1mdarray__at.html", null ],
-      [ "ngen::detail::visitors::mdarray_insert", "structngen_1_1detail_1_1visitors_1_1mdarray__insert.html", null ],
-      [ "ngen::detail::visitors::mdarray_rank", "structngen_1_1detail_1_1visitors_1_1mdarray__rank.html", null ],
-      [ "ngen::detail::visitors::mdarray_shape", "structngen_1_1detail_1_1visitors_1_1mdarray__shape.html", null ],
-      [ "ngen::detail::visitors::mdarray_size", "structngen_1_1detail_1_1visitors_1_1mdarray__size.html", null ],
-      [ "ngen::detail::visitors::to_string_visitor", "structngen_1_1detail_1_1visitors_1_1to__string__visitor.html", null ],
       [ "ngen::geopackage::wkb::wgs84", "structngen_1_1geopackage_1_1wkb_1_1wgs84.html", null ]
     ] ],
     [ "BoundingBox", "struct_bounding_box.html", null ],
@@ -115,10 +109,6 @@ var hierarchy =
       [ "Network_Test1", "class_network___test1.html", null ],
       [ "Network_Test2", "class_network___test2.html", null ]
     ] ],
-    [ "ngen::detail::dimension", "structngen_1_1detail_1_1dimension.html", null ],
-    [ "ngen::detail::dimension::hash", "structngen_1_1detail_1_1dimension_1_1hash.html", null ],
-    [ "ngen::detail::variable< SupportedTypes >", "structngen_1_1detail_1_1variable.html", null ],
-    [ "ngen::detail::variable< SupportedTypes >::hash", "structngen_1_1detail_1_1variable_1_1hash.html", null ],
     [ "ngen::geopackage::wkb", "structngen_1_1geopackage_1_1wkb.html", null ],
     [ "ngen::Layer", "classngen_1_1_layer.html", [
       [ "ngen::DomainLayer", "classngen_1_1_domain_layer.html", null ],
@@ -126,9 +116,6 @@ var hierarchy =
     ] ],
     [ "ngen::LayerDataStorage", "classngen_1_1_layer_data_storage.html", null ],
     [ "ngen::LayerDescription", "structngen_1_1_layer_description.html", null ],
-    [ "ngen::mdarray< T >", "classngen_1_1mdarray.html", null ],
-    [ "ngen::mdarray< T >::iterator< T >", "structngen_1_1mdarray_1_1iterator.html", null ],
-    [ "ngen::mdframe", "classngen_1_1mdframe.html", null ],
     [ "ngen::sqlite::database", "classngen_1_1sqlite_1_1database.html", null ],
     [ "ngen::sqlite::database::deleter", "structngen_1_1sqlite_1_1database_1_1deleter.html", null ],
     [ "ngen::sqlite::database::iterator", "structngen_1_1sqlite_1_1database_1_1iterator.html", null ],

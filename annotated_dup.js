@@ -60,18 +60,6 @@ var annotated_dup =
       [ "VertexProperty", "structnetwork_1_1_vertex_property.html", "structnetwork_1_1_vertex_property" ]
     ] ],
     [ "ngen", "namespacengen.html", [
-      [ "detail", "namespacengen_1_1detail.html", [
-        [ "visitors", "namespacengen_1_1detail_1_1visitors.html", [
-          [ "mdarray_at", "structngen_1_1detail_1_1visitors_1_1mdarray__at.html", "structngen_1_1detail_1_1visitors_1_1mdarray__at" ],
-          [ "mdarray_insert", "structngen_1_1detail_1_1visitors_1_1mdarray__insert.html", "structngen_1_1detail_1_1visitors_1_1mdarray__insert" ],
-          [ "mdarray_rank", "structngen_1_1detail_1_1visitors_1_1mdarray__rank.html", "structngen_1_1detail_1_1visitors_1_1mdarray__rank" ],
-          [ "mdarray_shape", "structngen_1_1detail_1_1visitors_1_1mdarray__shape.html", "structngen_1_1detail_1_1visitors_1_1mdarray__shape" ],
-          [ "mdarray_size", "structngen_1_1detail_1_1visitors_1_1mdarray__size.html", "structngen_1_1detail_1_1visitors_1_1mdarray__size" ],
-          [ "to_string_visitor", "structngen_1_1detail_1_1visitors_1_1to__string__visitor.html", "structngen_1_1detail_1_1visitors_1_1to__string__visitor" ]
-        ] ],
-        [ "dimension", "structngen_1_1detail_1_1dimension.html", "structngen_1_1detail_1_1dimension" ],
-        [ "variable", "structngen_1_1detail_1_1variable.html", "structngen_1_1detail_1_1variable" ]
-      ] ],
       [ "geopackage", "namespacengen_1_1geopackage.html", [
         [ "wkb", "structngen_1_1geopackage_1_1wkb.html", "structngen_1_1geopackage_1_1wkb" ]
       ] ],
@@ -90,8 +78,6 @@ var annotated_dup =
       [ "Layer", "classngen_1_1_layer.html", "classngen_1_1_layer" ],
       [ "LayerDataStorage", "classngen_1_1_layer_data_storage.html", "classngen_1_1_layer_data_storage" ],
       [ "LayerDescription", "structngen_1_1_layer_description.html", "structngen_1_1_layer_description" ],
-      [ "mdarray", "classngen_1_1mdarray.html", "classngen_1_1mdarray" ],
-      [ "mdframe", "classngen_1_1mdframe.html", "classngen_1_1mdframe" ],
       [ "SurfaceLayer", "classngen_1_1_surface_layer.html", "classngen_1_1_surface_layer" ]
     ] ],
     [ "nonstd", "namespacenonstd.html", [

@@ -405,17 +405,16 @@ var NAVTREE =
         [ "Enumerator", "functions_eval.html", null ],
         [ "Related Symbols", "functions_rela.html", null ]
       ] ]
-    ] ],
-    [ "Examples", "examples.html", "examples" ]
+    ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"_2github_2workspace_2include_2utilities_2mdarray_2mdarray_8hpp-example.html",
-"class_h_y___interior_catchment.html#a55f00d5e5a6283c0051e73079335eaf8",
-"class_simulation___time.html#a08bb9078f55a6aa12cf040dba5fe03f0",
-"classdata__access_1_1_optional_wrapped_data_provider.html#ab0b1614239c57ead01efc4f45bf7d719",
+"annotated.html",
+"class_h_y___interior_catchment.html#a74d59cfc7b5231d26ef07e09f5aff0c8",
+"class_simulation___time.html#a0fecf9117a12b85398abe700f84dd9fa",
+"classdata__access_1_1_optional_wrapped_data_provider.html#ab5c87312068edadb502830d0f0fa27ab",
 "classgeojson_1_1_feature_base.html#a3736c2f737da40c6e9ce032b1bc88779",
 "classgeojson_1_1_j_s_o_n_property.html#abc3fb5015f523acf462755a444896534",
 "classgeojson_1_1_multi_line_string_feature.html#ae37036f3abfe71ca484d4f6885624020",
@@ -425,17 +424,16 @@ var NAVTREEINDEX =
 "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a1fa6c71c6683a4f49957206d078b2435",
 "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a89ed729aade1ec00e5aee9f587168ea6",
 "classngen_1_1_domain_layer.html#a96c3fed503f10d2b2f9ab00c229a5b91",
-"classrealization_1_1_bmi___c___formulation.html#a043a34098a1c4c014b40f0b57ffacf39",
-"classrealization_1_1_bmi___cpp___formulation.html#a3e6136d3fde105fd835c8be24db7d1b7",
-"classrealization_1_1_bmi___formulation.html#abd0d3178a89234d538ab2a04bf3af3ef",
-"classrealization_1_1_bmi___multi___formulation.html#a02082f5077fee0a6e959640cf27a404d",
-"classrealization_1_1_configuration_exception.html",
-"classutils_1_1_stream_handler.html#a5f450a99693319a0ed096e0cb3b70a52",
-"md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md162",
-"namespacehy__features_1_1identifiers.html#a56a7f5d9e5bde39232a37f31dc7ca878",
-"struct_units_helper_1_1unit__error__log__key.html#a8c489eb5fbc8196f5e5c9b3750472bf2",
-"structngen_1_1geopackage_1_1wkb.html#af7c8a17f82860eb0ff37ba22ddc00b10",
-"structrealization_1_1config_1_1_time.html#a93a2e197f8841d39081be3caeedba65c"
+"classrealization_1_1_bmi___c___formulation.html#a8a8be619f96c81aa7bf60644b03bed38",
+"classrealization_1_1_bmi___cpp___formulation.html#abe1dcb8b91c143bb6c0ab67614ef92f1",
+"classrealization_1_1_bmi___module___formulation.html#a3ed78c910127ec5115d71fcfe4d47896",
+"classrealization_1_1_bmi___multi___formulation.html#a8ff42a69cf6c735578692c37e20a584c",
+"classrealization_1_1_formulation___manager.html#afbb8fd26cb697649d9d4a71bd79c8c86",
+"index.html#autotoc_md35",
+"md_doc_2references.html#autotoc_md270",
+"namespacerealization.html#af60e0abfbd9fa40024373e9012cb7769",
+"structngen_1_1geopackage_1_1wkb.html#a1b922431945c519ab6ca371a1fa4e341",
+"structrouting__params.html#af966a73055663bca37095a4e4feb754d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
