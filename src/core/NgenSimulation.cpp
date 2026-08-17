@@ -451,46 +451,62 @@ void NgenSimulation::set_troute_inputs(
 void NgenSimulation::run_routing(NgenSimulation::hy_features_t &features, std::string const& t_route_config_file_with_path)
 {
 #if NGEN_WITH_ROUTING
-    size_t number_of_timesteps = sim_time_->get_total_output_times();
-    if (nexus_downstream_flows_.size() != number_of_timesteps * nexus_indexes_.size()) {
-        std::string msg = "Routing input data in NgenSimulation::nexus_downstream_flows_ does not reflect a full-duration run";
-        LOG(msg, LogLevel::FATAL);
-        throw std::runtime_error(msg);
-    }
-    if (mpi_rank_ == 0) { // Run t-route from single process
-        LOG(LogLevel::INFO, "Running T-Route on simulation outputs.");
-
-        // Note: Currently, delta_time is set in the t-route yaml configuration file, and the
-        // number_of_timesteps is determined from the total number of nexus outputs in t-route.
-        // It is recommended to still pass these values to the routing_py_adapter object in
-        // case a future implementation needs these two values from the ngen framework.
-        int delta_time = sim_time_->get_output_interval_seconds();
-
-        // if the t-route model was not created from a hot start load, make it now
-        if (this->py_troute_ == NULL) {
-            this->make_troute(t_route_config_file_with_path);
+    try {
+        size_t number_of_timesteps = sim_time_->get_total_output_times();
+        if (nexus_downstream_flows_.size() != number_of_timesteps * nexus_indexes_.size()) {
+            std::string msg = "Routing input data in NgenSimulation::nexus_downstream_flows_ does not reflect a full-duration run";
+            LOG(msg, LogLevel::FATAL);
+            throw std::runtime_error(msg);
         }
-        this->py_troute_->set_value_unchecked("ngen_dt", &delta_time, 1);
-    }
-    // set the inputs from catchment and nexus results
+        if (mpi_rank_ == 0) { // Run t-route from single process
+            LOG(LogLevel::INFO, "Running T-Route on simulation outputs.");
+
+            // Note: Currently, delta_time is set in the t-route yaml configuration file, and the
+            // number_of_timesteps is determined from the total number of nexus outputs in t-route.
+            // It is recommended to still pass these values to the routing_py_adapter object in
+            // case a future implementation needs these two values from the ngen framework.
+            int delta_time = sim_time_->get_output_interval_seconds();
+
+            // if the t-route model was not created from a hot start load, make it now
+            if (this->py_troute_ == NULL) {
+                this->make_troute(t_route_config_file_with_path);
+            }
+            this->py_troute_->set_value_unchecked("ngen_dt", &delta_time, 1);
+        }
+        // set the inputs from catchment and nexus results
 #if NGEN_WITH_NEXUSES
-    this->set_troute_inputs(
-        &this->nexus_downstream_flows_,
-        &this->nexus_indexes_,
-        "land_surface_water_source__id",
-        "land_surface_water_source__volume_flow_rate",
-        features
-    );
+        this->set_troute_inputs(
+            &this->nexus_downstream_flows_,
+            &this->nexus_indexes_,
+            "land_surface_water_source__id",
+            "land_surface_water_source__volume_flow_rate",
+            features
+        );
 #endif // NGEN_WITH_NEXUSES
-    this->set_troute_inputs(
-        &this->catchment_outflows_,
-        &this->catchment_indexes_,
-        "catchment_water_source__id",
-        "catchment_water_source__volume_flow_rate",
-        features
-    );
-    if (this->mpi_rank_ == 0)
-        this->py_troute_->Update();
+        this->set_troute_inputs(
+            &this->catchment_outflows_,
+            &this->catchment_indexes_,
+            "catchment_water_source__id",
+            "catchment_water_source__volume_flow_rate",
+            features
+        );
+        if (this->mpi_rank_ == 0)
+            this->py_troute_->Update();
+    } catch (py::error_already_set &e) {
+        std::string msg = e.what();
+        LOG(LogLevel::FATAL, "A python error occurred when attempting to run T-Route.");
+        LOG(LogLevel::FATAL, msg);
+        // restore the python state to allow teardown
+        e.restore();
+        PyErr_Clear();
+        // convert to runtime_error to make shutting down the interpreter easier
+        throw std::runtime_error(msg);
+
+    } catch (const std::exception &e) {
+        LOG(LogLevel::FATAL, "An error occurred when attempting to run T-Route.");
+        LOG(LogLevel::FATAL, e.what());
+        throw;
+    }
 #endif // NGEN_WITH_ROUTING
 }
 
