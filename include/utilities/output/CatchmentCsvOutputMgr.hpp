@@ -23,7 +23,7 @@ limitations under the License.
 #include <memory>
 #include <optional>
 #include <string>
-#include <unordered_map>
+#include <map>
 #include <vector>
 
 #include "CatchmentOutputsMgr.hpp"
@@ -89,7 +89,7 @@ namespace utils
         // Open output streams keyed by resolved file path. In per-feature mode each (formulation,
         // catchment) has its own path; in aggregated mode every catchment of a formulation resolves
         // to the same path and shares one stream.
-        std::unordered_map<std::filesystem::path, std::shared_ptr<std::ofstream>> streams_;
+        std::map<std::filesystem::path, std::shared_ptr<std::ofstream>> streams_;
 
         //! Resolve the output file path for a (formulation, catchment). The file name is the
         //! catchment ("<catchment>.csv") per-feature, or the shared aggregated filename when
