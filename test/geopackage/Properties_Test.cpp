@@ -38,13 +38,23 @@ class Properties_Test : public ::testing::Test
         return row;
     }
 
+    //! The storage class SQLite reports for @p column of @p row. A column the fixture no longer
+    //! has yields -1, which matches no SQLITE_* constant, so the caller's comparison fails.
+    int type_of(ngen::sqlite::database::iterator& row, const std::string& column)
+    {
+        const int index = row.find(column);
+        if (index < 0) {
+            ADD_FAILURE() << "fixture drift: no column `" << column << "`";
+            return -1;
+        }
+        return row.types()[index];
+    }
+
     //! Convert @p column of @p row using the storage class SQLite reports for that cell, rather
     //! than a hard-coded constant, so the pairing the readers rely on is what gets exercised.
     geojson::JSONProperty property_of(ngen::sqlite::database::iterator& row, const std::string& column)
     {
-        const int index = row.find(column);
-        EXPECT_NE(index, -1) << "fixture drift: no column `" << column << "`";
-        return ngen::geopackage::get_property(row, column, row.types()[index]);
+        return ngen::geopackage::get_property(row, column, this->type_of(row, column));
     }
 
     std::unique_ptr<ngen::sqlite::database> db;
@@ -83,7 +93,7 @@ TEST_F(Properties_Test, text_column_becomes_a_string)
 TEST_F(Properties_Test, null_cell_falls_back_to_a_null_string)
 {
     ngen::sqlite::database::iterator row = this->first_row("aux_params_one");
-    ASSERT_EQ(row.types()[row.find("sparse_value")], SQLITE_NULL);
+    ASSERT_EQ(this->type_of(row, "sparse_value"), SQLITE_NULL);
 
     const geojson::JSONProperty property = this->property_of(row, "sparse_value");
     EXPECT_EQ(property.get_type(), geojson::PropertyType::String);
@@ -93,7 +103,7 @@ TEST_F(Properties_Test, null_cell_falls_back_to_a_null_string)
 TEST_F(Properties_Test, blob_cell_falls_back_to_a_null_string)
 {
     ngen::sqlite::database::iterator row = this->first_row("aux_params_blob");
-    ASSERT_EQ(row.types()[row.find("blob_value")], SQLITE_BLOB);
+    ASSERT_EQ(this->type_of(row, "blob_value"), SQLITE_BLOB);
 
     const geojson::JSONProperty property = this->property_of(row, "blob_value");
     EXPECT_EQ(property.get_type(), geojson::PropertyType::String);
