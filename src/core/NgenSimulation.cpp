@@ -14,6 +14,30 @@
 
 #include "parallel_utils.h"
 
+#if NGEN_WITH_MPI
+NgenSimulation::NgenSimulation(
+    Simulation_Time const& sim_time,
+    std::vector<std::shared_ptr<ngen::Layer>> layers,
+    std::unordered_map<std::string, int> catchment_indexes,
+    std::unordered_map<std::string, int> nexus_indexes,
+    MPI_Comm comm
+                               )
+    : simulation_step_(0)
+    , sim_time_(std::make_shared<Simulation_Time>(sim_time))
+    , layers_(std::move(layers))
+    , catchment_indexes_(std::move(catchment_indexes))
+    , nexus_indexes_(std::move(nexus_indexes))
+{
+    MPI_Comm_dup(comm, &mpi_comm_);
+    MPI_Comm_rank(mpi_comm_, &mpi_rank_);
+    MPI_Comm_size(mpi_comm_, &mpi_num_procs_);
+
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
+    catchment_outflows_.reserve(catchment_indexes_.size() * get_num_output_times());
+    nexus_downstream_flows_.reserve(nexus_indexes_.size() * get_num_output_times());
+#endif
+}
+
 NgenSimulation::NgenSimulation(
     Simulation_Time const& sim_time,
     std::vector<std::shared_ptr<ngen::Layer>> layers,
@@ -30,13 +54,44 @@ NgenSimulation::NgenSimulation(
     , mpi_rank_(mpi_rank)
     , mpi_num_procs_(mpi_num_procs)
 {
+    // This constructor does not own an MPI communicator; mark it so the
+    // destructor leaves it alone.
+    mpi_comm_ = MPI_COMM_NULL;
 #if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
     catchment_outflows_.reserve(catchment_indexes_.size() * get_num_output_times());
     nexus_downstream_flows_.reserve(nexus_indexes_.size() * get_num_output_times());
 #endif
 }
+#else
+NgenSimulation::NgenSimulation(
+    Simulation_Time const& sim_time,
+    std::vector<std::shared_ptr<ngen::Layer>> layers,
+    std::unordered_map<std::string, int> catchment_indexes,
+    std::unordered_map<std::string, int> nexus_indexes
+                               )
+    : simulation_step_(0)
+    , sim_time_(std::make_shared<Simulation_Time>(sim_time))
+    , layers_(std::move(layers))
+    , catchment_indexes_(std::move(catchment_indexes))
+    , nexus_indexes_(std::move(nexus_indexes))
+    , mpi_rank_(0)
+    , mpi_num_procs_(1)
+{
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
+    catchment_outflows_.reserve(catchment_indexes_.size() * get_num_output_times());
+    nexus_downstream_flows_.reserve(nexus_indexes_.size() * get_num_output_times());
+#endif
+}
+#endif // NGEN_WITH_MPI
 
-NgenSimulation::~NgenSimulation() = default;
+NgenSimulation::~NgenSimulation()
+{
+#if NGEN_WITH_MPI
+    if (mpi_comm_ != MPI_COMM_NULL) {
+        MPI_Comm_free(&mpi_comm_);
+    }
+#endif
+}
 
 void NgenSimulation::run_catchments()
 {
@@ -169,7 +224,7 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
             local_nexus_ids.push_back(nexus.first);
         }
         // MPI_Gather all nexus IDs into a single vector
-        std::vector<std::string> all_nexus_ids = parallel::gather_strings(local_nexus_ids, MPI_COMM_WORLD);
+        std::vector<std::string> all_nexus_ids = parallel::gather_strings(local_nexus_ids, mpi_comm_);
         if (mpi_rank_ == 0) {
             // filter to only the unique IDs
             std::sort(all_nexus_ids.begin(), all_nexus_ids.end());
@@ -179,7 +234,7 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
             );
         }
         // MPI_Broadcast so all processes share the nexus IDs
-        all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, MPI_COMM_WORLD));
+        all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, mpi_comm_));
 
         // MPI_Reduce to collect the results from processes
         if (mpi_rank_ == 0) {
@@ -200,7 +255,7 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
                 // if this process does not have the id, fill with 0 to make sure it doesn't affect reduce sum
                 std::fill(local_buffer.begin(), local_buffer.end(), 0.0);
             }
-            MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+            MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, mpi_comm_);
             if (mpi_rank_ == 0) {
                 // copy reduce values to a combined downflows vector
                 all_nexus_indexes[nexus_id] = i;
