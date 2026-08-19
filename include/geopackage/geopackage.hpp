@@ -34,6 +34,20 @@ geojson::PropertyMap build_properties(
 );
 
 /**
+ * Convert one column of a GeoPackage table row into a JSON property.
+ *
+ * @param[in] row SQLite iterator at the row containing the column
+ * @param[in] name Name of the column to read, which is also the key of the returned property
+ * @param[in] type SQLite type of this row's value in that column
+ * @return geojson::JSONProperty Property holding the column's value
+ */
+geojson::JSONProperty get_property(
+    const ngen::sqlite::database::iterator& row,
+    const std::string& name,
+    int type
+);
+
+/**
  * Build a feature from a GPKG table row
  * 
  * @param[in] row SQLite iterator at the row to build a feature from
@@ -58,6 +72,32 @@ std::shared_ptr<geojson::FeatureCollection> read(
     const std::string& gpkg_path,
     const std::string& layer,
     const std::vector<std::string>& ids
+);
+
+/**
+ * Join the columns of a GeoPackage attribute table onto the features of a collection.
+ *
+ * Rows are matched to features by comparing @p key_column against feature IDs, and each matched
+ * feature gains a property `<prefix>.<column>` per non-key column holding a value. SQL NULL cells
+ * yield no property. Rows keyed to a feature the collection does not hold are ignored, since under
+ * partitioning most of a table's rows belong to other ranks.
+ *
+ * @param[in,out] collection Features to join onto, mutated in place
+ * @param[in] gpkg_path Path to the GPKG file holding the attribute table
+ * @param[in] table Name of the attribute table within the GPKG file
+ * @param[in] key_column Column of @p table whose values are matched against feature IDs
+ * @param[in] prefix Namespace the joined columns are published under
+ * @param[in] required When true, a feature with no matching row is an error rather than a warning
+ * @throw std::runtime_error if @p table or @p key_column does not exist, or if a feature has no
+ *        matching row while @p required is true
+ */
+void join_attributes(
+    geojson::FeatureCollection& collection,
+    const std::string& gpkg_path,
+    const std::string& table,
+    const std::string& key_column,
+    const std::string& prefix,
+    bool required
 );
 
 } // namespace geopackage
