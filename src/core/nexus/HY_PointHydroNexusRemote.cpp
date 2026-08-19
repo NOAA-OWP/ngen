@@ -311,6 +311,27 @@ void HY_PointHydroNexusRemote::process_communications()
     }
 }
 
+void HY_PointHydroNexusRemote::flush(bool clear_completed)
+{
+    // Release the unbounded per-timestep accumulator state (the actual memory
+    // growth on long runs). This is intentionally NON-BLOCKING:
+    //
+    //  - process_communications() opportunistically reaps already-completed
+    //    sends/receives but never waits. In-flight sends are left in
+    //    stored_sends to complete naturally; they are already bounded by the
+    //    spinlock in add_upstream_flow and carry their own payload buffers, so
+    //    clearing the accumulators below cannot corrupt them.
+    //  - No new receives are posted: get_downstream_flow has already drained
+    //    this nexus's receives for the step, and posting one here would consume
+    //    a future timestep's message that the clear would then discard.
+    //
+    // Blocking here (e.g. waiting for sends to be received) would turn a
+    // per-timestep flush into an inter-rank synchronization point and can stall
+    // forward progress under load imbalance, so it is deliberately avoided.
+    process_communications();
+    HY_PointHydroNexus::flush(clear_completed);
+}
+
 long HY_PointHydroNexusRemote::get_time_step()
 {
    return time_step;
