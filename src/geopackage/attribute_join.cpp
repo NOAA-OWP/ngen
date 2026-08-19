@@ -1,27 +1,30 @@
 #include "attribute_join.hpp"
 #include "geopackage.hpp"
 #include "JSONProperty.hpp"
+#include "logging_utils.h"
 
-#include <iostream>
+#include <algorithm>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
 namespace {
 
-// A table name can't be bound as a parameter, so quoting keeps the interpolated statement
-// well-formed for names carrying spaces or punctuation.
-std::string quote_identifier(const std::string& identifier)
+//! Open the GeoPackage an attribute table lives in, naming that table if the open fails.
+ngen::sqlite::database open_for_table(const std::string& gpkg_path, const std::string& table)
 {
-    std::string quoted = "\"";
-    for (const char character : identifier) {
-        if (character == '"') {
-            quoted += '"';
-        }
-        quoted += character;
+    try {
+        return ngen::sqlite::database{gpkg_path};
+    } catch (const std::exception& error) {
+        throw std::runtime_error(
+            "cannot open " + gpkg_path + ", declared as the source of table `" +
+            table + "`: " + error.what()
+        );
     }
-    return quoted + "\"";
 }
+
+//! How many unmatched feature IDs a coverage report names before falling back to a count.
+constexpr std::size_t MAX_UNMATCHED_NAMED = 10;
 
 //! Whether a cell of this SQLite type has a JSON property counterpart.
 bool is_convertible_type(int type)
@@ -37,7 +40,8 @@ void ngen::geopackage::join_attributes(
     const AttributeJoinSpec& spec
 )
 {
-    ngen::sqlite::database db{gpkg_path};
+    const std::string table_identifier = quote_table_name(spec.table);
+    ngen::sqlite::database db = open_for_table(gpkg_path, spec.table);
 
     // An absent table or key column is a typo rather than a data gap, so `required` does not enter into it.
     if (!db.contains(spec.table)) {
@@ -46,7 +50,7 @@ void ngen::geopackage::join_attributes(
         );
     }
 
-    auto rows = db.query("SELECT * FROM " + quote_identifier(spec.table));
+    auto rows = db.query("SELECT * FROM " + table_identifier);
     const int key_index = rows.find(spec.key_column);
     if (key_index < 0) {
         throw std::runtime_error(
@@ -109,21 +113,40 @@ void ngen::geopackage::join_attributes(
         rows.next();
     }
 
+    // A table covering only part of a collection is worth one report, not one per feature: a
+    // regionalization table missing a handful of rows out of thousands would otherwise bury the
+    // run's output. Naming the first few keeps the common case -- a gap of one or two -- diagnosable
+    // without opening the file.
+    std::vector<std::string> unmatched;
     std::unordered_set<std::string> reported_ids;
     for (const auto& feature : collection) {
         const std::string& id = feature->get_id();
         if (joined_ids.contains(id) || !reported_ids.insert(id).second) {
             continue;
         }
-
-        const std::string message = "feature `" + id + "` has no row in table `" +
-                                    spec.table + "` of " + gpkg_path;
-        if (spec.required) {
-            throw std::runtime_error(message);
-        }
-
-        std::cerr << "WARN: " << message << std::endl;
+        unmatched.push_back(id);
     }
+
+    if (unmatched.empty()) {
+        return;
+    }
+
+    const std::size_t named = std::min(unmatched.size(), MAX_UNMATCHED_NAMED);
+    std::string message = std::to_string(unmatched.size()) +
+                          (unmatched.size() == 1 ? " feature has" : " features have") +
+                          " no row in table `" + spec.table + "` of " + gpkg_path + ": ";
+    for (std::size_t i = 0; i < named; i++) {
+        message += (i == 0 ? "" : ", ") + unmatched[i];
+    }
+    if (named < unmatched.size()) {
+        message += ", and " + std::to_string(unmatched.size() - named) + " more";
+    }
+
+    if (spec.required) {
+        throw std::runtime_error(message);
+    }
+
+    logging::warning((message + "\n").c_str());
 }
 
 void ngen::geopackage::join_all(

@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "GeoPackageReader.hpp"
+#include "geopackage.hpp"
 #include "FileChecker.h"
 #include "aux_fixture_builders.hpp"
 
@@ -197,4 +198,17 @@ TEST_F(GeoPackage_Test, geopackage_aux_fixture_test)
     dupe_other.next();
     ASSERT_FALSE(dupe_other.done());
     EXPECT_EQ(dupe_other.get<int>(0), 1);
+}
+
+// The one gate every interpolated table name passes through, on the read and join paths alike.
+TEST_F(GeoPackage_Test, geopackage_quote_table_name_test)
+{
+    EXPECT_EQ(ngen::geopackage::quote_table_name("divides"), "\"divides\"");
+    EXPECT_EQ(ngen::geopackage::quote_table_name("model attributes-2"), "\"model attributes-2\"");
+
+    EXPECT_THROW(ngen::geopackage::quote_table_name("sqlite_master"), std::runtime_error);
+    EXPECT_THROW(ngen::geopackage::quote_table_name("';"), std::runtime_error);
+
+    // quoting, rather than the character check, is what keeps a name with punctuation inert
+    EXPECT_EQ(ngen::geopackage::quote_table_name("odd\"name"), "\"odd\"\"name\"");
 }
