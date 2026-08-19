@@ -640,8 +640,11 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_2_b) {
     while (i < 542)
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
-    std::string output = formulation.get_output_line_for_timestep(i, ",");
-    EXPECT_THAT(output, MatchesRegex("0.000001,580.799988"));
+
+    // ex_index=2 does not configure output_variables, so values come out in the model's default
+    // order (OUTPUT_VAR_1's value first), unlike ex_index=1 above.
+    std::vector<double> output = formulation.get_output_values_for_timestep(i);
+    EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{1.1124674593096233e-06, 580.79998779296875}));
 }
 
 TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_a) {
