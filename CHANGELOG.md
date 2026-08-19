@@ -11,6 +11,7 @@ We follow the [Semantic Versioning 2.0.0](http://semver.org/) format.
 - Per-domain `rank_subdir` option placing each MPI rank's CSV output under a `rank_<N>/` subdirectory (applied automatically for `per_formulation` under MPI).
 - Initial hydrofabric v4.0 support, alongside the existing v2.2 and v4.0beta1 schemas.
 - A `HydrofabricReader` abstraction covering both supported hydrofabric formats, with GeoJSON and GeoPackage implementations selected by `make_hydrofabric_reader()`. Both drivers now obtain their catchment and nexus features through it instead of dispatching on the file extension themselves.
+- An optional `auxiliary_hydrofabric_attributes` realization config key, declaring GeoPackage attribute tables whose columns are joined onto the catchments at startup so `model_params` can read them like divides-layer properties. See [Realization Configuration](doc/REALIZATION_CONFIGURATION.md#auxiliary_hydrofabric_attributes).
 
 ### Changed
 
