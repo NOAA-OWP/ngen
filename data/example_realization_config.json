@@ -5,7 +5,7 @@
           "name": "bmi_c++",
           "params": {
             "model_type_name": "test_bmi_cpp",
-            "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+            "library_file": "./test-libs/test_bmi_cpp/libtestbmicppmodel.so",
             "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
             "main_output_variable": "OUTPUT_VAR_2",
             "variables_names_map" : {
@@ -36,7 +36,7 @@
               "name": "bmi_c++",
               "params": {
                 "model_type_name": "test_bmi_cpp",
-                "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+                "library_file": "./test-libs/test_bmi_cpp/libtestbmicppmodel.so",
                 "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
                 "main_output_variable": "OUTPUT_VAR_2",
                 "variables_names_map" : {
@@ -59,7 +59,7 @@
               "name": "bmi_c++",
               "params": {
                 "model_type_name": "test_bmi_cpp",
-                "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+                "library_file": "./test-libs/test_bmi_cpp/libtestbmicppmodel.so",
                 "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
                 "main_output_variable": "OUTPUT_VAR_2",
                 "variables_names_map" : {
@@ -82,7 +82,7 @@
               "name": "bmi_c++",
               "params": {
                 "model_type_name": "test_bmi_cpp",
-                "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+                "library_file": "./test-libs/test_bmi_cpp/libtestbmicppmodel.so",
                 "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
                 "main_output_variable": "OUTPUT_VAR_2",
                 "variables_names_map" : {
