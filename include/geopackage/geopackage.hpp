@@ -8,6 +8,20 @@ namespace ngen {
 namespace geopackage {
 
 /**
+ * Validate a GeoPackage table name and return it as a quoted SQL identifier.
+ *
+ * Table names cannot be bound as statement parameters, so every path that interpolates one into a
+ * statement funnels through here. SQLite's own internal tables are refused outright, as are names
+ * made up entirely of characters outside the GeoPackage conventions; quoting then keeps the
+ * statement well-formed, and the name inert, for everything that remains.
+ *
+ * @param[in] table Table name taken from a configuration file or the command line
+ * @return std::string @p table wrapped in double quotes, ready to interpolate into a statement
+ * @throw std::runtime_error if @p table names a SQLite internal table or holds no usable characters
+ */
+std::string quote_table_name(const std::string& table);
+
+/**
  * Build a geometry object from GeoPackage WKB.
  * 
  * @param[in] row SQLite iterator at the row containing a geometry column

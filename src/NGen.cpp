@@ -439,14 +439,22 @@ int main(int argc, char* argv[]) {
                 "' is not a GeoPackage."
             );
         }
-        ngen::geopackage::join_attributes(
-            *catchment_collection,
-            aux_table.file.empty() ? catchmentDataFile : aux_table.file,
-            aux_table.table,
-            aux_table.key_column,
-            aux_table.prefix(),
-            aux_table.required
-        );
+        try {
+            ngen::geopackage::join_attributes(
+                *catchment_collection,
+                aux_table.file.empty() ? catchmentDataFile : aux_table.file,
+                aux_table.table,
+                aux_table.key_column,
+                aux_table.prefix(),
+                aux_table.required
+            );
+        } catch (const std::exception& error) {
+            // The joiner knows the table and the file, not which config entry asked for them.
+            throw std::runtime_error(
+                "'" + realization::config::AUX_ATTRIBUTES_CONFIG_KEY + "' entry for table '" +
+                aux_table.table + "': " + error.what()
+            );
+        }
     }
     #else
     if (!auxiliary_attributes.empty()) {

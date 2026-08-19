@@ -95,9 +95,14 @@ TEST_F(AttributeJoin_Test, join_warns_for_feature_without_row)
     ngen::geopackage::join_attributes(*collection, this->path, "aux_params_one", "divide_id", "one", false);
     const std::string captured = testing::internal::GetCapturedStderr();
 
-    EXPECT_NE(captured.find("Second"), std::string::npos);
-    EXPECT_NE(captured.find("aux_params_one"), std::string::npos);
-    EXPECT_EQ(captured.find("First"), std::string::npos);
+    // the warning goes through logging::warning, which a quiet build compiles away
+    #ifndef NGEN_QUIET
+        EXPECT_NE(captured.find("Second"), std::string::npos);
+        EXPECT_NE(captured.find("aux_params_one"), std::string::npos);
+        EXPECT_EQ(captured.find("First"), std::string::npos);
+    #else
+        EXPECT_EQ(captured, "");
+    #endif
 
     // the warned-about feature is left alone, not given empty properties
     const auto& second = collection->get_feature("Second");
@@ -267,11 +272,42 @@ TEST_F(AttributeJoin_Test, join_reports_a_missing_row_once_for_a_shared_id)
     ngen::geopackage::join_attributes(*collection, this->path, "aux_params_one", "divide_id", "one", false);
     const std::string captured = testing::internal::GetCapturedStderr();
 
-    EXPECT_NE(captured.find("Second"), std::string::npos);
-    EXPECT_EQ(std::count(captured.begin(), captured.end(), '\n'), 1);
+    #ifndef NGEN_QUIET
+        EXPECT_NE(captured.find("Second"), std::string::npos);
+        EXPECT_EQ(std::count(captured.begin(), captured.end(), '\n'), 1);
+    #else
+        EXPECT_EQ(captured, "");
+    #endif
 
     EXPECT_THROW(
         ngen::geopackage::join_attributes(*collection, this->path, "aux_params_one", "divide_id", "one", true),
         std::runtime_error
     );
+}
+
+// The read path has always refused SQLite's internal tables; the join path shares that check.
+TEST_F(AttributeJoin_Test, join_errors_on_sqlite_internal_table)
+{
+    auto collection = this->features();
+    EXPECT_THROW(
+        ngen::geopackage::join_attributes(*collection, this->path, "sqlite_master", "divide_id", "master", false),
+        std::runtime_error
+    );
+}
+
+// A bare SQLite result code leaves the operator guessing which declaration named the file.
+TEST_F(AttributeJoin_Test, join_names_the_table_when_the_geopackage_cannot_be_opened)
+{
+    auto collection = this->features();
+
+    try {
+        ngen::geopackage::join_attributes(
+            *collection, "test/data/geopackage/no_such_file.gpkg", "aux_params_one", "divide_id", "one", false
+        );
+        FAIL() << "joining from a GeoPackage that cannot be opened should throw";
+    } catch (const std::runtime_error& error) {
+        const std::string message = error.what();
+        EXPECT_NE(message.find("aux_params_one"), std::string::npos);
+        EXPECT_NE(message.find("no_such_file.gpkg"), std::string::npos);
+    }
 }

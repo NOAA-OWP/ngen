@@ -1,25 +1,24 @@
 #include "geopackage.hpp"
 #include "JSONProperty.hpp"
+#include "logging_utils.h"
 
-#include <iostream>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
 namespace {
 
-// A table name can't be bound as a parameter, so quoting keeps the interpolated statement
-// well-formed for names carrying spaces or punctuation.
-std::string quote_identifier(const std::string& identifier)
+//! Open the GeoPackage an attribute table lives in, naming that table if the open fails.
+ngen::sqlite::database open_for_table(const std::string& gpkg_path, const std::string& table)
 {
-    std::string quoted = "\"";
-    for (const char character : identifier) {
-        if (character == '"') {
-            quoted += '"';
-        }
-        quoted += character;
+    try {
+        return ngen::sqlite::database{gpkg_path};
+    } catch (const std::exception& error) {
+        throw std::runtime_error(
+            "cannot open " + gpkg_path + ", declared as the source of auxiliary attribute table `" +
+            table + "`: " + error.what()
+        );
     }
-    return quoted + "\"";
 }
 
 //! Whether a cell of this SQLite type has a JSON property counterpart.
@@ -39,7 +38,8 @@ void ngen::geopackage::join_attributes(
     bool required
 )
 {
-    ngen::sqlite::database db{gpkg_path};
+    const std::string table_identifier = quote_table_name(table);
+    ngen::sqlite::database db = open_for_table(gpkg_path, table);
 
     // An absent table or key column is a typo rather than a data gap, so `required` does not enter into it.
     if (!db.contains(table)) {
@@ -48,7 +48,7 @@ void ngen::geopackage::join_attributes(
         );
     }
 
-    auto rows = db.query("SELECT * FROM " + quote_identifier(table));
+    auto rows = db.query("SELECT * FROM " + table_identifier);
     const int key_index = rows.find(key_column);
     if (key_index < 0) {
         throw std::runtime_error(
@@ -124,6 +124,6 @@ void ngen::geopackage::join_attributes(
             throw std::runtime_error(message);
         }
 
-        std::cerr << "WARN: " << message << std::endl;
+        logging::warning((message + "\n").c_str());
     }
 }
