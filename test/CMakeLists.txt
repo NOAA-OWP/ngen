@@ -170,6 +170,7 @@ ngen_add_test(
         realizations/Formulation_Manager_Test.cpp
         realizations/config/Output_Test.cpp
         realizations/config/CatchmentOutput_Test.cpp
+        realizations/config/AuxiliaryAttributes_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
@@ -559,6 +560,7 @@ ngen_add_test(
         core/NetworkTests.cpp
         utils/include/StreamOutputTest.cpp
         realizations/Formulation_Manager_Test.cpp
+        realizations/config/AuxiliaryAttributes_Test.cpp
         utils/PerFormulationNexusOutputMgr_Test.cpp
         utils/Partition_Test.cpp
         utils/logging_Test.cpp
