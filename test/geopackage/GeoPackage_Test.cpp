@@ -1,6 +1,10 @@
 #include <boost/geometry/io/wkt/write.hpp>
 #include <gtest/gtest.h>
 
+#include <filesystem>
+#include <sstream>
+#include <streambuf>
+
 #include "geopackage.hpp"
 #include "FileChecker.h"
 
@@ -73,6 +77,82 @@ TEST_F(GeoPackage_Test, geopackage_idsubset_test)
     EXPECT_EQ(point.get<1>(), 0.5);
 
     ASSERT_TRUE(gpkg->get_feature(1) == nullptr);
+}
+
+// The reader warns (on stderr) when the id column has no supporting index,
+// since subset queries degrade to full table scans without one. Verify the
+// warning fires for an unindexed layer and is suppressed once an index exists,
+// and that reads remain correct with the read-only pragmas applied.
+TEST_F(GeoPackage_Test, geopackage_index_warning_test)
+{
+    const std::string needle = "No index found on column 'id'";
+
+    // --- Unindexed layer: warning expected ---
+    std::ostringstream captured;
+    std::streambuf* old_cerr = std::cerr.rdbuf(captured.rdbuf());
+    const auto gpkg = ngen::geopackage::read(this->path, "test", {});
+    std::cerr.rdbuf(old_cerr);
+
+    // Read correctness is unaffected by the pragmas.
+    EXPECT_NE(gpkg->find("First"), -1);
+    EXPECT_NE(gpkg->find("Second"), -1);
+    EXPECT_EQ(2, gpkg->get_size());
+
+    // The warning is emitted for this unindexed layer, except in a NGEN_QUIET
+    // build which suppresses such output. Assert the right thing in either case
+    // so the test never degrades to a no-op.
+    const bool warned = captured.str().find(needle) != std::string::npos;
+#ifndef NGEN_QUIET
+    EXPECT_TRUE(warned) << "expected a missing-index warning; got: " << captured.str();
+#else
+    EXPECT_FALSE(warned) << "NGEN_QUIET build should suppress the warning; got: " << captured.str();
+#endif
+
+    // --- Indexed copy: warning suppressed ---
+    namespace fs = std::filesystem;
+    const fs::path indexed = fs::temp_directory_path() / "ngen_indexed_example.gpkg";
+    fs::copy_file(this->path, indexed, fs::copy_options::overwrite_existing);
+
+    sqlite3* conn = nullptr;
+    ASSERT_EQ(sqlite3_open_v2(indexed.c_str(), &conn, SQLITE_OPEN_READWRITE, nullptr), SQLITE_OK);
+    char* errmsg = nullptr;
+    const int rc = sqlite3_exec(conn, "CREATE INDEX idx_test_id ON \"test\"(id);", nullptr, nullptr, &errmsg);
+    if (rc != SQLITE_OK) {
+        std::string m = errmsg ? errmsg : "(unknown)";
+        sqlite3_free(errmsg);
+        sqlite3_close(conn);
+        fs::remove(indexed);
+        FAIL() << "failed to create test index: " << m;
+    }
+    sqlite3_close(conn);
+
+    std::ostringstream captured2;
+    old_cerr = std::cerr.rdbuf(captured2.rdbuf());
+    const auto gpkg2 = ngen::geopackage::read(indexed.string(), "test", {});
+    std::cerr.rdbuf(old_cerr);
+    fs::remove(indexed);
+
+    EXPECT_EQ(2, gpkg2->get_size());
+    EXPECT_EQ(captured2.str().find(needle), std::string::npos)
+        << "did not expect a missing-index warning once an index exists; got: " << captured2.str();
+}
+
+// The database is opened via a "file:...?immutable=1" URI, so paths containing
+// characters that are special in URIs (spaces being the common case) must be
+// percent-encoded. A path with spaces must still open and read correctly.
+TEST_F(GeoPackage_Test, geopackage_uri_encoded_path_test)
+{
+    namespace fs = std::filesystem;
+    const fs::path spaced = fs::temp_directory_path() / "ngen spaced example.gpkg";
+    fs::copy_file(this->path, spaced, fs::copy_options::overwrite_existing);
+
+    std::shared_ptr<geojson::FeatureCollection> gpkg;
+    ASSERT_NO_THROW(gpkg = ngen::geopackage::read(spaced.string(), "test", {}));
+    fs::remove(spaced);
+
+    EXPECT_EQ(2, gpkg->get_size());
+    EXPECT_NE(gpkg->find("First"), -1);
+    EXPECT_NE(gpkg->find("Second"), -1);
 }
 
 // this test is essentially the same as the above, however, the coordinates
