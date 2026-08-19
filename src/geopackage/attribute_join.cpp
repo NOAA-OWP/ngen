@@ -6,8 +6,8 @@
 
 namespace {
 
-// A table can only be named by interpolating it into the statement; quoting keeps that statement
-// well-formed for the punctuation and spaces table names are free to carry.
+// A table name can't be bound as a parameter, so quoting keeps the interpolated statement
+// well-formed for names carrying spaces or punctuation.
 std::string quote_identifier(const std::string& identifier)
 {
     std::string quoted = "\"";
