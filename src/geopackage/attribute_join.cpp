@@ -50,7 +50,7 @@ void ngen::geopackage::join_attributes(
         );
     }
 
-    auto rows = db.query("SELECT * FROM " + table_identifier);
+    ngen::sqlite::database::iterator rows = db.query("SELECT * FROM " + table_identifier);
     const int key_index = rows.find(spec.key_column);
     if (key_index < 0) {
         throw std::runtime_error(
@@ -61,16 +61,17 @@ void ngen::geopackage::join_attributes(
 
     // A collection is not required to hold one feature per id, so an id's row joins onto each of them.
     std::unordered_map<std::string, std::vector<geojson::Feature>> features_by_id;
-    for (const auto& feature : collection) {
+    for (const geojson::Feature& feature : collection) {
         features_by_id[feature->get_id()].push_back(feature);
     }
 
-    const auto columns = rows.columns();
+    const boost::span<const std::string> columns = rows.columns();
     std::unordered_set<std::string> joined_ids;
     rows.next();
     while (!rows.done()) {
         const std::string key = rows.get<std::string>(key_index);
-        const auto found = features_by_id.find(key);
+        const std::unordered_map<std::string, std::vector<geojson::Feature>>::const_iterator found =
+            features_by_id.find(key);
         if (found != features_by_id.end()) {
             // Nothing in the table says which of two rows keyed the same holds the feature's value,
             // so taking whichever a scan reaches first makes it an artifact of the file's layout.
@@ -81,7 +82,7 @@ void ngen::geopackage::join_attributes(
                 );
             }
 
-            const auto types = rows.types();
+            const boost::span<const int> types = rows.types();
             for (const geojson::Feature& feature : found->second) {
                 geojson::PropertyMap& properties = feature->get_properties();
 
@@ -119,7 +120,7 @@ void ngen::geopackage::join_attributes(
     // without opening the file.
     std::vector<std::string> unmatched;
     std::unordered_set<std::string> reported_ids;
-    for (const auto& feature : collection) {
+    for (const geojson::Feature& feature : collection) {
         const std::string& id = feature->get_id();
         if (joined_ids.contains(id) || !reported_ids.insert(id).second) {
             continue;

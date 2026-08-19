@@ -167,6 +167,7 @@ ngen_add_test(
         geopackage/WKB_Test.cpp
         geopackage/SQLite_Test.cpp
         geopackage/GeoPackage_Test.cpp
+        geopackage/Properties_Test.cpp
         geopackage/AttributeJoin_Test.cpp
         geopackage/aux_fixture_builders.cpp
     LIBRARIES
