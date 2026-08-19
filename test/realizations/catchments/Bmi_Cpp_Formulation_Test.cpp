@@ -24,6 +24,7 @@
 #include "FileChecker.h"
 #include "Formulation_Manager.hpp"
 #include <boost/date_time.hpp>
+#include <forcing/CsvPerFeatureForcingProvider.hpp>
 
 using namespace realization;
 
