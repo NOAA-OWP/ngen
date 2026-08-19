@@ -1925,9 +1925,7 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
 #if NGEN_WITH_SQLITE
 // ---------------------------------------------------------------------------
 // Integration: joined auxiliary attribute columns resolve through model_params the same way native
-// divides-layer properties do. The join itself is covered by AttributeJoin_Test; what these cases
-// add is that a namespaced `from` reaches the BMI module's parameters, and that a divide the table
-// holds no row for is warned about and skipped.
+// divides-layer properties do. The join itself is covered by AttributeJoin_Test.
 // ---------------------------------------------------------------------------
 
 //! Ends a gtest stderr capture however the enclosing scope exits, since a capture leaked by a
@@ -1947,7 +1945,9 @@ class CapturedStderr
     bool open = true;
 };
 
-TEST_F(Formulation_Manager_Test, joined_auxiliary_attributes_resolve_as_model_params)
+// A namespaced `from` reaches the BMI module's parameters: joined columns of two tables, one of
+// them sharing a column name with the other, resolve to the right value for each divide.
+TEST_F(Formulation_Manager_Test, read_auxiliary_attributes_1)
 {
     std::ostream* ptr = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(ptr, [](void*) {});
@@ -1971,7 +1971,9 @@ TEST_F(Formulation_Manager_Test, joined_auxiliary_attributes_resolve_as_model_pa
     EXPECT_DOUBLE_EQ(second.at("OUTPUT_VAR_5"), 2.5);
 }
 
-TEST_F(Formulation_Manager_Test, unmatched_auxiliary_attribute_warns_and_omits_the_parameter)
+// A divide the joined table holds no row for is warned about and its parameter omitted, leaving
+// the module to fall back on its own default.
+TEST_F(Formulation_Manager_Test, read_auxiliary_attributes_2)
 {
     std::ostream* ptr = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(ptr, [](void*) {});

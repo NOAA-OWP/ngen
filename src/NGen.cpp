@@ -429,9 +429,10 @@ int main(int argc, char* argv[]) {
 
     // Join declared auxiliary attribute tables onto the catchments before the formulations read their
     // parameters, so a joined column resolves like any other divides-layer property.
-    const auto auxiliary_attributes = realization::config::parse_auxiliary_attributes(realization_config);
+    const std::vector<realization::config::AuxiliaryAttributeTable> auxiliary_attributes =
+        realization::config::parse_auxiliary_attributes(realization_config);
     #if NGEN_WITH_SQLITE3
-    for (const auto& aux_table : auxiliary_attributes) {
+    for (const realization::config::AuxiliaryAttributeTable& aux_table : auxiliary_attributes) {
         if (aux_table.file.empty() && !catchment_data_is_gpkg) {
             throw std::runtime_error(
                 "'" + realization::config::AUX_ATTRIBUTES_CONFIG_KEY + "' entry for table '" + aux_table.table +

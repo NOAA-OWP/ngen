@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 
+#include <boost/optional.hpp>
 #include <boost/property_tree/ptree.hpp>
 
 namespace realization {
@@ -57,7 +58,8 @@ namespace realization {
 
             AuxiliaryAttributeTable parsed;
 
-            const auto table_node = entry.get_child_optional("table");
+            const boost::optional<const boost::property_tree::ptree&> table_node =
+                entry.get_child_optional("table");
             if (!table_node) {
                 throw std::runtime_error(context + ": required key 'table' is missing.");
             }
@@ -111,7 +113,8 @@ namespace realization {
     inline std::vector<AuxiliaryAttributeTable>
     parse_auxiliary_attributes(const boost::property_tree::ptree& realization_tree)
     {
-        const auto node = realization_tree.get_child_optional(AUX_ATTRIBUTES_CONFIG_KEY);
+        const boost::optional<const boost::property_tree::ptree&> node =
+            realization_tree.get_child_optional(AUX_ATTRIBUTES_CONFIG_KEY);
         if (!node) {
             return {};
         }

@@ -48,7 +48,7 @@ void ngen::geopackage::join_attributes(
         );
     }
 
-    auto rows = db.query("SELECT * FROM " + table_identifier);
+    ngen::sqlite::database::iterator rows = db.query("SELECT * FROM " + table_identifier);
     const int key_index = rows.find(key_column);
     if (key_index < 0) {
         throw std::runtime_error(
@@ -63,7 +63,7 @@ void ngen::geopackage::join_attributes(
         features_by_id[feature->get_id()].push_back(feature);
     }
 
-    const auto columns = rows.columns();
+    const boost::span<const std::string> columns = rows.columns();
     std::unordered_set<std::string> joined_ids;
     rows.next();
     while (!rows.done()) {
@@ -79,7 +79,7 @@ void ngen::geopackage::join_attributes(
                 );
             }
 
-            const auto types = rows.types();
+            const boost::span<const int> types = rows.types();
             for (const geojson::Feature& feature : found->second) {
                 geojson::PropertyMap& properties = feature->get_properties();
 
