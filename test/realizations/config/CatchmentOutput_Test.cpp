@@ -19,9 +19,9 @@
 // Unit tests for the catchment output factory (realization::config::make_catchment_output_mgr):
 // that it selects the manager's mode from the configuration. The CSV layout details themselves
 // (header-once, precision, id column, per-formulation subdirs) are covered by
-// CatchmentCsvOutputMgr_Test; config parsing by Output_Test. Here we assert only the selection,
-// so no Formulation_Manager or BMI model is involved -- catchments are registered with explicit
-// fields.
+// CatchmentCsvOutputMgr_Test; config parsing by Output_Test. Here we assert the selection and
+// that configured settings (e.g. precision) reach the writer, so no Formulation_Manager or BMI
+// model is involved -- catchments are registered with explicit fields.
 
 using realization::config::Output;
 using realization::config::OutputFormat;
@@ -134,6 +134,31 @@ TEST(CatchmentOutput_Factory_Test, FileNameDoesNotOverridePerFeatureGrouping)
 
     EXPECT_TRUE(fs::exists(root + "cat-1.csv"));
     EXPECT_FALSE(fs::exists(root + "cat_output.csv"));        // name ignored; grouping wins
+}
+
+// A non-default "precision" in the output block reaches the writer: values render at the
+// configured significant digits (config JSON -> factory -> CSV backend).
+TEST(CatchmentOutput_Factory_Test, PrecisionFromConfigReachesWriter)
+{
+    const std::string root = fresh_root();
+
+    std::stringstream ss(std::string("{\"output\":{\"root\":\"") + root
+        + "\",\"precision\":4,\"catchment\":{\"grouping\":\"per_feature\"}}}");
+    boost::property_tree::ptree tree;
+    boost::property_tree::json_parser::read_json(ss, tree);
+    Output cfg = Output::from_realization(tree);
+
+    {
+        std::shared_ptr<utils::CatchmentOutputsMgr> mgr =
+            make_catchment_output_mgr(cfg, { {"cat-1", {col("Q_OUT")}} });
+        mgr->receive_data_entry("cat-1", utils::time_marker(0, 0, "t0"), {1.0 / 3.0});
+        mgr->commit_writes();
+        mgr->close();
+    }
+
+    const std::vector<std::string> lines = read_lines(root + "cat-1.csv");
+    ASSERT_EQ(lines.size(), 2u);
+    EXPECT_EQ(lines[1], "0,t0,0.3333");   // 4 significant digits, not the default 9
 }
 
 // A non-CSV catchment output format is not implemented and is rejected.

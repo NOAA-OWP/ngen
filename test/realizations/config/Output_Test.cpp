@@ -59,6 +59,19 @@ TEST(Output_Config_Test, ParsesModernBlock)
     EXPECT_FALSE(out.nexus.rank_subdir);
 }
 
+// Precision: DEFAULT_PRECISION when unset; an explicit value in the modern block is parsed.
+TEST(Output_Config_Test, PrecisionDefaultsAndParses)
+{
+    Output defaulted = Output::from_realization(parse(R"({"time": {}})"));
+    EXPECT_EQ(defaulted.precision, Output::DEFAULT_PRECISION);
+
+    Output configured_a = Output::from_realization(parse(R"({"output": {"precision": 4}})"));
+    EXPECT_EQ(configured_a.precision, 4);
+
+    Output configured_b = Output::from_realization(parse(R"({"output": {"precision": 12}})"));
+    EXPECT_EQ(configured_b.precision, 12);
+}
+
 // Legacy top-level keys map onto the new structure and flag deprecation.
 TEST(Output_Config_Test, LegacyKeysMapped)
 {
