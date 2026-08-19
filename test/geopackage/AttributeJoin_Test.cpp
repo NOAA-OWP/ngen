@@ -1,9 +1,11 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
+
 #include "geopackage.hpp"
 #include "FileChecker.h"
 
-// Joins run against test/data/geopackage/example_aux.gpkg, whose two attribute tables and their
+// Joins run against test/data/geopackage/example_aux.gpkg, whose four attribute tables and their
 // deliberate gaps are described in test/data/geopackage/example_aux.sql.
 class AttributeJoin_Test : public ::testing::Test
 {
@@ -175,4 +177,101 @@ TEST_F(AttributeJoin_Test, join_of_two_tables_keeps_shared_column_names_distinct
     const auto& second = collection->get_feature("Second");
     EXPECT_FALSE(second->has_property("one.text_value"));
     EXPECT_EQ(second->get_property("two.text_value").as_string(), "delta");
+}
+
+// A composed name already on the feature belongs to the fabric layer or to an earlier entry, and
+// keeping it would hand the model that other value under this table's name.
+TEST_F(AttributeJoin_Test, join_errors_on_property_name_already_present)
+{
+    auto collection = this->features({ "First" });
+    join_quietly(*collection, "aux_params_one", "divide_id", "one");
+
+    EXPECT_THROW(
+        ngen::geopackage::join_attributes(*collection, this->path, "aux_params_one", "divide_id", "one", false),
+        std::runtime_error
+    );
+    EXPECT_EQ(collection->get_feature("First")->get_property("one.text_value").as_string(), "alpha");
+}
+
+// Prefixes are unique across config entries, but two entries can still compose the same property
+// name, e.g. alias "one" over a column "shared.x" and alias "one.shared" over a column "x".
+TEST_F(AttributeJoin_Test, join_errors_on_property_name_from_another_table)
+{
+    auto collection = this->features({ "First" });
+    join_quietly(*collection, "aux_params_one", "divide_id", "shared");
+
+    EXPECT_THROW(
+        ngen::geopackage::join_attributes(*collection, this->path, "aux_params_two", "catchment_id", "shared", false),
+        std::runtime_error
+    );
+}
+
+// Which of two rows keyed the same a scan reaches first can change when a GeoPackage is rebuilt,
+// so taking one silently would make model output depend on the file's layout.
+TEST_F(AttributeJoin_Test, join_errors_on_duplicate_keyed_rows)
+{
+    auto collection = this->features();
+    EXPECT_THROW(
+        ngen::geopackage::join_attributes(*collection, this->path, "aux_params_dupe", "divide_id", "dupe", false),
+        std::runtime_error
+    );
+}
+
+// Only rows for divides this run holds are joined, so a duplicate elsewhere in a whole-hydrofabric
+// table is another rank's problem, not this one's.
+TEST_F(AttributeJoin_Test, join_ignores_duplicate_rows_for_absent_features)
+{
+    auto collection = this->features({ "Second" });
+    ASSERT_NO_THROW(
+        ngen::geopackage::join_attributes(*collection, this->path, "aux_params_dupe", "divide_id", "dupe", true)
+    );
+
+    EXPECT_DOUBLE_EQ(collection->get_feature("Second")->get_property("dupe.dupe_value").as_real_number(), 3.5);
+}
+
+// A cell of a type no property can hold is skipped like a NULL, rather than becoming a property
+// holding some stand-in value.
+TEST_F(AttributeJoin_Test, join_omits_cells_of_unconvertible_type)
+{
+    auto collection = this->features();
+    ngen::geopackage::join_attributes(*collection, this->path, "aux_params_blob", "divide_id", "blob", true);
+
+    const auto& first = collection->get_feature("First");
+    EXPECT_FALSE(first->has_property("blob.blob_value"));
+    EXPECT_EQ(first->get_property("blob.int_value").as_natural_number(), 11);
+}
+
+// Nothing keeps a collection to one feature per id, and a feature sharing an id is as much the
+// subject of that id's row as the one indexed under it.
+TEST_F(AttributeJoin_Test, join_reaches_every_feature_sharing_an_id)
+{
+    auto collection = this->features({ "First" });
+    collection->add_feature(this->features({ "First" })->get_feature("First"));
+    ASSERT_EQ(collection->get_size(), 2);
+
+    ngen::geopackage::join_attributes(*collection, this->path, "aux_params_one", "divide_id", "one", true);
+
+    EXPECT_EQ(collection->get_feature(0)->get_property("one.text_value").as_string(), "alpha");
+    EXPECT_EQ(collection->get_feature(1)->get_property("one.text_value").as_string(), "alpha");
+}
+
+// The gap is one id with no row, so it is reported once however many features carry that id, and
+// is still a gap when the entry is required.
+TEST_F(AttributeJoin_Test, join_reports_a_missing_row_once_for_a_shared_id)
+{
+    auto collection = this->features({ "Second" });
+    collection->add_feature(this->features({ "Second" })->get_feature("Second"));
+    ASSERT_EQ(collection->get_size(), 2);
+
+    testing::internal::CaptureStderr();
+    ngen::geopackage::join_attributes(*collection, this->path, "aux_params_one", "divide_id", "one", false);
+    const std::string captured = testing::internal::GetCapturedStderr();
+
+    EXPECT_NE(captured.find("Second"), std::string::npos);
+    EXPECT_EQ(std::count(captured.begin(), captured.end(), '\n'), 1);
+
+    EXPECT_THROW(
+        ngen::geopackage::join_attributes(*collection, this->path, "aux_params_one", "divide_id", "one", true),
+        std::runtime_error
+    );
 }

@@ -78,9 +78,10 @@ std::shared_ptr<geojson::FeatureCollection> read(
  * Join the columns of a GeoPackage attribute table onto the features of a collection.
  *
  * Rows are matched to features by comparing @p key_column against feature IDs, and each matched
- * feature gains a property `<prefix>.<column>` per non-key column holding a value. SQL NULL cells
- * yield no property. Rows keyed to a feature the collection does not hold are ignored, since under
- * partitioning most of a table's rows belong to other ranks.
+ * feature gains a property `<prefix>.<column>` per non-key column holding an integer, real or text
+ * value. Cells of any other type, SQL NULL among them, yield no property. Rows keyed to a feature
+ * the collection does not hold are ignored, since under partitioning most of a table's rows belong
+ * to other ranks.
  *
  * @param[in,out] collection Features to join onto, mutated in place
  * @param[in] gpkg_path Path to the GPKG file holding the attribute table
@@ -88,8 +89,9 @@ std::shared_ptr<geojson::FeatureCollection> read(
  * @param[in] key_column Column of @p table whose values are matched against feature IDs
  * @param[in] prefix Namespace the joined columns are published under
  * @param[in] required When true, a feature with no matching row is an error rather than a warning
- * @throw std::runtime_error if @p table or @p key_column does not exist, or if a feature has no
- *        matching row while @p required is true
+ * @throw std::runtime_error if @p table or @p key_column does not exist, if two rows of @p table
+ *        are keyed to the same feature, if a composed property name is already held by a feature,
+ *        or if a feature has no matching row while @p required is true
  */
 void join_attributes(
     geojson::FeatureCollection& collection,

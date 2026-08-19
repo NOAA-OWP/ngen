@@ -1,9 +1,10 @@
 -- Derivation script for test/data/geopackage/example_aux.gpkg
 --
 -- example_aux.gpkg is a copy of example.gpkg (a two-feature "test" layer holding "First"
--- and "Second") with two auxiliary attribute tables added, covering prefixing, per-column
+-- and "Second") with four auxiliary attribute tables added, covering prefixing, per-column
 -- type mapping, NULL cells, features without a row, rows without a feature, a non-default
--- key column, and column names shared between two joined tables.
+-- key column, column names shared between two joined tables, cells of a type that cannot
+-- become a property, and a table keyed ambiguously.
 --
 -- The tables have the shape of the regionalization tables in the Aug 2026 hydrofabric
 -- preview: keyed on a text divide identifier, no "fid" column, and registered in
@@ -43,7 +44,35 @@ VALUES
   ('First',  1.5, 'beta',  'gauge-01'),
   ('Second', 2.5, 'delta', 'gauge-02');
 
+-- A BLOB column, which no property can hold, beside one that can, and full coverage of the
+-- layer so that a join of this table provokes nothing else.
+CREATE TABLE "aux_params_blob" (
+  "divide_id"  TEXT,
+  "blob_value" BLOB,
+  "int_value"  INTEGER
+);
+
+INSERT INTO "aux_params_blob" ("divide_id", "blob_value", "int_value")
+VALUES
+  ('First',  x'0102030405', 11),
+  ('Second', x'0607080910', 22);
+
+-- Two rows keyed to "First", leaving its value up to scan order; the single "Second" row lets
+-- a subset run over just that divide join this table cleanly.
+CREATE TABLE "aux_params_dupe" (
+  "divide_id"  TEXT,
+  "dupe_value" REAL
+);
+
+INSERT INTO "aux_params_dupe" ("divide_id", "dupe_value")
+VALUES
+  ('First',  1.5),
+  ('First',  2.5),
+  ('Second', 3.5);
+
 INSERT INTO "gpkg_contents" ("table_name", "data_type", "identifier", "description", "last_change")
 VALUES
   ('aux_params_one', 'attributes', 'aux_params_one', 'Auxiliary attribute table fixture', '2026-08-19T00:00:00.000Z'),
-  ('aux_params_two', 'attributes', 'aux_params_two', 'Auxiliary attribute table fixture', '2026-08-19T00:00:00.000Z');
+  ('aux_params_two', 'attributes', 'aux_params_two', 'Auxiliary attribute table fixture', '2026-08-19T00:00:00.000Z'),
+  ('aux_params_blob', 'attributes', 'aux_params_blob', 'Auxiliary attribute table fixture', '2026-08-19T00:00:00.000Z'),
+  ('aux_params_dupe', 'attributes', 'aux_params_dupe', 'Auxiliary attribute table fixture', '2026-08-19T00:00:00.000Z');

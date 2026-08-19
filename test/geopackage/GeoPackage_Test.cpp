@@ -112,7 +112,7 @@ TEST_F(GeoPackage_Test, geopackage_projection_test)
     ASSERT_TRUE(third == nullptr);
 }
 
-// example_aux.gpkg is a copy of example.gpkg carrying two auxiliary attribute tables;
+// example_aux.gpkg is a copy of example.gpkg carrying four auxiliary attribute tables;
 // see test/data/geopackage/example_aux.sql for how it is derived and why.
 TEST_F(GeoPackage_Test, geopackage_aux_fixture_test)
 {
@@ -121,19 +121,23 @@ TEST_F(GeoPackage_Test, geopackage_aux_fixture_test)
     EXPECT_NE(gpkg->find("First"), -1);
     EXPECT_NE(gpkg->find("Second"), -1);
 
+    const std::vector<std::string> expected_tables = {
+        "aux_params_blob", "aux_params_dupe", "aux_params_one", "aux_params_two"
+    };
+
     ngen::sqlite::database db{this->path_aux};
-    EXPECT_TRUE(db.contains("aux_params_one"));
-    EXPECT_TRUE(db.contains("aux_params_two"));
+    for (const std::string& table : expected_tables) {
+        EXPECT_TRUE(db.contains(table)) << table;
+    }
 
     auto contents = db.query(
         "SELECT table_name FROM gpkg_contents WHERE data_type = 'attributes' ORDER BY table_name"
     );
-    contents.next();
-    ASSERT_FALSE(contents.done());
-    EXPECT_EQ(contents.get<std::string>(0), "aux_params_one");
-    contents.next();
-    ASSERT_FALSE(contents.done());
-    EXPECT_EQ(contents.get<std::string>(0), "aux_params_two");
+    for (const std::string& table : expected_tables) {
+        contents.next();
+        ASSERT_FALSE(contents.done());
+        EXPECT_EQ(contents.get<std::string>(0), table);
+    }
     contents.next();
     EXPECT_TRUE(contents.done());
 
@@ -170,4 +174,28 @@ TEST_F(GeoPackage_Test, geopackage_aux_fixture_test)
     EXPECT_EQ(two.get<std::string>("catchment_id"), "Second");
     two.next();
     EXPECT_TRUE(two.done());
+
+    // a cell of a type no property can hold, beside one that can, for both features
+    auto blob = db.query("SELECT * FROM aux_params_blob ORDER BY divide_id");
+    blob.next();
+    ASSERT_FALSE(blob.done());
+    EXPECT_EQ(blob.get<std::string>("divide_id"), "First");
+    EXPECT_EQ(blob.types()[blob.find("blob_value")], SQLITE_BLOB);
+    EXPECT_EQ(blob.get<int>("int_value"), 11);
+    blob.next();
+    ASSERT_FALSE(blob.done());
+    EXPECT_EQ(blob.get<std::string>("divide_id"), "Second");
+    blob.next();
+    EXPECT_TRUE(blob.done());
+
+    // two rows for "First", so no scan order makes its value definite, and one for "Second"
+    auto dupe = db.query("SELECT COUNT(*) FROM aux_params_dupe WHERE divide_id = 'First'");
+    dupe.next();
+    ASSERT_FALSE(dupe.done());
+    EXPECT_EQ(dupe.get<int>(0), 2);
+
+    auto dupe_other = db.query("SELECT COUNT(*) FROM aux_params_dupe WHERE divide_id = 'Second'");
+    dupe_other.next();
+    ASSERT_FALSE(dupe_other.done());
+    EXPECT_EQ(dupe_other.get<int>(0), 1);
 }
