@@ -76,7 +76,7 @@ Each list entry is an object with the following fields:
 * `key_column` — column whose values are matched against catchment feature ids (default: `divide_id`).
 * `required` — whether a catchment with no row in `table` is an error rather than a warning (default: `false`).
 
-Joined columns are namespaced: each non-key column of a matched row becomes the feature property `<prefix>.<column>`, where `<prefix>` is the entry's `alias` when declared and otherwise its `table` name, e.g. `donor.real_value`. That is what allows tables sharing column names to be joined together, so prefixes must be unique across entries; two entries resolving to the same prefix is a configuration error. A cell holding SQL `NULL` yields no property, rather than a null-valued one.
+Joined columns are namespaced: each non-key column of a matched row becomes the feature property `<prefix>.<column>`, where `<prefix>` is the entry's `alias` when declared and otherwise its `table` name, e.g. `donor.real_value`. That is what allows tables sharing column names to be joined together, so prefixes must be unique across entries; two entries resolving to the same prefix is a configuration error. A cell holding SQL `NULL`, or anything else that is not an integer, a real number or text, yields no property, rather than a stand-in valued one.
 
 Strictness is per entry. A catchment with no matching row emits a `WARN:` line on standard error and is left without those properties; `required` set to `true` makes it a fatal error instead. Rows whose key matches no catchment are ignored silently, so a table covering an entire hydrofabric can be used with a subset run. A property missing from a catchment is not fatal downstream either: the `model_params` entry referencing it is reported as a skipped parameter, leaving the model's own default in place.
 
@@ -85,6 +85,8 @@ Entries are applied in declared order, and only to the catchments being simulate
 Because the join reads a GeoPackage, the following are errors:
 
 * the named `table`, or its `key_column`, does not exist in the GeoPackage being read;
+* `table` holds more than one row keyed to a catchment being simulated, since nothing in the table says which of them the catchment's value comes from;
+* a joined column's `<prefix>.<column>` name is already a property of the catchment, whether it came from the hydrofabric layer or an earlier entry, since the joined value would otherwise be dropped without a word;
 * an entry declares no `file` while the catchment data file given on the command line is not a GeoPackage (an entry that does declare a `file` is fine in that case, and can pull attributes from a GeoPackage alongside a GeoJSON fabric);
 * the key is present at all in a build without SQLite support (i.e., built without `-DNGEN_WITH_SQLITE=ON`), rather than the declarations being silently ignored.
 

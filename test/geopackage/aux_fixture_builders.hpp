@@ -31,8 +31,8 @@ namespace fixtures {
  * `gpkg_contents` as 'attributes' with a NULL srs_id and no bounding box.
  *
  * Between them the tables cover prefixing, per-column type mapping, NULL cells, a feature with no
- * row, a row for no feature, a non-default key column, and column names shared between two joined
- * tables.
+ * row, a row for no feature, a non-default key column, column names shared between two joined
+ * tables, cells of a type that cannot become a property, and a table keyed ambiguously.
  *
  * @return Path to the written GeoPackage
  * @throws std::runtime_error if `example.gpkg` cannot be found or copied, or if SQLite refuses any

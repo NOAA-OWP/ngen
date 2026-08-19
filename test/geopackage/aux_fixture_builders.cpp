@@ -179,6 +179,38 @@ std::string write_example_aux()
     );
     db.register_attributes_table("aux_params_two");
 
+    // A BLOB column, which no property can hold, beside one that can, and full coverage of the
+    // layer so that a join of this table provokes nothing else.
+    db.exec(
+        "CREATE TABLE \"aux_params_blob\" ("
+        "  \"divide_id\"  TEXT,"
+        "  \"blob_value\" BLOB,"
+        "  \"int_value\"  INTEGER"
+        ")"
+    );
+    db.exec(
+        "INSERT INTO \"aux_params_blob\" (\"divide_id\", \"blob_value\", \"int_value\")"
+        " VALUES ('First', x'0102030405', 11),"
+        "        ('Second', x'0607080910', 22)"
+    );
+    db.register_attributes_table("aux_params_blob");
+
+    // Two rows keyed to "First", leaving its value up to scan order; the single "Second" row lets
+    // a subset run over just that feature join this table cleanly.
+    db.exec(
+        "CREATE TABLE \"aux_params_dupe\" ("
+        "  \"divide_id\"  TEXT,"
+        "  \"dupe_value\" REAL"
+        ")"
+    );
+    db.exec(
+        "INSERT INTO \"aux_params_dupe\" (\"divide_id\", \"dupe_value\")"
+        " VALUES ('First', 1.5),"
+        "        ('First', 2.5),"
+        "        ('Second', 3.5)"
+    );
+    db.register_attributes_table("aux_params_dupe");
+
     return path;
 }
 
