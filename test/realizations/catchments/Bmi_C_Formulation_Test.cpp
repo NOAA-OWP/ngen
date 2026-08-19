@@ -595,7 +595,7 @@ TEST_F(Bmi_C_Formulation_Test, check_mass_balance_frequency) {
     // Context contract: current_time_step is drawn from [0, total_steps - 1].
     // For a 3-step run with frequency=2, indices 0 and 2 fire (0 % 2 == 0,
     // 2 % 2 == 0) and index 1 is skipped.
-    //Check initial mass balance -- should error which indicates it was propoerly checked
+    //Check initial mass balance -- should error which indicates it was properly checked
     //per frequency setting
     ASSERT_THROW(formulation.check_mass_balance(0, 3, "t0"), ProtocolError);
     // Call mass balance check again, this should NOT error, since the actual check
