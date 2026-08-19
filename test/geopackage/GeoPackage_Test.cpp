@@ -182,7 +182,9 @@ TEST_F(GeoPackage_Test, geopackage_aux_fixture_test)
     blob.next();
     ASSERT_FALSE(blob.done());
     EXPECT_EQ(blob.get<std::string>("divide_id"), "First");
-    EXPECT_EQ(blob.types()[blob.find("blob_value")], SQLITE_BLOB);
+    const int blob_column = blob.find("blob_value");
+    ASSERT_NE(blob_column, -1);
+    EXPECT_EQ(blob.types()[blob_column], SQLITE_BLOB);
     EXPECT_EQ(blob.get<int>("int_value"), 11);
     blob.next();
     ASSERT_FALSE(blob.done());
