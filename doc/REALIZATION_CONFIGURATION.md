@@ -65,6 +65,64 @@ The configuration may optionally contain a `catchments` key with a list of indiv
 ### `routing`
 The configuration may optionally contain a `routing` key with a subobject that defines the path to the t-route config file (`t_route_config_file_with_path`).  It also optionally may contain a path to the t-route source code (`t_route_connection_path`), but this is reserved for advanced usage; generally, t-route should be installed as a package in the normal Python environment.
 
+### `auxiliary_hydrofabric_attributes`
+The configuration may optionally contain an `auxiliary_hydrofabric_attributes` key with a list of GeoPackage *attributes* tables whose columns are joined onto the catchment features before the formulations are built. Values that live outside the `divides` layer, such as regionalized parameters, then resolve for `model_params` entries with `"source": "hydrofabric"` like any other layer column.
+
+Each list entry is an object with the following fields:
+
+* `table` — name of the attributes table in the GeoPackage. **Required.**
+* `alias` — short stand-in for the table name when namespacing the joined columns (default: none, i.e. the table name is used).
+* `file` — path to the GeoPackage holding `table` (default: the catchment data file given on the command line).
+* `key_column` — column whose values are matched against catchment feature ids (default: `divide_id`).
+* `required` — whether a catchment with no row in `table` is an error rather than a warning (default: `false`).
+
+Joined columns are namespaced: each non-key column of a matched row becomes the feature property `<prefix>.<column>`, where `<prefix>` is the entry's `alias` when declared and otherwise its `table` name, e.g. `donor.real_value`. That is what allows tables sharing column names to be joined together, so prefixes must be unique across entries; two entries resolving to the same prefix is a configuration error. A cell holding SQL `NULL` yields no property, rather than a null-valued one.
+
+Strictness is per entry. A catchment with no matching row emits a `WARN:` line on standard error and is left without those properties; `required` set to `true` makes it a fatal error instead. Rows whose key matches no catchment are ignored silently, so a table covering an entire hydrofabric can be used with a subset run. A property missing from a catchment is not fatal downstream either: the `model_params` entry referencing it is reported as a skipped parameter, leaving the model's own default in place.
+
+Entries are applied in declared order, and only to the catchments being simulated, so under MPI each rank joins against its own partition's subset with no additional configuration.
+
+Because the join reads a GeoPackage, the following are errors:
+
+* the named `table`, or its `key_column`, does not exist in the GeoPackage being read;
+* an entry declares no `file` while the catchment data file given on the command line is not a GeoPackage (an entry that does declare a `file` is fine in that case, and can pull attributes from a GeoPackage alongside a GeoJSON fabric);
+* the key is present at all in a build without SQLite support (i.e., built without `-DNGEN_WITH_SQLITE=ON`), rather than the declarations being silently ignored.
+
+A worked example, pairing a declaration with a `model_params` entry that consumes it:
+
+```jsonc
+{
+    "auxiliary_hydrofabric_attributes": [
+        {
+            "table": "divide-attributes-regionalized",
+            "alias": "reg",
+            "file": "./data/hydrofabric/regionalization.gpkg",
+            "key_column": "divide_id",
+            "required": true
+        }
+    ],
+    "global": {
+        "formulations": [
+            {
+                "name": "bmi_c",
+                "params": {
+                    "model_type_name": "bmi_c_cfe",
+                    // ... remaining formulation params ...
+                    "model_params": {
+                        // "reg" is the alias declared above, "bexp" a column of that table
+                        "b": { "source": "hydrofabric", "from": "reg.bexp" },
+                        // a column of the divides layer needs no prefix
+                        "areasqkm": { "source": "hydrofabric", "from": "area_sqkm" }
+                    }
+                }
+            }
+        ]
+    }
+}
+```
+
+See [`model_params`](BMI_MODELS.md#optional-parameters) for the general form of a dynamic model parameter.
+
 ## Examples of Top-Level Structure
 Note that these are not exhaustive examples.
 
