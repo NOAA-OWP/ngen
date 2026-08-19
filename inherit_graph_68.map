@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structutils_1_1_feature_descriptor.html" title="One feature&#39;s output schema, supplied to a manager at construction." alt="" coords="5,5,160,31"/>
+<area shape="rect" id="Node000000" href="$classutils_1_1_catchment_outputs_mgr.html" title="Abstract class for managing and writing to catchment data files." alt="" coords="5,5,188,31"/>
+<area shape="rect" id="Node000001" href="$classutils_1_1_catchment_csv_output_mgr.html" title="CSV backend for catchment output." alt="" coords="236,5,434,31"/>
+<area shape="poly" id="edge80_Node000000_Node000001" title=" " alt="" coords="204,16,235,16,235,21,204,21"/>
 </map>

@@ -6,6 +6,7 @@ var namespacerealization =
     [ "Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", "classrealization_1_1_bmi___formulation" ],
     [ "Bmi_Module_Formulation", "classrealization_1_1_bmi___module___formulation.html", "classrealization_1_1_bmi___module___formulation" ],
     [ "Bmi_Multi_Formulation", "classrealization_1_1_bmi___multi___formulation.html", "classrealization_1_1_bmi___multi___formulation" ],
+    [ "Bmi_Var_Details", "classrealization_1_1_bmi___var___details.html", "classrealization_1_1_bmi___var___details" ],
     [ "Catchment_Formulation", "classrealization_1_1_catchment___formulation.html", "classrealization_1_1_catchment___formulation" ],
     [ "ConfigurationException", "classrealization_1_1_configuration_exception.html", "classrealization_1_1_configuration_exception" ],
     [ "Formulation", "classrealization_1_1_formulation.html", "classrealization_1_1_formulation" ],

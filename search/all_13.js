@@ -1,7 +1,7 @@
 var searchData=
 [
   ['n_0',['n',['../class_network___test.html#a470fa2e04fd1239f0932f52c7e6439d5',1,'Network_Test']]],
-  ['name_1',['name',['../structngen_1_1_layer_description.html#a8d632f5ca6bcbda986fde0f73105ba0e',1,'ngen::LayerDescription']]],
+  ['name_1',['name',['../structngen_1_1_layer_description.html#a8d632f5ca6bcbda986fde0f73105ba0e',1,'ngen::LayerDescription::name'],['../classrealization_1_1_bmi___var___details.html#abad567c8f0617b99c8ab5bb79a670a4e',1,'realization::Bmi_Var_Details::name']]],
   ['name_20not_20permitted_2',['Input and output with the same name not permitted',['../md_doc_2_b_m_iconventions.html#autotoc_md107',1,'']]],
   ['names_3',['Names',['../md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md194',1,'File Names'],['../md_test_2_r_e_a_d_m_e.html#autotoc_md317',1,'Use Analogous Names']]],
   ['names_3a_4',['Bad Variable Names:',['../md_doc_2programming__standards.html#autotoc_md227',1,'']]],
@@ -81,5 +81,6 @@ var searchData=
   ['nullforcingprovider_78',['NullForcingProvider',['../class_null_forcing_provider.html',1,'NullForcingProvider'],['../class_null_forcing_provider.html#a586f4876aa823dee3c07963f49b2423b',1,'NullForcingProvider::NullForcingProvider()']]],
   ['nullstream_79',['NullStream',['../classutils_1_1_null_stream.html',1,'utils::NullStream'],['../classutils_1_1_null_stream.html#ac83443ec2d37a1763d5518655c58e164',1,'utils::NullStream::NullStream()']]],
   ['num_5fcolumns_80',['num_columns',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b',1,'ngen::sqlite::database::iterator']]],
-  ['number_5fof_5fdownstream_5fcatchments_81',['number_of_downstream_catchments',['../class_h_y___hydro_nexus.html#a849ee7fd94b2fd0d32a7fc7734bc3234',1,'HY_HydroNexus']]]
+  ['num_5fitems_81',['num_items',['../classrealization_1_1_bmi___var___details.html#aee65f76a3b02cb0c9958f841b7bbf86a',1,'realization::Bmi_Var_Details']]],
+  ['number_5fof_5fdownstream_5fcatchments_82',['number_of_downstream_catchments',['../class_h_y___hydro_nexus.html#a849ee7fd94b2fd0d32a7fc7734bc3234',1,'HY_HydroNexus']]]
 ];

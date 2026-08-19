@@ -102,7 +102,9 @@ $(function(){initNavTree('classrealization_1_1_bmi___module___formulation.html',
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="classrealization_1_1_bmi___module___formulation-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">realization::Bmi_Module_Formulation Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
@@ -202,6 +204,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:accb03e85ebfc6d5e88c945b4d30e71f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdc662b1912d37e3bf6bff8e2a7a9bab" id="r_afdc662b1912d37e3bf6bff8e2a7a9bab"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afdc662b1912d37e3bf6bff8e2a7a9bab">is_bmi_output_variable</a> (const std::string &amp;var_name) const override</td></tr>
 <tr class="separator:afdc662b1912d37e3bf6bff8e2a7a9bab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accff79d755091811e806fc3759d6539f" id="r_accff79d755091811e806fc3759d6539f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#accff79d755091811e806fc3759d6539f">is_input_variable_metadata_cached</a> () const</td></tr>
+<tr class="memdesc:accff79d755091811e806fc3759d6539f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> caches and reuses input variable metadata.  <br /></td></tr>
+<tr class="separator:accff79d755091811e806fc3759d6539f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8284264e52ed3f1cb548d18096fc5a6" id="r_ab8284264e52ed3f1cb548d18096fc5a6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8284264e52ed3f1cb548d18096fc5a6">is_property_sum_over_time_step</a> (const std::string &amp;name) const override</td></tr>
 <tr class="memdesc:ab8284264e52ed3f1cb548d18096fc5a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get whether a property's per-time-step values are each an aggregate sum over the entire time step.  <br /></td></tr>
 <tr class="separator:ab8284264e52ed3f1cb548d18096fc5a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -295,9 +300,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:adde8e7b5a34d5b0cea9011cc98be79f8" id="r_adde8e7b5a34d5b0cea9011cc98be79f8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adde8e7b5a34d5b0cea9011cc98be79f8">set_model_initialized</a> (bool is_initialized)</td></tr>
 <tr class="memdesc:adde8e7b5a34d5b0cea9011cc98be79f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set whether the backing model object has been initialize using the BMI standard <code>Initialize</code> function.  <br /></td></tr>
 <tr class="separator:adde8e7b5a34d5b0cea9011cc98be79f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef30be5d6ae1ef746a5717c1f2badc77" id="r_aef30be5d6ae1ef746a5717c1f2badc77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef30be5d6ae1ef746a5717c1f2badc77">set_model_inputs_prior_to_update</a> (const double &amp;model_init_time, <a class="el" href="classrealization_1_1_formulation.html#aedb7c17dc4527613c7411229a2dc9fff">time_step_t</a> t_delta)</td></tr>
-<tr class="memdesc:aef30be5d6ae1ef746a5717c1f2badc77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set BMI input variable values for the model appropriately prior to calling its <code>BMI</code><a class="el" href="#abb46469f850c323987b1feef0217504f">update()</a>``.  <br /></td></tr>
-<tr class="separator:aef30be5d6ae1ef746a5717c1f2badc77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc50e50f23df9c0178bd3ccba22c24e4" id="r_afc50e50f23df9c0178bd3ccba22c24e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> (const double &amp;model_time, <a class="el" href="classrealization_1_1_formulation.html#aedb7c17dc4527613c7411229a2dc9fff">time_step_t</a> t_delta)</td></tr>
+<tr class="memdesc:afc50e50f23df9c0178bd3ccba22c24e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set BMI input variable values for the model appropriately prior to calling its <code>BMI</code><a class="el" href="#abb46469f850c323987b1feef0217504f">update()</a>``.  <br /></td></tr>
+<tr class="separator:afc50e50f23df9c0178bd3ccba22c24e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76cb974642a085d4d754c4b162db63e3" id="r_a76cb974642a085d4d754c4b162db63e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a76cb974642a085d4d754c4b162db63e3">set_cache_input_var_metadata</a> (bool cache_input_var_metadata)</td></tr>
+<tr class="memdesc:a76cb974642a085d4d754c4b162db63e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set member variable indicating whether <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> should store and reuse metadata.  <br /></td></tr>
+<tr class="separator:a76cb974642a085d4d754c4b162db63e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d743db844179bbe762f4cf0ee522449" id="r_a7d743db844179bbe762f4cf0ee522449"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a7d743db844179bbe762f4cf0ee522449">get_output_precision</a> ()</td></tr>
 <tr class="separator:a7d743db844179bbe762f4cf0ee522449"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27b7e453211087d4c2a24d7f33860300" id="r_a27b7e453211087d4c2a24d7f33860300"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a27b7e453211087d4c2a24d7f33860300">set_bmi_main_output_var</a> (const std::string &amp;main_output_var)</td></tr>
@@ -351,8 +359,32 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:af996a3e50eaf51c63865f1fdbe4f8661" id="r_af996a3e50eaf51c63865f1fdbe4f8661"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">id_number</a></td></tr>
 <tr class="separator:af996a3e50eaf51c63865f1fdbe4f8661"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a138d48599bb6721054e1b9c8352b06e9" id="r_a138d48599bb6721054e1b9c8352b06e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a138d48599bb6721054e1b9c8352b06e9">do_bmi_sets_from_stored_metadata</a> (const time_t &amp;src_data_start, const <a class="el" href="classrealization_1_1_formulation.html#aedb7c17dc4527613c7411229a2dc9fff">time_step_t</a> &amp;t_delta)</td></tr>
+<tr class="memdesc:a138d48599bb6721054e1b9c8352b06e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set BMI input variables before `BMI update, using saved metadata rather than re-fetching or re-calculating.  <br /></td></tr>
+<tr class="separator:a138d48599bb6721054e1b9c8352b06e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff171a21897a83efdde7c523e3388adb" id="r_aff171a21897a83efdde7c523e3388adb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff171a21897a83efdde7c523e3388adb">do_bmi_sets_with_full_refetch</a> (const time_t &amp;src_data_start, const <a class="el" href="classrealization_1_1_formulation.html#aedb7c17dc4527613c7411229a2dc9fff">time_step_t</a> &amp;t_delta)</td></tr>
+<tr class="memdesc:aff171a21897a83efdde7c523e3388adb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set BMI input variables before `BMI update, re-fetching and re-calculating required metadata each time.  <br /></td></tr>
+<tr class="separator:aff171a21897a83efdde7c523e3388adb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a560df251f7c45e3003698a9ce589f0da" id="r_a560df251f7c45e3003698a9ce589f0da"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="namespacedata__access.html#a80e53ae1180ee33222d2a54436928c24">data_access::GenericDataProvider</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a560df251f7c45e3003698a9ce589f0da">get_provider_for_input_var</a> (const std::string &amp;var_name, const std::string &amp;mapped_alias)</td></tr>
+<tr class="memdesc:a560df251f7c45e3003698a9ce589f0da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the appropriate data provider to set inputs for this BMI variable.  <br /></td></tr>
+<tr class="separator:a560df251f7c45e3003698a9ce589f0da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b1178914ad6e8ae4d69d86284fce924" id="r_a6b1178914ad6e8ae4d69d86284fce924"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b1178914ad6e8ae4d69d86284fce924">initialize_bmi_input_var_metadata</a> ()</td></tr>
+<tr class="memdesc:a6b1178914ad6e8ae4d69d86284fce924"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the metadata as needed for <a class="el" href="#a138d48599bb6721054e1b9c8352b06e9">do_bmi_sets_from_stored_metadata</a>.  <br /></td></tr>
+<tr class="separator:a6b1178914ad6e8ae4d69d86284fce924"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addd74974bd828fac5bc15790787fc119" id="r_addd74974bd828fac5bc15790787fc119"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#addd74974bd828fac5bc15790787fc119">perform_set</a> (const time_t &amp;src_data_start, const <a class="el" href="classrealization_1_1_formulation.html#aedb7c17dc4527613c7411229a2dc9fff">time_step_t</a> &amp;t_delta, const std::shared_ptr&lt; <a class="el" href="namespacedata__access.html#a80e53ae1180ee33222d2a54436928c24">data_access::GenericDataProvider</a> &gt; &amp;provider, const <a class="el" href="classrealization_1_1_bmi___var___details.html">Bmi_Var_Details</a> *var_details) const</td></tr>
+<tr class="memdesc:addd74974bd828fac5bc15790787fc119"><td class="mdescLeft">&#160;</td><td class="mdescRight">Do the action of retrieving data and setting values for an input variable ahead of advancing the model.  <br /></td></tr>
+<tr class="separator:addd74974bd828fac5bc15790787fc119"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
+<tr class="memitem:a7dd68d66039258314ae59bd237ba5d5d" id="r_a7dd68d66039258314ae59bd237ba5d5d"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; std::vector&lt; <a class="el" href="classrealization_1_1_bmi___var___details.html">Bmi_Var_Details</a> * &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7dd68d66039258314ae59bd237ba5d5d">bmi_input_var_details</a></td></tr>
+<tr class="memdesc:a7dd68d66039258314ae59bd237ba5d5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">BMI input variables details for this instance, cached to improve compute performance when setting values prior to updates.  <br /></td></tr>
+<tr class="separator:a7dd68d66039258314ae59bd237ba5d5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad20a0abc6e06c670c587d7292494d96b" id="r_ad20a0abc6e06c670c587d7292494d96b"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; std::vector&lt; std::shared_ptr&lt; <a class="el" href="namespacedata__access.html#a80e53ae1180ee33222d2a54436928c24">data_access::GenericDataProvider</a> &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad20a0abc6e06c670c587d7292494d96b">bmi_input_providers</a></td></tr>
+<tr class="memdesc:ad20a0abc6e06c670c587d7292494d96b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector of data providers for BMI input vars, with the provider at an index corresponding to the var in <a class="el" href="#a7dd68d66039258314ae59bd237ba5d5d">bmi_input_var_details</a> at the same index.  <br /></td></tr>
+<tr class="separator:ad20a0abc6e06c670c587d7292494d96b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed9f477812f35c9b954bce2cc57d4eef" id="r_aed9f477812f35c9b954bce2cc57d4eef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html">models::bmi::protocols::NgenBmiProtocols</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed9f477812f35c9b954bce2cc57d4eef">bmi_protocols</a></td></tr>
 <tr class="separator:aed9f477812f35c9b954bce2cc57d4eef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4e9c77709218359bd00ef4bfb8b863c" id="r_af4e9c77709218359bd00ef4bfb8b863c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4e9c77709218359bd00ef4bfb8b863c">allow_model_exceed_end_time</a> = false</td></tr>
@@ -380,6 +412,9 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a33d349c7624eab7f867f877c8dd9539e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23add24bf83ce887364b65ec89408bd5" id="r_a23add24bf83ce887364b65ec89408bd5"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a23add24bf83ce887364b65ec89408bd5">REQUIRED_PARAMETERS</a></td></tr>
 <tr class="separator:a23add24bf83ce887364b65ec89408bd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d3a1bd77dfa422fbfe7360a3a38aeb2" id="r_a0d3a1bd77dfa422fbfe7360a3a38aeb2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0d3a1bd77dfa422fbfe7360a3a38aeb2">cache_input_variable_metadata</a> = false</td></tr>
+<tr class="memdesc:a0d3a1bd77dfa422fbfe7360a3a38aeb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> should store and reuse metadata.  <br /></td></tr>
+<tr class="separator:a0d3a1bd77dfa422fbfe7360a3a38aeb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a494171a1888c373c2a1e03008e00e5d5" id="r_a494171a1888c373c2a1e03008e00e5d5"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a494171a1888c373c2a1e03008e00e5d5">bmi_main_output_var</a></td></tr>
 <tr class="separator:a494171a1888c373c2a1e03008e00e5d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e6136d3fde105fd835c8be24db7d1b7" id="r_a3e6136d3fde105fd835c8be24db7d1b7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a3e6136d3fde105fd835c8be24db7d1b7">model_type_name</a></td></tr>
@@ -395,6 +430,12 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a8ff42a69cf6c735578692c37e20a584c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fe13a1bc94d6c8c0cf47c2248c22f1b" id="r_a4fe13a1bc94d6c8c0cf47c2248c22f1b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b">cat_id</a></td></tr>
 <tr class="separator:a4fe13a1bc94d6c8c0cf47c2248c22f1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:a2d63db036aa5ecba7f045f43349c698f" id="r_a2d63db036aa5ecba7f045f43349c698f"><td class="memItemLeft" align="right" valign="top">static std::set&lt; <a class="el" href="classrealization_1_1_bmi___var___details.html">Bmi_Var_Details</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d63db036aa5ecba7f045f43349c698f">known_bmi_input_vars</a></td></tr>
+<tr class="memdesc:a2d63db036aa5ecba7f045f43349c698f"><td class="mdescLeft">&#160;</td><td class="mdescRight">BMI input variables details for all instances, cached to improve compute performance when setting values prior to updates.  <br /></td></tr>
+<tr class="separator:a2d63db036aa5ecba7f045f43349c698f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
@@ -724,7 +765,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 <p>Implemented in <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a029185f64f954471018b5b5c63cae3b8">realization::Bmi_C_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a6b136f45d5a43bbb0ed672203bf56bcb">realization::Bmi_Cpp_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ae867f9a3aa14a30541162165066faaf8">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="#aaeaf8ef8b36e7c5690ca8134a5cd8065">determine_model_time_offset()</a>, and <a class="el" href="#aef30be5d6ae1ef746a5717c1f2badc77">set_model_inputs_prior_to_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#aaeaf8ef8b36e7c5690ca8134a5cd8065">determine_model_time_offset()</a>, and <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -819,6 +860,98 @@ template&lt;class DataType , class SelectionType &gt; </div>
 <p class="reference">References <a class="el" href="classrealization_1_1_bmi___formulation.html#a93fab1a9af5c9d1917219528bec89894">realization::Bmi_Formulation::convert_model_time()</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">realization::Catchment_Formulation::forcing</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, and <a class="el" href="#aa7dff6c36c259fa233012491d67d484d">set_bmi_model_start_time_forcing_offset_s()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#a7c62e8f7f7db1d06cfef28ee66554def">inner_create_formulation()</a>.</p>
+
+</div>
+</div>
+<a id="a138d48599bb6721054e1b9c8352b06e9" name="a138d48599bb6721054e1b9c8352b06e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a138d48599bb6721054e1b9c8352b06e9">&#9670;&#160;</a></span>do_bmi_sets_from_stored_metadata()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::Bmi_Module_Formulation::do_bmi_sets_from_stored_metadata </td>
+          <td>(</td>
+          <td class="paramtype">const time_t &amp;</td>          <td class="paramname"><span class="paramname"><em>src_data_start</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classrealization_1_1_formulation.html#aedb7c17dc4527613c7411229a2dc9fff">time_step_t</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>t_delta</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set BMI input variables before `BMI update, using saved metadata rather than re-fetching or re-calculating. </p>
+<p>This is one of two available execution paths used by <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> for the bulk of its behavior. Certain metadata details about a BMI input variable must be available in order for the framework to execute a <code>set_value</code> call: e.g., the data provider that is the correct source of input values, the analogous C++ type, the number of items, etc. In this execution option, that data is obtained once and stored for subsequent reuse, optimizing compute at each time step a bit at the expense of memory.</p>
+<p>References to objects containing these details are stored within the <a class="el" href="#a7dd68d66039258314ae59bd237ba5d5d">bmi_input_var_details</a> vector, populated on the first call to this function. These are actually pointers to objects contained within the <a class="el" href="#a2d63db036aa5ecba7f045f43349c698f">known_bmi_input_vars</a> static member variable.</p>
+<p>An important consideration is that this function is not strictly safe relying only on guarantees provided by BMI. Nothing within the BMI spec guarantees that, for example, a variable will not change the number of items it contains. It is therefore possible, in general, for stored data to become stale for a properly implemented BMI module. In practice, however, any selected module's implementation details and behavior will be known by the user, so users can elect to only use this execution path for <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> when the BMI module itself guarantees such data cannot become stale.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">src_data_start</td><td>The start time (in seconds) to use when retrieving data from the appropriate provider to use for setting the model's variables. </td></tr>
+    <tr><td class="paramname">t_delta</td><td>The size of the time step over which the formulation is going to update the model, which might be different than the model's internal time step. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="#ad20a0abc6e06c670c587d7292494d96b">bmi_input_providers</a>, <a class="el" href="#a7dd68d66039258314ae59bd237ba5d5d">bmi_input_var_details</a>, <a class="el" href="#a6b1178914ad6e8ae4d69d86284fce924">initialize_bmi_input_var_metadata()</a>, and <a class="el" href="#addd74974bd828fac5bc15790787fc119">perform_set()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update()</a>.</p>
+
+</div>
+</div>
+<a id="aff171a21897a83efdde7c523e3388adb" name="aff171a21897a83efdde7c523e3388adb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff171a21897a83efdde7c523e3388adb">&#9670;&#160;</a></span>do_bmi_sets_with_full_refetch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::Bmi_Module_Formulation::do_bmi_sets_with_full_refetch </td>
+          <td>(</td>
+          <td class="paramtype">const time_t &amp;</td>          <td class="paramname"><span class="paramname"><em>src_data_start</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classrealization_1_1_formulation.html#aedb7c17dc4527613c7411229a2dc9fff">time_step_t</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>t_delta</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set BMI input variables before `BMI update, re-fetching and re-calculating required metadata each time. </p>
+<p>This is one of two available execution paths used by <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> for the bulk of its behavior. Certain metadata details about a BMI input variable must be available in order for the framework to execute a <code>set_value</code> call: e.g., the data provider that is the correct source of input values, the analogous C++ type, the number of items, etc. In this execution option, that data is freshly obtained</p><ul>
+<li>either recalculated, redetermined, or refetched from the BMI module itself - on every call to this method. This results in less efficient compute but also reduced memory usage.</li>
+</ul>
+<p>An important consideration is that this function provides an execution option that is strictly safe relying only on guarantees provided by BMI. Nothing within the BMI spec guarantees that, for example, a variable will not change the number of items it contains. If a configured module does (or may) change input variable metadata, or if it is possible for a module to change the set of input variables, then this execution path for <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> should be selected.</p>
+<p>BMI module. In practice, however, any selected module's implementation details and behavior will be known by the user, so users can elect to only use this execution path for <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> when the BMI module itself guarantees such data cannot become stale. better memory and safe for no guarantees</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">src_data_start</td><td>The start time (in seconds) to use when retrieving data from the appropriate provider to use for setting the model's variables. </td></tr>
+    <tr><td class="paramname">t_delta</td><td>The size of the time step over which the formulation is going to update the model, which might be different than the model's internal time step. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="#a9bf1db96b3ecb9b4ae5bc7b0c2e6c76b">get_config_mapped_variable_name()</a>, <a class="el" href="#a560df251f7c45e3003698a9ce589f0da">get_provider_for_input_var()</a>, <a class="el" href="classbmi_1_1_bmi.html#aaac07008cbea8bc96082a4e7ad2173b6">bmi::Bmi::GetVarItemsize()</a>, and <a class="el" href="#addd74974bd828fac5bc15790787fc119">perform_set()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -1073,7 +1206,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 <p class="reference">References <a class="el" href="#a1e2d487c21e9540b0cbf36b6e3858cd0">bmi_model</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a029185f64f954471018b5b5c63cae3b8">realization::Bmi_C_Formulation::convert_model_time()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a6b136f45d5a43bbb0ed672203bf56bcb">realization::Bmi_Cpp_Formulation::convert_model_time()</a>, <a class="el" href="#aaeaf8ef8b36e7c5690ca8134a5cd8065">determine_model_time_offset()</a>, <a class="el" href="#ae0d3530cb9ec114a5a9798959cee1fa9">get_bmi_input_variables()</a>, <a class="el" href="#acd691f6d9630526e041f72176a7539b8">get_bmi_output_var_name()</a>, <a class="el" href="#a5736279b7c5266934563a31afc3f6780">get_bmi_output_variables()</a>, <a class="el" href="#a61f695665f81fc947e6e982753ad9263">get_data_start_time()</a>, <a class="el" href="#a58f9b6b9e3da79f2081eec6c2ef02d39">get_model_current_time()</a>, <a class="el" href="#a161392de1e35cafa631fb00a1bd02b49">get_model_end_time()</a>, <a class="el" href="#abda7768d404be3fd48054ecb8a29cf2b">get_output_fields()</a>, <a class="el" href="#a9e5990e1c4616de029d7ad7691c2b7c7">get_value()</a>, <a class="el" href="#a9265b07222e97669c28fc24454ad7350">get_values()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a95c328f3f7ebee638e0a36dc0874a898">realization::Bmi_C_Formulation::get_var_value_as()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a65eb8e2d86900ba37349334ebfeaf9cd">realization::Bmi_Cpp_Formulation::get_var_value_as()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">realization::Bmi_C_Formulation::get_var_value_as_double()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab01f9dad8c3c543595848fd9bc8b887b">realization::Bmi_Cpp_Formulation::get_var_value_as_double()</a>, <a class="el" href="#a7c62e8f7f7db1d06cfef28ee66554def">inner_create_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ac37bea953596faf0c3d03fb7db630f3c">realization::Bmi_C_Formulation::is_bmi_input_variable()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a7022029d1ac8654e3a95767a8d17aaed">realization::Bmi_Cpp_Formulation::is_bmi_input_variable()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a6f9751df6e3fd59bea4faa207b411787">realization::Bmi_C_Formulation::is_bmi_output_variable()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#add9969362e57d9dcc3a9a9ecf0f30b76">realization::Bmi_Cpp_Formulation::is_bmi_output_variable()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ac0f36d507216f74a61470bf17b5a5faa">realization::Bmi_C_Formulation::is_model_initialized()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#af96fa8d2f889e075d98e5884e91b6f98">realization::Bmi_Cpp_Formulation::is_model_initialized()</a>, <a class="el" href="#ab4acbd230e09c1dc4b0151c301bbe966">set_initial_bmi_parameters()</a>, <a class="el" href="#aef30be5d6ae1ef746a5717c1f2badc77">set_model_inputs_prior_to_update()</a>, and <a class="el" href="#abb46469f850c323987b1feef0217504f">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a029185f64f954471018b5b5c63cae3b8">realization::Bmi_C_Formulation::convert_model_time()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a6b136f45d5a43bbb0ed672203bf56bcb">realization::Bmi_Cpp_Formulation::convert_model_time()</a>, <a class="el" href="#aaeaf8ef8b36e7c5690ca8134a5cd8065">determine_model_time_offset()</a>, <a class="el" href="#aff171a21897a83efdde7c523e3388adb">do_bmi_sets_with_full_refetch()</a>, <a class="el" href="#ae0d3530cb9ec114a5a9798959cee1fa9">get_bmi_input_variables()</a>, <a class="el" href="#acd691f6d9630526e041f72176a7539b8">get_bmi_output_var_name()</a>, <a class="el" href="#a5736279b7c5266934563a31afc3f6780">get_bmi_output_variables()</a>, <a class="el" href="#a61f695665f81fc947e6e982753ad9263">get_data_start_time()</a>, <a class="el" href="#a58f9b6b9e3da79f2081eec6c2ef02d39">get_model_current_time()</a>, <a class="el" href="#a161392de1e35cafa631fb00a1bd02b49">get_model_end_time()</a>, <a class="el" href="#abda7768d404be3fd48054ecb8a29cf2b">get_output_fields()</a>, <a class="el" href="#a9e5990e1c4616de029d7ad7691c2b7c7">get_value()</a>, <a class="el" href="#a9265b07222e97669c28fc24454ad7350">get_values()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a95c328f3f7ebee638e0a36dc0874a898">realization::Bmi_C_Formulation::get_var_value_as()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a65eb8e2d86900ba37349334ebfeaf9cd">realization::Bmi_Cpp_Formulation::get_var_value_as()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">realization::Bmi_C_Formulation::get_var_value_as_double()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab01f9dad8c3c543595848fd9bc8b887b">realization::Bmi_Cpp_Formulation::get_var_value_as_double()</a>, <a class="el" href="#a6b1178914ad6e8ae4d69d86284fce924">initialize_bmi_input_var_metadata()</a>, <a class="el" href="#a7c62e8f7f7db1d06cfef28ee66554def">inner_create_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ac37bea953596faf0c3d03fb7db630f3c">realization::Bmi_C_Formulation::is_bmi_input_variable()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a7022029d1ac8654e3a95767a8d17aaed">realization::Bmi_Cpp_Formulation::is_bmi_input_variable()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a6f9751df6e3fd59bea4faa207b411787">realization::Bmi_C_Formulation::is_bmi_output_variable()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#add9969362e57d9dcc3a9a9ecf0f30b76">realization::Bmi_Cpp_Formulation::is_bmi_output_variable()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ac0f36d507216f74a61470bf17b5a5faa">realization::Bmi_C_Formulation::is_model_initialized()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#af96fa8d2f889e075d98e5884e91b6f98">realization::Bmi_Cpp_Formulation::is_model_initialized()</a>, <a class="el" href="#addd74974bd828fac5bc15790787fc119">perform_set()</a>, <a class="el" href="#ab4acbd230e09c1dc4b0151c301bbe966">set_initial_bmi_parameters()</a>, and <a class="el" href="#abb46469f850c323987b1feef0217504f">update()</a>.</p>
 
 </div>
 </div>
@@ -1104,7 +1237,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 <p class="reference">References <a class="el" href="#af5408b660a5caba226b7493698d95a1a">bmi_model_start_time_forcing_offset_s</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="#aef30be5d6ae1ef746a5717c1f2badc77">set_model_inputs_prior_to_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -1208,7 +1341,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b">realization::Catchment_Formulation::cat_id</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="#a813cd9420088cc7023a41c6429cf0ccb">get_output_values_for_timestep()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#aa54afafbd34ff0abade282bb48168886">realization::Bmi_Multi_Formulation::get_output_values_for_timestep()</a>, <a class="el" href="#a0108d3ee83f95ad2eb0733a237078e89">get_response()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a0b66d3f5f51b4b414e08965e15d7bff7">realization::Bmi_Multi_Formulation::get_response()</a>, and <a class="el" href="#aef30be5d6ae1ef746a5717c1f2badc77">set_model_inputs_prior_to_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="#a813cd9420088cc7023a41c6429cf0ccb">get_output_values_for_timestep()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#aa54afafbd34ff0abade282bb48168886">realization::Bmi_Multi_Formulation::get_output_values_for_timestep()</a>, <a class="el" href="#a0108d3ee83f95ad2eb0733a237078e89">get_response()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a0b66d3f5f51b4b414e08965e15d7bff7">realization::Bmi_Multi_Formulation::get_response()</a>, and <a class="el" href="#addd74974bd828fac5bc15790787fc119">perform_set()</a>.</p>
 
 </div>
 </div>
@@ -1250,7 +1383,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 <p class="reference">References <a class="el" href="#a1a20278de5cf4688c31c4ffff1e97f74">bmi_var_names_map</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="#aef30be5d6ae1ef746a5717c1f2badc77">set_model_inputs_prior_to_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#aff171a21897a83efdde7c523e3388adb">do_bmi_sets_with_full_refetch()</a>, and <a class="el" href="#a6b1178914ad6e8ae4d69d86284fce924">initialize_bmi_input_var_metadata()</a>.</p>
 
 </div>
 </div>
@@ -1632,6 +1765,50 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
+<a id="a560df251f7c45e3003698a9ce589f0da" name="a560df251f7c45e3003698a9ce589f0da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a560df251f7c45e3003698a9ce589f0da">&#9670;&#160;</a></span>get_provider_for_input_var()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="namespacedata__access.html#a80e53ae1180ee33222d2a54436928c24">data_access::GenericDataProvider</a> &gt; &amp; realization::Bmi_Module_Formulation::get_provider_for_input_var </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>var_name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>mapped_alias</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the appropriate data provider to set inputs for this BMI variable. </p>
+<p>Get the appropriate data provider for setting values for this BMI variable from <a class="el" href="#a812a84926c7dbc5da20dd459c24e004a">input_forcing_providers</a>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">var_name</td><td>The BMI variable name as retrievable directly via BMI. </td></tr>
+    <tr><td class="paramname">mapped_alias</td><td>The framework's internal mapped alias for this variable. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The appropriate data provider </dd></dl>
+
+<p class="reference">References <a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">realization::Catchment_Formulation::forcing</a>, and <a class="el" href="#a812a84926c7dbc5da20dd459c24e004a">input_forcing_providers</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="#aff171a21897a83efdde7c523e3388adb">do_bmi_sets_with_full_refetch()</a>, and <a class="el" href="#a6b1178914ad6e8ae4d69d86284fce924">initialize_bmi_input_var_metadata()</a>.</p>
+
+</div>
+</div>
 <a id="a79a5cf820e607620584359591604f2a2" name="a79a5cf820e607620584359591604f2a2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a79a5cf820e607620584359591604f2a2">&#9670;&#160;</a></span>get_required_parameters()</h2>
 
@@ -1801,7 +1978,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
   </dd>
 </dl>
 
-<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a428b42c9cdf72b63c2a0ac23b0bba4d4">data_access::WrappedDataProvider::get_value()</a>, and <a class="el" href="#aef30be5d6ae1ef746a5717c1f2badc77">set_model_inputs_prior_to_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a428b42c9cdf72b63c2a0ac23b0bba4d4">data_access::WrappedDataProvider::get_value()</a>.</p>
 
 </div>
 </div>
@@ -1908,7 +2085,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
   </dd>
 </dl>
 
-<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a37c23079f7163f992ea90fd156a6b4d7">data_access::WrappedDataProvider::get_values()</a>, and <a class="el" href="#aef30be5d6ae1ef746a5717c1f2badc77">set_model_inputs_prior_to_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a37c23079f7163f992ea90fd156a6b4d7">data_access::WrappedDataProvider::get_values()</a>.</p>
 
 </div>
 </div>
@@ -2031,6 +2208,38 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
+<a id="a6b1178914ad6e8ae4d69d86284fce924" name="a6b1178914ad6e8ae4d69d86284fce924"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b1178914ad6e8ae4d69d86284fce924">&#9670;&#160;</a></span>initialize_bmi_input_var_metadata()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::Bmi_Module_Formulation::initialize_bmi_input_var_metadata </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initialize the metadata as needed for <a class="el" href="#a138d48599bb6721054e1b9c8352b06e9">do_bmi_sets_from_stored_metadata</a>. </p>
+<p>This will populate the <a class="el" href="#a7dd68d66039258314ae59bd237ba5d5d">bmi_input_var_details</a> member. As metadata is gathered into <a class="el" href="classrealization_1_1_bmi___var___details.html">Bmi_Var_Details</a> objects, these will be inserted into to the <a class="el" href="#a2d63db036aa5ecba7f045f43349c698f">known_bmi_input_vars</a> static member. Pointers to the values in that set are then added to <a class="el" href="#a7dd68d66039258314ae59bd237ba5d5d">bmi_input_var_details</a>. </p>
+
+<p class="reference">References <a class="el" href="#ad20a0abc6e06c670c587d7292494d96b">bmi_input_providers</a>, <a class="el" href="#a7dd68d66039258314ae59bd237ba5d5d">bmi_input_var_details</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="#a9bf1db96b3ecb9b4ae5bc7b0c2e6c76b">get_config_mapped_variable_name()</a>, <a class="el" href="#a560df251f7c45e3003698a9ce589f0da">get_provider_for_input_var()</a>, <a class="el" href="classbmi_1_1_bmi.html#aaac07008cbea8bc96082a4e7ad2173b6">bmi::Bmi::GetVarItemsize()</a>, and <a class="el" href="#a2d63db036aa5ecba7f045f43349c698f">known_bmi_input_vars</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="#a138d48599bb6721054e1b9c8352b06e9">do_bmi_sets_from_stored_metadata()</a>.</p>
+
+</div>
+</div>
 <a id="a7c62e8f7f7db1d06cfef28ee66554def" name="a7c62e8f7f7db1d06cfef28ee66554def"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7c62e8f7f7db1d06cfef28ee66554def">&#9670;&#160;</a></span>inner_create_formulation()</h2>
 
@@ -2068,7 +2277,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="#a5c9d1261dbbaf14773579ca59d0d0a69">available_forcings</a>, <a class="el" href="#aed9f477812f35c9b954bce2cc57d4eef">bmi_protocols</a>, <a class="el" href="#a1a20278de5cf4688c31c4ffff1e97f74">bmi_var_names_map</a>, <a class="el" href="#a87b70a39f69a823f26f752f6e53c3363">construct_model()</a>, <a class="el" href="#aaeaf8ef8b36e7c5690ca8134a5cd8065">determine_model_time_offset()</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ac58942d917922a1bad80b1cd70e7196c">realization::Bmi_Formulation::get_output_variable_names()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a833fd44ca84e9b77b876f75e23215776">models::bmi::Bmi_Adapter::is_model_initialized()</a>, <a class="el" href="#abed3046790cc1f64d1a2e46c7c99a367">model_initialized</a>, <a class="el" href="#ad9a8e081c25cbb632514f67958502546">set_allow_model_exceed_end_time()</a>, <a class="el" href="#a043a34098a1c4c014b40f0b57ffacf39">set_bmi_init_config()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a27b7e453211087d4c2a24d7f33860300">realization::Bmi_Formulation::set_bmi_main_output_var()</a>, <a class="el" href="#a9b7e6fa3298ebf4570aa7476548ef3dd">set_bmi_model()</a>, <a class="el" href="#a291e55e27455ce2d068b02b6601fba00">set_bmi_model_time_step_fixed()</a>, <a class="el" href="#ab4acbd230e09c1dc4b0151c301bbe966">set_initial_bmi_parameters()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a3a59e65e398af534a189f5de2bda67f2">realization::Bmi_Formulation::set_model_type_name()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ae520479adedf30609de4068bc389bd41">realization::Bmi_Formulation::set_output_header_fields()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a2be85c1e7a58273fc0267c9e99ca38fc">realization::Bmi_Formulation::set_output_precision()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ac85ef69c4b2de5a261230469cd0f3985">realization::Bmi_Formulation::set_output_variable_names()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a3ed78c910127ec5115d71fcfe4d47896">realization::Formulation::validate_parameters()</a>.</p>
+<p class="reference">References <a class="el" href="#a5c9d1261dbbaf14773579ca59d0d0a69">available_forcings</a>, <a class="el" href="#aed9f477812f35c9b954bce2cc57d4eef">bmi_protocols</a>, <a class="el" href="#a1a20278de5cf4688c31c4ffff1e97f74">bmi_var_names_map</a>, <a class="el" href="#a87b70a39f69a823f26f752f6e53c3363">construct_model()</a>, <a class="el" href="#aaeaf8ef8b36e7c5690ca8134a5cd8065">determine_model_time_offset()</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ac58942d917922a1bad80b1cd70e7196c">realization::Bmi_Formulation::get_output_variable_names()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a833fd44ca84e9b77b876f75e23215776">models::bmi::Bmi_Adapter::is_model_initialized()</a>, <a class="el" href="#abed3046790cc1f64d1a2e46c7c99a367">model_initialized</a>, <a class="el" href="#ad9a8e081c25cbb632514f67958502546">set_allow_model_exceed_end_time()</a>, <a class="el" href="#a043a34098a1c4c014b40f0b57ffacf39">set_bmi_init_config()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a27b7e453211087d4c2a24d7f33860300">realization::Bmi_Formulation::set_bmi_main_output_var()</a>, <a class="el" href="#a9b7e6fa3298ebf4570aa7476548ef3dd">set_bmi_model()</a>, <a class="el" href="#a291e55e27455ce2d068b02b6601fba00">set_bmi_model_time_step_fixed()</a>, <a class="el" href="#a76cb974642a085d4d754c4b162db63e3">set_cache_input_var_metadata()</a>, <a class="el" href="#ab4acbd230e09c1dc4b0151c301bbe966">set_initial_bmi_parameters()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a3a59e65e398af534a189f5de2bda67f2">realization::Bmi_Formulation::set_model_type_name()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ae520479adedf30609de4068bc389bd41">realization::Bmi_Formulation::set_output_header_fields()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a2be85c1e7a58273fc0267c9e99ca38fc">realization::Bmi_Formulation::set_output_precision()</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#ac85ef69c4b2de5a261230469cd0f3985">realization::Bmi_Formulation::set_output_variable_names()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a3ed78c910127ec5115d71fcfe4d47896">realization::Formulation::validate_parameters()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#a3e910719332db1e221c4ef4dd3bb9eb1">create_formulation()</a>, and <a class="el" href="#a4dde9b0d6fa6a805262060becece9e52">create_formulation()</a>.</p>
 
@@ -2199,6 +2408,29 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
+<a id="accff79d755091811e806fc3759d6539f" name="accff79d755091811e806fc3759d6539f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accff79d755091811e806fc3759d6539f">&#9670;&#160;</a></span>is_input_variable_metadata_cached()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool realization::Bmi_Module_Formulation::is_input_variable_metadata_cached </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Test whether <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> caches and reuses input variable metadata. </p>
+<p>See <a class="el" href="#a0d3a1bd77dfa422fbfe7360a3a38aeb2">cache_input_variable_metadata</a> and <a class="el" href="#a76cb974642a085d4d754c4b162db63e3">set_cache_input_var_metadata</a> for details.</p>
+<dl class="section return"><dt>Returns</dt><dd>Whether input variable metadata is cached and reused across time steps, rather than re-fetched. </dd></dl>
+
+<p class="reference">References <a class="el" href="#a0d3a1bd77dfa422fbfe7360a3a38aeb2">cache_input_variable_metadata</a>.</p>
+
+</div>
+</div>
 <a id="a8fd7a28239c43101657fe469d6cde3f8" name="a8fd7a28239c43101657fe469d6cde3f8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8fd7a28239c43101657fe469d6cde3f8">&#9670;&#160;</a></span>is_model_initialized()</h2>
 
@@ -2268,6 +2500,60 @@ template&lt;class DataType , class SelectionType &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>Whether the property's value is an aggregate sum, which is always <code>true</code> for this type. </dd></dl>
 
 <p>Reimplemented from <a class="el" href="classdata__access_1_1_data_provider.html#adbf7b08984e7a17e21e50db3e779a8b7">data_access::DataProvider&lt; DataType, SelectionType &gt;</a>.</p>
+
+</div>
+</div>
+<a id="addd74974bd828fac5bc15790787fc119" name="addd74974bd828fac5bc15790787fc119"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#addd74974bd828fac5bc15790787fc119">&#9670;&#160;</a></span>perform_set()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::Bmi_Module_Formulation::perform_set </td>
+          <td>(</td>
+          <td class="paramtype">const time_t &amp;</td>          <td class="paramname"><span class="paramname"><em>src_data_start</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classrealization_1_1_formulation.html#aedb7c17dc4527613c7411229a2dc9fff">time_step_t</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>t_delta</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="namespacedata__access.html#a80e53ae1180ee33222d2a54436928c24">data_access::GenericDataProvider</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>provider</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classrealization_1_1_bmi___var___details.html">Bmi_Var_Details</a> *</td>          <td class="paramname"><span class="paramname"><em>var_details</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Do the action of retrieving data and setting values for an input variable ahead of advancing the model. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">src_data_start</td><td>The start time (in seconds) to use when retrieving data from the appropriate provider to use for setting the model's variables. </td></tr>
+    <tr><td class="paramname">t_delta</td><td>The size of the time step over which the formulation is going to update the model, which might be different than the model's internal time step. </td></tr>
+    <tr><td class="paramname">provider</td><td>The data provider from which to source the data to use to set the variable. </td></tr>
+    <tr><td class="paramname">var_details</td><td>Variable details struct containing the remainder of information required (e.g., var name). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#af35f3bc6a07f8e01e1a25b99ffb2e939">realization::Catchment_Formulation::get_catchment_id()</a>, <a class="el" href="classrealization_1_1_bmi___var___details.html#a63b2b4a79b97195eef81f86be7117cba">realization::Bmi_Var_Details::get_cpp_type()</a>, <a class="el" href="classrealization_1_1_bmi___var___details.html#a7f94ac580794d1fc21b22e452b91e45b">realization::Bmi_Var_Details::get_mapped_alias()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027">models::bmi::Bmi_Adapter::get_model_name()</a>, <a class="el" href="classrealization_1_1_bmi___var___details.html#acd34ef1244f803325dfdb9509957cf3b">realization::Bmi_Var_Details::get_name()</a>, <a class="el" href="classrealization_1_1_bmi___var___details.html#a5c2d9a64a2fc5e45eb2f9b2cdcc450b5">realization::Bmi_Var_Details::get_num_items()</a>, <a class="el" href="classrealization_1_1_bmi___var___details.html#ab1d89c40eba4bbd2d512fbc882545f3d">realization::Bmi_Var_Details::get_units()</a>, <a class="el" href="namespacerealization.html#a93cc4172ef61ac110470c47ca86667ae">realization::get_value_as_type()</a>, <a class="el" href="namespacerealization.html#a4b923a22dda92a7191b3f277e754884d">realization::get_values_as_type()</a>, <a class="el" href="struct_units_helper_1_1unit__conversion__exception.html#a77185d5c68305fc039ef414e86bedcf7">UnitsHelper::unit_conversion_exception::provider_model_name</a>, <a class="el" href="struct_units_helper_1_1unit__conversion__exception.html#ab804c77114920e37638aa6bf236c9511">UnitsHelper::unit_conversion_exception::provider_var_name</a>, <a class="el" href="class_units_helper.html#aa9348521aeb826373402b9a0b96ef2aa">UnitsHelper::record_unit_conversion_fault()</a>, <a class="el" href="classbmi_1_1_bmi.html#ae0e047f16b967e6b6cab77d3285add30">bmi::Bmi::SetValue()</a>, <a class="el" href="struct_units_helper_1_1unit__conversion__exception.html#a822e82434dcfaebf84c42e42cf79dc7b">UnitsHelper::unit_conversion_exception::unconverted_values</a>, and <a class="el" href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8">logging::warning()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="#a138d48599bb6721054e1b9c8352b06e9">do_bmi_sets_from_stored_metadata()</a>, and <a class="el" href="#aff171a21897a83efdde7c523e3388adb">do_bmi_sets_with_full_refetch()</a>.</p>
 
 </div>
 </div>
@@ -2482,6 +2768,44 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
+<a id="a76cb974642a085d4d754c4b162db63e3" name="a76cb974642a085d4d754c4b162db63e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76cb974642a085d4d754c4b162db63e3">&#9670;&#160;</a></span>set_cache_input_var_metadata()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::Bmi_Module_Formulation::set_cache_input_var_metadata </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>cache_input_var_metadata</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set member variable indicating whether <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> should store and reuse metadata. </p>
+<p>Set the <a class="el" href="#a0d3a1bd77dfa422fbfe7360a3a38aeb2">cache_input_variable_metadata</a> member variable, which indicates whether <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> should store and reuse metadata, as opposed to refreshing such data each time <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> is called.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cache_input_var_metadata</td><td>Whether <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> should store and reuse metadata </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="#a0d3a1bd77dfa422fbfe7360a3a38aeb2">cache_input_variable_metadata</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="#a7c62e8f7f7db1d06cfef28ee66554def">inner_create_formulation()</a>.</p>
+
+</div>
+</div>
 <a id="a2cce2b5b18eaa0ed7e0df10db57da144" name="a2cce2b5b18eaa0ed7e0df10db57da144"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2cce2b5b18eaa0ed7e0df10db57da144">&#9670;&#160;</a></span>set_catchment_id()</h2>
 
@@ -2581,8 +2905,8 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
-<a id="aef30be5d6ae1ef746a5717c1f2badc77" name="aef30be5d6ae1ef746a5717c1f2badc77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef30be5d6ae1ef746a5717c1f2badc77">&#9670;&#160;</a></span>set_model_inputs_prior_to_update()</h2>
+<a id="afc50e50f23df9c0178bd3ccba22c24e4" name="afc50e50f23df9c0178bd3ccba22c24e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc50e50f23df9c0178bd3ccba22c24e4">&#9670;&#160;</a></span>set_model_inputs_prior_to_update()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2593,7 +2917,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
         <tr>
           <td class="memname">void realization::Bmi_Module_Formulation::set_model_inputs_prior_to_update </td>
           <td>(</td>
-          <td class="paramtype">const double &amp;</td>          <td class="paramname"><span class="paramname"><em>model_init_time</em></span>, </td>
+          <td class="paramtype">const double &amp;</td>          <td class="paramname"><span class="paramname"><em>model_time</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2609,15 +2933,16 @@ template&lt;class DataType , class SelectionType &gt; </div>
 </div><div class="memdoc">
 
 <p>Set BMI input variable values for the model appropriately prior to calling its <code>BMI</code><a class="el" href="#abb46469f850c323987b1feef0217504f">update()</a>``. </p>
+<p>Depending on the value of <a class="el" href="#a0d3a1bd77dfa422fbfe7360a3a38aeb2">cache_input_variable_metadata</a> (<code>false</code> by default, but which can be controlled using <a class="el" href="#a76cb974642a085d4d754c4b162db63e3">set_cache_input_var_metadata</a>), this will defer most of its execution to a call either to <a class="el" href="#a138d48599bb6721054e1b9c8352b06e9">do_bmi_sets_from_stored_metadata</a> or <a class="el" href="#aff171a21897a83efdde7c523e3388adb">do_bmi_sets_with_full_refetch</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">model_initial_time</td><td>The model's time prior to the update, in its internal units and representation. </td></tr>
+    <tr><td class="paramname">model_time</td><td>The model's time prior to the update, in its internal units and representation. </td></tr>
     <tr><td class="paramname">t_delta</td><td>The size of the time step over which the formulation is going to update the model, which might be different than the model's internal time step. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classrealization_1_1_bmi___formulation.html#a93fab1a9af5c9d1917219528bec89894">realization::Bmi_Formulation::convert_model_time()</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a202e3be992fa8c73f74819b44bff14b6">realization::Catchment_Formulation::forcing</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a8dbc88c821422f043becca2742a9a507">models::bmi::Bmi_Adapter::get_analogous_cxx_type()</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="#abe1dcb8b91c143bb6c0ab67614ef92f1">get_bmi_model_start_time_forcing_offset_s()</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#af35f3bc6a07f8e01e1a25b99ffb2e939">realization::Catchment_Formulation::get_catchment_id()</a>, <a class="el" href="#a9bf1db96b3ecb9b4ae5bc7b0c2e6c76b">get_config_mapped_variable_name()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027">models::bmi::Bmi_Adapter::get_model_name()</a>, <a class="el" href="classdata__access_1_1_data_provider.html#a8c55fdbb6c7878bbea0d05ab2aaa8b39">data_access::DataProvider&lt; DataType, SelectionType &gt;::get_value()</a>, <a class="el" href="namespacerealization.html#a93cc4172ef61ac110470c47ca86667ae">realization::get_value_as_type()</a>, <a class="el" href="classdata__access_1_1_data_provider.html#a4ced90182c881aa0c597083ab619724d">data_access::DataProvider&lt; DataType, SelectionType &gt;::get_values()</a>, <a class="el" href="namespacerealization.html#a4b923a22dda92a7191b3f277e754884d">realization::get_values_as_type()</a>, <a class="el" href="classbmi_1_1_bmi.html#ae3eb5cd72bcc4929baedca798b0c65ff">bmi::Bmi::GetInputVarNames()</a>, <a class="el" href="classbmi_1_1_bmi.html#aaac07008cbea8bc96082a4e7ad2173b6">bmi::Bmi::GetVarItemsize()</a>, <a class="el" href="classbmi_1_1_bmi.html#ab200d1746bee8806139062040dd06d8f">bmi::Bmi::GetVarNbytes()</a>, <a class="el" href="classbmi_1_1_bmi.html#a75725d44cf7432a7f09f1ac403727d64">bmi::Bmi::GetVarUnits()</a>, <a class="el" href="#a812a84926c7dbc5da20dd459c24e004a">input_forcing_providers</a>, <a class="el" href="struct_units_helper_1_1unit__conversion__exception.html#a77185d5c68305fc039ef414e86bedcf7">UnitsHelper::unit_conversion_exception::provider_model_name</a>, <a class="el" href="struct_units_helper_1_1unit__conversion__exception.html#ab804c77114920e37638aa6bf236c9511">UnitsHelper::unit_conversion_exception::provider_var_name</a>, <a class="el" href="class_units_helper.html#aa9348521aeb826373402b9a0b96ef2aa">UnitsHelper::record_unit_conversion_fault()</a>, <a class="el" href="classbmi_1_1_bmi.html#ae0e047f16b967e6b6cab77d3285add30">bmi::Bmi::SetValue()</a>, <a class="el" href="struct_units_helper_1_1unit__conversion__exception.html#a822e82434dcfaebf84c42e42cf79dc7b">UnitsHelper::unit_conversion_exception::unconverted_values</a>, and <a class="el" href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8">logging::warning()</a>.</p>
+<p class="reference">References <a class="el" href="#a0d3a1bd77dfa422fbfe7360a3a38aeb2">cache_input_variable_metadata</a>, <a class="el" href="classrealization_1_1_bmi___formulation.html#a93fab1a9af5c9d1917219528bec89894">realization::Bmi_Formulation::convert_model_time()</a>, <a class="el" href="#a138d48599bb6721054e1b9c8352b06e9">do_bmi_sets_from_stored_metadata()</a>, <a class="el" href="#aff171a21897a83efdde7c523e3388adb">do_bmi_sets_with_full_refetch()</a>, and <a class="el" href="#abe1dcb8b91c143bb6c0ab67614ef92f1">get_bmi_model_start_time_forcing_offset_s()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#abb46469f850c323987b1feef0217504f">update()</a>.</p>
 
@@ -2793,7 +3118,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 <p>Implements <a class="el" href="classrealization_1_1_bmi___formulation.html#af0cfe337b74443c6c105d937102a1228">realization::Bmi_Formulation</a>.</p>
 
-<p class="reference">References <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a73ca855d0db45838b87309038fae1fed">models::bmi::Bmi_Adapter::convert_seconds_to_model_time()</a>, <a class="el" href="#aba113ffb035d65c338a2a8187cdddf88">get_allow_model_exceed_end_time()</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="classrealization_1_1_formulation.html#a224466bc8464766b40109ce929143d86">realization::Formulation::get_formulation_type()</a>, <a class="el" href="classbmi_1_1_bmi.html#acbbbbfa690e6adb9eb348aa0ecd03e69">bmi::Bmi::GetCurrentTime()</a>, <a class="el" href="#a6bc0ba27e103c821f269a1f56dc906a5">next_time_step_index</a>, <a class="el" href="#aef30be5d6ae1ef746a5717c1f2badc77">set_model_inputs_prior_to_update()</a>, <a class="el" href="classbmi_1_1_bmi.html#a0ecdb1dd0c0545908d7debb56e2c10aa">bmi::Bmi::Update()</a>, and <a class="el" href="classbmi_1_1_bmi.html#a6bead8b75c803a2fd51f4df6f6f91627">bmi::Bmi::UpdateUntil()</a>.</p>
+<p class="reference">References <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a73ca855d0db45838b87309038fae1fed">models::bmi::Bmi_Adapter::convert_seconds_to_model_time()</a>, <a class="el" href="#aba113ffb035d65c338a2a8187cdddf88">get_allow_model_exceed_end_time()</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="classrealization_1_1_formulation.html#a224466bc8464766b40109ce929143d86">realization::Formulation::get_formulation_type()</a>, <a class="el" href="classbmi_1_1_bmi.html#acbbbbfa690e6adb9eb348aa0ecd03e69">bmi::Bmi::GetCurrentTime()</a>, <a class="el" href="#a6bc0ba27e103c821f269a1f56dc906a5">next_time_step_index</a>, <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update()</a>, <a class="el" href="classbmi_1_1_bmi.html#a0ecdb1dd0c0545908d7debb56e2c10aa">bmi::Bmi::Update()</a>, and <a class="el" href="classbmi_1_1_bmi.html#a6bead8b75c803a2fd51f4df6f6f91627">bmi::Bmi::UpdateUntil()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#a0108d3ee83f95ad2eb0733a237078e89">get_response()</a>.</p>
 
@@ -3038,6 +3363,61 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
+<a id="ad20a0abc6e06c670c587d7292494d96b" name="ad20a0abc6e06c670c587d7292494d96b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad20a0abc6e06c670c587d7292494d96b">&#9670;&#160;</a></span>bmi_input_providers</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;std::vector&lt;std::shared_ptr&lt;<a class="el" href="namespacedata__access.html#a80e53ae1180ee33222d2a54436928c24">data_access::GenericDataProvider</a>&gt; &gt; &gt; realization::Bmi_Module_Formulation::bmi_input_providers</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Vector of data providers for BMI input vars, with the provider at an index corresponding to the var in <a class="el" href="#a7dd68d66039258314ae59bd237ba5d5d">bmi_input_var_details</a> at the same index. </p>
+<p>As with <a class="el" href="#a7dd68d66039258314ae59bd237ba5d5d">bmi_input_var_details</a>, these should be populated during the first call to <a class="el" href="#a138d48599bb6721054e1b9c8352b06e9">do_bmi_sets_from_stored_metadata</a> via a nested call to <a class="el" href="#a6b1178914ad6e8ae4d69d86284fce924">initialize_bmi_input_var_metadata</a>. </p>
+
+<p class="reference">Referenced by <a class="el" href="#a138d48599bb6721054e1b9c8352b06e9">do_bmi_sets_from_stored_metadata()</a>, and <a class="el" href="#a6b1178914ad6e8ae4d69d86284fce924">initialize_bmi_input_var_metadata()</a>.</p>
+
+</div>
+</div>
+<a id="a7dd68d66039258314ae59bd237ba5d5d" name="a7dd68d66039258314ae59bd237ba5d5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7dd68d66039258314ae59bd237ba5d5d">&#9670;&#160;</a></span>bmi_input_var_details</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;std::vector&lt;<a class="el" href="classrealization_1_1_bmi___var___details.html">Bmi_Var_Details</a>*&gt; &gt; realization::Bmi_Module_Formulation::bmi_input_var_details</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>BMI input variables details for this instance, cached to improve compute performance when setting values prior to updates. </p>
+<p>This will hold cached details on input variables needed by this instance during <a class="el" href="#a138d48599bb6721054e1b9c8352b06e9">do_bmi_sets_from_stored_metadata</a> at each time step. It will be populated lazily on the first time step, via a nested call to <a class="el" href="#a6b1178914ad6e8ae4d69d86284fce924">initialize_bmi_input_var_metadata</a>.</p>
+<p>These should be pointers to <a class="el" href="classrealization_1_1_bmi___var___details.html">Bmi_Var_Details</a> instances in <a class="el" href="#a2d63db036aa5ecba7f045f43349c698f">known_bmi_input_vars</a>. </p>
+
+<p class="reference">Referenced by <a class="el" href="#a138d48599bb6721054e1b9c8352b06e9">do_bmi_sets_from_stored_metadata()</a>, and <a class="el" href="#a6b1178914ad6e8ae4d69d86284fce924">initialize_bmi_input_var_metadata()</a>.</p>
+
+</div>
+</div>
 <a id="a494171a1888c373c2a1e03008e00e5d5" name="a494171a1888c373c2a1e03008e00e5d5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a494171a1888c373c2a1e03008e00e5d5">&#9670;&#160;</a></span>bmi_main_output_var</h2>
 
@@ -3210,6 +3590,32 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
+<a id="a0d3a1bd77dfa422fbfe7360a3a38aeb2" name="a0d3a1bd77dfa422fbfe7360a3a38aeb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d3a1bd77dfa422fbfe7360a3a38aeb2">&#9670;&#160;</a></span>cache_input_variable_metadata</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool realization::Bmi_Module_Formulation::cache_input_variable_metadata = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update</a> should store and reuse metadata. </p>
+
+<p class="reference">Referenced by <a class="el" href="#accff79d755091811e806fc3759d6539f">is_input_variable_metadata_cached()</a>, <a class="el" href="#a76cb974642a085d4d754c4b162db63e3">set_cache_input_var_metadata()</a>, and <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update()</a>.</p>
+
+</div>
+</div>
 <a id="a4fe13a1bc94d6c8c0cf47c2248c22f1b" name="a4fe13a1bc94d6c8c0cf47c2248c22f1b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4fe13a1bc94d6c8c0cf47c2248c22f1b">&#9670;&#160;</a></span>cat_id</h2>
 
@@ -3254,7 +3660,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="#aaeaf8ef8b36e7c5690ca8134a5cd8065">determine_model_time_offset()</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a92b6ca5352dd98640d7c320f7c6c3333">realization::Catchment_Formulation::finalize()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#aaa757bd704d7477df5322adfe4548cb1">realization::Bmi_Multi_Formulation::get_variable_time_begin()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#af7a6c848245cc7c359708fcc042a39f3">realization::Bmi_Multi_Formulation::get_variable_time_end()</a>, and <a class="el" href="#aef30be5d6ae1ef746a5717c1f2badc77">set_model_inputs_prior_to_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="#aaeaf8ef8b36e7c5690ca8134a5cd8065">determine_model_time_offset()</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a92b6ca5352dd98640d7c320f7c6c3333">realization::Catchment_Formulation::finalize()</a>, <a class="el" href="#a560df251f7c45e3003698a9ce589f0da">get_provider_for_input_var()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#aaa757bd704d7477df5322adfe4548cb1">realization::Bmi_Multi_Formulation::get_variable_time_begin()</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#af7a6c848245cc7c359708fcc042a39f3">realization::Bmi_Multi_Formulation::get_variable_time_end()</a>.</p>
 
 </div>
 </div>
@@ -3324,7 +3730,33 @@ template&lt;class DataType , class SelectionType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#aef30be5d6ae1ef746a5717c1f2badc77">set_model_inputs_prior_to_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a560df251f7c45e3003698a9ce589f0da">get_provider_for_input_var()</a>.</p>
+
+</div>
+</div>
+<a id="a2d63db036aa5ecba7f045f43349c698f" name="a2d63db036aa5ecba7f045f43349c698f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d63db036aa5ecba7f045f43349c698f">&#9670;&#160;</a></span>known_bmi_input_vars</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::set&lt; <a class="el" href="classrealization_1_1_bmi___var___details.html">Bmi_Var_Details</a> &gt; realization::Bmi_Module_Formulation::known_bmi_input_vars</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>BMI input variables details for all instances, cached to improve compute performance when setting values prior to updates. </p>
+
+<p class="reference">Referenced by <a class="el" href="#a6b1178914ad6e8ae4d69d86284fce924">initialize_bmi_input_var_metadata()</a>.</p>
 
 </div>
 </div>
@@ -3675,7 +4107,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___module___formulation.html">Bmi_Module_Formulation</a></li>
-    <li class="footer">Generated on Fri Aug 14 2026 21:14:59 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Aug 19 2026 16:54:00 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

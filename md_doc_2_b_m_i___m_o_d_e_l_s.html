@@ -350,6 +350,28 @@ Optional Parameters</h2>
 <li>implied to be <code>true</code> by default</li>
 </ul>
 </li>
+<li><code>cache_input_variable_metadata</code><ul>
+<li>boolean value, <code>false</code> by default</li>
+<li>indicates whether BMI input variable metadata should be saved in memory on first look-up and reused, thus optimizing execution<ul>
+<li>BMI input variables have values set at each time step</li>
+<li>certain metadata is required when performing those set operations:<ul>
+<li>name and mapped alias (if set)</li>
+<li>units</li>
+<li>memory size and type of individual items (e.g., <code>int</code>, <code>float</code>, <code>double</code>, etc.)</li>
+<li>whether the variable is an array, and if so, the number of individual items</li>
+</ul>
+</li>
+<li>for BMI modules that will not change applicable metadata throughout a simulation, this can be saved in memory and reused</li>
+</ul>
+</li>
+<li>the BMI specification does not expressly guarantee metadata values will not change, so configuration must consider the particular BMI module in use</li>
+<li>also, these optimizations do result in additional memory usage<ul>
+<li>while relatively small, can scale significantly for larger simulations, so this may not be usable for situations when memory is constrained</li>
+</ul>
+</li>
+<li>for a multi-BMI formulation, this option is configured on the individual nested modules (i.e., within each nested module's <code>params</code>) rather than at the top level of the multi-BMI formulation, so it can be enabled or disabled per nested module</li>
+</ul>
+</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md62"></a>
 BMI Models Written in C</h1>
@@ -701,7 +723,7 @@ Example Look-Back Config</h4>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Aug 14 2026 21:14:58 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Aug 19 2026 16:53:59 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

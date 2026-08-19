@@ -1,9 +1,9 @@
 <map id="realization::Bmi_Module_Formulation" name="realization::Bmi_Module_Formulation">
-<area shape="rect" id="Node000001" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="192,1827,380,3104"/>
-<area shape="rect" id="Node000009" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="95,3152,274,3396"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="207,3119,203,3153,197,3152,202,3119"/>
-<area shape="rect" id="Node000010" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="298,3152,477,3396"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="371,3119,375,3152,370,3153,366,3119"/>
+<area shape="rect" id="Node000001" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="192,1827,380,3398"/>
+<area shape="rect" id="Node000009" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="95,3446,274,3690"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="204,3413,200,3446,195,3446,199,3412"/>
+<area shape="rect" id="Node000010" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="298,3446,477,3690"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="374,3412,377,3446,372,3446,368,3413"/>
 <area shape="rect" id="Node000002" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="192,927,380,1779"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="289,1794,289,1828,284,1828,284,1794"/>
 <area shape="rect" id="Node000003" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="94,519,281,879"/>

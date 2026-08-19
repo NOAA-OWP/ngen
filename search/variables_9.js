@@ -15,5 +15,6 @@ var searchData=
   ['internal_5fnexuses_12',['internal_nexuses',['../class_h_y___hydro_network.html#a4d043be5dd5d779694ff90c555cca137',1,'HY_HydroNetwork']]],
   ['interpolative_13',['interpolative',['../structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html#ad8773fd35ca01511f8e2baed70e8afcf',1,'hy_features::hydrolocation::HY_DistanceFromReferent']]],
   ['is_5ffatal_14',['is_fatal',['../classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a1eebe6b07794a906741024418e632249',1,'models::bmi::protocols::NgenMassBalance']]],
-  ['is_5fout_5fvars_5ffrom_5flast_5fmod_15',['is_out_vars_from_last_mod',['../classrealization_1_1_bmi___multi___formulation.html#a2b3b0cb7670a2ab18107ec428ac06fa2',1,'realization::Bmi_Multi_Formulation']]]
+  ['is_5fout_5fvars_5ffrom_5flast_5fmod_15',['is_out_vars_from_last_mod',['../classrealization_1_1_bmi___multi___formulation.html#a2b3b0cb7670a2ab18107ec428ac06fa2',1,'realization::Bmi_Multi_Formulation']]],
+  ['item_5fsize_16',['item_size',['../classrealization_1_1_bmi___var___details.html#ae233bc01243910c9893890b3ca68a3f9',1,'realization::Bmi_Var_Details']]]
 ];
