@@ -164,6 +164,13 @@ ngen_add_test(
         NGEN_WITH_SQLITE
 )
 
+# Formulation_Manager_Test's auxiliary attribute table cases need NGen::geopackage, a target that
+# only exists when SQLite support is enabled; without it those cases compile to nothing.
+set(NGEN_GEOPACKAGE_WHEN_ENABLED "")
+if(NGEN_WITH_SQLITE)
+    set(NGEN_GEOPACKAGE_WHEN_ENABLED NGen::geopackage)
+endif()
+
 ########################## Realization Config Unit Tests
 ngen_add_test(
     test_realization_config
@@ -179,6 +186,7 @@ ngen_add_test(
         NGen::forcing
         NGen::ngen_bmi
         NGen::output
+        ${NGEN_GEOPACKAGE_WHEN_ENABLED}
     DEPENDS
         testbmicppmodel
 )
@@ -576,6 +584,7 @@ ngen_add_test(
         NGen::logging
         NGen::ngen_bmi
         NGen::output
+        ${NGEN_GEOPACKAGE_WHEN_ENABLED}
         testbmicppmodel
 )
 
