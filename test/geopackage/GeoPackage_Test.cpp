@@ -148,7 +148,9 @@ TEST_F(GeoPackage_Test, geopackage_aux_fixture_test)
     EXPECT_EQ(one.get<int>("int_value"), 42);
     EXPECT_DOUBLE_EQ(one.get<double>("real_value"), 3.5);
     EXPECT_EQ(one.get<std::string>("text_value"), "alpha");
-    EXPECT_EQ(one.types()[one.find("sparse_value")], SQLITE_NULL);
+    const int sparse_column = one.find("sparse_value");
+    ASSERT_NE(sparse_column, -1);
+    EXPECT_EQ(one.types()[sparse_column], SQLITE_NULL);
     one.next();
     EXPECT_TRUE(one.done());
 

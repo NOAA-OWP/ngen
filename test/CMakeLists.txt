@@ -171,6 +171,7 @@ ngen_add_test(
         geopackage/aux_fixture_builders.cpp
     LIBRARIES
         NGen::geopackage
+        NGen::config_header
     REQUIRES
         NGEN_WITH_SQLITE
 )

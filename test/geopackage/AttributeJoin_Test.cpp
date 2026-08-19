@@ -2,9 +2,28 @@
 
 #include <algorithm>
 
+#include <NGenConfig.h>
+
 #include "attribute_join.hpp"
 #include "GeoPackageReader.hpp"
 #include "aux_fixture_builders.hpp"
+
+//! Ends a gtest stderr capture however the enclosing scope exits, since a capture leaked by a
+//! throw aborts the next test that starts one.
+class CapturedStderr
+{
+  public:
+    CapturedStderr() { testing::internal::CaptureStderr(); }
+    CapturedStderr(const CapturedStderr&) = delete;
+    CapturedStderr& operator=(const CapturedStderr&) = delete;
+    ~CapturedStderr() { if (this->open) testing::internal::GetCapturedStderr(); }
+
+    //! Ends the capture, returning everything written to stderr while it was open.
+    std::string str() { this->open = false; return testing::internal::GetCapturedStderr(); }
+
+  private:
+    bool open = true;
+};
 
 // Joins run against the fixture written by write_example_aux(), whose four attribute tables and
 // their deliberate gaps are described there.
@@ -41,9 +60,8 @@ class AttributeJoin_Test : public ::testing::Test
     void join_quietly(geojson::FeatureCollection& collection, const std::string& table,
                       const std::string& key_column, const std::string& prefix)
     {
-        testing::internal::CaptureStderr();
+        CapturedStderr capture;
         ngen::geopackage::join_attributes(collection, this->path, spec(table, key_column, prefix));
-        testing::internal::GetCapturedStderr();
     }
 
     static std::string path;
@@ -101,12 +119,12 @@ TEST_F(AttributeJoin_Test, join_warns_for_feature_without_row)
 {
     auto collection = this->features();
 
-    testing::internal::CaptureStderr();
+    CapturedStderr capture;
     ngen::geopackage::join_attributes(*collection, this->path, spec("aux_params_one", "divide_id", "one"));
-    const std::string captured = testing::internal::GetCapturedStderr();
+    const std::string captured = capture.str();
 
     // the warning goes through logging::warning, which a quiet build compiles away
-    #ifndef NGEN_QUIET
+    #if !NGEN_QUIET
         EXPECT_NE(captured.find("Second"), std::string::npos);
         EXPECT_NE(captured.find("aux_params_one"), std::string::npos);
         EXPECT_EQ(captured.find("First"), std::string::npos);
@@ -166,9 +184,9 @@ TEST_F(AttributeJoin_Test, join_ignores_rows_without_a_feature)
     auto collection = this->features({ "First" });
     ASSERT_EQ(collection->get_size(), 1);
 
-    testing::internal::CaptureStderr();
+    CapturedStderr capture;
     ngen::geopackage::join_attributes(*collection, this->path, spec("aux_params_one", "divide_id", "one"));
-    const std::string captured = testing::internal::GetCapturedStderr();
+    const std::string captured = capture.str();
 
     EXPECT_EQ(collection->get_size(), 1);
     EXPECT_EQ(captured, "");
@@ -375,11 +393,11 @@ TEST_F(AttributeJoin_Test, join_reports_a_missing_row_once_for_a_shared_id)
     collection->add_feature(this->features({ "Second" })->get_feature("Second"));
     ASSERT_EQ(collection->get_size(), 2);
 
-    testing::internal::CaptureStderr();
+    CapturedStderr capture;
     ngen::geopackage::join_attributes(*collection, this->path, spec("aux_params_one", "divide_id", "one"));
-    const std::string captured = testing::internal::GetCapturedStderr();
+    const std::string captured = capture.str();
 
-    #ifndef NGEN_QUIET
+    #if !NGEN_QUIET
         EXPECT_NE(captured.find("Second"), std::string::npos);
         EXPECT_EQ(std::count(captured.begin(), captured.end(), '\n'), 1);
     #else
