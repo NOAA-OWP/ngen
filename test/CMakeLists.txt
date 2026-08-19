@@ -160,6 +160,7 @@ ngen_add_test(
         geopackage/AttributeJoin_Test.cpp
     LIBRARIES
         NGen::geopackage
+        NGen::config_header
     REQUIRES
         NGEN_WITH_SQLITE
 )

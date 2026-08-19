@@ -1930,6 +1930,23 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
 // holds no row for is warned about and skipped.
 // ---------------------------------------------------------------------------
 
+//! Ends a gtest stderr capture however the enclosing scope exits, since a capture leaked by a
+//! throw aborts the next test that starts one.
+class CapturedStderr
+{
+  public:
+    CapturedStderr() { testing::internal::CaptureStderr(); }
+    CapturedStderr(const CapturedStderr&) = delete;
+    CapturedStderr& operator=(const CapturedStderr&) = delete;
+    ~CapturedStderr() { if (this->open) testing::internal::GetCapturedStderr(); }
+
+    //! Ends the capture, returning everything written to stderr while it was open.
+    std::string str() { this->open = false; return testing::internal::GetCapturedStderr(); }
+
+  private:
+    bool open = true;
+};
+
 TEST_F(Formulation_Manager_Test, joined_auxiliary_attributes_resolve_as_model_params)
 {
     std::ostream* ptr = &std::cout;
@@ -1963,15 +1980,20 @@ TEST_F(Formulation_Manager_Test, unmatched_auxiliary_attribute_warns_and_omits_t
     auto fabric = this->aux_fabric_with_joined_attributes();
     auto [manager, simulation_time_config] = manager_and_time(fix_paths(EXAMPLE_12));
 
-    testing::internal::CaptureStderr();
+    CapturedStderr capture;
     manager.read(simulation_time_config, fabric, catchment_output);
-    const std::string captured = testing::internal::GetCapturedStderr();
+    const std::string captured = capture.str();
 
     // "Second" has no aux_params_one row, so MODEL_VAR_1 never resolves for it -- and only for it.
+    // The report goes through logging::warning, which a quiet build compiles away.
     const std::string skipped = "skipping MODEL_VAR_1";
-    const auto warned = captured.find(skipped);
-    ASSERT_NE(warned, std::string::npos);
-    EXPECT_EQ(captured.find(skipped, warned + 1), std::string::npos);
+    #if !NGEN_QUIET
+        const auto warned = captured.find(skipped);
+        ASSERT_NE(warned, std::string::npos);
+        EXPECT_EQ(captured.find(skipped, warned + 1), std::string::npos);
+    #else
+        EXPECT_EQ(captured.find(skipped), std::string::npos);
+    #endif
 
     const time_step_t ts = 2;
     const auto second = output_by_variable(manager, "Second", ts);
