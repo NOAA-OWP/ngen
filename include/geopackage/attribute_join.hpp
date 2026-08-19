@@ -2,6 +2,7 @@
 #define NGEN_GEOPACKAGE_ATTRIBUTE_JOIN_HPP
 
 #include <string>
+#include <vector>
 
 #include "FeatureCollection.hpp"
 
@@ -51,6 +52,32 @@ void join_attributes(
     geojson::FeatureCollection& collection,
     const std::string& gpkg_path,
     const AttributeJoinSpec& spec
+);
+
+/**
+ * Join every declared table onto a collection, in the order declared.
+ *
+ * A spec naming no file is read from @p default_source, which is why @p default_source_is_gpkg
+ * exists: the caller knows whether that default is a GeoPackage, and a spec relying on a default
+ * that is not one is refused here rather than surfacing as an unreadable database further down.
+ * A spec that does name a file is unaffected, so attributes can be pulled from a GeoPackage
+ * alongside a source in some other format.
+ *
+ * @param[in,out] collection Features to join onto, mutated in place
+ * @param[in] specs Tables to join, in the order they were declared
+ * @param[in] default_source Path a spec naming no file is read from
+ * @param[in] default_source_is_gpkg Whether @p default_source is a GeoPackage
+ * @param[in] context Name of the setting these specs came from; an error names the failing entry
+ *            as `<context>[<position>]`, the way the parser reporting on the same list does
+ * @throw std::runtime_error if a spec relies on a @p default_source that is not a GeoPackage, or
+ *        for any reason join_attributes() throws, with the failing entry named
+ */
+void join_all(
+    geojson::FeatureCollection& collection,
+    const std::vector<AttributeJoinSpec>& specs,
+    const std::string& default_source,
+    bool default_source_is_gpkg,
+    const std::string& context
 );
 
 } // namespace geopackage

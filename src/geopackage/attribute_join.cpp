@@ -90,3 +90,35 @@ void ngen::geopackage::join_attributes(
         std::cerr << "WARN: " << message << std::endl;
     }
 }
+
+void ngen::geopackage::join_all(
+    geojson::FeatureCollection& collection,
+    const std::vector<AttributeJoinSpec>& specs,
+    const std::string& default_source,
+    const bool default_source_is_gpkg,
+    const std::string& context
+)
+{
+    for (std::size_t index = 0; index < specs.size(); index++) {
+        const AttributeJoinSpec& spec = specs[index];
+
+        // Entries are identified by position, the way the parser reporting on them does. Naming the
+        // table here instead would repeat what the joiner's own message already says, and a table
+        // may legitimately be declared twice from two files, so position is what tells them apart.
+        const std::string entry = context + "[" + std::to_string(index) + "]";
+
+        if (spec.file.empty() && !default_source_is_gpkg) {
+            throw std::runtime_error(
+                entry + ": table '" + spec.table + "' declares no 'file', but '" + default_source +
+                "' is not a GeoPackage."
+            );
+        }
+
+        try {
+            join_attributes(collection, spec.file.empty() ? default_source : spec.file, spec);
+        } catch (const std::exception& error) {
+            // The joiner knows the table and the file, not which declaration asked for them.
+            throw std::runtime_error(entry + ": " + error.what());
+        }
+    }
+}

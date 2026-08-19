@@ -32,6 +32,8 @@ namespace hydrofabric {
 class GeoPackageHydrofabricReader : public HydrofabricReader
 {
   public:
+    HydrofabricVersion version() const noexcept override;
+
     geojson::GeoJSON read_divides(const std::vector<std::string>& ids = {}) override;
 
     geojson::GeoJSON read_nexus(const std::vector<std::string>& ids = {}) override;
@@ -63,13 +65,6 @@ class GeoPackageHydrofabricReader : public HydrofabricReader
      * @throws std::logic_error if @p layer is neither "divides" nor "nexus"
      */
     const geopackage::GeoPackageReader& reader_for(const std::string& layer) const;
-
-    /**
-     * The detected schema version, for the version-keyed schema utilities.
-     *
-     * @return Hydrofabric version this reader was constructed for
-     */
-    HydrofabricVersion version() const noexcept;
 
     /**
      * Verify up front that @p layer carries the columns this version needs.

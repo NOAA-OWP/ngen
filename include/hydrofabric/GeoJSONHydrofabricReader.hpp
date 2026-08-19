@@ -33,6 +33,9 @@ class GeoJSONHydrofabricReader : public HydrofabricReader
      */
     GeoJSONHydrofabricReader(std::string divides_path, std::string nexus_path);
 
+    //! Always V1_GEOJSON: the format carries no release marker to read.
+    HydrofabricVersion version() const noexcept override;
+
     geojson::GeoJSON read_divides(const std::vector<std::string>& ids = {}) override;
 
     geojson::GeoJSON read_nexus(const std::vector<std::string>& ids = {}) override;

@@ -186,3 +186,100 @@ TEST_F(AttributeJoin_Test, join_of_two_tables_keeps_shared_column_names_distinct
     EXPECT_FALSE(second->has_property("one.text_value"));
     EXPECT_EQ(second->get_property("two.text_value").as_string(), "delta");
 }
+
+// join_all is what the driver actually calls: it resolves each entry's source, applies the entries
+// in order, and names the entry that failed. Below are the cases only it can fail. Each joins over
+// a subset of one feature that every table covers, so none of them provokes a coverage warning.
+
+TEST_F(AttributeJoin_Test, join_all_applies_every_entry_in_order)
+{
+    auto collection = this->features({ "First" });
+    ngen::geopackage::join_all(
+        *collection,
+        { spec("aux_params_one", "divide_id", "one"), spec("aux_params_two", "catchment_id", "two") },
+        this->path,
+        true,
+        "auxiliary_hydrofabric_attributes"
+    );
+
+    const auto& first = collection->get_feature("First");
+    EXPECT_EQ(first->get_property("one.text_value").as_string(), "alpha");
+    EXPECT_EQ(first->get_property("two.text_value").as_string(), "beta");
+}
+
+// An entry naming no file is read from the default source the driver supplies.
+TEST_F(AttributeJoin_Test, join_all_reads_an_entry_without_a_file_from_the_default_source)
+{
+    auto collection = this->features({ "First" });
+    ngen::geopackage::join_all(
+        *collection, { spec("aux_params_one", "divide_id", "one") }, this->path, true,
+        "auxiliary_hydrofabric_attributes"
+    );
+
+    EXPECT_EQ(collection->get_feature("First")->get_property("one.text_value").as_string(), "alpha");
+}
+
+// Relying on a default source that is not a GeoPackage is refused here, rather than surfacing as
+// an unreadable database further down.
+TEST_F(AttributeJoin_Test, join_all_refuses_a_default_source_that_is_not_a_geopackage)
+{
+    auto collection = this->features({ "First" });
+    try {
+        ngen::geopackage::join_all(
+            *collection, { spec("aux_params_one", "divide_id", "one") },
+            "catchments.geojson", false, "auxiliary_hydrofabric_attributes"
+        );
+        FAIL() << "an entry with no 'file' over a non-GeoPackage default should throw";
+    } catch (const std::runtime_error& error) {
+        const std::string message = error.what();
+        EXPECT_NE(message.find("auxiliary_hydrofabric_attributes[0]"), std::string::npos);
+        EXPECT_NE(message.find("catchments.geojson"), std::string::npos);
+        EXPECT_NE(message.find("is not a GeoPackage"), std::string::npos);
+    }
+}
+
+// An entry that does name a file is unaffected by the default's format, so attributes can be
+// pulled from a GeoPackage beside a fabric in some other format.
+TEST_F(AttributeJoin_Test, join_all_allows_a_declared_file_over_a_non_geopackage_default)
+{
+    auto collection = this->features({ "First" });
+    ngen::geopackage::AttributeJoinSpec declared = spec("aux_params_one", "divide_id", "one");
+    declared.file = this->path;
+
+    ASSERT_NO_THROW(
+        ngen::geopackage::join_all(
+            *collection, { declared }, "catchments.geojson", false, "auxiliary_hydrofabric_attributes"
+        )
+    );
+    EXPECT_EQ(collection->get_feature("First")->get_property("one.text_value").as_string(), "alpha");
+}
+
+// The joiner names the table it failed on, so the entry context must not say it a second time: a
+// real regionalization table name runs to 60-odd characters, and twice is what buries the reason.
+TEST_F(AttributeJoin_Test, join_all_names_the_failing_entry_without_repeating_the_table)
+{
+    auto collection = this->features({ "First" });
+    try {
+        ngen::geopackage::join_all(
+            *collection,
+            { spec("aux_params_one", "divide_id", "one"), spec("aux_params_absent", "divide_id", "gone") },
+            this->path,
+            true,
+            "auxiliary_hydrofabric_attributes"
+        );
+        FAIL() << "an entry naming a table that does not exist should throw";
+    } catch (const std::runtime_error& error) {
+        const std::string message = error.what();
+
+        // the second entry is the one that failed, and it is identified by position
+        EXPECT_NE(message.find("auxiliary_hydrofabric_attributes[1]"), std::string::npos);
+        EXPECT_EQ(message.find("auxiliary_hydrofabric_attributes[0]"), std::string::npos);
+
+        std::size_t occurrences = 0;
+        for (std::size_t at = message.find("aux_params_absent"); at != std::string::npos;
+             at = message.find("aux_params_absent", at + 1)) {
+            occurrences++;
+        }
+        EXPECT_EQ(occurrences, 1u) << "table named " << occurrences << " times in: " << message;
+    }
+}
