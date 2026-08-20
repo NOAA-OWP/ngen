@@ -559,7 +559,7 @@ namespace geojson {
 
             virtual void visit(FeatureVisitor &visitor) = 0;
 
-            inline bool operator==(const FeatureBase& rhs) {
+            inline bool operator==(const FeatureBase& rhs) const {
                 if (this->get_id() != rhs.get_id()) {
                     return false;
                 }
