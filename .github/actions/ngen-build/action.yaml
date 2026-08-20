@@ -194,6 +194,11 @@ runs:
               export CFLAGS="$CFLAGS -O0 -fsanitize-ignorelist=/tmp/asan_ignore.txt -fno-common"
               export CXXFLAGS="$CXXFLAGS -O0 -fsanitize-ignorelist=/tmp/asan_ignore.txt -fno-common"
             else
+              if [ ${{ matrix.compiler }} == 'clang' ]
+              then
+                export CC=clang
+                export CXX=clang++
+              fi
               export CFLAGS="$CFLAGS -O1"
               export CXXFLAGS="$CXXFLAGS -O1"
             fi
