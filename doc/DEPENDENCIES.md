@@ -49,21 +49,21 @@ If CMake is unable to find a compiler automatically, the CMake `CMAKE_C_COMPILER
 
 ### Version Requirements
 
-Project C++ code needs to be compliant with the C++ 17 standard.  Supported compilers need to be of a recent enough version to be compatible.  
+Project C++ code needs to be compliant with the C++ 20 standard. Supported compilers need to be of a recent enough version to be compatible.
 
 Additionally, C++ compilers needs to be compatible (ideally officially *tested* as such) with other project C++ dependencies.
 
 #### GCC
 
-Based on [this page](https://gcc.gnu.org/projects/cxx-status.html#cxx17), C++ 17 *language* support alone equates to some GCC version `7` release or later. However, the project also relies on a complete C++ 17 `<filesystem>` implementation (e.g. `std::hash<std::filesystem::path>`), which GCC `8`'s libstdc++ does not fully provide, so the effective minimum is GCC `9` or later.
+Based on [this page](https://gcc.gnu.org/projects/cxx-status.html#cxx20), C++ 20 support equates to some GCC version `11` release or later.
 
 On RHEL/Rocky/AlmaLinux `8`, whose system compiler is GCC `8`, install and enable a newer [`gcc-toolset`](https://developers.redhat.com/products/developertoolset/overview) rather than the base `gcc` (the project's container image, `docker/ngen.dockerfile`, uses `gcc-toolset-12`).
 
 #### Clang
 
-The Clang versioning scheme is a little convoluted.  Using the official scheme, Clang 5 and later should support all C++ 17 features.
+The Clang versioning scheme is a little convoluted.  Using the official scheme, Clang versions 10 and later should sufficiently support C++ 20 features.
 
-However, Apple likes to apply their own versioning to Clang and LLVM.  The `Apple LLVM version 10.0.1 (clang-1001.0.46.4)` version released with MacOS 10.14.x should do fine.  Recent, earlier version likely will as well, but YMMV.
+However, Apple likes to apply their own versioning to Clang and LLVM.  The Apple LLVM version 12.0.5 should do fine.  Recent, earlier version likely will as well, but YMMV.
 
 ## CMake
 
