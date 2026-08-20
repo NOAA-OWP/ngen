@@ -202,6 +202,29 @@ TEST_F(AttributeJoin_Test, join_of_two_tables_keeps_shared_column_names_distinct
     EXPECT_EQ(second->get_property("two.text_value").as_string(), "delta");
 }
 
+// The joiner takes its own GeoPackage path, so an attribute table can live in a different file
+// than the fabric was read from, e.g. a base hydrofabric beside a regionalization overlay.
+TEST_F(AttributeJoin_Test, join_reads_the_table_from_a_separate_geopackage)
+{
+    const std::string base_path = utils::FileChecker::find_first_readable({
+        "test/data/geopackage/example.gpkg",
+        "../test/data/geopackage/example.gpkg",
+        "../../test/data/geopackage/example.gpkg"
+    });
+    ASSERT_FALSE(base_path.empty()) << "can't find test/data/geopackage/example.gpkg";
+
+    std::shared_ptr<geojson::FeatureCollection> collection = ngen::geopackage::read(base_path, "test", {});
+
+    CapturedStderr capture;  // "Second" has no aux_params_one row
+    ngen::geopackage::join_attributes(*collection, this->path, "aux_params_one", "divide_id", "one", false);
+
+    const auto& first = collection->get_feature("First");
+    ASSERT_TRUE(first != nullptr);
+    EXPECT_DOUBLE_EQ(first->get_property("one.real_value").as_real_number(), 3.5);
+    EXPECT_EQ(first->get_property("one.text_value").as_string(), "alpha");
+    EXPECT_FALSE(collection->get_feature("Second")->has_property("one.real_value"));
+}
+
 // A composed name already on the feature belongs to the fabric layer or to an earlier entry, and
 // keeping it would hand the model that other value under this table's name.
 TEST_F(AttributeJoin_Test, join_errors_on_property_name_already_present)
