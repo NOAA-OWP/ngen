@@ -53,7 +53,10 @@ auto NgenMassBalance::run(const ModelPtr& model, const Context& ctx) const -> ex
     if( frequency > 0 ){
         check_step = (ctx.current_time_step % frequency) == 0;
     }
-    else if(ctx.current_time_step == ctx.total_steps){
+    // Context contract: current_time_step is the index of the step just
+    // computed, in [0, total_steps - 1]. The end-of-run sentinel at this
+    // position is therefore total_steps - 1.
+    else if(ctx.current_time_step == ctx.total_steps - 1){
         check_step = true;
     }
 
