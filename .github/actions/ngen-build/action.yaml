@@ -190,6 +190,11 @@ runs:
             export CXXFLAGS="-fsanitize=address -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override"
             if [ ${{ runner.os }} == 'macOS' ]
             then
+              if [ ${{ matrix.compiler }} == 'gcc' ]
+              then
+                export CC=gcc-13
+                export CXX=g++-13
+              fi
               echo "fun:PyType_FromMetaclass" > /tmp/asan_ignore.txt
               export CFLAGS="$CFLAGS -O0 -fsanitize-ignorelist=/tmp/asan_ignore.txt -fno-common"
               export CXXFLAGS="$CXXFLAGS -O0 -fsanitize-ignorelist=/tmp/asan_ignore.txt -fno-common"
