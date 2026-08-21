@@ -10,9 +10,7 @@
 #include <Catchment_Formulation.hpp>
 #include <HY_Features.hpp>
 
-#if NGEN_WITH_SQLITE3
-#include <geopackage.hpp>
-#endif
+#include <HydrofabricReaderFactory.hpp>
 
 #include "NGenConfig.h"
 
@@ -369,37 +367,25 @@ int main(int argc, char* argv[]) {
     }
     #endif // NGEN_WITH_MPI
 
+    // The two data paths may name one hydrofabric or two halves of one, in either supported format;
+    // the factory settles all of that, and detects the schema version where the format has one.
+    std::unique_ptr<ngen::hydrofabric::HydrofabricReader> hydrofabric =
+        ngen::hydrofabric::make_hydrofabric_reader(catchmentDataFile, nexusDataFile);
+
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
-    geojson::GeoJSON nexus_collection;
-    if (boost::algorithm::ends_with(nexusDataFile, "gpkg")) {
-      #if NGEN_WITH_SQLITE3
-      nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
-      #else
-      throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
-      #endif
-    } else {
-      nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
-    }
+    geojson::GeoJSON nexus_collection = hydrofabric->read_nexus(nexus_subset_ids);
     std::cout << "Building Catchment collection" << std::endl;
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
-    geojson::GeoJSON catchment_collection;
+    //
     // As part of the fix for NOAA-OWP/ngen#284 / NGWPC-6553,
     // partitioning may insert sentinel flowpaths downstream of
     // terminal nexuses. Those sentinels will not exist in the
     // catchmentDataFile. Their listing in catchment_subset_ids works
-    // because the respective geoFOO::read() functions return the
-    // intersection of features in the file and the specified subset,
-    // rather than erroring on missing features.
-    if (boost::algorithm::ends_with(catchmentDataFile, "gpkg")) {
-      #if NGEN_WITH_SQLITE3
-      catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
-      #else
-      throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
-      #endif
-    } else {
-      catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
-    }
+    // because the hydrofabric readers return the intersection of
+    // features in the file and the specified subset, rather than
+    // erroring on missing features.
+    geojson::GeoJSON catchment_collection = hydrofabric->read_divides(catchment_subset_ids);
     
     for(auto& feature: *catchment_collection)
     {

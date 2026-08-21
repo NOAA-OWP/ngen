@@ -15,9 +15,7 @@
 #include <unordered_set>
 #include <tuple>
 
-#if NGEN_WITH_SQLITE3
-#include <geopackage.hpp>
-#endif
+#include <HydrofabricReaderFactory.hpp>
 
 #include "core/Partition_Parser.hpp"
 
@@ -441,19 +439,9 @@ int main(int argc, char* argv[])
     outFile.open(partitionOutFile, std::ios::trunc);
 
     //Get the feature collection for the given hydrofabric
-    geojson::GeoJSON catchment_collection;
-    if (boost::algorithm::ends_with(catchmentDataFile, "gpkg"))
-    {
-        #if NGEN_WITH_SQLITE3
-        catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
-        #else
-        throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
-        #endif
-    }
-    else
-    {
-        catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
-    }
+    std::unique_ptr<ngen::hydrofabric::HydrofabricReader> hydrofabric =
+        ngen::hydrofabric::make_hydrofabric_reader(catchmentDataFile, nexusDataFile);
+    geojson::GeoJSON catchment_collection = hydrofabric->read_divides(catchment_subset_ids);
     int num_catchments = catchment_collection->get_size();
     std::cout<<"Partitioning "<<num_catchments<<" catchments into "<<num_partitions<<" partitions."<<std::endl;
 
@@ -470,19 +458,7 @@ int main(int argc, char* argv[])
 
     //build the remote connections from network
     // read the nexus hydrofabric, reuse the catchments
-    geojson::GeoJSON global_nexus_collection;
-    if (boost::algorithm::ends_with(nexusDataFile, "gpkg")) 
-    {
-      #if NGEN_WITH_SQLITE3
-      global_nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
-      #else
-      throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
-      #endif
-    } 
-    else 
-    {
-      global_nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
-    }
+    geojson::GeoJSON global_nexus_collection = hydrofabric->read_nexus(nexus_subset_ids);
 
     //Now read the collection of catchments, iterate it and add them to the nexus collection
     //also link them by to->id
