@@ -18,12 +18,14 @@ limitations under the License.
 #ifndef NGEN_CATCHMENTCSVOUTPUTMGR_HPP
 #define NGEN_CATCHMENTCSVOUTPUTMGR_HPP
 
+#include <mutex>
 #include <filesystem>
 #include <fstream>
 #include <memory>
 #include <optional>
 #include <string>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include "CatchmentOutputsMgr.hpp"
@@ -85,6 +87,8 @@ namespace utils
         const std::optional<std::string> aggregated_filename_;
         const int precision_;
         bool closed_ = false;
+        // Just use one mutex until we can see contention is actually an issue
+        std::mutex all_streams_mutex_;
 
         // Open output streams keyed by resolved file path. In per-feature mode each (formulation,
         // catchment) has its own path; in aggregated mode every catchment of a formulation resolves
@@ -97,8 +101,8 @@ namespace utils
         //! id nests under "<root><formulation>/".
         std::filesystem::path output_path(const std::string &formulation_id, const std::string &catchment_id);
 
-        //! Resolve the stream a (formulation, catchment)'s rows are written to, or nullptr if not registered.
-        std::ofstream* stream_for(const std::string &formulation_id, const std::string &catchment_id);
+        //! Resolve the stream a (formulation, catchment)'s rows are written to, or nullptr if not registered, and the mutex guarding that stream.
+        std::pair<std::ofstream*, std::mutex*> stream_for(const std::string &formulation_id, const std::string &catchment_id);
 
         //! Open the file(s) and write the header for one descriptor; called for each at construction.
         void add_feature(const FeatureDescriptor &descriptor);
