@@ -95,7 +95,7 @@ Adds an executable test (i.e. a target) called <test name>.
     is called.
 #]==]
 function(ngen_add_test TESTNAME)
-    set(multiValueArgs OBJECTS LIBRARIES REQUIRES DEPENDS)
+    set(multiValueArgs OBJECTS LIBRARIES REQUIRES DEPENDS INCLUDES)
     cmake_parse_arguments(NGEN_TEST "" "" "${multiValueArgs}" ${ARGN})
 
     list(REMOVE_DUPLICATES NGEN_TEST_LIBRARIES)
@@ -111,6 +111,10 @@ function(ngen_add_test TESTNAME)
     if(NGEN_TEST_CREATE)
         add_executable(${TESTNAME} ${NGEN_TEST_OBJECTS})
         target_include_directories(${TESTNAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/bmi)
+        # For test support code shared between suites, e.g. the GeoPackage fixture builders.
+        foreach(include_dir IN LISTS NGEN_TEST_INCLUDES)
+            target_include_directories(${TESTNAME} PRIVATE ${include_dir})
+        endforeach()
         target_link_libraries(${TESTNAME} PRIVATE gtest gtest_main ${NGEN_TEST_LIBRARIES})
         set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
 
@@ -158,6 +162,37 @@ ngen_add_test(
         geopackage/SQLite_Test.cpp
         geopackage/GeoPackage_Test.cpp
     LIBRARIES
+        NGen::geopackage
+    REQUIRES
+        NGEN_WITH_SQLITE
+)
+
+########################## Hydrofabric Unit Tests
+# The GeoJSON implementation needs no SQLite, so it is testable in a build without it -- which is
+# also the build where the factory's refusal of GeoPackage paths is the only path available.
+ngen_add_test(
+    test_hydrofabric
+    OBJECTS
+        hydrofabric/GeoJSONHydrofabricReader_Test.cpp
+    INCLUDES
+        # FileChecker, which nothing this target links exposes on its own.
+        ${PROJECT_SOURCE_DIR}/include/utilities
+    LIBRARIES
+        NGen::hydrofabric
+)
+
+########################## GeoPackage Hydrofabric Unit Tests
+ngen_add_test(
+    test_hydrofabric_geopackage
+    OBJECTS
+        hydrofabric/GeoPackageHydrofabricSchema_Test.cpp
+        hydrofabric/GeoPackageHydrofabricReader_Test.cpp
+        hydrofabric/HydrofabricReaderFactory_Test.cpp
+        hydrofabric/fixture_builders.cpp
+    INCLUDES
+        ${CMAKE_CURRENT_LIST_DIR}/hydrofabric
+    LIBRARIES
+        NGen::hydrofabric
         NGen::geopackage
     REQUIRES
         NGEN_WITH_SQLITE
