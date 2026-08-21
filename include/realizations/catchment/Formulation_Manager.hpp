@@ -522,12 +522,15 @@ namespace realization {
                     if (init_config_property.get_type() == geojson::PropertyType::String) {
                         std::string original_value = init_config_property.as_string();
                         if (!original_value.empty()) {
-                            ss.str(""); ss << "construct_missing_formulation Performing pattern substitution for key: " << BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG
-                                           << ", pattern: {{id}}, replacement: " << identifier << std::endl;
+                            ss.str("");
+                            ss
+                                << "construct_missing_formulation Performing pattern substitution for key: "
+                                << BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG
+                                << ", pattern: {{id}}, replacement: "
+                                << identifier
+                            << "\n";
                             LOG(ss.str(), LogLevel::DEBUG);
                             ss.str("");
-//                            ss.str(""); ss << "Original value: " << original_value << std::endl;
-//                            LOG(ss.str(), LogLevel::DEBUG);
 
                             Catchment_Formulation::config_pattern_substitution(
                                 global_copy.formulation.parameters,
@@ -547,20 +550,6 @@ namespace realization {
                     ss.str(""); ss << "[WARNING] init_config not present in global configuration for identifier: " << identifier << std::endl;
                     LOG(ss.str(), LogLevel::WARNING);
                 }
-
-//                // Log parameters after substitution
-//                ss.str(""); ss << "Global config parameters (after substitution) for identifier: " << identifier << std::endl;
-//                LOG(ss.str(), LogLevel::DEBUG);
-//                for (auto it = global_copy.formulation.parameters.begin(); it != global_copy.formulation.parameters.end(); ++it) {
-//                    const std::string& key = it->first;
-//                    const geojson::JSONProperty& value = it->second;
-//
-//                    if (value.get_type() == geojson::PropertyType::String) {
-//                        std::cout << "    " << key << ": " << value.as_string() << std::endl;
-//                    } else {
-//                        std::cout << "    " << key << ": (non-string value)" << std::endl;
-//                    }
-//                }
 
                 // Link external properties
                 ss.str(""); ss << "Linking external properties for identifier: " << identifier << std::endl;
@@ -719,44 +708,41 @@ namespace realization {
                                     init_config
                                 );
                             }
-                            else if ( entry->d_type == DT_UNKNOWN )
-                            #endif
-                            {
-                                //dirent is not guaranteed to provide propoer file type identification in d_type
-                                //so if a system returns unknown or it isn't supported, need to use stat to determine if it is a file
-                                struct stat st;
-                                if (stat((path + entry->d_name).c_str(), &st) != 0) {
-                                    std::string throw_msg = "Could not stat file " + path + entry->d_name;
-                                    LOG(throw_msg, LogLevel::WARNING);
-                                    throw std::runtime_error(throw_msg);
-                                }
 
-                                if (S_ISREG(st.st_mode)) {
-                                    closedir(directory);
-                                    return forcing_params(
-                                        path + entry->d_name,
-                                        provider,
-                                        simulation_time_config.start_time,
-                                        simulation_time_config.end_time,
-                                        init_config
-                                    );
-                                }
-
-                                // Log a warning if the entry is not a regular file
-                                std::string throw_msg = "Forcing data in path " + path + entry->d_name + " is not a file";
+                            if (entry->d_type != DT_UNKNOWN) {
+                                // The directory wasn't found or otherwise couldn't be opened; forcing data cannot be retrieved
+                                std::string throw_msg = "Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg;
                                 LOG(throw_msg, LogLevel::WARNING);
                                 throw std::runtime_error(throw_msg);
-            #ifdef _DIRENT_HAVE_D_TYPE
                             }
             #endif
+                            //dirent is not guaranteed to provide propoer file type identification in d_type
+                            //so if a system returns unknown or it isn't supported, need to use stat to determine if it is a file
+                            struct stat st;
+                            if (stat((path + entry->d_name).c_str(), &st) != 0) {
+                                std::string throw_msg = "Could not stat file " + path + entry->d_name;
+                                LOG(throw_msg, LogLevel::WARNING);
+                                throw std::runtime_error(throw_msg);
+                            }
+
+                            if (S_ISREG(st.st_mode)) {
+                                closedir(directory);
+                                return forcing_params(
+                                    path + entry->d_name,
+                                    provider,
+                                    simulation_time_config.start_time,
+                                    simulation_time_config.end_time,
+                                    init_config
+                                );
+                            }
+
+                            // Log a warning if the entry is not a regular file
+                            std::string throw_msg = "Forcing data in path " + path + entry->d_name + " is not a file";
+                            LOG(throw_msg, LogLevel::WARNING);
+                            throw std::runtime_error(throw_msg);
                         }
                     }
                     closedir(directory);
-                } else {
-                    // The directory wasn't found or otherwise couldn't be opened; forcing data cannot be retrieved
-                    std::string throw_msg = "Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg;
-                    LOG(throw_msg, LogLevel::WARNING);
-                    throw std::runtime_error(throw_msg);
                 }
 
                 // If no match was found, throw an error
