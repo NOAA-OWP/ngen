@@ -18,8 +18,6 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
                                 std::unordered_map<std::string, int> const& nexus_indexes,
                                 int current_step)
 {
-    std::mutex accumulation_mutex;
-
     //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
     if(output_time_index%1000 == 0) std::cout<<"Running timestep " << output_time_index <<std::endl;
     std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
@@ -56,12 +54,7 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
 #if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
         int results_index = catchment_indexes.at(id);
         // XXX: This is currently accumulating in meters of depth, which may not be desirable
-        {
-            // XXX: Switch when we can use C++20
-            //std::atomic_ref(catchment_outflows[results_index]) += response;
-            std::lock_guard g(accumulation_mutex);
-            catchment_outflows[results_index] += response;
-        }
+        std::atomic_ref(catchment_outflows[results_index]) += response;
 
 #endif // NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
         if (catchment_output_mgr) {
