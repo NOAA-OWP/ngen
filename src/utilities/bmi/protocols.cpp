@@ -25,45 +25,80 @@ Container and management for abstract BMI protocols
 
 #include "protocols.hpp"
 
-namespace models{ namespace bmi{ namespace protocols{
+#include "deserialization.hpp"
+#include "mass_balance.hpp"
+#include "serialization.hpp"
+
+namespace models {
+namespace bmi {
+namespace protocols {
 
 auto operator<<(std::ostream& os, Protocol p) -> std::ostream& {
-    switch(p) {
-    case Protocol::MASS_BALANCE: os << "MASS_BALANCE"; break;
-    default: os << "UNKNOWN_PROTOCOL"; break;
+    switch (p) {
+    case Protocol::MASS_BALANCE:
+        os << "MASS_BALANCE";
+        break;
+    case Protocol::SERIALIZATION:
+        os << "SERIALIZATION";
+        break;
+    case Protocol::DESERIALIZATION:
+        os << "DESERIALIZATION";
+        break;
+    default:
+        os << "UNKNOWN_PROTOCOL";
+        break;
     }
     return os;
 }
 
 NgenBmiProtocols::NgenBmiProtocols()
     : model(nullptr) {
-        protocols[Protocol::MASS_BALANCE] = std::make_unique<NgenMassBalance>();
+    protocols[Protocol::MASS_BALANCE]    = std::make_unique<NgenMassBalance>();
+    protocols[Protocol::DESERIALIZATION] = std::make_unique<NgenDeserializationProtocol>();
+    protocols[Protocol::SERIALIZATION]   = std::make_unique<NgenSerializationProtocol>();
 }
 
+// Deserialization is constructed before serialization so its
+// `id_scope` sizes the shared FileBackend index (via the
+// path-keyed cache in FileBackend::create). Save-side writes
+// append independently and aren't affected by the scope.
 NgenBmiProtocols::NgenBmiProtocols(ModelPtr model, const geojson::PropertyMap& properties)
     : model(model) {
-    //Create and initialize mass balance configurable properties
     protocols[Protocol::MASS_BALANCE] = std::make_unique<NgenMassBalance>(model, properties);
+    protocols[Protocol::DESERIALIZATION] =
+        std::make_unique<NgenDeserializationProtocol>(model, properties);
+    protocols[Protocol::SERIALIZATION] =
+        std::make_unique<NgenSerializationProtocol>(model, properties);
 }
 
-auto NgenBmiProtocols::run(const Protocol& protocol_name, const Context& ctx) const -> expected<void, ProtocolError> {
-    // Consider using find() vs switch, especially if the number of protocols grows
-    expected<void, ProtocolError> result_or_err;
-    switch(protocol_name){
-        case Protocol::MASS_BALANCE:
-            return protocols.at(Protocol::MASS_BALANCE)->run(model, ctx)
-            .or_else( NgenBmiProtocol::error_or_warning );
-            break;
-        default:
-            std::stringstream ss;
-            ss << "Error: Request for unsupported protocol: '" << protocol_name << "'.";
-            return NgenBmiProtocol::error_or_warning( ProtocolError(
-                Error::UNSUPPORTED_PROTOCOL,
-                ss.str()
-            )
-            );
+auto NgenBmiProtocols::run(const Protocol& protocol_name, const Context& ctx) const
+    -> expected<void, ProtocolError> {
+    // Consider using find() vs switch, especially if the number of protocols grows.
+    switch (protocol_name) {
+    case Protocol::MASS_BALANCE:
+        return protocols.at(Protocol::MASS_BALANCE)
+            ->run(model, ctx)
+            .or_else(NgenBmiProtocol::error_or_warning);
+    case Protocol::SERIALIZATION:
+        return protocols.at(Protocol::SERIALIZATION)
+            ->run(model, ctx)
+            .or_else(NgenBmiProtocol::error_or_warning);
+    case Protocol::DESERIALIZATION:
+        return protocols.at(Protocol::DESERIALIZATION)
+            ->run(model, ctx)
+            .or_else(NgenBmiProtocol::error_or_warning);
+    default:
+        // Reached only when an invalid integer is cast to `Protocol`
+        // (e.g., a call-site bug). Return a diagnostic error rather
+        // than fall through with undefined behavior.
+        std::stringstream ss;
+        ss << "Error: Request for unsupported protocol: '" << protocol_name << "'.";
+        return NgenBmiProtocol::error_or_warning(
+            ProtocolError(Error::UNSUPPORTED_PROTOCOL, ss.str())
+        );
     }
-    return {};
 }
 
-}}} // end namespace models::bmi::protocols
+} // namespace protocols
+} // namespace bmi
+} // namespace models

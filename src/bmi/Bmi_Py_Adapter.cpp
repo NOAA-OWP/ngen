@@ -112,6 +112,12 @@ void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
         copy_to_array<long>(name, (long *) dest);
     } else if (cxx_type == "long long") {
         copy_to_array<long long>(name, (long long *) dest);
+    } else if (cxx_type == "uint8_t") {
+        // Opaque byte payload (e.g. the BMI serialization protocol's
+        // `ngen::serialization_state` buffer). The Python side exposes
+        // a numpy uint8 array; we copy it straight into the caller's
+        // raw byte buffer.
+        copy_to_array<uint8_t>(name, (uint8_t *) dest);
     } else if (cxx_type == "float") {
         copy_to_array<float>(name, (float *) dest);
     } else if (cxx_type == "double") {
