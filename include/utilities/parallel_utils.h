@@ -187,7 +187,7 @@ namespace parallel {
 
     /**
      * MPI_Gather vector<string> values from all processes. The result may include duplicate values.
-     * 
+     *
      * @param local_strings Vector of strings from the current process
      * @param comm The MPI communicator over which to gather
      * @return A vector of the gathered strings from all processes. This will only be populated on the root rank (rank 0)
@@ -196,12 +196,14 @@ namespace parallel {
 
     /**
      * Send a vector<string> from root to all other processes.
-     * 
+     *
      * @param strings If on the root rank (rank 0), the strings that will be broadcasted. Unused for other processes.
      * @param comm The MPI communicator over which to broadcast
      * @return vector<string> of the broadcasted strings from the root rank (rank 0)
      */
     std::vector<std::string> broadcast_strings(const std::vector<std::string>& strings, MPI_Comm comm);
+
+
 }
 
 #endif // NGEN_WITH_MPI

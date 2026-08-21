@@ -1,6 +1,7 @@
 #include "Bmi_Module_Formulation.hpp"
 #include "utilities/logging_utils.h"
 #include <UnitsHelper.hpp>
+#include "Logger.hpp"
 
 namespace realization {
 
@@ -71,13 +72,29 @@ namespace realization {
                 }
             }
 
+            int update_method;
             while (next_time_step_index <= t_index) {
                 double model_initial_time = get_bmi_model()->GetCurrentTime();
                 set_model_inputs_prior_to_update(model_initial_time, t_delta);
-                if (t_delta_model_units == get_bmi_model()->GetTimeStep())
-                    get_bmi_model()->Update();
-                else
-                    get_bmi_model()->UpdateUntil(model_initial_time + t_delta_model_units);
+                try {
+                    if (t_delta_model_units == get_bmi_model()->GetTimeStep()) {
+                        update_method = 0;
+                        get_bmi_model()->Update();
+                    }
+                    else {
+                        update_method = 1;
+                        get_bmi_model()->UpdateUntil(model_initial_time + t_delta_model_units);
+                    }
+                } catch (const std::exception &e) {
+                    std::stringstream error_message;
+                    error_message << "Model " << (update_method == 0 ? "Update" : "UpdateUntil")
+                        << " failed on catchment " << this->get_catchment_id()
+                        << ". t_index=" << t_index
+                        << ", next_step_index=" << next_time_step_index << "\n";
+                    append_model_inputs_to_stream(model_initial_time, t_delta, error_message);
+                    Logger::Log(LogLevel::FATAL, error_message.str());
+                    throw;
+                }
                 // TODO: again, consider whether we should store any historic response, ts_delta, or other var values
                 next_time_step_index++;
             }
@@ -246,7 +263,6 @@ namespace realization {
             throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
         }
 
-
         static bool is_var_name_in_collection(const std::vector<std::string> &all_names, const std::string &var_name) {
             return std::count(all_names.begin(), all_names.end(), var_name) > 0;
         }
@@ -376,16 +392,59 @@ namespace realization {
             determine_model_time_offset();
 
             // Output variable subset and order, if present
+            std::vector<std::string> out_headers;//define empty vector for headers
+            std::vector<std::string> out_units;//define empty vector for units for new json structure
             auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
             if (out_var_it != properties.end()) {
                 std::vector<geojson::JSONProperty> out_vars_json_list = out_var_it->second.as_list();
+                //Check if the first item is an object type or string type.
+                //string type: old format; object type: new format
+                if (out_vars_json_list.size() > 0){
+                    std::string item_type = get_propertytype_name(out_vars_json_list[0].get_type());
+                    if (item_type == "String"){
+                        set_realization_file_format(true);
+                    }
+                }
                 std::vector<std::string> out_vars(out_vars_json_list.size());
-                for (int i = 0; i < out_vars_json_list.size(); ++i) {
-                    out_vars[i] = out_vars_json_list[i].as_string();
+                if (is_realization_legacy_format()){
+                    for (int i = 0; i < out_vars_json_list.size(); ++i) {
+                        out_vars[i] = out_vars_json_list[i].as_string();
+                    }
+                }
+                else{
+                    out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
+                    out_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
+                    for (int i = 0; i < out_vars_json_list.size(); ++i) {
+                        out_vars[i] = out_vars_json_list[i].at("name").as_string();
+                        if(out_vars_json_list[i].has_key("header")){
+                            //indicates that a valid header is provided
+                            out_headers[i] = out_vars_json_list[i].at("header").as_string();
+                        }
+                        else{
+                            //indicates that header is not provided. The error actually returns a string.
+                            //in such cases, we assign variable name to the header.
+                            out_headers[i] = out_vars[i];
+                            std::stringstream ss;
+                            ss << "Header not provided for '" << out_vars[i] << "'. Using the variable name as header." << std::endl;
+                            LOG(ss.str(), LogLevel::INFO); ss.str("");
+                        }
+                        out_units[i] = out_vars_json_list[i].at("units").as_string();
+                    }
+                    //check if the units can be parsed correctly and write a warning message
+                    std::stringstream ss;
+                    for (const std::string& out_unit : out_units) {
+                        if (!UnitsHelper::can_parse(out_unit))
+                        {
+                            ss << "Unable to parse '" << out_unit << "' in units value." << std::endl;
+                            LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                        }
+                    }
+                    set_output_variable_units(out_units);
                 }
                 set_output_variable_names(out_vars);
+                set_output_header_fields(out_headers);
             }
-                // Otherwise, just take what literally is provided by the model
+            // Otherwise, just take what literally is provided by the model
             else {
                 set_output_variable_names(get_bmi_model()->GetOutputVarNames());
             }
@@ -409,8 +468,26 @@ namespace realization {
                               << " output variables" << std::endl;
                     set_output_header_fields(get_output_variable_names());
                 }
+            if(is_realization_legacy_format()){
+                if (out_headers_it != properties.end()) {
+                    std::vector<geojson::JSONProperty> out_headers_json_list = out_var_it->second.as_list();
+                    std::vector<std::string> out_headers(out_headers_json_list.size());
+                    for (int i = 0; i < out_headers_json_list.size(); ++i) {
+                        out_headers[i] = out_headers_json_list[i].as_string();
+                    }
+                    set_output_header_fields(out_headers);
+                }
+                else {
+                    set_output_header_fields(get_output_variable_names());
+                }
             }
-            else {
+            else{
+                if (out_headers_it != properties.end()) {
+                    //indicates that the new json format has legacy headers format in the realization.
+                    //put out a message that this is ignored.
+                    LOG("Deprecated output_header_fields item found in realization file ignored.", LogLevel::WARNING);
+                }
+                // if new format and no output/headers are mentioned.
                 set_output_header_fields(get_output_variable_names());
             }
 
@@ -616,6 +693,10 @@ namespace realization {
             return cache_input_variable_metadata;
         }
 
+        bool Bmi_Module_Formulation::is_realization_legacy_format() const {
+            return legacy_json_format;
+        }
+
         void Bmi_Module_Formulation::set_allow_model_exceed_end_time(bool allow_exceed_end) {
             allow_model_exceed_end_time = allow_exceed_end;
         }
@@ -637,6 +718,10 @@ namespace realization {
 
         void Bmi_Module_Formulation::set_model_initialized(bool is_initialized) {
             model_initialized = is_initialized;
+        }
+
+        void Bmi_Module_Formulation::set_realization_file_format(bool is_legacy_format){
+            legacy_json_format = is_legacy_format;
         }
 
         // TODO: need to modify this to support arrays properly, since in general that's what BMI modules deal with
@@ -816,5 +901,159 @@ namespace realization {
                 }
             }
             get_bmi_model()->SetValue(var_details->get_name(), value_ptr.get());
+        }
+
+        void Bmi_Module_Formulation::append_model_inputs_to_stream(const double &model_init_time, time_step_t t_delta, std::stringstream &inputs) {
+            std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();
+            time_t model_epoch_time = convert_model_time(model_init_time) + get_bmi_model_start_time_forcing_offset_s();
+            inputs << "Input variables were as follows:";
+
+            for (std::string & var_name : in_var_names) {
+                data_access::GenericDataProvider *provider;
+                std::string var_map_alias = get_config_mapped_variable_name(var_name);
+                if (input_forcing_providers.find(var_map_alias) != input_forcing_providers.end()) {
+                    provider = input_forcing_providers[var_map_alias].get();
+                }
+                else if (var_map_alias != var_name && input_forcing_providers.find(var_name) != input_forcing_providers.end()) {
+                    provider = input_forcing_providers[var_name].get();
+                }
+                else {
+                    provider = forcing.get();
+                }
+
+                // TODO: probably need to actually allow this by default and warn, but have config option to activate
+                //  this type of behavior
+                // TODO: account for arrays later
+                int nbytes = get_bmi_model()->GetVarNbytes(var_name);
+                int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
+                int numItems = nbytes / varItemSize;
+
+                std::shared_ptr<void> value_ptr;
+                // Finally, use the value obtained to set the model input
+                std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name),
+                                                                           varItemSize);
+
+                inputs << "\n" << var_map_alias << " = ";
+                if (numItems != 1) {
+                    //more than a single value needed for var_name
+                    auto values = provider->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
+                                                   get_bmi_model()->GetVarUnits(var_name)));
+                    value_ptr = get_values_as_type( type, values.begin(), values.end() );
+                    // array like input: precipitation_mm_per_h = [0.2, 0.8, 1.8]
+                    this->append_inputs(type, value_ptr, numItems, inputs);
+
+                } else {
+                    //scalar value
+                    double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
+                                                   get_bmi_model()->GetVarUnits(var_name)));
+                    this->append_input(type, value, inputs);
+                }
+            }
+        }
+
+        template<typename T>
+        void Bmi_Module_Formulation::append_inputs(std::shared_ptr<void> values, int num_items, std::stringstream &inputs) {
+            T *array = (T*)values.get();
+            inputs << "[";
+            for (int i = 0; i < num_items; ++i) {
+                if (i != 0)
+                    inputs << ", ";
+                inputs << array[i];
+            }
+            inputs << "]";
+        }
+
+        void Bmi_Module_Formulation::append_inputs(std::string type, std::shared_ptr<void> values, int num_items, std::stringstream &inputs) {
+
+            if (type == "double" || type == "double precision")
+                this->append_inputs<double>(values, num_items, inputs);
+
+            else if (type == "float" || type == "real")
+                this->append_inputs<float>(values, num_items, inputs);
+
+            else if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int")
+                this->append_inputs<short>(values, num_items, inputs);
+
+            else if (type == "unsigned short" || type == "unsigned short int")
+                this->append_inputs<unsigned short>(values, num_items, inputs);
+
+            else if (type == "int" || type == "signed" || type == "signed int" || type == "integer")
+                this->append_inputs<int>(values, num_items, inputs);
+
+            else if (type == "unsigned" || type == "unsigned int")
+                this->append_inputs<unsigned int>(values, num_items, inputs);
+
+            else if (type == "long" || type == "long int" || type == "signed long" || type == "signed long int")
+                this->append_inputs<long>(values, num_items, inputs);
+
+            else if (type == "unsigned long" || type == "unsigned long int")
+                this->append_inputs<unsigned long>(values, num_items, inputs);
+
+            else if (type == "long long" || type == "long long int" || type == "signed long long" || type == "signed long long int")
+                this->append_inputs<long long>(values, num_items, inputs);
+
+            else if (type == "unsigned long long" || type == "unsigned long long int")
+                this->append_inputs<unsigned long long>(values, num_items, inputs);
+
+        }
+
+        template<typename T>
+        void Bmi_Module_Formulation::append_input(std::string type, T value, std::stringstream &inputs) {
+
+            if (type == "double" || type == "double precision")
+                inputs << static_cast<double>(value);
+
+            else if (type == "float" || type == "real")
+                inputs << static_cast<float>(value);
+
+            else if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int")
+                inputs << static_cast<short>(value);
+
+            else if (type == "unsigned short" || type == "unsigned short int")
+                inputs << static_cast<unsigned short>(value);
+
+            else if (type == "int" || type == "signed" || type == "signed int" || type == "integer")
+                inputs << static_cast<int>(value);
+
+            else if (type == "unsigned" || type == "unsigned int")
+                inputs << static_cast<unsigned int>(value);
+
+            else if (type == "long" || type == "long int" || type == "signed long" || type == "signed long int")
+                inputs << static_cast<long>(value);
+
+            else if (type == "unsigned long" || type == "unsigned long int")
+                inputs << static_cast<unsigned long>(value);
+
+            else if (type == "long long" || type == "long long int" || type == "signed long long" || type == "signed long long int")
+                inputs << static_cast<long long>(value);
+
+            else if (type == "unsigned long long" || type == "unsigned long long int")
+                inputs << static_cast<unsigned long long>(value);
+
+        }
+
+        const boost::span<char> Bmi_Module_Formulation::get_serialization_state() const {
+            auto bmi = this->bmi_model;
+            // create a new serialized state, getting the amount of data that was saved
+            uint64_t* size = (uint64_t*)bmi->GetValuePtr("serialization_create");
+            // get the pointer of the new state
+            char* serialized = (char*)bmi->GetValuePtr("serialization_state");
+            const boost::span<char> span(serialized, *size);
+            return span;
+        }
+
+        void Bmi_Module_Formulation::load_serialization_state(const boost::span<char> state) const {
+            auto bmi = this->bmi_model;
+            // grab the pointer to the underlying state data
+            void* data = (void*)state.data();
+            // load the state through SetValue
+            bmi->SetValue("serialization_state", data);
+        }
+
+        void Bmi_Module_Formulation::free_serialization_state() const {
+            auto bmi = this->bmi_model;
+            // send message to clear memory associated with serialized data
+            void* _; // this pointer will be unused by SetValue
+            bmi->SetValue("serialization_free", _);
         }
 }

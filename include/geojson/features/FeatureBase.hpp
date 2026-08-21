@@ -1,5 +1,6 @@
 #ifndef GEOJSON_FEATURE_H
 #define GEOJSON_FEATURE_H
+#include "Logger.hpp"
 
 #include "JSONGeometry.hpp"
 #include "JSONProperty.hpp"
@@ -377,7 +378,9 @@ namespace geojson {
                     return geometry_collection;
                 }
 
-                throw std::runtime_error("There is no geometry collection to retrieve");
+                std::string throw_msg; throw_msg.assign("There is no geometry collection to retrieve");
+                LOG(throw_msg, LogLevel::WARNING);
+                throw std::runtime_error(throw_msg);
             }
 
             /**
@@ -533,9 +536,11 @@ namespace geojson {
                     return boost::get<T>(this->geom);
                 }
                 catch (boost::bad_get &exception) {
+                    std::stringstream ss;
                     std::string template_name = boost::typeindex::type_id<T>().pretty_name();
                     std::string expected_name = get_geometry_type(this->geom);
-                    std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                    ss  << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
                     throw;
                 }
             }
@@ -550,9 +555,11 @@ namespace geojson {
                     return boost::get<T>(this->geometry_collection[index]);
                 }
                 catch (boost::bad_get &exception) {
+                    std::stringstream ss;
                     std::string template_name = boost::typeindex::type_id<T>().pretty_name();
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
-                    std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                    ss  << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
                     throw;
                 }
             }

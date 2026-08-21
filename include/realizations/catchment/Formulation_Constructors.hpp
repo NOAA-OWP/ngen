@@ -1,20 +1,20 @@
 #ifndef NGEN_FORMULATION_CONSTRUCTORS_H
 #define NGEN_FORMULATION_CONSTRUCTORS_H
+#include "Logger.hpp"
 
 #include <NGenConfig.h>
 
 #include "Formulation.hpp"
-#include <JSONProperty.hpp>
-#include <exception>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/optional.hpp>
 
 // Formulations
 #include "Bmi_Formulation.hpp"
-#include <GenericDataProvider.hpp>
 #include "CsvPerFeatureForcingProvider.hpp"
 #include "NullForcingProvider.hpp"
+#include "ForcingsEngineLumpedDataProvider.hpp"
+
 #if NGEN_WITH_NETCDF
     #include "NetCDFPerFeatureDataProvider.hpp"
 #endif
@@ -45,6 +45,8 @@ namespace realization {
         constructor formulation_constructor = formulation_constructors.at(formulation_type);
 
         std::shared_ptr<data_access::GenericDataProvider> fp;
+        std::stringstream ss; 
+
         if (forcing_config.provider == "CsvPerFeature" || forcing_config.provider == ""){
             fp = std::make_shared<CsvPerFeatureForcingProvider>(forcing_config);
         }
@@ -69,11 +71,43 @@ namespace realization {
         else if (forcing_config.provider == "NullForcingProvider"){
             fp = std::make_shared<NullForcingProvider>();
         }
+#if NGEN_WITH_PYTHON
+        else if (forcing_config.provider == "ForcingsEngineLumpedDataProvider") {
+
+            ss.str(""); 
+            ss << "Using ForcingsEngineLumpedDataProvider for '" << identifier
+               << "' with init_config = " << forcing_config.init_config << std::endl;
+            LOG(ss.str(), LogLevel::DEBUG);
+
+
+            // Confirm requirements like Python module + WGRIB2 are present
+            data_access::detail::assert_forcings_engine_requirements();
+
+            // Construct the provider using the start/end times (as time_t)
+            auto start = forcing_config.simulation_start_t;
+            auto end   = forcing_config.simulation_end_t;
+
+            ss.str(""); 
+            ss << "About to call ForcingsEngineLumpedDataProvider constructor" << std::endl;
+            LOG(ss.str(), LogLevel::DEBUG);
+
+            // Construct the ForcingsEngineLumpedDataProvider
+            fp = std::make_shared<data_access::ForcingsEngineLumpedDataProvider>(
+                forcing_config.init_config, start, end, identifier
+            );
+
+            ss.str(""); 
+            ss << "Finished calling ForcingsEngineLumpedDataProvider constructor" << std::endl;
+            LOG(ss.str(), LogLevel::DEBUG);
+        }
+#endif
         else { // Some unknown string in the provider field?
-            throw std::runtime_error(
+            std::string throw_msg; throw_msg.assign(
                     "Invalid formulation forcing provider configuration! identifier: \"" + identifier +
                     "\", formulation_type: \"" + formulation_type +
                     "\", provider: \"" + forcing_config.provider + "\"");
+            LOG(throw_msg, LogLevel::WARNING);
+            throw std::runtime_error(throw_msg);
         }
         return formulation_constructor(identifier, fp, output_stream);
     }
@@ -89,7 +123,9 @@ namespace realization {
           return *key;
         }
 
-        throw std::runtime_error("No valid formulation for " + *key + " was described in the passed in tree.");
+        std::string throw_msg; throw_msg.assign("No valid formulation for " + *key + " was described in the passed in tree.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
     }
 }
 

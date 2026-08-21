@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>
 #include <cerrno>
+#include "Logger.hpp"
 
 #ifndef _WIN32 // This should catch both 32 and 64 bit Windows
 #include <sys/stat.h>
@@ -138,7 +139,9 @@ namespace utils {
                 return true;
             }
             else {
-                std::cout << description << " path " << path << " not readable" << std::endl;
+                std::stringstream ss;
+                ss << description << " path " << path << " not readable" << std::endl;
+                LOG(ss.str(), LogLevel::INFO); ss.str("");
                 return false;
             }
         }

@@ -2,6 +2,7 @@
 #define NGEN_BMI_FORTRAN_ADAPTER_HPP
 
 #include <NGenConfig.h>
+#include "Logger.hpp"
 
 #if NGEN_WITH_BMI_FORTRAN
 
@@ -199,7 +200,9 @@ namespace models {
             void GetGridNodesPerFace(const int grid, int *nodes_per_face) override;
 
             void *GetValuePtr(std::string name) override {
-                throw std::runtime_error(model_name + " cannot currently get pointers for Fortran-based BMI modules.");
+                std::string throw_msg; throw_msg.assign(model_name + " cannot currently get pointers for Fortran-based BMI modules.");
+                LOG(throw_msg, LogLevel::WARNING);
+                throw std::runtime_error(throw_msg);
             }
 
             /**
@@ -220,8 +223,11 @@ namespace models {
             template<class T>
             T *GetValuePtr(const std::string &name) {
                 int nbytes;
-                if (get_var_nbytes(&bmi_model->handle, name.c_str(), &nbytes) != BMI_SUCCESS)
-                    throw std::runtime_error(model_name + " failed to get pointer for BMI variable " + name + ".");
+                if (get_var_nbytes(&bmi_model->handle, name.c_str(), &nbytes) != BMI_SUCCESS) {
+                    std::string throw_msg; throw_msg.assign(model_name + " failed to get pointer for BMI variable " + name + ".");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
+                }
                 void *dest = GetValuePtr(name);
                 T *ptr = (T *) dest;
                 return ptr;
@@ -329,9 +335,11 @@ namespace models {
                     return "double";
                 }
                 else {
-                    throw std::runtime_error(
+                    std::string throw_msg; throw_msg.assign(
                             "Bmi_Fortran_Adapter received unrecognized Fortran type name '" + external_type_name +
                             "' for which the analogous C++ type could not be determined");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
             }
 
@@ -362,19 +370,25 @@ namespace models {
                     total_bytes = GetVarNbytes(name);
                 }
                 catch (std::runtime_error &e) {
-                    throw std::runtime_error("Cannot set " + name + " variable of " + model_name +
+                    std::string throw_msg; throw_msg.assign("Cannot set " + name + " variable of " + model_name +
                                              "; unable to test item and array sizes are equal (does variable " + name +
                                              " exist for model " + model_name + "?)");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
                 if (item_size != sizeof(src[0])) {
-                    throw std::runtime_error("Cannot set " + name + " variable of " + model_name +
+                    std::string throw_msg; throw_msg.assign("Cannot set " + name + " variable of " + model_name +
                                              " with values of different item size");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
                 if (src.size() != total_bytes / item_size) {
-                    throw std::runtime_error(
+                    std::string throw_msg; throw_msg.assign(
                             "Cannot set " + name + " variable of " + model_name + " from vector of size " +
                             std::to_string(src.size()) + " (expected size " + std::to_string(total_bytes / item_size) +
                             ")");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
                 SetValue(std::move(name), static_cast<void *>(src.data()));
             }
@@ -392,8 +406,10 @@ namespace models {
             template<class T>
             void SetValueAtIndices(const std::string &name, std::vector<int> inds, std::vector<T> src) {
                 if (inds.size() != src.size()) {
-                    throw std::runtime_error("Cannot set specified indexes for " + name + " variable of " + model_name +
+                    std::string throw_msg; throw_msg.assign("Cannot set specified indexes for " + name + " variable of " + model_name +
                                              " when index collection is different size than collection of values.");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
                 if (inds.empty()) {
                     return;
@@ -403,12 +419,16 @@ namespace models {
                     item_size = (size_t) GetVarItemsize(name);
                 }
                 catch (std::runtime_error &e) {
-                    throw std::runtime_error("Cannot set specified indexes for " + name + " variable of " + model_name +
+                    std::string throw_msg; throw_msg.assign("Cannot set specified indexes for " + name + " variable of " + model_name +
                                              "; unable to test item sizes are equal (does variable exist for model?)");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
                 if (item_size != sizeof(src[0])) {
-                    throw std::runtime_error("Cannot set specified indexes for " + name + " variable of " + model_name +
+                    std::string throw_msg; throw_msg.assign("Cannot set specified indexes for " + name + " variable of " + model_name +
                                              " with values of different item size");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
                 SetValueAtIndices(name, inds.data(), inds.size(), static_cast<void *>(src.data()));
             }
@@ -522,7 +542,9 @@ namespace models {
             inline int inner_get_input_item_count() {
                 int item_count;
                 if (get_input_item_count(&bmi_model->handle, &item_count) != BMI_SUCCESS) {
-                    throw std::runtime_error(model_name + " failed to get model input item count.");
+                    std::string throw_msg; throw_msg.assign(model_name + " failed to get model input item count.");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
                 return item_count;
             }
@@ -539,7 +561,9 @@ namespace models {
             inline int inner_get_output_item_count() {
                 int item_count;
                 if (get_output_item_count(&bmi_model->handle, &item_count) != BMI_SUCCESS) {
-                    throw std::runtime_error(model_name + " failed to get model output item count.");
+                    std::string throw_msg; throw_msg.assign(model_name + " failed to get model output item count.");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
                 return item_count;
             }
@@ -547,7 +571,9 @@ namespace models {
             inline std::string inner_get_var_type(const std::string &name) {
                 char type_c_str[BMI_MAX_TYPE_NAME];
                 if (get_var_type(&bmi_model->handle, name.c_str(), type_c_str) != BMI_SUCCESS) {
-                    throw std::runtime_error(model_name + " failed to get variable type for " + name + ".");
+                    std::string throw_msg; throw_msg.assign(model_name + " failed to get variable type for " + name + ".");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
                 return {type_c_str};
             }
@@ -602,7 +628,9 @@ namespace models {
              */
             inline void inner_get_value_int(const std::string& name, int *dest) {
                 if (get_value_int(&bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
-                    throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
+                    std::string throw_msg; throw_msg.assign(model_name + " failed to get values for variable " + name + ".");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
             }
 
@@ -623,7 +651,9 @@ namespace models {
              */
             inline void inner_get_value_float(const std::string& name, float *dest) {
                 if (get_value_float(&bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
-                    throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
+                    std::string throw_msg; throw_msg.assign(model_name + " failed to get values for variable " + name + ".");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
             }
 
@@ -644,7 +674,9 @@ namespace models {
              */
             inline void inner_get_value_double(const std::string& name, double *dest) {
                 if (get_value_double(&bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
-                    throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
+                    std::string throw_msg; throw_msg.assign(model_name + " failed to get values for variable " + name + ".");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
             }
 
@@ -671,7 +703,9 @@ namespace models {
                     variableCount = (is_input_variables) ? inner_get_input_item_count() : inner_get_output_item_count();
                 }
                 catch (const std::exception &e) {
-                    throw std::runtime_error(model_name + " failed to count of " + varType + " variable names array.");
+                    std::string throw_msg; throw_msg.assign(model_name + " failed to count of " + varType + " variable names array.");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
 
                 // With variable count now obtained, create the vector
@@ -695,7 +729,9 @@ namespace models {
                     names_result = get_output_var_names(bmi_model.get(), names_array.data());
                 }
                 if (names_result != BMI_SUCCESS) {
-                    throw std::runtime_error(model_name + " failed to get array of " + varType + " variables names.");
+                    std::string throw_msg; throw_msg.assign(model_name + " failed to get array of " + varType + " variables names.");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
 
                 // Then convert from array of C strings to vector of strings, freeing the allocated space as we go

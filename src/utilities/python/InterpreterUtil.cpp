@@ -4,6 +4,7 @@
 #if NGEN_WITH_PYTHON
 
 #include <utilities/python/InterpreterUtil.hpp>
+#include <utilities/Logger.hpp>
 #include <utilities/logging_utils.h>
 
 #include <pybind11/embed.h>
@@ -16,6 +17,10 @@
 #include <tuple>
 
 namespace py = pybind11;
+
+static inline const char* safe(const char* s) {
+    return s ? s : "<null>";
+}
 
 namespace utils {
     namespace ngenPy {
@@ -81,17 +86,23 @@ namespace utils {
                 if (major != python_major
                     || minor != python_minor
                     || patch != python_patch) {
-                    throw std::runtime_error("Python version mismatch between configure/build ("
+                    std::string throw_msg; throw_msg.assign("Python version mismatch between configure/build ("
                                              + std::string(python_version)
                                              + ") and runtime (" + std::string(runtime_python_version) + ")");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
 
                 importTopLevelModule("numpy");
                 py::str runtime_numpy_version = importedTopLevelModules["numpy"].attr("version").attr("version");
                 if(std::string(runtime_numpy_version) != numpy_version) {
-                    throw std::runtime_error("NumPy version mismatch between configure/build ("
-                                             + std::string(numpy_version)
-                                             + ") and runtime (" + std::string(runtime_numpy_version) + ")");
+                    std::string version_str = runtime_numpy_version.cast<std::string>();
+                    const char* version_cstr = version_str.c_str();
+                    std::string throw_msg; throw_msg.assign("NumPy version mismatch between configure/build ("
+                                             + std::string(safe(numpy_version))
+                                             + ") and runtime (" + std::string(safe(version_cstr)) + ")");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
             }
 
@@ -117,7 +128,9 @@ namespace utils {
                 }
                 else {
                     std::string dirPath = py::str(requestedDirPath);
-                    throw std::runtime_error("Cannot add non-existing directory '" + dirPath + "' to Python PATH");
+                    std::string throw_msg; throw_msg.assign("Cannot add non-existing directory '" + dirPath + "' to Python PATH");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
             }
 
@@ -201,8 +214,7 @@ namespace utils {
                     for (const auto& module : importedTopLevelModules) {
                         ss << module.first << ", ";
                     }
-                    ss << std::endl;
-                    logging::warning(ss.str().c_str());
+                    LOG(ss.str(), LogLevel::WARNING);
                     throw;
                 }
             }

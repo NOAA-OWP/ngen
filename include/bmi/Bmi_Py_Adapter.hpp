@@ -2,6 +2,7 @@
 #define NGEN_BMI_PY_ADAPTER_H
 
 #include <NGenConfig.h>
+#include "Logger.hpp"
 
 #if NGEN_WITH_PYTHON
 
@@ -256,9 +257,11 @@ namespace models {
                 } else if (py_type_name == "float" && item_size == sizeof(long double)) {
                     return "long double";
                 } else {
-                    throw std::runtime_error(
+                    std::string throw_msg; throw_msg.assign(
                             "(Bmi_Py_Adapter) Failed determining analogous C++ type for Python model '" + py_type_name +
                             "' type with size " + std::to_string(item_size) + " bytes.");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
             }
 
@@ -276,8 +279,10 @@ namespace models {
                 } else if (cxx_type_name == "float" || cxx_type_name == "double" || cxx_type_name == "long double") {
                     return "double";
                 } else {
-                    throw std::runtime_error("(Bmi_Py_Adapter) Failed determining analogous built-in Python type for C++ '" +
+                    std::string throw_msg; throw_msg.assign("(Bmi_Py_Adapter) Failed determining analogous built-in Python type for C++ '" +
                                         cxx_type_name + "' type");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
             }
 
@@ -313,8 +318,10 @@ namespace models {
                     }
                 }
 
-                throw std::runtime_error("(Bmi_Py_Adapter) Failed determining analogous Python dtype for C++ '" +
+                std::string throw_msg; throw_msg.assign("(Bmi_Py_Adapter) Failed determining analogous Python dtype for C++ '" +
                                     cxx_type_name + "' type with size " + std::to_string(item_size) + " bytes.");
+                LOG(throw_msg, LogLevel::WARNING);
+                throw std::runtime_error(throw_msg);
             }
 
             /**
@@ -448,11 +455,14 @@ namespace models {
                     else if (val_item_size == sizeof(long double))
                         get_via_numpy_array<long double>(name, dest, inds, count, val_item_size, is_all_indices);
                 }
-                else
-                    throw std::runtime_error(
+                else {
+                    std::string throw_msg; throw_msg.assign(
                             "(Bmi_Py_Adapter) Failed attempt to GET values of BMI variable '" + name + "' from '" +
                             model_name + "' model:  model advertises unsupported combination of type (" + val_type +
                             ") and size (" + std::to_string(val_item_size) + ").");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
+                }
             }
 
             /**
@@ -545,8 +555,10 @@ namespace models {
                 } else if (cxx_type == "long double") {
                     set_value<long double>(name, (long double *) src);
                 } else {
-                    throw std::runtime_error("Bmi_Py_Adapter cannot set values for variable '" + name +
+                    std::string throw_msg; throw_msg.assign("Bmi_Py_Adapter cannot set values for variable '" + name +
                                              "' that has unrecognized C++ type '" + cxx_type + "'");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
             }
 
@@ -565,9 +577,11 @@ namespace models {
                 int length = nbytes / itemSize;
 
                 if (length != src.size()) {
-                    throw std::runtime_error(
+                    std::string throw_msg; throw_msg.assign(
                             "Bmi_Py_Adapter mismatch of lengths setting variable array (" + std::to_string(length) +
                             " expected but " + std::to_string(src.size()) + " received)");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
 
                 py::array_t<T> model_var_array = bmi_model->attr("get_value_ptr")(name);
@@ -663,17 +677,33 @@ namespace models {
             inline void construct_and_init_backing_model_for_py_adapter() {
                 if (model_initialized)
                     return;
+
                 try {
                     separate_package_and_simple_name();
                     std::vector<std::string> moduleComponents = {*bmi_type_py_module_name, *bmi_type_py_class_name};
+
+                    LOG(LogLevel::DEBUG, "Attempting to load Python BMI module: %s, class: %s", bmi_type_py_module_name->c_str(), bmi_type_py_class_name->c_str());
+
                     // This is a class object for the BMI module Python class
                     py::object bmi_py_class = utils::ngenPy::InterpreterUtil::getPyModule(moduleComponents);
+
+                    LOG(LogLevel::DEBUG, "Successfully loaded Python class. About to instantiate it...");
+
                     // This is the actual backing model object
                     bmi_model = std::make_shared<py::object>(bmi_py_class());
+
+                    LOG(LogLevel::DEBUG, "Successfully created Python object. Calling initialize...");
+
                     bmi_model->attr("initialize")(bmi_init_config);
                 }
-                catch (std::runtime_error& e){ //Catch specific exception types so the type/message don't get erased
-                    throw e;
+                catch (py::error_already_set& e) {
+                    LOG(LogLevel::FATAL, "Python error during BMI construction:\n%s", e.what());
+                    throw;
+                }
+                catch (std::runtime_error& e) {
+                    std::string err = std::string("Failed in construct_and_init_backing_model_for_py_adapter:\n") + e.what();
+                    LOG(LogLevel::FATAL, err);
+                    throw std::runtime_error(err);
                 }
                 // Record the exception message before re-throwing to handle subsequent function calls properly
                 // TODO: handle exceptions in better detail, without losing type information
@@ -683,10 +713,10 @@ namespace models {
                     if (init_exception_msg.empty()) {
                         init_exception_msg = "Unknown Python model initialization exception.";
                     }
-                    //This message is lost and often contains valuable info.  Either need to break up and catch 
-                    //other possible exceptions, wrap all these in a custom exception, or at the very least, print
-                    //the original messge before it gets lost in this re-throw.
-                    std::cerr<<init_exception_msg<<std::endl;
+                    // This message is lost and often contains valuable info.  Either need to break up and catch
+                    // other possible exceptions, wrap all these in a custom exception, or at the very least, print
+                    // the original message before it gets lost in this re-throw.
+                    LOG(LogLevel::FATAL, init_exception_msg);
                     throw e;
                 }
             }
@@ -716,7 +746,9 @@ namespace models {
                     get_and_copy_grid_array<double>(name, grid, dest, shape[rank-index-1], "float");
                     return;
                 }else{
-                    throw std::runtime_error("GetGrid<X|Y|Z> coordinates not yet implemented for Python BMI adapter for grid type "+grid_type);
+                    std::string throw_msg; throw_msg.assign("GetGrid<X|Y|Z> coordinates not yet implemented for Python BMI adapter for grid type "+grid_type);
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
 
             }
@@ -743,8 +775,10 @@ namespace models {
                         name_string.erase(0, pos + delimiter.length());
                     }
                     if (split_name.empty()) {
-                        throw std::runtime_error("Cannot interpret BMI Python model type '" + bmi_type_py_full_name
+                        std::string throw_msg; throw_msg.assign("Cannot interpret BMI Python model type '" + bmi_type_py_full_name
                                                  + "'; expected format is <python_module>.<python_class>");
+                        LOG(throw_msg, LogLevel::WARNING);
+                        throw std::runtime_error(throw_msg);
                     }
                     // What's left should be the class name
                     bmi_type_py_class_name = std::make_shared<std::string>(name_string);

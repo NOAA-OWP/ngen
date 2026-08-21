@@ -8,6 +8,10 @@
 #include "GenericDataProvider.hpp"
 #include "utilities/output/CatchmentOutputsMgr.hpp"   // utils::OutputField
 
+#include "Logger.hpp"
+
+#define DEFAULT_FORMULATION_OUTPUT_DELIMITER ","
+
 namespace realization {
 
     class Catchment_Formulation : public Formulation, public HY_CatchmentArea {

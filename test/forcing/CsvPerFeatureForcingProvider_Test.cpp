@@ -251,7 +251,7 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderNonParsing)
 
         // make sure each expected column name is within varnames
         EXPECT_NE(std::find(varnames.begin(), varnames.end(), expected_name), varnames.end());
-        
+
         // conversion is not expected, since there is no mapping
         EXPECT_EQ(in_value, out_value);
     }

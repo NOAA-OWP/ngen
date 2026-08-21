@@ -6,7 +6,7 @@
 #include "HY_Features.hpp"
 #endif
 
-void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows, 
+void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
                                        std::unordered_map<std::string, int> const& catchment_indexes,
                                        boost::span<double> nexus_downstream_flows,
                                        std::unordered_map<std::string, int> const& nexus_indexes,
@@ -39,7 +39,7 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
     }
 
     // Once contributing catchments are updated for this timestep, dump the nexus output
-    for(const auto& id : features.nexuses()) 
+    for(const auto& id : features.nexuses())
     {
         // Get the correct "requesting" id for downstream_flow
         const auto& nexus = features.nexus_at(id);

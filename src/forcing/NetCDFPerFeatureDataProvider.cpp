@@ -5,6 +5,14 @@
 #include <mediator/UnitsHelper.hpp>
 
 #include <netcdf>
+#include <iostream>
+#include <iomanip>
+#include <algorithm>
+#include <cmath>
+#include "Logger.hpp"
+
+using namespace std;
+std::stringstream netcdf_ss;
 
 std::mutex data_access::NetCDFPerFeatureDataProvider::shared_providers_mutex;
 std::map<std::string, std::shared_ptr<data_access::NetCDFPerFeatureDataProvider>> data_access::NetCDFPerFeatureDataProvider::shared_providers;
@@ -181,6 +189,8 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     //nc_set_chunk_cache(sizep, nelemsp, preemptionp);
 
     //open the file
+    nc_file = std::make_shared<netCDF::NcFile>(input_path, netCDF::NcFile::read);
+
     try{
         nc_file = std::make_shared<netCDF::NcFile>(input_path, netCDF::NcFile::read);
     }
@@ -245,14 +255,14 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     // some sanity checks
     if ( id_dim_count > 1)
     {
-        throw std::runtime_error("Provided NetCDF file has an \"ids\" variable with more than 1 dimension");       
+        Logger::logMsgAndThrowError("Provided NetCDF file has an \"ids\" variable with more than 1 dimension");
     }
 
     auto id_dim = ids.getDim(0);
 
     if (id_dim.isNull() )
     {
-        throw std::runtime_error("Provided NetCDF file has a NULL dimension for variable  \"ids\"");
+        Logger::logMsgAndThrowError("Provided NetCDF file has a NULL dimension for variable  \"ids\"");
     }
 
     auto num_ids = id_dim.getSize();
@@ -267,7 +277,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     //TODO: split into smaller slices if num_ids is large.
     cache_slice_c_size = num_ids;
 
-    // allocate an array of character pointers 
+    // allocate an array of character pointers
     std::vector< char* > string_buffers(num_ids);
 
     // read the id strings
@@ -286,14 +296,24 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     // correct string release
     nc_free_string(num_ids,&string_buffers[0]);
 
-    // now get the size of the time dimension
-    auto num_times = nc_file->getDim("time").getSize();
+// Modified code to handle units, epoch start, and reading all time values correctly - KSL
 
-    // allocate storage for the raw time array
+    // Get the time variable - getVar collects all values at once and stores in memory
+    // Extremely large timespans could be problematic, but for ngen use cases, this should not be a problem
+    auto time_var = nc_file->getVar("Time");
+
+    // Get the size of the time dimension
+    size_t num_times = nc_file->getDim("time").getSize();
+
     std::vector<double> raw_time(num_times);
 
-    // get the time variable
-    auto time_var = nc_file->getVar("Time");
+    try {
+        time_var.getVar(raw_time.data());
+    } catch(const netCDF::exceptions::NcException& e) {
+        netcdf_ss << "Error reading time variable: " << e.what() << std::endl;
+        LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
+        throw;
+    }
 
     // read from the first catchment row to get the recorded times
     std::vector<size_t> start;
@@ -315,23 +335,25 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         [&](const auto& n){return n * time_info.scale_factor + time_info.epoch_start_time.value_or(0); });
         
 
-    // determine the stride of the time array
     time_stride = time_vals[1] - time_vals[0];
 
-    #ifndef NCEP_OPERATIONS
     // verify the time stride
-    for( size_t i = 1; i < time_vals.size() -1; ++i)
-    {
-        double tinterval = time_vals[i+1] - time_vals[i];
-
-        if ( tinterval - time_stride > 0.000001)
-        {
-            log_stream << "Error: Time intervals are not constant in forcing file\n";
-
-            throw std::runtime_error("Time intervals in forcing file are not constant");
+    #ifndef NCEP_OPERATIONS
+    for (size_t i = 1; i < time_vals.size(); ++i) {
+        double interval = time_vals[i] - time_vals[i-1];
+        if (std::abs(interval - time_stride) > 1e-6) {
+            netcdf_ss<< "Inconsistent interval at index " << i << ": " << interval << std::endl;
+            LOG(netcdf_ss.str(), LogLevel::SEVERE); netcdf_ss.str("");
+            netcdf_ss << "Error: Time intervals are not constant in forcing file\n" << std::endl;
+            log_stream << netcdf_ss.str();
+            LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
+            Logger::logMsgAndThrowError("Time intervals in forcing file are not constant");
         }
     }
     #endif
+
+    netcdf_ss << "All time intervals are constant within tolerance." << std::endl;
+    LOG(netcdf_ss.str(), LogLevel::SEVERE); netcdf_ss.str("");
 
     // determine start_time and stop_time;
     start_time = time_vals[0];
@@ -490,6 +512,7 @@ size_t NetCDFPerFeatureDataProvider::get_ts_index_for_time(const time_t &epoch_t
     {
         std::stringstream ss;
         ss << "The value " << (int)epoch_time << " was not in the range [" << (int)start_time << "," << (int)stop_time << ")\n" << SOURCE_LOC;
+        LOG(ss.str(), LogLevel::WARNING);
         throw std::out_of_range(ss.str().c_str());
     }
 }
@@ -536,7 +559,7 @@ namespace cache {
 }
 
 
-double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m) 
+double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m)
 {
     /*
      * this cache is made up of pages.
@@ -565,7 +588,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
      */
 
     auto init_time = selector.get_init_time();
-    auto stop_time = init_time + selector.get_duration_secs(); // scope hiding! BAD JUJU!
+    auto stop_time = init_time + selector.get_duration_secs();  // scope hiding! BAD JUJU!
     
     size_t c_idx1 = get_ts_index_for_time(init_time);
     size_t c_idx2;
@@ -705,7 +728,9 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
     try 
     {
-        return UnitsHelper::get_converted_value(native_units, rvalue, selector.get_output_units());
+        //minor change to aid debugging
+        double converted_value = UnitsHelper::get_converted_value(native_units, rvalue, selector.get_output_units());
+        return converted_value;
     }
     catch (UnitsHelper::unit_conversion_exception& uce)
     {
@@ -730,7 +755,9 @@ const netCDF::NcVar& NetCDFPerFeatureDataProvider::get_ncvar(const std::string& 
         return cache_hit->second;
     }
 
-    throw std::runtime_error("Got request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
+    std::string throw_msg; throw_msg.assign("Got request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
+    LOG(throw_msg, LogLevel::WARNING);
+    throw std::runtime_error(throw_msg);
 }
 
 const std::string& NetCDFPerFeatureDataProvider::get_ncvar_units(const std::string& name){
@@ -739,7 +766,10 @@ const std::string& NetCDFPerFeatureDataProvider::get_ncvar_units(const std::stri
         return cache_hit->second;
     }
 
-    throw std::runtime_error("Got units request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
+    std::string throw_msg; throw_msg.assign("Got units request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
+    LOG(throw_msg, LogLevel::WARNING);
+    throw std::runtime_error(throw_msg);
+
 }
 
 void NetCDFPerFeatureDataProvider::test_data_is_readable() {

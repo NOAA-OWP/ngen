@@ -9,6 +9,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/variant.hpp>
+#include "Logger.hpp"
 
 namespace geojson {
     class JSONProperty;
@@ -160,7 +161,11 @@ namespace geojson {
      */
     class JSONProperty {
         public:
-            
+            /**
+             * @brief Don't use this, but it's necessary for working with functions and classes that expect a default constructor
+             */
+            JSONProperty() = default;    
+
             JSONProperty(std::string value_key, const boost::property_tree::ptree& property_tree):
             key(std::move(value_key)) {
 
@@ -434,54 +439,53 @@ namespace geojson {
              * @param tab (optional) Additional starting tab to indent (default 0)
              * @param newline (optional) Add a new line to the end of the print (default true)
              */
-            static void print_property(const geojson::JSONProperty& p, int tab=0, bool newline = true){
-                char end = '\0';
-                if(newline)  end = '\n';
-                std::cout<<std::setw(tab);
-                switch( p.get_type() ){
+            static std::string print_property(const geojson::JSONProperty& p, int tab = 0, bool newline = true) {
+                std::ostringstream output;  // Use a string stream instead of cout
+                char end = newline ? '\n' : '\0';
+                
+                output << std::setw(tab); // Maintain indentation
+                
+                switch (p.get_type()) {
                     case geojson::PropertyType::String:
-                        std::cout<<p.as_string()<<end;
+                        output << p.as_string() << end;
                         break;
                     case geojson::PropertyType::Real:
-                        std::cout<<p.as_real_number()<<end;
+                        output << p.as_real_number() << end;
                         break;
                     case geojson::PropertyType::Natural:
-                        std::cout<<p.as_natural_number()<<end;
+                        output << p.as_natural_number() << end;
                         break;
                     case geojson::PropertyType::Boolean:
-                        if(p.as_boolean())
-                            std::cout<<"true"<<end;
-                        else
-                            std::cout<<"false"<<end;
-                        break;   
+                        output << (p.as_boolean() ? "true" : "false") << end;
+                        break;
                     case geojson::PropertyType::List:
-                        std::cout<<std::setw(tab)<<"[";
+                        output << std::setw(tab) << "[";
                         tab += 5;
-                        for( const auto& lp : p.as_list() ){
+                        for (const auto& lp : p.as_list()) {
                             //This is a little harder to align nicely without knowing
                             //the length of the property as a string first...so for now,
                             //just try to get a little bit in to make it easier to read
-                            std::cout<<std::setw(tab);
-                            print_property(lp, tab, false);
-                            std::cout<<","<<end;
+                            output << std::setw(tab);
+                            output << print_property(lp, tab, false);  // Recursively append
+                            output << "," << end;
                         }
                         tab -= 5;
-                        std::cout<<std::setw(tab)<<" ]"<<end;
-                        
+                        output << std::setw(tab) << " ]" << end;
                         break;
                     case geojson::PropertyType::Object:
-                        //tab += 5;
-                        std::cout<<std::setw(tab)<<"{\n";
+                        output << std::setw(tab) << "{\n";
                         tab += 5;
-                        for( auto pair : p.get_values() ){
-                            std::cout<<std::setw(tab + pair.first.length())<<pair.first<<" : ";
-                            print_property(pair.second, tab, false);
-                            std::cout<<",\n";
+                        for (const auto& pair : p.get_values()) {
+                            output << std::setw(tab + pair.first.length()) << pair.first << " : ";
+                            output << print_property(pair.second, tab, false);  // Recursively append
+                            output << ",\n";
                         }
                         tab -= 5;
-                        std::cout<<std::setw(tab)<<"}"<<end;
-                        tab -= 5;
-                };
+                        output << std::setw(tab) << "}" << end;
+                        break;
+                }
+                
+                return output.str();
             }
 
             /**

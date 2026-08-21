@@ -20,6 +20,7 @@
 #endif
 
 #include "core/Partition_Parser.hpp"
+#include <Logger.hpp>
 
 using PartitionVSet = std::vector<std::unordered_set<std::string> >;
 /**
@@ -121,10 +122,10 @@ void generate_partitions(network::Network& network, const int& num_partitions, P
     //int partition_size_plus1 = partition_size + 1;
     int partition_size_plus1 = ++partition_size;
     /**
-    std::cout << "num_partition:" << num_partitions << std::endl;
-    std::cout << "partition_size_norm:" << partition_size_norm << std::endl;
-    std::cout << "partition_size_plus1:" << partition_size_plus1 << std::endl;
-    std::cout << "remainder:" << remainder << std::endl;
+    partgen_ss << "num_partition:" << num_partitions << std::endl;
+    partgen_ss << "partition_size_norm:" << partition_size_norm << std::endl;
+    partgen_ss << "partition_size_plus1:" << partition_size_plus1 << std::endl;
+    partgen_ss << "remainder:" << remainder << std::endl;
     **/
     std::unordered_set<std::string> catchment_set, nexus_set;
     //We know we want ~partition_size catchments in the set, so reserve enough space for that to avoid a lot of realloction/rehash
@@ -144,17 +145,20 @@ void generate_partitions(network::Network& network, const int& num_partitions, P
             for( auto downstream : network.get_destination_ids(catchment) ){
                 nexus_set.emplace(downstream);
             }
-            if(nexus_set.size() == 0 && catchment.find("SENTINEL") == std::string::npos){
-                std::cerr<<"Error: Catchment "<<catchment<<" has no destination nexus.\n";
+        if(nexus_set.size() == 0 && catchment.find("SENTINEL") == std::string::npos){
+            partgen_ss <<"Error: Catchment "<<catchment<<" has no destination nexus.\n";
+            LOG(partgen_ss.str(), LogLevel::WARNING); partgen_ss.str("");
                 exit(1);
             }
             for( auto upstream : network.get_origination_ids(catchment) ){
                 nexus_set.emplace(upstream);
             }
-            //std::cout<<catchment<<" -> "<<nexus<<std::endl;
+            //partgen_ss<<catchment<<" -> "<<nexus<<std::endl;
 
             //keep track of all the features in this partition
             catchment_set.emplace(catchment);
+            LOG(catchment + " placed in partition " + std::to_string(partition), LogLevel::DEBUG);
+
             counter++;
             if(counter == partition_size)
             {
@@ -177,7 +181,8 @@ void generate_partitions(network::Network& network, const int& num_partitions, P
     }
 
     // validating catchment partition
-    std::cout << "Validating catchments..." << std::endl;
+    partgen_ss << "Validating catchments..." << std::endl;
+    LOG(partgen_ss.str(), LogLevel::INFO); partgen_ss.str("");
     std::vector<std::string> cat_id_vec;
     for (int i =0; i < catchment_part.size(); ++i) {
         std::unordered_set<std::string>& cat_set = catchment_part[i];
@@ -195,11 +200,14 @@ void generate_partitions(network::Network& network, const int& num_partitions, P
     std::set_difference(cat_id_vec.begin(), cat_id_vec.end(), unique.begin(), unique.end(), std::inserter(duplicates, duplicates.end()));
     if( duplicates.size() > 0 ){
         for( auto& id: duplicates){
-            std::cout << "catchment "<<id<<" is duplicated!"<<std::endl;
+            partgen_ss << "catchment "<<id<<" is duplicated!"<<std::endl;
+            LOG(partgen_ss.str(), LogLevel::SEVERE); partgen_ss.str("");
         }
     }
-    std::cout << "\nNumber of catchments is: " << cat_id_vec.size();
-    std::cout << "\nCatchment validation completed" << std::endl;
+    partgen_ss << "\nNumber of catchments is: " << cat_id_vec.size();
+    LOG(partgen_ss.str(), LogLevel::INFO); partgen_ss.str("");
+    partgen_ss << "\nCatchment validation completed" << std::endl;
+    LOG(partgen_ss.str(), LogLevel::INFO); partgen_ss.str("");
 }
 
 /**
@@ -228,7 +236,7 @@ int find_remote_rank(const std::string& id, const PartitionVSet& catchment_parti
     }
     if(pos < 0){
         std::string msg = "find_remote_rank: Could not find feature id "+id+" in any partition";
-        throw std::runtime_error(msg);
+        Logger::logMsgAndThrowError(msg);
     }
     return pos;
 }
@@ -342,23 +350,26 @@ void read_arguments(int argc, char* argv[],
                     std::vector<std::string>& nexus_subset_ids)
 {
     if( argc < 7 ){
-        std::cout << "Missing required args:" << std::endl;
-        std::cout << argv[0] << " <catchment_data_path> <nexus_data_path> <partition_output_name> <number of partitions> <catchment_subset_ids> <nexus_subset_ids> " << std::endl;
-        std::cout << "Use empty strings for subset_ids for no subsetting, e.g ''\nUse \'cat-X,cat-Y\', \'nex-X,nex-Y\' to partition only the defined catchment and nexus"<<std::endl;
-        std::cout << "Note the use of single quotes, and no spaces between the ids.  (no quotes will also work, but  \"\" will not."<<std::endl;
+        partgen_ss << "Missing required args:" << std::endl;
+        partgen_ss << argv[0] << " <catchment_data_path> <nexus_data_path> <partition_output_name> <number of partitions> <catchment_subset_ids> <nexus_subset_ids> " << std::endl;
+        partgen_ss << "Use empty strings for subset_ids for no subsetting, e.g ''\nUse \'cat-X,cat-Y\', \'nex-X,nex-Y\' to partition only the defined catchment and nexus"<<std::endl;
+        partgen_ss << "Note the use of single quotes, and no spaces between the ids.  (no quotes will also work, but  \"\" will not."<<std::endl;
+        LOG(partgen_ss.str(), LogLevel::WARNING); partgen_ss.str("");
         exit(-1);
     }
 
     bool error = false;
     if( !utils::FileChecker::file_is_readable(argv[1]) ) {
-        std::cout << "catchment data path " << argv[1] << " not readable" << std::endl;
+        partgen_ss << "catchment data path " << argv[1] << " not readable" << std::endl;
+        LOG(partgen_ss.str(), LogLevel::WARNING); partgen_ss.str("");
         error = true;
     } else {
         catchmentDataFile = argv[1];
     }
 
     if( !utils::FileChecker::file_is_readable(argv[2]) ) {
-        std::cout << "nexus data path " << argv[2] << " not readable" << std::endl;
+        partgen_ss << "nexus data path " << argv[2] << " not readable" << std::endl;
+        LOG(partgen_ss.str(), LogLevel::WARNING); partgen_ss.str("");
         error = true;
     } else {
         nexusDataFile = argv[2];
@@ -366,7 +377,8 @@ void read_arguments(int argc, char* argv[],
 
     partitionOutFile = argv[3];
     if (partitionOutFile.empty()) {
-        std::cout << "Missing output file name " << std::endl;
+        partgen_ss << "Missing output file name " << std::endl;
+        LOG(partgen_ss.str(), LogLevel::WARNING); partgen_ss.str("");
         error = true;
     }
 
@@ -375,7 +387,8 @@ void read_arguments(int argc, char* argv[],
         if (numPartitions < 0) throw boost::bad_lexical_cast();
     }
     catch(boost::bad_lexical_cast &e) {
-        std::cout << "number of partitions must be a positive integer." << std::endl;
+        partgen_ss << "number of partitions must be a positive integer." << std::endl;
+        LOG(partgen_ss.str(), LogLevel::WARNING); partgen_ss.str("");
         error = true;
     }
 
@@ -417,9 +430,16 @@ int main(int argc, char* argv[])
     if (boost::algorithm::ends_with(catchmentDataFile, "gpkg"))
     {
         #if NGEN_WITH_SQLITE3
+        try {
         catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
-        #else
-        throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
+        } catch (...) {
+            // Handle all exceptions
+            std::string msg = "Geopackage error occurred reading divides: " + catchmentDataFile;
+            LOG(msg,LogLevel::FATAL);
+            throw std::runtime_error(msg);
+        }
+    #else
+        Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
         #endif
     }
     else
@@ -427,16 +447,17 @@ int main(int argc, char* argv[])
         catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
     }
     int num_catchments = catchment_collection->get_size();
-    std::cout<<"Partitioning "<<num_catchments<<" catchments into "<<num_partitions<<" partitions."<<std::endl;
+    partgen_ss<<"Partitioning "<<num_catchments<<" catchments into "<<num_partitions<<" partitions."<<std::endl;
+    LOG(partgen_ss.str(), LogLevel::INFO); partgen_ss.str("");
 
     //Check that the number of partitions is less or equal to the number of catchment
     if (num_catchments < num_partitions) {
-        throw std::runtime_error("Input error: total number of catchments: " + std::to_string(num_catchments) + \
+        Logger::logMsgAndThrowError("Input error: total number of catchments: " + std::to_string(num_catchments) + \
                                  ", cannot be less than the number of partitions: " + std::to_string(num_partitions));
     }
 
     std::string link_key = "toid";
-  
+
     //Assumes dendritic, can add check in network if needed.
     PartitionVSet catchment_part, nexus_part;
 
@@ -445,11 +466,18 @@ int main(int argc, char* argv[])
     geojson::GeoJSON global_nexus_collection;
     if (boost::algorithm::ends_with(nexusDataFile, "gpkg")) 
     {
-      #if NGEN_WITH_SQLITE3
-      global_nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
-      #else
-      throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
-      #endif
+    #if NGEN_WITH_SQLITE3
+        try {
+            global_nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
+        } catch (...) {
+            // Handle all exceptions
+            std::string msg = "Geopackage error occurred reading nexuses: " + nexusDataFile;
+            LOG(msg,LogLevel::FATAL);
+            throw std::runtime_error(msg);
+        }
+    #else
+        Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
+    #endif
     } 
     else 
     {
@@ -458,12 +486,12 @@ int main(int argc, char* argv[])
 
     //Now read the collection of catchments, iterate it and add them to the nexus collection
     //also link them by to->id
-    //std::cout << "Iterating Catchment Features" << std::endl;
+    //partgen_ss << "Iterating Catchment Features" << std::endl;
     for(auto& feature: *catchment_collection)
     {
         //feature->set_id(feature->get_property("ID").as_string());
         global_nexus_collection->add_feature(feature);
-        //std::cout<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toID").as_string()<<std::endl;
+        //partgen_ss<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toID").as_string()<<std::endl;
     }
     //Update the feature ids for the combined collection, using the alternative property 'id'
     //to map features to their primary id as well as the alternative property
@@ -498,6 +526,7 @@ int main(int argc, char* argv[])
                 geojson::Feature sentinel_feature = std::make_shared<geojson::SentinelFeature>(sentinel_id);
                 sentinels.push_back(sentinel_feature);
                 feature->add_destination_feature(sentinel_feature.get());
+                LOG("Nexus " + feature->get_id() + " has no destination features; adding " + sentinel_id + " below it", LogLevel::INFO);
             }
         }
     }
@@ -516,6 +545,16 @@ int main(int argc, char* argv[])
 
     //The container holding all remote_connections
     std::vector<RemoteConnectionVec> remote_connections_vec;
+
+    for (int i = 0; i < num_partitions; ++i) {
+        partgen_ss << "Partition " << i << " catchments: " << catchment_part[i].size() << "\n";
+        for (auto& c : catchment_part[i])
+            partgen_ss << c << std::endl;
+        partgen_ss << "nexuses " << nexus_part[i].size() << "\n";
+        for (auto& n : nexus_part[i])
+            partgen_ss << n << std::endl;
+        LOG(partgen_ss.str(), LogLevel::DEBUG); partgen_ss.str("");
+    }
 
     int total_remotes = 0;
     // loop over all partitions by partition id
@@ -560,12 +599,14 @@ int main(int argc, char* argv[])
 
         remote_connections_vec.push_back(remote_connections);
         
-        //std::cout << "local network size: " << local_network.size() << "\n";
-        //std::cout << "global network size " << global_network.size() << "\n";
-        std::cout << "Found " << remote_catchments << " remotes in partition "<<ipart<<"\n";
+        //partgen_ss << "local network size: " << local_network.size() << "\n";
+        //partgen_ss << "global network size " << global_network.size() << "\n";
+        partgen_ss << "Found " << remote_catchments << " remotes in partition "<<ipart<<"\n";
+        LOG(partgen_ss.str(), LogLevel::INFO); partgen_ss.str("");
         total_remotes += remote_catchments;
     }
-    std::cout << "Found " << total_remotes << " total remotes (average of approximately " << (total_remotes/num_partitions) << " remotes per partition)" << std::endl;
+    partgen_ss << "Found " << total_remotes << " total remotes (average of approximately " << (total_remotes/num_partitions) << " remotes per partition)" << std::endl;
+    LOG(partgen_ss.str(), LogLevel::INFO); partgen_ss.str("");
 
     write_remote_connections(catchment_part, nexus_part, remote_connections_vec, num_partitions, outFile);
 

@@ -1,5 +1,6 @@
 #ifndef NGEN_CSVPERFEATUREFORCING_H
 #define NGEN_CSVPERFEATUREFORCING_H
+#include "Logger.hpp"
 
 #include <vector>
 #include <set>
@@ -81,7 +82,9 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      */
     size_t get_ts_index_for_time(const time_t &epoch_time) const override {
         if (epoch_time < start_date_time_epoch) {
-            throw std::out_of_range("Forcing had bad pre-start time for index query: " + std::to_string(epoch_time));
+            std::string throw_msg; throw_msg.assign("Forcing had bad pre-start time for index query: " + std::to_string(epoch_time));
+            LOG(throw_msg, LogLevel::WARNING);
+            throw std::out_of_range(throw_msg);
         }
         size_t i = 0;
         // 1 hour
@@ -94,7 +97,9 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         // The end_date_time_epoch is the epoch value of the BEGINNING of the last time step, not its end.
         // I.e., to make sure we cover it, we have to go another time step beyond.
         if (time >= end_date_time_epoch + 3600) {
-            throw std::out_of_range("Forcing had bad beyond-end time for index query: " + std::to_string(epoch_time));
+            std::string throw_msg; throw_msg.assign("Forcing had bad beyond-end time for index query: " + std::to_string(epoch_time));
+            LOG(throw_msg, LogLevel::WARNING);
+            throw std::out_of_range(throw_msg);            
         }
         else {
             return i;
@@ -123,7 +128,9 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
             current_index = get_ts_index_for_time(init_time);
         }
         catch (const std::out_of_range &e) {
-            throw std::out_of_range("Forcing had bad init_time " + std::to_string(init_time) + " for value request");
+            std::string throw_msg; throw_msg.assign("Forcing had bad init_time " + std::to_string(init_time) + " for value request");
+            LOG(throw_msg, LogLevel::WARNING);
+            throw std::out_of_range(throw_msg);            
         }
 
         std::vector<double> involved_time_step_values;
@@ -163,10 +170,18 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         try {
             return UnitsHelper::get_converted_value(available_forcings_units[output_name], value, output_units);
         }
-        catch (UnitsHelper::unit_conversion_exception& uce) {
-            uce.provider_model_name = "CsvPerFeatureProvider";
-            uce.provider_var_name = output_name;
+        catch (data_access::unit_conversion_exception& uce) {
+            uce.provider_model_name = "CsvPerFeatureForcingProvider";
+            uce.provider_bmi_var_name = output_name;
             throw;
+        }
+        catch (const std::runtime_error& e) {
+            data_access::unit_conversion_exception uce(e.what());
+            uce.provider_model_name = "CsvPerFeatureForcingProvider " + std::to_string(catchment_id);
+            uce.provider_bmi_var_name = output_name;
+            uce.provider_units = available_forcings_units[output_name];
+            uce.unconverted_values.push_back(value);
+            throw uce;
         }
     }
 
@@ -233,12 +248,14 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      */
     inline void check_forcing_vector_index_bounds()
     {
+        std::stringstream ss;
         //Check if forcing index is less than zero and if so, set to zero.
         if (forcing_vector_index < 0)
         {
             forcing_vector_index = 0;
             /// \todo: Return appropriate warning
-            std::cout << "WARNING: Forcing vector index is less than zero. Therefore, setting index to zero." << std::endl;
+            ss <<  "WARNING: Forcing vector index is less than zero. Therefore, setting index to zero." << std::endl;
+            LOG(ss.str(), LogLevel::SEVERE); ss.str("");
         }
 
         //Check if forcing index is greater than or equal to the size of the size of the time vector and if so, set to zero.
@@ -246,7 +263,8 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         {
             forcing_vector_index = time_epoch_vector.size() - 1;
             /// \todo: Return appropriate warning
-            std::cout << "WARNING: Reached beyond the size of the forcing vector. Therefore, setting index to last value of the vector." << std::endl;
+            ss << "WARNING: Reached beyond the size of the forcing vector. Therefore, setting index to last value of the vector." << std::endl;
+            LOG(ss.str(), LogLevel::SEVERE); ss.str("");
         }
 
         return;
@@ -261,7 +279,9 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      */
     inline double get_value_for_param_name(const std::string& name, int index) {
         if (index >= time_epoch_vector.size() ) {
-            throw std::out_of_range("Forcing had bad index " + std::to_string(index) + " for value lookup of " + name);
+            std::string throw_msg; throw_msg.assign("Forcing had bad index " + std::to_string(index) + " for value lookup of " + name);
+            LOG(throw_msg, LogLevel::WARNING);
+            throw std::out_of_range(throw_msg);
         }
 
         std::string can_name = name;
@@ -274,7 +294,9 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
             return forcing_vectors[can_name].at(index);
         }
         else {
-            throw std::runtime_error("Cannot get forcing value for unrecognized parameter name '" + name + "'.");
+            std::string throw_msg; throw_msg.assign("Cannot get forcing value for unrecognized parameter name '" + name + "'.");
+            LOG(throw_msg, LogLevel::WARNING);
+            throw std::runtime_error(throw_msg);
         }
     }
 
@@ -324,10 +346,13 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
                     }
                 }
 
+                LOG("CsvProvider has variable '" + var_name + "' with units '" + units + "'", LogLevel::DEBUG);
+
                 auto wkf = data_access::WellKnownFields.find(var_name);
                 if(wkf != data_access::WellKnownFields.end()){
                     units = units.empty() ? std::get<1>(wkf->second) : units;
                     auto wkf_name = std::get<0>(wkf->second);
+                    LOG("CsvProvider has well-known name '" + wkf_name + "' for variable '" + var_name + "' with units '" + units + "'", LogLevel::DEBUG);
                     available_forcings.push_back(var_name); // Allow lookup by non-canonical name
                     available_forcings_units[var_name] = units; // Allow lookup of units by non-canonical name
                     var_name = wkf_name; // Use the CSDMS name from here on
@@ -367,7 +392,9 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
                 
                 char tm_buff[128];
                 strftime(tm_buff, 128, "%Y-%m-%d %H:%M:%S", &start_date_tm);
-                throw std::runtime_error("Error: Forcing data " + file_name + " begins after the model start time:" + std::string(tm_buff) + " < " + time_str);
+                std::string throw_msg; throw_msg.assign("Error: Forcing data " + file_name + " begins after the model start time:" + std::string(tm_buff) + " < " + time_str);
+                LOG(throw_msg, LogLevel::WARNING);
+                throw std::out_of_range(throw_msg);
             }
 
             
@@ -390,8 +417,10 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         if (i <= 1 || current_row_date_time_epoch < end_date_time_epoch)
         {
             /// \todo TODO: Return appropriate error
-            std::cout << "WARNING: Forcing data ends before the model end time." << std::endl;
-            //throw std::runtime_error("Error: Forcing data ends before the model end time.");
+            std::stringstream ss;
+            ss << "WARNING: Forcing data ends before the model end time." << std::endl;
+            LOG(ss.str(), LogLevel::SEVERE); ss.str("");
+            //std::string throw_msg; throw_msg.assign("Error: Forcing data ends before the model end time.");
         }
     }
 

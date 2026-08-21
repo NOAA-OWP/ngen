@@ -1,8 +1,12 @@
 #ifndef NGEN_BMI_MULTI_FORMULATION_HPP
 #define NGEN_BMI_MULTI_FORMULATION_HPP
+#include "Logger.hpp"
 
 #include <map>
 #include <vector>
+#include <iostream>
+#include <stdexcept>
+#include <string>
 #include "Bmi_Formulation.hpp"
 #include "Bmi_Module_Formulation.hpp"
 #include "bmi.hpp"
@@ -12,6 +16,7 @@
 #include "ExternalIntegrationException.hpp"
 #include "utilities/logging_utils.h"
 #include <mediator/UnitsHelper.hpp>
+
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"
@@ -254,7 +259,9 @@ namespace realization {
             }
             // If not found ...
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
-                throw std::runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
+                std::string throw_msg; throw_msg.assign(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
+                LOG(throw_msg, LogLevel::WARNING);
+                throw std::runtime_error(throw_msg);
             }
             return availableData.at(var_name)->get_data_start_time();
         }
@@ -293,7 +300,9 @@ namespace realization {
             }
             // If not found ...
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
-                throw std::runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
+                std::string throw_msg; throw_msg.assign(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
+                LOG(throw_msg, LogLevel::WARNING);
+                throw std::runtime_error(throw_msg);
             }
             return availableData.at(var_name)->get_data_stop_time();
         }
@@ -314,7 +323,6 @@ namespace realization {
                 }
                 break;
             }
-
             // If not found ...
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
                 throw std::runtime_error(get_formulation_type() + " cannot get output record duration for unknown \"" + var_name + "\"");
@@ -379,7 +387,9 @@ namespace realization {
          */
         size_t get_ts_index_for_time(const time_t &epoch_time) const override {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw std::runtime_error("Bmi_Multi_Formulation does not yet implement get_ts_index_for_time");
+            std::string throw_msg; throw_msg.assign("Bmi_Multi_Formulation does not yet implement get_ts_index_for_time");
+            LOG(throw_msg, LogLevel::WARNING);
+            throw std::runtime_error(throw_msg);
         }
 
         /**
@@ -408,7 +418,9 @@ namespace realization {
             std::string output_name = selector.get_variable_name();
             // If not found ...
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
-                throw std::runtime_error(get_formulation_type() + " cannot get output value for unknown " + output_name + SOURCE_LOC);
+                std::string throw_msg; throw_msg.assign(get_formulation_type() + " cannot get output value for unknown " + output_name + SOURCE_LOC);
+                LOG(throw_msg, LogLevel::WARNING);
+                throw std::runtime_error(throw_msg);
             }
             return availableData[output_name]->get_value(selector, m);
         }
@@ -417,7 +429,9 @@ namespace realization {
         {
             std::string output_name = selector.get_variable_name();
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
-                throw std::runtime_error(get_formulation_type() + " cannot get output values for unknown " + output_name + SOURCE_LOC);
+                std::string throw_msg; throw_msg.assign(get_formulation_type() + " cannot get output values for unknown " + output_name + SOURCE_LOC);
+                LOG(throw_msg, LogLevel::WARNING);
+                throw std::runtime_error(throw_msg);
             }
             return availableData[output_name]->get_values(selector, m);
         }
@@ -440,6 +454,8 @@ namespace realization {
          */
         bool is_model_initialized() const override;
 
+        void set_realization_file_format(bool is_legacy_format);
+
         /**
          * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
          *
@@ -460,8 +476,10 @@ namespace realization {
          */
         bool is_property_sum_over_time_step(const std::string &name) const override {
             if (availableData.empty() || availableData.find(name) == availableData.end()) {
-                throw std::runtime_error(
+                std::string throw_msg; throw_msg.assign(
                         get_formulation_type() + " cannot get whether unknown property " + name + " is summation");
+                LOG(throw_msg, LogLevel::WARNING);
+                throw std::runtime_error(throw_msg);
             }
             return availableData.at(name)->is_property_sum_over_time_step(name);
         }
@@ -473,6 +491,8 @@ namespace realization {
          * @return Whether this time step goes beyond this formulations (i.e., any of it's modules') end time.
          */
         bool is_time_step_beyond_end_time(time_step_t t_index);
+
+
 
         /**
          * Get the index of the primary module.
@@ -522,7 +542,9 @@ namespace realization {
             for (int i = 0; i < output_var_names.size(); ++i) {
                 auto it = std::find(available_var_names.begin(), available_var_names.end(), output_var_names[i]);
                 if (it == available_var_names.end()) {
-                    throw std::runtime_error(output_var_names[i] + " does not exist in the output name list" + SOURCE_LOC);
+                    std::string throw_msg; throw_msg.assign(output_var_names[i] + " does not exist in the output name list" + SOURCE_LOC);
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
             }
         }
@@ -538,6 +560,63 @@ namespace realization {
          * @param needs_param_validation
          */
         void create_multi_formulation(geojson::PropertyMap properties, bool needs_param_validation);
+
+        /**
+         * Get value for some BMI model variable at a specific index.
+         *
+         * Function gets the value for a provided variable, retrieving the variable array from the backing model of the
+         * appropriate nested formulation. The function then returns the specific value at the desired index, cast as a
+         * double type.
+         *
+         * The function makes several assumptions:
+         *
+         *     1. `index` is within array bounds
+         *     2. `var_name` corresponds to a BMI variable for some nested module.
+         *     3. `var_name` is sufficient to identify what value needs to be retrieved
+         *     4. the type for output variable allows the value to be cast to a `double` appropriately
+         *
+         * Item 3. here can be inferred from 2. for non-multi formulations.  For multi formulations, this means the
+         * provided ``var_name`` must either be a unique BMI variable name among all nested module, or a unique mapped
+         * alias to a specific variable in a specific module.
+         *
+         * It falls to users of this function (i.e., other functions) to ensure these assumptions hold before invoking.
+         *
+         * @param index
+         * @param var_name
+         * @return
+         */
+        double get_var_value_as_double(const int& index, const std::string& var_name) override {
+            auto data_provider_iter = availableData.find(var_name);
+            if (data_provider_iter == availableData.end()) {
+                throw external::ExternalIntegrationException(
+                        "Multi BMI formulation can't find correct nested module for BMI variable " + var_name + SOURCE_LOC);
+            }
+            // Otherwise, we have a provider, and we can cast it based on the documented assumptions
+            try {
+                auto const& nested_module = data_provider_iter->second;
+                long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
+		auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"");
+                //TODO: After merge PR#405, try re-adding support for index
+                return nested_module->get_value(selector);
+            }
+            catch (data_access::unit_conversion_exception &uce) {
+                // We asked for it as a dimensionless quantity, "1", just above
+                static bool no_conversion_message_logged = false;
+                if (!no_conversion_message_logged) {
+                    no_conversion_message_logged = true;
+                    LOG("Output variables do not have unit conversion. Capability not yet implemented in ngen.", LogLevel::WARNING);
+                }
+                return uce.unconverted_values[0];
+            }
+            // If there was any problem with the cast and extraction of the value, throw runtime error
+            catch (std::exception &e) {
+                std::string throw_msg; throw_msg.assign("Multi BMI formulation can't use associated data provider as a nested module"
+                                         " when attempting to get values of BMI variable " + var_name + SOURCE_LOC);
+                LOG(throw_msg, LogLevel::WARNING);
+                throw std::runtime_error(throw_msg);
+                // TODO: look at adjusting defs to move this function up in class hierarchy (or at least add TODO there)
+            }
+        }
 
         /**
          * Initialize the deferred associations with the providers in @ref deferredProviders.
@@ -631,11 +710,13 @@ namespace realization {
                 std::string framework_alias = mod->get_config_mapped_variable_name(var_name);
                 (*var_aliases)[framework_alias] = var_name;
                 if (availableData.count(framework_alias) > 0) {
-                    throw std::runtime_error(
+                    std::string throw_msg; throw_msg.assign(
                             "Multi BMI cannot be created with module " + mod->get_model_type_name() +
                             " with output variable " + framework_alias +
                             (var_name == framework_alias ? "" : " (an alias of BMI variable " + var_name + ")") +
                             " because a previous module is using this output variable name/alias.");
+                    LOG(throw_msg, LogLevel::WARNING);
+                    throw std::runtime_error(throw_msg);
                 }
                 availableData[framework_alias] = mod;
             }
@@ -652,6 +733,8 @@ namespace realization {
          * these keys (and though ordering is important at a higher level, it is not handled directly by this member).
          */
         std::map<std::string, std::shared_ptr<data_access::GenericDataProvider>> availableData;
+
+        bool is_realization_legacy_format() const;
 
     private:
 
@@ -739,6 +822,9 @@ namespace realization {
         int next_time_step_index = 0;
         /** The index of the "primary" nested module, used when functionality is deferred to a particular module's behavior. */
         int primary_module_index = -1;
+
+        /** Whether the realization file follows legacy format or the new format. */
+        bool legacy_json_format = false;
 
         friend Bmi_Multi_Formulation_Test;
         friend class ::Bmi_Cpp_Multi_Array_Test;
