@@ -609,7 +609,7 @@
           <topic label="multipolygons" href="classgeojson_1_1_collection_feature.html#a2cb84382f8abdbcd2f59f0a4b84c32bd"/>
           <topic label="neighbor_features" href="classgeojson_1_1_collection_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_collection_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_collection_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_collection_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_collection_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="point" href="classgeojson_1_1_collection_feature.html#a612d40ad69ec13f03492a6295bdaa0bb"/>
           <topic label="points" href="classgeojson_1_1_collection_feature.html#ab33bdaf1ed796a32c10c2dfd9bd12021"/>
@@ -676,7 +676,7 @@
           <topic label="keys" href="classgeojson_1_1_feature_base.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_feature_base.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_feature_base.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_feature_base.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_feature_base.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_feature_base.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_feature_base.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_feature_base.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -838,7 +838,7 @@
           <topic label="keys" href="classgeojson_1_1_line_string_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_line_string_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_line_string_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_line_string_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_line_string_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_line_string_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_line_string_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_line_string_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -908,7 +908,7 @@
           <topic label="keys" href="classgeojson_1_1_multi_line_string_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_multi_line_string_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_multi_line_string_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_multi_line_string_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_multi_line_string_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_multi_line_string_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_multi_line_string_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_multi_line_string_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -970,7 +970,7 @@
           <topic label="keys" href="classgeojson_1_1_multi_point_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_multi_point_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_multi_point_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_multi_point_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_multi_point_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_multi_point_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_multi_point_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_multi_point_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -1032,7 +1032,7 @@
           <topic label="keys" href="classgeojson_1_1_multi_polygon_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_multi_polygon_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_multi_polygon_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_multi_polygon_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_multi_polygon_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_multi_polygon_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_multi_polygon_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_multi_polygon_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -1100,7 +1100,7 @@
           <topic label="keys" href="classgeojson_1_1_point_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_point_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_point_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_point_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_point_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_point_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_point_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_point_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -1161,7 +1161,7 @@
           <topic label="keys" href="classgeojson_1_1_polygon_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_polygon_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_polygon_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_polygon_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_polygon_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_polygon_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_polygon_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_polygon_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -1222,7 +1222,7 @@
           <topic label="keys" href="classgeojson_1_1_sentinel_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_sentinel_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_sentinel_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_sentinel_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_sentinel_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_sentinel_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_sentinel_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_sentinel_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -3147,7 +3147,7 @@
           <topic label="multipolygons" href="classgeojson_1_1_collection_feature.html#a2cb84382f8abdbcd2f59f0a4b84c32bd"/>
           <topic label="neighbor_features" href="classgeojson_1_1_collection_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_collection_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_collection_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_collection_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_collection_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="point" href="classgeojson_1_1_collection_feature.html#a612d40ad69ec13f03492a6295bdaa0bb"/>
           <topic label="points" href="classgeojson_1_1_collection_feature.html#ab33bdaf1ed796a32c10c2dfd9bd12021"/>
@@ -3214,7 +3214,7 @@
           <topic label="keys" href="classgeojson_1_1_feature_base.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_feature_base.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_feature_base.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_feature_base.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_feature_base.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_feature_base.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_feature_base.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_feature_base.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -3376,7 +3376,7 @@
           <topic label="keys" href="classgeojson_1_1_line_string_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_line_string_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_line_string_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_line_string_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_line_string_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_line_string_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_line_string_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_line_string_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -3446,7 +3446,7 @@
           <topic label="keys" href="classgeojson_1_1_multi_line_string_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_multi_line_string_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_multi_line_string_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_multi_line_string_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_multi_line_string_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_multi_line_string_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_multi_line_string_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_multi_line_string_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -3508,7 +3508,7 @@
           <topic label="keys" href="classgeojson_1_1_multi_point_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_multi_point_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_multi_point_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_multi_point_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_multi_point_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_multi_point_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_multi_point_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_multi_point_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -3570,7 +3570,7 @@
           <topic label="keys" href="classgeojson_1_1_multi_polygon_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_multi_polygon_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_multi_polygon_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_multi_polygon_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_multi_polygon_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_multi_polygon_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_multi_polygon_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_multi_polygon_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -3638,7 +3638,7 @@
           <topic label="keys" href="classgeojson_1_1_point_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_point_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_point_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_point_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_point_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_point_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_point_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_point_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -3699,7 +3699,7 @@
           <topic label="keys" href="classgeojson_1_1_polygon_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_polygon_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_polygon_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_polygon_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_polygon_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_polygon_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_polygon_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_polygon_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>
@@ -3760,7 +3760,7 @@
           <topic label="keys" href="classgeojson_1_1_sentinel_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709"/>
           <topic label="neighbor_features" href="classgeojson_1_1_sentinel_feature.html#a6b5c707dd3da393bdfec41650800ea89"/>
           <topic label="operator!=" href="classgeojson_1_1_sentinel_feature.html#a6ea15e613f60abad67e86f379a158255"/>
-          <topic label="operator==" href="classgeojson_1_1_sentinel_feature.html#a684df94c7a8a1838d23470a5b166d0a6"/>
+          <topic label="operator==" href="classgeojson_1_1_sentinel_feature.html#a8d4101b543890cf1097c4f48aa2794a2"/>
           <topic label="origination_features" href="classgeojson_1_1_sentinel_feature.html#ae37036f3abfe71ca484d4f6885624020"/>
           <topic label="property_keys" href="classgeojson_1_1_sentinel_feature.html#aaa9ad61de93c0194b73fbe8b32816c32"/>
           <topic label="remove_destination" href="classgeojson_1_1_sentinel_feature.html#af289e5db1d2039bddd84bef755f0bab6"/>

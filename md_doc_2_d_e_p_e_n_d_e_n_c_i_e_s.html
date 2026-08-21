@@ -154,17 +154,16 @@ Setup</h3>
 <p>If CMake is unable to find a compiler automatically, the CMake <code>CMAKE_C_COMPILER</code> and/or <code>CMAKE_CXX_COMPILER</code> variables will need to be explicitly set. This can be done from the command line when running CMake, or by setting the standard <code>CC</code> and <code>CXX</code> environment variables.</p>
 <h3><a class="anchor" id="autotoc_md158"></a>
 Version Requirements</h3>
-<p>Project C++ code needs to be compliant with the C++ 17 standard. Supported compilers need to be of a recent enough version to be compatible. <br  />
-</p>
+<p>Project C++ code needs to be compliant with the C++ 20 standard. Supported compilers need to be of a recent enough version to be compatible.</p>
 <p>Additionally, C++ compilers needs to be compatible (ideally officially <em>tested</em> as such) with other project C++ dependencies.</p>
 <h4><a class="anchor" id="autotoc_md159"></a>
 GCC</h4>
-<p>Based on <a href="https://gcc.gnu.org/projects/cxx-status.html#cxx17">this page</a>, C++ 17 <em>language</em> support alone equates to some GCC version <code>7</code> release or later. However, the project also relies on a complete C++ 17 <code>&lt;filesystem&gt;</code> implementation (e.g. <code>std::hash&lt;std::filesystem::path&gt;</code>), which GCC <code>8</code>'s libstdc++ does not fully provide, so the effective minimum is GCC <code>9</code> or later.</p>
+<p>Based on <a href="https://gcc.gnu.org/projects/cxx-status.html#cxx20">this page</a>, C++ 20 support equates to some GCC version <code>11</code> release or later.</p>
 <p>On RHEL/Rocky/AlmaLinux <code>8</code>, whose system compiler is GCC <code>8</code>, install and enable a newer <a href="https://developers.redhat.com/products/developertoolset/overview"><code>gcc-toolset</code></a> rather than the base <code>gcc</code> (the project's container image, <code>docker/ngen.dockerfile</code>, uses <code>gcc-toolset-12</code>).</p>
 <h4><a class="anchor" id="autotoc_md160"></a>
 Clang</h4>
-<p>The Clang versioning scheme is a little convoluted. Using the official scheme, Clang 5 and later should support all C++ 17 features.</p>
-<p>However, Apple likes to apply their own versioning to Clang and LLVM. The <code>Apple LLVM version 10.0.1 (clang-1001.0.46.4)</code> version released with MacOS 10.14.x should do fine. Recent, earlier version likely will as well, but YMMV.</p>
+<p>The Clang versioning scheme is a little convoluted. Using the official scheme, Clang versions 10 and later should sufficiently support C++ 20 features.</p>
+<p>However, Apple likes to apply their own versioning to Clang and LLVM. The Apple LLVM version 12.0.5 should do fine. Recent, earlier version likely will as well, but YMMV.</p>
 <h2><a class="anchor" id="autotoc_md161"></a>
 CMake</h2>
 <p>The <a href="https://gitlab.kitware.com/cmake/cmake">CMake</a> utility facilitates defining and running project builds. More details on CMake and builds have been documented <a class="el" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html">here</a>.</p>
@@ -304,7 +303,7 @@ Parallel NetCDF</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Aug 21 2026 18:04:00 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Aug 21 2026 21:04:46 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

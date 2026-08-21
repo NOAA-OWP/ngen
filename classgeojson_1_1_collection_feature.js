@@ -46,7 +46,7 @@ var classgeojson_1_1_collection_feature =
     [ "multipolygons", "classgeojson_1_1_collection_feature.html#a2cb84382f8abdbcd2f59f0a4b84c32bd", null ],
     [ "neighbor_features", "classgeojson_1_1_collection_feature.html#a6b5c707dd3da393bdfec41650800ea89", null ],
     [ "operator!=", "classgeojson_1_1_collection_feature.html#a6ea15e613f60abad67e86f379a158255", null ],
-    [ "operator==", "classgeojson_1_1_collection_feature.html#a684df94c7a8a1838d23470a5b166d0a6", null ],
+    [ "operator==", "classgeojson_1_1_collection_feature.html#a8d4101b543890cf1097c4f48aa2794a2", null ],
     [ "origination_features", "classgeojson_1_1_collection_feature.html#ae37036f3abfe71ca484d4f6885624020", null ],
     [ "point", "classgeojson_1_1_collection_feature.html#a612d40ad69ec13f03492a6295bdaa0bb", null ],
     [ "points", "classgeojson_1_1_collection_feature.html#ab33bdaf1ed796a32c10c2dfd9bd12021", null ],
