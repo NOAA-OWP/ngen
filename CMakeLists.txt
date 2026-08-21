@@ -368,6 +368,10 @@ if(NGEN_WITH_SQLITE)
     target_link_libraries(ngen PUBLIC NGen::geopackage)
 endif()
 
+# Added after src/geopackage so the GeoPackage hydrofabric implementation can link against it.
+add_subdirectory("src/hydrofabric")
+target_link_libraries(ngen PUBLIC NGen::hydrofabric)
+
 if(NGEN_WITH_ROUTING)
     add_subdirectory("src/routing")
     target_link_libraries(ngen PUBLIC NGen::routing)
@@ -379,7 +383,7 @@ if(NGEN_WITH_SQLITE)
     target_include_directories(partitionGenerator PUBLIC AFTER "${NGEN_INC_DIR}/geopackage")
 endif()
 
-target_link_libraries(partitionGenerator PUBLIC NGen::core NGen::geojson)
+target_link_libraries(partitionGenerator PUBLIC NGen::core NGen::geojson NGen::hydrofabric)
 if(NGEN_WITH_SQLITE)
     target_link_libraries(partitionGenerator PUBLIC NGen::geopackage)
 endif()
