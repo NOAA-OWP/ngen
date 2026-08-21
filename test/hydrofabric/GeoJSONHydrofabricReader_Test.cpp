@@ -68,11 +68,22 @@ TEST_F(GeoJSONHydrofabricReader_Test, geojson_hydrofabric_honors_id_subsets)
 
 // Without SQLite there is no GeoPackage implementation to dispatch to, and this is the only build
 // in which that refusal is reachable -- so it is the only build that can cover it.
+//
+// It needs a real GeoPackage, because the format is now read from the file rather than its name,
+// and this build cannot write one: the fixture builders are not compiled here. A committed
+// GeoPackage serves, since recognizing one only means reading its first bytes.
 #if !NGEN_WITH_SQLITE3
 TEST(HydrofabricReaderFactory_NoSqlite_Test, factory_refuses_geopackage_paths)
 {
+    const std::string geopackage_path = utils::FileChecker::find_first_readable({
+        "test/data/geopackage/example.gpkg",
+        "../test/data/geopackage/example.gpkg",
+        "../../test/data/geopackage/example.gpkg"
+    });
+    ASSERT_FALSE(geopackage_path.empty()) << "can't find test/data/geopackage/example.gpkg";
+
     try {
-        ngen::hydrofabric::make_hydrofabric_reader("hydrofabric.gpkg");
+        ngen::hydrofabric::make_hydrofabric_reader(geopackage_path);
         FAIL() << "expected std::runtime_error without SQLite support";
     } catch (const std::runtime_error& e) {
         EXPECT_NE(std::string(e.what()).find("SQLite3 support required"), std::string::npos)

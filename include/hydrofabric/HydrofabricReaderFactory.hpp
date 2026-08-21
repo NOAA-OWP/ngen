@@ -16,17 +16,18 @@ namespace hydrofabric {
  * Both paths must name the same format: a hydrofabric is one thing, and half of one in GeoJSON
  * beside half in a GeoPackage is a mistake worth reporting rather than honoring.
  *
- * GeoJSON is identified from the path alone and always yields V1_GEOJSON -- the format carries no
- * release marker, so there is nothing further to read. A GeoPackage is opened and its schema
+ * Which format a file is in is read from the file itself, not from its name. A GeoPackage says so
+ * in its header; anything else is taken to be GeoJSON, which always yields V1_GEOJSON, since that
+ * format carries no release marker to read. A GeoPackage is opened further and its schema
  * inspected, yielding the release it describes, or UNRECOGNIZED when it turns out not to be a
  * hydrofabric at all.
  *
  * @param[in] catchment_path Path to the file holding the divides
  * @param[in] nexus_path Path to the file holding the nexuses; may be the same file
- * @return HydrofabricVersion identified for the pair, or UNRECOGNIZED if the paths name
+ * @return HydrofabricVersion identified for the pair, or UNRECOGNIZED if the paths hold
  *         GeoPackages that are not a hydrofabric
- * @throws std::runtime_error if the two paths name different formats, if a GeoPackage cannot be
- *         opened, if its schema matches no known release, or if the paths name GeoPackages and
+ * @throws std::runtime_error if either file cannot be opened, if the two are in different formats,
+ *         if a GeoPackage's schema matches no known release, or if they are GeoPackages and
  *         GeoPackage support was not built in
  */
 HydrofabricVersion detect_hydrofabric(const std::string& catchment_path, const std::string& nexus_path);
