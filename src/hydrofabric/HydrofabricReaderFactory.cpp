@@ -1,11 +1,11 @@
 #include "HydrofabricReaderFactory.hpp"
 
+#include <cstring>
+#include <fstream>
 #include <iostream>
 #include <optional>
 #include <stdexcept>
 #include <utility>
-
-#include <boost/algorithm/string/predicate.hpp>
 
 #include "GeoJSONHydrofabricReader.hpp"
 
@@ -19,29 +19,43 @@ namespace hydrofabric {
 
 namespace {
 
+//! Every SQLite database begins with this, trailing NUL included.
+const char SQLITE_MAGIC[] = "SQLite format 3";
+
 /**
- * Whether @p path names a GeoPackage.
+ * Whether @p path holds a SQLite database, which for a hydrofabric means a GeoPackage.
  *
- * Taken from the path rather than the file's contents, which is how ngen has always decided this.
- * A GeoPackage is in fact identifiable from its own header, so this is the one place to change if
- * that ever becomes worth doing.
+ * Detect whether this is a SQLite database file by reading the beginning of the file, rather than
+ * simply reading the file name.  This probably means, if we assume it is a hydrofabric, that it
+ * is a GeoPackage hydrofabric (versus something else like a GeoJson hydrofabric), though specific
+ * validity checks of that nature are the responsibility of something else.
  *
- * @param[in] path Hydrofabric data path from the command line
- * @return true if the path ends in the GeoPackage extension
+ * @param[in] path Hydrofabric data path
+ * @return true if the file begins with the SQLite header
+ * @throws std::runtime_error if the file cannot be opened for reading
  */
-bool is_geopackage(const std::string& path)
+bool is_sqlite_file(const std::string& path)
 {
-    return boost::algorithm::ends_with(path, "gpkg");
+    std::ifstream file{path, std::ios::binary};
+    if (!file) {
+        throw std::runtime_error("cannot open hydrofabric data file " + path);
+    }
+
+    char header[sizeof(SQLITE_MAGIC)];
+    file.read(header, sizeof(header));
+    if (file.gcount() < static_cast<std::streamsize>(sizeof(header))) {
+        // Too short to be a SQLite database, whatever else it may be.
+        return false;
+    }
+
+    return std::memcmp(header, SQLITE_MAGIC, sizeof(SQLITE_MAGIC)) == 0;
 }
 
 /**
- * What identifying a hydrofabric produced: the answer, and anything that had to be opened to
- * arrive at it.
+ * The result of identifying a hydrofabric: which one it is, and any database opened to find out.
  *
- * Identifying a GeoPackage means opening it, and the reader built afterward needs the very same
- * file. Carrying the handles out alongside the answer is what lets a caller that goes on to build
- * a reader hand them straight over, rather than closing them and opening the file a second time.
- * A caller that only wanted the answer lets them fall out of scope.
+ * Structure to maintain handles for opening a database as needed to identify it as a hydrofabric
+ * of a particular schema, so that later reads of the database can reuse these handles.
  */
 struct Identified
 {
@@ -67,8 +81,10 @@ struct Identified
  */
 Identified identify(const std::string& catchment_path, const std::string& nexus_path)
 {
-    const bool catchment_is_gpkg = is_geopackage(catchment_path);
-    if (catchment_is_gpkg != is_geopackage(nexus_path)) {
+    // One path naming both roles is the common case, and a file is trivially in the same format as
+    // itself, so the second look is only worth taking when there is a second file.
+    const bool catchment_is_gpkg = is_sqlite_file(catchment_path);
+    if (nexus_path != catchment_path && catchment_is_gpkg != is_sqlite_file(nexus_path)) {
         throw std::runtime_error(
             "a hydrofabric must be in one format, but catchment data " + catchment_path +
             " and nexus data " + nexus_path + " are not"
@@ -110,9 +126,10 @@ Identified identify(const std::string& catchment_path, const std::string& nexus_
 /**
  * Build the reader for a GeoPackage hydrofabric of @p version, over already-open GeoPackages.
  *
- * The databases arrive open because identifying the release required opening them; handing those
- * same handles on is what keeps a hydrofabric opened exactly once, and is what makes the release
- * the reader is built for certain to be the release of the file it goes on to read.
+ * The databases arrive open because identifying the release required opening them. Handing those
+ * same handles on saves opening the files again, and means the release this reader is built for is
+ * certain to be the release of the database it goes on to read, rather than of one that was closed
+ * and reopened in between.
  *
  * @param[in] divides_reader Reader for the GeoPackage holding the `divides` layer
  * @param[in] nexus_reader Reader for the `nexus` layer's GeoPackage, if a separate file

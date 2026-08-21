@@ -297,6 +297,16 @@ class writer
      */
     void write_metadata_tables()
     {
+        // The GeoPackage standard marks a GeoPackage in the SQLite header, not only in its tables:
+        // it requires application_id to be 0x47504B47 ("GPKG" in ASCII), and user_version to hold
+        // the spec version as a major number followed by two-digit minor and patch numbers. That
+        // application id was introduced by GeoPackage 1.2 -- 1.0 and 1.1 used "GP10" and "GP11" --
+        // so 1.2.0, or 10200, is the earliest version consistent with claiming it. Without these a
+        // fixture is a GeoPackage-shaped SQLite file that nothing reading the header would accept
+        // as one.
+        exec("PRAGMA application_id = 0x47504B47");
+        exec("PRAGMA user_version = 10200");
+
         exec(
             "CREATE TABLE gpkg_spatial_ref_sys ("
             "  srs_name TEXT NOT NULL,"
