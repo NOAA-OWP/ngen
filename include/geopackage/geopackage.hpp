@@ -40,11 +40,10 @@ geojson::PropertyMap build_properties(
  *
  * Schema-agnostic: reads only the geometry from `row` and wraps the
  * given `id` and `properties` in the appropriate geojson::*Feature
- * subclass. The caller is responsible for resolving the id column,
- * aliasing renamed columns, and synthesizing any derived fields (e.g.
- * hydrofabric v4.0's "nexus_id" -> "id" alias) before calling; the
- * `properties` map should already contain an "id" entry matching `id`
- * and must not contain the geometry column.
+ * subclass. The id is taken from `id` alone -- nothing here reads it
+ * back out of `properties` -- so resolving which column an id came
+ * from, and publishing any derived property, is the caller's business,
+ * before or after. `properties` must not contain the geometry column.
  *
  * @param[in] row SQLite iterator at the row to build a feature from
  * @param[in] id Resolved feature id; stored on the returned Feature
@@ -57,20 +56,6 @@ geojson::Feature build_feature(
     const std::string& id,
     const std::string& geom_col,
     geojson::PropertyMap properties
-);
-
-/**
- * Build a feature collection from a GPKG layer
- *
- * @param[in] gpkg_path Path to GPKG file
- * @param[in] layer Layer name within GPKG file to create a collection from
- * @param[in] ids optional subset of feature IDs to capture (if empty, the entire layer is converted)
- * @return std::shared_ptr<geojson::FeatureCollection> 
- */
-std::shared_ptr<geojson::FeatureCollection> read(
-    const std::string& gpkg_path,
-    const std::string& layer,
-    const std::vector<std::string>& ids
 );
 
 } // namespace geopackage
