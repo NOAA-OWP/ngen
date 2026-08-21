@@ -8,6 +8,12 @@
 #include "HY_Features.hpp"
 #endif
 
+#include <algorithm>
+
+#if defined(NGEN_WITH_THREADING) && defined(__cpp_lib_execution) && __cpp_lib_execution >= 201603L
+#include <execution>
+#endif
+
 // Out-of-line so the shared_ptr members are destroyed where their (possibly forward-declared) types
 // are complete.
 ngen::Layer::~Layer() = default;
@@ -18,6 +24,8 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
                                 std::unordered_map<std::string, int> const& nexus_indexes,
                                 int current_step)
 {
+    std::mutex accumulation_mutex;
+
     //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
     if(output_time_index%1000 == 0) std::cout<<"Running timestep " << output_time_index <<std::endl;
     std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
@@ -26,7 +34,13 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
     // in this timestep (mirrors SurfaceLayer).
     utils::time_marker current_time_marker(
         output_time_index, simulation_time.get_current_epoch_time(), current_timestamp);
-    for(const auto& id : processing_units) {
+    auto b = begin(processing_units);
+    auto e = end(processing_units);
+    std::for_each(
+#if defined(NGEN_WITH_THREADING) && defined(__cpp_lib_execution) && __cpp_lib_execution >= 201603L
+                  std::execution::par,
+#endif
+                  b, e, [&](const std::string& id) {
         //std::cout<<"Running cat "<<id<<std::endl;
         auto r = features.catchment_at(id);
         //TODO redesign to avoid this cast
@@ -54,7 +68,13 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
 #if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
         int results_index = catchment_indexes.at(id);
         // XXX: This is currently accumulating in meters of depth, which may not be desirable
-        catchment_outflows[results_index] += response;
+        {
+            // XXX: Switch when we can use C++20
+            //std::atomic_ref(catchment_outflows[results_index]) += response;
+            std::lock_guard g(accumulation_mutex);
+            catchment_outflows[results_index] += response;
+        }
+
 #endif // NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
         if (catchment_output_mgr) {
             catchment_output_mgr->receive_data_entry(
@@ -88,7 +108,7 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
             break;
         }
                 
-    } //done catchments
+    }); //done catchments
 
     ++output_time_index;
     if ( output_time_index < simulation_time.get_total_output_times() ) {

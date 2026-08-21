@@ -58,7 +58,7 @@ HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_M
         {
             origins = network.get_origination_ids(feat_id);
             _nexuses.emplace(feat_id, std::make_unique<HY_PointHydroNexus>(
-                                          HY_PointHydroNexus(feat_id, destinations, origins) ));
+                                          feat_id, destinations, origins ));
         }
         else
         {
