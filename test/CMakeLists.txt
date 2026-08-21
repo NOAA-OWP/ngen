@@ -157,11 +157,21 @@ ngen_add_test(
         geopackage/WKB_Test.cpp
         geopackage/SQLite_Test.cpp
         geopackage/GeoPackage_Test.cpp
+        geopackage/Properties_Test.cpp
+        geopackage/AttributeJoin_Test.cpp
     LIBRARIES
         NGen::geopackage
+        NGen::config_header
     REQUIRES
         NGEN_WITH_SQLITE
 )
+
+# Formulation_Manager_Test's auxiliary attribute table cases need NGen::geopackage, a target that
+# only exists when SQLite support is enabled; without it those cases compile to nothing.
+set(NGEN_GEOPACKAGE_WHEN_ENABLED "")
+if(NGEN_WITH_SQLITE)
+    set(NGEN_GEOPACKAGE_WHEN_ENABLED NGen::geopackage)
+endif()
 
 ########################## Realization Config Unit Tests
 ngen_add_test(
@@ -170,6 +180,7 @@ ngen_add_test(
         realizations/Formulation_Manager_Test.cpp
         realizations/config/Output_Test.cpp
         realizations/config/CatchmentOutput_Test.cpp
+        realizations/config/AuxiliaryAttributes_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
@@ -177,6 +188,7 @@ ngen_add_test(
         NGen::forcing
         NGen::ngen_bmi
         NGen::output
+        ${NGEN_GEOPACKAGE_WHEN_ENABLED}
     DEPENDS
         testbmicppmodel
 )
@@ -559,6 +571,7 @@ ngen_add_test(
         core/NetworkTests.cpp
         utils/include/StreamOutputTest.cpp
         realizations/Formulation_Manager_Test.cpp
+        realizations/config/AuxiliaryAttributes_Test.cpp
         utils/PerFormulationNexusOutputMgr_Test.cpp
         utils/Partition_Test.cpp
         utils/logging_Test.cpp
@@ -573,6 +586,7 @@ ngen_add_test(
         NGen::logging
         NGen::ngen_bmi
         NGen::output
+        ${NGEN_GEOPACKAGE_WHEN_ENABLED}
         testbmicppmodel
 )
 

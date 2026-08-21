@@ -1,7 +1,7 @@
 #include "geopackage.hpp"
 #include "JSONProperty.hpp"
 
-geojson::JSONProperty get_property(
+geojson::JSONProperty ngen::geopackage::get_property(
     const ngen::sqlite::database::iterator& row,
     const std::string& name,
     int type

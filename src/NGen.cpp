@@ -57,6 +57,7 @@
 #include "utilities/output/PerNexusCsvOutputMgr.hpp"
 #include "utilities/output/CatchmentOutputsMgr.hpp"
 #include "realizations/config/catchment_output.hpp"
+#include "realizations/config/auxiliary_attributes.hpp"
 #if NGEN_WITH_NETCDF
 #include "utilities/output/PerFormulationNexusOutputMgr.hpp"
 #endif
@@ -391,7 +392,8 @@ int main(int argc, char* argv[]) {
     // because the respective geoFOO::read() functions return the
     // intersection of features in the file and the specified subset,
     // rather than erroring on missing features.
-    if (boost::algorithm::ends_with(catchmentDataFile, "gpkg")) {
+    const bool catchment_data_is_gpkg = boost::algorithm::ends_with(catchmentDataFile, "gpkg");
+    if (catchment_data_is_gpkg) {
       #if NGEN_WITH_SQLITE3
       catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
       #else
@@ -424,6 +426,45 @@ int main(int argc, char* argv[]) {
     auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
 
     sim_time = std::make_shared<Simulation_Time>(simulation_time_config);
+
+    // Join declared auxiliary attribute tables onto the catchments before the formulations read their
+    // parameters, so a joined column resolves like any other divides-layer property.
+    const std::vector<realization::config::AuxiliaryAttributeTable> auxiliary_attributes =
+        realization::config::parse_auxiliary_attributes(realization_config);
+    #if NGEN_WITH_SQLITE3
+    for (const realization::config::AuxiliaryAttributeTable& aux_table : auxiliary_attributes) {
+        if (aux_table.file.empty() && !catchment_data_is_gpkg) {
+            throw std::runtime_error(
+                "'" + realization::config::AUX_ATTRIBUTES_CONFIG_KEY + "' entry for table '" + aux_table.table +
+                "' declares no 'file', but the catchment data file '" + catchmentDataFile +
+                "' is not a GeoPackage."
+            );
+        }
+        try {
+            ngen::geopackage::join_attributes(
+                *catchment_collection,
+                aux_table.file.empty() ? catchmentDataFile : aux_table.file,
+                aux_table.table,
+                aux_table.key_column,
+                aux_table.prefix(),
+                aux_table.required
+            );
+        } catch (const std::exception& error) {
+            // The joiner knows the table and the file, not which config entry asked for them.
+            throw std::runtime_error(
+                "'" + realization::config::AUX_ATTRIBUTES_CONFIG_KEY + "' entry for table '" +
+                aux_table.table + "': " + error.what()
+            );
+        }
+    }
+    #else
+    if (!auxiliary_attributes.empty()) {
+        throw std::runtime_error(
+            "SQLite3 support required to read the tables declared in '" +
+            realization::config::AUX_ATTRIBUTES_CONFIG_KEY + "'."
+        );
+    }
+    #endif
 
     std::cout<<"Initializing formulations" << std::endl;
 
