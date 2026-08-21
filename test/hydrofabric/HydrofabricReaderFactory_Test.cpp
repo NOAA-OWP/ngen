@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
+#include <fstream>
 
 #include <sqlite3.h>
 
@@ -9,6 +10,22 @@
 #include "fixture_builders.hpp"
 
 namespace fixtures = ngen::hydrofabric::fixtures;
+
+namespace {
+
+//! Copy a file byte for byte, so a fixture can be given a name that says nothing about its format.
+std::string copy_as(const std::string& source, const std::string& name)
+{
+    const std::string destination = std::string(testing::TempDir()) + "/" + name;
+
+    std::ifstream in{source, std::ios::binary};
+    std::ofstream out{destination, std::ios::binary | std::ios::trunc};
+    out << in.rdbuf();
+
+    return destination;
+}
+
+} // namespace
 
 // Covers what the factory decides before any feature is read: which format the paths name, whether
 // the files are a hydrofabric at all, and which schema version they are.
@@ -190,6 +207,68 @@ TEST_F(HydrofabricReaderFactory_Test, detect_rejects_mixed_formats)
         FAIL() << "expected std::runtime_error for mixed-format hydrofabric paths";
     } catch (const std::runtime_error& e) {
         EXPECT_NE(std::string(e.what()).find("one format"), std::string::npos)
+            << "exception message: " << e.what();
+    }
+}
+
+// Format comes from the file's own header, so these cover the names an extension test got wrong.
+
+// The case that matters most, because ngen produces it: loading a subdivided hydrofabric under MPI
+// appends a rank suffix to both data paths, leaving a GeoPackage named `....gpkg.0`.
+TEST_F(HydrofabricReaderFactory_Test, detect_geopackage_with_rank_suffix)
+{
+    const std::string suffixed = copy_as(v4_0_path, "example_v4_0.gpkg.0");
+
+    EXPECT_EQ(
+        ngen::hydrofabric::detect_hydrofabric(suffixed, suffixed),
+        ngen::hydrofabric::HydrofabricVersion::V4_0
+    );
+}
+
+// A GeoPackage keeps being one under a name that says otherwise, including no extension at all.
+TEST_F(HydrofabricReaderFactory_Test, detect_geopackage_under_any_name)
+{
+    const std::string renamed = copy_as(v4_0_path, "hydrofabric_without_an_extension");
+
+    EXPECT_EQ(
+        ngen::hydrofabric::detect_hydrofabric(renamed, renamed),
+        ngen::hydrofabric::HydrofabricVersion::V4_0
+    );
+}
+
+// And the converse: a GeoJSON hydrofabric misnamed as a GeoPackage is still read as GeoJSON,
+// rather than handed to SQLite to fail on.
+TEST_F(HydrofabricReaderFactory_Test, detect_geojson_misnamed_as_geopackage)
+{
+    ASSERT_FALSE(geojson_catchment_path.empty()) << "can't find data/catchment_data.geojson";
+    ASSERT_FALSE(geojson_nexus_path.empty()) << "can't find data/nexus_data.geojson";
+
+    const std::string catchments = copy_as(geojson_catchment_path, "catchment_data.gpkg");
+    const std::string nexuses    = copy_as(geojson_nexus_path, "nexus_data.gpkg");
+
+    EXPECT_EQ(
+        ngen::hydrofabric::detect_hydrofabric(catchments, nexuses),
+        ngen::hydrofabric::HydrofabricVersion::V1_GEOJSON
+    );
+
+    // And it loads, rather than merely being identified.
+    const std::unique_ptr<ngen::hydrofabric::HydrofabricReader> hydrofabric =
+        ngen::hydrofabric::make_hydrofabric_reader(catchments, nexuses);
+    EXPECT_EQ(hydrofabric->read_divides({})->get_size(), 3);
+}
+
+// Reading the header means a missing file is reported as one, at identification, rather than
+// surfacing later as whichever parser it was guessed into.
+TEST_F(HydrofabricReaderFactory_Test, detect_rejects_unreadable_path)
+{
+    const std::string missing = std::string(testing::TempDir()) + "/no_such_hydrofabric.gpkg";
+    std::remove(missing.c_str());
+
+    try {
+        ngen::hydrofabric::detect_hydrofabric(missing, missing);
+        FAIL() << "expected std::runtime_error for an unreadable path";
+    } catch (const std::runtime_error& e) {
+        EXPECT_NE(std::string(e.what()).find("cannot open"), std::string::npos)
             << "exception message: " << e.what();
     }
 }
