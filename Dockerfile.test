@@ -1,0 +1,35 @@
+# Dockerfile.test
+ARG ORG=ngwpc
+ARG NGEN_FORCING_IMAGE_TAG=latest
+ARG BASE_IMAGE_NAME="alpine:latest"
+
+FROM ${BASE_IMAGE_NAME}
+
+# OCI Metadata Arguments
+ARG BASE_IMAGE_NAME
+ARG BASE_IMAGE_DIGEST="unknown"
+ARG BASE_IMAGE_REVISION="unknown"
+ARG IMAGE_SOURCE="unknown"
+ARG IMAGE_VENDOR="unknown"
+ARG IMAGE_VERSION="unknown"
+ARG IMAGE_REVISION="unknown"
+ARG IMAGE_CREATED="unknown"
+
+# OCI Standard Labels
+LABEL org.opencontainers.image.base.name="${BASE_IMAGE_NAME}" \
+    org.opencontainers.image.base.digest="${BASE_IMAGE_DIGEST}" \
+    io.ngwpc.image.base.revision="${BASE_IMAGE_REVISION}" \
+    org.opencontainers.image.source="${IMAGE_SOURCE}" \
+    org.opencontainers.image.vendor="${IMAGE_VENDOR}" \
+    org.opencontainers.image.version="${IMAGE_VERSION}" \
+    org.opencontainers.image.revision="${IMAGE_REVISION}" \
+    org.opencontainers.image.created="${IMAGE_CREATED}"
+
+# Create a dummy file just to prove we did something
+RUN echo "This is a lightweight test build for pipeline verification." > /build_info.txt
+
+# Add a timestamp so every build layer looks slightly different (optional, forces fresh hash)
+ARG BUILD_DATE
+RUN echo "Built on $BUILD_DATE" >> /build_info.txt
+
+CMD ["cat", "/build_info.txt"]

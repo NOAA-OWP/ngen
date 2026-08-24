@@ -130,6 +130,12 @@ namespace realization {
         boost::span<const std::string> get_available_variable_names() const override;
 
         /**
+         * Get the units of a forcing variable that this instance can provide.
+         * @param name The forcing variable for which the units are requested.
+         */
+        const std::string get_provider_units_for_variable(const std::string& name) const override;
+
+        /**
          * Get the output variable values for the given time step, one per output column and positionally aligned
          * with @ref get_output_fields.
          *
@@ -531,17 +537,6 @@ namespace realization {
          * @param model_initial_time The model's time prior to the update, in its internal units and representation.
          * @param t_delta The size of the time step over which the formulation is going to update the model, which might
          *                be different than the model's internal time step.
-         * @param inputs Stream the inputs message will be appended to.
-         */
-        void append_model_inputs_to_stream(const double &model_init_time, time_step_t t_delta, std::stringstream &inputs);
-
-        /**
-         * Convert a pointer to an array of data to its correct type, then append these items to a stream.
-         * The format will appear like a python list, e.g., [0.5, 1.2, 5.8]
-         *
-         * @param values Raw pointer to data that will be interpreted based on the `type`
-         * @param num_items The number of items expected in the array.
-         * @param inputs Stream the values will be appended to.
          */
         template<typename T>
         void append_inputs(std::shared_ptr<void> values, int num_items, std::stringstream &inputs);
@@ -566,6 +561,16 @@ namespace realization {
          */
         template<typename T>
         void append_input(std::string type, T value, std::stringstream &inputs);
+
+        /**
+         * Append `set_model_inputs_prior_to_update` values to an error message. This is intended to be used if the BMI fails to run `update()`.
+         *
+         * @param model_initial_time The model's time prior to the update, in its internal units and representation.
+         * @param t_delta The size of the time step over which the formulation is going to update the model, which might
+         *                be different than the model's internal time step.
+         * @param inputs Stream the inputs message will be appended to.
+         */
+        void append_model_inputs_to_stream(const double &model_init_time, time_step_t t_delta, std::stringstream &inputs);
 
         /** The delta of the last model update execution (typically, this is time step size). */
         time_step_t last_model_response_delta = 0;
@@ -642,6 +647,7 @@ namespace realization {
         bool allow_model_exceed_end_time = false;
         /** The set of available "forcings" (output variables, plus their mapped aliases) that the model can provide. */
         std::vector<std::string> available_forcings;
+        std::map<std::string, std::string> available_forcing_units;
         std::string bmi_init_config;
         std::shared_ptr<models::bmi::Bmi_Adapter> bmi_model;
         /** Whether backing model has fixed time step size. */

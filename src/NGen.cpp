@@ -180,6 +180,7 @@ int main(int argc, char* argv[]) {
     std::string REALIZATION_CONFIG_PATH   = "";
     bool is_subdivided_hydrofabric_wanted = false;
     std::string PARTITION_PATH = "";
+    std::stringstream ss("");
 
     // This default value should lead to behavior matching the single-process case in the standalone or non-MPI case
     int mpi_num_procs = 1;
@@ -534,7 +535,9 @@ int main(int argc, char* argv[]) {
 
     auto possible_simulation_time = realization_config.get_child_optional("time");
     if (!possible_simulation_time) {
-        throw std::runtime_error("ERROR: No simulation time period defined.");
+        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
     }
 
     auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
@@ -544,9 +547,18 @@ int main(int argc, char* argv[]) {
     ss << "Initializing formulations" << std::endl;
     LOG(ss.str(), LogLevel::INFO);
     ss.str("");
+
     std::shared_ptr<realization::Formulation_Manager> manager =
         std::make_shared<realization::Formulation_Manager>(realization_config);
-    manager->read(simulation_time_config, catchment_collection, utils::getStdOut());
+    try {
+        manager->read(simulation_time_config, catchment_collection, utils::getStdOut());
+    }
+    catch (const std::exception& e) {
+        std::string msg = std::string("Reading formulation data ") + e.what();
+        LOG(msg, LogLevel::FATAL);
+        throw;
+    }
+    LOG("Formulation Initialized", LogLevel::DEBUG);
 
 // TODO refactor manager->read so certain configs can be queried before the entire
 // realization collection is created
@@ -564,7 +576,6 @@ int main(int argc, char* argv[]) {
     }
 #endif // NGEN_WITH_ROUTING
     ss << "Building Feature Index" << std::endl;
-    ;
     LOG(ss.str(), LogLevel::INFO);
     ss.str("");
     std::string link_key = "toid";
@@ -989,7 +1000,9 @@ int main(int argc, char* argv[]) {
         ss.str("");
     }
 
+#if NGEN_WITH_PYTHON
     _interp.reset();
+#endif // NGEN_WITH_PYTHON
 
     auto time_done_total                               = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_total   = time_done_total - time_start;

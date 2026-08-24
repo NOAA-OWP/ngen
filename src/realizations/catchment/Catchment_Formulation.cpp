@@ -36,7 +36,13 @@ namespace realization {
                 return;
             }
 
-        std::string value = it->second.as_string();
+            std::string value = it->second.as_string();
+            ss.str("");
+            ss << "config_pattern_substitution Performing pattern substitution for key: " << key << ", pattern: " << pattern << ", replacement: " << replacement << std::endl;
+            LOG(ss.str(), LogLevel::DEBUG);
+//            ss.str("");
+//            ss << "Original value: " << value << std::endl;
+//            LOG(ss.str(), LogLevel::DEBUG);
 
         size_t id_index = value.find(pattern);
 

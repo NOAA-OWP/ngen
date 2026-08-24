@@ -669,4 +669,3 @@ bool Logger::FindAndOpenLogConfigFile(std::string path, std::ifstream& configFil
     }
     return false;
 }
-

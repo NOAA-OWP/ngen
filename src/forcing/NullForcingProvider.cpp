@@ -49,3 +49,8 @@ inline bool NullForcingProvider::is_property_sum_over_time_step(const std::strin
 boost::span<const std::string> NullForcingProvider::get_available_variable_names() const {
     return {};
 }
+
+const std::string NullForcingProvider::get_provider_units_for_variable(const std::string& name) const
+{
+    return std::string{};
+}

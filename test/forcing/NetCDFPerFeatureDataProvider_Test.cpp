@@ -33,12 +33,18 @@ class NetCDFPerFeatureDataProviderTest : public ::testing::Test {
     std::string forcing_file_name;
     std::unique_ptr<forcing_params> forcing_p;
     std::shared_ptr<data_access::NetCDFPerFeatureDataProvider> nc_provider;
+
     typedef struct tm time_type;
+
     std::shared_ptr<time_type> start_date_time;
+
     std::shared_ptr<time_type> end_date_time;
+
 };
 
 void NetCDFPerFeatureDataProviderTest::SetUp() {
+    //setupForcing();
+
     setupForcing();
 }
 
@@ -185,6 +191,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadMultiSpan)
 TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
 {
     // check to see that the variable "T2D" exists
+
     auto var_names = nc_provider->get_available_variable_names();
 
     auto pos = std::find(var_names.begin(), var_names.end(), CSDMS_STD_NAME_SURFACE_TEMP);
@@ -207,7 +214,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
     //std::cout << "Checking values in catchment "<<ids[0]<<" at time "<<start_time<<" with duration "<<duration<<"..."<<std::endl;
 
     // read exactly one time step correctly aligned
-    double val1 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration, "K"), data_access::MEAN);
+    double val1 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration, "K", 0), data_access::MEAN);
 
     //double tol = 0.00000612;
     double tol = 0.00002;
@@ -216,7 +223,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
     EXPECT_NEAR(val1, 17743, tol);
 
     // read 1/2 of a time step correctly aligned
-    double val2 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration / 2, "K"), data_access::MEAN);
+    double val2 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration / 2, "K", 0), data_access::MEAN);
 
 	// Updated value to match sample file. Note that raw values are altered by add_offset and scale_factor to convert to K - KSL
     EXPECT_NEAR(val2, 17743, tol);
@@ -229,7 +236,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
 
     // read exactly one time step correctly aligned but with a incorrect variable
     EXPECT_THROW(
-        double val4 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], "T3D", start_time, duration, "K"), data_access::MEAN);, 
+        double val4 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], "T3D", start_time, duration, "K", 0), data_access::MEAN);,
         std::runtime_error);
 
 }

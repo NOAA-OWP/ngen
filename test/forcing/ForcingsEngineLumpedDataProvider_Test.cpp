@@ -71,7 +71,7 @@ void TestFixture::SetUpTestSuite()
 
 void TestFixture::TearDownTestSuite()
 {
-    data_access::detail::ForcingsEngineStorage::instances.clear();
+    data_access::detail::ForcingsEngineStorage::instances.finalize();
     gil_.reset();
 
     #if NGEN_WITH_MPI
@@ -123,11 +123,11 @@ TEST_F(ForcingsEngineLumpedDataProviderTest, VariableAccess)
         );
     }
 
-    auto selector = CatchmentAggrDataSelector{"cat-11223", "PSFC", time_start, 3600, "seconds"};
+    auto selector = CatchmentAggrDataSelector{"cat-11223", "PSFC", time_start, 3600, "seconds", 0};
     auto result   = provider_->get_value(selector, data_access::ReSampleMethod::SUM);
     EXPECT_NEAR(result, 99580.52, 1e-2);
 
-    selector = CatchmentAggrDataSelector{"cat-11223", "LWDOWN", time_start + 3600, 3600, "seconds"};
+    selector = CatchmentAggrDataSelector{"cat-11223", "LWDOWN", time_start + 3600, 3600, "seconds", 0};
     auto result2 = provider_->get_values(selector, data_access::ReSampleMethod::SUM);
     ASSERT_GT(result2.size(), 0);
     EXPECT_NEAR(result2[0], 0, 1e-6);

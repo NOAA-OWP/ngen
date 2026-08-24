@@ -24,6 +24,9 @@ struct TestGridDataProvider
     boost::span<const std::string> get_available_variable_names() const override
     { return { &variable_, 1 }; }
 
+    const std::string get_provider_units_for_variable(const std::string& name) const override
+    {return variable_;}
+
     long get_data_start_time() const override
     { return 0; }
 

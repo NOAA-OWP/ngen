@@ -78,11 +78,14 @@ struct ForcingsEngineStorage {
         data_[key] = value;
     }
 
-    //! Clear all references to Forcings Engine instances.
+    //! Clear all references to Forcings Engine instances and run the Finalize methods on each BMI instance.
     //! @note This will not necessarily destroy the Forcings Engine instances. Since they
     //!       are reference counted, it will only decrement their instance by one.
-    void clear()
+    void finalize()
     {
+        for (auto &provider : data_) {
+            provider.second->Finalize();
+        }
         data_.clear();
     }
 
@@ -116,6 +119,18 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
     boost::span<const std::string> get_available_variable_names() const override
     {
         return var_output_names_;
+    }
+
+    const std::string get_provider_units_for_variable(const std::string& name) const override
+    {
+        auto iter = var_output_units_map_.find(name);
+        if(iter != var_output_units_map_.end()){
+            return iter->second;
+        }
+        std::string throw_msg;
+        throw_msg.assign("Got request to retrieve units for variable '" + name + "', but it was not found in the data provider. This should not happen." + SOURCE_LOC);
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
     }
 
     long get_data_start_time() const override
@@ -181,7 +196,7 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
       : time_begin_(std::chrono::system_clock::from_time_t(time_begin_seconds))
       , time_end_(std::chrono::system_clock::from_time_t(time_end_seconds))
     {
-        std::stringstream ss; 
+        std::stringstream ss;
 
         // Log the constructor arguments
         ss.str("");
@@ -291,6 +306,9 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
 
     //! Output variable names
     std::vector<std::string> var_output_names_{};
+
+    //! Units of Output variables
+    std::map<std::string, std::string> var_output_units_map_;
 
     //! Calendar time for simulation beginning
     clock_type::time_point time_begin_{};

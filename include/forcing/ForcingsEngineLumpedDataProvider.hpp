@@ -42,6 +42,10 @@ struct ForcingsEngineLumpedDataProvider final :
   private:
     std::size_t divide_id_;
     std::size_t divide_idx_;
+
+    // Search an array of numbers for the first instance of the current `divide_id_` and set the `divide_idx_` to that index if found
+    template <typename T>
+    void find_divide_id(const void *cat_id_ptr, const std::size_t size_id_dimension);
 };
 
 } // namespace data_access

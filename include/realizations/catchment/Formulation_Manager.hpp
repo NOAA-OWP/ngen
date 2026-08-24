@@ -713,12 +713,17 @@ namespace realization {
 
                 // Iterate over directory entries
                 if (directory != nullptr) {
+                    // handle closing the directory regardless of how the function returns
+                    auto closer = [](DIR *dir){ closedir(dir); };
+
+                    // Call closer when the unique pointer to DIR falls out of scope
+                    std::unique_ptr<DIR, decltype(closer)> directory_guard(directory, closer);
+
                     while ((entry = readdir(directory))) {
                         if (std::regex_match(entry->d_name, pattern)) {
                             // Check for regular files and symlinks
             #ifdef _DIRENT_HAVE_D_TYPE
                             if (entry->d_type == DT_REG || entry->d_type == DT_LNK) {
-                                closedir(directory);
                                 return forcing_params(
                                     path + entry->d_name,
                                     provider,
@@ -745,7 +750,6 @@ namespace realization {
                             }
 
                             if (S_ISREG(st.st_mode)) {
-                                closedir(directory);
                                 return forcing_params(
                                     path + entry->d_name,
                                     provider,
@@ -761,7 +765,6 @@ namespace realization {
                             throw std::runtime_error(throw_msg);
                         }
                     }
-                    closedir(directory);
                 }
 
                 // If no match was found, throw an error
@@ -773,7 +776,7 @@ namespace realization {
             /**
              * @brief Parse a `model_params` property tree and replace external parameters
              *        with values from a catchment's properties
-             * 
+             *
              * @param model_params Property tree with root key "model_params"
              * @param catchment_feature Associated catchment feature
              */
@@ -785,7 +788,7 @@ namespace realization {
                         attr.put_child(param.first, param.second);
                         continue;
                     }
-                
+
                     decltype(auto) param_source = param.second.get_child("source");
                     decltype(auto) param_source_name = param_source.get_value<std::string>();
                     if (param_source_name != "hydrofabric") {
@@ -838,7 +841,7 @@ namespace realization {
             /**
              * @brief Parse a `model_params` property map and replace external parameters
              *        with values from a catchment's properties
-             * 
+             *
              * @param model_params Property map with root key "model_params"
              * @param catchment_feature Associated catchment feature
              */
@@ -917,7 +920,6 @@ namespace realization {
             realization::config::Output output_config;
 
             ngen::LayerDataStorage layer_storage;
-
     };
 }
 #endif // NGEN_FORMULATION_MANAGER_H
