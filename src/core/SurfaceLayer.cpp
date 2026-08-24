@@ -1,4 +1,5 @@
 #include "SurfaceLayer.hpp"
+#include <Logger.hpp>
 
 #if NGEN_WITH_MPI
 #include "HY_Features_MPI.hpp"
@@ -47,6 +48,7 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
 
         if (cat_ids.size() > 1) {
             std::string error = "Nexus '" + id + "' violates dendritic hydrofabric network assumption";
+            LOG(error, LogLevel::FATAL);
             throw std::runtime_error(error);
         }
 

@@ -32,12 +32,12 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
         //TODO redesign to avoid this cast
         auto r_c = std::dynamic_pointer_cast<realization::Catchment_Formulation>(r);
         double response(0.0);
-        try{
+        try {
             response = r_c->get_response(output_time_index, simulation_time.get_output_interval_seconds());
             // Check mass balance if able
             r_c->check_mass_balance(output_time_index, simulation_time.get_total_output_times(), current_timestamp);
         }
-        catch(models::external::State_Exception& e){
+        catch(models::external::State_Exception& e) {
             std::string msg = e.what();
             msg = msg+" at timestep "+std::to_string(output_time_index)
                 +" ("+current_timestamp+")"
@@ -80,7 +80,9 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
             //If there is more than one, some form of catchment partitioning will be required.
             //for now, only contribute to the first one in the list
             if(nexus == nullptr){
-                throw std::runtime_error("Invalid (null) nexus instantiation downstream of '"+id+"'");
+                std::string throw_msg; throw_msg.assign("Invalid (null) nexus instantiation downstream of '"+id+"'");
+                LOG(throw_msg, LogLevel::WARNING);
+                throw std::runtime_error(throw_msg);
             }
             nexus->add_upstream_flow(response_m_h, id, output_time_index);
             /*std::cerr << "Add water to nexus ID = " << nexus->get_id() << " from catchment ID = " << id << " value = "

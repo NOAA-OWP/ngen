@@ -1,5 +1,6 @@
 #include <NgenSimulation.hpp>
 #include <NGenConfig.h>
+#include <Logger.hpp>
 
 #if NGEN_WITH_MPI
 #include "HY_Features_MPI.hpp"
@@ -85,7 +86,7 @@ void NgenSimulation::advance_models_one_output_step()
             // next time
             if (layer_next_time <= next_time && layer_next_time <= prev_layer_time) {
                 if (simulation_step_ % 100 == 0) {
-                    std::cout << "Updating layer: '" + layer->get_name() + "' at output step " + std::to_string(simulation_step_) << std::endl;
+                    LOG(("Updating layer: '" + layer->get_name() + "' at output step " + std::to_string(simulation_step_)), LogLevel::DEBUG);
                 }
 
 #if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
@@ -156,7 +157,9 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
 
     size_t number_of_timesteps = sim_time_->get_total_output_times();
     if (nexus_downstream_flows_.size() != number_of_timesteps * nexus_indexes_.size()) {
-        throw std::runtime_error("Routing input data in NgenSimulation::nexus_downstream_flows_ does not reflect a full-duration run");
+        std::string msg = "Routing input data in NgenSimulation::nexus_downstream_flows_ does not reflect a full-duration run";
+        LOG(msg, LogLevel::FATAL);
+        throw std::runtime_error(msg);
     }
 
 #if NGEN_WITH_MPI
@@ -221,7 +224,13 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
 #endif // NGEN_WITH_MPI
 
     if (mpi_rank_ == 0) { // Run t-route from single process
-        //LOG(LogLevel::INFO, "Running T-Route on nexus outflows.");
+        LOG(LogLevel::INFO, "Running T-Route on nexus outflows.");
+
+        // Note: Currently, delta_time is set in the t-route yaml configuration file, and the
+        // number_of_timesteps is determined from the total number of nexus outputs in t-route.
+        // It is recommended to still pass these values to the routing_py_adapter object in
+        // case a future implementation needs these two values from the ngen framework.
+        int delta_time = sim_time_->get_output_interval_seconds();
 
         // model for routing
         models::bmi::Bmi_Py_Adapter py_troute("T-Route", t_route_config_file_with_path, "troute_nwm_bmi.troute_bmi.BmiTroute", true);
@@ -243,7 +252,9 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
                 id_as_int = std::stoi(numbers);
             }
             if (id_as_int == -1) {
-                throw std::runtime_error("Cannot convert the nexus ID to an integer: " + key_value.first);
+                std::string error_msg = "Cannot convert the nexus ID to an integer: " + key_value.first;
+                LOG(LogLevel::FATAL, error_msg);
+                throw std::runtime_error(error_msg);
             }
             nexus_df_index[id_index] = id_as_int;
         }
@@ -262,6 +273,11 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
 size_t NgenSimulation::get_num_output_times() const
 {
     return sim_time_->get_total_output_times();
+}
+
+std::string NgenSimulation::get_timestamp_for_step(int step) const
+{
+    return sim_time_->get_timestamp(step);
 }
 
 template <class Archive>

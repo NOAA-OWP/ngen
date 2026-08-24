@@ -96,7 +96,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
 
     // After all nested formulations have been initialized, reconcile deferred providers
     init_deferred_associations();
-    
+
     // TODO: get synced start_time values for all models
     // TODO: get synced end_time values for all models
 
@@ -119,6 +119,9 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             for (int i = 0; i < out_vars_json_list.size(); ++i) {
                 out_vars[i] = out_vars_json_list[i].as_string();
             }
+            // empty array may be read as [""], so make it empty
+            if (out_vars.size() == 1 && out_vars[0].empty())
+                out_vars.pop_back();
         }
         else{
             out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
@@ -147,6 +150,12 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
                     ss << "Unable to parse '" << out_unit << "' in units value." << std::endl;
                     LOG(ss.str(), LogLevel::WARNING); ss.str("");
                 }
+            }
+            if (out_vars.size() == 1 && out_vars[0].empty()) {
+                // empty array may be read as [""], so make everything empty
+                out_vars.pop_back();
+                out_headers.pop_back();
+                out_units.pop_back();
             }
             set_output_variable_units(out_units);
         }
@@ -189,18 +198,18 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         }
     }
     else{
-        //in new format, if headers are not set. 
+        //in new format, if headers are not set.
         //This happens when the the BMI output variables of the last nested module should be used.
         if(out_headers.size() == 0){
             set_output_header_fields(get_output_variable_names());
         }
         if (out_headers_it != properties.end()) {
-            //indicates that the new json format has legacy headers format in the realization. 
+            //indicates that the new json format has legacy headers format in the realization.
             //put out a message that this is ignored.
             LOG("Deprecated output_header_fields item found in realization file ignored.", LogLevel::WARNING);
         }
     }
-    
+
     // Output precision, if present
     auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
     if (out_precision_it != properties.end()) {

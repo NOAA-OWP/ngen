@@ -186,6 +186,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
 {
     // check to see that the variable "T2D" exists
     auto var_names = nc_provider->get_available_variable_names();
+
     auto pos = std::find(var_names.begin(), var_names.end(), CSDMS_STD_NAME_SURFACE_TEMP);
     if ( pos != var_names.end() )
     {
@@ -198,7 +199,9 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
     }
 
     auto start_time = nc_provider->get_data_start_time();
+
     auto ids = nc_provider->get_ids();
+
     auto duration = nc_provider->record_duration();
 
     //std::cout << "Checking values in catchment "<<ids[0]<<" at time "<<start_time<<" with duration "<<duration<<"..."<<std::endl;
@@ -215,7 +218,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
     // read 1/2 of a time step correctly aligned
     double val2 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration / 2, "K"), data_access::MEAN);
 
-    // Updated value to match sample file. Note that raw values are altered by add_offset and scale_factor to convert to K - KSL
+	// Updated value to match sample file. Note that raw values are altered by add_offset and scale_factor to convert to K - KSL
     EXPECT_NEAR(val2, 17743, tol);
 
 	// Updated value to match sample file. Note that raw values are altered by add_offset and scale_factor to convert to K - KSL

@@ -45,7 +45,7 @@ namespace realization {
         constructor formulation_constructor = formulation_constructors.at(formulation_type);
 
         std::shared_ptr<data_access::GenericDataProvider> fp;
-        std::stringstream ss; 
+        std::stringstream ss;
 
         if (forcing_config.provider == "CsvPerFeature" || forcing_config.provider == ""){
             fp = std::make_shared<CsvPerFeatureForcingProvider>(forcing_config);
@@ -54,10 +54,10 @@ namespace realization {
         else if (forcing_config.provider == "NetCDF"){
             // Note: The stream mechanics of the formulations and formulation manager are
             // are strictly speaking indepdent of the log output stream here.  The "default" output
-            // stream likely coming into this function is the null stream, but we don't want to force the forcing provider 
-            // to also use the null stream for any logging it may do, 
+            // stream likely coming into this function is the null stream, but we don't want to force the forcing provider
+            // to also use the null stream for any logging it may do,
             // so we use the standard output stream for the forcing provider by default.
-            // TODO: this likely needs to be rethought and refactored, but for now, 
+            // TODO: this likely needs to be rethought and refactored, but for now,
             // this allows the NetCDF provider to log to standard output while still allowing
             // formulations to log to their own output streams as needed.
             std::shared_ptr<data_access::NetCDFPerFeatureDataProvider> f;
@@ -74,7 +74,7 @@ namespace realization {
 #if NGEN_WITH_PYTHON
         else if (forcing_config.provider == "ForcingsEngineLumpedDataProvider") {
 
-            ss.str(""); 
+            ss.str("");
             ss << "Using ForcingsEngineLumpedDataProvider for '" << identifier
                << "' with init_config = " << forcing_config.init_config << std::endl;
             LOG(ss.str(), LogLevel::DEBUG);
@@ -87,7 +87,7 @@ namespace realization {
             auto start = forcing_config.simulation_start_t;
             auto end   = forcing_config.simulation_end_t;
 
-            ss.str(""); 
+            ss.str("");
             ss << "About to call ForcingsEngineLumpedDataProvider constructor" << std::endl;
             LOG(ss.str(), LogLevel::DEBUG);
 
@@ -96,7 +96,7 @@ namespace realization {
                 forcing_config.init_config, start, end, identifier
             );
 
-            ss.str(""); 
+            ss.str("");
             ss << "Finished calling ForcingsEngineLumpedDataProvider constructor" << std::endl;
             LOG(ss.str(), LogLevel::DEBUG);
         }

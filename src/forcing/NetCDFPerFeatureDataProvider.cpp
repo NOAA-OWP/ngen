@@ -604,6 +604,10 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         // 'maybe_update_chunks_with_hints' clears 'hinted_ids'
         // assumes all id's will have been hinted before 'get_value' is called.
         maybe_update_chunks_with_hints();
+        netcdf_ss << "Warning: stop_time out of range, using last available time index" << std::endl;
+        log_stream << netcdf_ss.str();
+        LOG(netcdf_ss.str(), LogLevel::SEVERE); netcdf_ss.str("");
+        c_idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
     }
 
     auto stride = c_idx2 - c_idx1;

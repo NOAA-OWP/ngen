@@ -36,16 +36,30 @@ namespace realization {
         public:
             Formulation_Manager(std::stringstream &data) {
                 boost::property_tree::ptree loaded_tree;
-                boost::property_tree::json_parser::read_json(data, loaded_tree);
-                this->tree = loaded_tree;
-                initialize_output_config();
+                try {
+                    boost::property_tree::json_parser::read_json(data, loaded_tree);
+                    this->tree = loaded_tree;
+                    initialize_output_config();
+                }
+                catch (const std::exception& e) {
+                    std::string msg = std::string("Reading json data") + e.what();
+                    LOG(msg, LogLevel::FATAL);
+                    throw;
+                }
             }
 
             Formulation_Manager(const std::string &file_path) {
                 boost::property_tree::ptree loaded_tree;
-                boost::property_tree::json_parser::read_json(file_path, loaded_tree);
-                this->tree = loaded_tree;
-                initialize_output_config();
+                try {
+                    boost::property_tree::json_parser::read_json(file_path, loaded_tree);
+                    this->tree = loaded_tree;
+                    initialize_output_config();
+                }
+                catch (const std::exception& e) {
+                    std::string msg = std::string("Reading json file ") + file_path + e.what();
+                    LOG(msg, LogLevel::FATAL);
+                    throw;
+                }
             }
 
             Formulation_Manager(boost::property_tree::ptree &loaded_tree) {
@@ -86,7 +100,7 @@ namespace realization {
                 // add the default surface layer to storage
                 layer_storage.put_layer(layer_desc, layer_desc.id);
 
-                if(layers_json_array){
+                if (layers_json_array) {
                     
                     for (std::pair<std::string, boost::property_tree::ptree> layer_config : *layers_json_array) 
                     {
@@ -97,6 +111,7 @@ namespace realization {
                         layer_storage.put_layer(layer_desc, layer_desc.id);
                         ss.str(""); ss << "Layer added: ID = " << layer_desc.id << ", Name = " << layer_desc.name << std::endl;
                         LOG(ss.str(), LogLevel::DEBUG);
+
                         if (layer.has_formulation() && layer.get_domain() == "catchments") {
                             domain_formulations.emplace(
                                 layer_desc.id,
@@ -107,6 +122,10 @@ namespace realization {
                                     output_stream
                                 )
                             );
+                            auto formulation = domain_formulations.at(layer_desc.id);
+                            if (formulation->get_output_header_count() > 0) {
+                                formulation->set_output_stream(get_output_root() + layer_desc.name + "_layer_"+std::to_string(layer_desc.id) + ".csv");
+                            }
                         }
                         //TODO for each layer, create deferred providers for use by other layers
                         //VERY SIMILAR TO NESTED MODULE INIT
@@ -621,7 +640,7 @@ namespace realization {
                     throw std::runtime_error(throw_msg);
                 }
 
-                // Since we are given a pattern, we need to identify the directory and pull out anything that matches the pattern
+                // Append a trailing slash to the path if not already present
                 if (path.compare(path.size() - 1, 1, "/") != 0) {
                     path += "/";
                 }
@@ -759,7 +778,7 @@ namespace realization {
              * @param catchment_feature Associated catchment feature
              */
             void parse_external_model_params(boost::property_tree::ptree& model_params, const geojson::Feature catchment_feature) {
-                std::stringstream ss;
+                 std::stringstream ss;
                  boost::property_tree::ptree attr {};
                  for (decltype(auto) param : model_params) {
                     if (param.second.count("source") == 0) {

@@ -83,7 +83,7 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
         try {
             numpy = py::module_::import("numpy");
             imported_numpy = true;
-        } catch(py::error_already_set& e) {
+        } catch (py::error_already_set& e) {
             err = e.what();
         }
 
@@ -100,12 +100,12 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
         const auto python_venv = std::getenv("VIRTUAL_ENV") == nullptr ? "<none>" : std::getenv("VIRTUAL_ENV");
       
         stream << "  Python:\n"
-               << "    Version: "         << sys.attr("version").cast<std::string>() << "\n"
-               << "    Virtual Env: "     << python_venv                 << "\n"
-               << "    Executable: "      << sys.attr("executable").cast<std::string>() << "\n"
-               << "    Site Library: "    << python_paths.at("purelib")  << "\n"
-               << "    Include: "         << python_paths.at("include")  << "\n"
-               << "    Runtime Library: " << python_paths.at("stdlib")   << "\n";
+               << "    Version: " << sys.attr("version").cast<std::string>() << "\n"
+               << "    Virtual Env: " << python_venv << "\n"
+               << "    Executable: " << sys.attr("executable").cast<std::string>() << "\n"
+               << "    Site Library: " << python_paths.at("purelib") << "\n"
+               << "    Include: " << python_paths.at("include") << "\n"
+               << "    Runtime Library: " << python_paths.at("stdlib") << "\n";
 
         if (imported_numpy) {
             stream << "    NumPy Version: "   << numpy.attr("version").attr("version").cast<std::string>() << "\n"
@@ -128,6 +128,51 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
 #endif // NGEN_WITH_PYTHON // -------------------------------------------------
 
 } // ngen::exec_info::runtime_summary
+
+void write_nexus_outflow_csv_files(std::string const& output_root,
+                                   std::unique_ptr<NgenSimulation> const& simulation,
+                                   NgenSimulation::hy_features_t const& features)
+{
+    std::stringstream ss;
+
+    auto num_times = simulation->get_num_output_times();
+
+    for (const auto& id : features.nexuses()) {
+        ss << "Preparing to write nexus outflow file for nexus '" << id << "'";
+        LOG(ss.str(), LogLevel::DEBUG);
+        ss.str("");
+
+        std::string filename = output_root + id + "_output.csv";
+        std::ofstream nexus_outfile(filename, std::ios::trunc);
+        if (nexus_outfile.fail()) {
+            // Log error, and try the next one
+            ss << "Failed to open nexus outflow file for nexus '" << id << "', filename '" << filename << "'\n";
+            LOG(ss.str(), LogLevel::SEVERE);
+            ss.str("");
+            continue;
+        }
+
+        auto nexus_index = simulation->get_nexus_index(id);
+        for (int i = 0; i < num_times; ++i) {
+            nexus_outfile << i << ", " << simulation->get_timestamp_for_step(i) << ", " << simulation->get_nexus_outflow(nexus_index, i) << "\n";
+
+            if (nexus_outfile.fail()) {
+                // Log error and move on
+                ss << "Failed to write nexus outflow file for nexus '" << id << "', filename '" << filename << "'\n";
+                LOG(ss.str(), LogLevel::SEVERE);
+                ss.str("");
+                break;
+            }
+        }
+
+        nexus_outfile.close();
+        if (nexus_outfile.fail()) {
+            ss << "Failure reported while closing nexus outflow file for nexus '" << id << "', filename '" << filename << "'\n";
+            LOG(ss.str(), LogLevel::SEVERE);
+            ss.str("");
+        }
+    }
+}
 
 int main(int argc, char* argv[]) {
     std::string catchmentDataFile         = "";
@@ -158,7 +203,6 @@ int main(int argc, char* argv[]) {
                    << "    Processors: " << mpi_num_procs << "\n";
 #endif // NGEN_WITH_MPI
 
-            std::cout << output.str() << std::endl;
             ss << output.str() << std::endl;
             LOG(ss.str(), LogLevel::INFO);
             ss.str("");
@@ -278,10 +322,9 @@ int main(int argc, char* argv[]) {
         }
 
         exit(-1);
-    }
-    else {
-        catchmentDataFile = argv[1];
-        nexusDataFile = argv[3];
+    } else {
+        catchmentDataFile       = argv[1];
+        nexusDataFile           = argv[3];
         REALIZATION_CONFIG_PATH = argv[5];
 
 #if NGEN_WITH_MPI
@@ -936,6 +979,11 @@ int main(int argc, char* argv[]) {
 #if NGEN_WITH_ROUTING
            << "\n\tNGen::routing: " << time_elapsed_routing.count()
 #endif
+
+#if NGEN_WITH_COASTAL
+           << "\n\tNGen::coastal: " << time_elapsed_coastal.count()
+#endif
+           << "\n\tNGen::total: " << time_elapsed_routing.count()
            << std::endl;
         LOG(ss.str(), LogLevel::INFO);
         ss.str("");

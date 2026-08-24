@@ -67,6 +67,7 @@ public:
     double get_nexus_outflow(int nexus_index, int timestep_index) const;
 
     size_t get_num_output_times() const;
+    std::string get_timestamp_for_step(int step) const;
 
 private:
     void advance_models_one_output_step();

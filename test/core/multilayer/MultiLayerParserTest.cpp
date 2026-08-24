@@ -77,7 +77,9 @@ TEST_F(MultiLayerParserTest, TestRead0)
 
     auto possible_simulation_time = realization_config.get_child_optional("time");
     if (!possible_simulation_time) {
-        throw std::runtime_error("ERROR: No simulation time period defined.");
+        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
     }
 
     auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();

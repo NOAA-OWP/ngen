@@ -112,7 +112,7 @@ namespace ngen
         /***
          * @brief Run one simulation timestep for each model in this layer
         */
-        virtual void update_models(boost::span<double> catchment_outflows, 
+        virtual void update_models(boost::span<double> catchment_outflows,
                                    std::unordered_map<std::string, int> const& catchment_indexes,
                                    boost::span<double> nexus_downstream_flows,
                                    std::unordered_map<std::string, int> const& nexus_indexes,

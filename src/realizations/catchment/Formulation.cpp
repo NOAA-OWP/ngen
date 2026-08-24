@@ -42,7 +42,9 @@ namespace realization {
                 }
             }
 
-            throw std::runtime_error(message);
+            std::string throw_msg; throw_msg.assign(message);
+            LOG(throw_msg, LogLevel::WARNING);
+            throw std::runtime_error(throw_msg);
         }
     }
 } // namespace realization

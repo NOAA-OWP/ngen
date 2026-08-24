@@ -29,6 +29,10 @@ Bmi_Adapter::Bmi_Adapter(
                              "'. Error: " + std::strerror(errno);
         Logger::logMsgAndThrowError(init_exception_msg);
     }
+    std::stringstream str_stream;
+    str_stream << "Bmi_Adapter: Model name: " << this->model_name << std::endl;
+    LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
+
 }
 
 Bmi_Adapter::~Bmi_Adapter() = default;
@@ -46,6 +50,9 @@ double Bmi_Adapter::get_time_convert_factor() {
         //pybind exception is lost and all we see is a generic "uncaught exception"
         //with no context.  This way we at least get the error message wrapped in
         //a runtime error.
+        std::stringstream str_stream;
+        str_stream << "Bmi_Adapter get_time_convert_factor: Exception caught (" << e.what() << ")" << std::endl;
+        LOG(str_stream.str(), LogLevel::WARNING); str_stream.str("");
         throw std::runtime_error(e.what());
     }
     std::string output_units = "s";
@@ -104,10 +111,13 @@ void Bmi_Adapter::Initialize(std::string config_file) {
             " to " + config_file
         );
     }
+    std::stringstream str_stream;
+    str_stream << __FILE__ << ":" << __LINE__ << " Bmi_Adapter::Initialize: config_file = " << config_file << std::endl;
+    LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
 
     if (config_file != bmi_init_config && !model_initialized) {
-        std::string message = "Bmi_Adapter::Initialize: initialization call changes model config from " + bmi_init_config + " to " + config_file;
-        logging::warning(message.c_str());
+        str_stream << "Bmi_Adapter::Initialize: initialization call changes model config from " << bmi_init_config << " to " << config_file;
+        LOG(str_stream.str(), LogLevel::INFO); str_stream.str("");
 
         bmi_init_config = config_file;
     }

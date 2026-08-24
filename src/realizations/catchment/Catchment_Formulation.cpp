@@ -26,11 +26,15 @@ namespace realization {
     void Catchment_Formulation::config_pattern_substitution(geojson::PropertyMap &properties, const std::string &key,
                                                             const std::string &pattern, const std::string &replacement)
     {
-        auto it = properties.find(key);
-        // Do nothing and return if either the key isn't found or the associated property isn't a string
-        if (it == properties.end() || it->second.get_type() != geojson::PropertyType::String) {
-            return;
-        }
+            std::stringstream ss;
+            auto it = properties.find(key);
+            // Do nothing and return if either the key isn't found or the associated property isn't a string
+            if (it == properties.end() || it->second.get_type() != geojson::PropertyType::String) {
+                ss.str("");
+                ss << "Skipping pattern substitution for key: " << key << " (not found or not a string)" << std::endl;
+                LOG(ss.str(), LogLevel::DEBUG);
+                return;
+            }
 
         std::string value = it->second.as_string();
 
@@ -42,6 +46,7 @@ namespace realization {
                 id_index = value.find(pattern);
             } while (id_index != std::string::npos);
 
+            // Update the property with the substituted value
             properties.erase(key);
             properties.emplace(key, geojson::JSONProperty(key, value));
         }

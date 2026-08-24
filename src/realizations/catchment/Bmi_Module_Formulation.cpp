@@ -16,6 +16,21 @@ namespace realization {
             inner_create_formulation(properties, true);
         }
 
+        void Bmi_Module_Formulation::save_state(std::shared_ptr<UnitSaver> saver) const {
+            auto model = get_bmi_model();
+
+            size_t size = 1;
+            model->SetValue("serialization_create", &size);
+            model->GetValue("serialization_size", &size);
+
+            auto serialization_state = static_cast<char const*>(model->GetValuePtr("serialization_state"));
+            boost::span<const char> data(serialization_state, size);
+
+            saver->save(data);
+
+            model->SetValue("serialization_free", &size);
+        }
+
         boost::span<const std::string> Bmi_Module_Formulation::get_available_variable_names() const {
             return available_forcings;
         }
@@ -410,6 +425,9 @@ namespace realization {
                     for (int i = 0; i < out_vars_json_list.size(); ++i) {
                         out_vars[i] = out_vars_json_list[i].as_string();
                     }
+                    // empty array may be read as [""], so make it empty
+                    if (out_vars.size() == 1 && out_vars[0].empty())
+                        out_vars.pop_back();
                 }
                 else{
                     out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
@@ -439,6 +457,12 @@ namespace realization {
                             LOG(ss.str(), LogLevel::WARNING); ss.str("");
                         }
                     }
+                    if (out_vars.size() == 1 && out_vars[0].empty()) {
+                        // empty array may be read as [""], so make everything empty
+                        out_vars.pop_back();
+                        out_headers.pop_back();
+                        out_units.pop_back();
+                    }
                     set_output_variable_units(out_units);
                 }
                 set_output_variable_names(out_vars);
@@ -453,23 +477,8 @@ namespace realization {
             // the output variables (header i names variable i); on a count mismatch, warn and fall
             // back to the variable names so the two stay positionally aligned.
             auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
-            if (out_headers_it != properties.end()) {
-                std::vector<geojson::JSONProperty> out_headers_json_list = out_headers_it->second.as_list();
-                std::vector<std::string> out_headers(out_headers_json_list.size());
-                for (int i = 0; i < out_headers_json_list.size(); ++i) {
-                    out_headers[i] = out_headers_json_list[i].as_string();
-                }
-                if (get_output_variable_names().size() == out_headers.size()) {
-                    set_output_header_fields(out_headers);
-                }
-                else {
-                    std::cerr << "WARN: configured output headers have " << out_headers.size()
-                              << " fields, but there are " << get_output_variable_names().size()
-                              << " output variables" << std::endl;
-                    set_output_header_fields(get_output_variable_names());
-                }
             if(is_realization_legacy_format()){
-                if (out_headers_it != properties.end()) {
+                if (out_headers_it != properties.end() && get_output_variable_names().size() > 0) {
                     std::vector<geojson::JSONProperty> out_headers_json_list = out_var_it->second.as_list();
                     std::vector<std::string> out_headers(out_headers_json_list.size());
                     for (int i = 0; i < out_headers_json_list.size(); ++i) {
@@ -645,13 +654,17 @@ namespace realization {
                             //TODO consider some additional introspection/optimization for this?
                             param.second.as_vector(double_vec);
                             if(double_vec.size() == 0){
-                                logging::warning(("Cannot pass non-numeric lists as a BMI parameter, skipping "+param.first+"\n").c_str());
+                                std::stringstream bmiform_ss;
+                                bmiform_ss << "Cannot pass non-numeric lists as a BMI parameter, skipping " << param.first << std::endl;
+                                LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                                 continue;
                             }
                             value_ptr = get_values_as_type(type, double_vec.begin(), double_vec.end());
                             break;
                         default:
-                            logging::warning(("Cannot pass parameter of type "+geojson::get_propertytype_name(param.second.get_type())+" as a BMI parameter, skipping "+param.first+"\n").c_str());
+                            std::stringstream bmiform_ss;
+                            bmiform_ss << "Cannot pass parameter of type " << geojson::get_propertytype_name(param.second.get_type()) << " as a BMI parameter, skipping " << param.first << std::endl;
+                            LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                             continue;
                     }
                     try{
@@ -661,13 +674,19 @@ namespace realization {
                     }
                     catch (const std::exception &e)
                     {
-                        logging::warning((std::string("Exception setting parameter value: ")+e.what()).c_str());
-                        logging::warning(("Skipping parameter: "+param.first+"\n").c_str());
+                        std::stringstream bmiform_ss;
+                        bmiform_ss << "Exception setting parameter value: " << e.what() << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
+                        bmiform_ss << "Skipping parameter: " << param.first << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                     }
                     catch (...)
                     {
-                        logging::warning((std::string("Unknown Exception setting parameter value: \n")).c_str());
-                        logging::warning(("Skipping parameter: "+param.first+"\n").c_str());
+                        std::stringstream bmiform_ss;
+                        bmiform_ss << "Unknown Exception setting parameter value" << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
+                        bmiform_ss << "Skipping parameter: " << param.first << std::endl;
+                        LOG(bmiform_ss.str(), LogLevel::SEVERE); bmiform_ss.str("");
                     }
                     long_vec.clear();
                     double_vec.clear();
@@ -901,6 +920,96 @@ namespace realization {
                 }
             }
             get_bmi_model()->SetValue(var_details->get_name(), value_ptr.get());
+        }
+
+        void Bmi_Module_Formulation::append_model_inputs_to_stream(const double &model_init_time, time_step_t t_delta, std::stringstream &inputs) {
+            std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();
+            time_t model_epoch_time = convert_model_time(model_init_time) + get_bmi_model_start_time_forcing_offset_s();
+            inputs << "Input variables were as follows:";
+
+            for (std::string & var_name : in_var_names) {
+                data_access::GenericDataProvider *provider;
+                std::string var_map_alias = get_config_mapped_variable_name(var_name);
+                if (input_forcing_providers.find(var_map_alias) != input_forcing_providers.end()) {
+                    provider = input_forcing_providers[var_map_alias].get();
+                }
+                else if (var_map_alias != var_name && input_forcing_providers.find(var_name) != input_forcing_providers.end()) {
+                    provider = input_forcing_providers[var_name].get();
+                }
+                else {
+                    provider = forcing.get();
+                }
+
+                // TODO: probably need to actually allow this by default and warn, but have config option to activate
+                //  this type of behavior
+                // TODO: account for arrays later
+                int nbytes = get_bmi_model()->GetVarNbytes(var_name);
+                int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
+                int numItems = nbytes / varItemSize;
+
+                std::shared_ptr<void> value_ptr;
+                // Finally, use the value obtained to set the model input
+                std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name),
+                                                                           varItemSize);
+
+                // Minimal change: normalize requested units (treat ""/none as dimensionless "1")
+                std::string consumer_units = get_bmi_model()->GetVarUnits(var_name);
+                if (consumer_units.empty() || consumer_units == "none")
+                    consumer_units = "1";
+
+
+                inputs << "\n" << var_map_alias << " = ";
+                if (numItems != 1) {
+                    //more than a single value needed for var_name
+                    auto values = provider->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
+                                                   get_bmi_model()->GetVarUnits(var_name)));
+                                                   consumer_units);
+                    //need to marshal data types to the receiver as well
+                    //this could be done a little more elegantly if the provider interface were
+                    //"type aware", but for now, this will do (but requires yet another copy)
+                    if(values.size() == 1){
+                        //FIXME this isn't generic broadcasting, but works for scalar implementations
+                        #ifndef NGEN_QUIET
+                        std::stringstream ss;
+                        ss << "WARN: broadcasting variable '" << var_name << "' from scalar to expected array\n";;
+                        LOG(ss.str(), LogLevel::SEVERE); ss.str("");
+                        #endif
+                        values.resize(numItems, values[0]);
+                    } else if (values.size() != numItems) {
+                        throw std::runtime_error("Mismatch in item count for variable '" + var_name + "': model expects " +
+                            std::to_string(numItems) + ", provider returned " + std::to_string(values.size()) +
+                            " items\n");
+
+                    }
+                    value_ptr = get_values_as_type( type, values.begin(), values.end() );
+                    // array like input: precipitation_mm_per_h = [0.2, 0.8, 1.8]
+                    this->append_inputs(type, value_ptr, numItems, inputs);
+
+                } else {
+                    try {
+                        //scalar value
+                        double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
+                                                                                     consumer_units));
+                        value_ptr = get_value_as_type(type, value);
+                    } catch (data_access::unit_conversion_exception &uce) {
+                        data_access::unit_error_log_key key{get_id(), var_map_alias, uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
+                        auto ret = data_access::unit_errors_reported.insert(key);
+                        bool new_error = ret.second;
+                        if (new_error) {
+                            std::stringstream ss;
+                            ss << "Unit conversion failure:"
+                               << " requester {'" << get_bmi_model()->get_model_name() << "' catchment '" << get_catchment_id()
+                               << "' variable '" << var_name << "'" << " (alias '" << var_map_alias << "')"
+                               << " units '" << get_bmi_model()->GetVarUnits(var_name) << "'}"
+                               << " provider {'" << uce.provider_model_name << "' source variable '" << uce.provider_bmi_var_name << "'"
+                               << " raw value " << uce.unconverted_values[0] << "}"
+                               << " message \"" << uce.what() << "\"";
+                            LOG(ss.str(), LogLevel::WARNING); ss.str("");
+                        }
+                        value_ptr = get_value_as_type(type, uce.unconverted_values[0]);
+                    }
+                }
+            }
         }
 
         void Bmi_Module_Formulation::append_model_inputs_to_stream(const double &model_init_time, time_step_t t_delta, std::stringstream &inputs) {

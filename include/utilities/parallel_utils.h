@@ -205,7 +205,6 @@ namespace parallel {
 
 
 }
-
 #endif // NGEN_WITH_MPI
 
 #endif //NGEN_PARALLEL_UTILS_H

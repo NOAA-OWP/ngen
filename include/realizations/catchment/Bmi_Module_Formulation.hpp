@@ -9,6 +9,8 @@
 #include "bmi_utilities.hpp"
 #include "bmi/protocols.hpp"
 
+#include <utilities/StateSaving.hpp>
+
 #include <boost/core/span.hpp>
 
 using data_access::MEAN;
@@ -103,6 +105,14 @@ namespace realization {
 
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
         void create_formulation(geojson::PropertyMap properties) override;
+
+        /**
+         * Passes a serialized representation of the model's state to ``saver``
+         *
+         * Asks the model to serialize its state, queries the pointer
+         * and length, passes that to saver, and then releases it
+         */
+        void save_state(std::shared_ptr<UnitSaver> saver) const;
 
         /**
          * Get the collection of forcing output property names this instance can provide.
@@ -517,7 +527,7 @@ namespace realization {
 
         /**
          * Append `set_model_inputs_prior_to_update` values to an error message. This is intended to be used if the BMI fails to run `update()`.
-         * 
+         *
          * @param model_initial_time The model's time prior to the update, in its internal units and representation.
          * @param t_delta The size of the time step over which the formulation is going to update the model, which might
          *                be different than the model's internal time step.
@@ -526,9 +536,9 @@ namespace realization {
         void append_model_inputs_to_stream(const double &model_init_time, time_step_t t_delta, std::stringstream &inputs);
 
         /**
-         * Convert a pointer to an array of data to its correct type, then append these items to a stream. 
+         * Convert a pointer to an array of data to its correct type, then append these items to a stream.
          * The format will appear like a python list, e.g., [0.5, 1.2, 5.8]
-         * 
+         *
          * @param values Raw pointer to data that will be interpreted based on the `type`
          * @param num_items The number of items expected in the array.
          * @param inputs Stream the values will be appended to.
@@ -537,9 +547,9 @@ namespace realization {
         void append_inputs(std::shared_ptr<void> values, int num_items, std::stringstream &inputs);
 
         /**
-         * Convert a pointer to an array of data to its correct type, then append these items to a stream. 
+         * Convert a pointer to an array of data to its correct type, then append these items to a stream.
          * The format will appear like a python list, e.g., [0.5, 1.2, 5.8]
-         * 
+         *
          * @param type String representing the type of data the pointer is for.
          * @param values Raw pointer to data that will be interpreted based on the `type`
          * @param num_items The number of items expected in the array.
@@ -549,7 +559,7 @@ namespace realization {
 
         /**
          * Convert data to a target data type and append it to an stream.
-         * 
+         *
          * @param type String representing the type of data the pointer is for.
          * @param value Raw data that will be cast to a value based on the `type`.
          * @param inputs Stream the interpreted ata will be appeneded to.

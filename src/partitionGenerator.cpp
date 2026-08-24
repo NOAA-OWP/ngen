@@ -112,6 +112,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, P
 {
     auto catchments = network.filter("cat", network::SortOrder::TransposedDepthFirstPreorder);
 
+    std::stringstream partgen_ss("");
     int partition = 0;
     int counter = 0;
     int total = size(catchments);
@@ -349,6 +350,7 @@ void read_arguments(int argc, char* argv[],
                     std::vector<std::string>& catchment_subset_ids,
                     std::vector<std::string>& nexus_subset_ids)
 {
+    std::stringstream partgen_ss("");
     if( argc < 7 ){
         partgen_ss << "Missing required args:" << std::endl;
         partgen_ss << argv[0] << " <catchment_data_path> <nexus_data_path> <partition_output_name> <number of partitions> <catchment_subset_ids> <nexus_subset_ids> " << std::endl;
@@ -410,6 +412,7 @@ void read_arguments(int argc, char* argv[],
 
 int main(int argc, char* argv[])
 {
+    std::stringstream partgen_ss("");
     using network::Network;
     std::string catchmentDataFile, nexusDataFile;
     std::string partitionOutFile;
@@ -457,6 +460,7 @@ int main(int argc, char* argv[])
     }
 
     std::string link_key = "toid";
+
 
     //Assumes dendritic, can add check in network if needed.
     PartitionVSet catchment_part, nexus_part;
