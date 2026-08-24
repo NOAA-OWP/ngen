@@ -7,9 +7,10 @@ RUN dnf update -y \
     && dnf install -y --allowerasing tar git gcc-toolset-12 make cmake udunits2-devel coreutils \
     && dnf clean all
 
-# Rocky 8's system compiler is GCC 8, whose libstdc++ lacks complete C++17 <filesystem>
-# support (notably std::hash<std::filesystem::path>). Build with the gcc-toolset-12 SCL
-# toolchain instead, and point the runtime loader at its libstdc++.
+# Rocky 8's system compiler is GCC 8, which doesn't support C++20 and
+# whose libstdc++ lacks complete C++17 <filesystem> support.
+# Build with the gcc-toolset-12 SCL toolchain instead, and point the
+# runtime loader at its libstdc++.
 ENV PATH="/opt/rh/gcc-toolset-12/root/usr/bin:${PATH}" \
     LD_LIBRARY_PATH="/opt/rh/gcc-toolset-12/root/usr/lib64:/opt/rh/gcc-toolset-12/root/usr/lib" \
     CC="/opt/rh/gcc-toolset-12/root/usr/bin/gcc" \
