@@ -19,6 +19,7 @@ var class_h_y___point_hydro_nexus =
     [ "set_mintime", "class_h_y___point_hydro_nexus.html#acf43bf521f2c7d4e9175cec3dc8eff2c", null ],
     [ "completed", "class_h_y___point_hydro_nexus.html#a7a1b78a8c1bbbdcf9670b8eb14d2d53e", null ],
     [ "contributing_catchments", "class_h_y___point_hydro_nexus.html#ac9f670d94708c8987cff99e8bae94728", null ],
+    [ "contribution_mutex", "class_h_y___point_hydro_nexus.html#a28a770a186b6a3f1c027a7493d198b6c", null ],
     [ "downstream_requests", "class_h_y___point_hydro_nexus.html#a82e92313918794725a60e90d2159df44", null ],
     [ "id", "class_h_y___point_hydro_nexus.html#ac8d0eb98e582392e7191a80a9b4f74ef", null ],
     [ "min_timestep", "class_h_y___point_hydro_nexus.html#a7fd7859c86a603886b0d451010f87448", null ],

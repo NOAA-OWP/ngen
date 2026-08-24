@@ -189,6 +189,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a7fd7859c86a603886b0d451010f87448"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a1b78a8c1bbbdcf9670b8eb14d2d53e" id="r_a7a1b78a8c1bbbdcf9670b8eb14d2d53e"><td class="memItemLeft" align="right" valign="top">std::unordered_set&lt; <a class="el" href="class_h_y___hydro_nexus.html#aa1a3c19507476a39542058e484be0018">time_step_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a1b78a8c1bbbdcf9670b8eb14d2d53e">completed</a></td></tr>
 <tr class="separator:a7a1b78a8c1bbbdcf9670b8eb14d2d53e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28a770a186b6a3f1c027a7493d198b6c" id="r_a28a770a186b6a3f1c027a7493d198b6c"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a28a770a186b6a3f1c027a7493d198b6c">contribution_mutex</a></td></tr>
+<tr class="separator:a28a770a186b6a3f1c027a7493d198b6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8d0eb98e582392e7191a80a9b4f74ef" id="r_ac8d0eb98e582392e7191a80a9b4f74ef"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___hydro_nexus.html#ac8d0eb98e582392e7191a80a9b4f74ef">id</a></td></tr>
 <tr class="separator:ac8d0eb98e582392e7191a80a9b4f74ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -424,7 +426,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="class_h_y___hydro_nexus.html#a25198c16baaea6478cd7b83de78e6fea">HY_HydroNexus</a>.</p>
 
-<p class="reference">References <a class="el" href="#a7a1b78a8c1bbbdcf9670b8eb14d2d53e">completed</a>, <a class="el" href="#a7fd7859c86a603886b0d451010f87448">min_timestep</a>, <a class="el" href="#afa54a0484f0f4b1990f88a1a89732a38">summed_flows</a>, and <a class="el" href="#a3540aaa4a8d10ce03e5f8a6a7cdd8a2d">upstream_flows</a>.</p>
+<p class="reference">References <a class="el" href="#a7a1b78a8c1bbbdcf9670b8eb14d2d53e">completed</a>, <a class="el" href="#a28a770a186b6a3f1c027a7493d198b6c">contribution_mutex</a>, <a class="el" href="#a7fd7859c86a603886b0d451010f87448">min_timestep</a>, <a class="el" href="#afa54a0484f0f4b1990f88a1a89732a38">summed_flows</a>, and <a class="el" href="#a3540aaa4a8d10ce03e5f8a6a7cdd8a2d">upstream_flows</a>.</p>
 
 </div>
 </div>
@@ -718,6 +720,30 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a28a770a186b6a3f1c027a7493d198b6c" name="a28a770a186b6a3f1c027a7493d198b6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28a770a186b6a3f1c027a7493d198b6c">&#9670;&#160;</a></span>contribution_mutex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex HY_PointHydroNexus::contribution_mutex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="#aa0ff1744cae31cdc7b321b268cb0559e">add_upstream_flow()</a>.</p>
+
+</div>
+</div>
 <a id="a82e92313918794725a60e90d2159df44" name="a82e92313918794725a60e90d2159df44"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a82e92313918794725a60e90d2159df44">&#9670;&#160;</a></span>downstream_requests</h2>
 
@@ -944,7 +970,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_h_y___point_hydro_nexus.html">HY_PointHydroNexus</a></li>
-    <li class="footer">Generated on Fri Aug 21 2026 21:04:46 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Aug 24 2026 16:37:00 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

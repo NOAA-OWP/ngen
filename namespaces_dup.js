@@ -15,7 +15,8 @@ var namespaces_dup =
       [ "debug", "namespacelogging.html#ab974964045c6542ec5e35cf12afdbe62", null ],
       [ "error", "namespacelogging.html#a57fd6163eef35abcd6fd2b225842dc05", null ],
       [ "info", "namespacelogging.html#ab013f7af1de2527ea402979e0d8e723b", null ],
-      [ "warning", "namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8", null ]
+      [ "warning", "namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8", null ],
+      [ "logging_mutex", "namespacelogging.html#a1a38be1f0e4be2f2bfdee8b769752d30", null ]
     ] ],
     [ "models", "namespacemodels.html", "namespacemodels" ],
     [ "network", "namespacenetwork.html", "namespacenetwork" ],

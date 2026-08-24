@@ -97,7 +97,8 @@ $(function(){initNavTree('namespacelogging.html',''); initResizable(true); });
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">logging Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -119,6 +120,11 @@ Functions</h2></td></tr>
 <tr class="memitem:aaa6addcd244d71933234c851ad827383" id="r_aaa6addcd244d71933234c851ad827383"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa6addcd244d71933234c851ad827383">critical</a> (const char *msg)</td></tr>
 <tr class="memdesc:aaa6addcd244d71933234c851ad827383"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send critical message to std::cerr.  <br /></td></tr>
 <tr class="separator:aaa6addcd244d71933234c851ad827383"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a1a38be1f0e4be2f2bfdee8b769752d30" id="r_a1a38be1f0e4be2f2bfdee8b769752d30"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a38be1f0e4be2f2bfdee8b769752d30">logging_mutex</a></td></tr>
+<tr class="separator:a1a38be1f0e4be2f2bfdee8b769752d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="aaa6addcd244d71933234c851ad827383" name="aaa6addcd244d71933234c851ad827383"></a>
@@ -143,6 +149,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+<p class="reference">References <a class="el" href="#a1a38be1f0e4be2f2bfdee8b769752d30">logging_mutex</a>.</p>
 
 </div>
 </div>
@@ -169,6 +177,8 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
+<p class="reference">References <a class="el" href="#a1a38be1f0e4be2f2bfdee8b769752d30">logging_mutex</a>.</p>
+
 </div>
 </div>
 <a id="a57fd6163eef35abcd6fd2b225842dc05" name="a57fd6163eef35abcd6fd2b225842dc05"></a>
@@ -193,6 +203,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+<p class="reference">References <a class="el" href="#a1a38be1f0e4be2f2bfdee8b769752d30">logging_mutex</a>.</p>
 
 </div>
 </div>
@@ -219,6 +231,8 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
+<p class="reference">References <a class="el" href="#a1a38be1f0e4be2f2bfdee8b769752d30">logging_mutex</a>.</p>
+
 </div>
 </div>
 <a id="abbe2cbb6dacd04158dd9591797d854b8" name="abbe2cbb6dacd04158dd9591797d854b8"></a>
@@ -244,7 +258,26 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
+<p class="reference">References <a class="el" href="#a1a38be1f0e4be2f2bfdee8b769752d30">logging_mutex</a>.</p>
+
 <p class="reference">Referenced by <a class="el" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aee6c52698d720f8cb2607e3b3409a516">models::bmi::AbstractCLibBmiAdapter::dynamic_library_load()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a813cd9420088cc7023a41c6429cf0ccb">realization::Bmi_Module_Formulation::get_output_values_for_timestep()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0108d3ee83f95ad2eb0733a237078e89">realization::Bmi_Module_Formulation::get_response()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a0b66d3f5f51b4b414e08965e15d7bff7">realization::Bmi_Multi_Formulation::get_response()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2">models::bmi::Bmi_Adapter::Initialize()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#addd74974bd828fac5bc15790787fc119">realization::Bmi_Module_Formulation::perform_set()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab4acbd230e09c1dc4b0151c301bbe966">realization::Bmi_Module_Formulation::set_initial_bmi_parameters()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a1a38be1f0e4be2f2bfdee8b769752d30" name="a1a38be1f0e4be2f2bfdee8b769752d30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a38be1f0e4be2f2bfdee8b769752d30">&#9670;&#160;</a></span>logging_mutex</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex logging::logging_mutex</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="#aaa6addcd244d71933234c851ad827383">critical()</a>, <a class="el" href="#ab974964045c6542ec5e35cf12afdbe62">debug()</a>, <a class="el" href="#a57fd6163eef35abcd6fd2b225842dc05">error()</a>, <a class="el" href="#ab013f7af1de2527ea402979e0d8e723b">info()</a>, and <a class="el" href="#abbe2cbb6dacd04158dd9591797d854b8">warning()</a>.</p>
 
 </div>
 </div>
@@ -254,7 +287,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacelogging.html">logging</a></li>
-    <li class="footer">Generated on Fri Aug 21 2026 21:04:46 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Aug 24 2026 16:37:00 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
