@@ -10,7 +10,7 @@ var classrealization_1_1_formulation___manager =
     [ "construct_missing_formulation", "classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823", null ],
     [ "contains", "classrealization_1_1_formulation___manager.html#abe1de5766287584a045e3bb7cbee0ba2", null ],
     [ "end", "classrealization_1_1_formulation___manager.html#a6a88df7abd663f3072425abffb6501ef", null ],
-    [ "finalize", "classrealization_1_1_formulation___manager.html#a868f5aa6db72a5871e6a93ef000e5f6e", null ],
+    [ "finalize", "classrealization_1_1_formulation___manager.html#a54693fdc6062693ada8cca45c327eb52", null ],
     [ "get_domain_formulation", "classrealization_1_1_formulation___manager.html#a2cccad09b8389007daae3fe127fc8203", null ],
     [ "get_forcing_params", "classrealization_1_1_formulation___manager.html#a2ba4cf155d0e4ddfc9e37b6b377deed1", null ],
     [ "get_formulation", "classrealization_1_1_formulation___manager.html#a8e2580a925c904f3d5ef7534672ad791", null ],

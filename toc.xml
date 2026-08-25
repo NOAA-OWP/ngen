@@ -2775,7 +2775,7 @@
           <topic label="construct_missing_formulation" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823"/>
           <topic label="contains" href="classrealization_1_1_formulation___manager.html#abe1de5766287584a045e3bb7cbee0ba2"/>
           <topic label="end" href="classrealization_1_1_formulation___manager.html#a6a88df7abd663f3072425abffb6501ef"/>
-          <topic label="finalize" href="classrealization_1_1_formulation___manager.html#a868f5aa6db72a5871e6a93ef000e5f6e"/>
+          <topic label="finalize" href="classrealization_1_1_formulation___manager.html#a54693fdc6062693ada8cca45c327eb52"/>
           <topic label="get_domain_formulation" href="classrealization_1_1_formulation___manager.html#a2cccad09b8389007daae3fe127fc8203"/>
           <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#a2ba4cf155d0e4ddfc9e37b6b377deed1"/>
           <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#a8e2580a925c904f3d5ef7534672ad791"/>
@@ -2801,7 +2801,7 @@
         </topic>
         <topic label="constructor" href="namespacerealization.html#a4650d2aa0dbb51562df2b155d3f317a5"/>
         <topic label="as_c_array" href="namespacerealization.html#ac5a3c0c1080741658e77e7468b9b35dc"/>
-        <topic label="construct_formulation" href="namespacerealization.html#ab9e82c6743f665511634e0825d3c4be7"/>
+        <topic label="construct_formulation" href="namespacerealization.html#a7d869198d20463cf7eec427861e5146d"/>
         <topic label="create_formulation_constructor" href="namespacerealization.html#a3cd7f3652715fac25a746ef1810a1cff"/>
         <topic label="formulation_exists" href="namespacerealization.html#a0328960a5fc84440b67f91a6d705f940"/>
         <topic label="get_formulation_key" href="namespacerealization.html#a60fd2dcdc052492d4ae87454567f2b61"/>
@@ -5107,7 +5107,7 @@
           <topic label="construct_missing_formulation" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823"/>
           <topic label="contains" href="classrealization_1_1_formulation___manager.html#abe1de5766287584a045e3bb7cbee0ba2"/>
           <topic label="end" href="classrealization_1_1_formulation___manager.html#a6a88df7abd663f3072425abffb6501ef"/>
-          <topic label="finalize" href="classrealization_1_1_formulation___manager.html#a868f5aa6db72a5871e6a93ef000e5f6e"/>
+          <topic label="finalize" href="classrealization_1_1_formulation___manager.html#a54693fdc6062693ada8cca45c327eb52"/>
           <topic label="get_domain_formulation" href="classrealization_1_1_formulation___manager.html#a2cccad09b8389007daae3fe127fc8203"/>
           <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#a2ba4cf155d0e4ddfc9e37b6b377deed1"/>
           <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#a8e2580a925c904f3d5ef7534672ad791"/>
