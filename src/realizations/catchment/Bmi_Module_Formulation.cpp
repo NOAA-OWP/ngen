@@ -240,6 +240,14 @@ namespace realization {
                     uce.unconverted_values = std::move(values);
                     throw;
                 }
+                catch (const std::runtime_error& e) {
+                    data_access::unit_conversion_exception uce(e.what());
+                    uce.provider_model_name = get_bmi_model()->get_model_name();
+                    uce.provider_bmi_var_name = bmi_var_name;
+                    uce.provider_units = native_units; // keep original for diagnostics
+                    uce.unconverted_values = std::move(values);
+                    throw uce;
+                }
             }
             //This is unlikely (impossible?) to throw since a pre-check on available names is done above. Assert instead?
             throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
@@ -988,8 +996,7 @@ namespace realization {
                 if (numItems != 1) {
                     //more than a single value needed for var_name
                     auto values = provider->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                   get_bmi_model()->GetVarUnits(var_name)));
-                                                   consumer_units);
+                                                   consumer_units, 0));
                     //need to marshal data types to the receiver as well
                     //this could be done a little more elegantly if the provider interface were
                     //"type aware", but for now, this will do (but requires yet another copy)
@@ -1015,7 +1022,7 @@ namespace realization {
                     try {
                         //scalar value
                         double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                                                     consumer_units));
+                                                                                     consumer_units, 0));
                         value_ptr = get_value_as_type(type, value);
                     } catch (data_access::unit_conversion_exception &uce) {
                         data_access::unit_error_log_key key{get_id(), var_map_alias, uce.provider_model_name, uce.provider_bmi_var_name, uce.what()};
@@ -1132,112 +1139,6 @@ namespace realization {
                     this->append_input(type, value, inputs);
                 }
             }
-        }
-
-        template<typename T>
-        void Bmi_Module_Formulation::append_inputs(std::shared_ptr<void> values, int num_items, std::stringstream &inputs) {
-            T *array = (T*)values.get();
-            inputs << "[";
-            for (int i = 0; i < num_items; ++i) {
-                if (i != 0)
-                    inputs << ", ";
-                inputs << array[i];
-            }
-            inputs << "]";
-        }
-
-        void Bmi_Module_Formulation::append_inputs(std::string type, std::shared_ptr<void> values, int num_items, std::stringstream &inputs) {
-
-            if (type == "double" || type == "double precision")
-                this->append_inputs<double>(values, num_items, inputs);
-
-            else if (type == "float" || type == "real")
-                this->append_inputs<float>(values, num_items, inputs);
-
-            else if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int")
-                this->append_inputs<short>(values, num_items, inputs);
-
-            else if (type == "unsigned short" || type == "unsigned short int")
-                this->append_inputs<unsigned short>(values, num_items, inputs);
-
-            else if (type == "int" || type == "signed" || type == "signed int" || type == "integer")
-                this->append_inputs<int>(values, num_items, inputs);
-
-            else if (type == "unsigned" || type == "unsigned int")
-                this->append_inputs<unsigned int>(values, num_items, inputs);
-
-            else if (type == "long" || type == "long int" || type == "signed long" || type == "signed long int")
-                this->append_inputs<long>(values, num_items, inputs);
-
-            else if (type == "unsigned long" || type == "unsigned long int")
-                this->append_inputs<unsigned long>(values, num_items, inputs);
-
-            else if (type == "long long" || type == "long long int" || type == "signed long long" || type == "signed long long int")
-                this->append_inputs<long long>(values, num_items, inputs);
-
-            else if (type == "unsigned long long" || type == "unsigned long long int")
-                this->append_inputs<unsigned long long>(values, num_items, inputs);
-
-        }
-
-        template<typename T>
-        void Bmi_Module_Formulation::append_input(std::string type, T value, std::stringstream &inputs) {
-
-            if (type == "double" || type == "double precision")
-                inputs << static_cast<double>(value);
-
-            else if (type == "float" || type == "real")
-                inputs << static_cast<float>(value);
-
-            else if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int")
-                inputs << static_cast<short>(value);
-
-            else if (type == "unsigned short" || type == "unsigned short int")
-                inputs << static_cast<unsigned short>(value);
-
-            else if (type == "int" || type == "signed" || type == "signed int" || type == "integer")
-                inputs << static_cast<int>(value);
-
-            else if (type == "unsigned" || type == "unsigned int")
-                inputs << static_cast<unsigned int>(value);
-
-            else if (type == "long" || type == "long int" || type == "signed long" || type == "signed long int")
-                inputs << static_cast<long>(value);
-
-            else if (type == "unsigned long" || type == "unsigned long int")
-                inputs << static_cast<unsigned long>(value);
-
-            else if (type == "long long" || type == "long long int" || type == "signed long long" || type == "signed long long int")
-                inputs << static_cast<long long>(value);
-
-            else if (type == "unsigned long long" || type == "unsigned long long int")
-                inputs << static_cast<unsigned long long>(value);
-
-        }
-
-        const boost::span<char> Bmi_Module_Formulation::get_serialization_state() const {
-            auto bmi = this->bmi_model;
-            // create a new serialized state, getting the amount of data that was saved
-            uint64_t* size = (uint64_t*)bmi->GetValuePtr("serialization_create");
-            // get the pointer of the new state
-            char* serialized = (char*)bmi->GetValuePtr("serialization_state");
-            const boost::span<char> span(serialized, *size);
-            return span;
-        }
-
-        void Bmi_Module_Formulation::load_serialization_state(const boost::span<char> state) const {
-            auto bmi = this->bmi_model;
-            // grab the pointer to the underlying state data
-            void* data = (void*)state.data();
-            // load the state through SetValue
-            bmi->SetValue("serialization_state", data);
-        }
-
-        void Bmi_Module_Formulation::free_serialization_state() const {
-            auto bmi = this->bmi_model;
-            // send message to clear memory associated with serialized data
-            void* _; // this pointer will be unused by SetValue
-            bmi->SetValue("serialization_free", _);
         }
 
         template<typename T>

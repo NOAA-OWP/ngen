@@ -220,7 +220,8 @@ RUN --mount=type=cache,target=/root/.cache/pip,id=pip-cache \
       'torch' \
       --no-binary=mpi4py mpi4py && \
     pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu && \
-    pip install /ngen-app/ngen-forcing/
+    pip install /ngen-app/ngen-forcing/ && \
+    pip install /ngen-app/ngen-forcing/nextgen_forcings_ewts/
 
 WORKDIR /ngen-app/
 

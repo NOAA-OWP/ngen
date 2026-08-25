@@ -199,7 +199,7 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderParsing)
             CatchmentAggrDataSelector("", expected_name, t, 3600, expected_in_units, 0),
             data_access::SUM
         );
-    
+
         const double out_value = this->Forcing_Object_3->get_value(
             CatchmentAggrDataSelector("", expected_name, t, 3600, expected_out_units, 0),
             data_access::SUM

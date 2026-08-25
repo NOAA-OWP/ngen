@@ -30,8 +30,8 @@
 #endif // WRITE_PID_FILE_FOR_GDB_SERVER
 
 #if NGEN_WITH_PYTHON
-#include "python/InterpreterUtil.hpp"
 #include <pybind11/embed.h>
+#include "python/InterpreterUtil.hpp"
 #endif // NGEN_WITH_PYTHON
     
 #if NGEN_WITH_ROUTING

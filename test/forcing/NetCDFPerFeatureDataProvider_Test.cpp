@@ -43,8 +43,6 @@ class NetCDFPerFeatureDataProviderTest : public ::testing::Test {
 };
 
 void NetCDFPerFeatureDataProviderTest::SetUp() {
-    //setupForcing();
-
     setupForcing();
 }
 
@@ -191,7 +189,6 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadMultiSpan)
 TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
 {
     // check to see that the variable "T2D" exists
-
     auto var_names = nc_provider->get_available_variable_names();
 
     auto pos = std::find(var_names.begin(), var_names.end(), CSDMS_STD_NAME_SURFACE_TEMP);
@@ -230,7 +227,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
 
 	// Updated value to match sample file. Note that raw values are altered by add_offset and scale_factor to convert to K - KSL
     // read 4 time steps correctly aligned
-    double val3 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration * 4, "K"), data_access::MEAN);
+    double val3 = nc_provider->get_value(CatchmentAggrDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration * 4, "K", 0), data_access::MEAN);
 
     EXPECT_NEAR(val3, 17842.5, tol);
 

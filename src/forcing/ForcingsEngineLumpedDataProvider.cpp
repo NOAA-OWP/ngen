@@ -190,14 +190,23 @@ Provider::data_type Provider::get_value(
             bmi_->UpdateUntil(std::chrono::duration_cast<std::chrono::seconds>(current - time_begin_).count());
             acc += static_cast<double*>(bmi_->GetValuePtr(variable))[divide_idx_];
         }
-
         if (m == ReSampleMethod::MEAN) {
             auto duration = std::chrono::duration_cast<std::chrono::seconds>(current - start).count();
             auto num_time_steps = duration / time_step_.count();
             acc /= num_time_steps;
         }
-
-        return acc;
+        // Convert units
+        try {
+            return UnitsHelper::get_converted_value(bmi_->GetVarUnits(variable), acc, output_units);
+        }
+        catch (const std::runtime_error& e) {
+            data_access::unit_conversion_exception uce(e.what());
+            uce.provider_model_name = "ForcedEngineLumpedDataProvider " + selector.get_id();
+            uce.provider_bmi_var_name = variable;
+            uce.provider_units = bmi_->GetVarUnits(variable);
+            uce.unconverted_values.push_back(acc);
+            throw uce;
+        }
     }
 
     ss.str("");

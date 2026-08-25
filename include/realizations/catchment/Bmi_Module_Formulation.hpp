@@ -647,7 +647,6 @@ namespace realization {
         bool allow_model_exceed_end_time = false;
         /** The set of available "forcings" (output variables, plus their mapped aliases) that the model can provide. */
         std::vector<std::string> available_forcings;
-        std::map<std::string, std::string> available_forcing_units;
         std::string bmi_init_config;
         std::shared_ptr<models::bmi::Bmi_Adapter> bmi_model;
         /** Whether backing model has fixed time step size. */

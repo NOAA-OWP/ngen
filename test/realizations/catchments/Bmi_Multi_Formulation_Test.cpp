@@ -493,7 +493,7 @@ void Bmi_Multi_Formulation_Test::SetUp() {
 
     // Define this manually to set how many nested modules per example, and implicitly how many examples.
     // This means example_module_depth.size() example scenarios with example_module_depth[i] nested modules in each scenario.
-    example_module_depth = {2, 2, 2, 2, 2, 2, 3};
+    example_module_depth = {2, 2, 2, 2, 2, 2, 2};
 
     // Initialize the members for holding required input and result test data for individual example scenarios
     setupExampleDataCollections();
@@ -924,6 +924,20 @@ TEST_F(Bmi_Multi_Formulation_Test, OutputHeaderFieldsMatchConfiguredOrder_3) {
     std::vector<std::string> names;
     for (const auto& f : formulation.get_output_fields()) names.push_back(f.output_name);
     EXPECT_EQ(names, specified_output_variables[ex_index]);
+}
+
+/**
+ * Test for output variable being an array.
+ */
+TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_6_a) {
+    int ex_index = 6;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    formulation.get_response(0, 3600);
+    std::string output = formulation.get_output_line_for_timestep(0, ",");
+    ASSERT_EQ(output, "1.000000000,2.000000000,3.000000000");
 }
 
 /**

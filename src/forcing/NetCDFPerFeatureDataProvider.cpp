@@ -736,11 +736,18 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         double converted_value = UnitsHelper::get_converted_value(native_units, rvalue, selector.get_output_units());
         return converted_value;
     }
-    catch (UnitsHelper::unit_conversion_exception& uce)
-    {
+    catch (UnitsHelper::unit_conversion_exception& uce) {
         uce.provider_model_name = "NetCDFPerFeatureDataProvider(" + file_path + ")";
         uce.provider_var_name = selector.get_variable_name();
         throw;
+    }
+    catch (const std::runtime_error& e) {
+        data_access::unit_conversion_exception uce(e.what());
+        uce.provider_model_name = "NetCDFPerFeatureDataProvider(" + file_path + ")";
+        uce.provider_bmi_var_name = selector.get_variable_name();
+        uce.provider_units = native_units;
+        uce.unconverted_values.push_back(rvalue);
+        throw uce;
     }
 
     return rvalue;
@@ -764,7 +771,7 @@ const netCDF::NcVar& NetCDFPerFeatureDataProvider::get_ncvar(const std::string& 
     throw std::runtime_error(throw_msg);
 }
 
-const std::string& NetCDFPerFeatureDataProvider::get_ncvar_units(const std::string& name){
+const std::string& NetCDFPerFeatureDataProvider::get_ncvar_units(const std::string& name) const{
     auto cache_hit = units_cache.find(name);
     if(cache_hit != units_cache.end()){
         return cache_hit->second;
