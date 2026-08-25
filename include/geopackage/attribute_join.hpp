@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "FeatureCollection.hpp"
+
 namespace ngen {
 namespace geopackage {
 
@@ -30,6 +32,26 @@ struct AttributeJoinSpec
     //! The namespace joined columns are published under: the alias when declared, else the table name.
     const std::string& prefix() const { return alias.empty() ? table : alias; }
 };
+
+/**
+ * Join the columns of one GeoPackage table onto the features of a collection.
+ *
+ * Rows are matched to features by comparing the spec's key column against feature IDs, and each
+ * matched feature gains a property `<prefix>.<column>` per non-key column holding a value. SQL NULL
+ * cells yield no property. Rows keyed to a feature the collection does not hold are ignored, since
+ * under partitioning most of a table's rows belong to other ranks.
+ *
+ * @param[in,out] collection Features to join onto, mutated in place
+ * @param[in] gpkg_path Path to the GeoPackage holding the table, already resolved from the spec
+ * @param[in] spec The table to join, the column keying it, and how strictly to require coverage
+ * @throw std::runtime_error if the table or its key column does not exist, or if a feature has no
+ *        matching row while the spec requires one
+ */
+void join_attributes(
+    geojson::FeatureCollection& collection,
+    const std::string& gpkg_path,
+    const AttributeJoinSpec& spec
+);
 
 } // namespace geopackage
 } // namespace ngen

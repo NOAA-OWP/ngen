@@ -36,6 +36,20 @@ geojson::PropertyMap build_properties(
 );
 
 /**
+ * Convert one column of a GeoPackage table row into a JSON property.
+ *
+ * @param[in] row SQLite iterator at the row containing the column
+ * @param[in] name Name of the column to read, which is also the key of the returned property
+ * @param[in] type SQLite type of this row's value in that column
+ * @return geojson::JSONProperty Property holding the column's value
+ */
+geojson::JSONProperty get_property(
+    const ngen::sqlite::database::iterator& row,
+    const std::string& name,
+    int type
+);
+
+/**
  * Build a feature from a GPKG table row.
  *
  * Schema-agnostic: reads only the geometry from `row` and wraps the

@@ -1,4 +1,5 @@
 add_library(geopackage proj.cpp
+                       attribute_join.cpp
                        geometry.cpp
                        properties.cpp
                        feature.cpp
