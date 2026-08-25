@@ -172,6 +172,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a73e54b0e69eda631eb26af2530ae1ff2" id="r_a73e54b0e69eda631eb26af2530ae1ff2"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73e54b0e69eda631eb26af2530ae1ff2">get_model_type_name</a> () const</td></tr>
 <tr class="memdesc:a73e54b0e69eda631eb26af2530ae1ff2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the name of the specific type of the backing model object.  <br /></td></tr>
 <tr class="separator:a73e54b0e69eda631eb26af2530ae1ff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d8c030420a39c199639e29f765ff3ce" id="r_a9d8c030420a39c199639e29f765ff3ce"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d8c030420a39c199639e29f765ff3ce">compound_id</a> () const</td></tr>
+<tr class="memdesc:a9d8c030420a39c199639e29f765ff3ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get this formulation instance's compound identity.  <br /></td></tr>
+<tr class="separator:a9d8c030420a39c199639e29f765ff3ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac58942d917922a1bad80b1cd70e7196c" id="r_ac58942d917922a1bad80b1cd70e7196c"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac58942d917922a1bad80b1cd70e7196c">get_output_variable_names</a> () const</td></tr>
 <tr class="memdesc:ac58942d917922a1bad80b1cd70e7196c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the names of variables in formulation output.  <br /></td></tr>
 <tr class="separator:ac58942d917922a1bad80b1cd70e7196c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -256,6 +259,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a3a59e65e398af534a189f5de2bda67f2" id="r_a3a59e65e398af534a189f5de2bda67f2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a59e65e398af534a189f5de2bda67f2">set_model_type_name</a> (std::string type_name)</td></tr>
 <tr class="memdesc:a3a59e65e398af534a189f5de2bda67f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the name of the specific type of the backing model object.  <br /></td></tr>
 <tr class="separator:a3a59e65e398af534a189f5de2bda67f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a379329fb5d36b0c5dce4e3701c464e73" id="r_a379329fb5d36b0c5dce4e3701c464e73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a379329fb5d36b0c5dce4e3701c464e73">set_compound_id</a> (std::string id_string)</td></tr>
+<tr class="memdesc:a379329fb5d36b0c5dce4e3701c464e73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Override this formulation's compound identity.  <br /></td></tr>
+<tr class="separator:a379329fb5d36b0c5dce4e3701c464e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae520479adedf30609de4068bc389bd41" id="r_ae520479adedf30609de4068bc389bd41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae520479adedf30609de4068bc389bd41">set_output_header_fields</a> (const std::vector&lt; std::string &gt; &amp;output_headers)</td></tr>
 <tr class="separator:ae520479adedf30609de4068bc389bd41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a466f273912db9fdee8f11d4cd670c3ea" id="r_a466f273912db9fdee8f11d4cd670c3ea"><td class="memItemLeft" align="right" valign="top">boost::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a466f273912db9fdee8f11d4cd670c3ea">get_output_header_field_names</a> () const</td></tr>
@@ -297,6 +303,9 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a494171a1888c373c2a1e03008e00e5d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e6136d3fde105fd835c8be24db7d1b7" id="r_a3e6136d3fde105fd835c8be24db7d1b7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3e6136d3fde105fd835c8be24db7d1b7">model_type_name</a></td></tr>
 <tr class="separator:a3e6136d3fde105fd835c8be24db7d1b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbf9ff3443acb64c6ed69bd46a3880f0" id="r_afbf9ff3443acb64c6ed69bd46a3880f0"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afbf9ff3443acb64c6ed69bd46a3880f0">compound_id_</a></td></tr>
+<tr class="memdesc:afbf9ff3443acb64c6ed69bd46a3880f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Explicit compound identity override.  <br /></td></tr>
+<tr class="separator:afbf9ff3443acb64c6ed69bd46a3880f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfae59b61178df50d71b4d505a31488a" id="r_abfae59b61178df50d71b4d505a31488a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abfae59b61178df50d71b4d505a31488a">output_header_fields</a></td></tr>
 <tr class="memdesc:abfae59b61178df50d71b4d505a31488a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Output header field strings corresponding to the variables output by the realization, as defined in <code>output_variable_names</code>.  <br /></td></tr>
 <tr class="separator:abfae59b61178df50d71b4d505a31488a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -504,6 +513,42 @@ template&lt;class DataType , class SelectionType &gt; </div>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a53a61d1d8911c96bdb3af81992472dc4">realization::Bmi_Multi_Formulation</a>.</p>
+
+</div>
+</div>
+<a id="a9d8c030420a39c199639e29f765ff3ce" name="a9d8c030420a39c199639e29f765ff3ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d8c030420a39c199639e29f765ff3ce">&#9670;&#160;</a></span>compound_id()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string realization::Bmi_Formulation::compound_id </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get this formulation instance's compound identity. </p>
+<p>Default composition for a single-BMI formulation: "&lt;this-&gt;id&gt;:&lt;model_type_name&gt;" e.g. "cat-1:bmi_c_cfe"</p>
+<p>For a <a class="el" href="classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI.">Bmi_Multi_Formulation</a> submodule, <code><a class="el" href="classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI.">Bmi_Multi_Formulation</a></code> injects a three-part compound via <code><a class="el" href="#a379329fb5d36b0c5dce4e3701c464e73" title="Override this formulation&#39;s compound identity.">set_compound_id()</a></code> before <code><a class="el" href="classrealization_1_1_catchment___formulation.html#a4fb8ec9b08820c29d88627ee9781d579">create_formulation()</a></code> runs: "&lt;this-&gt;id&gt;:&lt;submodule-mtn&gt;:&lt;multi-mtn&gt;" e.g. "cat-1.0:bmi_c_cfe:bmi_multi_noahowp_cfe"</p>
+<h2><a class="anchor" id="autotoc_md3"></a>
+Uniqueness</h2>
+<p>The composition is unique in practice: single-BMI keys are unique because <code>id</code> is a catchment identifier and one catchment has at most one realization; multi-submodule keys are unique because the submodule index suffix in <code>this-&gt;id</code> (e.g. the <code>.0</code> in <code>cat-1.0</code>) already disambiguates siblings even when two submodules share a <code>model_type_name</code>.</p>
+<p>One scenario that could break that assumption in the future: if the engine ever instantiates two <em>different</em> multi formulations for the same <code>id</code> (e.g. A/B comparison runs on the same catchment within a single process), the outer <code>&lt;multi-mtn&gt;</code> suffix becomes the sole discriminator and must actually differ. Callers would need to set distinct <code>model_type_name</code> values on the two multi formulations, or pass a unique string via <code><a class="el" href="#a379329fb5d36b0c5dce4e3701c464e73" title="Override this formulation&#39;s compound identity.">set_compound_id()</a></code>.</p>
+<dl class="section return"><dt>Returns</dt><dd>The compound identity string, or the default composition when <code>set_compound_id</code> was never called. </dd></dl>
+
+<p class="reference">References <a class="el" href="#afbf9ff3443acb64c6ed69bd46a3880f0">compound_id_</a>, and <a class="el" href="#a3e6136d3fde105fd835c8be24db7d1b7">model_type_name</a>.</p>
 
 </div>
 </div>
@@ -1176,7 +1221,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 <p class="reference">References <a class="el" href="#a3e6136d3fde105fd835c8be24db7d1b7">model_type_name</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a916aba6fc1f5e4d95c9fcd3f234a5bf0">realization::Bmi_C_Formulation::construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a6b4dbeb33e8d3c85ad89d7555dfeb9b3">realization::Bmi_Cpp_Formulation::construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">realization::Bmi_C_Formulation::get_var_value_as_double()</a>, and <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab01f9dad8c3c543595848fd9bc8b887b">realization::Bmi_Cpp_Formulation::get_var_value_as_double()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a916aba6fc1f5e4d95c9fcd3f234a5bf0">realization::Bmi_C_Formulation::construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a6b4dbeb33e8d3c85ad89d7555dfeb9b3">realization::Bmi_Cpp_Formulation::construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">realization::Bmi_C_Formulation::get_var_value_as_double()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab01f9dad8c3c543595848fd9bc8b887b">realization::Bmi_Cpp_Formulation::get_var_value_as_double()</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a093bf43259686df1abbe02087619583e">realization::Bmi_Multi_Formulation::init_nested_module()</a>.</p>
 
 </div>
 </div>
@@ -1841,6 +1886,36 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
+<a id="a379329fb5d36b0c5dce4e3701c464e73" name="a379329fb5d36b0c5dce4e3701c464e73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a379329fb5d36b0c5dce4e3701c464e73">&#9670;&#160;</a></span>set_compound_id()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::Bmi_Formulation::set_compound_id </td>
+          <td>(</td>
+          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>id_string</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Override this formulation's compound identity. </p>
+<p>Callable (notably <code><a class="el" href="classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI.">Bmi_Multi_Formulation</a></code> during submodule setup) when the default <code><a class="el" href="#a9d8c030420a39c199639e29f765ff3ce" title="Get this formulation instance&#39;s compound identity.">compound_id()</a></code> composition isn't appropriate — e.g., to prepend multi-formulation context An empty string restores the default. </p>
+
+<p class="reference">References <a class="el" href="#afbf9ff3443acb64c6ed69bd46a3880f0">compound_id_</a>.</p>
+
+</div>
+</div>
 <a id="a3a59e65e398af534a189f5de2bda67f2" name="a3a59e65e398af534a189f5de2bda67f2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3a59e65e398af534a189f5de2bda67f2">&#9670;&#160;</a></span>set_model_type_name()</h2>
 
@@ -2158,6 +2233,33 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
+<a id="afbf9ff3443acb64c6ed69bd46a3880f0" name="afbf9ff3443acb64c6ed69bd46a3880f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbf9ff3443acb64c6ed69bd46a3880f0">&#9670;&#160;</a></span>compound_id_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string realization::Bmi_Formulation::compound_id_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Explicit compound identity override. </p>
+<p>Empty string signals the default <code>&lt;id&gt;:&lt;model_type_name&gt;</code> in <code><a class="el" href="#a9d8c030420a39c199639e29f765ff3ce" title="Get this formulation instance&#39;s compound identity.">compound_id()</a></code>. </p>
+
+<p class="reference">Referenced by <a class="el" href="#a9d8c030420a39c199639e29f765ff3ce">compound_id()</a>, and <a class="el" href="#a379329fb5d36b0c5dce4e3701c464e73">set_compound_id()</a>.</p>
+
+</div>
+</div>
 <a id="a202e3be992fa8c73f74819b44bff14b6" name="a202e3be992fa8c73f74819b44bff14b6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a202e3be992fa8c73f74819b44bff14b6">&#9670;&#160;</a></span>forcing</h2>
 
@@ -2248,7 +2350,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a73e54b0e69eda631eb26af2530ae1ff2">get_model_type_name()</a>, and <a class="el" href="#a3a59e65e398af534a189f5de2bda67f2">set_model_type_name()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a9d8c030420a39c199639e29f765ff3ce">compound_id()</a>, <a class="el" href="#a73e54b0e69eda631eb26af2530ae1ff2">get_model_type_name()</a>, and <a class="el" href="#a3a59e65e398af534a189f5de2bda67f2">set_model_type_name()</a>.</p>
 
 </div>
 </div>
@@ -2473,7 +2575,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___formulation.html">Bmi_Formulation</a></li>
-    <li class="footer">Generated on Tue Aug 25 2026 16:31:10 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Tue Aug 25 2026 21:20:31 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
