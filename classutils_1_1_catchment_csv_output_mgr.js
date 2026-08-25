@@ -16,5 +16,5 @@ var classutils_1_1_catchment_csv_output_mgr =
     [ "closed_", "classutils_1_1_catchment_csv_output_mgr.html#a584870a3dad40f6b48272941cf3c4f17", null ],
     [ "output_root_", "classutils_1_1_catchment_csv_output_mgr.html#a3e93142e905bed4773103be2b4db3f4d", null ],
     [ "precision_", "classutils_1_1_catchment_csv_output_mgr.html#a1ad07c80e527fe3eb7efe578d0d99500", null ],
-    [ "streams_", "classutils_1_1_catchment_csv_output_mgr.html#acdef6b3d9152bf579af2362d4a64f989", null ]
+    [ "streams_", "classutils_1_1_catchment_csv_output_mgr.html#a8f0d5593a862afa29b6743c289a9639a", null ]
 ];

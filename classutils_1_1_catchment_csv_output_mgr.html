@@ -177,8 +177,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a584870a3dad40f6b48272941cf3c4f17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd00d78f2f6e853ceeac581703028a83" id="r_abd00d78f2f6e853ceeac581703028a83"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abd00d78f2f6e853ceeac581703028a83">all_streams_mutex_</a></td></tr>
 <tr class="separator:abd00d78f2f6e853ceeac581703028a83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdef6b3d9152bf579af2362d4a64f989" id="r_acdef6b3d9152bf579af2362d4a64f989"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::filesystem::path, std::shared_ptr&lt; std::ofstream &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acdef6b3d9152bf579af2362d4a64f989">streams_</a></td></tr>
-<tr class="separator:acdef6b3d9152bf579af2362d4a64f989"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f0d5593a862afa29b6743c289a9639a" id="r_a8f0d5593a862afa29b6743c289a9639a"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::filesystem::path, std::shared_ptr&lt; std::ofstream &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f0d5593a862afa29b6743c289a9639a">streams_</a></td></tr>
+<tr class="separator:a8f0d5593a862afa29b6743c289a9639a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>CSV backend for catchment output. </p>
@@ -283,7 +283,7 @@ Private Attributes</h2></td></tr>
 
 <p>Open the file(s) and write the header for one descriptor; called for each at construction. </p>
 
-<p class="reference">References <a class="el" href="#aae005de9b248e9cf57ca451452710080">aggregated_filename_</a>, <a class="el" href="structutils_1_1_feature_descriptor.html#a96abb6f0ea388f360f7152b8e4b0800c">utils::FeatureDescriptor::catchment_id</a>, <a class="el" href="structutils_1_1_feature_descriptor.html#a0b1eed64e537c39ec50d2b8610f0c272">utils::FeatureDescriptor::fields</a>, <a class="el" href="structutils_1_1_feature_descriptor.html#afab3c3409af8149fb45099c50d21de49">utils::FeatureDescriptor::formulation_id</a>, <a class="el" href="#a593e9b991743657e1575c68a111d2155">output_path()</a>, <a class="el" href="#a1ad07c80e527fe3eb7efe578d0d99500">precision_</a>, and <a class="el" href="#acdef6b3d9152bf579af2362d4a64f989">streams_</a>.</p>
+<p class="reference">References <a class="el" href="#aae005de9b248e9cf57ca451452710080">aggregated_filename_</a>, <a class="el" href="structutils_1_1_feature_descriptor.html#a96abb6f0ea388f360f7152b8e4b0800c">utils::FeatureDescriptor::catchment_id</a>, <a class="el" href="structutils_1_1_feature_descriptor.html#a0b1eed64e537c39ec50d2b8610f0c272">utils::FeatureDescriptor::fields</a>, <a class="el" href="structutils_1_1_feature_descriptor.html#afab3c3409af8149fb45099c50d21de49">utils::FeatureDescriptor::formulation_id</a>, <a class="el" href="#a593e9b991743657e1575c68a111d2155">output_path()</a>, <a class="el" href="#a1ad07c80e527fe3eb7efe578d0d99500">precision_</a>, and <a class="el" href="#a8f0d5593a862afa29b6743c289a9639a">streams_</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#a15a89a3bc1836ea7ab3dfc7ee6c82ba6">CatchmentCsvOutputMgr()</a>.</p>
 
@@ -319,7 +319,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classutils_1_1_catchment_outputs_mgr.html#a22bf0b930b133698276586f6a1124ea7">utils::CatchmentOutputsMgr</a>.</p>
 
-<p class="reference">References <a class="el" href="#a584870a3dad40f6b48272941cf3c4f17">closed_</a>, <a class="el" href="#a9fa5c9dcc5d3a5f13bd2352ec7150235">commit_writes()</a>, and <a class="el" href="#acdef6b3d9152bf579af2362d4a64f989">streams_</a>.</p>
+<p class="reference">References <a class="el" href="#a584870a3dad40f6b48272941cf3c4f17">closed_</a>, <a class="el" href="#a9fa5c9dcc5d3a5f13bd2352ec7150235">commit_writes()</a>, and <a class="el" href="#a8f0d5593a862afa29b6743c289a9639a">streams_</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#afe815489abf2a4acb1fe5df07e0f417f">~CatchmentCsvOutputMgr()</a>.</p>
 
@@ -353,7 +353,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classutils_1_1_catchment_outputs_mgr.html#a302dca087466f3f6d5cda33eb53174a1">utils::CatchmentOutputsMgr</a>.</p>
 
-<p class="reference">References <a class="el" href="#a584870a3dad40f6b48272941cf3c4f17">closed_</a>, and <a class="el" href="#acdef6b3d9152bf579af2362d4a64f989">streams_</a>.</p>
+<p class="reference">References <a class="el" href="#a584870a3dad40f6b48272941cf3c4f17">closed_</a>, and <a class="el" href="#a8f0d5593a862afa29b6743c289a9639a">streams_</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#af177b9f1e9e2dc4a2ce60d85a0eb51d8">close()</a>.</p>
 
@@ -581,7 +581,7 @@ Private Attributes</h2></td></tr>
 
 <p>Resolve the stream a (formulation, catchment)'s rows are written to, or nullptr if not registered, and the mutex guarding that stream. </p>
 
-<p class="reference">References <a class="el" href="#abd00d78f2f6e853ceeac581703028a83">all_streams_mutex_</a>, <a class="el" href="#a593e9b991743657e1575c68a111d2155">output_path()</a>, and <a class="el" href="#acdef6b3d9152bf579af2362d4a64f989">streams_</a>.</p>
+<p class="reference">References <a class="el" href="#abd00d78f2f6e853ceeac581703028a83">all_streams_mutex_</a>, <a class="el" href="#a593e9b991743657e1575c68a111d2155">output_path()</a>, and <a class="el" href="#a8f0d5593a862afa29b6743c289a9639a">streams_</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#ac5068432d2740645411e01bd1655b2d4">receive_data_entry()</a>.</p>
 
@@ -708,8 +708,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="acdef6b3d9152bf579af2362d4a64f989" name="acdef6b3d9152bf579af2362d4a64f989"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acdef6b3d9152bf579af2362d4a64f989">&#9670;&#160;</a></span>streams_</h2>
+<a id="a8f0d5593a862afa29b6743c289a9639a" name="a8f0d5593a862afa29b6743c289a9639a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f0d5593a862afa29b6743c289a9639a">&#9670;&#160;</a></span>streams_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -718,7 +718,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unordered_map&lt;std::filesystem::path, std::shared_ptr&lt;std::ofstream&gt; &gt; utils::CatchmentCsvOutputMgr::streams_</td>
+          <td class="memname">std::map&lt;std::filesystem::path, std::shared_ptr&lt;std::ofstream&gt; &gt; utils::CatchmentCsvOutputMgr::streams_</td>
         </tr>
       </table>
   </td>
@@ -742,7 +742,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceutils.html">utils</a></li><li class="navelem"><a class="el" href="classutils_1_1_catchment_csv_output_mgr.html">CatchmentCsvOutputMgr</a></li>
-    <li class="footer">Generated on Mon Aug 24 2026 21:29:14 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Tue Aug 25 2026 16:24:28 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
