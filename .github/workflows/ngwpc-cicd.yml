@@ -173,7 +173,7 @@ jobs:
             IMAGE_CREATED=${{ env.BUILD_DATE }}
             CI_COMMIT_REF_NAME=${{ needs.setup.outputs.clean_ref }}
 
-  # run unit tests inside the built Docker image
+# run unit tests inside the built Docker image
   unit-test:
     name: unit-test
     if: |
@@ -200,109 +200,6 @@ jobs:
             ctest --rerun-failed --output-on-failure --verbose;
             exit 1;
           }
-
-  # SonarQube scan (only runs on internal NGWPC self-hosted runners)
-  sonarqube-internal:
-    name: sonarqube-internal
-    if: (github.event_name == 'pull_request' || github.event_name == 'push') && github.repository_owner == 'NGWPC'
-    runs-on: self-hosted
-    needs: [setup, build, unit-test]
-    #TODO: Configure SonarQube Scans
-    continue-on-error: true
-    container:
-      image: sonarsource/sonar-scanner-cli
-      options: --entrypoint="" --user 0
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: SonarQube Scan
-        env:
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: sonar-scanner -X -Dsonar.verbose=true
-
-  # CodeQL scan
-  # TODO: Update to scan as desired.
-  # Added as a minimal MVP for Static Code Analysis during GitHub migration
-  codeql-scan:
-    name: codeql-scan
-    if: |
-      (github.event_name == 'pull_request') ||
-      (github.event_name == 'push') ||
-      (github.event_name == 'repository_dispatch') ||
-      (github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-latest
-    needs: [setup]
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          submodules: recursive
-          fetch-depth: 0
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake g++ mpi-default-bin libopenmpi-dev libboost-all-dev libudunits2-dev libnetcdf-dev libnetcdf-c++4-dev
-          python3 -m pip install numpy==1.26.4 netcdf4 bmipy pandas torch pyyaml pyarrow
-          #python3 -m pip install -r extern/test_bmi_py/requirements.txt
-          #python3 -m pip install -r extern/t-route/requirements.txt
-
-      # Initialize CodeQL (C++ selected)
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
-        with:
-          languages: cpp
-
-      # Build (replicate your CMake build commands from Dockerfile or local builds)
-      - name: Build C++ code
-        env:
-          PYTHONPATH: ${{ env.PYTHONPATH }}
-        run: |
-          cmake -B cmake_build -S . \
-            -DPYTHON_EXECUTABLE=$(which python3) \
-            -DNGEN_WITH_MPI=ON \
-            -DNGEN_WITH_NETCDF=ON \
-            -DNGEN_WITH_SQLITE=ON \
-            -DNGEN_WITH_UDUNITS=ON \
-            -DNGEN_WITH_BMI_FORTRAN=ON \
-            -DNGEN_WITH_BMI_C=ON \
-            -DNGEN_WITH_PYTHON=ON \
-            -DNGEN_WITH_TESTS=OFF \
-            -DNGEN_WITH_ROUTING=ON \
-            -DNGEN_QUIET=ON \
-            -DNGEN_UPDATE_GIT_SUBMODULES=OFF \
-            # Using boost from apt for simplicity and code scanning
-            #-DBOOST_ROOT=/opt/boost
-          cmake --build cmake_build --target all
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-
-      - name: Build & push image
-        id: build_image
-        uses: docker/build-push-action@v6
-        env:
-          BUILD_DATE: ${{ env.BUILD_DATE }}
-        with:
-          context: .
-          # file: Dockerfile.test # comment out when done testing
-          push: true
-          tags: ${{ needs.setup.outputs.image_base }}:${{ needs.setup.outputs.test_image_tag }}
-          build-args: |
-            ORG=${{ needs.setup.outputs.org }}
-            NGEN_FORCING_IMAGE_TAG=${{ needs.setup.outputs.forcing_tag }}
-            BASE_IMAGE_DIGEST=${{ github.event.client_payload.digest || 'unknown' }}
-            BASE_IMAGE_REVISION=${{ github.event.client_payload.source_sha || 'unknown' }}
-            IMAGE_SOURCE=https://github.com/${{ github.repository }}
-            IMAGE_VENDOR=${{ github.repository_owner }}
-            IMAGE_VERSION=${{ github.ref_name }}
-            IMAGE_REVISION=${{ github.sha }}
-            IMAGE_CREATED=${{ env.BUILD_DATE }}
-            CI_COMMIT_REF_NAME=${{ needs.setup.outputs.clean_ref }}
 
 # run container security scan using Trivy
   container-scanning:
