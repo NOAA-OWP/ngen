@@ -4,6 +4,7 @@
 
 #include "ngen_sqlite.hpp"
 #include "FileChecker.h"
+#include <NGenConfig.h>
 
 class SQLite_Test : public ::testing::Test
 {
@@ -33,6 +34,39 @@ TEST_F(SQLite_Test, sqlite_access_test)
     // user wants metadata
     EXPECT_TRUE(db.contains("gpkg_contents"));
     EXPECT_FALSE(db.contains("some_fake_table"));
+}
+
+// The wrapper applies read-tuning pragmas at open. Verify they reflect the
+// build-time configuration: cache_size is set verbatim, and mmap_size is
+// enabled but clamped at or below the requested value (the library's
+// SQLITE_MAX_MMAP_SIZE may reduce it). Read via the raw API for int64 safety.
+TEST_F(SQLite_Test, sqlite_read_tuning_pragmas_test)
+{
+    ngen::sqlite::database db {this->path};
+
+    auto read_pragma_int64 = [&](const char* pragma) -> long long {
+        sqlite3_stmt* stmt = nullptr;
+        EXPECT_EQ(sqlite3_prepare_v2(db.connection(), pragma, -1, &stmt, nullptr), SQLITE_OK);
+        long long value = -1;
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            value = sqlite3_column_int64(stmt, 0);
+        }
+        sqlite3_finalize(stmt);
+        return value;
+    };
+
+    EXPECT_EQ(read_pragma_int64("PRAGMA cache_size;"), ngen::exec_info::sqlite_cache_size);
+
+    // temp_store reads back as 0 (default), 1 (file), or 2 (memory); we set MEMORY.
+    EXPECT_EQ(read_pragma_int64("PRAGMA temp_store;"), 2);
+
+    const long long effective_mmap = read_pragma_int64("PRAGMA mmap_size;");
+    if (ngen::exec_info::sqlite_mmap_size > 0) {
+        EXPECT_GT(effective_mmap, 0);
+        EXPECT_LE(effective_mmap, ngen::exec_info::sqlite_mmap_size);
+    } else {
+        EXPECT_EQ(effective_mmap, 0);
+    }
 }
 
 TEST_F(SQLite_Test, sqlite_query_test)
