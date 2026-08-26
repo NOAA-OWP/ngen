@@ -5,7 +5,7 @@
                 "name": "bmi_c",
                 "params": {
                     "model_type_name": "test_bmi_c",
-                    "library_file": "./extern/test_bmi_c/cmake_build/libtestbmicmodel",
+                    "library_file": "./test-libs/test_bmi_c/libtestbmicmodel",
                     "forcing_file": "",
                     "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
                     "allow_exceed_end_time": true,
@@ -36,7 +36,7 @@
                     "name": "bmi_c",
                     "params": {
                         "model_type_name": "test_bmi_pet",
-                        "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
+                        "library_file": "./extern-libs/evapotranspiration/libpetbmi",
                         "forcing_file": "",
                         "init_config": "./data/bmi/c/pet/laramie_bmi_config_pet_pass.txt",
                         "allow_exceed_end_time": true,
