@@ -16,6 +16,8 @@ class UnitsHelper {
 
     static double* convert_values(const std::string &in_units, double* values, const std::string &out_units, double* out_values, const size_t & count);
 
+    static bool can_parse(const std::string &in_units);
+
     struct unit_conversion_exception : public std::runtime_error {
         unit_conversion_exception(std::string message) : std::runtime_error(message) {}
         unit_conversion_exception(std::string const& message, std::string const& in_units, std::string const& out_units)

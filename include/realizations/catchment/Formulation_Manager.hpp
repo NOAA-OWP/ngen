@@ -345,7 +345,7 @@ namespace realization {
             std::shared_ptr<Catchment_Formulation> construct_formulation_from_config(
                 simulation_time_params &simulation_time_config,
                 std::string identifier,
-                const realization::config::Config& catchment_formulation,
+                realization::config::Config& catchment_formulation,
                 utils::StreamHandler output_stream
             ) {
                 std::stringstream ss;
@@ -410,9 +410,12 @@ namespace realization {
                 std::time_t start_t = static_cast<std::time_t>(forcing_config.simulation_start_t);
                 std::time_t end_t   = static_cast<std::time_t>(forcing_config.simulation_end_t);
 
-                Catchment_Formulation::config_pattern_substitution(catchment_formulation.formulation.parameters,
-                                                                   BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG, "{{id}}",
-                                                                   identifier);
+                Catchment_Formulation::config_pattern_substitution(
+                    catchment_formulation.formulation.parameters,
+                    BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
+                    "{{id}}",
+                    identifier
+                );
 
                 ss.str("");
                 ss << "  Simulation start time: " << std::put_time(std::gmtime(&start_t), "%Y-%m-%d %H:%M:%S UTC")

@@ -182,3 +182,10 @@ bool UnitsHelper::record_unit_conversion_fault(unit_conversion_exception const& 
     bool new_error = ret.second;
     return new_error;
 }
+
+bool UnitsHelper::can_parse(const std::string &in_units)
+{
+    std::call_once(unit_system_inited, init_unit_system);
+    const ut_unit* from = ut_parse(unit_system, in_units.c_str(), UT_UTF8);
+    return from != nullptr;
+}

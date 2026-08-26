@@ -30,7 +30,7 @@ class CatchmentAggrDataSelector
      * @param id the id of the associated catchment
      * @param index the index of the output vector of the associated catchment
      */
-    CatchmentAggrDataSelector(std::string id, std::string var, time_t start, long dur, std::string units, int index) : 
+    CatchmentAggrDataSelector(std::string id, std::string var, time_t start, long dur, std::string units, int index = 0) :
         id_str(id),
         variable_name(var), 
         init_time(start), 

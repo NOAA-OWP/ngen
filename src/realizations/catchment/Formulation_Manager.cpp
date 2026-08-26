@@ -29,6 +29,9 @@ void Formulation_Manager::finalize() {
 #if NGEN_WITH_NETCDF
     data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
 #endif
+#if NGEN_WITH_PYTHON
+    data_access::detail::ForcingsEngineStorage::instances.clear();
+#endif
 }
 
 /*

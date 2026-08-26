@@ -76,6 +76,36 @@ namespace realization {
         else if (forcing_config.provider == "NullForcingProvider"){
             fp = std::make_shared<NullForcingProvider>();
         }
+#if NGEN_WITH_PYTHON
+        else if (forcing_config.provider == "ForcingsEngineLumpedDataProvider") {
+
+            ss.str("");
+            ss << "Using ForcingsEngineLumpedDataProvider for '" << identifier
+               << "' with init_config = " << forcing_config.init_config << std::endl;
+            LOG(ss.str(), LogLevel::DEBUG);
+
+
+            // Confirm requirements like Python module + WGRIB2 are present
+            data_access::detail::assert_forcings_engine_requirements();
+
+            // Construct the provider using the start/end times (as time_t)
+            auto start = forcing_config.simulation_start_t;
+            auto end   = forcing_config.simulation_end_t;
+
+            ss.str("");
+            ss << "About to call ForcingsEngineLumpedDataProvider constructor" << std::endl;
+            LOG(ss.str(), LogLevel::DEBUG);
+
+            // Construct the ForcingsEngineLumpedDataProvider
+            fp = std::make_shared<data_access::ForcingsEngineLumpedDataProvider>(
+                forcing_config.init_config, start, end, identifier
+            );
+
+            ss.str("");
+            ss << "Finished calling ForcingsEngineLumpedDataProvider constructor" << std::endl;
+            LOG(ss.str(), LogLevel::DEBUG);
+        }
+#endif
         else { // Some unknown string in the provider field?
             throw std::runtime_error(
                     "Invalid formulation forcing provider configuration! identifier: \"" + identifier +

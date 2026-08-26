@@ -63,9 +63,9 @@ void NetCDFPerFeatureDataProviderTest::setupForcing() {
     forcing_file_name = utils::FileChecker::find_first_readable(forcing_file_names);
 
     // Using this to compute epoch times... this is what's done in Formulation_Constructors.hpp, FWIW...
-    forcing_p = std::make_unique<forcing_params>(forcing_file_name, NetCDF", "2024-10-18 07:00:00", "2024-10-18 21:00:00");
+    forcing_p = std::make_unique<forcing_params>(forcing_file_name, "NetCDF", "2024-10-18 07:00:00", "2024-10-18 21:00:00");
 
-    nc_provider = std::make_shared<data_access::NetCDFPerFeatureDataProvider>(forcing_file_name, forcing_p.simulation_start_t, forcing_p.simulation_end_t, utils::getStdErr() );
+    nc_provider = std::make_shared<data_access::NetCDFPerFeatureDataProvider>(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t, utils::getStdErr() );
     start_date_time = std::make_shared<time_type>();
     end_date_time = std::make_shared<time_type>();
 }
