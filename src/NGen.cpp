@@ -1,9 +1,9 @@
-#include <chrono>
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <thread>
 #include <unordered_map>
+#include <chrono>
 
 #include <boost/core/span.hpp>
 
@@ -64,9 +64,10 @@
 #include "utilities/output/PerFormulationNexusOutputMgr.hpp"
 #endif
 
-std::unordered_map<std::string, std::ofstream> nexus_outfiles;
+#include <mediator/UnitsHelper.hpp>
 
-void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
+void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
+{
     stream << "Runtime configuration summary:\n";
 
 #if NGEN_WITH_PYTHON // -------------------------------------------------------
@@ -128,51 +129,6 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
 #endif // NGEN_WITH_PYTHON // -------------------------------------------------
 
 } // ngen::exec_info::runtime_summary
-
-void write_nexus_outflow_csv_files(std::string const& output_root,
-                                   std::unique_ptr<NgenSimulation> const& simulation,
-                                   NgenSimulation::hy_features_t const& features)
-{
-    std::stringstream ss;
-
-    auto num_times = simulation->get_num_output_times();
-
-    for (const auto& id : features.nexuses()) {
-        ss << "Preparing to write nexus outflow file for nexus '" << id << "'";
-        LOG(ss.str(), LogLevel::DEBUG);
-        ss.str("");
-
-        std::string filename = output_root + id + "_output.csv";
-        std::ofstream nexus_outfile(filename, std::ios::trunc);
-        if (nexus_outfile.fail()) {
-            // Log error, and try the next one
-            ss << "Failed to open nexus outflow file for nexus '" << id << "', filename '" << filename << "'\n";
-            LOG(ss.str(), LogLevel::SEVERE);
-            ss.str("");
-            continue;
-        }
-
-        auto nexus_index = simulation->get_nexus_index(id);
-        for (int i = 0; i < num_times; ++i) {
-            nexus_outfile << i << ", " << simulation->get_timestamp_for_step(i) << ", " << simulation->get_nexus_outflow(nexus_index, i) << "\n";
-
-            if (nexus_outfile.fail()) {
-                // Log error and move on
-                ss << "Failed to write nexus outflow file for nexus '" << id << "', filename '" << filename << "'\n";
-                LOG(ss.str(), LogLevel::SEVERE);
-                ss.str("");
-                break;
-            }
-        }
-
-        nexus_outfile.close();
-        if (nexus_outfile.fail()) {
-            ss << "Failure reported while closing nexus outflow file for nexus '" << id << "', filename '" << filename << "'\n";
-            LOG(ss.str(), LogLevel::SEVERE);
-            ss.str("");
-        }
-    }
-}
 
 int main(int argc, char* argv[]) {
     std::string catchmentDataFile         = "";
@@ -847,10 +803,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     if (mpi_rank == 0) {
-        ss << "Finished " << manager->Simulation_Time_Object->get_total_output_times()
-           << " timesteps." << std::endl;
-        LOG(ss.str(), LogLevel::INFO);
-        ss.str("");
+        std::cout << "Finished " << sim_time->get_total_output_times() << " timesteps." << std::endl;
     }
 
     auto time_done_simulation = std::chrono::steady_clock::now();
@@ -862,121 +815,14 @@ int main(int argc, char* argv[]) {
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
-    manager->finalize();
-
-#if NGEN_WITH_ROUTING
-#if NGEN_WITH_MPI
-    if (mpi_num_procs > 1) {
-        int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
-        std::vector<std::string> local_nexus_ids;
-        for (const auto& nexus : nexus_indexes) {
-            local_nexus_ids.push_back(nexus.first);
-        }
-        // MPI_Gather all nexus IDs into a single vector
-        std::vector<std::string> all_nexus_ids = parallel::gather_strings(local_nexus_ids, mpi_rank, mpi_num_procs);
-        if (mpi_rank == 0) {
-            // filter to only the unique IDs
-            std::sort(all_nexus_ids.begin(), all_nexus_ids.end());
-            all_nexus_ids.erase(
-                std::unique(all_nexus_ids.begin(), all_nexus_ids.end()),
-                all_nexus_ids.end()
-            );
-        }
-        // MPI_Broadcast so all processes share the nexus IDs
-        all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, mpi_rank, mpi_num_procs));
-
-        // MPI_Reduce to collect the results from processes
-        std::vector<double> all_nexus_downflows;
-        if (mpi_rank == 0) {
-            all_nexus_downflows.resize(number_of_timesteps * all_nexus_ids.size(), 0.0);
-        }
-        std::unordered_map<std::string, int> all_nexus_indexes;
-        std::vector<double> local_buffer(number_of_timesteps);
-        std::vector<double> receive_buffer(number_of_timesteps, 0.0);
-        for (int i = 0; i < all_nexus_ids.size(); ++i) {
-            std::string nexus_id = all_nexus_ids[i];
-            if (nexus_indexes.find(nexus_id) != nexus_indexes.end() && !features.is_remote_sender_nexus(nexus_id)) {
-                // if this process has the id and receives/records data, copy the values to the buffer
-                int nexus_index = nexus_indexes[nexus_id];
-                for (int step = 0; step < number_of_timesteps; ++step) {
-                    int offset = step * nexus_indexes.size() + nexus_index;
-                    local_buffer[step] = nexus_downstream_flows[offset];
-                }
-            } else {
-                // if this process does not have the id, fill with 0 to make sure it doesn't affect reduce sum
-                std::fill(local_buffer.begin(), local_buffer.end(), 0.0);
-            }
-            MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-            if (mpi_rank == 0) {
-                // copy reduce values to a combined downflows vector
-                all_nexus_indexes[nexus_id] = i;
-                for (int step = 0; step < number_of_timesteps; ++step) {
-                    int offset = step * all_nexus_ids.size() + i;
-                    all_nexus_downflows[offset] = receive_buffer[step];
-                    receive_buffer[step] = 0.0;
-                }
-            }
-        }
-
-        if (mpi_rank == 0) {
-            // update root's local data for running t-route below
-            nexus_indexes = std::move(all_nexus_indexes);
-            nexus_downstream_flows = std::move(all_nexus_downflows);
-        }
-
+    if (manager->get_using_routing()) {
+        std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
+#if NGEN_WITH_ROUTING_TROUTE_BMI
+        simulation->run_routing_bmi(features, t_route_config_file_with_path);
+#else
+        simulation->run_routing(t_route_config_file_with_path);
+#endif // NGEN_WITH_ROUTING_TROUTE_BMI
     }
-#endif // NGEN_WITH_MPI
-    if (mpi_rank == 0) { // Run t-route from single process
-        if (manager->get_using_routing()) {
-            LOG(LogLevel::INFO, "Running T-Route on nexus outflows.");
-
-            // Note: Currently, delta_time is set in the t-route yaml configuration file, and the
-            // number_of_timesteps is determined from the total number of nexus outputs in t-route.
-            // It is recommended to still pass these values to the routing_py_adapter object in
-            // case a future implmentation needs these two values from the ngen framework.
-            int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
-
-            int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
-
-            std::string t_route_config_file_with_path =
-                manager->get_t_route_config_file_with_path();
-            // model for routing
-            models::bmi::Bmi_Py_Adapter py_troute("T-Route", t_route_config_file_with_path, "troute_nwm_bmi.troute_bmi.BmiTroute", true);
-
-            // tell BMI to resize nexus containers
-            int64_t nexus_count = nexus_indexes.size();
-            py_troute.SetValue("land_surface_water_source__volume_flow_rate__count", &nexus_count);
-            py_troute.SetValue("land_surface_water_source__id__count", &nexus_count);
-            // set up nexus id indexes
-            std::vector<int> nexus_df_index(nexus_count);
-            for (const auto& key_value : nexus_indexes) {
-                int id_index = key_value.second;
-
-                // Convert string ID into numbers for T-route index
-                int id_as_int = -1;
-                size_t sep_index = key_value.first.find(hy_features::identifiers::seperator);
-                if (sep_index != std::string::npos) {
-                    std::string numbers = key_value.first.substr(sep_index + hy_features::identifiers::seperator.length());
-                    id_as_int = std::stoi(numbers);
-                }
-                if (id_as_int == -1) {
-                    std::string error_msg = "Cannot convert the nexus ID to an integer: " + key_value.first;
-                    LOG(LogLevel::FATAL, error_msg);
-                    throw std::runtime_error(error_msg);
-                }
-                nexus_df_index[id_index] = id_as_int;
-            }
-            py_troute.SetValue("land_surface_water_source__id", nexus_df_index.data());
-            for (int i = 0; i < number_of_timesteps; ++i) {
-                py_troute.SetValue("land_surface_water_source__volume_flow_rate",
-                                   nexus_downstream_flows.data() + (i * nexus_count));
-                py_troute.Update();
-            }
-            // Finalize will write the output file
-            py_troute.Finalize();
-        }
-    }
-#endif
 
     auto time_done_routing = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_routing = time_done_routing - time_done_simulation;
@@ -1000,14 +846,7 @@ int main(int argc, char* argv[]) {
         ss.str("");
     }
 
-#if NGEN_WITH_PYTHON
-    _interp.reset();
-#endif // NGEN_WITH_PYTHON
-
-    auto time_done_total                               = std::chrono::steady_clock::now();
-    std::chrono::duration<double> time_elapsed_total   = time_done_total - time_start;
-
-    LOG("[TIMING]: Total: " + std::to_string(time_elapsed_total.count()), LogLevel::INFO);
+  manager->finalize();
 
 #if NGEN_WITH_MPI
     MPI_Finalize();

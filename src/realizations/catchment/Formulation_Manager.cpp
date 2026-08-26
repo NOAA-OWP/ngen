@@ -1,6 +1,36 @@
 #include <Formulation_Manager.hpp>
 
+#if NGEN_WITH_NETCDF
+    #include "NetCDFPerFeatureDataProvider.hpp"
+#endif
+
 using namespace realization;
+
+void Formulation_Manager::finalize() {
+    // The calls in these loops are staticly dispatched to
+    // Catchment_Formulation::finalize(). That does not
+    // inherit from DataProvider, with its virtual member
+    // function of the same name.
+    //
+    // If any formulation class needs to customize this
+    // behavior through this becoming a virtual dispatch,
+    // take care. Bmi_Multi_Formulation was a concern, but
+    // does not currently need to because none of its
+    // constituent formulations points to any forcing
+    // object other than the enclosing
+    // Bmi_Multi_Formulation instance itself.
+    for (auto const& fmap: formulations) {
+        fmap.second->finalize();
+    }
+    for (auto const& fmap: domain_formulations) {
+        fmap.second->finalize();
+    }
+
+#if NGEN_WITH_NETCDF
+    data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
+#endif
+}
+
 /*
 template<class realization_type>
 Realization_Manager<realization_type>::Realization_Manager(std::stringstream &data) {

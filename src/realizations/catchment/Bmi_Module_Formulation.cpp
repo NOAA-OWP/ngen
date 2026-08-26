@@ -3,6 +3,8 @@
 #include <UnitsHelper.hpp>
 #include "Logger.hpp"
 
+#include <atomic>
+
 namespace realization {
 
         std::set<Bmi_Var_Details> Bmi_Module_Formulation::known_bmi_input_vars;
@@ -52,9 +54,8 @@ namespace realization {
             if (timestep != (next_time_step_index - 1)) {
                 throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
             }
-            static bool no_conversion_message_logged = false;
-            if (!no_conversion_message_logged) {
-                no_conversion_message_logged = true;
+            static std::atomic_flag no_conversion_message_logged;
+            if (!no_conversion_message_logged.test_and_set()) {
                 logging::warning("Output variables do not have unit conversion. Capability not yet implemented in ngen.");
             }
 

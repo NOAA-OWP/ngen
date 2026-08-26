@@ -18,6 +18,7 @@ target_link_libraries(realizations_catchment PUBLIC
         ${CMAKE_DL_LIBS}
         NGen::config_header
         NGen::core_catchment
+        NGen::forcing
         NGen::geojson
         NGen::logging
         NGen::ngen_bmi

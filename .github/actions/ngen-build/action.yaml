@@ -85,7 +85,11 @@ runs:
               echo "NETCDF=/usr" >> $GITHUB_ENV
             elif [ ${{ runner.os }} == 'macOS' ]
             then
-              brew install netcdf netcdf-cxx netcdf-fortran
+              brew install netcdf netcdf-fortran
+              if [ ${{ matrix.compiler }} == 'clang' ]
+              then
+                brew install netcdf-cxx
+              fi
               echo "LIBRARY_PATH=$(brew --prefix)/lib/:$LIBRARY_PATH" >> $GITHUB_ENV
               echo "LD_LIBRARY_PATH=$(brew --prefix)/lib/:$LD_LIBRARY_PATH" >> $GITHUB_ENV
               echo "LDFLAGS=-L$(brew --prefix)/lib" >> $GITHUB_ENV
@@ -193,7 +197,21 @@ runs:
               echo "fun:PyType_FromMetaclass" > /tmp/asan_ignore.txt
               export CFLAGS="$CFLAGS -O0 -fsanitize-ignorelist=/tmp/asan_ignore.txt -fno-common"
               export CXXFLAGS="$CXXFLAGS -O0 -fsanitize-ignorelist=/tmp/asan_ignore.txt -fno-common"
+
+              # Don't bother wth ASan stuff for macOS-gcc - it's covered well enough by macOS-clang, and linux-gcc
+              if [ ${{ matrix.compiler }} == 'gcc' ]
+              then
+                export CC=gcc-13
+                export CXX=g++-13
+                export CFLAGS=" -g -fno-omit-frame-pointer -Werror"
+                export CXXFLAGS="-g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override"
+              fi
             else
+              if [ ${{ matrix.compiler }} == 'clang' ]
+              then
+                export CC=clang
+                export CXX=clang++
+              fi
               export CFLAGS="$CFLAGS -O1"
               export CXXFLAGS="$CXXFLAGS -O1"
             fi

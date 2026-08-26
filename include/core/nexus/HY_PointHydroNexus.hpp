@@ -43,6 +43,7 @@ class HY_PointHydroNexus : public HY_HydroNexus
     time_step_t min_timestep{0};
     std::unordered_set<time_step_t> completed;
 
+    std::mutex contribution_mutex;
 };
 
 #endif // HY_POINTHYDRONEXUS_H

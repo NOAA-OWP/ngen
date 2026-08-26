@@ -18,6 +18,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include "FileChecker.h"
 #include "Formulation_Manager.hpp"
+#include <forcing/CsvPerFeatureForcingProvider.hpp>
 
 using namespace realization;
 using namespace std;

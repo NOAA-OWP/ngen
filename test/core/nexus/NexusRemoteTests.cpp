@@ -899,7 +899,7 @@ TEST_F(Nexus_Remote_Test, DISABLED_TestRawMpiDeadlockPattern)
     if (mpi_rank == 1) {
         volatile double dummy = 0.0;
         for (int i = 0; i < 100000000; ++i) {
-            dummy += std::sin(i * 0.0001) * std::cos(i * 0.0002);
+            dummy = dummy + std::sin(i * 0.0001) * std::cos(i * 0.0002);
         }
     }
     
@@ -1065,7 +1065,7 @@ TEST_F(Nexus_Remote_Test, TestRemoteNexusDeadlockFree)
     if (mpi_rank == 1) {
         volatile double dummy = 0.0;
         for (int i = 0; i < 100000000; ++i) {
-            dummy += std::sin(i * 0.0001) * std::cos(i * 0.0002);
+            dummy = dummy + std::sin(i * 0.0001) * std::cos(i * 0.0002);
         }
     }
 

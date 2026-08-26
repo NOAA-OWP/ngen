@@ -2,7 +2,6 @@
 #define NGEN_FORMULATION_MANAGER_H
 
 #include <NGenConfig.h>
-#include "Logger.hpp"
 
 #include <memory>
 #include <sstream>
@@ -122,10 +121,6 @@ namespace realization {
                                     output_stream
                                 )
                             );
-                            auto formulation = domain_formulations.at(layer_desc.id);
-                            if (formulation->get_output_header_count() > 0) {
-                                formulation->set_output_stream(get_output_root() + layer_desc.name + "_layer_"+std::to_string(layer_desc.id) + ".csv");
-                            }
                         }
                         //TODO for each layer, create deferred providers for use by other layers
                         //VERY SIMILAR TO NESTED MODULE INIT
@@ -175,7 +170,7 @@ namespace realization {
 
                 /**
                  * Read catchment configurations from configuration file
-                 */      
+                 */
                 auto possible_catchment_configs = tree.get_child_optional("catchments");
 
                 // For now at least, this isn't allowed
@@ -315,38 +310,7 @@ namespace realization {
              *
              * In particular, this should be called before MPI_Finalize()
              */
-            void finalize() {
-                // The calls in these loops are staticly dispatched to
-                // Catchment_Formulation::finalize(). That does not
-                // inherit from DataProvider, with its virtual member
-                // function of the same name.
-                //
-                // If any formulation class needs to customize this
-                // behavior through this becoming a virtual dispatch,
-                // take care. Bmi_Multi_Formulation was a concern, but
-                // does not currently need to because none of its
-                // constituent formulations points to any forcing
-                // object other than the enclosing
-                // Bmi_Multi_Formulation instance itself.
-                std::stringstream ss;
-                ss.str(""); ss << "Finalizing Formulation_Manager" << std::endl;
-                LOG(ss.str(), LogLevel::DEBUG);
-                for (auto const& fmap: formulations) {
-                    fmap.second->finalize();
-                }
-                for (auto const& fmap: domain_formulations) {
-                    fmap.second->finalize();
-                }
-
-#if NGEN_WITH_NETCDF
-                data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
-#endif
-#if NGEN_WITH_PYTHON
-                data_access::detail::ForcingsEngineStorage::instances.clear();
-#endif
-                ss.str(""); ss << "Formulation_Manager finalized" << std::endl;
-                LOG(ss.str(), LogLevel::DEBUG);
-            }
+            void finalize();
 
             /**
              * Parse the output configuration from the realization tree (preferring
@@ -419,9 +383,11 @@ namespace realization {
                 // Log missing parameters, if any
                 if (!missing_parameters.empty()) {
                     std::string message = "A forcing configuration cannot be created for '" + identifier + "'; the following parameters are missing: ";
-                    for (size_t i = 0; i < missing_parameters.size(); ++i) {
-                        message += missing_parameters[i];
-                        if (i < missing_parameters.size() - 1) {
+
+                    for (int missing_parameter_index = 0; missing_parameter_index < missing_parameters.size(); missing_parameter_index++) {
+                        message += missing_parameters[missing_parameter_index];
+
+                        if (missing_parameter_index < missing_parameters.size() - 1) {
                             message += ", ";
                         }
                     }
@@ -517,63 +483,16 @@ namespace realization {
 
                 // Make a copy of the global configuration so parameters don't clash when linking to external data
                 realization::config::Config global_copy = global_config;
+                Catchment_Formulation::config_pattern_substitution(global_copy.formulation.parameters,
+                                                                   BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG, "{{id}}",
+                                                                   identifier);
+                //Some helpful debugging prints, commented out, but left for later
+                //because they will eventually be used by someone, someday, looking at configurations
+                //being turned into concrecte formulations...
+                // geojson::JSONProperty::print_property(global_config.formulation.parameters.at("modules"));
 
-//                // Log parameters before substitution
-//                ss.str(""); ss << "Global config parameters (before substitution) for identifier: " << identifier << std::endl;
-//                for (auto it = global_copy.formulation.parameters.begin(); it != global_copy.formulation.parameters.end(); ++it) {
-//                    const std::string& key = it->first;
-//                    const geojson::JSONProperty& value = it->second;
-//
-//                    if (value.get_type() == geojson::PropertyType::String) {
-//                        std::cout << "    " << key << ": " << value.as_string() << std::endl;
-//                    } else {
-//                        std::cout << "    " << key << ": (non-string value)" << std::endl;
-//                    }
-//                }
-
-                // Substitute {{id}} in the global formulation
-                ss.str(""); ss << "Checking for init_config before substitution for identifier: " << identifier << std::endl;
-                LOG(ss.str(), LogLevel::DEBUG);
-                auto init_config_it = global_copy.formulation.parameters.find(BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG);
-                if (init_config_it != global_copy.formulation.parameters.end()) {
-                    const geojson::JSONProperty& init_config_property = init_config_it->second;
-
-                    if (init_config_property.get_type() == geojson::PropertyType::String) {
-                        std::string original_value = init_config_property.as_string();
-                        if (!original_value.empty()) {
-                            ss.str("");
-                            ss
-                                << "construct_missing_formulation Performing pattern substitution for key: "
-                                << BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG
-                                << ", pattern: {{id}}, replacement: "
-                                << identifier
-                            << "\n";
-                            LOG(ss.str(), LogLevel::DEBUG);
-                            ss.str("");
-
-                            Catchment_Formulation::config_pattern_substitution(
-                                global_copy.formulation.parameters,
-                                BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
-                                "{{id}}",
-                                identifier
-                            );
-                        } else {
-                            ss.str(""); ss << "init_config is present but empty for identifier: " << identifier << std::endl;
-                            LOG(ss.str(), LogLevel::WARNING);
-                        }
-                    } else {
-                        ss.str(""); ss << "init_config is present but not a string for identifier: " << identifier << std::endl;
-                        LOG(ss.str(), LogLevel::WARNING);
-                    }
-                } else {
-                    ss.str(""); ss << "[WARNING] init_config not present in global configuration for identifier: " << identifier << std::endl;
-                    LOG(ss.str(), LogLevel::WARNING);
-                }
-
-                // Link external properties
-                ss.str(""); ss << "Linking external properties for identifier: " << identifier << std::endl;
-                LOG(ss.str(), LogLevel::DEBUG);
-                auto formulation = realization::config::Formulation(global_copy.formulation);
+                //Make a copy of the global configuration so parameters don't clash when linking to external data
+                auto formulation =  realization::config::Formulation(global_copy.formulation);
                 formulation.link_external(feature);
 
                 // Create the formulation
