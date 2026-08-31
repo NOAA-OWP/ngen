@@ -66,10 +66,13 @@ GeoPackageHydrofabricReader::GeoPackageHydrofabricReader(
 
 const geopackage::GeoPackageReader& GeoPackageHydrofabricReader::reader_for(const std::string& layer) const
 {
-    if (layer == "nexus" && nexus_reader_.has_value()) {
-        return nexus_reader_.value();
+    if (layer == "nexus") {
+        return nexus_reader_.has_value() ? nexus_reader_.value() : divides_reader_;
     }
-    return divides_reader_;
+    if (layer == "divides") {
+        return divides_reader_;
+    }
+    throw std::logic_error("no reader for unknown hydrofabric layer `" + layer + "`");
 }
 
 HydrofabricVersion GeoPackageHydrofabricReader::version() const noexcept
@@ -241,7 +244,9 @@ void V4_0Beta1GeoPackageHydrofabricReader::check_required_columns(const std::str
 geojson::GeoJSON V4_0Beta1GeoPackageHydrofabricReader::read_divides(const std::vector<std::string>& ids)
 {
     // Resolved once per reader rather than once per divide, and only when divides are actually
-    // asked for, since the join costs a full scan of `flowpaths`.
+    // asked for, since the join costs a full scan of `flowpaths`. The divides reader is the right
+    // source because the join is divides -> flowpaths: in a split hydrofabric, `flowpaths` is
+    // assumed to live in the same file as the `divides` layer it links.
     if (!divide_toid_lookup_built_) {
         divide_toid_lookup_ = build_divide_toid_lookup(
             version(), "divides", reader_for("divides").db()

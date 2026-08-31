@@ -1,5 +1,9 @@
 #include <gtest/gtest.h>
 
+#include <optional>
+#include <stdexcept>
+
+#include "GeoPackageHydrofabricReader.hpp"
 #include "HydrofabricReaderFactory.hpp"
 #include "FileChecker.h"
 #include "fixture_builders.hpp"
@@ -360,4 +364,25 @@ TEST_F(GeoPackage_SubsetTolerance_Test, geopackage_v4_minimal_loads_and_links_en
     // nexus toids (fp-2, coastal-000001) are absent from the collection,
     // so only the 3 divide->nexus edges count.
     EXPECT_EQ(links, 3);
+}
+
+// reader_for's domain is exactly the two hydrofabric roles. In a single-file
+// hydrofabric both resolve to the same reader, and any other layer name is a
+// coding error refused up front rather than guessed to a file that, in a
+// split hydrofabric, might not hold it.
+TEST(GeoPackage_ReaderFor_Test, geopackage_reader_for_unknown_layer_throws)
+{
+    // Expose the protected reader_for to pin its contract.
+    class Probe : public ngen::hydrofabric::V2_2GeoPackageHydrofabricReader
+    {
+      public:
+        explicit Probe(const std::string& path)
+          : V2_2GeoPackageHydrofabricReader(ngen::geopackage::make_reader(path), std::nullopt)
+        {}
+        using V2_2GeoPackageHydrofabricReader::reader_for;
+    };
+
+    Probe probe{fixtures::write_v2_2()};
+    EXPECT_EQ(&probe.reader_for("divides"), &probe.reader_for("nexus"));
+    EXPECT_THROW(probe.reader_for("flowpaths"), std::logic_error);
 }

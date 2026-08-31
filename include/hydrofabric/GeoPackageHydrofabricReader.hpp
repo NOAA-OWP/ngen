@@ -52,8 +52,15 @@ class GeoPackageHydrofabricReader : public HydrofabricReader
     /**
      * The reader for the file holding @p layer.
      *
+     * The two hydrofabric roles are the whole domain: "nexus" resolves to the second file when
+     * there is one and otherwise to the single shared file, and "divides" always resolves to the
+     * file it was constructed from. Any other name is refused rather than guessed at -- in a
+     * split hydrofabric there is no honest answer for which file holds a layer this class does
+     * not know, and a guess would surface later as a missing-table error naming the wrong file.
+     *
      * @param[in] layer Hydrofabric layer name, "divides" or "nexus"
      * @return Const reference to the reader that layer is read through
+     * @throws std::logic_error if @p layer is neither "divides" nor "nexus"
      */
     const geopackage::GeoPackageReader& reader_for(const std::string& layer) const;
 
