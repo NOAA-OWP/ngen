@@ -147,7 +147,7 @@ std::unordered_map<std::string, std::string> build_divide_toid_lookup(
 
     if (!db.contains("flowpaths")) {
 #ifndef NGEN_QUIET
-        std::cout << "WARN: v4.0beta1 divides loaded without a 'flowpaths' table; "
+        std::cout << "WARN: " << version_label(version) << " divides loaded without a 'flowpaths' table; "
                   << "all divides will be treated as terminal (no toid)." << std::endl;
 #endif
         return divide_toid_lookup;
