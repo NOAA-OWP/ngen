@@ -127,9 +127,9 @@ void V2_2GeoPackageHydrofabricReader::fixup_nexus(geojson::FeatureCollection& /*
     // As above: v2.2 nexuses already carry "id" and "toid" under those names.
 }
 
-// ngen::hydrofabric::V4GeoPackageHydrofabricReader ============================
+// ngen::hydrofabric::AbstractV4GeoPackageHydrofabricReader ============================
 
-V4GeoPackageHydrofabricReader::V4GeoPackageHydrofabricReader(
+AbstractV4GeoPackageHydrofabricReader::AbstractV4GeoPackageHydrofabricReader(
     geopackage::GeoPackageReader divides_reader,
     std::optional<geopackage::GeoPackageReader> nexus_reader,
     const HydrofabricVersion version
@@ -137,7 +137,7 @@ V4GeoPackageHydrofabricReader::V4GeoPackageHydrofabricReader(
   : GeoPackageHydrofabricReader(std::move(divides_reader), std::move(nexus_reader), version)
 {}
 
-void V4GeoPackageHydrofabricReader::check_required_columns(const std::string& layer) const
+void AbstractV4GeoPackageHydrofabricReader::check_required_columns(const std::string& layer) const
 {
     if (layer == "nexus") {
         const geopackage::GeoPackageReader& reader = reader_for(layer);
@@ -146,7 +146,7 @@ void V4GeoPackageHydrofabricReader::check_required_columns(const std::string& la
     }
 }
 
-void V4GeoPackageHydrofabricReader::fixup_nexus(geojson::FeatureCollection& nexus) const
+void AbstractV4GeoPackageHydrofabricReader::fixup_nexus(geojson::FeatureCollection& nexus) const
 {
     for (const geojson::Feature& feature : nexus) {
         if (feature->get_id().empty()) {
@@ -161,7 +161,7 @@ void V4GeoPackageHydrofabricReader::fixup_nexus(geojson::FeatureCollection& nexu
     }
 }
 
-void V4GeoPackageHydrofabricReader::fixup_divides(geojson::FeatureCollection& divides) const
+void AbstractV4GeoPackageHydrofabricReader::fixup_divides(geojson::FeatureCollection& divides) const
 {
     std::size_t unlinked = 0;
     for (const geojson::Feature& feature : divides) {
@@ -193,14 +193,14 @@ V4_0GeoPackageHydrofabricReader::V4_0GeoPackageHydrofabricReader(
     geopackage::GeoPackageReader divides_reader,
     std::optional<geopackage::GeoPackageReader> nexus_reader
 )
-  : V4GeoPackageHydrofabricReader(
+  : AbstractV4GeoPackageHydrofabricReader(
         std::move(divides_reader), std::move(nexus_reader), HydrofabricVersion::V4_0
     )
 {}
 
 void V4_0GeoPackageHydrofabricReader::check_required_columns(const std::string& layer) const
 {
-    V4GeoPackageHydrofabricReader::check_required_columns(layer);
+    AbstractV4GeoPackageHydrofabricReader::check_required_columns(layer);
     if (layer == "divides") {
         require_column(reader_for(layer), layer, "flowpath_toid", "v4.0");
     }
@@ -225,14 +225,14 @@ V4_0Beta1GeoPackageHydrofabricReader::V4_0Beta1GeoPackageHydrofabricReader(
     geopackage::GeoPackageReader divides_reader,
     std::optional<geopackage::GeoPackageReader> nexus_reader
 )
-  : V4GeoPackageHydrofabricReader(
+  : AbstractV4GeoPackageHydrofabricReader(
         std::move(divides_reader), std::move(nexus_reader), HydrofabricVersion::V4_0_BETA1
     )
 {}
 
 void V4_0Beta1GeoPackageHydrofabricReader::check_required_columns(const std::string& layer) const
 {
-    V4GeoPackageHydrofabricReader::check_required_columns(layer);
+    AbstractV4GeoPackageHydrofabricReader::check_required_columns(layer);
     if (layer == "divides") {
         require_column(reader_for(layer), layer, "flowpath_id", "v4.0beta1");
     }
