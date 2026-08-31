@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
+#include <set>
 
 #include <sqlite3.h>
 
@@ -76,7 +77,7 @@ TEST_F(GeoPackageHydrofabricSchema_Test, geopackage_detect_version_v4_0)
 // back to beta1, since the variant only matters when reading divides.
 TEST_F(GeoPackageHydrofabricSchema_Test, geopackage_detect_version_column_lists)
 {
-    const std::vector<std::string> v4_nexus{"fid", "geom", "nexus_id", "nexus_toid", "vpuid"};
+    const std::set<std::string> v4_nexus{"fid", "geom", "nexus_id", "nexus_toid", "vpuid"};
 
     EXPECT_EQ(
         ngen::hydrofabric::detect_version(v4_nexus, {"divide_id", "flowpath_id", "flowpath_toid"}),
