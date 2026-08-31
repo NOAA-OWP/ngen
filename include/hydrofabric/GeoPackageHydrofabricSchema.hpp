@@ -122,7 +122,7 @@ std::string get_layer_id_column(HydrofabricVersion version, const std::string& l
  * hashtable lookup instead of N queries.
  *
  * Returns an empty map outside of (V4_0_BETA1, "divides") -- V4_0 reads flowpath_toid directly and
- * needs no synthesis -- or when the GPKG has no `flowpaths` table (logs a WARN unless NGEN_QUIET).
+ * needs no synthesis -- or when the GPKG has no `flowpaths` table (warns unless NGEN_QUIET).
  * Rows with a NULL flowpath_toid are excluded from the join, so unlinked divides simply miss the
  * lookup and leave "toid" unset.
  *
