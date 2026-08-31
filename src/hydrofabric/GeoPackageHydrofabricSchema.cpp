@@ -9,6 +9,30 @@
 namespace ngen {
 namespace hydrofabric {
 
+namespace {
+
+/**
+ * Render a column set as a bracketed, comma-separated list for error messages.
+ *
+ * @param[in] columns Column names to render
+ * @return String of the form "[a, b, c]"
+ */
+std::string join_columns(const std::set<std::string>& columns)
+{
+    std::ostringstream joined;
+    joined << "[";
+    bool first = true;
+    for (const std::string& column : columns) {
+        if (!first) joined << ", ";
+        joined << column;
+        first = false;
+    }
+    joined << "]";
+    return joined.str();
+}
+
+} // namespace
+
 HydrofabricVersion detect_version(
     const std::set<std::string>& nexus_columns,
     const std::set<std::string>& divides_columns)
@@ -30,17 +54,10 @@ HydrofabricVersion detect_version(
         return HydrofabricVersion::V2_2;
     }
 
-    std::ostringstream msg;
-    msg << "hydrofabric detect_version: nexus table has neither 'nexus_id' "
-        << "(v4) nor 'id' (v2.2). Observed nexus columns: [";
-    bool first = true;
-    for (const std::string& column : nexus_columns) {
-        if (!first) msg << ", ";
-        msg << column;
-        first = false;
-    }
-    msg << "]";
-    throw std::runtime_error(msg.str());
+    throw std::runtime_error(
+        "hydrofabric detect_version: nexus table has neither 'nexus_id' (v4) nor 'id' (v2.2). "
+        "Observed nexus columns: " + join_columns(nexus_columns)
+    );
 }
 
 HydrofabricVersion detect_version(const sqlite::database& nexus_db, const sqlite::database& divides_db) {
@@ -72,38 +89,47 @@ HydrofabricVersion detect_hydrofabric(const sqlite::database& db) {
 std::string get_layer_id_column(const HydrofabricVersion version, const std::string& layer,
                                 const sqlite::database& db) {
 
-    if (layer == "divides" && is_v4(version)) {
-        // Every v4 variant always exposes divides.divide_id.
-        return "divide_id";
+    const std::set<std::string> columns = db.columns(layer);
+    if (columns.empty()) {
+        // No columns means no such table, so there is no id column to name: return a value that
+        // cannot be confused with a real column rather than a plausible-looking guess. Reporting
+        // the missing table itself is left to the read that follows, which names it with more
+        // context (the tables the file does have) than a column check can.
+        return "<unset>";
     }
 
-    if (layer == "divides" && version == HydrofabricVersion::V2_2) {
-        try {
-            auto query_get_first_row = db.query("SELECT divide_id FROM " + layer + " LIMIT 1");
-            return "divide_id";
+    std::string id_column = "id";
+    if (layer == "divides" && is_v4(version)) {
+        // Every v4 variant exposes divides.divide_id; verified below like everything else.
+        id_column = "divide_id";
+    }
+    else if (layer == "divides" && version == HydrofabricVersion::V2_2) {
+        if (columns.count("divide_id") > 0) {
+            id_column = "divide_id";
         }
-        catch (const std::exception& e){
-            #ifndef NGEN_QUIET
+        #ifndef NGEN_QUIET
+        else if (columns.count("id") > 0) {
             // output debug info on what is read exactly
             std::cout << "WARN: Using legacy ID column \"id\" in layer " << layer
                       << " is DEPRECATED and may stop working at any time."
                       << std::endl;
-            #endif
-            return "id";
         }
+        #endif
     }
-
-    if (layer == "nexus" && is_v4(version)) {
+    else if (layer == "nexus" && is_v4(version)) {
         // v4 renames nexus.id -> nexus.nexus_id.
-        return "nexus_id";
+        id_column = "nexus_id";
     }
+    // v2.2 nexus reads its native "id", as does any other layer.
 
-    if (layer == "nexus" && version == HydrofabricVersion::V2_2) {
-        return "id";
+    if (columns.count(id_column) == 0) {
+        throw std::runtime_error(
+            "hydrofabric " + std::string(version_label(version)) + " " + layer +
+            " layer has no '" + id_column + "' id column. Observed columns: " +
+            join_columns(columns)
+        );
     }
-
-    // Default fallback
-    return "id";
+    return id_column;
 }
 
 std::unordered_map<std::string, std::string> build_divide_toid_lookup(
