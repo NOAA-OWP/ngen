@@ -94,15 +94,24 @@ HydrofabricVersion detect_hydrofabric(const sqlite::database& db);
  * Resolve the column name to use as the feature id when reading rows from a hydrofabric layer,
  * centralizing the release/layer mapping so no caller needs to scatter version checks.
  *
- *   - divides, v4: "divide_id" (always present).
+ *   - divides, v4: "divide_id".
  *   - divides, v2.2: "divide_id" if present, else legacy "id" (warns unless NGEN_QUIET).
  *   - nexus, v4: "nexus_id"; nexus, v2.2: "id".
- *   - anything else: "id".
+ *   - any other layer: "id".
+ *   - a layer absent from @p db entirely: the sentinel "<unset>", which is deliberately not a
+ *     legal column name -- there is no id column to name, and a plausible-looking guess would
+ *     only misdirect whoever reads it.
+ *
+ * The resolved column is verified to exist in @p layer, so a schema surprise is reported here as
+ * the problem it is rather than as a confusing failure from the read that follows. An absent
+ * @p layer is not reported here, though: the subsequent read names the missing table with more
+ * context than a column check could.
  *
  * @param[in] version Hydrofabric release identified for this load
  * @param[in] layer Layer name being read (e.g., "divides", "nexus")
- * @param[in] db Open GeoPackage database; consulted only for v2.2 divides introspection
+ * @param[in] db Open GeoPackage database holding @p layer
  * @return Column name to use as the feature id
+ * @throws std::runtime_error if @p layer exists but lacks the resolved column
  */
 std::string get_layer_id_column(HydrofabricVersion version, const std::string& layer, const sqlite::database& db);
 
