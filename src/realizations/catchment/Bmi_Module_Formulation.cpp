@@ -533,10 +533,8 @@ namespace realization {
             if (model_initialized) {
                 for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
                     available_forcings.push_back(output_var_name);
-                    available_forcing_units[output_var_name] = get_bmi_model()->GetVarUnits(output_var_name);
                     if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end()){
                         available_forcings.push_back(bmi_var_names_map[output_var_name]);
-                        available_forcing_units[bmi_var_names_map[output_var_name]] = get_bmi_model()->GetVarUnits(output_var_name); //units come from the model output variable.
                     }
                 }
                 //Initialize all NgenBmiProtocols with the valid adapter pointer and any properties

@@ -136,8 +136,6 @@ namespace realization {
          */
         boost::span <const std::string> get_available_variable_names() const override;
 
-        const std::string get_provider_units_for_variable(const std::string& name) const override;
-
         /**
         * Get the input variables of 
         * the first nested BMI model.

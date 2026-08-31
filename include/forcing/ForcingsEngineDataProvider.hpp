@@ -121,18 +121,6 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
         return var_output_names_;
     }
 
-    const std::string get_provider_units_for_variable(const std::string& name) const override
-    {
-        auto iter = var_output_units_map_.find(name);
-        if(iter != var_output_units_map_.end()){
-            return iter->second;
-        }
-        std::string throw_msg;
-        throw_msg.assign("Got request to retrieve units for variable '" + name + "', but it was not found in the data provider. This should not happen." + SOURCE_LOC);
-        LOG(throw_msg, LogLevel::WARNING);
-        throw std::runtime_error(throw_msg);
-    }
-
     long get_data_start_time() const override
     {
         return clock_type::to_time_t(time_begin_);

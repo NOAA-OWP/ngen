@@ -47,10 +47,6 @@ namespace data_access
 
         virtual boost::span<const std::string> get_available_variable_names() const = 0;
 
-        /** Return the unit for the requested variable that is accessible by this data provider */
-
-        virtual const std::string get_provider_units_for_variable(const std::string& name) const = 0;
-
         /** Return the first valid time for which data from the request variable  can be requested */
 
         virtual long get_data_start_time() const = 0;
