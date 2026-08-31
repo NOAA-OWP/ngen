@@ -1,8 +1,8 @@
 #include "GeoPackageHydrofabricSchema.hpp"
 #include "ngen_sqlite.hpp"
 
-#include <algorithm>
 #include <iostream>
+#include <set>
 #include <sstream>
 #include <stdexcept>
 
@@ -10,8 +10,8 @@ namespace ngen {
 namespace hydrofabric {
 
 HydrofabricVersion detect_version(
-    const std::vector<std::string>& nexus_columns,
-    const std::vector<std::string>& divides_columns)
+    const std::set<std::string>& nexus_columns,
+    const std::set<std::string>& divides_columns)
 {
     if (nexus_columns.empty()) {
         throw std::runtime_error(
@@ -19,32 +19,25 @@ HydrofabricVersion detect_version(
         );
     }
 
-    const bool has_nexus_id =
-        std::find(nexus_columns.begin(), nexus_columns.end(), "nexus_id")
-        != nexus_columns.end();
-    if (has_nexus_id) {
+    if (nexus_columns.count("nexus_id") > 0) {
         // Both v4 variants rename nexus.id -> nexus.nexus_id; the divides
         // layer's flowpath_toid column tells them apart (present == V4_0).
-        const bool has_flowpath_toid =
-            std::find(divides_columns.begin(), divides_columns.end(), "flowpath_toid")
-            != divides_columns.end();
-        return has_flowpath_toid ? HydrofabricVersion::V4_0
-                                 : HydrofabricVersion::V4_0_BETA1;
+        return divides_columns.count("flowpath_toid") > 0 ? HydrofabricVersion::V4_0
+                                                          : HydrofabricVersion::V4_0_BETA1;
     }
 
-    const bool has_id =
-        std::find(nexus_columns.begin(), nexus_columns.end(), "id")
-        != nexus_columns.end();
-    if (has_id) {
+    if (nexus_columns.count("id") > 0) {
         return HydrofabricVersion::V2_2;
     }
 
     std::ostringstream msg;
     msg << "hydrofabric detect_version: nexus table has neither 'nexus_id' "
         << "(v4) nor 'id' (v2.2). Observed nexus columns: [";
-    for (std::size_t i = 0; i < nexus_columns.size(); ++i) {
-        if (i > 0) msg << ", ";
-        msg << nexus_columns[i];
+    bool first = true;
+    for (const std::string& column : nexus_columns) {
+        if (!first) msg << ", ";
+        msg << column;
+        first = false;
     }
     msg << "]";
     throw std::runtime_error(msg.str());
