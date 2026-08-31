@@ -88,7 +88,7 @@ geojson::GeoJSON GeoPackageHydrofabricReader::read_divides(const std::vector<std
     const std::string id_column = get_layer_id_column(version_, "divides", reader.db());
     geojson::GeoJSON divides = reader.read("divides", ids, id_column);
 
-    fixup_divides(*divides);
+    normalize_divides(*divides);
     return divides;
 }
 
@@ -100,7 +100,7 @@ geojson::GeoJSON GeoPackageHydrofabricReader::read_nexus(const std::vector<std::
     const std::string id_column = get_layer_id_column(version_, "nexus", reader.db());
     geojson::GeoJSON nexus = reader.read("nexus", ids, id_column);
 
-    fixup_nexus(*nexus);
+    normalize_nexus(*nexus);
     return nexus;
 }
 
@@ -115,14 +115,14 @@ V2_2GeoPackageHydrofabricReader::V2_2GeoPackageHydrofabricReader(
     )
 {}
 
-void V2_2GeoPackageHydrofabricReader::fixup_divides(geojson::FeatureCollection& /* divides */) const
+void V2_2GeoPackageHydrofabricReader::normalize_divides(geojson::FeatureCollection& /* divides */) const
 {
     // Nothing to translate: the property names ngen consumes are v2.2's own names, and v2.2 divides
     // carry a native "toid". The one thing that does vary -- whether the id column is "divide_id" or
     // the deprecated "id" -- is settled before the read, by get_layer_id_column().
 }
 
-void V2_2GeoPackageHydrofabricReader::fixup_nexus(geojson::FeatureCollection& /* nexus */) const
+void V2_2GeoPackageHydrofabricReader::normalize_nexus(geojson::FeatureCollection& /* nexus */) const
 {
     // As above: v2.2 nexuses already carry "id" and "toid" under those names.
 }
@@ -146,7 +146,7 @@ void AbstractV4GeoPackageHydrofabricReader::check_required_columns(const std::st
     }
 }
 
-void AbstractV4GeoPackageHydrofabricReader::fixup_nexus(geojson::FeatureCollection& nexus) const
+void AbstractV4GeoPackageHydrofabricReader::normalize_nexus(geojson::FeatureCollection& nexus) const
 {
     for (const geojson::Feature& feature : nexus) {
         if (feature->get_id().empty()) {
@@ -161,7 +161,7 @@ void AbstractV4GeoPackageHydrofabricReader::fixup_nexus(geojson::FeatureCollecti
     }
 }
 
-void AbstractV4GeoPackageHydrofabricReader::fixup_divides(geojson::FeatureCollection& divides) const
+void AbstractV4GeoPackageHydrofabricReader::normalize_divides(geojson::FeatureCollection& divides) const
 {
     std::size_t unlinked = 0;
     for (const geojson::Feature& feature : divides) {
