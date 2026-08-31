@@ -130,7 +130,7 @@ class V2_2GeoPackageHydrofabricReader : public GeoPackageHydrofabricReader
  * downstream reference. What the variants do not share is how a divide reaches its nexus, which is
  * left to attribute_divide_toid() in the concrete subclasses.
  */
-class V4GeoPackageHydrofabricReader : public GeoPackageHydrofabricReader
+class AbstractV4GeoPackageHydrofabricReader : public GeoPackageHydrofabricReader
 {
   protected:
     /**
@@ -138,7 +138,7 @@ class V4GeoPackageHydrofabricReader : public GeoPackageHydrofabricReader
      * @param[in] nexus_reader Reader for the `nexus` layer's GeoPackage, if a separate file
      * @param[in] version Which v4 variant was detected
      */
-    V4GeoPackageHydrofabricReader(
+    AbstractV4GeoPackageHydrofabricReader(
         geopackage::GeoPackageReader divides_reader,
         std::optional<geopackage::GeoPackageReader> nexus_reader,
         HydrofabricVersion version
@@ -176,7 +176,7 @@ class V4GeoPackageHydrofabricReader : public GeoPackageHydrofabricReader
  * v4.0 divides carry their downstream nexus natively in `flowpath_toid`, so this reader never
  * consults the `flowpaths` table.
  */
-class V4_0GeoPackageHydrofabricReader : public V4GeoPackageHydrofabricReader
+class V4_0GeoPackageHydrofabricReader : public AbstractV4GeoPackageHydrofabricReader
 {
   public:
     /**
@@ -201,7 +201,7 @@ class V4_0GeoPackageHydrofabricReader : public V4GeoPackageHydrofabricReader
  * the flowpath they contain. This reader resolves that join once per read into a lookup table,
  * rather than once per divide.
  */
-class V4_0Beta1GeoPackageHydrofabricReader : public V4GeoPackageHydrofabricReader
+class V4_0Beta1GeoPackageHydrofabricReader : public AbstractV4GeoPackageHydrofabricReader
 {
   public:
     /**
