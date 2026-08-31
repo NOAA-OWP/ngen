@@ -76,20 +76,32 @@ class GeoPackageHydrofabricReader : public HydrofabricReader
     virtual void check_required_columns(const std::string& layer) const;
 
     /**
-     * Translate a freshly read divides collection into the property names ngen consumes.
+     * Bring a freshly read divides collection into ngen's canonical vocabulary, in place.
+     *
+     * The generic read stores each column under the file's own name for it, but for simplicity,
+     * ngen's consumers key on specific names: "id" and "toid". A version that names them
+     * differently aliases its columns onto those names here, leaving the originals in place.
+     * Implementations also validate the rows they translate and summarize outcomes worth a
+     * warning.
      *
      * @param[in,out] divides Divides collection to update in place
      * @throws std::runtime_error if a row cannot be translated
      */
-    virtual void fixup_divides(geojson::FeatureCollection& divides) const = 0;
+    virtual void normalize_divides(geojson::FeatureCollection& divides) const = 0;
 
     /**
-     * Translate a freshly read nexus collection into the property names ngen consumes.
+     * Bring a freshly read nexus collection into ngen's canonical vocabulary, in place.
+     *
+     * The generic read stores each column under the file's own name for it, but for simplicity,
+     * ngen's consumers key on specific names: "id" and "toid". A version that names them
+     * differently aliases its columns onto those names here, leaving the originals in place.
+     * Implementations also validate the rows they translate and summarize outcomes worth a
+     * warning.
      *
      * @param[in,out] nexus Nexus collection to update in place
      * @throws std::runtime_error if a row cannot be translated
      */
-    virtual void fixup_nexus(geojson::FeatureCollection& nexus) const = 0;
+    virtual void normalize_nexus(geojson::FeatureCollection& nexus) const = 0;
 
   private:
     geopackage::GeoPackageReader divides_reader_;
@@ -117,9 +129,9 @@ class V2_2GeoPackageHydrofabricReader : public GeoPackageHydrofabricReader
     );
 
   protected:
-    void fixup_divides(geojson::FeatureCollection& divides) const override;
+    void normalize_divides(geojson::FeatureCollection& divides) const override;
 
-    void fixup_nexus(geojson::FeatureCollection& nexus) const override;
+    void normalize_nexus(geojson::FeatureCollection& nexus) const override;
 };
 
 /**
@@ -146,7 +158,7 @@ class AbstractV4GeoPackageHydrofabricReader : public GeoPackageHydrofabricReader
 
     void check_required_columns(const std::string& layer) const override;
 
-    void fixup_nexus(geojson::FeatureCollection& nexus) const override;
+    void normalize_nexus(geojson::FeatureCollection& nexus) const override;
 
     /**
      * Alias each divide's downstream nexus to "toid", then warn once with a count of the divides
@@ -155,7 +167,7 @@ class AbstractV4GeoPackageHydrofabricReader : public GeoPackageHydrofabricReader
      * @param[in,out] divides Divides collection to update in place
      * @throws std::runtime_error if a row cannot be translated
      */
-    void fixup_divides(geojson::FeatureCollection& divides) const override;
+    void normalize_divides(geojson::FeatureCollection& divides) const override;
 
     /**
      * Attribute "toid" on one divide, however this variant expresses it.
