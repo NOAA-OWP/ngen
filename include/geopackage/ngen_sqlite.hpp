@@ -2,6 +2,7 @@
 #define NGEN_GEOPACKAGE_SQLITE_H
 
 #include <memory>
+#include <set>
 #include <vector>
 
 #include <sqlite3.h>
@@ -150,8 +151,8 @@ class database
 
     //! List the column names of a table
     //! @param table name of table
-    //! @return column names in declaration order, empty if the table does not exist
-    std::vector<std::string> columns(const std::string& table) const;
+    //! @return column names, empty if the table does not exist
+    std::set<std::string> columns(const std::string& table) const;
 
     //! Query the SQLite Database and get the result
     //! @param statement String query with parameters

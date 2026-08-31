@@ -1,8 +1,8 @@
 #include "GeoPackageHydrofabricReader.hpp"
 #include "JSONProperty.hpp"
 
-#include <algorithm>
 #include <iostream>
+#include <set>
 #include <stdexcept>
 #include <utility>
 
@@ -27,8 +27,8 @@ void require_column(
     const std::string& version
 )
 {
-    const std::vector<std::string> columns = reader.db().columns(layer);
-    if (std::find(columns.begin(), columns.end(), column) == columns.end()) {
+    const std::set<std::string> columns = reader.db().columns(layer);
+    if (columns.count(column) == 0) {
         throw std::runtime_error(
             version + " " + layer + " layer missing required '" + column + "' column"
         );

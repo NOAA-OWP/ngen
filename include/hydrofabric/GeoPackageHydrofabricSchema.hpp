@@ -1,9 +1,9 @@
 #ifndef NGEN_GEOPACKAGE_HYDROFABRIC_SCHEMA_H
 #define NGEN_GEOPACKAGE_HYDROFABRIC_SCHEMA_H
 
+#include <set>
 #include <string>
 #include <unordered_map>
-#include <vector>
 
 #include "HydrofabricVersion.hpp"
 
@@ -25,12 +25,12 @@ namespace hydrofabric {
  *            nexus table" and throws
  * @param[in] divides_columns Column names observed on the `divides` table; only consulted for v4
  *            input, empty resolves to V4_0_BETA1
- * @return HydrofabricVersion identified from the column lists
- * @throws std::runtime_error if the column lists match no known release
+ * @return HydrofabricVersion identified from the column sets
+ * @throws std::runtime_error if the column sets match no known release
  */
 HydrofabricVersion detect_version(
-    const std::vector<std::string>& nexus_columns,
-    const std::vector<std::string>& divides_columns = {}
+    const std::set<std::string>& nexus_columns,
+    const std::set<std::string>& divides_columns = {}
 );
 
 /**

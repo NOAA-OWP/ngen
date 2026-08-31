@@ -202,16 +202,16 @@ auto database::contains(const std::string& table) const -> bool
     return q.get<int>(0);
 }
 
-auto database::columns(const std::string& table) const -> std::vector<std::string>
+auto database::columns(const std::string& table) const -> std::set<std::string>
 {
     // PRAGMA table_info yields one row per column, with the column's name at index 1. It yields
     // nothing at all for a table that does not exist, which is why an empty result reads as
     // "absent" rather than as an error.
-    std::vector<std::string> names;
+    std::set<std::string> names;
     iterator q = query("PRAGMA table_info(" + table + ")");
     q.next();
     while (!q.done()) {
-        names.emplace_back(q.get<std::string>(1));
+        names.insert(q.get<std::string>(1));
         q.next();
     }
     return names;
