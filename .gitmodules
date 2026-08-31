@@ -1,14 +1,14 @@
 [submodule "test/googletest"]
 	path = test/googletest
 	url = https://github.com/google/googletest
-	ignore = dirty
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/pybind11"]
 	path = extern/pybind11
 	url = https://github.com/pybind/pybind11
 [submodule "extern/t-route"]
 	path = extern/t-route
 	url = https://github.com/noaa-owp/t-route.git
-	branch = ngen
+  branch = ngen
 [submodule "extern/cfe/cfe"]
 	path = extern/cfe/cfe
 	url = https://github.com/NOAA-OWP/cfe.git
@@ -24,7 +24,6 @@
 [submodule "extern/bmi-cxx"]
 	path = extern/bmi-cxx
 	url = https://github.com/csdms/bmi-cxx.git
-	branch = master
 [submodule "extern/evapotranspiration/evapotranspiration"]
 	path = extern/evapotranspiration/evapotranspiration
 	url = https://github.com/NOAA-OWP/evapotranspiration.git
@@ -43,8 +42,4 @@
 	branch = latest
 [submodule "extern/netcdf-cxx4"]
 	path = extern/netcdf-cxx4/netcdf-cxx4
-	url = https://github.com/Unidata/netcdf-cxx4
-[submodule "extern/ueb-bmi"]
-    path = extern/ueb-bmi
-	url = https://github.com/NOAA-OWP/ueb_bmi
-	branch = master
+	url = https://github.com/Unidata/netcdf-cxx4/

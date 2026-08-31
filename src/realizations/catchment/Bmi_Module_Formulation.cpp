@@ -37,17 +37,6 @@ namespace realization {
             return available_forcings;
         }
 
-        const std::string Bmi_Module_Formulation::get_provider_units_for_variable(const std::string& name) const{
-            auto iter = available_forcing_units.find(name);
-            if(iter != available_forcing_units.end()){
-                return iter->second;
-            }
-            std::string throw_msg;
-            throw_msg.assign("Got request to retrieve units for variable '" + name + "', but it was not found in the data provider. This should not happen." + SOURCE_LOC);
-            LOG(throw_msg, LogLevel::WARNING);
-            throw std::runtime_error(throw_msg);
-        }
-
         std::vector<double> Bmi_Module_Formulation::get_output_values_for_timestep(int timestep) {
             // TODO: something must be added to store values if more than the current time step is wanted
             // TODO: if such a thing is added, it should probably be configurable to turn it off
