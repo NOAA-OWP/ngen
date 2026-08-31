@@ -17,7 +17,7 @@ namespace {
  * @param[in] reader Reader for the GeoPackage holding the layer
  * @param[in] layer Layer to inspect
  * @param[in] column Column the caller's schema version requires
- * @param[in] version Version label to name in the error, e.g. "v4.0"
+ * @param[in] version Version label to name in the error; pass version_label()
  * @throws std::runtime_error if the column is absent
  */
 void require_column(
@@ -143,9 +143,10 @@ AbstractV4GeoPackageHydrofabricReader::AbstractV4GeoPackageHydrofabricReader(
 void AbstractV4GeoPackageHydrofabricReader::check_required_columns(const std::string& layer) const
 {
     if (layer == "nexus") {
+        // The requirement is family-wide, but the error names the concrete detected variant.
         const geopackage::GeoPackageReader& reader = reader_for(layer);
-        require_column(reader, layer, "nexus_id", "v4");
-        require_column(reader, layer, "nexus_toid", "v4");
+        require_column(reader, layer, "nexus_id", version_label(version()));
+        require_column(reader, layer, "nexus_toid", version_label(version()));
     }
 }
 
@@ -153,7 +154,9 @@ void AbstractV4GeoPackageHydrofabricReader::normalize_nexus(geojson::FeatureColl
 {
     for (const geojson::Feature& feature : nexus) {
         if (feature->get_id().empty()) {
-            throw std::runtime_error("v4 nexus row has empty 'nexus_id' value");
+            throw std::runtime_error(
+                std::string(version_label(version())) + " nexus row has empty 'nexus_id' value"
+            );
         }
 
         // v4 renamed nexus.id/toid -> nexus_id/nexus_toid; downstream consumers still key on
@@ -170,7 +173,9 @@ void AbstractV4GeoPackageHydrofabricReader::normalize_divides(geojson::FeatureCo
     for (const geojson::Feature& feature : divides) {
         const std::string id = feature->get_id();
         if (id.empty()) {
-            throw std::runtime_error("v4 divides row has empty 'divide_id' value");
+            throw std::runtime_error(
+                std::string(version_label(version())) + " divides row has empty 'divide_id' value"
+            );
         }
 
         attribute_divide_toid(feature->get_properties(), id);
@@ -205,7 +210,7 @@ void V4_0GeoPackageHydrofabricReader::check_required_columns(const std::string& 
 {
     AbstractV4GeoPackageHydrofabricReader::check_required_columns(layer);
     if (layer == "divides") {
-        require_column(reader_for(layer), layer, "flowpath_toid", "v4.0");
+        require_column(reader_for(layer), layer, "flowpath_toid", version_label(version()));
     }
 }
 
@@ -237,7 +242,7 @@ void V4_0Beta1GeoPackageHydrofabricReader::check_required_columns(const std::str
 {
     AbstractV4GeoPackageHydrofabricReader::check_required_columns(layer);
     if (layer == "divides") {
-        require_column(reader_for(layer), layer, "flowpath_id", "v4.0beta1");
+        require_column(reader_for(layer), layer, "flowpath_id", version_label(version()));
     }
 }
 
