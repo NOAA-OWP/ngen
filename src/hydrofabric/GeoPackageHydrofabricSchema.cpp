@@ -43,25 +43,25 @@ HydrofabricVersion detect_version(
         );
     }
 
-    if (nexus_columns.count("nexus_id") > 0) {
+    if (nexus_columns.count(NEXUS_ID_COLUMN) > 0) {
         // Both v4 variants rename nexus.id -> nexus.nexus_id; the divides
         // layer's flowpath_toid column tells them apart (present == V4_0).
-        return divides_columns.count("flowpath_toid") > 0 ? HydrofabricVersion::V4_0
-                                                          : HydrofabricVersion::V4_0_BETA1;
+        return divides_columns.count(FLOWPATH_TOID_COLUMN) > 0 ? HydrofabricVersion::V4_0
+                                                               : HydrofabricVersion::V4_0_BETA1;
     }
 
-    if (nexus_columns.count("id") > 0) {
+    if (nexus_columns.count(ID_KEY) > 0) {
         return HydrofabricVersion::V2_2;
     }
 
     throw std::runtime_error(
-        "hydrofabric detect_version: nexus table has neither 'nexus_id' (v4) nor 'id' (v2.2). "
-        "Observed nexus columns: " + join_columns(nexus_columns)
+        std::string("hydrofabric detect_version: nexus table has neither '") + NEXUS_ID_COLUMN +
+        "' (v4) nor '" + ID_KEY + "' (v2.2). Observed nexus columns: " + join_columns(nexus_columns)
     );
 }
 
 HydrofabricVersion detect_version(const sqlite::database& nexus_db, const sqlite::database& divides_db) {
-    return detect_version(nexus_db.columns("nexus"), divides_db.columns("divides"));
+    return detect_version(nexus_db.columns(NEXUS_LAYER), divides_db.columns(DIVIDES_LAYER));
 }
 
 HydrofabricVersion detect_version(const sqlite::database& db) {
@@ -72,7 +72,7 @@ HydrofabricVersion detect_hydrofabric(
     const sqlite::database& nexus_db,
     const sqlite::database& divides_db) {
 
-    if (!nexus_db.contains("nexus")) {
+    if (!nexus_db.contains(NEXUS_LAYER)) {
         return HydrofabricVersion::UNRECOGNIZED;
     }
 
@@ -98,27 +98,27 @@ std::string get_layer_id_column(const HydrofabricVersion version, const std::str
         return "<unset>";
     }
 
-    std::string id_column = "id";
-    if (layer == "divides" && is_v4(version)) {
+    std::string id_column = ID_KEY;
+    if (layer == DIVIDES_LAYER && is_v4(version)) {
         // Every v4 variant exposes divides.divide_id; verified below like everything else.
-        id_column = "divide_id";
+        id_column = DIVIDE_ID_COLUMN;
     }
-    else if (layer == "divides" && version == HydrofabricVersion::V2_2) {
-        if (columns.count("divide_id") > 0) {
-            id_column = "divide_id";
+    else if (layer == DIVIDES_LAYER && version == HydrofabricVersion::V2_2) {
+        if (columns.count(DIVIDE_ID_COLUMN) > 0) {
+            id_column = DIVIDE_ID_COLUMN;
         }
         #ifndef NGEN_QUIET
-        else if (columns.count("id") > 0) {
+        else if (columns.count(ID_KEY) > 0) {
             // output debug info on what is read exactly
-            std::cout << "WARN: Using legacy ID column \"id\" in layer " << layer
+            std::cout << "WARN: Using legacy ID column \"" << ID_KEY << "\" in layer " << layer
                       << " is DEPRECATED and may stop working at any time."
                       << std::endl;
         }
         #endif
     }
-    else if (layer == "nexus" && is_v4(version)) {
+    else if (layer == NEXUS_LAYER && is_v4(version)) {
         // v4 renames nexus.id -> nexus.nexus_id.
-        id_column = "nexus_id";
+        id_column = NEXUS_ID_COLUMN;
     }
     // v2.2 nexus reads its native "id", as does any other layer.
 
@@ -141,11 +141,11 @@ std::unordered_map<std::string, std::string> build_divide_toid_lookup(
 
     // Only v4.0beta1 needs synthesis. V4_0 reads flowpath_toid straight off
     // the divides row, so it never consults flowpaths and gets an empty map.
-    if (version != HydrofabricVersion::V4_0_BETA1 || layer != "divides") {
+    if (version != HydrofabricVersion::V4_0_BETA1 || layer != DIVIDES_LAYER) {
         return divide_toid_lookup;
     }
 
-    if (!db.contains("flowpaths")) {
+    if (!db.contains(FLOWPATHS_LAYER)) {
 #ifndef NGEN_QUIET
         std::cout << "WARN: " << version_label(version) << " divides loaded without a 'flowpaths' table; "
                   << "all divides will be treated as terminal (no toid)." << std::endl;
