@@ -355,3 +355,42 @@ TEST_F(Network_Test2, test_dfr_filter)
   //ASSERT_FALSE( std::distance(cat0_it, cat2_it) > 0 );
 }
 
+class Network_Test3 : public Network_Test, public ::testing::Test{
+public:
+  Network_Test3(){}
+  void SetUp() override {
+    this->add_catchment("cat-0", "nex-0");
+    this->add_nexus("nex-0", "cat-1");
+    this->add_catchment("cat-1", "nex-1");
+    this->add_nexus("nex-1");                  // terminal nexus, no toid property at all
+    this->add_catchment("cat-2", "nex-void");  // catchment whose toid matches no feature
+  }
+};
+
+//! Test that attach_sentinels gives each terminal feature of the requested type a sentinel
+//! destination, leaves linked features alone, and never attaches a sentinel to a sentinel
+//! (the wb- prefix would otherwise match the catchment pass).
+TEST_F(Network_Test3, test_attach_sentinels)
+{
+  std::shared_ptr<geojson::FeatureCollection> fabric = this->get_fabric();
+  ASSERT_EQ(fabric->get_size(), 5);
+
+  network::attach_sentinels(fabric, "TERMINAL_SENTINEL", hy_features::identifiers::isNexus);
+  network::attach_sentinels(fabric, "OUTLET_SENTINEL", hy_features::identifiers::isCatchment);
+
+  ASSERT_EQ(fabric->get_size(), 7);
+
+  geojson::Feature terminal_nexus = fabric->get_feature("nex-1");
+  ASSERT_EQ(terminal_nexus->get_number_of_destination_features(), 1);
+  EXPECT_EQ(terminal_nexus->destination_features()[0]->get_id(), "wb-TERMINAL_SENTINEL-nex-1");
+
+  geojson::Feature outlet_catchment = fabric->get_feature("cat-2");
+  ASSERT_EQ(outlet_catchment->get_number_of_destination_features(), 1);
+  EXPECT_EQ(outlet_catchment->destination_features()[0]->get_id(), "wb-OUTLET_SENTINEL-cat-2");
+
+  // Linked features are untouched.
+  geojson::Feature linked_catchment = fabric->get_feature("cat-0");
+  ASSERT_EQ(linked_catchment->get_number_of_destination_features(), 1);
+  EXPECT_EQ(linked_catchment->destination_features()[0]->get_id(), "nex-0");
+}
+
