@@ -66,10 +66,10 @@ GeoPackageHydrofabricReader::GeoPackageHydrofabricReader(
 
 const geopackage::GeoPackageReader& GeoPackageHydrofabricReader::reader_for(const std::string& layer) const
 {
-    if (layer == "nexus") {
+    if (layer == NEXUS_LAYER) {
         return nexus_reader_.has_value() ? nexus_reader_.value() : divides_reader_;
     }
-    if (layer == "divides") {
+    if (layer == DIVIDES_LAYER) {
         return divides_reader_;
     }
     throw std::logic_error("no reader for unknown hydrofabric layer `" + layer + "`");
@@ -85,11 +85,11 @@ void GeoPackageHydrofabricReader::check_required_columns(const std::string& /* l
 
 geojson::GeoJSON GeoPackageHydrofabricReader::read_divides(const std::vector<std::string>& ids)
 {
-    check_required_columns("divides");
+    check_required_columns(DIVIDES_LAYER);
 
-    const geopackage::GeoPackageReader& reader = reader_for("divides");
-    const std::string id_column = get_layer_id_column(version_, "divides", reader.db());
-    geojson::GeoJSON divides = reader.read("divides", ids, id_column);
+    const geopackage::GeoPackageReader& reader = reader_for(DIVIDES_LAYER);
+    const std::string id_column = get_layer_id_column(version_, DIVIDES_LAYER, reader.db());
+    geojson::GeoJSON divides = reader.read(DIVIDES_LAYER, ids, id_column);
 
     normalize_divides(*divides);
     return divides;
@@ -97,11 +97,11 @@ geojson::GeoJSON GeoPackageHydrofabricReader::read_divides(const std::vector<std
 
 geojson::GeoJSON GeoPackageHydrofabricReader::read_nexus(const std::vector<std::string>& ids)
 {
-    check_required_columns("nexus");
+    check_required_columns(NEXUS_LAYER);
 
-    const geopackage::GeoPackageReader& reader = reader_for("nexus");
-    const std::string id_column = get_layer_id_column(version_, "nexus", reader.db());
-    geojson::GeoJSON nexus = reader.read("nexus", ids, id_column);
+    const geopackage::GeoPackageReader& reader = reader_for(NEXUS_LAYER);
+    const std::string id_column = get_layer_id_column(version_, NEXUS_LAYER, reader.db());
+    geojson::GeoJSON nexus = reader.read(NEXUS_LAYER, ids, id_column);
 
     normalize_nexus(*nexus);
     return nexus;
@@ -142,11 +142,11 @@ AbstractV4GeoPackageHydrofabricReader::AbstractV4GeoPackageHydrofabricReader(
 
 void AbstractV4GeoPackageHydrofabricReader::check_required_columns(const std::string& layer) const
 {
-    if (layer == "nexus") {
+    if (layer == NEXUS_LAYER) {
         // The requirement is family-wide, but the error names the concrete detected variant.
         const geopackage::GeoPackageReader& reader = reader_for(layer);
-        require_column(reader, layer, "nexus_id", version_label(version()));
-        require_column(reader, layer, "nexus_toid", version_label(version()));
+        require_column(reader, layer, NEXUS_ID_COLUMN, version_label(version()));
+        require_column(reader, layer, NEXUS_TOID_COLUMN, version_label(version()));
     }
 }
 
@@ -155,15 +155,16 @@ void AbstractV4GeoPackageHydrofabricReader::normalize_nexus(geojson::FeatureColl
     for (const geojson::Feature& feature : nexus) {
         if (feature->get_id().empty()) {
             throw std::runtime_error(
-                std::string(version_label(version())) + " nexus row has empty 'nexus_id' value"
+                std::string(version_label(version())) + " nexus row has empty '" +
+                NEXUS_ID_COLUMN + "' value"
             );
         }
 
         // v4 renamed nexus.id/toid -> nexus_id/nexus_toid; downstream consumers still key on
         // "id"/"toid", so alias them (additive).
         geojson::PropertyMap& properties = feature->get_properties();
-        alias_property(properties, "nexus_id", "id");
-        alias_property(properties, "nexus_toid", "toid");
+        alias_property(properties, NEXUS_ID_COLUMN, ID_KEY);
+        alias_property(properties, NEXUS_TOID_COLUMN, TOID_KEY);
     }
 }
 
@@ -174,13 +175,14 @@ void AbstractV4GeoPackageHydrofabricReader::normalize_divides(geojson::FeatureCo
         const std::string id = feature->get_id();
         if (id.empty()) {
             throw std::runtime_error(
-                std::string(version_label(version())) + " divides row has empty 'divide_id' value"
+                std::string(version_label(version())) + " divides row has empty '" +
+                DIVIDE_ID_COLUMN + "' value"
             );
         }
 
         attribute_divide_toid(feature->get_properties(), id);
 
-        if (!feature->has_property("toid")) {
+        if (!feature->has_property(TOID_KEY)) {
             ++unlinked;
         }
     }
@@ -209,8 +211,8 @@ V4_0GeoPackageHydrofabricReader::V4_0GeoPackageHydrofabricReader(
 void V4_0GeoPackageHydrofabricReader::check_required_columns(const std::string& layer) const
 {
     AbstractV4GeoPackageHydrofabricReader::check_required_columns(layer);
-    if (layer == "divides") {
-        require_column(reader_for(layer), layer, "flowpath_toid", version_label(version()));
+    if (layer == DIVIDES_LAYER) {
+        require_column(reader_for(layer), layer, FLOWPATH_TOID_COLUMN, version_label(version()));
     }
 }
 
@@ -221,9 +223,9 @@ void V4_0GeoPackageHydrofabricReader::attribute_divide_toid(
 {
     // v4.0 divides carry flowpath_toid natively, aliased straight to "toid". NULL arrives as the
     // placeholder string "null" (see build_properties); treat it as absent (terminal divide).
-    const geojson::PropertyMap::const_iterator toid = properties.find("flowpath_toid");
+    const geojson::PropertyMap::const_iterator toid = properties.find(FLOWPATH_TOID_COLUMN);
     if (toid != properties.end() && toid->second.as_string() != "null") {
-        properties.emplace("toid", geojson::JSONProperty("toid", toid->second));
+        properties.emplace(TOID_KEY, geojson::JSONProperty(TOID_KEY, toid->second));
     }
 }
 
@@ -241,8 +243,8 @@ V4_0Beta1GeoPackageHydrofabricReader::V4_0Beta1GeoPackageHydrofabricReader(
 void V4_0Beta1GeoPackageHydrofabricReader::check_required_columns(const std::string& layer) const
 {
     AbstractV4GeoPackageHydrofabricReader::check_required_columns(layer);
-    if (layer == "divides") {
-        require_column(reader_for(layer), layer, "flowpath_id", version_label(version()));
+    if (layer == DIVIDES_LAYER) {
+        require_column(reader_for(layer), layer, FLOWPATH_ID_COLUMN, version_label(version()));
     }
 }
 
@@ -254,7 +256,7 @@ geojson::GeoJSON V4_0Beta1GeoPackageHydrofabricReader::read_divides(const std::v
     // assumed to live in the same file as the `divides` layer it links.
     if (!divide_toid_lookup_built_) {
         divide_toid_lookup_ = build_divide_toid_lookup(
-            version(), "divides", reader_for("divides").db()
+            version(), DIVIDES_LAYER, reader_for(DIVIDES_LAYER).db()
         );
         divide_toid_lookup_built_ = true;
     }
@@ -273,7 +275,7 @@ void V4_0Beta1GeoPackageHydrofabricReader::attribute_divide_toid(
     const std::unordered_map<std::string, std::string>::const_iterator toid =
         divide_toid_lookup_.find(id);
     if (toid != divide_toid_lookup_.end()) {
-        properties.emplace("toid", geojson::JSONProperty("toid", toid->second));
+        properties.emplace(TOID_KEY, geojson::JSONProperty(TOID_KEY, toid->second));
     }
 }
 

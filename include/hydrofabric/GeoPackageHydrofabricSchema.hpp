@@ -14,6 +14,23 @@ namespace ngen {
     }
 namespace hydrofabric {
 
+//! GeoPackage hydrofabric layer (table) names, shared by the readers and the schema utilities.
+constexpr const char* const DIVIDES_LAYER = "divides";
+constexpr const char* const NEXUS_LAYER = "nexus";
+constexpr const char* const FLOWPATHS_LAYER = "flowpaths";
+
+//! Canonical feature property keys ngen consumes, which are also hydrofabric v2.2's own column
+//! names -- the release the canonical vocabulary was taken from.
+constexpr const char* const ID_KEY = "id";
+constexpr const char* const TOID_KEY = "toid";
+
+//! Version-specific column names, translated onto the canonical keys by the readers.
+constexpr const char* const DIVIDE_ID_COLUMN = "divide_id";
+constexpr const char* const NEXUS_ID_COLUMN = "nexus_id";
+constexpr const char* const NEXUS_TOID_COLUMN = "nexus_toid";
+constexpr const char* const FLOWPATH_ID_COLUMN = "flowpath_id";
+constexpr const char* const FLOWPATH_TOID_COLUMN = "flowpath_toid";
+
 /**
  * Identify which hydrofabric release a set of observed columns describes.
  *
