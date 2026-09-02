@@ -6,6 +6,7 @@
 #include <memory>
 #include <sstream>
 #include <tuple>
+#include <utility>
 #include <functional>
 #include <dirent.h>
 #include <sys/stat.h>
@@ -31,8 +32,8 @@ namespace realization {
 
     class Formulation_Manager {
         public:
-            Formulation_Manager(boost::property_tree::ptree &loaded_tree)
-                : tree(loaded_tree)
+            Formulation_Manager(boost::property_tree::ptree loaded_tree)
+                : tree(std::move(loaded_tree))
             {
                 initialize_output_config();
             }
