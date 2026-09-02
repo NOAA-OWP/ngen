@@ -32,20 +32,6 @@ namespace realization {
 
     class Formulation_Manager {
         public:
-            Formulation_Manager(std::stringstream &data) {
-                boost::property_tree::ptree loaded_tree;
-                boost::property_tree::json_parser::read_json(data, loaded_tree);
-                this->tree = loaded_tree;
-                initialize_output_config();
-            }
-
-            Formulation_Manager(const std::string &file_path) {
-                boost::property_tree::ptree loaded_tree;
-                boost::property_tree::json_parser::read_json(file_path, loaded_tree);
-                this->tree = loaded_tree;
-                initialize_output_config();
-            }
-
             Formulation_Manager(boost::property_tree::ptree &loaded_tree) {
                 this->tree = loaded_tree;
                 initialize_output_config();
