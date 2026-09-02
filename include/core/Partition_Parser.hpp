@@ -11,7 +11,6 @@
 #include <unordered_set>
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 #include <FeatureBuilder.hpp>
 #include "features/Features.hpp"
 #include <FeatureCollection.hpp>
@@ -21,15 +20,6 @@
 class Partitions_Parser {
 
     public:
-        //Constructor that takes an input json file path and points to the root of the tree in json file
-        Partitions_Parser(const std::string &file_path) {
-            boost::property_tree::ptree loaded_tree;
-            boost::property_tree::json_parser::read_json(file_path, loaded_tree);
-            std::cout << "file read success" << std::endl;
-            this->tree = loaded_tree;
-            std::cout << "file_path: " << file_path << std::endl;
-        };
-
         Partitions_Parser(const boost::property_tree::ptree tree){
             this->tree = tree;
         }

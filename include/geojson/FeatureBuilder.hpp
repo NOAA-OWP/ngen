@@ -13,6 +13,7 @@
 #include <algorithm>
 
 #include <boost/property_tree/ptree.hpp>
+#include "utilities/JSON_Reader.hpp"
 
 namespace geojson {
     /**
@@ -442,9 +443,7 @@ namespace geojson {
     }
 
     static GeoJSON read(const std::string &file_path, const std::vector<std::string> &ids = {}) {
-        boost::property_tree::ptree tree;
-        boost::property_tree::json_parser::read_json(file_path, tree);
-        return build_collection(tree, ids);
+        return build_collection(ptree_from_json_file(file_path), ids);
     }
 
     static GeoJSON read(std::stringstream &data, const std::vector<std::string> &ids = {}) {
