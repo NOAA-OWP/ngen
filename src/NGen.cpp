@@ -61,6 +61,8 @@
 #include "utilities/output/PerFormulationNexusOutputMgr.hpp"
 #endif
 
+#include "utilities/JSON_Reader.hpp"
+
 #include <mediator/UnitsHelper.hpp>
 
 void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
@@ -354,7 +356,7 @@ int main(int argc, char* argv[]) {
     #if NGEN_WITH_MPI
     PartitionData local_data;
     if (mpi_num_procs > 1) {
-        Partitions_Parser partition_parser(PARTITION_PATH);
+        Partitions_Parser partition_parser(ptree_from_json_file(PARTITION_PATH));
         // TODO: add something here to make sure this step worked for every rank, and maybe to checksum the file
         partition_parser.parse_partition_file();
 
@@ -413,8 +415,7 @@ int main(int argc, char* argv[]) {
     //to map features to their primary id as well as the alternative property
     nexus_collection->update_ids("id");
 
-    boost::property_tree::ptree realization_config;
-    boost::property_tree::json_parser::read_json(REALIZATION_CONFIG_PATH, realization_config);
+    boost::property_tree::ptree realization_config = ptree_from_json_file(REALIZATION_CONFIG_PATH);
 
     std::shared_ptr<Simulation_Time> sim_time;
 
