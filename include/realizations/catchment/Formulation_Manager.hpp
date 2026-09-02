@@ -32,8 +32,9 @@ namespace realization {
 
     class Formulation_Manager {
         public:
-            Formulation_Manager(boost::property_tree::ptree &loaded_tree) {
-                this->tree = loaded_tree;
+            Formulation_Manager(boost::property_tree::ptree &loaded_tree)
+                : tree(loaded_tree)
+            {
                 initialize_output_config();
             }
 
