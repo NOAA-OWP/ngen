@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <set>
 #include <sstream>
@@ -155,6 +156,8 @@ namespace data_access
 
         static std::mutex shared_providers_mutex;
         static std::map<std::string, std::shared_ptr<NetCDFPerFeatureDataProvider>> shared_providers;
+
+        std::mutex cache_mutex;
 
         std::vector<std::string> variable_names;
         std::vector<std::string> loc_ids;

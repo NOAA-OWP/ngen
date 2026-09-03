@@ -621,36 +621,40 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
 
         std::string key = ncvar.getName() + "|" + std::to_string(page_c_idx);
-        if(value_cache.contains(key)){
+	{
+	  std::lock_guard l(cache_mutex);
+	  if(value_cache.contains(key)){
             cached = value_cache.get(key).get();
-        } else {
+	  } else {
             cached = std::make_shared<std::vector<double>>(get_ids().size() * page_cache_line_size);
 
             // read each chunk and add it to "cached"
             std::size_t idx = 0;
             for(auto const& chunk: chunks){
-                // chunk start index = chunk.first;
-                // chunk length      = chunk.second;
-                start.clear();
-                start.push_back(chunk.first);
+	      // chunk start index = chunk.first;
+	      // chunk length      = chunk.second;
+	      start.clear();
+	      start.push_back(chunk.first);
 
-                // NOTE: in the first iteration, we might read more data in the Time
-                // dimension than we 'need'. b.c. we read from:
-                // 'c_idx1 - (c_idx1 % cache_slice_t_size)' to the end of the cache line.
-                // so, if 'c_idx1 % cache_slice_t_size > 0' we will read
-                // 'c_idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
-                start.push_back(page_c_idx);
+	      // NOTE: in the first iteration, we might read more data in the Time
+	      // dimension than we 'need'. b.c. we read from:
+	      // 'c_idx1 - (c_idx1 % cache_slice_t_size)' to the end of the cache line.
+	      // so, if 'c_idx1 % cache_slice_t_size > 0' we will read
+	      // 'c_idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
+	      start.push_back(page_c_idx);
 
-                count.clear();
-                count.push_back(chunk.second);
+	      count.clear();
+	      count.push_back(chunk.second);
 
-                count.push_back(page_cache_line_size);
-                ncvar.getVar(start,count,&(*cached)[idx]);
-                idx += chunk.second * page_cache_line_size;
+	      count.push_back(page_cache_line_size);
+	      ncvar.getVar(start,count,&(*cached)[idx]);
+	      idx += chunk.second * page_cache_line_size;
             }
 
             value_cache.insert(key, cached);
-        }
+	  }
+	}
+
         // Find all values in the current cache slice and push them onto raw_values
         while(c_idx >= page_c_idx &&
               c_idx < page_c_idx + page_cache_line_size &&
