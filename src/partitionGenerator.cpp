@@ -395,6 +395,34 @@ void read_arguments(int argc, char* argv[],
     if (error) exit(-1);
 }
 
+// Attach a SentinelFeature named "wb-<label>-<feature id>" as the
+// destination of every non-sentinel feature in `collection` whose id
+// prefix satisfies `matches_type` and that has no destination feature
+// yet. New sentinels are added to `collection` only after the scan
+// completes, to avoid iterator invalidation from inserting eagerly.
+void attach_sentinels(const geojson::GeoJSON& collection, const std::string& label,
+                       const bool (*matches_type)(const std::string&))
+{
+    std::vector<std::shared_ptr<geojson::FeatureBase>> sentinels;
+    for (auto& feature : *collection)
+    {
+        if (feature->get_type() == geojson::FeatureType::Sentinel) {
+            continue;
+        }
+        auto id = feature->get_id();
+        auto type = id.substr(0, id.find(hy_features::identifiers::separator));
+        if (matches_type(type) && feature->get_number_of_destination_features() == 0) {
+            std::string sentinel_id = "wb-" + label + "-" + id;
+            geojson::Feature sentinel_feature = std::make_shared<geojson::SentinelFeature>(sentinel_id);
+            sentinels.push_back(sentinel_feature);
+            feature->add_destination_feature(sentinel_feature.get());
+        }
+    }
+    for (auto& sentinel : sentinels) {
+        collection->add_feature(sentinel);
+    }
+}
+
 int main(int argc, char* argv[])
 {
     using network::Network;
@@ -478,33 +506,19 @@ int main(int argc, char* argv[])
     // Address that here by inserting sentinel flowpaths downstream of
     // those nexuses. Those sentinels will be assigned to specific
     // processes, which will then properly receive all of the flow for
-    // the nexus in question.
-    //
-    // These features will not exist in the hydrofabric
-    // GeoJSON/GeoPackage. As implemented, that means that they will
-    // simply be ignored when ngen figures out what features to
-    // simulate on each process.
-    //
-    // Store the sentinels separately to avoid iterator invalidation
-    // from inserting them eagerly
-    std::vector<std::shared_ptr<geojson::FeatureBase>> sentinels;
-    for (auto& feature : *global_nexus_collection)
-    {
-        auto id = feature->get_id();
-        auto type = id.substr(0,3);
-        if (hy_features::identifiers::isNexus(type)) {
-            if (feature->get_number_of_destination_features() == 0) {
-                std::string sentinel_id = "wb-TERMINAL_SENTINEL-" + feature->get_id();
-                geojson::Feature sentinel_feature = std::make_shared<geojson::SentinelFeature>(sentinel_id);
-                sentinels.push_back(sentinel_feature);
-                feature->add_destination_feature(sentinel_feature.get());
-            }
-        }
-    }
-    for (auto& sentinel : sentinels)
-    {
-        global_nexus_collection->add_feature(sentinel);
-    }
+    // the nexus in question. They will not exist in the hydrofabric
+    // GeoJSON/GeoPackage, so they are simply ignored when ngen figures
+    // out what features to simulate on each process.
+    attach_sentinels(global_nexus_collection, "TERMINAL_SENTINEL", hy_features::identifiers::isNexus);
+
+    // Some catchments (v2.2: destination nexus outside the GPKG subset;
+    // v4.0: divide.toid unresolved because the linked flowpath is missing)
+    // end up with no destination feature, which `generate_partitions`
+    // rejects with "Catchment X has no destination nexus" and exit(1).
+    // Mirror the terminal-nexus sentinel handling above so partitioning
+    // can run; these sentinels aren't picked up by network.filter("cat",
+    // ...), so ngen never simulates them.
+    attach_sentinels(global_nexus_collection, "OUTLET_SENTINEL", hy_features::identifiers::isCatchment);
 
     // make a global network
     Network global_network(global_nexus_collection);
