@@ -1,6 +1,5 @@
 var class_partitions___parser =
 [
-    [ "Partitions_Parser", "class_partitions___parser.html#a499e4585ca462c14892b788bf2da10f9", null ],
     [ "Partitions_Parser", "class_partitions___parser.html#ae7a44cd17e24bc06fec1aec7bc49f233", null ],
     [ "~Partitions_Parser", "class_partitions___parser.html#a31cd926a275c0d00b45b14d076231234", null ],
     [ "get_mpi_rank", "class_partitions___parser.html#a772bbf34bdcb23c6156981080e87f9f1", null ],

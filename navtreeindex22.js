@@ -1,10 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"structngen_1_1traits_1_1type__list.html#a3ab33dc8cba769ab4ade2357b3f17429":[23,0,9,3,1,3],
-"structngen_1_1traits_1_1type__list.html#a3ab33dc8cba769ab4ade2357b3f17429":[24,0,7,3,1,3],
-"structngen_1_1traits_1_1type__list.html#a4a32af846a3acc3dc13aef5efe96149f":[23,0,9,3,1,2],
-"structngen_1_1traits_1_1type__list.html#a4a32af846a3acc3dc13aef5efe96149f":[24,0,7,3,1,2],
-"structngen_1_1traits_1_1type__list.html#a91117e0c7427bf94c84b444ca3ad44cc":[23,0,9,3,1,1],
 "structngen_1_1traits_1_1type__list.html#a91117e0c7427bf94c84b444ca3ad44cc":[24,0,7,3,1,1],
 "structngen_1_1traits_1_1type__list.html#ad6517ca709d9362b3050110e805d2fe1":[23,0,9,3,1,0],
 "structngen_1_1traits_1_1type__list.html#ad6517ca709d9362b3050110e805d2fe1":[24,0,7,3,1,0],

@@ -24,7 +24,7 @@ var searchData=
   ['partitiondata_21',['PartitionData',['../struct_partition_data.html',1,'']]],
   ['partitioning_20config_20generator_22',['Partitioning Config Generator',['../md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md200',1,'']]],
   ['partitions_20create_20bidirectional_20communication_3a_23',['WHY NGEN PARTITIONS CREATE BIDIRECTIONAL COMMUNICATION:',['../_nexus_remote_tests_8cpp.html#autotoc_md18',1,'']]],
-  ['partitions_5fparser_24',['Partitions_Parser',['../class_partitions___parser.html',1,'Partitions_Parser'],['../class_partitions___parser.html#a499e4585ca462c14892b788bf2da10f9',1,'Partitions_Parser::Partitions_Parser(const std::string &amp;file_path)'],['../class_partitions___parser.html#ae7a44cd17e24bc06fec1aec7bc49f233',1,'Partitions_Parser::Partitions_Parser(const boost::property_tree::ptree tree)']]],
+  ['partitions_5fparser_24',['Partitions_Parser',['../class_partitions___parser.html',1,'Partitions_Parser'],['../class_partitions___parser.html#ae7a44cd17e24bc06fec1aec7bc49f233',1,'Partitions_Parser::Partitions_Parser()']]],
   ['passed_20to_20tt_20set_5fvalue_20tt_25',['Unknown/unexpected variables passed to &lt;tt&gt;set_value&lt;/tt&gt;',['../md_doc_2_b_m_iconventions.html#autotoc_md110',1,'']]],
   ['passing_20variables_20between_20nested_20formulations_26',['Passing Variables Between Nested Formulations',['../md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md87',1,'']]],
   ['path_27',['path',['../structforcing__params.html#a2f43abdd38531314c220ef34b5ee0037',1,'forcing_params']]],

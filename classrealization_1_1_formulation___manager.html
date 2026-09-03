@@ -116,12 +116,8 @@ $(function(){initNavTree('classrealization_1_1_formulation___manager.html',''); 
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a999424a470ead9efe66ab5989929eb8e" id="r_a999424a470ead9efe66ab5989929eb8e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a999424a470ead9efe66ab5989929eb8e">Formulation_Manager</a> (std::stringstream &amp;data)</td></tr>
-<tr class="separator:a999424a470ead9efe66ab5989929eb8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a0de93305e075b3a2ee775a6c74963a" id="r_a0a0de93305e075b3a2ee775a6c74963a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a0de93305e075b3a2ee775a6c74963a">Formulation_Manager</a> (const std::string &amp;file_path)</td></tr>
-<tr class="separator:a0a0de93305e075b3a2ee775a6c74963a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58bf2c51c335e14480dbcd42e4ca8d7c" id="r_a58bf2c51c335e14480dbcd42e4ca8d7c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58bf2c51c335e14480dbcd42e4ca8d7c">Formulation_Manager</a> (boost::property_tree::ptree &amp;loaded_tree)</td></tr>
-<tr class="separator:a58bf2c51c335e14480dbcd42e4ca8d7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb6bbc7fa5fe45e17b76f40f4c5a5857" id="r_abb6bbc7fa5fe45e17b76f40f4c5a5857"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb6bbc7fa5fe45e17b76f40f4c5a5857">Formulation_Manager</a> (boost::property_tree::ptree loaded_tree)</td></tr>
+<tr class="separator:abb6bbc7fa5fe45e17b76f40f4c5a5857"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbb8fd26cb697649d9d4a71bd79c8c86" id="r_afbb8fd26cb697649d9d4a71bd79c8c86"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afbb8fd26cb697649d9d4a71bd79c8c86">~Formulation_Manager</a> ()=default</td></tr>
 <tr class="separator:afbb8fd26cb697649d9d4a71bd79c8c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ce324df6581fc91e93f2350109fe168" id="r_a4ce324df6581fc91e93f2350109fe168"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ce324df6581fc91e93f2350109fe168">read</a> (<a class="el" href="structsimulation__time__params.html">simulation_time_params</a> &amp;simulation_time_config, <a class="el" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">geojson::GeoJSON</a> fabric, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
@@ -196,8 +192,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a0b50baa59826712652d559531463eefe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a999424a470ead9efe66ab5989929eb8e" name="a999424a470ead9efe66ab5989929eb8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a999424a470ead9efe66ab5989929eb8e">&#9670;&#160;</a></span>Formulation_Manager() <span class="overload">[1/3]</span></h2>
+<a id="abb6bbc7fa5fe45e17b76f40f4c5a5857" name="abb6bbc7fa5fe45e17b76f40f4c5a5857"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb6bbc7fa5fe45e17b76f40f4c5a5857">&#9670;&#160;</a></span>Formulation_Manager()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -208,7 +204,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">realization::Formulation_Manager::Formulation_Manager </td>
           <td>(</td>
-          <td class="paramtype">std::stringstream &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
+          <td class="paramtype">boost::property_tree::ptree</td>          <td class="paramname"><span class="paramname"><em>loaded_tree</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -219,61 +215,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="#ac1cd858aa10b3383d98ca427e7212a33">initialize_output_config()</a>, and <a class="el" href="#ae34d4f2d7d9bf211e5139eb2b8b09e39">tree</a>.</p>
-
-</div>
-</div>
-<a id="a0a0de93305e075b3a2ee775a6c74963a" name="a0a0de93305e075b3a2ee775a6c74963a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a0de93305e075b3a2ee775a6c74963a">&#9670;&#160;</a></span>Formulation_Manager() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">realization::Formulation_Manager::Formulation_Manager </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>file_path</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="#ac1cd858aa10b3383d98ca427e7212a33">initialize_output_config()</a>, and <a class="el" href="#ae34d4f2d7d9bf211e5139eb2b8b09e39">tree</a>.</p>
-
-</div>
-</div>
-<a id="a58bf2c51c335e14480dbcd42e4ca8d7c" name="a58bf2c51c335e14480dbcd42e4ca8d7c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58bf2c51c335e14480dbcd42e4ca8d7c">&#9670;&#160;</a></span>Formulation_Manager() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">realization::Formulation_Manager::Formulation_Manager </td>
-          <td>(</td>
-          <td class="paramtype">boost::property_tree::ptree &amp;</td>          <td class="paramname"><span class="paramname"><em>loaded_tree</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="#ac1cd858aa10b3383d98ca427e7212a33">initialize_output_config()</a>, and <a class="el" href="#ae34d4f2d7d9bf211e5139eb2b8b09e39">tree</a>.</p>
+<p class="reference">References <a class="el" href="#ac1cd858aa10b3383d98ca427e7212a33">initialize_output_config()</a>.</p>
 
 </div>
 </div>
@@ -808,7 +750,7 @@ Protected Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structrealization_1_1config_1_1_output_domain.html#aee34057c187100f9b5f5aeecc65dc7e2">realization::config::OutputDomain::format</a>, <a class="el" href="structrealization_1_1config_1_1_output.html#a951bad9ed42971b78185cffe21e1f318">realization::config::Output::from_legacy_keys</a>, <a class="el" href="structrealization_1_1config_1_1_output.html#a0317e8701c2daf82cb7661835e7a0701">realization::config::Output::from_realization()</a>, <a class="el" href="namespacerealization_1_1config.html#ab24879669387dcb7b2e65913b75e21bfac2e0f73e7b066a47b743d6ce8213e684">realization::config::netcdf</a>, <a class="el" href="structrealization_1_1config_1_1_output.html#aab88d0d406e1e542451a9362e3ce3d71">realization::config::Output::nexus</a>, <a class="el" href="#aa30fd8606796914e46da3ae33e6ee701">output_config</a>, and <a class="el" href="#ae34d4f2d7d9bf211e5139eb2b8b09e39">tree</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="#a58bf2c51c335e14480dbcd42e4ca8d7c">Formulation_Manager()</a>, <a class="el" href="#a0a0de93305e075b3a2ee775a6c74963a">Formulation_Manager()</a>, and <a class="el" href="#a999424a470ead9efe66ab5989929eb8e">Formulation_Manager()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#abb6bbc7fa5fe45e17b76f40f4c5a5857">Formulation_Manager()</a>.</p>
 
 </div>
 </div>
@@ -1124,7 +1066,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a58bf2c51c335e14480dbcd42e4ca8d7c">Formulation_Manager()</a>, <a class="el" href="#a0a0de93305e075b3a2ee775a6c74963a">Formulation_Manager()</a>, <a class="el" href="#a999424a470ead9efe66ab5989929eb8e">Formulation_Manager()</a>, <a class="el" href="#ac1cd858aa10b3383d98ca427e7212a33">initialize_output_config()</a>, and <a class="el" href="#a4ce324df6581fc91e93f2350109fe168">read()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#ac1cd858aa10b3383d98ca427e7212a33">initialize_output_config()</a>, and <a class="el" href="#a4ce324df6581fc91e93f2350109fe168">read()</a>.</p>
 
 </div>
 </div>
@@ -1162,7 +1104,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_formulation___manager.html">Formulation_Manager</a></li>
-    <li class="footer">Generated on Tue Aug 25 2026 21:20:31 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Sep 3 2026 13:26:15 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

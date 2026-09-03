@@ -7,7 +7,7 @@ var searchData=
   ['parse_5foutput_5fgrouping_4',['parse_output_grouping',['../namespacerealization_1_1config.html#a650a217cbb75c964f3a7e7d06ba0ab81',1,'realization::config']]],
   ['parse_5fpartition_5ffile_5',['parse_partition_file',['../class_partitions___parser.html#a1667ab474aa0daa3530a42f31d89da45',1,'Partitions_Parser']]],
   ['parse_5ftime_6',['parse_time',['../namespacedata__access_1_1detail.html#ae2b8636371aa00b1dfbe53a2595f7ae1',1,'data_access::detail']]],
-  ['partitions_5fparser_7',['Partitions_Parser',['../class_partitions___parser.html#a499e4585ca462c14892b788bf2da10f9',1,'Partitions_Parser::Partitions_Parser(const std::string &amp;file_path)'],['../class_partitions___parser.html#ae7a44cd17e24bc06fec1aec7bc49f233',1,'Partitions_Parser::Partitions_Parser(const boost::property_tree::ptree tree)']]],
+  ['partitions_5fparser_7',['Partitions_Parser',['../class_partitions___parser.html#ae7a44cd17e24bc06fec1aec7bc49f233',1,'Partitions_Parser']]],
   ['perform_5fset_8',['perform_set',['../classrealization_1_1_bmi___module___formulation.html#addd74974bd828fac5bc15790787fc119',1,'realization::Bmi_Module_Formulation']]],
   ['pernexuscsvoutputmgr_9',['PerNexusCsvOutputMgr',['../classutils_1_1_per_nexus_csv_output_mgr.html#a7fd5f6518048cf92ac5f7883c4069dd7',1,'utils::PerNexusCsvOutputMgr']]],
   ['point_10',['point',['../classgeojson_1_1_collection_feature.html#a612d40ad69ec13f03492a6295bdaa0bb',1,'geojson::CollectionFeature::point()'],['../namespacegeojson.html#a0f6ff987f88f0fa9f53225b87dc2d7db',1,'geojson::point()']]],

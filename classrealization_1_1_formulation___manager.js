@@ -1,8 +1,6 @@
 var classrealization_1_1_formulation___manager =
 [
-    [ "Formulation_Manager", "classrealization_1_1_formulation___manager.html#a999424a470ead9efe66ab5989929eb8e", null ],
-    [ "Formulation_Manager", "classrealization_1_1_formulation___manager.html#a0a0de93305e075b3a2ee775a6c74963a", null ],
-    [ "Formulation_Manager", "classrealization_1_1_formulation___manager.html#a58bf2c51c335e14480dbcd42e4ca8d7c", null ],
+    [ "Formulation_Manager", "classrealization_1_1_formulation___manager.html#abb6bbc7fa5fe45e17b76f40f4c5a5857", null ],
     [ "~Formulation_Manager", "classrealization_1_1_formulation___manager.html#afbb8fd26cb697649d9d4a71bd79c8c86", null ],
     [ "add_formulation", "classrealization_1_1_formulation___manager.html#a3868b41241493dd336e5e124c4d436ad", null ],
     [ "begin", "classrealization_1_1_formulation___manager.html#abcc1668bbbdcdb541a0bfb0f6a70faf4", null ],
