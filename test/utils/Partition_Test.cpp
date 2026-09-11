@@ -12,6 +12,8 @@
 #include "core/Partition_Parser.hpp"
 #include "FileChecker.h"
 
+#include "utilities/JSON_Reader.hpp"
+
 
 class PartitionsParserTest: public ::testing::Test {
 
@@ -76,7 +78,7 @@ void PartitionsParserTest::setupArbitraryExampleCase() {
 TEST_F(PartitionsParserTest, TestFileReader)
 {GTEST_SKIP() << "Skipping test"; //test broke, partition file is out of date
   const std::string file_path = file_search(data_paths,"partition_huc01.json");
-  Partitions_Parser partitions_parser = Partitions_Parser(file_path);
+  Partitions_Parser partitions_parser = Partitions_Parser(ptree_from_json_file(file_path));
 
   partitions_parser.parse_partition_file();
 
@@ -87,7 +89,7 @@ TEST_F(PartitionsParserTest, TestFileReader)
 TEST_F(PartitionsParserTest, DisplayPartitionData)
 { GTEST_SKIP() << "Skipping test"; //test broke, partition file is out of date
   const std::string file_path = file_search(data_paths,"partition_huc01.json");
-  Partitions_Parser partitions_parser = Partitions_Parser(file_path);
+  Partitions_Parser partitions_parser = Partitions_Parser(ptree_from_json_file(file_path));
 
   partitions_parser.parse_partition_file();
 

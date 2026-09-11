@@ -64,6 +64,8 @@
 #include "utilities/output/PerFormulationNexusOutputMgr.hpp"
 #endif
 
+#include "utilities/JSON_Reader.hpp"
+
 #include <mediator/UnitsHelper.hpp>
 
 void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
@@ -101,12 +103,12 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
         const auto python_venv = std::getenv("VIRTUAL_ENV") == nullptr ? "<none>" : std::getenv("VIRTUAL_ENV");
       
         stream << "  Python:\n"
-               << "    Version: " << sys.attr("version").cast<std::string>() << "\n"
-               << "    Virtual Env: " << python_venv << "\n"
-               << "    Executable: " << sys.attr("executable").cast<std::string>() << "\n"
-               << "    Site Library: " << python_paths.at("purelib") << "\n"
-               << "    Include: " << python_paths.at("include") << "\n"
-               << "    Runtime Library: " << python_paths.at("stdlib") << "\n";
+               << "    Version: "         << sys.attr("version").cast<std::string>() << "\n"
+               << "    Virtual Env: "     << python_venv                 << "\n"
+               << "    Executable: "      << sys.attr("executable").cast<std::string>() << "\n"
+               << "    Site Library: "    << python_paths.at("purelib")  << "\n"
+               << "    Include: "         << python_paths.at("include")  << "\n"
+               << "    Runtime Library: " << python_paths.at("stdlib")   << "\n";
 
         if (imported_numpy) {
             stream << "    NumPy Version: "   << numpy.attr("version").attr("version").cast<std::string>() << "\n"
@@ -484,8 +486,7 @@ int main(int argc, char* argv[]) {
     // to map features to their primary id as well as the alternative property
     nexus_collection->update_ids("id");
 
-    boost::property_tree::ptree realization_config;
-    boost::property_tree::json_parser::read_json(REALIZATION_CONFIG_PATH, realization_config);
+    boost::property_tree::ptree realization_config = ptree_from_json_file(REALIZATION_CONFIG_PATH);
 
     std::shared_ptr<Simulation_Time> sim_time;
 

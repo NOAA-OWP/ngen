@@ -66,7 +66,7 @@ endif()
 add_executable(test_all)
 target_link_libraries(test_all PRIVATE gtest gtest_main)
 set_target_properties(test_all PROPERTIES FOLDER test)
-target_include_directories(test_all PRIVATE ${CMAKE_CURRENT_LIST_DIR}/bmi)
+target_include_directories(test_all PRIVATE ${CMAKE_CURRENT_LIST_DIR}/bmi ${NGEN_ROOT_DIR}/include)
 
 # =============================================================================
 
@@ -110,6 +110,7 @@ function(ngen_add_test TESTNAME)
 
     if(NGEN_TEST_CREATE)
         add_executable(${TESTNAME} ${NGEN_TEST_OBJECTS})
+        target_include_directories(${TESTNAME} PRIVATE ${NGEN_ROOT_DIR}/include)
         target_include_directories(${TESTNAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/bmi)
         target_link_libraries(${TESTNAME} PRIVATE gtest gtest_main ${NGEN_TEST_LIBRARIES})
         set_target_properties(${TESTNAME} PROPERTIES FOLDER test)

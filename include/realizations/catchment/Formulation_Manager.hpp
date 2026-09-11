@@ -6,6 +6,7 @@
 #include <memory>
 #include <sstream>
 #include <tuple>
+#include <utility>
 #include <functional>
 #include <dirent.h>
 #include <sys/stat.h>
@@ -17,7 +18,6 @@
 #include <iostream>
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 #include <FeatureBuilder.hpp>
 #include "features/Features.hpp"
 #include "Formulation_Constructors.hpp"
@@ -33,36 +33,9 @@ namespace realization {
 
     class Formulation_Manager {
         public:
-            Formulation_Manager(std::stringstream &data) {
-                boost::property_tree::ptree loaded_tree;
-                try {
-                    boost::property_tree::json_parser::read_json(data, loaded_tree);
-                    this->tree = loaded_tree;
-                    initialize_output_config();
-                }
-                catch (const std::exception& e) {
-                    std::string msg = std::string("Reading json data") + e.what();
-                    LOG(msg, LogLevel::FATAL);
-                    throw;
-                }
-            }
-
-            Formulation_Manager(const std::string &file_path) {
-                boost::property_tree::ptree loaded_tree;
-                try {
-                    boost::property_tree::json_parser::read_json(file_path, loaded_tree);
-                    this->tree = loaded_tree;
-                    initialize_output_config();
-                }
-                catch (const std::exception& e) {
-                    std::string msg = std::string("Reading json file ") + file_path + e.what();
-                    LOG(msg, LogLevel::FATAL);
-                    throw;
-                }
-            }
-
-            Formulation_Manager(boost::property_tree::ptree &loaded_tree) {
-                this->tree = loaded_tree;
+            Formulation_Manager(boost::property_tree::ptree loaded_tree)
+                : tree(std::move(loaded_tree))
+            {
                 initialize_output_config();
             }
 
