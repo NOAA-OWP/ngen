@@ -19,10 +19,10 @@ module iso_c_bmif_2_0
   end type
 
   contains
-    pure function c_to_f_string(c_string) result(f_string)
+    pure subroutine c_to_f_string(c_string, f_string)
       implicit none
       character(kind=c_char, len=1), intent(in) :: c_string(:)
-      character(len=:), allocatable :: f_string
+      character(len=:), allocatable, intent(out) :: f_string
       integer i,n
 
       !loop  through the c_string till terminator is found
@@ -37,7 +37,7 @@ module iso_c_bmif_2_0
       n = i - 1 ! trim terminator
       allocate(character(len=n) :: f_string)
       f_string = transfer( c_string(1:n), f_string )
-    end function c_to_f_string
+    end subroutine c_to_f_string
 
     pure function f_to_c_string(f_string) result(c_string)
       implicit none
@@ -66,7 +66,7 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
       !convert c style string to fortran character array
-      f_file = c_to_f_string(config_file)
+      call c_to_f_string(config_file, f_file)
       bmi_status = bmi_box%ptr%initialize(f_file)
       deallocate(f_file)
     end function initialize
@@ -213,7 +213,7 @@ module iso_c_bmif_2_0
       character(kind=c_char, len=:), allocatable :: f_str
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      f_str = c_to_f_string(name)
+      call c_to_f_string(name, f_str)
       bmi_status = bmi_box%ptr%get_var_grid(f_str, grid)
       deallocate(f_str)
     end function get_var_grid
@@ -231,7 +231,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      f_str = c_to_f_string(name)
+      call c_to_f_string(name, f_str)
       bmi_status = bmi_box%ptr%get_var_type(f_str, f_type)
       type(1:len_trim(f_type)+1) = f_to_c_string(f_type)
       deallocate(f_str)
@@ -250,7 +250,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      f_str = c_to_f_string(name)
+      call c_to_f_string(name, f_str)
       bmi_status = bmi_box%ptr%get_var_units(f_str, f_units)
       units(1:len_trim(f_units)+1) = f_to_c_string(f_units)
       deallocate(f_str)
@@ -268,7 +268,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      f_str = c_to_f_string(name)
+      call c_to_f_string(name, f_str)
       bmi_status = bmi_box%ptr%get_var_itemsize(f_str, size)
       deallocate(f_str)
     end function get_var_itemsize
@@ -285,7 +285,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      f_str = c_to_f_string(name)
+      call c_to_f_string(name, f_str)
       bmi_status = bmi_box%ptr%get_var_nbytes(f_str, nbytes)
       deallocate(f_str)
     end function get_var_nbytes
@@ -304,7 +304,7 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
 
-      f_str = c_to_f_string(name)
+      call c_to_f_string(name, f_str)
       bmi_status = bmi_box%ptr%get_var_location(f_str, f_location)
       location(1:len_trim(f_location)+1) = f_to_c_string(f_location)
       deallocate(f_str)
@@ -391,7 +391,7 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
 
-      f_str = c_to_f_string(name)
+      call c_to_f_string(name, f_str)
       ! Use variable metadata to determine the size of the array required to
       ! hold the variable.
       bmi_status = bmi_box%ptr%get_var_nbytes(f_str, num_bytes)
@@ -423,7 +423,7 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
       
-      f_str = c_to_f_string(name)
+      call c_to_f_string(name, f_str)
       ! Use variable metadata to determine the size of the array required to
       ! hold the variable.
       bmi_status = bmi_box%ptr%get_var_nbytes(f_str, num_bytes)
@@ -455,7 +455,7 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      f_str = c_to_f_string(name)
+      call c_to_f_string(name, f_str)
       ! Use variable metadata to determine the size of the array required to
       ! hold the variable.
       bmi_status = bmi_box%ptr%get_var_nbytes(f_str, num_bytes)
@@ -553,7 +553,7 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      f_str = c_to_f_string(name)
+      call c_to_f_string(name, f_str)
       ! Use variable metadata to determine the size of the array required to
       ! hold the variable.
       bmi_status = bmi_box%ptr%get_var_nbytes(f_str, num_bytes)
@@ -587,7 +587,7 @@ module iso_c_bmif_2_0
       call c_f_pointer(this, bmi_box)
       !FIXME try both paths, nbytes/itemsize and grid info in cause some model doesn't implement
       !one one or the other????
-      f_str = c_to_f_string(name)
+      call c_to_f_string(name, f_str)
       ! Use variable metadata to determine the size of the array required to
       ! hold the variable.
       bmi_status = bmi_box%ptr%get_var_nbytes(f_str, num_bytes)
@@ -620,7 +620,7 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      f_str = c_to_f_string(name)
+      call c_to_f_string(name, f_str)
       ! Use variable metadata to determine the size of the array required to
       ! hold the variable.
       bmi_status = bmi_box%ptr%get_var_nbytes(f_str, num_bytes)
