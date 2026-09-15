@@ -157,7 +157,7 @@ module iso_c_bmif_2_0
     function get_input_var_names(this, names) result(bmi_status) bind(C, name="get_input_var_names")
       type(c_ptr) :: this
       type(c_ptr), intent(inout)  :: names (*)
-      character(kind=c_char, len=BMI_MAX_FILE_NAME), pointer :: f_names(:)
+      character(kind=c_char, len=BMI_MAX_VAR_NAME), pointer :: f_names(:)
       character(kind=c_char, len=1), pointer :: c_buff_ptr(:)
       integer(kind=c_int) :: bmi_status
       !use a wrapper for c interop
@@ -183,7 +183,7 @@ module iso_c_bmif_2_0
     function get_output_var_names(this, names) result(bmi_status) bind(C, name="get_output_var_names")
       type(c_ptr) :: this
       type(c_ptr), intent(inout)  :: names (*)
-      character(kind=c_char, len=BMI_MAX_FILE_NAME), pointer :: f_names(:)
+      character(kind=c_char, len=BMI_MAX_VAR_NAME), pointer :: f_names(:)
       character(kind=c_char, len=1), pointer :: c_buff_ptr(:)
       integer(kind=c_int) :: bmi_status
       !use a wrapper for c interop
