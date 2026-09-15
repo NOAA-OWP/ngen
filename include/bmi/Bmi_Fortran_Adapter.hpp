@@ -11,7 +11,12 @@
 #include "State_Exception.hpp"
 #include "utilities/ExternalIntegrationException.hpp"
 
+#include <array>
+#include <mutex>
 #include <stdexcept>
+
+// Comes from libgfortran
+extern "C" void _gfortran_set_options (int num, int const *options);
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Fortran_Adapter_Test;
@@ -485,6 +490,8 @@ namespace models {
             }
 
         private:
+
+            static std::once_flag fortran_runtime_initialization;
 
             /**
              * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
