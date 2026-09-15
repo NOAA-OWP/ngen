@@ -3,12 +3,35 @@
 #if NGEN_WITH_BMI_FORTRAN
 #include "bmi/Bmi_Fortran_Adapter.hpp"
 
+#include <array>
+#include <mutex>
+
+// Comes from libgfortran
+extern "C" void _gfortran_set_options (int num, int const *options);
+
 using namespace models::bmi;
+
+namespace {
+    std::once_flag fortran_runtime_initialization;
+}
 
 void Bmi_Fortran_Adapter::construct_and_init_backing_model_for_fortran() {
     if (model_initialized)
         return;
     bmi_model = std::make_unique<Bmi_Fortran_Handle_Wrapper>(Bmi_Fortran_Handle_Wrapper());
+
+#if NGEN_WITH_OPENMP
+    // Ensure that the GNU Fortran runtime library is
+    // initialized with Fortran 2018 support enabled, so
+    // that it will allow multiple units to be attached to
+    // individual files. This is necessary to support
+    // multi-threaded formulation initialization, since
+    // each instance will open its namelist and subsidiary
+    // files independently.
+    static constexpr std::array fortran_options{ 0, 16383 };
+    std::call_once(fortran_runtime_initialization, [](){ _gfortran_set_options(fortran_options.size(), fortran_options.data()); });
+#endif
+
     dynamic_library_load();
     execModuleRegistration();
     int init_result = initialize(&bmi_model->handle, bmi_init_config.c_str());
