@@ -39,11 +39,13 @@ module iso_c_bmif_2_0
       f_string = transfer( c_string(1:n), f_string )
     end subroutine c_to_f_string
 
-    pure function f_to_c_string(f_string) result(c_string)
+    ! Fill c_string with f_string's trimmed contents plus a null terminator.
+    ! c_string must have room for len_trim(f_string) + 1 elements.
+    pure subroutine f_to_c_string(f_string, c_string)
       implicit none
       character(len=*), intent(in) :: f_string
-      !Create a C compatable character array with room for a null terminator
-      character(kind=c_char, len=1), dimension( len_trim(f_string) + 1 ) :: c_string
+      !A C compatable character array with room for a null terminator
+      character(kind=c_char, len=1), intent(out) :: c_string(*)
 
       !loop through the string, copy each char
       integer i,n
@@ -52,7 +54,7 @@ module iso_c_bmif_2_0
         c_string(i) = f_string(i:i)
       end do
       c_string(n+1) = c_null_char !make sure to add null terminator
-    end function f_to_c_string
+    end subroutine f_to_c_string
 
     ! Perform startup tasks for the model.
     function initialize(this, config_file) result(bmi_status) bind(C, name="initialize")
@@ -124,7 +126,7 @@ module iso_c_bmif_2_0
       call c_f_pointer(handle, bmi_box)
       bmi_status = bmi_box%ptr%get_component_name(f_name)
       !Set the c_string input (name), make sure to inlcude the null_terminator
-      name(:len_trim(f_name)+1) = f_to_c_string(f_name)
+      call f_to_c_string(f_name, name)
     end function get_component_name
 
     ! Count the input variables.
@@ -174,7 +176,7 @@ module iso_c_bmif_2_0
         call c_f_pointer(names(i), c_buff_ptr, [ BMI_MAX_COMPONENT_NAME ] )
         !print *, c_to_f_string(c_buff_ptr)
         !assign the c_string to buffer
-        c_buff_ptr = f_to_c_string(f_names(i))
+        call f_to_c_string(f_names(i), c_buff_ptr)
       end do
 
     end function get_input_var_names
@@ -198,7 +200,7 @@ module iso_c_bmif_2_0
         !For each pointer (one for each name), associate c_buff_ptr with the string names points to
         call c_f_pointer(names(i), c_buff_ptr, [ BMI_MAX_COMPONENT_NAME ] )
         !assign the c_string to buffer
-        c_buff_ptr = f_to_c_string(f_names(i))
+        call f_to_c_string(f_names(i), c_buff_ptr)
       end do
     end function get_output_var_names
 
@@ -233,7 +235,7 @@ module iso_c_bmif_2_0
       call c_f_pointer(this, bmi_box)
       call c_to_f_string(name, f_str)
       bmi_status = bmi_box%ptr%get_var_type(f_str, f_type)
-      type(1:len_trim(f_type)+1) = f_to_c_string(f_type)
+      call f_to_c_string(f_type, type)
       deallocate(f_str)
     end function get_var_type
 
@@ -252,7 +254,7 @@ module iso_c_bmif_2_0
       call c_f_pointer(this, bmi_box)
       call c_to_f_string(name, f_str)
       bmi_status = bmi_box%ptr%get_var_units(f_str, f_units)
-      units(1:len_trim(f_units)+1) = f_to_c_string(f_units)
+      call f_to_c_string(f_units, units)
       deallocate(f_str)
     end function get_var_units
 
@@ -306,7 +308,7 @@ module iso_c_bmif_2_0
 
       call c_to_f_string(name, f_str)
       bmi_status = bmi_box%ptr%get_var_location(f_str, f_location)
-      location(1:len_trim(f_location)+1) = f_to_c_string(f_location)
+      call f_to_c_string(f_location, location)
       deallocate(f_str)
     end function get_var_location
 
@@ -361,7 +363,7 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
       bmi_status = bmi_box%ptr%get_time_units(f_units)
-      units(1:len_trim(f_units)+1) = f_to_c_string(f_units)
+      call f_to_c_string(f_units, units)
     end function get_time_units
 
     ! Time step of the model.
@@ -720,7 +722,7 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
       bmi_status = bmi_box%ptr%get_grid_type(grid, f_type)
-      type(1:len_trim(f_type)+1) = f_to_c_string(f_type)
+      call f_to_c_string(f_type, type)
     end function get_grid_type
 
     ! Get the dimensions of the computational grid.
