@@ -40,7 +40,21 @@ module iso_c_bmif_2_0
     end subroutine c_to_f_string
 
     ! Fill c_string with f_string's trimmed contents plus a null terminator.
-    ! c_string must have room for len_trim(f_string) + 1 elements.
+    !
+    ! Both arguments are deliberately declared without a known extent.
+    !
+    ! c_string is assumed-size (*) rather than an assumed-shape array or a
+    ! function result. An assumed-size dummy is sequence associated, so the
+    ! caller's buffer is written in place: no array descriptor is built and
+    ! no temporary is copied back. The trade is that the extent is not
+    ! passed, so this procedure cannot check it -- the caller must supply
+    ! room for len_trim(f_string) + 1 elements, the trimmed text plus the
+    ! terminator. Every caller here passes a BMI_MAX_*-sized buffer, which
+    ! is far larger than any name or unit string it will hold.
+    !
+    ! f_string is assumed-length (len=*) so it binds directly to whatever
+    ! fixed-length buffer the caller already has, without a copy, and its
+    ! trimmed length is measured once, here, rather than by each caller.
     pure subroutine f_to_c_string(f_string, c_string)
       implicit none
       character(len=*), intent(in) :: f_string
