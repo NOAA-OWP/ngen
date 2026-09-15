@@ -23,6 +23,10 @@ target_sources(iso_c_bmi PRIVATE ${_ISO_C_BMI_OBJECTS})
 target_compile_options(iso_c_bmi PRIVATE -cpp -ffree-line-length-none)
 target_include_directories(iso_c_bmi INTERFACE "${_ISO_C_BMI_BINARY_DIR}/mod")
 
+if(NGEN_WITH_OPENMP)
+    target_compile_options(iso_c_bmi PRIVATE -fopenmp -frecursive)
+endif()
+
 unset(_ISO_C_BMI_BINARY_DIR)
 unset(_ISO_C_BMI_OBJECTS)
 

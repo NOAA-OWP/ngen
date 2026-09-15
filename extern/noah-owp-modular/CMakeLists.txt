@@ -27,6 +27,10 @@ target_compile_options(surfacebmi PRIVATE -cpp -ffree-line-length-none)
 target_include_directories(surfacebmi INTERFACE "${_SURFACEBMI_BINARY_DIR}/mod")
 target_compile_definitions(surfacebmi PRIVATE BMI_ACTIVE)
 
+if(NGEN_WITH_OPENMP)
+    target_compile_options(surfacebmi PRIVATE -std=gnu -fopenmp -frecursive)
+endif()
+
 if(NGEN_IS_MAIN_PROJECT)
 
     # This ensures we can build NOAH-OWP-Modular with NGen support, but

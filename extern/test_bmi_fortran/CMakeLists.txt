@@ -17,6 +17,10 @@ target_compile_options(testbmifortranmodel PRIVATE -cpp -ffree-line-length-none)
 target_compile_definitions(testbmifortranmodel PRIVATE NGEN_ACTIVE)
 target_include_directories(testbmifortranmodel INTERFACE "${_TESTBMIFORTRAN_BINARY_DIR}/mod")
 
+if(NGEN_WITH_OPENMP)
+    target_compile_options(testbmifortranmodel PRIVATE -fopenmp -frecursive)
+endif()
+
 if(NGEN_IS_MAIN_PROJECT)
 
     # This ensures we can build testbmifortranmodel with NGen support, but
