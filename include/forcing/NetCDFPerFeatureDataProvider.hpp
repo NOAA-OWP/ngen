@@ -158,6 +158,7 @@ namespace data_access
         static std::map<std::string, std::shared_ptr<NetCDFPerFeatureDataProvider>> shared_providers;
 
         std::mutex cache_mutex;
+        std::mutex hinted_ids_mutex;
 
         std::vector<std::string> variable_names;
         std::vector<std::string> loc_ids;

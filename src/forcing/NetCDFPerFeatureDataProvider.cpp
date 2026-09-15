@@ -342,15 +342,19 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
 
 void NetCDFPerFeatureDataProvider::hint_shared_provider_id(const std::string& id)
 {
+    std::lock_guard l{hinted_ids_mutex};
     hinted_ids.emplace(id);
 }
 
 void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
 {
-    auto ids = hinted_ids;
+    std::lock_guard l{hinted_ids_mutex};
+
     if (hinted_ids.size() == 0){
         return;
     }
+
+    auto ids = hinted_ids;
 
     // Base cases covered in other ctor
     if (ids.size() == get_ids().size() || ids.size() == 0) {
@@ -576,12 +580,10 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         c_idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
     }
 
-    // update chunks during the first timestep
-    if (hinted_ids.size() > 0){
-        // 'maybe_update_chunks_with_hints' clears 'hinted_ids'
-        // assumes all id's will have been hinted before 'get_value' is called.
-        maybe_update_chunks_with_hints();
-    }
+    // update chunks during the first timestep, and no-op thereafter;
+    // 'maybe_update_chunks_with_hints' clears 'hinted_ids'
+    // assumes all id's will have been hinted before 'get_value' is called.
+    maybe_update_chunks_with_hints();
 
     auto stride = c_idx2 - c_idx1;
 
