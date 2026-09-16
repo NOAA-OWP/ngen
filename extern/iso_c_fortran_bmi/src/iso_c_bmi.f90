@@ -1,12 +1,12 @@
-! The Basic Model Interface ISO_C_BINDINGING compatible free functions
+! The Basic Model Interface ISO_C_BINDING compatible free functions
 !
 ! @author: Nels Frazier
 ! @email: nels.frazier@noaa.gov
 ! Date: August 23, 2021
 !
-! This module provides a set of ISO_C_BINDING compatable functions
+! This module provides a set of ISO_C_BINDING compatible functions
 ! that allow a Fortran BMI compatible model to interoperate with a C program, given that the
-! BMI module implelements a `register` function that is able to return an appropriate opaque handle
+! BMI module implements a `register` function that is able to return an appropriate opaque handle
 ! to the C caller.
 
 module iso_c_bmif_2_0
@@ -58,7 +58,7 @@ module iso_c_bmif_2_0
     pure subroutine f_to_c_string(f_string, c_string)
       implicit none
       character(len=*), intent(in) :: f_string
-      !A C compatable character array with room for a null terminator
+      !A C compatible character array with room for a null terminator
       character(kind=c_char, len=1), intent(out) :: c_string(*)
 
       !loop through the string, copy each char
@@ -139,7 +139,7 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(handle, bmi_box)
       bmi_status = bmi_box%ptr%get_component_name(f_name)
-      !Set the c_string input (name), make sure to inlcude the null_terminator
+      !Set the c_string input (name), make sure to include the null_terminator
       call f_to_c_string(f_name, name)
     end function get_component_name
 
@@ -751,7 +751,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      !Check the  grid rank to decide how many dimsions shape should have
+      !Check the  grid rank to decide how many dimensions shape should have
       !it needs at least one to hold the sentinel (no shape) value
       bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
       if (rank == 0) then
@@ -772,7 +772,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      !Check the  grid rank to decide how many dimsions shape should have
+      !Check the  grid rank to decide how many dimensions shape should have
       !it needs at least one to hold the sentinel (no shape) value
       bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
       if (rank == 0) then
@@ -793,7 +793,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      !Check the  grid rank to decide how many dimsions shape should have
+      !Check the  grid rank to decide how many dimensions shape should have
       !it needs at least one to hold the sentinel (no shape) value
       bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
       if (rank == 0) then
