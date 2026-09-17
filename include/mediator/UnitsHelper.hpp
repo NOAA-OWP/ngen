@@ -8,6 +8,8 @@
 #include <vector>
 #include "all.h"
 
+void init_unit_system();
+
 class UnitsHelper {
 
     public:

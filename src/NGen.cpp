@@ -428,6 +428,7 @@ int main(int argc, char* argv[]) {
 
     sim_time = std::make_shared<Simulation_Time>(simulation_time_config);
 
+    init_unit_system();
     std::cout<<"Initializing formulations" << std::endl;
 
     std::shared_ptr<realization::Formulation_Manager> manager =

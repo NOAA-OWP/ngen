@@ -28,7 +28,7 @@ static std::map<std::string, std::shared_ptr<cv_converter>> converters;
 static std::mutex converters_mutex;
 
 static std::once_flag unit_system_inited;
-static void init_unit_system(){
+void init_unit_system(){
 #ifdef NGEN_UDUNITS2_XML_PATH
     unit_system = ut_read_xml(NGEN_UDUNITS2_XML_PATH);
 #else
@@ -135,7 +135,6 @@ double UnitsHelper::get_converted_value(const std::string &in_units, const doubl
         return value;
     }
 
-    std::call_once(unit_system_inited, init_unit_system);
 
     try {
         auto converter = get_converter(in_norm, out_norm);
@@ -162,7 +161,6 @@ double* UnitsHelper::convert_values(const std::string &in_units, double* in_valu
         }
     }
 
-    std::call_once(unit_system_inited, init_unit_system);
 
     // Don't catch the UCE here to fill in uce.unconverted_values,
     // because the caller may be able to more efficiently std::move it
