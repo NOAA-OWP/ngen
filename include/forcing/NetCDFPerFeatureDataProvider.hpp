@@ -175,7 +175,7 @@ namespace data_access
 
         std::shared_ptr<netCDF::NcFile> nc_file;
 
-        std::map<std::string,netCDF::NcVar> ncvar_cache;
+        std::map<std::string, std::pair<std::string, netCDF::NcVar>> ncvar_cache;
         std::map<std::string,std::string> units_cache;
         boost::compute::detail::lru_cache<std::string, std::shared_ptr<std::vector<double>>> value_cache;
         // number of time slices per cache entry
@@ -184,7 +184,7 @@ namespace data_access
         size_t cache_slice_t_size = 24;
         size_t cache_slice_c_size = 1;
 
-        const netCDF::NcVar& get_ncvar(const std::string& name);
+        std::pair<std::string, netCDF::NcVar> const& get_ncvar(const std::string& name) const;
 
         const std::string& get_ncvar_units(const std::string& name);
 
