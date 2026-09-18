@@ -183,7 +183,13 @@ namespace data_access
         // Key is (c_idx, variable_name), value is a pointer to the
         // cached data; if the pointer is null, another thread has
         // started filling it in, but is not done yet
-        std::map<std::pair<int, std::string>, std::atomic<std::shared_ptr<std::vector<double>>>> value_cache_2;
+        struct cache_slot {
+            cache_slot() = default;
+            cache_slot(std::piecewise_construct_t) {}
+            std::shared_ptr<std::vector<double>> first = nullptr;
+            std::atomic_flag second = ATOMIC_FLAG_INIT;
+        };
+        std::map<std::pair<int, std::string>, cache_slot> value_cache_2;
         std::shared_mutex cache_2_mutex;
 
         // number of time slices per cache entry

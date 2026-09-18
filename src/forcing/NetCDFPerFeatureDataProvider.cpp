@@ -650,7 +650,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	      cache_iter = value_cache_2.find(key_2);
 	      if (cache_iter == value_cache_2.end()) {
 		// This thread really is reponsible for creating it
-		cache_iter = value_cache_2.emplace(key_2, nullptr).first;
+		cache_iter = value_cache_2.emplace(key_2, std::piecewise_construct).first;
 		should_fill = true;
 
 		// Also clear out values from any previous step, key.get<0> < page_c_idx
@@ -690,13 +690,17 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	      idx += chunk.second * page_cache_line_size;
 	    }
 
-	    cache_iter->second.store(cached, std::memory_order_release);
+	    cache_iter->second.first = cached;
+	    std::atomic_thread_fence(std::memory_order_release);
+	    cache_iter->second.second.test_and_set();
 	    std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) << " " << omp_get_thread_num() << " NetCDF done reading " << key_2.first << " " << key_2.second << " " << cached.get() << std::endl;
 	  } else {
-	    while ((cached = cache_iter->second.load(std::memory_order_acquire)) == nullptr) {
+	    while (!cache_iter->second.second.test()) {
 	      // Just spin on whatever thread is doing the filling
 	    }
-	    std::cout << omp_get_thread_num() << " consumer thread  " << key_2.first << " " << key_2.second << " " << cached.get() << std::endl;
+	    std::atomic_thread_fence(std::memory_order_acquire);
+	    cached = cache_iter->second.first;
+	    //std::cout << omp_get_thread_num() << " consumer thread  " << key_2.first << " " << key_2.second << " " << cached.get() << std::endl;
 	  }
 	} // at this point, cached.get() should be non-nullptr
 
