@@ -62,3 +62,39 @@ TEST_F(UnitsHelper_Test, TestConvertArrayDontModifyInputNoOp){
     ASSERT_EQ( expected,  data2);
     ASSERT_EQ( data.at(2), 3);
 }
+
+/**
+ * Reducing a pair of units is what makes is_identity() answerable.
+ *
+ * The none-ish spellings all mean the same thing, so they have to be collapsed before the question becomes
+ * a comparison. Asked of unreduced units it would answer "a conversion is needed" for two units that both
+ * mean "none", which is the whole reason the reduced form exists.
+ */
+TEST_F(UnitsHelper_Test, ReducingRecognizesEveryNoneishSpelling){
+    for (const std::string none : {"", "none", "unitless", "dimensionless", "-"}) {
+        // Neither side states units: nothing to convert, however each side spells it.
+        for (const std::string other : {"", "none", "unitless", "dimensionless", "-"}) {
+            ASSERT_TRUE(UnitsHelper::normalized_units(none, other).is_identity()) << none << " -> " << other;
+        }
+        // An unstated requirement takes whatever the provider has.
+        ASSERT_TRUE(UnitsHelper::normalized_units("m", none).is_identity()) << "m -> " << none;
+        // An unstated input cannot be known to satisfy a stated requirement.
+        ASSERT_FALSE(UnitsHelper::normalized_units(none, "m").is_identity()) << none << " -> m";
+    }
+}
+
+TEST_F(UnitsHelper_Test, IdentityAgreesWithWhatConversionActuallyDoes){
+    // Same units, and convertible-but-different units.
+    ASSERT_TRUE(UnitsHelper::normalized_units("m", "m").is_identity());
+    ASSERT_FALSE(UnitsHelper::normalized_units("m", "mm").is_identity());
+
+    // Where it reports identity, converting leaves the value alone.
+    std::vector<double> value = {2.5};
+    UnitsHelper::convert_values("m", value.data(), "none", value.data(), value.size());
+    ASSERT_DOUBLE_EQ(value[0], 2.5);
+
+    // Where it does not, converting changes it.
+    value[0] = 2.5;
+    UnitsHelper::convert_values("m", value.data(), "mm", value.data(), value.size());
+    ASSERT_DOUBLE_EQ(value[0], 2500.0);
+}

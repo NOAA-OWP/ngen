@@ -14,9 +14,40 @@ class UnitsHelper {
 
     public:
 
-    static double get_converted_value(const std::string &in_units, const double &value, const std::string &out_units);
+    /**
+     * A pair of normalized units
+     *
+     * This struct encapsulates the noneish semantics of unit strings, 
+     * normalizing various representations of "no units" for consistent handling in conversion checks.
+     */
+    struct normalized_units {
+        /** Reduce @p in_units and @p out_units to the form the questions below are asked of. */
+        normalized_units(std::string in_units, std::string out_units);
 
-    static double* convert_values(const std::string &in_units, double* values, const std::string &out_units, double* out_values, const size_t & count);
+        /**
+         * Whether converting between these would leave every value exactly as it is.
+         *
+         * True in two cases:
+         * 1. The output units are empty (no units stated).
+         * 2. The input and output units are identical.
+         */
+        bool is_identity() const { return out.empty() || in == out; }
+
+        std::string in;
+        std::string out;
+    };
+
+    static double get_converted_value(const normalized_units &units, const double &value);
+
+    static double get_converted_value(const std::string &in_units, const double &value, const std::string &out_units) {
+        return get_converted_value(normalized_units(in_units, out_units), value);
+    }
+
+    static double* convert_values(const normalized_units &units, double* values, double* out_values, const size_t & count);
+
+    static double* convert_values(const std::string &in_units, double* values, const std::string &out_units, double* out_values, const size_t & count) {
+        return convert_values(normalized_units(in_units, out_units), values, out_values, count);
+    }
 
     struct unit_conversion_exception : public std::runtime_error {
         unit_conversion_exception(std::string message) : std::runtime_error(message) {}
