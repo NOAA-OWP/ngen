@@ -616,7 +616,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     for( size_t i = 0; i < n_page_accesses; i++ ) {
         // rows: catchments; columns: time;
         // stride between rows is 'cache_line_size'
-        std::shared_ptr<std::vector<double>> cached;
+        std::shared_ptr<std::vector<double>> cached = nullptr;
 
 	std::size_t ith_p_idx = p_idx + i;
 	std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
@@ -652,7 +652,6 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	    }
 	  } // cache_iter should be valid, != end() at this point
 	  
-	  std::shared_ptr<std::vector<double>> cached = nullptr;
 	  if (should_fill) {
 	    std::unique_lock nc_file_lock(netcdf_library_mutex);
 
