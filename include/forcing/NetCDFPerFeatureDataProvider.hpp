@@ -8,6 +8,7 @@
 #include "GenericDataProvider.hpp"
 #include "DataProviderSelectors.hpp"
 
+#include <atomic>
 #include <string>
 #include <algorithm>
 #include <map>
@@ -157,13 +158,12 @@ namespace data_access
         static std::mutex shared_providers_mutex;
         static std::map<std::string, std::shared_ptr<NetCDFPerFeatureDataProvider>> shared_providers;
 
-        std::shared_mutex cache_mutex;
         std::mutex hinted_ids_mutex;
+        std::set<std::string> hinted_ids;
 
         std::vector<std::string> variable_names;
         std::vector<std::string> loc_ids;
         std::vector<double> time_vals;
-        std::set<std::string> hinted_ids;
         std::map<std::string, std::size_t> id_pos;      // map from cat-id to position in vec of nc var values; accounts for chunking
         std::vector<std::pair<size_t, size_t>> chunks;  // a chunk is the start and length of a span in the "catchment-id" dim of a nc variable
         double start_time;                              // the begining of the first time for which data is stored
@@ -173,11 +173,18 @@ namespace data_access
         utils::StreamHandler log_stream;
         std::string file_path;
 
+        std::mutex netcdf_library_mutex;
         std::shared_ptr<netCDF::NcFile> nc_file;
 
         std::map<std::string, std::pair<std::string, netCDF::NcVar>> ncvar_cache;
         std::map<std::string,std::string> units_cache;
-        boost::compute::detail::lru_cache<std::string, std::shared_ptr<std::vector<double>>> value_cache;
+
+        // Key is (c_idx, variable_name), value is a pointer to the
+        // cached data; if the pointer is null, another thread has
+        // started filling it in, but is not done yet
+        std::map<std::pair<int, std::string>, std::atomic<std::shared_ptr<std::vector<double>>>> value_cache_2;
+        std::shared_mutex cache_2_mutex;
+
         // number of time slices per cache entry
         // this is a tunable parameter; your mileage may vary
         // NOTE: it would be nice if this were divisible by 2 and 4
