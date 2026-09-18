@@ -596,7 +596,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
     std::vector<std::size_t> start, count;
 
-    auto i_idx = id_pos[selector.get_id()];
+    auto i_idx = id_pos.at(selector.get_id());
 
     double t1 = time_vals[c_idx1];
     double t2 = time_vals[c_idx2];
