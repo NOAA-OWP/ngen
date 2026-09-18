@@ -348,6 +348,10 @@ void NetCDFPerFeatureDataProvider::hint_shared_provider_id(const std::string& id
 
 void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
 {
+    if (hinted_ids_done.test()) {
+        return;
+    }
+
     std::lock_guard l{hinted_ids_mutex};
 
     if (hinted_ids.size() == 0){
@@ -360,6 +364,7 @@ void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
     if (ids.size() == get_ids().size() || ids.size() == 0) {
         assert(chunks.size() == 1);
         hinted_ids.clear();
+        hinted_ids_done.test_and_set();
         return;
     }
     // get rid of "default" chunks, we will build them here
@@ -439,6 +444,8 @@ void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
     // TODO: improve this; we only want this method to "do something" once.
     //       invariant is, weakly, enforced by prelude guard clause.
     hinted_ids.clear();
+
+    hinted_ids_done.test_and_set();
 }
 
 NetCDFPerFeatureDataProvider::~NetCDFPerFeatureDataProvider() = default;
