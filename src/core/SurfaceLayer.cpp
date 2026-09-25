@@ -24,7 +24,9 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
 
     // On the first time step, check all the nexuses and warn user about ones have no contributing catchments
     if (current_time_index == 0) {
-        for(const auto& id : features.nexuses()) {
+        auto nexuses_iterator = features.nexuses();
+        nexuses.reserve(size(nexuses_iterator));
+        for(const auto& id : nexuses_iterator) {
             #if NGEN_WITH_MPI
             // When running with MPI, only be concerned with the local nexuses
             if (!features.is_remote_sender_nexus(id) && features.nexus_at(id)->get_contributing_catchments().size() == 0)
@@ -35,15 +37,16 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
                 // Likely this means a flow value of 0.0, but that's dependent on the nexus class implementation
                 std::cout << "WARNING: Nexus "<< id << " has no contributing catchments for flow values!" << std::endl;
             }
+            nexuses.push_back(features.nexus_at(id));
         }
     }
 
     // Once contributing catchments are updated for this timestep, dump the nexus output
-    for(const auto& id : features.nexuses()) 
+    for(const auto& nexus : nexuses)
     {
         // Get the correct "requesting" id for downstream_flow
-        const auto& nexus = features.nexus_at(id);
         const auto& cat_ids = nexus->get_receiving_catchments();
+        const auto& id = nexus->get_id();
 
         if (cat_ids.size() > 1) {
             std::string error = "Nexus '" + id + "' violates dendritic hydrofabric network assumption";

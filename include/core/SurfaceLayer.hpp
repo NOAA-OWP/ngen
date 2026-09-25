@@ -2,6 +2,7 @@
 #define __NGEN_SURFACE_LAYER__
 
 #include "Layer.hpp"
+#include "core/nexus/HY_HydroNexus.hpp"
 #include "utilities/output/NexusOutputsMgr.hpp"
 
 namespace ngen
@@ -36,6 +37,7 @@ namespace ngen
 
         private:
         std::shared_ptr<utils::NexusOutputsMgr> nexus_outputs_mgr;
+        std::vector<std::shared_ptr<HY_HydroNexus>> nexuses;
     };
 }
 
