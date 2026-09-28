@@ -40,25 +40,10 @@ namespace {
 // and live in serialization.hpp / serialization_record.hpp
 // respectively. This .cpp consumes them in place.
 
-// RAII guard: `SetValue(create)` on construction, `SetValue(free)` on
-// destruction. Region (2) in the thread-safety map — the guard is
-// per-call so (a) a throw from the middle of run() still releases
-// model-side resources, and (b) the (create, free) scope is a single
-// syntactic region that the reader can't accidentally split.
-//
-// Two paths to release:
-//   * `release()` — the happy path calls this once the capture has
-//     been consumed. It issues the `SetValue(FREE, ...)` itself and
-//     propagates any exception so the caller can surface a real BMI
-//     error. Calling `release()` more than once is a no-op.
-//   * Destructor — best-effort fallback for exception paths. Swallows
-//     any thrown error from the model because destructors must not
-//     throw and a model that already errored earlier in the scope
-//     is in no state to surface a meaningful second failure.
-//
-// Each (CREATE, FREE) pair uses its own local trigger value: BMI
-// `SetValue` reads the pointed-to byte(s) and does not retain the
-// pointer, so the guard doesn't need to remember an address.
+// RAII guard for the (SetValue(CREATE), SetValue(FREE)) pair.
+// `release()` is the explicit exit and lets any model exception
+// propagate; the destructor is the fallback for stack unwinding
+// and does not propagate exceptions.
 class ScopedCapture {
   public:
     explicit ScopedCapture(const ModelPtr& model)
