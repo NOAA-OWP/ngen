@@ -66,25 +66,6 @@ auto write_record(
     });
 }
 
-// Convenience wrapper for tests that expect must_create() to
-// succeed (the overwhelming majority). Asserts the expected<>
-// returned a value and unwraps it. Tests that specifically exercise
-// the error arm call `must_create(...)` directly and inspect
-// `.error()`.
-std::shared_ptr<FileBackend> must_create(std::string path, IdPredicate scope = {}) {
-    // Call the factory through a typedef'd pointer so the helper's
-    // body doesn't textually contain `FileBackend::create(` — the
-    // tests adopt `must_create(...)` as the convenience name for
-    // unwrapping the expected<>, and we don't want this helper
-    // calling itself.
-    using CreateFn =
-        expected<std::shared_ptr<FileBackend>, BackendError> (*)(std::string, IdPredicate);
-    constexpr CreateFn factory = &FileBackend::create;
-    auto be                    = factory(std::move(path), std::move(scope));
-    EXPECT_TRUE(be.has_value()) << be.error().message;
-    return be.has_value() ? std::move(be.value()) : nullptr;
-}
-
 } // namespace
 
 // ---------------------------------------------------------------------
@@ -95,7 +76,7 @@ TEST(FileBackend, round_trip_single_record_via_factory_methods) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
     {
         auto w = be->writer(now(), Durability::relaxed);
         ASSERT_TRUE(w.has_value()) << w.error().message;
@@ -120,7 +101,7 @@ TEST(FileBackend, round_trip_via_scoped_wrappers) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
 
     // Save side via with_writer
     auto save = be->with_writer(now(), Durability::relaxed, [](Writer& w) {
@@ -148,7 +129,7 @@ TEST(FileBackend, multiple_entities_share_one_file) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
 
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
                       (void)write_record(w,"cat-A", 0, 0, {'1'});
@@ -178,7 +159,7 @@ TEST(FileBackend, find_at_step_picks_exact_step) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
                       (void)write_record(w,"cat-1", 0, 0, {'a'});
                       (void)write_record(w,"cat-1", 5, 300, {'b'});
@@ -201,7 +182,7 @@ TEST(FileBackend, find_at_simulation_timestamp_picks_exact_match) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
                       (void)write_record(w,"cat-1", 0, 1000, {'p'});
                       (void)write_record(w,"cat-1", 1, 2000, {'q'});
@@ -238,7 +219,7 @@ TEST(FileBackend, large_record_payload_round_trips) {
         big_payload[i] = static_cast<char>(i & 0xff);
     }
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [&](Writer& w) {
                       (void)write_record(w,"big-1", 0, 0, big_payload);
                   }).has_value());
@@ -270,7 +251,7 @@ TEST(FileBackend, strict_durability_commit_fsyncs_and_succeeds) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
     {
         auto w = be->writer(now(), Durability::strict);
         ASSERT_TRUE(w.has_value()) << w.error().message;
@@ -299,16 +280,98 @@ TEST(FileBackend, create_returns_same_backend_for_same_path) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be1 = must_create(path);
-    auto be2 = must_create(path);
+    auto be1 = FileBackend::create(path);
+    auto be2 = FileBackend::create(path);
     EXPECT_EQ(be1.get(), be2.get()) << "expected same FileBackend instance for identical paths";
 
     // Different paths should NOT share.
-    auto be3 = must_create(path + ".other");
+    auto be3 = FileBackend::create(path + ".other");
     EXPECT_NE(be1.get(), be3.get());
 
     std::remove(path.c_str());
     std::remove((path + ".other").c_str());
+}
+
+TEST(FileBackend, create_scope_registration_is_order_independent) {
+    // Registry keys by path, so each subtest uses its own path to
+    // force a fresh backend and check the ordering independently.
+    const std::string base = temp_path();
+    const std::string p1   = base + ".empty_first";
+    const std::string p2   = base + ".scoped_first";
+
+    auto seed = [](const std::string& p) {
+        std::remove(p.c_str());
+        auto be = FileBackend::create(p);
+        ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
+                          (void)write_record(w,"cat-1:cfe", 0, 0, {'1'});
+                          (void)write_record(w,"cat-2:cfe", 0, 0, {'2'});
+                      }).has_value());
+    };
+    seed(p1);
+    seed(p2);
+
+    {
+        auto empty  = FileBackend::create(p1);
+        auto scoped = FileBackend::create(p1, primary_prefix("cat-1"));
+        auto r      = scoped->reader();
+        ASSERT_TRUE(r.has_value());
+        EXPECT_FALSE(r.value()->find_latest("cat-2:cfe").has_value());
+    }
+    {
+        auto scoped = FileBackend::create(p2, primary_prefix("cat-1"));
+        auto empty  = FileBackend::create(p2);
+        auto r      = scoped->reader();
+        ASSERT_TRUE(r.has_value());
+        EXPECT_FALSE(r.value()->find_latest("cat-2:cfe").has_value());
+    }
+
+    std::remove(p1.c_str());
+    std::remove(p2.c_str());
+}
+
+TEST(FileBackend, create_unions_two_non_empty_scopes) {
+    const std::string path = temp_path();
+    std::remove(path.c_str());
+    {
+        auto be = FileBackend::create(path);
+        ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
+                          (void)write_record(w,"cat-1:cfe", 0, 0, {'1'});
+                          (void)write_record(w,"cat-2:cfe", 0, 0, {'2'});
+                          (void)write_record(w,"cat-3:cfe", 0, 0, {'3'});
+                      }).has_value());
+    }
+
+    auto be_a = FileBackend::create(path, primary_prefix("cat-1"));
+    auto be_b = FileBackend::create(path, primary_prefix("cat-2"));
+
+    auto r = be_a->reader();
+    ASSERT_TRUE(r.has_value());
+    EXPECT_TRUE(r.value()->find_latest("cat-1:cfe").has_value());
+    EXPECT_TRUE(r.value()->find_latest("cat-2:cfe").has_value());
+    EXPECT_FALSE(r.value()->find_latest("cat-3:cfe").has_value());
+
+    std::remove(path.c_str());
+}
+
+TEST(FileBackend, create_falls_back_to_index_all_when_no_scope_registered) {
+    const std::string path = temp_path();
+    std::remove(path.c_str());
+    {
+        auto be = FileBackend::create(path);
+        ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
+                          (void)write_record(w,"cat-1:cfe", 0, 0, {'1'});
+                          (void)write_record(w,"cat-2:cfe", 0, 0, {'2'});
+                      }).has_value());
+    }
+
+    auto a = FileBackend::create(path);
+    auto b = FileBackend::create(path);
+    auto r = a->reader();
+    ASSERT_TRUE(r.has_value());
+    EXPECT_TRUE(r.value()->find_latest("cat-1:cfe").has_value());
+    EXPECT_TRUE(r.value()->find_latest("cat-2:cfe").has_value());
+
+    std::remove(path.c_str());
 }
 
 TEST(FileBackend, registry_evicts_after_last_handle_drops) {
@@ -319,7 +382,7 @@ TEST(FileBackend, registry_evicts_after_last_handle_drops) {
 
     FileBackend* first_addr = nullptr;
     {
-        auto be1   = must_create(path);
+        auto be1   = FileBackend::create(path);
         first_addr = be1.get();
     } // last shared_ptr drops → backend destroyed → weak_ptr expires
 
@@ -327,7 +390,7 @@ TEST(FileBackend, registry_evicts_after_last_handle_drops) {
     // pointer. We can't assert that the new address differs (allocators
     // can reuse memory), but we can verify the new backend is fully
     // functional.
-    auto be2 = must_create(path);
+    auto be2 = FileBackend::create(path);
     EXPECT_NE(be2.get(), nullptr);
     auto w = be2->writer(now(), Durability::relaxed);
     ASSERT_TRUE(w.has_value()) << w.error().message;
@@ -349,7 +412,7 @@ TEST(FileBackend, concurrent_writers_serialize_records_via_backend_mutex) {
     constexpr int per_thread   = 50;
     constexpr int payload_size = 256;
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
 
     auto write_n = [&](const std::string& id_prefix) {
         auto wo = be->writer(now(), Durability::relaxed);
@@ -404,7 +467,7 @@ TEST(FileBackend, writer_supports_multiple_write_commit_cycles) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
     {
         auto w = be->writer(now(), Durability::relaxed);
         ASSERT_TRUE(w.has_value());
@@ -436,7 +499,7 @@ TEST(FileBackend, trailing_write_after_commit_is_flushed_on_destruction) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
     {
         auto w = be->writer(now(), Durability::relaxed);
         ASSERT_TRUE(w.has_value());
@@ -460,7 +523,7 @@ TEST(FileBackend, sequential_with_writer_calls_dont_trip_single_in_flight) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
     for (int i = 0; i < 4; ++i) {
         auto rc = be->with_writer(now(), Durability::relaxed, [i](Writer& w) {
             (void)write_record(w,"cat-" + std::to_string(i), i, i * 60, {'x'});
@@ -482,7 +545,7 @@ TEST(FileBackend, reader_with_scope_excludes_out_of_scope_ids) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
                       (void)write_record(w,"cat-1:cfe", 0, 0, {'1'});
                       (void)write_record(w,"cat-2:cfe", 0, 0, {'2'});
@@ -512,7 +575,7 @@ TEST(FileBackend, reader_remains_valid_after_backend_destruction) {
     std::remove(path.c_str());
 
     {
-        auto be = must_create(path);
+        auto be = FileBackend::create(path);
         ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
                           (void)write_record(w,"cat-1", 0, 0, {'A'});
                       }).has_value());
@@ -521,7 +584,7 @@ TEST(FileBackend, reader_remains_valid_after_backend_destruction) {
     // Re-open and grab a Reader; let the Backend handle die.
     std::unique_ptr<Reader> reader;
     {
-        auto be = must_create(path);
+        auto be = FileBackend::create(path);
         reader  = std::move(be->reader().value());
     } // FileBackend destroyed; Reader still alive (snapshot pattern)
 
@@ -540,7 +603,7 @@ TEST(FileBackend, reader_on_missing_file_returns_NotFound_on_lookups) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
     auto r  = be->reader();
     ASSERT_TRUE(r.has_value());
 
@@ -557,7 +620,7 @@ TEST(FileBackend, duplicate_key_warning_fires_at_index_build) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
     // Two records with the same (id, time_step, checkpoint_epoch).
     // This bypasses the single-in-flight rule by being in one
     // with_writer call, but normally they'd come from cross-process
@@ -593,7 +656,7 @@ TEST(FileBackend, finalize_returns_success_with_no_deferred_errors) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be = must_create(path);
+    auto be = FileBackend::create(path);
     EXPECT_TRUE(be->finalize().has_value());
 
     std::remove(path.c_str());

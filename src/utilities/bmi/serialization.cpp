@@ -390,30 +390,8 @@ auto NgenSerializationProtocol::initialize(const ModelPtr& model, const Properti
             return error_or_warning(probe.error());
         }
     }
-    // All other initialization is good, build the file backend.
-    // `FileBackend::create(path)` is a path-keyed get-or-create:
-    // all protocol instances configured with the same path
-    // receive the same `shared_ptr<FileBackend>`, so they
-    // cooperate through one owned write fd and the mutex that
-    // serializes record writes across all Writer handles. See
-    // file_backend.hpp for the sharing mechanics.
-    //
-    // Construction can fail (e.g. corrupted index walk on an
-    // existing file); we surface that as a protocol-level error
-    // and disable rather than register a half-broken backend.
-    // Future work may swap this via a set_backend() setter for
-    // testing or non-file storage.
-    auto be = ::ngen::serialization::FileBackend::create(path);
-    if (!be) {
-        check = false;
-        std::stringstream ss;
-        ss << "serialization: failed to construct backend at '" << path
-           << "': " << be.error().message;
-        return error_or_warning(
-            ProtocolError(is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING, ss.str())
-        );
-    }
-    backend_ = std::move(be.value());
+    // Error handling deferred to the backend writer() / write() calls.
+    backend_ = ::ngen::serialization::FileBackend::create(path);
     return {};
 }
 

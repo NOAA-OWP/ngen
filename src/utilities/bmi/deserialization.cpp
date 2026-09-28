@@ -81,14 +81,12 @@ auto NgenDeserializationProtocol::run(const ModelPtr& model, const Context& ctx)
     try {
         // Open a Reader scoped to exactly THIS feature's id. Two
         // layers of filtering apply:
-        //   - Construction scope (on the FileBackend): bounds the
-        //     index to the realization's id_subset. Set once at
-        //     backend create-time.
+        //   - Index scope (on the FileBackend): bounds the index
+        //     to the union of every caller's registered id_subset.
         //   - Read scope (on this Reader): bounds THIS lookup to
         //     the one feature id the engine handed us via ctx.id.
-        //     Per-run, single-feature. A Reader scoped this way
-        //     cannot return any other id's record even if
-        //     accidentally asked.
+        //     A Reader scoped this way cannot return any other
+        //     id's record even if accidentally asked.
         // The Reader is short-lived: open, do one find_*, drop.
         auto ro = backend_->reader(::ngen::serialization::exact_id(ctx.id));
         if (!ro) {
@@ -342,27 +340,8 @@ auto NgenDeserializationProtocol::initialize(const ModelPtr& model, const Proper
             return error_or_warning(probe.error());
         }
     }
-    // Default backend is FileBackend. Pass `id_scope` as the
-    // construction-time scope so the FIRST protocol that creates
-    // the path-keyed backend bounds the index to the configs
-    // intended subset. Subsequent protocols on the same path
-    // receive the cached backend (the scope arg they pass is
-    // ignored at the cache hit).
-    //
-    // FileBackend allows concurrent Readers via the snapshot Reader
-    // pattern (per-Reader ifstream, shared Index via shared_ptr);
-    // see file_backend.hpp for details.
-    auto be = ::ngen::serialization::FileBackend::create(path, id_scope);
-    if (!be) {
-        check = false;
-        std::stringstream ss;
-        ss << "deserialization: failed to construct backend at '" << path
-           << "': " << be.error().message;
-        return error_or_warning(
-            ProtocolError(is_fatal ? Error::PROTOCOL_ERROR : Error::PROTOCOL_WARNING, ss.str())
-        );
-    }
-    backend_ = std::move(be.value());
+    // Error handling deferred to the backend reader() call.
+    backend_ = ::ngen::serialization::FileBackend::create(path, id_scope);
     return {};
 }
 

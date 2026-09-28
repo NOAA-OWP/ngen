@@ -170,9 +170,7 @@ struct SharedStateBackendTraits {
 struct FileBackendTraits {
     using Backend = FileBackend;
     static std::shared_ptr<Backend> create() {
-        auto be = FileBackend::create(unique_temp_path("ngen_filebackend_lifetime"));
-        EXPECT_TRUE(be.has_value()) << be.error().message;
-        return be.value();
+        return FileBackend::create(unique_temp_path("ngen_filebackend_lifetime"));
     }
 };
 

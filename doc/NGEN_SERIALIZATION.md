@@ -825,25 +825,29 @@ within the budget of a single shared NFS volume for most workloads.
 
 `FileBackend` is **shared per path** via a process-static
 registry. The first protocol that calls
-`FileBackend::create(path, ...)` for a given path builds the
-backend, walks the file once to construct an in-memory index
-`id → [(time_step, simulation_timestamp, checkpoint_epoch, file_offset)]`,
-and registers the resulting `shared_ptr` under a `weak_ptr` slot.
-Subsequent protocols on the same realization (all configured
-against the same `serialization.path` by realization-level
-inheritance) receive the same `shared_ptr` and share the index
-without rebuilding. When the last protocol drops its handle, the
-backend is destroyed and the registry slot is opportunistically
-pruned.
+`FileBackend::create(path, ...)` for a given path allocates the
+backend and registers the resulting `shared_ptr` under a
+`weak_ptr` slot; subsequent protocols on the same realization
+(all configured against the same `serialization.path` by
+realization-level inheritance) receive the same `shared_ptr`.
+Each `create()` call also registers its scope with the shared
+backend; the in-memory index
+`id → [(time_step, simulation_timestamp, checkpoint_epoch, file_offset)]`
+is built lazily on the first `reader()` request from the union
+of every non-empty registered scope. When the last protocol
+drops its handle, the backend is destroyed and the registry slot
+is opportunistically pruned.
 
 Two-layer scope filtering applies:
 
-1. **Construction scope** — passed to `FileBackend::create(path,
-   scope)`. The first caller's `id_subset` (or its auto-derived
+1. **Index scope** — passed to `FileBackend::create(path,
+   scope)`. Each caller's `id_subset` (or its auto-derived
    equivalent — see `id_subset` for memory-bounded restores
-   below) bounds *which records enter the index*. Records outside
-   this scope are never indexed; backend memory is proportional
-   to the realization's subset, not the whole file.
+   below) is unioned into the backend's index scope. Records
+   outside the union are never indexed; backend memory is
+   proportional to the union of every caller's requested subset,
+   not the whole file. Save-side protocols pass `{}` and drop
+   out of the union — the save side has no read-scope opinion.
 
 2. **Read scope** — per-Reader, set per `run()` call to
    `exact_id(ctx.id)`. Each `run()` opens a Reader scoped to the
@@ -853,13 +857,13 @@ Two-layer scope filtering applies:
 
 For N catchments restored from one file:
 
-- Index walks per path: **1** (at first `create()`).
+- Index walks per path: **1** (at first `reader()`).
 - Per-`run()` cost: O(log records-for-this-id) lookup on the
   shared index + `seek+read` on a private ifstream + per-Reader
   predicate check.
 - Total restore-phase walks across all N protocols: **1**, not
-  N — the file is scanned once when the shared backend is first
-  constructed, then per-`run()` calls hit the in-memory index.
+  N — the file is scanned once when the first Reader is opened,
+  then per-`run()` calls hit the in-memory index.
 
 Payload bytes are not cached in memory: the index stores
 `(offset, record_metadata)` entries and Readers issue a `seek +

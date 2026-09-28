@@ -46,9 +46,7 @@ TEST(FileBackendNoFsync, strict_durability_errors_with_actionable_message) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be_result = FileBackend::create(path);
-    ASSERT_TRUE(be_result.has_value()) << be_result.error().message;
-    auto be = std::move(be_result.value());
+    auto be = FileBackend::create(path);
     auto w  = be->writer(std::chrono::system_clock::now(), Durability::strict);
 
     ASSERT_FALSE(w.has_value());
@@ -70,9 +68,7 @@ TEST(FileBackendNoFsync, relaxed_durability_still_works) {
     const std::string path = temp_path();
     std::remove(path.c_str());
 
-    auto be_result = FileBackend::create(path);
-    ASSERT_TRUE(be_result.has_value()) << be_result.error().message;
-    auto be = std::move(be_result.value());
+    auto be = FileBackend::create(path);
     {
         auto w = be->writer(std::chrono::system_clock::now(), Durability::relaxed);
         ASSERT_TRUE(w.has_value()) << w.error().message;
