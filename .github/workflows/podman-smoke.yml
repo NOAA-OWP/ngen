@@ -1,0 +1,146 @@
+# .github/workflows/podman-smoke.yml
+# ADDITIVE WORKFLOW: Proves Podman build and smoke verification for ngen.
+# Leaves existing .github/workflows/ngwpc-cicd.yml and release paths untouched.
+
+name: Podman Build & Smoke (Additive)
+
+on:
+  workflow_dispatch:
+    inputs:
+      push_images:
+        description: "Push test tags (:podman-test) to GHCR"
+        required: true
+        type: boolean
+        default: false
+      FORCING_IMAGE_TAG:
+        description: "Base forcing image tag from GHCR (defaults to 'latest')"
+        required: false
+        type: string
+        default: "latest"
+      EWTS_REF:
+        description: "EWTS branch or tag reference (defaults to 'development')"
+        required: false
+        type: string
+        default: "development"
+  pull_request:
+    branches:
+      - development
+    paths:
+      - '.github/workflows/podman-smoke.yml'
+      - 'Dockerfile'
+      - 'run-ngen.sh'
+      - 'CMakeLists.txt'
+      - 'src/**'
+      - 'include/**'
+      - 'cmake/**'
+      - 'data/**'
+      - '.gitmodules'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  podman-build-smoke:
+    name: Podman Build & Smoke (NextGen Engine)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout Repository with Recursive Submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Verify Submodules Status
+        run: |
+          echo "Verifying recursive submodules..."
+          git submodule status --recursive
+
+      - name: Verify Preinstalled Podman Environment
+        run: |
+          podman version
+          podman info --format 'OS: {{.Host.Distribution.Distribution}} {{.Host.Distribution.Version}} | Storage: {{.Store.GraphDriverName}}'
+
+      - name: Log in to GitHub Container Registry
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io \
+            -u "${{ github.actor }}" --password-stdin
+
+      - name: Build NextGen Engine Image with Podman (Docker Format)
+        id: build
+        run: |
+          set -euo pipefail
+          ulimit -n 65535 || true
+          IMAGE_TAG="localhost/ngen:podman-test"
+          FORCING_TAG="${{ inputs.FORCING_IMAGE_TAG || 'latest' }}"
+          EWTS_BRANCH="${{ inputs.EWTS_REF || 'development' }}"
+
+          echo "Building ${IMAGE_TAG} using Dockerfile with --format docker..."
+          podman build \
+            --ulimit nofile=65535:65535 \
+            --format docker \
+            --build-arg GHCR_ORG=ngwpc \
+            --build-arg FORCING_IMAGE="ghcr.io/ngwpc/ngen-bmi-forcing:${FORCING_TAG}" \
+            --build-arg EWTS_ORG=NGWPC \
+            --build-arg EWTS_REF="${EWTS_BRANCH}" \
+            --build-arg CI_COMMIT_REF_NAME="${{ github.ref_name }}" \
+            -f Dockerfile \
+            -t "${IMAGE_TAG}" \
+            .
+
+          echo "IMAGE_LOCAL=${IMAGE_TAG}" >> "${GITHUB_ENV}"
+
+      - name: Smoke Probe 1 - ngen Binary Usage & Build Information
+        run: |
+          set -euo pipefail
+          echo "Verifying ngen binary usage & build info..."
+          podman run --rm --entrypoint /ngen-app/ngen/cmake_build/ngen "${IMAGE_LOCAL}"
+          echo "Verifying run-ngen.sh entrypoint script..."
+          podman run --rm --entrypoint test "${IMAGE_LOCAL}" -x /ngen-app/bin/run-ngen.sh
+          echo "Probe 1 Passed: ngen binary and entrypoint executable."
+
+      - name: Smoke Probe 2 - Python Environment & Core Module Imports
+        run: |
+          set -euo pipefail
+          echo "Verifying Python version in container..."
+          podman run --rm --entrypoint /ngen-app/ngen-python/bin/python "${IMAGE_LOCAL}" --version
+          echo "Verifying scientific Python stack and EWTS package..."
+          podman run --rm --entrypoint /ngen-app/ngen-python/bin/python "${IMAGE_LOCAL}" \
+            -c "import numpy, pandas, netCDF4, xarray, ewts; print('Probe 2 Passed: Python scientific stack and EWTS imported successfully.')"
+          echo "Verifying LSTM module on PYTHONPATH..."
+          podman run --rm --entrypoint /ngen-app/ngen-python/bin/python "${IMAGE_LOCAL}" \
+            -c "import lstm; print('Probe 2b Passed: LSTM submodule imported successfully.')"
+
+      - name: Smoke Probe 3 - Git Provenance Metadata Check
+        run: |
+          set -euo pipefail
+          echo "Verifying combined Git provenance JSON..."
+          podman run --rm --entrypoint cat "${IMAGE_LOCAL}" /ngen-app/ngen_git_info.json
+          podman run --rm --entrypoint test "${IMAGE_LOCAL}" -s /ngen-app/ngen_git_info.json
+          echo "Probe 3 Passed: Git provenance metadata file verified."
+
+      - name: Inspect Built OCI Image
+        run: |
+          podman image inspect "${IMAGE_LOCAL}" \
+            --format 'Image ID: {{.Id}} | Digest: {{.Digest}} | Entrypoint: {{.Config.Entrypoint}} | Cmd: {{.Config.Cmd}}'
+
+      - name: Optional GHCR Push (:podman-test only)
+        if: ${{ inputs.push_images }}
+        run: |
+          set -euo pipefail
+          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          DEST_BASE="ghcr.io/${REPO_LOWER}"
+          TAG_TEST="${DEST_BASE}:podman-test"
+          TAG_SHA="${DEST_BASE}:${{ github.sha }}-podman-test"
+
+          echo "Publishing test verification tags..."
+          podman tag "${IMAGE_LOCAL}" "${TAG_TEST}"
+          podman tag "${IMAGE_LOCAL}" "${TAG_SHA}"
+
+          podman push "${TAG_TEST}"
+          podman push "${TAG_SHA}"
+
+          echo "Pushed ${TAG_TEST} and ${TAG_SHA}"
+          echo "NOTICE: Production aliases (:latest, release tags) remain untouched."
