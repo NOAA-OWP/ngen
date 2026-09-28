@@ -195,11 +195,12 @@ full 64-bit integer type instead.
 The protocol shuttles raw bytes without any framing, validation, or
 schema check of its own. Model implementers are strongly encouraged
 to encode their own header in the payload — a version number, magic
-bytes, or both — so that `SetValue(state, src)` can detect format
-drift before applying the bytes to the model's computed state. A
-buffer from an older model version, from a different model entirely,
-or from a truncated record will then be rejected at restore time
-rather than silently corrupting state.
+bytes, or both — so that a model's `SetValue(state, src)` implementation can detect format
+drift before applying the bytes to the model's computed state.
+Which policy the model applies on a version mismatch is up to the
+model: reject the buffer, forward-migrate an older format to the
+current one, or some other policy. The model's BMI code should attempt to detect drift *before* applying the bytes rather than silently
+corrupting state.
 
 This matters whenever:
 
@@ -209,10 +210,7 @@ This matters whenever:
 - Robust fail-fast behavior on a malformed buffer is preferable to
   best-effort interpretation.
 
-This is a model-level concern. The host engine's own record header
-(see [`NGEN_SERIALIZATION.md`](NGEN_SERIALIZATION.md)) operates at a
-different layer — it versions the framing the engine wraps around
-your payload, not the payload itself.
+This is a model-level concern.
 
 ### Constraints and non-goals
 
@@ -263,12 +261,27 @@ your payload, not the payload itself.
   marshal values across the language boundary, so all four must
   resolve correctly.
 
-### Future: zero-copy via `GetValuePtr`
+### Optional: `GetValuePtr` for zero-copy state access
 
-The current ngen protocol implementation copies bytes via `GetValue(state, dst)`. Ideally, the engine would use `GetValuePtr` instead, so it can stream directly from model-owned memory. Nothing in the protocol
-requires `GetValuePtr` today — a model that only implements the
-copy-based `GetValue` path is fully conforming — but authors who
-expose `GetValuePtr(ngen::serialization_state)` will enable the zero-copy path when it is available.
+`GetValuePtr(ngen::serialization_state)` is an **optional** add-on
+to the protocol. A model that only implements the copy-based
+`GetValue(state, dst)` path is fully conforming. Exposing the
+`GetValuePtr` variant enables a driver to stream state directly
+from model-owned memory instead of copying — recommended for
+large-footprint models where the copy is expensive.
+
+Models exposing `GetValuePtr(ngen::serialization_state)` must
+observe three rules for the pointer to be usable by drivers:
+
+- **Lifetime.** The pointer remains valid for the
+  caller to use from the moment `SetValue(create)` returns until the
+  matching `SetValue(free)` call. Retaining or dereferencing it past
+  `SetValue(free)` is a use-after-free.
+- **Read-only.** The model owns the bytes and is free to overwrite them as soon as
+  `SetValue(free)` has completed. The buffer should NOT be updated (by the model or the driver) between the two calls (create and free).
+- **Byte-identical to `GetValue(state, dst)`.** For any given
+  capture, the bytes at the pointer must be identical to what the
+  copy path would have written.
 
 ### Reference implementations
 

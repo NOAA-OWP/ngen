@@ -20,8 +20,8 @@ namespace config {
  * The serialization block accepts a shared top-level `path` plus two
  * per-direction overrides — `save.path` and `restore.path`. Each may
  * be absent; when present, its value goes through
- * `utilities::resolve_path_tokens` so the protocol layer only ever
- * sees concrete strings.
+ * `utilities::resolve_path_tokens` so consumers see
+ * concrete strings.
  *
  * Absent keys are skipped; ptree's dotted-path `put()` would otherwise
  * fabricate the intermediate sub-block.
@@ -44,10 +44,10 @@ inline void apply_serialization_path_token_resolution(
  *        of catchment identifiers that this realization will actually
  *        instantiate, when the user hasn't supplied one.
  *
- * The serialization restore protocol honors `id_subset` as a manual
- * knob to bound the restore lookup's scope; this helper fills it in
- * automatically so the scoping applies without requiring the caller
- * to enumerate features by hand.
+ * `id_subset` is a scoping knob that bounds which records are
+ * requested from the serialization backend. 
+ * This function applies a default policy for creating the subset
+ * based on the realization's enumerated features when they are specified.
  *
  * No-op if any of the following hold (deliberately conservative):
  *   - no `serialization` block is present in @p global_configs;
