@@ -63,6 +63,8 @@ namespace realization {
                 // later merged into every formulation's params via
                 // `realization::config::apply_config`. Per-formulation
                 // entries still win — the parsed block is a default.
+
+                // Iterate over each inheritable block, add new ones here.
                 for (auto which : { realization::config::GlobalConfigKey::SERIALIZATION }) {
                     const char* key = realization::config::to_key_string(which);
                     auto possible_block = tree.get_child_optional(key);

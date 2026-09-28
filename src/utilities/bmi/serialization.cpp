@@ -53,13 +53,10 @@ class ScopedCapture {
     }
 
     ~ScopedCapture() {
-        if (!released_) {
-            try {
-                int trigger = 1;
-                model_->SetValue(SERIALIZATION_FREE_NAME, &trigger);
-            } catch (...) {
-                // Suppress — see class-level doc.
-            }
+        try {
+            release();
+        } catch (...) {
+            // Suppress — see class-level doc.
         }
     }
 

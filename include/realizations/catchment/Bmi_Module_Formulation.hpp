@@ -371,7 +371,7 @@ namespace realization {
          * `<catchment>:<model_type_name>`, multi submodules with the
          * three-part compound injected during submodule construction.
          */
-        virtual void checkpoint_state(const int& iteration, const int& total_steps, const std::string& timestamp) const override {
+        void checkpoint_state(const int& iteration, const int& total_steps, const std::string& timestamp) const override {
             models::bmi::protocols::Context ctx{iteration, total_steps, timestamp, compound_id()};
             (void) bmi_protocols.run(models::bmi::protocols::Protocol::SERIALIZATION, ctx);
         }
