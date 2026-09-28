@@ -19,26 +19,26 @@ File-based `RecordBackend` implementation.
 Persists records using the v0.2 wire format defined in
 `src/utilities/bmi/wire_format.hpp`: each record is a fixed-size
 prefix + id bytes + payload bytes, written sequentially to a
-single append-mode file. A FileBackend opened for a given path
-walks the file once at construction to build an in-memory index
-keyed by `Record::id`, then services `find_*` queries via index
-lookup + per-record seek.
+single append-mode file. A FileBackend maintains an in-memory
+index keyed by `Record::id`, built on the first `reader()` call
+by walking the file once, and services `find_*` queries via
+index lookup + per-record seek.
 
 Per-path sharing
 ----------------
 `FileBackend` is **shared per path** via a process-static
 registry. `FileBackend::create(path, scope)` is a `get_or_create`
-factory: the first caller for a given path constructs the backend,
-walks the file, and registers the resulting `shared_ptr` under a
-`weak_ptr` slot. Subsequent callers for the same path receive the
-same `shared_ptr`. The backend (and its index, and its write fd)
-die when the last caller drops their handle; the `weak_ptr` slot
+factory: the first caller for a given path allocates the backend
+and registers the resulting `shared_ptr` under a `weak_ptr` slot;
+subsequent callers for the same path receive the same
+`shared_ptr`. The backend (and its index, and its write fd) die
+when the last caller drops their handle; the `weak_ptr` slot
 becomes recoverable and is opportunistically pruned on the next
 lookup.
 
 This pattern is what makes N independent clients on the same
 checkpoint file viable at scale: N callers that each ask the
-registry for a backend at the same path share **one** index walk,
+registry for a backend at the same path share **one** index,
 **one** write fd, and **one** mutex-serialized write critical
 section, instead of paying N times.
 
@@ -46,27 +46,24 @@ Two-layer scope filtering
 -------------------------
 `IdPredicate` filtering happens at two distinct layers:
 
-  - **Construction scope** — passed to `create(path, scope)`.
-    Records whose id does not satisfy the predicate are never
-    added to the in-memory index. This bounds index memory and
-    is the coarse-grained "what's worth indexing at all" filter
-    — set once when the backend is first constructed.
+  - **Index scope** — passed to `create(path, scope)`. Records
+    whose id does not satisfy the predicate are never added to
+    the in-memory index.
 
-    Because the registry is keyed by path only, the first caller's
-    `scope` is what the index is built against. Subsequent callers
-    requesting the same path get the cached backend regardless of
-    the `scope` they pass. **Callers MUST agree on the construction
-    scope for a given path** — this is a contract on the
-    application that uses the library, not a runtime check the
-    library performs.
+    Each `create()` call registers its scope. The index is built
+    on the first `reader()` call from the union of every non-empty
+    registered scope; empty scopes drop out of the union so a
+    save-only caller can pass `{}` to mean "no opinion." With no
+    non-empty scope registered, the fallback is "index everything."
+    `create()` calls arriving after the first `reader()` still
+    record but do not retroactively broaden the built index.
 
   - **Read scope** — passed to `reader(scope)`. Per-Reader
     predicate applied at `find_*` time. A record is returned iff
-    *both* the construction-time predicate (already enforced by
-    not being in the index) AND the read-time predicate accept its
-    id. The read scope is how a single Reader narrows further
-    within a backend whose construction scope was deliberately
-    broadened.
+    *both* the index-scope predicate (already enforced by not
+    being in the index) AND the read-scope predicate accept its
+    id. Lets a single Reader narrow further within a backend
+    whose index scope was deliberately broadened.
 
 Durability semantics
 --------------------
@@ -147,8 +144,8 @@ The Index is a point-in-time snapshot. A Writer appending records
 after the Index was built does NOT update the Index — the
 snapshot stays frozen. A `dirty_` flag flipped under the
 `io_mutex_` on every write marks the backend as having had
-post-construction appends; the next `reader()` call observes the
-flag and rebuilds the Index before returning the Reader. For the
+post-build appends; the next `reader()` call observes the flag
+and rebuilds the Index before returning the Reader. For the
 canonical "restore at init, save during run" workflow the flag
 never fires after restore-init completes (no one opens new
 Readers after that point). For mid-run restore-after-save it does
@@ -179,34 +176,18 @@ class FileBackend
     : public RecordBackend
     , public std::enable_shared_from_this<FileBackend> {
   public:
-    /** Construct (or retrieve from registry) a `shared_ptr`-managed
-     *  FileBackend at @p path with the given index-construction
-     *  scope.
+    /** Get-or-create a `shared_ptr`-managed FileBackend at @p path.
+     *  @p index_scope is registered as this caller's
+     *  contribution to the eventual index scope — see the class-
+     *  level "Two-layer scope filtering" section for how scopes
+     *  compose across callers. Pass `{}` to mean "no opinion."
      *
-     *  Behavior:
-     *    - First call for @p path constructs the backend, walks the
-     *      file once applying @p construction_scope to filter the
-     *      index, opens nothing for write (write fd is lazy), and
-     *      registers the resulting shared_ptr.
-     *    - Subsequent calls for the same @p path return the cached
-     *      backend. The `construction_scope` argument is ignored on
-     *      cached hits — callers must agree on scope for a given
-     *      path. The application is responsible for ensuring
-     *      agreement; the library does not detect mismatches at
-     *      runtime.
-     *
-     *  An empty (default-constructed) `construction_scope` means
-     *  "index all records."
-     *
-     *  Returns the error arm if the initial index walk surfaces a
-     *  non-recoverable problem (e.g. a partially constructed
-     *  backend would silently misbehave). A missing file at @p path
-     *  is NOT an error — the backend is constructed with an empty
-     *  index, which the Reader honors as "every find returns
-     *  NotFound." */
+     *  Does no I/O; the index is built on the first `reader()`
+     *  request, and any disk-side error surfaces there. A missing
+     *  file is not an error — it yields an empty index. */
     [[nodiscard]]
-    static auto create(std::string path, IdPredicate construction_scope = {})
-        -> expected<std::shared_ptr<FileBackend>, BackendError>;
+    static auto create(std::string path, IdPredicate index_scope = {})
+        -> std::shared_ptr<FileBackend>;
 
     ~FileBackend() override;
 
@@ -231,7 +212,11 @@ class FileBackend
     }
 
   private:
-    FileBackend(std::string path, IdPredicate construction_scope);
+    FileBackend(std::string path, IdPredicate initial_scope);
+
+    // No-op if @p scope is empty; else union it into
+    // `index_scope_`. Caller must hold `io_mutex_`.
+    void register_scope_(IdPredicate scope);
 
     // Sub-handle and index types; full definitions live in
     // file_backend.cpp. As nested classes, they have member-level
@@ -245,7 +230,7 @@ class FileBackend
     // -- Internal helpers ---------------------------------------------
 
     // Build (or rebuild) the index from disk applying
-    // `construction_scope_`. Caller must hold `io_mutex_` (or be
+    // `index_scope_`. Caller must hold `io_mutex_` (or be
     // inside the construction path where no other reference to
     // `this` exists yet). Sets `dirty_` to false on success.
     auto build_index_locked_() -> expected<void, BackendError>;
@@ -260,11 +245,16 @@ class FileBackend
     // -- State --------------------------------------------------------
 
     const std::string path_;
-    const IdPredicate construction_scope_;
 
-    // Index built once at construction (under construction_scope_)
-    // and rebuilt on demand if `dirty_` is set when a Reader is
-    // requested. Shared with every Reader via shared_ptr<const>.
+    // Union of non-empty registered scopes; consumed by
+    // `build_index_locked_()`. Guarded by `io_mutex_`.
+    IdPredicate index_scope_;
+
+    // Set true once `build_index_locked_()` has run; distinct from
+    // `dirty_` (which fires on post-build writes).
+    bool index_built_ = false;
+
+    // Shared with every Reader via shared_ptr<const>.
     std::shared_ptr<const Index> index_;
 
     // Single fd backing all writes; opened lazily on first write

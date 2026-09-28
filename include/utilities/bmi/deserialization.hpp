@@ -89,10 +89,10 @@ class NgenDeserializationProtocol : public NgenBmiProtocol {
      * match mode is set.
      *
      * Scope filtering applies at two layers:
-     *   - Construction scope: an optional `id_subset` passed at
-     *     `initialize()` time bounds the backend's index to the
-     *     caller's intended subset. Records outside that subset
-     *     are never indexed.
+     *   - Index scope: an optional `id_subset` passed at
+     *     `initialize()` time registers this caller's contribution
+     *     to the backend's index scope. Records outside the union
+     *     of every registered scope are never indexed.
      *   - Read scope: each `run()` opens a Reader for the current
      *     `ctx.id` — the one feature the caller is asking about.
      *     The Reader cannot return any other id's record.
@@ -137,10 +137,9 @@ class NgenDeserializationProtocol : public NgenBmiProtocol {
     int target_step                     = 0;
     // Optional set of ids the caller wants indexed, parsed from
     // config in initialize() into an
-    // `any_of(primary_prefix(...))` predicate. Passed to the
-    // backend at construction as its **construction-time**
-    // filter — records whose id fails this predicate are not
-    // indexed.
+    // `any_of(primary_prefix(...))` predicate. Registered with the
+    // backend as this caller's contribution to the index scope —
+    // records whose id fails this predicate are not indexed.
     //
     // This is the *backend-level* scope. The *per-Reader* scope
     // used inside `run()` is a tighter `exact_id(ctx.id)`

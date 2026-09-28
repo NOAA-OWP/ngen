@@ -109,9 +109,9 @@ write_all_to_fd(int fd, const void* data, std::size_t n, const char* what, const
 } // anonymous namespace
 
 // ---------------------------------------------------------------------
-// FileBackend::Index — record-metadata index built once at backend
-// construction (and optionally rebuilt on demand when `dirty_` is
-// set). Shared with every Reader via shared_ptr<const Index>.
+// FileBackend::Index — record-metadata index built lazily on first
+// reader() and rebuilt on demand when `dirty_` is set. Shared with
+// every Reader via shared_ptr<const Index>.
 // ---------------------------------------------------------------------
 
 class FileBackend::Index {
@@ -124,13 +124,13 @@ class FileBackend::Index {
     };
 
     /** Walk @p path and build an index of records whose id satisfies
-     *  @p construction_scope. An empty predicate means "index
+     *  @p index_scope. An empty predicate means "index
      *  everything." Returns a non-null shared_ptr<const Index> on
      *  success; the IOError arm fires only on stream-open failure of
      *  a kind that isn't "file doesn't exist" (missing-file yields
      *  an empty index — a valid outcome that pairs with NotFound on
      *  every Reader lookup). */
-    static auto build(const std::string& path, const IdPredicate& construction_scope)
+    static auto build(const std::string& path, const IdPredicate& index_scope)
         -> expected<std::shared_ptr<const Index>, BackendError> {
         std::ifstream in(path, std::ios::binary);
         if (!in) {
@@ -155,9 +155,9 @@ class FileBackend::Index {
             }
             if (status.value() == bmi::Status::Eof) break;
 
-            // Construction-scope filter — out-of-scope ids never
-            // enter the index.
-            if (construction_scope && !construction_scope(id)) continue;
+            // Index-scope filter — out-of-scope ids never enter
+            // the index.
+            if (index_scope && !index_scope(id)) continue;
 
             Entry
                 entry{prefix.time_step, prefix.simulation_timestamp, prefix.checkpoint_epoch, pos};
@@ -503,8 +503,8 @@ class FileBackend::Reader : public RecordBackend::Reader {
 std::mutex FileBackend::registry_mutex_;
 std::unordered_map<std::string, std::weak_ptr<FileBackend>> FileBackend::registry_;
 
-auto FileBackend::create(std::string path, IdPredicate construction_scope)
-    -> expected<std::shared_ptr<FileBackend>, BackendError> {
+auto FileBackend::create(std::string path, IdPredicate index_scope)
+    -> std::shared_ptr<FileBackend> {
     std::lock_guard<std::mutex> lk(registry_mutex_);
 
     // Opportunistic prune: cheap walk since the table is small in
@@ -521,38 +521,40 @@ auto FileBackend::create(std::string path, IdPredicate construction_scope)
     auto it = registry_.find(path);
     if (it != registry_.end()) {
         if (auto sp = it->second.lock()) {
-            // Cache hit. construction_scope arg is ignored; callers
-            // for the same path must agree (documented contract).
+            std::lock_guard<std::mutex> backend_lk(sp->io_mutex_);
+            // Add to the backend's index scope (union)
+            sp->register_scope_(std::move(index_scope));
             return sp;
         }
     }
 
-    // Cache miss. Construct, build the index under the requested
-    // scope, register. shared_ptr<new> instead of make_shared because
-    // the constructor is private.
-    auto sp =
-        std::shared_ptr<FileBackend>(new FileBackend(std::move(path), std::move(construction_scope))
-        );
-
-    // Build the initial index. A failure here is a hard create()
-    // error — we do NOT register a backend whose index didn't
-    // build, because subsequent callers asking for the same path
-    // would receive a permanently broken backend with no signal of
-    // the underlying problem.
-    {
-        std::lock_guard<std::mutex> backend_lk(sp->io_mutex_);
-        if (auto built = sp->build_index_locked_(); !built) {
-            return make_unexpected(std::move(built.error()));
-        }
-    }
+    // shared_ptr<new> instead of make_shared because the constructor
+    // is private.
+    auto sp = std::shared_ptr<FileBackend>(
+        new FileBackend(std::move(path), std::move(index_scope))
+    );
 
     registry_[sp->path_] = sp;
     return sp;
 }
 
-FileBackend::FileBackend(std::string path, IdPredicate construction_scope)
+FileBackend::FileBackend(std::string path, IdPredicate initial_scope)
     : path_(std::move(path))
-    , construction_scope_(std::move(construction_scope)) {
+    , index_scope_(std::move(initial_scope)) {
+}
+
+void FileBackend::register_scope_(IdPredicate scope) {
+    if (!scope) return;
+    if (!index_scope_) {
+        index_scope_ = std::move(scope);
+        return;
+    }
+    // For a small number of expected registrants,
+    // this is a reasonable funcitonal union of scopes.
+    index_scope_ =
+        [lhs = std::move(index_scope_), rhs = std::move(scope)]
+        (const std::string& id)
+        { return lhs(id) || rhs(id); };
 }
 
 FileBackend::~FileBackend() {
@@ -565,12 +567,13 @@ FileBackend::~FileBackend() {
 }
 
 auto FileBackend::build_index_locked_() -> expected<void, BackendError> {
-    auto built = Index::build(path_, construction_scope_);
+    auto built = Index::build(path_, index_scope_);
     if (!built) {
         return make_unexpected(std::move(built.error()));
     }
-    index_ = std::move(built.value());
-    dirty_ = false;
+    index_       = std::move(built.value());
+    dirty_       = false;
+    index_built_ = true;
     return {};
 }
 
@@ -614,17 +617,18 @@ auto FileBackend::writer(std::chrono::system_clock::time_point /*epoch*/, Durabi
 
 auto FileBackend::reader(IdPredicate read_scope)
     -> expected<std::unique_ptr<RecordBackend::Reader>, BackendError> {
-    // Rebuild the Index if any writer mutated the file since the
-    // last build (or initial construction). Cheap on the no-writes
-    // path; the typical restore-at-init flow never triggers a
-    // rebuild because no writes have happened yet.
+    // lazy build the index on first read
     std::shared_ptr<const Index> idx_snapshot;
     {
         std::lock_guard<std::mutex> lk(io_mutex_);
-        if (dirty_) {
+        if (!index_built_ || dirty_) {
             auto built = build_index_locked_();
             if (!built) return make_unexpected(std::move(built.error()));
         }
+        // sync the index passed to reader below
+        // under the mutex, reader's view of index
+        // is guaranteed to be consistent with the file
+        // at this point.
         idx_snapshot = index_;
     }
 
