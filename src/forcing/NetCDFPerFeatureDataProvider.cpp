@@ -546,6 +546,15 @@ namespace cache {
     }
 }
 
+thread_local NetCDFPerFeatureDataProvider::value_cache_type thread_cache;
+
+void NetCDFPerFeatureDataProvider::evict_stale_values(value_cache_type& cache, int floor_index)
+{
+  auto eviction_iterator = cache.begin();
+  while (eviction_iterator->first.first < floor_index) {
+    eviction_iterator = cache.erase(eviction_iterator);
+  }
+}
 
 double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m) 
 {
@@ -628,37 +637,45 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	std::size_t ith_p_idx = p_idx + i;
 	std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
 	std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
+        decltype(value_cache_2)::key_type key_2 = std::pair{page_c_idx, variable_name};
 
-	{
-	  decltype(value_cache_2)::key_type key_2 = std::pair{page_c_idx, variable_name};
-	  decltype(value_cache_2)::iterator cache_iter;
-	  bool should_fill = false;
+        {
+          decltype(value_cache_2)::iterator cache_iter;
+          bool should_fill = false;
+          bool from_global_cache = false;
 
-	  // Look up the cache slot for key_2 - either cache_iter =
-	  // find() gets an extant slot, or this thread commits to
-	  // creating and filling a new slot
-	  {
-	    std::shared_lock l(cache_2_mutex);
-	    cache_iter = value_cache_2.find(key_2);
+          cache_iter = thread_cache.find(key_2);
 
-	    if (cache_iter == value_cache_2.end()) {
-	      // Upgrade the lock and try to take responsibility for filling this entry in
-	      l.unlock();
-	      std::unique_lock ul(cache_2_mutex);
+          // Look up the cache slot for key_2 - either cache_iter =
+          // find() gets an extant slot, or this thread commits to
+          // creating and filling a new slot
+          if (cache_iter == thread_cache.end()) {
+            std::shared_lock l(cache_2_mutex);
+            cache_iter = value_cache_2.find(key_2);
+            from_global_cache = true;
 
-	      // Re-check that some other thread didn't get here first
-	      cache_iter = value_cache_2.find(key_2);
-	      if (cache_iter == value_cache_2.end()) {
-		// This thread really is reponsible for creating it
-		cache_iter = value_cache_2.emplace(key_2, std::piecewise_construct).first;
-		should_fill = true;
+            if (cache_iter == value_cache_2.end()) {
+              // Upgrade the lock and try to take responsibility for filling this entry in
+              l.unlock();
+              std::unique_lock ul(cache_2_mutex);
 
-		// Also clear out values from any previous step, key.get<0> < page_c_idx
-		// XXX
-	      }
-	    }
-	  } // cache_iter should be valid, != end() at this point
-	  
+              // Re-check that some other thread didn't get here first
+              cache_iter = value_cache_2.find(key_2);
+              if (cache_iter == value_cache_2.end()) {
+                // This thread really is reponsible for creating it
+                cache_iter = value_cache_2.emplace(key_2, std::piecewise_construct).first;
+                should_fill = true;
+
+                evict_stale_values(value_cache_2, page_c_idx);
+              }
+            }
+          } // cache_iter should be valid, != end() at this point
+
+          // Drop references to arrays of stale forcings values here,
+          // before reading or waiting on reads, to avoid or limit
+          // spikes in memory footprint as new forcings get read in
+          evict_stale_values(thread_cache, page_c_idx);
+
 	  if (should_fill) {
 	    std::unique_lock nc_file_lock(netcdf_library_mutex);
 
@@ -702,7 +719,14 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	    cached = cache_iter->second.first;
 	    //std::cout << omp_get_thread_num() << " consumer thread  " << key_2.first << " " << key_2.second << " " << cached.get() << std::endl;
 	  }
-	} // at this point, cached.get() should be non-nullptr
+
+	  // at this point, cached.get() should be non-nullptr
+	  if (from_global_cache) {
+	    auto &local_cache = *thread_cache.emplace(key_2, std::piecewise_construct).first;
+	    local_cache.second.first = cached;
+	    local_cache.second.second.test_and_set();
+	  }
+	}
 
         // Find all values in the current cache slice and push them onto raw_values
         while(c_idx >= page_c_idx &&

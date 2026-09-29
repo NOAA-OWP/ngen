@@ -149,6 +149,17 @@ namespace data_access
 
         virtual std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
+        // Key is (c_idx, variable_name), value is a pointer to the
+        // cached data; if the pointer is null, another thread has
+        // started filling it in, but is not done yet
+        struct cache_slot {
+            cache_slot() = default;
+            cache_slot(std::piecewise_construct_t) {}
+            std::shared_ptr<std::vector<double>> first = nullptr;
+            std::atomic_flag second = ATOMIC_FLAG_INIT;
+        };
+        using value_cache_type = std::map<std::pair<int, std::string>, cache_slot>;
+
         private:
 
         time_t sim_start_date_time_epoch;
@@ -180,16 +191,11 @@ namespace data_access
         std::map<std::string, std::pair<std::string, netCDF::NcVar>> ncvar_cache;
         std::map<std::string,std::string> units_cache;
 
-        // Key is (c_idx, variable_name), value is a pointer to the
-        // cached data; if the pointer is null, another thread has
-        // started filling it in, but is not done yet
-        struct cache_slot {
-            cache_slot() = default;
-            cache_slot(std::piecewise_construct_t) {}
-            std::shared_ptr<std::vector<double>> first = nullptr;
-            std::atomic_flag second = ATOMIC_FLAG_INIT;
-        };
-        std::map<std::pair<int, std::string>, cache_slot> value_cache_2;
+        // Erase entries in the passed cache with keys whose first
+        // element is less than floor_index
+        static void evict_stale_values(value_cache_type& cache, int floor_index);
+
+        value_cache_type value_cache_2;
         std::shared_mutex cache_2_mutex;
 
         // number of time slices per cache entry
