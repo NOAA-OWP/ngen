@@ -551,7 +551,8 @@ thread_local NetCDFPerFeatureDataProvider::value_cache_type thread_cache;
 void NetCDFPerFeatureDataProvider::evict_stale_values(value_cache_type& cache, int floor_index)
 {
   auto eviction_iterator = cache.begin();
-  while (eviction_iterator->first.first < floor_index) {
+  auto end = cache.end();
+  while (eviction_iterator != end && eviction_iterator->first.first < floor_index) {
     eviction_iterator = cache.erase(eviction_iterator);
   }
 }
