@@ -682,19 +682,12 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     // when the range starts mid-page and crosses a page boundary
     const std::size_t n_page_accesses = cache::page_p_idx(c_idx2, cache_line_size) - p_idx + 1;
 
-    std::size_t c_idx = c_idx1;
-
-    std::vector<double> raw_values;
-    raw_values.reserve(read_len);
-
     for( size_t i = 0; i < n_page_accesses; i++ ) {
         // rows: catchments; columns: time;
         // stride between rows is 'cache_line_size'
 	const std::size_t ith_p_idx = p_idx + i;
 	const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
 	const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
-
-        std::shared_ptr<std::vector<double>> cached = nullptr;
 
         decltype(value_cache_2)::key_type key_2 = std::pair{page_c_idx, variable_name};
 
@@ -735,6 +728,8 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
           // spikes in memory footprint as new forcings get read in
           evict_stale_values(thread_cache, page_c_idx);
 
+          std::shared_ptr<std::vector<double>> cached = nullptr;
+
 	  if (should_fill) {
             cached = fill_slot(page_c_idx, ncvar, cache_iter->second);
 	  } else {
@@ -749,6 +744,11 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	  }
 	}
     }
+
+    std::size_t c_idx = c_idx1;
+
+    std::vector<double> raw_values;
+    raw_values.reserve(read_len);
 
     for( size_t i = 0; i < n_page_accesses; i++ ) {
         // rows: catchments; columns: time;
