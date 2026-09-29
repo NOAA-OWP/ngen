@@ -709,14 +709,12 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	    }
 
 	    cache_iter->second.first = cached;
-	    std::atomic_thread_fence(std::memory_order_release);
-	    cache_iter->second.second.test_and_set();
+	    cache_iter->second.second.test_and_set(std::memory_order_release);
 	    std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) << " " << omp_get_thread_num() << " NetCDF done reading " << key_2.first << " " << key_2.second << " " << cached.get() << std::endl;
 	  } else {
-	    while (!cache_iter->second.second.test()) {
+	    while (!cache_iter->second.second.test(std::memory_order_acquire)) {
 	      // Just spin on whatever thread is doing the filling
 	    }
-	    std::atomic_thread_fence(std::memory_order_acquire);
 	    cached = cache_iter->second.first;
 	    //std::cout << omp_get_thread_num() << " consumer thread  " << key_2.first << " " << key_2.second << " " << cached.get() << std::endl;
 	  }
