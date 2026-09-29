@@ -748,13 +748,23 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
             local_cache.second.fill(cached);
 	  }
 	}
+    }
 
+    for( size_t i = 0; i < n_page_accesses; i++ ) {
+        // rows: catchments; columns: time;
+        // stride between rows is 'cache_line_size'
+	const std::size_t ith_p_idx = p_idx + i;
+	const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
+	const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
+        decltype(value_cache_2)::key_type key_2 = std::pair{page_c_idx, variable_name};
+
+        auto locally_cached = thread_cache.at(key_2).get();
         // Find all values in the current cache slice and push them onto raw_values
         while(c_idx >= page_c_idx &&
               c_idx < page_c_idx + page_cache_line_size &&
               c_idx <= c_idx2){
             std::size_t idx = cache::page_entry_idx(i_idx, c_idx, time_vals.size(), cache_line_size);
-            double value = cached->at(idx);
+            double value = locally_cached->at(idx);
             raw_values.push_back(value);
             c_idx++;
         }
