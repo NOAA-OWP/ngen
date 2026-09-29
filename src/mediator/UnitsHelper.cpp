@@ -24,7 +24,7 @@
 // Theoretically thread-safe. //TODO: Test?
 static ut_system* unit_system;
 
-static std::map<std::string, std::shared_ptr<cv_converter>> converters;
+static thread_local std::map<std::string, std::shared_ptr<cv_converter>> converters;
 static std::mutex converters_mutex;
 
 static std::once_flag unit_system_inited;
@@ -43,29 +43,10 @@ void init_unit_system(){
 #endif
 }
 
+static std::shared_ptr<cv_converter> make_converter(const std::string& in_units, const std::string& out_units, utEncoding in_encoding = UT_UTF8, utEncoding out_encoding = UT_UTF8) {
+        // Don't trust that UDUNITS2 is thread-safe
+        std::unique_lock insertion_lock(converters_mutex);
 
-static std::shared_ptr<cv_converter> get_converter(const std::string& in_units, const std::string& out_units, utEncoding in_encoding = UT_UTF8, utEncoding out_encoding = UT_UTF8 ){
-    if(in_units == "") {
-        UnitsHelper::unit_conversion_exception uce{"Requested conversion from empty input units string", in_units, out_units};
-        throw uce;
-    }
-
-    if(out_units == "") {
-        UnitsHelper::unit_conversion_exception uce{"Requested conversion to empty output units string", in_units, out_units};
-        throw uce;
-    }
-
-    const std::lock_guard<std::mutex> lock(converters_mutex);
-
-    std::string key = in_units + "|" + out_units; //Better solution? Good enough? Bother with nested maps?
-    if(converters.count(key) == 1){
-        if(converters[key] == nullptr){
-            // Recurrence of last throw case below
-            UnitsHelper::unit_conversion_exception uce{"Unable to convert as requested (repeated)", in_units, out_units};
-            throw uce;
-        }
-        return converters[key];
-    } else {
         ut_unit* from = ut_parse(unit_system, in_units.c_str(), in_encoding);
         if (from == NULL)
         {
@@ -86,7 +67,6 @@ static std::shared_ptr<cv_converter> get_converter(const std::string& in_units, 
         {
             ut_free(from);
             ut_free(to);
-            converters[key] = nullptr;
 
             UnitsHelper::unit_conversion_exception uce{"Unable to convert as requested", in_units, out_units};
             throw uce;
@@ -99,9 +79,39 @@ static std::shared_ptr<cv_converter> get_converter(const std::string& in_units, 
                 ut_free(to); // Captured via closure!
             }
         );
-        converters[key] = c;
-
         return c;
+}
+
+static std::shared_ptr<cv_converter> get_converter(const std::string& in_units, const std::string& out_units, utEncoding in_encoding = UT_UTF8, utEncoding out_encoding = UT_UTF8 ){
+    if(in_units == "") {
+        UnitsHelper::unit_conversion_exception uce{"Requested conversion from empty input units string", in_units, out_units};
+        throw uce;
+    }
+
+    if(out_units == "") {
+        UnitsHelper::unit_conversion_exception uce{"Requested conversion to empty output units string", in_units, out_units};
+        throw uce;
+    }
+
+    std::string key = in_units + "|" + out_units; //Better solution? Good enough? Bother with nested maps?
+
+    auto iter = converters.find(key);
+    if(iter != converters.end()){
+      if(iter->second == nullptr){
+          // Recurrence of last throw case below
+          UnitsHelper::unit_conversion_exception uce{"Unable to convert as requested (repeated)", in_units, out_units};
+          throw uce;
+      }
+      return iter->second;
+    }
+
+    try {
+      auto c = make_converter(in_units, out_units, in_encoding, out_encoding);
+      converters[key] = c;
+      return c;
+    } catch (UnitsHelper::unit_conversion_exception &) {
+      converters[key] = nullptr;
+      throw;
     }
 }
 
@@ -135,7 +145,6 @@ double UnitsHelper::get_converted_value(const std::string &in_units, const doubl
         return value;
     }
 
-
     try {
         auto converter = get_converter(in_norm, out_norm);
         double r = cv_convert_double(converter.get(), value);
@@ -161,7 +170,6 @@ double* UnitsHelper::convert_values(const std::string &in_units, double* in_valu
         }
     }
 
-
     // Don't catch the UCE here to fill in uce.unconverted_values,
     // because the caller may be able to more efficiently std::move it
     auto converter = get_converter(in_norm, out_norm);
@@ -174,8 +182,9 @@ std::set<UnitsHelper::unit_error_log_key> UnitsHelper::unit_errors_reported;
 
 bool UnitsHelper::record_unit_conversion_fault(unit_conversion_exception const& uce, std::string const& requester_name, std::string const& requester_variable)
 {
-    std::lock_guard lock(errors_mutex);
     unit_error_log_key key{requester_name, requester_variable, uce.provider_model_name, uce.provider_var_name, uce.what()};
+
+    std::lock_guard lock(errors_mutex);
     auto ret = unit_errors_reported.insert(key);
     bool new_error = ret.second;
     return new_error;
