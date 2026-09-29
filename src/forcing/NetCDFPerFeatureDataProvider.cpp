@@ -593,7 +593,7 @@ std::shared_ptr<std::vector<double>> NetCDFPerFeatureDataProvider::fill_slot(int
   auto var_name = ncvar.getName();
   
   #pragma omp critical
-  std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) << " " << omp_get_thread_num() << " NetCDF reading " << var_name << " " << page_c_idx << std::endl;
+  std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) << " " << omp_get_thread_num() << " NetCDF reading " << var_name << " " << page_c_idx << " from " << file_path << std::endl;
 
   // read each chunk and add it to "cached"
   std::size_t idx = 0;
