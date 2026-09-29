@@ -651,6 +651,15 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
      * p dim: page index
      */
 
+    // update chunks during the first timestep, and no-op thereafter;
+    // 'maybe_update_chunks_with_hints' clears 'hinted_ids'
+    // assumes all id's will have been hinted before 'get_value' is called.
+    maybe_update_chunks_with_hints();
+
+    auto const& [variable_name, ncvar] = get_ncvar(selector.get_variable_name());
+
+    auto i_idx = id_pos.at(selector.get_id());
+
     auto init_time = selector.get_init_time();
     auto stop_time = init_time + selector.get_duration_secs(); // scope hiding! BAD JUJU!
     
@@ -663,30 +672,9 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         c_idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
     }
 
-    // update chunks during the first timestep, and no-op thereafter;
-    // 'maybe_update_chunks_with_hints' clears 'hinted_ids'
-    // assumes all id's will have been hinted before 'get_value' is called.
-    maybe_update_chunks_with_hints();
-
     auto stride = c_idx2 - c_idx1;
 
-    std::vector<std::size_t> start(2), count(2);
-
-    auto i_idx = id_pos.at(selector.get_id());
-
-    double t1 = time_vals[c_idx1];
-    double t2 = time_vals[c_idx2];
-
-    double rvalue = 0.0;
-
-    auto const& [variable_name, ncvar] = get_ncvar(selector.get_variable_name());
-
-    std::string native_units = get_ncvar_units(variable_name);
-
     const std::size_t read_len = c_idx2 - c_idx1 + 1;
-
-    std::vector<double> raw_values;
-    raw_values.reserve(read_len);
 
     std::size_t cache_line_size = cache_slice_t_size;
     std::size_t p_idx = cache::page_p_idx(c_idx1, cache_line_size);
@@ -695,6 +683,12 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     std::size_t n_page_accesses = cache::page_p_idx(c_idx2, cache_line_size) - p_idx + 1;
 
     std::size_t c_idx = c_idx1;
+
+    std::vector<std::size_t> start(2), count(2);
+
+    std::vector<double> raw_values;
+    raw_values.reserve(read_len);
+
     // For reference: https://stackoverflow.com/a/72030286
     for( size_t i = 0; i < n_page_accesses; i++ ) {
         // rows: catchments; columns: time;
@@ -769,7 +763,10 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     }
 
     assert(raw_values.size() == read_len);
-    rvalue = 0.0;
+    double rvalue = 0.0;
+
+    double t1 = time_vals[c_idx1];
+    double t2 = time_vals[c_idx2];
 
     double a , b = 0.0;
     
@@ -808,6 +805,8 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         default:
             ;
     }
+
+    std::string native_units = get_ncvar_units(variable_name);
 
     try 
     {
