@@ -161,11 +161,12 @@ TEST_F(Bmi_C_Serialization_Test, save_writes_record) {
     ASSERT_EQ(records.size(), 1u);
     EXPECT_EQ(records[0].id, "c-cat-1");
     EXPECT_EQ(records[0].time_step, 0);
-    // The C test model's layout packs current_model_time (8) +
-    // input_var_1 (8) + input_var_2 (8) + output_var_1 (8) +
-    // output_var_2 (8) = 40 bytes; see SERIALIZED_STATE_BYTES in
-    // bmi_test_bmi_c.c.
-    EXPECT_EQ(records[0].payload.size(), 40u);
+    // The C test model's layout: current_model_time (8) + input_var_1
+    // (8) + input_var_2 (8) + output_var_1 (8) + output_var_2 (8) +
+    // n_cells (4) + cells[n_cells] (n_cells * 8) = 40 + 4 + 3*8 = 68
+    // bytes for the default n_cells = 3. See visit_serialization_fields
+    // in bmi_test_bmi_c.c.
+    EXPECT_EQ(records[0].payload.size(), 68u);
 }
 
 // ---------------------------------------------------------------------
@@ -223,7 +224,11 @@ TEST_F(Bmi_C_Serialization_Test, save_restore_roundtrip) {
         protocols.run(Protocol::DESERIALIZATION, make_context(0, 0, "restore", "c-cat-1"));
     ASSERT_TRUE(restore_r.has_value());
 
-    // Verify every serialized field round-tripped.
+    // Verify every serialized field round-tripped. The dynamic-array
+    // path (n_cells + cells[]) is covered implicitly: if its
+    // serialization had a byte-alignment bug, offset drift would
+    // corrupt the scalar values below, since cells sits in the middle
+    // of the payload.
     EXPECT_EQ(model->GetCurrentTime(), t_ref);
     double i1 = 0.0;
     double i2 = 0.0;

@@ -9,6 +9,7 @@
 #include <cassert>
 #include <cstring>
 #include <math.h>
+#include <numeric>
 #include <stdexcept>
 
 std::string TestBmiCpp::GetComponentName(){
@@ -641,4 +642,49 @@ void TestBmiCpp::run(long dt)
     this->current_model_time += (double)dt;
     this->mass_stored = *this->output_var_1 - *this->input_var_1;
     this->mass_leaked = 0;
+}
+
+void TestBmiCpp::create_serialization() {
+    serialized_state_.clear();
+    serialized_state_.reserve(serialized_state_bytes());
+    //serialization visitor, range copy into the buffer
+    //in visitor order.
+    visit_serialization_fields([&](const void* data, size_t size) {
+        const char* p = static_cast<const char*>(data);
+        serialized_state_.insert(serialized_state_.end(), p, p + size);
+    });
+    if (serialized_state_.size() != serialized_state_bytes()) {
+        throw std::runtime_error(
+            "create_serialization: produced " +
+            std::to_string(serialized_state_.size()) +
+            " bytes but the declared layout is " +
+            std::to_string(serialized_state_bytes()) +
+            " bytes — keep these in sync when adding fields.");
+    }
+    serialized_size_var = static_cast<int64_t>(serialized_state_.size());
+}
+
+void TestBmiCpp::free_serialization() {
+    serialized_state_.clear();
+    serialized_size_var = 0;
+}
+
+void TestBmiCpp::deserialize_state(const char* data, int64_t size) {
+    // Validate the caller's payload against the layout this model
+    // version knows how to read. A mismatch is a hard error — callers
+    // should be restoring a record produced by the same model version.
+    if (size != static_cast<int64_t>(serialized_state_bytes())) {
+        throw std::runtime_error(
+            "deserialize_state: payload size " + std::to_string(size) +
+            " does not match expected layout size " +
+            std::to_string(serialized_state_bytes()) +
+            " for this test model version.");
+    }
+    size_t offset = 0;
+    //de-serialization vistitor, iterate buffer in
+    //visitor order, copy into fields.
+    visit_serialization_fields([&](void* dest, size_t n) {
+        std::memcpy(dest, data + offset, n);
+        offset += n;
+    });
 }

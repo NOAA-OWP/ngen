@@ -175,20 +175,17 @@ module bmitestbmi
   character (len=BMI_MAX_UNITS_NAME) :: &
     serialization_units(4) = [character(BMI_MAX_UNITS_NAME):: 'ngen::trigger', 'ngen::trigger', 'bytes', 'ngen::opaque']
 
-  ! Single source of truth for this test model's on-disk state layout.
-  ! Bump alongside test_create_serialization / test_deserialize_state
-  ! when the layout grows; deserialize validates the incoming array
-  ! length against this value.
-  !   Fields (in order): current_model_time (real(8) = 8 bytes),
-  !                      input_var_1 (real(8) = 8),
-  !                      input_var_2 (real(4) = 4),
-  !                      input_var_3 (integer = 4),
-  !                      output_var_1 (real(8) = 8),
-  !                      output_var_2 (real(4) = 4),
-  !                      output_var_3 (integer = 4)
-  ! Total = 40 bytes = 10 default integers.
+  ! On-disk state layout. `visit_serialization_fields` below is the
+  ! single source of truth for the field sequence — both
+  ! test_create_serialization and test_deserialize_state drive off
+  ! that one routine with a direction flag, so adding a field only
+  ! happens in one place.
   integer, parameter :: SERIALIZED_STATE_BYTES = 40
   integer, parameter :: SERIALIZED_STATE_INTS  = 10
+
+  ! Direction flag passed to visit_serialization_fields.
+  integer, parameter :: SAVE = 0
+  integer, parameter :: LOAD = 1
 
 contains
 
@@ -1372,35 +1369,74 @@ end function test_finalize
  end function register_bmi
 #endif
 
+  ! ---- Per-field-type visitors: save (SAVE) or load (LOAD) one
+  ! field, updating `offset` by the number of default integers it
+  ! occupies in the buffer.
+
+  subroutine visit_r8(field, buf, offset, direction)
+    double precision, intent(inout) :: field
+    integer, intent(inout) :: buf(:)
+    integer, intent(inout) :: offset
+    integer, intent(in)    :: direction
+    integer, parameter :: N = 2  ! two default ints per double
+    if (direction == SAVE) then
+       buf(offset:offset+N-1) = transfer(field, buf(1:N))
+    else
+       field = transfer(buf(offset:offset+N-1), field)
+    end if
+    offset = offset + N
+  end subroutine visit_r8
+
+  subroutine visit_r4(field, buf, offset, direction)
+    real, intent(inout) :: field
+    integer, intent(inout) :: buf(:)
+    integer, intent(inout) :: offset
+    integer, intent(in)    :: direction
+    if (direction == SAVE) then
+       buf(offset:offset) = transfer(field, [0])
+    else
+       field = transfer(buf(offset:offset), field)
+    end if
+    offset = offset + 1
+  end subroutine visit_r4
+
+  subroutine visit_i4(field, buf, offset, direction)
+    integer, intent(inout) :: field
+    integer, intent(inout) :: buf(:)
+    integer, intent(inout) :: offset
+    integer, intent(in)    :: direction
+    if (direction == SAVE) then
+       buf(offset:offset) = [field]
+    else
+       field = buf(offset)
+    end if
+    offset = offset + 1
+  end subroutine visit_i4
+
+  ! Single source of truth for the model's internal layout. Both
+  ! save and load paths call this; adding a field only touches
+  ! one place.
+  subroutine visit_serialization_fields(this, buf, direction)
+    class(bmi_test_bmi), intent(inout) :: this
+    integer, intent(inout) :: buf(:)
+    integer, intent(in)    :: direction
+    integer :: offset
+    offset = 1
+    call visit_r8(this%model%current_model_time, buf, offset, direction)
+    call visit_r8(this%model%input_var_1,         buf, offset, direction)
+    call visit_r4(this%model%input_var_2,         buf, offset, direction)
+    call visit_i4(this%model%input_var_3,         buf, offset, direction)
+    call visit_r8(this%model%output_var_1,        buf, offset, direction)
+    call visit_r4(this%model%output_var_2,        buf, offset, direction)
+    call visit_i4(this%model%output_var_3,        buf, offset, direction)
+  end subroutine visit_serialization_fields
+
   subroutine test_create_serialization(this)
     class(bmi_test_bmi), intent(inout) :: this
-    integer :: offset
-
-    ! See SERIALIZED_STATE_BYTES / SERIALIZED_STATE_INTS at module scope
-    ! for the layout inventory and the single source of truth for size.
     if (allocated(this%serialized_state)) deallocate(this%serialized_state)
     allocate(this%serialized_state(SERIALIZED_STATE_INTS))
     this%serialized_size = SERIALIZED_STATE_BYTES
-
-    ! `transfer(source, mold)` reinterprets `source` as an array whose
-    ! element type matches `mold`. Using a 2-element integer slice as
-    ! the mold makes the result shape explicit — the 8-byte doubles
-    ! pack into two default integers; 4-byte reals pack into one.
-    offset = 1
-    this%serialized_state(offset:offset+1) = transfer(this%model%current_model_time, this%serialized_state(1:2))
-    offset = offset + 2
-    this%serialized_state(offset:offset+1) = transfer(this%model%input_var_1, this%serialized_state(1:2))
-    offset = offset + 2
-    this%serialized_state(offset:offset)   = transfer(this%model%input_var_2, [0])
-    offset = offset + 1
-    this%serialized_state(offset:offset)   = [this%model%input_var_3]
-    offset = offset + 1
-    this%serialized_state(offset:offset+1) = transfer(this%model%output_var_1, this%serialized_state(1:2))
-    offset = offset + 2
-    this%serialized_state(offset:offset)   = transfer(this%model%output_var_2, [0])
-    offset = offset + 1
-    this%serialized_state(offset:offset)   = [this%model%output_var_3]
-
+    call visit_serialization_fields(this, this%serialized_state, SAVE)
   end subroutine test_create_serialization
 
   subroutine test_free_serialization(this)
@@ -1411,8 +1447,32 @@ end function test_finalize
 
   subroutine test_deserialize_state(this, src)
     class(bmi_test_bmi), intent(inout) :: this
+    ! `src` is intent(in) because the abstract BMI interface
+    ! declares `bmif_set_value_int` that way and `test_set_int`
+    ! (the caller) matches.
+    ! Keeping the fields aligned with a shared vistor requires an
+    ! intent(inout) buffer, so we copy `src` into a mutable local.
+    !
+    ! Avoiding the copy is possible with pointer magic using
+    ! iso_c_binding — appropriate for MB/GB payloads where the copy
+    ! is a real cost.
+    !
+    !   subroutine test_deserialize_state(this, src)
+    !     use, intrinsic :: iso_c_binding, only: c_loc, c_f_pointer, c_ptr
+    !     class(bmi_test_bmi), intent(inout) :: this
+    !     integer, intent(in), target :: src(:)   ! `target` allows c_loc
+    !     integer, pointer :: buf(:)              ! pointers carry no intent
+    !     type(c_ptr) :: cptr
+    !     cptr = c_loc(src(1))
+    !     call c_f_pointer(cptr, buf, [size(src)])
+    !     call visit_serialization_fields(this, buf, LOAD)
+    !   end subroutine
+    !
+    ! The pointer alias sidesteps the intent(in) constraint without
+    ! writing through it. The vistor must ensure that no writes through
+    ! the pointer occur on the LOAD branch.
     integer, intent(in) :: src(:)
-    integer :: offset
+    integer :: buf(SERIALIZED_STATE_INTS)
 
     ! Validate the caller's array length against this model version's
     ! fixed layout. A mismatch is a hard error: callers should be
@@ -1426,21 +1486,8 @@ end function test_finalize
        return
     endif
 
-    offset = 1
-    this%model%current_model_time = transfer(src(offset:offset+1), this%model%current_model_time)
-    offset = offset + 2
-    this%model%input_var_1 = transfer(src(offset:offset+1), this%model%input_var_1)
-    offset = offset + 2
-    this%model%input_var_2 = transfer(src(offset:offset), this%model%input_var_2)
-    offset = offset + 1
-    this%model%input_var_3 = src(offset)
-    offset = offset + 1
-    this%model%output_var_1 = transfer(src(offset:offset+1), this%model%output_var_1)
-    offset = offset + 2
-    this%model%output_var_2 = transfer(src(offset:offset), this%model%output_var_2)
-    offset = offset + 1
-    this%model%output_var_3 = src(offset)
-
+    buf(:) = src(:)
+    call visit_serialization_fields(this, buf, LOAD)
   end subroutine test_deserialize_state
 
 end module bmitestbmi

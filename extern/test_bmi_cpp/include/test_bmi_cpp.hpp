@@ -6,9 +6,7 @@
 #include <vector>
 #include <map>
 #include "bmi.hxx"
-#include <numeric>
 #include <iostream>
-#include <stdexcept>
 #include <cstring>
 
 #define TRUE 1
@@ -268,71 +266,31 @@ class TestBmiCpp : public bmi::Bmi {
         // INT32_MAX correctly through the framework's int64_t slot.
         int32_t serialized_size_32bit_var = 0;
 
-        // Single source of truth for this test model's on-disk layout
-        // size. If the layout grows (new fields in create_serialization /
-        // deserialize_state below), bump both here and the read/write
-        // sequences together — deserialize_state validates the incoming
-        // size against this value, so a stale return here turns into a
-        // loud runtime error rather than a silent overread.
+        // Total byte length of the on-disk layout below. Keep in sync
+        // with `visit_serialization_fields` — `deserialize_state`
+        // validates incoming payloads against this value, so a stale
+        // return turns into a loud runtime error, not a silent overread.
         static constexpr size_t serialized_state_bytes() {
             return sizeof(double) * 5;  // current_model_time + 2 inputs + 2 outputs
         }
 
-        void create_serialization() {
-            serialized_state_.clear();
-            serialized_state_.reserve(serialized_state_bytes());
-
-            auto append = [&](const void* data, size_t size) {
-                const char* p = static_cast<const char*>(data);
-                serialized_state_.insert(serialized_state_.end(), p, p + size);
-            };
-
-            append(&current_model_time, sizeof(current_model_time));
-            append(input_var_1.get(),  sizeof(double));
-            append(input_var_2.get(),  sizeof(double));
-            append(output_var_1.get(), sizeof(double));
-            append(output_var_2.get(), sizeof(double));
-
-            if (serialized_state_.size() != serialized_state_bytes()) {
-                throw std::runtime_error(
-                    "create_serialization: produced " +
-                    std::to_string(serialized_state_.size()) +
-                    " bytes but the declared layout is " +
-                    std::to_string(serialized_state_bytes()) +
-                    " bytes — keep these in sync when adding fields.");
-            }
-            serialized_size_var = static_cast<int64_t>(serialized_state_.size());
+        // Single source of truth for the model's serialized field layout.
+        // Save (append) and restore (read) invoke this with a matching
+        // operation, so a new field added to the list appears on both
+        // paths automatically. This keeps serialize and
+        // deserialize from drifting apart.
+        template <typename Op>
+        void visit_serialization_fields(Op op) {
+            op(&current_model_time, sizeof(current_model_time));
+            op(input_var_1.get(),  sizeof(double));
+            op(input_var_2.get(),  sizeof(double));
+            op(output_var_1.get(), sizeof(double));
+            op(output_var_2.get(), sizeof(double));
         }
 
-        void free_serialization() {
-            serialized_state_.clear();
-            serialized_size_var = 0;
-        }
-
-        void deserialize_state(const char* data, int64_t size) {
-            // Validate the caller's payload against the layout this
-            // model version knows how to read. A mismatch is treated as
-            // a hard error — callers should be restoring a record
-            // produced by the same model version.
-            if (size != static_cast<int64_t>(serialized_state_bytes())) {
-                throw std::runtime_error(
-                    "deserialize_state: payload size " + std::to_string(size) +
-                    " does not match expected layout size " +
-                    std::to_string(serialized_state_bytes()) +
-                    " for this test model version.");
-            }
-            size_t offset = 0;
-            auto read = [&](void* dest, size_t n) {
-                std::memcpy(dest, data + offset, n);
-                offset += n;
-            };
-
-            read(&current_model_time, sizeof(current_model_time));
-            read(input_var_1.get(),  sizeof(double));
-            read(input_var_2.get(),  sizeof(double));
-            read(output_var_1.get(), sizeof(double));
-            read(output_var_2.get(), sizeof(double));
-        }
+        void create_serialization();
+        void free_serialization();
+        void deserialize_state(const char* data, int64_t size);
 
         /**
         * Read the BMI initialization config file and use its contents to set the state of the model.

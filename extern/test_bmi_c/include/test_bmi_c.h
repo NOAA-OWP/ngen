@@ -36,6 +36,14 @@ struct test_bmi_c_model {
     double mass_stored; // Mass balance variable, for testing purposes
     double mass_leaked; //Mass balance variable, for testing purposes
 
+    // Dynamic array to demonstrate the serialization visitor handling
+    // variable-size fields. Kept small (allocated in Initialize) and
+    // unused by any model logic — the point is to show the pattern
+    // round-trips correctly. `n_cells` must serialize BEFORE `cells`
+    // so restore has read the count by the time it reaches the array.
+    int n_cells;
+    double* cells;
+
     // Serialization support. No storage for the create/free trigger
     // variables — they're action signals with no stored state; the
     // SetValue dispatch short-circuits to the respective helper

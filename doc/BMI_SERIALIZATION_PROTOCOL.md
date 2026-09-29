@@ -283,6 +283,48 @@ observe three rules for the pointer to be usable by drivers:
   capture, the bytes at the pointer must be identical to what the
   copy path would have written.
 
+### Recommended: single field list, both directions driven from it
+
+The save path (`GetValue(state, dst)` fills a buffer from model
+fields) and the restore path (`SetValue(state, src)` writes back
+into the same fields) do inverse operations on the same layout.
+When those two paths hold their own copies of the field list,
+adding a field means updating both — and forgetting one is a
+class of bug that silently corrupts state on restore and is
+frustrating to diagnose.
+
+Model implementers are strongly encouraged to keep the field list
+in **exactly one place** and drive both directions from it. The
+mechanism is language-dependent; the invariant is that the
+enumeration of "which fields participate in serialization, in
+what order, at what size" exists once in the source.
+
+Each reference implementation holds the invariant in a shape
+suited to its language:
+
+- **C++** (`extern/test_bmi_cpp/`): a private member template
+  `visit_serialization_fields(op)` names each field once; the
+  save and restore method bodies each invoke it with a
+  matching lambda.
+- **C** (`extern/test_bmi_c/`): a
+  `visit_serialization_fields(m, cursor, dir)` function names
+  each field once; typed per-field helpers (`visit_double`,
+  `visit_int`, `visit_double_array`) dispatch on a direction
+  enum. The same shape as the Fortran visitor.
+- **Fortran** (`extern/test_bmi_fortran/`): a single
+  `visit_serialization_fields(this, buf, dir)` subroutine names
+  each field once; per-type helpers (`visit_r8`, `visit_r4`,
+  `visit_i4`) dispatch on a direction flag.
+- **Python** (`extern/test_bmi_py/`): a class-level tuple
+  `_SERIALIZED_FIELDS` combined with `pickle` — the field
+  enumeration lives in the tuple; pickle structurally guarantees
+  the save/restore round-trip.
+
+An external example the project has drawn from: TOPMODEL uses
+Boost.Serialization's `template<class Archive> void
+serialize(Archive& ar) { ar & field1; ar & field2; ... }` — same
+pattern, different mechanism.
+
 ### Reference implementations
 
 `extern/test_bmi_c/`, `extern/test_bmi_cpp/`, `extern/test_bmi_fortran/`,
