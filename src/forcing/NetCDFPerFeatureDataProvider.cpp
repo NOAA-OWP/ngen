@@ -658,12 +658,12 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
     auto const& [variable_name, ncvar] = get_ncvar(selector.get_variable_name());
 
-    auto i_idx = id_pos.at(selector.get_id());
+    auto const i_idx = id_pos.at(selector.get_id());
 
-    auto init_time = selector.get_init_time();
-    auto stop_time = init_time + selector.get_duration_secs(); // scope hiding! BAD JUJU!
+    auto const init_time = selector.get_init_time();
+    auto const stop_time = init_time + selector.get_duration_secs(); // scope hiding! BAD JUJU!
     
-    size_t c_idx1 = get_ts_index_for_time(init_time);
+    const size_t c_idx1 = get_ts_index_for_time(init_time);
     size_t c_idx2;
     try {
         c_idx2 = get_ts_index_for_time(stop_time-1); // Don't include next timestep when duration % timestep = 0
@@ -672,19 +672,17 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         c_idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
     }
 
-    auto stride = c_idx2 - c_idx1;
+    auto const stride = c_idx2 - c_idx1;
 
     const std::size_t read_len = c_idx2 - c_idx1 + 1;
 
-    std::size_t cache_line_size = cache_slice_t_size;
-    std::size_t p_idx = cache::page_p_idx(c_idx1, cache_line_size);
+    const std::size_t cache_line_size = cache_slice_t_size;
+    const std::size_t p_idx = cache::page_p_idx(c_idx1, cache_line_size);
     // pages spanned by [c_idx1, c_idx2]; ceil(read_len / line_size) undercounts
     // when the range starts mid-page and crosses a page boundary
-    std::size_t n_page_accesses = cache::page_p_idx(c_idx2, cache_line_size) - p_idx + 1;
+    const std::size_t n_page_accesses = cache::page_p_idx(c_idx2, cache_line_size) - p_idx + 1;
 
     std::size_t c_idx = c_idx1;
-
-    std::vector<std::size_t> start(2), count(2);
 
     std::vector<double> raw_values;
     raw_values.reserve(read_len);
@@ -695,9 +693,9 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         // stride between rows is 'cache_line_size'
         std::shared_ptr<std::vector<double>> cached = nullptr;
 
-	std::size_t ith_p_idx = p_idx + i;
-	std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
-	std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
+	const std::size_t ith_p_idx = p_idx + i;
+	const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
+	const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
         decltype(value_cache_2)::key_type key_2 = std::pair{page_c_idx, variable_name};
 
         {
