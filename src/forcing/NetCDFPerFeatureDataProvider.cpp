@@ -604,7 +604,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
     auto stride = c_idx2 - c_idx1;
 
-    std::vector<std::size_t> start, count;
+    std::vector<std::size_t> start(2), count(2);
 
     auto i_idx = id_pos.at(selector.get_id());
 
@@ -690,20 +690,18 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	    for(auto const& chunk: chunks){
 	      // chunk start index = chunk.first;
 	      // chunk length      = chunk.second;
-	      start.clear();
-	      start.push_back(chunk.first);
+	      start[0] = chunk.first;
 
 	      // NOTE: in the first iteration, we might read more data in the Time
 	      // dimension than we 'need'. b.c. we read from:
 	      // 'c_idx1 - (c_idx1 % cache_slice_t_size)' to the end of the cache line.
 	      // so, if 'c_idx1 % cache_slice_t_size > 0' we will read
 	      // 'c_idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
-	      start.push_back(page_c_idx);
+	      start[1] = page_c_idx;
 
-	      count.clear();
-	      count.push_back(chunk.second);
+	      count[0] = chunk.second;
+	      count[1] = page_cache_line_size;
 
-	      count.push_back(page_cache_line_size);
 	      ncvar.getVar(start,count,&(*cached)[idx]);
 	      idx += chunk.second * page_cache_line_size;
 	    }
