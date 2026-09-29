@@ -409,7 +409,11 @@ class bmi_model(Bmi):
         return self.get_attribute( 'time_units' ) 
        
     # ---------- BMI Serialization Protocol helpers --------------------
-    #
+    # `_SERIALIZED_FIELDS` is the single source of truth for the
+    # save/restore field list; adding a field here is the one and
+    # only place the layout changes. Save reads via the tuple,
+    # restore iterates whatever the pickle blob unpickles to, so
+    # the two paths cannot drift out of sync.
     # The test model round-trips its scalar state and one output array
     # through `pickle`. The exact set of fields is arbitrary — any
     # future field added to _values can be picked up here without

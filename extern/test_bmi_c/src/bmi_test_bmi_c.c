@@ -54,12 +54,62 @@ static const char *serialization_var_types[SERIALIZATION_VAR_NAME_COUNT] = { "in
 static const char *serialization_var_units[SERIALIZATION_VAR_NAME_COUNT] = { "ngen::trigger", "ngen::trigger", "bytes", "ngen::opaque" };
 static const int   serialization_var_item_count[SERIALIZATION_VAR_NAME_COUNT] = { 1, 1, 1, 0 };
 
-// Single source of truth for this test model's on-disk state layout size.
-// Bump alongside create_serialization / deserialize_state below when the
-// layout grows; deserialize_state validates the incoming byte count against
-// this value so a stale update here turns into a loud runtime signal
-// rather than a silent overread.
-#define SERIALIZED_STATE_BYTES ((int64_t)(sizeof(double) * 5))
+// Each per-type helper reads or writes ONE field's bytes at the
+// caller's cursor and advances the cursor by that field's size.
+// Direction is a runtime flag so the same field list drives both
+// save and restore.
+enum direction { SAVE, LOAD };
+
+// Note there are other options for keeping a consistent field set
+// This one is the most "verbose" in terms of typed helpers
+// but follows the visitor patter in the other reference modules
+// without getting overly complex in C pointer land.
+
+static void visit_double(double* field, char** cursor, enum direction dir) {
+    if (dir == SAVE) memcpy(*cursor, field, sizeof(*field));
+    else                 memcpy(field, *cursor, sizeof(*field));
+    *cursor += sizeof(*field);
+}
+
+static void visit_int(int* field, char** cursor, enum direction dir) {
+    if (dir == SAVE) memcpy(*cursor, field, sizeof(*field));
+    else                 memcpy(field, *cursor, sizeof(*field));
+    *cursor += sizeof(*field);
+}
+
+// Dynamic-array variant: count elements pointed to by @p field, byte
+// count derived from @p count. On restore the model must have the
+// count already set (either from an earlier visitor call or by other
+// means) AND @p field's backing storage already allocated to hold
+// @p count elements. This model preallocates cells[n_cells] in
+// Initialize; a real model might reallocate here on restore if the
+// stored count differs.
+static void visit_double_array(double* field, int count, char** cursor, enum direction dir) {
+    const size_t bytes = (size_t)count * sizeof(double);
+    if (dir == SAVE) memcpy(*cursor, field, bytes);
+    else                 memcpy(field, *cursor, bytes);
+    *cursor += bytes;
+}
+
+// Single source of truth for the model's on-disk field layout.
+// Adding a field is one line in this body. The count field for a
+// dynamic array (n_cells here) MUST appear before the array itself
+// so restore has read the count by the time it visits the array.
+static void visit_serialization_fields(test_bmi_c_model* m, char** cursor, enum direction dir) {
+    visit_double(&m->current_model_time, cursor, dir);
+    visit_double( m->input_var_1,        cursor, dir);
+    visit_double( m->input_var_2,        cursor, dir);
+    visit_double( m->output_var_1,       cursor, dir);
+    visit_double( m->output_var_2,       cursor, dir);
+    visit_int   (&m->n_cells,            cursor, dir);
+    visit_double_array(m->cells, m->n_cells, cursor, dir);
+}
+
+static int64_t serialized_state_bytes(const test_bmi_c_model* m) {
+    return (int64_t)(sizeof(double) * 5      // 5 scalar doubles
+                   + sizeof(int)             // n_cells
+                   + (size_t)m->n_cells * sizeof(double));
+}
 
 static int Finalize (Bmi *self)
 {
@@ -76,6 +126,8 @@ static int Finalize (Bmi *self)
             free(model->output_var_2);
         if (model->param_var_3 != NULL )
             free(model->param_var_3);
+        if (model->cells != NULL)
+            free(model->cells);
         if (model->serialized_state != NULL)
             free(model->serialized_state);
         free(self->data);
@@ -766,6 +818,10 @@ static int Initialize (Bmi *self, const char *file)
     model->param_var_3[0] = 0.0;
     model->param_var_3[1] = 0.0;
 
+    model->n_cells = 3;
+    model->cells   = malloc(model->n_cells * sizeof(double));
+    for (int i = 0; i < model->n_cells; ++i) model->cells[i] = 0.0+i;
+
     return BMI_SUCCESS;
 }
 
@@ -824,14 +880,10 @@ static int Set_value_at_indices (Bmi *self, const char *name, int * inds, int le
 
 static void create_serialization(test_bmi_c_model* model) {
     if (model->serialized_state) free(model->serialized_state);
-    model->serialized_size = SERIALIZED_STATE_BYTES; // Time + 2 inputs + 2 outputs
+    model->serialized_size = serialized_state_bytes(model);
     model->serialized_state = (char*)malloc(model->serialized_size);
-    char* p = model->serialized_state;
-    memcpy(p, &model->current_model_time, sizeof(double)); p += sizeof(double);
-    memcpy(p, model->input_var_1, sizeof(double));          p += sizeof(double);
-    memcpy(p, model->input_var_2, sizeof(double));          p += sizeof(double);
-    memcpy(p, model->output_var_1, sizeof(double));         p += sizeof(double);
-    memcpy(p, model->output_var_2, sizeof(double));         p += sizeof(double);
+    char* cursor = model->serialized_state;
+    visit_serialization_fields(model, &cursor, SAVE);
 }
 
 static void free_serialization(test_bmi_c_model* model) {
@@ -844,23 +896,25 @@ static void free_serialization(test_bmi_c_model* model) {
 
 /** Restore the model fields from @p src. @p size is the number of bytes
  *  the caller is presenting. On a size mismatch we return BMI_FAILURE
- *  rather than silently overreading — the test model's wire layout is
- *  fixed, so a mismatch indicates a caller bug or a schema drift that
- *  hasn't been propagated to this helper. */
+ *  rather than silently overreading — the model's serialized layout is
+ *  determined by the current field values.
+ *  The caller is expected to have restored a record produced with
+ *  matching sizing. */
 static int deserialize_state(test_bmi_c_model* model, const char* src, int64_t size) {
-    if (size != SERIALIZED_STATE_BYTES) {
+    const int64_t expected = serialized_state_bytes(model);
+    if (size != expected) {
         fprintf(stderr,
                 "deserialize_state: payload size %lld does not match expected "
                 "layout size %lld for this test model version.\n",
-                (long long)size, (long long)SERIALIZED_STATE_BYTES);
+                (long long)size, (long long)expected);
         return BMI_FAILURE;
     }
-    const char* p = src;
-    memcpy(&model->current_model_time, p, sizeof(double)); p += sizeof(double);
-    memcpy(model->input_var_1, p, sizeof(double));          p += sizeof(double);
-    memcpy(model->input_var_2, p, sizeof(double));          p += sizeof(double);
-    memcpy(model->output_var_1, p, sizeof(double));         p += sizeof(double);
-    memcpy(model->output_var_2, p, sizeof(double));         p += sizeof(double);
+    // Cast away const on the cursor: the visitor takes char** so it can
+    // advance the caller's position, but in LOAD mode it only reads
+    // from *cursor and writes to model fields — the bytes at `src` are
+    // never modified.
+    char* cursor = (char*)src;
+    visit_serialization_fields(model, &cursor, LOAD);
     return BMI_SUCCESS;
 }
 
@@ -945,6 +999,9 @@ test_bmi_c_model *new_bmi_model(void)
     data->input_var_2 = NULL;
     data->output_var_1 = NULL;
     data->output_var_2 = NULL;
+
+    data->n_cells = 0;
+    data->cells   = NULL;
 
     data->serialized_state = NULL;
     data->serialized_size = 0;
