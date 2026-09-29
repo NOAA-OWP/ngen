@@ -560,16 +560,23 @@ void NetCDFPerFeatureDataProvider::evict_stale_values(value_cache_type& cache, i
 void NetCDFPerFeatureDataProvider::cache_slot::fill(std::shared_ptr<std::vector<double>> buffer_ptr)
 {
   ptr_ = buffer_ptr;
-  flag_.test_and_set(std::memory_order_release);
+  std::atomic_thread_fence(std::memory_order_release);
+  state_.store(STATE::FILLED, std::memory_order_relaxed);
 }
 
 std::shared_ptr<std::vector<double>> NetCDFPerFeatureDataProvider::cache_slot::get()
 {
-  while (!flag_.test(std::memory_order_acquire)) {
+  int state = STATE::EMPTY;
+  while ((state = state_.load(std::memory_order_relaxed)) == STATE::EMPTY) {
     // Just spin on whatever thread is doing the filling
-#pragma omp taskyield
+    #pragma omp taskyield
     0; // no-op statement for the pragma above
   }
+  std::atomic_thread_fence(std::memory_order_acquire);
+
+  if (state == STATE::FILLED)
+    state_.store(STATE::HOT, std::memory_order_relaxed);
+
   return ptr_;
 }
 

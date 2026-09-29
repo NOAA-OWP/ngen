@@ -163,7 +163,8 @@ namespace data_access
 
         private:
           std::shared_ptr<std::vector<double>> ptr_ = nullptr;
-          std::atomic_flag flag_ = ATOMIC_FLAG_INIT;
+	  enum STATE : char { EMPTY=0, FILLED=1, HOT=2 };
+	  std::atomic<int> state_ = STATE::EMPTY;
         };
         using value_cache_type = std::map<std::pair<int, std::string>, cache_slot>;
 
