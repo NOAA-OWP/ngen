@@ -557,6 +557,65 @@ void NetCDFPerFeatureDataProvider::evict_stale_values(value_cache_type& cache, i
   }
 }
 
+void NetCDFPerFeatureDataProvider::cache_slot::fill(std::shared_ptr<std::vector<double>> buffer_ptr)
+{
+  ptr_ = buffer_ptr;
+  flag_.test_and_set(std::memory_order_release);
+}
+
+std::shared_ptr<std::vector<double>> NetCDFPerFeatureDataProvider::cache_slot::get()
+{
+  while (!flag_.test(std::memory_order_acquire)) {
+    // Just spin on whatever thread is doing the filling
+#pragma omp taskyield
+    0; // no-op statement for the pragma above
+  }
+  return ptr_;
+}
+
+std::shared_ptr<std::vector<double>> NetCDFPerFeatureDataProvider::fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot)
+{
+  std::size_t cache_line_size = cache_slice_t_size;
+  std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
+  auto cached = std::make_shared<std::vector<double>>(get_ids().size() * page_cache_line_size);
+
+  std::vector<std::size_t> start(2), count(2);
+
+  std::unique_lock nc_file_lock(netcdf_library_mutex);
+
+  auto var_name = ncvar.getName();
+  
+  #pragma omp critical
+  std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) << " " << omp_get_thread_num() << " NetCDF reading " << var_name << " " << page_c_idx << std::endl;
+
+  // read each chunk and add it to "cached"
+  std::size_t idx = 0;
+  for(auto const& chunk: chunks){
+    // chunk start index = chunk.first;
+    // chunk length      = chunk.second;
+    start[0] = chunk.first;
+
+    // NOTE: in the first iteration, we might read more data in the Time
+    // dimension than we 'need'. b.c. we read from:
+    // 'c_idx1 - (c_idx1 % cache_slice_t_size)' to the end of the cache line.
+    // so, if 'c_idx1 % cache_slice_t_size > 0' we will read
+    // 'c_idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
+    start[1] = page_c_idx;
+
+    count[0] = chunk.second;
+    count[1] = page_cache_line_size;
+
+    ncvar.getVar(start,count,&(*cached)[idx]);
+    idx += chunk.second * page_cache_line_size;
+  }
+
+  #pragma omp critical
+  std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) << " " << omp_get_thread_num() << " NetCDF done reading " << var_name << " " << page_c_idx << " " << cached.get() << " from " << file_path << std::endl;
+
+  slot.fill(cached);
+  return cached;
+}
+
 double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m) 
 {
     /*
@@ -678,50 +737,16 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
           evict_stale_values(thread_cache, page_c_idx);
 
 	  if (should_fill) {
-	    std::unique_lock nc_file_lock(netcdf_library_mutex);
-
-	    // Actually load the data
-	    cached = std::make_shared<std::vector<double>>(get_ids().size() * page_cache_line_size);
-
-	    std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) << " NetCDF reading " << key_2.first << " " << key_2.second << std::endl;
-
-	    // read each chunk and add it to "cached"
-	    std::size_t idx = 0;
-	    for(auto const& chunk: chunks){
-	      // chunk start index = chunk.first;
-	      // chunk length      = chunk.second;
-	      start[0] = chunk.first;
-
-	      // NOTE: in the first iteration, we might read more data in the Time
-	      // dimension than we 'need'. b.c. we read from:
-	      // 'c_idx1 - (c_idx1 % cache_slice_t_size)' to the end of the cache line.
-	      // so, if 'c_idx1 % cache_slice_t_size > 0' we will read
-	      // 'c_idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
-	      start[1] = page_c_idx;
-
-	      count[0] = chunk.second;
-	      count[1] = page_cache_line_size;
-
-	      ncvar.getVar(start,count,&(*cached)[idx]);
-	      idx += chunk.second * page_cache_line_size;
-	    }
-
-	    cache_iter->second.first = cached;
-	    cache_iter->second.second.test_and_set(std::memory_order_release);
-	    std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) << " " << omp_get_thread_num() << " NetCDF done reading " << key_2.first << " " << key_2.second << " " << cached.get() << std::endl;
+            cached = fill_slot(page_c_idx, ncvar, cache_iter->second);
 	  } else {
-	    while (!cache_iter->second.second.test(std::memory_order_acquire)) {
-	      // Just spin on whatever thread is doing the filling
-	    }
-	    cached = cache_iter->second.first;
+            cached = cache_iter->second.get();
 	    //std::cout << omp_get_thread_num() << " consumer thread  " << key_2.first << " " << key_2.second << " " << cached.get() << std::endl;
 	  }
 
 	  // at this point, cached.get() should be non-nullptr
 	  if (from_global_cache) {
 	    auto &local_cache = *thread_cache.emplace(key_2, std::piecewise_construct).first;
-	    local_cache.second.first = cached;
-	    local_cache.second.second.test_and_set();
+            local_cache.second.fill(cached);
 	  }
 	}
 

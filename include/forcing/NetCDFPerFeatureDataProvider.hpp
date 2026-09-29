@@ -153,14 +153,22 @@ namespace data_access
         // cached data; if the pointer is null, another thread has
         // started filling it in, but is not done yet
         struct cache_slot {
-            cache_slot() = default;
-            cache_slot(std::piecewise_construct_t) {}
-            std::shared_ptr<std::vector<double>> first = nullptr;
-            std::atomic_flag second = ATOMIC_FLAG_INIT;
+          cache_slot() = default;
+          cache_slot(std::piecewise_construct_t) {}
+
+          // Fill in this slot with the provided buffer pointer and notify any threads waiting in get()
+          void fill(std::shared_ptr<std::vector<double>> buffer_ptr);
+          // Wait for another thread to fill() this slot
+          std::shared_ptr<std::vector<double>> get();
+
+        private:
+          std::shared_ptr<std::vector<double>> ptr_ = nullptr;
+          std::atomic_flag flag_ = ATOMIC_FLAG_INIT;
         };
         using value_cache_type = std::map<std::pair<int, std::string>, cache_slot>;
 
         private:
+      std::shared_ptr<std::vector<double>> fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot);
 
         time_t sim_start_date_time_epoch;
         time_t sim_end_date_time_epoch;
