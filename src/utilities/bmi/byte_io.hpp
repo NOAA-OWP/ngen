@@ -36,10 +36,10 @@ Names the byte-level primitives `wire_format` uses, in one place:
     place.
 
 Signed-integer encoding inherits boost::endian's two's-complement
-assumption ([1], [2]); `wire_format.hpp`'s run-host canary tests
-verify the host satisfies it. C++20 codifies two's-complement as a
-mandatory representation, so once the project bumps to C++20 the
-canary tests become formalities.
+assumption ([1], [2]). C++20 mandates two's-complement, so the
+run-host canary tests in byte_io_Test.cpp are formalities on any
+conforming toolchain — kept as a safeguard against nonconforming
+toolchains and possible ports to older standards.
 
   [1] versioned (matches the Boost we link against):
       https://www.boost.org/doc/libs/1_86_0/libs/endian/doc/html/endian.html
