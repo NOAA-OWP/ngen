@@ -1,6 +1,7 @@
 #ifndef NGEN_BMI_UTILITIES_HPP
 #define NGEN_BMI_UTILITIES_HPP
 
+#include <cstdint>
 #include <string>
 #include <vector>
 #include <boost/type_index.hpp>
@@ -50,6 +51,31 @@ namespace models {
                 }
                 else if (type == "float"){
                     return make_vector<T>( (const float*) data, num_items);
+                }
+                // stdint type support.
+                else if (type == "int8" || type == "int8_t"){
+                    return make_vector<T>( (const int8_t*) data, num_items);
+                }
+                else if (type == "int16" || type == "int16_t"){
+                    return make_vector<T>( (const int16_t*) data, num_items);
+                }
+                else if (type == "int32" || type == "int32_t"){
+                    return make_vector<T>( (const int32_t*) data, num_items);
+                }
+                else if (type == "int64" || type == "int64_t"){
+                    return make_vector<T>( (const int64_t*) data, num_items);
+                }
+                else if (type == "uint8" || type == "uint8_t"){
+                    return make_vector<T>( (const uint8_t*) data, num_items);
+                }
+                else if (type == "uint16" || type == "uint16_t"){
+                    return make_vector<T>( (const uint16_t*) data, num_items);
+                }
+                else if (type == "uint32" || type == "uint32_t"){
+                    return make_vector<T>( (const uint32_t*) data, num_items);
+                }
+                else if (type == "uint64" || type == "uint64_t"){
+                    return make_vector<T>( (const uint64_t*) data, num_items);
                 }
                 else if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int"){
                     return make_vector<T>( (const short*) data, num_items);
