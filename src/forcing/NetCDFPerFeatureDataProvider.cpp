@@ -688,9 +688,8 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         // stride between rows is 'cache_line_size'
 	const std::size_t ith_p_idx = p_idx + i;
 	const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
-	const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
 
-        cache_key_type key_2 = std::pair{page_c_idx, variable_name};
+        cache_key_type key_2{page_c_idx, variable_name};
 
 	// Drop references to arrays of stale forcings values here,
 	// before reading or waiting on reads, to avoid or limit
