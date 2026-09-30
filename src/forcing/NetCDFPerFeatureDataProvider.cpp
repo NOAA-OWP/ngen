@@ -696,8 +696,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	// spikes in memory footprint as new forcings get read in
 	evict_stale_values(thread_cache, page_c_idx);
 
-	auto thread_cache_iter = thread_cache.find(key_2);
-	if (thread_cache_iter != thread_cache.end())
+	if (thread_cache.contains(key_2))
 	  continue;
           
         {
