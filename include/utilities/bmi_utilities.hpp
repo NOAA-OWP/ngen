@@ -1,6 +1,7 @@
 #ifndef NGEN_BMI_UTILITIES_HPP
 #define NGEN_BMI_UTILITIES_HPP
 
+#include <cstdint>
 #include <iterator>
 #include <memory>
 #include <stdexcept>
@@ -70,6 +71,32 @@ namespace models {
 
             if (type == "float" || type == "real")
                 return f.template operator()<float>();
+
+            // The stdint spellings, by typedef rather than by hand: int64_t is long on some platforms
+            // and long long on others, and the typedef is right on both.
+            if (type == "int8" || type == "int8_t")
+                return f.template operator()<std::int8_t>();
+
+            if (type == "uint8" || type == "uint8_t")
+                return f.template operator()<std::uint8_t>();
+
+            if (type == "int16" || type == "int16_t")
+                return f.template operator()<std::int16_t>();
+
+            if (type == "uint16" || type == "uint16_t")
+                return f.template operator()<std::uint16_t>();
+
+            if (type == "int32" || type == "int32_t")
+                return f.template operator()<std::int32_t>();
+
+            if (type == "uint32" || type == "uint32_t")
+                return f.template operator()<std::uint32_t>();
+
+            if (type == "int64" || type == "int64_t")
+                return f.template operator()<std::int64_t>();
+
+            if (type == "uint64" || type == "uint64_t")
+                return f.template operator()<std::uint64_t>();
 
             if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int")
                 return f.template operator()<short>();
