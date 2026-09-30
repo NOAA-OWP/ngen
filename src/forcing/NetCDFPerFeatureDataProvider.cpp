@@ -692,56 +692,46 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         decltype(value_cache_2)::key_type key_2 = std::pair{page_c_idx, variable_name};
 
         {
-          decltype(value_cache_2)::iterator cache_iter;
-          bool should_fill = false;
-          bool from_global_cache = false;
-
-          cache_iter = thread_cache.find(key_2);
-
-          // Look up the cache slot for key_2 - either cache_iter =
-          // find() gets an extant slot, or this thread commits to
-          // creating and filling a new slot
-          if (cache_iter == thread_cache.end()) {
-            std::shared_lock l(cache_2_mutex);
-            cache_iter = value_cache_2.find(key_2);
-            from_global_cache = true;
-
-            if (cache_iter == value_cache_2.end()) {
-              // Upgrade the lock and try to take responsibility for filling this entry in
-              l.unlock();
-              std::unique_lock ul(cache_2_mutex);
-
-              // Re-check that some other thread didn't get here first
-              cache_iter = value_cache_2.find(key_2);
-              if (cache_iter == value_cache_2.end()) {
-                // This thread really is reponsible for creating it
-                cache_iter = value_cache_2.emplace(key_2, std::piecewise_construct).first;
-                should_fill = true;
-
-                evict_stale_values(value_cache_2, page_c_idx);
-              }
-            }
-          } // cache_iter should be valid, != end() at this point
-
           // Drop references to arrays of stale forcings values here,
           // before reading or waiting on reads, to avoid or limit
           // spikes in memory footprint as new forcings get read in
           evict_stale_values(thread_cache, page_c_idx);
 
-          std::shared_ptr<std::vector<double>> cached = nullptr;
+          auto thread_cache_iter = thread_cache.find(key_2);
+          if (thread_cache_iter != thread_cache.end())
+            continue;
+          
+          // Look up the cache slot for key_2 - either cache_iter =
+          // find() gets an extant slot, or this thread commits to
+          // creating and filling a new slot
+          std::shared_lock l(cache_2_mutex);
+          auto cache_iter = value_cache_2.find(key_2);
 
-	  if (should_fill) {
-            cached = fill_slot(page_c_idx, ncvar, cache_iter->second);
-	  } else {
-            cached = cache_iter->second.get();
-	    //std::cout << omp_get_thread_num() << " consumer thread  " << key_2.first << " " << key_2.second << " " << cached.get() << std::endl;
-	  }
+          if (cache_iter == value_cache_2.end()) {
+            // Upgrade the lock and try to take responsibility for filling this entry in
+            l.unlock();
+            std::unique_lock ul(cache_2_mutex);
 
-	  // at this point, cached.get() should be non-nullptr
-	  if (from_global_cache) {
-	    auto &local_cache = *thread_cache.emplace(key_2, std::piecewise_construct).first;
-            local_cache.second.fill(cached);
-	  }
+            // Re-check that some other thread didn't get here first
+            cache_iter = value_cache_2.find(key_2);
+            if (cache_iter == value_cache_2.end()) {
+              // Evict while we hold the writer lock, and are
+              // responsible for modifying the cache anyway. Do it
+              // before fill_slot to drop references to old data
+              // before loading new data to limit memory footprint.
+              evict_stale_values(value_cache_2, page_c_idx);
+
+              // This thread really is reponsible for creating it
+              cache_iter = value_cache_2.emplace(key_2, std::piecewise_construct).first;
+              fill_slot(page_c_idx, ncvar, cache_iter->second);
+            }
+          } // cache_iter should be valid, != end() at this point
+
+          std::shared_ptr<std::vector<double>> cached = cache_iter->second.get();
+          //std::cout << omp_get_thread_num() << " consumer thread  " << key_2.first << " " << key_2.second << " " << cached.get() << std::endl;
+
+          auto &local_cache = *thread_cache.emplace(key_2, std::piecewise_construct).first;
+          local_cache.second.fill(cached);
 	}
     }
 
