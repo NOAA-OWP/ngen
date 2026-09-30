@@ -5,6 +5,19 @@
 
 using namespace models::bmi;
 
+void Bmi_Fortran_Adapter::construct_and_init_backing_model_for_fortran() {
+    if (model_initialized)
+        return;
+    bmi_model = std::make_unique<Bmi_Fortran_Handle_Wrapper>(Bmi_Fortran_Handle_Wrapper());
+    dynamic_library_load();
+    execModuleRegistration();
+    int init_result = initialize(&bmi_model->handle, bmi_init_config.c_str());
+    if (init_result != BMI_SUCCESS) {
+        init_exception_msg = "Failure when attempting to initialize " + model_name;
+        throw models::external::State_Exception(init_exception_msg);
+    }
+}
+
 std::string Bmi_Fortran_Adapter::GetComponentName() {
     char component_name[BMI_MAX_COMPONENT_NAME];
     if (get_component_name(&bmi_model->handle, component_name) != BMI_SUCCESS) {
