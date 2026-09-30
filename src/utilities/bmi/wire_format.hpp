@@ -166,29 +166,13 @@ integer representation**.
 The assumption matters for *cross-host* readability between
 different signed representations — same-host round-trip works
 regardless of representation because memcpy preserves the bit
-pattern. ngen does not target hosts with non-two's-complement
-signed integers: C++17 (ngen's required standard) does not
-formally mandate two's complement, but every architecture and
-compiler in ngen's CI matrix (and in every commercial deployment
-target) uses it.
-
-**Operational canary**: two tests in `test_bmi_protocols` verify
-the assumption holds on the host that runs the test binary:
+pattern. C++20 mandates two's-complement, so this holds by
+language rule on any conforming toolchain. Two byte_io tests
+verify it end-to-end on the running host as a safeguard against
+nonconforming toolchains and possible ports to older standards:
 
     ByteIO.i32_explicit_byte_layout_negative
     ByteIO.i64_explicit_byte_layout_negative
-
-Both check that `int{32,64}_t{-1}` writes as all-0xFF bytes on
-disk, which is true iff the running host uses two's complement.
-If those tests fail on a target, the wire format's signed-integer
-fields cannot be safely written or read on that target.
-
-The tests validate the *run* host, not the *build* host. In CI
-those are the same machine, but for cross-compiled artifacts or
-for production binaries deployed to hosts other than the CI
-runner, operators wanting strong guarantees should run
-test_bmi_protocols on the deployment host before trusting records
-produced or restored there.
 
 Truncation tolerance
 --------------------

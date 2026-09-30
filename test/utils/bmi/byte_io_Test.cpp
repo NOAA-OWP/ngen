@@ -145,24 +145,12 @@ TEST(ByteIO, u32_explicit_byte_layout) {
 
 // ---- Two's-complement canary tests ----------------------------------------
 //
-// These two tests are the platform-validity canaries the wire format
-// relies on. They verify that `int{32,64}_t{-1}` writes as all-0xFF
-// bytes on disk, which is true if and only if the running host uses
-// two's-complement signed integer representation. A ones'-complement
-// host would produce 0xFE in the low byte (signed -1 is 0xFE in 1C,
-// not 0xFF); a sign-magnitude host would produce 0x01 plus the sign-
-// bit byte 0x80 — both layouts these tests reject.
-//
-// **If these tests fail on a new build target, the wire format's
-// signed integer fields cannot be safely written or read on that
-// target.** See wire_format.hpp's "Signed integer fields and the
-// two's-complement assumption" section for the full explanation of
-// what these canaries validate at the format level.
+// C++20 mandates two's-complement, so these are formalities. Retained
+// as a safeguard against nonconforming toolchains and possible ports
+// to older standards.
 
 TEST(ByteIO, i32_explicit_byte_layout_negative) {
-    // -1 (int32) is 0xFFFFFFFF in two's complement; on disk every byte
-    // should be 0xFF. See "Two's-complement canary tests" comment above
-    // for the full implication if this test fails.
+    // -1 (int32) must serialize as all-0xFF bytes.
     std::stringstream ss(std::ios::in | std::ios::out | std::ios::binary);
     bio::write_i32_le(ss, int32_t{-1});
     const std::string bytes = ss.str();
@@ -171,11 +159,7 @@ TEST(ByteIO, i32_explicit_byte_layout_negative) {
 }
 
 TEST(ByteIO, i64_explicit_byte_layout_negative) {
-    // -1 (int64) is 0xFFFFFFFFFFFFFFFF in two's complement; on disk every
-    // byte should be 0xFF. The int32 round-trip test alone cannot catch
-    // a non-two's-complement int64 — they're separate types and the
-    // compiler's representation choices could in principle differ —
-    // so this canary exists as the int64 counterpart.
+    // -1 (int64) must serialize as all-0xFF bytes.
     std::stringstream ss(std::ios::in | std::ios::out | std::ios::binary);
     bio::write_i64_le(ss, int64_t{-1});
     const std::string bytes = ss.str();
