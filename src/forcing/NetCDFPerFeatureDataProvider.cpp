@@ -692,16 +692,16 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
         cache_key_type key_2 = std::pair{page_c_idx, variable_name};
 
-        {
-          // Drop references to arrays of stale forcings values here,
-          // before reading or waiting on reads, to avoid or limit
-          // spikes in memory footprint as new forcings get read in
-          evict_stale_values(thread_cache, page_c_idx);
+	// Drop references to arrays of stale forcings values here,
+	// before reading or waiting on reads, to avoid or limit
+	// spikes in memory footprint as new forcings get read in
+	evict_stale_values(thread_cache, page_c_idx);
 
-          auto thread_cache_iter = thread_cache.find(key_2);
-          if (thread_cache_iter != thread_cache.end())
-            continue;
+	auto thread_cache_iter = thread_cache.find(key_2);
+	if (thread_cache_iter != thread_cache.end())
+	  continue;
           
+        {
           // Look up the cache slot for key_2 - either cache_iter =
           // find() gets an extant slot, or this thread commits to
           // creating and filling a new slot
