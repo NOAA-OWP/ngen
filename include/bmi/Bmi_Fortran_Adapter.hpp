@@ -502,7 +502,9 @@ namespace models {
              * Implementations should return immediately without taking any further action if ``model_initialized`` is
              * already ``true``.
              *
-             * The call to the BMI native ``Initialize(string)`` should pass the value stored in ``bmi_init_config``.
+             * The contents of the file named by ``bmi_init_config`` are passed to the BMI native
+             * ``Initialize(string)`` through a private in-memory copy, so that each model instance opens a
+             * distinct file even when several share one config file.
              */
             void construct_and_init_backing_model_for_fortran();
 
