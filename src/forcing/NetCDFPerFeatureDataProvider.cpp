@@ -546,9 +546,10 @@ namespace cache {
     }
 }
 
-thread_local NetCDFPerFeatureDataProvider::value_cache_type thread_cache;
+thread_local NetCDFPerFeatureDataProvider::private_cache_type thread_cache;
 
-void NetCDFPerFeatureDataProvider::evict_stale_values(value_cache_type& cache, int floor_index)
+template <typename MapType>
+void NetCDFPerFeatureDataProvider::evict_stale_values(MapType& cache, int floor_index)
 {
   auto eviction_iterator = cache.begin();
   auto end = cache.end();
@@ -557,14 +558,14 @@ void NetCDFPerFeatureDataProvider::evict_stale_values(value_cache_type& cache, i
   }
 }
 
-void NetCDFPerFeatureDataProvider::cache_slot::fill(std::shared_ptr<std::vector<double>> buffer_ptr)
+void NetCDFPerFeatureDataProvider::cache_slot::fill(NetCDFPerFeatureDataProvider::cache_buffer_type buffer_ptr)
 {
   ptr_ = buffer_ptr;
   std::atomic_thread_fence(std::memory_order_release);
   state_.store(STATE::FILLED, std::memory_order_relaxed);
 }
 
-std::shared_ptr<std::vector<double>> NetCDFPerFeatureDataProvider::cache_slot::get()
+auto NetCDFPerFeatureDataProvider::cache_slot::get() -> cache_buffer_type
 {
   int state = STATE::EMPTY;
   while ((state = state_.load(std::memory_order_relaxed)) == STATE::EMPTY) {
@@ -580,7 +581,7 @@ std::shared_ptr<std::vector<double>> NetCDFPerFeatureDataProvider::cache_slot::g
   return ptr_;
 }
 
-std::shared_ptr<std::vector<double>> NetCDFPerFeatureDataProvider::fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot)
+auto NetCDFPerFeatureDataProvider::fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot) -> cache_buffer_type
 {
   std::size_t cache_line_size = cache_slice_t_size;
   std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
@@ -689,7 +690,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
 	const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
 
-        decltype(value_cache_2)::key_type key_2 = std::pair{page_c_idx, variable_name};
+        cache_key_type key_2 = std::pair{page_c_idx, variable_name};
 
         {
           // Drop references to arrays of stale forcings values here,
@@ -727,11 +728,9 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
             }
           } // cache_iter should be valid, != end() at this point
 
-          std::shared_ptr<std::vector<double>> cached = cache_iter->second.get();
-          //std::cout << omp_get_thread_num() << " consumer thread  " << key_2.first << " " << key_2.second << " " << cached.get() << std::endl;
+          cache_buffer_type cached = cache_iter->second.get();
 
-          auto &local_cache = *thread_cache.emplace(key_2, std::piecewise_construct).first;
-          local_cache.second.fill(cached);
+          thread_cache.emplace(key_2, cached);
 	}
     }
 
@@ -746,7 +745,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	const std::size_t ith_p_idx = p_idx + i;
 	const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
 	const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
-        decltype(value_cache_2)::key_type key_2 = std::pair{page_c_idx, variable_name};
+        cache_key_type key_2 = std::pair{page_c_idx, variable_name};
 
         auto locally_cached = thread_cache.at(key_2).get();
         // Find all values in the current cache slice and push them onto raw_values

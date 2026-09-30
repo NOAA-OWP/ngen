@@ -149,7 +149,11 @@ namespace data_access
 
         virtual std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
-        // Key is (c_idx, variable_name), value is a pointer to the
+        // Key is (c_idx, variable_name)
+        using cache_key_type = std::pair<int, std::string>;
+        using cache_buffer_type = std::shared_ptr<std::vector<double>>;
+
+        // value is a pointer to the
         // cached data; if the pointer is null, another thread has
         // started filling it in, but is not done yet
         struct cache_slot {
@@ -157,19 +161,20 @@ namespace data_access
           cache_slot(std::piecewise_construct_t) {}
 
           // Fill in this slot with the provided buffer pointer and notify any threads waiting in get()
-          void fill(std::shared_ptr<std::vector<double>> buffer_ptr);
-          // Wait for another thread to fill() this slot
-          std::shared_ptr<std::vector<double>> get();
+          void fill(cache_buffer_type buffer_ptr);
+          // Wait for another thread to fill() this slot - the pointer is guaranteed to be non-nullptr
+          cache_buffer_type get();
 
         private:
-          std::shared_ptr<std::vector<double>> ptr_ = nullptr;
+          cache_buffer_type ptr_ = nullptr;
 	  enum STATE : char { EMPTY=0, FILLED=1, HOT=2 };
 	  std::atomic<int> state_ = STATE::EMPTY;
         };
-        using value_cache_type = std::map<std::pair<int, std::string>, cache_slot>;
+        using shared_cache_type = std::map<cache_key_type, cache_slot>;
+        using private_cache_type = std::map<cache_key_type, cache_buffer_type>;
 
         private:
-      std::shared_ptr<std::vector<double>> fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot);
+        cache_buffer_type fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot);
 
         time_t sim_start_date_time_epoch;
         time_t sim_end_date_time_epoch;
@@ -202,9 +207,10 @@ namespace data_access
 
         // Erase entries in the passed cache with keys whose first
         // element is less than floor_index
-        static void evict_stale_values(value_cache_type& cache, int floor_index);
+        template <typename MapType>
+        static void evict_stale_values(MapType& cache, int floor_index);
 
-        value_cache_type value_cache_2;
+        shared_cache_type value_cache_2;
         std::shared_mutex cache_2_mutex;
 
         // number of time slices per cache entry
