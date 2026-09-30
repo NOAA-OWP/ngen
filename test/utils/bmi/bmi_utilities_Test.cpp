@@ -1,4 +1,5 @@
 #include <array>
+#include <cstdint>
 #include <list>
 #include <string>
 #include <vector>
@@ -46,6 +47,52 @@ TEST(BmiUtilitiesDispatch, float_variants) {
     expect_roundtrip<float>("float", {1.5f, -2.25f, 3.125f});
     expect_roundtrip<double>("double", {1.5, -2.25, 3.125});
     expect_roundtrip<long double>("long double", {1.5L, -2.25L, 3.125L});
+}
+
+// ---------------------------------------------------------------------
+// stdint integer spellings. Each width tested with
+// and without the `_t` suffix, both signed and unsigned.
+// ---------------------------------------------------------------------
+
+TEST(BmiUtilitiesDispatch, int8_stdint) {
+    expect_roundtrip<int8_t>("int8", {int8_t{-3}, int8_t{7}, int8_t{-128}});
+    expect_roundtrip<int8_t>("int8_t", {int8_t{-3}, int8_t{7}, int8_t{-128}});
+}
+
+TEST(BmiUtilitiesDispatch, uint8_stdint) {
+    expect_roundtrip<uint8_t>("uint8", {uint8_t{0}, uint8_t{200}, uint8_t{255}});
+    expect_roundtrip<uint8_t>("uint8_t", {uint8_t{0}, uint8_t{200}, uint8_t{255}});
+}
+
+TEST(BmiUtilitiesDispatch, int16_stdint) {
+    expect_roundtrip<int16_t>("int16", {int16_t{-1}, int16_t{32000}, int16_t{-32000}});
+    expect_roundtrip<int16_t>("int16_t", {int16_t{-1}, int16_t{32000}, int16_t{-32000}});
+}
+
+TEST(BmiUtilitiesDispatch, uint16_stdint) {
+    expect_roundtrip<uint16_t>("uint16", {uint16_t{0}, uint16_t{40000}, uint16_t{65535}});
+    expect_roundtrip<uint16_t>("uint16_t", {uint16_t{0}, uint16_t{40000}, uint16_t{65535}});
+}
+
+TEST(BmiUtilitiesDispatch, int32_stdint) {
+    expect_roundtrip<int32_t>("int32", {int32_t{-1}, int32_t{1'000'000}, int32_t{-1'000'000}});
+    expect_roundtrip<int32_t>("int32_t", {int32_t{-1}, int32_t{1'000'000}, int32_t{-1'000'000}});
+}
+
+TEST(BmiUtilitiesDispatch, uint32_stdint) {
+    expect_roundtrip<uint32_t>("uint32", {uint32_t{0}, uint32_t{3'000'000'000u}});
+    expect_roundtrip<uint32_t>("uint32_t", {uint32_t{0}, uint32_t{3'000'000'000u}});
+}
+
+TEST(BmiUtilitiesDispatch, int64_stdint) {
+    // Value range chosen to survive a lossless round-trip through double.
+    expect_roundtrip<int64_t>("int64", {int64_t{-1}, int64_t{1LL << 40}, int64_t{-(1LL << 40)}});
+    expect_roundtrip<int64_t>("int64_t", {int64_t{-1}, int64_t{1LL << 40}, int64_t{-(1LL << 40)}});
+}
+
+TEST(BmiUtilitiesDispatch, uint64_stdint) {
+    expect_roundtrip<uint64_t>("uint64", {uint64_t{0}, uint64_t{1ULL << 40}});
+    expect_roundtrip<uint64_t>("uint64_t", {uint64_t{0}, uint64_t{1ULL << 40}});
 }
 
 // ---------------------------------------------------------------------
@@ -143,9 +190,9 @@ TEST(BmiUtilitiesDispatch, one_table_serves_every_shape) {
 
     // An iterator range, cast into a contiguous array of the named type.
     std::vector<double> source{1.5, 2.5, 3.5};
-    auto many = models::bmi::get_values_as_type("int", source.begin(), source.end());
-    ASSERT_EQ(static_cast<int*>(many.get())[0], 1);
-    ASSERT_EQ(static_cast<int*>(many.get())[2], 3);
+    auto many = models::bmi::get_values_as_type("int32_t", source.begin(), source.end());
+    ASSERT_EQ(static_cast<std::int32_t*>(many.get())[0], 1);
+    ASSERT_EQ(static_cast<std::int32_t*>(many.get())[2], 3);
 
     // And bytes read back as something else, which is what read_as() above does.
     const float raw[2] = {1.5f, 3.5f};
@@ -168,6 +215,7 @@ TEST(BmiUtilitiesDispatch, both_type_name_vocabularies_resolve) {
     EXPECT_EQ(cxx_type_of("real"), cxx_type_of("float"));
     EXPECT_EQ(cxx_type_of("double precision"), cxx_type_of("double"));
     EXPECT_EQ(cxx_type_of("integer"), cxx_type_of("int"));
+    EXPECT_EQ(cxx_type_of("int32_t"), cxx_type_of("int32"));
     EXPECT_EQ(cxx_type_of("signed long int"), cxx_type_of("long"));
 }
 
@@ -175,7 +223,10 @@ TEST(BmiUtilitiesDispatch, both_type_name_vocabularies_resolve) {
 TEST(BmiUtilitiesDispatch, every_name_is_reachable_through_the_callers) {
     for (const std::string type : {"double", "double precision", "long double", "float", "real",
                                    "short", "unsigned short", "int", "integer", "unsigned",
-                                   "long", "unsigned long", "long long", "unsigned long long"}) {
+                                   "long", "unsigned long", "long long", "unsigned long long",
+                                   "int8", "int8_t", "uint8", "uint8_t", "int16", "int16_t",
+                                   "uint16", "uint16_t", "int32", "int32_t", "uint32", "uint32_t",
+                                   "int64", "int64_t", "uint64", "uint64_t"}) {
         EXPECT_NO_THROW(models::bmi::get_value_as_type(type, 1.0)) << type;
 
         std::vector<double> one{1.0};
