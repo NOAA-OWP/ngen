@@ -189,6 +189,63 @@ namespace models {
                 return std::vector<TO>(data, data+count);
             }
 
+            namespace {
+
+            template <typename T>
+            std::vector<T> get_vector(const std::string& type,
+                                      const void* data,
+                                      size_t num_items) {
+                /*
+                * Allows the std::vector constructor to type cast the values as it copies them.
+                * I don't see any other way around the typing issue other than an explicit copy of each...
+                * Now there is an early optimization that allows types that align to pass through uncopied
+                * but that also only works if GetValuePtr returns a compatible pointer that can iterate
+                * on the recieving side correctly.  This may be tricky for certain langague adapters (Fortran?)
+                * Untill this becomes burdensome on memory/time, I suggest copying and converting each value
+                */
+
+                if (type == "long double"){
+                    return make_vector<T>( (const long double*) data, num_items);
+                }
+                else if (type == "double"){
+                    return make_vector<T>( (const double*) data, num_items);
+                }
+                else if (type == "float"){
+                    return make_vector<T>( (const float*) data, num_items);
+                }
+                else if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int"){
+                    return make_vector<T>( (const short*) data, num_items);
+                }
+                else if (type == "unsigned short" || type == "unsigned short int"){
+                    return make_vector<T>( (const unsigned short*) data, num_items);
+                }
+                else if (type == "int" || type == "signed" || type == "signed int"){
+                    return make_vector<T>( (const int*) data, num_items);
+                }
+                else if (type == "unsigned" || type == "unsigned int"){
+                    return make_vector<T>( (const unsigned int*) data, num_items);
+                }
+                else if (type == "long" || type == "long int" || type == "signed long" || type == "signed long int"){
+                    return make_vector<T>( (const long*) data, num_items);
+                }
+                else if (type == "unsigned long" || type == "unsigned long int"){
+                    return make_vector<T>( (const unsigned long*) data, num_items);
+                }
+                else if (type == "long long" || type == "long long int" || type == "signed long long" || type == "signed long long int"){
+                    return make_vector<T>( (const long long*) data, num_items);
+                }
+                else if (type == "unsigned long long" || type == "unsigned long long int"){
+                    return make_vector<T>( (const unsigned long long*) data, num_items);
+                }
+                else{
+                    throw std::runtime_error(
+                        "get_vector: no logic for converting variable type "
+                        + type + " to " + boost::typeindex::type_id<T>().pretty_name());
+                }
+            }
+
+            } // anonymous namespace
+
         }
 
         /**
