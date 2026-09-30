@@ -497,18 +497,7 @@ namespace models {
              *
              * The call to the BMI native ``Initialize(string)`` should pass the value stored in ``bmi_init_config``.
              */
-            inline void construct_and_init_backing_model_for_fortran() {
-                if (model_initialized)
-                    return;
-                bmi_model = std::make_unique<Bmi_Fortran_Handle_Wrapper>(Bmi_Fortran_Handle_Wrapper());
-                dynamic_library_load();
-                execModuleRegistration();
-                int init_result = initialize(&bmi_model->handle, bmi_init_config.c_str());
-                if (init_result != BMI_SUCCESS) {
-                    init_exception_msg = "Failure when attempting to initialize " + model_name;
-                    throw models::external::State_Exception(init_exception_msg);
-                }
-            }
+            void construct_and_init_backing_model_for_fortran();
 
             /**
              * Internal implementation of logic used for @see GetInputItemCount.
