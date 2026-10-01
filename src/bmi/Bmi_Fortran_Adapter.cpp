@@ -5,6 +5,8 @@
 
 using namespace models::bmi;
 
+std::once_flag Bmi_Fortran_Adapter::fortran_runtime_initialization;
+
 std::string Bmi_Fortran_Adapter::GetComponentName() {
     char component_name[BMI_MAX_COMPONENT_NAME];
     if (get_component_name(&bmi_model->handle, component_name) != BMI_SUCCESS) {

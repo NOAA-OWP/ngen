@@ -41,6 +41,10 @@ if(NGEN_WITH_MPI)
     target_link_libraries(core PUBLIC MPI::MPI_CXX)
 endif()
 
+if(NGEN_WITH_THREADING)
+    target_link_libraries(core PUBLIC TBB::tbb)
+endif()
+
 add_subdirectory("catchment")
 add_subdirectory("nexus")
 add_subdirectory("hydrolocation")

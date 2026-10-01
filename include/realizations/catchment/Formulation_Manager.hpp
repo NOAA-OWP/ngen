@@ -126,6 +126,8 @@ namespace realization {
                     throw std::runtime_error(msg);
                 }
 
+		std::mutex formulations_mutex;
+
                 if (possible_catchment_configs) {
                     for (std::pair<std::string, boost::property_tree::ptree> catchment_config : *possible_catchment_configs) {
                       int catchment_index = fabric->find(catchment_config.first);
@@ -146,14 +148,16 @@ namespace realization {
                       // Parse catchment-specific model_params
                       auto catchment_feature = fabric->get_feature(catchment_index);
                       catchment_formulation.formulation.link_external(catchment_feature);
-                      this->add_formulation(
-                        this->construct_formulation_from_config(
-                            simulation_time_config,
-                            catchment_config.first,
-                            catchment_formulation,
-                            output_stream
-                        )
-                      );
+		      auto formulation = this->construct_formulation_from_config(
+										 simulation_time_config,
+										 catchment_config.first,
+										 catchment_formulation,
+										 output_stream
+										 );
+		      {
+			std::lock_guard l(formulations_mutex);
+			this->add_formulation(formulation);
+		      }
                         //  break; //only construct one for now FIXME
                        // } //end for formulaitons
                       }//end for catchments
@@ -162,11 +166,16 @@ namespace realization {
                 }//end if possible_catchment_configs
 
                 for (geojson::Feature location : *fabric) {
-                    if (not this->contains(location->get_id())) {
-                        std::shared_ptr<Catchment_Formulation> missing_formulation = this->construct_missing_formulation(
+		  {
+		    std::lock_guard presence(formulations_mutex);
+		    if (this->contains(location->get_id()))
+		      continue;
+		  }
+		  std::shared_ptr<Catchment_Formulation> missing_formulation = this->construct_missing_formulation(
                           location, output_stream, simulation_time_config);
-                        this->add_formulation(missing_formulation);
-                    }
+
+		  std::lock_guard insertion(formulations_mutex);
+		  this->add_formulation(missing_formulation);
                 }
             }
 
