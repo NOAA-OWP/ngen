@@ -19,6 +19,7 @@
 #include "GenericDataProvider.hpp"
 #include "DataProviderSelectors.hpp"
 #include <exception>
+#include <stdexcept>
 #include <mediator/UnitsHelper.hpp>
 
 /**
@@ -67,6 +68,12 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      * @return The duration of one record of this forcing source
      */
     long record_duration() const override {
+        // Needs two records to have a duration; exactly one row inside the
+        // simulation window would otherwise read past the end of the vector.
+        if (time_epoch_vector.size() < 2) {
+            throw std::runtime_error(
+                "Forcing data has fewer than two records inside the simulation window, so the record duration is undefined.");
+        }
         return time_epoch_vector[1] - time_epoch_vector[0];
     }
 
@@ -295,6 +302,13 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         //Get the data from CSV File
         std::vector<std::vector<std::string> > data_list = reader.getData();
 
+        // CSVReader::getData throws for a file it cannot read, but a readable
+        // empty file comes back as an empty list and there is no header row to
+        // process. Name the file rather than segfaulting on data_list[0].
+        if (data_list.empty()) {
+            throw std::runtime_error("Forcing file '" + file_name + "' is empty; expected a header row.");
+        }
+
         // Process the header (first) row..
         int col_num = 0;
         for (const auto& col_head : data_list[0]){
@@ -307,6 +321,12 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
                 std::string units = "";
 
                 boost::trim(var_name); // remove leading/trailing ws
+                // A trailing comma in the header row yields an empty final
+                // field, and std::string::back() on an empty string reads one
+                // byte before the buffer.
+                if (var_name.empty()) {
+                    throw std::runtime_error("Forcing file '" + file_name + "' has an empty column name in its header row.");
+                }
                 const auto var_name_close = var_name.back();
                 if (var_name_close == ']' || var_name_close == ')') {
                     // found closing bracket/parenth
@@ -374,6 +394,14 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
             if (start_date_time_epoch <= current_row_date_time_epoch && current_row_date_time_epoch <= end_date_time_epoch)
             {
                 time_epoch_vector.push_back(current_row_date_time_epoch);
+
+                // local_valvec_index was sized from the header row, so a data
+                // row with more fields than the header would index past its end.
+                if (vec.size() != local_valvec_index.size()) {
+                    throw std::runtime_error("Forcing file '" + file_name + "' row " + std::to_string(i)
+                        + " has " + std::to_string(vec.size()) + " fields but the header has "
+                        + std::to_string(local_valvec_index.size()) + ".");
+                }
 
                 int c = -1;
                 for (auto& s : vec){
