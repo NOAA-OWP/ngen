@@ -18,17 +18,13 @@ NgenSimulation::NgenSimulation(
     Simulation_Time const& sim_time,
     std::vector<std::shared_ptr<ngen::Layer>> layers,
     std::unordered_map<std::string, int> catchment_indexes,
-    std::unordered_map<std::string, int> nexus_indexes,
-    int mpi_rank,
-    int mpi_num_procs
+    std::unordered_map<std::string, int> nexus_indexes
                                )
     : simulation_step_(0)
     , sim_time_(std::make_shared<Simulation_Time>(sim_time))
     , layers_(std::move(layers))
     , catchment_indexes_(std::move(catchment_indexes))
     , nexus_indexes_(std::move(nexus_indexes))
-    , mpi_rank_(mpi_rank)
-    , mpi_num_procs_(mpi_num_procs)
 {
 #if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
     catchment_outflows_.reserve(catchment_indexes_.size() * get_num_output_times());
@@ -131,10 +127,6 @@ double NgenSimulation::get_nexus_outflow(int nexus_index, int timestep_index) co
 void NgenSimulation::run_routing(std::string const& t_route_config_file_with_path)
 {
 #if NGEN_WITH_ROUTING
-    // Run t-route from single process
-    if (mpi_rank_ != 0)
-        return;
-
     router_ = std::make_unique<routing_py_adapter::Routing_Py_Adapter>(t_route_config_file_with_path);
 
     // Note: Currently, delta_time is set in the t-route yaml configuration file, and the
@@ -148,7 +140,7 @@ void NgenSimulation::run_routing(std::string const& t_route_config_file_with_pat
 #endif
 }
 
-void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, std::string const& t_route_config_file_with_path)
+void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, std::string const& t_route_config_file_with_path, MPI_Comm mpi_comm)
 {
 #if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
     std::vector<double> *routing_nexus_downflows = &nexus_downstream_flows_;
@@ -160,17 +152,21 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
     }
 
 #if NGEN_WITH_MPI
+    int mpi_rank, mpi_num_procs;
+    MPI_Comm_rank(mpi_comm, &mpi_rank);
+    MPI_Comm_size(mpi_comm, &mpi_num_procs);
+
     std::vector<double> all_nexus_downflows;
     std::unordered_map<std::string, int> all_nexus_indexes;
 
-    if (mpi_num_procs_ > 1) {
+    if (mpi_num_procs > 1) {
         std::vector<std::string> local_nexus_ids;
         for (const auto& nexus : nexus_indexes_) {
             local_nexus_ids.push_back(nexus.first);
         }
         // MPI_Gather all nexus IDs into a single vector
-        std::vector<std::string> all_nexus_ids = parallel::gather_strings(local_nexus_ids, MPI_COMM_WORLD);
-        if (mpi_rank_ == 0) {
+        std::vector<std::string> all_nexus_ids = parallel::gather_strings(local_nexus_ids, mpi_comm);
+        if (mpi_rank == 0) {
             // filter to only the unique IDs
             std::sort(all_nexus_ids.begin(), all_nexus_ids.end());
             all_nexus_ids.erase(
@@ -179,10 +175,10 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
             );
         }
         // MPI_Broadcast so all processes share the nexus IDs
-        all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, MPI_COMM_WORLD));
+        all_nexus_ids = std::move(parallel::broadcast_strings(all_nexus_ids, mpi_comm));
 
         // MPI_Reduce to collect the results from processes
-        if (mpi_rank_ == 0) {
+        if (mpi_rank == 0) {
             all_nexus_downflows.resize(number_of_timesteps * all_nexus_ids.size(), 0.0);
         }
         std::vector<double> local_buffer(number_of_timesteps);
@@ -200,8 +196,8 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
                 // if this process does not have the id, fill with 0 to make sure it doesn't affect reduce sum
                 std::fill(local_buffer.begin(), local_buffer.end(), 0.0);
             }
-            MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-            if (mpi_rank_ == 0) {
+            MPI_Reduce(local_buffer.data(), receive_buffer.data(), number_of_timesteps, MPI_DOUBLE, MPI_SUM, 0, mpi_comm);
+            if (mpi_rank == 0) {
                 // copy reduce values to a combined downflows vector
                 all_nexus_indexes[nexus_id] = i;
                 for (int step = 0; step < number_of_timesteps; ++step) {
@@ -212,7 +208,7 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
             }
         }
 
-        if (mpi_rank_ == 0) {
+        if (mpi_rank == 0) {
             // update root's local data for running t-route below
             routing_nexus_indexes = &all_nexus_indexes;
             routing_nexus_downflows = &all_nexus_downflows;
@@ -220,7 +216,7 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
     }
 #endif // NGEN_WITH_MPI
 
-    if (mpi_rank_ == 0) { // Run t-route from single process
+    if (mpi_rank == 0) { // Run t-route from single process
         //LOG(LogLevel::INFO, "Running T-Route on nexus outflows.");
 
         // model for routing

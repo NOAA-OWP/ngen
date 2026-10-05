@@ -18,8 +18,6 @@ TEST(NgenSimulation_Test, Construction)
                            sim_time,
                            layers,
                            catchment_indexes,
-                           nexus_indexes,
-                           mpi_rank,
-                           mpi_num_procs
+                           nexus_indexes
                            )};
 }
