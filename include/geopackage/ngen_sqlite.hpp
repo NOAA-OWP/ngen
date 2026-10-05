@@ -2,6 +2,7 @@
 #define NGEN_GEOPACKAGE_SQLITE_H
 
 #include <memory>
+#include <set>
 #include <vector>
 
 #include <sqlite3.h>
@@ -146,13 +147,18 @@ class database
     //! @param table name of table
     //! @return true if table does exist
     //! @return false if table does not exist
-    bool contains(const std::string& table);
+    bool contains(const std::string& table) const;
+
+    //! List the column names of a table
+    //! @param table name of table
+    //! @return column names, empty if the table does not exist
+    std::set<std::string> columns(const std::string& table) const;
 
     //! Query the SQLite Database and get the result
     //! @param statement String query with parameters
     //! @param binds text parameters to bind to statement
     //! @return SQLite row iterator
-    iterator query(const std::string& statement, const boost::span<const std::string> binds = {});
+    iterator query(const std::string& statement, const boost::span<const std::string> binds = {}) const;
 
     //! Query the SQLite Database with a bound statement and get the result
     //! @param statement String query with parameters
@@ -165,7 +171,7 @@ class database
             bool
         > = true
     >
-    iterator query(const std::string& statement, const Ts&... params)
+    iterator query(const std::string& statement, const Ts&... params) const
     {
         std::array<std::string, sizeof...(params)> binds = { params... };
         return query(statement, binds);

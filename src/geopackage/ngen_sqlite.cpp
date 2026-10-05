@@ -195,17 +195,32 @@ auto database::connection() const noexcept -> sqlite3*
     return conn_.get();
 }
 
-auto database::contains(const std::string& table) -> bool
+auto database::contains(const std::string& table) const -> bool
 {
     auto q = query("SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type='table' AND name=?)", table);
     q.next();
     return q.get<int>(0);
 }
 
+auto database::columns(const std::string& table) const -> std::set<std::string>
+{
+    // PRAGMA table_info yields one row per column, with the column's name at index 1. It yields
+    // nothing at all for a table that does not exist, which is why an empty result reads as
+    // "absent" rather than as an error.
+    std::set<std::string> names;
+    iterator q = query("PRAGMA table_info(" + table + ")");
+    q.next();
+    while (!q.done()) {
+        names.insert(q.get<std::string>(1));
+        q.next();
+    }
+    return names;
+}
+
 auto database::query(
     const std::string& statement,
     const boost::span<const std::string> binds
-) -> iterator
+) const -> iterator
 {
     sqlite3_stmt* stmt = nullptr;
     const int code = sqlite3_prepare_v2(
