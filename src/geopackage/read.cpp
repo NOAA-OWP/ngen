@@ -3,7 +3,24 @@
 #include <numeric>
 #include <regex>
 
-void check_table_name(const std::string& table)
+namespace {
+
+//! Wrap an identifier in double quotes, doubling any quote character it carries.
+std::string quote_identifier(const std::string& identifier)
+{
+    std::string quoted = "\"";
+    for (const char character : identifier) {
+        if (character == '"') {
+            quoted += '"';
+        }
+        quoted += character;
+    }
+    return quoted + "\"";
+}
+
+} // anonymous namespace
+
+std::string ngen::geopackage::quote_table_name(const std::string& table)
 {
     if (boost::algorithm::starts_with(table, "sqlite_")) {
         throw std::runtime_error("table `" + table + "` is not queryable");
@@ -13,6 +30,8 @@ void check_table_name(const std::string& table)
     if (std::regex_match(table, allowed)) {
         throw std::runtime_error("table `" + table + "` contains invalid characters");
     }
+
+    return quote_identifier(table);
 }
 
 std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
@@ -21,8 +40,8 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     const std::vector<std::string>& ids = {}
 )
 {
-    // Check for malicious/invalid layer input
-    check_table_name(layer);
+    // Check for malicious/invalid layer input; the quoted form is what the statements below use.
+    const std::string layer_identifier = quote_table_name(layer);
 
     ngen::sqlite::database db{gpkg_path};
 
@@ -51,7 +70,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     if(layer == "divides"){
         try {
             //TODO: A bit primitive. Actually introspect the schema somehow? https://www.sqlite.org/c3ref/funclist.html
-            auto query_get_first_row = db.query("SELECT divide_id FROM " + layer + " LIMIT 1");
+            auto query_get_first_row = db.query("SELECT divide_id FROM " + layer_identifier + " LIMIT 1");
             id_column = "divide_id";
         }
         catch (const std::exception& e){
@@ -79,7 +98,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     }
 
     // Get number of features
-    auto query_get_layer_count = db.query("SELECT COUNT(*) FROM " + layer + joined_ids, ids);
+    auto query_get_layer_count = db.query("SELECT COUNT(*) FROM " + layer_identifier + joined_ids, ids);
     query_get_layer_count.next();
     const int layer_feature_count = query_get_layer_count.get<int>(0);
 
@@ -102,7 +121,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
 
     // Get layer
-    auto query_get_layer = db.query("SELECT * FROM " + layer + joined_ids, ids);
+    auto query_get_layer = db.query("SELECT * FROM " + layer_identifier + joined_ids, ids);
     query_get_layer.next();
 
     // build features out of layer query

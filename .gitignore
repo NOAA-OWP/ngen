@@ -28,6 +28,9 @@ _site/
 *.sql
 *.sqlite
 
+# ...except scripts that derive checked-in test fixtures
+!test/data/**/*.sql
+
 # OS generated files #
 ######################
 .DS_Store

@@ -27,6 +27,11 @@
 #include <AorcForcing.hpp>
 #include <Bmi_Formulation.hpp>
 
+#include <NGenConfig.h>
+#if NGEN_WITH_SQLITE
+#include "geopackage.hpp"
+#endif
+
 class Formulation_Manager_Test : public ::testing::Test {
 
     protected:
@@ -200,6 +205,65 @@ class Formulation_Manager_Test : public ::testing::Test {
 
         return realization::config::Time(*possible_simulation_time).make_params();
     }
+
+    /**
+     * Build a manager from a realization config, along with the time parameters read() needs.
+     *
+     * @param json Realization config document, already passed through fix_paths
+     */
+    static std::pair<realization::Formulation_Manager, simulation_time_params>
+    manager_and_time(const std::string& json)
+    {
+        boost::property_tree::ptree tree;
+        std::stringstream stream(json);
+        boost::property_tree::json_parser::read_json(stream, tree);
+        return {
+            realization::Formulation_Manager(tree),
+            realization::config::Time(tree.get_child("time")).make_params()
+        };
+    }
+
+    /**
+     * Advance a catchment's formulation to @p timestep and return its output values keyed by the
+     * model variable each came from, so assertions do not depend on output column order.
+     */
+    static std::map<std::string, double> output_by_variable(realization::Formulation_Manager& manager,
+                                                            const std::string& id, int timestep)
+    {
+        auto formulation = manager.get_formulation(id);
+        formulation->get_response(timestep, 3600);
+
+        const auto fields = formulation->get_output_fields();
+        const auto values = formulation->get_output_values_for_timestep(timestep);
+
+        std::map<std::string, double> by_variable;
+        for (std::size_t i = 0; i < fields.size(); i++)
+            by_variable.emplace(fields[i].source_name, values[i]);
+        return by_variable;
+    }
+
+#if NGEN_WITH_SQLITE
+    /**
+     * Read the auxiliary attribute fixture's feature layer and join both of its attribute tables
+     * onto it, under the prefixes EXAMPLE_12's `from` values name. The first join warns about
+     * "Second", which aux_params_one has no row for.
+     */
+    geojson::GeoJSON aux_fabric_with_joined_attributes()
+    {
+        std::vector<std::string> candidates;
+        for (const auto& option : path_options)
+            candidates.push_back(option + "data/geopackage/example_aux.gpkg");
+
+        const std::string path = utils::FileChecker::find_first_readable(candidates);
+        if (path.empty())
+            throw std::runtime_error("can't find test/data/geopackage/example_aux.gpkg");
+
+        geojson::GeoJSON collection = ngen::geopackage::read(path, "test", {});
+        ngen::geopackage::join_attributes(*collection, path, "aux_params_one", "divide_id", "one", false);
+        ngen::geopackage::join_attributes(*collection, path, "aux_params_two", "catchment_id", "two", false);
+        return collection;
+    }
+#endif
 
     geojson::GeoJSON fabric = std::make_shared<geojson::FeatureCollection>();
 
@@ -909,6 +973,60 @@ const std::string EXAMPLE_8 = "{ "
         "} "
     "} "
 "}";
+
+#if NGEN_WITH_SQLITE
+/**
+ * Configuration whose model_params resolve to auxiliary attribute table columns rather than to
+ * native divides-layer properties.
+ *
+ * Both `from` values name a `real_value` column -- one per attribute table of
+ * test/data/geopackage/example_aux.gpkg -- so only the joined-on prefix tells them apart. Every
+ * divide shares one forcing file, since the fixture's ids have none of their own.
+ */
+const std::string EXAMPLE_12 =
+"{"
+"    \"global\": {"
+"        \"formulations\": ["
+"            {"
+"                \"name\": \"bmi_c++\","
+"                \"params\": {"
+"                    \"model_type_name\": \"test_bmi_c++\","
+"                    \"library_file\": \"{{EXTERN_LIB_DIR_PATH}}" BMI_TEST_CPP_LIB_NAME "\","
+"                    \"init_config\": \"{{BMI_CPP_INIT_DIR_PATH}}/test_bmi_cpp_config_2.txt\","
+"                    \"allow_exceed_end_time\": true,"
+"                    \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                    \"" BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS "\": [\"OUTPUT_VAR_4\", \"OUTPUT_VAR_5\"],"
+"                    \"uses_forcing_file\": false,"
+"                    \"model_params\": {"
+"                        \"MODEL_VAR_1\": {"
+"                            \"source\": \"hydrofabric\","
+"                            \"from\": \"one.real_value\""
+"                        },"
+"                        \"MODEL_VAR_2\": {"
+"                            \"source\": \"hydrofabric\","
+"                            \"from\": \"two.real_value\""
+"                        }"
+"                    },"
+"                    \"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": {"
+"                        \"INPUT_VAR_1\": \"APCP_surface\","
+"                        \"INPUT_VAR_2\": \"APCP_surface\""
+"                    }"
+"                }"
+"            }"
+"        ],"
+"        \"forcing\": {"
+"            \"path\": \"./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\","
+"            \"provider\": \"CsvPerFeature\""
+"        }"
+"    },"
+"    \"time\": {"
+"        \"start_time\": \"2015-12-01 00:00:00\","
+"        \"end_time\": \"2015-12-30 23:00:00\","
+"        \"output_interval\": 3600"
+"    },"
+"    \"output\": { \"catchment\": { \"enable\": false } }"
+"}";
+#endif
 
 
 const std::string EXAMPLE_9 = "{ "
@@ -1803,3 +1921,85 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
     check_formulation_values(manager, "cat-27",    { 3.00000, 18.0 });
     check_formulation_values(manager, "cat-67", { 7.41722, 9231 });
 }
+
+#if NGEN_WITH_SQLITE
+// ---------------------------------------------------------------------------
+// Integration: joined auxiliary attribute columns resolve through model_params the same way native
+// divides-layer properties do. The join itself is covered by AttributeJoin_Test.
+// ---------------------------------------------------------------------------
+
+//! Ends a gtest stderr capture however the enclosing scope exits, since a capture leaked by a
+//! throw aborts the next test that starts one.
+class CapturedStderr
+{
+  public:
+    CapturedStderr() { testing::internal::CaptureStderr(); }
+    CapturedStderr(const CapturedStderr&) = delete;
+    CapturedStderr& operator=(const CapturedStderr&) = delete;
+    ~CapturedStderr() { if (this->open) testing::internal::GetCapturedStderr(); }
+
+    //! Ends the capture, returning everything written to stderr while it was open.
+    std::string str() { this->open = false; return testing::internal::GetCapturedStderr(); }
+
+  private:
+    bool open = true;
+};
+
+// A namespaced `from` reaches the BMI module's parameters: joined columns of two tables, one of
+// them sharing a column name with the other, resolve to the right value for each divide.
+TEST_F(Formulation_Manager_Test, read_auxiliary_attributes_1)
+{
+    std::ostream* ptr = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(ptr, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    auto fabric = this->aux_fabric_with_joined_attributes();
+    auto [manager, simulation_time_config] = manager_and_time(fix_paths(EXAMPLE_12));
+    manager.read(simulation_time_config, fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 2);
+
+    // The test model copies MODEL_VAR_1 to OUTPUT_VAR_4 and MODEL_VAR_2 to OUTPUT_VAR_5, so the
+    // outputs report the parameter values the module was actually configured with.
+    const time_step_t ts = 2;
+    const auto first = output_by_variable(manager, "First", ts);
+    EXPECT_DOUBLE_EQ(first.at("OUTPUT_VAR_4"), 3.5);  // aux_params_one.real_value for "First"
+    EXPECT_DOUBLE_EQ(first.at("OUTPUT_VAR_5"), 1.5);  // aux_params_two.real_value for "First"
+
+    // same column name, other table, other divide
+    const auto second = output_by_variable(manager, "Second", ts);
+    EXPECT_DOUBLE_EQ(second.at("OUTPUT_VAR_5"), 2.5);
+}
+
+// A divide the joined table holds no row for is warned about and its parameter omitted, leaving
+// the module to fall back on its own default.
+TEST_F(Formulation_Manager_Test, read_auxiliary_attributes_2)
+{
+    std::ostream* ptr = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(ptr, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    auto fabric = this->aux_fabric_with_joined_attributes();
+    auto [manager, simulation_time_config] = manager_and_time(fix_paths(EXAMPLE_12));
+
+    CapturedStderr capture;
+    manager.read(simulation_time_config, fabric, catchment_output);
+    const std::string captured = capture.str();
+
+    // "Second" has no aux_params_one row, so MODEL_VAR_1 never resolves for it -- and only for it.
+    // The report goes through logging::warning, which a quiet build compiles away.
+    const std::string skipped = "skipping MODEL_VAR_1";
+    #if !NGEN_QUIET
+        const auto warned = captured.find(skipped);
+        ASSERT_NE(warned, std::string::npos);
+        EXPECT_EQ(captured.find(skipped, warned + 1), std::string::npos);
+    #else
+        EXPECT_EQ(captured.find(skipped), std::string::npos);
+    #endif
+
+    const time_step_t ts = 2;
+    const auto second = output_by_variable(manager, "Second", ts);
+    EXPECT_DOUBLE_EQ(second.at("OUTPUT_VAR_4"), 1.0);  // the model's own default for MODEL_VAR_1
+    EXPECT_DOUBLE_EQ(second.at("OUTPUT_VAR_5"), 2.5);  // aux_params_two covers every divide
+}
+#endif
