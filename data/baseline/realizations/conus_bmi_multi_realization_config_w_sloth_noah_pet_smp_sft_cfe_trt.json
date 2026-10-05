@@ -14,7 +14,7 @@
 			    "name": "bmi_c++",
 			    "params": {
                                 "model_type_name": "bmi_c++_sloth",
-                                "library_file": "./extern/sloth/cmake_build/libslothmodel",
+                                "library_file": "./extern-libs/sloth/libslothmodel",
                                 "init_config": "/dev/null",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "z",
@@ -39,7 +39,7 @@
                             "name": "bmi_fortran",
                             "params": {
                                 "model_type_name": "bmi_fortran_noahowp",
-                                "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi",
+                                "library_file": "./extern-libs/noah-owp-modular/libsurfacebmi",
                                 "forcing_file": "",
                                 "init_config": "./conus_config/NoahOWP_{{id}}.namelist",
                                 "allow_exceed_end_time": true,
@@ -61,7 +61,7 @@
                             "name": "bmi_c",
                             "params": {
                                 "model_type_name": "bmi_c_pet",
-                                "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
+                                "library_file": "./extern-libs/evapotranspiration/libpetbmi",
                                 "forcing_file": "",
                                 "init_config": "./conus_config/PET_{{id}}.ini",
                                 "allow_exceed_end_time": true,
@@ -77,7 +77,7 @@
                             "name": "bmi_c++",
                             "params": {
                                 "model_type_name": "bmi_smp",
-                                "library_file": "./extern/SoilMoistureProfiles/SoilMoistureProfiles/cmake_build/libsmpbmi",
+                                "library_file": "./extern-libs/SoilMoistureProfiles/libsmpbmi",
                                 "init_config": "./conus_smp_configs/SoilMoistureProfile_{{id}}.ini",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "soil_water_table",
@@ -92,7 +92,7 @@
                             "name": "bmi_c++",
                             "params": {
                                 "model_type_name": "bmi_sft",
-                                "library_file": "./extern/SoilFreezeThaw/SoilFreezeThaw/cmake_build/libsftbmi",
+                                "library_file": "./extern-libs/SoilFreezeThaw/libsftbmi",
                                 "init_config": "./conus_sft_configs/SoilFreezeThaw_{{id}}.ini",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "num_cells",
@@ -106,7 +106,7 @@
                             "name": "bmi_c",
                             "params": {
                                 "model_type_name": "bmi_c_cfe",
-                                "library_file": "./extern/cfe/cmake_build/libcfebmi",
+                                "library_file": "./extern-libs/cfe/libcfebmi",
                                 "forcing_file": "",
                                 "init_config": "./conus_config/CFE_{{id}}.ini",
                                 "allow_exceed_end_time": true,

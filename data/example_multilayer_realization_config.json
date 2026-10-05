@@ -5,7 +5,7 @@
           "name": "bmi_c++",
           "params": {
             "model_type_name": "test_bmi_cpp",
-            "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+            "library_file": "./test-libs/test_bmi_cpp/libtestbmicppmodel.so",
             "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
             "main_output_variable": "OUTPUT_VAR_2",
             "variables_names_map" : {
@@ -35,7 +35,7 @@
             "name": "bmi_c++",
             "params": {
               "model_type_name": "test_bmi_cpp",
-              "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+              "library_file": "./test-libs/test_bmi_cpp/libtestbmicppmodel.so",
               "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
               "main_output_variable": "OUTPUT_VAR_2",
               "variables_names_map" : {
@@ -58,7 +58,7 @@
             "name": "bmi_c++",
             "params": {
               "model_type_name": "test_bmi_cpp",
-              "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+              "library_file": "./test-libs/test_bmi_cpp/libtestbmicppmodel.so",
               "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
               "main_output_variable": "OUTPUT_VAR_2",
               "variables_names_map" : {
@@ -81,7 +81,7 @@
             "name": "bmi_c++",
             "params": {
               "model_type_name": "test_bmi_cpp",
-              "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+              "library_file": "./test-libs/test_bmi_cpp/libtestbmicppmodel.so",
               "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
               "main_output_variable": "OUTPUT_VAR_2",
               "variables_names_map" : {
@@ -104,7 +104,7 @@
               "name": "bmi_fortran",
               "params": {
                 "model_type_name": "bmi_fortran_noahowp",
-                "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi.so",
+                "library_file": "./extern-libs/noah-owp-modular/libsurfacebmi.so",
                 "forcing_file": "",
                 "init_config": "./data/bmi/fortran/noah-owp-modular-init-agg-1.namelist.input",
                 "allow_exceed_end_time": true,
