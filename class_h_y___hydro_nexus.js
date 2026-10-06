@@ -8,6 +8,7 @@ var class_h_y___hydro_nexus =
     [ "HY_HydroNexus", "class_h_y___hydro_nexus.html#a8b137ee3a97a12fc2131576cadb4912f", null ],
     [ "~HY_HydroNexus", "class_h_y___hydro_nexus.html#a0a84a02f104fd0270790f57cfd5160f4", null ],
     [ "add_upstream_flow", "class_h_y___hydro_nexus.html#a25198c16baaea6478cd7b83de78e6fea", null ],
+    [ "flush", "class_h_y___hydro_nexus.html#abeefebc231a8d40f3eb25ee6e1b91bdf", null ],
     [ "get_contributing_catchments", "class_h_y___hydro_nexus.html#ad53f7029ca66d92c353430671166fc8b", null ],
     [ "get_downstream_flow", "class_h_y___hydro_nexus.html#a8fb66f25c3d6a1d480b1686510d7bc16", null ],
     [ "get_flow_units", "class_h_y___hydro_nexus.html#af515ce59ff427551b6e61cbdba65dd7f", null ],

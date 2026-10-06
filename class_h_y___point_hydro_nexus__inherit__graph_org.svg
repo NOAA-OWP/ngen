@@ -12,18 +12,16 @@
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title=" ">
-<polygon fill="#999999" stroke="none" points="139.12,-274.5 10.12,-274.5 10.12,0 139.12,0 139.12,-274.5"/>
-<text text-anchor="start" x="27" y="-261" font-family="Helvetica,sans-Serif" font-size="10.00">HY_PointHydroNexus</text>
-<text text-anchor="start" x="14.5" y="-245.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="24.12" y="-245.75" font-family="Helvetica,sans-Serif" font-size="10.00">upstream_flows</text>
+<polygon fill="#999999" stroke="none" points="139.12,-259.25 10.12,-259.25 10.12,0 139.12,0 139.12,-259.25"/>
+<text text-anchor="start" x="27" y="-245.75" font-family="Helvetica,sans-Serif" font-size="10.00">HY_PointHydroNexus</text>
 <text text-anchor="start" x="14.5" y="-230.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="24.12" y="-230.5" font-family="Helvetica,sans-Serif" font-size="10.00">downstream_requests</text>
+<text text-anchor="start" x="24.12" y="-230.5" font-family="Helvetica,sans-Serif" font-size="10.00">upstream_flows</text>
 <text text-anchor="start" x="14.5" y="-215.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="24.12" y="-215.25" font-family="Helvetica,sans-Serif" font-size="10.00">summed_flows</text>
+<text text-anchor="start" x="24.12" y="-215.25" font-family="Helvetica,sans-Serif" font-size="10.00">downstream_requests</text>
 <text text-anchor="start" x="14.5" y="-200" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="24.12" y="-200" font-family="Helvetica,sans-Serif" font-size="10.00">total_requests</text>
+<text text-anchor="start" x="24.12" y="-200" font-family="Helvetica,sans-Serif" font-size="10.00">summed_flows</text>
 <text text-anchor="start" x="14.5" y="-184.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="24.12" y="-184.75" font-family="Helvetica,sans-Serif" font-size="10.00">min_timestep</text>
+<text text-anchor="start" x="24.12" y="-184.75" font-family="Helvetica,sans-Serif" font-size="10.00">total_requests</text>
 <text text-anchor="start" x="14.5" y="-169.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
 <text text-anchor="start" x="24.12" y="-169.5" font-family="Helvetica,sans-Serif" font-size="10.00">completed</text>
 <text text-anchor="start" x="14.5" y="-154.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
@@ -46,11 +44,11 @@
 <text text-anchor="start" x="14.12" y="-21" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="24.12" y="-21" font-family="Helvetica,sans-Serif" font-size="10.00">get_flow_units()</text>
 <text text-anchor="start" x="14.12" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="24.12" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">set_mintime()</text>
-<polygon fill="#666666" stroke="#666666" points="10.12,-257.25 10.12,-257.25 139.12,-257.25 139.12,-257.25 10.12,-257.25"/>
+<text text-anchor="start" x="24.12" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">flush()</text>
+<polygon fill="#666666" stroke="#666666" points="10.12,-242 10.12,-242 139.12,-242 139.12,-242 10.12,-242"/>
 <polygon fill="#666666" stroke="#666666" points="10.12,-150.5 10.12,-150.5 22.12,-150.5 22.12,-150.5 10.12,-150.5"/>
 <polygon fill="#666666" stroke="#666666" points="22.12,-150.5 22.12,-150.5 139.12,-150.5 139.12,-150.5 22.12,-150.5"/>
-<polygon fill="none" stroke="#666666" points="10.12,0 10.12,-274.5 139.12,-274.5 139.12,0 10.12,0"/>
+<polygon fill="none" stroke="#666666" points="10.12,0 10.12,-259.25 139.12,-259.25 139.12,0 10.12,0"/>
 </a>
 </g>
 </g>
@@ -58,7 +56,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_h_y___hydro_nexus.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="none" points="149.25,-611.5 0,-611.5 0,-310.5 149.25,-310.5 149.25,-611.5"/>
+<polygon fill="white" stroke="none" points="149.25,-611.5 0,-611.5 0,-295.25 149.25,-295.25 149.25,-611.5"/>
 <text text-anchor="start" x="38.25" y="-598" font-family="Helvetica,sans-Serif" font-size="10.00">HY_HydroNexus</text>
 <text text-anchor="start" x="4.38" y="-582.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
 <text text-anchor="start" x="14" y="-582.75" font-family="Helvetica,sans-Serif" font-size="10.00">id</text>
@@ -91,15 +89,17 @@
 <text text-anchor="start" x="4" y="-362" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="14" y="-362" font-family="Helvetica,sans-Serif" font-size="10.00">get_flow_units()</text>
 <text text-anchor="start" x="4" y="-346.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="14" y="-346.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_receiving_catchments()</text>
+<text text-anchor="start" x="14" y="-346.75" font-family="Helvetica,sans-Serif" font-size="10.00">flush()</text>
 <text text-anchor="start" x="4" y="-331.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="14" y="-331.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_contributing_catchments()</text>
+<text text-anchor="start" x="14" y="-331.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_receiving_catchments()</text>
 <text text-anchor="start" x="4" y="-316.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="14" y="-316.25" font-family="Helvetica,sans-Serif" font-size="10.00">get_id()</text>
+<text text-anchor="start" x="14" y="-316.25" font-family="Helvetica,sans-Serif" font-size="10.00">get_contributing_catchments()</text>
+<text text-anchor="start" x="4" y="-301" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="14" y="-301" font-family="Helvetica,sans-Serif" font-size="10.00">get_id()</text>
 <polygon fill="#666666" stroke="#666666" points="0,-594.25 0,-594.25 149.25,-594.25 149.25,-594.25 0,-594.25"/>
 <polygon fill="#666666" stroke="#666666" points="0,-506.75 0,-506.75 12,-506.75 12,-506.75 0,-506.75"/>
 <polygon fill="#666666" stroke="#666666" points="12,-506.75 12,-506.75 149.25,-506.75 149.25,-506.75 12,-506.75"/>
-<polygon fill="none" stroke="#666666" points="0,-310.5 0,-611.5 149.25,-611.5 149.25,-310.5 0,-310.5"/>
+<polygon fill="none" stroke="#666666" points="0,-295.25 0,-611.5 149.25,-611.5 149.25,-295.25 0,-295.25"/>
 </a>
 </g>
 </g>
@@ -107,8 +107,8 @@
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node2&#45;&gt;Node1</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M74.62,-299.48C74.62,-291.09 74.62,-282.71 74.62,-274.41"/>
-<polygon fill="none" stroke="#63b8ff" points="71.13,-299.38 74.63,-309.38 78.13,-299.38 71.13,-299.38"/>
+<path fill="none" stroke="#63b8ff" d="M74.62,-283.9C74.62,-275.58 74.62,-267.27 74.62,-259.09"/>
+<polygon fill="none" stroke="#63b8ff" points="71.13,-283.76 74.63,-293.76 78.13,-283.76 71.13,-283.76"/>
 </a>
 </g>
 </g>

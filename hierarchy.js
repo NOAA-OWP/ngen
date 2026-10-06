@@ -17,7 +17,6 @@ var hierarchy =
       [ "add_to_summed_nexus", "structadd__to__summed__nexus.html", null ],
       [ "completed_time_step", "structcompleted__time__step.html", null ],
       [ "invalid_downstream_request", "structinvalid__downstream__request.html", null ],
-      [ "invalid_time_step", "structinvalid__time__step.html", null ],
       [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", null ]
     ] ],
     [ "boost::iostreams::stream", null, [
@@ -151,7 +150,6 @@ var hierarchy =
       [ "completed_time_step", "structcompleted__time__step.html", null ],
       [ "external::ExternalIntegrationException", "classexternal_1_1_external_integration_exception.html", null ],
       [ "invalid_downstream_request", "structinvalid__downstream__request.html", null ],
-      [ "invalid_time_step", "structinvalid__time__step.html", null ],
       [ "models::bmi::protocols::ProtocolError", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html", null ],
       [ "models::external::State_Exception", "classmodels_1_1external_1_1_state___exception.html", null ],
       [ "realization::ConfigurationException", "classrealization_1_1_configuration_exception.html", null ],

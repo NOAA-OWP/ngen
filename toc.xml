@@ -5634,6 +5634,7 @@
         <topic label="HY_HydroNexus" href="class_h_y___hydro_nexus.html#a8b137ee3a97a12fc2131576cadb4912f"/>
         <topic label="~HY_HydroNexus" href="class_h_y___hydro_nexus.html#a0a84a02f104fd0270790f57cfd5160f4"/>
         <topic label="add_upstream_flow" href="class_h_y___hydro_nexus.html#a25198c16baaea6478cd7b83de78e6fea"/>
+        <topic label="flush" href="class_h_y___hydro_nexus.html#abeefebc231a8d40f3eb25ee6e1b91bdf"/>
         <topic label="get_contributing_catchments" href="class_h_y___hydro_nexus.html#ad53f7029ca66d92c353430671166fc8b"/>
         <topic label="get_downstream_flow" href="class_h_y___hydro_nexus.html#a8fb66f25c3d6a1d480b1686510d7bc16"/>
         <topic label="get_flow_units" href="class_h_y___hydro_nexus.html#af515ce59ff427551b6e61cbdba65dd7f"/>
@@ -5685,6 +5686,7 @@
         <topic label="HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html#a94216b672307de3a748daa0cbbdd8cbe"/>
         <topic label="~HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html#a4a61dc18ee9c6004925880e43dc23c3c"/>
         <topic label="add_upstream_flow" href="class_h_y___point_hydro_nexus.html#aa0ff1744cae31cdc7b321b268cb0559e"/>
+        <topic label="flush" href="class_h_y___point_hydro_nexus.html#a569d7169d4a903a1bb6a2bb61482f919"/>
         <topic label="get_contributing_catchments" href="class_h_y___point_hydro_nexus.html#ad53f7029ca66d92c353430671166fc8b"/>
         <topic label="get_downstream_flow" href="class_h_y___point_hydro_nexus.html#a7b53a517431a8650460629c8bfd495a3"/>
         <topic label="get_flow_units" href="class_h_y___point_hydro_nexus.html#aca6acbf4da06c35b49440ec8f82446f8"/>
@@ -5692,13 +5694,11 @@
         <topic label="get_receiving_catchments" href="class_h_y___point_hydro_nexus.html#afcd4c4b517599cb265da2cfeb2610c9d"/>
         <topic label="inspect_downstream_requests" href="class_h_y___point_hydro_nexus.html#a2f1b019a2c6ac675c634b2dac29dfc6a"/>
         <topic label="inspect_upstream_flows" href="class_h_y___point_hydro_nexus.html#a53f4ff06a7930ca78ce38a07b1b083b8"/>
-        <topic label="set_mintime" href="class_h_y___point_hydro_nexus.html#acf43bf521f2c7d4e9175cec3dc8eff2c"/>
         <topic label="completed" href="class_h_y___point_hydro_nexus.html#a7a1b78a8c1bbbdcf9670b8eb14d2d53e"/>
         <topic label="contributing_catchments" href="class_h_y___point_hydro_nexus.html#ac9f670d94708c8987cff99e8bae94728"/>
         <topic label="contribution_mutex" href="class_h_y___point_hydro_nexus.html#a28a770a186b6a3f1c027a7493d198b6c"/>
         <topic label="downstream_requests" href="class_h_y___point_hydro_nexus.html#a82e92313918794725a60e90d2159df44"/>
         <topic label="id" href="class_h_y___point_hydro_nexus.html#ac8d0eb98e582392e7191a80a9b4f74ef"/>
-        <topic label="min_timestep" href="class_h_y___point_hydro_nexus.html#a7fd7859c86a603886b0d451010f87448"/>
         <topic label="number_of_downstream_catchments" href="class_h_y___point_hydro_nexus.html#a849ee7fd94b2fd0d32a7fc7734bc3234"/>
         <topic label="realization" href="class_h_y___point_hydro_nexus.html#ab5f94aa4c535b622261705a8a771a5b9"/>
         <topic label="receiving_catchments" href="class_h_y___point_hydro_nexus.html#a43d7fffb8f0e13c83e1cc7c23476d59f"/>
@@ -5708,9 +5708,6 @@
       </topic>
       <topic label="invalid_downstream_request" href="structinvalid__downstream__request.html">
         <topic label="what" href="structinvalid__downstream__request.html#a533914440d6899d74964e3c21fa19082"/>
-      </topic>
-      <topic label="invalid_time_step" href="structinvalid__time__step.html">
-        <topic label="what" href="structinvalid__time__step.html#ac3b9074b7890f9537f7dffe1c94fc11a"/>
       </topic>
       <topic label="JSONGeometry_Test" href="class_j_s_o_n_geometry___test.html">
         <topic label="JSONGeometry_Test" href="class_j_s_o_n_geometry___test.html#a2e1ef71129004f45c51e989305522a3b"/>
@@ -6036,7 +6033,6 @@
         <topic label="add_to_summed_nexus" href="structadd__to__summed__nexus.html"/>
         <topic label="completed_time_step" href="structcompleted__time__step.html"/>
         <topic label="invalid_downstream_request" href="structinvalid__downstream__request.html"/>
-        <topic label="invalid_time_step" href="structinvalid__time__step.html"/>
         <topic label="request_from_empty_nexus" href="structrequest__from__empty__nexus.html"/>
       </topic>
       <topic label="boost::iostreams::stream">
@@ -6170,7 +6166,6 @@
         <topic label="completed_time_step" href="structcompleted__time__step.html"/>
         <topic label="external::ExternalIntegrationException" href="classexternal_1_1_external_integration_exception.html"/>
         <topic label="invalid_downstream_request" href="structinvalid__downstream__request.html"/>
-        <topic label="invalid_time_step" href="structinvalid__time__step.html"/>
         <topic label="models::bmi::protocols::ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html"/>
         <topic label="models::external::State_Exception" href="classmodels_1_1external_1_1_state___exception.html"/>
         <topic label="realization::ConfigurationException" href="classrealization_1_1_configuration_exception.html"/>

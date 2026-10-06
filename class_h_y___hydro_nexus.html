@@ -156,6 +156,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af515ce59ff427551b6e61cbdba65dd7f" id="r_af515ce59ff427551b6e61cbdba65dd7f"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af515ce59ff427551b6e61cbdba65dd7f">get_flow_units</a> ()=0</td></tr>
 <tr class="memdesc:af515ce59ff427551b6e61cbdba65dd7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the units that the flows are described in  <br /></td></tr>
 <tr class="separator:af515ce59ff427551b6e61cbdba65dd7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abeefebc231a8d40f3eb25ee6e1b91bdf" id="r_abeefebc231a8d40f3eb25ee6e1b91bdf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abeefebc231a8d40f3eb25ee6e1b91bdf">flush</a> (bool clear_completed=false)=0</td></tr>
+<tr class="memdesc:abeefebc231a8d40f3eb25ee6e1b91bdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release the internal per-timestep state of the nexus.  <br /></td></tr>
+<tr class="separator:abeefebc231a8d40f3eb25ee6e1b91bdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcd4c4b517599cb265da2cfeb2610c9d" id="r_afcd4c4b517599cb265da2cfeb2610c9d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="#a6efba8fb752f9b96fa2f9464dbcb1a22">Catchments</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afcd4c4b517599cb265da2cfeb2610c9d">get_receiving_catchments</a> ()</td></tr>
 <tr class="memdesc:afcd4c4b517599cb265da2cfeb2610c9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the catchments that receive flow from this hydro nexus.  <br /></td></tr>
 <tr class="separator:afcd4c4b517599cb265da2cfeb2610c9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -367,6 +370,47 @@ Private Attributes</h2></td></tr>
 <p>Increase the downstream flow for timestep_t by input amount. </p>
 
 <p>Implemented in <a class="el" href="class_h_y___point_hydro_nexus.html#aa0ff1744cae31cdc7b321b268cb0559e">HY_PointHydroNexus</a>.</p>
+
+</div>
+</div>
+<a id="abeefebc231a8d40f3eb25ee6e1b91bdf" name="abeefebc231a8d40f3eb25ee6e1b91bdf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abeefebc231a8d40f3eb25ee6e1b91bdf">&#9670;&#160;</a></span>flush()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void HY_HydroNexus::flush </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>clear_completed</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Release the internal per-timestep state of the nexus. </p>
+<p>A nexus accumulates flow state for each time step it sees. On long runs that growth is unbounded, so callers should release state once a time step's data has been consumed. The accumulator state is always released.</p>
+<p>Separately, the nexus records which time steps are "completed" (fully drained &ndash; 100% of the flow requested). That record is a correctness guard: add/get on a completed time step throws rather than re-processing water that is already allocated. It only ever grows.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">clear_completed</td><td>also drop the completed-time-step record.<ul>
+<li>false: keep the guard, so a stray add/get on an already-drained time step still throws (but the record keeps growing).</li>
+<li>true: bound that record too, at the cost of the guard &ndash; a later add/get on a dropped time step is silently re-accumulated, not rejected. Safe only for a caller that advances strictly forward and never revisits a flushed time step (e.g. SurfaceLayer). </li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="class_h_y___point_hydro_nexus.html#a569d7169d4a903a1bb6a2bb61482f919">HY_PointHydroNexus</a>.</p>
 
 </div>
 </div>
@@ -718,7 +762,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_h_y___hydro_nexus.html">HY_HydroNexus</a></li>
-    <li class="footer">Generated on Tue Oct 6 2026 15:03:53 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Tue Oct 6 2026 21:19:49 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
