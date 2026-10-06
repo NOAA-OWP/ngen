@@ -22,13 +22,16 @@
 #include <mutex>
 
 // Theoretically thread-safe. //TODO: Test?
-static ut_system* unit_system;
+static ut_system* unit_system = nullptr;
 
 static thread_local std::map<std::string, std::shared_ptr<cv_converter>> converters;
 static std::mutex converters_mutex;
 
-static std::once_flag unit_system_inited;
 void init_unit_system(){
+    // Allow for multiple-initialization from unit tests
+    if (unit_system != nullptr)
+        return;
+
 #ifdef NGEN_UDUNITS2_XML_PATH
     unit_system = ut_read_xml(NGEN_UDUNITS2_XML_PATH);
 #else

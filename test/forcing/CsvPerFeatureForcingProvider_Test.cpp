@@ -35,8 +35,7 @@ class CsvPerFeatureForcingProviderTest : public ::testing::Test {
 
 
 void CsvPerFeatureForcingProviderTest::SetUp() {
-    //setupForcing();
-
+    init_unit_system();
     setupForcing();
 }
 

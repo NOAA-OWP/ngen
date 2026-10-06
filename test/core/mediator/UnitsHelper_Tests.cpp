@@ -6,6 +6,7 @@ class UnitsHelper_Test : public ::testing::Test {
 
     public:
         void SetUp() override {
+            init_unit_system();
         }
 
     protected:
