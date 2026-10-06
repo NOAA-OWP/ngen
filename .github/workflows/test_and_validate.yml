@@ -13,7 +13,7 @@ on:
 env:
   # Obtained from https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
   # TODO: add something later that can check the runners for hyperthreading
-  LINUX_NUM_PROC_CORES: 2
+  LINUX_NUM_PROC_CORES: 4
   MACOS_NUM_PROC_CORES: 3
   ASAN_OPTIONS: detect_leaks=false
 
