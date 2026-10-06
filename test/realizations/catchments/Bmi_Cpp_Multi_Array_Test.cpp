@@ -16,6 +16,7 @@
 #include "ConfigurationException.hpp"
 #include "FileChecker.h"
 #include "Formulation_Manager.hpp"
+#include "mediator/UnitsHelper.hpp"
 
 using namespace realization;
 
@@ -280,7 +281,7 @@ private:
 };
 
 void Bmi_Cpp_Multi_Array_Test::SetUpTestSuite() {
-
+    init_unit_system();
 }
 
 void Bmi_Cpp_Multi_Array_Test::TearDown() {

@@ -11,6 +11,7 @@ namespace py = pybind11;
 #include "Bmi_Py_Adapter.hpp"
 
 #include "utilities/FileChecker.h"
+#include "mediator/UnitsHelper.hpp"
 
 using namespace models::bmi;
 using namespace utils::ngenPy;
@@ -146,6 +147,7 @@ void Bmi_Py_Adapter_Test::TearDown() {
 }
 
 void Bmi_Py_Adapter_Test::SetUpTestSuite() {
+    init_unit_system();
     // Add the extern dir with our test lib to Python system path
     std::string module_directory = "./extern/";
     InterpreterUtil::addToPyPath(module_directory);
