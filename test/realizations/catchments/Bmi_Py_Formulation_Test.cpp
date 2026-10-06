@@ -13,6 +13,7 @@
 #include "python/InterpreterUtil.hpp"
 #include <CsvPerFeatureForcingProvider.hpp>
 #include "utilities/FileChecker.h"
+#include "mediator/UnitsHelper.hpp"
 
 namespace py = pybind11;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
@@ -210,6 +211,8 @@ void Bmi_Py_Formulation_Test::SetUp() {
 }
 
 void Bmi_Py_Formulation_Test::SetUpTestSuite() {
+    init_unit_system();
+
     // Add the extern dir with our test lib to Python system path
     std::string module_directory = "./extern/";
     InterpreterUtil::addToPyPath(module_directory);

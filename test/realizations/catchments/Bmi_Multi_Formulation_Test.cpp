@@ -20,6 +20,7 @@
 #include "CsvPerFeatureForcingProvider.hpp"
 #include "ConfigurationException.hpp"
 #include "FileChecker.h"
+#include "mediator/UnitsHelper.hpp"
 
 #if NGEN_WITH_PYTHON
 #include "python/InterpreterUtil.hpp"
@@ -437,6 +438,7 @@ std::shared_ptr<InterpreterUtil> Bmi_Multi_Formulation_Test::interpreter = Inter
 #endif
 
 void Bmi_Multi_Formulation_Test::SetUpTestSuite() {
+    init_unit_system();
     #if NGEN_WITH_PYTHON
     std::string module_directory = "./extern/";
 
