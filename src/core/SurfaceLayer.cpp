@@ -41,6 +41,10 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
         }
     }
 
+    if (nexus_outputs_mgr) {
+      nexus_outputs_mgr->prepare_for_step(current_time_marker);
+    }
+
     // Once contributing catchments are updated for this timestep, dump the nexus output
     #pragma omp parallel for
     for(const auto& nexus : nexuses)

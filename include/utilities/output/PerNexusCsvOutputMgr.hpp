@@ -87,6 +87,8 @@ namespace utils
         void receive_data_entry(const std::string &formulation_id, const std::string &nexus_id,
                                 const time_marker &data_time_marker, double flow_data_at_t) override;
 
+        void prepare_for_step(const std::string &formulation_id, const time_marker &data_time_marker) override { }
+
     private:
         std::unordered_map<std::string, std::ofstream> nexus_outfiles;
         bool closed = false;
