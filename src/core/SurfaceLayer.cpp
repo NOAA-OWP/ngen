@@ -42,6 +42,7 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
     }
 
     // Once contributing catchments are updated for this timestep, dump the nexus output
+    #pragma omp parallel for
     for(const auto& nexus : nexuses)
     {
         // Get the correct "requesting" id for downstream_flow
