@@ -68,6 +68,20 @@ namespace utils
         virtual bool is_closed() = 0;
 
         /**
+         * Update the manager's metadata about what step's data is set to be written and from what formulation.
+         *
+         * Do all metadata updates and error checking here, independent of specific nexuses
+         *
+         * @param formulation_id The ID of the formulation involved in producing the data to come
+         * @param data_time_marker A marker for the current simulation time for the data.
+         */
+        virtual void prepare_for_step(const std::string &formulation_id, const time_marker &data_time_marker) = 0;
+        /** Pass through to prepare_for_step with the default formulation ID */
+        virtual void prepare_for_step(const time_marker &data_time_marker) {
+            prepare_for_step(get_default_formulation_id(), data_time_marker);
+        }
+
+        /**
          * Receive a data entry for this nexus, specifying details including the formulation id.
          *
          * @param formulation_id The id of the formulation involved in producing this data.

@@ -168,6 +168,8 @@ namespace utils
         void receive_data_entry(const std::string &formulation_id, const std::string &nexus_id,
                                 const time_marker &data_time_marker, double flow_data_at_t) override;
 
+        void prepare_for_step(const std::string &formulation_id, const time_marker &data_time_marker) override;
+
     private:
 
         #if NGEN_WITH_MPI
