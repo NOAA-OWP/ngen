@@ -5,7 +5,10 @@
 #include <mediator/UnitsHelper.hpp>
 
 #include <netcdf>
+
+#if NGEN_WITH_OPENMP
 #include <omp.h>
+#endif
 
 std::mutex data_access::NetCDFPerFeatureDataProvider::shared_providers_mutex;
 std::map<std::string, std::shared_ptr<data_access::NetCDFPerFeatureDataProvider>> data_access::NetCDFPerFeatureDataProvider::shared_providers;
@@ -592,9 +595,13 @@ auto NetCDFPerFeatureDataProvider::fill_slot(int page_c_idx, netCDF::NcVar const
   std::unique_lock nc_file_lock(netcdf_library_mutex);
 
   auto var_name = ncvar.getName();
-  
+
   #pragma omp critical
-  std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) << " " << omp_get_thread_num() << " NetCDF reading " << var_name << " " << page_c_idx << " from " << file_path << std::endl;
+  std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())
+#if NGEN_WITH_OPENMP
+	    << " " << omp_get_thread_num()
+#endif
+	    << " NetCDF reading " << var_name << " " << page_c_idx << " from " << file_path << std::endl;
 
   // read each chunk and add it to "cached"
   std::size_t idx = 0;
@@ -618,7 +625,11 @@ auto NetCDFPerFeatureDataProvider::fill_slot(int page_c_idx, netCDF::NcVar const
   }
 
   #pragma omp critical
-  std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) << " " << omp_get_thread_num() << " NetCDF done reading " << var_name << " " << page_c_idx << " " << cached.get() << " from " << file_path << std::endl;
+  std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())
+#if NGEN_WITH_OPENMP
+	    << " " << omp_get_thread_num()
+#endif
+	    << " NetCDF done reading " << var_name << " " << page_c_idx << " " << cached.get() << " from " << file_path << std::endl;
 
   slot.fill(cached);
   return cached;
