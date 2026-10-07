@@ -25,3 +25,6 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::bmi_protocols
         )
 
+if(NGEN_WITH_OPENMP)
+    target_link_libraries(realizations_catchment PUBLIC OpenMP::OpenMP_CXX)
+endif()
