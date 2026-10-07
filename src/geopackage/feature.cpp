@@ -1,6 +1,6 @@
 #include "geopackage.hpp"
 
-// Points don't have a bounding box, so we can say its bbox is itself    
+// Points don't have a bounding box, so we can say its bbox is itself
 inline void build_point_bbox(const geojson::geometry& geom, std::vector<double>& bbox)
 {
     const auto& pt = boost::get<geojson::coordinate_t>(geom);
@@ -12,14 +12,13 @@ inline void build_point_bbox(const geojson::geometry& geom, std::vector<double>&
 
 geojson::Feature ngen::geopackage::build_feature(
   const ngen::sqlite::database::iterator& row,
-  const std::string& id_col,
-  const std::string& geom_col
+  const std::string& id,
+  const std::string& geom_col,
+  geojson::PropertyMap properties
 )
 {
     std::vector<double> bounding_box(4);
-    std::string id                   = row.get<std::string>(id_col);
-    geojson::PropertyMap properties  = build_properties(row, geom_col);
-    geojson::geometry geometry       = build_geometry(row, geom_col, bounding_box);
+    geojson::geometry geometry = build_geometry(row, geom_col, bounding_box);
 
     // Convert variant type (0-based) to FeatureType
     const auto wkb_type = static_cast<geojson::FeatureType>(geometry.which() + 1);

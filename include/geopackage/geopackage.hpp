@@ -1,6 +1,8 @@
 #ifndef NGEN_GEOPACKAGE_H
 #define NGEN_GEOPACKAGE_H
 
+#include <string>
+
 #include "FeatureCollection.hpp"
 #include "ngen_sqlite.hpp"
 
@@ -34,16 +36,27 @@ geojson::PropertyMap build_properties(
 );
 
 /**
- * Build a feature from a GPKG table row
- * 
+ * Build a feature from a GPKG table row.
+ *
+ * Schema-agnostic: reads only the geometry from `row` and wraps the
+ * given `id` and `properties` in the appropriate geojson::*Feature
+ * subclass. The caller is responsible for resolving the id column,
+ * aliasing renamed columns, and synthesizing any derived fields (e.g.
+ * hydrofabric v4.0's "nexus_id" -> "id" alias) before calling; the
+ * `properties` map should already contain an "id" entry matching `id`
+ * and must not contain the geometry column.
+ *
  * @param[in] row SQLite iterator at the row to build a feature from
+ * @param[in] id Resolved feature id; stored on the returned Feature
  * @param[in] geom_col Name of geometry column containing GPKG WKB
+ * @param[in] properties Pre-built property map for the feature
  * @return geojson::Feature Feature containing geometry and properties from the given row
  */
 geojson::Feature build_feature(
     const ngen::sqlite::database::iterator& row,
-    const std::string& id_col,
-    const std::string& geom_col
+    const std::string& id,
+    const std::string& geom_col,
+    geojson::PropertyMap properties
 );
 
 /**

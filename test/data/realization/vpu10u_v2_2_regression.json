@@ -1,0 +1,29 @@
+{
+    "global": {
+        "formulations": [
+            {
+                "name": "bmi_c++",
+                "params": {
+                    "model_type_name": "bmi_c++_sloth",
+                    "library_file": "extern/sloth/cmake_build/libslothmodel.so",
+                    "init_config": "/dev/null",
+                    "allow_exceed_end_time": true,
+                    "main_output_variable": "z",
+                    "uses_forcing_file": false,
+                    "model_params": {
+                        "z": "0.0"
+                    }
+                }
+            }
+        ],
+        "forcing": {
+            "provider": "NullForcingProvider"
+        }
+    },
+    "output_root": "/tmp/ngen_vpu10u_v2_2_output/",
+    "time": {
+        "start_time": "2015-12-01 00:00:00",
+        "end_time": "2015-12-01 02:00:00",
+        "output_interval": 3600
+    }
+}

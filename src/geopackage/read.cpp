@@ -1,7 +1,10 @@
 #include "geopackage.hpp"
+#include "HydrofabricVersion.hpp"
+#include "JSONProperty.hpp"
 
 #include <numeric>
 #include <regex>
+#include <unordered_map>
 
 void check_table_name(const std::string& table)
 {
@@ -15,6 +18,9 @@ void check_table_name(const std::string& table)
     }
 }
 
+// Hydrofabric tables touched: nexus and divides always; flowpaths only for
+// v4.0beta1 divides->toid synthesis (never for v4.0). Auxiliary tables
+// (network, flowlines, pois, lakes, attribute tables, etc.) are left alone.
 std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     const std::string& gpkg_path,
     const std::string& layer = "",
@@ -25,6 +31,10 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     check_table_name(layer);
 
     ngen::sqlite::database db{gpkg_path};
+
+    // Detected once per load and reused for every per-row decision below;
+    // falls back to V2_2 for non-hydrofabric input (e.g. synthetic fixtures).
+    HydrofabricVersion version = guaranteed_get_hydrofabric_version(db);
 
     // Check if layer exists
     if (!db.contains(layer)) {
@@ -47,20 +57,7 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     }
 
     // Introspect if the layer is divides to see which ID field is in use
-    std::string id_column = "id";
-    if(layer == "divides"){
-        try {
-            //TODO: A bit primitive. Actually introspect the schema somehow? https://www.sqlite.org/c3ref/funclist.html
-            auto query_get_first_row = db.query("SELECT divide_id FROM " + layer + " LIMIT 1");
-            id_column = "divide_id";
-        }
-        catch (const std::exception& e){
-            #ifndef NGEN_QUIET
-            // output debug info on what is read exactly
-            std::cout << "WARN: Using legacy ID column \"id\" in layer " << layer << " is DEPRECATED and may stop working at any time." << std::endl;
-            #endif
-        }
-    }
+    std::string id_column = get_layer_id_column(version, layer, db);
 
     // Layer exists, getting statement for it
     //
@@ -85,7 +82,8 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
 
     #ifndef NGEN_QUIET
     // output debug info on what is read exactly
-    std::cout << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"<< id_column << "`";
+    std::cout << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"
+              << id_column << "`";
     if (!ids.empty()) {
         std::cout << " (id subset:";
         for (auto& id : ids) {
@@ -101,6 +99,10 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     query_get_layer_geom_meta.next();
     const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
 
+    // Precomputed once so the per-row loop can attribute "toid" via a
+    // hashtable lookup instead of N queries; empty outside (V4_0_BETA1, "divides").
+    std::unordered_map<std::string, std::string> divide_toid_lookup = build_divide_toid_lookup(version, layer, db);
+
     // Get layer
     auto query_get_layer = db.query("SELECT * FROM " + layer + joined_ids, ids);
     query_get_layer.next();
@@ -109,14 +111,39 @@ std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     std::vector<geojson::Feature> features;
     features.reserve(layer_feature_count);
     while(!query_get_layer.done()) {
-        geojson::Feature feature = build_feature(
-            query_get_layer,
-            id_column,
-            layer_geometry_column
-        );
+        std::string id = query_get_layer.get<std::string>(id_column);
+        geojson::PropertyMap properties = build_properties(query_get_layer, layer_geometry_column);
 
-        features.push_back(feature);
+        // No-op for v2.2; for v4.0, aliases nexus_id/nexus_toid to id/toid and
+        // injects the synthesized "toid" on divides rows from divide_toid_lookup.
+        update_property_map_for_version(properties, version, layer, id, divide_toid_lookup);
+
+        features.push_back(build_feature(
+            query_get_layer,
+            id,
+            layer_geometry_column,
+            std::move(properties)
+        ));
         query_get_layer.next();
+    }
+
+    // Aggregate WARN for divides whose toid could not be synthesized, rather
+    // than one line per row.
+    if (is_v4(version) && layer == "divides") {
+        std::size_t unlinked = 0;
+        for (const auto& f : features) {
+            if (!f->has_property("toid")) {
+                ++unlinked;
+            }
+        }
+        #ifndef NGEN_QUIET
+        if (unlinked > 0) {
+            std::cout << "WARN: " << unlinked
+                      << " divide(s) have no toid (null downstream reference"
+                      << " or divides -> flowpaths join miss); treated as"
+                      << " terminal." << std::endl;
+        }
+        #endif
     }
 
     // get layer bounding box from features
