@@ -157,18 +157,18 @@ namespace data_access
         // cached data; if the pointer is null, another thread has
         // started filling it in, but is not done yet
         struct cache_slot {
-          cache_slot() = default;
-          cache_slot(std::piecewise_construct_t) {}
+            cache_slot() = default;
+            cache_slot(std::piecewise_construct_t) {}
 
-          // Fill in this slot with the provided buffer pointer and notify any threads waiting in get()
-          void fill(cache_buffer_type buffer_ptr);
-          // Wait for another thread to fill() this slot - the pointer is guaranteed to be non-nullptr
-          cache_buffer_type get();
+            // Fill in this slot with the provided buffer pointer and notify any threads waiting in get()
+            void fill(cache_buffer_type buffer_ptr);
+            // Wait for another thread to fill() this slot - the pointer is guaranteed to be non-nullptr
+            cache_buffer_type get();
 
         private:
-          cache_buffer_type ptr_ = nullptr;
-	  enum STATE : char { EMPTY=0, FILLED=1, HOT=2 };
-	  std::atomic<int> state_ = STATE::EMPTY;
+            cache_buffer_type ptr_ = nullptr;
+            enum STATE : char { EMPTY=0, FILLED=1, HOT=2 };
+            std::atomic<int> state_ = STATE::EMPTY;
         };
         using shared_cache_type = std::map<cache_key_type, cache_slot>;
         using private_cache_type = std::map<NetCDFPerFeatureDataProvider*, std::map<cache_key_type, cache_buffer_type>>;
