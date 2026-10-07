@@ -694,9 +694,9 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	// Drop references to arrays of stale forcings values here,
 	// before reading or waiting on reads, to avoid or limit
 	// spikes in memory footprint as new forcings get read in
-	evict_stale_values(thread_cache, page_c_idx);
+	evict_stale_values(thread_cache[this], page_c_idx);
 
-	if (thread_cache.contains(key_2))
+	if (thread_cache[this].contains(key_2))
 	  continue;
           
         {
@@ -728,7 +728,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
           cache_buffer_type cached = cache_iter->second.get();
 
-          thread_cache.emplace(key_2, cached);
+          thread_cache[this].emplace(key_2, cached);
 	}
     }
 
@@ -745,7 +745,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
         cache_key_type key_2 = std::pair{page_c_idx, variable_name};
 
-        auto locally_cached = thread_cache.at(key_2).get();
+        auto locally_cached = thread_cache[this].at(key_2).get();
         // Find all values in the current cache slice and push them onto raw_values
         while(c_idx >= page_c_idx &&
               c_idx < page_c_idx + page_cache_line_size &&

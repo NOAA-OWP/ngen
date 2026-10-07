@@ -171,7 +171,7 @@ namespace data_access
 	  std::atomic<int> state_ = STATE::EMPTY;
         };
         using shared_cache_type = std::map<cache_key_type, cache_slot>;
-        using private_cache_type = std::map<cache_key_type, cache_buffer_type>;
+        using private_cache_type = std::map<NetCDFPerFeatureDataProvider*, std::map<cache_key_type, cache_buffer_type>>;
 
         private:
         cache_buffer_type fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot);
