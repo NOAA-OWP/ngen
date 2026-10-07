@@ -6,8 +6,8 @@
 #include <vector>
 #include <map>
 #include "bmi.hxx"
-#include <numeric>
 #include <iostream>
+#include <cstring>
 
 #define TRUE 1
 #define FALSE 0
@@ -29,6 +29,11 @@
 #define NGEN_MASS_OUT "ngen::mass_out"
 #define NGEN_MASS_STORED "ngen::mass_stored"
 #define NGEN_MASS_LEAKED "ngen::mass_leaked"
+
+#define NGEN_SERIALIZATION_CREATE "ngen::serialization_create"
+#define NGEN_SERIALIZATION_FREE   "ngen::serialization_free"
+#define NGEN_SERIALIZATION_SIZE   "ngen::serialization_size"
+#define NGEN_SERIALIZATION_STATE  "ngen::serialization_state"
 
 class TestBmiCpp : public bmi::Bmi {
     public:
@@ -189,19 +194,31 @@ class TestBmiCpp : public bmi::Bmi {
         std::vector<std::string> mass_balance_var_units = { "m", "m", "m", "m" };
         std::vector<std::string> mass_balance_var_locations = { "node", "node", "node", "node"};
 
+        // Serialization protocol variables — queryable by name but not advertised via GetInputVarNames/GetOutputVarNames.
+        // Location and grid metadata are intentionally absent: the reserved
+        // protocol variables have no spatial semantics, and the protocol
+        // never queries either. `GetVarLocation` / `GetVarGrid` are left
+        // to throw for these names — reaching for them indicates a caller
+        // bug, not a model deficiency.
+        std::vector<std::string> serialization_var_names = { NGEN_SERIALIZATION_CREATE, NGEN_SERIALIZATION_FREE, NGEN_SERIALIZATION_SIZE, NGEN_SERIALIZATION_STATE };
+        std::vector<std::string> serialization_var_types = { "int", "int", "int64", "char" };
+        std::vector<std::string> serialization_var_units = { "ngen::trigger", "ngen::trigger", "bytes", "ngen::opaque" };
+
         std::vector<int> input_var_item_count = { 1, 1 };
         std::vector<int> output_var_item_count = { 1, 1 };
         std::vector<int> model_var_item_count = {};
         std::vector<int> input_var_grids = { 1, 1 };
         std::vector<int> output_var_grids = { 1, 1 };
         std::vector<int> model_var_grids = {};
-        
+
         std::map<std::string,int> type_sizes = {
             {BMI_TYPE_NAME_DOUBLE, sizeof(double)},
             {BMI_TYPE_NAME_FLOAT, sizeof(float)},
             {BMI_TYPE_NAME_INT, sizeof(int)},
             {BMI_TYPE_NAME_SHORT, sizeof(short)},
-            {BMI_TYPE_NAME_LONG, sizeof(long)}
+            {BMI_TYPE_NAME_LONG, sizeof(long)},
+            {"int64", sizeof(int64_t)},
+            {"char", sizeof(char)}
         };
 
         // ***********************************************************
@@ -235,6 +252,45 @@ class TestBmiCpp : public bmi::Bmi {
 
         double mass_stored = 0.0;
         double mass_leaked = 0.0;
+
+        // Serialization support. The create/free trigger variables
+        // have no backing storage — they are action signals with no
+        // stored value; the SetValue dispatch short-circuits to the
+        // respective helper without touching any field, and
+        // GetValuePtr deliberately does not handle them.
+        std::vector<char> serialized_state_;
+        int64_t serialized_size_var = 0;
+
+        // Used to verify that declaring SIZE as int32_t
+        // (itemsize/nbytes = 4) still round-trips values up to
+        // INT32_MAX correctly through the framework's int64_t slot.
+        int32_t serialized_size_32bit_var = 0;
+
+        // Total byte length of the on-disk layout below. Keep in sync
+        // with `visit_serialization_fields` — `deserialize_state`
+        // validates incoming payloads against this value, so a stale
+        // return turns into a loud runtime error, not a silent overread.
+        static constexpr size_t serialized_state_bytes() {
+            return sizeof(double) * 5;  // current_model_time + 2 inputs + 2 outputs
+        }
+
+        // Single source of truth for the model's serialized field layout.
+        // Save (append) and restore (read) invoke this with a matching
+        // operation, so a new field added to the list appears on both
+        // paths automatically. This keeps serialize and
+        // deserialize from drifting apart.
+        template <typename Op>
+        void visit_serialization_fields(Op op) {
+            op(&current_model_time, sizeof(current_model_time));
+            op(input_var_1.get(),  sizeof(double));
+            op(input_var_2.get(),  sizeof(double));
+            op(output_var_1.get(), sizeof(double));
+            op(output_var_2.get(), sizeof(double));
+        }
+
+        void create_serialization();
+        void free_serialization();
+        void deserialize_state(const char* data, int64_t size);
 
         /**
         * Read the BMI initialization config file and use its contents to set the state of the model.
