@@ -117,7 +117,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 # Define project version and use via generated config header
-project(ngen VERSION 0.3.0)
+project(ngen VERSION 0.3.0 LANGUAGES CXX)
+
+if(NGEN_WITH_BMI_FORTRAN)
+    enable_language("Fortran")
+endif()
 
 add_executable(ngen "${NGEN_SRC_DIR}/NGen.cpp")
 
@@ -501,6 +505,8 @@ ngen_dependent_multiline_message(NGEN_WITH_UDUNITS
 "    Include: ${UDUNITS2_INCLUDE_DIR}")
 ngen_dependent_multiline_message(NGEN_WITH_BMI_FORTRAN
 "  Fortran:"
+"    Compiler: ${CMAKE_Fortran_COMPILER}"
+"    Compiler ID: ${CMAKE_Fortran_COMPILER_ID}"
 "    BMI_FORTRAN_ISO_C_LIB_PATH: ${BMI_FORTRAN_ISO_C_LIB_PATH}"
 "    BMI_FORTRAN_ISO_C_LIB_NAME: ${BMI_FORTRAN_ISO_C_LIB_NAME}"
 "    BMI_FORTRAN_ISO_C_LIB_DIR: ${BMI_FORTRAN_ISO_C_LIB_DIR}")
