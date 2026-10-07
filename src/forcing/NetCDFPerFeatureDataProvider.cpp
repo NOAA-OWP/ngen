@@ -599,9 +599,9 @@ auto NetCDFPerFeatureDataProvider::fill_slot(int page_c_idx, netCDF::NcVar const
   #pragma omp critical
   std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())
 #if NGEN_WITH_OPENMP
-	    << " " << omp_get_thread_num()
+            << " " << omp_get_thread_num()
 #endif
-	    << " NetCDF reading " << var_name << " " << page_c_idx << " from " << file_path << std::endl;
+            << " NetCDF reading " << var_name << " " << page_c_idx << " from " << file_path << std::endl;
 
   // read each chunk and add it to "cached"
   std::size_t idx = 0;
@@ -627,9 +627,9 @@ auto NetCDFPerFeatureDataProvider::fill_slot(int page_c_idx, netCDF::NcVar const
   #pragma omp critical
   std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())
 #if NGEN_WITH_OPENMP
-	    << " " << omp_get_thread_num()
+            << " " << omp_get_thread_num()
 #endif
-	    << " NetCDF done reading " << var_name << " " << page_c_idx << " " << cached.get() << " from " << file_path << std::endl;
+            << " NetCDF done reading " << var_name << " " << page_c_idx << " " << cached.get() << " from " << file_path << std::endl;
 
   slot.fill(cached);
   return cached;
@@ -697,18 +697,18 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     for( size_t i = 0; i < n_page_accesses; i++ ) {
         // rows: catchments; columns: time;
         // stride between rows is 'cache_line_size'
-	const std::size_t ith_p_idx = p_idx + i;
-	const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
+        const std::size_t ith_p_idx = p_idx + i;
+        const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
 
         cache_key_type key_2{page_c_idx, variable_name};
 
-	// Drop references to arrays of stale forcings values here,
-	// before reading or waiting on reads, to avoid or limit
-	// spikes in memory footprint as new forcings get read in
-	evict_stale_values(thread_cache[this], page_c_idx);
+        // Drop references to arrays of stale forcings values here,
+        // before reading or waiting on reads, to avoid or limit
+        // spikes in memory footprint as new forcings get read in
+        evict_stale_values(thread_cache[this], page_c_idx);
 
-	if (thread_cache[this].contains(key_2))
-	  continue;
+        if (thread_cache[this].contains(key_2))
+            continue;
           
         {
           // Look up the cache slot for key_2 - either cache_iter =
@@ -740,7 +740,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
           cache_buffer_type cached = cache_iter->second.get();
 
           thread_cache[this].emplace(key_2, cached);
-	}
+        }
     }
 
     std::size_t c_idx = c_idx1;
@@ -751,9 +751,9 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     for( size_t i = 0; i < n_page_accesses; i++ ) {
         // rows: catchments; columns: time;
         // stride between rows is 'cache_line_size'
-	const std::size_t ith_p_idx = p_idx + i;
-	const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
-	const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
+        const std::size_t ith_p_idx = p_idx + i;
+        const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
+        const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
         cache_key_type key_2 = std::pair{page_c_idx, variable_name};
 
         auto locally_cached = thread_cache[this].at(key_2).get();
