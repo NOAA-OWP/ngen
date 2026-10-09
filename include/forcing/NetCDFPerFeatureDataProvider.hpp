@@ -169,12 +169,14 @@ namespace data_access
 
             // Fill in this slot with the provided buffer pointer and
             // safely unblock any threads waiting for it. Must be
-            // called exactly once, with a non-null pointer
+            // called with a non-null pointer, on a slot that is
+            // EMPTY, or in ERROR to retry a failed fill
             void fill(cache_buffer_type buffer_ptr, bool immediate_use);
 
         private:
             cache_buffer_type ptr_ = nullptr;
-            enum STATE : char { EMPTY=0, FILLED=1, HOT=2 };
+            // ERROR marks a failed fill, which fill() may retry
+            enum STATE : char { EMPTY=0, FILLED=1, HOT=2, ERROR=3 };
             std::atomic<int> state_ = STATE::EMPTY;
         };
 
