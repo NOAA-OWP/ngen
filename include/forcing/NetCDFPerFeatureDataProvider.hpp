@@ -23,6 +23,8 @@
 #include <iomanip>
 #include <optional>
 #include <ctime>
+#include <vector>
+#include <pthread.h>
 #include <boost/compute/detail/lru_cache.hpp>
 
 #include <StreamHandler.hpp>
@@ -243,6 +245,37 @@ namespace data_access
         // file. Populated by the constructor and not modified after, so
         // threads can look up a variable's cache without locking.
         std::map<std::string, shared_cache> value_caches;
+
+        // The buffers of pages a thread has already looked up, so it
+        // can skip the shared caches for them: by variable name, then
+        // by the same page key as that variable's shared cache.
+        using thread_cache_type = std::map<std::string, std::map<cache_key_type, cache_buffer_type>>;
+
+        // Owns a pthread key, so it is deleted even if the provider's
+        // constructor throws after creating it
+        struct thread_key {
+            thread_key();
+            ~thread_key();
+            thread_key(thread_key const&) = delete;
+            thread_key& operator=(thread_key const&) = delete;
+            pthread_key_t key;
+        };
+
+        // Each thread finds its thread cache for this provider through
+        // this key. POSIX gives a newly created key a null value in
+        // every thread, so a provider never sees caches belonging to
+        // an earlier one, even if it reuses that provider's address or
+        // key. pthread_key_delete() doesn't destroy the values, so the
+        // provider owns every thread cache it creates, in
+        // thread_caches, and frees them when it is destroyed. A cache
+        // whose thread exits stays until then.
+        thread_key thread_cache_key;
+        std::mutex thread_caches_mutex;
+        std::vector<std::unique_ptr<thread_cache_type>> thread_caches;
+
+        // The calling thread's cache for this provider, created on
+        // first use
+        thread_cache_type& get_thread_cache();
 
         // number of time slices per cache entry
         // this is a tunable parameter; your mileage may vary

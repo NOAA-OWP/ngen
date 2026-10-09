@@ -5,6 +5,7 @@
 #include <mediator/UnitsHelper.hpp>
 
 #include <netcdf>
+#include <system_error>
 
 #if NGEN_WITH_OPENMP
 #include <omp.h>
@@ -550,12 +551,33 @@ namespace cache {
     }
 }
 
-// Each thread's pages, by provider, then variable name, then page key
-thread_local std::map<NetCDFPerFeatureDataProvider*,
-                      std::map<std::string,
-                               std::map<NetCDFPerFeatureDataProvider::cache_key_type,
-                                        NetCDFPerFeatureDataProvider::cache_buffer_type>>
-                      > thread_cache;
+NetCDFPerFeatureDataProvider::thread_key::thread_key()
+{
+    int err = pthread_key_create(&key, nullptr);
+    if (err != 0)
+        throw std::system_error(err, std::generic_category(), "NetCDFPerFeatureDataProvider: pthread_key_create");
+}
+
+NetCDFPerFeatureDataProvider::thread_key::~thread_key()
+{
+    pthread_key_delete(key);
+}
+
+auto NetCDFPerFeatureDataProvider::get_thread_cache() -> thread_cache_type&
+{
+    if (void* existing = pthread_getspecific(thread_cache_key.key))
+        return *static_cast<thread_cache_type*>(existing);
+
+    thread_cache_type* created;
+    {
+        std::lock_guard l{thread_caches_mutex};
+        created = thread_caches.emplace_back(std::make_unique<thread_cache_type>()).get();
+    }
+    int err = pthread_setspecific(thread_cache_key.key, created);
+    if (err != 0)
+        throw std::system_error(err, std::generic_category(), "NetCDFPerFeatureDataProvider: pthread_setspecific");
+    return *created;
+}
 
 namespace {
 // Remove entries in the passed cache with keys less than
@@ -769,7 +791,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     // Drop references to arrays of stale forcings values here,
     // before reading or waiting on reads, to avoid or limit
     // spikes in memory footprint as new forcings get read in
-    auto& variable_thread_cache = thread_cache[this][variable_name];
+    auto& variable_thread_cache = get_thread_cache()[variable_name];
     evict_stale_values(variable_thread_cache, eviction_floor);
 
     for( size_t i = 0; i < n_page_accesses; i++ ) {
