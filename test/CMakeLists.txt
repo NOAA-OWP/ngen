@@ -261,6 +261,17 @@ ngen_add_test(
         NGen::output
 )
 
+########################## memfd-backed File Buffer Tests
+if(TARGET NGen::memfd_file_buffer)
+    ngen_add_test(
+        test_memfd_file_buffer
+        OBJECTS
+            utilities/MemfdFileBuffer_Test.cpp
+        LIBRARIES
+            NGen::memfd_file_buffer
+    )
+endif()
+
 ########################## Catchment CSV Output Manager Tests
 ngen_add_test(
     test_catchment_output_mgr

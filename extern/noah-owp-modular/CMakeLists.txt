@@ -23,7 +23,7 @@ set_target_properties(surfacebmi
         Fortran_MODULE_DIRECTORY "${_SURFACEBMI_BINARY_DIR}/mod")
 
 target_sources(surfacebmi PRIVATE ${_SURFACEBMI_OBJECTS})
-target_compile_options(surfacebmi PRIVATE -cpp -ffree-line-length-none)
+target_compile_options(surfacebmi PRIVATE -cpp -ffree-line-length-none -std=gnu -fopenmp -frecursive)
 target_include_directories(surfacebmi INTERFACE "${_SURFACEBMI_BINARY_DIR}/mod")
 target_compile_definitions(surfacebmi PRIVATE BMI_ACTIVE)
 

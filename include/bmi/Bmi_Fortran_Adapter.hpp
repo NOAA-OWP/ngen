@@ -11,7 +11,12 @@
 #include "State_Exception.hpp"
 #include "utilities/ExternalIntegrationException.hpp"
 
+#include <array>
+#include <mutex>
 #include <stdexcept>
+
+// Comes from libgfortran
+extern "C" void _gfortran_set_options (int num, int const *options);
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Fortran_Adapter_Test;
@@ -486,6 +491,8 @@ namespace models {
 
         private:
 
+            static std::once_flag fortran_runtime_initialization;
+
             /**
              * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
              *
@@ -495,20 +502,12 @@ namespace models {
              * Implementations should return immediately without taking any further action if ``model_initialized`` is
              * already ``true``.
              *
-             * The call to the BMI native ``Initialize(string)`` should pass the value stored in ``bmi_init_config``.
+             * On Linux, the contents of the file named by ``bmi_init_config`` are passed to the BMI native
+             * ``Initialize(string)`` through a private in-memory copy, so that each model instance opens a
+             * distinct file even when several share one config file. Elsewhere, ``bmi_init_config`` itself
+             * is passed.
              */
-            inline void construct_and_init_backing_model_for_fortran() {
-                if (model_initialized)
-                    return;
-                bmi_model = std::make_unique<Bmi_Fortran_Handle_Wrapper>(Bmi_Fortran_Handle_Wrapper());
-                dynamic_library_load();
-                execModuleRegistration();
-                int init_result = initialize(&bmi_model->handle, bmi_init_config.c_str());
-                if (init_result != BMI_SUCCESS) {
-                    init_exception_msg = "Failure when attempting to initialize " + model_name;
-                    throw models::external::State_Exception(init_exception_msg);
-                }
-            }
+            void construct_and_init_backing_model_for_fortran();
 
             /**
              * Internal implementation of logic used for @see GetInputItemCount.
