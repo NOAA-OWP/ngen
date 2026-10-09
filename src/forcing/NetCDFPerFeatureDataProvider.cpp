@@ -549,10 +549,15 @@ namespace cache {
     }
 }
 
-thread_local NetCDFPerFeatureDataProvider::private_cache_type thread_cache;
+thread_local std::map<NetCDFPerFeatureDataProvider*,
+                      std::map<NetCDFPerFeatureDataProvider::cache_key_type,
+                               NetCDFPerFeatureDataProvider::cache_buffer_type>
+                      > thread_cache;
 
+// Erase entries in the passed cache with keys whose first
+// element is less than floor_index
 template <typename MapType>
-void NetCDFPerFeatureDataProvider::evict_stale_values(MapType& cache, int floor_index)
+void evict_stale_values(MapType& cache, int floor_index)
 {
   auto eviction_iterator = cache.begin();
   auto end = cache.end();
@@ -561,11 +566,11 @@ void NetCDFPerFeatureDataProvider::evict_stale_values(MapType& cache, int floor_
   }
 }
 
-void NetCDFPerFeatureDataProvider::cache_slot::fill(NetCDFPerFeatureDataProvider::cache_buffer_type buffer_ptr)
+void NetCDFPerFeatureDataProvider::cache_slot::fill(NetCDFPerFeatureDataProvider::cache_buffer_type buffer_ptr, bool immediate_use)
 {
-  ptr_ = buffer_ptr;
+  ptr_ = std::move(buffer_ptr);
   std::atomic_thread_fence(std::memory_order_release);
-  state_.store(STATE::FILLED, std::memory_order_relaxed);
+  state_.store(immediate_use ? STATE::HOT : STATE::FILLED, std::memory_order_relaxed);
 }
 
 auto NetCDFPerFeatureDataProvider::cache_slot::get() -> cache_buffer_type
@@ -584,7 +589,40 @@ auto NetCDFPerFeatureDataProvider::cache_slot::get() -> cache_buffer_type
   return ptr_;
 }
 
-auto NetCDFPerFeatureDataProvider::fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot) -> cache_buffer_type
+auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type &key, bool evict_older) -> std::pair<NetCDFPerFeatureDataProvider::cache_slot&, bool>
+{
+    // Look up the cache slot for key - either cache_iter =
+    // find() gets an extant slot, or this thread commits to
+    // creating and filling a new slot
+    std::shared_lock l(mutex);
+    auto cache_iter = cache.find(key);
+
+    if (cache_iter != cache.end())
+        return {cache_iter->second, false};
+
+    // Upgrade the lock and try to take responsibility for filling this entry in
+    l.unlock();
+    std::unique_lock ul(mutex);
+
+    // Re-check that some other thread didn't get here first
+    cache_iter = cache.find(key);
+
+    if (cache_iter != cache.end())
+        return {cache_iter->second, false};
+
+    if (evict_older) {
+        // Evict while we hold the writer lock, and are
+        // responsible for modifying the cache anyway. Do it
+        // before fill_slot to drop references to old data
+        // before loading new data to limit memory footprint.
+        evict_stale_values(cache, key.first);
+    }
+
+    // This thread really is reponsible for creating it
+    return {cache.emplace(key, std::piecewise_construct).first->second, true};
+}
+
+auto NetCDFPerFeatureDataProvider::fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot, bool immediate_use) -> cache_buffer_type
 {
   std::size_t cache_line_size = cache_slice_t_size;
   std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
@@ -631,7 +669,7 @@ auto NetCDFPerFeatureDataProvider::fill_slot(int page_c_idx, netCDF::NcVar const
 #endif
             << " NetCDF done reading " << var_name << " " << page_c_idx << " " << cached.get() << " from " << file_path << std::endl;
 
-  slot.fill(cached);
+  slot.fill(cached, immediate_use);
   return cached;
 }
 
@@ -709,38 +747,16 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
         if (thread_cache[this].contains(key_2))
             continue;
-          
-        {
-          // Look up the cache slot for key_2 - either cache_iter =
-          // find() gets an extant slot, or this thread commits to
-          // creating and filling a new slot
-          std::shared_lock l(cache_2_mutex);
-          auto cache_iter = value_cache_2.find(key_2);
 
-          if (cache_iter == value_cache_2.end()) {
-            // Upgrade the lock and try to take responsibility for filling this entry in
-            l.unlock();
-            std::unique_lock ul(cache_2_mutex);
+        auto [cache_slot, just_inserted] = value_cache.find_or_insert(key_2, /* evict_older = */ true);
 
-            // Re-check that some other thread didn't get here first
-            cache_iter = value_cache_2.find(key_2);
-            if (cache_iter == value_cache_2.end()) {
-              // Evict while we hold the writer lock, and are
-              // responsible for modifying the cache anyway. Do it
-              // before fill_slot to drop references to old data
-              // before loading new data to limit memory footprint.
-              evict_stale_values(value_cache_2, page_c_idx);
-
-              // This thread really is reponsible for creating it
-              cache_iter = value_cache_2.emplace(key_2, std::piecewise_construct).first;
-              fill_slot(page_c_idx, ncvar, cache_iter->second);
-            }
-          } // cache_iter should be valid, != end() at this point
-
-          cache_buffer_type cached = cache_iter->second.get();
-
-          thread_cache[this].emplace(key_2, cached);
+        cache_buffer_type cached;
+        if (just_inserted) {
+            cached = fill_slot(page_c_idx, ncvar, cache_slot, true);
+        } else {
+            cached = cache_slot.get();
         }
+        thread_cache[this].emplace(key_2, cached);
     }
 
     std::size_t c_idx = c_idx1;

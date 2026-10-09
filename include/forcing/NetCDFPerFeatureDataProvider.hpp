@@ -160,21 +160,35 @@ namespace data_access
             cache_slot() = default;
             cache_slot(std::piecewise_construct_t) {}
 
-            // Fill in this slot with the provided buffer pointer and notify any threads waiting in get()
-            void fill(cache_buffer_type buffer_ptr);
-            // Wait for another thread to fill() this slot - the pointer is guaranteed to be non-nullptr
+            cache_slot(cache_slot const&) = delete;
+            cache_slot(cache_slot &&) = delete;
+
+            // Get back a non-nullptr buffer pointer that can safely
+            // be read from. If it's not already set, this may block
+            // on another thread that will fill said pointer
             cache_buffer_type get();
+
+            // Fill in this slot with the provided buffer pointer and
+            // safely unblock any threads waiting for it
+            void fill(cache_buffer_type buffer_ptr, bool immediate_use);
 
         private:
             cache_buffer_type ptr_ = nullptr;
             enum STATE : char { EMPTY=0, FILLED=1, HOT=2 };
             std::atomic<int> state_ = STATE::EMPTY;
         };
-        using shared_cache_type = std::map<cache_key_type, cache_slot>;
-        using private_cache_type = std::map<NetCDFPerFeatureDataProvider*, std::map<cache_key_type, cache_buffer_type>>;
+
+        struct shared_cache {
+            std::map<cache_key_type, cache_slot> cache;
+            std::shared_mutex mutex;
+            // Get back a cache slot matching the @arg key. Exactly
+            // one thread will return 'true' the first time `key` is
+            // passed
+            std::pair<cache_slot&, bool> find_or_insert(cache_key_type &key, bool evict_older);
+        };
 
         private:
-        cache_buffer_type fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot);
+        cache_buffer_type fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot, bool immediate_use);
 
         time_t sim_start_date_time_epoch;
         time_t sim_end_date_time_epoch;
@@ -205,13 +219,7 @@ namespace data_access
         std::map<std::string, std::pair<std::string, netCDF::NcVar>> ncvar_cache;
         std::map<std::string,std::string> units_cache;
 
-        // Erase entries in the passed cache with keys whose first
-        // element is less than floor_index
-        template <typename MapType>
-        static void evict_stale_values(MapType& cache, int floor_index);
-
-        shared_cache_type value_cache_2;
-        std::shared_mutex cache_2_mutex;
+        shared_cache value_cache;
 
         // number of time slices per cache entry
         // this is a tunable parameter; your mileage may vary
