@@ -568,6 +568,8 @@ void evict_stale_values(MapType& cache, int floor_index)
 
 void NetCDFPerFeatureDataProvider::cache_slot::fill(NetCDFPerFeatureDataProvider::cache_buffer_type buffer_ptr, bool immediate_use)
 {
+  assert(buffer_ptr != nullptr);
+  assert(state_.load(std::memory_order_relaxed) == STATE::EMPTY);
   ptr_ = std::move(buffer_ptr);
   state_.store(immediate_use ? STATE::HOT : STATE::FILLED, std::memory_order_release);
 }

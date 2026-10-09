@@ -168,7 +168,8 @@ namespace data_access
             cache_buffer_type get();
 
             // Fill in this slot with the provided buffer pointer and
-            // safely unblock any threads waiting for it
+            // safely unblock any threads waiting for it. Must be
+            // called exactly once, with a non-null pointer
             void fill(cache_buffer_type buffer_ptr, bool immediate_use);
 
         private:
