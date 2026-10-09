@@ -1,0 +1,6 @@
+time_step_seconds: 3600
+initial_time: 0
+start_timestamp: "2023-01-01 00:00:00"
+Obs_Data: "./02OJ016_UTC_mNAVD88.csv"
+Obs_Lat: 46.990329
+Obs_Lon: -70.766700
