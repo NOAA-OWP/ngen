@@ -634,6 +634,9 @@ int main(int argc, char* argv[]) {
             for (std::string id : features.catchments(keys[i])) {
                 cat_ids.push_back(id);
             }
+	    std::sort(cat_ids.begin(), cat_ids.end(),
+		      [&features](std::string const& cat_lhs, std::string const& cat_rhs)
+		      { return features.destination_nexuses(cat_lhs).at(0) < features.destination_nexuses(cat_rhs).at(0); });
             if (keys[i] != 0) {
                 layers[i] = std::make_shared<ngen::Layer>(
                     desc,

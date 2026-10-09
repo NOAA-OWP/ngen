@@ -314,10 +314,8 @@ std::shared_ptr<std::vector<std::string>> utils::PerFormulationNexusOutputMgr::g
     return filenames;
 }
 
-void utils::PerFormulationNexusOutputMgr::receive_data_entry(const std::string& formulation_id,
-                                                             const std::string& nexus_id,
-                                                             const time_marker& data_time_marker,
-                                                             const double flow_data_at_t) {
+void utils::PerFormulationNexusOutputMgr::prepare_for_step(const std::string& formulation_id,
+                                                           const time_marker& data_time_marker) {
     if (is_closed()) {
         throw std::runtime_error("Can't run PerFormulationNexusOutputMgr::receive_data_entry() if instance is closed");
     }
@@ -326,13 +324,13 @@ void utils::PerFormulationNexusOutputMgr::receive_data_entry(const std::string& 
     }
     else if (current_formulation_id != formulation_id) {
         throw std::runtime_error(
-            "Cannot receive data for formulation " + formulation_id + " for nexus " + nexus_id +
+            "Cannot receive data for formulation " + formulation_id +
             " when expecting data for " + current_formulation_id + ".");
     }
 
     if (data_time_marker.sim_time_index != current_time_index) {
         throw std::runtime_error(
-            "Cannot receive data for formulation " + formulation_id + " for nexus " + nexus_id +
+            "Cannot receive data for formulation " + formulation_id +
             " at time index " + std::to_string(data_time_marker.sim_time_index) + " when expecting data for "
             + "time index " + std::to_string(current_time_index) + ".");
     }
@@ -342,12 +340,17 @@ void utils::PerFormulationNexusOutputMgr::receive_data_entry(const std::string& 
     }
     else if (current_epoch_time != data_time_marker.epoch_time) {
         throw std::runtime_error(
-            "Cannot receive data for formulation " + formulation_id + " for nexus " + nexus_id +
+            "Cannot receive data for formulation " + formulation_id +
             ": expected '" + std::to_string(current_epoch_time) + "' for epoch time at current time " +
             "index " + std::to_string(current_time_index) + " but got '"
             + std::to_string(data_time_marker.epoch_time) + "'.");
     }
+}
 
+void utils::PerFormulationNexusOutputMgr::receive_data_entry(const std::string& formulation_id,
+                                                             const std::string& nexus_id,
+                                                             const time_marker& data_time_marker,
+                                                             double flow_data_at_t) {
     current_nexus_data[nexus_data_indices.at(nexus_id)] = flow_data_at_t;
 }
 

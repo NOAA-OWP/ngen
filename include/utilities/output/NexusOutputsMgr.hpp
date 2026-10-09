@@ -92,6 +92,11 @@ namespace utils
             receive_data_entry(get_default_formulation_id(), nexus_id, data_time_marker, flow_data_at_t);
         }
 
+        virtual void prepare_for_step(const std::string &formulation_id, const time_marker &data_time_marker) = 0;
+        virtual void prepare_for_step(const time_marker &data_time_marker) {
+            prepare_for_step(get_default_formulation_id(), data_time_marker);
+        }
+
     protected:
         virtual ~NexusOutputsMgr() = default;
 

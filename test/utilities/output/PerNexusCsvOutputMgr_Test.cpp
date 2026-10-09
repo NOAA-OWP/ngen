@@ -30,7 +30,9 @@ TEST(PerNexusCsvOutputMgr_Test, WritesPerNexusFilesInOutputRoot)
         // Use the base-class convenience overload (as callers do via the
         // NexusOutputsMgr interface); the derived 4-arg override otherwise hides it.
         utils::NexusOutputsMgr& base = mgr;
-        base.receive_data_entry("nex-1", time_marker(0, 0, "2020-01-01 00:00:00"), 1.5);
+        auto current_time = time_marker(0, 0, "2020-01-01 00:00:00");
+        base.prepare_for_step(current_time);
+        base.receive_data_entry("nex-1", current_time, 1.5);
         mgr.commit_writes();
 
         EXPECT_TRUE(fs::exists(root / "nex-1_output.csv"));

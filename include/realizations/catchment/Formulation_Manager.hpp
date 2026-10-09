@@ -161,6 +161,7 @@ namespace realization {
                     }//end for catchments
                 }//end if possible_catchment_configs
 
+                #pragma omp parallel for
                 for (geojson::Feature location : *fabric) {
                     {
                         std::lock_guard presence(formulations_mutex);
