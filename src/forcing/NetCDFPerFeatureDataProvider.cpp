@@ -623,6 +623,15 @@ auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type &
     return {cache.emplace(key, std::piecewise_construct).first->second, true};
 }
 
+auto NetCDFPerFeatureDataProvider::shared_cache::keys() const -> std::set<cache_key_type>
+{
+    std::shared_lock l(mutex);
+    std::set<cache_key_type> result;
+    for (auto const& entry : cache)
+        result.insert(entry.first);
+    return result;
+}
+
 auto NetCDFPerFeatureDataProvider::fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot, bool immediate_use) -> cache_buffer_type
 {
   std::size_t cache_line_size = cache_slice_t_size;

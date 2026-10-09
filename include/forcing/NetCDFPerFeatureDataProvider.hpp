@@ -179,8 +179,6 @@ namespace data_access
         };
 
         struct shared_cache {
-            std::map<cache_key_type, cache_slot> cache;
-            std::shared_mutex mutex;
             // Get back a cache slot matching the @arg key. Exactly
             // one thread will return 'true' the first time `key` is
             // passed
@@ -198,6 +196,13 @@ namespace data_access
             // here to take advantage of the locking on the internal
             // structure necessary for insertion.
             std::pair<cache_slot&, bool> find_or_insert(cache_key_type &key, std::optional<int> eviction_floor);
+
+            // The keys of all slots currently in the cache
+            std::set<cache_key_type> keys() const;
+
+        private:
+            std::map<cache_key_type, cache_slot> cache;
+            mutable std::shared_mutex mutex;
         };
 
         private:

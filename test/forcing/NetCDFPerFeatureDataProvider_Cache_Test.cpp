@@ -293,10 +293,7 @@ TEST(SharedCacheTest, InsertionEvictsOnlyBelowFloor)
 
         key_type key = c.key;
         auto inserted = cache.find_or_insert(key, c.eviction_floor).second;
-
-        std::set<key_type> remaining;
-        for (auto const& entry : cache.cache)
-            remaining.insert(entry.first);
+        auto remaining = cache.keys();
 
         const std::string label = "key {" + std::to_string(key.first) + ", " + key.second + "}, eviction_floor = "
                                 + (c.eviction_floor ? std::to_string(*c.eviction_floor) : "none");
@@ -383,7 +380,7 @@ TEST(SharedCacheTest, ConcurrentLookupsOfDistinctKeysElectOneInserterEach)
         distinct_slots.insert(begin->slot);
     }
     EXPECT_EQ(distinct_slots.size(), n_keys);
-    EXPECT_EQ(cache.cache.size(), n_keys);
+    EXPECT_EQ(cache.keys().size(), n_keys);
 }
 
 TEST(SharedCacheTest, ElectedInserterPublishesToAllFinders)
@@ -445,9 +442,10 @@ TEST(SharedCacheTest, ElectedInserterPublishesToAllFinders)
     }
 
     // Each round's inserts evicted every earlier round
-    EXPECT_EQ(cache.cache.size(), variables.size());
-    for (auto const& entry : cache.cache)
-        EXPECT_EQ(entry.first.first, (n_rounds - 1) * page_size);
+    auto remaining = cache.keys();
+    EXPECT_EQ(remaining.size(), variables.size());
+    for (auto const& key : remaining)
+        EXPECT_EQ(key.first, (n_rounds - 1) * page_size);
 }
 
 TEST(SharedCacheTest, ReadsSpanningTwoPagesKeepFirstPageAlive)
@@ -499,10 +497,7 @@ TEST(SharedCacheTest, ReadsSpanningTwoPagesKeepFirstPageAlive)
                 EXPECT_TRUE(ok[(r * 2 + i) * n_threads + t]) << "round " << r << ", page " << r + i << ", thread " << t;
 
     // Only the last round's two pages remain
-    std::set<key_type> remaining;
-    for (auto const& entry : cache.cache)
-        remaining.insert(entry.first);
-    EXPECT_EQ(remaining, (std::set<key_type>{{(n_rounds - 1) * page_size, variable}, {n_rounds * page_size, variable}}));
+    EXPECT_EQ(cache.keys(), (std::set<key_type>{{(n_rounds - 1) * page_size, variable}, {n_rounds * page_size, variable}}));
 }
 
 // Demonstrates a known hazard rather than a desired property, so it is
