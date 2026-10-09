@@ -2,6 +2,10 @@
 
 #include <stdexcept>
 #include <algorithm>
+#include <string>
+#include <iostream>
+
+#include <NGenConfig.h>
 
 namespace ngen {
 namespace sqlite {
@@ -180,14 +184,112 @@ auto database::iterator::get<std::vector<uint8_t>>(int col) const
 
 // ngen::sqlite::database =====================================================
 
+namespace {
+    //! Percent-encode a filesystem path for use in a SQLite "file:" URI.
+    //! Unreserved characters (RFC 3986) and '/' are left as-is; everything else
+    //! (notably spaces, '?', '#', '%') is percent-encoded so the path survives
+    //! SQLite's URI parsing. SQLite decodes %XX back to the original byte.
+    std::string uri_encode_path(const std::string& path)
+    {
+        static const char hex[] = "0123456789ABCDEF";
+        std::string out;
+        out.reserve(path.size() + 8); // headroom for a few 3-byte escapes
+
+        // Iterate as unsigned char so bytes >= 0x80 (e.g. UTF-8 path components)
+        // are treated as 0..255 and encoded correctly, not as negative values.
+        for (unsigned char c : path) {
+            // Leave RFC 3986 "unreserved" characters as-is, plus '/', which we
+            // keep literal so it stays a path separator rather than becoming
+            // %2F. Everything else (spaces, and URI-significant characters like
+            // '?', '#', '%') must be escaped so SQLite's URI parser sees the
+            // original path when it decodes.
+            const bool unreserved =
+                (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
+                (c >= '0' && c <= '9') ||
+                c == '-' || c == '.' || c == '_' || c == '~' || c == '/';
+            if (unreserved) {
+                out.push_back(static_cast<char>(c));
+            } else {
+                // Emit the byte as "%HH": '%' then its two uppercase hex
+                // digits, high (c / 16) then low (c % 16).
+                out.push_back('%');
+                out.push_back(hex[c / 16]);
+                out.push_back(hex[c % 16]);
+            }
+        }
+        return out;
+    }
+
+    //! Apply best-effort read-tuning pragmas to a freshly opened, read-only
+    //! connection and warn once if the library clamped mmap_size. See
+    //! NGEN_SQLITE_MMAP_SIZE / NGEN_SQLITE_CACHE_SIZE.
+    void apply_read_tuning(sqlite3* conn)
+    {
+        // Best-effort read tuning; non-fatal if the build doesn't support a pragma.
+        //  - mmap_size: memory-map reads so SQLite reads pages directly from the OS
+        //    page cache without copying each into a per-connection buffer, and
+        //    without a read() syscall per page. This is a cap on the bytes (the
+        //    first N, from the start of the file) eligible for mmap, not an
+        //    allocation; build-time configurable via NGEN_SQLITE_MMAP_SIZE
+        //    (0 disables it).
+        //  - temp_store=MEMORY: keep transient structures (e.g. the ephemeral table
+        //    SQLite builds for "WHERE id IN (...)" subset queries) off disk.
+        //  - cache_size: per-connection page cache for pages served by read()
+        //    rather than mmap (offsets beyond the window); build-time configurable
+        //    via NGEN_SQLITE_CACHE_SIZE.
+        const long long requested_mmap = ngen::exec_info::sqlite_mmap_size;
+        const std::string mmap_pragma  = "PRAGMA mmap_size="  + std::to_string(requested_mmap) + ";";
+        const std::string cache_pragma = "PRAGMA cache_size=" + std::to_string(ngen::exec_info::sqlite_cache_size) + ";";
+        sqlite3_exec(conn, mmap_pragma.c_str(),  nullptr, nullptr, nullptr);
+        sqlite3_exec(conn, "PRAGMA temp_store=MEMORY;", nullptr, nullptr, nullptr);
+        sqlite3_exec(conn, cache_pragma.c_str(), nullptr, nullptr, nullptr);
+
+        // Align with the library: SQLite clamps mmap_size to its build-time
+        // SQLITE_MAX_MMAP_SIZE, which can silently leave the tail of a large gpkg on
+        // conventional read(). Read back the effective value and warn once if it was
+        // reduced below the request.
+        if (requested_mmap > 0) {
+            long long effective_mmap = -1;
+            sqlite3_stmt* stmt = nullptr;
+            if (sqlite3_prepare_v2(conn, "PRAGMA mmap_size;", -1, &stmt, nullptr) == SQLITE_OK) {
+                if (sqlite3_step(stmt) == SQLITE_ROW) {
+                    effective_mmap = sqlite3_column_int64(stmt, 0);
+                }
+                sqlite3_finalize(stmt);
+            }
+#if !NGEN_QUIET
+            static bool warned_mmap_clamped = false;
+            if (!warned_mmap_clamped && effective_mmap >= 0 && effective_mmap < requested_mmap) {
+                warned_mmap_clamped = true;
+                std::cerr << "WARNING: requested SQLite mmap_size " << requested_mmap
+                          << " bytes was clamped to " << effective_mmap
+                          << " by the linked library's SQLITE_MAX_MMAP_SIZE; geopackages larger than "
+                          << effective_mmap << " bytes will not be fully memory-mapped."
+                          << " Rebuild SQLite with a larger SQLITE_MAX_MMAP_SIZE to map the whole file."
+                          << std::endl;
+            }
+#endif
+        }
+    }
+}
+
 database::database(const std::string& path)
 {
+    // Open read-only AND immutable. The hydrofabric file does not change during
+    // a run, so 'immutable' lets SQLite skip all file locking and change
+    // detection on every open -- a win for any read-only access, and especially
+    // for the engine's many-readers, one-file MPI pattern, where advisory
+    // locking on a shared/parallel filesystem is the real bottleneck (not
+    // bandwidth).
+    const std::string uri = "file:" + uri_encode_path(path) + "?immutable=1";
     sqlite3*  conn = nullptr;
-    const int code = sqlite3_open_v2(path.c_str(), &conn, SQLITE_OPEN_READONLY, nullptr);
+    const int code = sqlite3_open_v2(uri.c_str(), &conn, SQLITE_OPEN_READONLY | SQLITE_OPEN_URI, nullptr);
     if (code != SQLITE_OK) {
         throw sqlite_error{"sqlite3_open_v2", code};
     }
     conn_ = sqlite_t{conn};
+
+    apply_read_tuning(conn_.get());
 }
 
 auto database::connection() const noexcept -> sqlite3*
