@@ -241,10 +241,18 @@ TEST(SharedCacheTest, FirstLookupInsertsLaterLookupsFind)
 
     auto [first_slot, first_inserted] = cache.find_or_insert(key, std::nullopt);
     auto [second_slot, second_inserted] = cache.find_or_insert(key, std::nullopt);
+    // Equal keys passed as a temporary or through a const reference find the same slot
+    auto [third_slot, third_inserted] = cache.find_or_insert(key_type{0, "APCP_surface"}, std::nullopt);
+    key_type const& const_key = key;
+    auto [fourth_slot, fourth_inserted] = cache.find_or_insert(const_key, std::nullopt);
 
     EXPECT_TRUE(first_inserted);
     EXPECT_FALSE(second_inserted);
+    EXPECT_FALSE(third_inserted);
+    EXPECT_FALSE(fourth_inserted);
     EXPECT_EQ(&first_slot, &second_slot);
+    EXPECT_EQ(&first_slot, &third_slot);
+    EXPECT_EQ(&first_slot, &fourth_slot);
 }
 
 TEST(SharedCacheTest, SlotReferencesSurviveNonEvictingInserts)
@@ -288,10 +296,10 @@ TEST(SharedCacheTest, InsertionEvictsOnlyBelowFloor)
 
     for (auto const& c : cases) {
         shared_cache cache;
-        for (key_type k : {key_type{0, "a"}, key_type{0, "b"}, key_type{24, "a"}, key_type{48, "b"}})
+        for (key_type const& k : {key_type{0, "a"}, key_type{0, "b"}, key_type{24, "a"}, key_type{48, "b"}})
             cache.find_or_insert(k, std::nullopt);
 
-        key_type key = c.key;
+        auto const& key = c.key;
         auto inserted = cache.find_or_insert(key, c.eviction_floor).second;
         auto remaining = cache.keys();
 

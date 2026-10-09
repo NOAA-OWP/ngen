@@ -589,7 +589,7 @@ auto NetCDFPerFeatureDataProvider::cache_slot::get() -> cache_buffer_type
   return ptr_;
 }
 
-auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type &key, std::optional<int> eviction_floor) -> std::pair<NetCDFPerFeatureDataProvider::cache_slot&, bool>
+auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type const& key, std::optional<int> eviction_floor) -> std::pair<NetCDFPerFeatureDataProvider::cache_slot&, bool>
 {
     // Look up the cache slot for key - either cache_iter =
     // find() gets an extant slot, or this thread commits to

@@ -195,7 +195,7 @@ namespace data_access
             // includes the key being looked up. Eviction is handled
             // here to take advantage of the locking on the internal
             // structure necessary for insertion.
-            std::pair<cache_slot&, bool> find_or_insert(cache_key_type &key, std::optional<int> eviction_floor);
+            std::pair<cache_slot&, bool> find_or_insert(cache_key_type const& key, std::optional<int> eviction_floor);
 
             // The keys of all slots currently in the cache
             std::set<cache_key_type> keys() const;
