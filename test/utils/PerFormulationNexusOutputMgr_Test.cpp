@@ -360,10 +360,12 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_a)
 
     // Write for this rank's nexuses
     for (size_t t = 0; t < ex_2_timestamps.size(); ++t) {
+        auto current_time = utils::time_marker(t, ex_2_timestamps_seconds[t], ex_2_timestamps[t]);
+        mgr.prepare_for_step(current_time);
         for (size_t n = 0; n < nexus_ids->size(); ++n) {
             mgr.receive_data_entry(ex_2_form_names->at(0),
                                    nexus_ids->at(n),
-                                   utils::time_marker(t, ex_2_timestamps_seconds[t], ex_2_timestamps[t]),
+                                   current_time,
                                    group_data->at(t)[n]);
         }
         mgr.commit_writes();
@@ -749,6 +751,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_a) {
 
     utils::time_marker current_time = utils::time_marker(time_index, ex_0_timestamps_seconds[time_index], ex_0_timestamps[time_index]);
 
+    mgr.prepare_for_step(form_name, current_time);
     mgr.receive_data_entry(form_name, ex_0_form_0_nexus_ids[nex_id_index], current_time,
         ex_0_data[time_index][nex_id_index]);
 
@@ -771,18 +774,17 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_b)
     }
 
     utils::time_marker current_time = utils::time_marker(time_index, ex_0_timestamps_seconds[time_index], ex_0_timestamps[time_index]);
+    mgr.prepare_for_step(form_name, current_time);
 
     for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
         mgr.receive_data_entry(form_name,
             ex_0_form_0_nexus_ids[n],
-            utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]),
+            current_time,
             ex_0_data[0][n]);
     }
 
-    ASSERT_THROW(mgr.receive_data_entry(form_name,
-                                ex_0_form_0_nexus_ids[0],
-                                        utils::time_marker(1, ex_0_timestamps_seconds[1], ex_0_timestamps[1]),
-                                        ex_0_data[1][0]),
+    ASSERT_THROW(mgr.prepare_for_step(form_name,
+                                      utils::time_marker(1, ex_0_timestamps_seconds[1], ex_0_timestamps[1])),
                  std::runtime_error);
 }
 
@@ -800,10 +802,12 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_c) {
         files_to_cleanup.push_back(f);
     }
 
+    auto current_time = utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]);
+    mgr.prepare_for_step(current_time);
     for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
         mgr.receive_data_entry(form_name,
                                ex_0_form_0_nexus_ids[n],
-                               utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]),
+                               current_time,
                                ex_0_data[0][n]);
     }
 
@@ -840,10 +844,12 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_a) {
         files_to_cleanup.push_back(f);
     }
 
+    auto current_time = utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]);
+    mgr.prepare_for_step(current_time);
     for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
         mgr.receive_data_entry(form_name,
                                ex_0_form_0_nexus_ids[n],
-                               utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]),
+                               current_time,
                                ex_0_data[0][n]);
     }
     mgr.commit_writes();
@@ -875,10 +881,12 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_b) {
     }
 
     for (size_t t = 0; t < ex_0_timestamps.size(); ++t) {
+        auto current_time = utils::time_marker(t, ex_0_timestamps_seconds[t], ex_0_timestamps[t]);
+        mgr.prepare_for_step(current_time);
         for (int n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
             mgr.receive_data_entry(form_name,
                                    ex_0_form_0_nexus_ids[n],
-                                   utils::time_marker(t, ex_0_timestamps_seconds[t], ex_0_timestamps[t]),
+                                   current_time,
                                    ex_0_data[t][n]);
         }
         mgr.commit_writes();
@@ -915,11 +923,14 @@ TEST_F(PerFormulationNexusOutputMgr_Test, DISABLED_commit_writes_0_c) {
         files_to_cleanup.push_back(f);
     }
 
+    auto current_time = utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]);
+    mgr.prepare_for_step(current_time);
+
     // Importantly, using " - 1" below to not do things for all the nexuses
     for (size_t n = 0; n < ex_0_form_0_nexus_ids.size() - 1; ++n) {
         mgr.receive_data_entry(form_name,
                                ex_0_form_0_nexus_ids[n],
-                               utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]),
+                               current_time,
                                ex_0_data[0][n]);
     }
     ASSERT_THROW(mgr.commit_writes(), std::runtime_error);
@@ -939,10 +950,13 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_d)
         files_to_cleanup.push_back(f);
     }
 
+    auto current_time = utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]);
+    mgr.prepare_for_step(current_time);
+
     for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
         mgr.receive_data_entry(form_name,
                                ex_0_form_0_nexus_ids[n],
-                               utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]),
+                               current_time,
                                ex_0_data[0][n]);
     }
     mgr.commit_writes();
@@ -983,17 +997,22 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_a) {
 
     // Alternate writing, first all for group_a in a time step, then all for group b in a time step, then the next time step
     for (size_t t = 0; t < ex_1_timestamps.size(); ++t) {
+        auto current_time = utils::time_marker(t, ex_1_timestamps_seconds[t], ex_1_timestamps[t]);
+        mgr_a.prepare_for_step(current_time);
+
         for (size_t n = 0; n < ex_1_form_0_group_a_nexus_ids.size(); ++n) {
             mgr_a.receive_data_entry(form_name,
                                      ex_1_form_0_group_a_nexus_ids[n],
-                                     utils::time_marker(t, ex_1_timestamps_seconds[t], ex_1_timestamps[t]),
+                                     current_time,
                                      ex_1_group_a_data[t][n]);
         }
         mgr_a.commit_writes();
+
+        mgr_b.prepare_for_step(current_time);
         for (size_t n = 0; n < ex_1_form_0_group_b_nexus_ids.size(); ++n) {
             mgr_b.receive_data_entry(form_name,
                                      ex_1_form_0_group_b_nexus_ids[n],
-                                     utils::time_marker(t, ex_1_timestamps_seconds[t], ex_1_timestamps[t]),
+                                     current_time,
                                      ex_1_group_b_data[t][n]);
         }
         mgr_b.commit_writes();
@@ -1039,20 +1058,26 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_b) {
 
     // Write all the b group stuff first
     for (size_t t = 0; t < ex_1_timestamps.size(); ++t) {
+        auto current_time = utils::time_marker(t, ex_1_timestamps_seconds[t], ex_1_timestamps[t]);
+        mgr_b.prepare_for_step(current_time);
+
         for (size_t n = 0; n < ex_1_form_0_group_b_nexus_ids.size(); ++n) {
             mgr_b.receive_data_entry(form_name,
                                      ex_1_form_0_group_b_nexus_ids[n],
-                                     utils::time_marker(t, ex_1_timestamps_seconds[t], ex_1_timestamps[t]),
+                                     current_time,
                                      ex_1_group_b_data[t][n]);
         }
         mgr_b.commit_writes();
     }
     // Then come back and write all the a group stuff
     for (size_t t = 0; t < ex_1_timestamps.size(); ++t) {
+        auto current_time = utils::time_marker(t, ex_1_timestamps_seconds[t], ex_1_timestamps[t]);
+        mgr_a.prepare_for_step(current_time);
+
         for (size_t n = 0; n < ex_1_form_0_group_a_nexus_ids.size(); ++n) {
             mgr_a.receive_data_entry(form_name,
                                      ex_1_form_0_group_a_nexus_ids[n],
-                                     utils::time_marker(t, ex_1_timestamps_seconds[t], ex_1_timestamps[t]),
+                                     current_time,
                                      ex_1_group_a_data[t][n]);
         }
         mgr_a.commit_writes();
@@ -1095,17 +1120,22 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_c)
 
     // Alternate writing, first all for group_a in a time step, then all for group b in a time step, then the next time step
     for (size_t t = 0; t < ex_1_timestamps.size(); ++t) {
+        auto current_time = utils::time_marker(t, ex_1_timestamps_seconds[t], ex_1_timestamps[t]);
+        mgr_a.prepare_for_step(current_time);
+
         for (size_t n = 0; n < ex_1_form_0_group_a_nexus_ids.size(); ++n) {
             mgr_a.receive_data_entry(form_name,
                                      ex_1_form_0_group_a_nexus_ids[n],
-                                     utils::time_marker(t, ex_1_timestamps_seconds[t], ex_1_timestamps[t]),
+                                     current_time,
                                      ex_1_group_a_data[t][n]);
         }
         mgr_a.commit_writes();
+
+        mgr_b.prepare_for_step(current_time);
         for (size_t n = 0; n < ex_1_form_0_group_b_nexus_ids.size(); ++n) {
             mgr_b.receive_data_entry(form_name,
                                      ex_1_form_0_group_b_nexus_ids[n],
-                                     utils::time_marker(t, ex_1_timestamps_seconds[t], ex_1_timestamps[t]),
+                                     current_time,
                                      ex_1_group_b_data[t][n]);
         }
         mgr_b.commit_writes();
@@ -1147,10 +1177,13 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_5_a)
     }
 
     for (size_t t = 0; t < ex_5_timestamps.size(); ++t) {
+        auto current_time = utils::time_marker(t, ex_5_timestamps_seconds[t], ex_5_timestamps[t]);
+        mgr.prepare_for_step(current_time);
+
         for (size_t n = 0; n < ex_5_form_0_all_nexus_id.size(); ++n) {
             mgr.receive_data_entry(form_name,
                                    ex_5_form_0_all_nexus_id[n],
-                                   utils::time_marker(t, ex_5_timestamps_seconds[t], ex_5_timestamps[t]),
+                                   current_time,
                                    ex_5_all_data[t][n]);
         }
         mgr.commit_writes();
@@ -1212,10 +1245,13 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_c) {
     }
 
     for (size_t t = 0; t < ex_2_timestamps.size(); ++t) {
+        auto current_time = utils::time_marker(t, ex_2_timestamps_seconds[t], ex_2_timestamps[t]);
+        mgr.prepare_for_step(current_time);
+
         for (int n = 0; n < nexus_ids->size(); ++n) {
             mgr.receive_data_entry(form_name,
                                    nexus_ids->at(n),
-                                   utils::time_marker(t, ex_2_timestamps_seconds[t], ex_2_timestamps[t]),
+                                   current_time,
                                    group_data->at(t)[n]);
         }
         mgr.commit_writes();
@@ -1255,10 +1291,13 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_3_b) {
 
 
     for (size_t t = 0; t < ex_3_timestamps.size(); ++t) {
+        auto current_time = utils::time_marker(t, ex_3_timestamps_seconds[t], ex_3_timestamps[t]);
+        mgr.prepare_for_step(current_time);
+
         for (int n = 0; n < ex_3_form_0_all_nexus_id.size(); ++n) {
             mgr.receive_data_entry(form_name,
                                    ex_3_form_0_all_nexus_id[n],
-                                   utils::time_marker(t, ex_3_timestamps_seconds[t], ex_3_timestamps[t]),
+                                   current_time,
                                    ex_3_all_data[t][n]);
         }
         mgr.commit_writes();
@@ -1295,10 +1334,13 @@ TEST_F(PerFormulationNexusOutputMgr_Test, is_closed_0_a) {
     }
 
     for (size_t t = 0; t < ex_0_timestamps.size(); ++t) {
+        auto current_time = utils::time_marker(t, ex_0_timestamps_seconds[t], ex_0_timestamps[t]);
+        mgr.prepare_for_step(current_time);
+
         for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
             mgr.receive_data_entry(form_name,
                                    ex_0_form_0_nexus_ids[n],
-                                   utils::time_marker(t, ex_0_timestamps_seconds[t], ex_0_timestamps[t]),
+                                   current_time,
                                    ex_0_data[t][n]);
         }
         ASSERT_FALSE(mgr.is_closed());
@@ -1321,10 +1363,13 @@ TEST_F(PerFormulationNexusOutputMgr_Test, is_closed_0_b) {
         files_to_cleanup.push_back(f);
     }
 
+    auto current_time = utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]);
+    mgr.prepare_for_step(current_time);
+
     for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
         mgr.receive_data_entry(form_name,
                                ex_0_form_0_nexus_ids[n],
-                               utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]),
+                               current_time,
                                ex_0_data[0][n]);
     }
     ASSERT_FALSE(mgr.is_closed());
@@ -1346,10 +1391,13 @@ TEST_F(PerFormulationNexusOutputMgr_Test, is_closed_0_c) {
         files_to_cleanup.push_back(f);
     }
 
+    auto current_time = utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]);
+    mgr.prepare_for_step(current_time);
+
     for (size_t n = 0; n < ex_0_form_0_nexus_ids.size(); ++n) {
         mgr.receive_data_entry(form_name,
                                ex_0_form_0_nexus_ids[n],
-                               utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]),
+                               current_time,
                                ex_0_data[0][n]);
     }
     ASSERT_FALSE(mgr.is_closed());
