@@ -543,6 +543,39 @@ ngen_add_test(
         NGEN_WITH_NETCDF
 )
 
+########################### Netcdf Forcing Cache Concurrency Tests
+ngen_add_test(
+    test_netcdf_forcing_cache
+    OBJECTS
+        forcing/NetCDFPerFeatureDataProvider_Cache_Test.cpp
+    LIBRARIES
+        NGen::forcing
+    REQUIRES
+        NGEN_WITH_NETCDF
+)
+
+# With GCC or Clang, run these tests under ThreadSanitizer. The cache
+# implementation is compiled into the test itself so that both sides of
+# each shared access are instrumented; its object file then takes the
+# place of the uninstrumented one in the static forcing library. TSan
+# cannot be combined with the other sanitizers, so skip it if one of
+# them is already in use.
+if(TARGET test_netcdf_forcing_cache
+   AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang"
+   AND NOT BUILD_SHARED_LIBS
+   AND NOT CMAKE_CXX_FLAGS MATCHES "-fsanitize=(address|leak|memory)")
+    target_sources(test_netcdf_forcing_cache PRIVATE ${NGEN_ROOT_DIR}/src/forcing/NetCDFPerFeatureDataProvider.cpp)
+    target_compile_options(test_netcdf_forcing_cache PRIVATE -fsanitize=thread -g)
+    target_link_options(test_netcdf_forcing_cache PRIVATE -fsanitize=thread)
+endif()
+
+########################### Netcdf Forcing Cache Benchmarks
+if(NGEN_WITH_NETCDF)
+    add_executable(bench_netcdf_forcing_cache forcing/NetCDFPerFeatureDataProvider_Cache_Bench.cpp)
+    target_link_libraries(bench_netcdf_forcing_cache PRIVATE NGen::forcing)
+    set_target_properties(bench_netcdf_forcing_cache PROPERTIES FOLDER test)
+endif()
+
 ########################## Primary Combined Unit Test Target
 ngen_add_test(
     test_unit

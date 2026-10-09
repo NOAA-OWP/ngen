@@ -5,6 +5,11 @@
 #include <mediator/UnitsHelper.hpp>
 
 #include <netcdf>
+#include <system_error>
+
+#if NGEN_WITH_OPENMP
+#include <omp.h>
+#endif
 
 std::mutex data_access::NetCDFPerFeatureDataProvider::shared_providers_mutex;
 std::map<std::string, std::shared_ptr<data_access::NetCDFPerFeatureDataProvider>> data_access::NetCDFPerFeatureDataProvider::shared_providers;
@@ -172,7 +177,6 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
 NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s)
     : log_stream(log_s)
     , file_path(input_path)
-    , value_cache(N_EXPECTED_FORCING_VARS)
     , sim_start_date_time_epoch(sim_start)
     , sim_end_date_time_epoch(sim_end)
 {
@@ -206,7 +210,8 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         std::string var_name = element.first;
         auto ncvar = nc_file->getVar(var_name);
         variable_names.push_back(var_name);
-        ncvar_cache.emplace(var_name,ncvar);
+        ncvar_cache.emplace(var_name,std::pair{var_name, ncvar});
+        value_caches.try_emplace(var_name);
 
         std::string native_units;
         try
@@ -231,7 +236,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
             native_units = native_units.empty() ? std::get<1>(wkf->second) : native_units;
             std::string can_name = std::get<0>(wkf->second); // the CSDMS name
             variable_names.push_back(can_name);
-            ncvar_cache.emplace(can_name,ncvar);
+            ncvar_cache.emplace(can_name,std::pair{var_name, ncvar});
             units_cache[can_name] = native_units;
         }
 
@@ -342,20 +347,29 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
 
 void NetCDFPerFeatureDataProvider::hint_shared_provider_id(const std::string& id)
 {
+    std::lock_guard l{hinted_ids_mutex};
     hinted_ids.emplace(id);
 }
 
 void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
 {
-    auto ids = hinted_ids;
+    if (hinted_ids_done.test()) {
+        return;
+    }
+
+    std::lock_guard l{hinted_ids_mutex};
+
     if (hinted_ids.size() == 0){
         return;
     }
+
+    auto ids = hinted_ids;
 
     // Base cases covered in other ctor
     if (ids.size() == get_ids().size() || ids.size() == 0) {
         assert(chunks.size() == 1);
         hinted_ids.clear();
+        hinted_ids_done.test_and_set();
         return;
     }
     // get rid of "default" chunks, we will build them here
@@ -435,6 +449,8 @@ void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
     // TODO: improve this; we only want this method to "do something" once.
     //       invariant is, weakly, enforced by prelude guard clause.
     hinted_ids.clear();
+
+    hinted_ids_done.test_and_set();
 }
 
 NetCDFPerFeatureDataProvider::~NetCDFPerFeatureDataProvider() = default;
@@ -535,6 +551,176 @@ namespace cache {
     }
 }
 
+NetCDFPerFeatureDataProvider::thread_key::thread_key()
+{
+    int err = pthread_key_create(&key, nullptr);
+    if (err != 0)
+        throw std::system_error(err, std::generic_category(), "NetCDFPerFeatureDataProvider: pthread_key_create");
+}
+
+NetCDFPerFeatureDataProvider::thread_key::~thread_key()
+{
+    pthread_key_delete(key);
+}
+
+auto NetCDFPerFeatureDataProvider::get_thread_cache() -> thread_cache_type&
+{
+    if (void* existing = pthread_getspecific(thread_cache_key.key))
+        return *static_cast<thread_cache_type*>(existing);
+
+    thread_cache_type* created;
+    {
+        std::lock_guard l{thread_caches_mutex};
+        created = thread_caches.emplace_back(std::make_unique<thread_cache_type>()).get();
+    }
+    int err = pthread_setspecific(thread_cache_key.key, created);
+    if (err != 0)
+        throw std::system_error(err, std::generic_category(), "NetCDFPerFeatureDataProvider: pthread_setspecific");
+    return *created;
+}
+
+namespace {
+// Remove entries in the passed cache with keys less than
+// floor_index, and return them, so the caller
+// controls when they are destroyed. Nodes are spliced, so this
+// allocates and frees nothing. Returning the named local relies on
+// NRVO copy elision; where that isn't applied, the map is moved,
+// which is also constant time.
+template <typename MapType>
+MapType evict_stale_values(MapType& cache, int floor_index)
+{
+  MapType evicted;
+  auto eviction_iterator = cache.begin();
+  auto end = cache.end();
+  while (eviction_iterator != end && eviction_iterator->first < floor_index) {
+    evicted.insert(evicted.end(), cache.extract(eviction_iterator++));
+  }
+  return evicted;
+}
+}
+
+void NetCDFPerFeatureDataProvider::cache_slot::fill(NetCDFPerFeatureDataProvider::cache_buffer_type buffer_ptr, bool immediate_use)
+{
+  assert(buffer_ptr != nullptr);
+  assert(state_.load(std::memory_order_relaxed) == STATE::EMPTY ||
+         state_.load(std::memory_order_relaxed) == STATE::ERROR);
+  ptr_ = std::move(buffer_ptr);
+  state_.store(immediate_use ? STATE::HOT : STATE::FILLED, std::memory_order_release);
+}
+
+auto NetCDFPerFeatureDataProvider::cache_slot::get() -> cache_buffer_type
+{
+  int state = STATE::EMPTY;
+  while ((state = state_.load(std::memory_order_acquire)) == STATE::EMPTY) {
+    // Just spin on whatever thread is doing the filling
+    #pragma omp taskyield
+  }
+
+  // Release, so that readers who see HOT from this store rather
+  // than from fill() synchronize with this thread, and so
+  // transitively happen-after the filling thread's writes
+  if (state == STATE::FILLED)
+    state_.store(STATE::HOT, std::memory_order_release);
+
+  return ptr_;
+}
+
+auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type key, std::optional<int> eviction_floor) -> std::pair<NetCDFPerFeatureDataProvider::cache_slot&, bool>
+{
+    // Look up the cache slot for key - either cache_iter =
+    // find() gets an extant slot, or this thread commits to
+    // creating and filling a new slot
+    std::shared_lock l(mutex);
+    auto cache_iter = cache.find(key);
+
+    if (cache_iter != cache.end())
+        return {cache_iter->second, false};
+
+    // Upgrade the lock and try to take responsibility for filling this entry in
+    l.unlock();
+    // Declared before the lock, so that evicted entries are destroyed
+    // after it is released, keeping frees of their buffers outside it
+    decltype(cache) evicted;
+    std::unique_lock ul(mutex);
+
+    // Re-check that some other thread didn't get here first
+    cache_iter = cache.find(key);
+
+    if (cache_iter != cache.end())
+        return {cache_iter->second, false};
+
+    if (eviction_floor) {
+        assert(*eviction_floor <= key);
+        // Evict while we hold the writer lock, and are
+        // responsible for modifying the cache anyway. Do it
+        // before fill_slot to drop references to old data
+        // before loading new data to limit memory footprint.
+        evicted = evict_stale_values(cache, *eviction_floor);
+    }
+
+    // This thread really is reponsible for creating it
+    return {cache.try_emplace(key).first->second, true};
+}
+
+auto NetCDFPerFeatureDataProvider::shared_cache::keys() const -> std::set<cache_key_type>
+{
+    std::shared_lock l(mutex);
+    std::set<cache_key_type> result;
+    for (auto const& entry : cache)
+        result.insert(entry.first);
+    return result;
+}
+
+auto NetCDFPerFeatureDataProvider::fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot, bool immediate_use) -> cache_buffer_type
+{
+  std::size_t cache_line_size = cache_slice_t_size;
+  std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
+  auto cached = std::make_shared<std::vector<double>>(get_ids().size() * page_cache_line_size);
+
+  std::vector<std::size_t> start(2), count(2);
+
+  std::unique_lock nc_file_lock(netcdf_library_mutex);
+
+  auto var_name = ncvar.getName();
+
+  #pragma omp critical
+  std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())
+#if NGEN_WITH_OPENMP
+            << " " << omp_get_thread_num()
+#endif
+            << " NetCDF reading " << var_name << " " << page_c_idx << " from " << file_path << std::endl;
+
+  // read each chunk and add it to "cached"
+  std::size_t idx = 0;
+  for(auto const& chunk: chunks){
+    // chunk start index = chunk.first;
+    // chunk length      = chunk.second;
+    start[0] = chunk.first;
+
+    // NOTE: in the first iteration, we might read more data in the Time
+    // dimension than we 'need'. b.c. we read from:
+    // 'c_idx1 - (c_idx1 % cache_slice_t_size)' to the end of the cache line.
+    // so, if 'c_idx1 % cache_slice_t_size > 0' we will read
+    // 'c_idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
+    start[1] = page_c_idx;
+
+    count[0] = chunk.second;
+    count[1] = page_cache_line_size;
+
+    ncvar.getVar(start,count,&(*cached)[idx]);
+    idx += chunk.second * page_cache_line_size;
+  }
+
+  #pragma omp critical
+  std::cout << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())
+#if NGEN_WITH_OPENMP
+            << " " << omp_get_thread_num()
+#endif
+            << " NetCDF done reading " << var_name << " " << page_c_idx << " " << cached.get() << " from " << file_path << std::endl;
+
+  slot.fill(cached, immediate_use);
+  return cached;
+}
 
 double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m) 
 {
@@ -564,10 +750,20 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
      * p dim: page index
      */
 
-    auto init_time = selector.get_init_time();
-    auto stop_time = init_time + selector.get_duration_secs(); // scope hiding! BAD JUJU!
+    // update chunks during the first timestep, and no-op thereafter;
+    // 'maybe_update_chunks_with_hints' clears 'hinted_ids'
+    // assumes all id's will have been hinted before 'get_value' is called.
+    maybe_update_chunks_with_hints();
+
+    auto const& [variable_name, ncvar] = get_ncvar(selector.get_variable_name());
+    auto& variable_cache = value_caches.at(variable_name);
+
+    auto const i_idx = id_pos.at(selector.get_id());
+
+    auto const init_time = selector.get_init_time();
+    auto const stop_time = init_time + selector.get_duration_secs(); // scope hiding! BAD JUJU!
     
-    size_t c_idx1 = get_ts_index_for_time(init_time);
+    const size_t c_idx1 = get_ts_index_for_time(init_time);
     size_t c_idx2;
     try {
         c_idx2 = get_ts_index_for_time(stop_time-1); // Don't include next timestep when duration % timestep = 0
@@ -576,94 +772,78 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         c_idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
     }
 
-    // update chunks during the first timestep
-    if (hinted_ids.size() > 0){
-        // 'maybe_update_chunks_with_hints' clears 'hinted_ids'
-        // assumes all id's will have been hinted before 'get_value' is called.
-        maybe_update_chunks_with_hints();
-    }
-
-    auto stride = c_idx2 - c_idx1;
-
-    std::vector<std::size_t> start, count;
-
-    auto i_idx = id_pos[selector.get_id()];
-
-    double t1 = time_vals[c_idx1];
-    double t2 = time_vals[c_idx2];
-
-    double rvalue = 0.0;
-    
-    auto ncvar = get_ncvar(selector.get_variable_name());
-
-    std::string native_units = get_ncvar_units(selector.get_variable_name());
+    auto const stride = c_idx2 - c_idx1;
 
     const std::size_t read_len = c_idx2 - c_idx1 + 1;
+
+    const std::size_t cache_line_size = cache_slice_t_size;
+    const std::size_t p_idx = cache::page_p_idx(c_idx1, cache_line_size);
+    // pages spanned by [c_idx1, c_idx2]; ceil(read_len / line_size) undercounts
+    // when the range starts mid-page and crosses a page boundary
+    const std::size_t n_page_accesses = cache::page_p_idx(c_idx2, cache_line_size) - p_idx + 1;
+
+    // Only evict pages before the first one this read needs. Every
+    // thread in a time step reads the same pages, so when a read spans
+    // two pages, evicting below the second would drop the first while
+    // this or another thread still needs it
+    const int eviction_floor = cache::page_p_idx_to_c_idx(p_idx, cache_line_size);
+
+    // Drop references to arrays of stale forcings values here,
+    // before reading or waiting on reads, to avoid or limit
+    // spikes in memory footprint as new forcings get read in
+    auto& variable_thread_cache = get_thread_cache()[variable_name];
+    evict_stale_values(variable_thread_cache, eviction_floor);
+
+    for( size_t i = 0; i < n_page_accesses; i++ ) {
+        // rows: catchments; columns: time;
+        // stride between rows is 'cache_line_size'
+        const std::size_t ith_p_idx = p_idx + i;
+        const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
+
+        const cache_key_type page_key = page_c_idx;
+
+        if (variable_thread_cache.contains(page_key))
+            continue;
+
+        auto [cache_slot, just_inserted] = variable_cache.find_or_insert(page_key, eviction_floor);
+
+        cache_buffer_type cached;
+        if (just_inserted) {
+            cached = fill_slot(page_c_idx, ncvar, cache_slot, true);
+        } else {
+            cached = cache_slot.get();
+        }
+        variable_thread_cache.emplace(page_key, cached);
+    }
+
+    std::size_t c_idx = c_idx1;
 
     std::vector<double> raw_values;
     raw_values.reserve(read_len);
 
-    std::size_t cache_line_size = cache_slice_t_size;
-    std::size_t p_idx = cache::page_p_idx(c_idx1, cache_line_size);
-    // pages spanned by [c_idx1, c_idx2]; ceil(read_len / line_size) undercounts
-    // when the range starts mid-page and crosses a page boundary
-    std::size_t n_page_accesses = cache::page_p_idx(c_idx2, cache_line_size) - p_idx + 1;
-
-    std::size_t c_idx = c_idx1;
-    // For reference: https://stackoverflow.com/a/72030286
     for( size_t i = 0; i < n_page_accesses; i++ ) {
         // rows: catchments; columns: time;
         // stride between rows is 'cache_line_size'
-        std::shared_ptr<std::vector<double>> cached;
-
-	std::size_t ith_p_idx = p_idx + i;
-	std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
-	std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
-
-        std::string key = ncvar.getName() + "|" + std::to_string(page_c_idx);
-        if(value_cache.contains(key)){
-            cached = value_cache.get(key).get();
-        } else {
-            cached = std::make_shared<std::vector<double>>(get_ids().size() * page_cache_line_size);
-
-            // read each chunk and add it to "cached"
-            std::size_t idx = 0;
-            for(auto const& chunk: chunks){
-                // chunk start index = chunk.first;
-                // chunk length      = chunk.second;
-                start.clear();
-                start.push_back(chunk.first);
-
-                // NOTE: in the first iteration, we might read more data in the Time
-                // dimension than we 'need'. b.c. we read from:
-                // 'c_idx1 - (c_idx1 % cache_slice_t_size)' to the end of the cache line.
-                // so, if 'c_idx1 % cache_slice_t_size > 0' we will read
-                // 'c_idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
-                start.push_back(page_c_idx);
-
-                count.clear();
-                count.push_back(chunk.second);
-
-                count.push_back(page_cache_line_size);
-                ncvar.getVar(start,count,&(*cached)[idx]);
-                idx += chunk.second * page_cache_line_size;
-            }
-
-            value_cache.insert(key, cached);
-        }
+        const std::size_t ith_p_idx = p_idx + i;
+        const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
+        const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
+        auto locally_cached = variable_thread_cache.at(page_c_idx).get();
         // Find all values in the current cache slice and push them onto raw_values
         while(c_idx >= page_c_idx &&
               c_idx < page_c_idx + page_cache_line_size &&
               c_idx <= c_idx2){
             std::size_t idx = cache::page_entry_idx(i_idx, c_idx, time_vals.size(), cache_line_size);
-            double value = cached->at(idx);
+            double value = locally_cached->at(idx);
             raw_values.push_back(value);
             c_idx++;
         }
     }
 
     assert(raw_values.size() == read_len);
-    rvalue = 0.0;
+    double rvalue = 0.0;
+
+    double t1 = time_vals[c_idx1];
+    double t2 = time_vals[c_idx2];
 
     double a , b = 0.0;
     
@@ -703,6 +883,8 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
             ;
     }
 
+    std::string native_units = get_ncvar_units(variable_name);
+
     try 
     {
         return UnitsHelper::get_converted_value(native_units, rvalue, selector.get_output_units());
@@ -724,7 +906,7 @@ std::vector<double> NetCDFPerFeatureDataProvider::get_values(const CatchmentAggr
 
 // private:
 
-const netCDF::NcVar& NetCDFPerFeatureDataProvider::get_ncvar(const std::string& name){
+std::pair<std::string, netCDF::NcVar> const& NetCDFPerFeatureDataProvider::get_ncvar(const std::string& name) const {
     auto cache_hit = ncvar_cache.find(name);
     if(cache_hit != ncvar_cache.end()){
         return cache_hit->second;

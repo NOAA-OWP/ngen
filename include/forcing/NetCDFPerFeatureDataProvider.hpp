@@ -8,19 +8,23 @@
 #include "GenericDataProvider.hpp"
 #include "DataProviderSelectors.hpp"
 
+#include <atomic>
 #include <string>
 #include <algorithm>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <set>
 #include <sstream>
 #include <exception>
-#include <mutex>
+#include <shared_mutex>
 #include "assert.h"
 #include <iomanip>
 #include <optional>
 #include <ctime>
+#include <vector>
+#include <pthread.h>
 #include <boost/compute/detail/lru_cache.hpp>
 
 #include <StreamHandler.hpp>
@@ -147,7 +151,66 @@ namespace data_access
 
         virtual std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
+        // Key is the index of a page's first time step (c_idx)
+        using cache_key_type = int;
+        using cache_buffer_type = std::shared_ptr<std::vector<double>>;
+
+        // value is a pointer to the
+        // cached data; if the pointer is null, another thread has
+        // started filling it in, but is not done yet
+        struct cache_slot {
+            cache_slot() = default;
+
+            cache_slot(cache_slot const&) = delete;
+            cache_slot(cache_slot &&) = delete;
+
+            // Get back a non-nullptr buffer pointer that can safely
+            // be read from. If it's not already set, this may block
+            // on another thread that will fill said pointer
+            cache_buffer_type get();
+
+            // Fill in this slot with the provided buffer pointer and
+            // safely unblock any threads waiting for it. Must be
+            // called with a non-null pointer, on a slot that is
+            // EMPTY, or in ERROR to retry a failed fill
+            void fill(cache_buffer_type buffer_ptr, bool immediate_use);
+
         private:
+            cache_buffer_type ptr_ = nullptr;
+            // ERROR marks a failed fill, which fill() may retry
+            enum STATE : char { EMPTY=0, FILLED=1, HOT=2, ERROR=3 };
+            std::atomic<int> state_ = STATE::EMPTY;
+        };
+
+        struct shared_cache {
+            // Get back a cache slot matching the @arg key. Exactly
+            // one thread will return 'true' the first time `key` is
+            // passed
+            //
+            // Keys are expected to increase monotonically as the
+            // simulation advances, so a key is not looked up again
+            // after it is evicted. If it is, it is inserted again,
+            // and this returns 'true' again
+            //
+            // If this call inserts a slot and @arg eviction_floor is
+            // set, first evict all slots whose time index is below
+            // it. Callers must not pass a floor above the time index
+            // of any slot another thread may still be using, which
+            // includes the key being looked up. Eviction is handled
+            // here to take advantage of the locking on the internal
+            // structure necessary for insertion.
+            std::pair<cache_slot&, bool> find_or_insert(cache_key_type key, std::optional<int> eviction_floor);
+
+            // The keys of all slots currently in the cache
+            std::set<cache_key_type> keys() const;
+
+        private:
+            std::map<cache_key_type, cache_slot> cache;
+            mutable std::shared_mutex mutex;
+        };
+
+        private:
+        cache_buffer_type fill_slot(int page_c_idx, netCDF::NcVar const& ncvar, cache_slot& slot, bool immediate_use);
 
         time_t sim_start_date_time_epoch;
         time_t sim_end_date_time_epoch;
@@ -156,10 +219,13 @@ namespace data_access
         static std::mutex shared_providers_mutex;
         static std::map<std::string, std::shared_ptr<NetCDFPerFeatureDataProvider>> shared_providers;
 
+        std::mutex hinted_ids_mutex;
+        std::atomic_flag hinted_ids_done;
+        std::set<std::string> hinted_ids;
+
         std::vector<std::string> variable_names;
         std::vector<std::string> loc_ids;
         std::vector<double> time_vals;
-        std::set<std::string> hinted_ids;
         std::map<std::string, std::size_t> id_pos;      // map from cat-id to position in vec of nc var values; accounts for chunking
         std::vector<std::pair<size_t, size_t>> chunks;  // a chunk is the start and length of a span in the "catchment-id" dim of a nc variable
         double start_time;                              // the begining of the first time for which data is stored
@@ -169,18 +235,55 @@ namespace data_access
         utils::StreamHandler log_stream;
         std::string file_path;
 
+        std::mutex netcdf_library_mutex;
         std::shared_ptr<netCDF::NcFile> nc_file;
 
-        std::map<std::string,netCDF::NcVar> ncvar_cache;
+        std::map<std::string, std::pair<std::string, netCDF::NcVar>> ncvar_cache;
         std::map<std::string,std::string> units_cache;
-        boost::compute::detail::lru_cache<std::string, std::shared_ptr<std::vector<double>>> value_cache;
+
+        // One cache per variable, keyed by the variable's name in the
+        // file. Populated by the constructor and not modified after, so
+        // threads can look up a variable's cache without locking.
+        std::map<std::string, shared_cache> value_caches;
+
+        // The buffers of pages a thread has already looked up, so it
+        // can skip the shared caches for them: by variable name, then
+        // by the same page key as that variable's shared cache.
+        using thread_cache_type = std::map<std::string, std::map<cache_key_type, cache_buffer_type>>;
+
+        // Owns a pthread key, so it is deleted even if the provider's
+        // constructor throws after creating it
+        struct thread_key {
+            thread_key();
+            ~thread_key();
+            thread_key(thread_key const&) = delete;
+            thread_key& operator=(thread_key const&) = delete;
+            pthread_key_t key;
+        };
+
+        // Each thread finds its thread cache for this provider through
+        // this key. POSIX gives a newly created key a null value in
+        // every thread, so a provider never sees caches belonging to
+        // an earlier one, even if it reuses that provider's address or
+        // key. pthread_key_delete() doesn't destroy the values, so the
+        // provider owns every thread cache it creates, in
+        // thread_caches, and frees them when it is destroyed. A cache
+        // whose thread exits stays until then.
+        thread_key thread_cache_key;
+        std::mutex thread_caches_mutex;
+        std::vector<std::unique_ptr<thread_cache_type>> thread_caches;
+
+        // The calling thread's cache for this provider, created on
+        // first use
+        thread_cache_type& get_thread_cache();
+
         // number of time slices per cache entry
         // this is a tunable parameter; your mileage may vary
         // NOTE: it would be nice if this were divisible by 2 and 4
         size_t cache_slice_t_size = 24;
         size_t cache_slice_c_size = 1;
 
-        const netCDF::NcVar& get_ncvar(const std::string& name);
+        std::pair<std::string, netCDF::NcVar> const& get_ncvar(const std::string& name) const;
 
         const std::string& get_ncvar_units(const std::string& name);
 
