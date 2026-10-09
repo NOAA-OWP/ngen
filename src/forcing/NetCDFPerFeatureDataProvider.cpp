@@ -550,14 +550,22 @@ namespace cache {
     }
 }
 
+// Unlike shared_cache, which is per variable, each thread's cache holds
+// pages of every variable, so its key is (page key, variable name)
+using thread_cache_key_type = std::pair<NetCDFPerFeatureDataProvider::cache_key_type, std::string>;
+
 thread_local std::map<NetCDFPerFeatureDataProvider*,
-                      std::map<NetCDFPerFeatureDataProvider::cache_key_type,
+                      std::map<thread_cache_key_type,
                                NetCDFPerFeatureDataProvider::cache_buffer_type>
                       > thread_cache;
 
 namespace {
-// Remove entries in the passed cache with keys whose first
-// element is less than floor_index, and return them, so the caller
+// The time step index a key in either kind of cache refers to
+int page_index(NetCDFPerFeatureDataProvider::cache_key_type key) { return key; }
+int page_index(thread_cache_key_type const& key) { return key.first; }
+
+// Remove entries in the passed cache with keys whose page index
+// is less than floor_index, and return them, so the caller
 // controls when they are destroyed. Nodes are spliced, so this
 // allocates and frees nothing. Returning the named local relies on
 // NRVO copy elision; where that isn't applied, the map is moved,
@@ -568,7 +576,7 @@ MapType evict_stale_values(MapType& cache, int floor_index)
   MapType evicted;
   auto eviction_iterator = cache.begin();
   auto end = cache.end();
-  while (eviction_iterator != end && eviction_iterator->first.first < floor_index) {
+  while (eviction_iterator != end && page_index(eviction_iterator->first) < floor_index) {
     evicted.insert(evicted.end(), cache.extract(eviction_iterator++));
   }
   return evicted;
@@ -601,7 +609,7 @@ auto NetCDFPerFeatureDataProvider::cache_slot::get() -> cache_buffer_type
   return ptr_;
 }
 
-auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type const& key, std::optional<int> eviction_floor) -> std::pair<NetCDFPerFeatureDataProvider::cache_slot&, bool>
+auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type key, std::optional<int> eviction_floor) -> std::pair<NetCDFPerFeatureDataProvider::cache_slot&, bool>
 {
     // Look up the cache slot for key - either cache_iter =
     // find() gets an extant slot, or this thread commits to
@@ -626,7 +634,7 @@ auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type c
         return {cache_iter->second, false};
 
     if (eviction_floor) {
-        assert(*eviction_floor <= key.first);
+        assert(*eviction_floor <= key);
         // Evict while we hold the writer lock, and are
         // responsible for modifying the cache anyway. Do it
         // before fill_slot to drop references to old data
@@ -775,12 +783,13 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         const std::size_t ith_p_idx = p_idx + i;
         const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
 
-        cache_key_type key_2{page_c_idx, variable_name};
+        const cache_key_type page_key = page_c_idx;
+        const thread_cache_key_type thread_key{page_key, variable_name};
 
-        if (thread_cache[this].contains(key_2))
+        if (thread_cache[this].contains(thread_key))
             continue;
 
-        auto [cache_slot, just_inserted] = variable_cache.find_or_insert(key_2, eviction_floor);
+        auto [cache_slot, just_inserted] = variable_cache.find_or_insert(page_key, eviction_floor);
 
         cache_buffer_type cached;
         if (just_inserted) {
@@ -788,7 +797,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         } else {
             cached = cache_slot.get();
         }
-        thread_cache[this].emplace(key_2, cached);
+        thread_cache[this].emplace(thread_key, cached);
     }
 
     std::size_t c_idx = c_idx1;
@@ -802,9 +811,9 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         const std::size_t ith_p_idx = p_idx + i;
         const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
         const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
-        cache_key_type key_2 = std::pair{page_c_idx, variable_name};
+        const thread_cache_key_type thread_key{page_c_idx, variable_name};
 
-        auto locally_cached = thread_cache[this].at(key_2).get();
+        auto locally_cached = thread_cache[this].at(thread_key).get();
         // Find all values in the current cache slice and push them onto raw_values
         while(c_idx >= page_c_idx &&
               c_idx < page_c_idx + page_cache_line_size &&

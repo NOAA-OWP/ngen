@@ -243,36 +243,26 @@ TEST(CacheSlotTest, ReaderAfterFirstReaderOfColdFillSeesContents)
 TEST(SharedCacheTest, FirstLookupInsertsLaterLookupsFind)
 {
     shared_cache cache;
-    key_type key{0, "APCP_surface"};
+    key_type key = 24;
 
     auto [first_slot, first_inserted] = cache.find_or_insert(key, std::nullopt);
     auto [second_slot, second_inserted] = cache.find_or_insert(key, std::nullopt);
-    // Equal keys passed as a temporary or through a const reference find the same slot
-    auto [third_slot, third_inserted] = cache.find_or_insert(key_type{0, "APCP_surface"}, std::nullopt);
-    key_type const& const_key = key;
-    auto [fourth_slot, fourth_inserted] = cache.find_or_insert(const_key, std::nullopt);
 
     EXPECT_TRUE(first_inserted);
     EXPECT_FALSE(second_inserted);
-    EXPECT_FALSE(third_inserted);
-    EXPECT_FALSE(fourth_inserted);
     EXPECT_EQ(&first_slot, &second_slot);
-    EXPECT_EQ(&first_slot, &third_slot);
-    EXPECT_EQ(&first_slot, &fourth_slot);
 }
 
 TEST(SharedCacheTest, SlotReferencesSurviveNonEvictingInserts)
 {
     shared_cache cache;
-    key_type key{24, "T2D_2maboveground"};
+    key_type key = 24;
     cache_slot* original = &cache.find_or_insert(key, std::nullopt).first;
 
     // Rebalancing std::map under many inserts must not move the slot;
     // inserts flooring eviction at its time index never evict it either
-    for (int i = 0; i < 1000; ++i) {
-        key_type other{(i % 2) ? 24 : 1000 + i, "var" + std::to_string(i)};
-        cache.find_or_insert(other, (i % 2) ? std::optional<int>(24) : std::nullopt);
-    }
+    for (int i = 0; i < 1000; ++i)
+        cache.find_or_insert(1000 + i, (i % 2) ? std::optional<int>(key) : std::nullopt);
 
     auto [found, inserted] = cache.find_or_insert(key, std::nullopt);
     EXPECT_FALSE(inserted);
@@ -288,28 +278,27 @@ TEST(SharedCacheTest, InsertionEvictsOnlyBelowFloor)
         std::set<key_type> remaining;
     };
 
-    // Every case starts from a cache holding {0,a} {0,b} {24,a} {48,b}
+    // Every case starts from a cache holding pages 0, 24 and 48
     const eviction_case cases[] = {
-        //  key        eviction_floor  inserted  keys remaining afterwards
-          { {24, "a"}, 24,             false,    { {0, "a"}, {0, "b"}, {24, "a"}, {48, "b"}            } }
-        , { {36, "c"}, std::nullopt,   true,     { {0, "a"}, {0, "b"}, {24, "a"}, {36, "c"}, {48, "b"} } }
-        , { {0,  "c"}, 0,              true,     { {0, "a"}, {0, "b"}, {0, "c"}, {24, "a"}, {48, "b"}  } }
-        , { {12, "a"}, 12,             true,     { {12, "a"}, {24, "a"}, {48, "b"}                     } }
-        , { {36, "c"}, 36,             true,     { {36, "c"}, {48, "b"}                                } }
-        , { {96, "a"}, 96,             true,     { {96, "a"}                                           } }
-        , { {48, "a"}, 24,             true,     { {24, "a"}, {48, "a"}, {48, "b"}                     } }
+        //  key  eviction_floor  inserted  keys remaining afterwards
+          { 24,  24,             false,    { 0, 24, 48     } }
+        , { 36,  std::nullopt,   true,     { 0, 24, 36, 48 } }
+        , { 12,  0,              true,     { 0, 12, 24, 48 } }
+        , { 12,  12,             true,     { 12, 24, 48    } }
+        , { 36,  36,             true,     { 36, 48        } }
+        , { 96,  96,             true,     { 96            } }
+        , { 60,  24,             true,     { 24, 48, 60    } }
     };
 
     for (auto const& c : cases) {
         shared_cache cache;
-        for (key_type const& k : {key_type{0, "a"}, key_type{0, "b"}, key_type{24, "a"}, key_type{48, "b"}})
+        for (key_type k : {0, 24, 48})
             cache.find_or_insert(k, std::nullopt);
 
-        auto const& key = c.key;
-        auto inserted = cache.find_or_insert(key, c.eviction_floor).second;
+        auto inserted = cache.find_or_insert(c.key, c.eviction_floor).second;
         auto remaining = cache.keys();
 
-        const std::string label = "key {" + std::to_string(key.first) + ", " + key.second + "}, eviction_floor = "
+        const std::string label = "key " + std::to_string(c.key) + ", eviction_floor = "
                                 + (c.eviction_floor ? std::to_string(*c.eviction_floor) : "none");
         EXPECT_EQ(inserted, c.inserted) << label;
         EXPECT_EQ(remaining, c.remaining) << label;
@@ -322,12 +311,12 @@ TEST(SharedCacheTest, EvictedKeyIsInsertedAgain)
     // after it is evicted. If one is, it is inserted again, and that
     // lookup elects a new filler
     shared_cache cache;
-    key_type old_key{0, "a"};
-    key_type new_key{24, "a"};
+    key_type old_key = 0;
+    key_type new_key = 24;
 
-    EXPECT_TRUE(cache.find_or_insert(old_key, old_key.first).second);
-    EXPECT_TRUE(cache.find_or_insert(new_key, new_key.first).second);
-    EXPECT_TRUE(cache.find_or_insert(old_key, old_key.first).second);
+    EXPECT_TRUE(cache.find_or_insert(old_key, old_key).second);
+    EXPECT_TRUE(cache.find_or_insert(new_key, new_key).second);
+    EXPECT_TRUE(cache.find_or_insert(old_key, old_key).second);
 }
 
 TEST(SharedCacheTest, EvictedBuffersAreFreedAfterReleasingLock)
@@ -338,8 +327,8 @@ TEST(SharedCacheTest, EvictedBuffersAreFreedAfterReleasingLock)
     // thread take the cache's shared lock, which it can only do once the
     // writer lock is free.
     shared_cache cache;
-    key_type old_key{0, "APCP_surface"};
-    key_type new_key{24, "APCP_surface"};
+    key_type old_key = 0;
+    key_type new_key = 24;
 
     std::thread reader;
     std::atomic<bool> reader_done{false};
@@ -360,7 +349,7 @@ TEST(SharedCacheTest, EvictedBuffersAreFreedAfterReleasingLock)
     // The slot holds the only reference
     cache.find_or_insert(old_key, std::nullopt).first.fill(buffer_type(new std::vector<double>(buffer_size), deleter), true);
 
-    cache.find_or_insert(new_key, new_key.first);
+    cache.find_or_insert(new_key, new_key);
     ASSERT_TRUE(deleted);
     reader.join();
     EXPECT_TRUE(freed_outside_lock);
@@ -378,7 +367,7 @@ TEST(SharedCacheTest, ConcurrentLookupsOfOneKeyElectOneInserter)
 
     run_threads(n_threads, [&](unsigned t) {
         for (int r = 0; r < n_rounds; ++r) {
-            key_type key{r, "APCP_surface"};
+            key_type key = r;
             round_start.arrive_and_wait();
             auto [slot, inserted] = cache.find_or_insert(key, std::nullopt);
             results[r * n_threads + t] = {&slot, inserted};
@@ -413,7 +402,7 @@ TEST(SharedCacheTest, ConcurrentLookupsOfDistinctKeysElectOneInserterEach)
 
         start.arrive_and_wait();
         for (int k : order) {
-            key_type key{k % 4, "var" + std::to_string(k)};
+            key_type key = k;
             auto [slot, inserted] = cache.find_or_insert(key, std::nullopt);
             results[k * n_threads + t] = {&slot, inserted};
         }
@@ -445,13 +434,13 @@ TEST(SharedCacheTest, ElectedInserterPublishesToAllFinders)
     // thread still holds (see DISABLED_EvictionWhileAnotherThreadHoldsSlot).
     constexpr int n_rounds = 100;
     constexpr int page_size = 24;
-    const std::vector<std::string> variables = {"APCP_surface", "T2D_2maboveground", "SPFH_2maboveground"};
+    constexpr int n_vars = 3;
     const unsigned n_threads = test_thread_count();
-    const int n_vars = variables.size();
 
     std::vector<char> ok(n_rounds * n_vars * n_threads, false);
     std::vector<int> n_inserted(n_rounds * n_vars, 0);
-    shared_cache cache;
+    // One cache per variable, as the provider has
+    auto caches = std::make_unique<shared_cache[]>(n_vars);
     std::barrier round_end(n_threads);
 
     run_threads(n_threads, [&](unsigned t) {
@@ -465,9 +454,9 @@ TEST(SharedCacheTest, ElectedInserterPublishesToAllFinders)
             for (int v : order) {
                 const int cell = r * n_vars + v;
                 const double seed = cell * 10.0;
-                key_type key{r * page_size, variables[v]};
+                key_type key = r * page_size;
 
-                auto [slot, inserted] = cache.find_or_insert(key, key.first);
+                auto [slot, inserted] = caches[v].find_or_insert(key, key);
                 buffer_type got;
                 if (inserted) {
                     jitter(rng);
@@ -492,10 +481,8 @@ TEST(SharedCacheTest, ElectedInserterPublishesToAllFinders)
     }
 
     // Each round's inserts evicted every earlier round
-    auto remaining = cache.keys();
-    EXPECT_EQ(remaining.size(), variables.size());
-    for (auto const& key : remaining)
-        EXPECT_EQ(key.first, (n_rounds - 1) * page_size);
+    for (int v = 0; v < n_vars; ++v)
+        EXPECT_EQ(caches[v].keys(), std::set<key_type>{(n_rounds - 1) * page_size}) << "variable " << v;
 }
 
 TEST(SharedCacheTest, ReadsSpanningTwoPagesKeepFirstPageAlive)
@@ -510,7 +497,6 @@ TEST(SharedCacheTest, ReadsSpanningTwoPagesKeepFirstPageAlive)
     // between time steps.
     constexpr int n_rounds = 100;
     constexpr int page_size = 24;
-    const std::string variable = "APCP_surface";
     const unsigned n_threads = test_thread_count();
 
     // Slot contents are keyed by page, so whichever round fills a page,
@@ -524,7 +510,7 @@ TEST(SharedCacheTest, ReadsSpanningTwoPagesKeepFirstPageAlive)
         for (int r = 0; r < n_rounds; ++r) {
             const int floor = r * page_size;
             for (int page = r; page <= r + 1; ++page) {
-                key_type key{page * page_size, variable};
+                key_type key = page * page_size;
                 auto [slot, inserted] = cache.find_or_insert(key, floor);
                 jitter(rng);
 
@@ -547,7 +533,7 @@ TEST(SharedCacheTest, ReadsSpanningTwoPagesKeepFirstPageAlive)
                 EXPECT_TRUE(ok[(r * 2 + i) * n_threads + t]) << "round " << r << ", page " << r + i << ", thread " << t;
 
     // Only the last round's two pages remain
-    EXPECT_EQ(cache.keys(), (std::set<key_type>{{(n_rounds - 1) * page_size, variable}, {n_rounds * page_size, variable}}));
+    EXPECT_EQ(cache.keys(), (std::set<key_type>{(n_rounds - 1) * page_size, n_rounds * page_size}));
 }
 
 // Demonstrates a known hazard rather than a desired property, so it is
@@ -568,8 +554,8 @@ TEST(SharedCacheTest, ReadsSpanningTwoPagesKeepFirstPageAlive)
 TEST(SharedCacheTest, DISABLED_EvictionWhileAnotherThreadHoldsSlot)
 {
     shared_cache cache;
-    key_type old_key{0, "APCP_surface"};
-    key_type new_key{24, "APCP_surface"};
+    key_type old_key = 0;
+    key_type new_key = 24;
     cache.find_or_insert(old_key, std::nullopt).first.fill(make_buffer(0.0), true);
 
     std::atomic<bool> holding{false};
@@ -584,7 +570,7 @@ TEST(SharedCacheTest, DISABLED_EvictionWhileAnotherThreadHoldsSlot)
         } else {
             while (!holding.load(std::memory_order_relaxed))
                 std::this_thread::yield();
-            cache.find_or_insert(new_key, new_key.first);
+            cache.find_or_insert(new_key, new_key);
             evicted.store(true, std::memory_order_relaxed);
         }
     });

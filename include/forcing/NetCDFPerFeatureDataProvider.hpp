@@ -149,8 +149,8 @@ namespace data_access
 
         virtual std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
-        // Key is (c_idx, variable_name)
-        using cache_key_type = std::pair<int, std::string>;
+        // Key is the index of a page's first time step (c_idx)
+        using cache_key_type = int;
         using cache_buffer_type = std::shared_ptr<std::vector<double>>;
 
         // value is a pointer to the
@@ -197,7 +197,7 @@ namespace data_access
             // includes the key being looked up. Eviction is handled
             // here to take advantage of the locking on the internal
             // structure necessary for insertion.
-            std::pair<cache_slot&, bool> find_or_insert(cache_key_type const& key, std::optional<int> eviction_floor);
+            std::pair<cache_slot&, bool> find_or_insert(cache_key_type key, std::optional<int> eviction_floor);
 
             // The keys of all slots currently in the cache
             std::set<cache_key_type> keys() const;

@@ -18,9 +18,10 @@
 //   cache_lookup  Every thread repeatedly finds existing keys in a
 //                 populated shared_cache, measuring the shared-lock hit path.
 //   cache_rounds  Threads advance through time pages in lockstep, as in
-//                 get_value(): per page, each looks up every variable with
-//                 evicting inserts, the elected thread allocates and fills
-//                 a buffer after the simulated latency, and the others get().
+//                 get_value(): per page, each looks up every variable, each
+//                 in its own shared_cache as in the provider, with evicting
+//                 inserts; the elected thread allocates and fills a buffer
+//                 after the simulated latency, and the others get().
 //
 // The cpu/wall column is the threads' total CPU time over wall time in
 // the timed region; with threads waiting on a fill, it shows how many
@@ -71,18 +72,6 @@ inline void do_not_optimize(T const& value)
     static void const* volatile sink;
     sink = &value;
 #endif
-}
-
-// Forcing variable names, as found in ngen's NetCDF forcing files
-const std::vector<std::string> forcing_variables = {
-    "APCP_surface", "DLWRF_surface", "DSWRF_surface", "PRES_surface",
-    "SPFH_2maboveground", "TMP_2maboveground", "UGRD_10maboveground", "VGRD_10maboveground",
-};
-
-std::string variable_name(unsigned v)
-{
-    auto const& base = forcing_variables[v % forcing_variables.size()];
-    return v < forcing_variables.size() ? base : base + "_" + std::to_string(v);
 }
 
 // Time steps per cache page, matching cache_slice_t_size
@@ -237,7 +226,7 @@ rep_result bench_cache_lookup(options const& o, unsigned n_threads, unsigned)
     shared_cache cache;
     std::vector<key_type> keys;
     for (unsigned k = 0; k < o.keys; ++k) {
-        keys.emplace_back(int(k / forcing_variables.size()) * page_size, variable_name(k % forcing_variables.size()));
+        keys.push_back(int(k) * page_size);
         cache.find_or_insert(keys.back(), std::nullopt).first.fill(make_buffer(1), true);
     }
 
@@ -263,11 +252,7 @@ rep_result bench_cache_lookup(options const& o, unsigned n_threads, unsigned)
 
 rep_result bench_cache_rounds(options const& o, unsigned n_threads, unsigned latency_us)
 {
-    std::vector<std::string> variables;
-    for (unsigned v = 0; v < o.vars; ++v)
-        variables.push_back(variable_name(v));
-
-    shared_cache cache;
+    auto caches = std::make_unique<shared_cache[]>(o.vars);
     std::vector<std::vector<double>> wait_ns(n_threads);
     std::vector<double> fill_ns_total(n_threads, 0.0);
     std::vector<unsigned> n_fills(n_threads, 0);
@@ -280,9 +265,9 @@ rep_result bench_cache_rounds(options const& o, unsigned n_threads, unsigned lat
         for (unsigned r = 0; r < o.rounds; ++r) {
             for (unsigned j = 0; j < o.vars; ++j) {
                 unsigned v = o.same_var_order ? j : (j + t) % o.vars;
-                key_type key{int(r) * page_size, variables[v]};
+                key_type key = int(r) * page_size;
 
-                auto [slot, inserted] = cache.find_or_insert(key, key.first);
+                auto [slot, inserted] = caches[v].find_or_insert(key, key);
                 if (inserted) {
                     fill_ns_total[t] += simulate_fill_latency(latency_us, o.mode);
                     slot.fill(make_buffer(o.buffer_doubles), true);
