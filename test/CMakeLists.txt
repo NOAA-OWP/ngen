@@ -225,6 +225,7 @@ ngen_add_test(
     test_bmi_protocols
     OBJECTS
         utils/bmi/mass_balance_Test.cpp
+        utils/bmi/bmi_utilities_Test.cpp
     LIBRARIES
         NGen::bmi_protocols
         NGen::ngen_bmi
