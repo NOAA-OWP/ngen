@@ -24,6 +24,12 @@ target_sources(forcing PRIVATE "${CMAKE_CURRENT_LIST_DIR}/NullForcingProvider.cp
 if(NGEN_WITH_NETCDF)
     target_sources(forcing PRIVATE "${CMAKE_CURRENT_LIST_DIR}/NetCDFPerFeatureDataProvider.cpp")
     target_link_libraries(forcing PUBLIC NetCDF)
+
+    if(NGEN_WITH_OPENMP)
+      target_link_libraries(forcing PUBLIC OpenMP::OpenMP_CXX)
+      # Workaround for CMake bug #21818 that it will not automatically add the linking flags
+      target_link_options(forcing PUBLIC "-fopenmp")
+    endif()
 endif()
 
 if(NGEN_WITH_PYTHON)

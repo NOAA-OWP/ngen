@@ -578,7 +578,6 @@ auto NetCDFPerFeatureDataProvider::cache_slot::get() -> cache_buffer_type
   while ((state = state_.load(std::memory_order_acquire)) == STATE::EMPTY) {
     // Just spin on whatever thread is doing the filling
     #pragma omp taskyield
-    0; // no-op statement for the pragma above
   }
 
   // Release, so that readers who see HOT from this store rather
