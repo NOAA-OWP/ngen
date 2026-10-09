@@ -550,22 +550,16 @@ namespace cache {
     }
 }
 
-// Unlike shared_cache, which is per variable, each thread's cache holds
-// pages of every variable, so its key is (page key, variable name)
-using thread_cache_key_type = std::pair<NetCDFPerFeatureDataProvider::cache_key_type, std::string>;
-
+// Each thread's pages, by provider, then variable name, then page key
 thread_local std::map<NetCDFPerFeatureDataProvider*,
-                      std::map<thread_cache_key_type,
-                               NetCDFPerFeatureDataProvider::cache_buffer_type>
+                      std::map<std::string,
+                               std::map<NetCDFPerFeatureDataProvider::cache_key_type,
+                                        NetCDFPerFeatureDataProvider::cache_buffer_type>>
                       > thread_cache;
 
 namespace {
-// The time step index a key in either kind of cache refers to
-int page_index(NetCDFPerFeatureDataProvider::cache_key_type key) { return key; }
-int page_index(thread_cache_key_type const& key) { return key.first; }
-
-// Remove entries in the passed cache with keys whose page index
-// is less than floor_index, and return them, so the caller
+// Remove entries in the passed cache with keys less than
+// floor_index, and return them, so the caller
 // controls when they are destroyed. Nodes are spliced, so this
 // allocates and frees nothing. Returning the named local relies on
 // NRVO copy elision; where that isn't applied, the map is moved,
@@ -576,7 +570,7 @@ MapType evict_stale_values(MapType& cache, int floor_index)
   MapType evicted;
   auto eviction_iterator = cache.begin();
   auto end = cache.end();
-  while (eviction_iterator != end && page_index(eviction_iterator->first) < floor_index) {
+  while (eviction_iterator != end && eviction_iterator->first < floor_index) {
     evicted.insert(evicted.end(), cache.extract(eviction_iterator++));
   }
   return evicted;
@@ -775,7 +769,8 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     // Drop references to arrays of stale forcings values here,
     // before reading or waiting on reads, to avoid or limit
     // spikes in memory footprint as new forcings get read in
-    evict_stale_values(thread_cache[this], eviction_floor);
+    auto& variable_thread_cache = thread_cache[this][variable_name];
+    evict_stale_values(variable_thread_cache, eviction_floor);
 
     for( size_t i = 0; i < n_page_accesses; i++ ) {
         // rows: catchments; columns: time;
@@ -784,9 +779,8 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
 
         const cache_key_type page_key = page_c_idx;
-        const thread_cache_key_type thread_key{page_key, variable_name};
 
-        if (thread_cache[this].contains(thread_key))
+        if (variable_thread_cache.contains(page_key))
             continue;
 
         auto [cache_slot, just_inserted] = variable_cache.find_or_insert(page_key, eviction_floor);
@@ -797,7 +791,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         } else {
             cached = cache_slot.get();
         }
-        thread_cache[this].emplace(thread_key, cached);
+        variable_thread_cache.emplace(page_key, cached);
     }
 
     std::size_t c_idx = c_idx1;
@@ -811,9 +805,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         const std::size_t ith_p_idx = p_idx + i;
         const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
         const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
-        const thread_cache_key_type thread_key{page_c_idx, variable_name};
-
-        auto locally_cached = thread_cache[this].at(thread_key).get();
+        auto locally_cached = variable_thread_cache.at(page_c_idx).get();
         // Find all values in the current cache slice and push them onto raw_values
         while(c_idx >= page_c_idx &&
               c_idx < page_c_idx + page_cache_line_size &&
