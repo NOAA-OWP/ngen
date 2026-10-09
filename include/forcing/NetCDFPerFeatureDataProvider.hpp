@@ -158,7 +158,6 @@ namespace data_access
         // started filling it in, but is not done yet
         struct cache_slot {
             cache_slot() = default;
-            cache_slot(std::piecewise_construct_t) {}
 
             cache_slot(cache_slot const&) = delete;
             cache_slot(cache_slot &&) = delete;

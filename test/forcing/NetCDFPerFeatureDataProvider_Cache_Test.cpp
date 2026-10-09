@@ -16,6 +16,7 @@
 #include <set>
 #include <string>
 #include <thread>
+#include <type_traits>
 #include <vector>
 
 // Concurrency tests for NetCDFPerFeatureDataProvider::cache_slot and
@@ -85,6 +86,11 @@ void jitter(std::minstd_rand& rng)
 } // namespace
 
 // ---------------------------------------------------------------- cache_slot
+
+// Threads hold references to slots, so a slot must never be copied or
+// moved, and shared_cache has to construct each one in place
+static_assert(!std::is_copy_constructible_v<cache_slot>);
+static_assert(!std::is_move_constructible_v<cache_slot>);
 
 TEST(CacheSlotTest, GetAfterFillReturnsFilledBuffer)
 {

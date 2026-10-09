@@ -620,7 +620,7 @@ auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type c
     }
 
     // This thread really is reponsible for creating it
-    return {cache.emplace(key, std::piecewise_construct).first->second, true};
+    return {cache.try_emplace(key).first->second, true};
 }
 
 auto NetCDFPerFeatureDataProvider::shared_cache::keys() const -> std::set<cache_key_type>
