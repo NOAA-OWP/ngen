@@ -555,6 +555,7 @@ thread_local std::map<NetCDFPerFeatureDataProvider*,
                                NetCDFPerFeatureDataProvider::cache_buffer_type>
                       > thread_cache;
 
+namespace {
 // Remove entries in the passed cache with keys whose first
 // element is less than floor_index, and return them, so the caller
 // controls when they are destroyed. Nodes are spliced, so this
@@ -571,6 +572,7 @@ MapType evict_stale_values(MapType& cache, int floor_index)
     evicted.insert(evicted.end(), cache.extract(eviction_iterator++));
   }
   return evicted;
+}
 }
 
 void NetCDFPerFeatureDataProvider::cache_slot::fill(NetCDFPerFeatureDataProvider::cache_buffer_type buffer_ptr, bool immediate_use)
