@@ -32,15 +32,18 @@ target_sources(ngen_parallel
     "${CMAKE_CURRENT_LIST_DIR}/parallel_utils.cpp"
 )
 
-add_library(ngen_memfd_file_buffer)
-add_library(NGen::memfd_file_buffer ALIAS ngen_memfd_file_buffer)
+# memfd_create() is Linux-specific
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  add_library(ngen_memfd_file_buffer)
+  add_library(NGen::memfd_file_buffer ALIAS ngen_memfd_file_buffer)
 
-target_include_directories(ngen_memfd_file_buffer
-  PUBLIC
-    ${NGEN_INC_DIR}
-)
+  target_include_directories(ngen_memfd_file_buffer
+    PUBLIC
+      ${NGEN_INC_DIR}
+  )
 
-target_sources(ngen_memfd_file_buffer
-  PRIVATE
-    "${CMAKE_CURRENT_LIST_DIR}/MemfdFileBuffer.cpp"
-)
+  target_sources(ngen_memfd_file_buffer
+    PRIVATE
+      "${CMAKE_CURRENT_LIST_DIR}/MemfdFileBuffer.cpp"
+  )
+endif()

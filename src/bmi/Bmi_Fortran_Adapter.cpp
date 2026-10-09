@@ -2,7 +2,9 @@
 
 #if NGEN_WITH_BMI_FORTRAN
 #include "bmi/Bmi_Fortran_Adapter.hpp"
+#if defined(__linux__)
 #include "utilities/MemfdFileBuffer.hpp"
+#endif
 
 using namespace models::bmi;
 
@@ -26,12 +28,16 @@ void Bmi_Fortran_Adapter::construct_and_init_backing_model_for_fortran() {
     dynamic_library_load();
     execModuleRegistration();
 
+#if defined(__linux__)
     // Fortran does not allow one file to be connected to more than one unit at a time, as
     // identified by its inode. Handing the model a private memfd copy of the config lets
     // multiple model instances read the same config file concurrently.
     utils::MemfdFileBuffer const config(bmi_init_config);
     utils::MemfdHandle const config_fd = config.make_fd();
     int init_result = initialize(&bmi_model->handle, config_fd.path().c_str());
+#else
+    int init_result = initialize(&bmi_model->handle, bmi_init_config.c_str());
+#endif
     if (init_result != BMI_SUCCESS) {
         init_exception_msg = "Failure when attempting to initialize " + model_name;
         throw models::external::State_Exception(init_exception_msg);
