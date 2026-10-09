@@ -42,6 +42,7 @@
 #include <functional>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <random>
 #include <sstream>
 #include <string>
@@ -237,7 +238,7 @@ rep_result bench_cache_lookup(options const& o, unsigned n_threads, unsigned)
     std::vector<key_type> keys;
     for (unsigned k = 0; k < o.keys; ++k) {
         keys.emplace_back(int(k / forcing_variables.size()) * page_size, variable_name(k % forcing_variables.size()));
-        cache.find_or_insert(keys.back(), false).first.fill(make_buffer(1), true);
+        cache.find_or_insert(keys.back(), std::nullopt).first.fill(make_buffer(1), true);
     }
 
     // Precomputed per-thread key sequences keep the RNG out of the timed loop
@@ -253,7 +254,7 @@ rep_result bench_cache_lookup(options const& o, unsigned n_threads, unsigned)
     auto times = run_threads(n_threads, [&](unsigned t) {
         auto const& sequence = sequences[t];
         for (std::size_t i = 0; i < o.ops; ++i) {
-            auto found = cache.find_or_insert(keys[sequence[i % sequence_length]], false);
+            auto found = cache.find_or_insert(keys[sequence[i % sequence_length]], std::nullopt);
             do_not_optimize(found.first);
         }
     });
@@ -281,7 +282,7 @@ rep_result bench_cache_rounds(options const& o, unsigned n_threads, unsigned lat
                 unsigned v = o.same_var_order ? j : (j + t) % o.vars;
                 key_type key{int(r) * page_size, variables[v]};
 
-                auto [slot, inserted] = cache.find_or_insert(key, true);
+                auto [slot, inserted] = cache.find_or_insert(key, key.first);
                 if (inserted) {
                     fill_ns_total[t] += simulate_fill_latency(latency_us, o.mode);
                     slot.fill(make_buffer(o.buffer_doubles), true);

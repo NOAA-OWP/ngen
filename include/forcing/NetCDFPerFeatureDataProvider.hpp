@@ -184,7 +184,20 @@ namespace data_access
             // Get back a cache slot matching the @arg key. Exactly
             // one thread will return 'true' the first time `key` is
             // passed
-            std::pair<cache_slot&, bool> find_or_insert(cache_key_type &key, bool evict_older);
+            //
+            // Keys are expected to increase monotonically as the
+            // simulation advances, so a key is not looked up again
+            // after it is evicted. If it is, it is inserted again,
+            // and this returns 'true' again
+            //
+            // If this call inserts a slot and @arg eviction_floor is
+            // set, first evict all slots whose time index is below
+            // it. Callers must not pass a floor above the time index
+            // of any slot another thread may still be using, which
+            // includes the key being looked up. Eviction is handled
+            // here to take advantage of the locking on the internal
+            // structure necessary for insertion.
+            std::pair<cache_slot&, bool> find_or_insert(cache_key_type &key, std::optional<int> eviction_floor);
         };
 
         private:

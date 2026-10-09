@@ -590,7 +590,7 @@ auto NetCDFPerFeatureDataProvider::cache_slot::get() -> cache_buffer_type
   return ptr_;
 }
 
-auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type &key, bool evict_older) -> std::pair<NetCDFPerFeatureDataProvider::cache_slot&, bool>
+auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type &key, std::optional<int> eviction_floor) -> std::pair<NetCDFPerFeatureDataProvider::cache_slot&, bool>
 {
     // Look up the cache slot for key - either cache_iter =
     // find() gets an extant slot, or this thread commits to
@@ -611,12 +611,13 @@ auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type &
     if (cache_iter != cache.end())
         return {cache_iter->second, false};
 
-    if (evict_older) {
+    if (eviction_floor) {
+        assert(*eviction_floor <= key.first);
         // Evict while we hold the writer lock, and are
         // responsible for modifying the cache anyway. Do it
         // before fill_slot to drop references to old data
         // before loading new data to limit memory footprint.
-        evict_stale_values(cache, key.first);
+        evict_stale_values(cache, *eviction_floor);
     }
 
     // This thread really is reponsible for creating it
@@ -733,6 +734,17 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     // when the range starts mid-page and crosses a page boundary
     const std::size_t n_page_accesses = cache::page_p_idx(c_idx2, cache_line_size) - p_idx + 1;
 
+    // Only evict pages before the first one this read needs. Every
+    // thread in a time step reads the same pages, so when a read spans
+    // two pages, evicting below the second would drop the first while
+    // this or another thread still needs it
+    const int eviction_floor = cache::page_p_idx_to_c_idx(p_idx, cache_line_size);
+
+    // Drop references to arrays of stale forcings values here,
+    // before reading or waiting on reads, to avoid or limit
+    // spikes in memory footprint as new forcings get read in
+    evict_stale_values(thread_cache[this], eviction_floor);
+
     for( size_t i = 0; i < n_page_accesses; i++ ) {
         // rows: catchments; columns: time;
         // stride between rows is 'cache_line_size'
@@ -741,15 +753,10 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
         cache_key_type key_2{page_c_idx, variable_name};
 
-        // Drop references to arrays of stale forcings values here,
-        // before reading or waiting on reads, to avoid or limit
-        // spikes in memory footprint as new forcings get read in
-        evict_stale_values(thread_cache[this], page_c_idx);
-
         if (thread_cache[this].contains(key_2))
             continue;
 
-        auto [cache_slot, just_inserted] = value_cache.find_or_insert(key_2, /* evict_older = */ true);
+        auto [cache_slot, just_inserted] = value_cache.find_or_insert(key_2, eviction_floor);
 
         cache_buffer_type cached;
         if (just_inserted) {
