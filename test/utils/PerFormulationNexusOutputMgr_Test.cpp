@@ -346,12 +346,13 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_a)
         static_cast<int>(ex_2_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_2_form_0_group_b_nexus_ids.size())
     };
     std::vector<int> local_offsets = {0, nexus_per_rank[0]};
-    utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, ex_2_form_names, output_root, ex_2_num_time_steps, rank, local_offsets[rank], 2, ex_2_form_0_all_nexus_id.size());
+    utils::PerFormulationNexusOutputMgr mgr_impl(*nexus_ids, ex_2_form_names, output_root, ex_2_num_time_steps, rank, local_offsets[rank], 2, ex_2_form_0_all_nexus_id.size());
+    utils::NexusOutputsMgr& mgr = mgr_impl;
 
     // Add to files_to_clean_up, but only for rank 0 to deal with (they should be the same sets of files)
     if (rank == 0) {
         // Make sure we know what files to clean up
-        std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+        std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
         for (const std::string& f : *filenames) {
             files_to_cleanup.push_back(f);
         }
@@ -376,8 +377,8 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_a)
     // Finally, compare data read from both
 
     // Should only be one filename
-    const netCDF::NcFile ncf(mgr.get_filenames()->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+    const netCDF::NcFile ncf(mgr_impl.get_filenames()->at(0), netCDF::NcFile::read);
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_impl));
 
     ASSERT_FALSE(flow.isNull());
     ASSERT_EQ(flow.getDim(0).getSize(), 8);
@@ -790,10 +791,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_c) {
 
     std::string form_name = ex_0_form_names->at(0);
 
-    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::NexusOutputsMgr& mgr = mgr_impl;
 
     // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
@@ -807,7 +809,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_c) {
 
     // Should only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_impl));
 
     ASSERT_FALSE(flow.isNull());
     double values[4][2];
@@ -829,10 +831,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_a) {
 
     std::string form_name = ex_0_form_names->at(0);
 
-    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::NexusOutputsMgr& mgr = mgr_impl;
 
     // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
@@ -847,7 +850,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_a) {
 
     // Should only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_impl));
 
     ASSERT_FALSE(flow.isNull());
     double values[4][2];
@@ -862,10 +865,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_b) {
 
     std::string form_name = ex_0_form_names->at(0);
 
-    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::NexusOutputsMgr& mgr = mgr_impl;
 
     // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
@@ -882,7 +886,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_b) {
 
     // Should only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_impl));
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
@@ -902,10 +906,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, DISABLED_commit_writes_0_c) {
 
     std::string form_name = ex_0_form_names->at(0);
 
-    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::NexusOutputsMgr& mgr = mgr_impl;
 
     // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
@@ -925,10 +930,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_d)
 {
     std::string form_name = ex_0_form_names->at(0);
 
-    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::NexusOutputsMgr& mgr = mgr_impl;
 
     // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
@@ -942,7 +948,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_d)
     mgr.commit_writes();
 
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar nexus_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr));
+    const netCDF::NcVar nexus_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr_impl));
 
     // These should all have size 4 for the current example, equal to the size of ex_0_form_0_nexus_ids
     ASSERT_EQ(nexus_ids.getDim(0).getSize(), 4);
@@ -964,11 +970,13 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_a) {
         static_cast<int>(ex_1_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_1_form_0_group_b_nexus_ids.size())
     };
 
-    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, 0, 2, ex_1_form_0_all_nexus_id.size());
-    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
+    utils::PerFormulationNexusOutputMgr mgr_a_impl(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, 0, 2, ex_1_form_0_all_nexus_id.size());
+    utils::NexusOutputsMgr& mgr_a = mgr_a_impl;
+    utils::PerFormulationNexusOutputMgr mgr_b_impl(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
+    utils::NexusOutputsMgr& mgr_b = mgr_b_impl;
 
     // Make sure we know what files to clean up (and these should be the same for each)
-    std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_a_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
@@ -993,7 +1001,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_a) {
 
     // Should still only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_a));
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_a_impl));
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
@@ -1018,11 +1026,13 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_b) {
         static_cast<int>(ex_1_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_1_form_0_group_b_nexus_ids.size())
     };
 
-    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, 0, 2, ex_1_form_0_all_nexus_id.size());
-    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
+    utils::PerFormulationNexusOutputMgr mgr_a_impl(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, 0, 2, ex_1_form_0_all_nexus_id.size());
+    utils::NexusOutputsMgr& mgr_a = mgr_a_impl;
+    utils::PerFormulationNexusOutputMgr mgr_b_impl(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
+    utils::NexusOutputsMgr& mgr_b = mgr_b_impl;
 
     // Make sure we know what files to clean up (and these should be the same for each)
-    std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_a_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
@@ -1050,7 +1060,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_b) {
 
     // Should still only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_a));
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_a_impl));
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
@@ -1072,11 +1082,13 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_c)
         static_cast<int>(ex_1_form_0_group_a_nexus_ids.size()), static_cast<int>(ex_1_form_0_group_b_nexus_ids.size())
     };
 
-    utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, 0, 2, ex_1_form_0_all_nexus_id.size());
-    utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
+    utils::PerFormulationNexusOutputMgr mgr_a_impl(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, 0, 2, ex_1_form_0_all_nexus_id.size());
+    utils::NexusOutputsMgr& mgr_a = mgr_a_impl;
+    utils::PerFormulationNexusOutputMgr mgr_b_impl(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
+    utils::NexusOutputsMgr& mgr_b = mgr_b_impl;
 
     // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_a_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
@@ -1101,7 +1113,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_c)
 
 
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar nexus_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr_a));
+    const netCDF::NcVar nexus_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr_a_impl));
 
     // These should all have size 8 for the current example, equal to the size of ex_1_form_0_all_nexus_id
     ASSERT_EQ(nexus_ids.getDim(0).getSize(), 8);
@@ -1125,10 +1137,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_5_a)
 {
     std::string form_name = ex_5_form_names->at(0);
 
-    utils::PerFormulationNexusOutputMgr mgr(ex_5_form_0_all_nexus_id, ex_5_form_names, output_root, ex_5_timestamps.size());
+    utils::PerFormulationNexusOutputMgr mgr_impl(ex_5_form_0_all_nexus_id, ex_5_form_names, output_root, ex_5_timestamps.size());
+    utils::NexusOutputsMgr& mgr = mgr_impl;
 
     // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
@@ -1147,7 +1160,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_5_a)
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
 
     // The feature_id char variable must contain every id as a distinct, exact full string (prefix included).
-    const netCDF::NcVar nexus_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr));
+    const netCDF::NcVar nexus_ids = ncf.getVar(friend_get_nc_nex_id_dim_name(&mgr_impl));
     ASSERT_FALSE(nexus_ids.isNull());
     ASSERT_EQ(nexus_ids.getDim(0).getSize(), ex_5_form_0_all_nexus_id.size());
     // feature_id is a 2-D fixed-width char variable: nexus dimension then string-length dimension.
@@ -1165,7 +1178,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_5_a)
 
     // Each row's flow data must match what was sent for that specific id across both time steps, so the
     // distinct ids are not merely labels on swapped/merged data.
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_impl));
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
     double values[4][2];
@@ -1189,10 +1202,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_c) {
         ASSERT_TRUE(std::all_of(ex_2_all_data[t].cbegin(), ex_2_all_data[t].cend(), [](double d) { return d > 0.0;}));
     }
 
-    utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, ex_2_form_names, output_root, 720);
+    utils::PerFormulationNexusOutputMgr mgr_impl(*nexus_ids, ex_2_form_names, output_root, 720);
+    utils::NexusOutputsMgr& mgr = mgr_impl;
 
     // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
@@ -1209,7 +1223,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_c) {
 
     // Should only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_impl));
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
@@ -1229,10 +1243,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_3_b) {
 
     std::string form_name = ex_3_form_names->at(0);
 
-    utils::PerFormulationNexusOutputMgr mgr(ex_3_form_0_all_nexus_id, ex_3_form_names, output_root, 2);
+    utils::PerFormulationNexusOutputMgr mgr_impl(ex_3_form_0_all_nexus_id, ex_3_form_names, output_root, 2);
+    utils::NexusOutputsMgr& mgr = mgr_impl;
 
     // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
@@ -1251,7 +1266,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_3_b) {
 
     // Should only be one filename
     const netCDF::NcFile ncf(filenames->at(0), netCDF::NcFile::read);
-    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr));
+    const netCDF::NcVar flow = ncf.getVar(friend_get_nc_flow_var_name(&mgr_impl));
 
     ASSERT_FALSE(flow.isNull());
     // Note that nexus feature_id dim comes before time dim, so have to order this way
@@ -1270,10 +1285,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, is_closed_0_a) {
 
     std::string form_name = ex_0_form_names->at(0);
 
-    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::NexusOutputsMgr& mgr = mgr_impl;
 
     // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
@@ -1296,10 +1312,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, is_closed_0_b) {
 
     std::string form_name = ex_0_form_names->at(0);
 
-    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::NexusOutputsMgr& mgr = mgr_impl;
 
     // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
@@ -1320,10 +1337,11 @@ TEST_F(PerFormulationNexusOutputMgr_Test, is_closed_0_c) {
 
     std::string form_name = ex_0_form_names->at(0);
 
-    utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
+    utils::NexusOutputsMgr& mgr = mgr_impl;
 
     // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
+    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
     for (const std::string& f : *filenames) {
         files_to_cleanup.push_back(f);
     }
