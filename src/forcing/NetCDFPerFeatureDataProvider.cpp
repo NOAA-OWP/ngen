@@ -210,6 +210,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         auto ncvar = nc_file->getVar(var_name);
         variable_names.push_back(var_name);
         ncvar_cache.emplace(var_name,std::pair{var_name, ncvar});
+        value_caches.try_emplace(var_name);
 
         std::string native_units;
         try
@@ -729,6 +730,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     maybe_update_chunks_with_hints();
 
     auto const& [variable_name, ncvar] = get_ncvar(selector.get_variable_name());
+    auto& variable_cache = value_caches.at(variable_name);
 
     auto const i_idx = id_pos.at(selector.get_id());
 
@@ -776,7 +778,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         if (thread_cache[this].contains(key_2))
             continue;
 
-        auto [cache_slot, just_inserted] = value_cache.find_or_insert(key_2, eviction_floor);
+        auto [cache_slot, just_inserted] = variable_cache.find_or_insert(key_2, eviction_floor);
 
         cache_buffer_type cached;
         if (just_inserted) {

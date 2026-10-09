@@ -239,7 +239,10 @@ namespace data_access
         std::map<std::string, std::pair<std::string, netCDF::NcVar>> ncvar_cache;
         std::map<std::string,std::string> units_cache;
 
-        shared_cache value_cache;
+        // One cache per variable, keyed by the variable's name in the
+        // file. Populated by the constructor and not modified after, so
+        // threads can look up a variable's cache without locking.
+        std::map<std::string, shared_cache> value_caches;
 
         // number of time slices per cache entry
         // this is a tunable parameter; your mileage may vary
