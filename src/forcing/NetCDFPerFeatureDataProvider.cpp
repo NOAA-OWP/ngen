@@ -569,22 +569,23 @@ void evict_stale_values(MapType& cache, int floor_index)
 void NetCDFPerFeatureDataProvider::cache_slot::fill(NetCDFPerFeatureDataProvider::cache_buffer_type buffer_ptr, bool immediate_use)
 {
   ptr_ = std::move(buffer_ptr);
-  std::atomic_thread_fence(std::memory_order_release);
-  state_.store(immediate_use ? STATE::HOT : STATE::FILLED, std::memory_order_relaxed);
+  state_.store(immediate_use ? STATE::HOT : STATE::FILLED, std::memory_order_release);
 }
 
 auto NetCDFPerFeatureDataProvider::cache_slot::get() -> cache_buffer_type
 {
   int state = STATE::EMPTY;
-  while ((state = state_.load(std::memory_order_relaxed)) == STATE::EMPTY) {
+  while ((state = state_.load(std::memory_order_acquire)) == STATE::EMPTY) {
     // Just spin on whatever thread is doing the filling
     #pragma omp taskyield
     0; // no-op statement for the pragma above
   }
-  std::atomic_thread_fence(std::memory_order_acquire);
 
+  // Release, so that readers who see HOT from this store rather
+  // than from fill() synchronize with this thread, and so
+  // transitively happen-after the filling thread's writes
   if (state == STATE::FILLED)
-    state_.store(STATE::HOT, std::memory_order_relaxed);
+    state_.store(STATE::HOT, std::memory_order_release);
 
   return ptr_;
 }
