@@ -330,6 +330,42 @@ TEST(SharedCacheTest, EvictedKeyIsInsertedAgain)
     EXPECT_TRUE(cache.find_or_insert(old_key, old_key.first).second);
 }
 
+TEST(SharedCacheTest, EvictedBuffersAreFreedAfterReleasingLock)
+{
+    // An evicted page's buffer can be large, so dropping the last
+    // reference to it should happen after find_or_insert() releases its
+    // writer lock. The buffer's deleter checks this by having another
+    // thread take the cache's shared lock, which it can only do once the
+    // writer lock is free.
+    shared_cache cache;
+    key_type old_key{0, "APCP_surface"};
+    key_type new_key{24, "APCP_surface"};
+
+    std::thread reader;
+    std::atomic<bool> reader_done{false};
+    bool deleted = false;
+    bool freed_outside_lock = false;
+    auto deleter = [&](std::vector<double>* buffer) {
+        delete buffer;
+        deleted = true;
+        reader = std::thread([&] {
+            cache.keys();
+            reader_done.store(true);
+        });
+        auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(2);
+        while (!reader_done.load() && std::chrono::steady_clock::now() < deadline)
+            std::this_thread::yield();
+        freed_outside_lock = reader_done.load();
+    };
+    // The slot holds the only reference
+    cache.find_or_insert(old_key, std::nullopt).first.fill(buffer_type(new std::vector<double>(buffer_size), deleter), true);
+
+    cache.find_or_insert(new_key, new_key.first);
+    ASSERT_TRUE(deleted);
+    reader.join();
+    EXPECT_TRUE(freed_outside_lock);
+}
+
 TEST(SharedCacheTest, ConcurrentLookupsOfOneKeyElectOneInserter)
 {
     constexpr int n_rounds = 200;

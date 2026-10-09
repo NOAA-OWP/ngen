@@ -554,16 +554,22 @@ thread_local std::map<NetCDFPerFeatureDataProvider*,
                                NetCDFPerFeatureDataProvider::cache_buffer_type>
                       > thread_cache;
 
-// Erase entries in the passed cache with keys whose first
-// element is less than floor_index
+// Remove entries in the passed cache with keys whose first
+// element is less than floor_index, and return them, so the caller
+// controls when they are destroyed. Nodes are spliced, so this
+// allocates and frees nothing. Returning the named local relies on
+// NRVO copy elision; where that isn't applied, the map is moved,
+// which is also constant time.
 template <typename MapType>
-void evict_stale_values(MapType& cache, int floor_index)
+MapType evict_stale_values(MapType& cache, int floor_index)
 {
+  MapType evicted;
   auto eviction_iterator = cache.begin();
   auto end = cache.end();
   while (eviction_iterator != end && eviction_iterator->first.first < floor_index) {
-    eviction_iterator = cache.erase(eviction_iterator);
+    evicted.insert(evicted.end(), cache.extract(eviction_iterator++));
   }
+  return evicted;
 }
 
 void NetCDFPerFeatureDataProvider::cache_slot::fill(NetCDFPerFeatureDataProvider::cache_buffer_type buffer_ptr, bool immediate_use)
@@ -605,6 +611,9 @@ auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type c
 
     // Upgrade the lock and try to take responsibility for filling this entry in
     l.unlock();
+    // Declared before the lock, so that evicted entries are destroyed
+    // after it is released, keeping frees of their buffers outside it
+    decltype(cache) evicted;
     std::unique_lock ul(mutex);
 
     // Re-check that some other thread didn't get here first
@@ -619,7 +628,7 @@ auto NetCDFPerFeatureDataProvider::shared_cache::find_or_insert(cache_key_type c
         // responsible for modifying the cache anyway. Do it
         // before fill_slot to drop references to old data
         // before loading new data to limit memory footprint.
-        evict_stale_values(cache, *eviction_floor);
+        evicted = evict_stale_values(cache, *eviction_floor);
     }
 
     // This thread really is reponsible for creating it
