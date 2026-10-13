@@ -377,173 +377,162 @@ $(function(){initNavTree('_bmi___fortran___adapter_8hpp_source.html',''); initRe
 <div class="line"><a id="l00486" name="l00486"></a><span class="lineno">  486</span> </div>
 <div class="line"><a id="l00487" name="l00487"></a><span class="lineno">  487</span>        <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00488" name="l00488"></a><span class="lineno">  488</span> </div>
-<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> construct_and_init_backing_model_for_fortran() {</div>
-<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>                <span class="keywordflow">if</span> (model_initialized)</div>
-<div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>                    <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>                bmi_model = std::make_unique&lt;Bmi_Fortran_Handle_Wrapper&gt;(Bmi_Fortran_Handle_Wrapper());</div>
-<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>                dynamic_library_load();</div>
-<div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span>                execModuleRegistration();</div>
-<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>                <span class="keywordtype">int</span> init_result = initialize(&amp;bmi_model-&gt;handle, bmi_init_config.c_str());</div>
-<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>                <span class="keywordflow">if</span> (init_result != BMI_SUCCESS) {</div>
-<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span>                    init_exception_msg = <span class="stringliteral">&quot;Failure when attempting to initialize &quot;</span> + model_name;</div>
-<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>                    <span class="keywordflow">throw</span> <a class="code hl_class" href="classmodels_1_1external_1_1_state___exception.html">models::external::State_Exception</a>(init_exception_msg);</div>
-<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span>                }</div>
-<div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span>            }</div>
-<div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span> </div>
-<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>            <span class="keyword">inline</span> <span class="keywordtype">int</span> inner_get_input_item_count() {</div>
-<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>                <span class="keywordtype">int</span> item_count;</div>
-<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span>                <span class="keywordflow">if</span> (get_input_item_count(&amp;bmi_model-&gt;handle, &amp;item_count) != BMI_SUCCESS) {</div>
-<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get model input item count.&quot;</span>);</div>
-<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>                }</div>
-<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>                <span class="keywordflow">return</span> item_count;</div>
-<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>            }</div>
-<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span> </div>
-<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>            <span class="keyword">inline</span> <span class="keywordtype">int</span> inner_get_output_item_count() {</div>
-<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>                <span class="keywordtype">int</span> item_count;</div>
-<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>                <span class="keywordflow">if</span> (get_output_item_count(&amp;bmi_model-&gt;handle, &amp;item_count) != BMI_SUCCESS) {</div>
-<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get model output item count.&quot;</span>);</div>
-<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>                }</div>
-<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>                <span class="keywordflow">return</span> item_count;</div>
-<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>            }</div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span> </div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>            <span class="keyword">inline</span> std::string inner_get_var_type(<span class="keyword">const</span> std::string &amp;name) {</div>
-<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>                <span class="keywordtype">char</span> type_c_str[BMI_MAX_TYPE_NAME];</div>
-<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>                <span class="keywordflow">if</span> (get_var_type(&amp;bmi_model-&gt;handle, name.c_str(), type_c_str) != BMI_SUCCESS) {</div>
-<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get variable type for &quot;</span> + name + <span class="stringliteral">&quot;.&quot;</span>);</div>
-<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>                }</div>
-<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>                <span class="keywordflow">return</span> {type_c_str};</div>
-<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>            }</div>
-<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span> </div>
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_get_value(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">void</span> *dest) {</div>
-<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>                std::string varType = inner_get_var_type(name);</div>
-<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>                <span class="comment">//Can use the C type or the fortran type, e.g. int or integer</span></div>
-<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>                <span class="keywordflow">if</span> (varType == <span class="stringliteral">&quot;int&quot;</span> || varType == <span class="stringliteral">&quot;integer&quot;</span>) {</div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>                    inner_get_value_int(name, (<span class="keywordtype">int</span> *)dest);</div>
-<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>                }</div>
-<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (varType == <span class="stringliteral">&quot;float&quot;</span> || varType == <span class="stringliteral">&quot;real&quot;</span>) {</div>
-<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>                    inner_get_value_float(name, (<span class="keywordtype">float</span> *)dest);</div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>                }</div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (varType == <span class="stringliteral">&quot;double&quot;</span> || varType == <span class="stringliteral">&quot;double precision&quot;</span>) {</div>
-<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>                    inner_get_value_double(name, (<span class="keywordtype">double</span> *)dest);</div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>                }</div>
-<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>                <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>                    throw ::external::ExternalIntegrationException(</div>
-<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>                            <span class="stringliteral">&quot;Can&#39;t get model &quot;</span> + model_name + <span class="stringliteral">&quot; variable &quot;</span> + name + <span class="stringliteral">&quot; of type &#39;&quot;</span> + varType + <span class="stringliteral">&quot;.&quot;</span>);</div>
-<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>                }</div>
-<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>            }</div>
-<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span> </div>
-<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_get_value_int(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">int</span> *dest) {</div>
-<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>                <span class="keywordflow">if</span> (get_value_int(&amp;bmi_model-&gt;handle, name.c_str(), dest) != BMI_SUCCESS) {</div>
-<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get values for variable &quot;</span> + name + <span class="stringliteral">&quot;.&quot;</span>);</div>
-<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>                }</div>
-<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>            }</div>
-<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span> </div>
-<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_get_value_float(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">float</span> *dest) {</div>
-<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>                <span class="keywordflow">if</span> (get_value_float(&amp;bmi_model-&gt;handle, name.c_str(), dest) != BMI_SUCCESS) {</div>
-<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get values for variable &quot;</span> + name + <span class="stringliteral">&quot;.&quot;</span>);</div>
-<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>                }</div>
-<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>            }</div>
-<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span> </div>
-<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_get_value_double(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">double</span> *dest) {</div>
-<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>                <span class="keywordflow">if</span> (get_value_double(&amp;bmi_model-&gt;handle, name.c_str(), dest) != BMI_SUCCESS) {</div>
-<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get values for variable &quot;</span> + name + <span class="stringliteral">&quot;.&quot;</span>);</div>
-<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>                }</div>
-<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>            }</div>
-<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span> </div>
-<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>            std::shared_ptr&lt;std::vector&lt;std::string&gt;&gt; inner_get_variable_names(<span class="keywordtype">bool</span> is_input_variables) {</div>
-<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>                <span class="comment">// Writing this def once here at beginning: fewer lines, but this may or may not be used.</span></div>
-<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>                std::string varType = (is_input_variables) ? <span class="stringliteral">&quot;input&quot;</span> : <span class="stringliteral">&quot;output&quot;</span>;</div>
-<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span> </div>
-<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>                <span class="comment">// Obtain this via inner functions, which should use the model directly and not other member functions</span></div>
-<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>                <span class="keywordtype">int</span> variableCount;</div>
-<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>                <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>                    variableCount = (is_input_variables) ? inner_get_input_item_count() : inner_get_output_item_count();</div>
-<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>                }</div>
-<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>                <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception &amp;e) {</div>
-<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to count of &quot;</span> + varType + <span class="stringliteral">&quot; variable names array.&quot;</span>);</div>
-<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>                }</div>
-<div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span> </div>
-<div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span>                <span class="comment">// With variable count now obtained, create the vector</span></div>
-<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>                std::shared_ptr&lt;std::vector&lt;std::string&gt;&gt; var_names = std::make_shared&lt;std::vector&lt;std::string&gt;&gt;(</div>
-<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>                        std::vector&lt;std::string&gt;(variableCount));</div>
-<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span> </div>
-<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>                <span class="comment">// Must get the names from the model as an array of C strings</span></div>
-<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>                <span class="comment">// The array can be on the stack ...</span></div>
-<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>                std::vector&lt;char*&gt; names_array(variableCount);</div>
-<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>                <span class="comment">// ... but allocate the space for the individual C strings (i.e., the char * elements)</span></div>
-<div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span>                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; variableCount; i++) {</div>
-<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>                    names_array[i] = <span class="keyword">static_cast&lt;</span><span class="keywordtype">char</span> *<span class="keyword">&gt;</span>(malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">char</span>) * BMI_MAX_VAR_NAME));</div>
-<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>                }</div>
-<div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span> </div>
-<div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span>                <span class="comment">// With the necessary char** in hand, get the names from the model</span></div>
-<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span>                <span class="keywordtype">int</span> names_result;</div>
-<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>                <span class="keywordflow">if</span> (is_input_variables) {</div>
-<div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span>                    names_result = get_input_var_names(bmi_model.get(), names_array.data());</div>
-<div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span>                }</div>
-<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span>                <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span>                    names_result = get_output_var_names(bmi_model.get(), names_array.data());</div>
-<div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>                }</div>
-<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>                <span class="keywordflow">if</span> (names_result != BMI_SUCCESS) {</div>
-<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get array of &quot;</span> + varType + <span class="stringliteral">&quot; variables names.&quot;</span>);</div>
-<div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span>                }</div>
-<div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span> </div>
-<div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span>                <span class="comment">// Then convert from array of C strings to vector of strings, freeing the allocated space as we go</span></div>
-<div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; variableCount; ++i) {</div>
-<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>                    (*var_names)[i] = std::string(names_array[i]);</div>
-<div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>                    free(names_array[i]);</div>
-<div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span>                }</div>
-<div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span> </div>
-<div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span>                <span class="keywordflow">return</span> var_names;</div>
-<div class="line"><a id="l00708" name="l00708"></a><span class="lineno">  708</span>            }</div>
-<div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span> </div>
-<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_set_value(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">void</span> *src) {</div>
-<div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span>                std::string varType = inner_get_var_type(name);</div>
-<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span>                <span class="comment">//Can use the C type or the fortran type, e.g. int or integer</span></div>
-<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>                <span class="keywordflow">if</span> (varType == <span class="stringliteral">&quot;int&quot;</span> || varType == <span class="stringliteral">&quot;integer&quot;</span>) {</div>
-<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>                    inner_set_value_int(name, (<span class="keywordtype">int</span> *)src);</div>
-<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span>                }</div>
-<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (varType == <span class="stringliteral">&quot;float&quot;</span> || varType == <span class="stringliteral">&quot;real&quot;</span>) {</div>
-<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span>                    inner_set_value_float(name, (<span class="keywordtype">float</span> *)src);</div>
-<div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span>                }</div>
-<div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (varType == <span class="stringliteral">&quot;double&quot;</span> || varType == <span class="stringliteral">&quot;double precision&quot;</span>) {</div>
-<div class="line"><a id="l00735" name="l00735"></a><span class="lineno">  735</span>                    inner_set_value_double(name, (<span class="keywordtype">double</span> *)src);</div>
-<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span>                }</div>
-<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>                <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span>                    throw ::external::ExternalIntegrationException(</div>
-<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span>                            <span class="stringliteral">&quot;Can&#39;t get model &quot;</span> + model_name + <span class="stringliteral">&quot; variable &quot;</span> + name + <span class="stringliteral">&quot; of type &#39;&quot;</span> + varType + <span class="stringliteral">&quot;.&quot;</span>);</div>
-<div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span>                }</div>
-<div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span>            }</div>
-<div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span> </div>
-<div class="line"><a id="l00758" name="l00758"></a><span class="lineno">  758</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_set_value_int(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">int</span> *src) {</div>
-<div class="line"><a id="l00759" name="l00759"></a><span class="lineno">  759</span>                <span class="keywordflow">if</span> (set_value_int(&amp;bmi_model-&gt;handle, name.c_str(), src) != BMI_SUCCESS) {</div>
-<div class="line"><a id="l00760" name="l00760"></a><span class="lineno">  760</span>                    <span class="keywordflow">throw</span> <a class="code hl_class" href="classmodels_1_1external_1_1_state___exception.html">models::external::State_Exception</a>(<span class="stringliteral">&quot;Failed to set values of &quot;</span> + name + <span class="stringliteral">&quot; int variable for &quot;</span> + model_name);</div>
-<div class="line"><a id="l00761" name="l00761"></a><span class="lineno">  761</span>                }</div>
-<div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span>            }</div>
-<div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span> </div>
-<div class="line"><a id="l00779" name="l00779"></a><span class="lineno">  779</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_set_value_float(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">float</span> *src) {</div>
-<div class="line"><a id="l00780" name="l00780"></a><span class="lineno">  780</span>                <span class="keywordflow">if</span> (set_value_float(&amp;bmi_model-&gt;handle, name.c_str(), src) != BMI_SUCCESS) {</div>
-<div class="line"><a id="l00781" name="l00781"></a><span class="lineno">  781</span>                    <span class="keywordflow">throw</span> <a class="code hl_class" href="classmodels_1_1external_1_1_state___exception.html">models::external::State_Exception</a>(<span class="stringliteral">&quot;Failed to set values of &quot;</span> + name + <span class="stringliteral">&quot; float variable for &quot;</span> + model_name);</div>
-<div class="line"><a id="l00782" name="l00782"></a><span class="lineno">  782</span>                }</div>
-<div class="line"><a id="l00783" name="l00783"></a><span class="lineno">  783</span>            }</div>
-<div class="line"><a id="l00784" name="l00784"></a><span class="lineno">  784</span> </div>
-<div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_set_value_double(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">double</span> *src) {</div>
-<div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span>                <span class="keywordflow">if</span> (set_value_double(&amp;bmi_model-&gt;handle, name.c_str(), src) != BMI_SUCCESS) {</div>
-<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>                    <span class="keywordflow">throw</span> <a class="code hl_class" href="classmodels_1_1external_1_1_state___exception.html">models::external::State_Exception</a>(<span class="stringliteral">&quot;Failed to set values of &quot;</span> + name + <span class="stringliteral">&quot; double variable for &quot;</span> + model_name);</div>
-<div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span>                }</div>
-<div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span>            }</div>
-<div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span> </div>
-<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span>            <span class="keyword">friend</span> class ::Bmi_Fortran_Adapter_Test;</div>
-<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span> </div>
-<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span>        <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span>            std::unique_ptr&lt;Bmi_Fortran_Handle_Wrapper&gt; bmi_model = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span> </div>
-<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span>        };</div>
-<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span>    }</div>
-<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span>}</div>
-<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span> </div>
-<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_WITH_BMI_FORTRAN</span></div>
-<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span> </div>
-<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span><span class="preprocessor">#endif </span><span class="comment">//NGEN_BMI_FORTRAN_ADAPTER_HPP</span></div>
+<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>            <span class="keywordtype">void</span> construct_and_init_backing_model_for_fortran();</div>
+<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span> </div>
+<div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span>            <span class="keyword">inline</span> <span class="keywordtype">int</span> inner_get_input_item_count() {</div>
+<div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span>                <span class="keywordtype">int</span> item_count;</div>
+<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>                <span class="keywordflow">if</span> (get_input_item_count(&amp;bmi_model-&gt;handle, &amp;item_count) != BMI_SUCCESS) {</div>
+<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get model input item count.&quot;</span>);</div>
+<div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span>                }</div>
+<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>                <span class="keywordflow">return</span> item_count;</div>
+<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>            }</div>
+<div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span> </div>
+<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>            <span class="keyword">inline</span> <span class="keywordtype">int</span> inner_get_output_item_count() {</div>
+<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>                <span class="keywordtype">int</span> item_count;</div>
+<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>                <span class="keywordflow">if</span> (get_output_item_count(&amp;bmi_model-&gt;handle, &amp;item_count) != BMI_SUCCESS) {</div>
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get model output item count.&quot;</span>);</div>
+<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>                }</div>
+<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>                <span class="keywordflow">return</span> item_count;</div>
+<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>            }</div>
+<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span> </div>
+<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>            <span class="keyword">inline</span> std::string inner_get_var_type(<span class="keyword">const</span> std::string &amp;name) {</div>
+<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>                <span class="keywordtype">char</span> type_c_str[BMI_MAX_TYPE_NAME];</div>
+<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>                <span class="keywordflow">if</span> (get_var_type(&amp;bmi_model-&gt;handle, name.c_str(), type_c_str) != BMI_SUCCESS) {</div>
+<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get variable type for &quot;</span> + name + <span class="stringliteral">&quot;.&quot;</span>);</div>
+<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>                }</div>
+<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>                <span class="keywordflow">return</span> {type_c_str};</div>
+<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>            }</div>
+<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span> </div>
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_get_value(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">void</span> *dest) {</div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>                std::string varType = inner_get_var_type(name);</div>
+<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>                <span class="comment">//Can use the C type or the fortran type, e.g. int or integer</span></div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>                <span class="keywordflow">if</span> (varType == <span class="stringliteral">&quot;int&quot;</span> || varType == <span class="stringliteral">&quot;integer&quot;</span>) {</div>
+<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>                    inner_get_value_int(name, (<span class="keywordtype">int</span> *)dest);</div>
+<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>                }</div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (varType == <span class="stringliteral">&quot;float&quot;</span> || varType == <span class="stringliteral">&quot;real&quot;</span>) {</div>
+<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>                    inner_get_value_float(name, (<span class="keywordtype">float</span> *)dest);</div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>                }</div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (varType == <span class="stringliteral">&quot;double&quot;</span> || varType == <span class="stringliteral">&quot;double precision&quot;</span>) {</div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>                    inner_get_value_double(name, (<span class="keywordtype">double</span> *)dest);</div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>                }</div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>                <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>                    throw ::external::ExternalIntegrationException(</div>
+<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>                            <span class="stringliteral">&quot;Can&#39;t get model &quot;</span> + model_name + <span class="stringliteral">&quot; variable &quot;</span> + name + <span class="stringliteral">&quot; of type &#39;&quot;</span> + varType + <span class="stringliteral">&quot;.&quot;</span>);</div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>                }</div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>            }</div>
+<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span> </div>
+<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_get_value_int(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">int</span> *dest) {</div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>                <span class="keywordflow">if</span> (get_value_int(&amp;bmi_model-&gt;handle, name.c_str(), dest) != BMI_SUCCESS) {</div>
+<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get values for variable &quot;</span> + name + <span class="stringliteral">&quot;.&quot;</span>);</div>
+<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>                }</div>
+<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>            }</div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span> </div>
+<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_get_value_float(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">float</span> *dest) {</div>
+<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>                <span class="keywordflow">if</span> (get_value_float(&amp;bmi_model-&gt;handle, name.c_str(), dest) != BMI_SUCCESS) {</div>
+<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get values for variable &quot;</span> + name + <span class="stringliteral">&quot;.&quot;</span>);</div>
+<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>                }</div>
+<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>            }</div>
+<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span> </div>
+<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_get_value_double(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">double</span> *dest) {</div>
+<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>                <span class="keywordflow">if</span> (get_value_double(&amp;bmi_model-&gt;handle, name.c_str(), dest) != BMI_SUCCESS) {</div>
+<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get values for variable &quot;</span> + name + <span class="stringliteral">&quot;.&quot;</span>);</div>
+<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>                }</div>
+<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span>            }</div>
+<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span> </div>
+<div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>            std::shared_ptr&lt;std::vector&lt;std::string&gt;&gt; inner_get_variable_names(<span class="keywordtype">bool</span> is_input_variables) {</div>
+<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>                <span class="comment">// Writing this def once here at beginning: fewer lines, but this may or may not be used.</span></div>
+<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>                std::string varType = (is_input_variables) ? <span class="stringliteral">&quot;input&quot;</span> : <span class="stringliteral">&quot;output&quot;</span>;</div>
+<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span> </div>
+<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>                <span class="comment">// Obtain this via inner functions, which should use the model directly and not other member functions</span></div>
+<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>                <span class="keywordtype">int</span> variableCount;</div>
+<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>                <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>                    variableCount = (is_input_variables) ? inner_get_input_item_count() : inner_get_output_item_count();</div>
+<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>                }</div>
+<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>                <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception &amp;e) {</div>
+<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to count of &quot;</span> + varType + <span class="stringliteral">&quot; variable names array.&quot;</span>);</div>
+<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>                }</div>
+<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span> </div>
+<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>                <span class="comment">// With variable count now obtained, create the vector</span></div>
+<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>                std::shared_ptr&lt;std::vector&lt;std::string&gt;&gt; var_names = std::make_shared&lt;std::vector&lt;std::string&gt;&gt;(</div>
+<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>                        std::vector&lt;std::string&gt;(variableCount));</div>
+<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span> </div>
+<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>                <span class="comment">// Must get the names from the model as an array of C strings</span></div>
+<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>                <span class="comment">// The array can be on the stack ...</span></div>
+<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>                std::vector&lt;char*&gt; names_array(variableCount);</div>
+<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>                <span class="comment">// ... but allocate the space for the individual C strings (i.e., the char * elements)</span></div>
+<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; variableCount; i++) {</div>
+<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>                    names_array[i] = <span class="keyword">static_cast&lt;</span><span class="keywordtype">char</span> *<span class="keyword">&gt;</span>(malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">char</span>) * BMI_MAX_VAR_NAME));</div>
+<div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>                }</div>
+<div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span> </div>
+<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>                <span class="comment">// With the necessary char** in hand, get the names from the model</span></div>
+<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>                <span class="keywordtype">int</span> names_result;</div>
+<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>                <span class="keywordflow">if</span> (is_input_variables) {</div>
+<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>                    names_result = get_input_var_names(bmi_model.get(), names_array.data());</div>
+<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>                }</div>
+<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>                <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>                    names_result = get_output_var_names(bmi_model.get(), names_array.data());</div>
+<div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span>                }</div>
+<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>                <span class="keywordflow">if</span> (names_result != BMI_SUCCESS) {</div>
+<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get array of &quot;</span> + varType + <span class="stringliteral">&quot; variables names.&quot;</span>);</div>
+<div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span>                }</div>
+<div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span> </div>
+<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span>                <span class="comment">// Then convert from array of C strings to vector of strings, freeing the allocated space as we go</span></div>
+<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; variableCount; ++i) {</div>
+<div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span>                    (*var_names)[i] = std::string(names_array[i]);</div>
+<div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span>                    free(names_array[i]);</div>
+<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span>                }</div>
+<div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span> </div>
+<div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>                <span class="keywordflow">return</span> var_names;</div>
+<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>            }</div>
+<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span> </div>
+<div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_set_value(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">void</span> *src) {</div>
+<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>                std::string varType = inner_get_var_type(name);</div>
+<div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span>                <span class="comment">//Can use the C type or the fortran type, e.g. int or integer</span></div>
+<div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span>                <span class="keywordflow">if</span> (varType == <span class="stringliteral">&quot;int&quot;</span> || varType == <span class="stringliteral">&quot;integer&quot;</span>) {</div>
+<div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span>                    inner_set_value_int(name, (<span class="keywordtype">int</span> *)src);</div>
+<div class="line"><a id="l00719" name="l00719"></a><span class="lineno">  719</span>                }</div>
+<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (varType == <span class="stringliteral">&quot;float&quot;</span> || varType == <span class="stringliteral">&quot;real&quot;</span>) {</div>
+<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>                    inner_set_value_float(name, (<span class="keywordtype">float</span> *)src);</div>
+<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>                }</div>
+<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (varType == <span class="stringliteral">&quot;double&quot;</span> || varType == <span class="stringliteral">&quot;double precision&quot;</span>) {</div>
+<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span>                    inner_set_value_double(name, (<span class="keywordtype">double</span> *)src);</div>
+<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span>                }</div>
+<div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span>                <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span>                    throw ::external::ExternalIntegrationException(</div>
+<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>                            <span class="stringliteral">&quot;Can&#39;t get model &quot;</span> + model_name + <span class="stringliteral">&quot; variable &quot;</span> + name + <span class="stringliteral">&quot; of type &#39;&quot;</span> + varType + <span class="stringliteral">&quot;.&quot;</span>);</div>
+<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>                }</div>
+<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span>            }</div>
+<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span> </div>
+<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_set_value_int(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">int</span> *src) {</div>
+<div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span>                <span class="keywordflow">if</span> (set_value_int(&amp;bmi_model-&gt;handle, name.c_str(), src) != BMI_SUCCESS) {</div>
+<div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span>                    <span class="keywordflow">throw</span> <a class="code hl_class" href="classmodels_1_1external_1_1_state___exception.html">models::external::State_Exception</a>(<span class="stringliteral">&quot;Failed to set values of &quot;</span> + name + <span class="stringliteral">&quot; int variable for &quot;</span> + model_name);</div>
+<div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>                }</div>
+<div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span>            }</div>
+<div class="line"><a id="l00752" name="l00752"></a><span class="lineno">  752</span> </div>
+<div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_set_value_float(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">float</span> *src) {</div>
+<div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span>                <span class="keywordflow">if</span> (set_value_float(&amp;bmi_model-&gt;handle, name.c_str(), src) != BMI_SUCCESS) {</div>
+<div class="line"><a id="l00770" name="l00770"></a><span class="lineno">  770</span>                    <span class="keywordflow">throw</span> <a class="code hl_class" href="classmodels_1_1external_1_1_state___exception.html">models::external::State_Exception</a>(<span class="stringliteral">&quot;Failed to set values of &quot;</span> + name + <span class="stringliteral">&quot; float variable for &quot;</span> + model_name);</div>
+<div class="line"><a id="l00771" name="l00771"></a><span class="lineno">  771</span>                }</div>
+<div class="line"><a id="l00772" name="l00772"></a><span class="lineno">  772</span>            }</div>
+<div class="line"><a id="l00773" name="l00773"></a><span class="lineno">  773</span> </div>
+<div class="line"><a id="l00789" name="l00789"></a><span class="lineno">  789</span>            <span class="keyword">inline</span> <span class="keywordtype">void</span> inner_set_value_double(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">double</span> *src) {</div>
+<div class="line"><a id="l00790" name="l00790"></a><span class="lineno">  790</span>                <span class="keywordflow">if</span> (set_value_double(&amp;bmi_model-&gt;handle, name.c_str(), src) != BMI_SUCCESS) {</div>
+<div class="line"><a id="l00791" name="l00791"></a><span class="lineno">  791</span>                    <span class="keywordflow">throw</span> <a class="code hl_class" href="classmodels_1_1external_1_1_state___exception.html">models::external::State_Exception</a>(<span class="stringliteral">&quot;Failed to set values of &quot;</span> + name + <span class="stringliteral">&quot; double variable for &quot;</span> + model_name);</div>
+<div class="line"><a id="l00792" name="l00792"></a><span class="lineno">  792</span>                }</div>
+<div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span>            }</div>
+<div class="line"><a id="l00794" name="l00794"></a><span class="lineno">  794</span> </div>
+<div class="line"><a id="l00795" name="l00795"></a><span class="lineno">  795</span>            <span class="keyword">friend</span> class ::Bmi_Fortran_Adapter_Test;</div>
+<div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span> </div>
+<div class="line"><a id="l00797" name="l00797"></a><span class="lineno">  797</span>        <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span>            std::unique_ptr&lt;Bmi_Fortran_Handle_Wrapper&gt; bmi_model = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span> </div>
+<div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span>        };</div>
+<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>    }</div>
+<div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span>}</div>
+<div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span> </div>
+<div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_WITH_BMI_FORTRAN</span></div>
+<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span> </div>
+<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span><span class="preprocessor">#endif </span><span class="comment">//NGEN_BMI_FORTRAN_ADAPTER_HPP</span></div>
 <div class="ttc" id="aclassexternal_1_1_external_integration_exception_html"><div class="ttname"><a href="classexternal_1_1_external_integration_exception.html">external::ExternalIntegrationException</a></div><div class="ttdoc">Custom exception indicating a problem when integrating with some external component.</div><div class="ttdef"><b>Definition</b> ExternalIntegrationException.hpp:14</div></div>
 <div class="ttc" id="aclassmodels_1_1external_1_1_state___exception_html"><div class="ttname"><a href="classmodels_1_1external_1_1_state___exception.html">models::external::State_Exception</a></div><div class="ttdoc">Custom exception indicating bad external model state.</div><div class="ttdef"><b>Definition</b> State_Exception.hpp:18</div></div>
 <div class="ttc" id="anamespacebmi_html"><div class="ttname"><a href="namespacebmi.html">bmi</a></div><div class="ttdef"><b>Definition</b> bmi.hpp:16</div></div>
@@ -555,7 +544,7 @@ $(function(){initNavTree('_bmi___fortran___adapter_8hpp_source.html',''); initRe
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_7688c87f5c9cad4c135b176d94e89e38.html">bmi</a></li><li class="navelem"><b>Bmi_Fortran_Adapter.hpp</b></li>
-    <li class="footer">Generated on Wed Oct 7 2026 19:49:04 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Tue Oct 13 2026 18:31:35 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
