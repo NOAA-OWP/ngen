@@ -234,6 +234,36 @@ namespace models {
         }
 
         /**
+         * @brief Get a pointer to a model variable's own storage, addressed as @tparam T.
+         *
+         * The sibling of GetValue() for callers that want the model's memory rather than a copy of it.
+         * Bmi_Adapter exposes the pointer untyped, because BMI has no way to describe what is behind it;
+         * every caller therefore has to supply the type, and nothing in BMI obliges that type to be the
+         * width the model allocated. Indexing with the wrong stride walks off the variable, so the item
+         * size is checked here rather than at each call site.
+         *
+         * An adapter whose language cannot hand out pointers says so from GetValuePtr() itself; this
+         * does not need to know which those are.
+         *
+         * @tparam T The type to address the variable's storage as.
+         * @param model The adapter holding the variable.
+         * @param name The name of the variable.
+         * @return A pointer to the model's own storage, which the model continues to own.
+         * @throw std::runtime_error If the model's items are not @tparam T wide, or it cannot give a pointer.
+         */
+        template <typename T>
+        T *GetValuePtr(Bmi_Adapter &model, const std::string &name)
+        {
+            const size_t item_size = static_cast<size_t>(model.GetVarItemsize(name));
+            if (item_size != sizeof(T)) {
+                throw std::runtime_error("Cannot get pointer to variable " + name + " of model " +
+                                         model.get_model_name() + " as a " + std::to_string(sizeof(T)) +
+                                         " byte type; its items are " + std::to_string(item_size) + " bytes.");
+            }
+            return static_cast<T *>(model.GetValuePtr(name));
+        }
+
+        /**
          * @brief Copy values from a BMI model adapter and box them into a vector.
          * 
          * @tparam T Type to cast data from the BMI model to
