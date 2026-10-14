@@ -30,7 +30,13 @@ namespace realization {
         //Bmi_Var_Details() : Bmi_Var_Details("", "", nullptr, -1, -1, "", "") { }
 
         Bmi_Var_Details(std::string name, std::string alias, const int item_size, const int num_items, std::string cpp_type, std::string units)
-            : name(std::move(name)), mapped_alias(std::move(alias)), cpp_type(std::move(cpp_type)), units(std::move(units)), item_size(item_size), num_items(num_items) { }
+            : name(std::move(name)), mapped_alias(std::move(alias)), cpp_type(std::move(cpp_type)), units(std::move(units)), item_size(item_size), num_items(num_items)
+        {
+            // The buffers built from these details are sized by item_size and addressed as cpp_type, so
+            // the two disagreeing is caught once here rather than on every set.
+            models::bmi::require_item_size(this->cpp_type, static_cast<size_t>(item_size),
+                                           "variable '" + this->name + "'");
+        }
 
         Bmi_Var_Details(const Bmi_Var_Details& source) = default;
 

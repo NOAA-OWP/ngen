@@ -464,6 +464,9 @@ namespace realization {
                     //Figure out the c++ type to convert data to
                     std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(param.first),
                                                                            varItemSize);
+                    models::bmi::require_item_size(type, static_cast<size_t>(varItemSize),
+                                                   "parameter '" + param.first + "' of model '" +
+                                                   get_bmi_model()->get_model_name() + "'");
                     //TODO might consider refactoring as_vector and get_values_as_type
                     //(and by extension, as_c_array) into the JSONProperty class
                     //then instead of the PropertyVariant visitor filling vectors
