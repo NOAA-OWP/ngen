@@ -1,4 +1,5 @@
 #include "Bmi_C_Formulation.hpp"
+#include "bmi_utilities.hpp"
 using namespace realization;
 using namespace models::bmi;
 
@@ -37,42 +38,15 @@ double Bmi_C_Formulation::get_var_value_as_double(const int& index, const std::s
     //  don't fit or might convert inappropriately
     auto model = std::dynamic_pointer_cast<models::bmi::Bmi_C_Adapter>(get_bmi_model());
 
-    std::string type = model->GetVarType(var_name);
-    if (type == "long double")
-        return (double) (model->GetValuePtr<long double>(var_name))[index];
-
-    if (type == "double")
-        return (double) (model->GetValuePtr<double>(var_name))[index];
-
-    if (type == "float")
-        return (double) (model->GetValuePtr<float>(var_name))[index];
-
-    if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int")
-        return (double) (model->GetValuePtr<short>(var_name))[index];
-
-    if (type == "unsigned short" || type == "unsigned short int")
-        return (double) (model->GetValuePtr<unsigned short>(var_name))[index];
-
-    if (type == "int" || type == "signed" || type == "signed int")
-        return (double) (model->GetValuePtr<int>(var_name))[index];
-
-    if (type == "unsigned" || type == "unsigned int")
-        return (double) (model->GetValuePtr<unsigned int>(var_name))[index];
-
-    if (type == "long" || type == "long int" || type == "signed long" || type == "signed long int")
-        return (double) (model->GetValuePtr<long>(var_name))[index];
-
-    if (type == "unsigned long" || type == "unsigned long int")
-        return (double) (model->GetValuePtr<unsigned long>(var_name))[index];
-
-    if (type == "long long" || type == "long long int" || type == "signed long long" || type == "signed long long int")
-        return (double) (model->GetValuePtr<long long>(var_name))[index];
-
-    if (type == "unsigned long long" || type == "unsigned long long int")
-        return (double) (model->GetValuePtr<unsigned long long>(var_name))[index];
-
-    throw std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
-                             " as double: no logic for converting variable type " + type);
+    const std::string type = model->GetVarType(var_name);
+    try {
+        return models::bmi::with_bmi_type(type, [&]<typename T>() -> double {
+            return static_cast<double>(model->GetValuePtr<T>(var_name)[index]);
+        });
+    } catch (const models::bmi::unknown_bmi_type&) {
+        throw std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
+                                 " as double: no logic for converting variable type " + type);
+    }
 }
 
 bool Bmi_C_Formulation::is_bmi_input_variable(const std::string &var_name) const {
