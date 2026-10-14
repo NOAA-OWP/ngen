@@ -3,6 +3,7 @@
 #if NGEN_WITH_PYTHON
 
 #include "Bmi_Py_Formulation.hpp"
+#include "bmi_utilities.hpp"
 
 using namespace realization;
 using namespace models::bmi;
@@ -50,54 +51,35 @@ std::string Bmi_Py_Formulation::get_formulation_type() const {
 double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const std::string &var_name) {
     auto model = std::dynamic_pointer_cast<models::bmi::Bmi_Py_Adapter>(get_bmi_model());
 
-    std::string val_type = model->GetVarType(var_name);
-    size_t val_item_size = (size_t)model->GetVarItemsize(var_name);
+    const std::string val_type = model->GetVarType(var_name);
+    const size_t val_item_size = (size_t)model->GetVarItemsize(var_name);
 
-    //void *dest;
     int indices[1];
     indices[0] = index;
 
-    // The available types and how they are handled here should match what is in SetValueAtIndices
-    if (val_type == "int" && val_item_size == sizeof(short)) {
-        short dest;
-        model->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
-    }
-    if (val_type == "int" && val_item_size == sizeof(int)) {
-        int dest;
-        model->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
-    }
-    if (val_type == "int" && val_item_size == sizeof(long)) {
-        long dest;
-        model->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
-    }
-    if (val_type == "int" && val_item_size == sizeof(long long)) {
-        long long dest;
-        model->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
-    }
-    if (val_type == "float" || val_type == "float16" || val_type == "float32" || val_type == "float64") {
-        if (val_item_size == sizeof(float)) {
-            float dest;
-            model->get_value_at_indices(var_name, &dest, indices, 1, false);
-            return (double) dest;
-        }
-        if (val_item_size == sizeof(double)) {
-            double dest;
-            model->get_value_at_indices(var_name, &dest, indices, 1, false);
-            return dest;
-        }
-        if (val_item_size == sizeof(long double)) {
-            long double dest;
-            model->get_value_at_indices(var_name, &dest, indices, 1, false);
-            return (double) dest;
-        }
+    const auto unsupported = [&]() {
+        return std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
+                                  " as double: no logic for converting variable type " + val_type);
+    };
+
+    // A Python type name does not name a width -- "int" is any of them -- so the pair has to be
+    // reduced to a C++ spelling before the shared table can pick a type from it.
+    std::string cxx_type;
+    try {
+        cxx_type = model->get_analogous_cxx_type(val_type, val_item_size);
+    } catch (const std::runtime_error&) {
+        throw unsupported();
     }
 
-    throw std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
-    " as double: no logic for converting variable type " + val_type);
+    try {
+        return models::bmi::with_bmi_type(cxx_type, [&]<typename T>() -> double {
+            T dest;
+            model->get_value_at_indices(var_name, &dest, indices, 1, false);
+            return static_cast<double>(dest);
+        });
+    } catch (const models::bmi::unknown_bmi_type&) {
+        throw unsupported();
+    }
 }
 
 bool Bmi_Py_Formulation::is_bmi_input_variable(const std::string &var_name) const {
