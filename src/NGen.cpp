@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -637,9 +638,9 @@ int main(int argc, char* argv[]) {
             // Sort catchments by their destination nexus, so that
             // they're grouped when updating their downstream
             // contributions
-            std::sort(cat_ids.begin(), cat_ids.end(),
-                      [&features](std::string const& cat_lhs, std::string const& cat_rhs)
-                      { return features.destination_nexuses(cat_lhs).at(0) < features.destination_nexuses(cat_rhs).at(0); });
+            std::ranges::sort(cat_ids, {},
+                              [&features](auto const& cat)
+                              { return features.destination_nexuses(cat).at(0); } );
             if (keys[i] != 0) {
                 layers[i] = std::make_shared<ngen::Layer>(
                     desc,
