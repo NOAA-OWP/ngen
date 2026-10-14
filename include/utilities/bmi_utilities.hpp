@@ -10,6 +10,27 @@
 #include <boost/type_index.hpp>
 #include "bmi/Bmi_Adapter.hpp"
 
+/*
+ * Typed access to BMI model variables.
+ *
+ * A BMI adapter reports a variable in three ways the standard does not tie together: a type, as a
+ * string; a size, as a count of bytes; and a buffer or pointer carrying no type at all. Reading or
+ * writing one therefore means choosing a C++ type, sizing a buffer, and trusting the two agree.
+ *
+ * Prefer the helpers below to calling Bmi_Adapter::GetValue() or GetValuePtr() and casting the
+ * result:
+ *
+ *   with_bmi_type()       resolve a type name to a C++ type; the one table the others are built on
+ *   GetValue<T>()         read a variable, converted to T
+ *   GetValuePtr<T>()      borrow the model's own storage, typed
+ *   get_value_as_type()   build a value in the variable's declared type
+ *   get_values_as_type()  build a buffer in the variable's declared type
+ *   require_item_size()   confirm a type name and a reported item size describe the same width
+ *
+ * The raw adapter calls stay public -- the adapters implement them, and a caller may genuinely want
+ * bytes -- but they are not the ordinary way to read or write a variable.
+ */
+
 namespace models {
     namespace bmi {
         /** @brief Thrown when a BMI type name has no C++ type behind it. */
