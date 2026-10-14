@@ -41,8 +41,11 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
         }
     }
 
+    std::unique_ptr<utils::FormulationStepOutput> step_output;
     if (nexus_outputs_mgr) {
-      nexus_outputs_mgr->prepare_for_step(current_time_marker);
+        // TODO: (later) eventually may want to use this form, if we support multiple formulations per catchment
+        //step_output = nexus_outputs_mgr->prepare_for_step(form_id, current_time_marker);
+        step_output = nexus_outputs_mgr->prepare_for_step(current_time_marker);
     }
 
     // Once contributing catchments are updated for this timestep, dump the nexus output
@@ -75,10 +78,8 @@ void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows,
         nexus_downstream_flows[nexus_index] += contribution_at_t;
 #endif // NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
 
-        // TODO: (later) eventually may want to use this form, if we support multiple formulations per catchment
-        //nexus_outputs_mgr->receive_data_entry(form_id, id, current_time_index, current_timestamp, contribution_at_t);
-        if (nexus_outputs_mgr) {
-            nexus_outputs_mgr->receive_data_entry(id, current_time_marker, contribution_at_t);
+        if (step_output) {
+            step_output->receive_data_entry(id, contribution_at_t);
         }
 
         // Release this nexus's accumulated per-timestep state to bound memory on

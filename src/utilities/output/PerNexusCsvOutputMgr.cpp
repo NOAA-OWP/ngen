@@ -21,6 +21,22 @@ limitations under the License.
 #include <filesystem>
 #include <stdexcept>
 
+struct PerNexusStepOutput : utils::FormulationStepOutput
+{
+    PerNexusStepOutput(std::string formulation_id, utils::time_marker time, utils::PerNexusCsvOutputMgr &output_mgr)
+        : formulation_id_(std::move(formulation_id))
+        , time_(std::move(time))
+        , output_mgr_(output_mgr)
+    { }
+    const std::string formulation_id_;
+    const utils::time_marker time_;
+    utils::PerNexusCsvOutputMgr &output_mgr_;
+
+    void receive_data_entry(const std::string &nexus_id, const double flow_data_at_t) override {
+        output_mgr_.receive_data_entry(formulation_id_, nexus_id, time_, flow_data_at_t);
+    }
+};
+
 utils::PerNexusCsvOutputMgr::PerNexusCsvOutputMgr(const std::vector<std::string>& nexus_ids,
                                                   const std::string& output_root) {
     // output_root is the effective directory this manager writes to;
@@ -53,13 +69,20 @@ bool utils::PerNexusCsvOutputMgr::is_closed() {
     return closed;
 }
 
-void utils::PerNexusCsvOutputMgr::receive_data_entry(const std::string& formulation_id, const std::string& nexus_id,
-                                                     const time_marker& data_time_marker, const double flow_data_at_t) {
+std::unique_ptr<utils::FormulationStepOutput> utils::PerNexusCsvOutputMgr::prepare_for_step(const std::string &formulation_id,
+                                                                                     const time_marker &data_time_marker)
+{
     if (is_closed()) {
         throw std::runtime_error("Can't run PerNexusCsvOutputMgr::receive_data_entry() if instance is closed");
     }
     if (formulation_id != get_default_formulation_id()) {
-        throw std::runtime_error("Cannot write data entry for non-default formulation " + formulation_id + " for nexus " + nexus_id + " when per-nexus CSV output is enabled.");
+        throw std::runtime_error("Cannot prepare data entry for non-default formulation " + formulation_id + " when per-nexus CSV output is enabled.");
     }
+
+    return make_unique<PerNexusStepOutput>(formulation_id, data_time_marker, *this);
+}
+
+void utils::PerNexusCsvOutputMgr::receive_data_entry(const std::string& formulation_id, const std::string& nexus_id,
+                                                     const time_marker& data_time_marker, const double flow_data_at_t) {
     nexus_outfiles.at(nexus_id) << data_time_marker.sim_time_index << ", " << data_time_marker.time_stamp << ", " << flow_data_at_t << '\n';
 }
