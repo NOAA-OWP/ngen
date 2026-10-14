@@ -10,6 +10,7 @@
 #define OUTPUT_VAR_NAME_COUNT 2
 #define PARAM_VAR_NAME_COUNT 3
 #define MASS_BALANCE_VAR_NAME_COUNT 4
+#define SERIALIZATION_VAR_NAME_COUNT 4
 
 // Don't forget to update Get_value/Get_value_at_indices (and setter) implementation if these are adjusted
 static const char *output_var_names[OUTPUT_VAR_NAME_COUNT] = { "OUTPUT_VAR_1", "OUTPUT_VAR_2" };
@@ -42,6 +43,74 @@ static const int mass_balance_var_item_count[MASS_BALANCE_VAR_NAME_COUNT] = { 1,
 static const char *mass_balance_var_grids[MASS_BALANCE_VAR_NAME_COUNT] = { 0, 0, 0, 0 };
 static const char *mass_balance_var_locations[MASS_BALANCE_VAR_NAME_COUNT] = { "node", "node", "node", "node" };
 
+// Serialization protocol variables — queryable by name but not advertised via GetInputVarNames/GetOutputVarNames.
+// Intentionally no location array: the reserved protocol variables
+// have no spatial semantics (triggers, an opaque byte buffer, a byte
+// count) and the protocol never queries Get_var_location. Leave those
+// calls to return BMI_FAILURE for these names so a caller reaching
+// for spatial metadata sees a real signal.
+static const char *serialization_var_names[SERIALIZATION_VAR_NAME_COUNT] = { NGEN_SERIALIZATION_CREATE, NGEN_SERIALIZATION_FREE, NGEN_SERIALIZATION_SIZE, NGEN_SERIALIZATION_STATE };
+static const char *serialization_var_types[SERIALIZATION_VAR_NAME_COUNT] = { "int", "int", "int64", "char" };
+static const char *serialization_var_units[SERIALIZATION_VAR_NAME_COUNT] = { "ngen::trigger", "ngen::trigger", "bytes", "ngen::opaque" };
+static const int   serialization_var_item_count[SERIALIZATION_VAR_NAME_COUNT] = { 1, 1, 1, 0 };
+
+// Each per-type helper reads or writes ONE field's bytes at the
+// caller's cursor and advances the cursor by that field's size.
+// Direction is a runtime flag so the same field list drives both
+// save and restore.
+enum direction { SAVE, LOAD };
+
+// Note there are other options for keeping a consistent field set
+// This one is the most "verbose" in terms of typed helpers
+// but follows the visitor patter in the other reference modules
+// without getting overly complex in C pointer land.
+
+static void visit_double(double* field, char** cursor, enum direction dir) {
+    if (dir == SAVE) memcpy(*cursor, field, sizeof(*field));
+    else                 memcpy(field, *cursor, sizeof(*field));
+    *cursor += sizeof(*field);
+}
+
+static void visit_int(int* field, char** cursor, enum direction dir) {
+    if (dir == SAVE) memcpy(*cursor, field, sizeof(*field));
+    else                 memcpy(field, *cursor, sizeof(*field));
+    *cursor += sizeof(*field);
+}
+
+// Dynamic-array variant: count elements pointed to by @p field, byte
+// count derived from @p count. On restore the model must have the
+// count already set (either from an earlier visitor call or by other
+// means) AND @p field's backing storage already allocated to hold
+// @p count elements. This model preallocates cells[n_cells] in
+// Initialize; a real model might reallocate here on restore if the
+// stored count differs.
+static void visit_double_array(double* field, int count, char** cursor, enum direction dir) {
+    const size_t bytes = (size_t)count * sizeof(double);
+    if (dir == SAVE) memcpy(*cursor, field, bytes);
+    else                 memcpy(field, *cursor, bytes);
+    *cursor += bytes;
+}
+
+// Single source of truth for the model's on-disk field layout.
+// Adding a field is one line in this body. The count field for a
+// dynamic array (n_cells here) MUST appear before the array itself
+// so restore has read the count by the time it visits the array.
+static void visit_serialization_fields(test_bmi_c_model* m, char** cursor, enum direction dir) {
+    visit_double(&m->current_model_time, cursor, dir);
+    visit_double( m->input_var_1,        cursor, dir);
+    visit_double( m->input_var_2,        cursor, dir);
+    visit_double( m->output_var_1,       cursor, dir);
+    visit_double( m->output_var_2,       cursor, dir);
+    visit_int   (&m->n_cells,            cursor, dir);
+    visit_double_array(m->cells, m->n_cells, cursor, dir);
+}
+
+static int64_t serialized_state_bytes(const test_bmi_c_model* m) {
+    return (int64_t)(sizeof(double) * 5      // 5 scalar doubles
+                   + sizeof(int)             // n_cells
+                   + (size_t)m->n_cells * sizeof(double));
+}
+
 static int Finalize (Bmi *self)
 {
     // Function assumes everything that is needed is retrieved from the model before Finalize is called.
@@ -57,6 +126,10 @@ static int Finalize (Bmi *self)
             free(model->output_var_2);
         if (model->param_var_3 != NULL )
             free(model->param_var_3);
+        if (model->cells != NULL)
+            free(model->cells);
+        if (model->serialized_state != NULL)
+            free(model->serialized_state);
         free(self->data);
     }
 
@@ -289,6 +362,13 @@ static int Get_time_units (Bmi *self, char * units)
 
 static int Get_value (Bmi *self, const char *name, void *dest)
 {
+    if (strcmp(name, NGEN_SERIALIZATION_STATE) == 0) {
+        test_bmi_c_model* model = (test_bmi_c_model*)self->data;
+        if (model->serialized_state && model->serialized_size > 0)
+            memcpy(dest, model->serialized_state, model->serialized_size);
+        return BMI_SUCCESS;
+    }
+
     int i = 0;
     int item_count = -1;
     for (i = 0; i < PARAM_VAR_NAME_COUNT; i++) {
@@ -355,6 +435,13 @@ static int Get_value_at_indices (Bmi *self, const char *name, void *dest, int *i
         return BMI_SUCCESS;
     }
 
+    if (strcmp (var_type, "int64") == 0) {
+        for (size_t i = 0; i < len; ++i) {
+            ((int64_t*)dest)[i] = ((int64_t*)ptr)[inds[i]];
+        }
+        return BMI_SUCCESS;
+    }
+
     return BMI_FAILURE;
 }
 
@@ -412,6 +499,24 @@ static int Get_value_ptr (Bmi *self, const char *name, void **dest)
         *dest = &((test_bmi_c_model *)(self->data))->mass_leaked;
         return BMI_SUCCESS;
     }
+    // Serialization support. CREATE / FREE are triggers — action
+    // signals that carry no stored value — so they deliberately do
+    // NOT appear here. Any caller reaching for a pointer to a
+    // trigger variable gets BMI_FAILURE via the function's fall-
+    // through, which matches the "this isn't a readable variable"
+    // semantic.
+    if (strcmp (name, NGEN_SERIALIZATION_SIZE) == 0) {
+        *dest = &((test_bmi_c_model *)(self->data))->serialized_size;
+        return BMI_SUCCESS;
+    }
+    if (strcmp (name, NGEN_SERIALIZATION_STATE) == 0) {
+        *dest = ((test_bmi_c_model *)(self->data))->serialized_state;
+        return BMI_SUCCESS;
+    }
+    if (strcmp (name, "test::serialization_32bit") == 0) {
+        *dest = &((test_bmi_c_model *)(self->data))->serialized_size_32bit;
+        return BMI_SUCCESS;
+    }
     return BMI_FAILURE;
 }
 
@@ -424,6 +529,15 @@ static int Get_var_grid(Bmi *self, const char *name, int *grid)
 
 static int Get_var_itemsize (Bmi *self, const char *name, int * size)
 {
+    // Triggers (create/free) have no stored value, so reporting a
+    // per-element byte size for them is meaningless. Fail here for
+    // the same reason Get_var_nbytes does: the protocol never asks,
+    // and any external caller reaching for this gets a real signal.
+    if (strcmp(name, NGEN_SERIALIZATION_CREATE) == 0 ||
+        strcmp(name, NGEN_SERIALIZATION_FREE)   == 0) {
+        *size = 0;
+        return BMI_FAILURE;
+    }
     char type[BMI_MAX_TYPE_NAME];
     if (self->get_var_type(self, name, type) != BMI_SUCCESS)
         return BMI_FAILURE;
@@ -446,6 +560,14 @@ static int Get_var_itemsize (Bmi *self, const char *name, int * size)
     }
     else if (strcmp (type, "long") == 0) {
         *size = sizeof(long);
+        return BMI_SUCCESS;
+    }
+    else if (strcmp (type, "int64") == 0) {
+        *size = sizeof(int64_t);
+        return BMI_SUCCESS;
+    }
+    else if (strcmp (type, "char") == 0) {
+        *size = sizeof(char);
         return BMI_SUCCESS;
     }
     else {
@@ -472,6 +594,9 @@ static int Get_var_location (Bmi *self, const char *name, char * location)
             return BMI_SUCCESS;
         }
     }
+    // Serialization reserved names are deliberately NOT handled here:
+    // they have no spatial semantics and the protocol never queries
+    // Get_var_location. Fall through to the BMI_FAILURE path.
     // If we get here, it means the variable name wasn't recognized
     location[0] = '\0';
     return BMI_FAILURE;
@@ -480,6 +605,16 @@ static int Get_var_location (Bmi *self, const char *name, char * location)
 
 static int Get_var_nbytes (Bmi *self, const char *name, int * nbytes)
 {
+    // Trigger variables (create/free) carry no storage — they're
+    // action signals. Reporting a byte count for them would pretend
+    // they're ordinary integer-valued vars, which is misleading. A
+    // caller reaching for nbytes on a trigger gets BMI_FAILURE; the
+    // protocol itself never asks.
+    if (strcmp(name, NGEN_SERIALIZATION_CREATE) == 0 ||
+        strcmp(name, NGEN_SERIALIZATION_FREE)   == 0) {
+        *nbytes = 0;
+        return BMI_FAILURE;
+    }
     int item_size;
     if (self->get_var_itemsize(self, name, &item_size) != BMI_SUCCESS) {
         return BMI_FAILURE;
@@ -516,6 +651,29 @@ static int Get_var_nbytes (Bmi *self, const char *name, int * nbytes)
             }
         }
     }
+    // Serialization reserved vars: only SIZE and STATE have a
+    // meaningful byte count; triggers are handled at the top of this
+    // function. STATE gets a special case just below because its
+    // size is variable (== current payload length).
+    if (item_count < 1) {
+        for (i = 0; i < SERIALIZATION_VAR_NAME_COUNT; i++) {
+            if (strcmp(name, serialization_var_names[i]) == 0) {
+                item_count = serialization_var_item_count[i];
+                break;
+            }
+        }
+    }
+
+    if (strcmp(name, NGEN_SERIALIZATION_STATE) == 0) {
+        // Special case: serialization_state has variable size — report the current buffer size (bytes) directly.
+        *nbytes = ((test_bmi_c_model *) self->data)->serialized_size;
+        return BMI_SUCCESS;
+    }
+    if (strcmp(name, "test::serialization_32bit") == 0) {
+        *nbytes = item_size;
+        return BMI_SUCCESS;
+    }
+
     if (item_count < 1)
         item_count = ((test_bmi_c_model *) self->data)->num_time_steps;
 
@@ -555,6 +713,17 @@ static int Get_var_type (Bmi *self, const char *name, char * type)
             return BMI_SUCCESS;
         }
     }
+    // Check serialization protocol variables
+    for (i = 0; i < SERIALIZATION_VAR_NAME_COUNT; i++) {
+        if (strcmp(name, serialization_var_names[i]) == 0) {
+            snprintf(type, BMI_MAX_TYPE_NAME, "%s", serialization_var_types[i]);
+            return BMI_SUCCESS;
+        }
+    }
+    if (strcmp(name, "test::serialization_32bit") == 0) {
+        snprintf(type, BMI_MAX_TYPE_NAME, "%s", "int");
+        return BMI_SUCCESS;
+    }
     // If we get here, it means the variable name wasn't recognized
     type[0] = '\0';
     return BMI_FAILURE;
@@ -582,6 +751,13 @@ static int Get_var_units (Bmi *self, const char *name, char * units)
     for (i = 0; i < MASS_BALANCE_VAR_NAME_COUNT; i++) {
         if (strcmp(name, mass_balance_var_names[i]) == 0) {
             snprintf(units, BMI_MAX_UNITS_NAME, "%s", mass_balance_var_units[i]);
+            return BMI_SUCCESS;
+        }
+    }
+    // Check serialization protocol variables
+    for (i = 0; i < SERIALIZATION_VAR_NAME_COUNT; i++) {
+        if (strcmp(name, serialization_var_names[i]) == 0) {
+            snprintf(units, BMI_MAX_UNITS_NAME, "%s", serialization_var_units[i]);
             return BMI_SUCCESS;
         }
     }
@@ -642,6 +818,10 @@ static int Initialize (Bmi *self, const char *file)
     model->param_var_3[0] = 0.0;
     model->param_var_3[1] = 0.0;
 
+    model->n_cells = 3;
+    model->cells   = malloc(model->n_cells * sizeof(double));
+    for (int i = 0; i < model->n_cells; ++i) model->cells[i] = 0.0+i;
+
     return BMI_SUCCESS;
 }
 
@@ -687,11 +867,75 @@ static int Set_value_at_indices (Bmi *self, const char *name, int * inds, int le
         return BMI_SUCCESS;
     }
 
+    if (strcmp (var_type, "int64") == 0) {
+        for (size_t i = 0; i < len; ++i) {
+            ((int64_t*)ptr)[inds[i]] = ((int64_t*)src)[i];
+        }
+        return BMI_SUCCESS;
+    }
+
     return BMI_FAILURE;
 }
 
 
+static void create_serialization(test_bmi_c_model* model) {
+    if (model->serialized_state) free(model->serialized_state);
+    model->serialized_size = serialized_state_bytes(model);
+    model->serialized_state = (char*)malloc(model->serialized_size);
+    char* cursor = model->serialized_state;
+    visit_serialization_fields(model, &cursor, SAVE);
+}
+
+static void free_serialization(test_bmi_c_model* model) {
+    if (model->serialized_state) {
+        free(model->serialized_state);
+        model->serialized_state = NULL;
+    }
+    model->serialized_size = 0;
+}
+
+/** Restore the model fields from @p src. @p size is the number of bytes
+ *  the caller is presenting. On a size mismatch we return BMI_FAILURE
+ *  rather than silently overreading — the model's serialized layout is
+ *  determined by the current field values.
+ *  The caller is expected to have restored a record produced with
+ *  matching sizing. */
+static int deserialize_state(test_bmi_c_model* model, const char* src, int64_t size) {
+    const int64_t expected = serialized_state_bytes(model);
+    if (size != expected) {
+        fprintf(stderr,
+                "deserialize_state: payload size %lld does not match expected "
+                "layout size %lld for this test model version.\n",
+                (long long)size, (long long)expected);
+        return BMI_FAILURE;
+    }
+    // Cast away const on the cursor: the visitor takes char** so it can
+    // advance the caller's position, but in LOAD mode it only reads
+    // from *cursor and writes to model fields — the bytes at `src` are
+    // never modified.
+    char* cursor = (char*)src;
+    visit_serialization_fields(model, &cursor, LOAD);
+    return BMI_SUCCESS;
+}
+
 static int Set_value (Bmi *self, const char *name, void *array) {
+    if (strcmp(name, NGEN_SERIALIZATION_CREATE) == 0) {
+        create_serialization((test_bmi_c_model*)self->data);
+        return BMI_SUCCESS;
+    }
+    if (strcmp(name, NGEN_SERIALIZATION_FREE) == 0) {
+        free_serialization((test_bmi_c_model*)self->data);
+        return BMI_SUCCESS;
+    }
+    if (strcmp(name, NGEN_SERIALIZATION_STATE) == 0) {
+        // A caller must provide the payload size via SetValue(NGEN_SERIALIZATION_SIZE, ...)
+        // before a deserialize_state trigger.
+        // deserialize_state validates against the fixed
+        // layout size internally in this test model
+        test_bmi_c_model* model = (test_bmi_c_model*)self->data;
+        return deserialize_state(model, (const char*)array, model->serialized_size);
+    }
+
     void *dest = NULL;
     if (self->get_value_ptr(self, name, &dest) == BMI_FAILURE)
         return BMI_FAILURE;
@@ -755,6 +999,13 @@ test_bmi_c_model *new_bmi_model(void)
     data->input_var_2 = NULL;
     data->output_var_1 = NULL;
     data->output_var_2 = NULL;
+
+    data->n_cells = 0;
+    data->cells   = NULL;
+
+    data->serialized_state = NULL;
+    data->serialized_size = 0;
+    data->serialized_size_32bit = 0;
 
     return data;
 }

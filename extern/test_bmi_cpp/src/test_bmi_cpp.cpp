@@ -9,6 +9,7 @@
 #include <cassert>
 #include <cstring>
 #include <math.h>
+#include <numeric>
 #include <stdexcept>
 
 std::string TestBmiCpp::GetComponentName(){
@@ -110,6 +111,7 @@ void TestBmiCpp::GetValueAtIndices(std::string name, void* dest, int* inds, int 
     for (size_t i = 0; i < count; ++i) {
       out[i] = static_cast<int*>(ptr)[inds[i]];
     }
+    return;
   }
 
   if (type == BMI_TYPE_NAME_FLOAT) {
@@ -124,6 +126,22 @@ void TestBmiCpp::GetValueAtIndices(std::string name, void* dest, int* inds, int 
     long* out = static_cast<long*>(dest);
     for (size_t i = 0; i < count; ++i) {
       out[i] = static_cast<long*>(ptr)[inds[i]];
+    }
+    return;
+  }
+
+  if (type == "int64") {
+    int64_t* out = static_cast<int64_t*>(dest);
+    for (size_t i = 0; i < count; ++i) {
+      out[i] = static_cast<int64_t*>(ptr)[inds[i]];
+    }
+    return;
+  }
+
+  if (type == "char") {
+    char* out = static_cast<char*>(dest);
+    for (size_t i = 0; i < count; ++i) {
+      out[i] = static_cast<char*>(ptr)[inds[i]];
     }
     return;
   }
@@ -178,10 +196,35 @@ void* TestBmiCpp::GetValuePtr(std::string name){
     return this->output_var_1.get();
   }
 
+  // Serialization support. CREATE / FREE are deliberately absent
+  // here — they're action signals that carry no stored value. A
+  // caller reaching for a pointer to a trigger hits the throw below,
+  // which matches the "this isn't a readable variable" semantic.
+  if (name == NGEN_SERIALIZATION_SIZE) {
+    return &this->serialized_size_var;
+  }
+  if (name == NGEN_SERIALIZATION_STATE) {
+    return this->serialized_state_.data();
+  }
+
+  // Simple-path SIZE canary — see the field's declaration comment.
+  if (name == "test::serialization_32bit") {
+    return &this->serialized_size_32bit_var;
+  }
+
   throw std::runtime_error("GetValuePtr called for unknown variable: "+name);
 }
 
 int TestBmiCpp::GetVarItemsize(std::string name){
+  // Triggers (create/free) have no stored value, so reporting a
+  // per-element byte size is meaningless. Throw here for the same
+  // reason GetVarNbytes does: the protocol never asks, and any
+  // external caller gets a real signal rather than a made-up 4-byte
+  // answer.
+  if (name == NGEN_SERIALIZATION_CREATE || name == NGEN_SERIALIZATION_FREE) {
+    throw std::runtime_error(
+        "GetVarItemsize: trigger variable \"" + name + "\" has no byte size" SOURCE_LOC);
+  }
   std::map<std::string,int>::const_iterator iter = this->type_sizes.find(this->GetVarType(name));
   if(iter != this->type_sizes.end()){
     return iter->second;
@@ -203,10 +246,23 @@ std::string TestBmiCpp::GetVarLocation(std::string name){
   if(iter != this->model_var_names.end()){
     return this->model_var_locations[iter - this->model_var_names.begin()];
   }
+  // Serialization reserved names are deliberately NOT handled here:
+  // they have no spatial semantics and the protocol never queries
+  // GetVarLocation. Fall through to the "unknown variable" throw.
   throw std::runtime_error("GetVarLocation called for non-existent variable: "+name+"" SOURCE_LOC);
 }
 
 int TestBmiCpp::GetVarNbytes(std::string name){
+  if (name == NGEN_SERIALIZATION_STATE) {
+    return this->serialized_size_var;
+  }
+  // Trigger variables (create/free) carry no storage — they're
+  // action signals. GetVarItemsize throws for them too; catching
+  // here just lets the error message point at Nbytes explicitly.
+  if (name == NGEN_SERIALIZATION_CREATE || name == NGEN_SERIALIZATION_FREE) {
+    throw std::runtime_error(
+        "GetVarNbytes: trigger variable \"" + name + "\" has no byte size" SOURCE_LOC);
+  }
   int item_size = this->GetVarItemsize(name);
 
   // this will never actually get used, but mimicing the C version...
@@ -227,6 +283,13 @@ int TestBmiCpp::GetVarNbytes(std::string name){
   }
   iter = std::find(this->mass_balance_var_names.begin(), this->mass_balance_var_names.end(), name);
   if(iter != this->mass_balance_var_names.end()){
+    item_count = 1;
+  }
+  iter = std::find(this->serialization_var_names.begin(), this->serialization_var_names.end(), name);
+  if(iter != this->serialization_var_names.end()){
+    item_count = 1;
+  }
+  if (name == "test::serialization_32bit") {
     item_count = 1;
   }
   if(item_count == -1){
@@ -254,6 +317,14 @@ std::string TestBmiCpp::GetVarType(std::string name){
   if(iter != this->mass_balance_var_names.end()){
     return this->mass_balance_var_types[iter - this->mass_balance_var_names.begin()];
   }
+  iter = std::find(this->serialization_var_names.begin(), this->serialization_var_names.end(), name);
+  if(iter != this->serialization_var_names.end()){
+    return this->serialization_var_types[iter - this->serialization_var_names.begin()];
+  }
+  // Simple-path SIZE canary — see the field's declaration comment.
+  if (name == "test::serialization_32bit") {
+    return "int";
+  }
   throw std::runtime_error("GetVarType called for non-existent variable: "+name+"" SOURCE_LOC );
 }
 
@@ -273,6 +344,10 @@ std::string TestBmiCpp::GetVarUnits(std::string name){
   iter = std::find(this->mass_balance_var_names.begin(), this->mass_balance_var_names.end(), name);
   if(iter != this->mass_balance_var_names.end()){
     return this->mass_balance_var_units[iter - this->mass_balance_var_names.begin()];
+  }
+  iter = std::find(this->serialization_var_names.begin(), this->serialization_var_names.end(), name);
+  if(iter != this->serialization_var_names.end()){
+    return this->serialization_var_units[iter - this->serialization_var_names.begin()];
   }
   throw std::runtime_error("GetVarUnits called for non-existent variable: "+name+"" SOURCE_LOC);
 }
@@ -336,10 +411,33 @@ void TestBmiCpp::SetValueAtIndices(std::string name, int* inds, int len, void* s
     for (size_t i = 0; i < len; ++i) {
       in[inds[i]] = static_cast<long*>(src)[i];
     }
+  } else if (type == "int64") {
+    int64_t* in = static_cast<int64_t*>(ptr);
+    for (size_t i = 0; i < len; ++i) {
+      in[inds[i]] = static_cast<int64_t*>(src)[i];
+    }
   }
 }
 
 void TestBmiCpp::SetValue(std::string name, void* src){
+  if (name == NGEN_SERIALIZATION_CREATE) {
+    this->create_serialization();
+    return;
+  }
+  if (name == NGEN_SERIALIZATION_FREE) {
+    this->free_serialization();
+    return;
+  }
+  if (name == NGEN_SERIALIZATION_STATE) {
+    // A caller must provide the payload size via SetValue(NGEN_SERIALIZATION_SIZE, ...)
+    // before a deserialize_state trigger.
+    // deserialize_state validates against the fixed
+    // layout size internally in this test model
+    this->deserialize_state(static_cast<const char*>(src),
+                            this->serialized_size_var);
+    return;
+  }
+
   void *dest = this->GetValuePtr(name);
   int nbytes = this->GetVarNbytes(name);
   std::memcpy (dest, src, nbytes);
@@ -544,4 +642,49 @@ void TestBmiCpp::run(long dt)
     this->current_model_time += (double)dt;
     this->mass_stored = *this->output_var_1 - *this->input_var_1;
     this->mass_leaked = 0;
+}
+
+void TestBmiCpp::create_serialization() {
+    serialized_state_.clear();
+    serialized_state_.reserve(serialized_state_bytes());
+    //serialization visitor, range copy into the buffer
+    //in visitor order.
+    visit_serialization_fields([&](const void* data, size_t size) {
+        const char* p = static_cast<const char*>(data);
+        serialized_state_.insert(serialized_state_.end(), p, p + size);
+    });
+    if (serialized_state_.size() != serialized_state_bytes()) {
+        throw std::runtime_error(
+            "create_serialization: produced " +
+            std::to_string(serialized_state_.size()) +
+            " bytes but the declared layout is " +
+            std::to_string(serialized_state_bytes()) +
+            " bytes — keep these in sync when adding fields.");
+    }
+    serialized_size_var = static_cast<int64_t>(serialized_state_.size());
+}
+
+void TestBmiCpp::free_serialization() {
+    serialized_state_.clear();
+    serialized_size_var = 0;
+}
+
+void TestBmiCpp::deserialize_state(const char* data, int64_t size) {
+    // Validate the caller's payload against the layout this model
+    // version knows how to read. A mismatch is a hard error — callers
+    // should be restoring a record produced by the same model version.
+    if (size != static_cast<int64_t>(serialized_state_bytes())) {
+        throw std::runtime_error(
+            "deserialize_state: payload size " + std::to_string(size) +
+            " does not match expected layout size " +
+            std::to_string(serialized_state_bytes()) +
+            " for this test model version.");
+    }
+    size_t offset = 0;
+    //de-serialization vistitor, iterate buffer in
+    //visitor order, copy into fields.
+    visit_serialization_fields([&](void* dest, size_t n) {
+        std::memcpy(dest, data + offset, n);
+        offset += n;
+    });
 }

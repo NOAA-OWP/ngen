@@ -1,6 +1,7 @@
 #ifndef NGEN_BMI_UTILITIES_HPP
 #define NGEN_BMI_UTILITIES_HPP
 
+#include <cstdint>
 #include <string>
 #include <vector>
 #include <boost/type_index.hpp>
@@ -26,6 +27,88 @@ namespace models {
                 //Let Return Value Optimization (move semantics) help here (no copy of vector)
                 return std::vector<TO>(data, data+count);
             }
+
+            namespace {
+
+            template <typename T>
+            std::vector<T> get_vector(const std::string& type,
+                                      const void* data,
+                                      size_t num_items) {
+                /*
+                * Allows the std::vector constructor to type cast the values as it copies them.
+                * I don't see any other way around the typing issue other than an explicit copy of each...
+                * Now there is an early optimization that allows types that align to pass through uncopied
+                * but that also only works if GetValuePtr returns a compatible pointer that can iterate
+                * on the recieving side correctly.  This may be tricky for certain langague adapters (Fortran?)
+                * Untill this becomes burdensome on memory/time, I suggest copying and converting each value
+                */
+
+                if (type == "long double"){
+                    return make_vector<T>( (const long double*) data, num_items);
+                }
+                else if (type == "double"){
+                    return make_vector<T>( (const double*) data, num_items);
+                }
+                else if (type == "float"){
+                    return make_vector<T>( (const float*) data, num_items);
+                }
+                // stdint type support.
+                else if (type == "int8" || type == "int8_t"){
+                    return make_vector<T>( (const int8_t*) data, num_items);
+                }
+                else if (type == "int16" || type == "int16_t"){
+                    return make_vector<T>( (const int16_t*) data, num_items);
+                }
+                else if (type == "int32" || type == "int32_t"){
+                    return make_vector<T>( (const int32_t*) data, num_items);
+                }
+                else if (type == "int64" || type == "int64_t"){
+                    return make_vector<T>( (const int64_t*) data, num_items);
+                }
+                else if (type == "uint8" || type == "uint8_t"){
+                    return make_vector<T>( (const uint8_t*) data, num_items);
+                }
+                else if (type == "uint16" || type == "uint16_t"){
+                    return make_vector<T>( (const uint16_t*) data, num_items);
+                }
+                else if (type == "uint32" || type == "uint32_t"){
+                    return make_vector<T>( (const uint32_t*) data, num_items);
+                }
+                else if (type == "uint64" || type == "uint64_t"){
+                    return make_vector<T>( (const uint64_t*) data, num_items);
+                }
+                else if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int"){
+                    return make_vector<T>( (const short*) data, num_items);
+                }
+                else if (type == "unsigned short" || type == "unsigned short int"){
+                    return make_vector<T>( (const unsigned short*) data, num_items);
+                }
+                else if (type == "int" || type == "signed" || type == "signed int"){
+                    return make_vector<T>( (const int*) data, num_items);
+                }
+                else if (type == "unsigned" || type == "unsigned int"){
+                    return make_vector<T>( (const unsigned int*) data, num_items);
+                }
+                else if (type == "long" || type == "long int" || type == "signed long" || type == "signed long int"){
+                    return make_vector<T>( (const long*) data, num_items);
+                }
+                else if (type == "unsigned long" || type == "unsigned long int"){
+                    return make_vector<T>( (const unsigned long*) data, num_items);
+                }
+                else if (type == "long long" || type == "long long int" || type == "signed long long" || type == "signed long long int"){
+                    return make_vector<T>( (const long long*) data, num_items);
+                }
+                else if (type == "unsigned long long" || type == "unsigned long long int"){
+                    return make_vector<T>( (const unsigned long long*) data, num_items);
+                }
+                else{
+                    throw std::runtime_error(
+                        "get_vector: no logic for converting variable type "
+                        + type + " to " + boost::typeindex::type_id<T>().pretty_name());
+                }
+            }
+
+            } // anonymous namespace
         }
 
         /**
@@ -69,55 +152,13 @@ namespace models {
             //Note, may be able to optimize this furthur using GetValuePtr
             //which would avoid copying in the BMI model and copying again here
             model.GetValue(name, data);
-            std::vector<T> result;
 
-            /*
-            * Allows the std::vector constructor to type cast the values as it copies them.
-            * I don't see any other way around the typing issue other than an explicit copy of each...
-            * Now there is an early optimization that allows types that align to pass through uncopied
-            * but that also only works if GetValuePtr returns a compatible pointer that can iterate
-            * on the recieving side correctly.  This may be tricky for certain langague adapters (Fortran?)
-            * Untill this becomes burdensome on memory/time, I suggest copying and converting each value
-            */
-
-            if (type == "long double"){
-                result = helper::make_vector<T>( (long double*) data, num_items);
-            }
-            else if (type == "double"){
-                result = helper::make_vector<T>( (double*) data, num_items);
-            }
-            else if (type == "float"){
-                result = helper::make_vector<T>( (float*) data, num_items);
-            }
-            else if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int"){
-                result = helper::make_vector<T>( (short*) data, num_items);
-            }
-            else if (type == "unsigned short" || type == "unsigned short int"){
-                result = helper::make_vector<T>( (unsigned short*) data, num_items);
-            }
-            else if (type == "int" || type == "signed" || type == "signed int"){
-                result = helper::make_vector<T>( (int*) data, num_items);
-            }
-            else if (type == "unsigned" || type == "unsigned int"){
-                result = helper::make_vector<T>( (unsigned int*) data, num_items);
-            }
-            else if (type == "long" || type == "long int" || type == "signed long" || type == "signed long int"){
-                result = helper::make_vector<T>( (long*) data, num_items);
-            }
-            else if (type == "unsigned long" || type == "unsigned long int"){
-                result = helper::make_vector<T>( (unsigned long*) data, num_items);
-            }
-            else if (type == "long long" || type == "long long int" || type == "signed long long" || type == "signed long long int"){
-                result = helper::make_vector<T>( (long long*) data, num_items);
-            }
-            else if (type == "unsigned long long" || type == "unsigned long long int"){
-                result = helper::make_vector<T>( (unsigned long long*) data, num_items);
-            }
-            else{
+            try {
+                return helper::get_vector<T>(type, data, num_items);
+            } catch (const std::runtime_error&) {
                 throw std::runtime_error("Unable to get value of variable " + name +
                                 " as " + boost::typeindex::type_id<T>().pretty_name() + ": no logic for converting variable type " + type);
             }
-            return result;
         }
     }
 }
