@@ -26,6 +26,22 @@ limitations under the License.
 #include "utilities/parallel_utils.h"
 #endif
 
+struct PerFormulationStepOutput : utils::FormulationStepOutput
+{
+    PerFormulationStepOutput(std::string formulation_id, utils::time_marker time, utils::PerFormulationNexusOutputMgr &output_mgr)
+        : formulation_id_(std::move(formulation_id))
+        , time_(std::move(time))
+        , output_mgr_(output_mgr)
+    { }
+    const std::string formulation_id_;
+    const utils::time_marker time_;
+    utils::PerFormulationNexusOutputMgr &output_mgr_;
+
+    void receive_data_entry(const std::string &nexus_id, const double flow_data_at_t) override {
+        output_mgr_.receive_data_entry(formulation_id_, nexus_id, time_, flow_data_at_t);
+    }
+};
+
 utils::PerFormulationNexusOutputMgr::PerFormulationNexusOutputMgr(
     const std::vector<std::string>& nexus_ids,
     std::shared_ptr<std::vector<std::string>> formulation_ids,
@@ -314,10 +330,10 @@ std::shared_ptr<std::vector<std::string>> utils::PerFormulationNexusOutputMgr::g
     return filenames;
 }
 
-void utils::PerFormulationNexusOutputMgr::prepare_for_step(const std::string& formulation_id,
-                                                           const time_marker& data_time_marker) {
+std::unique_ptr<utils::FormulationStepOutput> utils::PerFormulationNexusOutputMgr::prepare_for_step(const std::string& formulation_id,
+                                                                                                    const time_marker& data_time_marker) {
     if (is_closed()) {
-        throw std::runtime_error("Can't run PerFormulationNexusOutputMgr::receive_data_entry() if instance is closed");
+        throw std::runtime_error("Can't run PerFormulationNexusOutputMgr::prepare_for_step() if instance is closed");
     }
     if (current_formulation_id.empty()) {
         current_formulation_id = formulation_id;
@@ -345,6 +361,8 @@ void utils::PerFormulationNexusOutputMgr::prepare_for_step(const std::string& fo
             "index " + std::to_string(current_time_index) + " but got '"
             + std::to_string(data_time_marker.epoch_time) + "'.");
     }
+
+    return make_unique<PerFormulationStepOutput>(formulation_id, data_time_marker, *this);
 }
 
 void utils::PerFormulationNexusOutputMgr::receive_data_entry(const std::string& formulation_id,
