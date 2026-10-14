@@ -24,6 +24,7 @@ Implementation the BMI mass balance checking protocol
 */
 
 #include "mass_balance.hpp"
+#include "utilities/bmi_utilities.hpp"
 
 namespace models { namespace bmi { namespace protocols {
 
@@ -61,11 +62,11 @@ auto NgenMassBalance::run(const ModelPtr& model, const Context& ctx) const -> ex
     }
 
     if(check_step) {
-        double mass_in, mass_out, mass_stored, mass_leaked, mass_balance;
-        model->GetValue(INPUT_MASS_NAME, &mass_in);
-        model->GetValue(OUTPUT_MASS_NAME, &mass_out);
-        model->GetValue(STORED_MASS_NAME, &mass_stored);
-        model->GetValue(LEAKED_MASS_NAME, &mass_leaked);
+        double mass_balance;
+        const double mass_in     = models::bmi::GetValue<double>(*model, INPUT_MASS_NAME)[0];
+        const double mass_out    = models::bmi::GetValue<double>(*model, OUTPUT_MASS_NAME)[0];
+        const double mass_stored = models::bmi::GetValue<double>(*model, STORED_MASS_NAME)[0];
+        const double mass_leaked = models::bmi::GetValue<double>(*model, LEAKED_MASS_NAME)[0];
         // TODO consider unit conversion if/when it becomes necessary
         mass_balance = mass_in - mass_out - mass_stored - mass_leaked;
         if ( std::abs(mass_balance) > tolerance || std::isnan(mass_balance)) {
@@ -93,14 +94,15 @@ auto NgenMassBalance::run(const ModelPtr& model, const Context& ctx) const -> ex
 
 auto NgenMassBalance::check_support(const ModelPtr& model) -> expected<void, ProtocolError> {
     if (model != nullptr && model->is_model_initialized()) {
-        double mass_var;
         std::vector<std::string> units;
         units.reserve(4);
         try{
             for(const auto& name : 
                 {INPUT_MASS_NAME, OUTPUT_MASS_NAME, STORED_MASS_NAME, LEAKED_MASS_NAME}
             ){
-                model->GetValue(name, &mass_var);
+                // Reading it is the support check: this throws if the variable is missing, or if its
+                // declared type disagrees with the size the model reports for an item.
+                (void) models::bmi::GetValue<double>(*model, name);
                 units.push_back( model->GetVarUnits(name) );
             }
             //Compare all other units to the first one (+1)
