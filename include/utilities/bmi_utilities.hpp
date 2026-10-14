@@ -125,6 +125,30 @@ namespace models {
             throw unknown_bmi_type(type);
         }
 
+        /**
+         * @brief Throw unless @p type names a C++ type of exactly @p item_size bytes.
+         *
+         * A model reports a variable's type name and the size of one item separately, and nothing in
+         * BMI makes the two agree. Every buffer here is sized from one and addressed as the other, so a
+         * disagreement reads or writes past the end -- on a read, out of the buffer; on a write, out of
+         * it by whatever the model takes. Neither is detectable afterwards, so refuse up front.
+         *
+         * @param type A BMI type name.
+         * @param item_size The size in bytes of one item, as the model reports it.
+         * @param described What is being resolved, for the message; e.g. "variable 'X' of model 'Y'".
+         * @throw unknown_bmi_type If @p type has no C++ type behind it.
+         * @throw std::runtime_error If that type is not @p item_size bytes.
+         */
+        inline void require_item_size(const std::string &type, size_t item_size, const std::string &described)
+        {
+            const size_t declared = with_bmi_type(type, []<typename T>() -> size_t { return sizeof(T); });
+            if (declared != item_size) {
+                throw std::runtime_error("Cannot use " + described + ": type '" + type + "' is " +
+                                         std::to_string(declared) + " bytes, but the model reports an item size of " +
+                                         std::to_string(item_size) + " bytes.");
+            }
+        }
+
         namespace helper {
 
             /**
@@ -252,6 +276,8 @@ namespace models {
             model.GetValue(name, data);
 
             try {
+                require_item_size(type, static_cast<size_t>(item_size),
+                                  "variable '" + name + "' of model '" + model.get_model_name() + "'");
                 return with_bmi_type(type, [&]<typename S>() -> std::vector<T> {
                     return helper::make_vector<T>(static_cast<const S*>(data), num_items);
                 });
