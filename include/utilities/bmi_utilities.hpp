@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 #include <boost/type_index.hpp>
-#include "Bmi_Adapter.hpp"
+#include "bmi/Bmi_Adapter.hpp"
 
 namespace models {
     namespace bmi {
