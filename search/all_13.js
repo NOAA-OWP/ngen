@@ -76,11 +76,12 @@ var searchData=
   ['nooutletreservoir2_73',['NoOutletReservoir2',['../class_reservoir_kernel_test.html#a2388e5a52b338a7a655d4855b4fc84e7',1,'ReservoirKernelTest::NoOutletReservoir2'],['../class_reservoir_timeless_kernel_test.html#af20b4030e198fe3a8a66a30bac9b7ee3',1,'ReservoirTimelessKernelTest::NoOutletReservoir2']]],
   ['nooutletreservoir3_74',['NoOutletReservoir3',['../class_reservoir_kernel_test.html#a8940d7294c4e15d00b6776719c8db958',1,'ReservoirKernelTest::NoOutletReservoir3'],['../class_reservoir_timeless_kernel_test.html#a9991d3dad1be1cc5067c574df69eb38a',1,'ReservoirTimelessKernelTest::NoOutletReservoir3']]],
   ['normalize_5froot_75',['normalize_root',['../structrealization_1_1config_1_1_output.html#a4d3d504399ebb375da73974824dcc234',1,'realization::config::Output']]],
-  ['not_20permitted_76',['Input and output with the same name not permitted',['../md_doc_2_b_m_iconventions.html#autotoc_md108',1,'']]],
-  ['note_20on_20bmi_20models_77',['A Note on BMI Models',['../md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md267',1,'']]],
-  ['nullforcingprovider_78',['NullForcingProvider',['../class_null_forcing_provider.html',1,'NullForcingProvider'],['../class_null_forcing_provider.html#a586f4876aa823dee3c07963f49b2423b',1,'NullForcingProvider::NullForcingProvider()']]],
-  ['nullstream_79',['NullStream',['../classutils_1_1_null_stream.html',1,'utils::NullStream'],['../classutils_1_1_null_stream.html#ac83443ec2d37a1763d5518655c58e164',1,'utils::NullStream::NullStream()']]],
-  ['num_5fcolumns_80',['num_columns',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b',1,'ngen::sqlite::database::iterator']]],
-  ['num_5fitems_81',['num_items',['../classrealization_1_1_bmi___var___details.html#aee65f76a3b02cb0c9958f841b7bbf86a',1,'realization::Bmi_Var_Details']]],
-  ['number_5fof_5fdownstream_5fcatchments_82',['number_of_downstream_catchments',['../class_h_y___hydro_nexus.html#a849ee7fd94b2fd0d32a7fc7734bc3234',1,'HY_HydroNexus']]]
+  ['normalized_5funits_76',['normalized_units',['../struct_units_helper_1_1normalized__units.html',1,'UnitsHelper::normalized_units'],['../struct_units_helper_1_1normalized__units.html#a847d20b0ca96372c945aea880400feef',1,'UnitsHelper::normalized_units::normalized_units()']]],
+  ['not_20permitted_77',['Input and output with the same name not permitted',['../md_doc_2_b_m_iconventions.html#autotoc_md108',1,'']]],
+  ['note_20on_20bmi_20models_78',['A Note on BMI Models',['../md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md267',1,'']]],
+  ['nullforcingprovider_79',['NullForcingProvider',['../class_null_forcing_provider.html',1,'NullForcingProvider'],['../class_null_forcing_provider.html#a586f4876aa823dee3c07963f49b2423b',1,'NullForcingProvider::NullForcingProvider()']]],
+  ['nullstream_80',['NullStream',['../classutils_1_1_null_stream.html',1,'utils::NullStream'],['../classutils_1_1_null_stream.html#ac83443ec2d37a1763d5518655c58e164',1,'utils::NullStream::NullStream()']]],
+  ['num_5fcolumns_81',['num_columns',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b',1,'ngen::sqlite::database::iterator']]],
+  ['num_5fitems_82',['num_items',['../classrealization_1_1_bmi___var___details.html#aee65f76a3b02cb0c9958f841b7bbf86a',1,'realization::Bmi_Var_Details']]],
+  ['number_5fof_5fdownstream_5fcatchments_83',['number_of_downstream_catchments',['../class_h_y___hydro_nexus.html#a849ee7fd94b2fd0d32a7fc7734bc3234',1,'HY_HydroNexus']]]
 ];

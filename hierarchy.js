@@ -179,6 +179,7 @@ var hierarchy =
       [ "Network_Test1", "class_network___test1.html", null ]
     ] ],
     [ "UnitsHelper", "class_units_helper.html", null ],
+    [ "UnitsHelper::normalized_units", "struct_units_helper_1_1normalized__units.html", null ],
     [ "UnitsHelper::unit_error_log_key", "struct_units_helper_1_1unit__error__log__key.html", null ],
     [ "utils::CatchmentOutputsMgr", "classutils_1_1_catchment_outputs_mgr.html", [
       [ "utils::CatchmentCsvOutputMgr", "classutils_1_1_catchment_csv_output_mgr.html", null ]

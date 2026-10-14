@@ -16,7 +16,8 @@ var searchData=
   ['ngenmassbalance_13',['NgenMassBalance',['../classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a942276f6833dfac529000dc902bacca2',1,'models::bmi::protocols::NgenMassBalance::NgenMassBalance(const ModelPtr &amp;model, const Properties &amp;properties)'],['../classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#adaf303401a68e066ddf74e34bb08ace1',1,'models::bmi::protocols::NgenMassBalance::NgenMassBalance()']]],
   ['ngensimulation_14',['NgenSimulation',['../class_ngen_simulation.html#a8cf729ebc31f210e9889a16f1e600f29',1,'NgenSimulation::NgenSimulation(Simulation_Time const &amp;sim_time, std::vector&lt; std::shared_ptr&lt; ngen::Layer &gt; &gt; layers, std::unordered_map&lt; std::string, int &gt; catchment_indexes, std::unordered_map&lt; std::string, int &gt; nexus_indexes, int mpi_rank, int mpi_num_procs)'],['../class_ngen_simulation.html#a4071b542efdd11b2fa258d6346bed743',1,'NgenSimulation::NgenSimulation()=delete']]],
   ['normalize_5froot_15',['normalize_root',['../structrealization_1_1config_1_1_output.html#a4d3d504399ebb375da73974824dcc234',1,'realization::config::Output']]],
-  ['nullforcingprovider_16',['NullForcingProvider',['../class_null_forcing_provider.html#a586f4876aa823dee3c07963f49b2423b',1,'NullForcingProvider']]],
-  ['nullstream_17',['NullStream',['../classutils_1_1_null_stream.html#ac83443ec2d37a1763d5518655c58e164',1,'utils::NullStream']]],
-  ['num_5fcolumns_18',['num_columns',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b',1,'ngen::sqlite::database::iterator']]]
+  ['normalized_5funits_16',['normalized_units',['../struct_units_helper_1_1normalized__units.html#a847d20b0ca96372c945aea880400feef',1,'UnitsHelper::normalized_units']]],
+  ['nullforcingprovider_17',['NullForcingProvider',['../class_null_forcing_provider.html#a586f4876aa823dee3c07963f49b2423b',1,'NullForcingProvider']]],
+  ['nullstream_18',['NullStream',['../classutils_1_1_null_stream.html#ac83443ec2d37a1763d5518655c58e164',1,'utils::NullStream']]],
+  ['num_5fcolumns_19',['num_columns',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b',1,'ngen::sqlite::database::iterator']]]
 ];

@@ -11,6 +11,7 @@ var searchData=
   ['ngenbmiprotocols_8',['NgenBmiProtocols',['../classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html',1,'models::bmi::protocols']]],
   ['ngenmassbalance_9',['NgenMassBalance',['../classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html',1,'models::bmi::protocols']]],
   ['ngensimulation_10',['NgenSimulation',['../class_ngen_simulation.html',1,'']]],
-  ['nullforcingprovider_11',['NullForcingProvider',['../class_null_forcing_provider.html',1,'']]],
-  ['nullstream_12',['NullStream',['../classutils_1_1_null_stream.html',1,'utils']]]
+  ['normalized_5funits_11',['normalized_units',['../struct_units_helper_1_1normalized__units.html',1,'UnitsHelper']]],
+  ['nullforcingprovider_12',['NullForcingProvider',['../class_null_forcing_provider.html',1,'']]],
+  ['nullstream_13',['NullStream',['../classutils_1_1_null_stream.html',1,'utils']]]
 ];

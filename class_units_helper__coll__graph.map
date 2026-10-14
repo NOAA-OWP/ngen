@@ -1,7 +1,7 @@
 <map id="UnitsHelper" name="UnitsHelper">
-<area shape="rect" id="Node000001" title=" " alt="" coords="64,649,222,771"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="64,649,222,812"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="77,505,210,586"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,586,146,633,140,633,140,586"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,586,146,632,140,632,140,586"/>
 <area shape="rect" id="Node000003" href="$struct_units_helper_1_1unit__error__log__key.html" title=" " alt="" coords="5,325,145,427"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="98,426,123,488,118,490,93,428"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="38,136,104,202"/>
