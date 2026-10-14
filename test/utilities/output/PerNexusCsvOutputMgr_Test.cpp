@@ -28,11 +28,10 @@ TEST(PerNexusCsvOutputMgr_Test, WritesPerNexusFilesInOutputRoot)
     {
         PerNexusCsvOutputMgr mgr(ids, root.string() + "/");
         // Use the base-class convenience overload (as callers do via the
-        // NexusOutputsMgr interface); the derived 4-arg override otherwise hides it.
+        // NexusOutputsMgr interface); the derived 2-arg override otherwise hides it.
         utils::NexusOutputsMgr& base = mgr;
-        auto current_time = time_marker(0, 0, "2020-01-01 00:00:00");
-        base.prepare_for_step(current_time);
-        base.receive_data_entry("nex-1", current_time, 1.5);
+        auto step_output = base.prepare_for_step(time_marker(0, 0, "2020-01-01 00:00:00"));
+        step_output->receive_data_entry("nex-1", 1.5);
         mgr.commit_writes();
 
         EXPECT_TRUE(fs::exists(root / "nex-1_output.csv"));
@@ -59,6 +58,24 @@ TEST(PerNexusCsvOutputMgr_Test, CreatesAndUsesPerRankSubdirectory)
         EXPECT_TRUE(fs::is_directory(root / "rank_7"));
         EXPECT_TRUE(fs::exists(root / "rank_7" / "nex-1_output.csv"));
         EXPECT_FALSE(fs::exists(root / "nex-1_output.csv"));
+    }
+    fs::remove_all(root);
+}
+
+// Per-step validation happens up front in prepare_for_step, before any per-nexus data is received.
+TEST(PerNexusCsvOutputMgr_Test, PrepareForStepRejectsInvalidState)
+{
+    const fs::path root = fresh_temp_dir();
+    const std::vector<std::string> ids = {"nex-1"};
+    {
+        PerNexusCsvOutputMgr mgr(ids, root.string() + "/");
+        const auto current_time = time_marker(0, 0, "2020-01-01 00:00:00");
+
+        EXPECT_THROW(mgr.prepare_for_step("not-default", current_time), std::runtime_error);
+
+        mgr.close();
+        utils::NexusOutputsMgr& base = mgr;
+        EXPECT_THROW(base.prepare_for_step(current_time), std::runtime_error);
     }
     fs::remove_all(root);
 }
