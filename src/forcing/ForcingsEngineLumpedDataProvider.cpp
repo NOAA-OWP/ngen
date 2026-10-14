@@ -1,6 +1,7 @@
 #include "DataProvider.hpp"
 #include <chrono>
 #include <forcing/ForcingsEngineLumpedDataProvider.hpp>
+#include "bmi_utilities.hpp"
 
 namespace data_access {
 
@@ -46,7 +47,7 @@ Provider::ForcingsEngineLumpedDataProvider(
 
     // Copy CAT-ID values into instance vector
     const auto cat_id_span = boost::span<const int>(
-        static_cast<const int*>(bmi_->GetValuePtr("CAT-ID")),
+        models::bmi::GetValuePtr<int>(*bmi_, "CAT-ID"),
         size_id_dimension
     );
 
@@ -90,7 +91,7 @@ Provider::data_type Provider::get_value(
         while (current < end) {
             current += time_step_;
             bmi_->UpdateUntil(std::chrono::duration_cast<std::chrono::seconds>(current - time_begin_).count());
-            acc += static_cast<double*>(bmi_->GetValuePtr(variable))[divide_idx_];
+            acc += models::bmi::GetValuePtr<double>(*bmi_, variable)[divide_idx_];
         }
 
         if (m == ReSampleMethod::MEAN) {
@@ -125,7 +126,7 @@ std::vector<Provider::data_type> Provider::get_values(
     while (current < end) {
         current += time_step_;
         bmi_->UpdateUntil(std::chrono::duration_cast<std::chrono::seconds>(current - time_begin_).count());
-        values.push_back(static_cast<double*>(bmi_->GetValuePtr(variable))[divide_idx_]);
+        values.push_back(models::bmi::GetValuePtr<double>(*bmi_, variable)[divide_idx_]);
     }
 
     return values;
