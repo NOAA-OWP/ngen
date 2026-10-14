@@ -261,18 +261,6 @@ namespace models {
                 return (T*) bmi_model->GetValuePtr(name);
             }
 
-            /**
-             * This is totally redundant for C++ models, so this simply returns the original
-             * string for the external name.
-             *
-             * @param external_type_name The string name of a C++ type.
-             * @param item_size The particular size in bytes for items of the involved analogous types.
-             * @return The name string for the analogous C++ type, which is exactly what was passed in.
-             */
-            const std::string
-            get_analogous_cxx_type(const std::string &external_type_name, const size_t item_size) override {
-                return external_type_name;
-            }
 
             /**
              * Whether the backing model has been initialized yet.
