@@ -256,11 +256,7 @@ namespace models {
 
             int GetGridSize(int grid_id) override;
 
-            template<class T>
-            T *GetValuePtr(const std::string &name){
-                return (T*) bmi_model->GetValuePtr(name);
-            }
-
+            
 
             /**
              * Whether the backing model has been initialized yet.

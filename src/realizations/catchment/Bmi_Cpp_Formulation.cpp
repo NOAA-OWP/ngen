@@ -51,7 +51,7 @@ double Bmi_Cpp_Formulation::get_var_value_as_double(const int& index, const std:
     const std::string type = model->GetVarType(var_name);
     try {
         return models::bmi::with_bmi_type(type, [&]<typename T>() -> double {
-            return static_cast<double>(model->GetValuePtr<T>(var_name)[index]);
+            return static_cast<double>(models::bmi::GetValuePtr<T>(*model, var_name)[index]);
         });
     } catch (const models::bmi::unknown_bmi_type&) {
         throw std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
