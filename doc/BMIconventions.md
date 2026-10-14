@@ -71,13 +71,15 @@ Since the [BMI Documentation] simply states that, "Use of native language type n
 
 * C
     * all permissible C basic types
+    * the fixed-width spellings, with or without the `_t` suffix: `int8`/`int8_t` through `int64`/`int64_t`, and their `uint` counterparts
     * `get_var_itemsize` result **must** match the size of the data type in the compiler used to build ngen
 * C++
     * all permissible C basic types
+    * the fixed-width spellings, with or without the `_t` suffix: `int8`/`int8_t` through `int64`/`int64_t`, and their `uint` counterparts
     * `get_var_itemsize` result **must** match the size of the data type in the compiler used to build ngen
 * Fortran
     * `integer`, `real`, `double precision` 
-    * also accepts `int`, `float`, and `double`
+    * also accepts any spelling listed for C above, including `int`, `float`, and `double`
     * `get_var_itemsize` result **must** match the size of the data type in the compiler used to build ngen
 * Python
     * `int`, `long`, `long long`, `int64`, `longlong`, `float`, `float64`, `long double`
@@ -94,6 +96,11 @@ Since the [BMI Documentation] simply states that, "Use of native language type n
     will produce `dtype('float32')`.
 
     For variables where the dtype is not directly accessed from the numpy meta data, this usage is discouraged! Please use the non-namespaced names above.
+
+The `get_var_itemsize` requirement above is checked. ngen resolves the name returned by
+`get_var_type` to a C++ type and compares that type's width against the item size you report; if the
+two disagree, the variable is refused and the error names both sizes. A model reporting `integer`
+for an `integer(kind=8)` variable is rejected on that basis.
 
 # Input and output published variables
 
