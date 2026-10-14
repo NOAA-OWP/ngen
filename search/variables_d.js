@@ -17,7 +17,7 @@ var searchData=
   ['nexus_5findexes_5f_14',['nexus_indexes_',['../class_ngen_simulation.html#a6a81cfc85c71834ae9fe3986fa68e057',1,'NgenSimulation']]],
   ['nexus_5foutfiles_15',['nexus_outfiles',['../classutils_1_1_per_nexus_csv_output_mgr.html#af76ee3e66e12b4fcc66a5f6557d8f937',1,'utils::PerNexusCsvOutputMgr']]],
   ['nexus_5foutputs_5fmgr_16',['nexus_outputs_mgr',['../classngen_1_1_surface_layer.html#a2a9db2399700b8dcb7c3f22ccffcca13',1,'ngen::SurfaceLayer']]],
-  ['nexuses_17',['nexuses',['../class_network___test.html#ae789eeaf0218215360e2c2b7f3f60d8d',1,'Network_Test']]],
+  ['nexuses_17',['nexuses',['../classngen_1_1_surface_layer.html#abc560367ec28489a1fc886905242fa09',1,'ngen::SurfaceLayer::nexuses'],['../class_network___test.html#ae789eeaf0218215360e2c2b7f3f60d8d',1,'Network_Test::nexuses']]],
   ['nooutletreservoir_18',['NoOutletReservoir',['../class_reservoir_kernel_test.html#a7c15ea06536a086b52fe2556832885f0',1,'ReservoirKernelTest::NoOutletReservoir'],['../class_reservoir_timeless_kernel_test.html#af4bafdd80667fac7872bbe8481619ebb',1,'ReservoirTimelessKernelTest::NoOutletReservoir']]],
   ['nooutletreservoir2_19',['NoOutletReservoir2',['../class_reservoir_kernel_test.html#a2388e5a52b338a7a655d4855b4fc84e7',1,'ReservoirKernelTest::NoOutletReservoir2'],['../class_reservoir_timeless_kernel_test.html#af20b4030e198fe3a8a66a30bac9b7ee3',1,'ReservoirTimelessKernelTest::NoOutletReservoir2']]],
   ['nooutletreservoir3_20',['NoOutletReservoir3',['../class_reservoir_kernel_test.html#a8940d7294c4e15d00b6776719c8db958',1,'ReservoirKernelTest::NoOutletReservoir3'],['../class_reservoir_timeless_kernel_test.html#a9991d3dad1be1cc5067c574df69eb38a',1,'ReservoirTimelessKernelTest::NoOutletReservoir3']]],

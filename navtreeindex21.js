@@ -1,5 +1,7 @@
 var NAVTREEINDEX21 =
 {
+"struct_partition_data.html#ace7481bdd629019f1f88b883932e69c9":[24,0,52,3],
+"struct_selector_config.html":[24,0,58],
 "struct_selector_config.html#a3bee33144aeb242bc5f5de932c53feb0":[24,0,58,2],
 "struct_selector_config.html#a5356a02dad76fed50aa0b601d8a201ac":[24,0,58,3],
 "struct_selector_config.html#a6430c7570d2f3d020644ed6e21554d42":[24,0,58,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX21 =
 "structngen_1_1traits_1_1type__list.html#a3ab33dc8cba769ab4ade2357b3f17429":[24,0,7,3,1,3],
 "structngen_1_1traits_1_1type__list.html#a4a32af846a3acc3dc13aef5efe96149f":[23,0,9,3,1,2],
 "structngen_1_1traits_1_1type__list.html#a4a32af846a3acc3dc13aef5efe96149f":[24,0,7,3,1,2],
-"structngen_1_1traits_1_1type__list.html#a91117e0c7427bf94c84b444ca3ad44cc":[23,0,9,3,1,1],
-"structngen_1_1traits_1_1type__list.html#a91117e0c7427bf94c84b444ca3ad44cc":[24,0,7,3,1,1],
-"structngen_1_1traits_1_1type__list.html#ad6517ca709d9362b3050110e805d2fe1":[23,0,9,3,1,0]
+"structngen_1_1traits_1_1type__list.html#a91117e0c7427bf94c84b444ca3ad44cc":[23,0,9,3,1,1]
 };

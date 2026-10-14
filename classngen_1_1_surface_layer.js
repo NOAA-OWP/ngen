@@ -14,6 +14,7 @@ var classngen_1_1_surface_layer =
     [ "description", "classngen_1_1_surface_layer.html#a681d5a55c86a8d1f6d6f9f5fc57b6c63", null ],
     [ "features", "classngen_1_1_surface_layer.html#a2529e511bb8f0091ff321652988a3290", null ],
     [ "nexus_outputs_mgr", "classngen_1_1_surface_layer.html#a2a9db2399700b8dcb7c3f22ccffcca13", null ],
+    [ "nexuses", "classngen_1_1_surface_layer.html#abc560367ec28489a1fc886905242fa09", null ],
     [ "output_time_index", "classngen_1_1_surface_layer.html#a1d1dbf9050ac23f56ac06e9e3dffc176", null ],
     [ "processing_units", "classngen_1_1_surface_layer.html#a5cb15eea3711606ced64504aa3ea1749", null ],
     [ "simulation_time", "classngen_1_1_surface_layer.html#a96c3fed503f10d2b2f9ab00c229a5b91", null ]

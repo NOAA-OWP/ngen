@@ -1,5 +1,7 @@
 var NAVTREEINDEX22 =
 {
+"structngen_1_1traits_1_1type__list.html#a91117e0c7427bf94c84b444ca3ad44cc":[24,0,7,3,1,1],
+"structngen_1_1traits_1_1type__list.html#ad6517ca709d9362b3050110e805d2fe1":[23,0,9,3,1,0],
 "structngen_1_1traits_1_1type__list.html#ad6517ca709d9362b3050110e805d2fe1":[24,0,7,3,1,0],
 "structnonstd_1_1detail_1_1in__place__index__tag.html":[23,0,10,0,0],
 "structnonstd_1_1detail_1_1in__place__index__tag.html":[24,0,8,0,0],

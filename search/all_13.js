@@ -49,7 +49,7 @@ var searchData=
   ['nexus_5fremote_5ftest_46',['Nexus_Remote_Test',['../class_nexus___remote___test.html',1,'Nexus_Remote_Test'],['../class_nexus___remote___test.html#a84ef792b6f6ec0b55fc6f1a45d969460',1,'Nexus_Remote_Test::Nexus_Remote_Test()']]],
   ['nexus_5ftest_47',['Nexus_Test',['../class_nexus___test.html',1,'Nexus_Test'],['../class_nexus___test.html#ab44b788bdf27a20acba375001c999cb0',1,'Nexus_Test::Nexus_Test()']]],
   ['nexuses_48',['Nexuses',['../class_h_y___catchment.html#a287e2db7317f88a8ba389ebb12dd3c7f',1,'HY_Catchment']]],
-  ['nexuses_49',['nexuses',['../class_network___test.html#ae789eeaf0218215360e2c2b7f3f60d8d',1,'Network_Test::nexuses'],['../classhy__features_1_1_h_y___features.html#a24406236a51bf3cb9d9af96e1890cc49',1,'hy_features::HY_Features::nexuses()']]],
+  ['nexuses_49',['nexuses',['../classngen_1_1_surface_layer.html#abc560367ec28489a1fc886905242fa09',1,'ngen::SurfaceLayer::nexuses'],['../class_network___test.html#ae789eeaf0218215360e2c2b7f3f60d8d',1,'Network_Test::nexuses'],['../classhy__features_1_1_h_y___features.html#a24406236a51bf3cb9d9af96e1890cc49',1,'hy_features::HY_Features::nexuses()']]],
   ['nexusoutputsmgr_50',['NexusOutputsMgr',['../classutils_1_1_nexus_outputs_mgr.html',1,'utils']]],
   ['ngen_51',['NGen',['../index.html',1,'']]],
   ['ngen_52',['ngen',['../md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md246',1,'Configuration considerations for t-route with ngen'],['../namespacengen.html',1,'ngen'],['../md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md243',1,'Using t-route with ngen']]],
