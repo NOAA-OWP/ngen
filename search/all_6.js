@@ -78,7 +78,7 @@ var searchData=
   ['as_20shared_20library_75',['As Shared Library',['../md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md64',1,'BMI C Model As Shared Library'],['../md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md72',1,'BMI C++ Model As Shared Library']]],
   ['as_5fboolean_76',['as_boolean',['../classgeojson_1_1_j_s_o_n_property.html#a6c9b6e556b9c2e2000bd9283ce8d1dbe',1,'geojson::JSONProperty']]],
   ['as_5fboolean_5fvector_77',['as_boolean_vector',['../classgeojson_1_1_j_s_o_n_property.html#a90c308f94b964f678592ba0c0c76afc4',1,'geojson::JSONProperty']]],
-  ['as_5fc_5farray_78',['as_c_array',['../namespacerealization.html#ac5a3c0c1080741658e77e7468b9b35dc',1,'realization']]],
+  ['as_5fc_5farray_78',['as_c_array',['../namespacemodels_1_1bmi.html#a542cc76d42a7abf4b46caa75eb0df312',1,'models::bmi']]],
   ['as_5flist_79',['as_list',['../classgeojson_1_1_j_s_o_n_property.html#a4e95480bc0ecde8028f0a68a11245617',1,'geojson::JSONProperty']]],
   ['as_5fnatural_5fnumber_80',['as_natural_number',['../classgeojson_1_1_j_s_o_n_property.html#a99b488b0681f98286fe65be25f5cba06',1,'geojson::JSONProperty']]],
   ['as_5fnatural_5fvector_81',['as_natural_vector',['../classgeojson_1_1_j_s_o_n_property.html#a6793486f38f4330e6f780b956e7122be',1,'geojson::JSONProperty']]],

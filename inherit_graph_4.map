@@ -23,8 +23,10 @@
 <area shape="poly" id="edge16_Node000002_Node000008" title=" " alt="" coords="128,252,177,252,177,258,128,258"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="197,300,318,325"/>
 <area shape="poly" id="edge18_Node000002_Node000010" title=" " alt="" coords="122,270,168,284,209,296,208,302,167,290,121,275"/>
-<area shape="rect" id="Node000011" href="$struct_units_helper_1_1unit__conversion__exception.html" title=" " alt="" coords="395,260,582,301"/>
-<area shape="poly" id="edge19_Node000010_Node000011" title=" " alt="" coords="332,299,394,291,395,296,333,305"/>
-<area shape="rect" id="Node000012" href="$structngen_1_1sqlite_1_1sqlite__error.html" title=" " alt="" coords="427,325,550,366"/>
-<area shape="poly" id="edge20_Node000010_Node000012" title=" " alt="" coords="333,321,427,334,426,339,333,326"/>
+<area shape="rect" id="Node000011" href="$struct_units_helper_1_1unit__conversion__exception.html" title=" " alt="" coords="395,227,582,267"/>
+<area shape="poly" id="edge19_Node000010_Node000011" title=" " alt="" coords="319,292,413,265,415,271,321,297"/>
+<area shape="rect" id="Node000012" href="$structmodels_1_1bmi_1_1unknown__bmi__type.html" title="Thrown when a BMI type name has no C++ type behind it." alt="" coords="414,292,563,333"/>
+<area shape="poly" id="edge20_Node000010_Node000012" title=" " alt="" coords="333,310,414,310,414,315,333,315"/>
+<area shape="rect" id="Node000013" href="$structngen_1_1sqlite_1_1sqlite__error.html" title=" " alt="" coords="427,357,550,398"/>
+<area shape="poly" id="edge21_Node000010_Node000013" title=" " alt="" coords="321,327,427,358,426,363,319,332"/>
 </map>

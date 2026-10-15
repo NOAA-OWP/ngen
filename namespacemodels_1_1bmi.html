@@ -124,15 +124,172 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html">Bmi_Cpp_Adapter</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A thin wrapper class to provide convenience functions around raw BMI models written in C++, especially those loaded dynamically from libraries.  <a href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmodels_1_1bmi_1_1unknown__bmi__type.html">unknown_bmi_type</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thrown when a BMI type name has no C++ type behind it.  <a href="structmodels_1_1bmi_1_1unknown__bmi__type.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ad08b04570775a5bfade8aa39deb0d751" id="r_ad08b04570775a5bfade8aa39deb0d751"><td class="memTemplParams" colspan="2">template&lt;typename F &gt; </td></tr>
+<tr class="memitem:ad08b04570775a5bfade8aa39deb0d751"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ad08b04570775a5bfade8aa39deb0d751">with_bmi_type</a> (const std::string &amp;type, F &amp;&amp;f)</td></tr>
+<tr class="memdesc:ad08b04570775a5bfade8aa39deb0d751"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call <code>f</code> with the C++ type that a BMI type name denotes.  <br /></td></tr>
+<tr class="separator:ad08b04570775a5bfade8aa39deb0d751"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a054dd7ec3fbb6fdd9079e3caa48d665a" id="r_a054dd7ec3fbb6fdd9079e3caa48d665a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a054dd7ec3fbb6fdd9079e3caa48d665a">require_item_size</a> (const std::string &amp;type, size_t item_size, const std::string &amp;described)</td></tr>
+<tr class="memdesc:a054dd7ec3fbb6fdd9079e3caa48d665a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Throw unless <code>type</code> names a C++ type of exactly <code>item_size</code> bytes.  <br /></td></tr>
+<tr class="separator:a054dd7ec3fbb6fdd9079e3caa48d665a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a542cc76d42a7abf4b46caa75eb0df312" id="r_a542cc76d42a7abf4b46caa75eb0df312"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Iterator &gt; </td></tr>
+<tr class="memitem:a542cc76d42a7abf4b46caa75eb0df312"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a542cc76d42a7abf4b46caa75eb0df312">as_c_array</a> (Iterator begin, Iterator end)</td></tr>
+<tr class="memdesc:a542cc76d42a7abf4b46caa75eb0df312"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template function for copying iterator range into contiguous array.  <br /></td></tr>
+<tr class="separator:a542cc76d42a7abf4b46caa75eb0df312"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa56083ccb0ce55d60a4c3c3391b65928" id="r_aa56083ccb0ce55d60a4c3c3391b65928"><td class="memTemplParams" colspan="2">template&lt;typename Iterator &gt; </td></tr>
+<tr class="memitem:aa56083ccb0ce55d60a4c3c3391b65928"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; void &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aa56083ccb0ce55d60a4c3c3391b65928">get_values_as_type</a> (std::string type, Iterator begin, Iterator end)</td></tr>
+<tr class="memdesc:aa56083ccb0ce55d60a4c3c3391b65928"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets values in iterator range, casted based on <code>type</code> then returned as typeless (void) pointer.  <br /></td></tr>
+<tr class="separator:aa56083ccb0ce55d60a4c3c3391b65928"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a190d426fc97ea51b5f754f078048d1c0" id="r_a190d426fc97ea51b5f754f078048d1c0"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a190d426fc97ea51b5f754f078048d1c0"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; void &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a190d426fc97ea51b5f754f078048d1c0">get_value_as_type</a> (std::string type, T value)</td></tr>
+<tr class="memdesc:a190d426fc97ea51b5f754f078048d1c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a single value, casted based on <code>type</code> then returned as a typeless (void) pointer.  <br /></td></tr>
+<tr class="separator:a190d426fc97ea51b5f754f078048d1c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c2366c15ed4de750faf988535516581" id="r_a0c2366c15ed4de750faf988535516581"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a0c2366c15ed4de750faf988535516581"><td class="memTemplItemLeft" align="right" valign="top">T *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a0c2366c15ed4de750faf988535516581">GetValuePtr</a> (<a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html">Bmi_Adapter</a> &amp;model, const std::string &amp;name)</td></tr>
+<tr class="memdesc:a0c2366c15ed4de750faf988535516581"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a pointer to a model variable's own storage, addressed as.  <br /></td></tr>
+<tr class="separator:a0c2366c15ed4de750faf988535516581"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a023e01b3fa0c71541bcc8e5f804b80ee" id="r_a023e01b3fa0c71541bcc8e5f804b80ee"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a023e01b3fa0c71541bcc8e5f804b80ee"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a023e01b3fa0c71541bcc8e5f804b80ee">GetValue</a> (<a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html">Bmi_Adapter</a> &amp;model, const std::string &amp;name)</td></tr>
 <tr class="memdesc:a023e01b3fa0c71541bcc8e5f804b80ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy values from a BMI model adapter and box them into a vector.  <br /></td></tr>
 <tr class="separator:a023e01b3fa0c71541bcc8e5f804b80ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a542cc76d42a7abf4b46caa75eb0df312" name="a542cc76d42a7abf4b46caa75eb0df312"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a542cc76d42a7abf4b46caa75eb0df312">&#9670;&#160;</a></span>as_c_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Iterator &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; T &gt; models::bmi::as_c_array </td>
+          <td>(</td>
+          <td class="paramtype">Iterator</td>          <td class="paramname"><span class="paramname"><em>begin</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Iterator</td>          <td class="paramname"><span class="paramname"><em>end</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Template function for copying iterator range into contiguous array. </p>
+<p>This function will iterate the range and cast the iterator value to type T and copy that value into a C-like array of contiguous, dynamically allocated memory. This array is stored in a smart pointer with a custom array deleter.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td></td></tr>
+    <tr><td class="paramname">Iterator</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">begin</td><td></td></tr>
+    <tr><td class="paramname">end</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;T&gt; </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="#aa56083ccb0ce55d60a4c3c3391b65928">get_values_as_type()</a>.</p>
+
+</div>
+</div>
+<a id="a190d426fc97ea51b5f754f078048d1c0" name="a190d426fc97ea51b5f754f078048d1c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a190d426fc97ea51b5f754f078048d1c0">&#9670;&#160;</a></span>get_value_as_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; void &gt; models::bmi::get_value_as_type </td>
+          <td>(</td>
+          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets a single value, casted based on <code>type</code> then returned as a typeless (void) pointer. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td></td></tr>
+    <tr><td class="paramname">value</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;void&gt; </dd></dl>
+
+<p class="reference">References <a class="el" href="#ad08b04570775a5bfade8aa39deb0d751">with_bmi_type()</a>.</p>
+
+</div>
+</div>
+<a id="aa56083ccb0ce55d60a4c3c3391b65928" name="aa56083ccb0ce55d60a4c3c3391b65928"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa56083ccb0ce55d60a4c3c3391b65928">&#9670;&#160;</a></span>get_values_as_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Iterator &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; void &gt; models::bmi::get_values_as_type </td>
+          <td>(</td>
+          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Iterator</td>          <td class="paramname"><span class="paramname"><em>begin</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Iterator</td>          <td class="paramname"><span class="paramname"><em>end</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets values in iterator range, casted based on <code>type</code> then returned as typeless (void) pointer. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Iterator</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td></td></tr>
+    <tr><td class="paramname">begin</td><td></td></tr>
+    <tr><td class="paramname">end</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;void&gt; </dd></dl>
+
+<p class="reference">References <a class="el" href="#a542cc76d42a7abf4b46caa75eb0df312">as_c_array()</a>, and <a class="el" href="#ad08b04570775a5bfade8aa39deb0d751">with_bmi_type()</a>.</p>
+
+</div>
+</div>
 <a id="a023e01b3fa0c71541bcc8e5f804b80ee" name="a023e01b3fa0c71541bcc8e5f804b80ee"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a023e01b3fa0c71541bcc8e5f804b80ee">&#9670;&#160;</a></span>GetValue()</h2>
 
@@ -188,9 +345,183 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a8dbc88c821422f043becca2742a9a507">models::bmi::Bmi_Adapter::get_analogous_cxx_type()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027">models::bmi::Bmi_Adapter::get_model_name()</a>, <a class="el" href="classbmi_1_1_bmi.html#a9bec826b32a2362ab32585e7f42d0230">bmi::Bmi::GetValue()</a>, <a class="el" href="classbmi_1_1_bmi.html#aaac07008cbea8bc96082a4e7ad2173b6">bmi::Bmi::GetVarItemsize()</a>, <a class="el" href="classbmi_1_1_bmi.html#ab200d1746bee8806139062040dd06d8f">bmi::Bmi::GetVarNbytes()</a>, <a class="el" href="classbmi_1_1_bmi.html#a0eff3235819c8c9c793e437a88048a1e">bmi::Bmi::GetVarType()</a>, and <a class="el" href="namespacemodels_1_1bmi_1_1helper.html#ae390f681f50fc89690893b76733a88e1">models::bmi::helper::make_vector()</a>.</p>
+<p class="reference">References <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#add7916e3cbe2b42e8084182afd4ee412">models::bmi::Bmi_Adapter::get_analogous_cxx_type()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027">models::bmi::Bmi_Adapter::get_model_name()</a>, <a class="el" href="classbmi_1_1_bmi.html#a9bec826b32a2362ab32585e7f42d0230">bmi::Bmi::GetValue()</a>, <a class="el" href="classbmi_1_1_bmi.html#aaac07008cbea8bc96082a4e7ad2173b6">bmi::Bmi::GetVarItemsize()</a>, <a class="el" href="classbmi_1_1_bmi.html#ab200d1746bee8806139062040dd06d8f">bmi::Bmi::GetVarNbytes()</a>, <a class="el" href="classbmi_1_1_bmi.html#a0eff3235819c8c9c793e437a88048a1e">bmi::Bmi::GetVarType()</a>, <a class="el" href="namespacemodels_1_1bmi_1_1helper.html#ae390f681f50fc89690893b76733a88e1">models::bmi::helper::make_vector()</a>, <a class="el" href="#a054dd7ec3fbb6fdd9079e3caa48d665a">require_item_size()</a>, and <a class="el" href="#ad08b04570775a5bfade8aa39deb0d751">with_bmi_type()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9265b07222e97669c28fc24454ad7350">realization::Bmi_Module_Formulation::get_values()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a95c328f3f7ebee638e0a36dc0874a898">realization::Bmi_C_Formulation::get_var_value_as()</a>, and <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a65eb8e2d86900ba37349334ebfeaf9cd">realization::Bmi_Cpp_Formulation::get_var_value_as()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a0f3a680030c5e99d7917077fea0d7369">models::bmi::protocols::NgenMassBalance::check_support()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9265b07222e97669c28fc24454ad7350">realization::Bmi_Module_Formulation::get_values()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a95c328f3f7ebee638e0a36dc0874a898">realization::Bmi_C_Formulation::get_var_value_as()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a65eb8e2d86900ba37349334ebfeaf9cd">realization::Bmi_Cpp_Formulation::get_var_value_as()</a>, and <a class="el" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a1a673a48d66e7bf989e50b2b6e40749d">models::bmi::protocols::NgenMassBalance::run()</a>.</p>
+
+</div>
+</div>
+<a id="a0c2366c15ed4de750faf988535516581" name="a0c2366c15ed4de750faf988535516581"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c2366c15ed4de750faf988535516581">&#9670;&#160;</a></span>GetValuePtr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T * models::bmi::GetValuePtr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html">Bmi_Adapter</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>model</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get a pointer to a model variable's own storage, addressed as. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T.</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<p>The sibling of <a class="el" href="#a023e01b3fa0c71541bcc8e5f804b80ee" title="Copy values from a BMI model adapter and box them into a vector.">GetValue()</a> for callers that want the model's memory rather than a copy of it. <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ...">Bmi_Adapter</a> exposes the pointer untyped, because BMI has no way to describe what is behind it; every caller therefore has to supply the type, and nothing in BMI obliges that type to be the width the model allocated. Indexing with the wrong stride walks off the variable, so the item size is checked here rather than at each call site.</p>
+<p>An adapter whose language cannot hand out pointers says so from <a class="el" href="#a0c2366c15ed4de750faf988535516581" title="Get a pointer to a model variable&#39;s own storage, addressed as.">GetValuePtr()</a> itself; this does not need to know which those are.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type to address the variable's storage as. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model</td><td>The adapter holding the variable. </td></tr>
+    <tr><td class="paramname">name</td><td>The name of the variable. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the model's own storage, which the model continues to own. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>If the model's items are not </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>wide, or it cannot give a pointer. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027">models::bmi::Bmi_Adapter::get_model_name()</a>, <a class="el" href="classbmi_1_1_bmi.html#a20a614920ee1fda51670923736670a83">bmi::Bmi::GetValuePtr()</a>, and <a class="el" href="classbmi_1_1_bmi.html#aaac07008cbea8bc96082a4e7ad2173b6">bmi::Bmi::GetVarItemsize()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">realization::Bmi_C_Formulation::get_var_value_as_double()</a>, and <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab01f9dad8c3c543595848fd9bc8b887b">realization::Bmi_Cpp_Formulation::get_var_value_as_double()</a>.</p>
+
+</div>
+</div>
+<a id="a054dd7ec3fbb6fdd9079e3caa48d665a" name="a054dd7ec3fbb6fdd9079e3caa48d665a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a054dd7ec3fbb6fdd9079e3caa48d665a">&#9670;&#160;</a></span>require_item_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void models::bmi::require_item_size </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>item_size</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>described</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Throw unless <code>type</code> names a C++ type of exactly <code>item_size</code> bytes. </p>
+<p>A model reports a variable's type name and the size of one item separately, and nothing in BMI makes the two agree. Every buffer here is sized from one and addressed as the other, so a disagreement reads or writes past the end &ndash; on a read, out of the buffer; on a write, out of it by whatever the model takes. Neither is detectable afterwards, so refuse up front.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>A BMI type name. </td></tr>
+    <tr><td class="paramname">item_size</td><td>The size in bytes of one item, as the model reports it. </td></tr>
+    <tr><td class="paramname">described</td><td>What is being resolved, for the message; e.g. "variable 'X' of model 'Y'". </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="structmodels_1_1bmi_1_1unknown__bmi__type.html" title="Thrown when a BMI type name has no C++ type behind it.">unknown_bmi_type</a></td><td>If <code>type</code> has no C++ type behind it. </td></tr>
+    <tr><td class="paramname">std::runtime_error</td><td>If that type is not <code>item_size</code> bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="#ad08b04570775a5bfade8aa39deb0d751">with_bmi_type()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___var___details.html#a63b0a4b7dd13badeff93e0cb46c8a5fd">realization::Bmi_Var_Details::Bmi_Var_Details()</a>, <a class="el" href="#a023e01b3fa0c71541bcc8e5f804b80ee">GetValue()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab4acbd230e09c1dc4b0151c301bbe966">realization::Bmi_Module_Formulation::set_initial_bmi_parameters()</a>.</p>
+
+</div>
+</div>
+<a id="ad08b04570775a5bfade8aa39deb0d751" name="ad08b04570775a5bfade8aa39deb0d751"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad08b04570775a5bfade8aa39deb0d751">&#9670;&#160;</a></span>with_bmi_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto models::bmi::with_bmi_type </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">F &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>f</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Call <code>f</code> with the C++ type that a BMI type name denotes. </p>
+<p>BMI reports a variable's type as a string, and every operation on that variable has to pick the matching C++ type before it can do anything. This is the one place that mapping lives: <code>f</code> is a callable with a template parameter, invoked as <code>f.template operator()&lt;T&gt;()</code>, and this picks the T.</p>
+<p>Several spellings may denote one type &ndash; "real" and "float", "integer" and "int" &ndash; and the table resolves them alike. Which spelling a given model reports is not this function's concern.</p>
+<div class="fragment"><div class="line"><span class="comment">// &quot;Give me this value as whatever the variable declares.&quot; The target type is a string, so the</span></div>
+<div class="line"><span class="comment">// cast cannot be written directly: capture the value, and let the table supply the type.</span></div>
+<div class="line">std::shared_ptr&lt;void&gt; as_declared_type(<span class="keyword">const</span> std::string &amp;type, <span class="keywordtype">double</span> value)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code hl_function" href="#ad08b04570775a5bfade8aa39deb0d751">with_bmi_type</a>(type, [&amp;]&lt;<span class="keyword">typename</span> T&gt;() -&gt; std::shared_ptr&lt;void&gt; {</div>
+<div class="line">        <span class="keywordflow">return</span> std::make_shared&lt;T&gt;(<span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(value));</div>
+<div class="line">    });</div>
+<div class="line">}</div>
+<div class="ttc" id="anamespacemodels_1_1bmi_html_ad08b04570775a5bfade8aa39deb0d751"><div class="ttname"><a href="#ad08b04570775a5bfade8aa39deb0d751">models::bmi::with_bmi_type</a></div><div class="ttdeci">auto with_bmi_type(const std::string &amp;type, F &amp;&amp;f)</div><div class="ttdoc">Call f with the C++ type that a BMI type name denotes.</div><div class="ttdef"><b>Definition</b> bmi_utilities.hpp:85</div></div>
+</div><!-- fragment --><p>Two things there are easy to get wrong.</p>
+<p>The lambda takes no arguments. <code>value</code> arrives by capture, which leaves the parameter list free for the one thing this function supplies &ndash; <code>f.template operator()&lt;T&gt;()</code> passes a type and nothing else. That is what lets one table serve callers whose data is a scalar, an iterator pair, or a pointer and a count: each seals its own data into the closure.</p>
+<p>The <code>-&gt; std::shared_ptr&lt;void&gt;</code> is load-bearing. <code>make_shared&lt;T&gt;</code> yields a <code>shared_ptr&lt;T&gt;</code>, a different type in every branch, and the branches have to agree on one return type. Converting there is the only place T is still known. Omitting it is a compile error rather than a silent conversion &ndash; as is a body that does not compile for every type below, even one no caller ever asks for, since all of them are instantiated.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>The BMI type name to resolve. </td></tr>
+    <tr><td class="paramname">f</td><td>A callable templated on the type to use. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Whatever <code>f</code> returns. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="structmodels_1_1bmi_1_1unknown__bmi__type.html" title="Thrown when a BMI type name has no C++ type behind it.">unknown_bmi_type</a></td><td>If no C++ type corresponds to <code>type</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">Referenced by <a class="el" href="#a190d426fc97ea51b5f754f078048d1c0">get_value_as_type()</a>, <a class="el" href="#aa56083ccb0ce55d60a4c3c3391b65928">get_values_as_type()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">realization::Bmi_C_Formulation::get_var_value_as_double()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab01f9dad8c3c543595848fd9bc8b887b">realization::Bmi_Cpp_Formulation::get_var_value_as_double()</a>, <a class="el" href="#a023e01b3fa0c71541bcc8e5f804b80ee">GetValue()</a>, and <a class="el" href="#a054dd7ec3fbb6fdd9079e3caa48d665a">require_item_size()</a>.</p>
 
 </div>
 </div>
@@ -200,7 +531,7 @@ template&lt;typename T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacemodels.html">models</a></li><li class="navelem"><a class="el" href="namespacemodels_1_1bmi.html">bmi</a></li>
-    <li class="footer">Generated on Wed Oct 14 2026 18:34:08 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 15 2026 18:04:30 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

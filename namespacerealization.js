@@ -12,13 +12,10 @@ var namespacerealization =
     [ "Formulation", "classrealization_1_1_formulation.html", "classrealization_1_1_formulation" ],
     [ "Formulation_Manager", "classrealization_1_1_formulation___manager.html", "classrealization_1_1_formulation___manager" ],
     [ "constructor", "namespacerealization.html#a4650d2aa0dbb51562df2b155d3f317a5", null ],
-    [ "as_c_array", "namespacerealization.html#ac5a3c0c1080741658e77e7468b9b35dc", null ],
     [ "construct_formulation", "namespacerealization.html#a7d869198d20463cf7eec427861e5146d", null ],
     [ "create_formulation_constructor", "namespacerealization.html#a3cd7f3652715fac25a746ef1810a1cff", null ],
     [ "formulation_exists", "namespacerealization.html#a0328960a5fc84440b67f91a6d705f940", null ],
     [ "get_formulation_key", "namespacerealization.html#a60fd2dcdc052492d4ae87454567f2b61", null ],
-    [ "get_value_as_type", "namespacerealization.html#a93cc4172ef61ac110470c47ca86667ae", null ],
-    [ "get_values_as_type", "namespacerealization.html#a4b923a22dda92a7191b3f277e754884d", null ],
     [ "is_var_name_in_collection", "namespacerealization.html#a0dcefe582566b875b127ff489f423300", null ],
     [ "valid_formulation_keys", "namespacerealization.html#a6b6d6d33a273c0a3de61473e05881ef6", null ],
     [ "formulation_constructors", "namespacerealization.html#af60e0abfbd9fa40024373e9012cb7769", null ]

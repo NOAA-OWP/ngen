@@ -222,12 +222,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a46721fb3efe64696d7f70e75542f4bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a632b6de2675d4089a3e885ef8989cdb8" id="r_a632b6de2675d4089a3e885ef8989cdb8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a632b6de2675d4089a3e885ef8989cdb8">GetGridSize</a> (int grid_id) override</td></tr>
 <tr class="separator:a632b6de2675d4089a3e885ef8989cdb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01ef25ce848b6b9ac9622ea974ae96d5" id="r_a01ef25ce848b6b9ac9622ea974ae96d5"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a01ef25ce848b6b9ac9622ea974ae96d5"><td class="memTemplItemLeft" align="right" valign="top">T *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a01ef25ce848b6b9ac9622ea974ae96d5">GetValuePtr</a> (const std::string &amp;name)</td></tr>
-<tr class="separator:a01ef25ce848b6b9ac9622ea974ae96d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9436b5b458bfbe85f8efc2a0c1f2f90a" id="r_a9436b5b458bfbe85f8efc2a0c1f2f90a"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9436b5b458bfbe85f8efc2a0c1f2f90a">get_analogous_cxx_type</a> (const std::string &amp;external_type_name, const size_t item_size) override</td></tr>
-<tr class="memdesc:a9436b5b458bfbe85f8efc2a0c1f2f90a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is totally redundant for C++ models, so this simply returns the original string for the external name.  <br /></td></tr>
-<tr class="separator:a9436b5b458bfbe85f8efc2a0c1f2f90a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fb64f09d9e675f4da58e9a9fa08b550" id="r_a4fb64f09d9e675f4da58e9a9fa08b550"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4fb64f09d9e675f4da58e9a9fa08b550">is_model_initialized</a> () override</td></tr>
 <tr class="memdesc:a4fb64f09d9e675f4da58e9a9fa08b550"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the backing model has been initialized yet.  <br /></td></tr>
 <tr class="separator:a4fb64f09d9e675f4da58e9a9fa08b550"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -254,6 +248,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a73ca855d0db45838b87309038fae1fed" id="r_a73ca855d0db45838b87309038fae1fed"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a73ca855d0db45838b87309038fae1fed">convert_seconds_to_model_time</a> (const double &amp;seconds_val)</td></tr>
 <tr class="memdesc:a73ca855d0db45838b87309038fae1fed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a given number of seconds to equivalent in model time units.  <br /></td></tr>
 <tr class="separator:a73ca855d0db45838b87309038fae1fed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add7916e3cbe2b42e8084182afd4ee412" id="r_add7916e3cbe2b42e8084182afd4ee412"><td class="memItemLeft" align="right" valign="top">virtual const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#add7916e3cbe2b42e8084182afd4ee412">get_analogous_cxx_type</a> (const std::string &amp;external_type_name, const size_t item_size)</td></tr>
+<tr class="memdesc:add7916e3cbe2b42e8084182afd4ee412"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduce a type name the backing model reports to one <a class="el" href="namespacemodels_1_1bmi.html#ad08b04570775a5bfade8aa39deb0d751">models::bmi::with_bmi_type</a> resolves.  <br /></td></tr>
+<tr class="separator:add7916e3cbe2b42e8084182afd4ee412"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeace85bbd89962f2945bec0ca3c76091" id="r_aeace85bbd89962f2945bec0ca3c76091"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#aeace85bbd89962f2945bec0ca3c76091">Initialize</a> ()</td></tr>
 <tr class="memdesc:aeace85bbd89962f2945bec0ca3c76091"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the wrapped BMI model functionality using the value from the <code>bmi_init_config</code> member variable and the API's <code>Initialize</code> function.  <br /></td></tr>
 <tr class="separator:aeace85bbd89962f2945bec0ca3c76091"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1071,8 +1068,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a9436b5b458bfbe85f8efc2a0c1f2f90a" name="a9436b5b458bfbe85f8efc2a0c1f2f90a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9436b5b458bfbe85f8efc2a0c1f2f90a">&#9670;&#160;</a></span>get_analogous_cxx_type()</h2>
+<a id="add7916e3cbe2b42e8084182afd4ee412" name="add7916e3cbe2b42e8084182afd4ee412"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add7916e3cbe2b42e8084182afd4ee412">&#9670;&#160;</a></span>get_analogous_cxx_type()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1081,7 +1078,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string models::bmi::Bmi_Cpp_Adapter::get_analogous_cxx_type </td>
+          <td class="memname">virtual const std::string models::bmi::Bmi_Adapter::get_analogous_cxx_type </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>external_type_name</em></span>, </td>
         </tr>
@@ -1093,22 +1090,30 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>This is totally redundant for C++ models, so this simply returns the original string for the external name. </p>
+<p>Reduce a type name the backing model reports to one <a class="el" href="namespacemodels_1_1bmi.html#ad08b04570775a5bfade8aa39deb0d751">models::bmi::with_bmi_type</a> resolves. </p>
+<p>Most languages need no reduction: the table carries the C and C++ keyword spellings and the Fortran ones alike, so the name a model reports is already a name the table knows, and the default returns it unchanged.</p>
+<p>The exception is a language whose type names do not determine a type. A Python model reports "int" for any width, so the name alone cannot be resolved and the item size has to settle it. That is what an override is for, and why the size is a parameter here.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">external_type_name</td><td>The string name of a C++ type. </td></tr>
-    <tr><td class="paramname">item_size</td><td>The particular size in bytes for items of the involved analogous types. </td></tr>
+    <tr><td class="paramname">external_type_name</td><td>The string name of some type in the backing model's language. </td></tr>
+    <tr><td class="paramname">item_size</td><td>The size in bytes of one item, where the name alone does not imply it. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The name string for the analogous C++ type, which is exactly what was passed in. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A type name that <a class="el" href="namespacemodels_1_1bmi.html#ad08b04570775a5bfade8aa39deb0d751" title="Call f with the C++ type that a BMI type name denotes.">with_bmi_type()</a> can resolve. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>If an override cannot reduce the name to one the table carries. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Implements <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a8dbc88c821422f043becca2742a9a507">models::bmi::Bmi_Adapter</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee">models::bmi::GetValue()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab4acbd230e09c1dc4b0151c301bbe966">realization::Bmi_Module_Formulation::set_initial_bmi_parameters()</a>.</p>
 
 </div>
 </div>
@@ -1232,7 +1237,7 @@ Friends</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ac2c1d1c1e279212c200ad6a4be4864d6">models::bmi::Bmi_Adapter::model_name</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e5990e1c4616de029d7ad7691c2b7c7">realization::Bmi_Module_Formulation::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9265b07222e97669c28fc24454ad7350">realization::Bmi_Module_Formulation::get_values()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee">models::bmi::GetValue()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#addd74974bd828fac5bc15790787fc119">realization::Bmi_Module_Formulation::perform_set()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e5990e1c4616de029d7ad7691c2b7c7">realization::Bmi_Module_Formulation::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9265b07222e97669c28fc24454ad7350">realization::Bmi_Module_Formulation::get_values()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee">models::bmi::GetValue()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a0c2366c15ed4de750faf988535516581">models::bmi::GetValuePtr()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#addd74974bd828fac5bc15790787fc119">realization::Bmi_Module_Formulation::perform_set()</a>.</p>
 
 </div>
 </div>
@@ -2181,37 +2186,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a01ef25ce848b6b9ac9622ea974ae96d5" name="a01ef25ce848b6b9ac9622ea974ae96d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a01ef25ce848b6b9ac9622ea974ae96d5">&#9670;&#160;</a></span>GetValuePtr() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">T * models::bmi::Bmi_Cpp_Adapter::GetValuePtr </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="#ab816605158ae58a39b799531f8100ee3">bmi_model</a>.</p>
-
-</div>
-</div>
 <a id="a5b9403c0314283a85ed95a823d0e8bb8" name="a5b9403c0314283a85ed95a823d0e8bb8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b9403c0314283a85ed95a823d0e8bb8">&#9670;&#160;</a></span>GetValuePtr() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b9403c0314283a85ed95a823d0e8bb8">&#9670;&#160;</a></span>GetValuePtr()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2900,7 +2876,7 @@ template&lt;class T &gt; </div>
 
 <p>Pointer to backing BMI model instance. </p>
 
-<p class="reference">Referenced by <a class="el" href="#aae261e8942befef9cb10ba47b89199a4">construct_and_init_backing_model_for_type()</a>, <a class="el" href="#a6cf1d96f795492f61873e0669840ee11">execModuleCreation()</a>, <a class="el" href="#afabb0ce9324c2c08bab9e836dc612c3b">finalizeForCppAdapter()</a>, <a class="el" href="#a525a39465193c8d20339e99ab8bde811">GetComponentName()</a>, <a class="el" href="#aaa7231e53236d33b6fdcd0115593a895">GetCurrentTime()</a>, <a class="el" href="#a0923801f9d9825c4ef5d3cf72b4f8708">GetEndTime()</a>, <a class="el" href="#ab45666badfaa907ba0a7c55c6e106219">GetGridEdgeCount()</a>, <a class="el" href="#a19652fbb7c60f056da4527efd5aa2a88">GetGridEdgeNodes()</a>, <a class="el" href="#a4a737701bc874461655bd7d4323ba24a">GetGridFaceCount()</a>, <a class="el" href="#a4c6a978be19ef4bed202e052cc83c73d">GetGridFaceEdges()</a>, <a class="el" href="#abb7f2d4c8f3d7ba01351d07f79cc955f">GetGridFaceNodes()</a>, <a class="el" href="#a1c2607f396ff1823d3cc66be038e4d4e">GetGridNodeCount()</a>, <a class="el" href="#ad4aed4f4e912c9161e3449c1a0bb50ce">GetGridNodesPerFace()</a>, <a class="el" href="#a9f2357d6b7d4b8da329b1a9641e8fde5">GetGridOrigin()</a>, <a class="el" href="#a46721fb3efe64696d7f70e75542f4bb8">GetGridRank()</a>, <a class="el" href="#ac17af9d7d2ea5965bbd1e3a28fbc70a3">GetGridShape()</a>, <a class="el" href="#a632b6de2675d4089a3e885ef8989cdb8">GetGridSize()</a>, <a class="el" href="#a2a11647efdf0a02747504b956ca9a8bd">GetGridSpacing()</a>, <a class="el" href="#a5043ca6510cd206ce1edd2ab32db4670">GetGridType()</a>, <a class="el" href="#ad3532931dd9e131ac9b30f2e87eb8517">GetGridX()</a>, <a class="el" href="#a69795aaedd44e68fdcfd6e4d26b1aca0">GetGridY()</a>, <a class="el" href="#a3bb3f0e6b50c4de9c316ae8645b5a48b">GetGridZ()</a>, <a class="el" href="#a08c7bcef329dc755ae8e6d033f6f8863">GetInputItemCount()</a>, <a class="el" href="#a6d9a06972635dc97df073be308cf4d40">GetInputVarNames()</a>, <a class="el" href="#a08e4a3af233609310dac6edb07dfaf9f">GetOutputItemCount()</a>, <a class="el" href="#a4dcf1892ff38d9cd57c8e640fe56f610">GetOutputVarNames()</a>, <a class="el" href="#acc80b86af4c9a9b925ae69e6e5648da3">GetStartTime()</a>, <a class="el" href="#ace1062b59c99e99e4ea2db034bb19e27">GetTimeUnits()</a>, <a class="el" href="#a9bea0cc777d5a640dc7f89dbe5f6d789">GetValue()</a>, <a class="el" href="#af9dd2629499833ef47718489a31d7929">GetValueAtIndices()</a>, <a class="el" href="#a01ef25ce848b6b9ac9622ea974ae96d5">GetValuePtr()</a>, <a class="el" href="#a5b9403c0314283a85ed95a823d0e8bb8">GetValuePtr()</a>, <a class="el" href="#ab97af381039be3a6cd5e5c1bfcfbe8d7">GetVarGrid()</a>, <a class="el" href="#a2b089a47b5dd9bba06938059873638c3">GetVarItemsize()</a>, <a class="el" href="#a12f1473ea30e7a53cfda13ebdd8849fb">GetVarLocation()</a>, <a class="el" href="#af5dafe2165c1195da18a1c95264a1e24">GetVarNbytes()</a>, <a class="el" href="#a6a9f11b324fa7d84303f98636ba8fecf">GetVarType()</a>, <a class="el" href="#a841e084e84ba0325b77e1a868c7407d6">GetVarUnits()</a>, <a class="el" href="#afecf067b64e1c54a6055c7f3f4425d88">retrieve_bmi_model_time_step_size()</a>, <a class="el" href="#a3bfd5449118d6cda3284ae082a9c6f29">SetValue()</a>, <a class="el" href="#ab236c00fa83e76c4f6f61fc0b01e053a">SetValue()</a>, <a class="el" href="#a8beb0b4c2b142c8e9a39bce3a9c88232">SetValueAtIndices()</a>, <a class="el" href="#a56fff2766129afc3b9cef1d7b2fd82cb">SetValueAtIndices()</a>, <a class="el" href="#ae33b5178cf37132e8c0186977612f74b">Update()</a>, and <a class="el" href="#a89ed729aade1ec00e5aee9f587168ea6">UpdateUntil()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#aae261e8942befef9cb10ba47b89199a4">construct_and_init_backing_model_for_type()</a>, <a class="el" href="#a6cf1d96f795492f61873e0669840ee11">execModuleCreation()</a>, <a class="el" href="#afabb0ce9324c2c08bab9e836dc612c3b">finalizeForCppAdapter()</a>, <a class="el" href="#a525a39465193c8d20339e99ab8bde811">GetComponentName()</a>, <a class="el" href="#aaa7231e53236d33b6fdcd0115593a895">GetCurrentTime()</a>, <a class="el" href="#a0923801f9d9825c4ef5d3cf72b4f8708">GetEndTime()</a>, <a class="el" href="#ab45666badfaa907ba0a7c55c6e106219">GetGridEdgeCount()</a>, <a class="el" href="#a19652fbb7c60f056da4527efd5aa2a88">GetGridEdgeNodes()</a>, <a class="el" href="#a4a737701bc874461655bd7d4323ba24a">GetGridFaceCount()</a>, <a class="el" href="#a4c6a978be19ef4bed202e052cc83c73d">GetGridFaceEdges()</a>, <a class="el" href="#abb7f2d4c8f3d7ba01351d07f79cc955f">GetGridFaceNodes()</a>, <a class="el" href="#a1c2607f396ff1823d3cc66be038e4d4e">GetGridNodeCount()</a>, <a class="el" href="#ad4aed4f4e912c9161e3449c1a0bb50ce">GetGridNodesPerFace()</a>, <a class="el" href="#a9f2357d6b7d4b8da329b1a9641e8fde5">GetGridOrigin()</a>, <a class="el" href="#a46721fb3efe64696d7f70e75542f4bb8">GetGridRank()</a>, <a class="el" href="#ac17af9d7d2ea5965bbd1e3a28fbc70a3">GetGridShape()</a>, <a class="el" href="#a632b6de2675d4089a3e885ef8989cdb8">GetGridSize()</a>, <a class="el" href="#a2a11647efdf0a02747504b956ca9a8bd">GetGridSpacing()</a>, <a class="el" href="#a5043ca6510cd206ce1edd2ab32db4670">GetGridType()</a>, <a class="el" href="#ad3532931dd9e131ac9b30f2e87eb8517">GetGridX()</a>, <a class="el" href="#a69795aaedd44e68fdcfd6e4d26b1aca0">GetGridY()</a>, <a class="el" href="#a3bb3f0e6b50c4de9c316ae8645b5a48b">GetGridZ()</a>, <a class="el" href="#a08c7bcef329dc755ae8e6d033f6f8863">GetInputItemCount()</a>, <a class="el" href="#a6d9a06972635dc97df073be308cf4d40">GetInputVarNames()</a>, <a class="el" href="#a08e4a3af233609310dac6edb07dfaf9f">GetOutputItemCount()</a>, <a class="el" href="#a4dcf1892ff38d9cd57c8e640fe56f610">GetOutputVarNames()</a>, <a class="el" href="#acc80b86af4c9a9b925ae69e6e5648da3">GetStartTime()</a>, <a class="el" href="#ace1062b59c99e99e4ea2db034bb19e27">GetTimeUnits()</a>, <a class="el" href="#a9bea0cc777d5a640dc7f89dbe5f6d789">GetValue()</a>, <a class="el" href="#af9dd2629499833ef47718489a31d7929">GetValueAtIndices()</a>, <a class="el" href="#a5b9403c0314283a85ed95a823d0e8bb8">GetValuePtr()</a>, <a class="el" href="#ab97af381039be3a6cd5e5c1bfcfbe8d7">GetVarGrid()</a>, <a class="el" href="#a2b089a47b5dd9bba06938059873638c3">GetVarItemsize()</a>, <a class="el" href="#a12f1473ea30e7a53cfda13ebdd8849fb">GetVarLocation()</a>, <a class="el" href="#af5dafe2165c1195da18a1c95264a1e24">GetVarNbytes()</a>, <a class="el" href="#a6a9f11b324fa7d84303f98636ba8fecf">GetVarType()</a>, <a class="el" href="#a841e084e84ba0325b77e1a868c7407d6">GetVarUnits()</a>, <a class="el" href="#afecf067b64e1c54a6055c7f3f4425d88">retrieve_bmi_model_time_step_size()</a>, <a class="el" href="#a3bfd5449118d6cda3284ae082a9c6f29">SetValue()</a>, <a class="el" href="#ab236c00fa83e76c4f6f61fc0b01e053a">SetValue()</a>, <a class="el" href="#a8beb0b4c2b142c8e9a39bce3a9c88232">SetValueAtIndices()</a>, <a class="el" href="#a56fff2766129afc3b9cef1d7b2fd82cb">SetValueAtIndices()</a>, <a class="el" href="#ae33b5178cf37132e8c0186977612f74b">Update()</a>, and <a class="el" href="#a89ed729aade1ec00e5aee9f587168ea6">UpdateUntil()</a>.</p>
 
 </div>
 </div>
@@ -3220,7 +3196,7 @@ template&lt;class T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacemodels.html">models</a></li><li class="navelem"><a class="el" href="namespacemodels_1_1bmi.html">bmi</a></li><li class="navelem"><a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html">Bmi_Cpp_Adapter</a></li>
-    <li class="footer">Generated on Wed Oct 14 2026 18:34:08 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 15 2026 18:04:30 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

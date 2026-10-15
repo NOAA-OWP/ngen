@@ -155,17 +155,6 @@ Functions</h2></td></tr>
 <tr class="separator:a7d869198d20463cf7eec427861e5146d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0dcefe582566b875b127ff489f423300" id="r_a0dcefe582566b875b127ff489f423300"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0dcefe582566b875b127ff489f423300">is_var_name_in_collection</a> (const std::vector&lt; std::string &gt; &amp;all_names, const std::string &amp;var_name)</td></tr>
 <tr class="separator:a0dcefe582566b875b127ff489f423300"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5a3c0c1080741658e77e7468b9b35dc" id="r_ac5a3c0c1080741658e77e7468b9b35dc"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Iterator &gt; </td></tr>
-<tr class="memitem:ac5a3c0c1080741658e77e7468b9b35dc"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ac5a3c0c1080741658e77e7468b9b35dc">as_c_array</a> (Iterator begin, Iterator end)</td></tr>
-<tr class="memdesc:ac5a3c0c1080741658e77e7468b9b35dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template function for copying iterator range into contiguous array.  <br /></td></tr>
-<tr class="separator:ac5a3c0c1080741658e77e7468b9b35dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b923a22dda92a7191b3f277e754884d" id="r_a4b923a22dda92a7191b3f277e754884d"><td class="memTemplParams" colspan="2">template&lt;typename Iterator &gt; </td></tr>
-<tr class="memitem:a4b923a22dda92a7191b3f277e754884d"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; void &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a4b923a22dda92a7191b3f277e754884d">get_values_as_type</a> (std::string type, Iterator begin, Iterator end)</td></tr>
-<tr class="memdesc:a4b923a22dda92a7191b3f277e754884d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets values in iterator range, casted based on <code>type</code> then returned as typeless (void) pointer.  <br /></td></tr>
-<tr class="separator:a4b923a22dda92a7191b3f277e754884d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93cc4172ef61ac110470c47ca86667ae" id="r_a93cc4172ef61ac110470c47ca86667ae"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a93cc4172ef61ac110470c47ca86667ae"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; void &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a93cc4172ef61ac110470c47ca86667ae">get_value_as_type</a> (std::string type, T value)</td></tr>
-<tr class="separator:a93cc4172ef61ac110470c47ca86667ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cd7f3652715fac25a746ef1810a1cff" id="r_a3cd7f3652715fac25a746ef1810a1cff"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a3cd7f3652715fac25a746ef1810a1cff"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="#a4650d2aa0dbb51562df2b155d3f317a5">constructor</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a3cd7f3652715fac25a746ef1810a1cff">create_formulation_constructor</a> ()</td></tr>
 <tr class="separator:a3cd7f3652715fac25a746ef1810a1cff"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -193,49 +182,6 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ac5a3c0c1080741658e77e7468b9b35dc" name="ac5a3c0c1080741658e77e7468b9b35dc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac5a3c0c1080741658e77e7468b9b35dc">&#9670;&#160;</a></span>as_c_array()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T , typename Iterator &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt; T &gt; realization::as_c_array </td>
-          <td>(</td>
-          <td class="paramtype">Iterator</td>          <td class="paramname"><span class="paramname"><em>begin</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Iterator</td>          <td class="paramname"><span class="paramname"><em>end</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Template function for copying iterator range into contiguous array. </p>
-<p>This function will iterate the range and cast the iterator value to type T and copy that value into a C-like array of contiguous, dynamically allocated memory. This array is stored in a smart pointer with a custom array deleter.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td></td></tr>
-    <tr><td class="paramname">Iterator</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">begin</td><td></td></tr>
-    <tr><td class="paramname">end</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;T&gt; </dd></dl>
-
-<p class="reference">Referenced by <a class="el" href="#a4b923a22dda92a7191b3f277e754884d">get_values_as_type()</a>.</p>
-
-</div>
-</div>
 <a id="a7d869198d20463cf7eec427861e5146d" name="a7d869198d20463cf7eec427861e5146d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7d869198d20463cf7eec427861e5146d">&#9670;&#160;</a></span>construct_formulation()</h2>
 
@@ -354,80 +300,6 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="a93cc4172ef61ac110470c47ca86667ae" name="a93cc4172ef61ac110470c47ca86667ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93cc4172ef61ac110470c47ca86667ae">&#9670;&#160;</a></span>get_value_as_type()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt; void &gt; realization::get_value_as_type </td>
-          <td>(</td>
-          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#addd74974bd828fac5bc15790787fc119">realization::Bmi_Module_Formulation::perform_set()</a>.</p>
-
-</div>
-</div>
-<a id="a4b923a22dda92a7191b3f277e754884d" name="a4b923a22dda92a7191b3f277e754884d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b923a22dda92a7191b3f277e754884d">&#9670;&#160;</a></span>get_values_as_type()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Iterator &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt; void &gt; realization::get_values_as_type </td>
-          <td>(</td>
-          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Iterator</td>          <td class="paramname"><span class="paramname"><em>begin</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Iterator</td>          <td class="paramname"><span class="paramname"><em>end</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Gets values in iterator range, casted based on <code>type</code> then returned as typeless (void) pointer. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Iterator</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">type</td><td></td></tr>
-    <tr><td class="paramname">begin</td><td></td></tr>
-    <tr><td class="paramname">end</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;void&gt; </dd></dl>
-
-<p class="reference">References <a class="el" href="#ac5a3c0c1080741658e77e7468b9b35dc">as_c_array()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#addd74974bd828fac5bc15790787fc119">realization::Bmi_Module_Formulation::perform_set()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab4acbd230e09c1dc4b0151c301bbe966">realization::Bmi_Module_Formulation::set_initial_bmi_parameters()</a>.</p>
-
-</div>
-</div>
 <a id="a0dcefe582566b875b127ff489f423300" name="a0dcefe582566b875b127ff489f423300"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0dcefe582566b875b127ff489f423300">&#9670;&#160;</a></span>is_var_name_in_collection()</h2>
 
@@ -524,7 +396,7 @@ template&lt;typename Iterator &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li>
-    <li class="footer">Generated on Wed Oct 14 2026 18:34:08 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 15 2026 18:04:30 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

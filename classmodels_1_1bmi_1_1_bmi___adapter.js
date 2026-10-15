@@ -8,7 +8,7 @@ var classmodels_1_1bmi_1_1_bmi___adapter =
     [ "convert_model_time_to_seconds", "classmodels_1_1bmi_1_1_bmi___adapter.html#a6efbfd9ff146bbe3b3c1a82d243f8266", null ],
     [ "convert_seconds_to_model_time", "classmodels_1_1bmi_1_1_bmi___adapter.html#a73ca855d0db45838b87309038fae1fed", null ],
     [ "Finalize", "classmodels_1_1bmi_1_1_bmi___adapter.html#a50ba4a7a721969d53c269298a1e607a7", null ],
-    [ "get_analogous_cxx_type", "classmodels_1_1bmi_1_1_bmi___adapter.html#a8dbc88c821422f043becca2742a9a507", null ],
+    [ "get_analogous_cxx_type", "classmodels_1_1bmi_1_1_bmi___adapter.html#add7916e3cbe2b42e8084182afd4ee412", null ],
     [ "get_model_name", "classmodels_1_1bmi_1_1_bmi___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027", null ],
     [ "get_time_convert_factor", "classmodels_1_1bmi_1_1_bmi___adapter.html#a4b021125add57e1921bb4344d9ccea5f", null ],
     [ "GetComponentName", "classmodels_1_1bmi_1_1_bmi___adapter.html#a260433746fad7ef67ace7daf4927ccf8", null ],

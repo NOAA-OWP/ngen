@@ -234,9 +234,9 @@
 <g id="Node000011" class="node">
 <title>Node11</title>
 <g id="a_Node000011"><a xlink:href="struct_units_helper_1_1unit__conversion__exception.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="432.75,-195.5 292.25,-195.5 292.25,-165 432.75,-165 432.75,-195.5"/>
-<text text-anchor="start" x="300.25" y="-182" font-family="Helvetica,sans-Serif" font-size="10.00">UnitsHelper::unit_conversion</text>
-<text text-anchor="middle" x="362.5" y="-170.75" font-family="Helvetica,sans-Serif" font-size="10.00">_exception</text>
+<polygon fill="white" stroke="#666666" points="432.75,-220.5 292.25,-220.5 292.25,-190 432.75,-190 432.75,-220.5"/>
+<text text-anchor="start" x="300.25" y="-207" font-family="Helvetica,sans-Serif" font-size="10.00">UnitsHelper::unit_conversion</text>
+<text text-anchor="middle" x="362.5" y="-195.75" font-family="Helvetica,sans-Serif" font-size="10.00">_exception</text>
 </a>
 </g>
 </g>
@@ -244,18 +244,18 @@
 <g id="edge19_Node000010_Node000011" class="edge">
 <title>Node10&#45;&gt;Node11</title>
 <g id="a_edge19_Node000010_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M245.59,-164.03C260.34,-166.09 276.46,-168.35 291.85,-170.5"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="246.5,-160.62 236.11,-162.7 245.53,-167.56 246.5,-160.62"/>
+<path fill="none" stroke="#63b8ff" d="M236.03,-169.4C257.72,-175.6 283.78,-183.04 306.5,-189.54"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="237.15,-166.08 226.57,-166.7 235.23,-172.81 237.15,-166.08"/>
 </a>
 </g>
 </g>
 <!-- Node12 -->
 <g id="Node000012" class="node">
 <title>Node12</title>
-<g id="a_Node000012"><a xlink:href="structngen_1_1sqlite_1_1sqlite__error.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="408.75,-146.5 316.25,-146.5 316.25,-116 408.75,-116 408.75,-146.5"/>
-<text text-anchor="start" x="324.25" y="-133" font-family="Helvetica,sans-Serif" font-size="10.00">ngen::sqlite::sqlite</text>
-<text text-anchor="middle" x="362.5" y="-121.75" font-family="Helvetica,sans-Serif" font-size="10.00">_error</text>
+<g id="a_Node000012"><a xlink:href="structmodels_1_1bmi_1_1unknown__bmi__type.html" target="_top" xlink:title="Thrown when a BMI type name has no C++ type behind it.">
+<polygon fill="white" stroke="#666666" points="418.12,-171.5 306.88,-171.5 306.88,-141 418.12,-141 418.12,-171.5"/>
+<text text-anchor="start" x="314.88" y="-158" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::unknown</text>
+<text text-anchor="middle" x="362.5" y="-146.75" font-family="Helvetica,sans-Serif" font-size="10.00">_bmi_type</text>
 </a>
 </g>
 </g>
@@ -263,8 +263,27 @@
 <g id="edge20_Node000010_Node000012" class="edge">
 <title>Node10&#45;&gt;Node12</title>
 <g id="a_edge20_Node000010_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M245.8,-148.12C268.5,-144.81 294.39,-141.03 315.92,-137.89"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="245.5,-144.62 236.11,-149.53 246.51,-151.55 245.5,-144.62"/>
+<path fill="none" stroke="#63b8ff" d="M246.02,-156.25C265.4,-156.25 287.08,-156.25 306.38,-156.25"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="246.13,-152.75 236.13,-156.25 246.13,-159.75 246.13,-152.75"/>
+</a>
+</g>
+</g>
+<!-- Node13 -->
+<g id="Node000013" class="node">
+<title>Node13</title>
+<g id="a_Node000013"><a xlink:href="structngen_1_1sqlite_1_1sqlite__error.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="408.75,-122.5 316.25,-122.5 316.25,-92 408.75,-92 408.75,-122.5"/>
+<text text-anchor="start" x="324.25" y="-109" font-family="Helvetica,sans-Serif" font-size="10.00">ngen::sqlite::sqlite</text>
+<text text-anchor="middle" x="362.5" y="-97.75" font-family="Helvetica,sans-Serif" font-size="10.00">_error</text>
+</a>
+</g>
+</g>
+<!-- Node10&#45;&gt;Node13 -->
+<g id="edge21_Node000010_Node000013" class="edge">
+<title>Node10&#45;&gt;Node13</title>
+<g id="a_edge21_Node000010_Node000013"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M236.07,-143.09C260.85,-136.01 291.3,-127.31 315.99,-120.25"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="235.23,-139.69 226.57,-145.8 237.15,-146.42 235.23,-139.69"/>
 </a>
 </g>
 </g>

@@ -20,6 +20,7 @@ var searchData=
   ['tr_17',['tr',['../structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a2530391bf0767dc8d82fdbe9d93e2736',1,'ngen::geopackage::wkb::wgs84']]],
   ['tree_18',['tree',['../class_partitions___parser.html#aa8a46b738112a567324898164372cce9',1,'Partitions_Parser::tree'],['../classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39',1,'realization::Formulation_Manager::tree']]],
   ['type_19',['type',['../classgeojson_1_1_feature_base.html#ac2786341bb4e570fa8d60fefe18dbe0f',1,'geojson::FeatureBase::type'],['../classgeojson_1_1_j_s_o_n_property.html#a1d92b4f0ec6df2fef86a7b4ef183973b',1,'geojson::JSONProperty::type'],['../structrealization_1_1config_1_1_formulation.html#a69273e7abbfc0a8c974d4c075c9fc18c',1,'realization::config::Formulation::type']]],
-  ['types_20',['types',['../class_visitor.html#a3eb2cd9d4d15c13b69c011e8df28d03b',1,'Visitor']]],
-  ['types_5f_21',['types_',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a70d526cc218c9ddd25504b50f3f138cf',1,'ngen::sqlite::database::iterator']]]
+  ['type_5fname_20',['type_name',['../structmodels_1_1bmi_1_1unknown__bmi__type.html#a9f122cf6ae44b8df40d4c091a6b45e45',1,'models::bmi::unknown_bmi_type']]],
+  ['types_21',['types',['../class_visitor.html#a3eb2cd9d4d15c13b69c011e8df28d03b',1,'Visitor']]],
+  ['types_5f_22',['types_',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a70d526cc218c9ddd25504b50f3f138cf',1,'ngen::sqlite::database::iterator']]]
 ];

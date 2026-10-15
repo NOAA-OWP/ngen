@@ -146,9 +146,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a73ca855d0db45838b87309038fae1fed" id="r_a73ca855d0db45838b87309038fae1fed"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73ca855d0db45838b87309038fae1fed">convert_seconds_to_model_time</a> (const double &amp;seconds_val)</td></tr>
 <tr class="memdesc:a73ca855d0db45838b87309038fae1fed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a given number of seconds to equivalent in model time units.  <br /></td></tr>
 <tr class="separator:a73ca855d0db45838b87309038fae1fed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8dbc88c821422f043becca2742a9a507" id="r_a8dbc88c821422f043becca2742a9a507"><td class="memItemLeft" align="right" valign="top">virtual const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8dbc88c821422f043becca2742a9a507">get_analogous_cxx_type</a> (const std::string &amp;external_type_name, const size_t item_size)=0</td></tr>
-<tr class="memdesc:a8dbc88c821422f043becca2742a9a507"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the name string for the C++ type analogous to the described type in the backing model.  <br /></td></tr>
-<tr class="separator:a8dbc88c821422f043becca2742a9a507"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add7916e3cbe2b42e8084182afd4ee412" id="r_add7916e3cbe2b42e8084182afd4ee412"><td class="memItemLeft" align="right" valign="top">virtual const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add7916e3cbe2b42e8084182afd4ee412">get_analogous_cxx_type</a> (const std::string &amp;external_type_name, const size_t item_size)</td></tr>
+<tr class="memdesc:add7916e3cbe2b42e8084182afd4ee412"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduce a type name the backing model reports to one <a class="el" href="namespacemodels_1_1bmi.html#ad08b04570775a5bfade8aa39deb0d751">models::bmi::with_bmi_type</a> resolves.  <br /></td></tr>
+<tr class="separator:add7916e3cbe2b42e8084182afd4ee412"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeace85bbd89962f2945bec0ca3c76091" id="r_aeace85bbd89962f2945bec0ca3c76091"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeace85bbd89962f2945bec0ca3c76091">Initialize</a> ()</td></tr>
 <tr class="memdesc:aeace85bbd89962f2945bec0ca3c76091"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the wrapped BMI model functionality using the value from the <code>bmi_init_config</code> member variable and the API's <code>Initialize</code> function.  <br /></td></tr>
 <tr class="separator:aeace85bbd89962f2945bec0ca3c76091"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -505,8 +505,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a8dbc88c821422f043becca2742a9a507" name="a8dbc88c821422f043becca2742a9a507"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8dbc88c821422f043becca2742a9a507">&#9670;&#160;</a></span>get_analogous_cxx_type()</h2>
+<a id="add7916e3cbe2b42e8084182afd4ee412" name="add7916e3cbe2b42e8084182afd4ee412"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add7916e3cbe2b42e8084182afd4ee412">&#9670;&#160;</a></span>get_analogous_cxx_type()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -527,31 +527,28 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Get the name string for the C++ type analogous to the described type in the backing model. </p>
-<p>The supported languages for BMI modules support different types than C++ in general, but it is necessary to map "external" types to the appropriate C++ type for certain interactions; e.g., setting a variable value. This function encapsulates the translation specific to the particular language.</p>
-<p>Note that the size of an individual item is also required, as this can vary in certain situations depending on the implementation language of a backing model.</p>
-<p>Implementations should all throw the same type of exception (currently, std::runtime_error) if/when an unrecognized external type name parameter is provided.</p>
+<p>Reduce a type name the backing model reports to one <a class="el" href="namespacemodels_1_1bmi.html#ad08b04570775a5bfade8aa39deb0d751">models::bmi::with_bmi_type</a> resolves. </p>
+<p>Most languages need no reduction: the table carries the C and C++ keyword spellings and the Fortran ones alike, so the name a model reports is already a name the table knows, and the default returns it unchanged.</p>
+<p>The exception is a language whose type names do not determine a type. A Python model reports "int" for any width, so the name alone cannot be resolved and the item size has to settle it. That is what an override is for, and why the size is a parameter here.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">external_type_name</td><td>The string name of some type in backing model's implementation language. </td></tr>
-    <tr><td class="paramname">item_size</td><td>The particular size in bytes for items of the involved analogous types. </td></tr>
+    <tr><td class="paramname">external_type_name</td><td>The string name of some type in the backing model's language. </td></tr>
+    <tr><td class="paramname">item_size</td><td>The size in bytes of one item, where the name alone does not imply it. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The name string for the C++ type analogous to the described type in the backing model. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A type name that <a class="el" href="namespacemodels_1_1bmi.html#ad08b04570775a5bfade8aa39deb0d751" title="Call f with the C++ type that a BMI type name denotes.">with_bmi_type()</a> can resolve. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">std::runtime_error</td><td>If an unrecognized external type name parameter is provided. </td></tr>
+    <tr><td class="paramname">std::runtime_error</td><td>If an override cannot reduce the name to one the table carries. </td></tr>
   </table>
   </dd>
 </dl>
-
-<p>Implemented in <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#afe1d151a20915c4155640219c21d73b1">models::bmi::Bmi_C_Adapter</a>, and <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a9436b5b458bfbe85f8efc2a0c1f2f90a">models::bmi::Bmi_Cpp_Adapter</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee">models::bmi::GetValue()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab4acbd230e09c1dc4b0151c301bbe966">realization::Bmi_Module_Formulation::set_initial_bmi_parameters()</a>.</p>
 
@@ -577,7 +574,7 @@ Protected Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="#ac2c1d1c1e279212c200ad6a4be4864d6">model_name</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e5990e1c4616de029d7ad7691c2b7c7">realization::Bmi_Module_Formulation::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9265b07222e97669c28fc24454ad7350">realization::Bmi_Module_Formulation::get_values()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee">models::bmi::GetValue()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#addd74974bd828fac5bc15790787fc119">realization::Bmi_Module_Formulation::perform_set()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e5990e1c4616de029d7ad7691c2b7c7">realization::Bmi_Module_Formulation::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9265b07222e97669c28fc24454ad7350">realization::Bmi_Module_Formulation::get_values()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee">models::bmi::GetValue()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a0c2366c15ed4de750faf988535516581">models::bmi::GetValuePtr()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#addd74974bd828fac5bc15790787fc119">realization::Bmi_Module_Formulation::perform_set()</a>.</p>
 
 </div>
 </div>
@@ -1464,6 +1461,8 @@ Protected Attributes</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#abff680c53532f0ced29347a1c593250b">models::bmi::Bmi_C_Adapter</a>, and <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a5b9403c0314283a85ed95a823d0e8bb8">models::bmi::Bmi_Cpp_Adapter</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="namespacemodels_1_1bmi.html#a0c2366c15ed4de750faf988535516581">models::bmi::GetValuePtr()</a>.</p>
+
 </div>
 </div>
 <a id="ade7dda12b5beafed4166a113525f723c" name="ade7dda12b5beafed4166a113525f723c"></a>
@@ -1518,7 +1517,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a4077c403a272bec5a0ea64f30272ee89">models::bmi::Bmi_C_Adapter</a>, and <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2b089a47b5dd9bba06938059873638c3">models::bmi::Bmi_Cpp_Adapter</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aff171a21897a83efdde7c523e3388adb">realization::Bmi_Module_Formulation::do_bmi_sets_with_full_refetch()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee">models::bmi::GetValue()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a6b1178914ad6e8ae4d69d86284fce924">realization::Bmi_Module_Formulation::initialize_bmi_input_var_metadata()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab4acbd230e09c1dc4b0151c301bbe966">realization::Bmi_Module_Formulation::set_initial_bmi_parameters()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aff171a21897a83efdde7c523e3388adb">realization::Bmi_Module_Formulation::do_bmi_sets_with_full_refetch()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee">models::bmi::GetValue()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a0c2366c15ed4de750faf988535516581">models::bmi::GetValuePtr()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a6b1178914ad6e8ae4d69d86284fce924">realization::Bmi_Module_Formulation::initialize_bmi_input_var_metadata()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab4acbd230e09c1dc4b0151c301bbe966">realization::Bmi_Module_Formulation::set_initial_bmi_parameters()</a>.</p>
 
 </div>
 </div>
@@ -2146,7 +2145,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacemodels.html">models</a></li><li class="navelem"><a class="el" href="namespacemodels_1_1bmi.html">bmi</a></li><li class="navelem"><a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html">Bmi_Adapter</a></li>
-    <li class="footer">Generated on Wed Oct 14 2026 18:34:08 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 15 2026 18:04:30 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

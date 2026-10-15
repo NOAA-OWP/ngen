@@ -1,0 +1,11 @@
+<map id="models::bmi::unknown_bmi_type" name="models::bmi::unknown_bmi_type">
+<area shape="rect" id="Node000001" title="Thrown when a BMI type name has no C++ type behind it." alt="" coords="45,265,188,347"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,136,116,202"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,215,103,264,98,266,77,217"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="12,13,102,79"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="61,94,62,136,57,136,56,94"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="146,136,213,202"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="167,203,145,251,140,249,162,201"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="126,5,238,87"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="183,101,183,136,177,136,178,101"/>
+</map>

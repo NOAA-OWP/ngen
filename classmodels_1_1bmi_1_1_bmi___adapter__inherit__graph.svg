@@ -261,7 +261,7 @@ var sectionId = 'dynsection-0';
 <text text-anchor="start" x="14" y="-282.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetStartTime()</text>
 <text text-anchor="start" x="4" y="-267.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="14" y="-267.5" font-family="Helvetica,sans-Serif" font-size="10.00">GetTimeStep()</text>
-<text text-anchor="start" x="14" y="-252.25" font-family="Helvetica,sans-Serif" font-size="10.00">and 35 more...</text>
+<text text-anchor="start" x="14" y="-252.25" font-family="Helvetica,sans-Serif" font-size="10.00">and 33 more...</text>
 <text text-anchor="start" x="4.38" y="-237" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
 <text text-anchor="start" x="14" y="-237" font-family="Helvetica,sans-Serif" font-size="10.00">Bmi_C_Adapter()</text>
 <text text-anchor="start" x="4.38" y="-221.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
@@ -350,7 +350,7 @@ var sectionId = 'dynsection-0';
 <text text-anchor="start" x="166" y="-227.75" font-family="Helvetica,sans-Serif" font-size="10.00">GetStartTime()</text>
 <text text-anchor="start" x="156" y="-212.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="166" y="-212.5" font-family="Helvetica,sans-Serif" font-size="10.00">GetTimeStep()</text>
-<text text-anchor="start" x="166" y="-197.25" font-family="Helvetica,sans-Serif" font-size="10.00">and 35 more...</text>
+<text text-anchor="start" x="166" y="-197.25" font-family="Helvetica,sans-Serif" font-size="10.00">and 33 more...</text>
 <text text-anchor="start" x="156.38" y="-182" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
 <text text-anchor="start" x="166" y="-182" font-family="Helvetica,sans-Serif" font-size="10.00">Bmi_Cpp_Adapter()</text>
 <text text-anchor="start" x="156.38" y="-166.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>

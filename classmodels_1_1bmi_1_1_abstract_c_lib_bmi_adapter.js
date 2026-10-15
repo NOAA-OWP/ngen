@@ -10,7 +10,7 @@ var classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter =
     [ "dynamic_load_symbol", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a8c61e9b9324dff859901309b12037898", null ],
     [ "Finalize", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4d83ca0190339e27eda4b539e05177a6", null ],
     [ "finalizeForLibAbstraction", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6f507602993ebdec7ad1d9ce4f33eb05", null ],
-    [ "get_analogous_cxx_type", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a8dbc88c821422f043becca2742a9a507", null ],
+    [ "get_analogous_cxx_type", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#add7916e3cbe2b42e8084182afd4ee412", null ],
     [ "get_bmi_registration_function", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#abf7c98e446296bd7245a0872fcdba4db", null ],
     [ "get_dyn_lib_handle", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad273a417c3b0d21e01b09c81d8c00d91", null ],
     [ "get_model_name", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027", null ],

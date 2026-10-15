@@ -158,8 +158,9 @@ var searchData=
   ['type_155',['Optional: Specifying Project Build Config Type',['../md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md139',1,'']]],
   ['type_156',['type',['../classgeojson_1_1_feature_base.html#ac2786341bb4e570fa8d60fefe18dbe0f',1,'geojson::FeatureBase::type'],['../classgeojson_1_1_j_s_o_n_property.html#a1d92b4f0ec6df2fef86a7b4ef183973b',1,'geojson::JSONProperty::type'],['../structrealization_1_1config_1_1_formulation.html#a69273e7abbfc0a8c974d4c075c9fc18c',1,'realization::config::Formulation::type']]],
   ['type_5flist_157',['type_list',['../structngen_1_1traits_1_1type__list.html',1,'ngen::traits']]],
-  ['types_158',['types',['../class_visitor.html#a3eb2cd9d4d15c13b69c011e8df28d03b',1,'Visitor::types'],['../structngen_1_1sqlite_1_1database_1_1iterator.html#a0346a3c803f1288c2eb75374d5d8299d',1,'ngen::sqlite::database::iterator::types()']]],
-  ['types_20and_20sizes_159',['Variable Types and Sizes',['../md_doc_2_b_m_iconventions.html#autotoc_md101',1,'']]],
-  ['types_20in_20separate_20files_160',['Separate Test Types in Separate Files',['../md_test_2_r_e_a_d_m_e.html#autotoc_md317',1,'']]],
-  ['types_5f_161',['types_',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a70d526cc218c9ddd25504b50f3f138cf',1,'ngen::sqlite::database::iterator']]]
+  ['type_5fname_158',['type_name',['../structmodels_1_1bmi_1_1unknown__bmi__type.html#a9f122cf6ae44b8df40d4c091a6b45e45',1,'models::bmi::unknown_bmi_type']]],
+  ['types_159',['types',['../class_visitor.html#a3eb2cd9d4d15c13b69c011e8df28d03b',1,'Visitor::types'],['../structngen_1_1sqlite_1_1database_1_1iterator.html#a0346a3c803f1288c2eb75374d5d8299d',1,'ngen::sqlite::database::iterator::types()']]],
+  ['types_20and_20sizes_160',['Variable Types and Sizes',['../md_doc_2_b_m_iconventions.html#autotoc_md101',1,'']]],
+  ['types_20in_20separate_20files_161',['Separate Test Types in Separate Files',['../md_test_2_r_e_a_d_m_e.html#autotoc_md317',1,'']]],
+  ['types_5f_162',['types_',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a70d526cc218c9ddd25504b50f3f138cf',1,'ngen::sqlite::database::iterator']]]
 ];
