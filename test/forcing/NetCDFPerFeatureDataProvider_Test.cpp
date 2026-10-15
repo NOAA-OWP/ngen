@@ -9,6 +9,7 @@
 #include "StreamHandler.hpp"
 #include "FileChecker.h"
 #include <memory>
+#include <optional>
 #include <vector>
 #include <string>
 #include <unistd.h>
@@ -239,8 +240,8 @@ class NetCDFCacheLayoutTest : public ::testing::Test {
 
     // Creates a forcing file with n_cats catchments ("cat-0".."cat-N"), n_times
     // hourly timesteps starting at kStartEpoch, and one variable "temp" (units K)
-    // holding cellValue(cat, t). time_chunk == 0 leaves the variable contiguous.
-    std::string makeForcing(const std::string& name, std::size_t n_cats, std::size_t n_times, std::size_t time_chunk) {
+    // holding cellValue(cat, t) + offset. time_chunk == 0 leaves the variable contiguous.
+    std::string makeForcing(const std::string& name, std::size_t n_cats, std::size_t n_times, std::size_t time_chunk, double offset = 0) {
         std::string path = "./" + name;
         temp_files.push_back(path);
 
@@ -279,7 +280,7 @@ class NetCDFCacheLayoutTest : public ::testing::Test {
         std::vector<double> vals(n_cats * n_times);
         for (std::size_t i = 0; i < n_cats; ++i) {
             for (std::size_t t = 0; t < n_times; ++t) {
-                vals[i * n_times + t] = cellValue(i, t);
+                vals[i * n_times + t] = cellValue(i, t) + offset;
             }
         }
         temp_var.putVar(vals.data());
@@ -336,6 +337,25 @@ TEST_F(NetCDFCacheLayoutTest, PartialLastPageRead)
                 << "cat=" << cat << " t=" << t;
         }
     }
+}
+
+// A provider constructed at the address of a destroyed one must read its
+// own file, not pages the earlier provider's threads cached.
+TEST_F(NetCDFCacheLayoutTest, ProviderAtReusedAddressReadsItsOwnData)
+{
+    const std::size_t n_cats = 3, n_times = 30, chunk = 24;
+    auto first_path = makeForcing("nc_cache_reuse_first.nc", n_cats, n_times, chunk);
+    auto second_path = makeForcing("nc_cache_reuse_second.nc", n_cats, n_times, chunk, 1000.0);
+
+    std::optional<NetCDFPerFeatureDataProvider> provider;
+    provider.emplace(first_path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+    const auto* first_address = &*provider;
+    EXPECT_DOUBLE_EQ(readStep(*provider, 1, 3), cellValue(1, 3));
+    provider.reset();
+
+    provider.emplace(second_path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+    ASSERT_EQ(&*provider, first_address);
+    EXPECT_DOUBLE_EQ(readStep(*provider, 1, 3), cellValue(1, 3) + 1000.0);
 }
 
 // A multi-timestep read whose range starts mid-page and crosses a page
