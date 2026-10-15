@@ -5,7 +5,7 @@ var searchData=
   ['add_5fdestination_5ffeature_2',['add_destination_feature',['../classgeojson_1_1_feature_base.html#aac23f8caae143de17e37ce091b3b069e',1,'geojson::FeatureBase']]],
   ['add_5ffeature_3',['add_feature',['../classgeojson_1_1_feature_collection.html#a94257e07bb9115a6231d13672c92eb06',1,'geojson::FeatureCollection::add_feature()'],['../classutils_1_1_catchment_csv_output_mgr.html#af31b61b13a31011fc24dc4e3406fbb50',1,'utils::CatchmentCsvOutputMgr::add_feature()']]],
   ['add_5ffeature_5fid_4',['add_feature_id',['../classgeojson_1_1_feature_collection.html#af81a82e4bc6a7f9293c6c64759d60245',1,'geojson::FeatureCollection']]],
-  ['add_5fformulation_5',['add_formulation',['../classrealization_1_1_formulation___manager.html#a3868b41241493dd336e5e124c4d436ad',1,'realization::Formulation_Manager']]],
+  ['add_5fformulation_5',['add_formulation',['../classrealization_1_1_formulation___manager.html#a05734aa77f94e49481b9dd5a122bc0ff',1,'realization::Formulation_Manager']]],
   ['add_5fneighbor_5ffeature_6',['add_neighbor_feature',['../classgeojson_1_1_feature_base.html#adfb6ba4107e752620dcb9a04aeb4a158',1,'geojson::FeatureBase']]],
   ['add_5fnexus_7',['add_nexus',['../class_network___test.html#a01ae65a6bc8bf5e064bcbe1083b5ec36',1,'Network_Test']]],
   ['add_5forigination_5ffeature_8',['add_origination_feature',['../classgeojson_1_1_feature_base.html#a29b6852ed6a7359d1e844de4faa9f170',1,'geojson::FeatureBase']]],
