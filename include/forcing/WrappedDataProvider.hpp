@@ -63,6 +63,11 @@ namespace data_access {
             return wrapped_provider->get_available_variable_names();
         }
 
+        const std::string get_provider_units_for_variable(const std::string& name) const override{
+            if (!wrapped_provider) throw std::runtime_error("Unit metadata unavailable for unresolved provider: " + name);
+            return wrapped_provider->get_provider_units_for_variable(name);
+        }
+
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
          *

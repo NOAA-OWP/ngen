@@ -44,18 +44,30 @@ namespace realization {
 //            ss << "Original value: " << value << std::endl;
 //            LOG(ss.str(), LogLevel::DEBUG);
 
-        size_t id_index = value.find(pattern);
-
-        if (id_index != std::string::npos) {
-            do {
-                value = value.replace(id_index, sizeof(pattern.c_str()) - 2, replacement);
+            size_t id_index = value.find(pattern);
+            while (id_index != std::string::npos) {
+                value = value.replace(id_index, pattern.size(), replacement);
                 id_index = value.find(pattern);
-            } while (id_index != std::string::npos);
+            }
 
             // Update the property with the substituted value
             properties.erase(key);
             properties.emplace(key, geojson::JSONProperty(key, value));
+
+//            ss.str("");
+//            ss << "Substitution result for key: " << key << " -> " << value << std::endl;
+//            LOG(ss.str(), LogLevel::DEBUG);
+    }
+
+    std::string Catchment_Formulation::config_pattern_id_replacement(const std::string &id) {
+        size_t index = id.find_last_of('-');
+        if (index != std::string::npos && ++index < id.length()) {
+            // check if first character after the last hyphen is a number
+            if (static_cast<unsigned char>(id[index]) - static_cast<unsigned char>('0') <= 9) {
+                return id.substr(index);
+            }
         }
+        return id;
     }
 
     void Catchment_Formulation::finalize()

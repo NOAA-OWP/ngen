@@ -6,6 +6,7 @@
 #include <utility>
 #include <vector>
 #include <memory>
+#include <stdexcept>
 #include <boost/core/span.hpp>
 #include "Catchment_Formulation.hpp"
 #include "GenericDataProvider.hpp"
@@ -43,6 +44,9 @@ class Bmi_Formulation_Test;
 class Bmi_C_Formulation_Test;
 class Bmi_C_Pet_IT;
 
+class State_Snapshot_Saver;
+class State_Snapshot_Loader;
+
 namespace realization {
 
     /**
@@ -69,6 +73,30 @@ namespace realization {
 
 
         virtual ~Bmi_Formulation() {};
+
+        /**
+         * Passes a serialized representation of the model's state to ``saver``
+         *
+         * Asks the model to serialize its state, queries the pointer
+         * and length, passes that to saver, and then releases it
+         */
+        virtual void save_state(std::shared_ptr<State_Snapshot_Saver> saver) = 0;
+
+        /**
+         * Passes a serialized representation of the model's state to ``loader``
+         *
+         * Asks saver to find data for the BMI and passes that data to the BMI for loading.
+         */
+        virtual void load_state(std::shared_ptr<State_Snapshot_Loader> loader) = 0;
+
+        /**
+         * Passes a serialized representation of the model's state to ``loader``
+         *
+         * Asks saver to find data for the BMI and passes that data to the BMI for loading.
+         *
+         * Differes from `load_state` by also restting the internal time value to its initial state.
+         */
+        virtual void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) = 0;
 
         /**
          * Convert a time value from the model to an epoch time in seconds.
@@ -298,8 +326,78 @@ namespace realization {
             output_variable_names = out_var_names;
         }
 
-        void set_output_variable_units(const std::vector<std::string> &output_units) {
-            output_variable_units = output_units;
+        // Normalize legacy strings and additive object entries once, preserving column order
+        // and duplicate variables selected with different units/indices.
+        void configure_output_selections(const geojson::PropertyMap &properties,
+                                         const std::vector<std::string> &defaults) {
+            output_selections.clear();
+            auto configured = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
+            if (configured == properties.end()) {
+                for (const auto &name : defaults) output_selections.push_back({name, name, "", 0});
+            }
+            else {
+                auto entries = configured->second.as_list();
+                // Property-tree represents an empty array as a single empty string.
+                if (entries.size() == 1 && entries.front().get_type() == geojson::PropertyType::String &&
+                    entries.front().as_string().empty()) entries.clear();
+                for (const auto &entry : entries) {
+                    OutputSelection selection;
+                    if (entry.get_type() == geojson::PropertyType::String) {
+                        selection.name = entry.as_string();
+                        selection.header = selection.name;
+                    }
+                    else if (entry.get_type() == geojson::PropertyType::Object) {
+                        for (const auto &field : entry.get_values()) {
+                            if (field.first != "name" && field.first != "header" && field.first != "units" && field.first != "index")
+                                throw std::invalid_argument("Unknown output_variables field: " + field.first);
+                        }
+                        if (!entry.has_key("name") || entry.at("name").get_type() != geojson::PropertyType::String)
+                            throw std::invalid_argument("output_variables object requires a string name");
+                        selection.name = entry.at("name").as_string();
+                        selection.header = selection.name;
+                        for (const auto &key : {"header", "units"}) {
+                            if (entry.has_key(key) && entry.at(key).get_type() != geojson::PropertyType::String)
+                                throw std::invalid_argument(std::string("output_variables ") + key + " must be a string");
+                        }
+                        if (entry.has_key("header")) selection.header = entry.at("header").as_string();
+                        if (entry.has_key("units")) selection.units = entry.at("units").as_string();
+                        // The legacy converter treats these sentinels as unspecified. Never
+                        // advertise them as a successful conversion of a dimensional value.
+                        if (selection.units == "none") selection.units.clear();
+                        if (selection.units == "unitless" || selection.units == "dimensionless" || selection.units == "-")
+                            throw std::invalid_argument("Use units '1' for explicit dimensionless output, or omit units for native output");
+                        if (entry.has_key("index")) {
+                            const auto &index = entry.at("index");
+                            if (index.get_type() != geojson::PropertyType::Natural && index.get_type() != geojson::PropertyType::String)
+                                throw std::invalid_argument("output_variables index must be a nonnegative integer");
+                            auto text = index.get_type() == geojson::PropertyType::String ? index.as_string() : std::to_string(index.as_natural_number());
+                            if (text.empty() || text.find_first_not_of("0123456789") != std::string::npos)
+                                throw std::invalid_argument("output_variables index must be a nonnegative integer");
+                            selection.index = std::stoi(text);
+                        }
+                    }
+                    else throw std::invalid_argument("output_variables entries must be strings or objects");
+                    if (selection.name.empty()) throw std::invalid_argument("output_variables name must not be empty");
+                    output_selections.push_back(std::move(selection));
+                }
+            }
+            auto headers = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
+            if (headers != properties.end() && !output_selections.empty()) {
+                auto entries = headers->second.as_list();
+                if (entries.size() != output_selections.size()) {
+                    LOG("Configured output headers and variables have different counts; using variable names", LogLevel::WARNING);
+                    for (auto &selection : output_selections) selection.header = selection.name;
+                }
+                else for (std::size_t i = 0; i < entries.size(); ++i)
+                    output_selections[i].header = entries[i].as_string();
+            }
+            std::vector<std::string> names, labels;
+            for (const auto &selection : output_selections) {
+                names.push_back(selection.name);
+                labels.push_back(selection.header);
+            }
+            set_output_variable_names(names);
+            set_output_header_fields(labels);
         }
 
     private:
@@ -314,11 +412,6 @@ namespace realization {
          * `output_variable_names`.
          */
         std::vector<std::string> output_header_fields;
-        /**
-         * Output units for the variables output by the realization, as defined in
-         * `output_variables`.
-         */
-        std::vector<std::string> output_variable_units;
         /**
          * Names of the variables to include in the output from this formulation, which will be some ordered subset of
          * the BMI module output variables accessible to the instance.

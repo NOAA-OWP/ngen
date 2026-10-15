@@ -1,15 +1,11 @@
 #include "JSONProperty.hpp"
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 using namespace geojson;
 
-void List::push_back(const JSONProperty& property) {
-    values->push_back(property);
-}
+void List::push_back(const JSONProperty& property) { values->push_back(property); }
 
-bool List::operator==(const List& other) const {
-    return *values == *(other.values);
-}
+bool List::operator==(const List& other) const { return *values == *(other.values); }
 
 /**
  * @brief Attempt to get the natural numeric value stored within the property

@@ -16,7 +16,7 @@
 
 #include "DataProvider.hpp"
 #include "bmi/Bmi_Py_Adapter.hpp"
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 namespace data_access {
 
@@ -111,7 +111,6 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
     void finalize() override
     {
         if (bmi_ != nullptr) {
-            bmi_->Finalize();
             bmi_ = nullptr;
         }
     }
@@ -119,6 +118,11 @@ struct ForcingsEngineDataProvider : public DataProvider<DataType, SelectionType>
     boost::span<const std::string> get_available_variable_names() const override
     {
         return var_output_names_;
+    }
+
+    const std::string get_provider_units_for_variable(const std::string& name) const override
+    {
+        return bmi_->GetVarUnits(ensure_variable(name));
     }
 
     long get_data_start_time() const override

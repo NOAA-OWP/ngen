@@ -1,3 +1,5 @@
+// Historical ngwpc logger (cec6439, original path). Inactive archival source.
+// Active framework logging uses ewts_ngen/logger.hpp and ewts::ewts_ngen_bridge.
 #include "Logger.hpp"
 #include <algorithm>
 #include <cassert>

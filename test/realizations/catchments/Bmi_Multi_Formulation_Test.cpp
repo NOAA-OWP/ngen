@@ -493,7 +493,10 @@ void Bmi_Multi_Formulation_Test::SetUp() {
 
     // Define this manually to set how many nested modules per example, and implicitly how many examples.
     // This means example_module_depth.size() example scenarios with example_module_depth[i] nested modules in each scenario.
-    example_module_depth = {2, 2, 2, 2, 2, 2, 2};
+    example_module_depth = {2, 2, 2, 2, 2, 2, 2, 3};
+#if !NGEN_WITH_BMI_C
+    example_module_depth[7] = 2;
+#endif
 
     // Initialize the members for holding required input and result test data for individual example scenarios
     setupExampleDataCollections();
@@ -534,13 +537,14 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     initializeTestExample(4, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, { "bogus_variable" });
     initializeTestExample(5, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, { "OUTPUT_VAR_1" });
 
+    initializeTestExample(6, "cat-27", {std::string(BMI_CPP_TYPE), std::string(BMI_FORTRAN_TYPE)}, { "OUTPUT_VAR_3","OUTPUT_VAR_3","OUTPUT_VAR_3" });
+
     #if NGEN_WITH_BMI_C
-    initializeTestExample(6, "cat-27", {std::string(BMI_C_TYPE), std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {"OUTPUT_VAR_1__0"}); // Output var from C module...
+    initializeTestExample(7, "cat-27", {std::string(BMI_C_TYPE), std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {"OUTPUT_VAR_1__0"}); // Output var from C module...
     #else
-    initializeTestExample(6, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {"OUTPUT_VAR_1__0"}); // Output var from Fortran module...
+    initializeTestExample(7, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {"OUTPUT_VAR_1__0"}); // Output var from Fortran module...
 
     #endif // NGEN_WITH_PYTHON
-
 }
 
 /** Simple test to make sure the model config from example 0 initializes. */
@@ -936,23 +940,21 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_6_a) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     formulation.get_response(0, 3600);
-    std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "1.000000000,2.000000000,3.000000000");
+    auto output = formulation.get_output_values_for_timestep(0);
+    EXPECT_THAT(output, ::testing::ElementsAre(1.0, 2.0, 3.0));
+    const auto fields = formulation.get_output_fields();
+    ASSERT_EQ(fields.size(), output.size());
 }
 
 /**
  * Test for output variable being an array.
  */
-TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_6_a) {
-    int ex_index = 6;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
-    formulation.create_formulation(config_prop_ptree[ex_index]);
 
-    formulation.get_response(0, 3600);
-    std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "1.000000000,2.000000000,3.000000000");
-}
+/**
+ * Test for output variable being an array.
+ */
+
 
 /**
  * Test if Catchment Ids of submodules correctly trim any suffix

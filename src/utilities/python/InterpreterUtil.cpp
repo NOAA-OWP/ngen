@@ -4,8 +4,7 @@
 #if NGEN_WITH_PYTHON
 
 #include <utilities/python/InterpreterUtil.hpp>
-#include <utilities/Logger.hpp>
-#include <utilities/logging_utils.h>
+#include "ewts_ngen/logger.hpp"
 
 #include <pybind11/embed.h>
 #include <pybind11/stl.h>

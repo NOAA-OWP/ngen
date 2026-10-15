@@ -5,12 +5,33 @@
 #include <exception>
 #include <utility>
 #include <iostream>
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include "bmi/Bmi_Py_Adapter.hpp"
 
 using namespace models::bmi;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
+
+#define IF_TYPE_SET_VALUE_INDEX(type) if (cxx_type == #type) { this->set_value_at_indices<type>(name, inds, count, src, val_type); }
+
+/**
+ * @def IF_TYPE_COPY_TO_ARRAY(target, detected_type, desired_type, field, array)
+ * @brief Copies a value into an array when the C++ type matches the specified type
+ *
+ * Compares the runtime C++ type name against the string representation of `type`. If they match,
+ * the destination array is cast to the corresponding pointer type and passed to a `copy_to_array`
+ * function.
+ *
+ * @param target        An instance of an object with a `copy_to_array<T>(string, T*)` function (assumed to be an instance of `Bmi_Py_Adapter`)
+ * @param detected_type The string dictating what sort of C++ type a detected type corresponds to
+ * @param desired_type  The C++ type to consider for copying
+ * @param field         The name of the field to pass to `copy_to_array`
+ * @param array         The destination array to insert the value into
+ */
+#define IF_TYPE_COPY_TO_ARRAY(target, detected_type, desired_type, field, array) \
+    if ((detected_type) == #desired_type) { \
+        (target).copy_to_array<desired_type>((field), static_cast<desired_type *>(array)); \
+    }
 
 Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, std::string bmi_init_config, const std::string &bmi_python_type,
                                bool has_fixed_time_step)
@@ -102,27 +123,27 @@ void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
     catch (std::runtime_error &e) {
         std::string msg = "Encountered error getting C++ type during call to GetValue: \n";
         msg += e.what();
-        Logger::logMsgAndThrowError(msg);
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
 
-    if (cxx_type == "short") {
-        copy_to_array<short>(name, (short *) dest);
-    } else if (cxx_type == "int") {
-        copy_to_array<int>(name, (int *) dest);
-    } else if (cxx_type == "long") {
-        copy_to_array<long>(name, (long *) dest);
-    } else if (cxx_type == "long long") {
-        copy_to_array<long long>(name, (long long *) dest);
-    } else if (cxx_type == "float") {
-        copy_to_array<float>(name, (float *) dest);
-    } else if (cxx_type == "double") {
-        copy_to_array<double>(name, (double *) dest);
-    } else if (cxx_type == "long double") {
-        copy_to_array<long double>(name, (long double *) dest);
-    } else {
-        Logger::logMsgAndThrowError("Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
+    IF_TYPE_COPY_TO_ARRAY(*this, cxx_type, signed char, name, dest)
+    else IF_TYPE_COPY_TO_ARRAY(*this, cxx_type, unsigned char, name, dest)
+    else IF_TYPE_COPY_TO_ARRAY(*this, cxx_type, short, name, dest)
+    else IF_TYPE_COPY_TO_ARRAY(*this, cxx_type, unsigned short, name, dest)
+    else IF_TYPE_COPY_TO_ARRAY(*this, cxx_type, int, name, dest)
+    else IF_TYPE_COPY_TO_ARRAY(*this, cxx_type, unsigned int, name, dest)
+    else IF_TYPE_COPY_TO_ARRAY(*this, cxx_type, long, name, dest)
+    else IF_TYPE_COPY_TO_ARRAY(*this, cxx_type, unsigned long, name, dest)
+    else IF_TYPE_COPY_TO_ARRAY(*this, cxx_type, long long, name, dest)
+    else IF_TYPE_COPY_TO_ARRAY(*this, cxx_type, unsigned long long, name, dest)
+    else IF_TYPE_COPY_TO_ARRAY(*this, cxx_type, float, name, dest)
+    else IF_TYPE_COPY_TO_ARRAY(*this, cxx_type, double, name, dest)
+    else IF_TYPE_COPY_TO_ARRAY(*this, cxx_type, long double, name, dest)
+    else {
+        LOG(LogLevel::FATAL, "Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
+        throw std::runtime_error("Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
     }
-
 }
 
 void Bmi_Py_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {
@@ -176,42 +197,40 @@ std::string Bmi_Py_Adapter::get_bmi_type_simple_name() const {
  * type and size of the variable in question via @ref GetVarType and @ref GetVarItemsize to infer the native
  * type for this variable (i.e., the actual type for the values pointed to by ``src``).  It then uses this
  * as the type param in a nested called to the template-based @ref set_value_at_indices.  If such a type
- * param cannot be determined, a ``runtime_error`` is thrown.
+ * param cannot be determined, a ``std::runtime_error`` is thrown.
  *
  * @param name The name of the involved BMI variable.
  * @param inds A C++ integer array of indices to update, corresponding to each value in ``src``.
  * @param count Number of elements in the ``inds`` and ``src`` arrays.
  * @param src A C++ array containing the new values to be set in the BMI variable.
- * @throws runtime_error Thrown if @ref GetVarType and @ref GetVarItemsize functions return a combination for
+ * @throws std::runtime_error Thrown if @ref GetVarType and @ref GetVarItemsize functions return a combination for
  *                       which there is not support for mapping to a native type in the framework.
  * @see set_value_at_indices
  */
 void Bmi_Py_Adapter::SetValueAtIndices(std::string name, int *inds, int count, void *src) {
     std::string val_type = GetVarType(name);
     size_t val_item_size = (size_t)GetVarItemsize(name);
+    std::string cxx_type = this->get_analogous_cxx_type(val_type, val_item_size);
 
-    // The available types and how they are handled here should match what is in get_value_at_indices
-    if (val_type == "int" && val_item_size == sizeof(short)) {
-        set_value_at_indices<short>(name, inds, count, src, val_type);
-    } else if (val_type == "int" && val_item_size == sizeof(int)) {
-        set_value_at_indices<int>(name, inds, count, src, val_type);
-    } else if (val_type == "int" && val_item_size == sizeof(long)) {
-        set_value_at_indices<long>(name, inds, count, src, val_type);
-    } else if (val_type == "int" && val_item_size == sizeof(long long)) {
-        set_value_at_indices<long long>(name, inds, count, src, val_type);
-    } else if (val_type == "float" && val_item_size == sizeof(float)) {
-        set_value_at_indices<float>(name, inds, count, src, val_type);
-    } else if (val_type == "float" && val_item_size == sizeof(double)) {
-        set_value_at_indices<double>(name, inds, count, src, val_type);
-    } else if (val_type == "float64" && val_item_size == sizeof(double)) {
-        set_value_at_indices<double>(name, inds, count, src, val_type);
-    } else if (val_type == "float" && val_item_size == sizeof(long double)) {
-        set_value_at_indices<long double>(name, inds, count, src, val_type);
-    } else {
-        Logger::logMsgAndThrowError(
-                "(Bmi_Py_Adapter) Failed attempt to SET values of BMI variable '" + name + "' from '" +
+    IF_TYPE_SET_VALUE_INDEX(signed char)
+    else IF_TYPE_SET_VALUE_INDEX(unsigned char)
+    else IF_TYPE_SET_VALUE_INDEX(short)
+    else IF_TYPE_SET_VALUE_INDEX(unsigned short)
+    else IF_TYPE_SET_VALUE_INDEX(int)
+    else IF_TYPE_SET_VALUE_INDEX(unsigned int)
+    else IF_TYPE_SET_VALUE_INDEX(long)
+    else IF_TYPE_SET_VALUE_INDEX(unsigned long)
+    else IF_TYPE_SET_VALUE_INDEX(long long)
+    else IF_TYPE_SET_VALUE_INDEX(unsigned long long)
+    else IF_TYPE_SET_VALUE_INDEX(float)
+    else IF_TYPE_SET_VALUE_INDEX(double)
+    else IF_TYPE_SET_VALUE_INDEX(long double)
+    else {
+        std::string msg = "(Bmi_Py_Adapter) Failed attempt to SET values of BMI variable '" + name + "' from '" +
                 model_name + "' model:  model advertises unsupported combination of type (" + val_type +
-                ") and size (" + std::to_string(val_item_size) + ").");
+                ") and size (" + std::to_string(val_item_size) + ").";
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
 }
 
@@ -223,4 +242,6 @@ void Bmi_Py_Adapter::UpdateUntil(double time) {
     bmi_model->attr("update_until")(time);
 }
 
+#undef IF_TYPE_SET_VALUE_INDEX
+#undef IF_TYPE_COPY_TO_ARRAY
 #endif //NGEN_WITH_PYTHON

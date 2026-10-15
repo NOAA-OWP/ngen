@@ -1,6 +1,6 @@
 #ifndef NGEN_BMI_UTILITIES_HPP
 #define NGEN_BMI_UTILITIES_HPP
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include <string>
 #include <vector>
@@ -53,7 +53,7 @@ namespace models {
                  // one possible way to handle this would be to ensure a single element vector with NaN were returned here
                  // but since this function has to deal with both int and floating point types, that isn't possible
                  // because int has not NaN representation.  So the best we can do at this point is raise a runtime exception
-                std::string throw_msg; throw_msg.assign("Unable to get value of variable "+name+". Model "+ model.get_model_name() + 
+                std::string throw_msg; throw_msg.assign("Unable to get value of variable "+name+". Model "+ model.get_model_name() +
                                          " reports no valid items (Nbytes = "+std::to_string(total_mem) +
                                          ", Itemsize = "+std::to_string(item_size)+".");
                 LOG(throw_msg, LogLevel::WARNING);

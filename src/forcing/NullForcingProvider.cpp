@@ -1,5 +1,5 @@
 #include "NullForcingProvider.hpp"
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include <stdexcept>
 #include <limits>
@@ -48,4 +48,9 @@ inline bool NullForcingProvider::is_property_sum_over_time_step(const std::strin
 
 boost::span<const std::string> NullForcingProvider::get_available_variable_names() const {
     return {};
+}
+
+const std::string NullForcingProvider::get_provider_units_for_variable(const std::string& name) const
+{
+    throw std::runtime_error("No variable provided by NullForcingProvider: " + name);
 }

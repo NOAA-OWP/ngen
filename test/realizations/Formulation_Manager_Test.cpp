@@ -1128,16 +1128,7 @@ TEST_F(Formulation_Manager_Test, basic_reading_1) {
     stream << fix_paths(EXAMPLE_1);
 
     boost::property_tree::ptree realization_config;
-    boost::property_tree::json_parser::read_json(stream, realization_config);
-
-    auto possible_simulation_time = realization_config.get_child_optional("time");
-    if (!possible_simulation_time) {
-        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
-        LOG(throw_msg, LogLevel::WARNING);
-        throw std::runtime_error(throw_msg);
-    }
-
-    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+    simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
@@ -1163,16 +1154,7 @@ TEST_F(Formulation_Manager_Test, basic_reading_2) {
     stream << fix_paths(EXAMPLE_2);
 
     boost::property_tree::ptree realization_config;
-    boost::property_tree::json_parser::read_json(stream, realization_config);
-
-    auto possible_simulation_time = realization_config.get_child_optional("time");
-    if (!possible_simulation_time) {
-        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
-        LOG(throw_msg, LogLevel::WARNING);
-        throw std::runtime_error(throw_msg);
-    }
-
-    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+    simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
@@ -1319,16 +1301,7 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
     stream << fix_paths(EXAMPLE_1);
 
     boost::property_tree::ptree realization_config;
-    boost::property_tree::json_parser::read_json(stream, realization_config);
-
-    auto possible_simulation_time = realization_config.get_child_optional("time");
-    if (!possible_simulation_time) {
-        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
-        LOG(throw_msg, LogLevel::WARNING);
-        throw std::runtime_error(throw_msg);
-    }
-
-    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+    simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
@@ -1627,16 +1600,51 @@ TEST_F(Formulation_Manager_Test, read_extra) {
     stream << fix_paths(EXAMPLE_3);
 
     boost::property_tree::ptree realization_config;
-    boost::property_tree::json_parser::read_json(stream, realization_config);
+    simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    auto possible_simulation_time = realization_config.get_child_optional("time");
-    if (!possible_simulation_time) {
-        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
-        LOG(throw_msg, LogLevel::WARNING);
-        throw std::runtime_error(throw_msg);
-    }
+    std::ostream* raw_pointer = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
 
-    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
+
+    ASSERT_TRUE(manager.is_empty());
+
+    this->add_feature("cat-67");
+    manager.read(simulation_time_config, this->fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 1);
+    ASSERT_TRUE(manager.contains("cat-67"));
+}
+
+TEST_F(Formulation_Manager_Test, init_config_pattern_match_global) {
+    std::stringstream stream;
+    stream << fix_paths(EXAMPLE_7);
+
+    boost::property_tree::ptree realization_config;
+    simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
+
+    std::ostream* raw_pointer = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
+
+    ASSERT_TRUE(manager.is_empty());
+
+    this->add_feature("cat-67");
+    manager.read(simulation_time_config, this->fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 1);
+    ASSERT_TRUE(manager.contains("cat-67"));
+}
+
+TEST_F(Formulation_Manager_Test, init_config_pattern_match_specific) {
+    std::stringstream stream;
+    stream << fix_paths(EXAMPLE_8);
+
+    boost::property_tree::ptree realization_config;
+    simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
@@ -1658,16 +1666,7 @@ TEST_F(Formulation_Manager_Test, forcing_provider_specification) {
     stream << fix_paths(EXAMPLE_4);
 
     boost::property_tree::ptree realization_config;
-    boost::property_tree::json_parser::read_json(stream, realization_config);
-
-    auto possible_simulation_time = realization_config.get_child_optional("time");
-    if (!possible_simulation_time) {
-        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
-        LOG(throw_msg, LogLevel::WARNING);
-        throw std::runtime_error(throw_msg);
-    }
-
-    auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
+    simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
@@ -1749,16 +1748,7 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
     };
 
     boost::property_tree::ptree realization_config_a;
-    boost::property_tree::json_parser::read_json(stream_a, realization_config_a);
-
-    auto possible_simulation_time_a = realization_config_a.get_child_optional("time");
-    if (!possible_simulation_time_a) {
-        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
-        LOG(throw_msg, LogLevel::WARNING);
-        throw std::runtime_error(throw_msg);
-    }
-
-    auto simulation_time_config_a = realization::config::Time(*possible_simulation_time_a).make_params();
+    simulation_time_params simulation_time_config_a = get_time_from_load_realization_config(stream_a, realization_config_a);
 
     auto manager = realization::Formulation_Manager(realization_config_a);
   
@@ -1789,16 +1779,7 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
     this->fabric->remove_feature_by_id("cat-27115");
 
     boost::property_tree::ptree realization_config_b;
-    boost::property_tree::json_parser::read_json(stream_b, realization_config_b);
-
-    auto possible_simulation_time_b = realization_config_b.get_child_optional("time");
-    if (!possible_simulation_time_b) {
-        std::string throw_msg; throw_msg.assign("ERROR: No simulation time period defined.");
-        LOG(throw_msg, LogLevel::WARNING);
-        throw std::runtime_error(throw_msg);
-    }
-
-    auto simulation_time_config_b = realization::config::Time(*possible_simulation_time_b).make_params();
+    simulation_time_params simulation_time_config_b = get_time_from_load_realization_config(stream_b, realization_config_b);
 
     manager = realization::Formulation_Manager(realization_config_b);
    

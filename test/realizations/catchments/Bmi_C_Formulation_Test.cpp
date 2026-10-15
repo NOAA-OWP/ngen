@@ -600,6 +600,47 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
     EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{0.0, 571.60003662109375}));
 }
 
+TEST_F(Bmi_C_Formulation_Test, ObjectSelectionsConvertAndPreserveColumnSchema) {
+    auto config = config_prop_ptree[0];
+    std::stringstream json(R"({"output_variables":[
+        {"name":"echo","header":"native"},
+        {"name":"echo","header":"converted","units":"km","index":0}],
+        "output_header_fields":["metres","kilometres"]})");
+    boost::property_tree::ptree selection_config;
+    boost::property_tree::read_json(json, selection_config);
+    config.put_child("output_variables", selection_config.get_child("output_variables"));
+    config.put_child("output_header_fields", selection_config.get_child("output_header_fields"));
+    config.put("variables_names_map.OUTPUT_VAR_2", "echo");
+    Bmi_C_Formulation formulation(catchment_ids[0],
+        std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[0]), utils::StreamHandler());
+    formulation.create_formulation(config);
+    const auto fields = formulation.get_output_fields();
+    ASSERT_EQ(fields.size(), 2);
+    EXPECT_EQ(fields[0].source_name, "echo");
+    EXPECT_EQ(fields[1].source_name, "echo");
+    EXPECT_EQ(fields[0].output_name, "metres");
+    EXPECT_EQ(fields[1].output_name, "kilometres");
+    EXPECT_EQ(fields[0].units, std::optional<std::string>("m"));
+    EXPECT_EQ(fields[1].units, std::optional<std::string>("km"));
+    formulation.get_response(0, 3600);
+    const auto values = formulation.get_output_values_for_timestep(0);
+    ASSERT_EQ(values.size(), fields.size());
+    EXPECT_NEAR(values[0], 571.60003662109375, 1e-10);
+    EXPECT_NEAR(values[1], values[0] / 1000.0, 1e-12);
+    EXPECT_THROW(formulation.get_output_values_for_timestep(1), std::invalid_argument);
+}
+
+TEST_F(Bmi_C_Formulation_Test, ObjectSelectionRejectsMalformedIndex) {
+    auto config = config_prop_ptree[0];
+    std::stringstream json(R"({"output_variables":[{"name":"OUTPUT_VAR_2","index":-1}]})");
+    boost::property_tree::ptree selection_config;
+    boost::property_tree::read_json(json, selection_config);
+    config.put_child("output_variables", selection_config.get_child("output_variables"));
+    Bmi_C_Formulation formulation(catchment_ids[0],
+        std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[0]), utils::StreamHandler());
+    EXPECT_THROW(formulation.create_formulation(config), std::invalid_argument);
+}
+
 /** Simple test of output with modified variables. */
 TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_a) {
     int ex_index = 1;

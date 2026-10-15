@@ -51,6 +51,7 @@ namespace realization {
     ) {
         constructor formulation_constructor = formulation_constructors.at(formulation_type);
 
+        std::stringstream ss;
         std::shared_ptr<data_access::GenericDataProvider> fp;
         if (forcing_config.provider == "CsvPerFeature" || forcing_config.provider == ""){
             fp = std::make_shared<CsvPerFeatureForcingProvider>(forcing_config);

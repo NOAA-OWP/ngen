@@ -4,7 +4,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include "bmi.hpp"
 #include "AbstractCLibBmiAdapter.hpp"

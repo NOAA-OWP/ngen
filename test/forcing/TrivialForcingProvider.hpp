@@ -28,6 +28,10 @@ namespace data_access {
                 return outputs;
             }
 
+            const std::string get_provider_units_for_variable(const std::string& name) const override {
+                return OUTPUT_UNIT_1;
+            }
+
             long get_data_start_time() const override {
                 return std::numeric_limits<long>::min();
             }

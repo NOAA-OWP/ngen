@@ -1,5 +1,5 @@
 #include "geopackage.hpp"
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 // Points don't have a bounding box, so we can say its bbox is itself    
 inline void build_point_bbox(const geojson::geometry& geom, std::vector<double>& bbox)

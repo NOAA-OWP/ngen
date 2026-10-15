@@ -9,7 +9,8 @@
 #include <iomanip>
 #include <algorithm>
 #include <cmath>
-#include "Logger.hpp"
+#include <stdexcept>
+#include "ewts_ngen/logger.hpp"
 
 using namespace std;
 std::stringstream netcdf_ss;
@@ -189,8 +190,6 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     //nc_set_chunk_cache(sizep, nelemsp, preemptionp);
 
     //open the file
-    nc_file = std::make_shared<netCDF::NcFile>(input_path, netCDF::NcFile::read);
-
     try{
         nc_file = std::make_shared<netCDF::NcFile>(input_path, netCDF::NcFile::read);
     }
@@ -255,14 +254,18 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     // some sanity checks
     if ( id_dim_count > 1)
     {
-        Logger::logMsgAndThrowError("Provided NetCDF file has an \"ids\" variable with more than 1 dimension");
+        std::string msg = "Provided NetCDF file has an \"ids\" variable with more than 1 dimension";
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
 
     auto id_dim = ids.getDim(0);
 
     if (id_dim.isNull() )
     {
-        Logger::logMsgAndThrowError("Provided NetCDF file has a NULL dimension for variable  \"ids\"");
+        std::string msg = "Provided NetCDF file has a NULL dimension for variable  \"ids\"";
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
 
     auto num_ids = id_dim.getSize();
@@ -308,28 +311,25 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     std::vector<double> raw_time(num_times);
 
     try {
-        time_var.getVar(raw_time.data());
+        if (time_var.getDimCount() == 1) {
+            time_var.getVar({0ul}, {num_times}, raw_time.data());
+        }
+        else if (time_var.getDimCount() == 2 && time_var.getDim(0).getName() == "catchment-id" &&
+                 time_var.getDim(1).getName() == "time") {
+            time_var.getVar({0ul, 0ul}, {1ul, num_times}, raw_time.data());
+        }
+        else throw std::runtime_error("Unexpected Time dimensions in " + input_path);
     } catch(const netCDF::exceptions::NcException& e) {
         netcdf_ss << "Error reading time variable: " << e.what() << std::endl;
         LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
         throw;
     }
 
-    // read from the first catchment row to get the recorded times
-    std::vector<size_t> start;
-    start.push_back(0);
-    start.push_back(0);
-    std::vector<size_t> count;
-    count.push_back(1);
-    count.push_back(num_times);
-    time_var.getVar(start, count, &raw_time[0]);
 
     // read the time metadata (unit, scale factor and reference epoch)
     TimeInfo time_info = get_time_metadata(time_var);
     time_unit = time_info.unit;
 
-    // scale the time to account for time units and epoch_start
-    // TODO make sure this happens with a FMA instruction
     time_vals.resize(raw_time.size());
     std::transform(raw_time.begin(), raw_time.end(), time_vals.begin(),
         [&](const auto& n){return n * time_info.scale_factor + time_info.epoch_start_time.value_or(0); });
@@ -337,29 +337,28 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
 
     time_stride = time_vals[1] - time_vals[0];
 
-    // verify the time stride
     #ifndef NCEP_OPERATIONS
-    for (size_t i = 1; i < time_vals.size(); ++i) {
-        double interval = time_vals[i] - time_vals[i-1];
-        if (std::abs(interval - time_stride) > 1e-6) {
-            netcdf_ss<< "Inconsistent interval at index " << i << ": " << interval << std::endl;
-            LOG(netcdf_ss.str(), LogLevel::SEVERE); netcdf_ss.str("");
-            netcdf_ss << "Error: Time intervals are not constant in forcing file\n" << std::endl;
-            log_stream << netcdf_ss.str();
-            LOG(netcdf_ss.str(), LogLevel::WARNING); netcdf_ss.str("");
-            Logger::logMsgAndThrowError("Time intervals in forcing file are not constant");
+    for (size_t i = 1; i < time_vals.size() - 1; ++i) {
+        const double interval = time_vals[i + 1] - time_vals[i];
+        if (interval - time_stride > 0.000001) {
+            LOG("Time intervals in forcing file are not constant", LogLevel::SEVERE);
+            throw std::runtime_error("Time intervals in forcing file are not constant");
         }
     }
     #endif
-
-    netcdf_ss << "All time intervals are constant within tolerance." << std::endl;
-    LOG(netcdf_ss.str(), LogLevel::SEVERE); netcdf_ss.str("");
 
     // determine start_time and stop_time;
     start_time = time_vals[0];
     stop_time = time_vals.back() + time_stride;
 
     sim_to_data_time_offset = sim_start_date_time_epoch - start_time;
+
+    netcdf_ss << "NetCDF Forcing from file '" << input_path << "'"
+              << "Start time " << (time_t)start_time
+              << ", Stop time " << (time_t)stop_time
+              << ", sim_start_date_time_epoch " << sim_start_date_time_epoch
+        ;
+    LOG(netcdf_ss.str(), LogLevel::DEBUG); netcdf_ss.str("");
 }
 
 void NetCDFPerFeatureDataProvider::hint_shared_provider_id(const std::string& id)
@@ -474,11 +473,14 @@ boost::span<const std::string> NetCDFPerFeatureDataProvider::get_available_varia
     return variable_names;
 }
 
+const std::string NetCDFPerFeatureDataProvider::get_provider_units_for_variable(const std::string& name) const{
+    return get_ncvar_units(name);
+}
+
 const std::vector<std::string>& NetCDFPerFeatureDataProvider::get_ids() const
 {
     return loc_ids;
 }
-
 /** Return the first valid time for which data from the request variable  can be requested */
 long NetCDFPerFeatureDataProvider::get_data_start_time() const
 {
@@ -604,10 +606,6 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         // 'maybe_update_chunks_with_hints' clears 'hinted_ids'
         // assumes all id's will have been hinted before 'get_value' is called.
         maybe_update_chunks_with_hints();
-        netcdf_ss << "Warning: stop_time out of range, using last available time index" << std::endl;
-        log_stream << netcdf_ss.str();
-        LOG(netcdf_ss.str(), LogLevel::SEVERE); netcdf_ss.str("");
-        c_idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
     }
 
     auto stride = c_idx2 - c_idx1;
@@ -630,6 +628,11 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     std::vector<double> raw_values;
     raw_values.reserve(read_len);
 
+    const auto dims = ncvar.getDims();
+    if (dims.size() != 2) throw std::runtime_error("Forcing variable must have time and catchment-id dimensions");
+    const bool time_first = dims[0].getName() == "time" && dims[1].getName() == "catchment-id";
+    if (!time_first && !(dims[0].getName() == "catchment-id" && dims[1].getName() == "time"))
+        throw std::runtime_error("Unexpected forcing dimensions in " + file_path);
     std::size_t cache_line_size = cache_slice_t_size;
     std::size_t p_idx = cache::page_p_idx(c_idx1, cache_line_size);
     // pages spanned by [c_idx1, c_idx2]; ceil(read_len / line_size) undercounts
@@ -672,7 +675,13 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
                 count.push_back(chunk.second);
 
                 count.push_back(page_cache_line_size);
-                ncvar.getVar(start,count,&(*cached)[idx]);
+                if (time_first) {
+                    std::swap(start[0], start[1]);
+                    std::swap(count[0], count[1]);
+                    ncvar.getVar(start, count, {1l, 1l},
+                        {1l, static_cast<std::ptrdiff_t>(page_cache_line_size)}, &(*cached)[idx]);
+                }
+                else ncvar.getVar(start, count, &(*cached)[idx]);
                 idx += chunk.second * page_cache_line_size;
             }
 
@@ -744,7 +753,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     catch (const std::runtime_error& e) {
         data_access::unit_conversion_exception uce(e.what());
         uce.provider_model_name = "NetCDFPerFeatureDataProvider(" + file_path + ")";
-        uce.provider_bmi_var_name = selector.get_variable_name();
+        uce.provider_var_name = selector.get_variable_name();
         uce.provider_units = native_units;
         uce.unconverted_values.push_back(rvalue);
         throw uce;
@@ -848,7 +857,8 @@ void NetCDFPerFeatureDataProvider::align_cache_with_chunks()
         std::vector<size_t> chunk_sizes;
         var.getChunkingParameters(mode, chunk_sizes);
         if (mode == netCDF::NcVar::ChunkMode::nc_CHUNKED && chunk_sizes.size() >= 2) {
-            cache_slice_t_size = chunk_sizes[1];  // Assume second dimension is time
+            for (std::size_t i = 0; i < var.getDimCount(); ++i)
+                if (var.getDim(i).getName() == "time") cache_slice_t_size = chunk_sizes[i];
             break;  // Use the first suitable chunk size found
         }
     }

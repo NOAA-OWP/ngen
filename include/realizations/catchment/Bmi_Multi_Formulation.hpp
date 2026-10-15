@@ -1,6 +1,6 @@
 #ifndef NGEN_BMI_MULTI_FORMULATION_HPP
 #define NGEN_BMI_MULTI_FORMULATION_HPP
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include <map>
 #include <vector>
@@ -14,10 +14,8 @@
 #include "OptionalWrappedDataProvider.hpp"
 #include "ConfigurationException.hpp"
 #include "ExternalIntegrationException.hpp"
-#include "utilities/logging_utils.h"
-#include <mediator/UnitsHelper.hpp>
 
-
+#include <boost/serialization/access.hpp>
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"
@@ -58,6 +56,12 @@ namespace realization {
                 module->check_mass_balance(iteration, total_steps, timestamp);
             }
         };
+
+        void save_state(std::shared_ptr<State_Snapshot_Saver> saver) override;
+
+        void load_state(std::shared_ptr<State_Snapshot_Loader> loader) override;
+
+        void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) override;
 
         /**
          * Convert a time value from the model to an epoch time in seconds.
@@ -135,6 +139,8 @@ namespace realization {
          * @see ForcingProvider
          */
         boost::span <const std::string> get_available_variable_names() const override;
+
+        const std::string get_provider_units_for_variable(const std::string& name) const override;
 
         /**
         * Get the input variables of 
@@ -627,6 +633,8 @@ namespace realization {
             // Since this is a nested formulation, support usage of the '{{id}}' syntax for init config file paths.
             Catchment_Formulation::config_pattern_substitution(properties, BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
                                                                "{{id}}", id);
+            Catchment_Formulation::config_pattern_substitution(properties, BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
+                "{{id_numeric}}", Catchment_Formulation::config_pattern_id_replacement(id));
 
             // Inject a three-part compound identity on the submodule BEFORE
             // create_formulation runs, so that compound_id() is fully qualified
@@ -690,6 +698,7 @@ namespace realization {
         bool is_realization_legacy_format() const;
 
     private:
+        friend class boost::serialization::access;
 
         /**
          * Setup a deferred provider for a nested module, tracking the class as needed.
@@ -737,6 +746,10 @@ namespace realization {
 
         /** The set of available "forcings" (output variables, plus their mapped aliases) this instance can provide. */
         std::vector<std::string> available_forcings;
+
+
+
+
         /**
          * Any configured default values for outputs, keyed by framework alias (or var name if this is globally unique).
          */
@@ -782,6 +795,8 @@ namespace realization {
         friend Bmi_Multi_Formulation_Test;
         friend class ::Bmi_Cpp_Multi_Array_Test;
 
+        template<class Archive>
+        void serialize(Archive& ar, const unsigned int version);
     };
 }
 

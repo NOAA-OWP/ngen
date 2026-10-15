@@ -30,7 +30,7 @@ void Formulation_Manager::finalize() {
     data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
 #endif
 #if NGEN_WITH_PYTHON
-    data_access::detail::ForcingsEngineStorage::instances.clear();
+    data_access::detail::ForcingsEngineStorage::instances.finalize();
 #endif
 }
 

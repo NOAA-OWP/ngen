@@ -1,6 +1,6 @@
 #include <NgenSimulation.hpp>
 #include <NGenConfig.h>
-#include <Logger.hpp>
+#include "ewts_ngen/logger.hpp"
 
 #if NGEN_WITH_MPI
 #include "HY_Features_MPI.hpp"
@@ -14,6 +14,10 @@
 #endif // NGEN_WITH_ROUTING
 
 #include "parallel_utils.h"
+#include "state_save_restore/State_Save_Utils.hpp"
+#include "state_save_restore/State_Save_Restore.hpp"
+
+namespace { const auto TROUTE_UNIT_NAME = "troute"; }
 
 NgenSimulation::NgenSimulation(
     Simulation_Time const& sim_time,
@@ -116,6 +120,82 @@ void NgenSimulation::advance_models_one_output_step()
         } // done layers
     } while (layer_min_next_time < next_time); // rerun the loop until the last layer would pass the master next time
 
+}
+
+void NgenSimulation::save_state_snapshot(std::shared_ptr<State_Snapshot_Saver>) {
+    throw std::runtime_error("Mid-run checkpoints require scheduler and nexus state serialization; use end-of-run hot starts");
+}
+
+void NgenSimulation::save_end_of_run(std::shared_ptr<State_Snapshot_Saver> snapshot_saver)
+{
+    for (auto& layer : layers_) {
+        layer->save_state_snapshot(snapshot_saver);
+    }
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
+    if (this->mpi_rank_ == 0 && this->py_troute_) {
+        uint64_t serialization_size = 0;
+        this->py_troute_->SetValue(StateSaveNames::CREATE, &serialization_size);
+        this->py_troute_->GetValue(StateSaveNames::SIZE, &serialization_size);
+        void *troute_state = this->py_troute_->GetValuePtr(StateSaveNames::STATE);
+        boost::span<const char> span(static_cast<const char*>(troute_state), serialization_size);
+        snapshot_saver->save_unit(TROUTE_UNIT_NAME, span);
+        this->py_troute_->SetValue(StateSaveNames::FREE, &serialization_size);
+    }
+#endif // NGEN_WITH_ROUTING
+}
+
+void NgenSimulation::load_state_snapshot(std::shared_ptr<State_Snapshot_Loader>) {
+    throw std::runtime_error("Mid-run checkpoint resume is unsupported without scheduler and nexus state");
+}
+
+void NgenSimulation::load_hot_start(std::shared_ptr<State_Snapshot_Loader> snapshot_loader, const std::string &t_route_config_file_with_path) {
+    if (simulation_step_ != 0) throw std::runtime_error("Hot start must precede timestep execution");
+    for (auto& layer : layers_) layer->load_hot_start(snapshot_loader);
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
+    if (this->mpi_rank_ == 0) {
+        bool config_file_set = !t_route_config_file_with_path.empty();
+        bool snapshot_exists = snapshot_loader->has_unit(TROUTE_UNIT_NAME);
+        if (config_file_set && snapshot_exists) {
+            LOG(LogLevel::DEBUG, "Loading T-Route data from snapshot.");
+            std::vector<char> troute_data;
+            snapshot_loader->load_unit(TROUTE_UNIT_NAME, troute_data);
+            if (py_troute_ == NULL) {
+                this->make_troute(t_route_config_file_with_path);
+            }
+            py_troute_->set_value_unchecked(StateSaveNames::STATE, troute_data.data(), troute_data.size());
+            double rt = 0; // unused by the BMI but needed for messaging
+            py_troute_->SetValue(StateSaveNames::RESET, &rt);
+        } else if (!config_file_set && !snapshot_exists) {
+            LOG(LogLevel::DEBUG, "No data set for loading T-Route.");
+        } else if (config_file_set && !snapshot_exists) {
+            LOG(LogLevel::WARNING, "A T-Route config file was provided but the load data does not contain T-Route data. T-Route will be run as a cold start.");
+        } else if (!config_file_set && snapshot_exists) {
+            LOG(LogLevel::WARNING, "A T-Route hot start snapshot exists but no config file was provided. T-Route will not be loaded or run,");
+        }
+    }
+#endif // NGEN_WITH_ROUTING
+}
+
+
+void NgenSimulation::make_troute(const std::string &t_route_config_file_with_path) {
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
+    this->py_troute_ = std::make_unique<models::bmi::Bmi_Py_Adapter>(
+        "T-Route",
+        t_route_config_file_with_path,
+        "troute_nwm_bmi.troute_bmi.BmiTroute",
+        true
+    );
+#endif // NGEN_WITH_ROUTING
+}
+
+
+void NgenSimulation::finalize() {
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
+    if (py_troute_) { py_troute_->Finalize(); py_troute_.reset(); }
+#endif
+#if NGEN_WITH_ROUTING
+    router_.reset();
+#endif
 }
 
 int NgenSimulation::get_nexus_index(std::string const& nexus_id) const
@@ -233,7 +313,8 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
         int delta_time = sim_time_->get_output_interval_seconds();
 
         // model for routing
-        models::bmi::Bmi_Py_Adapter py_troute("T-Route", t_route_config_file_with_path, "troute_nwm_bmi.troute_bmi.BmiTroute", true);
+        if (!py_troute_) make_troute(t_route_config_file_with_path);
+        auto &py_troute = *py_troute_;
 
         // tell BMI to resize nexus containers
         int64_t nexus_count = routing_nexus_indexes->size();
@@ -264,8 +345,7 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
                                routing_nexus_downflows->data() + (i * nexus_count));
             py_troute.Update();
         }
-        // Finalize will write the output file
-        py_troute.Finalize();
+        // Retain the adapter for end-of-run serialization; finalize() closes it afterward.
     }
 #endif // NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
 }

@@ -1,6 +1,9 @@
 #include <Layer.hpp>
 #include <Catchment_Formulation.hpp>
 #include <CatchmentOutputsMgr.hpp>
+#include <Bmi_Formulation.hpp>
+#include "state_save_restore/State_Save_Restore.hpp"
+#include <string>
 
 #if NGEN_WITH_MPI
 #include "HY_Features_MPI.hpp"
@@ -18,8 +21,22 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
                                 std::unordered_map<std::string, int> const& nexus_indexes,
                                 int current_step)
 {
+    auto idx = simulation_time.next_timestep_index();
+    auto step = simulation_time.get_output_interval_seconds();
+
     //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
-    if(output_time_index%1000 == 0) std::cout<<"Running timestep " << output_time_index <<std::endl;
+
+#if NGEN_WITH_MPI
+    if (output_time_index%1000 == 0) {
+        int rank = 0;
+        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+        std::string msg = "[rank " + std::to_string(rank) + "] Running timestep " + std::to_string(output_time_index);
+        std::cout << msg << std::endl;
+    }
+#else
+    if (output_time_index%1000 == 0) std::cout << "Running timestep " << output_time_index << std::endl;
+#endif
+
     std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
     // Catchment output (if enabled) is pushed to this layer's output manager, which owns the
     // sinks and decides formatting/aggregation. Build the time marker once for all catchments
@@ -96,5 +113,38 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
     ++output_time_index;
     if ( output_time_index < simulation_time.get_total_output_times() ) {
         simulation_time.advance_timestep();
+    }
+}
+
+void ngen::Layer::save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> snapshot_saver)
+{
+    // XXX Handle any of this class's own state as a meta-data unit
+
+    for (auto const& id : processing_units) {
+        auto r = features.catchment_at(id);
+        auto r_c = std::dynamic_pointer_cast<realization::Bmi_Formulation>(r);
+        r_c->save_state(snapshot_saver);
+    }
+}
+
+void ngen::Layer::load_state_snapshot(std::shared_ptr<State_Snapshot_Loader> snapshot_loader)
+{
+    // XXX Handle any of this class's own state as a meta-data unit
+
+    for (auto const& id : processing_units) {
+        auto r = features.catchment_at(id);
+        auto r_c = std::dynamic_pointer_cast<realization::Bmi_Formulation>(r);
+        r_c->load_state(snapshot_loader);
+    }
+}
+
+void ngen::Layer::load_hot_start(std::shared_ptr<State_Snapshot_Loader> snapshot_loader)
+{
+    // XXX Handle any of this class's own state as a meta-data unit
+
+    for (auto const& id : processing_units) {
+        auto r = features.catchment_at(id);
+        auto r_c = std::dynamic_pointer_cast<realization::Bmi_Formulation>(r);
+        r_c->load_hot_start(snapshot_loader);
     }
 }

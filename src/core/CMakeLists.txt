@@ -3,12 +3,16 @@ dynamic_sourced_cxx_library(core "${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_library(NGen::core ALIAS core)
 target_link_libraries(core PUBLIC
-                           NGen::config_header          # Headers-only Boost
+                           NGen::config_header
                            Boost::boost                # Headers-only Boost
                            )
 
 target_link_libraries(core PRIVATE
                            NGen::parallel
+                           )
+
+target_link_libraries(core PUBLIC
+                           ewts::ewts_ngen_bridge
                            )
 
 target_include_directories(core PUBLIC

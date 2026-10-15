@@ -11,10 +11,11 @@ target_link_libraries(ngen_bmi
     ${CMAKE_DL_LIBS}
     Boost::boost # Headers-only Boost
     NGen::config_header
-    NGen::logging
     NGen::geojson
     NGen::core_mediator
 )
+
+target_link_libraries(ngen_bmi PUBLIC ewts::ewts_ngen_bridge)
 
 target_sources(ngen_bmi
   PRIVATE

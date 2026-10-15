@@ -4,7 +4,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include "bmi.h"
 #include "AbstractCLibBmiAdapter.hpp"
@@ -260,7 +260,7 @@ namespace models {
                     LOG(throw_msg, LogLevel::WARNING);
                     throw std::runtime_error(throw_msg);
                 }
-                    
+
                 void *dest = GetValuePtr(name);
                 T *ptr = (T *) dest;
                 return ptr;

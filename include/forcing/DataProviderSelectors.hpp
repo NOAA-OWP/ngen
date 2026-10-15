@@ -69,8 +69,8 @@ class CatchmentAggrDataSelector
 
     /**
      * @brief Get the index for output variable that is requested by this selector
-     * 
-     * @return int 
+     *
+     * @return int
      */
     int get_output_variable_index() const { return output_variable_index; }
 
@@ -104,7 +104,7 @@ class CatchmentAggrDataSelector
 
     /**
      * @brief Set the output index for the output variable to be returned with this selector
-     * 
+     *
      * @param index The index of the output variable
      */
     void set_output_variable_index(int index) { output_variable_index = index; }

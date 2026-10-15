@@ -20,7 +20,9 @@
 #endif
 
 #include "core/Partition_Parser.hpp"
-#include <Logger.hpp>
+#include "ewts_ngen/logger.hpp"
+
+std::stringstream partgen_ss("");
 
 using PartitionVSet = std::vector<std::unordered_set<std::string> >;
 /**
@@ -218,7 +220,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, P
  * @param catchment_partitions The global set of partitions
  * @return int partition number containing the id
  * 
- * @throws runtime_error if no partition contains the requested id
+ * @throws std::runtime_error if no partition contains the requested id
  */
 int find_remote_rank(const std::string& id, const PartitionVSet& catchment_partitions)
 {
@@ -237,7 +239,8 @@ int find_remote_rank(const std::string& id, const PartitionVSet& catchment_parti
     }
     if(pos < 0){
         std::string msg = "find_remote_rank: Could not find feature id "+id+" in any partition";
-        Logger::logMsgAndThrowError(msg);
+        LOG(LogLevel::FATAL, msg);
+        throw std::runtime_error(msg);
     }
     return pos;
 }
@@ -442,7 +445,7 @@ int main(int argc, char* argv[])
             throw std::runtime_error(msg);
         }
     #else
-        Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
+        { const std::string message = "SQLite3 support required to read GeoPackage files."; LOG(message, LogLevel::SEVERE); throw std::runtime_error(message); }
         #endif
     }
     else
@@ -455,8 +458,8 @@ int main(int argc, char* argv[])
 
     //Check that the number of partitions is less or equal to the number of catchment
     if (num_catchments < num_partitions) {
-        Logger::logMsgAndThrowError("Input error: total number of catchments: " + std::to_string(num_catchments) + \
-                                 ", cannot be less than the number of partitions: " + std::to_string(num_partitions));
+        { const std::string message = "Input error: total number of catchments: " + std::to_string(num_catchments) + \
+                                 ", cannot be less than the number of partitions: " + std::to_string(num_partitions); LOG(message, LogLevel::SEVERE); throw std::runtime_error(message); }
     }
 
     std::string link_key = "toid";
@@ -480,7 +483,7 @@ int main(int argc, char* argv[])
             throw std::runtime_error(msg);
         }
     #else
-        Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
+        { const std::string message = "SQLite3 support required to read GeoPackage files."; LOG(message, LogLevel::SEVERE); throw std::runtime_error(message); }
     #endif
     } 
     else 

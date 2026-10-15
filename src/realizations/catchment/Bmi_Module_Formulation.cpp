@@ -1,9 +1,12 @@
 #include "Bmi_Module_Formulation.hpp"
 #include "utilities/logging_utils.h"
 #include <UnitsHelper.hpp>
-#include "Logger.hpp"
+#include <stdexcept>
+#include "ewts_ngen/logger.hpp"
+#include "state_save_restore/State_Save_Utils.hpp"
+#include <state_save_restore/State_Save_Restore.hpp>
 
-#include <atomic>
+std::stringstream bmiform_ss;
 
 namespace realization {
 
@@ -18,44 +21,61 @@ namespace realization {
             inner_create_formulation(properties, true);
         }
 
-        void Bmi_Module_Formulation::save_state(std::shared_ptr<UnitSaver> saver) const {
-            auto model = get_bmi_model();
+        void Bmi_Module_Formulation::save_state(std::shared_ptr<State_Snapshot_Saver> saver) {
+            boost::span<char> data = this->get_serialization_state();
 
-            size_t size = 1;
-            model->SetValue("serialization_create", &size);
-            model->GetValue("serialization_size", &size);
+            // Rely on Formulation_Manager also using this->get_id()
+            // as a unique key for the individual catchment
+            // formulations
+            saver->save_unit(this->get_id(), data);
 
-            auto serialization_state = static_cast<char const*>(model->GetValuePtr("serialization_state"));
-            boost::span<const char> data(serialization_state, size);
+            this->free_serialization_state();
+        }
 
-            saver->save(data);
+        void Bmi_Module_Formulation::load_state(std::shared_ptr<State_Snapshot_Loader> loader) {
+            std::vector<char> buffer;
+            loader->load_unit(this->get_id(), buffer);
+            boost::span<char> data(buffer.data(), buffer.size());
+            this->load_serialization_state(data);
+        }
 
-            model->SetValue("serialization_free", &size);
+        void Bmi_Module_Formulation::load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) {
+            this->load_state(loader);
+            double rt = 0;
+            this->get_bmi_model()->SetValue(StateSaveNames::RESET, &rt);
+            next_time_step_index = 0;
         }
 
         boost::span<const std::string> Bmi_Module_Formulation::get_available_variable_names() const {
             return available_forcings;
         }
 
-        std::vector<double> Bmi_Module_Formulation::get_output_values_for_timestep(int timestep) {
-            // TODO: something must be added to store values if more than the current time step is wanted
-            // TODO: if such a thing is added, it should probably be configurable to turn it off
-            if (timestep != (next_time_step_index - 1)) {
-                throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
-            }
-            static std::atomic_flag no_conversion_message_logged;
-            if (!no_conversion_message_logged.test_and_set()) {
-                logging::warning("Output variables do not have unit conversion. Capability not yet implemented in ngen.");
-            }
+        const std::string Bmi_Module_Formulation::get_provider_units_for_variable(const std::string& name) const {
+            std::string native_name;
+            get_bmi_output_var_name(name, native_name);
+            if (native_name.empty()) throw std::runtime_error("Unknown BMI output variable: " + name);
+            return get_bmi_model()->GetVarUnits(native_name);
+        }
 
-            auto const & names = get_output_variable_names();
+        std::vector<double> Bmi_Module_Formulation::get_output_values_for_timestep(int timestep) {
+            if (timestep != next_time_step_index - 1)
+                throw std::invalid_argument("Only current time step valid when getting BMI formulation output");
             std::vector<double> values;
-            values.reserve(names.size());
-            // Fetch values through the unit-checked/converting get_value path; output_units is empty,
-            // so values are returned unconverted, positionally aligned with the names.
-            for (const std::string& name : names) {
-                std::string output_units = "";
-                values.push_back(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units, 0), MEAN));
+            const auto time = convert_model_time(get_model_current_time()) + get_bmi_model_start_time_forcing_offset_s();
+            for (const auto &selection : output_selections) {
+                try {
+                    values.push_back(get_value(CatchmentAggrDataSelector(get_catchment_id(), selection.name,
+                        time, 3600, selection.units, selection.index), MEAN));
+                }
+                catch (const data_access::unit_conversion_exception &error) {
+                    data_access::unit_error_log_key key{compound_id(), selection.name, error.provider_model_name,
+                        error.provider_var_name, error.what()};
+                    if (data_access::unit_errors_reported.insert(key).second)
+                        LOG("Output conversion failed for " + compound_id() + " variable " + selection.name +
+                            " requested units '" + selection.units + "' provider " + error.provider_model_name +
+                            " variable " + error.provider_var_name + ": " + error.what(), LogLevel::WARNING);
+                    throw;
+                }
             }
             return values;
         }
@@ -107,7 +127,8 @@ namespace realization {
                         << " failed on catchment " << this->get_catchment_id()
                         << ". t_index=" << t_index
                         << ", next_step_index=" << next_time_step_index << "\n";
-                    Logger::Log(LogLevel::FATAL, error_message.str());
+                    append_model_inputs_to_stream(model_initial_time, t_delta, error_message);
+                    LOG(LogLevel::FATAL, error_message.str());
                     throw;
                 }
                 // TODO: again, consider whether we should store any historic response, ts_delta, or other var values
@@ -119,10 +140,13 @@ namespace realization {
             update(t_index, t_delta);
             double var_value;
             try{
-                var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
+                var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m", 0),MEAN);
             }
-            catch(UnitsHelper::unit_conversion_exception &uce){
-                bool new_error = UnitsHelper::record_unit_conversion_fault(uce, "Bmi_Module_Formulation::get_response", get_bmi_main_output_var());
+            catch(data_access::unit_conversion_exception &uce){
+                if (uce.unconverted_values.empty()) throw;
+                data_access::unit_error_log_key key{"Bmi_Module_Formulation::get_response", get_bmi_main_output_var(), uce.provider_model_name, uce.provider_var_name, uce.what()};
+                auto ret = data_access::unit_errors_reported.insert(key);
+                bool new_error = ret.second;
                 if (new_error) {
                     std::stringstream ss;
                     ss << "Unit conversion failure:"
@@ -134,7 +158,7 @@ namespace realization {
                         << "' source variable '" << uce.provider_var_name << "'"
                         << " raw value " << uce.unconverted_values[0] << "}"
                         << " message \"" << uce.what() << "\"";
-                    logging::warning(ss.str().c_str()); ss.str("");
+                    LOG(ss.str(), LogLevel::WARNING); ss.str("");
                 }
                 var_value = uce.unconverted_values[0];
             }
@@ -199,7 +223,7 @@ namespace realization {
             //  consistent with times
             /*
             if (last_model_response_delta == 0 && last_model_response_start_time == 0) {
-                throw runtime_error(get_formulation_type() + " does not properly set output time validity ranges "
+                throw std::runtime_error(get_formulation_type() + " does not properly set output time validity ranges "
                                                              "needed to provide outputs as forcings");
             }
             */
@@ -219,20 +243,19 @@ namespace realization {
 
                 // Convert units
                 std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
+
+                if (output_units.empty() || output_units == native_units) return values;
+                const auto &in_units_norm = native_units;
+                const auto &out_units_norm = output_units;
+
                 try {
-                    UnitsHelper::convert_values(native_units, values.data(), output_units, values.data(), values.size());
+                    UnitsHelper::convert_values(in_units_norm, values.data(), out_units_norm, values.data(), values.size());
                     return values;
-                }
-                catch (UnitsHelper::unit_conversion_exception& uce) {
-                    uce.provider_model_name = get_bmi_model()->get_model_name();
-                    uce.provider_var_name = bmi_var_name;
-                    uce.unconverted_values = std::move(values);
-                    throw;
                 }
                 catch (const std::runtime_error& e) {
                     data_access::unit_conversion_exception uce(e.what());
                     uce.provider_model_name = get_bmi_model()->get_model_name();
-                    uce.provider_bmi_var_name = bmi_var_name;
+                    uce.provider_var_name = bmi_var_name;
                     uce.provider_units = native_units; // keep original for diagnostics
                     uce.unconverted_values = std::move(values);
                     throw uce;
@@ -257,7 +280,7 @@ namespace realization {
             //  consistent with times
             /*
             if (last_model_response_delta == 0 && last_model_response_start_time == 0) {
-                throw runtime_error(get_formulation_type() + " does not properly set output time validity ranges "
+                throw std::runtime_error(get_formulation_type() + " does not properly set output time validity ranges "
                                                              "needed to provide outputs as forcings");
             }
             */
@@ -268,15 +291,25 @@ namespace realization {
 
             if( !bmi_var_name.empty() )
             {
+                const auto item_size = get_bmi_model()->GetVarItemsize(bmi_var_name);
+                const auto byte_count = get_bmi_model()->GetVarNbytes(bmi_var_name);
+                if (item_size <= 0 || output_index < 0 || output_index >= byte_count / item_size)
+                    throw std::out_of_range("BMI output index out of range for " + bmi_var_name);
                 //Get forcing value from BMI variable
                 double value = get_var_value_as_double(output_index, bmi_var_name);
 
                 // Convert units
                 std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
+
+                if (output_units.empty() || output_units == native_units) return value;
+                const auto &in_units_norm = native_units;
+                const auto &out_units_norm = output_units;
+
                 try {
-                    return UnitsHelper::get_converted_value(native_units, value, output_units);
+                    return UnitsHelper::get_converted_value(in_units_norm, value, out_units_norm);
                 }
                 catch (UnitsHelper::unit_conversion_exception& uce){
+                if (uce.unconverted_values.empty()) throw;
                     uce.provider_model_name = get_bmi_model()->get_model_name();
                     uce.provider_var_name = bmi_var_name;
                     throw;
@@ -284,7 +317,7 @@ namespace realization {
                 catch (const std::runtime_error& e) {
                     data_access::unit_conversion_exception uce(e.what());
                     uce.provider_model_name = get_bmi_model()->get_model_name();
-                    uce.provider_bmi_var_name = bmi_var_name;
+                    uce.provider_var_name = bmi_var_name;
                     uce.provider_units = native_units; // keep original for diagnostics
                     uce.unconverted_values.push_back(value);
                     throw uce;
@@ -426,99 +459,7 @@ namespace realization {
             // usually starting at 0 and just counting up
             determine_model_time_offset();
 
-            // Output variable subset and order, if present
-            std::vector<std::string> out_headers;//define empty vector for headers
-            std::vector<std::string> out_units;//define empty vector for units for new json structure
-            auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
-            if (out_var_it != properties.end()) {
-                std::vector<geojson::JSONProperty> out_vars_json_list = out_var_it->second.as_list();
-                //Check if the first item is an object type or string type.
-                //string type: old format; object type: new format
-                if (out_vars_json_list.size() > 0){
-                    std::string item_type = get_propertytype_name(out_vars_json_list[0].get_type());
-                    if (item_type == "String"){
-                        set_realization_file_format(true);
-                    }
-                }
-                std::vector<std::string> out_vars(out_vars_json_list.size());
-                if (is_realization_legacy_format()){
-                    for (int i = 0; i < out_vars_json_list.size(); ++i) {
-                        out_vars[i] = out_vars_json_list[i].as_string();
-                    }
-                    // empty array may be read as [""], so make it empty
-                    if (out_vars.size() == 1 && out_vars[0].empty())
-                        out_vars.pop_back();
-                }
-                else{
-                    out_headers.resize(out_vars_json_list.size()); //assumption: number of vars = number of headers
-                    out_units.resize(out_vars_json_list.size()); //assumption: number of vars = number of units
-                    for (int i = 0; i < out_vars_json_list.size(); ++i) {
-                        out_vars[i] = out_vars_json_list[i].at("name").as_string();
-                        if(out_vars_json_list[i].has_key("header")){
-                            //indicates that a valid header is provided
-                            out_headers[i] = out_vars_json_list[i].at("header").as_string();
-                        }
-                        else{
-                            //indicates that header is not provided. The error actually returns a string.
-                            //in such cases, we assign variable name to the header.
-                            out_headers[i] = out_vars[i];
-                            std::stringstream ss;
-                            ss << "Header not provided for '" << out_vars[i] << "'. Using the variable name as header." << std::endl;
-                            LOG(ss.str(), LogLevel::INFO); ss.str("");
-                        }
-                        out_units[i] = out_vars_json_list[i].at("units").as_string();
-                    }
-                    //check if the units can be parsed correctly and write a warning message
-                    std::stringstream ss;
-                    for (const std::string& out_unit : out_units) {
-                        if (!UnitsHelper::can_parse(out_unit))
-                        {
-                            ss << "Unable to parse '" << out_unit << "' in units value." << std::endl;
-                            LOG(ss.str(), LogLevel::WARNING); ss.str("");
-                        }
-                    }
-                    if (out_vars.size() == 1 && out_vars[0].empty()) {
-                        // empty array may be read as [""], so make everything empty
-                        out_vars.pop_back();
-                        out_headers.pop_back();
-                        out_units.pop_back();
-                    }
-                    set_output_variable_units(out_units);
-                }
-                set_output_variable_names(out_vars);
-                set_output_header_fields(out_headers);
-            }
-            // Otherwise, just take what literally is provided by the model
-            else {
-                set_output_variable_names(get_bmi_model()->GetOutputVarNames());
-            }
-
-            // Output header fields, if present. These label the output columns and must be 1:1 with
-            // the output variables (header i names variable i); on a count mismatch, warn and fall
-            // back to the variable names so the two stay positionally aligned.
-            auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
-            if(is_realization_legacy_format()){
-                if (out_headers_it != properties.end() && get_output_variable_names().size() > 0) {
-                    std::vector<geojson::JSONProperty> out_headers_json_list = out_var_it->second.as_list();
-                    std::vector<std::string> out_headers(out_headers_json_list.size());
-                    for (int i = 0; i < out_headers_json_list.size(); ++i) {
-                        out_headers[i] = out_headers_json_list[i].as_string();
-                    }
-                    set_output_header_fields(out_headers);
-                }
-                else {
-                    set_output_header_fields(get_output_variable_names());
-                }
-            }
-            else{
-                if (out_headers_it != properties.end()) {
-                    //indicates that the new json format has legacy headers format in the realization.
-                    //put out a message that this is ignored.
-                    LOG("Deprecated output_header_fields item found in realization file ignored.", LogLevel::WARNING);
-                }
-                // if new format and no output/headers are mentioned.
-                set_output_header_fields(get_output_variable_names());
-            }
+            configure_output_selections(properties, get_bmi_model()->GetOutputVarNames());
 
             // Output precision, if present
             auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
@@ -923,6 +864,7 @@ namespace realization {
                         var_details->get_units()));
                     value_ptr = get_value_as_type(var_details->get_cpp_type(), value);
                 } catch (UnitsHelper::unit_conversion_exception &uce) {
+                if (uce.unconverted_values.empty()) throw;
                     bool new_error = UnitsHelper::record_unit_conversion_fault(
                         uce, "Bmi_Module_Formulation::perform_set", var_details->get_mapped_alias());
                     if (new_error) {
@@ -943,28 +885,28 @@ namespace realization {
             get_bmi_model()->SetValue(var_details->get_name(), value_ptr.get());
         }
 
-        const boost::span<char> Bmi_Module_Formulation::get_serialization_state() const {
-            auto bmi = this->bmi_model;
-            // create a new serialized state, getting the amount of data that was saved
-            uint64_t* size = (uint64_t*)bmi->GetValuePtr("serialization_create");
-            // get the pointer of the new state
-            char* serialized = (char*)bmi->GetValuePtr("serialization_state");
-            const boost::span<char> span(serialized, *size);
+        const boost::span<char> Bmi_Module_Formulation::get_serialization_state() {
+            auto model = get_bmi_model();
+            uint64_t size = 0;
+            model->SetValue(StateSaveNames::CREATE, &size);
+            model->GetValue(StateSaveNames::SIZE, &size);
+            auto serialization_state = static_cast<char *>(model->GetValuePtr(StateSaveNames::STATE));
+            const boost::span<char> span(serialization_state, size);
             return span;
         }
 
-        void Bmi_Module_Formulation::load_serialization_state(const boost::span<char> state) const {
+        void Bmi_Module_Formulation::load_serialization_state(const boost::span<char> state) {
             auto bmi = this->bmi_model;
             // grab the pointer to the underlying state data
             void* data = (void*)state.data();
             // load the state through SetValue
-            bmi->SetValue("serialization_state", data);
+            bmi->SetValue(StateSaveNames::STATE, data);
         }
 
-        void Bmi_Module_Formulation::free_serialization_state() const {
+        void Bmi_Module_Formulation::free_serialization_state() {
             auto bmi = this->bmi_model;
             // send message to clear memory associated with serialized data
-            void* _; // this pointer will be unused by SetValue
-            bmi->SetValue("serialization_free", _);
+            void* _ = nullptr; // this pointer is unused by SetValue
+            bmi->SetValue(StateSaveNames::FREE, _);
         }
 }

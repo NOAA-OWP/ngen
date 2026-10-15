@@ -8,11 +8,18 @@
 #include "GenericDataProvider.hpp"
 #include "utilities/output/CatchmentOutputsMgr.hpp"   // utils::OutputField
 
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #define DEFAULT_FORMULATION_OUTPUT_DELIMITER ","
 
 namespace realization {
+
+    struct OutputSelection {
+        std::string name;
+        std::string header;
+        std::string units; // Empty means native output, never an implicit dimensionless request.
+        int index = 0;
+    };
 
     class Catchment_Formulation : public Formulation, public HY_CatchmentArea {
         public:
@@ -32,6 +39,12 @@ namespace realization {
              */
             static void config_pattern_substitution(geojson::PropertyMap &properties, const std::string &key,
                                                     const std::string &pattern, const std::string &replacement);
+
+            /**Remove leading non-numeric characters from the ID string.
+             *
+             * This may be needed to correct NGEN adding an identifying prefix to the ID with system file names without the prefix.
+             */
+            static std::string config_pattern_id_replacement(const std::string &id);
 
             /**
              * Get this formulation's output fields -- name plus metadata (units, ...) -- in the same
@@ -94,6 +107,7 @@ namespace realization {
             void finalize();
 
     protected:
+            std::vector<OutputSelection> output_selections;
             const std::string& get_catchment_id() const override {
                 return this->cat_id;
             }

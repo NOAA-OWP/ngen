@@ -1,6 +1,6 @@
 #ifndef NGEN_CSVPERFEATUREFORCING_H
 #define NGEN_CSVPERFEATUREFORCING_H
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 #include <vector>
 #include <set>
@@ -21,6 +21,7 @@
 #include "DataProviderSelectors.hpp"
 #include <exception>
 #include <mediator/UnitsHelper.hpp>
+#include <cctype>
 
 /**
  * @brief Forcing class providing time-series precipiation forcing data to the model.
@@ -136,7 +137,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
             current_index = get_ts_index_for_time(init_time);
         }
         catch (const std::out_of_range &e) {
-            std::string throw_msg; throw_msg.assign("Forcing had bad init_time " + std::to_string(init_time) + " for value request");
+            std::string throw_msg; throw_msg.assign("Forcing had bad init_time " + std::to_string(init_time) + " for value request.");
             LOG(throw_msg, LogLevel::WARNING);
             throw std::out_of_range(throw_msg);
         }
@@ -174,19 +175,20 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
                 value += involved_time_step_values[i] * ((double)involved_time_step_seconds[i] / (double)selector.get_duration_secs());
         }
 
+        if (output_units.empty()) return value;
         // Convert units
         try {
             return UnitsHelper::get_converted_value(available_forcings_units[output_name], value, output_units);
         }
         catch (data_access::unit_conversion_exception& uce) {
             uce.provider_model_name = "CsvPerFeatureForcingProvider";
-            uce.provider_bmi_var_name = output_name;
+            uce.provider_var_name = output_name;
             throw;
         }
         catch (const std::runtime_error& e) {
             data_access::unit_conversion_exception uce(e.what());
-            uce.provider_model_name = "CsvPerFeatureForcingProvider " + std::to_string(catchment_id);
-            uce.provider_bmi_var_name = output_name;
+            uce.provider_model_name = "CsvPerFeatureForcingProvider " + selector.get_id();
+            uce.provider_var_name = output_name;
             uce.provider_units = available_forcings_units[output_name];
             uce.unconverted_values.push_back(value);
             throw uce;
@@ -247,6 +249,17 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
     boost::span<const std::string> get_available_variable_names() const override {
         return available_forcings;
     }
+
+    const std::string get_provider_units_for_variable(const std::string& name) const override {
+        auto iter = available_forcings_units.find(name);
+        if(iter != available_forcings_units.end()){
+            return iter->second;
+        }
+        std::string throw_msg;
+        throw_msg.assign("Got request to retrieve units for variable '" + name + "', but it was not found in the data provider. This should not happen." + SOURCE_LOC);
+        LOG(throw_msg, LogLevel::WARNING);
+        throw std::runtime_error(throw_msg);
+    };
 
     private:
 
@@ -508,7 +521,6 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
 
     double latitude; //latitude (degrees_north)
     double longitude; //longitude (degrees_east)
-    int catchment_id;
     int day_of_year;
     std::string forcing_file_name;
 

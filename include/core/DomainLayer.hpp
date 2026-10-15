@@ -2,6 +2,7 @@
 #define NGEN_DOMAIN_LAYER
 
 #include "Catchment_Formulation.hpp"
+#include "Bmi_Formulation.hpp"
 #include "Layer.hpp"
 #include "State_Exception.hpp"
 #include "CatchmentOutputsMgr.hpp"
@@ -95,6 +96,16 @@ namespace ngen
                simulation_time.advance_timestep();
             }
     
+        }
+
+        void save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> saver) override {
+            std::dynamic_pointer_cast<realization::Bmi_Formulation>(formulation)->save_state(saver);
+        }
+        void load_state_snapshot(std::shared_ptr<State_Snapshot_Loader> loader) override {
+            std::dynamic_pointer_cast<realization::Bmi_Formulation>(formulation)->load_state(loader);
+        }
+        void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) override {
+            std::dynamic_pointer_cast<realization::Bmi_Formulation>(formulation)->load_hot_start(loader);
         }
 
         private:

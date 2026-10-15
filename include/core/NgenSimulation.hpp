@@ -15,6 +15,13 @@ namespace routing_py_adapter {
     class Routing_Py_Adapter;
 }
 
+class State_Snapshot_Saver;
+class State_Snapshot_Loader;
+
+#if NGEN_WITH_ROUTING
+#include "bmi/Bmi_Py_Adapter.hpp"
+#endif // NGEN_WITH_ROUTING
+
 #include <memory>
 #include <vector>
 #include <unordered_map>
@@ -57,6 +64,8 @@ public:
      * simulation
      */
     void run_routing(std::string const& t_route_config_file_with_path);
+    // Tear down of any items stored on the NgenSimulation object that could throw errors and, thus, should be kept separate from the deconstructor.
+    void finalize();
 
     /**
      * Run t-route via BMI on the stored nexus outflow values for the full configured duration of the simulation
@@ -69,8 +78,23 @@ public:
     size_t get_num_output_times() const;
     std::string get_timestamp_for_step(int step) const;
 
+    void save_state_snapshot(std::shared_ptr<State_Snapshot_Saver> snapshot_saver);
+    void load_state_snapshot(std::shared_ptr<State_Snapshot_Loader> snapshot_loader);
+    /**
+     * Saves a snapshot state that's intended to be run at the end of a simulation.
+     *
+     * This version of saving will include T-Route BMI data and exclude the nexus outflow data stored during the catchment processing.
+    */
+    void save_end_of_run(std::shared_ptr<State_Snapshot_Saver> snapshot_saver);
+    // Load a snapshot of the end of a previous run. This will create a T-Route python adapter if the loader finds a unit for it and the config path is not empty.
+    void load_hot_start(std::shared_ptr<State_Snapshot_Loader> snapshot_loader, const std::string &t_route_config_file_with_path);
+
 private:
     void advance_models_one_output_step();
+    void make_troute(const std::string &config_file);
+#if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
+    std::unique_ptr<models::bmi::Bmi_Py_Adapter> py_troute_;
+#endif
 
     int simulation_step_;
 

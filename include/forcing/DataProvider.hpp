@@ -6,6 +6,7 @@
 #include <set>
 #include <tuple>
 #include <boost/core/span.hpp>
+#include "UnitsHelper.hpp"
 
 namespace data_access
 {
@@ -46,6 +47,10 @@ namespace data_access
         /** Return the variables that are accessible by this data provider */
 
         virtual boost::span<const std::string> get_available_variable_names() const = 0;
+
+        /** Return the unit for the requested variable that is accessible by this data provider */
+
+        virtual const std::string get_provider_units_for_variable(const std::string& name) const = 0;
 
         /** Return the first valid time for which data from the request variable  can be requested */
 
@@ -123,13 +128,8 @@ namespace data_access
 
     extern std::set<unit_error_log_key> unit_errors_reported;
 
-    struct unit_conversion_exception : public std::runtime_error {
-        unit_conversion_exception(std::string message) : std::runtime_error(message) {}
-        std::string provider_model_name;
-        std::string provider_bmi_var_name;
-        std::string provider_units;
-        std::vector<double> unconverted_values;
-    };
+    using unit_conversion_exception = UnitsHelper::unit_conversion_exception;
+
 }
 
 

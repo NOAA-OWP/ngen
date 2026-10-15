@@ -2,7 +2,7 @@
 
 #include <boost/exception/all.hpp>
 
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 typedef boost::error_info<struct tag_errmsg, std::string> errmsg_info;
 
@@ -149,7 +149,6 @@ double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_st
 
 void HY_PointHydroNexus::add_upstream_flow(double val, std::string catchment_id, time_step_t t)
 {
-    std::lock_guard<std::mutex> lock(contribution_mutex);
      if ( t < min_timestep ) {
         LOG(LogLevel::FATAL, "Time step %d before minimum time step requested %d", t, min_timestep);
         BOOST_THROW_EXCEPTION(invalid_time_step());

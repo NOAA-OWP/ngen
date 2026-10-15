@@ -2,7 +2,8 @@
 #include "EndianCopy.hpp"
 #include "wkb.hpp"
 #include "proj.hpp"
-#include "Logger.hpp"
+#include <stdexcept>
+#include "ewts_ngen/logger.hpp"
 
 geojson::geometry ngen::geopackage::build_geometry(
     const ngen::sqlite::database::iterator& row,
@@ -12,7 +13,8 @@ geojson::geometry ngen::geopackage::build_geometry(
 {
     const std::vector<uint8_t> geometry_blob = row.get<std::vector<uint8_t>>(geom_col);
     if (geometry_blob[0] != 'G' || geometry_blob[1] != 'P') {
-        Logger::logMsgAndThrowError("expected geopackage WKB, but found invalid format instead");
+        LOG(LogLevel::FATAL, "expected geopackage WKB, but found invalid format instead");
+        throw std::runtime_error("expected geopackage WKB, but found invalid format instead");
     }
 
     int index = 3; // skip version

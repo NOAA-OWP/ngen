@@ -289,3 +289,53 @@ An [example realization configuration](https://github.com/NOAA-OWP/ngen/blob/mas
 
 BMI is a commonly used model interface and formulation type used in ngen. [BMI documenation](https://github.com/NOAA-OWP/ngen/blob/master/doc/BMI_MODELS.md) with an example [for both Linux and macOS realizations](https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config_w_bmi_c__lin_mac.json).
 
+
+### Typed output selections on the ngwpc holding branch
+
+`output_variables` continues to accept ordered string names. An entry may also be
+an object with `name`, optional `header`, optional `units`, and optional `index`:
+
+```json
+"output_variables": [
+  "streamflow",
+  {"name": "soil_water", "header": "top_layer", "index": 0},
+  {"name": "soil_water", "header": "lower_layer_mm", "units": "mm", "index": 1}
+]
+```
+
+Names may use configured provider aliases. Repeated names create distinct columns.
+An omitted header defaults to the source name; index defaults to zero and must be
+a nonnegative integer (integer strings are also accepted for contributed configs).
+Missing names, empty names and malformed indices are errors. A BMI index must fit
+the source variable's length. String and object entries may be mixed.
+
+An omitted or empty `units` request means native, unconverted output. Native-unit
+metadata is queried from the supplying provider; unavailable schema metadata alone
+does not disable output. Use `"1"` for an explicit dimensionless request where the
+provider supports it. Do not use `"none"` to request conversion to dimensionless:
+object selections treat `"none"` as native output. Other ambiguous sentinel requests
+(`"unitless"`, `"dimensionless"`, `"-"`) are rejected; request `"1"` explicitly.
+The provider conversion helper otherwise retains its master semantics.
+Conversion failures propagate; raw values are never emitted under requested units.
+A valid `output_header_fields` list overrides object header labels. A count mismatch
+warns and falls back to source names, preserving the master behavior in both single
+and multi formulations. Without explicit multi output selections, the final
+module supplies its values and units; outer headers can still rename those columns.
+
+Output managers remain responsible for format, grouping, precision, timestamps,
+per-feature/domain/nexus sinks and flushing. `output_precision` retains its parsed
+legacy interface, while manager precision follows the global `output` configuration.
+No formulation-owned CSV writer is active.
+
+For file-pattern matching and nested BMI init paths, existing `{{id}}` placeholders
+retain the full feature ID. `{{id_numeric}}` explicitly selects the contributed
+suffix after the final hyphen when that suffix starts with a digit.
+
+State saving retains contributed `state_saving` configuration for end-of-run
+snapshots and start-of-run hot starts. Hot starts run after initialization, reset
+model time via `reset_time`, and begin this run at timestep zero. Every selected
+model must implement the serialization protocol. Mid-run checkpoint resume remains
+unsupported because scheduler and nexus state are not serialized; its simulation
+APIs fail explicitly. Legacy routing has no BMI state to save; routing state is
+available only with BMI routing and a model implementing serialization. See
+`conflict_resolution_decisions.md` for the source integration limitations.

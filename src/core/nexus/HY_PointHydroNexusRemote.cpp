@@ -92,37 +92,42 @@ HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(std::string nexus_id, Catchme
 
 HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
 {
-    const unsigned int timeout = 120000; // timeout threshold in milliseconds
-    unsigned int wait_time = 0;
-    // This destructor might be called after MPI_Finalize so do not attempt communication if
-    // this has occured
-    int mpi_finalized;
+    using clock = std::chrono::steady_clock;
+    constexpr auto timeout = std::chrono::minutes(2);
+
+    auto pending = [this] {
+        return !stored_receives.empty() || !stored_sends.empty();
+    };
+
+    // May be called after MPI_Finalize; no communication allowed then.
+    int mpi_finalized = 0;
     MPI_Finalized(&mpi_finalized);
+    if (mpi_finalized) {
+        if (pending())
+            std::cerr << "HY_PointHydroNexusRemote: " << id
+                      << " destroyed after MPI_Finalize with pending communications\n";
+        return;
+    }
 
-    while ( (stored_receives.size() > 0 || stored_sends.size() > 0) && !mpi_finalized )
+    const auto deadline = clock::now() + timeout;
+
+    while (pending())
     {
-        //std::cerr << "Neuxs with rank " << id << " has pending communications\n";
-
         process_communications();
+        if (!pending()) break;               // cleared, no sleep, no false alarm
 
-        if( wait_time < timeout && wait_time > 0 ){ // don't sleep if first call clears comms!
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        if (clock::now() >= deadline) {
+            std::cerr << "HY_PointHydroNexusRemote: " << id
+                      << " destructor timed out after "
+                      << std::chrono::duration_cast<std::chrono::seconds>(timeout).count()
+                      << " s waiting on pending MPI communications\n";
+            return;  // TODO: MPI_Cancel outstanding receives before buffers die
         }
-        else
-        {
-            std::cerr << "HY_PointHydroNexusRemote: "<< id 
-                      << " destructor timed out after " << timeout/1000 
-                      << " seconds waiting on pending MPI communications\n";
-            // The return is is probably best, logging the error.
-            // There is no good way to recover from this.
-            // Throwing an exception from destructors is generally not a good idea
-            // as it can lead to undefined behavior.
-            // and using std::exit forces the program to terminate immediately,
-            // even if this situation is recoverable/acceptable in some cases.
-            return;
-        }
-        wait_time += 1;
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
         MPI_Finalized(&mpi_finalized);
+        if (mpi_finalized) return;
     }
 }
 
@@ -158,7 +163,8 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
         //because the `add_upstream_flow` call triggers a `send` which removes from the local accounting
         //all available water and sends it to the remote counterpart for this nexus.
         std::string msg = "Nexus "+id+" attempted to get_downstream_flow, but its communicator type is sender only.";
-        Logger::logMsgAndThrowError(msg);
+        LOG(msg, LogLevel::FATAL);
+        throw std::runtime_error(msg);
     }
     else if ( type == receiver || type == sender_receiver )
     {

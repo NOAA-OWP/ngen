@@ -1,6 +1,12 @@
+#
+# ngen/extern/sac-sma/CMakeLists.txt
+#
+
 cmake_minimum_required(VERSION 3.12)
 enable_language( Fortran )
-add_subdirectory(../iso_c_fortran_bmi ${CMAKE_BINARY_DIR}/iso_c_bmi)
+if(NOT TARGET iso_c_bmi)
+    add_subdirectory(../iso_c_fortran_bmi ${CMAKE_BINARY_DIR}/iso_c_bmi)
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../../cmake/")
 # Uncomment this and rebuild artifacts to enable debugging

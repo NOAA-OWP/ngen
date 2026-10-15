@@ -7,7 +7,7 @@ find_package(Threads REQUIRED)
 target_include_directories(forcing PUBLIC
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/include/core
-        ${PROJECT_SOURCE_DIR}/include/core/mediator
+        ${PROJECT_SOURCE_DIR}/include/mediator
         ${PROJECT_SOURCE_DIR}/include/utilities
         ${PROJECT_SOURCE_DIR}/include/forcing
         )
@@ -18,6 +18,7 @@ target_link_libraries(forcing PUBLIC
         Boost::boost                # Headers-only Boost
         Threads::Threads
 )
+target_link_libraries(forcing PUBLIC ewts::ewts_ngen_bridge)
 
 target_sources(forcing PRIVATE "${CMAKE_CURRENT_LIST_DIR}/NullForcingProvider.cpp")
 

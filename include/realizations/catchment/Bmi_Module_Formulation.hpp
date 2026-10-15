@@ -107,20 +107,17 @@ namespace realization {
         void create_formulation(geojson::PropertyMap properties) override;
 
         /**
-         * Passes a serialized representation of the model's state to ``saver``
-         *
-         * Asks the model to serialize its state, queries the pointer
-         * and length, passes that to saver, and then releases it
+         * Create a save state, save it using the `State_Snapshot_Saver`, then clear the save state from memory.
+         * `this->get_id()` will be used as the unique ID for the saver.
          */
-        void save_state(std::shared_ptr<UnitSaver> saver) const;
+        void save_state(std::shared_ptr<State_Snapshot_Saver> saver) override;
+
+        void load_state(std::shared_ptr<State_Snapshot_Loader> loader) override;
+
+        void load_hot_start(std::shared_ptr<State_Snapshot_Loader> loader) override;
 
         /**
          * Get the collection of forcing output property names this instance can provide.
-         *
-         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
-         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
-         * (i.e., one of its forcings) a data property output from this object.
-         *
          * For this type, this is the collection of BMI output variables, plus any aliases included in the formulation
          * config's output variable mapping.
          *
@@ -128,6 +125,12 @@ namespace realization {
          * @see ForcingProvider
          */
         boost::span<const std::string> get_available_variable_names() const override;
+
+        /**
+         * Get the units of a forcing variable that this instance can provide.
+         * @param name The forcing variable for which the units are requested.
+         */
+        const std::string get_provider_units_for_variable(const std::string& name) const override;
 
         /**
          * Get the output variable values for the given time step, one per output column and positionally aligned
@@ -151,22 +154,15 @@ namespace realization {
          * the model reports none (GetVarUnits fails / BMI_FAILURE) rather than failing the run.
          */
         std::vector<utils::OutputField> get_output_fields() const override {
-            // The output variables and their header (output) names are 1:1 and positionally aligned
-            // (enforced at construction) -- variable i is written under header i. Build one field per
-            // variable: units come from the model for that variable; the output name is its header
-            // (which defaults to the variable name, or is a configured alias).
-            const std::vector<std::string> &variables = get_output_variable_names();
-            boost::span<const std::string> headers = get_output_header_field_names();
             std::vector<utils::OutputField> fields;
-            fields.reserve(variables.size());
-            for (std::size_t i = 0; i < variables.size(); ++i) {
+            for (const auto &selection : output_selections) {
                 std::optional<std::string> units;
-                try {
-                    units = get_bmi_model()->GetVarUnits(variables[i]);
-                } catch (...) {
-                    units = std::nullopt;
-                }
-                fields.emplace_back(variables[i], headers[i], std::move(units));
+                if (!selection.units.empty()) units = selection.units;
+                else try {
+                    auto native = get_provider_units_for_variable(selection.name);
+                    if (!native.empty()) units = std::move(native);
+                } catch (...) { }
+                fields.emplace_back(selection.name, selection.header, std::move(units));
             }
             return fields;
         }
@@ -369,15 +365,28 @@ namespace realization {
         const std::vector<std::string> get_bmi_input_variables() const override;
         const std::vector<std::string> get_bmi_output_variables() const override;
 
+        /**
+         * Requests the BMI to copy its current state into memory. The state will remain in memory until either a new state is made or `free_serialization_state` is called.
+         *
+         * @return Span of the serialized data.
+         */
+        virtual const boost::span<char> get_serialization_state();
+        /**
+         * Requests the BMI to load data from a previously saved state. This has a side effect of freeing a current state if it currently exists.
+         */
+        virtual void load_serialization_state(const boost::span<char> state);
+        /**
+         * Requests the BMI to clear a currently saved state from memory.
+         * Existing state pointers should not be used as the stored data may be freed depending on implementation.
+         */
+        virtual void free_serialization_state();
+        void set_realization_file_format(bool is_legacy_format);
+
         virtual void check_mass_balance(const int& iteration, const int& total_steps, const std::string& timestamp) const override {
             //Create the protocol context, each member is const, and cannot change during the check
             models::bmi::protocols::Context ctx{iteration, total_steps, timestamp, id};
             (void) bmi_protocols.run(models::bmi::protocols::Protocol::MASS_BALANCE, ctx);
         }
-        const boost::span<char> get_serialization_state() const;
-        void load_serialization_state(const boost::span<char> state) const;
-        void free_serialization_state() const;
-        void set_realization_file_format(bool is_legacy_format);
 
     protected:
 
@@ -525,6 +534,48 @@ namespace realization {
          */
         void set_cache_input_var_metadata(bool cache_input_var_metadata);
 
+        /**
+         * Append `set_model_inputs_prior_to_update` values to an error message. This is intended to be used if the BMI fails to run `update()`.
+         *
+         * @param model_initial_time The model's time prior to the update, in its internal units and representation.
+         * @param t_delta The size of the time step over which the formulation is going to update the model, which might
+         *                be different than the model's internal time step.
+         * @param inputs Stream the inputs message will be appended to.
+         */
+        void append_model_inputs_to_stream(const double &model_init_time, time_step_t t_delta, std::stringstream &inputs);
+
+        /**
+         * Convert a pointer to an array of data to its correct type, then append these items to a stream.
+         * The format will appear like a python list, e.g., [0.5, 1.2, 5.8]
+         *
+         * @param values Raw pointer to data that will be interpreted based on the `type`
+         * @param num_items The number of items expected in the array.
+         * @param inputs Stream the values will be appended to.
+         */
+        template<typename T>
+        void append_inputs(std::shared_ptr<void> values, int num_items, std::stringstream &inputs);
+
+        /**
+         * Convert a pointer to an array of data to its correct type, then append these items to a stream.
+         * The format will appear like a python list, e.g., [0.5, 1.2, 5.8]
+         *
+         * @param type String representing the type of data the pointer is for.
+         * @param values Raw pointer to data that will be interpreted based on the `type`
+         * @param num_items The number of items expected in the array.
+         * @param inputs Stream the values will be appended to.
+         */
+        void append_inputs(std::string type, std::shared_ptr<void> values, int num_items, std::stringstream &inputs);
+
+        /**
+         * Convert data to a target data type and append it to an stream.
+         *
+         * @param type String representing the type of data the pointer is for.
+         * @param value Raw data that will be cast to a value based on the `type`.
+         * @param inputs Stream the interpreted ata will be appeneded to.
+         */
+        template<typename T>
+        void append_input(std::string type, T value, std::stringstream &inputs);
+
         /** The delta of the last model update execution (typically, this is time step size). */
         time_step_t last_model_response_delta = 0;
         /** The epoch time of the model at the beginning of its last update. */
@@ -615,6 +666,8 @@ namespace realization {
 
         /** Whether the realization file follows legacy format or the new format. */
         bool legacy_json_format = false;
+
+
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__USES_FORCINGS

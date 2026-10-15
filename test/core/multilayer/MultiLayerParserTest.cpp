@@ -3,8 +3,6 @@
 #include "FileChecker.h"
 #include <Formulation_Manager.hpp>
 
-#include "utilities/JSON_Reader.hpp"
-
 class MultiLayerParserTest : public ::testing::Test {
 
     static std::string find_file(std::vector<std::string> dir_opts, const std::string& basename) {
@@ -65,14 +63,17 @@ class MultiLayerParserTest : public ::testing::Test {
 
 TEST_F(MultiLayerParserTest, TestInit0)
 {
-    manager = std::make_shared<realization::Formulation_Manager>(ptree_from_json_file(realization_config_path));
+    manager = std::make_shared<realization::Formulation_Manager>(realization_config_path.c_str());
 
     ASSERT_TRUE(true);
 }
 
 TEST_F(MultiLayerParserTest, TestRead0)
 {
-    boost::property_tree::ptree realization_config = ptree_from_json_file(realization_config_path);
+    std::ifstream stream(realization_config_path);
+
+    boost::property_tree::ptree realization_config;
+    boost::property_tree::json_parser::read_json(stream, realization_config);
 
     auto possible_simulation_time = realization_config.get_child_optional("time");
     if (!possible_simulation_time) {

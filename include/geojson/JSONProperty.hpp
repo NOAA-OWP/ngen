@@ -9,7 +9,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/variant.hpp>
-#include "Logger.hpp"
+#include "ewts_ngen/logger.hpp"
 
 namespace geojson {
     class JSONProperty;
@@ -164,7 +164,7 @@ namespace geojson {
             /**
              * @brief Don't use this, but it's necessary for working with functions and classes that expect a default constructor
              */
-            JSONProperty() = default;    
+            JSONProperty() = default;
 
             JSONProperty(std::string value_key, const boost::property_tree::ptree& property_tree):
             key(std::move(value_key)) {
@@ -439,12 +439,16 @@ namespace geojson {
              * @param tab (optional) Additional starting tab to indent (default 0)
              * @param newline (optional) Add a new line to the end of the print (default true)
              */
-            static std::string print_property(const geojson::JSONProperty& p, int tab = 0, bool newline = true) {
+            static void print_property(const geojson::JSONProperty& p, int tab = 0, bool newline = true) {
+                std::cout << format_property(p, tab, newline);
+            }
+
+            static std::string format_property(const geojson::JSONProperty& p, int tab = 0, bool newline = true) {
                 std::ostringstream output;  // Use a string stream instead of cout
                 char end = newline ? '\n' : '\0';
-                
+
                 output << std::setw(tab); // Maintain indentation
-                
+
                 switch (p.get_type()) {
                     case geojson::PropertyType::String:
                         output << p.as_string() << end;
@@ -466,7 +470,7 @@ namespace geojson {
                             //the length of the property as a string first...so for now,
                             //just try to get a little bit in to make it easier to read
                             output << std::setw(tab);
-                            output << print_property(lp, tab, false);  // Recursively append
+                            output << format_property(lp, tab, false);  // Recursively append
                             output << "," << end;
                         }
                         tab -= 5;
@@ -477,14 +481,14 @@ namespace geojson {
                         tab += 5;
                         for (const auto& pair : p.get_values()) {
                             output << std::setw(tab + pair.first.length()) << pair.first << " : ";
-                            output << print_property(pair.second, tab, false);  // Recursively append
+                            output << format_property(pair.second, tab, false);  // Recursively append
                             output << ",\n";
                         }
                         tab -= 5;
                         output << std::setw(tab) << "}" << end;
                         break;
                 }
-                
+
                 return output.str();
             }
 

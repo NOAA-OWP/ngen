@@ -4,6 +4,11 @@
 #include <thread>
 #include <unordered_map>
 #include <chrono>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <thread>
+#include <unordered_map>
 
 #include <boost/core/span.hpp>
 
@@ -17,7 +22,7 @@
 
 #include "NGenConfig.h"
 
-#include <Logger.hpp>
+#include "ewts_ngen/logger.hpp"
 
 #include <FileChecker.h>
 #include <boost/algorithm/string.hpp>
@@ -30,8 +35,9 @@
 #endif // WRITE_PID_FILE_FOR_GDB_SERVER
 
 #if NGEN_WITH_PYTHON
-#include <pybind11/embed.h>
 #include "python/InterpreterUtil.hpp"
+#include <pybind11/embed.h>
+#include <pybind11/pybind11.h>
 #endif // NGEN_WITH_PYTHON
     
 #if NGEN_WITH_ROUTING
@@ -44,15 +50,17 @@
 #define MPI_HF_SUB_CLI_FLAG "--subdivided-hydrofabric"
 #endif
 
-#include <mpi.h>
-#include "parallel_utils.h"
 #include "core/Partition_Parser.hpp"
+#include "parallel_utils.h"
 #include <HY_Features_MPI.hpp>
+#include <mpi.h>
+#include <algorithm>
 
 #include "core/Partition_One.hpp"
 
 #endif // NGEN_WITH_MPI
 
+#include <DomainLayer.hpp>
 #include <Layer.hpp>
 #include <SurfaceLayer.hpp>
 #include <DomainLayer.hpp>
@@ -67,9 +75,9 @@
 #include "utilities/JSON_Reader.hpp"
 
 #include <mediator/UnitsHelper.hpp>
+#include <state_save_restore/State_Save_Restore.hpp>
 
-void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
-{
+void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept {
     stream << "Runtime configuration summary:\n";
 
 #if NGEN_WITH_PYTHON // -------------------------------------------------------
@@ -84,14 +92,15 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
         bool imported_numpy = false;
         std::string err;
         try {
-            numpy = py::module_::import("numpy");
+            numpy          = py::module_::import("numpy");
             imported_numpy = true;
         } catch (py::error_already_set& e) {
             err = e.what();
         }
 
         // Lambda to convert py::dict -> std::unordered_map<std::string, std::string>
-        const auto dict_to_map = [](const py::dict& dict) -> std::unordered_map<std::string, std::string> {
+        const auto dict_to_map = [](const py::dict& dict
+                                 ) -> std::unordered_map<std::string, std::string> {
             std::unordered_map<std::string, std::string> map;
             for (const auto& kv : dict)
                 map[kv.first.cast<std::string>()] = kv.second.cast<std::string>();
@@ -100,19 +109,22 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
         };
 
         const auto python_paths = dict_to_map(sysconfig.attr("get_paths")().cast<py::dict>());
-        const auto python_venv = std::getenv("VIRTUAL_ENV") == nullptr ? "<none>" : std::getenv("VIRTUAL_ENV");
-      
+        const auto python_venv =
+            std::getenv("VIRTUAL_ENV") == nullptr ? "<none>" : std::getenv("VIRTUAL_ENV");
+
         stream << "  Python:\n"
-               << "    Version: "         << sys.attr("version").cast<std::string>() << "\n"
-               << "    Virtual Env: "     << python_venv                 << "\n"
-               << "    Executable: "      << sys.attr("executable").cast<std::string>() << "\n"
-               << "    Site Library: "    << python_paths.at("purelib")  << "\n"
-               << "    Include: "         << python_paths.at("include")  << "\n"
-               << "    Runtime Library: " << python_paths.at("stdlib")   << "\n";
+               << "    Version: " << sys.attr("version").cast<std::string>() << "\n"
+               << "    Virtual Env: " << python_venv << "\n"
+               << "    Executable: " << sys.attr("executable").cast<std::string>() << "\n"
+               << "    Site Library: " << python_paths.at("purelib") << "\n"
+               << "    Include: " << python_paths.at("include") << "\n"
+               << "    Runtime Library: " << python_paths.at("stdlib") << "\n";
 
         if (imported_numpy) {
-            stream << "    NumPy Version: "   << numpy.attr("version").attr("version").cast<std::string>() << "\n"
-                   << "    NumPy Include: "   << numpy.attr("get_include")().cast<std::string>() << "\n";
+            stream << "    NumPy Version: "
+                   << numpy.attr("version").attr("version").cast<std::string>() << "\n"
+                   << "    NumPy Include: " << numpy.attr("get_include")().cast<std::string>()
+                   << "\n";
         } else {
             // Output NumPy import error
             stream << "    NumPy: " << err << "\n";
@@ -132,7 +144,7 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
 
 } // ngen::exec_info::runtime_summary
 
-int main(int argc, char* argv[]) {
+int run_ngen(int argc, char* argv[], int mpi_num_procs, int mpi_rank) {
     std::string catchmentDataFile         = "";
     std::string nexusDataFile             = "";
     std::string REALIZATION_CONFIG_PATH   = "";
@@ -140,18 +152,7 @@ int main(int argc, char* argv[]) {
     std::string PARTITION_PATH = "";
     std::stringstream ss("");
 
-    // This default value should lead to behavior matching the single-process case in the standalone or non-MPI case
-    int mpi_num_procs = 1;
-    // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
-    int mpi_rank = 0;
-
     if (argc > 1 && std::string{argv[1]} == "--info") {
-#if NGEN_WITH_MPI
-        MPI_Init(nullptr, nullptr);
-        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-        MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
-#endif
-
         if (mpi_rank == 0) {
             std::ostringstream output;
             output << ngen::exec_info::build_summary;
@@ -162,16 +163,10 @@ int main(int argc, char* argv[]) {
                    << "    Processors: " << mpi_num_procs << "\n";
 #endif // NGEN_WITH_MPI
 
-            ss << output.str() << std::endl;
-            LOG(ss.str(), LogLevel::INFO);
-            ss.str("");
+            std::cout << output.str() << std::endl;
         } // if (mpi_rank == 0)
 
-#if NGEN_WITH_MPI
-        MPI_Finalize();
-#endif
-
-        exit(1);
+        return 1;
     }
 
     auto time_start = std::chrono::steady_clock::now();
@@ -181,15 +176,6 @@ int main(int argc, char* argv[]) {
     LOG(ss.str(), LogLevel::INFO);
     ss.str("");
     std::ios::sync_with_stdio(false);
-
-#if NGEN_WITH_PYTHON
-    // Start Python interpreter via the manager singleton
-    // Need to bind to a variable so that the underlying reference count
-    // is incremented, this essentially becomes the global reference to keep
-    // the interpreter alive till the end of `main`
-    auto _interp = utils::ngenPy::InterpreterUtil::getInstance();
-// utils::ngenPy::InterpreterUtil::getInstance();
-#endif // NGEN_WITH_PYTHON
 
     // Pull a few "options" form the cli input, this is a temporary solution to CLI parsing!
     // Use "positional args"
@@ -248,8 +234,8 @@ int main(int argc, char* argv[]) {
         ss << "  VIRTUAL_ENV environment variable: "
            << (std::getenv("VIRTUAL_ENV") == nullptr ? "(not set)" : std::getenv("VIRTUAL_ENV"))
            << std::endl;
-        ss << "  Discovered venv: " << _interp->getDiscoveredVenvPath() << std::endl;
-        auto paths = _interp->getSystemPath();
+        ss << "  Discovered venv: " << utils::ngenPy::InterpreterUtil::getInstance()->getDiscoveredVenvPath() << std::endl;
+        auto paths = utils::ngenPy::InterpreterUtil::getInstance()->getSystemPath();
         ss << "  System paths:" << std::endl;
         for (std::string& path : std::get<1>(paths)) {
             if (!path.empty()) {
@@ -261,7 +247,7 @@ int main(int argc, char* argv[]) {
         std::cout << ss.str() << std::endl;
         LOG(ss.str(), LogLevel::INFO);
         ss.str("");
-        exit(0); // Unsure if this path should have a non-zero exit code?
+        return 0; // Unsure if this path should have a non-zero exit code?
 
     } else if (argc < 6) {
         ss << "Missing required args:" << std::endl;
@@ -280,19 +266,13 @@ int main(int argc, char* argv[]) {
             ss.str("");
         }
 
-        exit(-1);
+        return -1;
     } else {
         catchmentDataFile       = argv[1];
         nexusDataFile           = argv[3];
         REALIZATION_CONFIG_PATH = argv[5];
 
 #if NGEN_WITH_MPI
-
-        // Initalize MPI
-        MPI_Init(NULL, NULL);
-        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-        MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
-
         if (argc >= 7) {
             LOG("argc >= 7", LogLevel::INFO);
             ss.str("");
@@ -301,7 +281,7 @@ int main(int argc, char* argv[]) {
             ss << "Missing required argument for partition file path." << std::endl;
             LOG(ss.str(), LogLevel::WARNING);
             ss.str("");
-            exit(-1);
+            return -1;
         }
 
         if (argc >= 8) {
@@ -314,7 +294,7 @@ int main(int argc, char* argv[]) {
                    << std::endl;
                 LOG(ss.str(), LogLevel::WARNING);
                 ss.str("");
-                exit(-1);
+                return -1;
             }
         }
 #endif // NGEN_WITH_MPI
@@ -342,7 +322,8 @@ int main(int argc, char* argv[]) {
 
 #if NGEN_WITH_MPI
         if (!PARTITION_PATH.empty()) {
-            error = error || !utils::FileChecker::file_is_readable(PARTITION_PATH, "Partition config");
+            error =
+                error || !utils::FileChecker::file_is_readable(PARTITION_PATH, "Partition config");
         }
 
         // Do some extra steps if we expect to load a subdivided hydrofabric
@@ -372,7 +353,7 @@ int main(int argc, char* argv[]) {
 #endif // NGEN_WITH_MPI
 
         if (error)
-            exit(-1);
+            return -1;
 
         // split the subset strings into vectors
         boost::split(catchment_subset_ids, argv[2], [](char c) { return c == ','; });
@@ -402,8 +383,8 @@ int main(int argc, char* argv[]) {
         // checksum the file
         partition_parser.parse_partition_file();
 
-        std::vector<PartitionData> &partitions = partition_parser.partition_ranks;
-        local_data = std::move(partitions[mpi_rank]);
+        std::vector<PartitionData>& partitions = partition_parser.partition_ranks;
+        local_data                             = std::move(partitions[mpi_rank]);
         if (!nexus_subset_ids.empty()) {
             ss << "Warning: CLI provided nexus subset will be ignored when using partition config";
             LOG(ss.str(), LogLevel::WARNING);
@@ -438,7 +419,7 @@ int main(int argc, char* argv[]) {
             throw std::runtime_error(msg);
         }
 #else
-        Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
+        { const std::string message = "SQLite3 support required to read GeoPackage files."; LOG(message, LogLevel::SEVERE); throw std::runtime_error(message); }
 #endif
     } else {
         nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
@@ -470,7 +451,7 @@ int main(int argc, char* argv[]) {
         }
 
 #else
-        Logger::logMsgAndThrowError("SQLite3 support required to read GeoPackage files.");
+        { const std::string message = "SQLite3 support required to read GeoPackage files."; LOG(message, LogLevel::SEVERE); throw std::runtime_error(message); }
 #endif
     } else {
         catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
@@ -498,8 +479,9 @@ int main(int argc, char* argv[]) {
     }
 
     auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
-
     sim_time = std::make_shared<Simulation_Time>(simulation_time_config);
+
+    auto state_saving_config = State_Save_Config(realization_config);
 
     ss << "Initializing formulations" << std::endl;
     LOG(ss.str(), LogLevel::INFO);
@@ -608,7 +590,8 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < nexus_collection->get_size(); ++i) {
         auto feature = nexus_collection->get_feature(i);
         std::string feature_id = feature->get_id();
-        if (hy_features::identifiers::isNexus(feature_id.substr(0, 3))) {
+        if (hy_features::identifiers::isNexus(feature_id.substr(0, 3)) &&
+            nexus_indexes.find(feature_id) == nexus_indexes.end()) {
             nexus_indexes[feature_id] = nexus_index;
             ++nexus_index;
         }
@@ -784,6 +767,16 @@ int main(int argc, char* argv[]) {
 
     auto time_done_init = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
+    LOG("[TIMING]: Init: " + std::to_string(time_elapsed_init.count()), LogLevel::INFO);
+
+    // Initialization has completed; hot starts reset model clocks to this run's epoch.
+    if (auto loader = state_saving_config.hot_start()) {
+        auto snapshot = loader->initialize_snapshot();
+        simulation->load_hot_start(snapshot, manager->get_using_routing() ?
+            manager->get_t_route_config_file_with_path() : std::string{});
+        snapshot->finish_saving();
+        loader->finalize();
+    }
 
     simulation->run_catchments();
 
@@ -830,6 +823,23 @@ int main(int argc, char* argv[]) {
 
     LOG("[TIMING]: Routing: " + std::to_string(time_elapsed_routing.count()), LogLevel::INFO);
 
+    // run any end-of-run state saving after T-Route has finished but before starting to tear down data structures
+    for (const auto& end_saver : state_saving_config.end_of_run_savers()) {
+        LOG(LogLevel::INFO, "Saving end of run simulation data for state saving config " + end_saver.first);
+        std::shared_ptr<State_Snapshot_Saver> snapshot = end_saver.second->initialize_snapshot(State_Saver::State_Durability::strict);
+        simulation->save_end_of_run(snapshot);
+        snapshot->finish_saving();
+        end_saver.second->finalize();
+    }
+
+    simulation->finalize();
+    manager->finalize();
+
+    auto time_done_total                               = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_total   = time_done_total - time_start;
+
+    LOG("[TIMING]: Total: " + std::to_string(time_elapsed_total.count()), LogLevel::INFO);
+
     if (mpi_rank == 0) {
         ss << "NGen top-level timings:"
            << "\n\tNGen::init: " << time_elapsed_init.count()
@@ -837,21 +847,82 @@ int main(int argc, char* argv[]) {
 #if NGEN_WITH_ROUTING
            << "\n\tNGen::routing: " << time_elapsed_routing.count()
 #endif
-
 #if NGEN_WITH_COASTAL
            << "\n\tNGen::coastal: " << time_elapsed_coastal.count()
 #endif
-           << "\n\tNGen::total: " << time_elapsed_routing.count()
+           << "\n\tNGen::total: " << time_elapsed_total.count()
            << std::endl;
         LOG(ss.str(), LogLevel::INFO);
         ss.str("");
     }
 
-  manager->finalize();
+    return 0;
+}
+
+/**
+ * This function acts as a wrapper around the main executing body of NGEN.
+ * Currently, the end of the `run_ngen` triggers the destruction of the catchment BMIs.
+ * A future improvement would be to turn `run_ngen` into `main` and have a cleaner ownership model of the BMIs
+ * so they can be finalized explicitly instead of when their `shared_ptr` reference count goes to zero.
+ */
+int main(int argc, char* argv[]) {
+     // This default value should lead to behavior matching the single-process case in the standalone or non-MPI case
+    int mpi_num_procs = 1;
+    // Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
+    int mpi_rank = 0;
+    // exit code result of the simulation run
+    int result;
+
+#if NGEN_WITH_MPI
+    // initialize MPI if needed
+    MPI_Init(nullptr, nullptr);
+    MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
+#endif
+
+    Logger::g_mpiRank = mpi_rank;
+
+#if NGEN_WITH_PYTHON
+    // Start Python interpreter via the manager singleton
+    // Need to bind to a variable so that the underlying reference count
+    // is incremented, this essentially becomes the global reference to keep
+    // the interpreter alive till the end of `main`
+    auto interp = utils::ngenPy::InterpreterUtil::getInstance();
+    try {
+        result = run_ngen(argc, argv, mpi_num_procs, mpi_rank);
+
+    } catch (pybind11::error_already_set &e) {
+        // If the error comes from python,
+        // we cannot rethrow the execption after destroying the interpreter (doing so sometimes caused MPI runs to hang)
+        // First, copy the python error message so it an be reraised as a runtime_error
+        std::string error_msg = std::string("Uncaught python error: ") + e.what();
+        // destroy the interpreter to let python atexit actions trigger
+        interp.reset();
+        // throw the copied error to ensure MPI acknowledges the termination
+        throw std::runtime_error(error_msg);
+
+    } catch (...) {
+        // If any uncaught exception happens,
+        // explictly destroy the interpreter to ensure any
+        // python atexit registered actions will trigger.
+        interp.reset();
+        // Then, throw the original error.
+        throw;
+    }
+    // explicitly destroy the interpreter before calling MPI_Finalize
+    interp.reset();
+#if NGEN_WITH_MPI
+    // ensure all interpreters are fully closed between MPI ranks before calling MPI_Finalize below
+    // this is needed if any python atexit registered functions would interact with MPI
+    MPI_Barrier(MPI_COMM_WORLD);
+#endif // NGEN_WITH_MPI
+#else // not NGEN_WITH_PYTHON
+    result = run_ngen(argc, argv, mpi_num_procs, mpi_rank);
+#endif // NGEN_WITH_PYTHON
 
 #if NGEN_WITH_MPI
     MPI_Finalize();
 #endif
 
-    return 0;
+    return result;
 }
