@@ -2900,12 +2900,19 @@
           <topic label="output_stream" href="classutils_1_1_file_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798"/>
           <topic label="sep" href="classutils_1_1_file_stream_handler.html#a94fc95b39ccee186539087dcad20f43b"/>
         </topic>
+        <topic label="FormulationStepOutput" href="structutils_1_1_formulation_step_output.html">
+          <topic label="FormulationStepOutput" href="structutils_1_1_formulation_step_output.html#a7c66ca085440f73607a6efdf72a57481"/>
+          <topic label="~FormulationStepOutput" href="structutils_1_1_formulation_step_output.html#a93a7c8c438b9a935ac30adfc7d763bd0"/>
+          <topic label="receive_data_entry" href="structutils_1_1_formulation_step_output.html#a443ff100440671abdd001069e2ad24ce"/>
+        </topic>
         <topic label="NexusOutputsMgr" href="classutils_1_1_nexus_outputs_mgr.html">
           <topic label="~NexusOutputsMgr" href="classutils_1_1_nexus_outputs_mgr.html#a2d87d034c26bf83787668cf50f704256"/>
           <topic label="close" href="classutils_1_1_nexus_outputs_mgr.html#afb3e5a7c94d647ddd114b17dbcdcc312"/>
           <topic label="commit_writes" href="classutils_1_1_nexus_outputs_mgr.html#a42f6eac37da60d03d871eaebd3f4ba07"/>
           <topic label="get_default_formulation_id" href="classutils_1_1_nexus_outputs_mgr.html#a4deb1cdc49b801a8a4783075b2cbfb6f"/>
           <topic label="is_closed" href="classutils_1_1_nexus_outputs_mgr.html#ad2a54b09faa897ac4ce2fec11c804d80"/>
+          <topic label="prepare_for_step" href="classutils_1_1_nexus_outputs_mgr.html#aef89228ec99170269c3b5494d8bfd0c8"/>
+          <topic label="prepare_for_step" href="classutils_1_1_nexus_outputs_mgr.html#ac8d2906b4a74dd1329ab933d7982b090"/>
           <topic label="receive_data_entry" href="classutils_1_1_nexus_outputs_mgr.html#af7bcb3b55ef20da262c64c5d670ddf59"/>
           <topic label="receive_data_entry" href="classutils_1_1_nexus_outputs_mgr.html#a5dd85baadb99e8fcb7c573f051e48bbb"/>
         </topic>
@@ -2925,6 +2932,8 @@
           <topic label="commit_writes" href="classutils_1_1_per_nexus_csv_output_mgr.html#abbbef8d4fbf17950d3d5e3b7d4848312"/>
           <topic label="get_default_formulation_id" href="classutils_1_1_per_nexus_csv_output_mgr.html#a4deb1cdc49b801a8a4783075b2cbfb6f"/>
           <topic label="is_closed" href="classutils_1_1_per_nexus_csv_output_mgr.html#a0a4da8813c166c768f5fcdf15304b75f"/>
+          <topic label="prepare_for_step" href="classutils_1_1_per_nexus_csv_output_mgr.html#ac8d2906b4a74dd1329ab933d7982b090"/>
+          <topic label="prepare_for_step" href="classutils_1_1_per_nexus_csv_output_mgr.html#ad522677250c507b0fe6c669f07ed671b"/>
           <topic label="receive_data_entry" href="classutils_1_1_per_nexus_csv_output_mgr.html#a5dd85baadb99e8fcb7c573f051e48bbb"/>
           <topic label="receive_data_entry" href="classutils_1_1_per_nexus_csv_output_mgr.html#acbdd5705bcd76f76d819250451301131"/>
           <topic label="closed" href="classutils_1_1_per_nexus_csv_output_mgr.html#afb9465481c75410d618216b0b8c7576d"/>
@@ -5236,12 +5245,19 @@
           <topic label="output_stream" href="classutils_1_1_file_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798"/>
           <topic label="sep" href="classutils_1_1_file_stream_handler.html#a94fc95b39ccee186539087dcad20f43b"/>
         </topic>
+        <topic label="FormulationStepOutput" href="structutils_1_1_formulation_step_output.html">
+          <topic label="FormulationStepOutput" href="structutils_1_1_formulation_step_output.html#a7c66ca085440f73607a6efdf72a57481"/>
+          <topic label="~FormulationStepOutput" href="structutils_1_1_formulation_step_output.html#a93a7c8c438b9a935ac30adfc7d763bd0"/>
+          <topic label="receive_data_entry" href="structutils_1_1_formulation_step_output.html#a443ff100440671abdd001069e2ad24ce"/>
+        </topic>
         <topic label="NexusOutputsMgr" href="classutils_1_1_nexus_outputs_mgr.html">
           <topic label="~NexusOutputsMgr" href="classutils_1_1_nexus_outputs_mgr.html#a2d87d034c26bf83787668cf50f704256"/>
           <topic label="close" href="classutils_1_1_nexus_outputs_mgr.html#afb3e5a7c94d647ddd114b17dbcdcc312"/>
           <topic label="commit_writes" href="classutils_1_1_nexus_outputs_mgr.html#a42f6eac37da60d03d871eaebd3f4ba07"/>
           <topic label="get_default_formulation_id" href="classutils_1_1_nexus_outputs_mgr.html#a4deb1cdc49b801a8a4783075b2cbfb6f"/>
           <topic label="is_closed" href="classutils_1_1_nexus_outputs_mgr.html#ad2a54b09faa897ac4ce2fec11c804d80"/>
+          <topic label="prepare_for_step" href="classutils_1_1_nexus_outputs_mgr.html#aef89228ec99170269c3b5494d8bfd0c8"/>
+          <topic label="prepare_for_step" href="classutils_1_1_nexus_outputs_mgr.html#ac8d2906b4a74dd1329ab933d7982b090"/>
           <topic label="receive_data_entry" href="classutils_1_1_nexus_outputs_mgr.html#af7bcb3b55ef20da262c64c5d670ddf59"/>
           <topic label="receive_data_entry" href="classutils_1_1_nexus_outputs_mgr.html#a5dd85baadb99e8fcb7c573f051e48bbb"/>
         </topic>
@@ -5261,6 +5277,8 @@
           <topic label="commit_writes" href="classutils_1_1_per_nexus_csv_output_mgr.html#abbbef8d4fbf17950d3d5e3b7d4848312"/>
           <topic label="get_default_formulation_id" href="classutils_1_1_per_nexus_csv_output_mgr.html#a4deb1cdc49b801a8a4783075b2cbfb6f"/>
           <topic label="is_closed" href="classutils_1_1_per_nexus_csv_output_mgr.html#a0a4da8813c166c768f5fcdf15304b75f"/>
+          <topic label="prepare_for_step" href="classutils_1_1_per_nexus_csv_output_mgr.html#ac8d2906b4a74dd1329ab933d7982b090"/>
+          <topic label="prepare_for_step" href="classutils_1_1_per_nexus_csv_output_mgr.html#ad522677250c507b0fe6c669f07ed671b"/>
           <topic label="receive_data_entry" href="classutils_1_1_per_nexus_csv_output_mgr.html#a5dd85baadb99e8fcb7c573f051e48bbb"/>
           <topic label="receive_data_entry" href="classutils_1_1_per_nexus_csv_output_mgr.html#acbdd5705bcd76f76d819250451301131"/>
           <topic label="closed" href="classutils_1_1_per_nexus_csv_output_mgr.html#afb9465481c75410d618216b0b8c7576d"/>
@@ -5862,6 +5880,20 @@
         <topic label="remote_tuple" href="class_partitions___parser.html#aa37cfde3d5f16a122f81a9f44cf7e491"/>
         <topic label="tree" href="class_partitions___parser.html#aa8a46b738112a567324898164372cce9"/>
       </topic>
+      <topic label="PerFormulationStepOutput" href="struct_per_formulation_step_output.html">
+        <topic label="PerFormulationStepOutput" href="struct_per_formulation_step_output.html#ade5921cf5ccd733e27ed6cd840eaffe4"/>
+        <topic label="receive_data_entry" href="struct_per_formulation_step_output.html#adb6b5c6fba3db8900025fba5045e1ec3"/>
+        <topic label="formulation_id_" href="struct_per_formulation_step_output.html#a506e49441d362db0a4f1f50f8e088d22"/>
+        <topic label="output_mgr_" href="struct_per_formulation_step_output.html#a8683e39207ed4fe6cb458b11cf29c778"/>
+        <topic label="time_" href="struct_per_formulation_step_output.html#ab6b29228a8d3a7e6a5000683894173e3"/>
+      </topic>
+      <topic label="PerNexusStepOutput" href="struct_per_nexus_step_output.html">
+        <topic label="PerNexusStepOutput" href="struct_per_nexus_step_output.html#a1e187a41fe5c431d9ca855e88af72154"/>
+        <topic label="receive_data_entry" href="struct_per_nexus_step_output.html#a83e644c7dcaaba3b0fd07c3a92abfb02"/>
+        <topic label="formulation_id_" href="struct_per_nexus_step_output.html#af35f8a6faceed269dffaf549848fba91"/>
+        <topic label="output_mgr_" href="struct_per_nexus_step_output.html#a50a37ccb5831b5da6e58d26adb8ba30b"/>
+        <topic label="time_" href="struct_per_nexus_step_output.html#a59ed7fb5a87cbe8e61d4f74d851b9d96"/>
+      </topic>
       <topic label="request_from_empty_nexus" href="structrequest__from__empty__nexus.html">
         <topic label="what" href="structrequest__from__empty__nexus.html#a5e3bb421f6d94856d4ee53a390a1ba6c"/>
       </topic>
@@ -6220,6 +6252,10 @@
       </topic>
       <topic label="utils::FeatureDescriptor" href="structutils_1_1_feature_descriptor.html"/>
       <topic label="utils::FileChecker" href="classutils_1_1_file_checker.html"/>
+      <topic label="utils::FormulationStepOutput" href="structutils_1_1_formulation_step_output.html">
+        <topic label="PerFormulationStepOutput" href="struct_per_formulation_step_output.html"/>
+        <topic label="PerNexusStepOutput" href="struct_per_nexus_step_output.html"/>
+      </topic>
       <topic label="utils::NexusOutputsMgr" href="classutils_1_1_nexus_outputs_mgr.html">
         <topic label="utils::PerNexusCsvOutputMgr" href="classutils_1_1_per_nexus_csv_output_mgr.html"/>
       </topic>

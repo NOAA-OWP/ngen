@@ -5,6 +5,8 @@ var classutils_1_1_per_nexus_csv_output_mgr =
     [ "commit_writes", "classutils_1_1_per_nexus_csv_output_mgr.html#abbbef8d4fbf17950d3d5e3b7d4848312", null ],
     [ "get_default_formulation_id", "classutils_1_1_per_nexus_csv_output_mgr.html#a4deb1cdc49b801a8a4783075b2cbfb6f", null ],
     [ "is_closed", "classutils_1_1_per_nexus_csv_output_mgr.html#a0a4da8813c166c768f5fcdf15304b75f", null ],
+    [ "prepare_for_step", "classutils_1_1_per_nexus_csv_output_mgr.html#ac8d2906b4a74dd1329ab933d7982b090", null ],
+    [ "prepare_for_step", "classutils_1_1_per_nexus_csv_output_mgr.html#ad522677250c507b0fe6c669f07ed671b", null ],
     [ "receive_data_entry", "classutils_1_1_per_nexus_csv_output_mgr.html#a5dd85baadb99e8fcb7c573f051e48bbb", null ],
     [ "receive_data_entry", "classutils_1_1_per_nexus_csv_output_mgr.html#acbdd5705bcd76f76d819250451301131", null ],
     [ "closed", "classutils_1_1_per_nexus_csv_output_mgr.html#afb9465481c75410d618216b0b8c7576d", null ],

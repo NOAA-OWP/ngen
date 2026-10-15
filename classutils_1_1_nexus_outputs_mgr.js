@@ -5,6 +5,8 @@ var classutils_1_1_nexus_outputs_mgr =
     [ "commit_writes", "classutils_1_1_nexus_outputs_mgr.html#a42f6eac37da60d03d871eaebd3f4ba07", null ],
     [ "get_default_formulation_id", "classutils_1_1_nexus_outputs_mgr.html#a4deb1cdc49b801a8a4783075b2cbfb6f", null ],
     [ "is_closed", "classutils_1_1_nexus_outputs_mgr.html#ad2a54b09faa897ac4ce2fec11c804d80", null ],
+    [ "prepare_for_step", "classutils_1_1_nexus_outputs_mgr.html#aef89228ec99170269c3b5494d8bfd0c8", null ],
+    [ "prepare_for_step", "classutils_1_1_nexus_outputs_mgr.html#ac8d2906b4a74dd1329ab933d7982b090", null ],
     [ "receive_data_entry", "classutils_1_1_nexus_outputs_mgr.html#af7bcb3b55ef20da262c64c5d670ddf59", null ],
     [ "receive_data_entry", "classutils_1_1_nexus_outputs_mgr.html#a5dd85baadb99e8fcb7c573f051e48bbb", null ]
 ];

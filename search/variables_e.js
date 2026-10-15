@@ -15,13 +15,14 @@ var searchData=
   ['output_5finterval_12',['output_interval',['../structrealization_1_1config_1_1_time.html#aa1c533a9094a1ffb9802c50628ef8c3a',1,'realization::config::Time::output_interval'],['../structsimulation__time__params.html#a07f1ef40713f5e1da6a1fe9900e59607',1,'simulation_time_params::output_interval']]],
   ['output_5finterval_5fseconds_13',['output_interval_seconds',['../class_simulation___time.html#aca840918d55535a52110f4c3132c4df0',1,'Simulation_Time']]],
   ['output_5fmass_5fname_14',['OUTPUT_MASS_NAME',['../namespacemodels_1_1bmi_1_1protocols.html#a7762c6b1a0dfecc668efd45d6383381b',1,'models::bmi::protocols']]],
-  ['output_5fname_15',['output_name',['../structutils_1_1_output_field.html#aa59a3090889eff3defe657a4a76a9d02',1,'utils::OutputField']]],
-  ['output_5fprecision_16',['output_precision',['../classrealization_1_1_bmi___formulation.html#a8ff42a69cf6c735578692c37e20a584c',1,'realization::Bmi_Formulation']]],
-  ['output_5froot_5f_17',['output_root_',['../classutils_1_1_catchment_csv_output_mgr.html#a3e93142e905bed4773103be2b4db3f4d',1,'utils::CatchmentCsvOutputMgr']]],
-  ['output_5fstream_18',['output_stream',['../classutils_1_1_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798',1,'utils::StreamHandler']]],
-  ['output_5ftext_5fstream_19',['output_text_stream',['../classrealization_1_1_bmi___formulation.html#a0dd771991a46889d4bc299f8c13cb5e3',1,'realization::Bmi_Formulation']]],
-  ['output_5ftime_5findex_20',['output_time_index',['../classngen_1_1_layer.html#a1d1dbf9050ac23f56ac06e9e3dffc176',1,'ngen::Layer']]],
-  ['output_5funits_21',['output_units',['../class_catchment_aggr_data_selector.html#a78bb6eabd1d62510e6d8e8c02f4dd0e1',1,'CatchmentAggrDataSelector']]],
-  ['output_5fvar_5fnames_22',['output_var_names',['../classmodels_1_1bmi_1_1_bmi___adapter.html#af9384bd6c9dfa04e5ec29181f6a66ed4',1,'models::bmi::Bmi_Adapter']]],
-  ['output_5fvariable_5fnames_23',['output_variable_names',['../classrealization_1_1_bmi___formulation.html#a566505f80702c117ef23688ce6892a51',1,'realization::Bmi_Formulation']]]
+  ['output_5fmgr_5f_15',['output_mgr_',['../struct_per_formulation_step_output.html#a8683e39207ed4fe6cb458b11cf29c778',1,'PerFormulationStepOutput::output_mgr_'],['../struct_per_nexus_step_output.html#a50a37ccb5831b5da6e58d26adb8ba30b',1,'PerNexusStepOutput::output_mgr_']]],
+  ['output_5fname_16',['output_name',['../structutils_1_1_output_field.html#aa59a3090889eff3defe657a4a76a9d02',1,'utils::OutputField']]],
+  ['output_5fprecision_17',['output_precision',['../classrealization_1_1_bmi___formulation.html#a8ff42a69cf6c735578692c37e20a584c',1,'realization::Bmi_Formulation']]],
+  ['output_5froot_5f_18',['output_root_',['../classutils_1_1_catchment_csv_output_mgr.html#a3e93142e905bed4773103be2b4db3f4d',1,'utils::CatchmentCsvOutputMgr']]],
+  ['output_5fstream_19',['output_stream',['../classutils_1_1_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798',1,'utils::StreamHandler']]],
+  ['output_5ftext_5fstream_20',['output_text_stream',['../classrealization_1_1_bmi___formulation.html#a0dd771991a46889d4bc299f8c13cb5e3',1,'realization::Bmi_Formulation']]],
+  ['output_5ftime_5findex_21',['output_time_index',['../classngen_1_1_layer.html#a1d1dbf9050ac23f56ac06e9e3dffc176',1,'ngen::Layer']]],
+  ['output_5funits_22',['output_units',['../class_catchment_aggr_data_selector.html#a78bb6eabd1d62510e6d8e8c02f4dd0e1',1,'CatchmentAggrDataSelector']]],
+  ['output_5fvar_5fnames_23',['output_var_names',['../classmodels_1_1bmi_1_1_bmi___adapter.html#af9384bd6c9dfa04e5ec29181f6a66ed4',1,'models::bmi::Bmi_Adapter']]],
+  ['output_5fvariable_5fnames_24',['output_variable_names',['../classrealization_1_1_bmi___formulation.html#a566505f80702c117ef23688ce6892a51',1,'realization::Bmi_Formulation']]]
 ];

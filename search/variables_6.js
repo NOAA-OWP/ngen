@@ -19,8 +19,9 @@ var searchData=
   ['formulation_16',['formulation',['../classngen_1_1_domain_layer.html#a0ad7858964a7b9f9b7190b0ebad7fa4c',1,'ngen::DomainLayer::formulation'],['../structrealization_1_1config_1_1_config.html#aa26f215e393f521357b655021b3f1119',1,'realization::config::Config::formulation'],['../structrealization_1_1config_1_1_layer.html#ac0acb7199a410ad6cefa85177a62a1da',1,'realization::config::Layer::formulation']]],
   ['formulation_5fconstructors_17',['formulation_constructors',['../namespacerealization.html#af60e0abfbd9fa40024373e9012cb7769',1,'realization']]],
   ['formulation_5fid_18',['formulation_id',['../structutils_1_1_feature_descriptor.html#afab3c3409af8149fb45099c50d21de49',1,'utils::FeatureDescriptor']]],
-  ['formulations_19',['formulations',['../classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d',1,'realization::Formulation_Manager']]],
-  ['frequency_20',['frequency',['../classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#ae36ebcec6ab68d031c47fada53f73cf0',1,'models::bmi::protocols::NgenMassBalance']]],
-  ['frequency_5fkey_21',['FREQUENCY_KEY',['../namespacemodels_1_1bmi_1_1protocols.html#a0d2708045fe54054be425ef0696205b6',1,'models::bmi::protocols']]],
-  ['from_5flegacy_5fkeys_22',['from_legacy_keys',['../structrealization_1_1config_1_1_output.html#a951bad9ed42971b78185cffe21e1f318',1,'realization::config::Output']]]
+  ['formulation_5fid_5f_19',['formulation_id_',['../struct_per_formulation_step_output.html#a506e49441d362db0a4f1f50f8e088d22',1,'PerFormulationStepOutput::formulation_id_'],['../struct_per_nexus_step_output.html#af35f8a6faceed269dffaf549848fba91',1,'PerNexusStepOutput::formulation_id_']]],
+  ['formulations_20',['formulations',['../classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d',1,'realization::Formulation_Manager']]],
+  ['frequency_21',['frequency',['../classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#ae36ebcec6ab68d031c47fada53f73cf0',1,'models::bmi::protocols::NgenMassBalance']]],
+  ['frequency_5fkey_22',['FREQUENCY_KEY',['../namespacemodels_1_1bmi_1_1protocols.html#a0d2708045fe54054be425ef0696205b6',1,'models::bmi::protocols']]],
+  ['from_5flegacy_5fkeys_23',['from_legacy_keys',['../structrealization_1_1config_1_1_output.html#a951bad9ed42971b78185cffe21e1f318',1,'realization::config::Output']]]
 ];

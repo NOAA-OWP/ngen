@@ -115,7 +115,7 @@
 <area shape="rect" id="Node000040" href="$classutils_1_1_catchment_outputs_mgr.html" title="Abstract class for managing and writing to catchment data files." alt="" coords="2326,621,2498,810"/>
 <area shape="poly" id="edge69_Node000039_Node000040" title=" " alt="" coords="2424,809,2424,860,2419,916,2406,971,2385,1023,2378,1035,2373,1032,2380,1021,2401,970,2413,915,2419,860,2419,809"/>
 <area shape="poly" id="edge71_Node000001_Node000041" title=" " alt="" coords="2834,1127,2841,1228,2845,1349,2845,3882,2842,3913,2832,3943,2817,3970,2799,3995,2754,4039,2706,4074,2703,4069,2750,4035,2795,3992,2813,3967,2827,3941,2837,3912,2840,3882,2840,1350,2836,1228,2829,1127"/>
-<area shape="rect" id="Node000042" href="$classutils_1_1_nexus_outputs_mgr.html" title="Abstract class for managing and writing to nexus data files." alt="" coords="2736,621,2920,810"/>
-<area shape="poly" id="edge72_Node000041_Node000042" title=" " alt="" coords="2831,809,2831,1029,2825,1029,2825,809"/>
+<area shape="rect" id="Node000042" href="$classutils_1_1_nexus_outputs_mgr.html" title="Abstract class for managing and writing to nexus data files." alt="" coords="2736,601,2920,830"/>
+<area shape="poly" id="edge72_Node000041_Node000042" title=" " alt="" coords="2831,830,2831,1029,2825,1029,2825,830"/>
 <area shape="poly" id="edge74_Node000001_Node000043" title=" " alt="" coords="2632,3156,2632,4053,2627,4053,2627,3156"/>
 </map>

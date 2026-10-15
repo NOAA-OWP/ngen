@@ -114,7 +114,7 @@ $(function(){initNavTree('classutils_1_1_per_nexus_csv_output_mgr.html',''); ini
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classutils_1_1_per_nexus_csv_output_mgr__inherit__graph.svg" width="195" height="415"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classutils_1_1_per_nexus_csv_output_mgr__inherit__graph.svg" width="195" height="476"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div id="dynsection-1" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Collaboration diagram for utils::PerNexusCsvOutputMgr:</div>
@@ -141,6 +141,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acbdd5705bcd76f76d819250451301131" id="r_acbdd5705bcd76f76d819250451301131"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acbdd5705bcd76f76d819250451301131">receive_data_entry</a> (const std::string &amp;formulation_id, const std::string &amp;nexus_id, const <a class="el" href="structutils_1_1time__marker.html">time_marker</a> &amp;data_time_marker, double flow_data_at_t) override</td></tr>
 <tr class="memdesc:acbdd5705bcd76f76d819250451301131"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a data entry for this nexus, specifying details including the formulation id.  <br /></td></tr>
 <tr class="separator:acbdd5705bcd76f76d819250451301131"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad522677250c507b0fe6c669f07ed671b" id="r_ad522677250c507b0fe6c669f07ed671b"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="structutils_1_1_formulation_step_output.html">FormulationStepOutput</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad522677250c507b0fe6c669f07ed671b">prepare_for_step</a> (const std::string &amp;formulation_id, const <a class="el" href="structutils_1_1time__marker.html">time_marker</a> &amp;data_time_marker) override</td></tr>
+<tr class="memdesc:ad522677250c507b0fe6c669f07ed671b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the manager's metadata about what step's data is set to be written and from what formulation.  <br /></td></tr>
+<tr class="separator:ad522677250c507b0fe6c669f07ed671b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8d2906b4a74dd1329ab933d7982b090" id="r_ac8d2906b4a74dd1329ab933d7982b090"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="structutils_1_1_formulation_step_output.html">FormulationStepOutput</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classutils_1_1_nexus_outputs_mgr.html#ac8d2906b4a74dd1329ab933d7982b090">prepare_for_step</a> (const <a class="el" href="structutils_1_1time__marker.html">time_marker</a> &amp;data_time_marker)</td></tr>
+<tr class="memdesc:ac8d2906b4a74dd1329ab933d7982b090"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pass through to prepare_for_step with the default formulation ID.  <br /></td></tr>
+<tr class="separator:ac8d2906b4a74dd1329ab933d7982b090"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dd85baadb99e8fcb7c573f051e48bbb" id="r_a5dd85baadb99e8fcb7c573f051e48bbb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classutils_1_1_nexus_outputs_mgr.html#a5dd85baadb99e8fcb7c573f051e48bbb">receive_data_entry</a> (const std::string &amp;nexus_id, const <a class="el" href="structutils_1_1time__marker.html">time_marker</a> &amp;data_time_marker, const double flow_data_at_t)</td></tr>
 <tr class="memdesc:a5dd85baadb99e8fcb7c573f051e48bbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive a data entry for this nexus, specifying details but using the default formulation id (however that is determined).  <br /></td></tr>
 <tr class="separator:a5dd85baadb99e8fcb7c573f051e48bbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,7 +288,7 @@ Private Attributes</h2></td></tr>
 <p>Get some a formulation id value. </p>
 <dl class="section return"><dt>Returns</dt><dd>The value for the default formulation id. </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="classutils_1_1_nexus_outputs_mgr.html#a5dd85baadb99e8fcb7c573f051e48bbb">utils::NexusOutputsMgr::receive_data_entry()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classutils_1_1_nexus_outputs_mgr.html#ac8d2906b4a74dd1329ab933d7982b090">utils::NexusOutputsMgr::prepare_for_step()</a>, and <a class="el" href="classutils_1_1_nexus_outputs_mgr.html#a5dd85baadb99e8fcb7c573f051e48bbb">utils::NexusOutputsMgr::receive_data_entry()</a>.</p>
 
 </div>
 </div>
@@ -314,6 +320,76 @@ Private Attributes</h2></td></tr>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#a2caf78abaa1e72fa0e5a975c2e3c2556" title="Close this instance, closing all nexus_outfiles streams.">close</a> </dd></dl>
 
 <p>Implements <a class="el" href="classutils_1_1_nexus_outputs_mgr.html#ad2a54b09faa897ac4ce2fec11c804d80">utils::NexusOutputsMgr</a>.</p>
+
+</div>
+</div>
+<a id="ac8d2906b4a74dd1329ab933d7982b090" name="ac8d2906b4a74dd1329ab933d7982b090"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8d2906b4a74dd1329ab933d7982b090">&#9670;&#160;</a></span>prepare_for_step() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::unique_ptr&lt; <a class="el" href="structutils_1_1_formulation_step_output.html">FormulationStepOutput</a> &gt; utils::NexusOutputsMgr::prepare_for_step </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structutils_1_1time__marker.html">time_marker</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>data_time_marker</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pass through to prepare_for_step with the default formulation ID. </p>
+
+<p class="reference">References <a class="el" href="classutils_1_1_nexus_outputs_mgr.html#a4deb1cdc49b801a8a4783075b2cbfb6f">utils::NexusOutputsMgr::get_default_formulation_id()</a>, and <a class="el" href="classutils_1_1_nexus_outputs_mgr.html#aef89228ec99170269c3b5494d8bfd0c8">utils::NexusOutputsMgr::prepare_for_step()</a>.</p>
+
+</div>
+</div>
+<a id="ad522677250c507b0fe6c669f07ed671b" name="ad522677250c507b0fe6c669f07ed671b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad522677250c507b0fe6c669f07ed671b">&#9670;&#160;</a></span>prepare_for_step() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; <a class="el" href="structutils_1_1_formulation_step_output.html">utils::FormulationStepOutput</a> &gt; utils::PerNexusCsvOutputMgr::prepare_for_step </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>formulation_id</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structutils_1_1time__marker.html">time_marker</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>data_time_marker</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update the manager's metadata about what step's data is set to be written and from what formulation. </p>
+<p>Do all metadata updates and error checking here, independent of specific nexuses</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">formulation_id</td><td>The ID of the formulation involved in producing the data to come </td></tr>
+    <tr><td class="paramname">data_time_marker</td><td>A marker for the current simulation time for the data. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classutils_1_1_nexus_outputs_mgr.html#aef89228ec99170269c3b5494d8bfd0c8">utils::NexusOutputsMgr</a>.</p>
 
 </div>
 </div>
@@ -420,6 +496,8 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structutils_1_1time__marker.html#a7f6fb5f887ebda8cea2e0ebc7a5226ac">utils::time_marker::sim_time_index</a>, and <a class="el" href="structutils_1_1time__marker.html#aa1495f58ce5137fbe6f02d5c687ec497">utils::time_marker::time_stamp</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="struct_per_nexus_step_output.html#a83e644c7dcaaba3b0fd07c3a92abfb02">PerNexusStepOutput::receive_data_entry()</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -479,7 +557,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceutils.html">utils</a></li><li class="navelem"><a class="el" href="classutils_1_1_per_nexus_csv_output_mgr.html">PerNexusCsvOutputMgr</a></li>
-    <li class="footer">Generated on Thu Oct 15 2026 18:04:30 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 15 2026 18:19:03 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

@@ -1,0 +1,7 @@
+<map id="utils::FormulationStepOutput" name="utils::FormulationStepOutput">
+<area shape="rect" id="Node000001" title=" " alt="" coords="108,5,283,112"/>
+<area shape="rect" id="Node000002" href="$struct_per_formulation_step_output.html" title=" " alt="" coords="5,160,191,288"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,126,138,162,133,159,155,124"/>
+<area shape="rect" id="Node000003" href="$struct_per_nexus_step_output.html" title=" " alt="" coords="216,160,370,288"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="237,124,258,159,253,162,232,126"/>
+</map>

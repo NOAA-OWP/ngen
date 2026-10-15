@@ -187,6 +187,10 @@ var hierarchy =
     ] ],
     [ "utils::FeatureDescriptor", "structutils_1_1_feature_descriptor.html", null ],
     [ "utils::FileChecker", "classutils_1_1_file_checker.html", null ],
+    [ "utils::FormulationStepOutput", "structutils_1_1_formulation_step_output.html", [
+      [ "PerFormulationStepOutput", "struct_per_formulation_step_output.html", null ],
+      [ "PerNexusStepOutput", "struct_per_nexus_step_output.html", null ]
+    ] ],
     [ "utils::NexusOutputsMgr", "classutils_1_1_nexus_outputs_mgr.html", [
       [ "utils::PerNexusCsvOutputMgr", "classutils_1_1_per_nexus_csv_output_mgr.html", null ]
     ] ],

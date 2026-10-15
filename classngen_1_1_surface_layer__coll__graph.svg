@@ -1691,26 +1691,30 @@ var sectionId = 'dynsection-1';
 <g id="Node000042" class="node">
 <title>Node42</title>
 <g id="a_Node000042"><a xlink:href="classutils_1_1_nexus_outputs_mgr.html" target="_top" xlink:title="Abstract class for managing and writing to nexus data files.">
-<polygon fill="white" stroke="none" points="2186,-2651.5 2048,-2651.5 2048,-2510.25 2186,-2510.25 2186,-2651.5"/>
-<text text-anchor="start" x="2066.38" y="-2638" font-family="Helvetica,sans-Serif" font-size="10.00">utils::NexusOutputsMgr</text>
-<text text-anchor="start" x="2115.5" y="-2622.75" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<polygon fill="white" stroke="none" points="2186,-2666.75 2048,-2666.75 2048,-2495 2186,-2495 2186,-2666.75"/>
+<text text-anchor="start" x="2066.38" y="-2653.25" font-family="Helvetica,sans-Serif" font-size="10.00">utils::NexusOutputsMgr</text>
+<text text-anchor="start" x="2115.5" y="-2638" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="2052" y="-2622.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="2062" y="-2622.75" font-family="Helvetica,sans-Serif" font-size="10.00">close()</text>
 <text text-anchor="start" x="2052" y="-2607.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="2062" y="-2607.5" font-family="Helvetica,sans-Serif" font-size="10.00">close()</text>
+<text text-anchor="start" x="2062" y="-2607.5" font-family="Helvetica,sans-Serif" font-size="10.00">commit_writes()</text>
 <text text-anchor="start" x="2052" y="-2592.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="2062" y="-2592.25" font-family="Helvetica,sans-Serif" font-size="10.00">commit_writes()</text>
+<text text-anchor="start" x="2062" y="-2592.25" font-family="Helvetica,sans-Serif" font-size="10.00">is_closed()</text>
 <text text-anchor="start" x="2052" y="-2577" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="2062" y="-2577" font-family="Helvetica,sans-Serif" font-size="10.00">is_closed()</text>
+<text text-anchor="start" x="2062" y="-2577" font-family="Helvetica,sans-Serif" font-size="10.00">prepare_for_step()</text>
 <text text-anchor="start" x="2052" y="-2561.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="2062" y="-2561.75" font-family="Helvetica,sans-Serif" font-size="10.00">receive_data_entry()</text>
+<text text-anchor="start" x="2062" y="-2561.75" font-family="Helvetica,sans-Serif" font-size="10.00">prepare_for_step()</text>
 <text text-anchor="start" x="2052" y="-2546.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="2062" y="-2546.5" font-family="Helvetica,sans-Serif" font-size="10.00">receive_data_entry()</text>
-<text text-anchor="start" x="2052.38" y="-2531.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="2062" y="-2531.25" font-family="Helvetica,sans-Serif" font-size="10.00">~NexusOutputsMgr()</text>
+<text text-anchor="start" x="2052" y="-2531.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="2062" y="-2531.25" font-family="Helvetica,sans-Serif" font-size="10.00">receive_data_entry()</text>
 <text text-anchor="start" x="2052.38" y="-2516" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="2062" y="-2516" font-family="Helvetica,sans-Serif" font-size="10.00">get_default_formulation_id()</text>
+<text text-anchor="start" x="2062" y="-2516" font-family="Helvetica,sans-Serif" font-size="10.00">~NexusOutputsMgr()</text>
+<text text-anchor="start" x="2052.38" y="-2500.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="2062" y="-2500.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_default_formulation_id()</text>
+<polygon fill="#666666" stroke="#666666" points="2048,-2649.5 2048,-2649.5 2186,-2649.5 2186,-2649.5 2048,-2649.5"/>
 <polygon fill="#666666" stroke="#666666" points="2048,-2634.25 2048,-2634.25 2186,-2634.25 2186,-2634.25 2048,-2634.25"/>
-<polygon fill="#666666" stroke="#666666" points="2048,-2619 2048,-2619 2186,-2619 2186,-2619 2048,-2619"/>
-<polygon fill="none" stroke="#666666" points="2048,-2510.25 2048,-2651.5 2186,-2651.5 2186,-2510.25 2048,-2510.25"/>
+<polygon fill="none" stroke="#666666" points="2048,-2495 2048,-2666.75 2186,-2666.75 2186,-2495 2048,-2495"/>
 </a>
 </g>
 </g>
@@ -1718,7 +1722,7 @@ var sectionId = 'dynsection-1';
 <g id="edge72_Node000041_Node000042" class="edge">
 <title>Node42&#45;&gt;Node41</title>
 <g id="a_edge72_Node000041_Node000042"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M2117,-2510.49C2117,-2458.73 2117,-2389.67 2117,-2345.88"/>
+<path fill="none" stroke="#63b8ff" d="M2117,-2495.08C2117,-2445.57 2117,-2385.27 2117,-2345.71"/>
 <polygon fill="none" stroke="#63b8ff" points="2117,-2345.78 2113,-2339.78 2117,-2333.78 2121,-2339.78 2117,-2345.78"/>
 </a>
 </g>
