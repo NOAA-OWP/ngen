@@ -210,14 +210,7 @@ namespace models {
             //This is a CONTIGUOUS array of type T
             //Must provide a custom deleter to delete the array
             std::shared_ptr<T> ptr( new T[std::distance(begin, end)], [](T *p) { delete[] p; } );
-            Iterator it = begin;
-            int i = 0;
-            while(it != end){
-                //Be safe and cast the input to the desired type
-                ptr.get()[i] = static_cast<T>(*it);
-                ++it;
-                ++i;
-            }
+            std::transform(begin, end, ptr.get(), [](auto const& in){ return static_cast<T>(in); });
             return ptr;
         }
 
