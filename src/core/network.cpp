@@ -210,3 +210,28 @@ const NetworkIndexT& Network::get_sorted_index(SortOrder order, bool cache) cons
   }
 }
 
+void network::attach_sentinels(const geojson::GeoJSON& collection, const std::string& label,
+                               const bool (*matches_type)(const std::string&))
+{
+    // New sentinels are added to the collection only after the scan completes, to avoid iterator
+    // invalidation from inserting eagerly.
+    std::vector<std::shared_ptr<geojson::FeatureBase>> sentinels;
+    for (auto& feature : *collection)
+    {
+        if (feature->get_type() == geojson::FeatureType::Sentinel) {
+            continue;
+        }
+        std::string id = feature->get_id();
+        std::string type = id.substr(0, id.find(hy_features::identifiers::separator));
+        if (matches_type(type) && feature->get_number_of_destination_features() == 0) {
+            std::string sentinel_id = "wb-" + label + "-" + id;
+            geojson::Feature sentinel_feature = std::make_shared<geojson::SentinelFeature>(sentinel_id);
+            sentinels.push_back(sentinel_feature);
+            feature->add_destination_feature(sentinel_feature.get());
+        }
+    }
+    for (auto& sentinel : sentinels) {
+        collection->add_feature(sentinel);
+    }
+}
+

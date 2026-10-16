@@ -2,7 +2,7 @@ add_library(geopackage proj.cpp
                        geometry.cpp
                        properties.cpp
                        feature.cpp
-                       read.cpp
+                       GeoPackageReader.cpp
                        wkb.cpp
                        ngen_sqlite.cpp
 )
