@@ -56,6 +56,11 @@ struct test_bmi_c_model {
     // (itemsize/nbytes = 4) still round-trips values up to
     // INT32_MAX correctly through the framework's int64_t slot.
     int32_t serialized_size_32bit;
+
+    // Test-only (`test::restore_clock`): 1 restores the saved clock with the
+    // rest of the state; 0 keeps the clock the model already has, emulating a
+    // model that restores state but not time. The clock is always saved.
+    int restore_clock;
 };
 typedef struct test_bmi_c_model test_bmi_c_model;
 
