@@ -179,7 +179,7 @@ TEST_F(Bmi_Fortran_Serialization_Test, save_writes_record) {
     // The Fortran test model's layout packs current_model_time (8) +
     // input_var_1 (8) + input_var_2 (4) + input_var_3 (4) +
     // output_var_1 (8) + output_var_2 (4) + output_var_3 (4) = 40
-    // bytes; see SERIALIZED_STATE_BYTES in bmi_test_bmi_fortran.f90.
+    // bytes; see visit_serialization_fields in bmi_test_bmi_fortran.f90.
     EXPECT_EQ(records[0].payload.size(), 40u);
 }
 
@@ -262,6 +262,21 @@ TEST_F(Bmi_Fortran_Serialization_Test, save_restore_roundtrip) {
     EXPECT_EQ(i1, input1);
     EXPECT_EQ(i2, input2);
     EXPECT_EQ(i3, input3);
+}
+
+// ---------------------------------------------------------------------
+// A STATE payload whose length doesn't match the model's layout fails
+// the set_value call instead of leaving the model's state untouched.
+// ---------------------------------------------------------------------
+
+TEST_F(Bmi_Fortran_Serialization_Test, restore_rejects_wrong_length) {
+    // One default integer short of the 40-byte layout.
+    std::vector<int> short_state(9, 0);
+    int64_t nbytes = static_cast<int64_t>(short_state.size() * sizeof(int));
+    model->SetValue(models::bmi::protocols::SERIALIZATION_SIZE_NAME, &nbytes);
+    EXPECT_THROW(
+        model->SetValue(models::bmi::protocols::SERIALIZATION_STATE_NAME, short_state.data()),
+        models::external::State_Exception);
 }
 
 // ---------------------------------------------------------------------
