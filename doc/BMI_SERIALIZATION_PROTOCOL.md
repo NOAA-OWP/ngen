@@ -130,6 +130,11 @@ A BMI module wishing to support the protocol must:
       (`GetValue(ngen::serialization_state, ...)` after `create`). The byte count is
       the value set immediately before via
       `SetValue(ngen::serialization_size, &n)`.
+      If the model can't apply `src` (a byte count that doesn't match
+      its layout, an unrecognized format), the call MUST fail —
+      `BMI_FAILURE`, or an exception in C++ and Python — rather than
+      return success with the model's state unchanged. The host engine
+      only learns of a failed restore through this call.
 
    Models can rely on knowing the incoming byte count
    before receiving the state bytes.
@@ -198,7 +203,8 @@ to encode their own header in the payload — a version number, magic
 bytes, or both — so that a model's `SetValue(state, src)` implementation can detect format
 drift before applying the bytes to the model's computed state.
 Which policy the model applies on a version mismatch is up to the
-model: reject the buffer, forward-migrate an older format to the
+model: reject the buffer (fail the `SetValue` call, per the restore
+sequence above), forward-migrate an older format to the
 current one, or some other policy. The model's BMI code should attempt to detect drift *before* applying the bytes rather than silently
 corrupting state.
 
@@ -283,7 +289,7 @@ observe three rules for the pointer to be usable by drivers:
   capture, the bytes at the pointer must be identical to what the
   copy path would have written.
 
-### Recommended: single field list, both directions driven from it
+### Recommended: single field list drives save, restore, and size
 
 The save path (`GetValue(state, dst)` fills a buffer from model
 fields) and the restore path (`SetValue(state, src)` writes back
@@ -291,34 +297,54 @@ into the same fields) do inverse operations on the same layout.
 When those two paths hold their own copies of the field list,
 adding a field means updating both — and forgetting one is a
 class of bug that silently corrupts state on restore and is
-frustrating to diagnose.
+frustrating to diagnose. The byte count reported through
+`ngen::serialization_size` is a third copy of the same
+information: computed separately, it can drift from the fields the
+same way, and a wrong size corrupts the saved record.
 
 Model implementers are strongly encouraged to keep the field list
-in **exactly one place** and drive both directions from it. The
-mechanism is language-dependent; the invariant is that the
-enumeration of "which fields participate in serialization, in
-what order, at what size" exists once in the source.
+in **exactly one place** and drive save, restore, and size from it.
+The size pass also gives restore the expected byte count to check
+the incoming payload against. The mechanism is language-dependent;
+the invariant is that the enumeration of "which fields participate
+in serialization, in what order, at what size" exists once in the
+source.
 
 Each reference implementation holds the invariant in a shape
 suited to its language:
 
 - **C++** (`extern/test_bmi_cpp/`): a private member template
-  `visit_serialization_fields(op)` names each field once; the
-  save and restore method bodies each invoke it with a
-  matching lambda.
+  `visit_serialization_fields(op)` names each field once. Each
+  operation is a lambda that takes a pointer to one field and
+  returns the bytes it handled, and the visitor returns their sum.
+  Save and restore copy; size is the operation that copies nothing.
 - **C** (`extern/test_bmi_c/`): a
-  `visit_serialization_fields(m, cursor, dir)` function names
+  `visit_serialization_fields(m, cursor, op)` function names
   each field once; typed per-field helpers (`visit_double`,
-  `visit_int`, `visit_double_array`) dispatch on a direction
-  enum. The same shape as the Fortran visitor.
+  `visit_int`, `visit_double_array`) dispatch on a `SAVE` /
+  `LOAD` / `SIZE` operation enum and return the bytes they handle.
+  The same shape as the Fortran visitor.
 - **Fortran** (`extern/test_bmi_fortran/`): a single
-  `visit_serialization_fields(this, buf, dir)` subroutine names
-  each field once; per-type helpers (`visit_r8`, `visit_r4`,
-  `visit_i4`) dispatch on a direction flag.
+  `visit_serialization_fields(this, buf, op, buf_len)` subroutine
+  names each field once; per-type helpers (`visit_r8`, `visit_r4`,
+  `visit_i4`) dispatch on a `SAVE` / `LOAD` / `SIZING` flag. A
+  `SIZING` pass reports the buffer length without touching the
+  buffer.
 - **Python** (`extern/test_bmi_py/`): a class-level tuple
   `_SERIALIZED_FIELDS` combined with `pickle` — the field
   enumeration lives in the tuple; pickle structurally guarantees
-  the save/restore round-trip.
+  the save/restore round-trip, and the size is the length of the
+  pickled bytes.
+
+**Arrays and containers.** Copying a field's bytes works for scalars
+and fixed-length arrays. For a field whose length can vary, write the
+length before the elements so restore knows how many to read; the C
+reference's `n_cells` / `cells` pair shows the order. If a length can
+change during a run, the model's current size can't be used to
+validate the record. Either check each stored length as it is read,
+which leaves the model partly restored if one fails, or walk the whole
+record first to compute its expected size before copying anything into
+model state.
 
 An external example the project has drawn from: TOPMODEL uses
 Boost.Serialization's `template<class Archive> void

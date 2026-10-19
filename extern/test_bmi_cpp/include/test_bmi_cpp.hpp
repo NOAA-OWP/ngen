@@ -266,26 +266,27 @@ class TestBmiCpp : public bmi::Bmi {
         // INT32_MAX correctly through the framework's int64_t slot.
         int32_t serialized_size_32bit_var = 0;
 
-        // Total byte length of the on-disk layout below. Keep in sync
-        // with `visit_serialization_fields` — `deserialize_state`
-        // validates incoming payloads against this value, so a stale
-        // return turns into a loud runtime error, not a silent overread.
-        static constexpr size_t serialized_state_bytes() {
-            return sizeof(double) * 5;  // current_model_time + 2 inputs + 2 outputs
+        // Total byte length of the serialized layout: a visitor pass
+        // whose operation copies nothing and reports each field's size.
+        size_t serialized_state_bytes() {
+            return visit_serialization_fields([](const auto* data) { return sizeof(*data); });
         }
 
         // Single source of truth for the model's serialized field layout.
-        // Save (append) and restore (read) invoke this with a matching
-        // operation, so a new field added to the list appears on both
-        // paths automatically. This keeps serialize and
-        // deserialize from drifting apart.
+        // Save (append), restore (read) and size invoke this with a
+        // matching operation, so a new field added to the list appears on
+        // every path automatically. Each operation takes a pointer to one
+        // field and returns the bytes it handled; the visitor returns
+        // their sum.
         template <typename Op>
-        void visit_serialization_fields(Op op) {
-            op(&current_model_time, sizeof(current_model_time));
-            op(input_var_1.get(),  sizeof(double));
-            op(input_var_2.get(),  sizeof(double));
-            op(output_var_1.get(), sizeof(double));
-            op(output_var_2.get(), sizeof(double));
+        size_t visit_serialization_fields(Op op) {
+            size_t total = 0;
+            total += op(&current_model_time);
+            total += op(input_var_1.get());
+            total += op(input_var_2.get());
+            total += op(output_var_1.get());
+            total += op(output_var_2.get());
+            return total;
         }
 
         void create_serialization();
