@@ -106,6 +106,14 @@ and "when did the operator save this?" without consulting the
 surrounding filesystem layout (which not every backend preserves
 identically across copy, concatenation, or format migration).
 
+ngen stamps `simulation_timestamp` with the step's output time `T`,
+the same time as that step's row in the output files. A record holds
+the state shown in output row `T`, valid from `T` until the next
+output; a run continuing from it starts at `T + output_interval`.
+`time_step` is that step's index within the saving run. For a run
+ending at 12:00 with hourly output, the record saved after the last
+step has a `simulation_timestamp` of 11:00.
+
 ### Wire-format version
 
 The prefix carries exactly one version field, `wire_version`, covering
@@ -318,16 +326,15 @@ Keys:
   present.* Master enable for the restore-side protocol.
 - `restore.step` — *string, default `"latest"`.* Either the literal
   sentinel `"latest"` (the highest step present for the entity's id in
-  the file) or a numeric step string (e.g. `"5"`). An integer is also
-  accepted.
-- `restore.timestamp` — *string, optional.* If set, restore matches by
-  numeric compare against `SerializationRecord::timestamp` (instead of
-  `time_step`). The string is parsed through the same rule the save
-  protocol uses — `std::stoll`, with unparseable strings mapping to 0
-  — so callers who want timestamp-keyed round-trip should emit the
-  same integer encoding (typically seconds since the Unix epoch) on
-  both sides. **If both `timestamp` and `step` are specified,
-  `timestamp` wins.**
+  the file, chosen per formulation; see
+  [Restart semantics](#restart-semantics-hot-start-and-resume)) or a
+  numeric step string (e.g. `"5"`). An integer is also accepted.
+- `restore.timestamp` — *string, optional.* If set, restore selects the
+  record whose `simulation_timestamp` equals this time (instead of
+  matching `time_step`). Accepts seconds since the Unix epoch or
+  `"YYYY-MM-DD HH:MM:SS"` (UTC). An unparseable value disables restore,
+  or raises an error when `fatal` is true. **If both `timestamp` and
+  `step` are specified, `timestamp` wins.**
 - `restore.fatal` — *bool, default true.* On a non-conforming model at
   load time, or a missing record, missing file, or BMI failure during
   `run()`, `true` raises a `PROTOCOL_ERROR` (fatal); `false` logs a
@@ -382,9 +389,9 @@ Each `run()` scans `path` for a `SerializationRecord` matching the
 entity's `ctx.id` and the configured match mode:
 
 - **Timestamp** (if `restore.timestamp` is set): the record whose
-  `timestamp` field — an `int64_t` — numerically equals the parsed
-  value of the `restore.timestamp` configuration string. Wins over
-  `step` if both are configured.
+  `simulation_timestamp` equals the parsed value of the
+  `restore.timestamp` configuration string. Wins over `step` if both
+  are configured.
 - **`"latest"`** (default when only `step` is set, or neither key is
   specified): the record with the highest `time_step` for that id.
 - **Fixed step** (when `step` is a numeric value): the record whose
@@ -438,6 +445,135 @@ same ones that restore reads back. Per-entity isolation is maintained
 by tagging each record with `ctx.id` (an engine-level *compound
 identity*, described below); multiple entities sharing one file
 round-trip independently.
+
+---
+
+## Restart semantics: hot start and resume
+
+A restore uses the record's state as the model's initial condition at
+the run's `start_time`. This is a **hot start**: the record may come
+from any simulated time, and the run's forcings follow the run's own
+clock from `start_time`. After restoring, ngen re-anchors its mapping
+from model time to forcing time, so this holds whether or not a
+model's serialized state includes the model's own clock.
+
+What a model does with a restored clock internally (calendar,
+day-of-year, step counters) is up to the model. Under the hot start and
+resume mechanics described here, ngen re-anchors forcings but doesn't
+change the model's clock, so a model that restores its clock sees the
+saving run's time, which may not match this run's `start_time` (see
+[Not supported yet](#not-supported-yet)).
+
+Records carry the output time of the step that produced them (see
+[Two timestamps, not one](#two-timestamps-not-one)), so choosing a
+state means choosing an output row: restoring `T` gives the state
+shown in output row `T`.
+
+### Hot start
+
+Start a run at `S` from the state in output row `T`:
+
+```json
+"time":          { "start_time": "S", "end_time": "...", "output_interval": 3600 },
+"serialization": { "path": "/runs/source.ckpt", "restore": { "timestamp": "T" } }
+```
+
+`S` can be any time. `S = T + output_interval` continues exactly where
+that state left off.
+
+### Resume
+
+To continue a run that ended at `E`, start the new run at `E` and
+restore the previous run's last output row, `E - output_interval`:
+
+```json
+// Run 1: saves once, after its last step (the 11:00 output row).
+"time":          { "start_time": "2015-12-01 00:00:00", "end_time": "2015-12-01 12:00:00", "output_interval": 3600 },
+"serialization": { "path": "/runs/day1.ckpt", "save": { "frequency": -1 } }
+
+// Run 2: starts where run 1 ended, from run 1's last output row.
+"time":          { "start_time": "2015-12-01 12:00:00", "end_time": "2015-12-02 00:00:00", "output_interval": 3600 },
+"serialization": { "path": "/runs/day1.ckpt", "restore": { "timestamp": "2015-12-01 11:00:00" } }
+```
+
+Run 2's first output is the 12:00 step, computed from run 1's final
+state.
+
+### Guaranteed consistent restore
+
+To make sure every formulation starts from the same saved time, or the
+run doesn't start at all:
+
+```json
+// Top level of the realization config, not inside a formulation.
+"serialization": {
+    "path": "/runs/day1.ckpt",
+    "restore": { "timestamp": "2015-12-01 11:00:00", "fatal": true }
+}
+```
+
+- **Realization level.** Every formulation, including multi-formulation
+  submodules, inherits this block. Don't override `restore` per
+  formulation, except to switch it off for modules with no state (see
+  [Modules with no state](#modules-with-no-state)).
+- **Explicit `timestamp`, not `"latest"`.** Each formulation restores
+  the record at exactly that time.
+- **`fatal: true`** (the default). A formulation with no record at that
+  time, or whose model doesn't support the protocol, stops the run at
+  startup instead of starting from its initial state.
+- **One source run per file.** If several runs saved the same time into
+  one file, each formulation takes its most recently written record.
+  Restoring from a file written by a single run (for example with
+  [split save/restore paths](#split-saverestore-paths)) avoids mixing
+  runs.
+
+### Modules with no state
+
+A module with nothing to restore (e.g. SLoTH, or a module that only
+supplies forcings) usually doesn't implement the protocol, so under
+`fatal: true` it would stop the run. Give it its own `serialization`
+block with restore switched off:
+
+```json
+"modules": [
+    {
+        "name": "bmi_c++",
+        "params": {
+            "model_type_name": "bmi_c++_sloth",
+            "serialization": { "restore": { "check": false } }
+        }
+    },
+    { "name": "bmi_c", "params": { "model_type_name": "bmi_c_cfe" } }
+]
+```
+
+A formulation's or submodule's own `serialization` block replaces the
+inherited one entirely, so this module neither saves nor restores, and
+with `check` false its support isn't probed. The other modules still
+inherit the realization-level block. Only do this for modules with no
+state: on a stateful module it skips the restore silently, and that
+module starts from its initial state.
+
+### `"latest"`
+
+`"latest"` picks the highest-step record for each formulation
+independently. When the file comes from one run that finished and
+saved its last step, every formulation gets that run's final record,
+and `"latest"` behaves like the resume recipe. If the file holds
+records from an interrupted run or from several runs, formulations can
+be restored from different times. Use the
+[guaranteed consistent restore](#guaranteed-consistent-restore) recipe
+when the result needs to be guaranteed.
+
+### Not supported yet
+
+- Resuming mid-simulation with the original `start_time` (e.g. crash
+  recovery at step *k*). Restart from the last saved time with the
+  resume recipe instead.
+- Telling the model what time it is at restore, or whether to keep a
+  restored clock.
+- State outside BMI formulations (e.g. routing) is not saved or
+  restored.
 
 ---
 
@@ -526,6 +662,9 @@ r_c->checkpoint_state(output_time_index,
                       current_timestamp);
 ```
 
+`current_timestamp` is the step's output time, so a record carries
+the same time as the output row for the state it holds.
+
 When `serialization.save` is unconfigured or disabled, the protocol's
 `run()` short-circuits; the steady-state cost is one virtual dispatch
 per formulation per timestep.
@@ -564,6 +703,13 @@ not used for record matching — the record to restore is selected by
 `serialization.restore.step` or `serialization.restore.timestamp`
 from config. The placeholder values here exist only for error-message
 context should restore fail.
+
+Immediately after the restore, if the model's current time no longer
+equals its start time (its serialized state included its clock), the
+formulation re-anchors its forcing offset so the restored model time
+maps to the run's `start_time`. Without this, forcing reads would be
+shifted by the time elapsed in the saving run. See
+[Restart semantics](#restart-semantics-hot-start-and-resume).
 
 ### Lifecycle summary
 

@@ -450,6 +450,16 @@ namespace realization {
                     /*id*/                compound_id()
                 };
                 (void) bmi_protocols.run(models::bmi::protocols::Protocol::DESERIALIZATION, restore_ctx);
+
+                // Deserialization *may* restore the internal model clock to its saved state.
+                // Re-compute the forcing offset so the restored model time
+                // is consistent with this run's start time;
+                // otherwise forcing reads would shift by the time
+                // elapsed in the saving run.
+                if (get_bmi_model()->GetCurrentTime() != get_bmi_model()->GetStartTime()) {
+                    set_bmi_model_start_time_forcing_offset_s(
+                        forcing->get_data_start_time() - convert_model_time(get_bmi_model()->GetCurrentTime()));
+                }
             }
         }
         /**
