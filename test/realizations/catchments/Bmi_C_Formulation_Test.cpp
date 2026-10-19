@@ -18,7 +18,11 @@
 #include "utilities/bmi/mass_balance.hpp"
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include <cstdio>
+#include <ctime>
 #include <iostream>
+#include <map>
+#include <memory>
 #include <vector>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -922,6 +926,245 @@ TEST_F(Bmi_C_Formulation_Test, check_mass_balance_frequency_1) {
     // timestep (current_time_step == total_steps - 1) and the violation
     // should now be observable.
     ASSERT_THROW(formulation.check_mass_balance(2, 3, "t2"), ProtocolError);
+}
+
+/**
+ * Restoring a state that carries the model clock must not shift forcing reads.
+ *
+ * test_bmi_c serializes its current time, and OUTPUT_VAR_2 echoes the hourly
+ * temperature forcing, so a misaligned forcing read shows up directly in the
+ * response. A first-half run (00:00 -> 12:00) saves after its last step; restored
+ * runs are compared against an uninterrupted 00:00 -> 24:00 run at the same times.
+ *
+ * Only forcing alignment is checked. Whether the restored state belongs at the
+ * new run's start time is a separate question these tests don't cover.
+ */
+class Bmi_C_Formulation_Restore_Clock_Test : public Bmi_C_Formulation_Test {
+protected:
+    static constexpr const char* DAY_START = "2015-12-01 00:00:00";
+    static constexpr const char* MIDDAY    = "2015-12-01 12:00:00";
+    static constexpr const char* DAY_END   = "2015-12-02 00:00:00";
+    static constexpr time_step_t DT = 3600;
+
+    void SetUp() override {
+        Bmi_C_Formulation_Test::SetUp();
+        checkpoint = ::testing::TempDir() + "bmi_c_restore_clock_" +
+                     ::testing::UnitTest::GetInstance()->current_test_info()->name() + ".ckpt";
+        std::remove(checkpoint.c_str());
+    }
+
+    void TearDown() override {
+        std::remove(checkpoint.c_str());
+        Bmi_C_Formulation_Test::TearDown();
+    }
+
+    static std::string format_time(time_t t) {
+        std::tm tm{};
+        gmtime_r(&t, &tm);
+        char buf[32];
+        std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &tm);
+        return buf;
+    }
+
+    /** test_bmi_c over [start, end) with optional "serialization" and "model_params" blocks (JSON object text).
+     *  model_params are applied via SetValue before the restore runs. */
+    std::unique_ptr<Bmi_C_Formulation> make_formulation(const std::string& start, const std::string& end,
+                                                        const std::string& serialization = "",
+                                                        const std::string& model_params = "") {
+        std::string json =
+            "{"
+            "  \"model_type_name\": \"test_bmi_c\","
+            "  \"library_file\": \"" + lib_file[0] + "\","
+            "  \"init_config\": \"" + init_config[0] + "\","
+            "  \"main_output_variable\": \"OUTPUT_VAR_2\","
+            "  \"registration_function\": \"register_bmi\","
+            "  \"uses_forcing_file\": false,"
+            "  \"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": {"
+            "      \"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG "\","
+            "      \"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+            "  }" +
+            (serialization.empty() ? std::string() : ", \"serialization\": " + serialization) +
+            (model_params.empty() ? std::string() : ", \"model_params\": " + model_params) +
+            "}";
+        std::stringstream stream(json);
+        boost::property_tree::ptree tree;
+        boost::property_tree::json_parser::read_json(stream, tree);
+        auto provider = std::make_shared<CsvPerFeatureForcingProvider>(
+            forcing_params(forcing_file[0], "legacy", start, end));
+        auto formulation = std::make_unique<Bmi_C_Formulation>(catchment_ids[0], provider, utils::StreamHandler());
+        formulation->create_formulation(tree);
+        return formulation;
+    }
+
+    /** Responses of an uninterrupted DAY_START -> DAY_END run, keyed by step start time. */
+    std::map<time_t, double> reference_run() {
+        auto formulation = make_formulation(DAY_START, DAY_END);
+        std::map<time_t, double> responses;
+        const time_t start = parse_forcing_time(DAY_START);
+        for (int i = 0; i < 24; ++i) {
+            responses[start + i * DT] = formulation->get_response(i, DT);
+        }
+        return responses;
+    }
+
+    /** DAY_START -> MIDDAY, saving every `frequency` steps (-1: only after the last step).
+     *  Records are stamped with each step's output time, as Layer does. Returns each step's response. */
+    std::vector<double> save_first_half(int frequency = -1) {
+        auto formulation = make_formulation(DAY_START, MIDDAY,
+            "{\"path\": \"" + checkpoint + "\", \"save\": {\"frequency\": " + std::to_string(frequency) +
+            ", \"fatal\": true}}");
+        const time_t start = parse_forcing_time(DAY_START);
+        std::vector<double> responses;
+        for (int i = 0; i < 12; ++i) {
+            responses.push_back(formulation->get_response(i, DT));
+            formulation->checkpoint_state(i, 12, format_time(start + i * DT));
+        }
+        return responses;
+    }
+
+    /** Restore by "latest", or by an explicit timestamp when one is given. */
+    std::string restore_block(bool fatal = true, const std::string& timestamp = "") const {
+        const std::string select =
+            timestamp.empty() ? "\"step\": \"latest\"" : "\"timestamp\": \"" + timestamp + "\"";
+        return "{\"path\": \"" + checkpoint + "\", \"restore\": {" + select + ", \"fatal\": " +
+               (fatal ? "true" : "false") + "}}";
+    }
+
+    /** Same conversion as Bmi_C_Formulation::convert_model_time, which is protected. */
+    static time_t model_time_seconds(Bmi_C_Formulation& formulation, double model_time) {
+        return (time_t) get_friend_bmi_model(formulation)->convert_model_time_to_seconds(model_time);
+    }
+
+    /** Forcing reads for the first step map to the run's start time. */
+    void expect_forcing_anchored_to_start(Bmi_C_Formulation& formulation, const std::string& start) {
+        EXPECT_EQ(model_time_seconds(formulation, formulation.get_model_current_time()) +
+                      get_friend_bmi_model_start_time_forcing_offset_s(formulation),
+                  parse_forcing_time(start));
+    }
+
+    /** Restore into [start, end) and compare every step against the reference run. */
+    void expect_restored_run_matches_reference(const std::string& start, const std::string& end, int steps) {
+        const auto reference = reference_run();
+        save_first_half();
+
+        auto restored = make_formulation(start, end, restore_block());
+        auto model = get_friend_bmi_model(*restored);
+        ASSERT_NE(model->GetCurrentTime(), model->GetStartTime())
+            << "restore did not move the model clock, so this test would not exercise re-anchoring";
+        expect_forcing_anchored_to_start(*restored, start);
+
+        const time_t t0 = parse_forcing_time(start);
+        for (int i = 0; i < steps; ++i) {
+            EXPECT_DOUBLE_EQ(restored->get_response(i, DT), reference.at(t0 + i * DT))
+                << "step " << i << " (" << format_time(t0 + i * DT) << ")";
+        }
+    }
+
+    std::string checkpoint;
+};
+
+/** Resume where the saving run stopped (start == the restored state's time). */
+TEST_F(Bmi_C_Formulation_Restore_Clock_Test, RestoredClock_StartAtSavePoint) {
+    expect_restored_run_matches_reference(MIDDAY, DAY_END, 12);
+}
+
+/** Start before the restored state's time; forcings must follow the new run's clock. */
+TEST_F(Bmi_C_Formulation_Restore_Clock_Test, RestoredClock_StartBeforeSavePoint) {
+    expect_restored_run_matches_reference(DAY_START, MIDDAY, 12);
+}
+
+/** Start after the restored state's time; forcings must follow the new run's clock. */
+TEST_F(Bmi_C_Formulation_Restore_Clock_Test, RestoredClock_StartAfterSavePoint) {
+    expect_restored_run_matches_reference("2015-12-01 14:00:00", DAY_END, 10);
+}
+
+/** The documented resume recipe: start at the saving run's end time and restore its last output time. */
+TEST_F(Bmi_C_Formulation_Restore_Clock_Test, ExplicitTimestamp_ResumeFromLastOutput) {
+    const auto reference = reference_run();
+    const double saved_output = save_first_half().back();
+
+    // The saving run's last output row is 11:00 (end_time - output_interval).
+    auto restored = make_formulation(MIDDAY, DAY_END, restore_block(/*fatal*/ true, "2015-12-01 11:00:00"));
+    ASSERT_EQ(get_friend_var_value_as_double(*restored, "OUTPUT_VAR_2"), saved_output);
+    expect_forcing_anchored_to_start(*restored, MIDDAY);
+
+    const time_t t0 = parse_forcing_time(MIDDAY);
+    for (int i = 0; i < 12; ++i) {
+        EXPECT_DOUBLE_EQ(restored->get_response(i, DT), reference.at(t0 + i * DT))
+            << "step " << i << " (" << format_time(t0 + i * DT) << ")";
+    }
+}
+
+/** A record's timestamp is its step's output time: restoring T gives the state shown in output row T. */
+TEST_F(Bmi_C_Formulation_Restore_Clock_Test, ExplicitTimestamp_SelectsStateFromThatOutputRow) {
+    const auto responses = save_first_half(/*frequency*/ 1);
+    ASSERT_NE(responses[4], responses[5]) << "adjacent steps must differ for this check to mean anything";
+
+    // Output row 05:00 is the step at index 5; continuing from it starts at 06:00.
+    const std::string six = "2015-12-01 06:00:00";
+    auto restored = make_formulation(six, DAY_END, restore_block(/*fatal*/ true, "2015-12-01 05:00:00"));
+    EXPECT_EQ(get_friend_var_value_as_double(*restored, "OUTPUT_VAR_2"), responses[5]);
+    expect_forcing_anchored_to_start(*restored, six);
+}
+
+/** The consistency guarantee: with fatal, a formulation that has no record at the requested time stops
+ *  the run at creation instead of starting unrestored. */
+TEST_F(Bmi_C_Formulation_Restore_Clock_Test, ExplicitTimestamp_MissingRecordIsFatal) {
+    save_first_half();
+    EXPECT_THROW(make_formulation(MIDDAY, DAY_END, restore_block(/*fatal*/ true, "2015-12-01 13:00:00")),
+                 ProtocolError);
+}
+
+/** Models that restore state but keep their own clock (`test::restore_clock` = 0, set before the restore). */
+class Bmi_C_Formulation_Restore_Kept_Clock_Test : public Bmi_C_Formulation_Restore_Clock_Test {
+protected:
+    void expect_kept_clock_run_matches_reference(const std::string& start, const std::string& end, int steps) {
+        const auto reference = reference_run();
+        const double saved_output = save_first_half().back();
+
+        auto restored = make_formulation(start, end, restore_block(), "{\"test::restore_clock\": 0}");
+        auto model = get_friend_bmi_model(*restored);
+        ASSERT_EQ(get_friend_var_value_as_double(*restored, "OUTPUT_VAR_2"), saved_output)
+            << "state was not restored, so this test would not exercise a restore";
+        ASSERT_EQ(model->GetCurrentTime(), model->GetStartTime()) << "model clock should not be restored";
+        EXPECT_EQ(get_friend_bmi_model_start_time_forcing_offset_s(*restored),
+                  parse_forcing_time(start) - model_time_seconds(*restored, model->GetStartTime()));
+        expect_forcing_anchored_to_start(*restored, start);
+
+        const time_t t0 = parse_forcing_time(start);
+        for (int i = 0; i < steps; ++i) {
+            EXPECT_DOUBLE_EQ(restored->get_response(i, DT), reference.at(t0 + i * DT))
+                << "step " << i << " (" << format_time(t0 + i * DT) << ")";
+        }
+    }
+};
+
+/** Resume where the saving run stopped; the model keeps its own clock. */
+TEST_F(Bmi_C_Formulation_Restore_Kept_Clock_Test, KeptClock_StartAtSavePoint) {
+    expect_kept_clock_run_matches_reference(MIDDAY, DAY_END, 12);
+}
+
+/** Start away from the restored state's time; the model keeps its own clock. */
+TEST_F(Bmi_C_Formulation_Restore_Kept_Clock_Test, KeptClock_StartAfterSavePoint) {
+    expect_kept_clock_run_matches_reference("2015-12-01 14:00:00", DAY_END, 10);
+}
+
+/** A configured restore that finds no record leaves the clock and the forcing offset alone. */
+TEST_F(Bmi_C_Formulation_Restore_Clock_Test, NothingRestored_OffsetUnchanged) {
+    const auto reference = reference_run();
+
+    auto formulation = make_formulation(MIDDAY, DAY_END, restore_block(/*fatal*/ false));
+    auto model = get_friend_bmi_model(*formulation);
+    ASSERT_EQ(model->GetCurrentTime(), model->GetStartTime());
+    EXPECT_EQ(get_friend_bmi_model_start_time_forcing_offset_s(*formulation),
+              parse_forcing_time(MIDDAY) - model_time_seconds(*formulation, model->GetStartTime()));
+    expect_forcing_anchored_to_start(*formulation, MIDDAY);
+
+    const time_t t0 = parse_forcing_time(MIDDAY);
+    for (int i = 0; i < 12; ++i) {
+        EXPECT_DOUBLE_EQ(formulation->get_response(i, DT), reference.at(t0 + i * DT))
+            << "step " << i << " (" << format_time(t0 + i * DT) << ")";
+    }
 }
 
 #endif  // NGEN_BMI_C_LIB_TESTS_ACTIVE

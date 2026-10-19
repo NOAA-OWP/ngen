@@ -100,6 +100,14 @@ static size_t visit_double_array(double* field, int count, char** cursor, enum s
     return n;
 }
 
+// The clock is always saved; on LOAD with restore_clock == 0 its bytes are
+// consumed but discarded.
+static size_t visit_clock(test_bmi_c_model* m, char** cursor, enum ser_op op) {
+    double discarded;
+    double* target = (op == LOAD && !m->restore_clock) ? &discarded : &m->current_model_time;
+    return visit_double(target, cursor, op);
+}
+
 // Single source of truth for the model's on-disk field layout.
 // Adding a field is one line in this body — the per-field helpers
 // contribute to the running total so `serialized_state_bytes()` stays
@@ -108,7 +116,7 @@ static size_t visit_double_array(double* field, int count, char** cursor, enum s
 // read the count by the time it visits the array.
 static size_t visit_serialization_fields(test_bmi_c_model* m, char** cursor, enum ser_op op) {
     size_t total = 0;
-    total += visit_double(&m->current_model_time, cursor, op);
+    total += visit_clock (m,                      cursor, op);
     total += visit_double( m->input_var_1,        cursor, op);
     total += visit_double( m->input_var_2,        cursor, op);
     total += visit_double( m->output_var_1,       cursor, op);
@@ -528,6 +536,10 @@ static int Get_value_ptr (Bmi *self, const char *name, void **dest)
         *dest = &((test_bmi_c_model *)(self->data))->serialized_size_32bit;
         return BMI_SUCCESS;
     }
+    if (strcmp (name, "test::restore_clock") == 0) {
+        *dest = &((test_bmi_c_model *)(self->data))->restore_clock;
+        return BMI_SUCCESS;
+    }
     return BMI_FAILURE;
 }
 
@@ -680,7 +692,8 @@ static int Get_var_nbytes (Bmi *self, const char *name, int * nbytes)
         *nbytes = ((test_bmi_c_model *) self->data)->serialized_size;
         return BMI_SUCCESS;
     }
-    if (strcmp(name, "test::serialization_32bit") == 0) {
+    if (strcmp(name, "test::serialization_32bit") == 0 ||
+        strcmp(name, "test::restore_clock") == 0) {
         *nbytes = item_size;
         return BMI_SUCCESS;
     }
@@ -731,7 +744,8 @@ static int Get_var_type (Bmi *self, const char *name, char * type)
             return BMI_SUCCESS;
         }
     }
-    if (strcmp(name, "test::serialization_32bit") == 0) {
+    if (strcmp(name, "test::serialization_32bit") == 0 ||
+        strcmp(name, "test::restore_clock") == 0) {
         snprintf(type, BMI_MAX_TYPE_NAME, "%s", "int");
         return BMI_SUCCESS;
     }
@@ -1017,6 +1031,7 @@ test_bmi_c_model *new_bmi_model(void)
     data->serialized_state = NULL;
     data->serialized_size = 0;
     data->serialized_size_32bit = 0;
+    data->restore_clock = 1;
 
     return data;
 }
