@@ -54,27 +54,36 @@ static const char *serialization_var_types[SERIALIZATION_VAR_NAME_COUNT] = { "in
 static const char *serialization_var_units[SERIALIZATION_VAR_NAME_COUNT] = { "ngen::trigger", "ngen::trigger", "bytes", "ngen::opaque" };
 static const int   serialization_var_item_count[SERIALIZATION_VAR_NAME_COUNT] = { 1, 1, 1, 0 };
 
-// Each per-type helper reads or writes ONE field's bytes at the
-// caller's cursor and advances the cursor by that field's size.
-// Direction is a runtime flag so the same field list drives both
-// save and restore.
-enum direction { SAVE, LOAD };
+// Each per-type helper reads, writes, or sizes ONE field at the
+// caller's cursor. Operation is a runtime flag so the same field
+// list drives save, restore, and size calculation — size is a
+// derived property of the visitor rather than a separately-maintained
+// constant, so adding a field cannot drift the layout bytes out of
+// sync with the sum.
+//
+// Each helper returns the byte count it contributed. For SAVE/LOAD
+// the return doubles as a "bytes written" diagnostic; for SIZE it is
+// the aggregator's only output. The SIZE op never dereferences
+// cursor, so callers that only want the size can pass `cursor = NULL`.
+enum ser_op { SAVE, LOAD, SIZE };
 
 // Note there are other options for keeping a consistent field set
 // This one is the most "verbose" in terms of typed helpers
-// but follows the visitor patter in the other reference modules
+// but follows the visitor pattern in the other reference modules
 // without getting overly complex in C pointer land.
 
-static void visit_double(double* field, char** cursor, enum direction dir) {
-    if (dir == SAVE) memcpy(*cursor, field, sizeof(*field));
-    else                 memcpy(field, *cursor, sizeof(*field));
-    *cursor += sizeof(*field);
+static size_t visit_double(double* field, char** cursor, enum ser_op op) {
+    const size_t n = sizeof(*field);
+    if (op == SAVE)      { memcpy(*cursor, field, n); *cursor += n; }
+    else if (op == LOAD) { memcpy(field, *cursor, n); *cursor += n; }
+    return n;
 }
 
-static void visit_int(int* field, char** cursor, enum direction dir) {
-    if (dir == SAVE) memcpy(*cursor, field, sizeof(*field));
-    else                 memcpy(field, *cursor, sizeof(*field));
-    *cursor += sizeof(*field);
+static size_t visit_int(int* field, char** cursor, enum ser_op op) {
+    const size_t n = sizeof(*field);
+    if (op == SAVE)      { memcpy(*cursor, field, n); *cursor += n; }
+    else if (op == LOAD) { memcpy(field, *cursor, n); *cursor += n; }
+    return n;
 }
 
 // Dynamic-array variant: count elements pointed to by @p field, byte
@@ -84,31 +93,33 @@ static void visit_int(int* field, char** cursor, enum direction dir) {
 // @p count elements. This model preallocates cells[n_cells] in
 // Initialize; a real model might reallocate here on restore if the
 // stored count differs.
-static void visit_double_array(double* field, int count, char** cursor, enum direction dir) {
-    const size_t bytes = (size_t)count * sizeof(double);
-    if (dir == SAVE) memcpy(*cursor, field, bytes);
-    else                 memcpy(field, *cursor, bytes);
-    *cursor += bytes;
+static size_t visit_double_array(double* field, int count, char** cursor, enum ser_op op) {
+    const size_t n = (size_t)count * sizeof(double);
+    if (op == SAVE)      { memcpy(*cursor, field, n); *cursor += n; }
+    else if (op == LOAD) { memcpy(field, *cursor, n); *cursor += n; }
+    return n;
 }
 
 // Single source of truth for the model's on-disk field layout.
-// Adding a field is one line in this body. The count field for a
-// dynamic array (n_cells here) MUST appear before the array itself
-// so restore has read the count by the time it visits the array.
-static void visit_serialization_fields(test_bmi_c_model* m, char** cursor, enum direction dir) {
-    visit_double(&m->current_model_time, cursor, dir);
-    visit_double( m->input_var_1,        cursor, dir);
-    visit_double( m->input_var_2,        cursor, dir);
-    visit_double( m->output_var_1,       cursor, dir);
-    visit_double( m->output_var_2,       cursor, dir);
-    visit_int   (&m->n_cells,            cursor, dir);
-    visit_double_array(m->cells, m->n_cells, cursor, dir);
+// Adding a field is one line in this body — the per-field helpers
+// contribute to the running total so `serialized_state_bytes()` stays
+// correct automatically. The count field for a dynamic array
+// (n_cells here) MUST appear before the array itself so restore has
+// read the count by the time it visits the array.
+static size_t visit_serialization_fields(test_bmi_c_model* m, char** cursor, enum ser_op op) {
+    size_t total = 0;
+    total += visit_double(&m->current_model_time, cursor, op);
+    total += visit_double( m->input_var_1,        cursor, op);
+    total += visit_double( m->input_var_2,        cursor, op);
+    total += visit_double( m->output_var_1,       cursor, op);
+    total += visit_double( m->output_var_2,       cursor, op);
+    total += visit_int   (&m->n_cells,            cursor, op);
+    total += visit_double_array(m->cells, m->n_cells, cursor, op);
+    return total;
 }
 
 static int64_t serialized_state_bytes(const test_bmi_c_model* m) {
-    return (int64_t)(sizeof(double) * 5      // 5 scalar doubles
-                   + sizeof(int)             // n_cells
-                   + (size_t)m->n_cells * sizeof(double));
+    return (int64_t)visit_serialization_fields((test_bmi_c_model*)m, NULL, SIZE);
 }
 
 static int Finalize (Bmi *self)

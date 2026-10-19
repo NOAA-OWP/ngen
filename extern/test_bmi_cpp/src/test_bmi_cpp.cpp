@@ -649,18 +649,11 @@ void TestBmiCpp::create_serialization() {
     serialized_state_.reserve(serialized_state_bytes());
     //serialization visitor, range copy into the buffer
     //in visitor order.
-    visit_serialization_fields([&](const void* data, size_t size) {
-        const char* p = static_cast<const char*>(data);
-        serialized_state_.insert(serialized_state_.end(), p, p + size);
+    visit_serialization_fields([&](const auto* data) {
+        const char* p = reinterpret_cast<const char*>(data);
+        serialized_state_.insert(serialized_state_.end(), p, p + sizeof(*data));
+        return sizeof(*data);
     });
-    if (serialized_state_.size() != serialized_state_bytes()) {
-        throw std::runtime_error(
-            "create_serialization: produced " +
-            std::to_string(serialized_state_.size()) +
-            " bytes but the declared layout is " +
-            std::to_string(serialized_state_bytes()) +
-            " bytes — keep these in sync when adding fields.");
-    }
     serialized_size_var = static_cast<int64_t>(serialized_state_.size());
 }
 
@@ -683,8 +676,9 @@ void TestBmiCpp::deserialize_state(const char* data, int64_t size) {
     size_t offset = 0;
     //de-serialization vistitor, iterate buffer in
     //visitor order, copy into fields.
-    visit_serialization_fields([&](void* dest, size_t n) {
-        std::memcpy(dest, data + offset, n);
-        offset += n;
+    visit_serialization_fields([&](auto* dest) {
+        std::memcpy(dest, data + offset, sizeof(*dest));
+        offset += sizeof(*dest);
+        return sizeof(*dest);
     });
 }
