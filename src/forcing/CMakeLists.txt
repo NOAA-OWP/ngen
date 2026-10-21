@@ -15,6 +15,7 @@ target_include_directories(forcing PUBLIC
 target_link_libraries(forcing PUBLIC
         NGen::config_header
         NGen::core_mediator
+        NGen::logging
         NGen::multithreading
         Boost::boost                # Headers-only Boost
         Threads::Threads

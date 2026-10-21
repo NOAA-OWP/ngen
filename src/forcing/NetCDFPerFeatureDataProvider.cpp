@@ -3,12 +3,18 @@
 #if NGEN_WITH_NETCDF
 #include "NetCDFPerFeatureDataProvider.hpp"
 #include "utilities/multithreading.hpp"
+#include "utilities/logging_utils.h"
 #include <mediator/UnitsHelper.hpp>
 
 #include <netcdf>
 
+#include <chrono>
 #include <iomanip>
 #include <sstream>
+
+#if NGEN_WITH_OPENMP
+#include <omp.h>
+#endif
 
 std::mutex data_access::NetCDFPerFeatureDataProvider::shared_providers_mutex;
 std::map<std::string, std::shared_ptr<data_access::NetCDFPerFeatureDataProvider>> data_access::NetCDFPerFeatureDataProvider::shared_providers;
@@ -542,6 +548,18 @@ auto NetCDFPerFeatureDataProvider::load_page(netCDF::NcVar const& ncvar, std::si
 
   std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
 
+  auto var_name = ncvar.getName();
+
+  {
+    std::ostringstream msg;
+    msg << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())
+#if NGEN_WITH_OPENMP
+        << " " << omp_get_thread_num()
+#endif
+        << " NetCDF reading " << var_name << " " << page_c_idx << " from " << file_path << "\n";
+    logging::info(msg.str().c_str());
+  }
+
   // read each chunk and add it to "cached"
   std::size_t idx = 0;
   for(auto const& chunk: chunks){
@@ -561,6 +579,16 @@ auto NetCDFPerFeatureDataProvider::load_page(netCDF::NcVar const& ncvar, std::si
 
     ncvar.getVar(start,count,&(*cached)[idx]);
     idx += chunk.second * page_cache_line_size;
+  }
+
+  {
+    std::ostringstream msg;
+    msg << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())
+#if NGEN_WITH_OPENMP
+        << " " << omp_get_thread_num()
+#endif
+        << " NetCDF done reading " << var_name << " " << page_c_idx << " " << cached.get() << " from " << file_path << "\n";
+    logging::info(msg.str().c_str());
   }
 
   return cached;
