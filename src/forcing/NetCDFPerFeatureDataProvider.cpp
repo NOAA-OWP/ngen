@@ -565,15 +565,15 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
      */
 
     auto init_time = selector.get_init_time();
-    auto stop_time = init_time + selector.get_duration_secs(); // scope hiding! BAD JUJU!
+    auto end_time = init_time + selector.get_duration_secs();
     
     size_t c_idx1 = get_ts_index_for_time(init_time);
     size_t c_idx2;
     try {
-        c_idx2 = get_ts_index_for_time(stop_time-1); // Don't include next timestep when duration % timestep = 0
+        c_idx2 = get_ts_index_for_time(end_time-1); // Don't include next timestep when duration % timestep = 0
     }
     catch(const std::out_of_range &e){
-        c_idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
+        c_idx2 = get_ts_index_for_time(stop_time-1); //to the edge
     }
 
     // update chunks during the first timestep
@@ -675,7 +675,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
     if (  raw_values.size() > 1) // likewise the last data value may not be fully in the window
     {
-        b = (stop_time - t2) / time_stride;
+        b = (end_time - t2) / time_stride;
         rvalue += (b * raw_values.back() );
     }
 
