@@ -471,6 +471,7 @@ size_t NetCDFPerFeatureDataProvider::get_ts_index_for_time(const time_t &epoch_t
     }
 }
 
+namespace {
 namespace cache {
     std::size_t page_count(std::size_t c_size, std::size_t line_size) {
         return (c_size / line_size) + std::min<std::size_t>(1, c_size % line_size);
@@ -510,6 +511,7 @@ namespace cache {
         std::size_t pj_idx = page_entry_j_idx(c_idx, line_size);
         return (pls * i_idx) + pj_idx;
     }
+}
 }
 
 
