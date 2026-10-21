@@ -369,29 +369,25 @@ void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
         hinted_ids_done.test_and_set();
         return;
     }
-    // get rid of "default" chunks, we will build them here
-    chunks.clear();
-
     // Map from nc cat-id index to cat-id; sorted by index position
     std::map<std::size_t, std::string> idx_map;
 
-    // remove "id_pos" keys that are not in "hinted_ids"
-    {
-        auto it = id_pos.begin();
-        while (it != id_pos.end()) {
-            auto sub = hinted_ids.find(it->first);
-            if (sub != hinted_ids.end()) {
-                // Here we know the id AND its position in the index
-                idx_map.emplace(it->second, it->first);
-                ++it;
-            } else {
-                it = id_pos.erase(it);
-            }
+    // find the "id_pos" keys that are in "hinted_ids"
+    for (auto const& [id, pos] : id_pos) {
+        if (hinted_ids.count(id) > 0) {
+            // Here we know the id AND its position in the index
+            idx_map.emplace(pos, id);
         }
     }
+    // throw before modifying any state, so a failed call leaves it unchanged
     if(idx_map.empty()){
         throw std::runtime_error("NetCDF source has no ids matching the domain hinted ids.");
     }
+
+    // get rid of "default" chunks, we will build them here
+    chunks.clear();
+    // remove "id_pos" keys that are not in "hinted_ids"; the rest are re-added below
+    id_pos.clear();
     // NOTE: not sure if there are dependencies elsewhere on the ordering of this vector.
     // refill in the expected order just to be on the safe side.
     loc_ids.clear();

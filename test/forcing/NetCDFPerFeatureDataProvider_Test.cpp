@@ -173,6 +173,27 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadMultiSpan)
     ASSERT_EQ(ids, nc_provider.get_ids());
 }
 
+// Hints matching no id in the file fail on every read, and leave the
+// provider able to apply hints that do match once they are added
+TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadUnmatchedHints)
+{
+    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t, utils::getStdErr() );
+    nc_provider.hint_shared_provider_id("cat-999");
+
+    auto start_time = nc_provider.get_data_start_time();
+    auto duration = nc_provider.record_duration();
+    CatchmentAggrDataSelector selector("cat-52", CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration, "K");
+
+    EXPECT_THROW(nc_provider.get_value(selector, data_access::MEAN), std::runtime_error);
+    EXPECT_THROW(nc_provider.get_value(selector, data_access::MEAN), std::runtime_error);
+
+    nc_provider.hint_shared_provider_id("cat-52");
+
+    double tol = 0.00002;
+    EXPECT_NEAR(nc_provider.get_value(selector, data_access::MEAN), 285.9, tol);
+    ASSERT_EQ(std::vector<std::string>{"cat-52"}, nc_provider.get_ids());
+}
+
 ///Test AORC Forcing Object
 TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
 {
