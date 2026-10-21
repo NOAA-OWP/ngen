@@ -381,51 +381,28 @@ void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
     if(idx_map.empty()){
         throw std::runtime_error("NetCDF source has no ids matching the domain hinted ids.");
     }
+    // NOTE: not sure if there are dependencies elsewhere on the ordering of this vector.
+    // refill in the expected order just to be on the safe side.
+    loc_ids.clear();
     // Build chunks where a chunk has:
     // a starting nc index
     // the length of the chunk relative to its starting index
     //
     // While building the chunks, rebase nc indices to now "internal" cache indices
-    auto it = idx_map.begin();
-    std::string& key = it->second;
-
-    std::size_t left, right;
-    left = it->first;
-    right = it->first;
-    //  start nc idx, length
-    std::pair<size_t, size_t> pair(left, 1);
-
-    std::size_t n = 0;
-    id_pos[key] = n;
-    n++;
-
-    // NOTE: not sure if there are dependencies elsewhere on the ordering of this vector.
-    // refill in the expected order just to be on the safe side.
-    loc_ids.clear();
-    loc_ids.push_back(key);
-    for (++it; it != idx_map.end(); ++it) {
-        std::size_t current = it->first;
-        if (right < current-1){
-            pair.second = right-left+1;
-            chunks.push_back(pair);
-
-            left  = current;
-            right = current;
-            pair.first = current;
-        }else{
-            right = current;
+    for (auto const& [nc_idx, id] : idx_map) {
+        // Start a new chunk at the first id, or after a gap in nc indices
+        if (chunks.empty() || nc_idx != chunks.back().first + chunks.back().second) {
+            chunks.emplace_back(nc_idx, 1);
+        } else {
+            ++chunks.back().second;
         }
 
-        key = it->second;
         // NOTE: update "id_pos" with new "internal" index
-        id_pos[key] = n;
-        n++;
+        id_pos[id] = loc_ids.size();
 
-        // push key back onto "loc_ids" in its original order
-        loc_ids.push_back(key);
+        // push id back onto "loc_ids" in its original order
+        loc_ids.push_back(id);
     }
-    pair.second = right-left+1;
-    chunks.push_back(pair);
 
     // minor gains
     loc_ids.shrink_to_fit();
