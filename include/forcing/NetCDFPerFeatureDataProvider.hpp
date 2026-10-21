@@ -14,6 +14,7 @@
 #include <assert.h>
 
 #include <algorithm>
+#include <atomic>
 #include <ctime>
 #include <exception>
 #include <map>
@@ -155,10 +156,13 @@ namespace data_access
         static std::mutex shared_providers_mutex;
         static std::map<std::string, std::shared_ptr<NetCDFPerFeatureDataProvider>> shared_providers;
 
+        std::mutex hinted_ids_mutex;
+        std::atomic_flag hinted_ids_done;
+        std::set<std::string> hinted_ids;
+
         std::vector<std::string> variable_names;
         std::vector<std::string> loc_ids;
         std::vector<double> time_vals;
-        std::set<std::string> hinted_ids;
         std::map<std::string, std::size_t> id_pos;      // map from cat-id to position in vec of nc var values; accounts for chunking
         std::vector<std::pair<size_t, size_t>> chunks;  // a chunk is the start and length of a span in the "catchment-id" dim of a nc variable
         double start_time;                              // the begining of the first time for which data is stored
