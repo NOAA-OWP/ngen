@@ -358,6 +358,7 @@ void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
     std::lock_guard l{hinted_ids_mutex};
 
     if (hinted_ids.size() == 0){
+        hinted_ids_done.test_and_set();
         return;
     }
 
