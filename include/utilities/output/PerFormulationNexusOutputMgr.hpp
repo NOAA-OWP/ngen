@@ -378,6 +378,8 @@ namespace utils
          * after the @ref nexus_outfile and @ref obj_id member variables are properly set).  An exception will be thrown
          * if the @ref netcdf_file_id member variable is already set (to something other than ``-1``) when this function
          * is called.
+         *
+         * Called only by the constructor, which holds the NetCDF library lock.
          */
         void create_netcdf_file();
 
@@ -394,6 +396,8 @@ namespace utils
          * is called.
          *
          * @param mpi_comm The MPI communicator passed to the NetCDF API function calls
+         *
+         * Called only by the constructor, which holds the NetCDF library lock.
          */
         void create_netcdf_file_parallel(MPI_Comm mpi_comm);
         #endif
@@ -415,6 +419,8 @@ namespace utils
          * are not needed, so only one "create" function call is needed, but other instances still need a way to get
          * the NetCDF id.
          *
+         *
+         * Called only by the constructor, which holds the NetCDF library lock.
          */
         void open_netcdf_file();
 
@@ -422,6 +428,8 @@ namespace utils
          * For cases when only opening a NetCDF file/dataset, retrieve necessary variable metadata for execution.
          *
          * Function will lookup and store the variable ids for the nexus_id, time, and flow/runoff variables.
+         *
+         * Called only by the constructor, which holds the NetCDF library lock.
          */
         void lookup_netcdf_metadata();
 
@@ -430,6 +438,8 @@ namespace utils
          *
          * Function will create and store the variable ids for the nexus_id, time, and flow/runoff variables.  To
          * support those variables, it will also create the nexus_id and time dimensions, though not store those ids.
+         *
+         * Called only by the constructor, which holds the NetCDF library lock.
          */
         void setup_netcdf_metadata();
 
@@ -443,6 +453,8 @@ namespace utils
          * Set the NetCDF variable with the given variable id to have ``NC_COLLECTIVE`` parallel access.
          *
          * @param nc_var_id The numeric NetCDF variable id
+         *
+         * Called only by the constructor, which holds the NetCDF library lock.
          */
         void set_nc_var_parallel_collective(const int nc_var_id) const;
         #endif

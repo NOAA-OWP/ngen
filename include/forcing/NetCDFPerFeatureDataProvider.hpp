@@ -172,12 +172,14 @@ namespace data_access
         utils::StreamHandler log_stream;
         std::string file_path;
 
+        // Its deleter takes the NetCDF library lock, since destroying
+        // an NcFile closes it if it is still open
         std::shared_ptr<netCDF::NcFile> nc_file;
 
         // By the name requested, which may be the CSDMS name: the
         // variable's name in the file, which keys the value cache, and
         // its NcVar. Storing the name saves calling NcVar::getName(),
-        // which calls into the NetCDF library
+        // which would need the NetCDF library lock
         std::map<std::string, std::pair<std::string, netCDF::NcVar>> ncvar_cache;
         std::map<std::string,std::string> units_cache;
         boost::compute::detail::lru_cache<std::string, std::shared_ptr<std::vector<double>>> value_cache;

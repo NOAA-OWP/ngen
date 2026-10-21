@@ -17,6 +17,7 @@ limitations under the License.
 */
 
 #include "PerFormulationNexusOutputMgr.hpp"
+#include "utilities/multithreading.hpp"
 
 #include <cstdint>
 #include <cstring>
@@ -106,6 +107,10 @@ utils::PerFormulationNexusOutputMgr::PerFormulationNexusOutputMgr(
     if (!output_root.empty()) {
         std::filesystem::create_directories(output_root);
     }
+
+    // Held for the rest of construction. It covers the NetCDF calls in the private helpers that only the
+    // constructor calls, which therefore don't lock themselves.
+    std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
 
     // To support unit testing when not running via MPI, but when MPI and parallel netcdf are compiled in, we
     // have to detect things.
@@ -270,6 +275,8 @@ void utils::PerFormulationNexusOutputMgr::commit_writes() {
     // MPI_Gatherv above) from every other configuration, where each instance opened or created the file and
     // writes its own slice.
     if (netcdf_file_id != -1) {
+        std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
+
         // For just obj_id 0, write the time value
         if (obj_id == 0) {
             long long epoch_minutes = current_epoch_time / 60;
@@ -300,6 +307,7 @@ void utils::PerFormulationNexusOutputMgr::commit_writes() {
     // It might be nice to utilize NetCDF's built-in chunk caching, but with MPI it looks like we can't:
     //  https://support.hdfgroup.org/documentation/hdf5/latest/group___f_a_p_l.html#ga034a5fc54d9b05296555544d8dd9fe89
     if (netcdf_file_id != -1 && current_time_index % data_flush_interval == 0) {
+        std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
         nc_status = nc_sync(netcdf_file_id);
         if (nc_status != NC_NOERR) {
             throw std::runtime_error("Error syncing/flushing data to nexus file '" + nexus_outfile + "' after "
@@ -528,6 +536,7 @@ void utils::PerFormulationNexusOutputMgr::create_netcdf_file_parallel(MPI_Comm m
 #endif
 
 void utils::PerFormulationNexusOutputMgr::close_netcdf_file() {
+    std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
     int nc_status = nc_close(netcdf_file_id);
     if (nc_status != NC_NOERR) {
         throw std::runtime_error("Error closing nexus file '" + nexus_outfile + "' after write for "
@@ -632,6 +641,7 @@ void utils::PerFormulationNexusOutputMgr::write_nexus_ids_once() const {
         }
         std::vector<size_t> start{0, 0};
         std::vector<size_t> count{static_cast<size_t>(total_nexus_count), nexus_id_string_width};
+        std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
         int nc_status = nc_put_vara_text(netcdf_file_id, nc_var_id_nexus_id, start.data(), count.data(),
                                          all_packed_nex_ids.data());
         if (nc_status != NC_NOERR) {
@@ -645,6 +655,7 @@ void utils::PerFormulationNexusOutputMgr::write_nexus_ids_once() const {
     std::vector<size_t> start{this->local_offset, 0};
     std::vector<size_t> count{nexus_ids.size(), nexus_id_string_width};
 
+    std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
     int nc_status = nc_put_vara_text(netcdf_file_id, nc_var_id_nexus_id, start.data(), count.data(),
                                      packed_nex_ids.data());
     if (nc_status != NC_NOERR) {

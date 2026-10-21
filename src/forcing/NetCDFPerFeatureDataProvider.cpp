@@ -2,6 +2,7 @@
 
 #if NGEN_WITH_NETCDF
 #include "NetCDFPerFeatureDataProvider.hpp"
+#include "utilities/multithreading.hpp"
 #include <mediator/UnitsHelper.hpp>
 
 #include <netcdf>
@@ -179,13 +180,22 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     , sim_start_date_time_epoch(sim_start)
     , sim_end_date_time_epoch(sim_end)
 {
+    // Held for the whole constructor, including the private helpers it
+    // calls that read from the file
+    std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
+
     //size_t sizep = 1073741824, nelemsp = 202481;
     //float preemptionp = 0.75;
     //nc_set_chunk_cache(sizep, nelemsp, preemptionp);
 
     //open the file
     try{
-        nc_file = std::make_shared<netCDF::NcFile>(input_path, netCDF::NcFile::read);
+        nc_file = std::shared_ptr<netCDF::NcFile>(new netCDF::NcFile(input_path, netCDF::NcFile::read), [](netCDF::NcFile* file) {
+            // Deleting an NcFile closes it if it's still open, which calls
+            // into the NetCDF library
+            std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
+            delete file;
+        });
     }
     catch(const netCDF::exceptions::NcException& e){
         std::cerr<<"Error opening NetCDF file: "<<input_path<<std::endl;
@@ -428,8 +438,10 @@ NetCDFPerFeatureDataProvider::~NetCDFPerFeatureDataProvider() = default;
 void NetCDFPerFeatureDataProvider::finalize()
 {
     if (nc_file != nullptr) {
+        std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
         nc_file->close();
     }
+    // Outside the lock, since nc_file's deleter takes it
     nc_file = nullptr;
 }
 
@@ -609,6 +621,8 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
             cached = value_cache.get(key).get();
         } else {
             cached = std::make_shared<std::vector<double>>(get_ids().size() * page_cache_line_size);
+
+            std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
 
             // read each chunk and add it to "cached"
             std::size_t idx = 0;
