@@ -3,6 +3,7 @@
 #include <functional>
 #include <map>
 #include <string>
+#include <system_error>
 
 namespace multithreading
 {
@@ -18,5 +19,17 @@ namespace multithreading
 
         std::lock_guard l{mutexes_mutex};
         return (*mutexes)[name];
+    }
+
+    thread_key::thread_key()
+    {
+        int err = pthread_key_create(&key, nullptr);
+        if (err != 0)
+            throw std::system_error(err, std::generic_category(), "pthread_key_create");
+    }
+
+    thread_key::~thread_key()
+    {
+        pthread_key_delete(key);
     }
 }

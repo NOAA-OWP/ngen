@@ -10,7 +10,10 @@
 #include <optional>
 #include <set>
 #include <shared_mutex>
+#include <system_error>
 #include <utility>
+#include <vector>
+#include <pthread.h>
 
 namespace multithreading
 {
@@ -122,6 +125,48 @@ namespace multithreading
         mutable std::shared_mutex mutex;
     };
 
+    // Owns a pthread key, so it is deleted even if its owner's
+    // constructor throws after creating it
+    struct thread_key {
+        thread_key();
+        ~thread_key();
+        thread_key(thread_key const&) = delete;
+        thread_key& operator=(thread_key const&) = delete;
+        pthread_key_t key;
+    };
+
+    // One instance of T for each thread that calls get() on this
+    // object, default-constructed on that thread's first call.
+    //
+    // Each thread finds its instance through a pthread key. POSIX gives
+    // a newly created key a null value in every thread, so an object
+    // never sees instances belonging to an earlier one, even if it
+    // reuses that object's address or key. pthread_key_delete() doesn't
+    // destroy the values, so this object owns every instance it
+    // creates, and destroys them when it is destroyed. An instance
+    // whose thread exits stays until then.
+    //
+    // Each object uses one pthread key, so constructing one throws
+    // std::system_error once the process has PTHREAD_KEYS_MAX keys. The
+    // object must not be destroyed while any thread may still call
+    // get() on it or use an instance it returned.
+    template <typename T>
+    class per_thread {
+    public:
+        per_thread() = default;
+        per_thread(per_thread const&) = delete;
+        per_thread& operator=(per_thread const&) = delete;
+
+        // The calling thread's instance, created on first use
+        T& get();
+
+    private:
+        // Declared before instances, so the key outlives them
+        thread_key key_;
+        std::mutex instances_mutex_;
+        std::vector<std::unique_ptr<T>> instances_;
+    };
+
     // Remove entries in the passed cache with keys less than
     // floor_index, and return them, so the caller
     // controls when they are destroyed. Nodes are spliced, so this
@@ -209,6 +254,23 @@ namespace multithreading
 
         // This thread really is reponsible for creating it
         return {cache.try_emplace(key).first->second, true};
+    }
+
+    template <typename T>
+    T& per_thread<T>::get()
+    {
+        if (void* existing = pthread_getspecific(key_.key))
+            return *static_cast<T*>(existing);
+
+        T* created;
+        {
+            std::lock_guard l{instances_mutex_};
+            created = instances_.emplace_back(std::make_unique<T>()).get();
+        }
+        int err = pthread_setspecific(key_.key, created);
+        if (err != 0)
+            throw std::system_error(err, std::generic_category(), "pthread_setspecific");
+        return *created;
     }
 
     template <typename Key, typename T>
