@@ -357,13 +357,12 @@ void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
 
     std::lock_guard l{hinted_ids_mutex};
 
-    auto ids = hinted_ids;
     if (hinted_ids.size() == 0){
         return;
     }
 
     // Base cases covered in other ctor
-    if (ids.size() == get_ids().size()) {
+    if (hinted_ids.size() == get_ids().size()) {
         assert(chunks.size() == 1);
         hinted_ids.clear();
         hinted_ids_done.test_and_set();
@@ -375,12 +374,12 @@ void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
     // Map from nc cat-id index to cat-id; sorted by index position
     std::map<std::size_t, std::string> idx_map;
 
-    // remove "id_pos" keys that are not in "ids"
+    // remove "id_pos" keys that are not in "hinted_ids"
     {
         auto it = id_pos.begin();
         while (it != id_pos.end()) {
-            auto sub = ids.find(it->first);
-            if (sub != ids.end()) {
+            auto sub = hinted_ids.find(it->first);
+            if (sub != hinted_ids.end()) {
                 // Here we know the id AND its position in the index
                 idx_map.emplace(it->second, it->first);
                 ++it;
