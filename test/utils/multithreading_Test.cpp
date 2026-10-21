@@ -14,8 +14,8 @@
 #include <type_traits>
 #include <vector>
 
-// Concurrency tests for multithreading::cache_slot and
-// multithreading::shared_cache.
+// Concurrency tests for multithreading::cache_slot,
+// multithreading::shared_cache and multithreading::per_thread.
 //
 // When built with GCC or Clang, the test target is compiled with
 // -fsanitize=thread, so these tests are meant to be judged by
@@ -569,4 +569,76 @@ TEST(SharedCacheTest, DISABLED_EvictionWhileAnotherThreadHoldsSlot)
             evicted.store(true, std::memory_order_relaxed);
         }
     });
+}
+
+// ---------------------------------------------------------------- per_thread
+
+TEST(PerThreadTest, GetReturnsOneValueInitializedInstancePerThread)
+{
+    multithreading::per_thread<int> instances;
+    int& first = instances.get();
+    EXPECT_EQ(first, 0);
+    first = 5;
+    EXPECT_EQ(&instances.get(), &first);
+    EXPECT_EQ(instances.get(), 5);
+}
+
+TEST(PerThreadTest, ObjectsOnOneThreadAreIndependent)
+{
+    multithreading::per_thread<int> a, b;
+    a.get() = 1;
+    b.get() = 2;
+    EXPECT_NE(&a.get(), &b.get());
+    EXPECT_EQ(a.get(), 1);
+    EXPECT_EQ(b.get(), 2);
+}
+
+TEST(PerThreadTest, NewObjectDoesNotSeeDestroyedObjectsInstances)
+{
+    // A new object may reuse a destroyed one's address and pthread key
+    for (int i = 0; i < 16; ++i) {
+        auto instances = std::make_unique<multithreading::per_thread<int>>();
+        EXPECT_EQ(instances->get(), 0) << "iteration " << i;
+        instances->get() = 42;
+    }
+}
+
+TEST(PerThreadTest, ConcurrentThreadsGetDistinctInstances)
+{
+    const unsigned n_threads = test_thread_count();
+    multithreading::per_thread<unsigned> instances;
+    std::vector<unsigned*> addresses(n_threads, nullptr);
+    std::vector<char> kept_value(n_threads, false);
+    std::barrier all_written(n_threads);
+
+    run_threads(n_threads, [&](unsigned t) {
+        unsigned& mine = instances.get();
+        addresses[t] = &mine;
+        mine = t + 1;
+        all_written.arrive_and_wait();
+        kept_value[t] = &instances.get() == &mine && mine == t + 1;
+    });
+
+    EXPECT_EQ(std::set<unsigned*>(addresses.begin(), addresses.end()).size(), n_threads);
+    for (unsigned t = 0; t < n_threads; ++t)
+        EXPECT_TRUE(kept_value[t]) << "thread " << t;
+}
+
+namespace {
+std::atomic<int> live_counted{0};
+
+struct counted {
+    counted() { live_counted.fetch_add(1, std::memory_order_relaxed); }
+    ~counted() { live_counted.fetch_sub(1, std::memory_order_relaxed); }
+};
+} // namespace
+
+TEST(PerThreadTest, InstancesOutliveTheirThreadsUntilObjectIsDestroyed)
+{
+    const unsigned n_threads = test_thread_count();
+    auto instances = std::make_unique<multithreading::per_thread<counted>>();
+    run_threads(n_threads, [&](unsigned) { instances->get(); });
+    EXPECT_EQ(live_counted.load(), static_cast<int>(n_threads));
+    instances.reset();
+    EXPECT_EQ(live_counted.load(), 0);
 }
