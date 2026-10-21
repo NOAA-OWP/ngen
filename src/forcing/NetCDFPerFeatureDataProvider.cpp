@@ -353,7 +353,7 @@ void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
     }
 
     // Base cases covered in other ctor
-    if (ids.size() == get_ids().size() || ids.size() == 0) {
+    if (ids.size() == get_ids().size()) {
         assert(chunks.size() == 1);
         hinted_ids.clear();
         return;
