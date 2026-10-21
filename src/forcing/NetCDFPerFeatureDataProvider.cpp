@@ -583,8 +583,6 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         maybe_update_chunks_with_hints();
     }
 
-    auto stride = c_idx2 - c_idx1;
-
     std::vector<std::size_t> start, count;
 
     auto i_idx = id_pos[selector.get_id()];
