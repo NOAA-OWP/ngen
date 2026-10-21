@@ -345,11 +345,18 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
 
 void NetCDFPerFeatureDataProvider::hint_shared_provider_id(const std::string& id)
 {
+    std::lock_guard l{hinted_ids_mutex};
     hinted_ids.emplace(id);
 }
 
 void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
 {
+    if (hinted_ids_done.test()) {
+        return;
+    }
+
+    std::lock_guard l{hinted_ids_mutex};
+
     auto ids = hinted_ids;
     if (hinted_ids.size() == 0){
         return;
@@ -359,6 +366,7 @@ void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
     if (ids.size() == get_ids().size()) {
         assert(chunks.size() == 1);
         hinted_ids.clear();
+        hinted_ids_done.test_and_set();
         return;
     }
     // get rid of "default" chunks, we will build them here
@@ -415,6 +423,8 @@ void NetCDFPerFeatureDataProvider::maybe_update_chunks_with_hints()
     // TODO: improve this; we only want this method to "do something" once.
     //       invariant is, weakly, enforced by prelude guard clause.
     hinted_ids.clear();
+
+    hinted_ids_done.test_and_set();
 }
 
 NetCDFPerFeatureDataProvider::~NetCDFPerFeatureDataProvider() = default;
@@ -546,6 +556,11 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
      * p dim: page index
      */
 
+    // update chunks during the first timestep, and no-op thereafter;
+    // 'maybe_update_chunks_with_hints' clears 'hinted_ids'
+    // assumes all id's will have been hinted before 'get_value' is called.
+    maybe_update_chunks_with_hints();
+
     auto init_time = selector.get_init_time();
     auto end_time = init_time + selector.get_duration_secs();
     
@@ -556,13 +571,6 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     }
     catch(const std::out_of_range &e){
         c_idx2 = get_ts_index_for_time(stop_time-1); //to the edge
-    }
-
-    // update chunks during the first timestep
-    if (hinted_ids.size() > 0){
-        // 'maybe_update_chunks_with_hints' clears 'hinted_ids'
-        // assumes all id's will have been hinted before 'get_value' is called.
-        maybe_update_chunks_with_hints();
     }
 
     std::vector<std::size_t> start, count;
