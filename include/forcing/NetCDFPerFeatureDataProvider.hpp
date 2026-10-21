@@ -7,25 +7,24 @@
 
 #include "GenericDataProvider.hpp"
 #include "DataProviderSelectors.hpp"
-
-#include <string>
-#include <algorithm>
-#include <map>
-#include <memory>
-#include <string>
-#include <set>
-#include <sstream>
-#include <exception>
-#include <mutex>
-#include "assert.h"
-#include <iomanip>
-#include <optional>
-#include <ctime>
-#include <boost/compute/detail/lru_cache.hpp>
+#include "AorcForcing.hpp"
 
 #include <StreamHandler.hpp>
 
-#include "AorcForcing.hpp"
+#include <assert.h>
+
+#include <algorithm>
+#include <ctime>
+#include <exception>
+#include <map>
+#include <memory>
+#include <mutex>
+#include <optional>
+#include <set>
+#include <string>
+#include <vector>
+
+#include <boost/compute/detail/lru_cache.hpp>
 
 namespace netCDF {
     class NcVar;
