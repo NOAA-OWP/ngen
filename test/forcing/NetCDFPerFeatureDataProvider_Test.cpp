@@ -9,6 +9,7 @@
 #include "StreamHandler.hpp"
 #include "FileChecker.h"
 #include <memory>
+#include <optional>
 #include <vector>
 #include <string>
 #include <unistd.h>
@@ -405,6 +406,25 @@ TEST_F(NetCDFCacheLayoutTest, ReadsComeFromTheNamedVariable)
     // and the CSDMS names read from pages cached by reads using the names in the file
     EXPECT_DOUBLE_EQ(readStep(provider, 2, n_times - 1, CSDMS_STD_NAME_SURFACE_TEMP, "K"), cellValue(2, n_times - 1) + 1000);
     EXPECT_DOUBLE_EQ(readStep(provider, 2, n_times - 1, CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa"), cellValue(2, n_times - 1) + 3000);
+}
+
+// A provider constructed at the address of a destroyed one must read its
+// own file, not pages the earlier provider's threads cached.
+TEST_F(NetCDFCacheLayoutTest, ProviderAtReusedAddressReadsItsOwnData)
+{
+    const std::size_t n_cats = 3, n_times = 30, chunk = 24;
+    auto first_path = makeForcing("nc_cache_reuse_first.nc", n_cats, n_times, chunk);
+    auto second_path = makeForcing("nc_cache_reuse_second.nc", n_cats, n_times, chunk, 1000.0);
+
+    std::optional<NetCDFPerFeatureDataProvider> provider;
+    provider.emplace(first_path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+    const auto* first_address = &*provider;
+    EXPECT_DOUBLE_EQ(readStep(*provider, 1, 3), cellValue(1, 3));
+    provider.reset();
+
+    provider.emplace(second_path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+    ASSERT_EQ(&*provider, first_address);
+    EXPECT_DOUBLE_EQ(readStep(*provider, 1, 3), cellValue(1, 3) + 1000.0);
 }
 
 // A multi-timestep read whose range starts mid-page and crosses a page
