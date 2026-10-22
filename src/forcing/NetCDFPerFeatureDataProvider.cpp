@@ -569,10 +569,14 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     // assumes all id's will have been hinted before 'get_value' is called.
     maybe_update_chunks_with_hints();
 
-    auto init_time = selector.get_init_time();
-    auto end_time = init_time + selector.get_duration_secs();
+    auto const& [variable_name, ncvar] = get_ncvar(selector.get_variable_name());
+
+    auto const i_idx = id_pos.at(selector.get_id());
+
+    auto const init_time = selector.get_init_time();
+    auto const end_time = init_time + selector.get_duration_secs();
     
-    size_t c_idx1 = get_ts_index_for_time(init_time);
+    const size_t c_idx1 = get_ts_index_for_time(init_time);
     size_t c_idx2;
     try {
         c_idx2 = get_ts_index_for_time(end_time-1); // Don't include next timestep when duration % timestep = 0
@@ -581,40 +585,29 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         c_idx2 = get_ts_index_for_time(stop_time-1); //to the edge
     }
 
+    const std::size_t read_len = c_idx2 - c_idx1 + 1;
+
+    const std::size_t cache_line_size = cache_slice_t_size;
+    const std::size_t p_idx = cache::page_p_idx(c_idx1, cache_line_size);
+    // pages spanned by [c_idx1, c_idx2]; ceil(read_len / line_size) undercounts
+    // when the range starts mid-page and crosses a page boundary
+    const std::size_t n_page_accesses = cache::page_p_idx(c_idx2, cache_line_size) - p_idx + 1;
+
     std::vector<std::size_t> start, count;
 
-    auto i_idx = id_pos[selector.get_id()];
-
-    double t1 = time_vals[c_idx1];
-    double t2 = time_vals[c_idx2];
-
-    double rvalue = 0.0;
-    
-    auto const& [variable_name, ncvar] = get_ncvar(selector.get_variable_name());
-
-    std::string native_units = get_ncvar_units(selector.get_variable_name());
-
-    const std::size_t read_len = c_idx2 - c_idx1 + 1;
+    std::size_t c_idx = c_idx1;
 
     std::vector<double> raw_values;
     raw_values.reserve(read_len);
 
-    std::size_t cache_line_size = cache_slice_t_size;
-    std::size_t p_idx = cache::page_p_idx(c_idx1, cache_line_size);
-    // pages spanned by [c_idx1, c_idx2]; ceil(read_len / line_size) undercounts
-    // when the range starts mid-page and crosses a page boundary
-    std::size_t n_page_accesses = cache::page_p_idx(c_idx2, cache_line_size) - p_idx + 1;
-
-    std::size_t c_idx = c_idx1;
-    // For reference: https://stackoverflow.com/a/72030286
     for( size_t i = 0; i < n_page_accesses; i++ ) {
         // rows: catchments; columns: time;
         // stride between rows is 'cache_line_size'
         std::shared_ptr<std::vector<double>> cached;
 
-	std::size_t ith_p_idx = p_idx + i;
-	std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
-	std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
+        const std::size_t ith_p_idx = p_idx + i;
+        const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
+        const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
 
         std::string key = variable_name + "|" + std::to_string(page_c_idx);
         if(value_cache.contains(key)){
@@ -661,7 +654,10 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     }
 
     assert(raw_values.size() == read_len);
-    rvalue = 0.0;
+    double rvalue = 0.0;
+
+    double t1 = time_vals[c_idx1];
+    double t2 = time_vals[c_idx2];
 
     double a , b = 0.0;
     
@@ -700,6 +696,8 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         default:
             ;
     }
+
+    std::string native_units = get_ncvar_units(variable_name);
 
     try 
     {
