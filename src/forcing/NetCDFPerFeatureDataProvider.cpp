@@ -209,7 +209,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         std::string var_name = element.first;
         auto ncvar = nc_file->getVar(var_name);
         variable_names.push_back(var_name);
-        ncvar_cache.emplace(var_name,ncvar);
+        ncvar_cache.emplace(var_name,std::pair{var_name, ncvar});
 
         std::string native_units;
         try
@@ -234,7 +234,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
             native_units = native_units.empty() ? std::get<1>(wkf->second) : native_units;
             std::string can_name = std::get<0>(wkf->second); // the CSDMS name
             variable_names.push_back(can_name);
-            ncvar_cache.emplace(can_name,ncvar);
+            ncvar_cache.emplace(can_name,std::pair{var_name, ncvar});
             units_cache[can_name] = native_units;
         }
 
@@ -578,7 +578,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
     double rvalue = 0.0;
     
-    auto ncvar = get_ncvar(selector.get_variable_name());
+    auto const& [variable_name, ncvar] = get_ncvar(selector.get_variable_name());
 
     std::string native_units = get_ncvar_units(selector.get_variable_name());
 
@@ -604,7 +604,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 	std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
 	std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
 
-        std::string key = ncvar.getName() + "|" + std::to_string(page_c_idx);
+        std::string key = variable_name + "|" + std::to_string(page_c_idx);
         if(value_cache.contains(key)){
             cached = value_cache.get(key).get();
         } else {
@@ -708,7 +708,7 @@ std::vector<double> NetCDFPerFeatureDataProvider::get_values(const CatchmentAggr
 
 // private:
 
-const netCDF::NcVar& NetCDFPerFeatureDataProvider::get_ncvar(const std::string& name){
+std::pair<std::string, netCDF::NcVar> const& NetCDFPerFeatureDataProvider::get_ncvar(const std::string& name) const {
     auto cache_hit = ncvar_cache.find(name);
     if(cache_hit != ncvar_cache.end()){
         return cache_hit->second;
