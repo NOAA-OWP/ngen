@@ -147,7 +147,10 @@ namespace data_access
 
         virtual std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
+        using page_buffer_type = std::shared_ptr<std::vector<double>>;
+
         private:
+        page_buffer_type load_page(netCDF::NcVar const& ncvar, std::size_t page_c_idx);
 
         time_t sim_start_date_time_epoch;
         time_t sim_end_date_time_epoch;
