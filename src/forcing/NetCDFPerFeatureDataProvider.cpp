@@ -535,6 +535,41 @@ namespace cache {
 }
 }
 
+auto NetCDFPerFeatureDataProvider::load_page(netCDF::NcVar const& ncvar, std::size_t page_c_idx) -> page_buffer_type
+{
+  std::size_t cache_line_size = cache_slice_t_size;
+  std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
+  // Allocate before taking the NetCDF library lock, so that it is held
+  // only for the reads
+  auto cached = std::make_shared<std::vector<double>>(get_ids().size() * page_cache_line_size);
+
+  std::vector<std::size_t> start(2), count(2);
+
+  std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
+
+  // read each chunk and add it to "cached"
+  std::size_t idx = 0;
+  for(auto const& chunk: chunks){
+    // chunk start index = chunk.first;
+    // chunk length      = chunk.second;
+    start[0] = chunk.first;
+
+    // NOTE: in the first iteration, we might read more data in the Time
+    // dimension than we 'need'. b.c. we read from:
+    // 'c_idx1 - (c_idx1 % cache_slice_t_size)' to the end of the cache line.
+    // so, if 'c_idx1 % cache_slice_t_size > 0' we will read
+    // 'c_idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
+    start[1] = page_c_idx;
+
+    count[0] = chunk.second;
+    count[1] = page_cache_line_size;
+
+    ncvar.getVar(start,count,&(*cached)[idx]);
+    idx += chunk.second * page_cache_line_size;
+  }
+
+  return cached;
+}
 
 double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m) 
 {
@@ -593,8 +628,6 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     // when the range starts mid-page and crosses a page boundary
     const std::size_t n_page_accesses = cache::page_p_idx(c_idx2, cache_line_size) - p_idx + 1;
 
-    std::vector<std::size_t> start, count;
-
     std::size_t c_idx = c_idx1;
 
     std::vector<double> raw_values;
@@ -603,7 +636,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     for( size_t i = 0; i < n_page_accesses; i++ ) {
         // rows: catchments; columns: time;
         // stride between rows is 'cache_line_size'
-        std::shared_ptr<std::vector<double>> cached;
+        page_buffer_type cached;
 
         const std::size_t ith_p_idx = p_idx + i;
         const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
@@ -613,33 +646,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
         if(value_cache.contains(key)){
             cached = value_cache.get(key).get();
         } else {
-            cached = std::make_shared<std::vector<double>>(get_ids().size() * page_cache_line_size);
-
-            std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
-
-            // read each chunk and add it to "cached"
-            std::size_t idx = 0;
-            for(auto const& chunk: chunks){
-                // chunk start index = chunk.first;
-                // chunk length      = chunk.second;
-                start.clear();
-                start.push_back(chunk.first);
-
-                // NOTE: in the first iteration, we might read more data in the Time
-                // dimension than we 'need'. b.c. we read from:
-                // 'c_idx1 - (c_idx1 % cache_slice_t_size)' to the end of the cache line.
-                // so, if 'c_idx1 % cache_slice_t_size > 0' we will read
-                // 'c_idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
-                start.push_back(page_c_idx);
-
-                count.clear();
-                count.push_back(chunk.second);
-
-                count.push_back(page_cache_line_size);
-                ncvar.getVar(start,count,&(*cached)[idx]);
-                idx += chunk.second * page_cache_line_size;
-            }
-
+            cached = load_page(ncvar, page_c_idx);
             value_cache.insert(key, cached);
         }
         // Find all values in the current cache slice and push them onto raw_values
