@@ -1,7 +1,6 @@
 #ifndef NGEN_BMI_FORMULATION_HPP
 #define NGEN_BMI_FORMULATION_HPP
 
-#include <iomanip>
 #include <string>
 #include <utility>
 #include <vector>
@@ -23,7 +22,6 @@
 // TODO: change this (and output_header_fields) to something like output_file_variables to distinguish from BMI output variables
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS "output_variables"
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS "output_header_fields"
-#define BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION "output_precision"
 #define BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END "allow_exceed_end_time"
 #define BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP "fixed_time_step"
 #define BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE "library_file"
@@ -58,14 +56,9 @@ namespace realization {
          *
          * @param id
          * @param forcing
-         * @param output_stream
          */
-        Bmi_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream)
-                : Catchment_Formulation(std::move(id), forcing, output_stream)
-        {
-            // Do this here, as this function also handles initializing the output string stream for formatting.
-            set_output_precision(9);
-        };
+        Bmi_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing)
+                : Catchment_Formulation(std::move(id), forcing) { };
 
 
         virtual ~Bmi_Formulation() {};
@@ -212,28 +205,9 @@ namespace realization {
          */
         virtual bool is_model_initialized() const = 0;
 
-        /**
-         * Set the precision of output values when converted to text.
-         *
-         * @param precision The desired precision, as a number of decimal places.
-         */
-        void set_output_precision(int precision) {
-            output_precision = precision;
-            output_text_stream = std::make_shared<std::ostringstream>();
-            *output_text_stream << std::fixed;
-            *output_text_stream << std::setprecision(output_precision);
-        }
-
         virtual void update(time_step_t t_index, time_step_t t_delta) = 0;
 
     protected:
-
-        /** Object to help with converting numeric output values to text. */
-        std::shared_ptr<std::ostringstream> output_text_stream;
-
-        int get_output_precision() {
-            return output_precision;
-        }
 
         void set_bmi_main_output_var(const std::string &main_output_var) {
             bmi_main_output_var = main_output_var;
@@ -302,8 +276,6 @@ namespace realization {
          * the BMI module output variables accessible to the instance.
          */
         std::vector<std::string> output_variable_names;
-        /** The degree of precision in output values when converting to text. */
-        int output_precision;
 
         const static std::vector<std::string> OPTIONAL_PARAMETERS;
         const static std::vector<std::string> REQUIRED_PARAMETERS;

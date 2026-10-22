@@ -135,7 +135,6 @@ void Bmi_C_Pet_IT::SetUp() {
                          "                \"library_file\": \"" + lib_file[i] + "\","
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
-                         "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 9, "
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
                          "                      \"land_surface_air__temperature\": \"" + AORC_FIELD_NAME_TEMP_2M_AG + "\","
                          "                      \"land_surface_air__pressure\": \"" + AORC_FIELD_NAME_PRESSURE_SURFACE + "\","
@@ -169,7 +168,7 @@ void Bmi_C_Pet_IT::TearDown() {
 /** Test to make sure the model initializes. */
 TEST_F(Bmi_C_Pet_IT, Test_InitModel) {
     int ex_index = 0;
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     ASSERT_EQ(get_friend_model_type_name(formulation), model_type_name[ex_index]);
@@ -185,7 +184,7 @@ TEST_F(Bmi_C_Pet_IT, Test_GetResponse) {
     // Compare within a margin of error
     double error_margin = 0.001;
 
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
@@ -208,7 +207,7 @@ TEST_F(Bmi_C_Pet_IT, Test_Cat27_Method5_CompareBenchmark) {
      *
      * (0) "water_potential_evaporation_flux",
      */
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
 
     formulation.create_formulation(config_prop_ptree[ex_index]);
    
@@ -243,7 +242,7 @@ TEST_F(Bmi_C_Pet_IT, Test_Cat67_Method1_CompareBenchmark) {
      *
      * (0) "water_potential_evaporation_flux",
      */
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
 
     formulation.create_formulation(config_prop_ptree[ex_index]);
    

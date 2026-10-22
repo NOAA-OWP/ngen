@@ -23,7 +23,7 @@ namespace realization {
 
     public:
 
-        Bmi_Py_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream);
+        Bmi_Py_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing);
 
         const std::vector<std::string> get_bmi_input_variables() const override;
 

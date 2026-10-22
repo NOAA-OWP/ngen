@@ -14,7 +14,7 @@ namespace realization {
 
     public:
 
-        Bmi_C_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream);
+        Bmi_C_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider);
 
         std::string get_formulation_type() const override;
 

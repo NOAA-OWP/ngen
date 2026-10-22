@@ -9,6 +9,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 #include <FeatureBuilder.hpp>
+#include <AorcForcing.hpp>
 #include "features/Features.hpp"
 #include "Formulation_Constructors.hpp"
 #include "LayerData.hpp"
@@ -28,7 +29,7 @@ namespace realization {
             ~Formulation_Manager() = default;
 
             void read(simulation_time_params &simulation_time_config,
-                      geojson::GeoJSON fabric, utils::StreamHandler output_stream);
+                      geojson::GeoJSON fabric);
 
             void add_formulation(std::shared_ptr<Catchment_Formulation> formulation);
 
@@ -93,11 +94,10 @@ namespace realization {
             std::shared_ptr<Catchment_Formulation> construct_formulation_from_config(
                 simulation_time_params &simulation_time_config,
                 std::string identifier,
-                realization::config::Config& catchment_formulation,
-                utils::StreamHandler output_stream
+                realization::config::Config& catchment_formulation
             );
 
-            std::shared_ptr<Catchment_Formulation> construct_missing_formulation(geojson::Feature& feature, utils::StreamHandler output_stream, simulation_time_params &simulation_time_config);
+            std::shared_ptr<Catchment_Formulation> construct_missing_formulation(geojson::Feature& feature, simulation_time_params &simulation_time_config);
 
             forcing_params get_forcing_params(const geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config);
 

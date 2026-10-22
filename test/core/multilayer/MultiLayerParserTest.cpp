@@ -82,7 +82,7 @@ TEST_F(MultiLayerParserTest, TestRead0)
     auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
 
     manager = std::make_shared<realization::Formulation_Manager>(realization_config);
-    manager->read(simulation_time_config, catchment_collection, utils::getStdOut());
+    manager->read(simulation_time_config, catchment_collection);
 
     ASSERT_TRUE(true);
 }

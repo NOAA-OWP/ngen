@@ -5,25 +5,17 @@
 
 #include "GM_Object.hpp"
 
-#include "StreamHandler.hpp"
-#include "FileStreamHandler.hpp"
-#include "GenericDataProvider.hpp"
-
 
 class HY_CatchmentArea : public HY_CatchmentRealization, public GM_Object
 {
     public:
 
     HY_CatchmentArea();
-    HY_CatchmentArea(utils::StreamHandler output_stream);
-    //HY_CatchmentArea(forcing_params forcing_config, utils::StreamHandler output_stream); //TODO not sure I like this pattern
     virtual ~HY_CatchmentArea();
 
     protected:
 
     polygon_t bounds;
-
-    utils::StreamHandler output;
 
     private:
 };
