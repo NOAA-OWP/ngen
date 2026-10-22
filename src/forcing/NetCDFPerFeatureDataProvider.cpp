@@ -13,11 +13,6 @@
 std::mutex data_access::NetCDFPerFeatureDataProvider::shared_providers_mutex;
 std::map<std::string, std::shared_ptr<data_access::NetCDFPerFeatureDataProvider>> data_access::NetCDFPerFeatureDataProvider::shared_providers;
 
-// limit access outside of compilation unit.
-namespace {
-    const size_t N_EXPECTED_FORCING_VARS = 8;
-}
-
 namespace data_access {
 
 std::shared_ptr<NetCDFPerFeatureDataProvider> NetCDFPerFeatureDataProvider::get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s)
@@ -176,7 +171,6 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
 NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s)
     : log_stream(log_s)
     , file_path(input_path)
-    , value_cache(N_EXPECTED_FORCING_VARS)
     , sim_start_date_time_epoch(sim_start)
     , sim_end_date_time_epoch(sim_end)
 {
@@ -220,6 +214,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         auto ncvar = nc_file->getVar(var_name);
         variable_names.push_back(var_name);
         ncvar_cache.emplace(var_name,std::pair{var_name, ncvar});
+        value_caches.try_emplace(var_name);
 
         std::string native_units;
         try
@@ -605,6 +600,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     maybe_update_chunks_with_hints();
 
     auto const& [variable_name, ncvar] = get_ncvar(selector.get_variable_name());
+    auto& variable_cache = value_caches.at(variable_name);
 
     auto const i_idx = id_pos.at(selector.get_id());
 
@@ -628,6 +624,41 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     // when the range starts mid-page and crosses a page boundary
     const std::size_t n_page_accesses = cache::page_p_idx(c_idx2, cache_line_size) - p_idx + 1;
 
+    // Only evict pages before the first one this read needs. Every
+    // thread in a time step reads the same pages, so when a read spans
+    // two pages, evicting below the second would drop the first while
+    // this or another thread still needs it
+    const std::size_t eviction_floor = cache::page_p_idx_to_c_idx(p_idx, cache_line_size);
+
+    // Drop references to arrays of stale forcings values here,
+    // before reading or waiting on reads, to avoid or limit
+    // spikes in memory footprint as new forcings get read in
+    auto& variable_thread_cache = thread_caches.get()[variable_name];
+    multithreading::evict_stale_values(variable_thread_cache, eviction_floor);
+
+    for( size_t i = 0; i < n_page_accesses; i++ ) {
+        // rows: catchments; columns: time;
+        // stride between rows is 'cache_line_size'
+        const std::size_t ith_p_idx = p_idx + i;
+        const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
+
+        const cache_key_type page_key = page_c_idx;
+
+        if (variable_thread_cache.contains(page_key))
+            continue;
+
+        auto [cache_slot, just_inserted] = variable_cache.find_or_insert(page_key, eviction_floor);
+
+        page_buffer_type cached;
+        if (just_inserted) {
+            cached = load_page(ncvar, page_c_idx);
+            cache_slot.fill(cached, true);
+        } else {
+            cached = cache_slot.get();
+        }
+        variable_thread_cache.emplace(page_key, cached);
+    }
+
     std::size_t c_idx = c_idx1;
 
     std::vector<double> raw_values;
@@ -636,25 +667,16 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     for( size_t i = 0; i < n_page_accesses; i++ ) {
         // rows: catchments; columns: time;
         // stride between rows is 'cache_line_size'
-        page_buffer_type cached;
-
         const std::size_t ith_p_idx = p_idx + i;
         const std::size_t page_c_idx = cache::page_p_idx_to_c_idx(ith_p_idx, cache_line_size);
         const std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
-
-        std::string key = variable_name + "|" + std::to_string(page_c_idx);
-        if(value_cache.contains(key)){
-            cached = value_cache.get(key).get();
-        } else {
-            cached = load_page(ncvar, page_c_idx);
-            value_cache.insert(key, cached);
-        }
+        auto locally_cached = variable_thread_cache.at(page_c_idx).get();
         // Find all values in the current cache slice and push them onto raw_values
         while(c_idx >= page_c_idx &&
               c_idx < page_c_idx + page_cache_line_size &&
               c_idx <= c_idx2){
             std::size_t idx = cache::page_entry_idx(i_idx, c_idx, time_vals.size(), cache_line_size);
-            double value = cached->at(idx);
+            double value = locally_cached->at(idx);
             raw_values.push_back(value);
             c_idx++;
         }
