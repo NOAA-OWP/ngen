@@ -212,7 +212,6 @@ private:
                 "                                \"init_config\": \"" + nested_init_config_lists[ex_index][nested_index] + "\",\n"
                 "                                \"allow_exceed_end_time\": true,\n"
                 "                                \"main_output_variable\": \"" + nested_module_main_output_variables[ex_index][nested_index] + "\",\n"
-                "                                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6,\n"
 
                 "                                \"library_file\": \"" + nested_module_file_lists[ex_index][nested_index] + "\",\n"
                 "                                \"registration_function\": \"" + nested_registration_function_lists[ex_index][nested_index] + "\",\n"
@@ -240,7 +239,6 @@ private:
                 "                                \"init_config\": \"" + nested_init_config_lists[ex_index][nested_index] + "\",\n"
                 "                                \"allow_exceed_end_time\": true,\n"
                 "                                \"main_output_variable\": \"" + nested_module_main_output_variables[ex_index][nested_index] + "\",\n"
-                "                                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6,\n"
 
                 "                                \"library_file\": \"" + nested_module_file_lists[ex_index][nested_index] + "\",\n"
                 "                                \"registration_function\": \"" + nested_registration_function_lists[ex_index][nested_index] + "\",\n"
@@ -272,7 +270,6 @@ private:
                 "                                \"init_config\": \"" + nested_init_config_lists[ex_index][nested_index] + "\",\n"
                 "                                \"allow_exceed_end_time\": true,\n"
                 "                                \"main_output_variable\": \"" + nested_module_main_output_variables[ex_index][nested_index] + "\",\n"
-                "                                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6,\n"
 
                 "                                \"" + std::string(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME) + "\": \"" + nested_module_type_name_lists[ex_index][nested_index] + "\",\n"
 
@@ -510,7 +507,7 @@ void Bmi_Multi_Formulation_Test::SetUp() {
 TEST_F(Bmi_Multi_Formulation_Test, Initialize_0_a) {
     int ex_index = 0;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     ASSERT_EQ(get_friend_nested_module_model_type_name(formulation, 0), nested_module_type_name_lists[ex_index][0]);
@@ -524,7 +521,7 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_0_a) {
 TEST_F(Bmi_Multi_Formulation_Test, Initialize_0_b) {
     int ex_index = 0;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     ASSERT_EQ(get_friend_deferred_providers(formulation).size(), 0);
@@ -534,7 +531,7 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_0_b) {
 TEST_F(Bmi_Multi_Formulation_Test, Initialize_1_a) {
     int ex_index = 1;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     ASSERT_EQ(get_friend_nested_module_model_type_name(formulation, 0), nested_module_type_name_lists[ex_index][0]);
@@ -548,7 +545,7 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_1_a) {
 TEST_F(Bmi_Multi_Formulation_Test, Initialize_1_b) {
     int ex_index = 1;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     ASSERT_EQ(get_friend_deferred_providers(formulation).size(), 0);
@@ -557,7 +554,7 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_1_b) {
 /** Simple test to make sure the model config from example 2 does not initialize because of a bad config alias. */
 TEST_F(Bmi_Multi_Formulation_Test, Initialize_2_a) {
     int ex_index = 2;
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     ASSERT_THROW(formulation.create_formulation(config_prop_ptree[ex_index]), realization::ConfigurationException);
 }
 
@@ -565,7 +562,7 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_2_a) {
 TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_a) {
     int ex_index = 3;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     ASSERT_EQ(get_friend_nested_module_model_type_name(formulation, 0), nested_module_type_name_lists[ex_index][0]);
@@ -579,7 +576,7 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_a) {
 TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_b) {
     int ex_index = 3;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     ASSERT_GT(get_friend_deferred_providers(formulation).size(), 0);
@@ -589,7 +586,7 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_b) {
 TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_c) {
     int ex_index = 3;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     const std::vector<std::shared_ptr<data_access::OptionalWrappedDataProvider>> deferred = get_friend_deferred_providers(
@@ -615,7 +612,7 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_output_header_fields) {
     }
     props.put_child("output_header_fields", headers);
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(props);
 
     std::vector<std::string> names;
@@ -627,7 +624,7 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_output_header_fields) {
 TEST_F(Bmi_Multi_Formulation_Test, Initialize_4_Fails) {
     int ex_index = 4;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
 
     EXPECT_THROW({
         formulation.create_formulation(config_prop_ptree[ex_index]);
@@ -641,7 +638,7 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_4_Fails) {
 TEST_F(Bmi_Multi_Formulation_Test, Initialize_5_Fails) {
     int ex_index = 5;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
 
     EXPECT_THROW({
         formulation.create_formulation(config_prop_ptree[ex_index]);
@@ -654,7 +651,7 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_5_Fails) {
 TEST_F(Bmi_Multi_Formulation_Test, GetResponse_0_a) {
     int ex_index = 0;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     double response = formulation.get_response(0, 3600);
@@ -667,7 +664,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_0_a) {
 TEST_F(Bmi_Multi_Formulation_Test, GetResponse_0_b) {
     int ex_index = 0;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     double response;
@@ -684,7 +681,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_0_b) {
 TEST_F(Bmi_Multi_Formulation_Test, GetResponse_1_a) {
     int ex_index = 1;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     double response = formulation.get_response(0, 3600);
@@ -697,7 +694,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_1_a) {
 TEST_F(Bmi_Multi_Formulation_Test, GetResponse_1_b) {
     int ex_index = 1;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     double response;
@@ -714,7 +711,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_1_b) {
 TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_a) {
     int ex_index = 3;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     double response = formulation.get_response(0, 3600);
@@ -727,7 +724,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_a) {
 TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
     int ex_index = 3;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     double response;
@@ -750,7 +747,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
 
         int ex_index = 3;
 
-        Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+        Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
         formulation.create_formulation(config_prop_ptree[ex_index]);
 
         double response, mod_0_input_1, mod_1_output_2;
@@ -777,7 +774,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
 TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_0_a) {
     int ex_index = 0;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     formulation.get_response(0, 3600);
@@ -791,7 +788,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_0_a) {
 TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_0_b) {
     int ex_index = 0;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     int i = 0;
@@ -811,7 +808,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
 #if NGEN_WITH_PYTHON
     int ex_index = 1;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
     //Init the test grids #FIXME do this better...highly volitile if example changes...
     //This only works if the python module is at index 1 in the multi BMI layers, and would need repeated
@@ -838,7 +835,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
 #if NGEN_WITH_PYTHON
     int ex_index = 1;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
     //Init the test grids #FIXME do this better...highly volitile if example changes...
     //This only works if the python module is at index 1 in the multi BMI layers, and would need repeated
@@ -865,7 +862,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
 TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_3_a) {
     int ex_index = 3;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     int i = 0;
@@ -881,7 +878,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_3_a) {
 TEST_F(Bmi_Multi_Formulation_Test, OutputHeaderFieldsMatchConfiguredOrder_3) {
     int ex_index = 3;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     std::vector<std::string> names;
@@ -895,7 +892,7 @@ TEST_F(Bmi_Multi_Formulation_Test, OutputHeaderFieldsMatchConfiguredOrder_3) {
 TEST_F(Bmi_Multi_Formulation_Test, GetIdAndCatchmentId) {
     int ex_index = 3;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
     ASSERT_EQ(formulation.get_id(), "cat-27");
     ASSERT_EQ(get_friend_catchment_id(formulation), "cat-27");
@@ -908,7 +905,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetIdAndCatchmentId) {
 TEST_F(Bmi_Multi_Formulation_Test, GetAvailableVariableNames) {
     int ex_index = 1;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
     
     const auto actual_names =  formulation.get_available_variable_names();
@@ -937,7 +934,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetAvailableVariableNames) {
 TEST_F(Bmi_Multi_Formulation_Test, MassBalanceCheck) {
     int ex_index = 6;
 
-    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
     formulation.create_formulation(config_prop_ptree[ex_index]);
     
     formulation.check_mass_balance(0, 1, "t0");

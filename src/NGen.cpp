@@ -434,7 +434,7 @@ int main(int argc, char* argv[]) {
 
     std::shared_ptr<realization::Formulation_Manager> manager =
         std::make_shared<realization::Formulation_Manager>(realization_config);
-    manager->read(simulation_time_config, catchment_collection, utils::getStdOut());
+    manager->read(simulation_time_config, catchment_collection);
 
     //TODO refactor manager->read so certain configs can be queried before the entire
     //realization collection is created

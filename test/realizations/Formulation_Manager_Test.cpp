@@ -3,7 +3,6 @@
 #include "DataProvider.hpp"
 #include "DataProviderSelectors.hpp"
 #include "FileChecker.h"
-#include "StreamHandler.hpp"
 #include "gtest/gtest.h"
 #include <Formulation_Manager.hpp>
 #include <Catchment_Formulation.hpp>
@@ -1130,9 +1129,6 @@ TEST_F(Formulation_Manager_Test, basic_reading_1) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
@@ -1140,7 +1136,7 @@ TEST_F(Formulation_Manager_Test, basic_reading_1) {
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -1156,9 +1152,6 @@ TEST_F(Formulation_Manager_Test, basic_reading_2) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
@@ -1166,7 +1159,7 @@ TEST_F(Formulation_Manager_Test, basic_reading_2) {
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -1267,13 +1260,9 @@ TEST_F(Formulation_Manager_Test, aggregated_catchment_output_writes_single_file)
     boost::property_tree::ptree cfg;
     simulation_time_params sim_time = get_time_from_load_realization_config(stream, cfg);
 
-    std::ostream* raw = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw, [](void*){});
-    utils::StreamHandler out(s_ptr);
-
     {
         auto manager = std::make_shared<realization::Formulation_Manager>(cfg);
-        manager->read(sim_time, build_catchments({"cat-52", "cat-67"}, "nex-1"), out);
+        manager->read(sim_time, build_catchments({"cat-52", "cat-67"}, "nex-1"));
         // Mirror the driver's per_formulation wiring: gather every catchment's columns, then
         // construct the manager with the full set (output is owned by the driver, not HY_Features);
         // the aggregated file name defaults.
@@ -1303,15 +1292,12 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -1341,14 +1327,11 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 1);
     ASSERT_TRUE(manager.contains("cat-67"));
@@ -1383,15 +1366,12 @@ TEST_F(Formulation_Manager_Test, basic_run_9) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -1425,14 +1405,11 @@ TEST_F(Formulation_Manager_Test, basic_run_10) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 1);
     ASSERT_TRUE(manager.contains("cat-67"));
@@ -1469,15 +1446,12 @@ TEST_F(Formulation_Manager_Test, cache_bmi_var_metadata_1) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -1505,15 +1479,12 @@ TEST_F(Formulation_Manager_Test, cache_bmi_var_metadata_9) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -1539,15 +1510,12 @@ TEST_F(Formulation_Manager_Test, cache_bmi_var_metadata_10) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -1574,15 +1542,12 @@ TEST_F(Formulation_Manager_Test, cache_bmi_var_metadata_11) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     this->add_feature("cat-52");
     this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -1602,16 +1567,13 @@ TEST_F(Formulation_Manager_Test, read_extra) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     ASSERT_TRUE(manager.is_empty());
 
     this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 1);
     ASSERT_TRUE(manager.contains("cat-67"));
@@ -1624,16 +1586,13 @@ TEST_F(Formulation_Manager_Test, init_config_pattern_match_global) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     ASSERT_TRUE(manager.is_empty());
 
     this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 1);
     ASSERT_TRUE(manager.contains("cat-67"));
@@ -1646,16 +1605,13 @@ TEST_F(Formulation_Manager_Test, init_config_pattern_match_specific) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     ASSERT_TRUE(manager.is_empty());
 
     this->add_feature("cat-67");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 1);
     ASSERT_TRUE(manager.contains("cat-67"));
@@ -1668,15 +1624,12 @@ TEST_F(Formulation_Manager_Test, forcing_provider_specification) {
     boost::property_tree::ptree realization_config;
     simulation_time_params simulation_time_config = get_time_from_load_realization_config(stream, realization_config);
 
-    std::ostream* raw_pointer = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(realization_config);
 
     this->add_feature("cat-67");
     this->add_feature("cat-27115");
-    manager.read(simulation_time_config, this->fabric, catchment_output);
+    manager.read(simulation_time_config, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 2);
     ASSERT_TRUE(manager.contains("cat-67"));
@@ -1704,10 +1657,6 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
 
     std::stringstream stream_b;
     stream_b << fix_paths(EXAMPLE_5_b);
-
-    std::ostream* ptr = &std::cout;
-    std::shared_ptr<std::ostream> s_ptr(ptr, [](void*) {});
-    utils::StreamHandler catchment_output(s_ptr);
 
     time_step_t ts = 2;
 
@@ -1767,7 +1716,7 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
       { "e",           geojson::JSONProperty{"e",           2.71828 } }
     });
 
-    manager.read(simulation_time_config_a, this->fabric, catchment_output);
+    manager.read(simulation_time_config_a, this->fabric);
 
     ASSERT_EQ(manager.get_size(), 3);
     check_formulation_values(manager, "cat-67",    { 1.70352, 10.0 });
@@ -1798,7 +1747,7 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
       { "val",          geojson::JSONProperty{"val", 3} }
     });
     
-    manager.read(simulation_time_config_b, this->fabric, catchment_output);
+    manager.read(simulation_time_config_b, this->fabric);
     
     check_formulation_values(manager, "cat-27",    { 3.00000, 18.0 });
     check_formulation_values(manager, "cat-67", { 7.41722, 9231 });

@@ -4,10 +4,8 @@
 namespace realization {
 
     Catchment_Formulation::Catchment_Formulation(std::string id,
-                                                 std::shared_ptr<data_access::GenericDataProvider> forcing,
-                                                 utils::StreamHandler output_stream)
+                                                 std::shared_ptr<data_access::GenericDataProvider> forcing)
         : Formulation(id)
-        , HY_CatchmentArea(output_stream)
         , forcing(forcing)
     {
         // Assume the catchment ID is equal to or embedded in the formulation `id`

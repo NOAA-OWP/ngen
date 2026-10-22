@@ -24,8 +24,8 @@
 namespace realization {
     template<class T>
     static constructor create_formulation_constructor() {
-        return [](std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream) -> std::shared_ptr<Catchment_Formulation>{
-            return std::make_shared<T>(id, forcing_provider, output_stream);
+        return [](std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider) -> std::shared_ptr<Catchment_Formulation>{
+            return std::make_shared<T>(id, forcing_provider);
         };
     }
 
@@ -46,8 +46,7 @@ namespace realization {
     std::shared_ptr<Catchment_Formulation> construct_formulation(
         std::string formulation_type,
         std::string identifier,
-        forcing_params &forcing_config,
-        utils::StreamHandler output_stream
+        forcing_params &forcing_config
     ) {
         constructor formulation_constructor = formulation_constructors.at(formulation_type);
 
@@ -82,7 +81,7 @@ namespace realization {
                     "\", formulation_type: \"" + formulation_type +
                     "\", provider: \"" + forcing_config.provider + "\"");
         }
-        return formulation_constructor(identifier, fp, output_stream);
+        return formulation_constructor(identifier, fp);
     }
 
     std::map<std::string, constructor> formulation_constructors = {

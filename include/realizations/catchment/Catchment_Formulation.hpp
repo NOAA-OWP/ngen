@@ -12,7 +12,7 @@ namespace realization {
 
     class Catchment_Formulation : public Formulation, public HY_CatchmentArea {
         public:
-            Catchment_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream);
+            Catchment_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing);
             Catchment_Formulation(std::string id);
 
             /**

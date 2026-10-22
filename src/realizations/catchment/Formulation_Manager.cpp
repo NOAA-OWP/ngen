@@ -26,7 +26,7 @@ Formulation_Manager::Formulation_Manager(boost::property_tree::ptree loaded_tree
 }
 
 void Formulation_Manager::read(simulation_time_params &simulation_time_config,
-                               geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
+                               geojson::GeoJSON fabric) {
     //TODO seperate the parsing of configuration options like time
     //and routing and other non feature specific tasks from this main function
     //which has to iterate the entire hydrofabric.
@@ -88,8 +88,7 @@ void Formulation_Manager::read(simulation_time_params &simulation_time_config,
                     layer_desc.id,
                     construct_formulation_from_config(simulation_time_config,
                     "layer-"+std::to_string(layer_desc.id),
-                    layer.formulation,
-                    output_stream
+                    layer.formulation
                     )
                 );
             }
@@ -177,8 +176,7 @@ void Formulation_Manager::read(simulation_time_params &simulation_time_config,
           auto formulation = this->construct_formulation_from_config(
                                                                      simulation_time_config,
                                                                      catchment_config.first,
-                                                                     catchment_formulation,
-                                                                     output_stream
+                                                                     catchment_formulation
                                                                      );
           {
               std::lock_guard l(formulations_mutex);
@@ -195,7 +193,7 @@ void Formulation_Manager::read(simulation_time_params &simulation_time_config,
         }
 
         std::shared_ptr<Catchment_Formulation> missing_formulation =
-            this->construct_missing_formulation(location, output_stream, simulation_time_config);
+            this->construct_missing_formulation(location, simulation_time_config);
 
         std::lock_guard insertion(formulations_mutex);
         this->add_formulation(missing_formulation);
@@ -275,8 +273,7 @@ ngen::LayerDataStorage& Formulation_Manager::get_layer_metadata() { return layer
 std::shared_ptr<Catchment_Formulation> Formulation_Manager::construct_formulation_from_config(
     simulation_time_params &simulation_time_config,
     std::string identifier,
-    realization::config::Config& catchment_formulation,
-    utils::StreamHandler output_stream
+    realization::config::Config& catchment_formulation
 ) {
     if(!formulation_exists(catchment_formulation.formulation.type)){
         throw std::runtime_error("Catchment " + identifier + " failed initialization: '" +
@@ -308,7 +305,7 @@ std::shared_ptr<Catchment_Formulation> Formulation_Manager::construct_formulatio
     }
 
     forcing_params forcing_config = this->get_forcing_params(catchment_formulation.forcing.parameters, identifier, simulation_time_config);
-    std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(catchment_formulation.formulation.type, identifier, forcing_config, output_stream);
+    std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(catchment_formulation.formulation.type, identifier, forcing_config);
     //, geometry);
 
     Catchment_Formulation::config_pattern_substitution(catchment_formulation.formulation.parameters,
@@ -323,11 +320,11 @@ std::shared_ptr<Catchment_Formulation> Formulation_Manager::construct_formulatio
     return constructed_formulation;
 }
 
-std::shared_ptr<Catchment_Formulation> Formulation_Manager::construct_missing_formulation(geojson::Feature& feature, utils::StreamHandler output_stream, simulation_time_params &simulation_time_config){
+std::shared_ptr<Catchment_Formulation> Formulation_Manager::construct_missing_formulation(geojson::Feature& feature, simulation_time_params &simulation_time_config){
     const std::string identifier = feature->get_id();
 
     forcing_params forcing_config = this->get_forcing_params(global_config.forcing.parameters, identifier, simulation_time_config);
-    std::shared_ptr<Catchment_Formulation> missing_formulation = construct_formulation(global_config.formulation.type, identifier, forcing_config, output_stream);
+    std::shared_ptr<Catchment_Formulation> missing_formulation = construct_formulation(global_config.formulation.type, identifier, forcing_config);
     // Need to work with a copy, since it is altered in-place
     realization::config::Config global_copy = global_config;
     Catchment_Formulation::config_pattern_substitution(global_copy.formulation.parameters,

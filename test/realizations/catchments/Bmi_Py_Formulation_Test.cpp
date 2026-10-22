@@ -198,8 +198,7 @@ void Bmi_Py_Formulation_Test::SetUp() {
         generate_realization_config((int)i);
 
         examples[i].formulation = std::make_shared<Bmi_Py_Formulation>(examples[i].catchment_id,
-                                                                       std::make_unique<CsvPerFeatureForcingProvider>(*examples[i].forcing_params),
-                                                                       utils::StreamHandler());
+                                                                       std::make_unique<CsvPerFeatureForcingProvider>(*examples[i].forcing_params));
         examples[i].formulation->create_formulation(examples[i].realization_config_properties_tree);
 
         //Init the test grids
@@ -248,7 +247,6 @@ void Bmi_Py_Formulation_Test::generate_realization_config(int ex_idx) {
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME + "\": \"" + examples[ex_idx].module_name + "\","
               "                \"init_config\": \"" + examples[ex_idx].bmi_init_config + "\","
               "                \"main_output_variable\": \"" + examples[ex_idx].main_output_variable + "\","
-              "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
               "                      \"INPUT_VAR_2\": \"" + AORC_FIELD_NAME_TEMP_2M_AG + "\","
               "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\","

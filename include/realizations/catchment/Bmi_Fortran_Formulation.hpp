@@ -19,7 +19,7 @@ namespace realization {
 
     public:
 
-        Bmi_Fortran_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream);
+        Bmi_Fortran_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing);
 
         std::string get_formulation_type() const override;
 

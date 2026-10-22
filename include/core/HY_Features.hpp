@@ -28,7 +28,8 @@ namespace hy_features {
      * @code {.cpp}
      * geojson::GeoJSON catchment_collection = geojson::read("catchment_data.geojson", std::vector<std::string>());
      * std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>("realization_config.json");
-     * manager->read(catchment_collection, utils::getStdOut());
+     * simulation_time_params simulation_time_config("2015-12-01 00:00:00", "2015-12-30 23:00:00", 3600);
+     * manager->read(simulation_time_config, catchment_collection);
      * 
      * hy_features::HY_Features features = hy_features::HY_Features(catchment_collection, manager);
      * int time_index = 0;
