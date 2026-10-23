@@ -102,6 +102,7 @@ var hierarchy =
       [ "models::bmi::protocols::NgenMassBalance", "classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html", null ]
     ] ],
     [ "models::bmi::protocols::NgenBmiProtocols", "classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html", null ],
+    [ "multithreading::details::string_literal< N >", "structmultithreading_1_1details_1_1string__literal.html", null ],
     [ "network::Network", "classnetwork_1_1_network.html", null ],
     [ "network::VertexProperty", "structnetwork_1_1_vertex_property.html", null ],
     [ "Network_Test", "class_network___test.html", [

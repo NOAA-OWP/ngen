@@ -19,6 +19,7 @@ var namespaces_dup =
       [ "logging_mutex", "namespacelogging.html#a1a38be1f0e4be2f2bfdee8b769752d30", null ]
     ] ],
     [ "models", "namespacemodels.html", "namespacemodels" ],
+    [ "multithreading", "namespacemultithreading.html", "namespacemultithreading" ],
     [ "network", "namespacenetwork.html", "namespacenetwork" ],
     [ "ngen", "namespacengen.html", "namespacengen" ],
     [ "nonstd", "namespacenonstd.html", "namespacenonstd" ],

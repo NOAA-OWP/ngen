@@ -55,6 +55,11 @@ var annotated_dup =
         [ "State_Exception", "classmodels_1_1external_1_1_state___exception.html", "classmodels_1_1external_1_1_state___exception" ]
       ] ]
     ] ],
+    [ "multithreading", "namespacemultithreading.html", [
+      [ "details", "namespacemultithreading_1_1details.html", [
+        [ "string_literal", "structmultithreading_1_1details_1_1string__literal.html", "structmultithreading_1_1details_1_1string__literal" ]
+      ] ]
+    ] ],
     [ "network", "namespacenetwork.html", [
       [ "Network", "classnetwork_1_1_network.html", "classnetwork_1_1_network" ],
       [ "preorder_visitor", "structnetwork_1_1preorder__visitor.html", "structnetwork_1_1preorder__visitor" ],

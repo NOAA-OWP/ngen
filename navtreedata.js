@@ -432,8 +432,8 @@ var NAVTREEINDEX =
 "classutils_1_1_per_nexus_csv_output_mgr.html#abbbef8d4fbf17950d3d5e3b7d4848312",
 "md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md136",
 "namespacehy__features_1_1hydrolocation.html#a7fcfe40520bcda2cd5be66a5b5bbbc0ba087b9933bc9964f1267b02216f31ac03",
-"struct_grid_specification.html",
-"structngen_1_1sqlite_1_1database_1_1iterator.html#ab17b2f5d88168158db9acf9ca0d2c3ba"
+"struct_grid_data_selector.html#ad72a6cca644c1f62a9a9a9bf550becf6",
+"structngen_1_1sqlite_1_1database_1_1iterator.html#a675a7559d402dc2579e006fdbf8a410a"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
