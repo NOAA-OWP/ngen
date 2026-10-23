@@ -26,3 +26,6 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::path_tokens
         )
 
+if(NGEN_WITH_OPENMP)
+    target_link_libraries(realizations_catchment PUBLIC OpenMP::OpenMP_CXX)
+endif()
