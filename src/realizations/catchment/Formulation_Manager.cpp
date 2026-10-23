@@ -1,4 +1,5 @@
 #include <Formulation_Manager.hpp>
+#include "realizations/config/serialization_helper.hpp"
 
 #include <cerrno>
 #include <dirent.h>
@@ -49,6 +50,10 @@ void Formulation_Manager::read(simulation_time_params &simulation_time_config,
         const char* key = realization::config::to_key_string(which);
         auto possible_block = tree.get_child_optional(key);
         if (possible_block) {
+            // Resolve path tokens before the block is inherited by formulations.
+            if (which == realization::config::GlobalConfigKey::SERIALIZATION) {
+                realization::config::apply_serialization_path_token_resolution(*possible_block);
+            }
             global_configs.emplace(
                 key,
                 geojson::JSONProperty(key, *possible_block)
@@ -310,6 +315,10 @@ std::shared_ptr<Catchment_Formulation> Formulation_Manager::construct_formulatio
                                                        BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG, "{{id}}",
                                                        identifier);
 
+    for (auto which : { realization::config::GlobalConfigKey::SERIALIZATION }) {
+        realization::config::apply_config(
+            catchment_formulation.formulation.parameters, global_configs, which);
+    }
     constructed_formulation->create_formulation(catchment_formulation.formulation.parameters);
     return constructed_formulation;
 }
@@ -332,6 +341,9 @@ std::shared_ptr<Catchment_Formulation> Formulation_Manager::construct_missing_fo
     //Make a copy of the global configuration so parameters don't clash when linking to external data
     auto formulation =  realization::config::Formulation(global_copy.formulation);
     formulation.link_external(feature);
+    for (auto which : { realization::config::GlobalConfigKey::SERIALIZATION }) {
+        realization::config::apply_config(formulation.parameters, global_configs, which);
+    }
     missing_formulation->create_formulation(formulation.parameters);
 
     return missing_formulation;
