@@ -1,6 +1,7 @@
 #ifndef NGEN_BMI_UTILITIES_HPP
 #define NGEN_BMI_UTILITIES_HPP
 
+#include <algorithm>
 #include <cstdint>
 #include <iterator>
 #include <memory>

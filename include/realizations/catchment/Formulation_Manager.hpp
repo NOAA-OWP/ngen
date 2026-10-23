@@ -18,8 +18,6 @@
 #include "realizations/config/layer.hpp"
 #include "realizations/config/output.hpp"
 #include "realizations/config/global_config.hpp"
-#include "realizations/config/serialization_helper.hpp"
-#include "path_tokens.hpp"
 
 namespace realization {
 
@@ -39,31 +37,6 @@ namespace realization {
             std::shared_ptr<Catchment_Formulation> get_domain_formulation(long id) const;
 
             bool has_domain_formulation(int id) const;
-                // Parse realization-level inheritable config blocks from the
-                // top-level JSON (see realization::config::GlobalConfigKey).
-                // Each recognized block is stored in `global_configs` and
-                // later merged into every formulation's params via
-                // `realization::config::apply_config`. Per-formulation
-                // entries still win — the parsed block is a default.
-
-                // Iterate over each inheritable block, add new ones here.
-                for (auto which : { realization::config::GlobalConfigKey::SERIALIZATION }) {
-                    const char* key = realization::config::to_key_string(which);
-                    auto possible_block = tree.get_child_optional(key);
-                    if (possible_block) {
-                        // Resolve `{{rank}}`/`{{pid}}`/`{{host}}`/`{{date}}`
-                        // tokens in the path related fields before they
-                        // propagate into every formulation.
-                        if (which == realization::config::GlobalConfigKey::SERIALIZATION) {
-                            realization::config::apply_serialization_path_token_resolution(
-                                *possible_block);
-                        }
-                        global_configs.emplace(
-                            key,
-                            geojson::JSONProperty(key, *possible_block)
-                        );
-                    }
-                }
 
             bool contains(std::string identifier) const;
 
