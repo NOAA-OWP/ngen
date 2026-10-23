@@ -31,3 +31,16 @@ target_sources(ngen_parallel
   PRIVATE
     "${CMAKE_CURRENT_LIST_DIR}/parallel_utils.cpp"
 )
+
+add_library(ngen_multithreading)
+add_library(NGen::multithreading ALIAS ngen_multithreading)
+
+target_include_directories(ngen_multithreading
+  PUBLIC
+    ${NGEN_INC_DIR}
+)
+
+target_sources(ngen_multithreading
+  PRIVATE
+    "${CMAKE_CURRENT_LIST_DIR}/multithreading.cpp"
+)
