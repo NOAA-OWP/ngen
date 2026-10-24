@@ -1438,7 +1438,9 @@ end function test_finalize
     class(bmi_test_bmi), intent(inout) :: this
     if (allocated(this%serialized_state)) deallocate(this%serialized_state)
     allocate(this%serialized_state(serialized_state_len(this)))
-    this%serialized_size = c_sizeof(this%serialized_state)
+    ! Deferred-shape allocatable arrays are not interoperable C_SIZEOF arguments on all compilers.
+    ! The buffer stores default integers; count their bytes using a scalar of that kind.
+    this%serialized_size = size(this%serialized_state, kind=c_int64_t) * c_sizeof(0)
     call visit_serialization_fields(this, this%serialized_state, SAVE)
   end subroutine test_create_serialization
 
