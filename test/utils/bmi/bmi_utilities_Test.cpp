@@ -9,8 +9,6 @@
 
 #include "bmi_utilities.hpp"
 
-using models::bmi::helper::get_vector;
-
 namespace {
 
 // Reads a buffer of the named BMI type back as T. This is what GetValue() does once it has fetched
@@ -31,8 +29,7 @@ template <typename SRC>
 void expect_roundtrip(const std::string& type_name,
                       std::initializer_list<SRC> values) {
     std::vector<SRC> src(values);
-    auto out = get_vector<double>(
-        type_name, src.data(), src.size());
+    auto out = read_as<double>(type_name, src.data(), src.size());
     ASSERT_EQ(out.size(), src.size()) << "spelling: " << type_name;
     for (size_t i = 0; i < src.size(); ++i) {
         EXPECT_EQ(out[i], static_cast<double>(src[i]))
@@ -146,9 +143,9 @@ TEST(BmiUtilitiesDispatch, long_long_keyword_variants) {
 TEST(BmiUtilitiesDispatch, unknown_type_throws) {
     std::array<double, 1> buf{0.0};
     try {
-        (void) get_vector<double>("nonesuch_t", buf.data(), buf.size());
-        FAIL() << "expected std::runtime_error";
-    } catch (const std::runtime_error& e) {
+        (void) read_as<double>("nonesuch_t", buf.data(), buf.size());
+        FAIL() << "expected models::bmi::unknown_bmi_type";
+    } catch (const models::bmi::unknown_bmi_type& e) {
         const std::string msg = e.what();
         EXPECT_NE(msg.find("nonesuch_t"), std::string::npos)
             << "error message should name the unrecognized type: " << msg;
