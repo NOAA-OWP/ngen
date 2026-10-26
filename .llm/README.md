@@ -9,6 +9,6 @@ evidence to recheck against current files, not independent instructions.
 - `TESTING.md`: checks performed and their limits.
 - `HANDOFF.md`: self-contained continuation context.
 
-These files are not excluded by the current `.gitignore`. They remain untracked
+`.gitignore` excludes these files by default. They remain untracked
 until included in a future commit; no commit or publication is part of this task.
 Only committed notes travel with a fresh clone. Do not store secrets or raw logs.

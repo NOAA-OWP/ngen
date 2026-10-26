@@ -137,7 +137,6 @@ data/forcing/huc01_demo/
 data/hydrofabric/huc01_demo/
 
 # LLM Resources
-.llm/DECISIONS.md
-.llm/HANDOFF.md
-.llm/STATUS.md
-.llm/TESTING.md
+.llm/*
+!.llm/Skills/
+!.llm/scripts/
