@@ -1,0 +1,3 @@
+<map id="models::bmi::protocols::ReservedVar" name="models::bmi::protocols::ReservedVar">
+<area shape="rect" id="Node000001" title="(Reserved&#45;name, expected&#45;unit&#45;string) pair used by both the save and restore protocols&#39; check_support..." alt="" coords="5,5,144,107"/>
+</map>

@@ -502,7 +502,7 @@ template&lt;typename F &gt; </div>
 <div class="line">        <span class="keywordflow">return</span> std::make_shared&lt;T&gt;(<span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(value));</div>
 <div class="line">    });</div>
 <div class="line">}</div>
-<div class="ttc" id="anamespacemodels_1_1bmi_html_ad08b04570775a5bfade8aa39deb0d751"><div class="ttname"><a href="#ad08b04570775a5bfade8aa39deb0d751">models::bmi::with_bmi_type</a></div><div class="ttdeci">auto with_bmi_type(const std::string &amp;type, F &amp;&amp;f)</div><div class="ttdoc">Call f with the C++ type that a BMI type name denotes.</div><div class="ttdef"><b>Definition</b> bmi_utilities.hpp:85</div></div>
+<div class="ttc" id="anamespacemodels_1_1bmi_html_ad08b04570775a5bfade8aa39deb0d751"><div class="ttname"><a href="#ad08b04570775a5bfade8aa39deb0d751">models::bmi::with_bmi_type</a></div><div class="ttdeci">auto with_bmi_type(const std::string &amp;type, F &amp;&amp;f)</div><div class="ttdoc">Call f with the C++ type that a BMI type name denotes.</div><div class="ttdef"><b>Definition</b> bmi_utilities.hpp:86</div></div>
 </div><!-- fragment --><p>Two things there are easy to get wrong.</p>
 <p>The lambda takes no arguments. <code>value</code> arrives by capture, which leaves the parameter list free for the one thing this function supplies &ndash; <code>f.template operator()&lt;T&gt;()</code> passes a type and nothing else. That is what lets one table serve callers whose data is a scalar, an iterator pair, or a pointer and a count: each seals its own data into the closure.</p>
 <p>The <code>-&gt; std::shared_ptr&lt;void&gt;</code> is load-bearing. <code>make_shared&lt;T&gt;</code> yields a <code>shared_ptr&lt;T&gt;</code>, a different type in every branch, and the branches have to agree on one return type. Converting there is the only place T is still known. Omitting it is a compile error rather than a silent conversion &ndash; as is a body that does not compile for every type below, even one no caller ever asks for, since all of them are instantiated.</p>
@@ -531,7 +531,7 @@ template&lt;typename F &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacemodels.html">models</a></li><li class="navelem"><a class="el" href="namespacemodels_1_1bmi.html">bmi</a></li>
-    <li class="footer">Generated on Fri Oct 23 2026 21:22:03 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Oct 26 2026 17:20:05 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

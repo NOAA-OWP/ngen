@@ -1,0 +1,7 @@
+<map id="ngen::serialization::FileBackend" name="ngen::serialization::FileBackend">
+<area shape="rect" id="Node000001" title=" " alt="" coords="68,236,244,684"/>
+<area shape="rect" id="Node000002" href="$classngen_1_1serialization_1_1_record_backend.html" title="Abstract storage interface for Records." alt="" coords="5,5,136,188"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,202,106,236,101,237,93,204"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="160,56,326,138"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="232,153,212,237,207,236,227,151"/>
+</map>

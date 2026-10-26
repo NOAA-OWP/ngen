@@ -39,11 +39,22 @@ var annotated_dup =
     [ "models", "namespacemodels.html", [
       [ "bmi", "namespacemodels_1_1bmi.html", [
         [ "protocols", "namespacemodels_1_1bmi_1_1protocols.html", [
+          [ "anonymous_namespace{serialization.cpp}", "namespacemodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03.html", [
+            [ "ScopedCapture", "classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html", "classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture" ]
+          ] ],
+          [ "serialization", "namespacemodels_1_1bmi_1_1protocols_1_1serialization.html", [
+            [ "wire_format", "namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html", [
+              [ "RecordPrefix", "structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html", "structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix" ]
+            ] ]
+          ] ],
           [ "Context", "structmodels_1_1bmi_1_1protocols_1_1_context.html", "structmodels_1_1bmi_1_1protocols_1_1_context" ],
           [ "NgenBmiProtocol", "classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html", "classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol" ],
           [ "NgenBmiProtocols", "classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html", "classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols" ],
+          [ "NgenDeserializationProtocol", "classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html", "classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol" ],
           [ "NgenMassBalance", "classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html", "classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance" ],
-          [ "ProtocolError", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error" ]
+          [ "NgenSerializationProtocol", "classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html", "classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol" ],
+          [ "ProtocolError", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error" ],
+          [ "ReservedVar", "structmodels_1_1bmi_1_1protocols_1_1_reserved_var.html", "structmodels_1_1bmi_1_1protocols_1_1_reserved_var" ]
         ] ],
         [ "AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter" ],
         [ "Bmi_Adapter", "classmodels_1_1bmi_1_1_bmi___adapter.html", "classmodels_1_1bmi_1_1_bmi___adapter" ],
@@ -68,6 +79,14 @@ var annotated_dup =
     [ "ngen", "namespacengen.html", [
       [ "geopackage", "namespacengen_1_1geopackage.html", [
         [ "wkb", "structngen_1_1geopackage_1_1wkb.html", "structngen_1_1geopackage_1_1wkb" ]
+      ] ],
+      [ "serialization", "namespacengen_1_1serialization.html", [
+        [ "detail", "namespacengen_1_1serialization_1_1detail.html", [
+          [ "RecordT", "structngen_1_1serialization_1_1detail_1_1_record_t.html", "structngen_1_1serialization_1_1detail_1_1_record_t" ]
+        ] ],
+        [ "BackendError", "structngen_1_1serialization_1_1_backend_error.html", "structngen_1_1serialization_1_1_backend_error" ],
+        [ "FileBackend", "classngen_1_1serialization_1_1_file_backend.html", "classngen_1_1serialization_1_1_file_backend" ],
+        [ "RecordBackend", "classngen_1_1serialization_1_1_record_backend.html", "classngen_1_1serialization_1_1_record_backend" ]
       ] ],
       [ "sqlite", "namespacengen_1_1sqlite.html", [
         [ "database", "classngen_1_1sqlite_1_1database.html", "classngen_1_1sqlite_1_1database" ],

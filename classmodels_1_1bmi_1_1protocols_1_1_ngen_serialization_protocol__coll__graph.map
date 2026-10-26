@@ -1,0 +1,13 @@
+<map id="models::bmi::protocols::NgenSerializationProtocol" name="models::bmi::protocols::NgenSerializationProtocol">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,642,193,906"/>
+<area shape="rect" id="Node000002" href="$classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html" title=" " alt="" coords="8,396,148,579"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,593,92,642,87,642,83,593"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="173,446,367,528"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="249,529,189,628,184,626,244,526"/>
+<area shape="rect" id="Node000004" href="$classngen_1_1serialization_1_1_record_backend.html" title="Abstract storage interface for Records." alt="" coords="152,135,284,318"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="239,317,261,429,256,430,233,318"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="307,193,433,259"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="355,274,288,448,283,446,350,272"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="361,5,379,72"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="373,72,373,176,367,176,367,72"/>
+</map>

@@ -11,8 +11,12 @@ var searchData=
   ['legacy_5fdisable_5fcatchment_5fkey_8',['LEGACY_DISABLE_CATCHMENT_KEY',['../namespacerealization_1_1config.html#a77d11909bf8a870e68199dd700c29b67',1,'realization::config']]],
   ['legacy_5foutput_5froot_5fkey_9',['LEGACY_OUTPUT_ROOT_KEY',['../namespacerealization_1_1config.html#aa62ced51c5055676f21301e815749911',1,'realization::config']]],
   ['legacy_5fper_5fformulation_5fkey_10',['LEGACY_PER_FORMULATION_KEY',['../namespacerealization_1_1config.html#ae48cbacb49a069033c5af2108530a4b9',1,'realization::config']]],
-  ['link_5fkey_11',['link_key',['../class_network___test.html#ae02d327028f826a5e29bff896ec30232',1,'Network_Test']]],
-  ['logging_5fmutex_12',['logging_mutex',['../namespacelogging.html#a1a38be1f0e4be2f2bfdee8b769752d30',1,'logging']]],
-  ['longitude_13',['longitude',['../class_csv_per_feature_forcing_provider.html#ac884269b16a45322c1b089fb29288012',1,'CsvPerFeatureForcingProvider']]],
-  ['lower_5fcatchment_14',['lower_catchment',['../class_h_y___catchment.html#ac6c37362d4f55aed074b02a0ae6d8a3d',1,'HY_Catchment']]]
+  ['library_5fversion_5fmajor_11',['LIBRARY_VERSION_MAJOR',['../namespacengen_1_1serialization.html#aff24c1a5112f35b3202ed473217b8f56',1,'ngen::serialization']]],
+  ['library_5fversion_5fminor_12',['LIBRARY_VERSION_MINOR',['../namespacengen_1_1serialization.html#a4f6caba5b9e2be9753d88ad5970154f6',1,'ngen::serialization']]],
+  ['library_5fversion_5fpatch_13',['LIBRARY_VERSION_PATCH',['../namespacengen_1_1serialization.html#aa21238c7e1815f25467f61b0526e9e0d',1,'ngen::serialization']]],
+  ['library_5fversion_5fstring_14',['LIBRARY_VERSION_STRING',['../namespacengen_1_1serialization.html#ae57e04c66d7d4eddbbcbe5c36bf48d22',1,'ngen::serialization']]],
+  ['link_5fkey_15',['link_key',['../class_network___test.html#ae02d327028f826a5e29bff896ec30232',1,'Network_Test']]],
+  ['logging_5fmutex_16',['logging_mutex',['../namespacelogging.html#a1a38be1f0e4be2f2bfdee8b769752d30',1,'logging']]],
+  ['longitude_17',['longitude',['../class_csv_per_feature_forcing_provider.html#ac884269b16a45322c1b089fb29288012',1,'CsvPerFeatureForcingProvider']]],
+  ['lower_5fcatchment_18',['lower_catchment',['../class_h_y___catchment.html#ac6c37362d4f55aed074b02a0ae6d8a3d',1,'HY_Catchment']]]
 ];

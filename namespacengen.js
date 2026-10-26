@@ -1,6 +1,7 @@
 var namespacengen =
 [
     [ "geopackage", "namespacengen_1_1geopackage.html", "namespacengen_1_1geopackage" ],
+    [ "serialization", "namespacengen_1_1serialization.html", "namespacengen_1_1serialization" ],
     [ "sqlite", "namespacengen_1_1sqlite.html", "namespacengen_1_1sqlite" ],
     [ "srs", "namespacengen_1_1srs.html", "namespacengen_1_1srs" ],
     [ "traits", "namespacengen_1_1traits.html", "namespacengen_1_1traits" ],

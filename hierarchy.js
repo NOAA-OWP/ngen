@@ -97,11 +97,16 @@ var hierarchy =
     [ "HY_HydroNexus", "class_h_y___hydro_nexus.html", [
       [ "HY_PointHydroNexus", "class_h_y___point_hydro_nexus.html", null ]
     ] ],
+    [ "models::bmi::protocols::anonymous_namespace{serialization.cpp}::ScopedCapture", "classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html", null ],
     [ "models::bmi::protocols::Context", "structmodels_1_1bmi_1_1protocols_1_1_context.html", null ],
     [ "models::bmi::protocols::NgenBmiProtocol", "classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html", [
-      [ "models::bmi::protocols::NgenMassBalance", "classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html", null ]
+      [ "models::bmi::protocols::NgenDeserializationProtocol", "classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html", null ],
+      [ "models::bmi::protocols::NgenMassBalance", "classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html", null ],
+      [ "models::bmi::protocols::NgenSerializationProtocol", "classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html", null ]
     ] ],
     [ "models::bmi::protocols::NgenBmiProtocols", "classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html", null ],
+    [ "models::bmi::protocols::ReservedVar", "structmodels_1_1bmi_1_1protocols_1_1_reserved_var.html", null ],
+    [ "models::bmi::protocols::serialization::wire_format::RecordPrefix", "structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html", null ],
     [ "multithreading::details::string_literal< N >", "structmultithreading_1_1details_1_1string__literal.html", null ],
     [ "network::Network", "classnetwork_1_1_network.html", null ],
     [ "network::VertexProperty", "structnetwork_1_1_vertex_property.html", null ],
@@ -116,6 +121,19 @@ var hierarchy =
     ] ],
     [ "ngen::LayerDataStorage", "classngen_1_1_layer_data_storage.html", null ],
     [ "ngen::LayerDescription", "structngen_1_1_layer_description.html", null ],
+    [ "ngen::serialization::BackendError", "structngen_1_1serialization_1_1_backend_error.html", null ],
+    [ "ngen::serialization::detail::RecordT< PayloadT >", "structngen_1_1serialization_1_1detail_1_1_record_t.html", null ],
+    [ "ngen::serialization::FileBackend::Index", "classngen_1_1serialization_1_1_file_backend_1_1_index.html", null ],
+    [ "ngen::serialization::FileBackend::Index::Entry", "structngen_1_1serialization_1_1_file_backend_1_1_index_1_1_entry.html", null ],
+    [ "ngen::serialization::RecordBackend", "classngen_1_1serialization_1_1_record_backend.html", [
+      [ "ngen::serialization::FileBackend", "classngen_1_1serialization_1_1_file_backend.html", null ]
+    ] ],
+    [ "ngen::serialization::RecordBackend::Reader", "classngen_1_1serialization_1_1_record_backend_1_1_reader.html", [
+      [ "ngen::serialization::FileBackend::Reader", "classngen_1_1serialization_1_1_file_backend_1_1_reader.html", null ]
+    ] ],
+    [ "ngen::serialization::RecordBackend::Writer", "classngen_1_1serialization_1_1_record_backend_1_1_writer.html", [
+      [ "ngen::serialization::FileBackend::Writer", "classngen_1_1serialization_1_1_file_backend_1_1_writer.html", null ]
+    ] ],
     [ "ngen::sqlite::database", "classngen_1_1sqlite_1_1database.html", null ],
     [ "ngen::sqlite::database::deleter", "structngen_1_1sqlite_1_1database_1_1deleter.html", null ],
     [ "ngen::sqlite::database::iterator", "structngen_1_1sqlite_1_1database_1_1iterator.html", null ],
@@ -146,6 +164,9 @@ var hierarchy =
     [ "SelectorConfig", "struct_selector_config.html", null ],
     [ "Simulation_Time", "class_simulation___time.html", null ],
     [ "simulation_time_params", "structsimulation__time__params.html", null ],
+    [ "std::enable_shared_from_this", null, [
+      [ "ngen::serialization::FileBackend", "classngen_1_1serialization_1_1_file_backend.html", null ]
+    ] ],
     [ "std::exception", null, [
       [ "add_to_summed_nexus", "structadd__to__summed__nexus.html", null ],
       [ "completed_time_step", "structcompleted__time__step.html", null ],

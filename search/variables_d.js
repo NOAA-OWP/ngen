@@ -1,7 +1,7 @@
 var searchData=
 [
   ['n_0',['n',['../class_network___test.html#a470fa2e04fd1239f0932f52c7e6439d5',1,'Network_Test']]],
-  ['name_1',['name',['../structngen_1_1_layer_description.html#a8d632f5ca6bcbda986fde0f73105ba0e',1,'ngen::LayerDescription::name'],['../classrealization_1_1_bmi___var___details.html#abad567c8f0617b99c8ab5bb79a670a4e',1,'realization::Bmi_Var_Details::name']]],
+  ['name_1',['name',['../structngen_1_1_layer_description.html#a8d632f5ca6bcbda986fde0f73105ba0e',1,'ngen::LayerDescription::name'],['../classrealization_1_1_bmi___var___details.html#abad567c8f0617b99c8ab5bb79a670a4e',1,'realization::Bmi_Var_Details::name'],['../structmodels_1_1bmi_1_1protocols_1_1_reserved_var.html#a928f27f1d99de0ae1b692f32ef2fe958',1,'models::bmi::protocols::ReservedVar::name']]],
   ['names_5f_2',['names_',['../structngen_1_1sqlite_1_1database_1_1iterator.html#ab17b2f5d88168158db9acf9ca0d2c3ba',1,'ngen::sqlite::database::iterator']]],
   ['ncol_5f_3',['ncol_',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a0b1eab3cd2df38d55e1c8a368d2bd22a',1,'ngen::sqlite::database::iterator']]],
   ['neighbors_4',['neighbors',['../classgeojson_1_1_feature_base.html#ad2b3f513a87e2787c8450254c0187857',1,'geojson::FeatureBase']]],

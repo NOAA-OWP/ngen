@@ -1,0 +1,28 @@
+var classngen_1_1serialization_1_1_file_backend =
+[
+    [ "Index", "classngen_1_1serialization_1_1_file_backend_1_1_index.html", "classngen_1_1serialization_1_1_file_backend_1_1_index" ],
+    [ "Reader", "classngen_1_1serialization_1_1_file_backend_1_1_reader.html", "classngen_1_1serialization_1_1_file_backend_1_1_reader" ],
+    [ "Writer", "classngen_1_1serialization_1_1_file_backend_1_1_writer.html", "classngen_1_1serialization_1_1_file_backend_1_1_writer" ],
+    [ "~FileBackend", "classngen_1_1serialization_1_1_file_backend.html#a5f43ccd5b11609d1c0d33db40fe26955", null ],
+    [ "FileBackend", "classngen_1_1serialization_1_1_file_backend.html#a8f35cbf3258978f070a1ad7c0021f858", null ],
+    [ "build_index_locked_", "classngen_1_1serialization_1_1_file_backend.html#a7afdaa13aa3f1f36baec379d772d6453", null ],
+    [ "create", "classngen_1_1serialization_1_1_file_backend.html#acd1650c905a69c6a7c7d974fbe553045", null ],
+    [ "ensure_write_fd_locked_", "classngen_1_1serialization_1_1_file_backend.html#a6b4db06bc06a25aa7f29111d49e00bae", null ],
+    [ "finalize", "classngen_1_1serialization_1_1_file_backend.html#a06bc590c57071746e335ea70ee081425", null ],
+    [ "path", "classngen_1_1serialization_1_1_file_backend.html#abb0bcd23a2b3183b033a705d228abeff", null ],
+    [ "reader", "classngen_1_1serialization_1_1_file_backend.html#a8d00175a3b710dc188abfe5c05c1e505", null ],
+    [ "register_scope_", "classngen_1_1serialization_1_1_file_backend.html#a2fd2958f98e5c6153aa55bdd61e2d6af", null ],
+    [ "with_reader", "classngen_1_1serialization_1_1_file_backend.html#a3b415bbcf9ca0680d4c406813b135a83", null ],
+    [ "with_writer", "classngen_1_1serialization_1_1_file_backend.html#a5f919628ca11ae762e0b0aeac94b7f0d", null ],
+    [ "writer", "classngen_1_1serialization_1_1_file_backend.html#a51615949e3e20f6bc7554ba6ff858ad6", null ],
+    [ "deferred_errors_", "classngen_1_1serialization_1_1_file_backend.html#afe909965ca68942c173e4845bfe25994", null ],
+    [ "dirty_", "classngen_1_1serialization_1_1_file_backend.html#ac7587b62caa9bc017f8e3ce122a1efbc", null ],
+    [ "fd_", "classngen_1_1serialization_1_1_file_backend.html#a69adba04b3af92199c8c91bb6968c7b4", null ],
+    [ "index_", "classngen_1_1serialization_1_1_file_backend.html#a4edf786e10dcc7f55e84dc01f26d6c0d", null ],
+    [ "index_built_", "classngen_1_1serialization_1_1_file_backend.html#a4fb1219dafb4021eb20f305718a8b00f", null ],
+    [ "index_scope_", "classngen_1_1serialization_1_1_file_backend.html#ae278211c17094b67829c1ecee1c74caf", null ],
+    [ "io_mutex_", "classngen_1_1serialization_1_1_file_backend.html#a1c53b5276cb14958a6983554dbd014e3", null ],
+    [ "path_", "classngen_1_1serialization_1_1_file_backend.html#aa3f7811c1b01bd15be54a16ee6fcc1b7", null ],
+    [ "registry_", "classngen_1_1serialization_1_1_file_backend.html#a3071842ff0756ade20a561af9328766c", null ],
+    [ "registry_mutex_", "classngen_1_1serialization_1_1_file_backend.html#a795befd33909ff7fe535e558e2d17186", null ]
+];

@@ -1,381 +1,478 @@
 <toc label="NGen" topic="index.html">
-  <topic label="Next Gen Water Modeling Framework Prototype" href="index.html#autotoc_md31">
-    <topic label="Structural Diagrams" href="index.html#autotoc_md32"/>
-    <topic label="Dependencies" href="index.html#autotoc_md33"/>
-    <topic label="Installation" href="index.html#autotoc_md34"/>
-    <topic label="Configuration" href="index.html#autotoc_md35"/>
-    <topic label="Usage" href="index.html#autotoc_md36"/>
-    <topic label="How to test the software" href="index.html#autotoc_md37"/>
-    <topic label="How to debug the software" href="index.html#autotoc_md38"/>
-    <topic label="Known issues" href="index.html#autotoc_md39"/>
-    <topic label="Getting help" href="index.html#autotoc_md40"/>
-    <topic label="Getting involved" href="index.html#autotoc_md41"/>
-    <topic label="Open source licensing info" href="index.html#autotoc_md43"/>
-    <topic label="Credits and references" href="index.html#autotoc_md45"/>
+  <topic label="Next Gen Water Modeling Framework Prototype" href="index.html#autotoc_md60">
+    <topic label="Structural Diagrams" href="index.html#autotoc_md61"/>
+    <topic label="Dependencies" href="index.html#autotoc_md62"/>
+    <topic label="Installation" href="index.html#autotoc_md63"/>
+    <topic label="Configuration" href="index.html#autotoc_md64"/>
+    <topic label="Usage" href="index.html#autotoc_md65"/>
+    <topic label="How to test the software" href="index.html#autotoc_md66"/>
+    <topic label="How to debug the software" href="index.html#autotoc_md67"/>
+    <topic label="Known issues" href="index.html#autotoc_md68"/>
+    <topic label="Getting help" href="index.html#autotoc_md69"/>
+    <topic label="Getting involved" href="index.html#autotoc_md70"/>
+    <topic label="Open source licensing info" href="index.html#autotoc_md72"/>
+    <topic label="Credits and references" href="index.html#autotoc_md74"/>
+  </topic>
+  <topic label="&lt;tt&gt;ngen_serialization&lt;/tt&gt; library" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html">
+    <topic label="Library version" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md5"/>
+    <topic label="Where the headers live" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md6"/>
+    <topic label="Companion documents" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md7"/>
+    <topic label="What this library does and does not do" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md9"/>
+    <topic label="The core types at a glance" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md11"/>
+    <topic label="Rules every backend must satisfy" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md13">
+      <topic label="3.1 Identity contract" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md14"/>
+      <topic label="3.2 Error categorization" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md15"/>
+      <topic label="3.3 Sub-handle lifetime" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md16">
+        <topic label="Pattern A: Snapshot" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md17"/>
+        <topic label="Pattern B: Shared-state" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md18"/>
+        <topic label="Why both patterns coexist" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md19"/>
+      </topic>
+      <topic label="3.4 Single-in-flight Writer rule" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md20"/>
+      <topic label="3.5 Reader scope is fixed at construction" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md21"/>
+      <topic label="3.6 Writer commit semantics" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md22"/>
+      <topic label="3.7 Optional Reader::close()" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md23"/>
+      <topic label="3.8 Concurrent sub-handle access" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md24"/>
+    </topic>
+    <topic label="Recommended call patterns" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md26">
+      <topic label="4.1 Scoped wrappers (the default)" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md27"/>
+      <topic label="4.2 Low-level factories (the escape hatch)" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md28"/>
+      <topic label="4.3 Error category branching" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md29"/>
+      <topic label="4.4 Id predicates" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md30"/>
+    </topic>
+    <topic label="Writing a new RecordBackend" href="md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md32"/>
   </topic>
   <topic label="CHANGELOG" href="md__c_h_a_n_g_e_l_o_g.html">
-      <topic label="x.y.z - YYYY-MM-DD" href="md__c_h_a_n_g_e_l_o_g.html#autotoc_md46">
-        <topic label="Added" href="md__c_h_a_n_g_e_l_o_g.html#autotoc_md47"/>
-        <topic label="Deprecated" href="md__c_h_a_n_g_e_l_o_g.html#autotoc_md48"/>
-        <topic label="Removed" href="md__c_h_a_n_g_e_l_o_g.html#autotoc_md49"/>
-        <topic label="Fixed" href="md__c_h_a_n_g_e_l_o_g.html#autotoc_md50"/>
+      <topic label="x.y.z - YYYY-MM-DD" href="md__c_h_a_n_g_e_l_o_g.html#autotoc_md75">
+        <topic label="Added" href="md__c_h_a_n_g_e_l_o_g.html#autotoc_md76"/>
+        <topic label="Deprecated" href="md__c_h_a_n_g_e_l_o_g.html#autotoc_md77"/>
+        <topic label="Removed" href="md__c_h_a_n_g_e_l_o_g.html#autotoc_md78"/>
+        <topic label="Fixed" href="md__c_h_a_n_g_e_l_o_g.html#autotoc_md79"/>
     </topic>
   </topic>
   <topic label="Github Automated Testing" href="md_doc_2_a_u_t_o_m_a_t_e_d___t_e_s_t.html">
-    <topic label="What Are Automated Tests and How to Start Them" href="md_doc_2_a_u_t_o_m_a_t_e_d___t_e_s_t.html#autotoc_md52"/>
-    <topic label="What Code Tests Are Performed" href="md_doc_2_a_u_t_o_m_a_t_e_d___t_e_s_t.html#autotoc_md53"/>
-    <topic label="Local Testing" href="md_doc_2_a_u_t_o_m_a_t_e_d___t_e_s_t.html#autotoc_md54"/>
-    <topic label="What to Do When a Test Fail" href="md_doc_2_a_u_t_o_m_a_t_e_d___t_e_s_t.html#autotoc_md55"/>
+    <topic label="What Are Automated Tests and How to Start Them" href="md_doc_2_a_u_t_o_m_a_t_e_d___t_e_s_t.html#autotoc_md81"/>
+    <topic label="What Code Tests Are Performed" href="md_doc_2_a_u_t_o_m_a_t_e_d___t_e_s_t.html#autotoc_md82"/>
+    <topic label="Local Testing" href="md_doc_2_a_u_t_o_m_a_t_e_d___t_e_s_t.html#autotoc_md83"/>
+    <topic label="What to Do When a Test Fail" href="md_doc_2_a_u_t_o_m_a_t_e_d___t_e_s_t.html#autotoc_md84"/>
   </topic>
   <topic label="BMI External Models" href="md_doc_2_b_m_i___m_o_d_e_l_s.html">
-    <topic label="Summary" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md57"/>
-    <topic label="Formulation Config" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md58">
-      <topic label="Required Parameters" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md59">
-          <topic label="Parameter Details:" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md60"/>
+    <topic label="Summary" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md86"/>
+    <topic label="Formulation Config" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md87">
+      <topic label="Required Parameters" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md88">
+          <topic label="Parameter Details:" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md89"/>
       </topic>
-      <topic label="Semi-Optional Parameters" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md61"/>
-      <topic label="Optional Parameters" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md62"/>
+      <topic label="Semi-Optional Parameters" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md90"/>
+      <topic label="Optional Parameters" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md91"/>
     </topic>
-    <topic label="BMI Models Written in C" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md63">
-      <topic label="BMI C Model As Shared Library" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md64">
-        <topic label="Dynamic Loading" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md65"/>
+    <topic label="BMI Models Written in C" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md92">
+      <topic label="BMI C Model As Shared Library" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md93">
+        <topic label="Dynamic Loading" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md94"/>
       </topic>
-      <topic label="BMI C CFE Example" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md66"/>
-      <topic label="BMI C Caveats" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md67">
-        <topic label="BMI C Activate/Deactivation Required in CMake Build" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md68"/>
-        <topic label="Additional Bootstrapping Function Needed" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md69">
-          <topic label="Why?" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md70"/>
+      <topic label="BMI C CFE Example" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md95"/>
+      <topic label="BMI C Caveats" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md96">
+        <topic label="BMI C Activate/Deactivation Required in CMake Build" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md97"/>
+        <topic label="Additional Bootstrapping Function Needed" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md98">
+          <topic label="Why?" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md99"/>
         </topic>
       </topic>
     </topic>
-    <topic label="BMI Models Written in C++" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md71">
-      <topic label="BMI C++ Model As Shared Library" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md72">
-        <topic label="Dynamic Loading" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md73"/>
-        <topic label="Additional Bootstrapping Functions Needed" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md74">
-          <topic label="Why?" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md75"/>
+    <topic label="BMI Models Written in C++" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md100">
+      <topic label="BMI C++ Model As Shared Library" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md101">
+        <topic label="Dynamic Loading" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md102"/>
+        <topic label="Additional Bootstrapping Functions Needed" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md103">
+          <topic label="Why?" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md104"/>
         </topic>
       </topic>
-      <topic label="BMI C++ Example" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md76"/>
+      <topic label="BMI C++ Example" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md105"/>
     </topic>
-    <topic label="BMI Models Written in Python" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md77">
-      <topic label="Enabling Python Integration" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md78"/>
-      <topic label="BMI Python Model as Package Class" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md79"/>
-      <topic label="BMI Python Example" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md80"/>
+    <topic label="BMI Models Written in Python" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md106">
+      <topic label="Enabling Python Integration" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md107"/>
+      <topic label="BMI Python Model as Package Class" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md108"/>
+      <topic label="BMI Python Example" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md109"/>
     </topic>
-    <topic label="BMI Models Written in Fortran" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md81">
-      <topic label="Enabling Fortran Integration" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md82"/>
-      <topic label="ISO C Binding Middleware" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md83"/>
-      <topic label="A Compiled Shared Library" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md84">
-        <topic label="Required Additional Fortran Registration Function" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md85"/>
+    <topic label="BMI Models Written in Fortran" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md110">
+      <topic label="Enabling Fortran Integration" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md111"/>
+      <topic label="ISO C Binding Middleware" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md112"/>
+      <topic label="A Compiled Shared Library" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md113">
+        <topic label="Required Additional Fortran Registration Function" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md114"/>
       </topic>
     </topic>
-    <topic label="Multi-Module BMI Formulations" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md86">
-      <topic label="Passing Variables Between Nested Formulations" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md87">
-        <topic label="How Values Are Orchestrated" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md88"/>
-        <topic label="Look-back and Default Values" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md89">
-          <topic label="Example Look-Back Config" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md90"/>
+    <topic label="Multi-Module BMI Formulations" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md115">
+      <topic label="Passing Variables Between Nested Formulations" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md116">
+        <topic label="How Values Are Orchestrated" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md117"/>
+        <topic label="Look-back and Default Values" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md118">
+          <topic label="Example Look-Back Config" href="md_doc_2_b_m_i___m_o_d_e_l_s.html#autotoc_md119"/>
         </topic>
       </topic>
+    </topic>
+  </topic>
+  <topic label="ngen BMI Serialization Protocol" href="md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o_c_o_l.html">
+    <topic label="TODO or Not TODO" href="md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o_c_o_l.html#autotoc_md121">
+      <topic label="Conformance is use-case dependent" href="md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o_c_o_l.html#autotoc_md122"/>
+    </topic>
+    <topic label="Reserved BMI Variables" href="md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o_c_o_l.html#autotoc_md124">
+      <topic label="Item list behavior" href="md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o_c_o_l.html#autotoc_md125"/>
+    </topic>
+    <topic label="Unit Conventions for Non-Physical Variables" href="md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o_c_o_l.html#autotoc_md127"/>
+    <topic label="Model Developer Implementation Guide" href="md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o_c_o_l.html#autotoc_md129">
+      <topic label="Width of the size variable" href="md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o_c_o_l.html#autotoc_md130"/>
+      <topic label="Recommended: defensive payload format" href="md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o_c_o_l.html#autotoc_md131"/>
+      <topic label="Constraints and non-goals" href="md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o_c_o_l.html#autotoc_md132"/>
+      <topic label="Optional: GetValuePtr for zero-copy state access" href="md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o_c_o_l.html#autotoc_md133"/>
+      <topic label="Recommended: single field list drives save, restore, and size" href="md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o_c_o_l.html#autotoc_md134"/>
+      <topic label="Reference implementations" href="md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o_c_o_l.html#autotoc_md135"/>
     </topic>
   </topic>
   <topic label="BMI Conventions" href="md_doc_2_b_m_iconventions.html">
-    <topic label="Compliance with the BMI v2.0 Standard" href="md_doc_2_b_m_iconventions.html#autotoc_md92"/>
-    <topic label="Time Control" href="md_doc_2_b_m_iconventions.html#autotoc_md93">
-      <topic label="Set and Get Values Per Timestep" href="md_doc_2_b_m_iconventions.html#autotoc_md94"/>
-      <topic label="update vs. update_until" href="md_doc_2_b_m_iconventions.html#autotoc_md95"/>
-      <topic label="Time Units" href="md_doc_2_b_m_iconventions.html#autotoc_md96"/>
-      <topic label="Model time begin" href="md_doc_2_b_m_iconventions.html#autotoc_md97"/>
-      <topic label="Model time end" href="md_doc_2_b_m_iconventions.html#autotoc_md98"/>
+    <topic label="Compliance with the BMI v2.0 Standard" href="md_doc_2_b_m_iconventions.html#autotoc_md137"/>
+    <topic label="Time Control" href="md_doc_2_b_m_iconventions.html#autotoc_md138">
+      <topic label="Set and Get Values Per Timestep" href="md_doc_2_b_m_iconventions.html#autotoc_md139"/>
+      <topic label="update vs. update_until" href="md_doc_2_b_m_iconventions.html#autotoc_md140"/>
+      <topic label="Time Units" href="md_doc_2_b_m_iconventions.html#autotoc_md141"/>
+      <topic label="Model time begin" href="md_doc_2_b_m_iconventions.html#autotoc_md142"/>
+      <topic label="Model time end" href="md_doc_2_b_m_iconventions.html#autotoc_md143"/>
     </topic>
-    <topic label="Metadata" href="md_doc_2_b_m_iconventions.html#autotoc_md99">
-      <topic label="Variable Units" href="md_doc_2_b_m_iconventions.html#autotoc_md100"/>
-      <topic label="Variable Types and Sizes" href="md_doc_2_b_m_iconventions.html#autotoc_md101"/>
+    <topic label="Metadata" href="md_doc_2_b_m_iconventions.html#autotoc_md144">
+      <topic label="Variable Units" href="md_doc_2_b_m_iconventions.html#autotoc_md145"/>
+      <topic label="Variable Types and Sizes" href="md_doc_2_b_m_iconventions.html#autotoc_md146"/>
     </topic>
-    <topic label="Input and output published variables" href="md_doc_2_b_m_iconventions.html#autotoc_md102">
-      <topic label="Input/output variables and the time loop" href="md_doc_2_b_m_iconventions.html#autotoc_md103"/>
-      <topic label="Validation of formulations for input variables" href="md_doc_2_b_m_iconventions.html#autotoc_md104"/>
-      <topic label="Validation of formulations for output variables" href="md_doc_2_b_m_iconventions.html#autotoc_md105"/>
-      <topic label="Calling set_value on output variables" href="md_doc_2_b_m_iconventions.html#autotoc_md106"/>
-      <topic label="Calling get_value on input variables" href="md_doc_2_b_m_iconventions.html#autotoc_md107"/>
-      <topic label="Input and output with the same name not permitted" href="md_doc_2_b_m_iconventions.html#autotoc_md108"/>
+    <topic label="Input and output published variables" href="md_doc_2_b_m_iconventions.html#autotoc_md147">
+      <topic label="Input/output variables and the time loop" href="md_doc_2_b_m_iconventions.html#autotoc_md148"/>
+      <topic label="Validation of formulations for input variables" href="md_doc_2_b_m_iconventions.html#autotoc_md149"/>
+      <topic label="Validation of formulations for output variables" href="md_doc_2_b_m_iconventions.html#autotoc_md150"/>
+      <topic label="Calling set_value on output variables" href="md_doc_2_b_m_iconventions.html#autotoc_md151"/>
+      <topic label="Calling get_value on input variables" href="md_doc_2_b_m_iconventions.html#autotoc_md152"/>
+      <topic label="Input and output with the same name not permitted" href="md_doc_2_b_m_iconventions.html#autotoc_md153"/>
     </topic>
-    <topic label="Unpublished variables" href="md_doc_2_b_m_iconventions.html#autotoc_md109">
-      <topic label="Unknown/unexpected variables passed to set_value" href="md_doc_2_b_m_iconventions.html#autotoc_md110"/>
-      <topic label="Must support variable metadata functions" href="md_doc_2_b_m_iconventions.html#autotoc_md111"/>
+    <topic label="Unpublished variables" href="md_doc_2_b_m_iconventions.html#autotoc_md154">
+      <topic label="Unknown/unexpected variables passed to set_value" href="md_doc_2_b_m_iconventions.html#autotoc_md155"/>
+      <topic label="Must support variable metadata functions" href="md_doc_2_b_m_iconventions.html#autotoc_md156"/>
     </topic>
-    <topic label="Array representation" href="md_doc_2_b_m_iconventions.html#autotoc_md112">
-      <topic label="Contiguousness" href="md_doc_2_b_m_iconventions.html#autotoc_md113"/>
-      <topic label="Zero-Indexing" href="md_doc_2_b_m_iconventions.html#autotoc_md114"/>
-      <topic label="Layout and Flattening" href="md_doc_2_b_m_iconventions.html#autotoc_md115">
-        <topic label="C ordering required" href="md_doc_2_b_m_iconventions.html#autotoc_md116"/>
-        <topic label="Proper ordering example" href="md_doc_2_b_m_iconventions.html#autotoc_md117"/>
-        <topic label="When this matters" href="md_doc_2_b_m_iconventions.html#autotoc_md118">
-          <topic label="Fortran models using z,y,x index ordering" href="md_doc_2_b_m_iconventions.html#autotoc_md119"/>
-          <topic label="Clarification for get_value_at_indices and set_value_at_indices" href="md_doc_2_b_m_iconventions.html#autotoc_md120"/>
-          <topic label="Spatial data arrays for structured grids" href="md_doc_2_b_m_iconventions.html#autotoc_md121"/>
+    <topic label="Array representation" href="md_doc_2_b_m_iconventions.html#autotoc_md157">
+      <topic label="Contiguousness" href="md_doc_2_b_m_iconventions.html#autotoc_md158"/>
+      <topic label="Zero-Indexing" href="md_doc_2_b_m_iconventions.html#autotoc_md159"/>
+      <topic label="Layout and Flattening" href="md_doc_2_b_m_iconventions.html#autotoc_md160">
+        <topic label="C ordering required" href="md_doc_2_b_m_iconventions.html#autotoc_md161"/>
+        <topic label="Proper ordering example" href="md_doc_2_b_m_iconventions.html#autotoc_md162"/>
+        <topic label="When this matters" href="md_doc_2_b_m_iconventions.html#autotoc_md163">
+          <topic label="Fortran models using z,y,x index ordering" href="md_doc_2_b_m_iconventions.html#autotoc_md164"/>
+          <topic label="Clarification for get_value_at_indices and set_value_at_indices" href="md_doc_2_b_m_iconventions.html#autotoc_md165"/>
+          <topic label="Spatial data arrays for structured grids" href="md_doc_2_b_m_iconventions.html#autotoc_md166"/>
         </topic>
       </topic>
     </topic>
-    <topic label="Grid metadata functions" href="md_doc_2_b_m_iconventions.html#autotoc_md122">
-      <topic label="Required metadata functions" href="md_doc_2_b_m_iconventions.html#autotoc_md123"/>
-      <topic label="Ranks and sizes for scalar values" href="md_doc_2_b_m_iconventions.html#autotoc_md124"/>
+    <topic label="Grid metadata functions" href="md_doc_2_b_m_iconventions.html#autotoc_md167">
+      <topic label="Required metadata functions" href="md_doc_2_b_m_iconventions.html#autotoc_md168"/>
+      <topic label="Ranks and sizes for scalar values" href="md_doc_2_b_m_iconventions.html#autotoc_md169"/>
     </topic>
-    <topic label="Specific ngen uses of unpublished variables" href="md_doc_2_b_m_iconventions.html#autotoc_md125">
-      <topic label="The model_params list" href="md_doc_2_b_m_iconventions.html#autotoc_md126"/>
-      <topic label="Grid sizing parameters" href="md_doc_2_b_m_iconventions.html#autotoc_md127">
-        <topic label="ngen_grid_N_shape" href="md_doc_2_b_m_iconventions.html#autotoc_md128"/>
-        <topic label="ngen_grid_N_spacing" href="md_doc_2_b_m_iconventions.html#autotoc_md129"/>
-        <topic label="ngen_grid_N_origin" href="md_doc_2_b_m_iconventions.html#autotoc_md130"/>
+    <topic label="Specific ngen uses of unpublished variables" href="md_doc_2_b_m_iconventions.html#autotoc_md170">
+      <topic label="The model_params list" href="md_doc_2_b_m_iconventions.html#autotoc_md171"/>
+      <topic label="Grid sizing parameters" href="md_doc_2_b_m_iconventions.html#autotoc_md172">
+        <topic label="ngen_grid_N_shape" href="md_doc_2_b_m_iconventions.html#autotoc_md173"/>
+        <topic label="ngen_grid_N_spacing" href="md_doc_2_b_m_iconventions.html#autotoc_md174"/>
+        <topic label="ngen_grid_N_origin" href="md_doc_2_b_m_iconventions.html#autotoc_md175"/>
       </topic>
     </topic>
   </topic>
   <topic label="Project Builds" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html">
-    <topic label="The TL;DR" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md132"/>
-    <topic label="Generating a Build System" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md133">
-      <topic label="Out-of-Source Building" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md134"/>
-      <topic label="Ignoring the Build Directory" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md135"/>
-      <topic label="Generation Commands" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md136">
-        <topic label="Generating from Build Directory" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md137"/>
-        <topic label="Generating from Project Root" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md138"/>
-        <topic label="Optional: Specifying Project Build Config Type" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md139"/>
+    <topic label="The TL;DR" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md177"/>
+    <topic label="Generating a Build System" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md178">
+      <topic label="Out-of-Source Building" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md179"/>
+      <topic label="Ignoring the Build Directory" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md180"/>
+      <topic label="Generation Commands" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md181">
+        <topic label="Generating from Build Directory" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md182"/>
+        <topic label="Generating from Project Root" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md183"/>
+        <topic label="Optional: Specifying Project Build Config Type" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md184"/>
       </topic>
-      <topic label="Regenerating" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md140"/>
+      <topic label="Regenerating" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md185"/>
     </topic>
-    <topic label="Building Targets" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md141">
-      <topic label="Building From Build Directory" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md142"/>
-      <topic label="Building From Source Directory" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md143"/>
+    <topic label="Building Targets" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md186">
+      <topic label="Building From Build Directory" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md187"/>
+      <topic label="Building From Source Directory" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md188"/>
     </topic>
-    <topic label="Dependencies" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md144">
-      <topic label="Build System Regeneration" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md145"/>
-      <topic label="Boost ENV Variable" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md146"/>
+    <topic label="Dependencies" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md189">
+      <topic label="Build System Regeneration" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md190"/>
+      <topic label="Boost ENV Variable" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md191"/>
     </topic>
-    <topic label="Build Design" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md147">
-      <topic label="Library-Based Structure" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md148"/>
-      <topic label="Handling Changes" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md149">
-        <topic label="Adding New Subdirectories" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md150"/>
+    <topic label="Build Design" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md192">
+      <topic label="Library-Based Structure" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md193"/>
+      <topic label="Handling Changes" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md194">
+        <topic label="Adding New Subdirectories" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html#autotoc_md195"/>
       </topic>
     </topic>
   </topic>
   <topic label="Project Dependencies" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html">
-    <topic label="Summary" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md152"/>
-    <topic label="Details" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md153">
-      <topic label="Google Test" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md154">
-        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md155"/>
-        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md156"/>
+    <topic label="Summary" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md197"/>
+    <topic label="Details" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md198">
+      <topic label="Google Test" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md199">
+        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md200"/>
+        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md201"/>
       </topic>
-      <topic label="C and C++ Compiler" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md157">
-        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md158"/>
-        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md159">
-          <topic label="GCC" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md160"/>
-          <topic label="Clang" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md161"/>
+      <topic label="C and C++ Compiler" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md202">
+        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md203"/>
+        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md204">
+          <topic label="GCC" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md205"/>
+          <topic label="Clang" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md206"/>
         </topic>
       </topic>
-      <topic label="CMake" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md162">
-        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md163"/>
-        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md164"/>
+      <topic label="CMake" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md207">
+        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md208"/>
+        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md209"/>
       </topic>
-      <topic label="Boost (Headers Only)" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md165">
-        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md166">
-          <topic label="Setting BOOST_ROOT" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md167"/>
+      <topic label="Boost (Headers Only)" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md210">
+        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md211">
+          <topic label="Setting BOOST_ROOT" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md212"/>
         </topic>
-        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md168"/>
+        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md213"/>
       </topic>
-      <topic label="Udunits" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md169">
-          <topic label="Package Manager Install" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md170">
-            <topic label="Example Install Commands" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md171"/>
+      <topic label="Udunits" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md214">
+          <topic label="Package Manager Install" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md215">
+            <topic label="Example Install Commands" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md216"/>
         </topic>
-        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md172"/>
+        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md217"/>
       </topic>
-      <topic label="Python 3 Libraries" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md173">
-          <topic label="Overriding Python Dependency" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md174"/>
-        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md175"/>
-        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md176"/>
+      <topic label="Python 3 Libraries" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md218">
+          <topic label="Overriding Python Dependency" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md219"/>
+        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md220"/>
+        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md221"/>
       </topic>
-      <topic label="pybind11" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md177">
-          <topic label="Overriding pybind11 Dependency" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md178"/>
-        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md179"/>
-        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md180"/>
+      <topic label="pybind11" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md222">
+          <topic label="Overriding pybind11 Dependency" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md223"/>
+        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md224"/>
+        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md225"/>
       </topic>
-      <topic label="The dmod.subsetservice Package" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md181">
-        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md182"/>
-        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md183"/>
+      <topic label="The dmod.subsetservice Package" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md226">
+        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md227"/>
+        <topic label="Version Requirements" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md228"/>
       </topic>
-      <topic label="t-route" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md184">
-        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md185"/>
+      <topic label="t-route" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md229">
+        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md230"/>
       </topic>
-      <topic label="NetCDF Libraries" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md186">
-        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md187"/>
-        <topic label="Parallel NetCDF" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md188"/>
+      <topic label="NetCDF Libraries" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md231">
+        <topic label="Setup" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md232"/>
+        <topic label="Parallel NetCDF" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md233"/>
       </topic>
     </topic>
   </topic>
   <topic label="Distributed Processing" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html">
-    <topic label="Overview" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md190"/>
-    <topic label="Building the MPI-Enabled Nextgen Driver" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md191"/>
-    <topic label="Running the MPI-Enabled Nextgen Driver" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md192">
-      <topic label="Subdivided Hydrofabric" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md193">
-        <topic label="Driver Runtime Differences" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md194"/>
-        <topic label="File Names" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md195"/>
-        <topic label="On-the-fly Generation" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md196"/>
+    <topic label="Overview" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md235"/>
+    <topic label="Building the MPI-Enabled Nextgen Driver" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md236"/>
+    <topic label="Running the MPI-Enabled Nextgen Driver" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md237">
+      <topic label="Subdivided Hydrofabric" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md238">
+        <topic label="Driver Runtime Differences" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md239"/>
+        <topic label="File Names" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md240"/>
+        <topic label="On-the-fly Generation" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md241"/>
       </topic>
-      <topic label="Examples" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md197">
-        <topic label="Example 1 - Full Hydrofabric" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md198"/>
-        <topic label="Example 2 - Subdivided Hydrofabric" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md199"/>
+      <topic label="Examples" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md242">
+        <topic label="Example 1 - Full Hydrofabric" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md243"/>
+        <topic label="Example 2 - Subdivided Hydrofabric" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md244"/>
       </topic>
     </topic>
-    <topic label="Partitioning Config Generator" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md200"/>
+    <topic label="Partitioning Config Generator" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md245"/>
   </topic>
   <topic label="Git Strategy" href="md_doc_2_g_i_t___u_s_a_g_e.html">
-    <topic label="Branching Model" href="md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md202">
-      <topic label="Feature Branches from master" href="md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md203"/>
-      <topic label="Relating production, master, and Release Branches" href="md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md204"/>
+    <topic label="Branching Model" href="md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md247">
+      <topic label="Feature Branches from master" href="md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md248"/>
+      <topic label="Relating production, master, and Release Branches" href="md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md249"/>
     </topic>
-    <topic label="Contributing" href="md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md205"/>
-    <topic label="Optional: Setting Up Hook Scripts" href="md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md206"/>
+    <topic label="Contributing" href="md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md250"/>
+    <topic label="Optional: Setting Up Hook Scripts" href="md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md251"/>
   </topic>
   <topic label="Definitions" href="md_doc_2glossary.html">
-    <topic label="References" href="md_doc_2glossary.html#autotoc_md208"/>
+    <topic label="References" href="md_doc_2glossary.html#autotoc_md253"/>
   </topic>
   <topic label="MPI Remote Nexus" href="md_doc_2_m_p_i___r_e_m_o_t_e___n_e_x_u_s.html">
-    <topic label="Summary" href="md_doc_2_m_p_i___r_e_m_o_t_e___n_e_x_u_s.html#autotoc_md210"/>
+    <topic label="Summary" href="md_doc_2_m_p_i___r_e_m_o_t_e___n_e_x_u_s.html#autotoc_md255"/>
   </topic>
   <topic label="NextGen on CONUS" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html">
-    <topic label="Summary" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md212"/>
-    <topic label="Download the Codes" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md213"/>
-    <topic label="Setting up the Environment" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md214"/>
-    <topic label="Build the Executable" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md215"/>
-    <topic label="CONUS Hydrofabric" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md216"/>
-    <topic label="Generate Partition For Parallel Computation" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md217"/>
-    <topic label="Prepare the Input Data" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md218"/>
-    <topic label="Build the Realization Configurations" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md219"/>
-    <topic label="Run Computations with Submodules" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md220"/>
-    <topic label="Resource Usage" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md221"/>
-    <topic label="Run Computation with Topmodel" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md222"/>
-    <topic label="Run Computation with Routing" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md223"/>
+    <topic label="Summary" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md257"/>
+    <topic label="Download the Codes" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md258"/>
+    <topic label="Setting up the Environment" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md259"/>
+    <topic label="Build the Executable" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md260"/>
+    <topic label="CONUS Hydrofabric" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md261"/>
+    <topic label="Generate Partition For Parallel Computation" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md262"/>
+    <topic label="Prepare the Input Data" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md263"/>
+    <topic label="Build the Realization Configurations" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md264"/>
+    <topic label="Run Computations with Submodules" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md265"/>
+    <topic label="Resource Usage" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md266"/>
+    <topic label="Run Computation with Topmodel" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md267"/>
+    <topic label="Run Computation with Routing" href="md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md268"/>
+  </topic>
+  <topic label="ngen Serialization" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html">
+    <topic label="Engine behavior with non-conforming models" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md271"/>
+    <topic label="Wire Format" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md273">
+      <topic label="Two timestamps, not one" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md274"/>
+      <topic label="Wire-format version" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md275"/>
+      <topic label="Key properties" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md276"/>
+    </topic>
+    <topic label="Save Protocol: NgenSerializationProtocol" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md278">
+      <topic label="Configuration" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md279"/>
+      <topic label="Support detection" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md280"/>
+      <topic label="Operation" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md281"/>
+      <topic label="Size variable width — how the engine composes with narrower models" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md282"/>
+    </topic>
+    <topic label="Restore Protocol: NgenDeserializationProtocol" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md284">
+      <topic label="Configuration" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md285"/>
+      <topic label="Split save/restore paths" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md286"/>
+      <topic label="Support detection" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md287"/>
+      <topic label="Operation" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md288"/>
+    </topic>
+    <topic label="Combined save + restore example" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md290"/>
+    <topic label="Restart semantics: hot start and resume" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md292">
+      <topic label="Hot start" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md293"/>
+      <topic label="Resume" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md294"/>
+      <topic label="Guaranteed consistent restore" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md295"/>
+      <topic label="Modules with no state" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md296"/>
+      <topic label="&quot;latest&quot;" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md297"/>
+      <topic label="Not supported yet" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md298"/>
+    </topic>
+    <topic label="Identity Convention: compound_id()" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md300">
+      <topic label="How the compound gets set" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md301"/>
+    </topic>
+    <topic label="Engine Integration" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md303">
+      <topic label="Save — per-timestep from Layer" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md304"/>
+      <topic label="Restore — once at the end of create_model" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md305"/>
+      <topic label="Lifecycle summary" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md306"/>
+    </topic>
+    <topic label="Worked Example — multi-BMI formulation with save + restore" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md308"/>
+    <topic label="Realization-Level (Global) Configuration" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md310">
+      <topic label="Top-level placement" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md311"/>
+      <topic label="Precedence" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md312"/>
+      <topic label="Absent block" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md313"/>
+      <topic label="Path templating" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md314"/>
+    </topic>
+    <topic label="Scaling Considerations" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md316">
+      <topic label="On-disk format" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md317"/>
+      <topic label="Save cost model" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md318"/>
+      <topic label="Restore cost model" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md319"/>
+      <topic label="id_subset for memory-bounded restores" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md320"/>
+      <topic label="Thread and process safety" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md321"/>
+      <topic label="When the protocol is not the right tool" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md322"/>
+    </topic>
   </topic>
   <topic label="Precision guidelines for validation of NGEN code translation and upgrades" href="md_doc_2_precision___guidelines__for___ngen___code___validation.html"/>
   <topic label="Standards for Programming" href="md_doc_2programming__standards.html">
-    <topic label="Source Documentation" href="md_doc_2programming__standards.html#autotoc_md226"/>
-    <topic label="Naming" href="md_doc_2programming__standards.html#autotoc_md227">
-        <topic label="Bad Variable Names:" href="md_doc_2programming__standards.html#autotoc_md228"/>
-        <topic label="General Guidelines" href="md_doc_2programming__standards.html#autotoc_md229"/>
+    <topic label="Source Documentation" href="md_doc_2programming__standards.html#autotoc_md325"/>
+    <topic label="Naming" href="md_doc_2programming__standards.html#autotoc_md326">
+        <topic label="Bad Variable Names:" href="md_doc_2programming__standards.html#autotoc_md327"/>
+        <topic label="General Guidelines" href="md_doc_2programming__standards.html#autotoc_md328"/>
     </topic>
-    <topic label="Other" href="md_doc_2programming__standards.html#autotoc_md230">
-      <topic label="Headers" href="md_doc_2programming__standards.html#autotoc_md231"/>
-      <topic label="Spaces vs Tabs" href="md_doc_2programming__standards.html#autotoc_md232"/>
-      <topic label="Braces" href="md_doc_2programming__standards.html#autotoc_md233"/>
-      <topic label="Line Width" href="md_doc_2programming__standards.html#autotoc_md234"/>
+    <topic label="Other" href="md_doc_2programming__standards.html#autotoc_md329">
+      <topic label="Headers" href="md_doc_2programming__standards.html#autotoc_md330"/>
+      <topic label="Spaces vs Tabs" href="md_doc_2programming__standards.html#autotoc_md331"/>
+      <topic label="Braces" href="md_doc_2programming__standards.html#autotoc_md332"/>
+      <topic label="Line Width" href="md_doc_2programming__standards.html#autotoc_md333"/>
     </topic>
   </topic>
   <topic label="Python Routing" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html">
-    <topic label="Summary" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md236"/>
-    <topic label="Setup Virtual Environment" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md237"/>
-    <topic label="Install t-route" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md238"/>
-    <topic label="Installation Caveats" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md239">
-      <topic label="Compilers and Libraries" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md240"/>
-      <topic label="Default installation is in development mode (impacts macOS)" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md241"/>
-      <topic label="Some tips on installation if you run into issues" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md242"/>
+    <topic label="Summary" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md335"/>
+    <topic label="Setup Virtual Environment" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md336"/>
+    <topic label="Install t-route" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md337"/>
+    <topic label="Installation Caveats" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md338">
+      <topic label="Compilers and Libraries" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md339"/>
+      <topic label="Default installation is in development mode (impacts macOS)" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md340"/>
+      <topic label="Some tips on installation if you run into issues" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md341"/>
     </topic>
-    <topic label="Using t-route with ngen" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md243">
-      <topic label="Realization Config" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md244"/>
-      <topic label="Routing Config" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md245"/>
-      <topic label="Configuration considerations for t-route with ngen" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md246"/>
+    <topic label="Using t-route with ngen" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md342">
+      <topic label="Realization Config" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md343"/>
+      <topic label="Routing Config" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md344"/>
+      <topic label="Configuration considerations for t-route with ngen" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md345"/>
     </topic>
-    <topic label="Running t-route separately with ngen output" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md247"/>
-    <topic label="Known issues" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md248">
-      <topic label="Cleanup of *.parquet files required" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md249"/>
-      <topic label="Bug in multiprocessing on macOS" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md250"/>
+    <topic label="Running t-route separately with ngen output" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md346"/>
+    <topic label="Known issues" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md347">
+      <topic label="Cleanup of *.parquet files required" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md348"/>
+      <topic label="Bug in multiprocessing on macOS" href="md_doc_2_p_y_t_h_o_n___r_o_u_t_i_n_g.html#autotoc_md349"/>
     </topic>
   </topic>
   <topic label="Realization Configuration" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html">
-    <topic label="Description and Top-Level Structure" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md252">
-      <topic label="Required Top-Level Keys" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md253"/>
-      <topic label="Optional Top-Level Keys" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md254">
-        <topic label="output" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md255"/>
-        <topic label="output_root" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md256"/>
-        <topic label="disable_catchment_output" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md257"/>
-        <topic label="per_formulation_nexus_files" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md258"/>
-        <topic label="catchments" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md259"/>
-        <topic label="routing" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md260"/>
+    <topic label="Description and Top-Level Structure" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md351">
+      <topic label="Required Top-Level Keys" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md352"/>
+      <topic label="Optional Top-Level Keys" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md353">
+        <topic label="output" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md354"/>
+        <topic label="output_root" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md355"/>
+        <topic label="disable_catchment_output" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md356"/>
+        <topic label="per_formulation_nexus_files" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md357"/>
+        <topic label="catchments" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md358"/>
+        <topic label="routing" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md359"/>
       </topic>
-      <topic label="Examples of Top-Level Structure" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md261"/>
+      <topic label="Examples of Top-Level Structure" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md360"/>
     </topic>
-    <topic label="The Global Section" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md262"/>
-    <topic label="The Time Section" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md263"/>
-    <topic label="Individual Catchments" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md264"/>
-    <topic label="The Routing Section" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md265"/>
-    <topic label="A Full Example" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md266"/>
-    <topic label="A Note on BMI Models" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md267"/>
+    <topic label="The Global Section" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md361"/>
+    <topic label="The Time Section" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md362"/>
+    <topic label="Individual Catchments" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md363"/>
+    <topic label="The Routing Section" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md364"/>
+    <topic label="A Full Example" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md365"/>
+    <topic label="A Note on BMI Models" href="md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md366"/>
   </topic>
   <topic label="&lt;a href=&quot;https://docs.opengeospatial.org/is/14-111r6/14-111r6.html&quot; &gt;HY_Features&lt;/a&gt;" href="md_doc_2references.html">
-    <topic label="BMI" href="md_doc_2references.html#autotoc_md269"/>
-    <topic label="Formulations" href="md_doc_2references.html#autotoc_md270"/>
-    <topic label="HYMOD" href="md_doc_2references.html#autotoc_md271"/>
-    <topic label="T-shirt" href="md_doc_2references.html#autotoc_md272"/>
-    <topic label="GIUH" href="md_doc_2references.html#autotoc_md273">
-      <topic label="Modeling References" href="md_doc_2references.html#autotoc_md274"/>
+    <topic label="BMI" href="md_doc_2references.html#autotoc_md368"/>
+    <topic label="Formulations" href="md_doc_2references.html#autotoc_md369"/>
+    <topic label="HYMOD" href="md_doc_2references.html#autotoc_md370"/>
+    <topic label="T-shirt" href="md_doc_2references.html#autotoc_md371"/>
+    <topic label="GIUH" href="md_doc_2references.html#autotoc_md372">
+      <topic label="Modeling References" href="md_doc_2references.html#autotoc_md373"/>
     </topic>
   </topic>
   <topic label="Release Management" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html">
-    <topic label="The Release Process" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md276">
-      <topic label="TL;DR" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md277"/>
-      <topic label="Process Steps" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md278"/>
+    <topic label="The Release Process" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md375">
+      <topic label="TL;DR" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md376"/>
+      <topic label="Process Steps" href="md_doc_2_r_e_l_e_a_s_e___m_a_n_a_g_e_m_e_n_t.html#autotoc_md377"/>
     </topic>
   </topic>
   <topic label="Installation instructions" href="md__i_n_s_t_a_l_l.html">
-    <topic label="Building and running with docker:" href="md__i_n_s_t_a_l_l.html#autotoc_md281"/>
-    <topic label="Building manually:" href="md__i_n_s_t_a_l_l.html#autotoc_md282"/>
+    <topic label="Building and running with docker:" href="md__i_n_s_t_a_l_l.html#autotoc_md380"/>
+    <topic label="Building manually:" href="md__i_n_s_t_a_l_l.html#autotoc_md381"/>
   </topic>
   <topic label="Guidance on How to Contribute" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html">
-    <topic label="Using the Issue Tracker" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md285"/>
-    <topic label="Changing the Code-Base" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md286">
-      <topic label="Summary" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md287"/>
-      <topic label="Getting Started" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md288">
-        <topic label="Optional: Git Hooks" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md289"/>
+    <topic label="Using the Issue Tracker" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md384"/>
+    <topic label="Changing the Code-Base" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md385">
+      <topic label="Summary" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md386"/>
+      <topic label="Getting Started" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md387">
+        <topic label="Optional: Git Hooks" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md388"/>
       </topic>
-      <topic label="Developing Changes" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md290">
-        <topic label="Work in a Dedicated Branch" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md291"/>
-        <topic label="Pushing Incremental Commits" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md292"/>
-        <topic label="Submitting Pull Requests" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md293">
-          <topic label="Guidelines for Pull Requests" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md294"/>
-          <topic label="PR Review and Requested Revisions" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md295"/>
+      <topic label="Developing Changes" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md389">
+        <topic label="Work in a Dedicated Branch" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md390"/>
+        <topic label="Pushing Incremental Commits" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md391"/>
+        <topic label="Submitting Pull Requests" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md392">
+          <topic label="Guidelines for Pull Requests" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md393"/>
+          <topic label="PR Review and Requested Revisions" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md394"/>
         </topic>
       </topic>
-      <topic label="Keeping Forks Up to Date" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md296">
-        <topic label="A Rebase Strategy" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md297"/>
-        <topic label="Getting Remote Changes" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md298">
-          <topic label="For production Too" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md299"/>
+      <topic label="Keeping Forks Up to Date" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md395">
+        <topic label="A Rebase Strategy" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md396"/>
+        <topic label="Getting Remote Changes" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md397">
+          <topic label="For production Too" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md398"/>
         </topic>
-        <topic label="Rebasing Development Branches" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md300">
-          <topic label="Interactive Rebasing" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md301"/>
+        <topic label="Rebasing Development Branches" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md399">
+          <topic label="Interactive Rebasing" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md400"/>
         </topic>
-        <topic label="Fixing Diverging Development Branches" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md302"/>
+        <topic label="Fixing Diverging Development Branches" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md401"/>
       </topic>
     </topic>
   </topic>
   <topic label="Disclaimer" href="md__t_e_r_m_s.html">
-      <topic label="Other Information" href="md__t_e_r_m_s.html#autotoc_md304"/>
-    <topic label="Exceptions" href="md__t_e_r_m_s.html#autotoc_md305"/>
+      <topic label="Other Information" href="md__t_e_r_m_s.html#autotoc_md403"/>
+    <topic label="Exceptions" href="md__t_e_r_m_s.html#autotoc_md404"/>
   </topic>
   <topic label="Testing" href="md_test_2_r_e_a_d_m_e.html">
-    <topic label="Testing Frameworks" href="md_test_2_r_e_a_d_m_e.html#autotoc_md307">
-      <topic label="Google Test" href="md_test_2_r_e_a_d_m_e.html#autotoc_md308">
-        <topic label="(Re)generating CMake Project Buildsystem" href="md_test_2_r_e_a_d_m_e.html#autotoc_md309"/>
+    <topic label="Testing Frameworks" href="md_test_2_r_e_a_d_m_e.html#autotoc_md406">
+      <topic label="Google Test" href="md_test_2_r_e_a_d_m_e.html#autotoc_md407">
+        <topic label="(Re)generating CMake Project Buildsystem" href="md_test_2_r_e_a_d_m_e.html#autotoc_md408"/>
       </topic>
     </topic>
-    <topic label="Executing Automated Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md310">
-      <topic label="C++ Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md311">
-        <topic label="Test Targets and Executables" href="md_test_2_r_e_a_d_m_e.html#autotoc_md312"/>
+    <topic label="Executing Automated Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md409">
+      <topic label="C++ Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md410">
+        <topic label="Test Targets and Executables" href="md_test_2_r_e_a_d_m_e.html#autotoc_md411"/>
       </topic>
     </topic>
-    <topic label="Creating New Automated Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md313">
-      <topic label="Adding Tests to CMake Builds" href="md_test_2_r_e_a_d_m_e.html#autotoc_md314"/>
-      <topic label="Test Creation Rules of Thumb" href="md_test_2_r_e_a_d_m_e.html#autotoc_md315">
-          <topic label="Test Work Before Push or PR" href="md_test_2_r_e_a_d_m_e.html#autotoc_md316"/>
-          <topic label="Separate Test Types in Separate Files" href="md_test_2_r_e_a_d_m_e.html#autotoc_md317"/>
-          <topic label="Use Analogous Names" href="md_test_2_r_e_a_d_m_e.html#autotoc_md318"/>
-          <topic label="Use Analogous Paths" href="md_test_2_r_e_a_d_m_e.html#autotoc_md319"/>
-          <topic label="Keep Unit Test Assertions to a Minimum" href="md_test_2_r_e_a_d_m_e.html#autotoc_md320"/>
+    <topic label="Creating New Automated Tests" href="md_test_2_r_e_a_d_m_e.html#autotoc_md412">
+      <topic label="Adding Tests to CMake Builds" href="md_test_2_r_e_a_d_m_e.html#autotoc_md413"/>
+      <topic label="Test Creation Rules of Thumb" href="md_test_2_r_e_a_d_m_e.html#autotoc_md414">
+          <topic label="Test Work Before Push or PR" href="md_test_2_r_e_a_d_m_e.html#autotoc_md415"/>
+          <topic label="Separate Test Types in Separate Files" href="md_test_2_r_e_a_d_m_e.html#autotoc_md416"/>
+          <topic label="Use Analogous Names" href="md_test_2_r_e_a_d_m_e.html#autotoc_md417"/>
+          <topic label="Use Analogous Paths" href="md_test_2_r_e_a_d_m_e.html#autotoc_md418"/>
+          <topic label="Keep Unit Test Assertions to a Minimum" href="md_test_2_r_e_a_d_m_e.html#autotoc_md419"/>
       </topic>
     </topic>
   </topic>
@@ -432,13 +529,6 @@
           <topic label="Update" href="classbmi_1_1_bmi.html#a0ecdb1dd0c0545908d7debb56e2c10aa"/>
           <topic label="UpdateUntil" href="classbmi_1_1_bmi.html#a6bead8b75c803a2fd51f4df6f6f91627"/>
         </topic>
-        <topic label="BMI_FAILURE" href="namespacebmi.html#af3c63c2ca142e13c57dc137f963be87b"/>
-        <topic label="BMI_SUCCESS" href="namespacebmi.html#a456cda3f680009c65df14d01ee512980"/>
-        <topic label="MAX_COMPONENT_NAME" href="namespacebmi.html#a0abd082bdd55cfbf77d4bfd2ea0f5f2b"/>
-        <topic label="MAX_LOCATION_NAME" href="namespacebmi.html#ac439b5c154bfd7089bf97a8acaa3e32d"/>
-        <topic label="MAX_TYPE_NAME" href="namespacebmi.html#a91105d5ae43aff261835c96fb3f20877"/>
-        <topic label="MAX_UNITS_NAME" href="namespacebmi.html#aea3326679ef22728e57255a71ef1f01c"/>
-        <topic label="MAX_VAR_NAME" href="namespacebmi.html#aa9da18fdf23479e14be4ab65196dde77"/>
       </topic>
       <topic label="data_access" href="namespacedata__access.html">
         <topic label="detail" href="namespacedata__access_1_1detail.html">
@@ -1432,6 +1522,60 @@
             <topic label="make_vector" href="namespacemodels_1_1bmi_1_1helper.html#ae390f681f50fc89690893b76733a88e1"/>
           </topic>
           <topic label="protocols" href="namespacemodels_1_1bmi_1_1protocols.html">
+            <topic label="anonymous_namespace{deserialization.cpp}" href="namespacemodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02deserialization_8cpp_03.html">
+              <topic label="make_scope" href="namespacemodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02deserialization_8cpp_03.html#a5c1395c7f12507c41924c9406eb56387"/>
+            </topic>
+            <topic label="anonymous_namespace{serialization.cpp}" href="namespacemodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03.html">
+              <topic label="ScopedCapture" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html">
+                <topic label="ScopedCapture" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#ae0331eead9c88f8f9585da7aa31f0e04"/>
+                <topic label="~ScopedCapture" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#a3fb87a4b4a46fa265d374aa904603809"/>
+                <topic label="ScopedCapture" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#adb93bf7b3d4ad1d53f6d72c677f9919b"/>
+                <topic label="operator=" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#adcfe3472f54f0da5c8447d2a60519aee"/>
+                <topic label="release" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#ab21cafdec87423373bd4bdff947d4626"/>
+                <topic label="model_" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#aadbedec0e42ec4cce2f7e56bedd9ee92"/>
+                <topic label="released_" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#a552fddda00fcd66512be07aedc025c61"/>
+              </topic>
+            </topic>
+            <topic label="serialization" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization.html">
+              <topic label="byte_io" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html">
+                <topic label="load_little_u8" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#a8749e6c1e63f808083a5eb6807674116"/>
+                <topic label="read_i32_le" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#a57165a8cd58c899623a1392aafd48d78"/>
+                <topic label="read_i64_le" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#a5343bac076c409f7495852bf2c37cdd2"/>
+                <topic label="read_u16_le" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#af7500bb17a2a6d1a17bdf72f4eb76a5b"/>
+                <topic label="read_u32_le" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#a358b52f0cbc9576414f6e54f5e8e9002"/>
+                <topic label="read_u64_le" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#a39351f629e49529b55c40fb37c05c5cc"/>
+                <topic label="read_u8" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#aedb07813b756f4d9fd06404029076bd6"/>
+                <topic label="store_little_u8" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#a8cb5d75e74992862ca5743d61d4c78e5"/>
+                <topic label="write_i32_le" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#afb5ba4d3672ce67469d74cf946f6cb67"/>
+                <topic label="write_i64_le" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#a62f30b7e931fbadd2e09d9f19fcb932c"/>
+                <topic label="write_u16_le" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#ae73ce15b5a285e4e047082a953c7253b"/>
+                <topic label="write_u32_le" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#a71c9d17971164d611602581c7fc376f0"/>
+                <topic label="write_u64_le" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#aee537397c27f1e4f9df170ad1b4f4adc"/>
+                <topic label="write_u8" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1byte__io.html#aac185644dccd8d3d431188e84ed41ebd"/>
+              </topic>
+              <topic label="wire_format" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html">
+                <topic label="RecordPrefix" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html">
+                  <topic label="checkpoint_epoch" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#ac8ad4e6ecce4804296ac8ab027b43e18"/>
+                  <topic label="id_length" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a13aa08b5734ae6b5acb534537a547991"/>
+                  <topic label="MAGIC" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a4a46840d5b2a46d5281c8dab75474454"/>
+                  <topic label="magic" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a36478b6e8a1dbe32144fd43b0a795f2f"/>
+                  <topic label="payload_length" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#aa86fd88a0327f7c65f1de253dfaed51a"/>
+                  <topic label="PREFIX_BYTES" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a15b274bd2fa5aad7967b8371fae7ac00"/>
+                  <topic label="simulation_timestamp" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#aa2a65eca2b8f472c61282ef75d6c6090"/>
+                  <topic label="time_step" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a6a0b53394b5fa9eefe8d5f64c6d6b4f5"/>
+                  <topic label="VERSION" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#af486f4020f1d0652b6f31a0e3381fc5e"/>
+                  <topic label="wire_version" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a0ca4edae5c419e1af66a8012fdba9358"/>
+                </topic>
+                <topic label="Status" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html#a2ff1bcffc97c071abba0f0bc90c3d3e0">
+                  <topic label="Ok" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html#a2ff1bcffc97c071abba0f0bc90c3d3e0aa60852f204ed8028c1c58808b746d115"/>
+                  <topic label="Eof" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html#a2ff1bcffc97c071abba0f0bc90c3d3e0a49650dcc55dc413da4032cbe44b15d37"/>
+                </topic>
+                <topic label="decode_record_prefix" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html#a00ce562a3983c539ad0a9da4d9dce098"/>
+                <topic label="encode_record_prefix" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html#ad7fb8f71e3836ba0c0f22eac35ce9339"/>
+                <topic label="read_record_prefix" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html#a4fc6f32d14991f114850132cae5dc656"/>
+                <topic label="write_record_prefix" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html#a7a010be39ace45fbc2846d747e9ab121"/>
+              </topic>
+            </topic>
             <topic label="Context" href="structmodels_1_1bmi_1_1protocols_1_1_context.html">
               <topic label="current_time_step" href="structmodels_1_1bmi_1_1protocols_1_1_context.html#aace653cfd38c514210cdd61b218378d8"/>
               <topic label="id" href="structmodels_1_1bmi_1_1protocols_1_1_context.html#a1e31a50551d4d3c6d3ea67719db8a1bd"/>
@@ -1454,6 +1598,25 @@
               <topic label="model" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#ad8e0eb3e3f86e3e0e0b5dbbc7352ea50"/>
               <topic label="protocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#ab77f6fa47c05a62ba038210299188ed3"/>
             </topic>
+            <topic label="NgenDeserializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html">
+              <topic label="NgenDeserializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a64b1006a0b7ca18cf64d24206b34d3e8"/>
+              <topic label="NgenDeserializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a5d74b4058885a3cc31a504a5290b42c2"/>
+              <topic label="~NgenDeserializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a8a5862bc6a623df7550968164170183f"/>
+              <topic label="check_support" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a767960d023af02559eb427c96416c10a"/>
+              <topic label="error_or_warning" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#aca11929f23379414c3832821ea76c1ea"/>
+              <topic label="initialize" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a25f256d2a8051d5bc3f4cda89906bede"/>
+              <topic label="is_supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#ac4a57d4cbbdad3cd4895472d17f86633"/>
+              <topic label="run" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a042bd97906a10264fe76709c457c4c3e"/>
+              <topic label="backend_" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a4ca048e007e172749e6b8d727fa3b025"/>
+              <topic label="by_timestamp" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a107300a540fdb04f45b97a2a648dc9e1"/>
+              <topic label="check" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a7149c7ef9b6786082c4a8b55d8571c0f"/>
+              <topic label="id_scope" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#ad4d3498ef9169b8e0b2cf0e46610f12d"/>
+              <topic label="is_fatal" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a19f1f38e9dd81057cabca3ff1625ba5a"/>
+              <topic label="step_latest" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a8db40a3bd3bdff08abfa67f841ccdd72"/>
+              <topic label="supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a37eca1bfed7ccc6dc80c3beaa503b7b5"/>
+              <topic label="target_simulation_timestamp" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#adc8bd4a9e6d5fffd36ed12e5f0b00a92"/>
+              <topic label="target_step" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a56b9df3eac23cc22710398fb23af45ac"/>
+            </topic>
             <topic label="NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html">
               <topic label="NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a942276f6833dfac529000dc902bacca2"/>
               <topic label="NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#adaf303401a68e066ddf74e34bb08ace1"/>
@@ -1469,6 +1632,21 @@
               <topic label="supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a43c9f6cc22cc98274d26d55ac5f77b0d"/>
               <topic label="tolerance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a6d607110426777fdf2c9fc1b539da10d"/>
             </topic>
+            <topic label="NgenSerializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html">
+              <topic label="NgenSerializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a59060c60a49ce2d407b50fc7d5411080"/>
+              <topic label="NgenSerializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a4cbcdb3f0d0a9ce30a2f14f141f99240"/>
+              <topic label="~NgenSerializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a24836408b14de05459a67f7615c54b7e"/>
+              <topic label="check_support" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a9fdf22301e35c10b4c6af67b462706ba"/>
+              <topic label="error_or_warning" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#aca11929f23379414c3832821ea76c1ea"/>
+              <topic label="initialize" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a74dcbfa2d71ba90531df74b198ad95ad"/>
+              <topic label="is_supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#ae23f33846eb30ddb068e198fac35e8d2"/>
+              <topic label="run" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a4d3c5f4c129031743603891b3154f2e2"/>
+              <topic label="backend_" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#af7e4aa8ac8c022e1218f4d03c6b486ff"/>
+              <topic label="check" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a5874ffc638d51b30843e8f1b742c6b51"/>
+              <topic label="frequency" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#affc3fa9cf87042a7d49b05eaee2772a9"/>
+              <topic label="is_fatal" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#af1b62877a4fe3e5aacb002cb0cae3363"/>
+              <topic label="supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a6e8107240de717f2fb764fbb9e7a5d66"/>
+            </topic>
             <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html">
               <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a919f2c7bbb142675eb33a732344e1fa9"/>
               <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aaa6a3dcc61eb991e745c46ea4e9c0989"/>
@@ -1480,12 +1658,18 @@
               <topic label="operator=" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#adfa25eef83ce8f2ffac9df8b7d5ae7e7"/>
               <topic label="operator=" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aa89e744056d1484dc546d1fe708e8892"/>
               <topic label="to_string" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aefff4e7722bc069b1a8448dbbc3df53f"/>
-              <topic label="what" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aa37143293db6aa4026694bc1b66b7ff9"/>
+              <topic label="what" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a47ae9f57de7dead87ca42bf219a224f5"/>
               <topic label="err" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a7ba147cb28f4211d2e64919808f9288a"/>
               <topic label="message" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a15bf04e5f1a956636bc07166ff872f08"/>
             </topic>
+            <topic label="ReservedVar" href="structmodels_1_1bmi_1_1protocols_1_1_reserved_var.html">
+              <topic label="name" href="structmodels_1_1bmi_1_1protocols_1_1_reserved_var.html#a928f27f1d99de0ae1b692f32ef2fe958"/>
+              <topic label="unit" href="structmodels_1_1bmi_1_1protocols_1_1_reserved_var.html#a385136db6a82f54a45996de5c2be3aec"/>
+            </topic>
             <topic label="ModelPtr" href="namespacemodels_1_1bmi_1_1protocols.html#a3d6ae38d015b690b5b0fdb0a4e0cc6b2"/>
             <topic label="Properties" href="namespacemodels_1_1bmi_1_1protocols.html#a5405ec54d1c5f12a71a36ddd4639fdb1"/>
+            <topic label="SerializationRecord" href="namespacemodels_1_1bmi_1_1protocols.html#a13d9ff2eda0de0fce834855d597ca7b5"/>
+            <topic label="SerializationRecordView" href="namespacemodels_1_1bmi_1_1protocols.html#a63905d160cd709df3b1a9f7dc7efcdd8"/>
             <topic label="Error" href="namespacemodels_1_1bmi_1_1protocols.html#aa0aa8e7c2fca284c07c66b6186d9fb93">
               <topic label="UNITIALIZED_MODEL" href="namespacemodels_1_1bmi_1_1protocols.html#aa0aa8e7c2fca284c07c66b6186d9fb93a7388d2f530d3c4a5d519e4b7c65d3a43"/>
               <topic label="UNSUPPORTED_PROTOCOL" href="namespacemodels_1_1bmi_1_1protocols.html#aa0aa8e7c2fca284c07c66b6186d9fb93a735c3d53d46c84c25dc772162b02ca6c"/>
@@ -1495,15 +1679,47 @@
             </topic>
             <topic label="Protocol" href="namespacemodels_1_1bmi_1_1protocols.html#a39a83dd4438899d0ebd1db814fe5a02d">
               <topic label="MASS_BALANCE" href="namespacemodels_1_1bmi_1_1protocols.html#a39a83dd4438899d0ebd1db814fe5a02da901d3c007f56dd095ef89db62a0d3731"/>
+              <topic label="SERIALIZATION" href="namespacemodels_1_1bmi_1_1protocols.html#a39a83dd4438899d0ebd1db814fe5a02da1e9b0ec6eace5b06bb4b944ab3b9a45b"/>
+              <topic label="DESERIALIZATION" href="namespacemodels_1_1bmi_1_1protocols.html#a39a83dd4438899d0ebd1db814fe5a02dac4c41b5e3a7ae62fb13c1b28cae26246"/>
             </topic>
             <topic label="operator&lt;&lt;" href="namespacemodels_1_1bmi_1_1protocols.html#acace047a630fa3bc0afae145767a6680"/>
+            <topic label="read_next_record" href="namespacemodels_1_1bmi_1_1protocols.html#ae5df59897c20ab0cd98a6ff4bb4ed523"/>
+            <topic label="read_record_length" href="namespacemodels_1_1bmi_1_1protocols.html#a8dec126e6e34d69b98309b6c5bfa9d79"/>
+            <topic label="read_record_metadata" href="namespacemodels_1_1bmi_1_1protocols.html#aa7a91e70525eef17f3e4e753e1e9d0af"/>
+            <topic label="read_validated_prefix" href="namespacemodels_1_1bmi_1_1protocols.html#afd1665f6092f3f1a3dddbb41b78ae148"/>
+            <topic label="write_record" href="namespacemodels_1_1bmi_1_1protocols.html#a90f1a7354ad4961d3271069c0e7bfe59"/>
+            <topic label="write_record" href="namespacemodels_1_1bmi_1_1protocols.html#ab4b2345c8ba94f91c0e426f2e9189d3c"/>
+            <topic label="BMI_FAILURE" href="namespacemodels_1_1bmi_1_1protocols.html#a7ac064ef9c0e31dba8754e0828c26c4c"/>
+            <topic label="BMI_SUCCESS" href="namespacemodels_1_1bmi_1_1protocols.html#a5bd6138a94168b88a43292a547f22507"/>
             <topic label="CHECK_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#a2f4f0f2ecbe01aa6add2a542c1b6e233"/>
             <topic label="CONFIGURATION_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#a924285549e386073adb56d65af2c599a"/>
+            <topic label="DESERIALIZATION_ID_SUBSET_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#a7c14a53721b863b545376b5f98b78330"/>
+            <topic label="DESERIALIZATION_RESTORE_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#a0e1beadffaeafb44c99f84326d56301d"/>
+            <topic label="DESERIALIZATION_STEP_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#a443c750ee9ece3d5f548a551180a775a"/>
+            <topic label="DESERIALIZATION_STEP_LATEST" href="namespacemodels_1_1bmi_1_1protocols.html#a412ee8633ae2efbf87ec0b305b641023"/>
+            <topic label="DESERIALIZATION_TIMESTAMP_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#a8482bfa6fb1caf5b75704c678c56af07"/>
             <topic label="FATAL_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#a90c856a194aff973ac83a03aebe4b94d"/>
             <topic label="FREQUENCY_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#a0d2708045fe54054be425ef0696205b6"/>
             <topic label="INPUT_MASS_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#aaa1dd08488543edd9137a624bb529fd8"/>
             <topic label="LEAKED_MASS_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#a3ab87da893c45d154218c925d01037b0"/>
+            <topic label="MAX_COMPONENT_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#aa8bf761b8abd9bb6cea89e60ca462ed5"/>
+            <topic label="MAX_LOCATION_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#ab2db065e5594ded9fde63d99210d6392"/>
+            <topic label="MAX_RECORD_PAYLOAD_BYTES" href="namespacemodels_1_1bmi_1_1protocols.html#a4dd57e22ff6665dbe907618c8007565a"/>
+            <topic label="MAX_TYPE_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#a8dd3151c53080139dcc646ada4e5faa8"/>
+            <topic label="MAX_UNITS_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#a7d388f85c1e7d4edf5c70d07e49e1faf"/>
+            <topic label="MAX_VAR_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#a8a3ae1038a9d850a3dae8d64d1ca5f01"/>
             <topic label="OUTPUT_MASS_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#a7762c6b1a0dfecc668efd45d6383381b"/>
+            <topic label="RESERVED_VARS" href="namespacemodels_1_1bmi_1_1protocols.html#a10707b405ae10bccd468fd9887146141"/>
+            <topic label="SERIALIZATION_CHECK_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#ad32000e8eb669e397be40142206df4c4"/>
+            <topic label="SERIALIZATION_CONFIGURATION_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#abdffc974268fdc90eb4df0312c2a78a4"/>
+            <topic label="SERIALIZATION_CREATE_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#a535e4d4c026c9861f95ee6d3b809dea4"/>
+            <topic label="SERIALIZATION_FATAL_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#aa1421d3b846bfebac43daa8f4bc8387e"/>
+            <topic label="SERIALIZATION_FREE_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#a9d51784e2a23612928554dc29a471a92"/>
+            <topic label="SERIALIZATION_FREQUENCY_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#aa7d4cc72c1000b4d6a0479b00e8fe55d"/>
+            <topic label="SERIALIZATION_PATH_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#ab37d114c95e5e2b976c511a1384ee5b7"/>
+            <topic label="SERIALIZATION_SAVE_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#a47a5604faf7b22e11b712c198ce2a2a6"/>
+            <topic label="SERIALIZATION_SIZE_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#ab125f9ca84ebfaa5fef99c63c217801c"/>
+            <topic label="SERIALIZATION_STATE_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#a30a9103693ac21e3affbe59b723200d5"/>
             <topic label="STORED_MASS_NAME" href="namespacemodels_1_1bmi_1_1protocols.html#a33953c0ffe885acf27637b67d90abf72"/>
             <topic label="TOLERANCE_KEY" href="namespacemodels_1_1bmi_1_1protocols.html#ac72387c92378a1dd2554c738b530b08a"/>
           </topic>
@@ -1950,6 +2166,139 @@
           <topic label="read" href="namespacengen_1_1geopackage.html#a14730a731d79d792b5b4e6ddafca9f6e"/>
           <topic label="throw_if_not_type" href="namespacengen_1_1geopackage.html#ac6ff506ab9f5211854c9bc68bfaa2135"/>
         </topic>
+        <topic label="serialization" href="namespacengen_1_1serialization.html">
+          <topic label="anonymous_namespace{file_backend.cpp}" href="namespacengen_1_1serialization_1_1anonymous__namespace_02file__backend_8cpp_03.html">
+            <topic label="corrupted_error" href="namespacengen_1_1serialization_1_1anonymous__namespace_02file__backend_8cpp_03.html#a4e3a5bf924fca1389853bde883950ec5"/>
+            <topic label="io_error" href="namespacengen_1_1serialization_1_1anonymous__namespace_02file__backend_8cpp_03.html#a6229f503cb25c5936b7fb0c07c58ddf1"/>
+            <topic label="not_found_error" href="namespacengen_1_1serialization_1_1anonymous__namespace_02file__backend_8cpp_03.html#a7ad2492958c0a5d0394f2c52e25774a2"/>
+          </topic>
+          <topic label="detail" href="namespacengen_1_1serialization_1_1detail.html">
+            <topic label="RecordT" href="structngen_1_1serialization_1_1detail_1_1_record_t.html">
+              <topic label="RecordT" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#a80abcd75d0bab471f2e01bb196669329"/>
+              <topic label="RecordT" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#ac80d5c1510b5eb36b22ea123c4095c77"/>
+              <topic label="checkpoint_epoch" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#a5001d7045868a631897ed6695daacbe7"/>
+              <topic label="id" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#a7ed57248806e68b81f7c6d6ecd5f10af"/>
+              <topic label="payload" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#a996f07990373334b6f4400c079e92362"/>
+              <topic label="simulation_timestamp" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#ad1539d8050906bf18c139e014ac55c3c"/>
+              <topic label="time_step" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#a2038f9bef479eca7dba88327bd10091c"/>
+            </topic>
+          </topic>
+          <topic label="BackendError" href="structngen_1_1serialization_1_1_backend_error.html">
+            <topic label="Kind" href="structngen_1_1serialization_1_1_backend_error.html#ae518db22480912fe8a6a7b7fca61dde4">
+              <topic label="NotFound" href="structngen_1_1serialization_1_1_backend_error.html#ae518db22480912fe8a6a7b7fca61dde4a38c300f4fc9ce8a77aad4a30de05cad8"/>
+              <topic label="Corrupted" href="structngen_1_1serialization_1_1_backend_error.html#ae518db22480912fe8a6a7b7fca61dde4a15ff2bcedc465304bd186b34a01e251e"/>
+              <topic label="IOError" href="structngen_1_1serialization_1_1_backend_error.html#ae518db22480912fe8a6a7b7fca61dde4a5206bd7472156351d2d9a99633ac9580"/>
+            </topic>
+            <topic label="BackendError" href="structngen_1_1serialization_1_1_backend_error.html#a682e75554b588dfbdddb9e2e7e5a92e5"/>
+            <topic label="BackendError" href="structngen_1_1serialization_1_1_backend_error.html#aa32a585ff44051150ff0de1d9b3d4681"/>
+            <topic label="kind" href="structngen_1_1serialization_1_1_backend_error.html#a8413ed1ea0529259ed7aabbce9cd2bb4"/>
+            <topic label="message" href="structngen_1_1serialization_1_1_backend_error.html#ae6ef145a38cf09f43f4e3b3f26c22ace"/>
+          </topic>
+          <topic label="FileBackend" href="classngen_1_1serialization_1_1_file_backend.html">
+            <topic label="Index" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html">
+              <topic label="Entry" href="structngen_1_1serialization_1_1_file_backend_1_1_index_1_1_entry.html">
+                <topic label="checkpoint_epoch" href="structngen_1_1serialization_1_1_file_backend_1_1_index_1_1_entry.html#af63447314f092f8916f3e6b72bf96db9"/>
+                <topic label="file_offset" href="structngen_1_1serialization_1_1_file_backend_1_1_index_1_1_entry.html#ae77b6a2e1630d71d5186632e3e8c1a34"/>
+                <topic label="simulation_timestamp" href="structngen_1_1serialization_1_1_file_backend_1_1_index_1_1_entry.html#adc1ce221ddd6910be35aa0c121e584f8"/>
+                <topic label="time_step" href="structngen_1_1serialization_1_1_file_backend_1_1_index_1_1_entry.html#ad6568139ffa7768b3c4cff2eee6bb99f"/>
+              </topic>
+              <topic label="Index" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#a2c6e6dc2102e3334e4328b03c8d3e267"/>
+              <topic label="build" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#ad8e4d64f7c6a7482559f2b522e08b5fe"/>
+              <topic label="find_at_simulation_timestamp" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#a9afd8f7fa7d6839c03d678763e6635d1"/>
+              <topic label="find_at_step" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#ab1ea59d3bedd5cd7b7fb6063be15f594"/>
+              <topic label="find_latest" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#a3e87e9b632bf6677e91f65a278eacf0c"/>
+              <topic label="insert_or_replace" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#a1c2ffddabddc32f619ac979e9420b04f"/>
+              <topic label="size" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#a5d5f4607c5eeb6a8543cb686d2b9cf25"/>
+              <topic label="by_id_" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#a78a80813bf08b612052ba2350ad4a338"/>
+            </topic>
+            <topic label="Reader" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html">
+              <topic label="Reader" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a415d5bb3f929cef2428516af3d5bb257"/>
+              <topic label="close" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a274d69f7e3c72bc564597626b6ffc805"/>
+              <topic label="find_at_simulation_timestamp" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a02cc8049465912595bdbf858f57ef5e5"/>
+              <topic label="find_at_step" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a6a30f9186437a36896946dc3a03030a4"/>
+              <topic label="find_latest" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a60f2e4d05bd61f39ffa167d219bde079"/>
+              <topic label="load_at" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#ad817c6260f9766e51b90c73b93d033e0"/>
+              <topic label="in_" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a08432398c758037e0744171976889707"/>
+              <topic label="index_" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#aa9fb071224a0817d05bc5cea5dc97689"/>
+              <topic label="path_" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a89bf4b945be539f5754caa5321640463"/>
+              <topic label="read_scope_" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#ae246182301f77ee74e4ca78aed7b87da"/>
+            </topic>
+            <topic label="Writer" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html">
+              <topic label="Writer" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html#aa84779521daa5400d929c532b59b72c5"/>
+              <topic label="~Writer" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html#a935696f853002373f8cb2dd1916ea65d"/>
+              <topic label="commit" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html#ab0b8b31f47adb85cf383a1719e5f2c9f"/>
+              <topic label="write" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html#afca253b7437c4f81fb4c860235d8dc54"/>
+              <topic label="durability_" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html#a97c38b997f1e3089071b0edfcbaaa688"/>
+              <topic label="parent_" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html#af7fff8df2ac99470ddfd9bb69c6f0848"/>
+            </topic>
+            <topic label="~FileBackend" href="classngen_1_1serialization_1_1_file_backend.html#a5f43ccd5b11609d1c0d33db40fe26955"/>
+            <topic label="FileBackend" href="classngen_1_1serialization_1_1_file_backend.html#a8f35cbf3258978f070a1ad7c0021f858"/>
+            <topic label="build_index_locked_" href="classngen_1_1serialization_1_1_file_backend.html#a7afdaa13aa3f1f36baec379d772d6453"/>
+            <topic label="create" href="classngen_1_1serialization_1_1_file_backend.html#acd1650c905a69c6a7c7d974fbe553045"/>
+            <topic label="ensure_write_fd_locked_" href="classngen_1_1serialization_1_1_file_backend.html#a6b4db06bc06a25aa7f29111d49e00bae"/>
+            <topic label="finalize" href="classngen_1_1serialization_1_1_file_backend.html#a06bc590c57071746e335ea70ee081425"/>
+            <topic label="path" href="classngen_1_1serialization_1_1_file_backend.html#abb0bcd23a2b3183b033a705d228abeff"/>
+            <topic label="reader" href="classngen_1_1serialization_1_1_file_backend.html#a8d00175a3b710dc188abfe5c05c1e505"/>
+            <topic label="register_scope_" href="classngen_1_1serialization_1_1_file_backend.html#a2fd2958f98e5c6153aa55bdd61e2d6af"/>
+            <topic label="with_reader" href="classngen_1_1serialization_1_1_file_backend.html#a3b415bbcf9ca0680d4c406813b135a83"/>
+            <topic label="with_writer" href="classngen_1_1serialization_1_1_file_backend.html#a5f919628ca11ae762e0b0aeac94b7f0d"/>
+            <topic label="writer" href="classngen_1_1serialization_1_1_file_backend.html#a51615949e3e20f6bc7554ba6ff858ad6"/>
+            <topic label="deferred_errors_" href="classngen_1_1serialization_1_1_file_backend.html#afe909965ca68942c173e4845bfe25994"/>
+            <topic label="dirty_" href="classngen_1_1serialization_1_1_file_backend.html#ac7587b62caa9bc017f8e3ce122a1efbc"/>
+            <topic label="fd_" href="classngen_1_1serialization_1_1_file_backend.html#a69adba04b3af92199c8c91bb6968c7b4"/>
+            <topic label="index_" href="classngen_1_1serialization_1_1_file_backend.html#a4edf786e10dcc7f55e84dc01f26d6c0d"/>
+            <topic label="index_built_" href="classngen_1_1serialization_1_1_file_backend.html#a4fb1219dafb4021eb20f305718a8b00f"/>
+            <topic label="index_scope_" href="classngen_1_1serialization_1_1_file_backend.html#ae278211c17094b67829c1ecee1c74caf"/>
+            <topic label="io_mutex_" href="classngen_1_1serialization_1_1_file_backend.html#a1c53b5276cb14958a6983554dbd014e3"/>
+            <topic label="path_" href="classngen_1_1serialization_1_1_file_backend.html#aa3f7811c1b01bd15be54a16ee6fcc1b7"/>
+            <topic label="registry_" href="classngen_1_1serialization_1_1_file_backend.html#a3071842ff0756ade20a561af9328766c"/>
+            <topic label="registry_mutex_" href="classngen_1_1serialization_1_1_file_backend.html#a795befd33909ff7fe535e558e2d17186"/>
+          </topic>
+          <topic label="RecordBackend" href="classngen_1_1serialization_1_1_record_backend.html">
+            <topic label="Reader" href="classngen_1_1serialization_1_1_record_backend_1_1_reader.html">
+              <topic label="~Reader" href="classngen_1_1serialization_1_1_record_backend_1_1_reader.html#a0d1fc922689b1ef55437584c733ff621"/>
+              <topic label="close" href="classngen_1_1serialization_1_1_record_backend_1_1_reader.html#a274d69f7e3c72bc564597626b6ffc805"/>
+              <topic label="find_at_simulation_timestamp" href="classngen_1_1serialization_1_1_record_backend_1_1_reader.html#a9aeda5b5a268518789efc2b8f17fd56c"/>
+              <topic label="find_at_step" href="classngen_1_1serialization_1_1_record_backend_1_1_reader.html#a334d6bf4dfe9ac6ddbe4a3cc87569173"/>
+              <topic label="find_latest" href="classngen_1_1serialization_1_1_record_backend_1_1_reader.html#aece5a2dbe8e14ea37b1951ce86102648"/>
+            </topic>
+            <topic label="Writer" href="classngen_1_1serialization_1_1_record_backend_1_1_writer.html">
+              <topic label="~Writer" href="classngen_1_1serialization_1_1_record_backend_1_1_writer.html#aff892aae6ce5fb9bf34baff960edcaa4"/>
+              <topic label="commit" href="classngen_1_1serialization_1_1_record_backend_1_1_writer.html#aee97e2e6f868eb03da6bca22bc5aa4c6"/>
+              <topic label="write" href="classngen_1_1serialization_1_1_record_backend_1_1_writer.html#ab3cd74e425a2cf3d5410bfe7aeca1702"/>
+            </topic>
+            <topic label="~RecordBackend" href="classngen_1_1serialization_1_1_record_backend.html#af795e1608a2322f0f599b1fe7398d922"/>
+            <topic label="finalize" href="classngen_1_1serialization_1_1_record_backend.html#ab81370fae8f2fdb039bd24b94c34baa4"/>
+            <topic label="reader" href="classngen_1_1serialization_1_1_record_backend.html#a70683c1c30f263cc564a3a35b262082b"/>
+            <topic label="with_reader" href="classngen_1_1serialization_1_1_record_backend.html#a3b415bbcf9ca0680d4c406813b135a83"/>
+            <topic label="with_writer" href="classngen_1_1serialization_1_1_record_backend.html#a5f919628ca11ae762e0b0aeac94b7f0d"/>
+            <topic label="writer" href="classngen_1_1serialization_1_1_record_backend.html#a1b01a9b371d65ed456bf3674f35aef97"/>
+          </topic>
+          <topic label="IdPredicate" href="namespacengen_1_1serialization.html#a3fc67cb4eb1ffead4aea87e0921d270a"/>
+          <topic label="Record" href="namespacengen_1_1serialization.html#a5a0bd9036418f81c45a38babef202a6b"/>
+          <topic label="RecordView" href="namespacengen_1_1serialization.html#ae1d780a4d4af75621e64cbced94b5676"/>
+          <topic label="Durability" href="namespacengen_1_1serialization.html#ae84cb2bca59109b764caad44a79633e5">
+            <topic label="relaxed" href="namespacengen_1_1serialization.html#ae84cb2bca59109b764caad44a79633e5a81f32be24a2a62fc472cc43edc97e65b"/>
+            <topic label="strict" href="namespacengen_1_1serialization.html#ae84cb2bca59109b764caad44a79633e5a2133fd717402a7966ee88d06f9e0b792"/>
+          </topic>
+          <topic label="all_of" href="namespacengen_1_1serialization.html#a80eec0e02817d7401fbd6ed2ce133f3c"/>
+          <topic label="any_of" href="namespacengen_1_1serialization.html#a4e37d6ed11d58f17c29cb691c8bd5a75"/>
+          <topic label="at_position" href="namespacengen_1_1serialization.html#a2abe0702ee648c230f48c6fa95803016"/>
+          <topic label="contains_segment" href="namespacengen_1_1serialization.html#aa7d82a00b3bedb10647694e5edb44aad"/>
+          <topic label="exact_id" href="namespacengen_1_1serialization.html#aca9057cf8e595566c3fe8ae39b5738b2"/>
+          <topic label="not_fn" href="namespacengen_1_1serialization.html#aa554ebc1a5bb19eaee1dada4977ebd4b"/>
+          <topic label="parse_epoch_string" href="namespacengen_1_1serialization.html#a0e8a026f55fe81c3395abe0e2a9cd94a"/>
+          <topic label="parse_formatted_time" href="namespacengen_1_1serialization.html#ac9800d1eb5efdb0cdbb164b9faf11568"/>
+          <topic label="parse_timestamp" href="namespacengen_1_1serialization.html#a64397bb61fbee02e6727e14ce1ff97e5"/>
+          <topic label="primary_prefix" href="namespacengen_1_1serialization.html#a32fe07e60dc9339451c7ca5c36e90cd0"/>
+          <topic label="starts_with" href="namespacengen_1_1serialization.html#a1a066470dd08b1662c07b54839f6f21f"/>
+          <topic label="LIBRARY_VERSION_MAJOR" href="namespacengen_1_1serialization.html#aff24c1a5112f35b3202ed473217b8f56"/>
+          <topic label="LIBRARY_VERSION_MINOR" href="namespacengen_1_1serialization.html#a4f6caba5b9e2be9753d88ad5970154f6"/>
+          <topic label="LIBRARY_VERSION_PATCH" href="namespacengen_1_1serialization.html#aa21238c7e1815f25467f61b0526e9e0d"/>
+          <topic label="LIBRARY_VERSION_STRING" href="namespacengen_1_1serialization.html#ae57e04c66d7d4eddbbcbe5c36bf48d22"/>
+          <topic label="TIMESTAMP_STRPTIME_FORMAT" href="namespacengen_1_1serialization.html#a829292226ab92ad045570da3f0a6883e"/>
+          <topic label="UNPARSEABLE_TIMESTAMP_SENTINEL" href="namespacengen_1_1serialization.html#a9591c635569f92d926fe471814378deb"/>
+        </topic>
         <topic label="sqlite" href="namespacengen_1_1sqlite.html">
           <topic label="database" href="classngen_1_1sqlite_1_1database.html">
             <topic label="deleter" href="structngen_1_1sqlite_1_1database_1_1deleter.html">
@@ -2182,6 +2531,9 @@
             <topic label="output_interval" href="structrealization_1_1config_1_1_time.html#aa1c533a9094a1ffb9802c50628ef8c3a"/>
             <topic label="start_time" href="structrealization_1_1config_1_1_time.html#a1e06af95b8bf9a71d9886ad00a3cd8c3"/>
           </topic>
+          <topic label="GlobalConfigKey" href="namespacerealization_1_1config.html#a09b5cffe3671fe15906c0881b0331eb8">
+            <topic label="SERIALIZATION" href="namespacerealization_1_1config.html#a09b5cffe3671fe15906c0881b0331eb8a1e9b0ec6eace5b06bb4b944ab3b9a45b"/>
+          </topic>
           <topic label="OutputFormat" href="namespacerealization_1_1config.html#ab24879669387dcb7b2e65913b75e21bf">
             <topic label="csv" href="namespacerealization_1_1config.html#ab24879669387dcb7b2e65913b75e21bfa628cb5675ff524f3e719b7aa2e88fe3f"/>
             <topic label="netcdf" href="namespacerealization_1_1config.html#ab24879669387dcb7b2e65913b75e21bfac2e0f73e7b066a47b743d6ce8213e684"/>
@@ -2190,10 +2542,14 @@
             <topic label="per_feature" href="namespacerealization_1_1config.html#a50f1a4acc522b75d352df1f4e84fa04caa144e5e9277e3262602155c330f89a0b"/>
             <topic label="per_formulation" href="namespacerealization_1_1config.html#a50f1a4acc522b75d352df1f4e84fa04ca42ffd54bc4ba4c105461e8b3b4232295"/>
           </topic>
+          <topic label="apply_config" href="namespacerealization_1_1config.html#a413420f38783c032c06e82aafc7fb8ef"/>
+          <topic label="apply_serialization_path_token_resolution" href="namespacerealization_1_1config.html#a9406186e7fd5ef586eb62769754ab37a"/>
+          <topic label="apply_serialization_restore_subset_default" href="namespacerealization_1_1config.html#a78218a3b142e281d37c414e86d073003"/>
           <topic label="make_catchment_output_mgr" href="namespacerealization_1_1config.html#a9703c5b74ed2eb2cb69f7d6a05eccde5"/>
           <topic label="parse_output_format" href="namespacerealization_1_1config.html#ae6f4c4de5326e76c91d995a77b610653"/>
           <topic label="parse_output_grouping" href="namespacerealization_1_1config.html#a650a217cbb75c964f3a7e7d06ba0ab81"/>
           <topic label="rank_output_root" href="namespacerealization_1_1config.html#aab9f0b64835b2616f72d5eb4117543d2"/>
+          <topic label="to_key_string" href="namespacerealization_1_1config.html#af59178b2a7d2cc3ee2f2bbbac7b2c07a"/>
           <topic label="DEFAULT_AGGREGATED_FILENAME" href="namespacerealization_1_1config.html#ad2b7486f4da23f8b6c7e7c140b882853"/>
           <topic label="LEGACY_DISABLE_CATCHMENT_KEY" href="namespacerealization_1_1config.html#a77d11909bf8a870e68199dd700c29b67"/>
           <topic label="LEGACY_OUTPUT_ROOT_KEY" href="namespacerealization_1_1config.html#aa62ced51c5055676f21301e815749911"/>
@@ -2207,6 +2563,7 @@
           <topic label="time_step_t" href="classrealization_1_1_bmi___c___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_C_Formulation" href="classrealization_1_1_bmi___c___formulation.html#afb7f4b7f7d8e5b3f636a059181e1a521"/>
           <topic label="check_mass_balance" href="classrealization_1_1_bmi___c___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_bmi___c___formulation.html#a83781ef5c7c90cfeb09f01ab57510157"/>
           <topic label="compound_id" href="classrealization_1_1_bmi___c___formulation.html#a9d8c030420a39c199639e29f765ff3ce"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___c___formulation.html#a1de265980481ff42242990ede3b4689f"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___c___formulation.html#a916aba6fc1f5e4d95c9fcd3f234a5bf0"/>
@@ -2324,6 +2681,7 @@
           <topic label="time_step_t" href="classrealization_1_1_bmi___cpp___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_Cpp_Formulation" href="classrealization_1_1_bmi___cpp___formulation.html#ac236d280681cc9a31053f505a562d087"/>
           <topic label="check_mass_balance" href="classrealization_1_1_bmi___cpp___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_bmi___cpp___formulation.html#a83781ef5c7c90cfeb09f01ab57510157"/>
           <topic label="compound_id" href="classrealization_1_1_bmi___cpp___formulation.html#a9d8c030420a39c199639e29f765ff3ce"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___cpp___formulation.html#a1de265980481ff42242990ede3b4689f"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___cpp___formulation.html#a6b4dbeb33e8d3c85ad89d7555dfeb9b3"/>
@@ -2441,6 +2799,7 @@
           <topic label="Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html#ad23e2ac461a34855b320e2c81cc1e2f6"/>
           <topic label="~Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html#af04ef53959ce9c63da57f1f767740401"/>
           <topic label="check_mass_balance" href="classrealization_1_1_bmi___formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_bmi___formulation.html#aa6aeb77a56b585e13d2c5c60c891a35c"/>
           <topic label="compound_id" href="classrealization_1_1_bmi___formulation.html#a9d8c030420a39c199639e29f765ff3ce"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___formulation.html#a1de265980481ff42242990ede3b4689f"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___formulation.html#a93fab1a9af5c9d1917219528bec89894"/>
@@ -2515,6 +2874,7 @@
           <topic label="Bmi_Module_Formulation" href="classrealization_1_1_bmi___module___formulation.html#a0d0a4a7d1392c8a2f705dfad175be7c4"/>
           <topic label="~Bmi_Module_Formulation" href="classrealization_1_1_bmi___module___formulation.html#af4f6d7edfdca22867e9982ce5577978b"/>
           <topic label="check_mass_balance" href="classrealization_1_1_bmi___module___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_bmi___module___formulation.html#a83781ef5c7c90cfeb09f01ab57510157"/>
           <topic label="compound_id" href="classrealization_1_1_bmi___module___formulation.html#a9d8c030420a39c199639e29f765ff3ce"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___module___formulation.html#a1de265980481ff42242990ede3b4689f"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___module___formulation.html#a87b70a39f69a823f26f752f6e53c3363"/>
@@ -2638,6 +2998,7 @@
           <topic label="~Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#a6ef8f446a1fcece399fb72532e854363"/>
           <topic label="check_mass_balance" href="classrealization_1_1_bmi___multi___formulation.html#a53a61d1d8911c96bdb3af81992472dc4"/>
           <topic label="check_output_var_names" href="classrealization_1_1_bmi___multi___formulation.html#a5663cca69cb8f68f38899a031a19fc43"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_bmi___multi___formulation.html#a51e969c7f9e5d8881d490a394c24c2b9"/>
           <topic label="compound_id" href="classrealization_1_1_bmi___multi___formulation.html#a9d8c030420a39c199639e29f765ff3ce"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___multi___formulation.html#a1de265980481ff42242990ede3b4689f"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___multi___formulation.html#ae867f9a3aa14a30541162165066faaf8"/>
@@ -2754,6 +3115,7 @@
           <topic label="Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#ae20086b1dc436b0a42f149b3d9de1009"/>
           <topic label="~Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#af3f6844bf377c6483b744b94dcbbc3fc"/>
           <topic label="check_mass_balance" href="classrealization_1_1_catchment___formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_catchment___formulation.html#aa6aeb77a56b585e13d2c5c60c891a35c"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_catchment___formulation.html#a1de265980481ff42242990ede3b4689f"/>
           <topic label="create_formulation" href="classrealization_1_1_catchment___formulation.html#a4fb8ec9b08820c29d88627ee9781d579"/>
           <topic label="create_formulation" href="classrealization_1_1_catchment___formulation.html#a2a2ac83503092d24da0ee4e4c6eeaa25"/>
@@ -2789,6 +3151,7 @@
           <topic label="Formulation" href="classrealization_1_1_formulation.html#a3a5a0e33ca89dac2153a988eecc1d4c2"/>
           <topic label="~Formulation" href="classrealization_1_1_formulation.html#a2a5e659ff09f6851836bd3a249edd7cc"/>
           <topic label="check_mass_balance" href="classrealization_1_1_formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_formulation.html#aa6aeb77a56b585e13d2c5c60c891a35c"/>
           <topic label="create_formulation" href="classrealization_1_1_formulation.html#a6b495fa685dcea07f2b5ca9c41aa76fc"/>
           <topic label="create_formulation" href="classrealization_1_1_formulation.html#a2cec813cc10759bfb854d0ab0367ebd1"/>
           <topic label="get_formulation_type" href="classrealization_1_1_formulation.html#a224466bc8464766b40109ce929143d86"/>
@@ -2825,6 +3188,7 @@
           <topic label="domain_formulations" href="classrealization_1_1_formulation___manager.html#a5dde983c552aa9515e962b251c030187"/>
           <topic label="formulations" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d"/>
           <topic label="global_config" href="classrealization_1_1_formulation___manager.html#a158bc03a7f3200c6246f067b45af5546"/>
+          <topic label="global_configs" href="classrealization_1_1_formulation___manager.html#ac3220e43a0756785d3200bb4d1236e40"/>
           <topic label="layer_storage" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe"/>
           <topic label="output_config" href="classrealization_1_1_formulation___manager.html#aa30fd8606796914e46da3ae33e6ee701"/>
           <topic label="routing_config" href="classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a"/>
@@ -2853,6 +3217,16 @@
           <topic label="operator()" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01_t_00_01_e_01_4_01_4.html#ad9415e2ba32a1876fb9f981ff590afa0"/>
         </topic>
         <topic label="hash&lt; nonstd::expected&lt; void, E &gt; &gt;" href="structstd_1_1hash_3_01nonstd_1_1expected_3_01void_00_01_e_01_4_01_4.html"/>
+      </topic>
+      <topic label="utilities" href="namespaceutilities.html">
+        <topic label="anonymous_namespace{path_tokens.cpp}" href="namespaceutilities_1_1anonymous__namespace_02path__tokens_8cpp_03.html">
+          <topic label="date_string" href="namespaceutilities_1_1anonymous__namespace_02path__tokens_8cpp_03.html#a15ae67e95e8e7c600f7b343a80d35d2d"/>
+          <topic label="host_string" href="namespaceutilities_1_1anonymous__namespace_02path__tokens_8cpp_03.html#af708062d7aa85eb7417387faf0a2be9a"/>
+          <topic label="mpi_rank_string" href="namespaceutilities_1_1anonymous__namespace_02path__tokens_8cpp_03.html#a8856bde5a5cfa472c3e2c7d6b44a8956"/>
+          <topic label="pid_string" href="namespaceutilities_1_1anonymous__namespace_02path__tokens_8cpp_03.html#a9b6d7447ebee4c698cea990660a0f579"/>
+          <topic label="try_match" href="namespaceutilities_1_1anonymous__namespace_02path__tokens_8cpp_03.html#ac1fc79ca506d4067dad0b04b8db1fc2b"/>
+        </topic>
+        <topic label="resolve_path_tokens" href="namespaceutilities.html#ae9d58fe3c47b3def51e050838fde4f59"/>
       </topic>
       <topic label="utils" href="namespaceutils.html">
         <topic label="CatchmentCsvOutputMgr" href="classutils_1_1_catchment_csv_output_mgr.html">
@@ -2977,7 +3351,29 @@
       </topic>
     </topic>
     <topic label="Namespace Members" href="namespacemembers.html">
-      <topic label="All" href="namespacemembers.html"/>
+      <topic label="All" href="namespacemembers.html">
+        <topic label="a" href="namespacemembers.html"/>
+        <topic label="b" href="namespacemembers_b.html"/>
+        <topic label="c" href="namespacemembers_c.html"/>
+        <topic label="d" href="namespacemembers_d.html"/>
+        <topic label="e" href="namespacemembers_e.html"/>
+        <topic label="f" href="namespacemembers_f.html"/>
+        <topic label="g" href="namespacemembers_g.html"/>
+        <topic label="h" href="namespacemembers_h.html"/>
+        <topic label="i" href="namespacemembers_i.html"/>
+        <topic label="j" href="namespacemembers_j.html"/>
+        <topic label="l" href="namespacemembers_l.html"/>
+        <topic label="m" href="namespacemembers_m.html"/>
+        <topic label="n" href="namespacemembers_n.html"/>
+        <topic label="o" href="namespacemembers_o.html"/>
+        <topic label="p" href="namespacemembers_p.html"/>
+        <topic label="r" href="namespacemembers_r.html"/>
+        <topic label="s" href="namespacemembers_s.html"/>
+        <topic label="t" href="namespacemembers_t.html"/>
+        <topic label="u" href="namespacemembers_u.html"/>
+        <topic label="v" href="namespacemembers_v.html"/>
+        <topic label="w" href="namespacemembers_w.html"/>
+      </topic>
       <topic label="Functions" href="namespacemembers_func.html"/>
       <topic label="Variables" href="namespacemembers_vars.html"/>
       <topic label="Typedefs" href="namespacemembers_type.html"/>
@@ -3885,6 +4281,33 @@
       <topic label="models" href="namespacemodels.html">
         <topic label="bmi" href="namespacemodels_1_1bmi.html">
           <topic label="protocols" href="namespacemodels_1_1bmi_1_1protocols.html">
+            <topic label="anonymous_namespace{serialization.cpp}" href="namespacemodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03.html">
+              <topic label="ScopedCapture" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html">
+                <topic label="ScopedCapture" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#ae0331eead9c88f8f9585da7aa31f0e04"/>
+                <topic label="~ScopedCapture" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#a3fb87a4b4a46fa265d374aa904603809"/>
+                <topic label="ScopedCapture" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#adb93bf7b3d4ad1d53f6d72c677f9919b"/>
+                <topic label="operator=" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#adcfe3472f54f0da5c8447d2a60519aee"/>
+                <topic label="release" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#ab21cafdec87423373bd4bdff947d4626"/>
+                <topic label="model_" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#aadbedec0e42ec4cce2f7e56bedd9ee92"/>
+                <topic label="released_" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#a552fddda00fcd66512be07aedc025c61"/>
+              </topic>
+            </topic>
+            <topic label="serialization" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization.html">
+              <topic label="wire_format" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html">
+                <topic label="RecordPrefix" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html">
+                  <topic label="checkpoint_epoch" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#ac8ad4e6ecce4804296ac8ab027b43e18"/>
+                  <topic label="id_length" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a13aa08b5734ae6b5acb534537a547991"/>
+                  <topic label="MAGIC" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a4a46840d5b2a46d5281c8dab75474454"/>
+                  <topic label="magic" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a36478b6e8a1dbe32144fd43b0a795f2f"/>
+                  <topic label="payload_length" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#aa86fd88a0327f7c65f1de253dfaed51a"/>
+                  <topic label="PREFIX_BYTES" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a15b274bd2fa5aad7967b8371fae7ac00"/>
+                  <topic label="simulation_timestamp" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#aa2a65eca2b8f472c61282ef75d6c6090"/>
+                  <topic label="time_step" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a6a0b53394b5fa9eefe8d5f64c6d6b4f5"/>
+                  <topic label="VERSION" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#af486f4020f1d0652b6f31a0e3381fc5e"/>
+                  <topic label="wire_version" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a0ca4edae5c419e1af66a8012fdba9358"/>
+                </topic>
+              </topic>
+            </topic>
             <topic label="Context" href="structmodels_1_1bmi_1_1protocols_1_1_context.html">
               <topic label="current_time_step" href="structmodels_1_1bmi_1_1protocols_1_1_context.html#aace653cfd38c514210cdd61b218378d8"/>
               <topic label="id" href="structmodels_1_1bmi_1_1protocols_1_1_context.html#a1e31a50551d4d3c6d3ea67719db8a1bd"/>
@@ -3907,6 +4330,25 @@
               <topic label="model" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#ad8e0eb3e3f86e3e0e0b5dbbc7352ea50"/>
               <topic label="protocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html#ab77f6fa47c05a62ba038210299188ed3"/>
             </topic>
+            <topic label="NgenDeserializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html">
+              <topic label="NgenDeserializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a64b1006a0b7ca18cf64d24206b34d3e8"/>
+              <topic label="NgenDeserializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a5d74b4058885a3cc31a504a5290b42c2"/>
+              <topic label="~NgenDeserializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a8a5862bc6a623df7550968164170183f"/>
+              <topic label="check_support" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a767960d023af02559eb427c96416c10a"/>
+              <topic label="error_or_warning" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#aca11929f23379414c3832821ea76c1ea"/>
+              <topic label="initialize" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a25f256d2a8051d5bc3f4cda89906bede"/>
+              <topic label="is_supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#ac4a57d4cbbdad3cd4895472d17f86633"/>
+              <topic label="run" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a042bd97906a10264fe76709c457c4c3e"/>
+              <topic label="backend_" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a4ca048e007e172749e6b8d727fa3b025"/>
+              <topic label="by_timestamp" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a107300a540fdb04f45b97a2a648dc9e1"/>
+              <topic label="check" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a7149c7ef9b6786082c4a8b55d8571c0f"/>
+              <topic label="id_scope" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#ad4d3498ef9169b8e0b2cf0e46610f12d"/>
+              <topic label="is_fatal" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a19f1f38e9dd81057cabca3ff1625ba5a"/>
+              <topic label="step_latest" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a8db40a3bd3bdff08abfa67f841ccdd72"/>
+              <topic label="supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a37eca1bfed7ccc6dc80c3beaa503b7b5"/>
+              <topic label="target_simulation_timestamp" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#adc8bd4a9e6d5fffd36ed12e5f0b00a92"/>
+              <topic label="target_step" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html#a56b9df3eac23cc22710398fb23af45ac"/>
+            </topic>
             <topic label="NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html">
               <topic label="NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a942276f6833dfac529000dc902bacca2"/>
               <topic label="NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#adaf303401a68e066ddf74e34bb08ace1"/>
@@ -3922,6 +4364,21 @@
               <topic label="supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a43c9f6cc22cc98274d26d55ac5f77b0d"/>
               <topic label="tolerance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html#a6d607110426777fdf2c9fc1b539da10d"/>
             </topic>
+            <topic label="NgenSerializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html">
+              <topic label="NgenSerializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a59060c60a49ce2d407b50fc7d5411080"/>
+              <topic label="NgenSerializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a4cbcdb3f0d0a9ce30a2f14f141f99240"/>
+              <topic label="~NgenSerializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a24836408b14de05459a67f7615c54b7e"/>
+              <topic label="check_support" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a9fdf22301e35c10b4c6af67b462706ba"/>
+              <topic label="error_or_warning" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#aca11929f23379414c3832821ea76c1ea"/>
+              <topic label="initialize" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a74dcbfa2d71ba90531df74b198ad95ad"/>
+              <topic label="is_supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#ae23f33846eb30ddb068e198fac35e8d2"/>
+              <topic label="run" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a4d3c5f4c129031743603891b3154f2e2"/>
+              <topic label="backend_" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#af7e4aa8ac8c022e1218f4d03c6b486ff"/>
+              <topic label="check" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a5874ffc638d51b30843e8f1b742c6b51"/>
+              <topic label="frequency" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#affc3fa9cf87042a7d49b05eaee2772a9"/>
+              <topic label="is_fatal" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#af1b62877a4fe3e5aacb002cb0cae3363"/>
+              <topic label="supported" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html#a6e8107240de717f2fb764fbb9e7a5d66"/>
+            </topic>
             <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html">
               <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a919f2c7bbb142675eb33a732344e1fa9"/>
               <topic label="ProtocolError" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aaa6a3dcc61eb991e745c46ea4e9c0989"/>
@@ -3933,9 +4390,13 @@
               <topic label="operator=" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#adfa25eef83ce8f2ffac9df8b7d5ae7e7"/>
               <topic label="operator=" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aa89e744056d1484dc546d1fe708e8892"/>
               <topic label="to_string" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aefff4e7722bc069b1a8448dbbc3df53f"/>
-              <topic label="what" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aa37143293db6aa4026694bc1b66b7ff9"/>
+              <topic label="what" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a47ae9f57de7dead87ca42bf219a224f5"/>
               <topic label="err" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a7ba147cb28f4211d2e64919808f9288a"/>
               <topic label="message" href="classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a15bf04e5f1a956636bc07166ff872f08"/>
+            </topic>
+            <topic label="ReservedVar" href="structmodels_1_1bmi_1_1protocols_1_1_reserved_var.html">
+              <topic label="name" href="structmodels_1_1bmi_1_1protocols_1_1_reserved_var.html#a928f27f1d99de0ae1b692f32ef2fe958"/>
+              <topic label="unit" href="structmodels_1_1bmi_1_1protocols_1_1_reserved_var.html#a385136db6a82f54a45996de5c2be3aec"/>
             </topic>
           </topic>
           <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">
@@ -4345,6 +4806,110 @@
             <topic label="read_polygon" href="structngen_1_1geopackage_1_1wkb.html#a06573240ede5aecaff0a90e7c0418004"/>
           </topic>
         </topic>
+        <topic label="serialization" href="namespacengen_1_1serialization.html">
+          <topic label="detail" href="namespacengen_1_1serialization_1_1detail.html">
+            <topic label="RecordT" href="structngen_1_1serialization_1_1detail_1_1_record_t.html">
+              <topic label="RecordT" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#a80abcd75d0bab471f2e01bb196669329"/>
+              <topic label="RecordT" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#ac80d5c1510b5eb36b22ea123c4095c77"/>
+              <topic label="checkpoint_epoch" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#a5001d7045868a631897ed6695daacbe7"/>
+              <topic label="id" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#a7ed57248806e68b81f7c6d6ecd5f10af"/>
+              <topic label="payload" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#a996f07990373334b6f4400c079e92362"/>
+              <topic label="simulation_timestamp" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#ad1539d8050906bf18c139e014ac55c3c"/>
+              <topic label="time_step" href="structngen_1_1serialization_1_1detail_1_1_record_t.html#a2038f9bef479eca7dba88327bd10091c"/>
+            </topic>
+          </topic>
+          <topic label="BackendError" href="structngen_1_1serialization_1_1_backend_error.html">
+            <topic label="Kind" href="structngen_1_1serialization_1_1_backend_error.html#ae518db22480912fe8a6a7b7fca61dde4">
+              <topic label="NotFound" href="structngen_1_1serialization_1_1_backend_error.html#ae518db22480912fe8a6a7b7fca61dde4a38c300f4fc9ce8a77aad4a30de05cad8"/>
+              <topic label="Corrupted" href="structngen_1_1serialization_1_1_backend_error.html#ae518db22480912fe8a6a7b7fca61dde4a15ff2bcedc465304bd186b34a01e251e"/>
+              <topic label="IOError" href="structngen_1_1serialization_1_1_backend_error.html#ae518db22480912fe8a6a7b7fca61dde4a5206bd7472156351d2d9a99633ac9580"/>
+            </topic>
+            <topic label="BackendError" href="structngen_1_1serialization_1_1_backend_error.html#a682e75554b588dfbdddb9e2e7e5a92e5"/>
+            <topic label="BackendError" href="structngen_1_1serialization_1_1_backend_error.html#aa32a585ff44051150ff0de1d9b3d4681"/>
+            <topic label="kind" href="structngen_1_1serialization_1_1_backend_error.html#a8413ed1ea0529259ed7aabbce9cd2bb4"/>
+            <topic label="message" href="structngen_1_1serialization_1_1_backend_error.html#ae6ef145a38cf09f43f4e3b3f26c22ace"/>
+          </topic>
+          <topic label="FileBackend" href="classngen_1_1serialization_1_1_file_backend.html">
+            <topic label="Index" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html">
+              <topic label="Entry" href="structngen_1_1serialization_1_1_file_backend_1_1_index_1_1_entry.html">
+                <topic label="checkpoint_epoch" href="structngen_1_1serialization_1_1_file_backend_1_1_index_1_1_entry.html#af63447314f092f8916f3e6b72bf96db9"/>
+                <topic label="file_offset" href="structngen_1_1serialization_1_1_file_backend_1_1_index_1_1_entry.html#ae77b6a2e1630d71d5186632e3e8c1a34"/>
+                <topic label="simulation_timestamp" href="structngen_1_1serialization_1_1_file_backend_1_1_index_1_1_entry.html#adc1ce221ddd6910be35aa0c121e584f8"/>
+                <topic label="time_step" href="structngen_1_1serialization_1_1_file_backend_1_1_index_1_1_entry.html#ad6568139ffa7768b3c4cff2eee6bb99f"/>
+              </topic>
+              <topic label="Index" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#a2c6e6dc2102e3334e4328b03c8d3e267"/>
+              <topic label="build" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#ad8e4d64f7c6a7482559f2b522e08b5fe"/>
+              <topic label="find_at_simulation_timestamp" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#a9afd8f7fa7d6839c03d678763e6635d1"/>
+              <topic label="find_at_step" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#ab1ea59d3bedd5cd7b7fb6063be15f594"/>
+              <topic label="find_latest" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#a3e87e9b632bf6677e91f65a278eacf0c"/>
+              <topic label="insert_or_replace" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#a1c2ffddabddc32f619ac979e9420b04f"/>
+              <topic label="size" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#a5d5f4607c5eeb6a8543cb686d2b9cf25"/>
+              <topic label="by_id_" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html#a78a80813bf08b612052ba2350ad4a338"/>
+            </topic>
+            <topic label="Reader" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html">
+              <topic label="Reader" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a415d5bb3f929cef2428516af3d5bb257"/>
+              <topic label="close" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a274d69f7e3c72bc564597626b6ffc805"/>
+              <topic label="find_at_simulation_timestamp" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a02cc8049465912595bdbf858f57ef5e5"/>
+              <topic label="find_at_step" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a6a30f9186437a36896946dc3a03030a4"/>
+              <topic label="find_latest" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a60f2e4d05bd61f39ffa167d219bde079"/>
+              <topic label="load_at" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#ad817c6260f9766e51b90c73b93d033e0"/>
+              <topic label="in_" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a08432398c758037e0744171976889707"/>
+              <topic label="index_" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#aa9fb071224a0817d05bc5cea5dc97689"/>
+              <topic label="path_" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#a89bf4b945be539f5754caa5321640463"/>
+              <topic label="read_scope_" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html#ae246182301f77ee74e4ca78aed7b87da"/>
+            </topic>
+            <topic label="Writer" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html">
+              <topic label="Writer" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html#aa84779521daa5400d929c532b59b72c5"/>
+              <topic label="~Writer" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html#a935696f853002373f8cb2dd1916ea65d"/>
+              <topic label="commit" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html#ab0b8b31f47adb85cf383a1719e5f2c9f"/>
+              <topic label="write" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html#afca253b7437c4f81fb4c860235d8dc54"/>
+              <topic label="durability_" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html#a97c38b997f1e3089071b0edfcbaaa688"/>
+              <topic label="parent_" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html#af7fff8df2ac99470ddfd9bb69c6f0848"/>
+            </topic>
+            <topic label="~FileBackend" href="classngen_1_1serialization_1_1_file_backend.html#a5f43ccd5b11609d1c0d33db40fe26955"/>
+            <topic label="FileBackend" href="classngen_1_1serialization_1_1_file_backend.html#a8f35cbf3258978f070a1ad7c0021f858"/>
+            <topic label="build_index_locked_" href="classngen_1_1serialization_1_1_file_backend.html#a7afdaa13aa3f1f36baec379d772d6453"/>
+            <topic label="create" href="classngen_1_1serialization_1_1_file_backend.html#acd1650c905a69c6a7c7d974fbe553045"/>
+            <topic label="ensure_write_fd_locked_" href="classngen_1_1serialization_1_1_file_backend.html#a6b4db06bc06a25aa7f29111d49e00bae"/>
+            <topic label="finalize" href="classngen_1_1serialization_1_1_file_backend.html#a06bc590c57071746e335ea70ee081425"/>
+            <topic label="path" href="classngen_1_1serialization_1_1_file_backend.html#abb0bcd23a2b3183b033a705d228abeff"/>
+            <topic label="reader" href="classngen_1_1serialization_1_1_file_backend.html#a8d00175a3b710dc188abfe5c05c1e505"/>
+            <topic label="register_scope_" href="classngen_1_1serialization_1_1_file_backend.html#a2fd2958f98e5c6153aa55bdd61e2d6af"/>
+            <topic label="with_reader" href="classngen_1_1serialization_1_1_file_backend.html#a3b415bbcf9ca0680d4c406813b135a83"/>
+            <topic label="with_writer" href="classngen_1_1serialization_1_1_file_backend.html#a5f919628ca11ae762e0b0aeac94b7f0d"/>
+            <topic label="writer" href="classngen_1_1serialization_1_1_file_backend.html#a51615949e3e20f6bc7554ba6ff858ad6"/>
+            <topic label="deferred_errors_" href="classngen_1_1serialization_1_1_file_backend.html#afe909965ca68942c173e4845bfe25994"/>
+            <topic label="dirty_" href="classngen_1_1serialization_1_1_file_backend.html#ac7587b62caa9bc017f8e3ce122a1efbc"/>
+            <topic label="fd_" href="classngen_1_1serialization_1_1_file_backend.html#a69adba04b3af92199c8c91bb6968c7b4"/>
+            <topic label="index_" href="classngen_1_1serialization_1_1_file_backend.html#a4edf786e10dcc7f55e84dc01f26d6c0d"/>
+            <topic label="index_built_" href="classngen_1_1serialization_1_1_file_backend.html#a4fb1219dafb4021eb20f305718a8b00f"/>
+            <topic label="index_scope_" href="classngen_1_1serialization_1_1_file_backend.html#ae278211c17094b67829c1ecee1c74caf"/>
+            <topic label="io_mutex_" href="classngen_1_1serialization_1_1_file_backend.html#a1c53b5276cb14958a6983554dbd014e3"/>
+            <topic label="path_" href="classngen_1_1serialization_1_1_file_backend.html#aa3f7811c1b01bd15be54a16ee6fcc1b7"/>
+            <topic label="registry_" href="classngen_1_1serialization_1_1_file_backend.html#a3071842ff0756ade20a561af9328766c"/>
+            <topic label="registry_mutex_" href="classngen_1_1serialization_1_1_file_backend.html#a795befd33909ff7fe535e558e2d17186"/>
+          </topic>
+          <topic label="RecordBackend" href="classngen_1_1serialization_1_1_record_backend.html">
+            <topic label="Reader" href="classngen_1_1serialization_1_1_record_backend_1_1_reader.html">
+              <topic label="~Reader" href="classngen_1_1serialization_1_1_record_backend_1_1_reader.html#a0d1fc922689b1ef55437584c733ff621"/>
+              <topic label="close" href="classngen_1_1serialization_1_1_record_backend_1_1_reader.html#a274d69f7e3c72bc564597626b6ffc805"/>
+              <topic label="find_at_simulation_timestamp" href="classngen_1_1serialization_1_1_record_backend_1_1_reader.html#a9aeda5b5a268518789efc2b8f17fd56c"/>
+              <topic label="find_at_step" href="classngen_1_1serialization_1_1_record_backend_1_1_reader.html#a334d6bf4dfe9ac6ddbe4a3cc87569173"/>
+              <topic label="find_latest" href="classngen_1_1serialization_1_1_record_backend_1_1_reader.html#aece5a2dbe8e14ea37b1951ce86102648"/>
+            </topic>
+            <topic label="Writer" href="classngen_1_1serialization_1_1_record_backend_1_1_writer.html">
+              <topic label="~Writer" href="classngen_1_1serialization_1_1_record_backend_1_1_writer.html#aff892aae6ce5fb9bf34baff960edcaa4"/>
+              <topic label="commit" href="classngen_1_1serialization_1_1_record_backend_1_1_writer.html#aee97e2e6f868eb03da6bca22bc5aa4c6"/>
+              <topic label="write" href="classngen_1_1serialization_1_1_record_backend_1_1_writer.html#ab3cd74e425a2cf3d5410bfe7aeca1702"/>
+            </topic>
+            <topic label="~RecordBackend" href="classngen_1_1serialization_1_1_record_backend.html#af795e1608a2322f0f599b1fe7398d922"/>
+            <topic label="finalize" href="classngen_1_1serialization_1_1_record_backend.html#ab81370fae8f2fdb039bd24b94c34baa4"/>
+            <topic label="reader" href="classngen_1_1serialization_1_1_record_backend.html#a70683c1c30f263cc564a3a35b262082b"/>
+            <topic label="with_reader" href="classngen_1_1serialization_1_1_record_backend.html#a3b415bbcf9ca0680d4c406813b135a83"/>
+            <topic label="with_writer" href="classngen_1_1serialization_1_1_record_backend.html#a5f919628ca11ae762e0b0aeac94b7f0d"/>
+            <topic label="writer" href="classngen_1_1serialization_1_1_record_backend.html#a1b01a9b371d65ed456bf3674f35aef97"/>
+          </topic>
+        </topic>
         <topic label="sqlite" href="namespacengen_1_1sqlite.html">
           <topic label="database" href="classngen_1_1sqlite_1_1database.html">
             <topic label="deleter" href="structngen_1_1sqlite_1_1database_1_1deleter.html">
@@ -4569,6 +5134,7 @@
           <topic label="time_step_t" href="classrealization_1_1_bmi___c___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_C_Formulation" href="classrealization_1_1_bmi___c___formulation.html#afb7f4b7f7d8e5b3f636a059181e1a521"/>
           <topic label="check_mass_balance" href="classrealization_1_1_bmi___c___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_bmi___c___formulation.html#a83781ef5c7c90cfeb09f01ab57510157"/>
           <topic label="compound_id" href="classrealization_1_1_bmi___c___formulation.html#a9d8c030420a39c199639e29f765ff3ce"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___c___formulation.html#a1de265980481ff42242990ede3b4689f"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___c___formulation.html#a916aba6fc1f5e4d95c9fcd3f234a5bf0"/>
@@ -4686,6 +5252,7 @@
           <topic label="time_step_t" href="classrealization_1_1_bmi___cpp___formulation.html#aedb7c17dc4527613c7411229a2dc9fff"/>
           <topic label="Bmi_Cpp_Formulation" href="classrealization_1_1_bmi___cpp___formulation.html#ac236d280681cc9a31053f505a562d087"/>
           <topic label="check_mass_balance" href="classrealization_1_1_bmi___cpp___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_bmi___cpp___formulation.html#a83781ef5c7c90cfeb09f01ab57510157"/>
           <topic label="compound_id" href="classrealization_1_1_bmi___cpp___formulation.html#a9d8c030420a39c199639e29f765ff3ce"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___cpp___formulation.html#a1de265980481ff42242990ede3b4689f"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___cpp___formulation.html#a6b4dbeb33e8d3c85ad89d7555dfeb9b3"/>
@@ -4803,6 +5370,7 @@
           <topic label="Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html#ad23e2ac461a34855b320e2c81cc1e2f6"/>
           <topic label="~Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html#af04ef53959ce9c63da57f1f767740401"/>
           <topic label="check_mass_balance" href="classrealization_1_1_bmi___formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_bmi___formulation.html#aa6aeb77a56b585e13d2c5c60c891a35c"/>
           <topic label="compound_id" href="classrealization_1_1_bmi___formulation.html#a9d8c030420a39c199639e29f765ff3ce"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___formulation.html#a1de265980481ff42242990ede3b4689f"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___formulation.html#a93fab1a9af5c9d1917219528bec89894"/>
@@ -4877,6 +5445,7 @@
           <topic label="Bmi_Module_Formulation" href="classrealization_1_1_bmi___module___formulation.html#a0d0a4a7d1392c8a2f705dfad175be7c4"/>
           <topic label="~Bmi_Module_Formulation" href="classrealization_1_1_bmi___module___formulation.html#af4f6d7edfdca22867e9982ce5577978b"/>
           <topic label="check_mass_balance" href="classrealization_1_1_bmi___module___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_bmi___module___formulation.html#a83781ef5c7c90cfeb09f01ab57510157"/>
           <topic label="compound_id" href="classrealization_1_1_bmi___module___formulation.html#a9d8c030420a39c199639e29f765ff3ce"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___module___formulation.html#a1de265980481ff42242990ede3b4689f"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___module___formulation.html#a87b70a39f69a823f26f752f6e53c3363"/>
@@ -5000,6 +5569,7 @@
           <topic label="~Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#a6ef8f446a1fcece399fb72532e854363"/>
           <topic label="check_mass_balance" href="classrealization_1_1_bmi___multi___formulation.html#a53a61d1d8911c96bdb3af81992472dc4"/>
           <topic label="check_output_var_names" href="classrealization_1_1_bmi___multi___formulation.html#a5663cca69cb8f68f38899a031a19fc43"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_bmi___multi___formulation.html#a51e969c7f9e5d8881d490a394c24c2b9"/>
           <topic label="compound_id" href="classrealization_1_1_bmi___multi___formulation.html#a9d8c030420a39c199639e29f765ff3ce"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___multi___formulation.html#a1de265980481ff42242990ede3b4689f"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___multi___formulation.html#ae867f9a3aa14a30541162165066faaf8"/>
@@ -5116,6 +5686,7 @@
           <topic label="Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#ae20086b1dc436b0a42f149b3d9de1009"/>
           <topic label="~Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#af3f6844bf377c6483b744b94dcbbc3fc"/>
           <topic label="check_mass_balance" href="classrealization_1_1_catchment___formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_catchment___formulation.html#aa6aeb77a56b585e13d2c5c60c891a35c"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_catchment___formulation.html#a1de265980481ff42242990ede3b4689f"/>
           <topic label="create_formulation" href="classrealization_1_1_catchment___formulation.html#a4fb8ec9b08820c29d88627ee9781d579"/>
           <topic label="create_formulation" href="classrealization_1_1_catchment___formulation.html#a2a2ac83503092d24da0ee4e4c6eeaa25"/>
@@ -5151,6 +5722,7 @@
           <topic label="Formulation" href="classrealization_1_1_formulation.html#a3a5a0e33ca89dac2153a988eecc1d4c2"/>
           <topic label="~Formulation" href="classrealization_1_1_formulation.html#a2a5e659ff09f6851836bd3a249edd7cc"/>
           <topic label="check_mass_balance" href="classrealization_1_1_formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d"/>
+          <topic label="checkpoint_state" href="classrealization_1_1_formulation.html#aa6aeb77a56b585e13d2c5c60c891a35c"/>
           <topic label="create_formulation" href="classrealization_1_1_formulation.html#a6b495fa685dcea07f2b5ca9c41aa76fc"/>
           <topic label="create_formulation" href="classrealization_1_1_formulation.html#a2cec813cc10759bfb854d0ab0367ebd1"/>
           <topic label="get_formulation_type" href="classrealization_1_1_formulation.html#a224466bc8464766b40109ce929143d86"/>
@@ -5187,6 +5759,7 @@
           <topic label="domain_formulations" href="classrealization_1_1_formulation___manager.html#a5dde983c552aa9515e962b251c030187"/>
           <topic label="formulations" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d"/>
           <topic label="global_config" href="classrealization_1_1_formulation___manager.html#a158bc03a7f3200c6246f067b45af5546"/>
+          <topic label="global_configs" href="classrealization_1_1_formulation___manager.html#ac3220e43a0756785d3200bb4d1236e40"/>
           <topic label="layer_storage" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe"/>
           <topic label="output_config" href="classrealization_1_1_formulation___manager.html#aa30fd8606796914e46da3ae33e6ee701"/>
           <topic label="routing_config" href="classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a"/>
@@ -6180,11 +6753,16 @@
       <topic label="HY_HydroNexus" href="class_h_y___hydro_nexus.html">
         <topic label="HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html"/>
       </topic>
+      <topic label="models::bmi::protocols::anonymous_namespace{serialization.cpp}::ScopedCapture" href="classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html"/>
       <topic label="models::bmi::protocols::Context" href="structmodels_1_1bmi_1_1protocols_1_1_context.html"/>
       <topic label="models::bmi::protocols::NgenBmiProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocol.html">
+        <topic label="models::bmi::protocols::NgenDeserializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html"/>
         <topic label="models::bmi::protocols::NgenMassBalance" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html"/>
+        <topic label="models::bmi::protocols::NgenSerializationProtocol" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html"/>
       </topic>
       <topic label="models::bmi::protocols::NgenBmiProtocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html"/>
+      <topic label="models::bmi::protocols::ReservedVar" href="structmodels_1_1bmi_1_1protocols_1_1_reserved_var.html"/>
+      <topic label="models::bmi::protocols::serialization::wire_format::RecordPrefix" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html"/>
       <topic label="multithreading::details::string_literal&lt; N &gt;" href="structmultithreading_1_1details_1_1string__literal.html"/>
       <topic label="network::Network" href="classnetwork_1_1_network.html"/>
       <topic label="network::VertexProperty" href="structnetwork_1_1_vertex_property.html"/>
@@ -6199,6 +6777,19 @@
       </topic>
       <topic label="ngen::LayerDataStorage" href="classngen_1_1_layer_data_storage.html"/>
       <topic label="ngen::LayerDescription" href="structngen_1_1_layer_description.html"/>
+      <topic label="ngen::serialization::BackendError" href="structngen_1_1serialization_1_1_backend_error.html"/>
+      <topic label="ngen::serialization::detail::RecordT&lt; PayloadT &gt;" href="structngen_1_1serialization_1_1detail_1_1_record_t.html"/>
+      <topic label="ngen::serialization::FileBackend::Index" href="classngen_1_1serialization_1_1_file_backend_1_1_index.html"/>
+      <topic label="ngen::serialization::FileBackend::Index::Entry" href="structngen_1_1serialization_1_1_file_backend_1_1_index_1_1_entry.html"/>
+      <topic label="ngen::serialization::RecordBackend" href="classngen_1_1serialization_1_1_record_backend.html">
+        <topic label="ngen::serialization::FileBackend" href="classngen_1_1serialization_1_1_file_backend.html"/>
+      </topic>
+      <topic label="ngen::serialization::RecordBackend::Reader" href="classngen_1_1serialization_1_1_record_backend_1_1_reader.html">
+        <topic label="ngen::serialization::FileBackend::Reader" href="classngen_1_1serialization_1_1_file_backend_1_1_reader.html"/>
+      </topic>
+      <topic label="ngen::serialization::RecordBackend::Writer" href="classngen_1_1serialization_1_1_record_backend_1_1_writer.html">
+        <topic label="ngen::serialization::FileBackend::Writer" href="classngen_1_1serialization_1_1_file_backend_1_1_writer.html"/>
+      </topic>
       <topic label="ngen::sqlite::database" href="classngen_1_1sqlite_1_1database.html"/>
       <topic label="ngen::sqlite::database::deleter" href="structngen_1_1sqlite_1_1database_1_1deleter.html"/>
       <topic label="ngen::sqlite::database::iterator" href="structngen_1_1sqlite_1_1database_1_1iterator.html"/>
@@ -6229,6 +6820,9 @@
       <topic label="SelectorConfig" href="struct_selector_config.html"/>
       <topic label="Simulation_Time" href="class_simulation___time.html"/>
       <topic label="simulation_time_params" href="structsimulation__time__params.html"/>
+      <topic label="std::enable_shared_from_this">
+        <topic label="ngen::serialization::FileBackend" href="classngen_1_1serialization_1_1_file_backend.html"/>
+      </topic>
       <topic label="std::exception">
         <topic label="add_to_summed_nexus" href="structadd__to__summed__nexus.html"/>
         <topic label="completed_time_step" href="structcompleted__time__step.html"/>
@@ -6372,6 +6966,7 @@
         <topic label="z" href="functions_vars_z.html"/>
       </topic>
       <topic label="Typedefs" href="functions_type.html"/>
+      <topic label="Enumerations" href="functions_enum.html"/>
       <topic label="Enumerator" href="functions_eval.html"/>
       <topic label="Related Symbols" href="functions_rela.html"/>
     </topic>

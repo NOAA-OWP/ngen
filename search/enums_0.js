@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['error_0',['Error',['../namespacemodels_1_1bmi_1_1protocols.html#aa0aa8e7c2fca284c07c66b6186d9fb93',1,'models::bmi::protocols']]]
+  ['durability_0',['Durability',['../namespacengen_1_1serialization.html#ae84cb2bca59109b764caad44a79633e5',1,'ngen::serialization']]]
 ];

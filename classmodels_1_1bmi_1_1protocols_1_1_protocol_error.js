@@ -10,7 +10,7 @@ var classmodels_1_1bmi_1_1protocols_1_1_protocol_error =
     [ "operator=", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#adfa25eef83ce8f2ffac9df8b7d5ae7e7", null ],
     [ "operator=", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aa89e744056d1484dc546d1fe708e8892", null ],
     [ "to_string", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aefff4e7722bc069b1a8448dbbc3df53f", null ],
-    [ "what", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aa37143293db6aa4026694bc1b66b7ff9", null ],
+    [ "what", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a47ae9f57de7dead87ca42bf219a224f5", null ],
     [ "err", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a7ba147cb28f4211d2e64919808f9288a", null ],
     [ "message", "classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#a15bf04e5f1a956636bc07166ff872f08", null ]
 ];

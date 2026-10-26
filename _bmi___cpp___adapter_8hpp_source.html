@@ -114,13 +114,13 @@ $(function(){initNavTree('_bmi___cpp___adapter_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// Forward declaration to provide access to protected items in testing</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">class </span>Bmi_Cpp_Adapter_Test;</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">using </span><a class="code hl_class" href="classbmi_1_1_bmi.html">Cpp_Bmi</a> = <a class="code hl_class" href="classbmi_1_1_bmi.html">bmi::Bmi</a>;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">using </span>Cpp_Bmi = <a class="code hl_class" href="classbmi_1_1_bmi.html">bmi::Bmi</a>;</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">using </span>ModelCreator = <a class="code hl_class" href="classbmi_1_1_bmi.html">Cpp_Bmi</a>* (*)();</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">using </span>ModelDestroyer = void (*)(<a class="code hl_class" href="classbmi_1_1_bmi.html">Cpp_Bmi</a>*);</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">using </span>ModelCreator = Cpp_Bmi* (*)();</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">using </span>ModelDestroyer = void (*)(Cpp_Bmi*);</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemodels.html">models</a> {</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebmi.html">bmi</a> {</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemodels_1_1bmi_1_1protocols.html">bmi</a> {</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="foldopen" id="foldopen00029" data-start="{" data-end="};">
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html">   29</a></span>        <span class="keyword">class </span><a class="code hl_class" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html">Bmi_Cpp_Adapter</a> final : <span class="keyword">public</span> <a class="code hl_class" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">AbstractCLibBmiAdapter</a>  {</div>
@@ -307,7 +307,7 @@ $(function(){initNavTree('_bmi___cpp___adapter_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                    dynamic_creator = (ModelCreator) symbol;</div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                    <a class="code hl_variable" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ab816605158ae58a39b799531f8100ee3">bmi_model</a> = std::shared_ptr&lt;Cpp_Bmi&gt;(</div>
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                        dynamic_creator(),</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>                        [](<a class="code hl_class" href="classbmi_1_1_bmi.html">Cpp_Bmi</a>* p) {</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>                        [](Cpp_Bmi* p) {</div>
 <div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                            <span class="comment">// DO NOTHING.</span></div>
 <div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                            <span class="comment">/* The best practice pattern for using C++ objects with dlopen is to declare a creator function</span></div>
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span><span class="comment">                             * AND a destroyer function. It is not wise to create the object in the library and destroy it</span></div>
@@ -468,7 +468,7 @@ $(function(){initNavTree('_bmi___cpp___adapter_8hpp_source.html',''); initResiza
 <div class="ttc" id="aclassmodels_1_1bmi_1_1_bmi___cpp___adapter_html_af9dd2629499833ef47718489a31d7929"><div class="ttname"><a href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#af9dd2629499833ef47718489a31d7929">models::bmi::Bmi_Cpp_Adapter::GetValueAtIndices</a></div><div class="ttdeci">void GetValueAtIndices(std::string name, void *dest, int *inds, int count) override</div><div class="ttdef"><b>Definition</b> Bmi_Cpp_Adapter.cpp:117</div></div>
 <div class="ttc" id="aclassmodels_1_1bmi_1_1_bmi___cpp___adapter_html_afabb0ce9324c2c08bab9e836dc612c3b"><div class="ttname"><a href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afabb0ce9324c2c08bab9e836dc612c3b">models::bmi::Bmi_Cpp_Adapter::finalizeForCppAdapter</a></div><div class="ttdeci">void finalizeForCppAdapter()</div><div class="ttdoc">A non-virtual equivalent for the virtual.</div><div class="ttdef"><b>Definition</b> Bmi_Cpp_Adapter.hpp:426</div></div>
 <div class="ttc" id="aclassmodels_1_1bmi_1_1_bmi___cpp___adapter_html_afecf067b64e1c54a6055c7f3f4425d88"><div class="ttname"><a href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afecf067b64e1c54a6055c7f3f4425d88">models::bmi::Bmi_Cpp_Adapter::retrieve_bmi_model_time_step_size</a></div><div class="ttdeci">std::shared_ptr&lt; double &gt; retrieve_bmi_model_time_step_size()</div><div class="ttdoc">Retrieve time step size directly from model.</div><div class="ttdef"><b>Definition</b> Bmi_Cpp_Adapter.hpp:390</div></div>
-<div class="ttc" id="anamespacebmi_html"><div class="ttname"><a href="namespacebmi.html">bmi</a></div><div class="ttdef"><b>Definition</b> bmi.hpp:16</div></div>
+<div class="ttc" id="anamespacemodels_1_1bmi_1_1protocols_html"><div class="ttname"><a href="namespacemodels_1_1bmi_1_1protocols.html">models::bmi::protocols</a></div><div class="ttdef"><b>Definition</b> deserialization.hpp:40</div></div>
 <div class="ttc" id="anamespacemodels_html"><div class="ttname"><a href="namespacemodels.html">models</a></div><div class="ttdef"><b>Definition</b> AbstractCLibBmiAdapter.hpp:6</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -476,7 +476,7 @@ $(function(){initNavTree('_bmi___cpp___adapter_8hpp_source.html',''); initResiza
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_7688c87f5c9cad4c135b176d94e89e38.html">bmi</a></li><li class="navelem"><b>Bmi_Cpp_Adapter.hpp</b></li>
-    <li class="footer">Generated on Fri Oct 23 2026 21:22:02 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Oct 26 2026 17:20:04 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

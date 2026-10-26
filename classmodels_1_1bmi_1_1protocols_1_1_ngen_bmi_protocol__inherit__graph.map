@@ -1,5 +1,9 @@
 <map id="models::bmi::protocols::NgenBmiProtocol" name="models::bmi::protocols::NgenBmiProtocol">
-<area shape="rect" id="Node000001" title=" " alt="" coords="9,5,150,188"/>
-<area shape="rect" id="Node000002" href="$classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html" title=" " alt="" coords="5,236,154,521"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,203,82,237,77,237,77,203"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="236,5,377,188"/>
+<area shape="rect" id="Node000002" href="$classmodels_1_1bmi_1_1protocols_1_1_ngen_deserialization_protocol.html" title=" " alt="" coords="5,236,207,602"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="244,202,222,238,209,258,205,255,217,235,240,200"/>
+<area shape="rect" id="Node000003" href="$classmodels_1_1bmi_1_1protocols_1_1_ngen_mass_balance.html" title=" " alt="" coords="232,277,381,562"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="309,203,309,277,304,277,304,203"/>
+<area shape="rect" id="Node000004" href="$classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html" title=" " alt="" coords="404,277,592,562"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="374,200,395,235,420,276,415,279,391,238,369,202"/>
 </map>

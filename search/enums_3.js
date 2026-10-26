@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['jsongeometrytype_0',['JSONGeometryType',['../namespacegeojson.html#a316aa4b4d9aba725f7c899a598b33cb5',1,'geojson']]]
+  ['globalconfigkey_0',['GlobalConfigKey',['../namespacerealization_1_1config.html#a09b5cffe3671fe15906c0881b0331eb8',1,'realization::config']]]
 ];

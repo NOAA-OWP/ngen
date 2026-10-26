@@ -26,6 +26,7 @@ var classrealization_1_1_formulation___manager =
     [ "domain_formulations", "classrealization_1_1_formulation___manager.html#a5dde983c552aa9515e962b251c030187", null ],
     [ "formulations", "classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d", null ],
     [ "global_config", "classrealization_1_1_formulation___manager.html#a158bc03a7f3200c6246f067b45af5546", null ],
+    [ "global_configs", "classrealization_1_1_formulation___manager.html#ac3220e43a0756785d3200bb4d1236e40", null ],
     [ "layer_storage", "classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe", null ],
     [ "output_config", "classrealization_1_1_formulation___manager.html#aa30fd8606796914e46da3ae33e6ee701", null ],
     [ "routing_config", "classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a", null ],

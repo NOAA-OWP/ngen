@@ -5,6 +5,7 @@ var classrealization_1_1_bmi___cpp___formulation =
     [ "time_step_t", "classrealization_1_1_bmi___cpp___formulation.html#aedb7c17dc4527613c7411229a2dc9fff", null ],
     [ "Bmi_Cpp_Formulation", "classrealization_1_1_bmi___cpp___formulation.html#ac236d280681cc9a31053f505a562d087", null ],
     [ "check_mass_balance", "classrealization_1_1_bmi___cpp___formulation.html#a289cd8db8cd2b7cbfab86eb205d59301", null ],
+    [ "checkpoint_state", "classrealization_1_1_bmi___cpp___formulation.html#a83781ef5c7c90cfeb09f01ab57510157", null ],
     [ "compound_id", "classrealization_1_1_bmi___cpp___formulation.html#a9d8c030420a39c199639e29f765ff3ce", null ],
     [ "config_pattern_substitution", "classrealization_1_1_bmi___cpp___formulation.html#a1de265980481ff42242990ede3b4689f", null ],
     [ "construct_model", "classrealization_1_1_bmi___cpp___formulation.html#a6b4dbeb33e8d3c85ad89d7555dfeb9b3", null ],

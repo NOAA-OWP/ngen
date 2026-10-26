@@ -1,0 +1,7 @@
+<map id="ngen::serialization::BackendError" name="ngen::serialization::BackendError">
+<area shape="rect" id="Node000001" title="Categorized error carried on every abstract&#45;backend method&#39;s expected&lt;&gt; error arm." alt="" coords="5,265,118,367"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="28,136,95,202"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,202,64,248,59,248,59,202"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,118,87"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="64,101,64,136,59,136,59,101"/>
+</map>

@@ -26,5 +26,6 @@ var namespaces_dup =
     [ "realization", "namespacerealization.html", "namespacerealization" ],
     [ "routing_py_adapter", "namespacerouting__py__adapter.html", null ],
     [ "std", "namespacestd.html", "namespacestd" ],
+    [ "utilities", "namespaceutilities.html", "namespaceutilities" ],
     [ "utils", "namespaceutils.html", "namespaceutils" ]
 ];

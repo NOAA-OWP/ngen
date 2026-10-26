@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['resamplemethod_0',['ReSampleMethod',['../namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9',1,'data_access']]]
+  ['kind_0',['Kind',['../structngen_1_1serialization_1_1_backend_error.html#ae518db22480912fe8a6a7b7fca61dde4',1,'ngen::serialization::BackendError']]]
 ];

@@ -1,0 +1,4 @@
+var namespacemodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03 =
+[
+    [ "ScopedCapture", "classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html", "classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture" ]
+];

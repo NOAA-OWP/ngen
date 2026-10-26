@@ -217,6 +217,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a02267e0cc9fec2e1d883f55c2c12b39d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0cc85bff600c74d7ab3d7a9db96643d" id="r_ab0cc85bff600c74d7ab3d7a9db96643d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d">check_mass_balance</a> (const int &amp;iteration, const int &amp;total_steps, const std::string &amp;timestamp) const =0</td></tr>
 <tr class="separator:ab0cc85bff600c74d7ab3d7a9db96643d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6aeb77a56b585e13d2c5c60c891a35c" id="r_aa6aeb77a56b585e13d2c5c60c891a35c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#aa6aeb77a56b585e13d2c5c60c891a35c">checkpoint_state</a> (const int &amp;iteration, const int &amp;total_steps, const std::string &amp;timestamp) const =0</td></tr>
+<tr class="memdesc:aa6aeb77a56b585e13d2c5c60c891a35c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the state-save side of the ngen BMI Serialization Protocol.  <br /></td></tr>
+<tr class="separator:aa6aeb77a56b585e13d2c5c60c891a35c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af783d34fb272298f8c8f9673b1ea891e" id="r_af783d34fb272298f8c8f9673b1ea891e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#af783d34fb272298f8c8f9673b1ea891e">finalize</a> ()</td></tr>
 <tr class="memdesc:af783d34fb272298f8c8f9673b1ea891e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources that should not be held as the run is shutting down.  <br /></td></tr>
 <tr class="separator:af783d34fb272298f8c8f9673b1ea891e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -516,6 +519,45 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
+<a id="aa6aeb77a56b585e13d2c5c60c891a35c" name="aa6aeb77a56b585e13d2c5c60c891a35c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6aeb77a56b585e13d2c5c60c891a35c">&#9670;&#160;</a></span>checkpoint_state()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void realization::Formulation::checkpoint_state </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>iteration</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>total_steps</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>timestamp</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Invoke the state-save side of the ngen BMI Serialization Protocol. </p>
+<p>Called from the per-timestep driver (see <code>core/Layer.cpp</code>) alongside <code>check_mass_balance</code>. Implementations build a protocol Context from the arguments and the formulation's own compound identity, then forward to the <code>NgenBmiProtocols</code> container. Non-BMI formulations may implement as a no-op; unconfigured save protocols short-circuit inside <code>run()</code> so the cost is just the virtual dispatch. </p>
+
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a83781ef5c7c90cfeb09f01ab57510157">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a51e969c7f9e5d8881d490a394c24c2b9">realization::Bmi_Multi_Formulation</a>.</p>
+
+</div>
+</div>
 <a id="a9d8c030420a39c199639e29f765ff3ce" name="a9d8c030420a39c199639e29f765ff3ce"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9d8c030420a39c199639e29f765ff3ce">&#9670;&#160;</a></span>compound_id()</h2>
 
@@ -549,6 +591,8 @@ Uniqueness</h2>
 <dl class="section return"><dt>Returns</dt><dd>The compound identity string, or the default composition when <code>set_compound_id</code> was never called. </dd></dl>
 
 <p class="reference">References <a class="el" href="#afbf9ff3443acb64c6ed69bd46a3880f0">compound_id_</a>, and <a class="el" href="#a3e6136d3fde105fd835c8be24db7d1b7">model_type_name</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a83781ef5c7c90cfeb09f01ab57510157">realization::Bmi_Module_Formulation::checkpoint_state()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7c62e8f7f7db1d06cfef28ee66554def">realization::Bmi_Module_Formulation::inner_create_formulation()</a>.</p>
 
 </div>
 </div>
@@ -642,7 +686,7 @@ Uniqueness</h2>
 
 <p>Implemented in <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a029185f64f954471018b5b5c63cae3b8">realization::Bmi_C_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a6b136f45d5a43bbb0ed672203bf56bcb">realization::Bmi_Cpp_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ae867f9a3aa14a30541162165066faaf8">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aaeaf8ef8b36e7c5690ca8134a5cd8065">realization::Bmi_Module_Formulation::determine_model_time_offset()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#afc50e50f23df9c0178bd3ccba22c24e4">realization::Bmi_Module_Formulation::set_model_inputs_prior_to_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aaeaf8ef8b36e7c5690ca8134a5cd8065">realization::Bmi_Module_Formulation::determine_model_time_offset()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7c62e8f7f7db1d06cfef28ee66554def">realization::Bmi_Module_Formulation::inner_create_formulation()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#afc50e50f23df9c0178bd3ccba22c24e4">realization::Bmi_Module_Formulation::set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -2280,7 +2324,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aaeaf8ef8b36e7c5690ca8134a5cd8065">realization::Bmi_Module_Formulation::determine_model_time_offset()</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a92b6ca5352dd98640d7c320f7c6c3333">realization::Catchment_Formulation::finalize()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a560df251f7c45e3003698a9ce589f0da">realization::Bmi_Module_Formulation::get_provider_for_input_var()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#aaa757bd704d7477df5322adfe4548cb1">realization::Bmi_Multi_Formulation::get_variable_time_begin()</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#af7a6c848245cc7c359708fcc042a39f3">realization::Bmi_Multi_Formulation::get_variable_time_end()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aaeaf8ef8b36e7c5690ca8134a5cd8065">realization::Bmi_Module_Formulation::determine_model_time_offset()</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a92b6ca5352dd98640d7c320f7c6c3333">realization::Catchment_Formulation::finalize()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a560df251f7c45e3003698a9ce589f0da">realization::Bmi_Module_Formulation::get_provider_for_input_var()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#aaa757bd704d7477df5322adfe4548cb1">realization::Bmi_Multi_Formulation::get_variable_time_begin()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#af7a6c848245cc7c359708fcc042a39f3">realization::Bmi_Multi_Formulation::get_variable_time_end()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7c62e8f7f7db1d06cfef28ee66554def">realization::Bmi_Module_Formulation::inner_create_formulation()</a>.</p>
 
 </div>
 </div>
@@ -2575,7 +2619,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___formulation.html">Bmi_Formulation</a></li>
-    <li class="footer">Generated on Fri Oct 23 2026 21:22:03 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Oct 26 2026 17:20:06 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

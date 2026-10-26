@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['outputformat_0',['OutputFormat',['../namespacerealization_1_1config.html#ab24879669387dcb7b2e65913b75e21bf',1,'realization::config']]],
-  ['outputgrouping_1',['OutputGrouping',['../namespacerealization_1_1config.html#a50f1a4acc522b75d352df1f4e84fa04c',1,'realization::config']]]
+  ['hy_5fdistancediscription_0',['HY_DistanceDiscription',['../namespacehy__features_1_1hydrolocation.html#a6332f21e5c195e289dd1b6c59a029b1a',1,'hy_features::hydrolocation']]],
+  ['hy_5fhydrolocationtype_1',['HY_HydroLocationType',['../namespacehy__features_1_1hydrolocation.html#a7fcfe40520bcda2cd5be66a5b5bbbc0b',1,'hy_features::hydrolocation']]]
 ];

@@ -1,0 +1,22 @@
+<map id="ngen::serialization::FileBackend::Index" name="ngen::serialization::FileBackend::Index">
+<area shape="rect" id="Node000001" title=" " alt="" coords="227,719,358,937"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="201,544,384,656"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="295,655,295,702,290,702,290,655"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="76,400,143,466"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="145,462,221,531,218,535,141,466"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,173,118,254"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="76,268,105,400,100,401,71,269"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="214,385,371,481"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="295,481,295,527,290,527,290,481"/>
+<area shape="rect" id="Node000006" href="$structngen_1_1serialization_1_1_file_backend_1_1_index_1_1_entry.html" title=" " alt="" coords="142,135,293,292"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="229,291,237,326,248,360,252,369,247,371,243,362,232,328,224,292"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="317,180,417,246"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="354,261,311,386,306,385,349,260"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="406,5,424,72"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="408,49,388,69,371,97,364,130,363,163,358,163,358,129,366,95,384,66,404,45"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="441,173,565,254"/>
+<area shape="poly" id="edge10_Node000009_Node000008" title=" " alt="" coords="426,56,478,156,473,159,422,59"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="490,269,456,362,415,445,364,522,345,546,341,543,360,519,411,442,451,360,485,268"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="546,5,566,72"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="549,72,523,157,518,156,544,71"/>
+</map>

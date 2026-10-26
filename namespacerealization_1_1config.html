@@ -132,6 +132,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:a09b5cffe3671fe15906c0881b0331eb8" id="r_a09b5cffe3671fe15906c0881b0331eb8"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a09b5cffe3671fe15906c0881b0331eb8">GlobalConfigKey</a> { <a class="el" href="#a09b5cffe3671fe15906c0881b0331eb8a1e9b0ec6eace5b06bb4b944ab3b9a45b">SERIALIZATION</a>
+ }</td></tr>
+<tr class="memdesc:a09b5cffe3671fe15906c0881b0331eb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifier for a realization-level configuration block that can be inherited down into each formulation's params.  <a href="#a09b5cffe3671fe15906c0881b0331eb8">More...</a><br /></td></tr>
+<tr class="separator:a09b5cffe3671fe15906c0881b0331eb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab24879669387dcb7b2e65913b75e21bf" id="r_ab24879669387dcb7b2e65913b75e21bf"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab24879669387dcb7b2e65913b75e21bf">OutputFormat</a> { <br />
 &#160;&#160;<a class="el" href="#ab24879669387dcb7b2e65913b75e21bfa628cb5675ff524f3e719b7aa2e88fe3f">csv</a>
 , <br />
@@ -154,6 +158,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a9703c5b74ed2eb2cb69f7d6a05eccde5" id="r_a9703c5b74ed2eb2cb69f7d6a05eccde5"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classutils_1_1_catchment_outputs_mgr.html">utils::CatchmentOutputsMgr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9703c5b74ed2eb2cb69f7d6a05eccde5">make_catchment_output_mgr</a> (const <a class="el" href="structrealization_1_1config_1_1_output.html">Output</a> &amp;output_config, std::vector&lt; <a class="el" href="structutils_1_1_feature_descriptor.html">utils::FeatureDescriptor</a> &gt; descriptors, const std::string &amp;aggregated_filename=<a class="el" href="#ad2b7486f4da23f8b6c7e7c140b882853">DEFAULT_AGGREGATED_FILENAME</a>)</td></tr>
 <tr class="memdesc:a9703c5b74ed2eb2cb69f7d6a05eccde5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the catchment output manager from the parsed output configuration.  <br /></td></tr>
 <tr class="separator:a9703c5b74ed2eb2cb69f7d6a05eccde5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af59178b2a7d2cc3ee2f2bbbac7b2c07a" id="r_af59178b2a7d2cc3ee2f2bbbac7b2c07a"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af59178b2a7d2cc3ee2f2bbbac7b2c07a">to_key_string</a> (<a class="el" href="#a09b5cffe3671fe15906c0881b0331eb8">GlobalConfigKey</a> which)</td></tr>
+<tr class="memdesc:af59178b2a7d2cc3ee2f2bbbac7b2c07a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Top-level JSON key string for a given GlobalConfigKey.  <br /></td></tr>
+<tr class="separator:af59178b2a7d2cc3ee2f2bbbac7b2c07a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a413420f38783c032c06e82aafc7fb8ef" id="r_a413420f38783c032c06e82aafc7fb8ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a413420f38783c032c06e82aafc7fb8ef">apply_config</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;child, const <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;parent, <a class="el" href="#a09b5cffe3671fe15906c0881b0331eb8">GlobalConfigKey</a> which)</td></tr>
+<tr class="memdesc:a413420f38783c032c06e82aafc7fb8ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy a named config block from <code>parent</code> into <code>child</code>, unless the child already declares its own entry for the same key.  <br /></td></tr>
+<tr class="separator:a413420f38783c032c06e82aafc7fb8ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6f4c4de5326e76c91d995a77b610653" id="r_ae6f4c4de5326e76c91d995a77b610653"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ab24879669387dcb7b2e65913b75e21bf">OutputFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6f4c4de5326e76c91d995a77b610653">parse_output_format</a> (const std::string &amp;s)</td></tr>
 <tr class="separator:ae6f4c4de5326e76c91d995a77b610653"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a650a217cbb75c964f3a7e7d06ba0ab81" id="r_a650a217cbb75c964f3a7e7d06ba0ab81"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04c">OutputGrouping</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a650a217cbb75c964f3a7e7d06ba0ab81">parse_output_grouping</a> (const std::string &amp;s)</td></tr>
@@ -161,6 +171,12 @@ Functions</h2></td></tr>
 <tr class="memitem:aab9f0b64835b2616f72d5eb4117543d2" id="r_aab9f0b64835b2616f72d5eb4117543d2"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab9f0b64835b2616f72d5eb4117543d2">rank_output_root</a> (const std::string &amp;base_root, const <a class="el" href="structrealization_1_1config_1_1_output_domain.html">OutputDomain</a> &amp;domain, int mpi_rank, int mpi_num_procs)</td></tr>
 <tr class="memdesc:aab9f0b64835b2616f72d5eb4117543d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The output root for a rank's files in this domain: appends "rank_&lt;N&gt;/" to <code>base_root</code> when the domain requests per-rank subdirectories, or when it aggregates per formulation (which requires per-rank separation so ranks don't write the same file).  <br /></td></tr>
 <tr class="separator:aab9f0b64835b2616f72d5eb4117543d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9406186e7fd5ef586eb62769754ab37a" id="r_a9406186e7fd5ef586eb62769754ab37a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9406186e7fd5ef586eb62769754ab37a">apply_serialization_path_token_resolution</a> (boost::property_tree::ptree &amp;block)</td></tr>
+<tr class="memdesc:a9406186e7fd5ef586eb62769754ab37a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve <code>{{rank}}</code>/<code>{{pid}}</code>/<code>{{host}}</code>/<code>{{date}}</code> tokens in every path field the serialization block may carry.  <br /></td></tr>
+<tr class="separator:a9406186e7fd5ef586eb62769754ab37a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78218a3b142e281d37c414e86d073003" id="r_a78218a3b142e281d37c414e86d073003"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78218a3b142e281d37c414e86d073003">apply_serialization_restore_subset_default</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;global_configs, const std::vector&lt; std::string &gt; &amp;known_ids)</td></tr>
+<tr class="memdesc:a78218a3b142e281d37c414e86d073003"><td class="mdescLeft">&#160;</td><td class="mdescRight">Auto-populate <code>serialization.restore.id_subset</code> with the set of catchment identifiers that this realization will actually instantiate, when the user hasn't supplied one.  <br /></td></tr>
+<tr class="separator:a78218a3b142e281d37c414e86d073003"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -181,6 +197,36 @@ Variables</h2></td></tr>
 <tr class="separator:a4b47cec0634b4cbc2d53aeffb122c169"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a09b5cffe3671fe15906c0881b0331eb8" name="a09b5cffe3671fe15906c0881b0331eb8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09b5cffe3671fe15906c0881b0331eb8">&#9670;&#160;</a></span>GlobalConfigKey</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#a09b5cffe3671fe15906c0881b0331eb8">realization::config::GlobalConfigKey</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Identifier for a realization-level configuration block that can be inherited down into each formulation's params. </p>
+<p>The inheritance convention is: if a realization-level JSON document carries a block under the key identified by this enum, every formulation built by <code><a class="el" href="classrealization_1_1_formulation___manager.html">Formulation_Manager</a></code> receives that block in its params unless the per-formulation config already declares it. Within a multi-BMI formulation, the block is further propagated into each submodule's params on the same "child wins" basis.</p>
+<p>Adding a new realization-level inheritable block is a two-step: 1) add an enum entry here; 2) add a matching <code>case</code> in <code><a class="el" href="#af59178b2a7d2cc3ee2f2bbbac7b2c07a" title="Top-level JSON key string for a given GlobalConfigKey.">to_key_string()</a></code> below. The rest of the plumbing (parsing, injection, submodule propagation) is already wired to iterate enum values. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a09b5cffe3671fe15906c0881b0331eb8a1e9b0ec6eace5b06bb4b944ab3b9a45b" name="a09b5cffe3671fe15906c0881b0331eb8a1e9b0ec6eace5b06bb4b944ab3b9a45b"></a>SERIALIZATION&#160;</td><td class="fielddoc"><p>The <code>serialization</code> block consumed by the BMI serialization protocols (Ngen{Serialization,Deserialization}Protocol). </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <a id="ab24879669387dcb7b2e65913b75e21bf" name="ab24879669387dcb7b2e65913b75e21bf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab24879669387dcb7b2e65913b75e21bf">&#9670;&#160;</a></span>OutputFormat</h2>
 
@@ -239,6 +285,136 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a413420f38783c032c06e82aafc7fb8ef" name="a413420f38783c032c06e82aafc7fb8ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a413420f38783c032c06e82aafc7fb8ef">&#9670;&#160;</a></span>apply_config()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::config::apply_config </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>child</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>parent</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a09b5cffe3671fe15906c0881b0331eb8">GlobalConfigKey</a></td>          <td class="paramname"><span class="paramname"><em>which</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy a named config block from <code>parent</code> into <code>child</code>, unless the child already declares its own entry for the same key. </p>
+<p>Per-child entries always win; the parent value is a default, not an override. This is the single mechanism for realization-level config inheritance — <code><a class="el" href="classrealization_1_1_formulation___manager.html">Formulation_Manager</a></code> calls it to seed every formulation from parsed top-level blocks, and <code><a class="el" href="classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI.">Bmi_Multi_Formulation</a></code> calls it during submodule setup to carry the same defaults further down the tree.</p>
+<p>No-op if the parent has no entry under <code>which</code>. </p>
+
+<p class="reference">References <a class="el" href="#af59178b2a7d2cc3ee2f2bbbac7b2c07a">to_key_string()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a6e8f2c8a99b739c32e66ed347b297bd9">realization::Formulation_Manager::construct_formulation_from_config()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a7ba6ce71189d6b0c2a8e1be1b421913a">realization::Formulation_Manager::construct_missing_formulation()</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>.</p>
+
+</div>
+</div>
+<a id="a9406186e7fd5ef586eb62769754ab37a" name="a9406186e7fd5ef586eb62769754ab37a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9406186e7fd5ef586eb62769754ab37a">&#9670;&#160;</a></span>apply_serialization_path_token_resolution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::config::apply_serialization_path_token_resolution </td>
+          <td>(</td>
+          <td class="paramtype">boost::property_tree::ptree &amp;</td>          <td class="paramname"><span class="paramname"><em>block</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Resolve <code>{{rank}}</code>/<code>{{pid}}</code>/<code>{{host}}</code>/<code>{{date}}</code> tokens in every path field the serialization block may carry. </p>
+<p>The serialization block accepts a shared top-level <code>path</code> plus two per-direction overrides — <code>save.path</code> and <code>restore.path</code>. Each may be absent; when present, its value goes through <code><a class="el" href="namespaceutilities.html#ae9d58fe3c47b3def51e050838fde4f59" title="Expand {{rank}}, {{pid}}, {{host}}, {{date}} tokens in path and return the resolved string.">utilities::resolve_path_tokens</a></code> so consumers see concrete strings.</p>
+<p>Absent keys are skipped; ptree's dotted-path <code>put()</code> would otherwise fabricate the intermediate sub-block.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">block</td><td>The raw <code>serialization</code> sub-tree (mutated in place). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="namespaceutilities.html#ae9d58fe3c47b3def51e050838fde4f59">utilities::resolve_path_tokens()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#afa7aaea263bfb2c864329e404d02458c">realization::Formulation_Manager::read()</a>.</p>
+
+</div>
+</div>
+<a id="a78218a3b142e281d37c414e86d073003" name="a78218a3b142e281d37c414e86d073003"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78218a3b142e281d37c414e86d073003">&#9670;&#160;</a></span>apply_serialization_restore_subset_default()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::config::apply_serialization_restore_subset_default </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>global_configs</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>known_ids</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Auto-populate <code>serialization.restore.id_subset</code> with the set of catchment identifiers that this realization will actually instantiate, when the user hasn't supplied one. </p>
+<p><code>id_subset</code> is a scoping knob that bounds which records are requested from the serialization backend. This function applies a default policy for creating the subset based on the realization's enumerated features when they are specified.</p>
+<p>No-op if any of the following hold (deliberately conservative):</p><ul>
+<li>no <code>serialization</code> block is present in <code>global_configs</code>;</li>
+<li>the serialization block has no <code>restore</code> sub-block;</li>
+<li>the <code>restore</code> sub-block already declares <code>id_subset</code> — the caller's explicit value always wins, same as the rest of the inheritance system;</li>
+<li><code>known_ids</code> is empty (passing an empty list could be read as "restore nothing", which is the wrong default).</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">global_configs</td><td>The realization-level inheritable configs map (mutated in place). </td></tr>
+    <tr><td class="paramname">known_ids</td><td>Catchment ids the caller intends to construct. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a497031794414a552435f90151ac3b54b">geojson::Object</a>, <a class="el" href="#a09b5cffe3671fe15906c0881b0331eb8a1e9b0ec6eace5b06bb4b944ab3b9a45b">SERIALIZATION</a>, and <a class="el" href="#af59178b2a7d2cc3ee2f2bbbac7b2c07a">to_key_string()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#afa7aaea263bfb2c864329e404d02458c">realization::Formulation_Manager::read()</a>.</p>
+
+</div>
+</div>
 <a id="a9703c5b74ed2eb2cb69f7d6a05eccde5" name="a9703c5b74ed2eb2cb69f7d6a05eccde5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9703c5b74ed2eb2cb69f7d6a05eccde5">&#9670;&#160;</a></span>make_catchment_output_mgr()</h2>
 
@@ -386,6 +562,37 @@ Variables</h2></td></tr>
 <p>Only distributed (<code>mpi_num_procs</code> &gt; 1) runs are affected; in serial <code>base_root</code> is returned unchanged. The directory is created lazily by the backend when it opens files. </p>
 
 <p class="reference">References <a class="el" href="structrealization_1_1config_1_1_output_domain.html#a3a39eca4401c3582bd5c7562ad92b39a">realization::config::OutputDomain::grouping</a>, <a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04ca42ffd54bc4ba4c105461e8b3b4232295">per_formulation</a>, and <a class="el" href="structrealization_1_1config_1_1_output_domain.html#a51411b1aab8facc4479e502388d42443">realization::config::OutputDomain::rank_subdir</a>.</p>
+
+</div>
+</div>
+<a id="af59178b2a7d2cc3ee2f2bbbac7b2c07a" name="af59178b2a7d2cc3ee2f2bbbac7b2c07a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af59178b2a7d2cc3ee2f2bbbac7b2c07a">&#9670;&#160;</a></span>to_key_string()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * realization::config::to_key_string </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a09b5cffe3671fe15906c0881b0331eb8">GlobalConfigKey</a></td>          <td class="paramname"><span class="paramname"><em>which</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Top-level JSON key string for a given GlobalConfigKey. </p>
+
+<p class="reference">References <a class="el" href="#a09b5cffe3671fe15906c0881b0331eb8a1e9b0ec6eace5b06bb4b944ab3b9a45b">SERIALIZATION</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="#a413420f38783c032c06e82aafc7fb8ef">apply_config()</a>, <a class="el" href="#a78218a3b142e281d37c414e86d073003">apply_serialization_restore_subset_default()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#afa7aaea263bfb2c864329e404d02458c">realization::Formulation_Manager::read()</a>.</p>
 
 </div>
 </div>
@@ -545,7 +752,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="namespacerealization_1_1config.html">config</a></li>
-    <li class="footer">Generated on Fri Oct 23 2026 21:22:04 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Oct 26 2026 17:20:06 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

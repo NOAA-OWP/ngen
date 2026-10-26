@@ -38,8 +38,9 @@ var searchData=
   ['get_5fvar_5ftype_35',['get_var_type',['../struct_bmi.html#a1f5a94a5b71999141c0cc31cb1d280e2',1,'Bmi']]],
   ['get_5fvar_5funits_36',['get_var_units',['../struct_bmi.html#a8ca6256250e4746f02720c479dbb6c8f',1,'Bmi']]],
   ['global_5fconfig_37',['global_config',['../classrealization_1_1_formulation___manager.html#a158bc03a7f3200c6246f067b45af5546',1,'realization::Formulation_Manager']]],
-  ['graph_38',['graph',['../classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5',1,'network::Network']]],
-  ['ground_5fwater_5fdeep_5flayer_39',['GROUND_WATER_DEEP_LAYER',['../class_h_y___catchment.html#aad15ceff27c27396918e8c528f185512',1,'HY_Catchment']]],
-  ['ground_5fwater_5fshallow_5flayer_40',['GROUND_WATER_SHALLOW_LAYER',['../class_h_y___catchment.html#aaa625493796d8cf9079ab2fb98554c07',1,'HY_Catchment']]],
-  ['grouping_41',['grouping',['../structrealization_1_1config_1_1_output_domain.html#a3a39eca4401c3582bd5c7562ad92b39a',1,'realization::config::OutputDomain']]]
+  ['global_5fconfigs_38',['global_configs',['../classrealization_1_1_formulation___manager.html#ac3220e43a0756785d3200bb4d1236e40',1,'realization::Formulation_Manager']]],
+  ['graph_39',['graph',['../classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5',1,'network::Network']]],
+  ['ground_5fwater_5fdeep_5flayer_40',['GROUND_WATER_DEEP_LAYER',['../class_h_y___catchment.html#aad15ceff27c27396918e8c528f185512',1,'HY_Catchment']]],
+  ['ground_5fwater_5fshallow_5flayer_41',['GROUND_WATER_SHALLOW_LAYER',['../class_h_y___catchment.html#aaa625493796d8cf9079ab2fb98554c07',1,'HY_Catchment']]],
+  ['grouping_42',['grouping',['../structrealization_1_1config_1_1_output_domain.html#a3a39eca4401c3582bd5c7562ad92b39a',1,'realization::config::OutputDomain']]]
 ];
