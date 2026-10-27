@@ -16,7 +16,7 @@ We follow the [Semantic Versioning 2.0.0](http://semver.org/) format.
 
 ### Removed
 
-- Nothing.
+- The `output_precision` formulation parameter in realization configs. It has had no effect since catchment output moved to the output manager; text precision is the `output` block's `precision` value.
 
 ### Fixed
 

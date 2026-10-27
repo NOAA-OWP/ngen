@@ -1,7 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"classgeojson_1_1_polygon_feature.html#af289e5db1d2039bddd84bef755f0bab6":[26,0,4,12,37],
-"classgeojson_1_1_polygon_feature.html#af289e5db1d2039bddd84bef755f0bab6":[27,0,3,12,37],
 "classgeojson_1_1_sentinel_feature.html":[26,0,4,13],
 "classgeojson_1_1_sentinel_feature.html":[27,0,3,13],
 "classgeojson_1_1_sentinel_feature.html#a07a793b858d72f62d5bde068cc9d7cbe":[26,0,4,13,20],
@@ -249,5 +247,7 @@ var NAVTREEINDEX8 =
 "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a49eb80cdeed0b3836f627cfb4d3f792f":[26,0,7,0,2,21],
 "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a49eb80cdeed0b3836f627cfb4d3f792f":[27,0,5,0,1,21],
 "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2":[26,0,7,0,2,51],
-"classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2":[27,0,5,0,1,51]
+"classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2":[27,0,5,0,1,51],
+"classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4a7a884db6ccb6c892bd681f89ab6e17":[26,0,7,0,2,24],
+"classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4a7a884db6ccb6c892bd681f89ab6e17":[27,0,5,0,1,24]
 };

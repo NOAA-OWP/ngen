@@ -1,7 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classnetwork_1_1_network.html":[26,0,9,0],
-"classnetwork_1_1_network.html":[27,0,7,0],
 "classnetwork_1_1_network.html#a04dbb9e0615fbb4db09d8c9fb4f68102":[26,0,9,0,22],
 "classnetwork_1_1_network.html#a04dbb9e0615fbb4db09d8c9fb4f68102":[27,0,7,0,22],
 "classnetwork_1_1_network.html#a099489c63f54a90f82788f1904b19f92":[26,0,9,0,10],
@@ -249,5 +247,7 @@ var NAVTREEINDEX12 =
 "classngen_1_1serialization_1_1_file_backend_1_1_index.html#ab1ea59d3bedd5cd7b7fb6063be15f594":[26,0,10,1,3,0,4],
 "classngen_1_1serialization_1_1_file_backend_1_1_index.html#ab1ea59d3bedd5cd7b7fb6063be15f594":[27,0,8,1,2,0,4],
 "classngen_1_1serialization_1_1_file_backend_1_1_index.html#ad8e4d64f7c6a7482559f2b522e08b5fe":[26,0,10,1,3,0,2],
-"classngen_1_1serialization_1_1_file_backend_1_1_index.html#ad8e4d64f7c6a7482559f2b522e08b5fe":[27,0,8,1,2,0,2]
+"classngen_1_1serialization_1_1_file_backend_1_1_index.html#ad8e4d64f7c6a7482559f2b522e08b5fe":[27,0,8,1,2,0,2],
+"classngen_1_1serialization_1_1_file_backend_1_1_reader.html":[26,0,10,1,3,1],
+"classngen_1_1serialization_1_1_file_backend_1_1_reader.html":[27,0,8,1,2,1]
 };
