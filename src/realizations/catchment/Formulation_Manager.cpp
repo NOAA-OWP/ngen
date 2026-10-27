@@ -187,6 +187,7 @@ void Formulation_Manager::read(simulation_time_params &simulation_time_config,
         }//end for catchments
     }//end if possible_catchment_configs
 
+    #pragma omp parallel for
     for (geojson::Feature location : *fabric) {
         {
             std::lock_guard presence(formulations_mutex);
