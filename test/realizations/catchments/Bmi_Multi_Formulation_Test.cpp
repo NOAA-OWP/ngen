@@ -646,6 +646,24 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_5_Fails) {
 }
 
 /**
+ * A formulation can be advanced through the generic base without being asked for a value.
+ *
+ * This is the interface a DomainLayer holds: a model over a domain produces a field and has no
+ * single response, so stepping it must not require reducing it to one. Its results are read
+ * through the output variables, as they are here.
+ */
+TEST_F(Bmi_Multi_Formulation_Test, AdvanceFormulation) {
+    int ex_index = 0;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    realization::Formulation& as_generic = formulation;
+    ASSERT_NO_THROW(as_generic.update(0, 3600));
+    EXPECT_FALSE(as_generic.get_output_values_for_timestep(0).empty());
+}
+
+/**
  * Simple test of get response in example 0.
  */
 TEST_F(Bmi_Multi_Formulation_Test, GetResponse_0_a) {

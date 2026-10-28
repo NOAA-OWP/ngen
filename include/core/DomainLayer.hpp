@@ -73,7 +73,10 @@ namespace ngen
                            int current_step) override {
             std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
             try{
-                formulation->get_response(output_time_index, simulation_time.get_output_interval_seconds());
+                // Advance the model, get outputs as needed through the output variables.
+                // This doesn't use `get_response` since as of now, the semantics of
+                // "distill a domain layer to a single value" aren't well established.
+                formulation->update(output_time_index, simulation_time.get_output_interval_seconds());
             }
             catch(models::external::State_Exception& e){
                 std::string msg = e.what();
