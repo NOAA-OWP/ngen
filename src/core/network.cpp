@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <boost/graph/reverse_graph.hpp>
 #include <boost/graph/graph_utility.hpp>
+#include <boost/graph/undirected_dfs.hpp>
+#include<boost/graph/properties.hpp>
 
 using namespace network;
 
@@ -96,6 +98,20 @@ void Network::init_indicies(){
     }
   }
 
+  //Do a cycle check and report cycles in the topology if they exist
+  std::vector<std::pair<Graph::vertex_descriptor, Graph::vertex_descriptor>> cycles;
+  detect_cycles vis(&cycles);
+  //Run an undirected, depth first search applying the loop detector visitor
+  //cycles added as vertex pairs for the closing edge of the cycle
+  boost::undirected_dfs(this->graph, vis, make_assoc_property_map(vis.vertex_coloring), make_assoc_property_map(vis.edge_coloring));
+  if(cycles.size() > 0){
+    std::string msg = "The following features form a cycle:\n";
+    for(auto p : cycles){
+      msg += "\t"+get_id(p.first)+" --> "+get_id(p.second)+"\n";
+    }
+    throw std::domain_error("Cycle(s) detected in hydrofabric\n"+msg);
+  }
+ 
   boost::topological_sort(this->graph, std::back_inserter(this->topo_order),
                    boost::vertex_index_map(get(boost::vertex_index, this->graph)));
 }
