@@ -10,6 +10,10 @@ We follow the [Semantic Versioning 2.0.0](http://semver.org/) format.
 - Catchment output routed through a pluggable output manager (CSV backend), with an optional `grouping: per_formulation` that aggregates a formulation's catchments into one file with a leading `catchment_id` column (columns uniform per file by construction).
 - Per-domain `rank_subdir` option placing each MPI rank's CSV output under a `rank_<N>/` subdirectory (applied automatically for `per_formulation` under MPI).
 
+### Changed
+
+- Models referenced as git submodules under extern/ are now built in the CMake binary tree under extern-libs/, not in the source tree as cmake_build/ directories under their respective source roots
+
 ### Deprecated
 
 - Top-level realization config keys `output_root`, `disable_catchment_output`, and `per_formulation_nexus_files`, superseded by the `output` block (still honored when no `output` block is present).
