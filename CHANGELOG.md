@@ -19,6 +19,10 @@ We follow the [Semantic Versioning 2.0.0](http://semver.org/) format.
 - Hydrofabric data files are recognized by their contents rather than their file names. A GeoPackage is identified by the SQLite header it begins with, so it is read as one whatever it is called, and anything else is read as GeoJSON. The previous test required a name ending in a lowercase `gpkg`, which missed `.GPKG`, matched unrelated names ending in those letters, and — because loading a subdivided hydrofabric under MPI appends a rank suffix to both data paths — missed every GeoPackage in that mode.
 - The `INFO: hydrofabric detected: ...` line now reports for either format and fires exactly once per run. GeoJSON hydrofabrics previously reported nothing, and a single-file GeoPackage hydrofabric reported twice, once per file opened.
 
+### Changed
+
+- Models referenced as git submodules under extern/ are now built in the CMake binary tree under extern-libs/, not in the source tree as cmake_build/ directories under their respective source roots
+
 ### Deprecated
 
 - Top-level realization config keys `output_root`, `disable_catchment_output`, and `per_formulation_nexus_files`, superseded by the `output` block (still honored when no `output` block is present).
