@@ -52,7 +52,7 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
           }
 
           //Realize the catchment as the face it covers, modeled by the formulation
-          auto realization = std::make_shared<HY_CatchmentArea>(feat_id, formulation);
+          auto realization = std::make_shared<HY_CatchmentArea>(feat_id, formulation, cat_json_node);
           std::shared_ptr<HY_Catchment> c = realization->realize(origins, destinations, lyr);
 
           _catchments.emplace(feat_id, c);

@@ -36,14 +36,12 @@ namespace ngen
                 const std::vector<std::string>& p_u, 
                 const Simulation_Time& s_t, 
                 feature_type& f,
-                geojson::GeoJSON cd,
                 long idx,
                 std::shared_ptr<utils::CatchmentOutputsMgr> cat_output_mgr) :
             description(desc),
             processing_units(p_u),
             simulation_time(s_t),
             features(f),
-            catchment_data(cd),
             output_time_index(idx),
             catchment_output_mgr(cat_output_mgr)
         {
@@ -125,8 +123,6 @@ namespace ngen
         const std::vector<std::string> processing_units;
         Simulation_Time simulation_time;
         feature_type& features;
-        //TODO is this really required at the top level? or can this be moved to SurfaceLayer?
-        const geojson::GeoJSON catchment_data;
         long output_time_index;
         //! Catchment output sink for this layer's per-timestep push; null when output is disabled.
         std::shared_ptr<utils::CatchmentOutputsMgr> catchment_output_mgr = nullptr;

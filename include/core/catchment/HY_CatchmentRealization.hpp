@@ -2,6 +2,7 @@
 #define HY_CATCHMENTREALIZATION_H
 
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -77,6 +78,16 @@ class HY_CatchmentRealization : public std::enable_shared_from_this<HY_Catchment
      * Null until @ref realize has been called.
      */
     std::shared_ptr<HY_Catchment> get_realized_catchment() const;
+
+    /**
+     * The areal extent of this feature, in square kilometers, where the perspective has one.
+     *
+     * A face has an area, and so does the edge bounding that face; the edge running through it has
+     * a length instead. Empty therefore says the perspective has no extent to give, never that the
+     * hydrofabric withheld one: a catchment whose hydrofabric carries no extent is refused when
+     * the realization is built, so it does not reach here.
+     */
+    virtual std::optional<double> area_sqkm() const { return std::nullopt; }
 
     /**
      * Execute the attached model for the given time step, where it is of the specified size, and
