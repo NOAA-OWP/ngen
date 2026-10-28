@@ -552,7 +552,7 @@ Below is a partial config example illustrating a look-back setup involving CFE a
               "name": "bmi_c",
               "params": {
                 "model_type_name": "bmi_c_cfe",
-                "library_file": "./ngen/extern/cfe/cmake_build/libcfebmi",
+                "library_file": "./ngen/cmake_build/extern-libs/cfe/libcfebmi",
                 "forcing_file": "",
                 "init_config": "./configs/cfe/cat-20521.txt",
                 "allow_exceed_end_time": true,
@@ -570,7 +570,7 @@ Below is a partial config example illustrating a look-back setup involving CFE a
               "name": "bmi_c++",
               "params": {
                 "model_type_name": "bmi_smp",
-                "library_file": "./ngen/extern/SoilMoistureProfiles/cmake_build/libsmpbmi",
+                "library_file": "./ngen/cmake_build/extern-libs/SoilMoistureProfiles/libsmpbmi",
                 "init_config": "./configs/smp_cfe/cat-20521.txt",
                 "allow_exceed_end_time": true,
                 "main_output_variable": "soil_water_table",
