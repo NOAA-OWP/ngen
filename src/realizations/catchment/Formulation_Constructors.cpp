@@ -24,7 +24,7 @@
 namespace realization {
     template<class T>
     static constructor create_formulation_constructor() {
-        return [](std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider) -> std::shared_ptr<Catchment_Formulation>{
+        return [](std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider) -> std::shared_ptr<Formulation>{
             return std::make_shared<T>(id, forcing_provider);
         };
     }
@@ -43,7 +43,7 @@ namespace realization {
         throw std::runtime_error("No valid formulation for " + *key + " was described in the passed in tree.");
     }
 
-    std::shared_ptr<Catchment_Formulation> construct_formulation(
+    std::shared_ptr<Formulation> construct_formulation(
         std::string formulation_type,
         std::string identifier,
         forcing_params &forcing_config

@@ -5,6 +5,7 @@
 #include <vector>
 #include "Bmi_Formulation.hpp"
 #include "Bmi_Module_Formulation.hpp"
+#include "realizations/config/properties.hpp"
 #include "bmi.hpp"
 #include "GenericDataProvider.hpp"
 #include "OptionalWrappedDataProvider.hpp"
@@ -615,9 +616,16 @@ namespace realization {
             std::shared_ptr<data_access::GenericDataProvider> wfp = std::make_shared<data_access::WrappedDataProvider>(this);
             std::shared_ptr<T> mod = std::make_shared<T>(identifier, wfp);
 
-            // Since this is a nested formulation, support usage of the '{{id}}' syntax for init config file paths.
-            Catchment_Formulation::config_pattern_substitution(properties, BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
-                                                               "{{id}}", id);
+            // A module's locator names where it sits, not what it models, so give it the
+            // subject this formulation models. Set before create_formulation, like the compound
+            // id below, so the module is never configured against the wrong one.
+            mod->set_feature_id(get_feature_id());
+
+            // Since this is a nested formulation, support usage of the '{{id}}' syntax for init
+            // config file paths. The subject, not this formulation's locator: a config writes
+            // {{id}} meaning the catchment, and the two differ once this is itself nested.
+            realization::config::pattern_substitution(properties, BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
+                                                               "{{id}}", get_feature_id());
 
             // Inject a three-part compound identity on the submodule BEFORE
             // create_formulation runs, so that compound_id() is fully qualified

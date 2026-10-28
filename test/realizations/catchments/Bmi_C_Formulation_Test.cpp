@@ -943,7 +943,7 @@ protected:
     static constexpr const char* DAY_START = "2015-12-01 00:00:00";
     static constexpr const char* MIDDAY    = "2015-12-01 12:00:00";
     static constexpr const char* DAY_END   = "2015-12-02 00:00:00";
-    static constexpr time_step_t DT = 3600;
+    static constexpr realization::Formulation::time_step_t DT = 3600;
 
     void SetUp() override {
         Bmi_C_Formulation_Test::SetUp();

@@ -19,6 +19,7 @@
 #include "realizations/config/layer.hpp"
 #include "realizations/config/output.hpp"
 #include "realizations/config/global_config.hpp"
+#include <AorcForcing.hpp>
 
 namespace realization {
 
@@ -31,11 +32,11 @@ namespace realization {
             void read(simulation_time_params &simulation_time_config,
                       geojson::GeoJSON fabric);
 
-            void add_formulation(std::shared_ptr<Catchment_Formulation> formulation);
+            void add_formulation(std::shared_ptr<Formulation> formulation);
 
-            std::shared_ptr<Catchment_Formulation> get_formulation(std::string id) const;
+            std::shared_ptr<Formulation> get_formulation(std::string id) const;
 
-            std::shared_ptr<Catchment_Formulation> get_domain_formulation(long id) const;
+            std::shared_ptr<Formulation> get_domain_formulation(long id) const;
 
             bool has_domain_formulation(int id) const;
 
@@ -54,9 +55,9 @@ namespace realization {
             //! The parsed output configuration block.
             const realization::config::Output& get_output_config() const;
 
-            std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator begin() const;
+            std::map<std::string, std::shared_ptr<Formulation>>::const_iterator begin() const;
 
-            std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator end() const;
+            std::map<std::string, std::shared_ptr<Formulation>>::const_iterator end() const;
 
             /**
              * @return Whether or not using routing
@@ -91,13 +92,13 @@ namespace realization {
 
 
         protected:
-            std::shared_ptr<Catchment_Formulation> construct_formulation_from_config(
+            std::shared_ptr<Formulation> construct_formulation_from_config(
                 simulation_time_params &simulation_time_config,
                 std::string identifier,
                 realization::config::Config& catchment_formulation
             );
 
-            std::shared_ptr<Catchment_Formulation> construct_missing_formulation(geojson::Feature& feature, simulation_time_params &simulation_time_config);
+            std::shared_ptr<Formulation> construct_missing_formulation(geojson::Feature& feature, simulation_time_params &simulation_time_config);
 
             forcing_params get_forcing_params(const geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config);
 
@@ -129,10 +130,10 @@ namespace realization {
              *  string (see realization::config::GlobalConfigKey). */
             geojson::PropertyMap global_configs;
 
-            std::map<std::string, std::shared_ptr<Catchment_Formulation>> formulations;
+            std::map<std::string, std::shared_ptr<Formulation>> formulations;
 
             //Store global layer formulation pointers
-            std::map<int, std::shared_ptr<Catchment_Formulation> > domain_formulations;
+            std::map<int, std::shared_ptr<Formulation> > domain_formulations;
 
             std::shared_ptr<routing_params> routing_config;
 

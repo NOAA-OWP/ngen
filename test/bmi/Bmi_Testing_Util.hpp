@@ -56,10 +56,17 @@
 #include "FileChecker.h"
 
 using namespace realization;
-using namespace std;
 
 namespace ngen {
     namespace test {
+        // Avoid `set` conflict with boost::geometry on some gcc compiler versions, only grab what's
+        // needed from the std namespace.
+        // https://github.com/boostorg/geometry/issues/1009#issuecomment-6451198052
+        using std::map;
+        using std::string;
+        using std::to_string;
+        using std::vector;
+
 
         class Bmi_Testing_Util {
         public:

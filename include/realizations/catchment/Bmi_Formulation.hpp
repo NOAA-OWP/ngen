@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory>
 #include <boost/core/span.hpp>
-#include "Catchment_Formulation.hpp"
+#include "Formulation.hpp"
 #include "GenericDataProvider.hpp"
 
 // Define the configuration parameter names used in the realization/formulation config JSON file
@@ -46,7 +46,7 @@ namespace realization {
     /**
      * Abstraction of formulation with backing model object(s) that implements the BMI.
      */
-    class Bmi_Formulation : public Catchment_Formulation, public data_access::GenericDataProvider {
+    class Bmi_Formulation : public Formulation, public data_access::GenericDataProvider {
 
     public:
 
@@ -58,7 +58,7 @@ namespace realization {
          * @param forcing
          */
         Bmi_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing)
-                : Catchment_Formulation(std::move(id), forcing) { };
+                : Formulation(id, forcing) { };
 
 
         virtual ~Bmi_Formulation() {};

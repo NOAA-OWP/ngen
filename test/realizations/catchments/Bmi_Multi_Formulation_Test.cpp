@@ -72,13 +72,13 @@ protected:
     }
 
     static std::string get_friend_catchment_id(Bmi_Multi_Formulation& formulation){
-        return formulation.get_catchment_id();
+        return formulation.get_feature_id();
     }
 
     template <class N>
     static std::string get_friend_nested_catchment_id(const Bmi_Multi_Formulation& formulation, const int mod_index) {
         std::shared_ptr<N> nested = std::static_pointer_cast<N>(formulation.modules[mod_index]);
-        return nested->get_catchment_id();
+        return nested->get_feature_id();
     }
 
     /*
@@ -398,10 +398,10 @@ private:
                 "formulations").begin()->second.get_child("params");
     }
 
-    inline void initializeTestExample(const int ex_index, const std::string &cat_id,
+    inline void initializeTestExample(const int ex_index, const std::string &feature_id,
                                       const std::vector<std::string> &nested_types, const std::vector<std::string> &output_variables) {
-        catchment_ids[ex_index] = cat_id;
-        example_forcing_files[ex_index] = testUtil.getForcingFilePath(cat_id);
+        catchment_ids[ex_index] = feature_id;
+        example_forcing_files[ex_index] = testUtil.getForcingFilePath(feature_id);
         uses_forcing_file[ex_index] = false;
         // TODO: re-implement things to have these be retrieved from the testing util object
         forcing_params_examples[ex_index] = std::make_shared<forcing_params>(
@@ -899,7 +899,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetIdAndCatchmentId) {
     #if NGEN_WITH_BMI_FORTRAN
     ASSERT_EQ(get_friend_nested_catchment_id<Bmi_Fortran_Formulation>(formulation, 0), "cat-27");
     #endif
-    //ASSERT_EQ(formulation.get_catchment_id(), "id");
+    //ASSERT_EQ(formulation.get_feature_id(), "id");
 }
 
 TEST_F(Bmi_Multi_Formulation_Test, GetAvailableVariableNames) {

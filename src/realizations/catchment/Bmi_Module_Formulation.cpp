@@ -42,7 +42,7 @@ namespace realization {
             // so values are returned unconverted, positionally aligned with the names.
             for (const std::string& name : names) {
                 std::string output_units = "";
-                values.push_back(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, 0, 0, output_units), MEAN));
+                values.push_back(get_value(CatchmentAggrDataSelector(this->get_feature_id(), name, 0, 0, output_units), MEAN));
             }
             return values;
         }
@@ -91,7 +91,7 @@ namespace realization {
             update(t_index, t_delta);
             double var_value;
             try{
-                var_value = get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
+                var_value = get_value(CatchmentAggrDataSelector(this->get_feature_id(), get_bmi_main_output_var(), 0, 0, "m"),MEAN);
             }
             catch(UnitsHelper::unit_conversion_exception &uce){
                 bool new_error = UnitsHelper::record_unit_conversion_fault(uce, "Bmi_Module_Formulation::get_response", get_bmi_main_output_var());
@@ -99,7 +99,7 @@ namespace realization {
                     std::stringstream ss;
                     ss << "Unit conversion failure:"
                         << " requester {'Get Response (Module Formulation)"
-                        << "' catchment '" << get_catchment_id()
+                        << "' catchment '" << get_feature_id()
                         << "' variable '" << get_bmi_main_output_var()
                         << "' units 'm'}"
                         << " provider {'" << uce.provider_model_name
@@ -678,7 +678,7 @@ namespace realization {
             if (var_details->get_num_items() != 1) {
                 //more than a single value needed for var_name
                 std::vector<data_type> values = provider->get_values(
-                    CatchmentAggrDataSelector(get_catchment_id(), var_details->get_mapped_alias(), src_data_start,
+                    CatchmentAggrDataSelector(get_feature_id(), var_details->get_mapped_alias(), src_data_start,
                                               t_delta, var_details->get_units())
                 );
                 //need to marshal data types to the receiver as well
@@ -704,7 +704,7 @@ namespace realization {
                 try {
                     //scalar value
                     double value = provider->get_value(CatchmentAggrDataSelector(
-                        this->get_catchment_id(), var_details->get_mapped_alias(), src_data_start, t_delta,
+                        this->get_feature_id(), var_details->get_mapped_alias(), src_data_start, t_delta,
                         var_details->get_units()));
                     value_ptr = get_value_as_type(var_details->get_cpp_type(), value);
                 } catch (UnitsHelper::unit_conversion_exception &uce) {
@@ -713,7 +713,7 @@ namespace realization {
                     if (new_error) {
                         std::stringstream ss;
                         ss << "Unit conversion failure:"
-                           << " requester {'" << get_bmi_model()->get_model_name() << "' catchment '" << get_catchment_id()
+                           << " requester {'" << get_bmi_model()->get_model_name() << "' catchment '" << get_feature_id()
                            << "' variable '" << var_details->get_name() << "'"
                            << " (alias '" << var_details->get_mapped_alias() << "')"
                            << " units '" << var_details->get_units() << "'}"

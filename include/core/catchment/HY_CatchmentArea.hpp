@@ -6,11 +6,19 @@
 #include "GM_Object.hpp"
 
 
+/**
+ * The two-dimensional realization of a catchment: the face it covers.
+ *
+ * Topologically a face bounded by catchment divide and flowpath edges, so this is the
+ * perspective to ask for an areal extent -- the denominator when a value is distributed over
+ * the catchment.
+ */
 class HY_CatchmentArea : public HY_CatchmentRealization, public GM_Object
 {
     public:
 
     HY_CatchmentArea();
+    HY_CatchmentArea(std::string catchment_id, std::shared_ptr<realization::Formulation> formulation);
     virtual ~HY_CatchmentArea();
 
     protected:

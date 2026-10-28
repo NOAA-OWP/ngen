@@ -1,5 +1,5 @@
 #include <Layer.hpp>
-#include <Catchment_Formulation.hpp>
+#include <Formulation.hpp>
 #include <CatchmentOutputsMgr.hpp>
 
 #if NGEN_WITH_MPI
@@ -28,16 +28,14 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
         output_time_index, simulation_time.get_current_epoch_time(), current_timestamp);
     for(const auto& id : processing_units) {
         //std::cout<<"Running cat "<<id<<std::endl;
-        auto r = features.catchment_at(id);
-        //TODO redesign to avoid this cast
-        auto r_c = std::dynamic_pointer_cast<realization::Catchment_Formulation>(r);
+        auto r_c = features.catchment_at(id);
         double response(0.0);
         try{
             response = r_c->get_response(output_time_index, simulation_time.get_output_interval_seconds());
             // Check mass balance if able
-            r_c->check_mass_balance(output_time_index, simulation_time.get_total_output_times(), current_timestamp);
+            r_c->get_formulation()->check_mass_balance(output_time_index, simulation_time.get_total_output_times(), current_timestamp);
             // Checkpoint state via the serialization protocol (no-op when unconfigured)
-            r_c->checkpoint_state(output_time_index, simulation_time.get_total_output_times(), current_timestamp);
+            r_c->get_formulation()->checkpoint_state(output_time_index, simulation_time.get_total_output_times(), current_timestamp);
         }
         catch(models::external::State_Exception& e){
             std::string msg = e.what();
@@ -61,7 +59,8 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
 #endif // NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
         if (catchment_output_mgr) {
             catchment_output_mgr->receive_data_entry(
-                id, current_time_marker, r_c->get_output_values_for_timestep(output_time_index));
+                id, current_time_marker,
+                r_c->get_formulation()->get_output_values_for_timestep(output_time_index));
         }
         //TODO put this somewhere else.  For now, just trying to ensure we get m^3/s into nexus output
         double area;
