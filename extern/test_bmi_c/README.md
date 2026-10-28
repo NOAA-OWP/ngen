@@ -12,21 +12,21 @@ This is a implementation of a C-based model that fulfills the C language BMI int
 
 # Building
 
-To generate the shared library files, build the `testbmicmodel` target in the generated build system.  This needs to be separate from the main NextGen build system.
+To generate the shared library files, build the `testbmicmodel` target in the generated build system.  When NextGen is configured with tests enabled, this is done automatically, with output under `<build dir>/test-libs/test_bmi_c/`, which is where the tests look for it. The commands below build it manually, assuming the main NextGen build directory is `cmake_build`.
 
 #### Generating a Build System Directory
 
 Run from the project root directory:
 
-    cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
+    cmake -B cmake_build/test-libs/test_bmi_c -S extern/test_bmi_c
 
-To regenerate, simply remove the `extern/test_bmi_c/cmake_build` directory and run the command again.
+To regenerate, simply remove the `cmake_build/test-libs/test_bmi_c` directory and run the command again.
 
 #### Building the Shared Library
 
 Again, from the project root directory:
 
-    cmake --build extern/test_bmi_c/cmake_build --target testbmicmodel
+    cmake --build cmake_build/test-libs/test_bmi_c --target testbmicmodel
 
 This should generate the appropriate library files for your system.
 

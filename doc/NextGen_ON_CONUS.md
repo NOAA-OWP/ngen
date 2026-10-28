@@ -41,24 +41,24 @@ You most likely need to use Python. For that we recommend setting up a virtual e
 After setting up the environment variables, we need to first build the necessary dynamically linked libraries. Although `ngen` has the capability for automated building of submodule libraries, we build them explicitly so that users have a better understanding. For simplicity, we display the content a script which we name it `build_libs`.
 
 ```
-cmake -B extern/sloth/cmake_build -S extern/sloth && \
-make -C extern/sloth/cmake_build && \
-cmake -B extern/cfe/cmake_build -S extern/cfe/cfe/ -DNGEN=ON && \
-make -C extern/cfe/cmake_build && \
-cmake -B extern/topmodel/cmake_build -S extern/topmodel && \
-make -C extern/topmodel/cmake_build && \
-cmake -B extern/iso_c_fortran_bmi/cmake_build -S extern/iso_c_fortran_bmi && \
-make -C extern/iso_c_fortran_bmi/cmake_build && \
-cmake -B extern/noah-owp-modular/cmake_build -S extern/noah-owp-modular -DNGEN_IS_MAIN_PROJECT=ON && \
-make -C extern/noah-owp-modular/cmake_build && \
-cmake -B extern/evapotranspiration/evapotranspiration/cmake_build -S extern/evapotranspiration/evapotranspiration && \
-make -C extern/evapotranspiration/evapotranspiration/cmake_build && \
-cmake -B extern/sloth/cmake_build -S extern/sloth && \
-make -C extern/sloth/cmake_build && \
-cmake -B extern/SoilFreezeThaw/SoilFreezeThaw/cmake_build -S extern/SoilFreezeThaw/SoilFreezeThaw -DNGEN=ON && \
-cmake --build extern/SoilFreezeThaw/SoilFreezeThaw/cmake_build --target sftbmi -- -j 2 && \
-cmake -B extern/SoilMoistureProfiles/SoilMoistureProfiles/cmake_build -S extern/SoilMoistureProfiles/SoilMoistureProfiles -DNGEN=ON && \
-cmake --build extern/SoilMoistureProfiles/SoilMoistureProfiles/cmake_build --target smpbmi -- -j 2 &&
+cmake -B cmake_build_mpi/extern-libs/sloth -S extern/sloth && \
+make -C cmake_build_mpi/extern-libs/sloth && \
+cmake -B cmake_build_mpi/extern-libs/cfe -S extern/cfe/cfe/ -DNGEN=ON && \
+make -C cmake_build_mpi/extern-libs/cfe && \
+cmake -B cmake_build_mpi/extern-libs/topmodel -S extern/topmodel && \
+make -C cmake_build_mpi/extern-libs/topmodel && \
+cmake -B cmake_build_mpi/extern-libs/iso_c_fortran_bmi -S extern/iso_c_fortran_bmi && \
+make -C cmake_build_mpi/extern-libs/iso_c_fortran_bmi && \
+cmake -B cmake_build_mpi/extern-libs/noah-owp-modular -S extern/noah-owp-modular -DNGEN_IS_MAIN_PROJECT=ON && \
+make -C cmake_build_mpi/extern-libs/noah-owp-modular && \
+cmake -B cmake_build_mpi/extern-libs/evapotranspiration -S extern/evapotranspiration/evapotranspiration && \
+make -C cmake_build_mpi/extern-libs/evapotranspiration && \
+cmake -B cmake_build_mpi/extern-libs/sloth -S extern/sloth && \
+make -C cmake_build_mpi/extern-libs/sloth && \
+cmake -B cmake_build_mpi/extern-libs/SoilFreezeThaw -S extern/SoilFreezeThaw/SoilFreezeThaw -DNGEN=ON && \
+cmake --build cmake_build_mpi/extern-libs/SoilFreezeThaw --target sftbmi -- -j 2 && \
+cmake -B cmake_build_mpi/extern-libs/SoilMoistureProfiles -S extern/SoilMoistureProfiles/SoilMoistureProfiles -DNGEN=ON && \
+cmake --build cmake_build_mpi/extern-libs/SoilMoistureProfiles --target smpbmi -- -j 2 &&
 ```
 
 Copy the content into the file named `build_libs` and run the command:
