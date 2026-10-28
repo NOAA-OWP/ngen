@@ -1,0 +1,71 @@
+{
+    "global": {
+        "formulations": [
+            {
+                "name": "bmi_multi",
+                "params": {
+                    "model_type_name": "bmi_multi_pet_lgc",
+                    "forcing_file": "",
+                    "init_config": "",
+                    "allow_exceed_end_time": true,
+                    "main_output_variable": "total_discharge",
+                    "modules": [
+			{
+			    "name": "bmi_c++",
+			    "params": {
+                                "model_type_name": "bmi_c++_sloth",
+                                "library_file": "./extern/sloth/cmake_build/libslothmodel",
+                                "init_config": "/dev/null",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "z",
+                                "uses_forcing_file": false,
+                                "model_params": {
+                                    "soil_temperature_profile(1,double,K,node)" : 275.15
+                                }
+			    }
+                        },
+                        {
+                            "name": "bmi_c",
+                            "params": {
+                                "model_type_name": "bmi_c_pet",
+                                "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
+                                "forcing_file": "",
+                                "init_config": "./conus_config/PET_{{id}}.ini",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "water_potential_evaporation_flux",
+                                "registration_function": "register_bmi_pet",
+                                "uses_forcing_file": false
+                            }
+                        },
+                        {
+                            "name": "bmi_c++",
+                            "params": {
+                                "model_type_name": "bmi_lasam",
+                                "library_file": "./extern/LGAR-C/cmake_build/liblasambmi",
+                                "init_config": "./conus_lsm_configs/{{id}}_config_lasam.txt",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "total_discharge",
+                                "variables_names_map" : {
+                                    "precipitation_rate" : "precip_rate",
+                                    "potential_evapotranspiration_rate" : "water_potential_evaporation_flux"
+                                },
+                                "uses_forcing_file": false
+                            }
+                        }
+                    ],
+                    "uses_forcing_file": false
+                }
+            }
+        ],
+        "forcing": {
+            "path": "./forcing/NextGen_forcing_2016010100.nc",
+            "provider": "NetCDF"
+        }
+    },
+    "time": {
+        "start_time": "2016-01-01 00:00:00",
+        "end_time": "2016-01-10 23:00:00",
+        "output_interval": 3600
+    },
+    "output_root": "./output_dir/"
+}
