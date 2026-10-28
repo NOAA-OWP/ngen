@@ -17,7 +17,7 @@ namespace geojson {
             PointFeature(const FeatureBase& feature) : FeatureBase(feature) {}
 
             PointFeature(const PointFeature& feature) : FeatureBase(feature) {
-                this->geom = feature.geometry();
+                set_geom(feature.geometry());
                 this->type = feature.get_type();
             }
 
@@ -30,12 +30,12 @@ namespace geojson {
                 std::vector<FeatureBase*> downstream_features = std::vector<FeatureBase*>(),
                 std::map<std::string, JSONProperty> members = std::map<std::string, JSONProperty>()
             ) : FeatureBase(std::move(new_id), std::move(new_properties), std::move(new_bounding_box), std::move(upstream_features), std::move(downstream_features), std::move(members)) {
-                this->geom = coordinate;
+                set_geom(coordinate);
                 this->type = geojson::FeatureType::Point;
             }
 
             coordinate_t geometry() const {
-                return boost::get<coordinate_t>(this->geom);
+                return boost::get<coordinate_t>(*this->geom);
             }
 
             void visit(FeatureVisitor& visitor) override {
