@@ -205,7 +205,7 @@ namespace realization {
          */
         virtual bool is_model_initialized() const = 0;
 
-        virtual void update(time_step_t t_index, time_step_t t_delta) = 0;
+        void update(time_step_t t_index, time_step_t t_delta) override = 0;
 
     protected:
 

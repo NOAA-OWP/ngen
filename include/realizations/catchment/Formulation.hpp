@@ -109,8 +109,20 @@ namespace realization {
             virtual void checkpoint_state(const int& iteration, const int& total_steps, const std::string& timestamp) const = 0;
 
             /**
+             * Advance the backing model formulation through the given time step.
+             *
+             * @param t_index The index of the time step to run.
+             * @param t_delta The duration, in seconds, of that time step.
+             */
+            virtual void update(time_step_t t_index, time_step_t t_delta) = 0;
+
+            /**
              * Execute the backing model formulation for the given time step, where it is of the specified size, and
              * return the response output.
+             *
+             * Advances the model as @ref update does, and additionally reduces its state to one value.
+             * Callers that only need the model stepped should use @ref update instead.  This function
+             * should be implemented and used when a single-value representation of the model's state is required.
              *
              * Any inputs and additional parameters must be made available as instance members.
              *
