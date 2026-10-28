@@ -16,7 +16,7 @@ namespace geojson {
             LineStringFeature(const FeatureBase& feature) : FeatureBase(feature) {}
 
             LineStringFeature(const LineStringFeature& feature) : FeatureBase(feature) {
-                this->geom = feature.geometry();
+                set_geom(feature.geometry());
                 this->type = feature.get_type();
             }
 
@@ -29,12 +29,12 @@ namespace geojson {
                 std::vector<FeatureBase*> downstream_features = std::vector<FeatureBase*>(),
                 std::map<std::string, JSONProperty> members = std::map<std::string, JSONProperty>()
             ) : FeatureBase(new_id, new_properties, new_bounding_box, upstream_features, downstream_features, members) {
-                this->geom = linestring;
+                set_geom(linestring);
               this->type = geojson::FeatureType::LineString;
             }
 
             linestring_t geometry()  const {
-                return boost::get<linestring_t>(this->geom);
+                return boost::get<linestring_t>(*this->geom);
             }
 
             void visit(FeatureVisitor& visitor) override {
