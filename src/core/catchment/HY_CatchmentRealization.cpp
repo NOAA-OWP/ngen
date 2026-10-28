@@ -38,11 +38,14 @@ std::shared_ptr<HY_Catchment> HY_CatchmentRealization::get_realized_catchment() 
     return realized_catchment.lock();
 }
 
-double HY_CatchmentRealization::get_response(time_step_t t_index, time_step_t t_delta)
+HY_CatchmentRealization::Response
+HY_CatchmentRealization::get_response(time_step_t t_index, time_step_t t_delta)
 {
     if (formulation == nullptr) {
         throw std::runtime_error("Catchment realization '" + get_catchment_id()
                                  + "' has no formulation attached to answer with.");
     }
-    return formulation->get_response(t_index, t_delta);
+    // get_response() implementers are responsible for any unit conversion; the assumption of
+    // depth in meters materializes here.
+    return {Quantity::depth, formulation->get_response(t_index, t_delta)};
 }

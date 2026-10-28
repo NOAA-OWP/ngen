@@ -73,6 +73,16 @@ class HY_CatchmentArea : public HY_CatchmentRealization, public GM_Object
      */
     const std::shared_ptr<const geojson::geometry>& get_bounds() const { return bounds; }
 
+    /**
+     * The value representing the state of this feature after one time step.
+     * E.g. depth, depth spread over the face's extent, and the rate with
+     * respect to the time step.
+     *
+     * @throws std::runtime_error If this feature has no formulation attached, or has no extent to
+     *         spread the depth over.
+     */
+    Response get_response(time_step_t t_index, time_step_t t_delta) override;
+
     private:
 
     //! Shared with the feature this was realized from; const, so neither can surprise the other.

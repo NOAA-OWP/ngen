@@ -1,6 +1,8 @@
 #ifndef HY_CATCHMENTREALIZATION_H
 #define HY_CATCHMENTREALIZATION_H
 
+#include <array>
+#include <cstddef>
 #include <memory>
 #include <optional>
 #include <string>
@@ -90,15 +92,67 @@ class HY_CatchmentRealization : public std::enable_shared_from_this<HY_Catchment
     virtual std::optional<double> area_sqkm() const { return std::nullopt; }
 
     /**
+     * A quantity a perspective can express its value as, each in one canonical unit.
+     *
+     * Unit conversion should be handled at a higher level, outside of the perspective itself.
+     */
+    enum class Quantity {
+        //! Meters.
+        depth,
+        //! Cubic meters, over the step.
+        volume,
+        //! Cubic meters per second.
+        volumetric_flow
+    };
+
+    /** How many @ref Quantity there are */
+    static constexpr std::size_t quantity_count = 3;
+
+    /**
+     * The response value distilled by this perspective, in every way the perspective can express it.
+     *
+     * A formulation typically answers in a depth, because that is what @ref realization::Formulation::get_response
+     * asks its model for. What a depth means for the feature is the perspective's to say, so each
+     * subtype expresses it in the terms its own topology implies -- a face has an extent to spread
+     * it over, an edge does not.
+     *
+     * A perspective offers what it can express of the step
+     * so a caller that is handed something it cannot read finds out by asking.
+     */
+    class Response {
+      public:
+        //! A response expressing nothing yet.
+        Response() = default;
+
+        //! A response expressing @p value as @p quantity, for a perspective that offers just one.
+        Response(Quantity quantity, double value) { set(quantity, value); }
+
+        /** The value as @p quantity, or empty where this perspective does not express it. */
+        std::optional<double> in(Quantity quantity) const {
+            return values[static_cast<std::size_t>(quantity)];
+        }
+
+        /** Offer @p value as @p quantity, in that quantity's canonical unit. */
+        void set(Quantity quantity, double value) {
+            values[static_cast<std::size_t>(quantity)] = value;
+        }
+
+      private:
+        std::array<std::optional<double>, quantity_count> values{};
+    };
+
+    /**
      * Execute the attached model for the given time step, where it is of the specified size, and
-     * return the response output.
+     * return the perspective's response.
+     *
+     * A model's value is assumed to be depth by default.
      *
      * @param t_index The index of the time step for which to run model calculations.
      * @param t_delta The duration, in seconds, of the time step for which to run model calculations.
-     * @return The response output of the model for this time step.
+     * @return This perspective's response for the step, as each @ref Quantity it expresses.
      * @throws std::runtime_error If this feature has no formulation attached.
      */
-    double get_response(time_step_t t_index, time_step_t t_delta);
+    virtual Response get_response(time_step_t t_index, time_step_t t_delta);
 
     protected:
 
