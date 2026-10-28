@@ -1,0 +1,58 @@
+{
+    "global": {
+        "formulations": [
+            {
+                "name": "bmi_multi",
+                "params": {
+                    "model_type_name": "bmi_multi_noah_pet_topmodel",
+                    "forcing_file": "",
+                    "init_config": "",
+                    "allow_exceed_end_time": true,
+                    "main_output_variable": "Qout",
+                    "modules": [
+                        {
+                            "name": "bmi_c",
+                            "params": {
+                                "model_type_name": "bmi_c_pet",
+                                "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
+                                "forcing_file": "",
+                                "init_config": "./conus_config/PET_{{id}}.ini",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "water_potential_evaporation_flux",
+                                "registration_function": "register_bmi_pet",
+                                "uses_forcing_file": false
+                            }
+                        },
+                        {
+                            "name": "bmi_c",
+                            "params": {
+                                "model_type_name": "bmi_c_topmodel",
+                                "library_file": "./extern/topmodel/cmake_build/libtopmodelbmi",
+                                "forcing_file": "",
+                                "init_config": "./conus_topmod_config/topmod_{{id}}.run",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "Qout",
+                                "registration_function": "register_bmi_topmodel",
+                                "variables_names_map": {
+                                    "atmosphere_water__liquid_equivalent_precipitation_rate": "precip_rate"
+                                },
+                                "uses_forcing_file": false
+                            }
+                        }
+                    ],
+                    "uses_forcing_file": false
+                }
+            }
+        ],
+        "forcing": {
+            "path": "./forcing/NextGen_forcing_2016010100.nc",
+            "provider": "NetCDF"
+        }
+    },
+    "time": {
+        "start_time": "2016-01-01 00:00:00",
+        "end_time": "2016-01-10 23:00:00",
+        "output_interval": 3600
+    },
+    "output_root": "./output_dir/"
+}
