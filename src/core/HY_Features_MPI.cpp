@@ -1,6 +1,7 @@
 #include <HY_Features_MPI.hpp>
 #include <HY_PointHydroNexusRemote.hpp>
 #include <Formulation_Manager.hpp>
+#include <HY_CatchmentArea.hpp>
 
 #if NGEN_WITH_MPI
 
@@ -50,10 +51,9 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
               hf_layers.insert(lyr);
           }
 
-          //Create the HY_Catchment with the formulation realization
-          std::shared_ptr<HY_Catchment> c = std::make_shared<HY_Catchment>(
-              HY_Catchment(feat_id, origins, destinations, formulation, lyr)
-            );
+          //Realize the catchment as the face it covers, modeled by the formulation
+          auto realization = std::make_shared<HY_CatchmentArea>(feat_id, formulation);
+          std::shared_ptr<HY_Catchment> c = realization->realize(origins, destinations, lyr);
 
           _catchments.emplace(feat_id, c);
         }

@@ -8,7 +8,7 @@
 #include <boost/core/span.hpp>
 
 #include "realizations/catchment/Formulation_Manager.hpp"
-#include <Catchment_Formulation.hpp>
+#include <Formulation.hpp>
 #include <HY_Features.hpp>
 
 #if NGEN_WITH_SQLITE3

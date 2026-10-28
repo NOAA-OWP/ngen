@@ -1,4 +1,5 @@
 #include <Formulation_Manager.hpp>
+#include "realizations/config/properties.hpp"
 #include "realizations/config/serialization_helper.hpp"
 
 #include <cerrno>
@@ -192,7 +193,7 @@ void Formulation_Manager::read(simulation_time_params &simulation_time_config,
                 continue;
         }
 
-        std::shared_ptr<Catchment_Formulation> missing_formulation =
+        std::shared_ptr<Formulation> missing_formulation =
             this->construct_missing_formulation(location, simulation_time_config);
 
         std::lock_guard insertion(formulations_mutex);
@@ -200,16 +201,16 @@ void Formulation_Manager::read(simulation_time_params &simulation_time_config,
     }
 }
 
-void Formulation_Manager::add_formulation(std::shared_ptr<Catchment_Formulation> formulation) {
+void Formulation_Manager::add_formulation(std::shared_ptr<Formulation> formulation) {
     this->formulations.emplace(formulation->get_id(), formulation);
 }
 
-std::shared_ptr<Catchment_Formulation> Formulation_Manager::get_formulation(std::string id) const {
+std::shared_ptr<Formulation> Formulation_Manager::get_formulation(std::string id) const {
     // TODO: Implement on-the-fly formulation creation using global parameters
     return this->formulations.at(id);
 }
 
-std::shared_ptr<Catchment_Formulation> Formulation_Manager::get_domain_formulation(long id) const {
+std::shared_ptr<Formulation> Formulation_Manager::get_domain_formulation(long id) const {
     return this->domain_formulations.at(id);
 }
 
@@ -233,11 +234,11 @@ const realization::config::Output& Formulation_Manager::get_output_config() cons
     return output_config;
 }
 
-std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator Formulation_Manager::begin() const {
+std::map<std::string, std::shared_ptr<Formulation>>::const_iterator Formulation_Manager::begin() const {
     return this->formulations.cbegin();
 }
 
-std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator Formulation_Manager::end() const {
+std::map<std::string, std::shared_ptr<Formulation>>::const_iterator Formulation_Manager::end() const {
     return this->formulations.cend();
 }
 
@@ -270,7 +271,7 @@ void Formulation_Manager::initialize_output_config() {
 
 ngen::LayerDataStorage& Formulation_Manager::get_layer_metadata() { return layer_storage; }
 
-std::shared_ptr<Catchment_Formulation> Formulation_Manager::construct_formulation_from_config(
+std::shared_ptr<Formulation> Formulation_Manager::construct_formulation_from_config(
     simulation_time_params &simulation_time_config,
     std::string identifier,
     realization::config::Config& catchment_formulation
@@ -305,12 +306,12 @@ std::shared_ptr<Catchment_Formulation> Formulation_Manager::construct_formulatio
     }
 
     forcing_params forcing_config = this->get_forcing_params(catchment_formulation.forcing.parameters, identifier, simulation_time_config);
-    std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(catchment_formulation.formulation.type, identifier, forcing_config);
+    std::shared_ptr<Formulation> constructed_formulation = construct_formulation(catchment_formulation.formulation.type, identifier, forcing_config);
     //, geometry);
 
-    Catchment_Formulation::config_pattern_substitution(catchment_formulation.formulation.parameters,
-                                                       BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG, "{{id}}",
-                                                       identifier);
+    realization::config::pattern_substitution(catchment_formulation.formulation.parameters,
+                                              BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG, "{{id}}",
+                                              identifier);
 
     for (auto which : { realization::config::GlobalConfigKey::SERIALIZATION }) {
         realization::config::apply_config(
@@ -320,16 +321,16 @@ std::shared_ptr<Catchment_Formulation> Formulation_Manager::construct_formulatio
     return constructed_formulation;
 }
 
-std::shared_ptr<Catchment_Formulation> Formulation_Manager::construct_missing_formulation(geojson::Feature& feature, simulation_time_params &simulation_time_config){
+std::shared_ptr<Formulation> Formulation_Manager::construct_missing_formulation(geojson::Feature& feature, simulation_time_params &simulation_time_config){
     const std::string identifier = feature->get_id();
 
     forcing_params forcing_config = this->get_forcing_params(global_config.forcing.parameters, identifier, simulation_time_config);
-    std::shared_ptr<Catchment_Formulation> missing_formulation = construct_formulation(global_config.formulation.type, identifier, forcing_config);
+    std::shared_ptr<Formulation> missing_formulation = construct_formulation(global_config.formulation.type, identifier, forcing_config);
     // Need to work with a copy, since it is altered in-place
     realization::config::Config global_copy = global_config;
-    Catchment_Formulation::config_pattern_substitution(global_copy.formulation.parameters,
-                                                       BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG, "{{id}}",
-                                                       identifier);
+    realization::config::pattern_substitution(global_copy.formulation.parameters,
+                                              BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG, "{{id}}",
+                                              identifier);
     //Some helpful debugging prints, commented out, but left for later
     //because they will eventually be used by someone, someday, looking at configurations
     //being turned into concrecte formulations...
@@ -598,7 +599,7 @@ void Formulation_Manager::parse_external_model_params(geojson::PropertyMap& mode
 
 void Formulation_Manager::finalize() {
     // The calls in these loops are staticly dispatched to
-    // Catchment_Formulation::finalize(). That does not
+    // Formulation::finalize(). That does not
     // inherit from DataProvider, with its virtual member
     // function of the same name.
     //

@@ -33,6 +33,10 @@ class HY_Catchment : public HY_HydroFeature
     realization(realization),
     layer(lyr){}
     virtual ~HY_Catchment();
+
+    /*! \brief This catchment's identity, which it takes from the realization that realized it. */
+    const std::string& get_id() const { return id; }
+
     const Nexuses& get_outflow_nexuses(){ return outflows; }
     std::shared_ptr<HY_CatchmentRealization> realization;
 

@@ -6,6 +6,7 @@
 #include <string>
 
 #include "JSONProperty.hpp"
+#include "features/FeatureBase.hpp"
 
 namespace realization{
   namespace config{

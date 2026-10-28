@@ -679,6 +679,7 @@ ngen_add_test(
         core/mediator/UnitsHelper_Tests.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/NetworkTests.cpp
+        core/catchment/HY_CatchmentRealization_Test.cpp
         utils/include/StreamOutputTest.cpp
         realizations/Formulation_Manager_Test.cpp
         utils/PerFormulationNexusOutputMgr_Test.cpp

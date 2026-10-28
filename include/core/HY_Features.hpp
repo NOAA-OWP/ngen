@@ -35,12 +35,11 @@ namespace hy_features {
      * int time_index = 0;
      * for(const auto& id : features.catchments()) {
      *     auto r = features.catchment_at(id);
-     *     auto r_c = dynamic_pointer_cast<realization::Catchment_Formulation>(r);
-     *     double response = r_c->get_response(time_index, 3600.0);
+     *     double response = r->get_response(time_index, 3600.0);
      *     // outputs for the timestep as a vector<double> of values,
      *     // in the order the output fields are defined.
-     *     auto fields = r_c->get_output_fields();
-     *     auto values = r_c->get_output_values_for_timestep(time_index);
+     *     auto fields = r->get_formulation()->get_output_fields();
+     *     auto values = r->get_formulation()->get_output_values_for_timestep(time_index);
      * }
      * @endcode
      */

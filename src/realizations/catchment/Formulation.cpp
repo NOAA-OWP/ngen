@@ -1,6 +1,34 @@
 #include <Formulation.hpp>
 
 namespace realization {
+
+    // `id` names the formulation, `feature_id` names the feature it is associated with.
+    // Both start from the one string the constructor is given, because that string is the feature
+    // wherever a formulation is built directly: a catchment formulation is constructed with its
+    // catchment id, a domain layer with its layer id.
+    //
+    // Bmi_Multi_Formulation is the exception. It constructs each nested module with an id locating
+    // that module within itself, so there is no feature in the string to start from; it assigns
+    // the module its own feature through @ref set_feature_id.
+
+    Formulation::Formulation(const std::string& id, std::shared_ptr<data_access::GenericDataProvider> forcing)
+        : id(id)
+        , feature_id(id)
+        , forcing(std::move(forcing))
+    { }
+
+    Formulation::Formulation(const std::string& id)
+        : Formulation(id, nullptr)
+    { }
+
+    void Formulation::finalize()
+    {
+        if (forcing) {
+            forcing->finalize();
+            forcing = nullptr;
+        }
+    }
+
     geojson::PropertyMap Formulation::interpret_parameters(boost::property_tree::ptree &config, geojson::PropertyMap *global) {
         geojson::PropertyMap options;
 

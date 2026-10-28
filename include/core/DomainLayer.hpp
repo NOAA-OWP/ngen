@@ -1,7 +1,7 @@
 #ifndef NGEN_DOMAIN_LAYER
 #define NGEN_DOMAIN_LAYER
 
-#include "Catchment_Formulation.hpp"
+#include "Formulation.hpp"
 #include "Layer.hpp"
 #include "State_Exception.hpp"
 #include "CatchmentOutputsMgr.hpp"
@@ -48,7 +48,7 @@ namespace ngen
                 const Simulation_Time& s_t,
                 feature_type& features,
                 long idx,
-                std::shared_ptr<realization::Catchment_Formulation> formulation,
+                std::shared_ptr<realization::Formulation> formulation,
                 std::shared_ptr<utils::CatchmentOutputsMgr> output_mgr):
                     Layer(desc, s_t, features, idx, std::move(output_mgr)), formulation(formulation),
                     output_formulation_id("layer_" + std::to_string(desc.id)),
@@ -98,7 +98,7 @@ namespace ngen
         }
 
         private:
-        std::shared_ptr<realization::Catchment_Formulation> formulation;
+        std::shared_ptr<realization::Formulation> formulation;
         //! This layer's identity in the shared manager, split into its (formulation, catchment) key.
         std::string output_formulation_id;
         std::string output_catchment_id;
