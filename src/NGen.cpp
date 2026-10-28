@@ -647,7 +647,6 @@ int main(int argc, char* argv[]) {
                     cat_ids,
                     layer_sim_time,
                     features,
-                    catchment_collection,
                     0,
                     catchment_outputs_mgr
                 );
@@ -657,7 +656,6 @@ int main(int argc, char* argv[]) {
                     cat_ids,
                     layer_sim_time,
                     features,
-                    catchment_collection,
                     0,
                     nexus_outputs_mgr,
                     catchment_outputs_mgr

@@ -1,4 +1,8 @@
 #include <Layer.hpp>
+
+#include <optional>
+
+#include <boost/type_index.hpp>
 #include <Formulation.hpp>
 #include <CatchmentOutputsMgr.hpp>
 
@@ -28,14 +32,15 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
         output_time_index, simulation_time.get_current_epoch_time(), current_timestamp);
     for(const auto& id : processing_units) {
         //std::cout<<"Running cat "<<id<<std::endl;
-        auto r_c = features.catchment_at(id);
+        auto realization = features.catchment_at(id);
+        auto formulation = realization->get_formulation();
         double response(0.0);
         try{
-            response = r_c->get_response(output_time_index, simulation_time.get_output_interval_seconds());
+            response = realization->get_response(output_time_index, simulation_time.get_output_interval_seconds());
             // Check mass balance if able
-            r_c->get_formulation()->check_mass_balance(output_time_index, simulation_time.get_total_output_times(), current_timestamp);
+            formulation->check_mass_balance(output_time_index, simulation_time.get_total_output_times(), current_timestamp);
             // Checkpoint state via the serialization protocol (no-op when unconfigured)
-            r_c->get_formulation()->checkpoint_state(output_time_index, simulation_time.get_total_output_times(), current_timestamp);
+            formulation->checkpoint_state(output_time_index, simulation_time.get_total_output_times(), current_timestamp);
         }
         catch(models::external::State_Exception& e){
             std::string msg = e.what();
@@ -60,17 +65,20 @@ void ngen::Layer::update_models(boost::span<double> catchment_outflows,
         if (catchment_output_mgr) {
             catchment_output_mgr->receive_data_entry(
                 id, current_time_marker,
-                r_c->get_formulation()->get_output_values_for_timestep(output_time_index));
+                formulation->get_output_values_for_timestep(output_time_index));
         }
-        //TODO put this somewhere else.  For now, just trying to ensure we get m^3/s into nexus output
-        double area;
-        try {
-            area = catchment_data->get_feature(id)->get_property("areasqkm").as_real_number();
+        // The face the response is distributed over is what the depth is scaled by. Settled when
+        // the feature was realized -- from the hydrofabric's area attribute or by measuring its
+        // divide -- rather than looked up again here every timestep. Empty only for a perspective
+        // with no areal extent, which is named rather than left to produce a wrong number.
+        std::optional<double> area = realization->area_sqkm();
+        if (!area) {
+            throw std::runtime_error(
+                "Catchment '" + id + "' is realized as " +
+                boost::typeindex::type_id_runtime(*realization).pretty_name() +
+                ", which has no areal extent, so its response cannot be converted to a volumetric flow.");
         }
-        catch(std::invalid_argument &e) {
-            area = catchment_data->get_feature(id)->get_property("area_sqkm").as_real_number();
-        }
-        double response_m_s = response * (area * 1000000);
+        double response_m_s = response * (*area * 1000000);
         //TODO put this somewhere else as well, for now, an implicit assumption is that a module's get_response returns
         //m/timestep
         //since we are operating on a 1 hour (3600s) dt, we need to scale the output appropriately
