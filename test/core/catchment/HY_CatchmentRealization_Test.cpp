@@ -9,6 +9,39 @@
 #include "HY_CatchmentArea.hpp"
 #include "HY_CatchmentRealization.hpp"
 #include "HY_FlowPath.hpp"
+#include "Formulation.hpp"
+
+/**
+ * A formulation that answers a fixed depth.
+ *
+ * Formulation::get_response requests meters of its model, so a stub standing in for one answers in
+ * meters too. Everything else here is the interface, not the subject.
+ */
+class Depth_Formulation : public realization::Formulation {
+  public:
+    explicit Depth_Formulation(double depth_m) : realization::Formulation("cat-27"), depth(depth_m) {}
+
+    std::string get_formulation_type() const override { return "depth_stub"; }
+    void create_formulation(boost::property_tree::ptree&, geojson::PropertyMap*) override {}
+    void create_formulation(geojson::PropertyMap) override {}
+    void check_mass_balance(const int&, const int&, const std::string&) const override {}
+    void checkpoint_state(const int&, const int&, const std::string&) const override {}
+    void update(time_step_t, time_step_t) override {}
+    double get_response(time_step_t, time_step_t) override { return depth; }
+    std::vector<utils::OutputField> get_output_fields() const override { return {}; }
+    std::vector<double> get_output_values_for_timestep(int) override { return {}; }
+
+  protected:
+    const std::vector<std::string>& get_required_parameters() const override {
+        static const std::vector<std::string> none;
+        return none;
+    }
+
+  private:
+    double depth;
+};
+
+using Quantity = HY_CatchmentRealization::Quantity;
 
 #include <features/Features.hpp>
 
@@ -78,6 +111,96 @@ TEST_F(HY_CatchmentRealization_Test, BackReferenceDoesNotOwnTheCatchment)
 TEST_F(HY_CatchmentRealization_Test, UnmodeledRealizationRefusesToRespond)
 {
     EXPECT_THROW(area->get_response(0, 3600), std::runtime_error);
+}
+
+/** A face with no extent cannot spread a depth over it, and says so rather than guessing one. */
+TEST_F(HY_CatchmentRealization_Test, AFaceWithNoExtentRefusesToRespond)
+{
+    // A model is attached, so a refusal here is about the missing extent and not the missing
+    // formulation -- which is the other reason this call can throw.
+    auto measured = std::make_shared<HY_CatchmentArea>(
+            "cat-27", std::make_shared<Depth_Formulation>(0.004));
+    try {
+        measured->get_response(0, 3600);
+        FAIL() << "expected a face with no extent to refuse";
+    }
+    catch (const std::runtime_error& e) {
+        EXPECT_NE(std::string(e.what()).find("no areal extent"), std::string::npos) << e.what();
+    }
+}
+
+/** The model's depth, spread over the face's extent, is the face's response. */
+TEST_F(HY_CatchmentRealization_Test, AFaceSpreadsTheModelsDepthOverItsExtent)
+{
+    auto modeled = std::make_shared<HY_CatchmentArea>(
+            "cat-27", std::make_shared<Depth_Formulation>(0.004), 15.625);
+
+    EXPECT_EQ(modeled->get_response(0, 3600).in(Quantity::volume), 0.004 * 15.625 * 1000000.0);
+}
+
+/** Deriving a volume does not consume the depth it came from; both remain on offer. */
+TEST_F(HY_CatchmentRealization_Test, AFaceStillOffersTheDepthItSpread)
+{
+    auto modeled = std::make_shared<HY_CatchmentArea>(
+            "cat-27", std::make_shared<Depth_Formulation>(0.004), 15.625);
+
+    EXPECT_EQ(modeled->get_response(0, 3600).in(Quantity::depth), 0.004);
+}
+
+/**
+ * The base perspective offers the model's value and nothing derived from it.
+ *
+ * It has no topology to interpret the depth with, so a caller wanting a volume is asking something
+ * this perspective cannot answer, and finds that out rather than receiving a guess.
+ */
+TEST_F(HY_CatchmentRealization_Test, TheBasePerspectiveOffersOnlyTheDepth)
+{
+    auto base = std::make_shared<HY_CatchmentRealization>(
+            "cat-27", std::make_shared<Depth_Formulation>(0.004));
+
+    HY_CatchmentRealization::Response response = base->get_response(0, 3600);
+
+    EXPECT_EQ(response.in(Quantity::depth), 0.004);
+    EXPECT_FALSE(response.in(Quantity::volume).has_value());
+    EXPECT_FALSE(response.in(Quantity::volumetric_flow).has_value());
+}
+
+/** The volume is what the step produced, so it does not depend on how long the step was. */
+TEST_F(HY_CatchmentRealization_Test, TheVolumeDoesNotDependOnTheStepLength)
+{
+    auto modeled = std::make_shared<HY_CatchmentArea>(
+            "cat-27", std::make_shared<Depth_Formulation>(0.004), 15.625);
+
+    EXPECT_EQ(modeled->get_response(0, 3600).in(Quantity::volume),
+              modeled->get_response(1, 900).in(Quantity::volume));
+}
+
+/**
+ * The rate does depend on the step, and on the step the model was advanced for.
+ *
+ * The same volume over a quarter of the time is four times the flow. Derived where the step is
+ * known rather than by a caller that may only know how often output is sampled.
+ */
+TEST_F(HY_CatchmentRealization_Test, TheRateIsTheVolumeOverTheStepItWasAdvancedFor)
+{
+    auto modeled = std::make_shared<HY_CatchmentArea>(
+            "cat-27", std::make_shared<Depth_Formulation>(0.004), 15.625);
+    const double volume = *modeled->get_response(0, 3600).in(Quantity::volume);
+
+    EXPECT_DOUBLE_EQ(*modeled->get_response(0, 3600).in(Quantity::volumetric_flow), volume / 3600.0);
+    EXPECT_DOUBLE_EQ(*modeled->get_response(1, 900).in(Quantity::volumetric_flow), volume / 900.0);
+}
+
+/** With no interval to spread it over there is no rate, rather than a division by zero. */
+TEST_F(HY_CatchmentRealization_Test, ADegenerateStepOffersNoRate)
+{
+    auto modeled = std::make_shared<HY_CatchmentArea>(
+            "cat-27", std::make_shared<Depth_Formulation>(0.004), 15.625);
+
+    HY_CatchmentRealization::Response response = modeled->get_response(0, 0);
+
+    EXPECT_TRUE(response.in(Quantity::volume).has_value());
+    EXPECT_FALSE(response.in(Quantity::volumetric_flow).has_value());
 }
 
 /** A face reports the extent it was realized with, which is what a value is distributed over. */

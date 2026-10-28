@@ -35,7 +35,8 @@ namespace hy_features {
      * int time_index = 0;
      * for(const auto& id : features.catchments()) {
      *     auto r = features.catchment_at(id);
-     *     double response = r->get_response(time_index, 3600.0);
+     *     // this perspective's response for the step, as each quantity it expresses
+     *     auto response = r->get_response(time_index, 3600.0);
      *     // outputs for the timestep as a vector<double> of values,
      *     // in the order the output fields are defined.
      *     auto fields = r->get_formulation()->get_output_fields();
