@@ -110,13 +110,30 @@ TEST_F(JSONProperty_Test, object_property_test) {
     ASSERT_EQ(object_property.at("natural").get_type(), geojson::PropertyType::Natural);
     ASSERT_EQ(object_property.at("natural").as_natural_number(), 4);
 
-    const geojson::PropertyMap copy_list_object = {
+    geojson::PropertyMap inner_initializer_list_properties = {
         {"natural", {"natural", 9}},
         {"real", {"real", 18.0}},
         {"string", {"string", "other_test_string"}},
         {"empty_string", {"empty_string", ""}},
         {"boolean", {"boolean", false}}
     };
+    const geojson::JSONProperty initializer_list_property = {
+        "object",
+        inner_initializer_list_properties
+    };
+
+    EXPECT_EQ(initializer_list_property.get_values().size(), 5);
+    EXPECT_EQ(initializer_list_property.at("natural").get_type(), geojson::PropertyType::Natural);
+    EXPECT_EQ(initializer_list_property.at("real").get_type(), geojson::PropertyType::Real);
+    EXPECT_EQ(initializer_list_property.at("string").get_type(), geojson::PropertyType::String);
+    EXPECT_EQ(initializer_list_property.at("empty_string").get_type(), geojson::PropertyType::String);
+    EXPECT_EQ(initializer_list_property.at("boolean").get_type(), geojson::PropertyType::Boolean);
+
+    EXPECT_EQ(initializer_list_property.at("natural").as_natural_number(), 9);
+    EXPECT_EQ(initializer_list_property.at("real").as_real_number(), 18.0);
+    EXPECT_EQ(initializer_list_property.at("string").as_string(), "other_test_string");
+    EXPECT_EQ(initializer_list_property.at("empty_string").as_string(), "");
+    EXPECT_EQ(initializer_list_property.at("boolean").as_boolean(), false);
 }
 
 TEST_F(JSONProperty_Test, list_property_test) {
