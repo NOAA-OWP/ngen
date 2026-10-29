@@ -3,8 +3,9 @@
 
 #include <iostream>
 #include <set>
-#include <sstream>
 #include <stdexcept>
+
+#include <boost/algorithm/string/join.hpp>
 
 namespace ngen {
 namespace hydrofabric {
@@ -19,16 +20,7 @@ namespace {
  */
 std::string join_columns(const std::set<std::string>& columns)
 {
-    std::ostringstream joined;
-    joined << "[";
-    bool first = true;
-    for (const std::string& column : columns) {
-        if (!first) joined << ", ";
-        joined << column;
-        first = false;
-    }
-    joined << "]";
-    return joined.str();
+    return "[" + boost::algorithm::join(columns, ", ") + "]";
 }
 
 } // namespace
