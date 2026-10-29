@@ -297,6 +297,10 @@ namespace models {
              * that size is also gfortran's 80-bit ``real(kind=10)`` with padding, so the size cannot tell the two
              * apart.
              *
+             * A module can resolve that ambiguity itself by reporting ``long double`` for a variable of kind
+             * ``c_long_double``.  That name is not reduced, so it reaches the table as reported, and denotes the
+             * C++ ``long double`` on every platform, whatever else shares its size.
+             *
              * Any other name, or a size with no type of the named kind, is returned unchanged, for the table's
              * item size check to refuse.
              *
