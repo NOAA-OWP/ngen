@@ -395,7 +395,7 @@ namespace network {
      * Every non-sentinel feature in @p collection whose id type prefix satisfies @p matches_type
      * and that has no destination feature yet gains a destination SentinelFeature named
      * "wb-<label>-<feature id>", and the new sentinels are added to @p collection. The "wb-"
-     * prefix is what makes a sentinel partition as a catchment.
+     * prefix is what causes a sentinel to be partitioned as a catchment.
      *
      * @param collection Linked feature collection to update in place
      * @param label Sentinel naming label, e.g. "TERMINAL_SENTINEL"
