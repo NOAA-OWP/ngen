@@ -43,14 +43,14 @@ HydrofabricVersion detect_version(
         );
     }
 
-    if (nexus_columns.count(NEXUS_ID_COLUMN) > 0) {
+    if (nexus_columns.contains(NEXUS_ID_COLUMN)) {
         // Both v4 variants rename nexus.id -> nexus.nexus_id; the divides
         // layer's flowpath_toid column tells them apart (present == V4_0).
-        return divides_columns.count(FLOWPATH_TOID_COLUMN) > 0 ? HydrofabricVersion::V4_0
+        return divides_columns.contains(FLOWPATH_TOID_COLUMN) ? HydrofabricVersion::V4_0
                                                                : HydrofabricVersion::V4_0_BETA1;
     }
 
-    if (nexus_columns.count(ID_KEY) > 0) {
+    if (nexus_columns.contains(ID_KEY)) {
         return HydrofabricVersion::V2_2;
     }
 
@@ -104,11 +104,11 @@ std::string get_layer_id_column(const HydrofabricVersion version, const std::str
         id_column = DIVIDE_ID_COLUMN;
     }
     else if (layer == DIVIDES_LAYER && version == HydrofabricVersion::V2_2) {
-        if (columns.count(DIVIDE_ID_COLUMN) > 0) {
+        if (columns.contains(DIVIDE_ID_COLUMN)) {
             id_column = DIVIDE_ID_COLUMN;
         }
         #ifndef NGEN_QUIET
-        else if (columns.count(ID_KEY) > 0) {
+        else if (columns.contains(ID_KEY)) {
             // output debug info on what is read exactly
             std::cout << "WARN: Using legacy ID column \"" << ID_KEY << "\" in layer " << layer
                       << " is DEPRECATED and may stop working at any time."
@@ -122,7 +122,7 @@ std::string get_layer_id_column(const HydrofabricVersion version, const std::str
     }
     // v2.2 nexus reads its native "id", as does any other layer.
 
-    if (columns.count(id_column) == 0) {
+    if (!columns.contains(id_column)) {
         throw std::runtime_error(
             "hydrofabric " + std::string(version_label(version)) + " " + layer +
             " layer has no '" + id_column + "' id column. Observed columns: " +
