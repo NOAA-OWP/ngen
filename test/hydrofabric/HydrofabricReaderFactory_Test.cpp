@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
-#include <fstream>
+#include <filesystem>
 
 #include <sqlite3.h>
 
@@ -16,13 +16,9 @@ namespace {
 //! Copy a file byte for byte, so a fixture can be given a name that says nothing about its format.
 std::string copy_as(const std::string& source, const std::string& name)
 {
-    const std::string destination = std::string(testing::TempDir()) + "/" + name;
-
-    std::ifstream in{source, std::ios::binary};
-    std::ofstream out{destination, std::ios::binary | std::ios::trunc};
-    out << in.rdbuf();
-
-    return destination;
+    const std::filesystem::path destination = std::filesystem::path(testing::TempDir()) / name;
+    std::filesystem::copy_file(source, destination, std::filesystem::copy_options::overwrite_existing);
+    return destination.string();
 }
 
 } // namespace
