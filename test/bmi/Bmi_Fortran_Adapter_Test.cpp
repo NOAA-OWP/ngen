@@ -1402,6 +1402,21 @@ TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_c) {
     EXPECT_EQ(adapter->get_analogous_cxx_type("real", 16), long_double_is_quad ? "long double" : "real");
 }
 
+/**
+ * Test that a module can name ``long double`` outright, for a variable of kind c_long_double.
+ *
+ * That is the spelling that resolves where a 16-byte real alone is ambiguous, so it is passed through as reported,
+ * and the table's size check still refuses it if the reported size disagrees.
+ */
+TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_d) {
+    const std::string resolved = adapter->get_analogous_cxx_type("long double", sizeof(long double));
+    EXPECT_EQ(resolved, "long double");
+    EXPECT_NO_THROW(models::bmi::require_item_size(resolved, sizeof(long double), "long double"));
+
+    EXPECT_THROW(models::bmi::require_item_size(adapter->get_analogous_cxx_type("long double", 3), 3, "long double"),
+                 std::runtime_error);
+}
+
 /** Test that a 'real' the module reports as 8 bytes wide is set and read back at that width. */
 TEST_F(Bmi_Fortran_Adapter_Test, SetValue_GetValue_widened_real_0_a) {
     const std::string name = "test::real_kind8";
