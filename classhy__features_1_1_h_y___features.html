@@ -132,7 +132,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a454546ffe97d110b2a36fab9912e9c79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classhy__features_1_1_h_y___features.html" title="Collection interface to HY_Features objects and their associated model formulations.">HY_Features</a> object from a Network and a set of formulations.  <br /></td></tr>
 <tr class="separator:a454546ffe97d110b2a36fab9912e9c79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a416658ed2fa45fbb70516e7ed34cf314" id="r_a416658ed2fa45fbb70516e7ed34cf314"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a416658ed2fa45fbb70516e7ed34cf314">catchment_at</a> (std::string id) const</td></tr>
-<tr class="memdesc:a416658ed2fa45fbb70516e7ed34cf314"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a> pointer identified by <code>id</code>.  <br /></td></tr>
+<tr class="memdesc:a416658ed2fa45fbb70516e7ed34cf314"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="class_h_y___catchment_realization.html" title="A hydrology-specific perspective of a catchment.">HY_CatchmentRealization</a> pointer identified by <code>id</code>.  <br /></td></tr>
 <tr class="separator:a416658ed2fa45fbb70516e7ed34cf314"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed90b4d166de9a43be5018d5f51e318c" id="r_aed90b4d166de9a43be5018d5f51e318c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_h_y___hydro_nexus.html">HY_HydroNexus</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed90b4d166de9a43be5018d5f51e318c">nexus_at</a> (const std::string &amp;id) const</td></tr>
 <tr class="memdesc:aed90b4d166de9a43be5018d5f51e318c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="class_h_y___hydro_nexus.html">HY_HydroNexus</a> pointer identifed by <code>id</code>.  <br /></td></tr>
@@ -192,13 +192,14 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="keywordtype">int</span> time_index = 0;</div>
 <div class="line"><span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; <span class="keywordtype">id</span> : features.<a class="code hl_function" href="#af4f58bd66959ab0a06999ea5b14be0bd">catchments</a>()) {</div>
 <div class="line">    <span class="keyword">auto</span> r = features.<a class="code hl_function" href="#a416658ed2fa45fbb70516e7ed34cf314">catchment_at</a>(<span class="keywordtype">id</span>);</div>
-<div class="line">    <span class="keyword">auto</span> r_c = dynamic_pointer_cast&lt;realization::Catchment_Formulation&gt;(r);</div>
-<div class="line">    <span class="keywordtype">double</span> response = r_c-&gt;get_response(time_index, 3600.0);</div>
+<div class="line">    <span class="comment">// this perspective&#39;s response for the step, as each quantity it expresses</span></div>
+<div class="line">    <span class="keyword">auto</span> response = r-&gt;<a class="code hl_function" href="class_h_y___catchment_realization.html#a15c1b60e807bf8545ef57b8fc60e8d04">get_response</a>(time_index, 3600.0);</div>
 <div class="line">    <span class="comment">// outputs for the timestep as a vector&lt;double&gt; of values,</span></div>
 <div class="line">    <span class="comment">// in the order the output fields are defined.</span></div>
-<div class="line">    <span class="keyword">auto</span> fields = r_c-&gt;get_output_fields();</div>
-<div class="line">    <span class="keyword">auto</span> values = r_c-&gt;get_output_values_for_timestep(time_index);</div>
+<div class="line">    <span class="keyword">auto</span> fields = r-&gt;get_formulation()-&gt;get_output_fields();</div>
+<div class="line">    <span class="keyword">auto</span> values = r-&gt;get_formulation()-&gt;get_output_values_for_timestep(time_index);</div>
 <div class="line">}</div>
+<div class="ttc" id="aclass_h_y___catchment_realization_html_a15c1b60e807bf8545ef57b8fc60e8d04"><div class="ttname"><a href="class_h_y___catchment_realization.html#a15c1b60e807bf8545ef57b8fc60e8d04">HY_CatchmentRealization::get_response</a></div><div class="ttdeci">virtual Response get_response(time_step_t t_index, time_step_t t_delta)</div><div class="ttdoc">Execute the attached model for the given time step, where it is of the specified size,...</div><div class="ttdef"><b>Definition</b> HY_CatchmentRealization.cpp:42</div></div>
 <div class="ttc" id="aclasshy__features_1_1_h_y___features_html"><div class="ttname"><a href="classhy__features_1_1_h_y___features.html">hy_features::HY_Features</a></div><div class="ttdoc">Collection interface to HY_Features objects and their associated model formulations.</div><div class="ttdef"><b>Definition</b> HY_Features.hpp:47</div></div>
 <div class="ttc" id="aclasshy__features_1_1_h_y___features_html_a416658ed2fa45fbb70516e7ed34cf314"><div class="ttname"><a href="#a416658ed2fa45fbb70516e7ed34cf314">hy_features::HY_Features::catchment_at</a></div><div class="ttdeci">std::shared_ptr&lt; HY_CatchmentRealization &gt; catchment_at(std::string id) const</div><div class="ttdoc">Get the HY_CatchmentRealization pointer identified by id.</div><div class="ttdef"><b>Definition</b> HY_Features.hpp:99</div></div>
 <div class="ttc" id="aclasshy__features_1_1_h_y___features_html_af4f58bd66959ab0a06999ea5b14be0bd"><div class="ttname"><a href="#af4f58bd66959ab0a06999ea5b14be0bd">hy_features::HY_Features::catchments</a></div><div class="ttdeci">auto catchments()</div><div class="ttdoc">An iterator of only the catchment feature ids.</div><div class="ttdef"><b>Definition</b> HY_Features.hpp:128</div></div>
@@ -413,7 +414,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Get the <a class="el" href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a> pointer identified by <code>id</code>. </p>
+<p>Get the <a class="el" href="class_h_y___catchment_realization.html" title="A hydrology-specific perspective of a catchment.">HY_CatchmentRealization</a> pointer identified by <code>id</code>. </p>
 <p>If no realization exists for <code>id</code>, a nullptr is returned.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -772,7 +773,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacehy__features.html">hy_features</a></li><li class="navelem"><a class="el" href="classhy__features_1_1_h_y___features.html">HY_Features</a></li>
-    <li class="footer">Generated on Tue Oct 27 2026 21:29:57 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 29 2026 20:43:09 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

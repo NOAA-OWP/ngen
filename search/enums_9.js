@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['resamplemethod_0',['ReSampleMethod',['../namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9',1,'data_access']]]
+  ['propertytype_0',['PropertyType',['../namespacegeojson.html#a972cd4a487858a36473c775ac360f361',1,'geojson']]],
+  ['protocol_1',['Protocol',['../namespacemodels_1_1bmi_1_1protocols.html#a39a83dd4438899d0ebd1db814fe5a02d',1,'models::bmi::protocols']]]
 ];

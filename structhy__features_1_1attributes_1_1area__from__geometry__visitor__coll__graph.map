@@ -1,0 +1,5 @@
+<map id="hy_features::attributes::area_from_geometry_visitor" name="hy_features::attributes::area_from_geometry_visitor">
+<area shape="rect" id="Node000001" title="Measures whichever geometries enclose an area; anything else has none to give." alt="" coords="5,135,182,257"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="13,5,174,87"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,101,96,135,91,135,91,101"/>
+</map>

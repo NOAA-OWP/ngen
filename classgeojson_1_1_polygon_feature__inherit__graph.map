@@ -1,5 +1,5 @@
 <map id="geojson::PolygonFeature" name="geojson::PolygonFeature">
-<area shape="rect" id="Node000001" title="Represents a feature based around a polygon defining an area." alt="" coords="14,709,166,837"/>
-<area shape="rect" id="Node000002" href="$classgeojson_1_1_feature_base.html" title="Represents an individual feature within a Geojson definition." alt="" coords="5,5,175,661"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,676,93,710,88,710,88,676"/>
+<area shape="rect" id="Node000001" title="Represents a feature based around a polygon defining an area." alt="" coords="14,730,166,857"/>
+<area shape="rect" id="Node000002" href="$classgeojson_1_1_feature_base.html" title="Represents an individual feature within a Geojson definition." alt="" coords="5,5,175,682"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,697,93,730,88,730,88,697"/>
 </map>

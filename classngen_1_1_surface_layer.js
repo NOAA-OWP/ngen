@@ -1,7 +1,7 @@
 var classngen_1_1_surface_layer =
 [
     [ "feature_type", "classngen_1_1_surface_layer.html#ad1ec52c5a456f72aa02e7a0c5d711449", null ],
-    [ "SurfaceLayer", "classngen_1_1_surface_layer.html#afa09d534f952e76d8c1b4ea759c13330", null ],
+    [ "SurfaceLayer", "classngen_1_1_surface_layer.html#a6ae97a789ee8ff1b81ed46cb8d9dc4ff", null ],
     [ "current_timestep_epoch_time", "classngen_1_1_surface_layer.html#a178444ad250c0c8faaefa6c5263c618c", null ],
     [ "get_id", "classngen_1_1_surface_layer.html#acd4f99d80cbcac7f64c4b5211ba58f8c", null ],
     [ "get_name", "classngen_1_1_surface_layer.html#acda7ee56e91a6c395b9c25c74bf0494b", null ],
@@ -9,7 +9,6 @@ var classngen_1_1_surface_layer =
     [ "get_time_step_units", "classngen_1_1_surface_layer.html#a3cda46167a3ae4a09baf0ba36e01161b", null ],
     [ "next_timestep_epoch_time", "classngen_1_1_surface_layer.html#abd1389469be1b1bf1e39001edde2d14f", null ],
     [ "update_models", "classngen_1_1_surface_layer.html#afb6d1cc8b2c19b4024b07999ea6a0788", null ],
-    [ "catchment_data", "classngen_1_1_surface_layer.html#a5689db4f3999584bea58d99aa9ff8b15", null ],
     [ "catchment_output_mgr", "classngen_1_1_surface_layer.html#a4a55d14541dd7d8f17f72e9872f42faf", null ],
     [ "description", "classngen_1_1_surface_layer.html#a681d5a55c86a8d1f6d6f9f5fc57b6c63", null ],
     [ "features", "classngen_1_1_surface_layer.html#a2529e511bb8f0091ff321652988a3290", null ],

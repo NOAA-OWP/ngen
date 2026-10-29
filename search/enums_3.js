@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['globalconfigkey_0',['GlobalConfigKey',['../namespacerealization_1_1config.html#a09b5cffe3671fe15906c0881b0331eb8',1,'realization::config']]]
+  ['featuretype_0',['FeatureType',['../namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0',1,'geojson']]]
 ];

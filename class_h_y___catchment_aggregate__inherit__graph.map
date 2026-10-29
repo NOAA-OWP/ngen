@@ -1,7 +1,7 @@
 <map id="HY_CatchmentAggregate" name="HY_CatchmentAggregate">
-<area shape="rect" id="Node000001" title=" " alt="" coords="25,696,212,783"/>
-<area shape="rect" id="Node000002" href="$class_h_y___catchment.html" title=" " alt="" coords="5,140,231,648"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,664,121,697,116,697,116,664"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="25,717,212,803"/>
+<area shape="rect" id="Node000002" href="$class_h_y___catchment.html" title=" " alt="" coords="5,140,231,669"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,684,121,717,116,717,116,684"/>
 <area shape="rect" id="Node000003" href="$class_h_y___hydro_feature.html" title=" " alt="" coords="47,5,190,92"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="121,107,121,140,116,140,116,107"/>
 </map>

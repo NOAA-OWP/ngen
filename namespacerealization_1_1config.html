@@ -171,6 +171,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aab9f0b64835b2616f72d5eb4117543d2" id="r_aab9f0b64835b2616f72d5eb4117543d2"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab9f0b64835b2616f72d5eb4117543d2">rank_output_root</a> (const std::string &amp;base_root, const <a class="el" href="structrealization_1_1config_1_1_output_domain.html">OutputDomain</a> &amp;domain, int mpi_rank, int mpi_num_procs)</td></tr>
 <tr class="memdesc:aab9f0b64835b2616f72d5eb4117543d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The output root for a rank's files in this domain: appends "rank_&lt;N&gt;/" to <code>base_root</code> when the domain requests per-rank subdirectories, or when it aggregates per formulation (which requires per-rank separation so ranks don't write the same file).  <br /></td></tr>
 <tr class="separator:aab9f0b64835b2616f72d5eb4117543d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b516d511ddcadf17b8dfed83654a941" id="r_a1b516d511ddcadf17b8dfed83654a941"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b516d511ddcadf17b8dfed83654a941">pattern_substitution</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;properties, const std::string &amp;key, const std::string &amp;pattern, const std::string &amp;replacement)</td></tr>
+<tr class="memdesc:a1b516d511ddcadf17b8dfed83654a941"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform in-place substitution on the given config property item, if the item and the pattern are present.  <br /></td></tr>
+<tr class="separator:a1b516d511ddcadf17b8dfed83654a941"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9406186e7fd5ef586eb62769754ab37a" id="r_a9406186e7fd5ef586eb62769754ab37a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9406186e7fd5ef586eb62769754ab37a">apply_serialization_path_token_resolution</a> (boost::property_tree::ptree &amp;block)</td></tr>
 <tr class="memdesc:a9406186e7fd5ef586eb62769754ab37a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve <code>{{rank}}</code>/<code>{{pid}}</code>/<code>{{host}}</code>/<code>{{date}}</code> tokens in every path field the serialization block may carry.  <br /></td></tr>
 <tr class="separator:a9406186e7fd5ef586eb62769754ab37a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -323,7 +326,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="#af59178b2a7d2cc3ee2f2bbbac7b2c07a">to_key_string()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a95ce9b1450de7c28810b46db56d46fbc">realization::Formulation_Manager::construct_formulation_from_config()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a51993f8d3e6b016aee9a7318a99e57d7">realization::Formulation_Manager::construct_missing_formulation()</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#af9789b43f6ebaf151a38bd58895de261">realization::Formulation_Manager::construct_formulation_from_config()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#abdd8bf78eb05da606f188150d3919a6a">realization::Formulation_Manager::construct_missing_formulation()</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>.</p>
 
 </div>
 </div>
@@ -518,6 +521,61 @@ Variables</h2></td></tr>
 <p class="reference">References <a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04caa144e5e9277e3262602155c330f89a0b">per_feature</a>, and <a class="el" href="#a50f1a4acc522b75d352df1f4e84fa04ca42ffd54bc4ba4c105461e8b3b4232295">per_formulation</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structrealization_1_1config_1_1_output_domain.html#a2790d4cf37828cdf11a0df599734cb53">realization::config::OutputDomain::OutputDomain()</a>.</p>
+
+</div>
+</div>
+<a id="a1b516d511ddcadf17b8dfed83654a941" name="a1b516d511ddcadf17b8dfed83654a941"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b516d511ddcadf17b8dfed83654a941">&#9670;&#160;</a></span>pattern_substitution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::config::pattern_substitution </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>properties</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>key</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>pattern</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>replacement</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Perform in-place substitution on the given config property item, if the item and the pattern are present. </p>
+<p>Any and all instances of the substring <code>pattern</code> are replaced by <code>replacement</code>, if <code>key</code> maps to a present string-type property value.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">properties</td><td>A reference to the properties config object to be altered. </td></tr>
+    <tr><td class="paramname">key</td><td>The key for the configuration property to potentially adjust. </td></tr>
+    <tr><td class="paramname">pattern</td><td>The pattern substring to search for that, when present, should be replaced. </td></tr>
+    <tr><td class="paramname">replacement</td><td>The replacement substring to potentially insert. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a27118326006d3829667a400ad23d5d98">geojson::String</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#af9789b43f6ebaf151a38bd58895de261">realization::Formulation_Manager::construct_formulation_from_config()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#abdd8bf78eb05da606f188150d3919a6a">realization::Formulation_Manager::construct_missing_formulation()</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a093bf43259686df1abbe02087619583e">realization::Bmi_Multi_Formulation::init_nested_module()</a>.</p>
 
 </div>
 </div>
@@ -752,7 +810,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="namespacerealization_1_1config.html">config</a></li>
-    <li class="footer">Generated on Tue Oct 27 2026 21:29:58 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 29 2026 20:43:09 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

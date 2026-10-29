@@ -1,16 +1,26 @@
 var classrealization_1_1_formulation =
 [
     [ "time_step_t", "classrealization_1_1_formulation.html#aedb7c17dc4527613c7411229a2dc9fff", null ],
-    [ "Formulation", "classrealization_1_1_formulation.html#a3a5a0e33ca89dac2153a988eecc1d4c2", null ],
+    [ "Formulation", "classrealization_1_1_formulation.html#aed83d26fee3f2caca39868a64b867580", null ],
+    [ "Formulation", "classrealization_1_1_formulation.html#a53f4938e2a28b5122dec0bc2a8aeb6ad", null ],
     [ "~Formulation", "classrealization_1_1_formulation.html#a2a5e659ff09f6851836bd3a249edd7cc", null ],
     [ "check_mass_balance", "classrealization_1_1_formulation.html#ab0cc85bff600c74d7ab3d7a9db96643d", null ],
     [ "checkpoint_state", "classrealization_1_1_formulation.html#aa6aeb77a56b585e13d2c5c60c891a35c", null ],
     [ "create_formulation", "classrealization_1_1_formulation.html#a6b495fa685dcea07f2b5ca9c41aa76fc", null ],
     [ "create_formulation", "classrealization_1_1_formulation.html#a2cec813cc10759bfb854d0ab0367ebd1", null ],
+    [ "finalize", "classrealization_1_1_formulation.html#ac5b0196eb683309b862ace3e179df94e", null ],
+    [ "get_feature_id", "classrealization_1_1_formulation.html#a9a03b1a83f0ec001afc2819b228f6a00", null ],
     [ "get_formulation_type", "classrealization_1_1_formulation.html#a224466bc8464766b40109ce929143d86", null ],
     [ "get_id", "classrealization_1_1_formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d", null ],
+    [ "get_output_fields", "classrealization_1_1_formulation.html#a1760e858f9f8a958f91da544470b90d6", null ],
+    [ "get_output_values_for_timestep", "classrealization_1_1_formulation.html#aed312863bb9541c15b3c3e8306c87c5f", null ],
     [ "get_required_parameters", "classrealization_1_1_formulation.html#acc135395934555459fd9151cc1650837", null ],
+    [ "get_response", "classrealization_1_1_formulation.html#a24586a89e49005c6feca65a5057ec289", null ],
     [ "interpret_parameters", "classrealization_1_1_formulation.html#a8a8be619f96c81aa7bf60644b03bed38", null ],
+    [ "set_feature_id", "classrealization_1_1_formulation.html#a51fc7e9618d12df56f4b0f1970b06347", null ],
+    [ "update", "classrealization_1_1_formulation.html#a783b4007f7b915e12c0848bd4a80db4e", null ],
     [ "validate_parameters", "classrealization_1_1_formulation.html#a3ed78c910127ec5115d71fcfe4d47896", null ],
+    [ "feature_id", "classrealization_1_1_formulation.html#ab63c9d06afc56d32873948673c4a6819", null ],
+    [ "forcing", "classrealization_1_1_formulation.html#aaf28742868fafdccb60fa98938e57dc2", null ],
     [ "id", "classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d", null ]
 ];

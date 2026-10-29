@@ -246,13 +246,17 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a847a3fc24978b7b87f57ecf6c4a5d13d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3946b483dae8cba1affb2228a760f1c" id="r_ad3946b483dae8cba1affb2228a760f1c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_base.html#ad3946b483dae8cba1affb2228a760f1c">remove_neighbor</a> (<a class="el" href="classgeojson_1_1_feature_base.html">FeatureBase</a> *feature)</td></tr>
 <tr class="separator:ad3946b483dae8cba1affb2228a760f1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0999e936addd1cd55f5d3adcbcbc01d6" id="r_a0999e936addd1cd55f5d3adcbcbc01d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_base.html#a0999e936addd1cd55f5d3adcbcbc01d6">set_geom</a> (<a class="el" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">::geojson::geometry</a> new_geom)</td></tr>
+<tr class="memdesc:a0999e936addd1cd55f5d3adcbcbc01d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Give this feature a geometry, replacing rather than modifying any it already has.  <br /></td></tr>
+<tr class="separator:a0999e936addd1cd55f5d3adcbcbc01d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:ac2786341bb4e570fa8d60fefe18dbe0f" id="r_ac2786341bb4e570fa8d60fefe18dbe0f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0">FeatureType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_base.html#ac2786341bb4e570fa8d60fefe18dbe0f">type</a></td></tr>
 <tr class="separator:ac2786341bb4e570fa8d60fefe18dbe0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaba97b89c01dfd529c5eca61517107c7" id="r_aaba97b89c01dfd529c5eca61517107c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">::geojson::geometry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_base.html#aaba97b89c01dfd529c5eca61517107c7">geom</a></td></tr>
-<tr class="separator:aaba97b89c01dfd529c5eca61517107c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4faa46bcc1ff5d30779aa4d223fc6a1f" id="r_a4faa46bcc1ff5d30779aa4d223fc6a1f"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; const <a class="el" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">::geojson::geometry</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_base.html#a4faa46bcc1ff5d30779aa4d223fc6a1f">geom</a></td></tr>
+<tr class="memdesc:a4faa46bcc1ff5d30779aa4d223fc6a1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The feature's geometry, shared rather than owned outright.  <br /></td></tr>
+<tr class="separator:a4faa46bcc1ff5d30779aa4d223fc6a1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cbe59eecb42e6cedb3ee7b12cddedc2" id="r_a9cbe59eecb42e6cedb3ee7b12cddedc2"><td class="memItemLeft" align="right" valign="top">std::vector&lt;<a class="el" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">::geojson::geometry</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_base.html#a9cbe59eecb42e6cedb3ee7b12cddedc2">geometry_collection</a></td></tr>
 <tr class="separator:a9cbe59eecb42e6cedb3ee7b12cddedc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b5b4e112d4b3559c8876126f1f1412c" id="r_a8b5b4e112d4b3559c8876126f1f1412c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">PropertyMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_base.html#a8b5b4e112d4b3559c8876126f1f1412c">properties</a></td></tr>
@@ -319,7 +323,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classgeojson_1_1_feature_base.html#aaba97b89c01dfd529c5eca61517107c7">geojson::FeatureBase::geom</a>, <a class="el" href="#a8c44bc74fdde836a83cde693ffb145a9">geometry()</a>, <a class="el" href="namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0a5645dd61a1073a52cf2476fd28f04a3b">geojson::MultiPolygon</a>, and <a class="el" href="classgeojson_1_1_feature_base.html#ac2786341bb4e570fa8d60fefe18dbe0f">geojson::FeatureBase::type</a>.</p>
+<p class="reference">References <a class="el" href="#a8c44bc74fdde836a83cde693ffb145a9">geometry()</a>, <a class="el" href="namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0a5645dd61a1073a52cf2476fd28f04a3b">geojson::MultiPolygon</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a0999e936addd1cd55f5d3adcbcbc01d6">geojson::FeatureBase::set_geom()</a>, and <a class="el" href="classgeojson_1_1_feature_base.html#ac2786341bb4e570fa8d60fefe18dbe0f">geojson::FeatureBase::type</a>.</p>
 
 </div>
 </div>
@@ -375,7 +379,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classgeojson_1_1_feature_base.html#aaba97b89c01dfd529c5eca61517107c7">geojson::FeatureBase::geom</a>, <a class="el" href="namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0a5645dd61a1073a52cf2476fd28f04a3b">geojson::MultiPolygon</a>, <a class="el" href="namespacegeojson.html#ac4449e4484e97e644466c76fba9ee48d">geojson::multipolygon()</a>, and <a class="el" href="classgeojson_1_1_feature_base.html#ac2786341bb4e570fa8d60fefe18dbe0f">geojson::FeatureBase::type</a>.</p>
+<p class="reference">References <a class="el" href="namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0a5645dd61a1073a52cf2476fd28f04a3b">geojson::MultiPolygon</a>, <a class="el" href="namespacegeojson.html#ac4449e4484e97e644466c76fba9ee48d">geojson::multipolygon()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a0999e936addd1cd55f5d3adcbcbc01d6">geojson::FeatureBase::set_geom()</a>, and <a class="el" href="classgeojson_1_1_feature_base.html#ac2786341bb4e570fa8d60fefe18dbe0f">geojson::FeatureBase::type</a>.</p>
 
 </div>
 </div>
@@ -645,7 +649,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classgeojson_1_1_feature_base.html#aaba97b89c01dfd529c5eca61517107c7">geojson::FeatureBase::geom</a>.</p>
+<p class="reference">References <a class="el" href="classgeojson_1_1_feature_base.html#a4faa46bcc1ff5d30779aa4d223fc6a1f">geojson::FeatureBase::geom</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#a92c65c7807bc633062f427a28e9124f1">MultiPolygonFeature()</a>.</p>
 
@@ -1378,7 +1382,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classgeojson_1_1_feature_base.html#a77d7f52df0473ed087c9a72a7c66fce9">geojson::FeatureBase::bounding_box</a>, <a class="el" href="namespacegeojson.html#a2fd0ff0c76d9798103057ccaf435b714">geojson::contains()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#ae3da4d699f37811a450985f094b45bf8">geojson::FeatureBase::destination</a>, <a class="el" href="classgeojson_1_1_feature_base.html#aaba97b89c01dfd529c5eca61517107c7">geojson::FeatureBase::geom</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a9cbe59eecb42e6cedb3ee7b12cddedc2">geojson::FeatureBase::geometry_collection</a>, <a class="el" href="namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0aa56fbded614f111bf2bc4741d0f5ad09">geojson::GeometryCollection</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a85efe89fcc761fe2f16b13939b71acda">geojson::FeatureBase::get()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#ab28e770c32f649fa2b6d342d8b3d55c5">geojson::FeatureBase::get_id()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a15ae69e7a5b7bb92995a3b52c8f2c51d">geojson::FeatureBase::get_property()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a15e8c3693a636453b0af958337cb516f">geojson::FeatureBase::get_type()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#adbebd1a45b3feeeb6d2d1d49b9027709">geojson::FeatureBase::keys()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#ad2b3f513a87e2787c8450254c0187857">geojson::FeatureBase::neighbors</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a2e62de0267a14d019a8e230b276bb6b4">geojson::FeatureBase::origination</a>, and <a class="el" href="classgeojson_1_1_feature_base.html#aaa9ad61de93c0194b73fbe8b32816c32">geojson::FeatureBase::property_keys()</a>.</p>
+<p class="reference">References <a class="el" href="classgeojson_1_1_feature_base.html#a77d7f52df0473ed087c9a72a7c66fce9">geojson::FeatureBase::bounding_box</a>, <a class="el" href="namespacegeojson.html#a2fd0ff0c76d9798103057ccaf435b714">geojson::contains()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#ae3da4d699f37811a450985f094b45bf8">geojson::FeatureBase::destination</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a4faa46bcc1ff5d30779aa4d223fc6a1f">geojson::FeatureBase::geom</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a9cbe59eecb42e6cedb3ee7b12cddedc2">geojson::FeatureBase::geometry_collection</a>, <a class="el" href="namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0aa56fbded614f111bf2bc4741d0f5ad09">geojson::GeometryCollection</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a85efe89fcc761fe2f16b13939b71acda">geojson::FeatureBase::get()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#ab28e770c32f649fa2b6d342d8b3d55c5">geojson::FeatureBase::get_id()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a15ae69e7a5b7bb92995a3b52c8f2c51d">geojson::FeatureBase::get_property()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a15e8c3693a636453b0af958337cb516f">geojson::FeatureBase::get_type()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#adbebd1a45b3feeeb6d2d1d49b9027709">geojson::FeatureBase::keys()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#ad2b3f513a87e2787c8450254c0187857">geojson::FeatureBase::neighbors</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a2e62de0267a14d019a8e230b276bb6b4">geojson::FeatureBase::origination</a>, and <a class="el" href="classgeojson_1_1_feature_base.html#aaa9ad61de93c0194b73fbe8b32816c32">geojson::FeatureBase::property_keys()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classgeojson_1_1_feature_base.html#a6ea15e613f60abad67e86f379a158255">geojson::FeatureBase::operator!=()</a>.</p>
 
@@ -1808,6 +1812,35 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
+<a id="a0999e936addd1cd55f5d3adcbcbc01d6" name="a0999e936addd1cd55f5d3adcbcbc01d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0999e936addd1cd55f5d3adcbcbc01d6">&#9670;&#160;</a></span>set_geom()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void geojson::FeatureBase::set_geom </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">::geojson::geometry</a></td>          <td class="paramname"><span class="paramname"><em>new_geom</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Give this feature a geometry, replacing rather than modifying any it already has. </p>
+
+<p class="reference">Referenced by <a class="el" href="classgeojson_1_1_line_string_feature.html#ac2ab135c13982d50b9111347872c3146">geojson::LineStringFeature::LineStringFeature()</a>, <a class="el" href="classgeojson_1_1_line_string_feature.html#a4079b7e11cfd7a1d55f31611fcb1d79f">geojson::LineStringFeature::LineStringFeature()</a>, <a class="el" href="classgeojson_1_1_multi_line_string_feature.html#aec13e9dc06ce009feb8a40a919ffd3b8">geojson::MultiLineStringFeature::MultiLineStringFeature()</a>, <a class="el" href="classgeojson_1_1_multi_line_string_feature.html#ad59777ce8827a24caa4419cc879f7d69">geojson::MultiLineStringFeature::MultiLineStringFeature()</a>, <a class="el" href="classgeojson_1_1_multi_point_feature.html#a9683e5f370d0b2c0f6f1bb318d9b088a">geojson::MultiPointFeature::MultiPointFeature()</a>, <a class="el" href="classgeojson_1_1_multi_point_feature.html#a55ff6a743e749591235cc7a0fbd49772">geojson::MultiPointFeature::MultiPointFeature()</a>, <a class="el" href="#a92c65c7807bc633062f427a28e9124f1">MultiPolygonFeature()</a>, <a class="el" href="#ab2de4a1a154f9c653102b3d5a8e459a2">MultiPolygonFeature()</a>, <a class="el" href="classgeojson_1_1_point_feature.html#ad7548a243f385c49927a2feb1543d5bb">geojson::PointFeature::PointFeature()</a>, <a class="el" href="classgeojson_1_1_point_feature.html#ab6837260c5ce9c427a8369334dc87a26">geojson::PointFeature::PointFeature()</a>, and <a class="el" href="classgeojson_1_1_polygon_feature.html#a28c9a47577e2984d1f6f6b1e1dd053a2">geojson::PolygonFeature::PolygonFeature()</a>.</p>
+
+</div>
+</div>
 <a id="aad1d7ad22e5f98d384d1654daa2f4796" name="aad1d7ad22e5f98d384d1654daa2f4796"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aad1d7ad22e5f98d384d1654daa2f4796">&#9670;&#160;</a></span>set_id()</h2>
 
@@ -1943,8 +1976,8 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="aaba97b89c01dfd529c5eca61517107c7" name="aaba97b89c01dfd529c5eca61517107c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaba97b89c01dfd529c5eca61517107c7">&#9670;&#160;</a></span>geom</h2>
+<a id="a4faa46bcc1ff5d30779aa4d223fc6a1f" name="a4faa46bcc1ff5d30779aa4d223fc6a1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4faa46bcc1ff5d30779aa4d223fc6a1f">&#9670;&#160;</a></span>geom</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1953,7 +1986,7 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">::geojson::geometry</a> geojson::FeatureBase::geom</td>
+          <td class="memname">std::shared_ptr&lt;const <a class="el" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">::geojson::geometry</a>&gt; geojson::FeatureBase::geom</td>
         </tr>
       </table>
   </td>
@@ -1963,7 +1996,11 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classgeojson_1_1_feature_base.html#ace69fa341400cd2ad96f07c155f486e4">geojson::FeatureBase::FeatureBase()</a>, <a class="el" href="classgeojson_1_1_line_string_feature.html#ac2ab135c13982d50b9111347872c3146">geojson::LineStringFeature::LineStringFeature()</a>, <a class="el" href="classgeojson_1_1_line_string_feature.html#a4079b7e11cfd7a1d55f31611fcb1d79f">geojson::LineStringFeature::LineStringFeature()</a>, <a class="el" href="classgeojson_1_1_multi_line_string_feature.html#aec13e9dc06ce009feb8a40a919ffd3b8">geojson::MultiLineStringFeature::MultiLineStringFeature()</a>, <a class="el" href="classgeojson_1_1_multi_line_string_feature.html#ad59777ce8827a24caa4419cc879f7d69">geojson::MultiLineStringFeature::MultiLineStringFeature()</a>, <a class="el" href="classgeojson_1_1_multi_point_feature.html#a9683e5f370d0b2c0f6f1bb318d9b088a">geojson::MultiPointFeature::MultiPointFeature()</a>, <a class="el" href="classgeojson_1_1_multi_point_feature.html#a55ff6a743e749591235cc7a0fbd49772">geojson::MultiPointFeature::MultiPointFeature()</a>, <a class="el" href="#a92c65c7807bc633062f427a28e9124f1">MultiPolygonFeature()</a>, <a class="el" href="#ab2de4a1a154f9c653102b3d5a8e459a2">MultiPolygonFeature()</a>, <a class="el" href="classgeojson_1_1_point_feature.html#ad7548a243f385c49927a2feb1543d5bb">geojson::PointFeature::PointFeature()</a>, <a class="el" href="classgeojson_1_1_point_feature.html#ab6837260c5ce9c427a8369334dc87a26">geojson::PointFeature::PointFeature()</a>, <a class="el" href="classgeojson_1_1_polygon_feature.html#a28c9a47577e2984d1f6f6b1e1dd053a2">geojson::PolygonFeature::PolygonFeature()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#af8baac5c089adc79a5e10b216a654958">geojson::FeatureBase::geometry()</a>, <a class="el" href="classgeojson_1_1_line_string_feature.html#ad61e9cbecf802cb275eef65ddb5c6837">geojson::LineStringFeature::geometry()</a>, <a class="el" href="classgeojson_1_1_multi_line_string_feature.html#aefdf3a8db489eb6344f1d792b09b357a">geojson::MultiLineStringFeature::geometry()</a>, <a class="el" href="classgeojson_1_1_multi_point_feature.html#a7b39ffc913b07d89a31d177bffd537e2">geojson::MultiPointFeature::geometry()</a>, <a class="el" href="#a8c44bc74fdde836a83cde693ffb145a9">geometry()</a>, <a class="el" href="classgeojson_1_1_point_feature.html#a5786fc958134db3887a4031bfb376541">geojson::PointFeature::geometry()</a>, <a class="el" href="classgeojson_1_1_polygon_feature.html#aae1f61154af7d1bce6f085070a3af307">geojson::PolygonFeature::geometry()</a>, and <a class="el" href="classgeojson_1_1_feature_base.html#a8d4101b543890cf1097c4f48aa2794a2">geojson::FeatureBase::operator==()</a>.</p>
+<p>The feature's geometry, shared rather than owned outright. </p>
+<p>A geometry may hold many thousands of coordinates, and a caller that only reads one should not be made to hold a copy.</p>
+<p>Const because it is replaced, never modified: a feature given a new geometry points at a new one through <a class="el" href="classgeojson_1_1_feature_base.html#a0999e936addd1cd55f5d3adcbcbc01d6">set_geom</a>, leaving whoever still holds the previous one unaffected. Copies of a feature therefore share until one of them is given a different geometry, which keeps them as independent as the rest of this type's value semantics already are. </p>
+
+<p class="reference">Referenced by <a class="el" href="classgeojson_1_1_feature_base.html#ace69fa341400cd2ad96f07c155f486e4">geojson::FeatureBase::FeatureBase()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#af8baac5c089adc79a5e10b216a654958">geojson::FeatureBase::geometry()</a>, <a class="el" href="classgeojson_1_1_line_string_feature.html#ad61e9cbecf802cb275eef65ddb5c6837">geojson::LineStringFeature::geometry()</a>, <a class="el" href="classgeojson_1_1_multi_line_string_feature.html#aefdf3a8db489eb6344f1d792b09b357a">geojson::MultiLineStringFeature::geometry()</a>, <a class="el" href="classgeojson_1_1_multi_point_feature.html#a7b39ffc913b07d89a31d177bffd537e2">geojson::MultiPointFeature::geometry()</a>, <a class="el" href="#a8c44bc74fdde836a83cde693ffb145a9">geometry()</a>, <a class="el" href="classgeojson_1_1_point_feature.html#a5786fc958134db3887a4031bfb376541">geojson::PointFeature::geometry()</a>, <a class="el" href="classgeojson_1_1_polygon_feature.html#aae1f61154af7d1bce6f085070a3af307">geojson::PolygonFeature::geometry()</a>, and <a class="el" href="classgeojson_1_1_feature_base.html#a8d4101b543890cf1097c4f48aa2794a2">geojson::FeatureBase::operator==()</a>.</p>
 
 </div>
 </div>
@@ -2120,7 +2157,7 @@ template&lt;class T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacegeojson.html">geojson</a></li><li class="navelem"><a class="el" href="classgeojson_1_1_multi_polygon_feature.html">MultiPolygonFeature</a></li>
-    <li class="footer">Generated on Tue Oct 27 2026 21:29:57 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 29 2026 20:43:09 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

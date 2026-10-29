@@ -1,5 +1,6 @@
 var namespacehy__features =
 [
+    [ "attributes", "namespacehy__features_1_1attributes.html", "namespacehy__features_1_1attributes" ],
     [ "hydrolocation", "namespacehy__features_1_1hydrolocation.html", "namespacehy__features_1_1hydrolocation" ],
     [ "identifiers", "namespacehy__features_1_1identifiers.html", [
       [ "isCatchment", "namespacehy__features_1_1identifiers.html#a176d1283c69b6a3ad706bd7974b642c2", null ],

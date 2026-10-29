@@ -25,6 +25,7 @@ var namespacerealization_1_1config =
     [ "make_catchment_output_mgr", "namespacerealization_1_1config.html#a9703c5b74ed2eb2cb69f7d6a05eccde5", null ],
     [ "parse_output_format", "namespacerealization_1_1config.html#ae6f4c4de5326e76c91d995a77b610653", null ],
     [ "parse_output_grouping", "namespacerealization_1_1config.html#a650a217cbb75c964f3a7e7d06ba0ab81", null ],
+    [ "pattern_substitution", "namespacerealization_1_1config.html#a1b516d511ddcadf17b8dfed83654a941", null ],
     [ "rank_output_root", "namespacerealization_1_1config.html#aab9f0b64835b2616f72d5eb4117543d2", null ],
     [ "to_key_string", "namespacerealization_1_1config.html#af59178b2a7d2cc3ee2f2bbbac7b2c07a", null ],
     [ "DEFAULT_AGGREGATED_FILENAME", "namespacerealization_1_1config.html#ad2b7486f4da23f8b6c7e7c140b882853", null ],

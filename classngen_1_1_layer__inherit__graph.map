@@ -1,7 +1,7 @@
 <map id="ngen::Layer" name="ngen::Layer">
-<area shape="rect" id="Node000001" title=" " alt="" coords="80,5,244,407"/>
-<area shape="rect" id="Node000002" href="$classngen_1_1_domain_layer.html" title=" " alt="" coords="5,455,153,602"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,422,101,456,95,454,104,420"/>
-<area shape="rect" id="Node000003" href="$classngen_1_1_surface_layer.html" title=" " alt="" coords="178,475,314,582"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="221,420,235,475,230,476,216,422"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="80,5,244,386"/>
+<area shape="rect" id="Node000002" href="$classngen_1_1_domain_layer.html" title=" " alt="" coords="5,434,153,582"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,401,101,435,96,434,105,400"/>
+<area shape="rect" id="Node000003" href="$classngen_1_1_surface_layer.html" title=" " alt="" coords="178,455,314,562"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,400,235,454,229,456,215,402"/>
 </map>

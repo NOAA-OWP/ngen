@@ -24,6 +24,7 @@ var hierarchy =
     ] ],
     [ "boost::static_visitor", null, [
       [ "geojson::JSONProperty::AsVectorVisitor< T >", "structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html", null ],
+      [ "hy_features::attributes::area_from_geometry_visitor", "structhy__features_1_1attributes_1_1area__from__geometry__visitor.html", null ],
       [ "ngen::geopackage::wkb::wgs84", "structngen_1_1geopackage_1_1wkb_1_1wgs84.html", null ]
     ] ],
     [ "BoundingBox", "struct_bounding_box.html", null ],
@@ -65,11 +66,7 @@ var hierarchy =
     [ "geojson::List", "structgeojson_1_1_list.html", null ],
     [ "geojson::Object", "structgeojson_1_1_object.html", null ],
     [ "GM_Object", "class_g_m___object.html", [
-      [ "HY_CatchmentArea", "class_h_y___catchment_area.html", [
-        [ "realization::Catchment_Formulation", "classrealization_1_1_catchment___formulation.html", [
-          [ "realization::Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", null ]
-        ] ]
-      ] ],
+      [ "HY_CatchmentArea", "class_h_y___catchment_area.html", null ],
       [ "HY_CatchmentDivide", "class_h_y___catchment_divide.html", null ],
       [ "HY_FlowPath", "class_h_y___flow_path.html", null ],
       [ "HY_HydroNetwork", "class_h_y___hydro_network.html", null ],
@@ -77,13 +74,7 @@ var hierarchy =
     ] ],
     [ "GridDataSelector", "struct_grid_data_selector.html", null ],
     [ "GridSpecification", "struct_grid_specification.html", null ],
-    [ "HY_CatchmentRealization", "class_h_y___catchment_realization.html", [
-      [ "HY_CartographicRealization", "class_h_y___cartographic_realization.html", null ],
-      [ "HY_CatchmentArea", "class_h_y___catchment_area.html", null ],
-      [ "HY_CatchmentDivide", "class_h_y___catchment_divide.html", null ],
-      [ "HY_FlowPath", "class_h_y___flow_path.html", null ],
-      [ "HY_HydroNetwork", "class_h_y___hydro_network.html", null ]
-    ] ],
+    [ "HY_CatchmentRealization::Response", "class_h_y___catchment_realization_1_1_response.html", null ],
     [ "hy_features::HY_Features", "classhy__features_1_1_h_y___features.html", null ],
     [ "hy_features::hydrolocation::HY_DistanceFromReferent", "structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html", null ],
     [ "hy_features::hydrolocation::HY_IndirectPosition", "classhy__features_1_1hydrolocation_1_1_h_y___indirect_position.html", null ],
@@ -157,7 +148,8 @@ var hierarchy =
     [ "realization::config::Routing", "structrealization_1_1config_1_1_routing.html", null ],
     [ "realization::config::Time", "structrealization_1_1config_1_1_time.html", null ],
     [ "realization::Formulation", "classrealization_1_1_formulation.html", [
-      [ "realization::Catchment_Formulation", "classrealization_1_1_catchment___formulation.html", null ]
+      [ "Depth_Formulation", "class_depth___formulation.html", null ],
+      [ "realization::Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", null ]
     ] ],
     [ "realization::Formulation_Manager", "classrealization_1_1_formulation___manager.html", null ],
     [ "routing_params", "structrouting__params.html", null ],
@@ -165,6 +157,13 @@ var hierarchy =
     [ "Simulation_Time", "class_simulation___time.html", null ],
     [ "simulation_time_params", "structsimulation__time__params.html", null ],
     [ "std::enable_shared_from_this", null, [
+      [ "HY_CatchmentRealization", "class_h_y___catchment_realization.html", [
+        [ "HY_CartographicRealization", "class_h_y___cartographic_realization.html", null ],
+        [ "HY_CatchmentArea", "class_h_y___catchment_area.html", null ],
+        [ "HY_CatchmentDivide", "class_h_y___catchment_divide.html", null ],
+        [ "HY_FlowPath", "class_h_y___flow_path.html", null ],
+        [ "HY_HydroNetwork", "class_h_y___hydro_network.html", null ]
+      ] ],
       [ "ngen::serialization::FileBackend", "classngen_1_1serialization_1_1_file_backend.html", null ]
     ] ],
     [ "std::exception", null, [
@@ -188,6 +187,8 @@ var hierarchy =
     [ "testing::Test", null, [
       [ "FeatureCollection_Test", "class_feature_collection___test.html", null ],
       [ "Feature_Test", "class_feature___test.html", null ],
+      [ "HY_CatchmentRealization_Test", "class_h_y___catchment_realization___test.html", null ],
+      [ "HY_Features_Attributes_Test", "class_h_y___features___attributes___test.html", null ],
       [ "JSONGeometry_Test", "class_j_s_o_n_geometry___test.html", null ],
       [ "JSONProperty_Test", "class_j_s_o_n_property___test.html", null ],
       [ "MultiLayerParserTest", "class_multi_layer_parser_test.html", null ],

@@ -1,7 +1,9 @@
 <map id="HY_CatchmentDivide" name="HY_CatchmentDivide">
-<area shape="rect" id="Node000001" title=" " alt="" coords="104,221,268,349"/>
-<area shape="rect" id="Node000002" href="$class_h_y___catchment_realization.html" title=" " alt="" coords="5,5,196,173"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,186,161,220,156,222,141,188"/>
-<area shape="rect" id="Node000003" href="$class_g_m___object.html" title=" " alt="" coords="220,46,325,133"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="250,147,217,222,212,220,246,145"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="132,493,296,620"/>
+<area shape="rect" id="Node000002" href="$class_h_y___catchment_realization.html" title="A hydrology&#45;specific perspective of a catchment." alt="" coords="33,135,224,445"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,458,196,492,191,494,180,460"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,251,87"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="131,102,131,135,126,135,126,102"/>
+<area shape="rect" id="Node000004" href="$class_g_m___object.html" title=" " alt="" coords="248,246,353,333"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="284,348,236,494,231,492,279,347"/>
 </map>

@@ -7,6 +7,7 @@ var class_h_y___catchment =
     [ "HY_Catchment", "class_h_y___catchment.html#ae07739618a32c15b30a16c773827e200", null ],
     [ "HY_Catchment", "class_h_y___catchment.html#ae9871125bec28e89259d0fa7cb11e8ff", null ],
     [ "~HY_Catchment", "class_h_y___catchment.html#a63003e4b1530d83abb38c788c195b935", null ],
+    [ "get_id", "class_h_y___catchment.html#a963dcc3285de779d78fe590f44f97561", null ],
     [ "get_layer", "class_h_y___catchment.html#ae49af53a679415965205212a447bec1a", null ],
     [ "get_outflow_nexuses", "class_h_y___catchment.html#ad9001b2546e79b586c9e368681ef038a", null ],
     [ "set_layer", "class_h_y___catchment.html#adac39dc3089551c50f3737cb16e6c031", null ],

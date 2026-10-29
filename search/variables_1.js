@@ -8,10 +8,13 @@ var searchData=
   ['all_5fstreams_5fmutex_5f_5',['all_streams_mutex_',['../classutils_1_1_catchment_csv_output_mgr.html#abd00d78f2f6e853ceeac581703028a83',1,'utils::CatchmentCsvOutputMgr']]],
   ['allow_5fmodel_5fexceed_5fend_5ftime_6',['allow_model_exceed_end_time',['../classrealization_1_1_bmi___module___formulation.html#af4e9c77709218359bd00ef4bfb8b863c',1,'realization::Bmi_Module_Formulation']]],
   ['apcp_5fsurface_5fkg_5fper_5fmeters_5fsquared_7',['APCP_surface_kg_per_meters_squared',['../struct_a_o_r_c__data.html#afe55907c1902e4dd8c47655ab4d1ba7c',1,'AORC_data']]],
-  ['atmospheric_5flayer_5fhigh_8',['ATMOSPHERIC_LAYER_HIGH',['../class_h_y___catchment.html#ae7c6633ea379cc6daed8a14dc7164ef0',1,'HY_Catchment']]],
-  ['atmospheric_5flayer_5flow_9',['ATMOSPHERIC_Layer_LOW',['../class_h_y___catchment.html#a9b443b9306c4f78f436f26e154507963',1,'HY_Catchment']]],
-  ['attributes_10',['attributes',['../structutils_1_1_output_field.html#a2bbb68c85a6b472645f2d522e3abbccb',1,'utils::OutputField']]],
-  ['available_5fforcings_11',['available_forcings',['../class_csv_per_feature_forcing_provider.html#a483bd1b029bb9dd378aea3b81af2fd6d',1,'CsvPerFeatureForcingProvider::available_forcings'],['../classrealization_1_1_bmi___module___formulation.html#a5c9d1261dbbaf14773579ca59d0d0a69',1,'realization::Bmi_Module_Formulation::available_forcings'],['../classrealization_1_1_bmi___multi___formulation.html#aa4a7afd0056334dde2a3ad6185a8b26c',1,'realization::Bmi_Multi_Formulation::available_forcings']]],
-  ['available_5fforcings_5funits_12',['available_forcings_units',['../class_csv_per_feature_forcing_provider.html#a9aa01ca7a86b6586a03fa8cdcd39921b',1,'CsvPerFeatureForcingProvider']]],
-  ['availabledata_13',['availableData',['../classrealization_1_1_bmi___multi___formulation.html#ab0bbecfcd6d7a94cf448450da6600a41',1,'realization::Bmi_Multi_Formulation']]]
+  ['area_8',['area',['../class_h_y___catchment_area.html#a7927106764a31aa2cb3c3820b5c793da',1,'HY_CatchmentArea::area'],['../class_h_y___catchment_realization___test.html#ab0b71cc1d1401f5ee1e2aefc75c30ded',1,'HY_CatchmentRealization_Test::area']]],
+  ['area_5fv1_9',['area_v1',['../namespacehy__features_1_1attributes.html#af43d230611162f006ae1ff9eec3f6092',1,'hy_features::attributes']]],
+  ['area_5fv2_10',['area_v2',['../namespacehy__features_1_1attributes.html#abb312a2ea089e075e3f821684f9d6966',1,'hy_features::attributes']]],
+  ['atmospheric_5flayer_5fhigh_11',['ATMOSPHERIC_LAYER_HIGH',['../class_h_y___catchment.html#ae7c6633ea379cc6daed8a14dc7164ef0',1,'HY_Catchment']]],
+  ['atmospheric_5flayer_5flow_12',['ATMOSPHERIC_Layer_LOW',['../class_h_y___catchment.html#a9b443b9306c4f78f436f26e154507963',1,'HY_Catchment']]],
+  ['attributes_13',['attributes',['../structutils_1_1_output_field.html#a2bbb68c85a6b472645f2d522e3abbccb',1,'utils::OutputField']]],
+  ['available_5fforcings_14',['available_forcings',['../class_csv_per_feature_forcing_provider.html#a483bd1b029bb9dd378aea3b81af2fd6d',1,'CsvPerFeatureForcingProvider::available_forcings'],['../classrealization_1_1_bmi___module___formulation.html#a5c9d1261dbbaf14773579ca59d0d0a69',1,'realization::Bmi_Module_Formulation::available_forcings'],['../classrealization_1_1_bmi___multi___formulation.html#aa4a7afd0056334dde2a3ad6185a8b26c',1,'realization::Bmi_Multi_Formulation::available_forcings']]],
+  ['available_5fforcings_5funits_15',['available_forcings_units',['../class_csv_per_feature_forcing_provider.html#a9aa01ca7a86b6586a03fa8cdcd39921b',1,'CsvPerFeatureForcingProvider']]],
+  ['availabledata_16',['availableData',['../classrealization_1_1_bmi___multi___formulation.html#ab0bbecfcd6d7a94cf448450da6600a41',1,'realization::Bmi_Multi_Formulation']]]
 ];

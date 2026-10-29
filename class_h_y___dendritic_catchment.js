@@ -6,6 +6,7 @@ var class_h_y___dendritic_catchment =
     [ "Nexuses", "class_h_y___dendritic_catchment.html#a287e2db7317f88a8ba389ebb12dd3c7f", null ],
     [ "HY_DendriticCatchment", "class_h_y___dendritic_catchment.html#aac4ec095a8f5433284b96702a5c7fc12", null ],
     [ "~HY_DendriticCatchment", "class_h_y___dendritic_catchment.html#acbce96fad79082db76fd63d3a58ff2c3", null ],
+    [ "get_id", "class_h_y___dendritic_catchment.html#a963dcc3285de779d78fe590f44f97561", null ],
     [ "get_layer", "class_h_y___dendritic_catchment.html#ae49af53a679415965205212a447bec1a", null ],
     [ "get_outflow_nexuses", "class_h_y___dendritic_catchment.html#ad9001b2546e79b586c9e368681ef038a", null ],
     [ "set_layer", "class_h_y___dendritic_catchment.html#adac39dc3089551c50f3737cb16e6c031", null ],

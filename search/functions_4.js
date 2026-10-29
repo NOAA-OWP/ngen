@@ -1,7 +1,7 @@
 var searchData=
 [
   ['encode_5frecord_5fprefix_0',['encode_record_prefix',['../namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html#ad7fb8f71e3836ba0c0f22eac35ce9339',1,'models::bmi::protocols::serialization::wire_format']]],
-  ['end_1',['end',['../classnetwork_1_1_network.html#a1cc30eb92debc1a6ca752df2a33793b4',1,'network::Network::end()'],['../classgeojson_1_1_feature_collection.html#aaf4844cbd49a412bf9359996ea19eced',1,'geojson::FeatureCollection::end()'],['../classgeojson_1_1_collection_feature.html#a2bc7a3f01e528b191378fd285c8a31ec',1,'geojson::CollectionFeature::end()'],['../classrealization_1_1_formulation___manager.html#a0c4cede19b0ec7fbc07189cff9524a7f',1,'realization::Formulation_Manager::end()']]],
+  ['end_1',['end',['../classnetwork_1_1_network.html#a1cc30eb92debc1a6ca752df2a33793b4',1,'network::Network::end()'],['../classgeojson_1_1_feature_collection.html#aaf4844cbd49a412bf9359996ea19eced',1,'geojson::FeatureCollection::end()'],['../classgeojson_1_1_collection_feature.html#a2bc7a3f01e528b191378fd285c8a31ec',1,'geojson::CollectionFeature::end()'],['../classrealization_1_1_formulation___manager.html#a7571e3e7cb9831688e816496c886a067',1,'realization::Formulation_Manager::end()']]],
   ['ensure_5fwrite_5ffd_5flocked_5f_2',['ensure_write_fd_locked_',['../classngen_1_1serialization_1_1_file_backend.html#a6b4db06bc06a25aa7f29111d49e00bae',1,'ngen::serialization::FileBackend']]],
   ['error_3',['error',['../namespacelogging.html#a57fd6163eef35abcd6fd2b225842dc05',1,'logging']]],
   ['error_5fcode_4',['error_code',['../classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aa4081c2fbcf40910ea4c442cc3f21a98',1,'models::bmi::protocols::ProtocolError']]],

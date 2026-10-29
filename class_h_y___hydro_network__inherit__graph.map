@@ -1,7 +1,9 @@
 <map id="HY_HydroNetwork" name="HY_HydroNetwork">
-<area shape="rect" id="Node000001" title=" " alt="" coords="69,221,217,369"/>
-<area shape="rect" id="Node000002" href="$class_g_m___object.html" title=" " alt="" coords="5,46,110,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,145,115,220,110,222,79,147"/>
-<area shape="rect" id="Node000003" href="$class_h_y___catchment_realization.html" title=" " alt="" coords="134,5,325,173"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,188,176,223,171,221,186,186"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="69,493,217,641"/>
+<area shape="rect" id="Node000002" href="$class_g_m___object.html" title=" " alt="" coords="5,246,110,333"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,346,123,493,118,494,73,348"/>
+<area shape="rect" id="Node000003" href="$class_h_y___catchment_realization.html" title="A hydrology&#45;specific perspective of a catchment." alt="" coords="134,135,325,445"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,460,168,494,163,493,174,459"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="107,5,353,87"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="232,102,232,135,227,135,227,102"/>
 </map>

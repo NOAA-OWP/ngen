@@ -97,11 +97,13 @@ $(function(){initNavTree('class_h_y___cartographic_realization.html',''); initRe
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_h_y___cartographic_realization-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">HY_CartographicRealization Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
+  <div class="headertitle"><div class="title">HY_CartographicRealization Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -111,7 +113,7 @@ $(function(){initNavTree('class_h_y___cartographic_realization.html',''); initRe
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_h_y___cartographic_realization__inherit__graph.svg" width="212" height="314"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_h_y___cartographic_realization__inherit__graph.svg" width="256" height="586"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div id="dynsection-1" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Collaboration diagram for HY_CartographicRealization:</div>
@@ -121,30 +123,98 @@ $(function(){initNavTree('class_h_y___cartographic_realization.html',''); initRe
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_h_y___cartographic_realization__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:aa086b255e575b2460b93f26a78fff326" id="r_aa086b255e575b2460b93f26a78fff326"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#aa086b255e575b2460b93f26a78fff326">Quantity</a> { <br />
+&#160;&#160;<a class="el" href="class_h_y___catchment_realization.html#aa086b255e575b2460b93f26a78fff326a12a055bf01a31369fe81ac35d85c7bc1">depth</a>
+, <br />
+&#160;&#160;<a class="el" href="class_h_y___catchment_realization.html#aa086b255e575b2460b93f26a78fff326a210ab9e731c9c36c2c38db15c28a8d1c">volume</a>
+, <br />
+&#160;&#160;<a class="el" href="class_h_y___catchment_realization.html#aa086b255e575b2460b93f26a78fff326a82044e270fb7a676a5eeef3cff1e110c">volumetric_flow</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:aa086b255e575b2460b93f26a78fff326"><td class="mdescLeft">&#160;</td><td class="mdescRight">A quantity a perspective can express its value as, each in one canonical unit.  <a href="class_h_y___catchment_realization.html#aa086b255e575b2460b93f26a78fff326">More...</a><br /></td></tr>
+<tr class="separator:aa086b255e575b2460b93f26a78fff326"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:afdd6e3514fc40ad9162f02c456bf45b8" id="r_afdd6e3514fc40ad9162f02c456bf45b8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afdd6e3514fc40ad9162f02c456bf45b8">HY_CartographicRealization</a> ()</td></tr>
 <tr class="separator:afdd6e3514fc40ad9162f02c456bf45b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4015403b56478c5447adebbe75bec7c1" id="r_a4015403b56478c5447adebbe75bec7c1"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4015403b56478c5447adebbe75bec7c1">~HY_CartographicRealization</a> ()</td></tr>
 <tr class="separator:a4015403b56478c5447adebbe75bec7c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49bea88ba02bc8dc4e9ebbc6fb12c67b" id="r_a49bea88ba02bc8dc4e9ebbc6fb12c67b"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b">get_response</a> (time_step_t t_index, time_step_t t_delta)=0</td></tr>
-<tr class="memdesc:a49bea88ba02bc8dc4e9ebbc6fb12c67b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the backing model formulation for the given time step, where it is of the specified size, and return the response output.  <br /></td></tr>
-<tr class="separator:a49bea88ba02bc8dc4e9ebbc6fb12c67b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a9dcd60d04728fa36ee1216d6b7f159" id="r_a7a9dcd60d04728fa36ee1216d6b7f159"><td class="memItemLeft" align="right" valign="top">const std::shared_ptr&lt; <a class="el" href="classrealization_1_1_formulation.html">realization::Formulation</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a7a9dcd60d04728fa36ee1216d6b7f159">get_formulation</a> () const</td></tr>
+<tr class="memdesc:a7a9dcd60d04728fa36ee1216d6b7f159"><td class="mdescLeft">&#160;</td><td class="mdescRight">The model producing this feature's values, or nullptr where the feature is not modeled.  <br /></td></tr>
+<tr class="separator:a7a9dcd60d04728fa36ee1216d6b7f159"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b48fbf1557900b67821709baf59fc82" id="r_a0b48fbf1557900b67821709baf59fc82"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a0b48fbf1557900b67821709baf59fc82">get_catchment_id</a> () const</td></tr>
+<tr class="memdesc:a0b48fbf1557900b67821709baf59fc82"><td class="mdescLeft">&#160;</td><td class="mdescRight">The id this feature shares with the catchment it realizes.  <br /></td></tr>
+<tr class="separator:a0b48fbf1557900b67821709baf59fc82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6afc57b9ee8842013ef0d4c8ffba63a1" id="r_a6afc57b9ee8842013ef0d4c8ffba63a1"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_h_y___catchment.html">HY_Catchment</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a6afc57b9ee8842013ef0d4c8ffba63a1">realize</a> (std::vector&lt; std::string &gt; inflows, std::vector&lt; std::string &gt; outflows, long layer=0)</td></tr>
+<tr class="memdesc:a6afc57b9ee8842013ef0d4c8ffba63a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the catchment this feature is a perspective of, and bind the two together.  <br /></td></tr>
+<tr class="separator:a6afc57b9ee8842013ef0d4c8ffba63a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b7831e286b0e0b83b7712805da28782" id="r_a4b7831e286b0e0b83b7712805da28782"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_h_y___catchment.html">HY_Catchment</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a4b7831e286b0e0b83b7712805da28782">get_realized_catchment</a> () const</td></tr>
+<tr class="memdesc:a4b7831e286b0e0b83b7712805da28782"><td class="mdescLeft">&#160;</td><td class="mdescRight">The catchment this feature realizes, whose inflow and outflow nexuses it shares.  <br /></td></tr>
+<tr class="separator:a4b7831e286b0e0b83b7712805da28782"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76fc06088e86076498f19b8862ea1cde" id="r_a76fc06088e86076498f19b8862ea1cde"><td class="memItemLeft" align="right" valign="top">virtual std::optional&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a76fc06088e86076498f19b8862ea1cde">area_sqkm</a> () const</td></tr>
+<tr class="memdesc:a76fc06088e86076498f19b8862ea1cde"><td class="mdescLeft">&#160;</td><td class="mdescRight">The areal extent of this feature, in square kilometers, where the perspective has one.  <br /></td></tr>
+<tr class="separator:a76fc06088e86076498f19b8862ea1cde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15c1b60e807bf8545ef57b8fc60e8d04" id="r_a15c1b60e807bf8545ef57b8fc60e8d04"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_h_y___catchment_realization_1_1_response.html">Response</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a15c1b60e807bf8545ef57b8fc60e8d04">get_response</a> (time_step_t t_index, time_step_t t_delta)</td></tr>
+<tr class="memdesc:a15c1b60e807bf8545ef57b8fc60e8d04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the attached model for the given time step, where it is of the specified size, and return the perspective's response.  <br /></td></tr>
+<tr class="separator:a15c1b60e807bf8545ef57b8fc60e8d04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:a326f75ca2d9eb329548e1b52bfbbac91" id="r_a326f75ca2d9eb329548e1b52bfbbac91"><td class="memItemLeft" align="right" valign="top">virtual const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a326f75ca2d9eb329548e1b52bfbbac91">get_catchment_id</a> () const =0</td></tr>
-<tr class="separator:a326f75ca2d9eb329548e1b52bfbbac91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86a05a47bfa53a6feb4ef14e117b1928" id="r_a86a05a47bfa53a6feb4ef14e117b1928"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a86a05a47bfa53a6feb4ef14e117b1928">set_catchment_id</a> (std::string cat_id)=0</td></tr>
-<tr class="separator:a86a05a47bfa53a6feb4ef14e117b1928"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:ae9163b01dc127860ecf81a3f86f129f9" id="r_ae9163b01dc127860ecf81a3f86f129f9"><td class="memItemLeft" align="right" valign="top">static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#ae9163b01dc127860ecf81a3f86f129f9">quantity_count</a> = 3</td></tr>
+<tr class="memdesc:ae9163b01dc127860ecf81a3f86f129f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">How many <a class="el" href="class_h_y___catchment_realization.html#aa086b255e575b2460b93f26a78fff326">Quantity</a> there are.  <br /></td></tr>
+<tr class="separator:ae9163b01dc127860ecf81a3f86f129f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:aa92f9bd07b2cdf99ce74367fd7988b1c" id="r_aa92f9bd07b2cdf99ce74367fd7988b1c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_h_y___catchment.html">HY_Catchment</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#aa92f9bd07b2cdf99ce74367fd7988b1c">realized_catchment</a></td></tr>
-<tr class="separator:aa92f9bd07b2cdf99ce74367fd7988b1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b3206ffc465f73f0fc4246d89e3dcd9" id="r_a9b3206ffc465f73f0fc4246d89e3dcd9"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a9b3206ffc465f73f0fc4246d89e3dcd9">catchment_id</a></td></tr>
+<tr class="separator:a9b3206ffc465f73f0fc4246d89e3dcd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c7fb84b45e435d46126d65bfac3219c" id="r_a9c7fb84b45e435d46126d65bfac3219c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classrealization_1_1_formulation.html">realization::Formulation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a9c7fb84b45e435d46126d65bfac3219c">formulation</a></td></tr>
+<tr class="separator:a9c7fb84b45e435d46126d65bfac3219c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af996a3e50eaf51c63865f1fdbe4f8661" id="r_af996a3e50eaf51c63865f1fdbe4f8661"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">id_number</a></td></tr>
 <tr class="separator:af996a3e50eaf51c63865f1fdbe4f8661"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a42edd43be2609216a5ad25b73f9cfa63" id="r_a42edd43be2609216a5ad25b73f9cfa63"><td class="memItemLeft" align="right" valign="top">std::weak_ptr&lt; <a class="el" href="class_h_y___catchment.html">HY_Catchment</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a42edd43be2609216a5ad25b73f9cfa63">realized_catchment</a></td></tr>
+<tr class="separator:a42edd43be2609216a5ad25b73f9cfa63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="aa086b255e575b2460b93f26a78fff326" name="aa086b255e575b2460b93f26a78fff326"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa086b255e575b2460b93f26a78fff326">&#9670;&#160;</a></span>Quantity</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="class_h_y___catchment_realization.html#aa086b255e575b2460b93f26a78fff326">HY_CatchmentRealization::Quantity</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A quantity a perspective can express its value as, each in one canonical unit. </p>
+<p>Unit conversion should be handled at a higher level, outside of the perspective itself. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa086b255e575b2460b93f26a78fff326a12a055bf01a31369fe81ac35d85c7bc1" name="aa086b255e575b2460b93f26a78fff326a12a055bf01a31369fe81ac35d85c7bc1"></a>depth&#160;</td><td class="fielddoc"><p>Meters. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa086b255e575b2460b93f26a78fff326a210ab9e731c9c36c2c38db15c28a8d1c" name="aa086b255e575b2460b93f26a78fff326a210ab9e731c9c36c2c38db15c28a8d1c"></a>volume&#160;</td><td class="fielddoc"><p>Cubic meters, over the step. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa086b255e575b2460b93f26a78fff326a82044e270fb7a676a5eeef3cff1e110c" name="aa086b255e575b2460b93f26a78fff326a82044e270fb7a676a5eeef3cff1e110c"></a>volumetric_flow&#160;</td><td class="fielddoc"><p>Cubic meters per second. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="afdd6e3514fc40ad9162f02c456bf45b8" name="afdd6e3514fc40ad9162f02c456bf45b8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afdd6e3514fc40ad9162f02c456bf45b8">&#9670;&#160;</a></span>HY_CartographicRealization()</h2>
@@ -189,8 +259,8 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a326f75ca2d9eb329548e1b52bfbbac91" name="a326f75ca2d9eb329548e1b52bfbbac91"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a326f75ca2d9eb329548e1b52bfbbac91">&#9670;&#160;</a></span>get_catchment_id()</h2>
+<a id="a76fc06088e86076498f19b8862ea1cde" name="a76fc06088e86076498f19b8862ea1cde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76fc06088e86076498f19b8862ea1cde">&#9670;&#160;</a></span>area_sqkm()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -199,7 +269,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual const std::string &amp; HY_CatchmentRealization::get_catchment_id </td>
+          <td class="memname">virtual std::optional&lt; double &gt; HY_CatchmentRealization::area_sqkm </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -207,17 +277,20 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classrealization_1_1_catchment___formulation.html#af35f3bc6a07f8e01e1a25b99ffb2e939">realization::Catchment_Formulation</a>.</p>
+<p>The areal extent of this feature, in square kilometers, where the perspective has one. </p>
+<p>A face has an area, and so does the edge bounding that face; the edge running through it has a length instead. Empty therefore says the perspective has no extent to give, never that the hydrofabric withheld one: a catchment whose hydrofabric carries no extent is refused when the realization is built, so it does not reach here. </p>
+
+<p>Reimplemented in <a class="el" href="class_h_y___catchment_area.html#a04bc29190b9c21144392c0d378560099">HY_CatchmentArea</a>.</p>
 
 </div>
 </div>
-<a id="a49bea88ba02bc8dc4e9ebbc6fb12c67b" name="a49bea88ba02bc8dc4e9ebbc6fb12c67b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49bea88ba02bc8dc4e9ebbc6fb12c67b">&#9670;&#160;</a></span>get_response()</h2>
+<a id="a0b48fbf1557900b67821709baf59fc82" name="a0b48fbf1557900b67821709baf59fc82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b48fbf1557900b67821709baf59fc82">&#9670;&#160;</a></span>get_catchment_id()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -226,7 +299,97 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual double HY_CatchmentRealization::get_response </td>
+          <td class="memname">const std::string &amp; HY_CatchmentRealization::get_catchment_id </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The id this feature shares with the catchment it realizes. </p>
+
+<p class="reference">References <a class="el" href="class_h_y___catchment_realization.html#a9b3206ffc465f73f0fc4246d89e3dcd9">HY_CatchmentRealization::catchment_id</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_h_y___catchment_area.html#a347a67282308882b66060322aefbbf62">HY_CatchmentArea::get_response()</a>, and <a class="el" href="class_h_y___catchment_realization.html#a15c1b60e807bf8545ef57b8fc60e8d04">HY_CatchmentRealization::get_response()</a>.</p>
+
+</div>
+</div>
+<a id="a7a9dcd60d04728fa36ee1216d6b7f159" name="a7a9dcd60d04728fa36ee1216d6b7f159"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a9dcd60d04728fa36ee1216d6b7f159">&#9670;&#160;</a></span>get_formulation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::shared_ptr&lt; <a class="el" href="classrealization_1_1_formulation.html">realization::Formulation</a> &gt; &amp; HY_CatchmentRealization::get_formulation </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The model producing this feature's values, or nullptr where the feature is not modeled. </p>
+
+<p class="reference">References <a class="el" href="class_h_y___catchment_realization.html#a9c7fb84b45e435d46126d65bfac3219c">HY_CatchmentRealization::formulation</a>.</p>
+
+</div>
+</div>
+<a id="a4b7831e286b0e0b83b7712805da28782" name="a4b7831e286b0e0b83b7712805da28782"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b7831e286b0e0b83b7712805da28782">&#9670;&#160;</a></span>get_realized_catchment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="class_h_y___catchment.html">HY_Catchment</a> &gt; HY_CatchmentRealization::get_realized_catchment </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The catchment this feature realizes, whose inflow and outflow nexuses it shares. </p>
+<p>Null until <a class="el" href="class_h_y___catchment_realization.html#a6afc57b9ee8842013ef0d4c8ffba63a1">realize</a> has been called. </p>
+
+<p class="reference">References <a class="el" href="class_h_y___catchment_realization.html#a42edd43be2609216a5ad25b73f9cfa63">HY_CatchmentRealization::realized_catchment</a>.</p>
+
+</div>
+</div>
+<a id="a15c1b60e807bf8545ef57b8fc60e8d04" name="a15c1b60e807bf8545ef57b8fc60e8d04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15c1b60e807bf8545ef57b8fc60e8d04">&#9670;&#160;</a></span>get_response()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_h_y___catchment_realization_1_1_response.html">HY_CatchmentRealization::Response</a> HY_CatchmentRealization::get_response </td>
           <td>(</td>
           <td class="paramtype">time_step_t</td>          <td class="paramname"><span class="paramname"><em>t_index</em></span>, </td>
         </tr>
@@ -238,29 +401,38 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Execute the backing model formulation for the given time step, where it is of the specified size, and return the response output. </p>
-<p>Any inputs and additional parameters must be made available as instance members.</p>
-<p>Types should clearly document the details of their particular response output.</p>
+<p>Execute the attached model for the given time step, where it is of the specified size, and return the perspective's response. </p>
+<p>A model's value is assumed to be depth by default.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">t_index</td><td>The index of the time step for which to run model calculations. </td></tr>
-    <tr><td class="paramname">d_delta_s</td><td>The duration, in seconds, of the time step for which to run model calculations. </td></tr>
+    <tr><td class="paramname">t_delta</td><td>The duration, in seconds, of the time step for which to run model calculations. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The response output of the model for this time step. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>This perspective's response for the step, as each <a class="el" href="class_h_y___catchment_realization.html#aa086b255e575b2460b93f26a78fff326">Quantity</a> it expresses. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>If this feature has no formulation attached. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0108d3ee83f95ad2eb0733a237078e89">realization::Bmi_Module_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a0b66d3f5f51b4b414e08965e15d7bff7">realization::Bmi_Multi_Formulation</a>, and <a class="el" href="classrealization_1_1_catchment___formulation.html#ab84b1e0762cab86130d88317d0e2cfc1">realization::Catchment_Formulation</a>.</p>
+<p>Reimplemented in <a class="el" href="class_h_y___catchment_area.html#a347a67282308882b66060322aefbbf62">HY_CatchmentArea</a>.</p>
+
+<p class="reference">References <a class="el" href="class_h_y___catchment_realization.html#a9c7fb84b45e435d46126d65bfac3219c">HY_CatchmentRealization::formulation</a>, <a class="el" href="class_h_y___catchment_realization.html#a0b48fbf1557900b67821709baf59fc82">HY_CatchmentRealization::get_catchment_id()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a24586a89e49005c6feca65a5057ec289">realization::Formulation::get_response()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_h_y___catchment_area.html#a347a67282308882b66060322aefbbf62">HY_CatchmentArea::get_response()</a>.</p>
 
 </div>
 </div>
-<a id="a86a05a47bfa53a6feb4ef14e117b1928" name="a86a05a47bfa53a6feb4ef14e117b1928"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86a05a47bfa53a6feb4ef14e117b1928">&#9670;&#160;</a></span>set_catchment_id()</h2>
+<a id="a6afc57b9ee8842013ef0d4c8ffba63a1" name="a6afc57b9ee8842013ef0d4c8ffba63a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6afc57b9ee8842013ef0d4c8ffba63a1">&#9670;&#160;</a></span>realize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -269,24 +441,102 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void HY_CatchmentRealization::set_catchment_id </td>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="class_h_y___catchment.html">HY_Catchment</a> &gt; HY_CatchmentRealization::realize </td>
           <td>(</td>
-          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>cat_id</em></span></td><td>)</td>
+          <td class="paramtype">std::vector&lt; std::string &gt;</td>          <td class="paramname"><span class="paramname"><em>inflows</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt;</td>          <td class="paramname"><span class="paramname"><em>outflows</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long</td>          <td class="paramname"><span class="paramname"><em>layer</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classrealization_1_1_catchment___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144">realization::Catchment_Formulation</a>.</p>
+<p>Build the catchment this feature is a perspective of, and bind the two together. </p>
+<p>The catchment is given this realization's identity, so the pair cannot disagree about what it names. Each then holds the other: the catchment owns its realization, and the realization reaches back to the catchment for its nexuses.</p>
+<p>One realization is one perspective of one catchment. Calling this again returns the catchment already built and does not apply the arguments; realizing a catchment from another perspective means another realization, which builds its own.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inflows</td><td>Ids of the nexuses contributing to the catchment. </td></tr>
+    <tr><td class="paramname">outflows</td><td>Ids of the nexuses the catchment contributes to. </td></tr>
+    <tr><td class="paramname">layer</td><td>The hydrofabric layer the catchment belongs to. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The catchment, newly built or the one this realization already built. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::bad_weak_ptr</td><td>If this realization is not already held by a shared_ptr. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="class_h_y___catchment_realization.html#a9b3206ffc465f73f0fc4246d89e3dcd9">HY_CatchmentRealization::catchment_id</a>, and <a class="el" href="class_h_y___catchment_realization.html#a42edd43be2609216a5ad25b73f9cfa63">HY_CatchmentRealization::realized_catchment</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_h_y___catchment_realization___test.html#abc93fadd6cb0d12d77fff65cbb7e81f2">HY_CatchmentRealization_Test::SetUp()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a9b3206ffc465f73f0fc4246d89e3dcd9" name="a9b3206ffc465f73f0fc4246d89e3dcd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b3206ffc465f73f0fc4246d89e3dcd9">&#9670;&#160;</a></span>catchment_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string HY_CatchmentRealization::catchment_id</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="class_h_y___catchment_realization.html#a0b48fbf1557900b67821709baf59fc82">HY_CatchmentRealization::get_catchment_id()</a>, and <a class="el" href="class_h_y___catchment_realization.html#a6afc57b9ee8842013ef0d4c8ffba63a1">HY_CatchmentRealization::realize()</a>.</p>
+
+</div>
+</div>
+<a id="a9c7fb84b45e435d46126d65bfac3219c" name="a9c7fb84b45e435d46126d65bfac3219c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c7fb84b45e435d46126d65bfac3219c">&#9670;&#160;</a></span>formulation</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classrealization_1_1_formulation.html">realization::Formulation</a>&gt; HY_CatchmentRealization::formulation</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="class_h_y___catchment_realization.html#a7a9dcd60d04728fa36ee1216d6b7f159">HY_CatchmentRealization::get_formulation()</a>, and <a class="el" href="class_h_y___catchment_realization.html#a15c1b60e807bf8545ef57b8fc60e8d04">HY_CatchmentRealization::get_response()</a>.</p>
+
+</div>
+</div>
 <a id="af996a3e50eaf51c63865f1fdbe4f8661" name="af996a3e50eaf51c63865f1fdbe4f8661"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af996a3e50eaf51c63865f1fdbe4f8661">&#9670;&#160;</a></span>id_number</h2>
 
@@ -309,8 +559,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa92f9bd07b2cdf99ce74367fd7988b1c" name="aa92f9bd07b2cdf99ce74367fd7988b1c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa92f9bd07b2cdf99ce74367fd7988b1c">&#9670;&#160;</a></span>realized_catchment</h2>
+<a id="ae9163b01dc127860ecf81a3f86f129f9" name="ae9163b01dc127860ecf81a3f86f129f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9163b01dc127860ecf81a3f86f129f9">&#9670;&#160;</a></span>quantity_count</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -319,15 +569,41 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="class_h_y___catchment.html">HY_Catchment</a>&gt; HY_CatchmentRealization::realized_catchment</td>
+          <td class="memname">std::size_t HY_CatchmentRealization::quantity_count = 3</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>How many <a class="el" href="class_h_y___catchment_realization.html#aa086b255e575b2460b93f26a78fff326">Quantity</a> there are. </p>
+
+</div>
+</div>
+<a id="a42edd43be2609216a5ad25b73f9cfa63" name="a42edd43be2609216a5ad25b73f9cfa63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42edd43be2609216a5ad25b73f9cfa63">&#9670;&#160;</a></span>realized_catchment</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::weak_ptr&lt;<a class="el" href="class_h_y___catchment.html">HY_Catchment</a>&gt; HY_CatchmentRealization::realized_catchment</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="class_h_y___catchment_realization.html#a4b7831e286b0e0b83b7712805da28782">HY_CatchmentRealization::get_realized_catchment()</a>, and <a class="el" href="class_h_y___catchment_realization.html#a6afc57b9ee8842013ef0d4c8ffba63a1">HY_CatchmentRealization::realize()</a>.</p>
 
 </div>
 </div>
@@ -341,7 +617,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_h_y___cartographic_realization.html">HY_CartographicRealization</a></li>
-    <li class="footer">Generated on Tue Oct 27 2026 21:29:57 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 29 2026 20:43:08 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
