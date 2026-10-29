@@ -1,3 +1,27 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structforcing__params.html" title="forcing_params providing configuration information for forcing time period and source." alt="" coords="5,5,116,31"/>
+<area shape="rect" id="Node000000" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,95,193,136"/>
+<area shape="rect" id="Node000001" href="$class_csv_per_feature_forcing_provider.html" title="Forcing class providing time&#45;series precipiation forcing data to the model." alt="" coords="241,5,440,31"/>
+<area shape="poly" id="edge26_Node000000_Node000001" title=" " alt="" coords="146,85,191,61,240,40,274,29,275,34,242,45,193,66,149,89"/>
+<area shape="rect" id="Node000002" href="$class_null_forcing_provider.html" title="Forcing class that returns no variables to the simulation–use this e.g." alt="" coords="273,55,408,80"/>
+<area shape="poly" id="edge27_Node000000_Node000002" title=" " alt="" coords="208,91,272,78,273,84,209,96"/>
+<area shape="rect" id="Node000003" href="$classdata__access_1_1_wrapped_data_provider.html" title="Simple implementation that basically wraps another instance." alt="" coords="251,104,430,145"/>
+<area shape="poly" id="edge28_Node000000_Node000003" title=" " alt="" coords="208,117,250,119,250,124,208,122"/>
+<area shape="rect" id="Node000006" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="249,173,432,199"/>
+<area shape="poly" id="edge31_Node000000_Node000006" title=" " alt="" coords="186,138,294,170,293,175,184,143"/>
+<area shape="rect" id="Node000004" href="$classdata__access_1_1_deferred_wrapped_provider.html" title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps." alt="" coords="488,100,689,141"/>
+<area shape="poly" id="edge29_Node000003_Node000004" title=" " alt="" coords="445,120,487,120,488,125,445,126"/>
+<area shape="rect" id="Node000005" href="$classdata__access_1_1_optional_wrapped_data_provider.html" title="Extension of DeferredWrappedProvider, where default values can be used instead of a backing provider." alt="" coords="737,100,938,141"/>
+<area shape="poly" id="edge30_Node000004_Node000005" title=" " alt="" coords="705,118,737,118,737,124,705,124"/>
+<area shape="rect" id="Node000007" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="510,166,667,206"/>
+<area shape="poly" id="edge32_Node000006_Node000007" title=" " alt="" coords="447,184,509,184,509,189,447,189"/>
+<area shape="rect" id="Node000010" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="517,231,660,272"/>
+<area shape="poly" id="edge35_Node000006_Node000010" title=" " alt="" coords="413,201,441,208,517,229,516,234,439,213,412,206"/>
+<area shape="rect" id="Node000008" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="775,166,900,206"/>
+<area shape="poly" id="edge33_Node000007_Node000008" title=" " alt="" coords="683,184,775,184,775,189,683,189"/>
+<area shape="rect" id="Node000009" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="768,231,907,272"/>
+<area shape="poly" id="edge34_Node000007_Node000009" title=" " alt="" coords="683,208,769,231,767,236,682,213"/>
+<area shape="rect" id="Node000011" href="$classrealization_1_1_formulation.html" title="A model attached to a feature: what is run for that feature, and what it emits." alt="" coords="22,184,176,210"/>
+<area shape="poly" id="edge37_Node000011_Node000006" title=" " alt="" coords="191,190,248,188,248,193,191,195"/>
+<area shape="rect" id="Node000012" href="$class_depth___formulation.html" title="A formulation that answers a fixed depth." alt="" coords="275,223,406,248"/>
+<area shape="poly" id="edge36_Node000011_Node000012" title=" " alt="" coords="191,209,275,222,274,228,190,214"/>
 </map>

@@ -1,5 +1,6 @@
 var hierarchy =
 [
+    [ "anonymous_namespace{Formulation_Manager.cpp}::DirectoryCloser", "structanonymous__namespace_02_formulation___manager_8cpp_03_1_1_directory_closer.html", null ],
     [ "AORC_data", "struct_a_o_r_c__data.html", null ],
     [ "Bmi", "struct_bmi.html", null ],
     [ "bmi::Bmi", "classbmi_1_1_bmi.html", [

@@ -1,5 +1,32 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,168,31"/>
-<area shape="rect" id="Node000001" href="$classutils_1_1_null_stream.html" title=" " alt="" coords="216,5,332,31"/>
-<area shape="poly" id="edge22_Node000000_Node000001" title=" " alt="" coords="184,16,215,16,215,21,184,21"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,96,120,121"/>
+<area shape="rect" id="Node000001" href="$structadd__to__summed__nexus.html" title=" " alt="" coords="178,70,336,96"/>
+<area shape="poly" id="edge6_Node000000_Node000001" title=" " alt="" coords="134,96,177,91,178,96,135,102"/>
+<area shape="rect" id="Node000003" href="$structcompleted__time__step.html" title=" " alt="" coords="185,120,330,145"/>
+<area shape="poly" id="edge7_Node000000_Node000003" title=" " alt="" coords="135,115,184,121,184,126,135,120"/>
+<area shape="rect" id="Node000005" href="$structinvalid__downstream__request.html" title=" " alt="" coords="189,169,326,210"/>
+<area shape="poly" id="edge8_Node000000_Node000005" title=" " alt="" coords="105,126,169,155,197,166,195,171,167,160,103,131"/>
+<area shape="rect" id="Node000009" href="$structrequest__from__empty__nexus.html" title=" " alt="" coords="188,5,327,46"/>
+<area shape="poly" id="edge9_Node000000_Node000009" title=" " alt="" coords="102,86,167,55,195,44,197,49,169,60,104,91"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="12,242,113,268"/>
+<area shape="poly" id="edge10_Node000002_Node000001" title=" " alt="" coords="73,227,109,165,135,132,166,105,186,94,189,99,169,109,139,136,113,168,78,229"/>
+<area shape="poly" id="edge11_Node000002_Node000003" title=" " alt="" coords="82,229,119,191,166,155,194,143,196,148,169,160,122,195,86,232"/>
+<area shape="poly" id="edge13_Node000002_Node000005" title=" " alt="" coords="117,234,194,208,195,213,118,239"/>
+<area shape="poly" id="edge17_Node000002_Node000009" title=" " alt="" coords="74,227,123,128,149,81,166,56,186,43,189,47,170,60,153,84,128,130,79,230"/>
+<area shape="rect" id="Node000004" href="$classexternal_1_1_external_integration_exception.html" title="Custom exception indicating a problem when integrating with some external component." alt="" coords="168,349,347,390"/>
+<area shape="poly" id="edge12_Node000002_Node000004" title=" " alt="" coords="90,277,126,307,169,335,192,346,190,351,166,340,123,311,87,281"/>
+<area shape="rect" id="Node000006" href="$classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html" title=" " alt="" coords="183,415,332,455"/>
+<area shape="poly" id="edge14_Node000002_Node000006" title=" " alt="" coords="79,281,115,340,140,372,169,400,189,412,186,416,166,404,136,376,110,343,74,283"/>
+<area shape="rect" id="Node000007" href="$classmodels_1_1external_1_1_state___exception.html" title="Custom exception indicating bad external model state." alt="" coords="182,480,333,521"/>
+<area shape="poly" id="edge15_Node000002_Node000007" title=" " alt="" coords="73,282,85,322,105,371,133,421,169,465,187,477,184,482,166,469,128,424,100,374,80,324,68,284"/>
+<area shape="rect" id="Node000008" href="$classrealization_1_1_configuration_exception.html" title="Custom exception indicating a problem when integrating with the provided realization configuration." alt="" coords="177,235,338,275"/>
+<area shape="poly" id="edge16_Node000002_Node000008" title=" " alt="" coords="128,252,177,252,177,258,128,258"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="197,300,318,325"/>
+<area shape="poly" id="edge18_Node000002_Node000010" title=" " alt="" coords="122,270,168,284,209,296,208,302,167,290,121,275"/>
+<area shape="rect" id="Node000011" href="$struct_units_helper_1_1unit__conversion__exception.html" title=" " alt="" coords="395,227,582,267"/>
+<area shape="poly" id="edge19_Node000010_Node000011" title=" " alt="" coords="319,292,413,265,415,271,321,297"/>
+<area shape="rect" id="Node000012" href="$structmodels_1_1bmi_1_1unknown__bmi__type.html" title="Thrown when a BMI type name has no C++ type behind it." alt="" coords="414,292,563,333"/>
+<area shape="poly" id="edge20_Node000010_Node000012" title=" " alt="" coords="333,310,414,310,414,315,333,315"/>
+<area shape="rect" id="Node000013" href="$structngen_1_1sqlite_1_1sqlite__error.html" title=" " alt="" coords="427,357,550,398"/>
+<area shape="poly" id="edge21_Node000010_Node000013" title=" " alt="" coords="321,327,427,358,426,363,319,332"/>
 </map>

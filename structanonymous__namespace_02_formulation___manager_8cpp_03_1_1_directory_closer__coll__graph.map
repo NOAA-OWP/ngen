@@ -1,0 +1,3 @@
+<map id="anonymous_namespace{Formulation_Manager.cpp}::DirectoryCloser" name="anonymous_namespace{Formulation_Manager.cpp}::DirectoryCloser">
+<area shape="rect" id="Node000001" title="Wrap closedir in a deleter to avoid GCC&#39;s ignored&#45;attributes warning for decltype(&amp;closedir)" alt="" coords="5,5,173,102"/>
+</map>

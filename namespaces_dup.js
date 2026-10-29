@@ -5,6 +5,7 @@ var namespaces_dup =
       [ "join_columns", "namespaceanonymous__namespace_02_catchment_csv_output_mgr_8cpp_03.html#a1a3199fb29befeec9dc01bd22785dd8e", null ],
       [ "DELIMITER", "namespaceanonymous__namespace_02_catchment_csv_output_mgr_8cpp_03.html#a6bd63aeee9e705a60c34076f9973146d", null ]
     ] ],
+    [ "anonymous_namespace{Formulation_Manager.cpp}", "namespaceanonymous__namespace_02_formulation___manager_8cpp_03.html", "namespaceanonymous__namespace_02_formulation___manager_8cpp_03" ],
     [ "bmi", "namespacebmi.html", "namespacebmi" ],
     [ "data_access", "namespacedata__access.html", "namespacedata__access" ],
     [ "external", "namespaceexternal.html", "namespaceexternal" ],

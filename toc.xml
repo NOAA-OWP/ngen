@@ -484,6 +484,16 @@
         <topic label="join_columns" href="namespaceanonymous__namespace_02_catchment_csv_output_mgr_8cpp_03.html#a1a3199fb29befeec9dc01bd22785dd8e"/>
         <topic label="DELIMITER" href="namespaceanonymous__namespace_02_catchment_csv_output_mgr_8cpp_03.html#a6bd63aeee9e705a60c34076f9973146d"/>
       </topic>
+      <topic label="anonymous_namespace{Formulation_Manager.cpp}" href="namespaceanonymous__namespace_02_formulation___manager_8cpp_03.html">
+        <topic label="DirectoryCloser" href="structanonymous__namespace_02_formulation___manager_8cpp_03_1_1_directory_closer.html">
+          <topic label="operator()" href="structanonymous__namespace_02_formulation___manager_8cpp_03_1_1_directory_closer.html#a200dc5765c870a7b4cbde49654564e07"/>
+        </topic>
+        <topic label="DirectoryPointer" href="namespaceanonymous__namespace_02_formulation___manager_8cpp_03.html#aa4523615dbecb5663701fac5a1f388de"/>
+        <topic label="PlaceholderContext" href="namespaceanonymous__namespace_02_formulation___manager_8cpp_03.html#aa463a149c497209069fc9c033ca025e2"/>
+        <topic label="create_file_pattern_matcher" href="namespaceanonymous__namespace_02_formulation___manager_8cpp_03.html#a5012c68a8c6f5498e2085bffc2bf739d"/>
+        <topic label="is_regular_file_or_symlink_target" href="namespaceanonymous__namespace_02_formulation___manager_8cpp_03.html#a67212e600b60e38ecf3245b6dc3e529f"/>
+        <topic label="open_directory" href="namespaceanonymous__namespace_02_formulation___manager_8cpp_03.html#abdaf7efa11f059a9a6e7aa3cd6105773"/>
+      </topic>
       <topic label="bmi" href="namespacebmi.html">
         <topic label="Bmi" href="classbmi_1_1_bmi.html">
           <topic label="~Bmi" href="classbmi_1_1_bmi.html#a00f64e1b8841c7a259de3aa8713597db"/>
@@ -3342,6 +3352,11 @@
   </topic>
   <topic label="Classes" href="annotated.html">
     <topic label="Class List" href="annotated.html">
+      <topic label="anonymous_namespace{Formulation_Manager.cpp}" href="namespaceanonymous__namespace_02_formulation___manager_8cpp_03.html">
+        <topic label="DirectoryCloser" href="structanonymous__namespace_02_formulation___manager_8cpp_03_1_1_directory_closer.html">
+          <topic label="operator()" href="structanonymous__namespace_02_formulation___manager_8cpp_03_1_1_directory_closer.html#a200dc5765c870a7b4cbde49654564e07"/>
+        </topic>
+      </topic>
       <topic label="bmi" href="namespacebmi.html">
         <topic label="Bmi" href="classbmi_1_1_bmi.html">
           <topic label="~Bmi" href="classbmi_1_1_bmi.html#a00f64e1b8841c7a259de3aa8713597db"/>
@@ -6681,6 +6696,7 @@
     </topic>
     <topic label="Class Index" href="classes.html"/>
     <topic label="Class Hierarchy" href="hierarchy.html">
+      <topic label="anonymous_namespace{Formulation_Manager.cpp}::DirectoryCloser" href="structanonymous__namespace_02_formulation___manager_8cpp_03_1_1_directory_closer.html"/>
       <topic label="AORC_data" href="struct_a_o_r_c__data.html"/>
       <topic label="Bmi" href="struct_bmi.html"/>
       <topic label="bmi::Bmi" href="classbmi_1_1_bmi.html">

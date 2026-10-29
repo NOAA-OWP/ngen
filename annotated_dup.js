@@ -1,5 +1,8 @@
 var annotated_dup =
 [
+    [ "anonymous_namespace{Formulation_Manager.cpp}", "namespaceanonymous__namespace_02_formulation___manager_8cpp_03.html", [
+      [ "DirectoryCloser", "structanonymous__namespace_02_formulation___manager_8cpp_03_1_1_directory_closer.html", "structanonymous__namespace_02_formulation___manager_8cpp_03_1_1_directory_closer" ]
+    ] ],
     [ "bmi", "namespacebmi.html", [
       [ "Bmi", "classbmi_1_1_bmi.html", "classbmi_1_1_bmi" ]
     ] ],
