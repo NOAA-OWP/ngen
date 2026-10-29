@@ -19,6 +19,7 @@
 #include "CsvPerFeatureForcingProvider.hpp"
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include <iomanip>
 #include <iostream>
 #include <vector>
 #include <boost/property_tree/ptree.hpp>
@@ -312,6 +313,27 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetOutputLineForTimestep_0_a) {
     //NOTE these answers are dependent on the INPUT vars selected and the data in the forcing file
     //Also, for grid vars, just gets the first value in the returned flattened array...
     EXPECT_THAT(output, ::testing::Pointwise(::testing::DoubleNear(1e-15), std::vector<double>{0.0, 0.018600000068545341, 0.0, 2.0, 10.0, 10.0}));
+}
+
+/** Test that a 'real' the module reports as 8 bytes wide is read as a double at full width, not through a float. */
+TEST_F(Bmi_Fortran_Formulation_Test, get_var_value_as_double_widened_real_0_a) {
+    int ex_index = 0;
+
+    Bmi_Fortran_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]));
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+    std::shared_ptr<models::bmi::Bmi_Fortran_Adapter> model_adapter = get_friend_bmi_model(formulation);
+
+    const std::string name = "test::real_kind8";
+    ASSERT_EQ(model_adapter->GetVarType(name), "real");
+    ASSERT_EQ(model_adapter->GetVarItemsize(name), 8);
+
+    // Not representable as a float, so reading through one would change it.
+    double value = 1.000000000001;
+    ASSERT_NE(static_cast<double>(static_cast<float>(value)), value);
+    model_adapter->SetValue(name, &value);
+
+    const double read = get_friend_var_value_as_double(formulation, name);
+    EXPECT_EQ(read, value) << std::setprecision(17) << "read back " << read << ", set " << value;
 }
 
 /** Simple test of output with modified variables. */
