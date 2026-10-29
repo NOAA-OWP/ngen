@@ -28,7 +28,7 @@ void require_column(
 )
 {
     const std::set<std::string> columns = reader.db().columns(layer);
-    if (columns.count(column) == 0) {
+    if (!columns.contains(column)) {
         throw std::runtime_error(
             version + " " + layer + " layer missing required '" + column + "' column"
         );
