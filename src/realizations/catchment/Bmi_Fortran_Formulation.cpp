@@ -50,7 +50,9 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
 
     // TODO: consider different way of handling (and how to document) cases like long double or unsigned long long that
     //  don't fit or might convert inappropriately
-    const std::string type = model->GetVarType(var_name);
+    // A Fortran type name does not imply a width, so resolve it with the item size, as GetValue() does.
+    const std::string type = model->get_analogous_cxx_type(model->GetVarType(var_name),
+                                                           static_cast<size_t>(model->GetVarItemsize(var_name)));
     // GetValue() throws rather than handing back an empty vector, so indexing its result is safe here.
     try {
         return models::bmi::with_bmi_type(type, [&]<typename T>() -> double {
