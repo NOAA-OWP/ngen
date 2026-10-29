@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "HydrofabricReaderFactory.hpp"
-#include "FileChecker.h"
+#include "utilities/FileChecker.h"
 
 // The original hydrofabric format: divides and nexuses in two separate GeoJSON files, carrying
 // "id" and "toid" directly, with no schema version to detect and nothing to translate.

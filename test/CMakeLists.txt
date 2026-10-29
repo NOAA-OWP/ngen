@@ -104,7 +104,7 @@ Adds an executable test (i.e. a target) called <test name>.
     is called.
 #]==]
 function(ngen_add_test TESTNAME)
-    set(multiValueArgs OBJECTS LIBRARIES REQUIRES DEPENDS INCLUDES)
+    set(multiValueArgs OBJECTS LIBRARIES REQUIRES DEPENDS)
     cmake_parse_arguments(NGEN_TEST "" "" "${multiValueArgs}" ${ARGN})
 
     list(REMOVE_DUPLICATES NGEN_TEST_LIBRARIES)
@@ -121,10 +121,6 @@ function(ngen_add_test TESTNAME)
         add_executable(${TESTNAME} ${NGEN_TEST_OBJECTS})
         target_include_directories(${TESTNAME} PRIVATE ${NGEN_ROOT_DIR}/include)
         target_include_directories(${TESTNAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/bmi)
-        # For test support code shared between suites, e.g. the GeoPackage fixture builders.
-        foreach(include_dir IN LISTS NGEN_TEST_INCLUDES)
-            target_include_directories(${TESTNAME} PRIVATE ${include_dir})
-        endforeach()
         target_link_libraries(${TESTNAME} PRIVATE gtest gtest_main ${NGEN_TEST_LIBRARIES})
         set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
 
@@ -146,9 +142,6 @@ function(ngen_add_test TESTNAME)
         # ---------------------------------------------------------------------
         target_sources(test_all PRIVATE ${NGEN_TEST_OBJECTS})
         target_link_libraries(test_all PRIVATE ${NGEN_TEST_LIBRARIES})
-        foreach(include_dir IN LISTS NGEN_TEST_INCLUDES)
-            target_include_directories(test_all PRIVATE ${include_dir})
-        endforeach()
         # ---------------------------------------------------------------------
     endif()
 endfunction()
@@ -187,9 +180,6 @@ ngen_add_test(
     test_hydrofabric
     OBJECTS
         hydrofabric/GeoJSONHydrofabricReader_Test.cpp
-    INCLUDES
-        # FileChecker, which nothing this target links exposes on its own.
-        ${PROJECT_SOURCE_DIR}/include/utilities
     LIBRARIES
         NGen::hydrofabric
 )
@@ -202,8 +192,6 @@ ngen_add_test(
         hydrofabric/GeoPackageHydrofabricReader_Test.cpp
         hydrofabric/HydrofabricReaderFactory_Test.cpp
         hydrofabric/fixture_builders.cpp
-    INCLUDES
-        ${CMAKE_CURRENT_LIST_DIR}/hydrofabric
     LIBRARIES
         NGen::hydrofabric
         NGen::geopackage
