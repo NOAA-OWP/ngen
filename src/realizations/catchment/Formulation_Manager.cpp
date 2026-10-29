@@ -368,16 +368,16 @@ namespace {
     /** @brief Test to see if a directory entry at a path is either a regular file or a symlink that
      * points at a file
      *
-     * @param file_path The path to the entry of interest
+     * @param path The path to the directory containing the entry of interest
      * @param entry The loaded/assigned directory entry
      * @return Whether the received entry is a regular file or a link to a regular file
      * @throws std::invalid_argument if a null directory entry was passed
      * @throws std::runtime_error if the file could not be called with stat
      */
-    bool is_regular_file_or_symlink_target(const std::string& file_path, const dirent* entry) {
+    bool is_regular_file_or_symlink_target(const std::string& path, const dirent* entry) {
         if (entry == nullptr) {
             throw std::invalid_argument(
-                "Cannot test if '" + file_path + "' is a regular file - no directory pointer was passed"
+                "Cannot test if an object under '" + path +  + "' is a regular file - no directory pointer was passed"
             );
         }
     #ifdef _DIRENT_HAVE_D_TYPE
@@ -389,10 +389,11 @@ namespace {
             return false;
         }
     #endif
+        const std::string file_path = path + entry->d_name;
         struct stat file_stat{};
-        if (stat((file_path + entry->d_name).c_str(), &file_stat) != 0) {
+        if (stat((file_path).c_str(), &file_stat) != 0) {
             throw std::runtime_error(
-                "Could not stat file '" + file_path + entry->d_name + "': " + strerror(errno)
+                "Could not stat file '" + file_path + "': " + strerror(errno)
             );
         }
         return S_ISREG(file_stat.st_mode);
@@ -439,7 +440,7 @@ namespace {
         int error_code = 0;
         int attempt = 0;
 
-        for (; attempt < maximum_attempts && !directory_pointer; attempt++) {
+        for (; attempt < maximum_attempts; attempt++) {
             directory_pointer.reset(opendir(search_path));
             if (directory_pointer) {
                 return directory_pointer;
@@ -464,6 +465,7 @@ namespace {
                 break;
             }
 
+            // Bypass the wait on the last loop
             if (attempt + 1 < maximum_attempts) {
                 sleep(wait_seconds);
             }
@@ -479,13 +481,13 @@ namespace {
         );
     }
 
-    /** @brief Replace all placeholders in a given file pattern with a paired identifier and return a regex ready to match on it
+    /** @brief Replace all placeholders in a given file pattern with a supplied context and return a prepared regular expression paired with its pattern
      *
      * TODO: Integrate with the path_tokens resolution functionality
      *
      * @param file_pattern A configured pattern to match on when searching for a file
      * @param context A set of placeholders and values that need to be inserted into the file pattern
-     * @return A regular expression ready to search for files based on path pattern with all placeholders filled with appropriate values
+     * @return A pairing of a prepared regular expression and its pattern
      */
     std::pair<std::regex, std::string> create_file_pattern_matcher(
         std::string file_pattern,
@@ -575,6 +577,9 @@ forcing_params Formulation_Manager::get_forcing_params(
     // https://www.gnu.org/software/libc/manual/html_node/Directory-Entries.html
     dirent *entry = nullptr;
     int invalid_matches = 0;
+
+    // TODO: Determine if this loop should see an implementation similar to `open_directory`
+    //  in order to supply more flexible error handling
     while (true) {
         errno = 0;
 
