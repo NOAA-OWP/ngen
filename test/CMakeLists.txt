@@ -370,7 +370,7 @@ ngen_add_test(
 
 ########################## Specialized MPI Tests
 if (NGEN_WITH_MPI)
-    find_package(MPI REQUIRED)
+    find_package(MPI REQUIRED COMPONENTS CXX)
     add_executable(test_mpi_unit
             gtest_mpi_main.cpp                          # Special test main() for use with MPI
             utils/PerFormulationNexusOutputMgr_Test.cpp # Involved test files
