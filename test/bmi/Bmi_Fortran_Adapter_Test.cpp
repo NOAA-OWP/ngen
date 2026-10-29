@@ -5,7 +5,9 @@
 #include <exception>
 #include <chrono>
 #include <unordered_map>
+#include <limits>
 #include <numeric>
+#include <tuple>
 
 #include "FileChecker.h"
 #include "Bmi_Fortran_Adapter.hpp"
@@ -1346,6 +1348,58 @@ TEST_F(Bmi_Fortran_Adapter_Test, SetValue_0_c) {
     double retrieved = GetValue<double>(*adapter, "INPUT_VAR_1")[0];
     adapter->Finalize();
     ASSERT_EQ(value_2, retrieved);
+}
+
+/**
+ * Test that a Fortran type name is resolved by item size, not taken at its word.
+ *
+ * Compiler flags such as ``-fdefault-real-8`` change the width of ``real`` and ``integer``, so the name only says
+ * whether a variable is integral or floating point.
+ */
+TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_a) {
+    const std::vector<std::tuple<std::string, size_t, std::string>> cases = {
+        {"integer", 1, "int8_t"},
+        {"integer", 2, "int16_t"},
+        {"integer", 4, "int32_t"},
+        {"integer", 8, "int64_t"},
+        {"int", 8, "int64_t"},
+        {"real", sizeof(float), "float"},
+        {"real", sizeof(double), "double"},
+        {"float", sizeof(double), "double"},
+        {"double precision", sizeof(double), "double"},
+        {"double precision", sizeof(float), "float"},
+        {"double", sizeof(float), "float"},
+    };
+    for (const auto &[name, item_size, expected] : cases) {
+        const std::string resolved = adapter->get_analogous_cxx_type(name, item_size);
+        EXPECT_EQ(resolved, expected) << name << " of " << item_size << " bytes";
+        EXPECT_NO_THROW(models::bmi::require_item_size(resolved, item_size, name)) << name;
+    }
+}
+
+/** Test that names it does not reduce, and sizes with no type of the named kind, are passed through unchanged. */
+TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_b) {
+    EXPECT_EQ(adapter->get_analogous_cxx_type("long", sizeof(long)), "long");
+    EXPECT_EQ(adapter->get_analogous_cxx_type("int64_t", 8), "int64_t");
+    EXPECT_EQ(adapter->get_analogous_cxx_type("integer", 3), "integer");
+    EXPECT_EQ(adapter->get_analogous_cxx_type("real", 3), "real");
+    EXPECT_EQ(adapter->get_analogous_cxx_type("nonesuch", 4), "nonesuch");
+
+    // Passed through, a disagreeing pair is then refused by the table's size check.
+    EXPECT_THROW(models::bmi::require_item_size(adapter->get_analogous_cxx_type("real", 3), 3, "real"),
+                 std::runtime_error);
+}
+
+/**
+ * Test that a 16-byte real resolves to long double only where that is IEEE quad precision.
+ *
+ * On x86, gfortran's 80-bit real(kind=10) is also stored in 16 bytes, so there the size cannot tell it from
+ * real(kind=16) and the name must be refused rather than guessed.
+ */
+TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_c) {
+    const bool long_double_is_quad =
+        sizeof(long double) == 16 && std::numeric_limits<long double>::digits == 113;
+    EXPECT_EQ(adapter->get_analogous_cxx_type("real", 16), long_double_is_quad ? "long double" : "real");
 }
 
 /** Test that getting the current model time works after initialization. */
