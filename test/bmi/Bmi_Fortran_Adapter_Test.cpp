@@ -1402,6 +1402,41 @@ TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_c) {
     EXPECT_EQ(adapter->get_analogous_cxx_type("real", 16), long_double_is_quad ? "long double" : "real");
 }
 
+/** Test that a 'real' the module reports as 8 bytes wide is set and read back at that width. */
+TEST_F(Bmi_Fortran_Adapter_Test, SetValue_GetValue_widened_real_0_a) {
+    const std::string name = "test::real_kind8";
+    adapter->Initialize();
+    ASSERT_EQ(adapter->GetVarType(name), "real");
+    ASSERT_EQ(adapter->GetVarItemsize(name), 8);
+
+    // Not representable as a float, so a 4-byte path anywhere would change it.
+    const double value = 1.000000000001;
+    ASSERT_NE(static_cast<double>(static_cast<float>(value)), value);
+
+    double src = value;
+    adapter->SetValue(name, &src);
+    double dest = 0;
+    adapter->GetValue(name, &dest);
+    const double via_utilities = GetValue<double>(*adapter, name)[0];
+    adapter->Finalize();
+
+    EXPECT_EQ(dest, value);
+    EXPECT_EQ(via_utilities, value);
+}
+
+/** Test that an 'integer' the module reports as 8 bytes wide is refused, since the shim has no accessor that wide. */
+TEST_F(Bmi_Fortran_Adapter_Test, SetValue_GetValue_widened_integer_0_a) {
+    const std::string name = "test::integer_kind8";
+    adapter->Initialize();
+    ASSERT_EQ(adapter->GetVarType(name), "integer");
+    ASSERT_EQ(adapter->GetVarItemsize(name), 8);
+
+    std::int64_t value = 1;
+    EXPECT_THROW(adapter->SetValue(name, &value), ::external::ExternalIntegrationException);
+    EXPECT_THROW(adapter->GetValue(name, &value), ::external::ExternalIntegrationException);
+    adapter->Finalize();
+}
+
 /** Test that getting the current model time works after initialization. */
 TEST_F(Bmi_Fortran_Adapter_Test, GetCurrentTime_0_a) {
     adapter->Initialize();

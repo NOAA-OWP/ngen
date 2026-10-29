@@ -7,7 +7,7 @@ module bmitestbmi
 
   use test_model
   use bmi_grid
-  use, intrinsic :: iso_c_binding, only: c_ptr, c_loc, c_f_pointer, c_int, c_int64_t, c_sizeof
+  use, intrinsic :: iso_c_binding, only: c_ptr, c_loc, c_f_pointer, c_int, c_int64_t, c_double, c_sizeof
   implicit none
   integer :: DEFAULT_TIME_STEP_SIZE = 3600
   integer :: DEFAULT_TIME_STEP_COUNT = 24
@@ -29,6 +29,19 @@ module bmitestbmi
      ! the composition works up to INT32_MAX; on big-endian the same
      ! test would fail loudly with a value read back as (written << 32).
      integer :: serialized_size_32bit = 0
+     ! Test-only variables whose Fortran type name does not imply their
+     ! width, as when a kind parameter or a flag such as -fdefault-real-8
+     ! widens 'real' or 'integer'. Each reports its true item size.
+     !
+     ! "test::real_kind8" is a 'real' of 8 bytes. It is served by the
+     ! double accessors, the only ones whose argument is an 8-byte real;
+     ! the float accessors would narrow it to 4 bytes, contradicting the
+     ! item size reported for it.
+     !
+     ! "test::integer_kind8" is an 'integer' of 8 bytes. The ISO C shim
+     ! has no 64-bit integer accessor, so no accessor serves it.
+     real(kind=c_double) :: real_kind8 = 0
+     integer(kind=c_int64_t) :: integer_kind8 = 0
    contains
      procedure :: get_component_name => test_component_name
      procedure :: get_input_item_count => test_input_item_count
@@ -412,6 +425,18 @@ end function test_finalize
 
     !test-only canary — see the derived-type field's comment
     if (trim(name) .eq. "test::serialization_32bit") then
+      type = "integer"
+      bmi_status = BMI_SUCCESS
+      return
+    endif
+
+    !test-only widened kinds - see the derived-type fields' comment
+    if (trim(name) .eq. "test::real_kind8") then
+      type = "real"
+      bmi_status = BMI_SUCCESS
+      return
+    endif
+    if (trim(name) .eq. "test::integer_kind8") then
       type = "integer"
       bmi_status = BMI_SUCCESS
       return
@@ -865,6 +890,12 @@ end function test_finalize
     case("test::serialization_32bit")
        size = sizeof(this%serialized_size_32bit)
        bmi_status = BMI_SUCCESS
+    case("test::real_kind8")
+       size = sizeof(this%real_kind8)
+       bmi_status = BMI_SUCCESS
+    case("test::integer_kind8")
+       size = sizeof(this%integer_kind8)
+       bmi_status = BMI_SUCCESS
     case default
        size = -1
        bmi_status = BMI_FAILURE
@@ -913,6 +944,11 @@ end function test_finalize
       ! preserved at the Fortran side, and the shim dispatches.
       ! The "test::serialization_32bit" *does* carry a stored value (unlike the triggers),
       ! but reports the same single-c_int slice
+      nbytes = item_size
+      bmi_status = BMI_SUCCESS
+      return
+    case("test::real_kind8", "test::integer_kind8")
+      ! Scalars
       nbytes = item_size
       bmi_status = BMI_SUCCESS
       return
@@ -1050,6 +1086,9 @@ end function test_finalize
     case("INPUT_VAR_1")
       this%model%input_var_1 = src(1)
       bmi_status=BMI_SUCCESS
+    case("test::real_kind8")
+      this%real_kind8 = src(1)
+      bmi_status = BMI_SUCCESS
     case default
        bmi_status = BMI_FAILURE
     end select
@@ -1196,6 +1235,9 @@ end function test_finalize
       end if
     case("OUTPUT_VAR_1")
       dest = [this%model%output_var_1]
+      bmi_status = BMI_SUCCESS
+    case("test::real_kind8")
+      dest = [this%real_kind8]
       bmi_status = BMI_SUCCESS
     case default
        dest(:) = -1.d0
