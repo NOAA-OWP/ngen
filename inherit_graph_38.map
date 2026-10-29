@@ -2,34 +2,37 @@
 <area shape="rect" id="Node000000" href="$class_network___test.html" title=" " alt="" coords="32,55,135,80"/>
 <area shape="rect" id="Node000001" href="$class_network___test1.html" title=" " alt="" coords="258,5,368,31"/>
 <area shape="poly" id="edge68_Node000000_Node000001" title=" " alt="" coords="150,51,257,27,258,33,151,56"/>
-<area shape="rect" id="Node000003" href="$class_network___test2.html" title=" " alt="" coords="258,55,368,80"/>
-<area shape="poly" id="edge69_Node000000_Node000003" title=" " alt="" coords="151,65,257,65,257,70,151,70"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="37,351,130,376"/>
-<area shape="poly" id="edge77_Node000004_Node000003" title=" " alt="" coords="87,335,99,282,122,216,157,147,180,116,208,89,231,76,256,69,258,74,233,81,211,94,184,120,162,150,127,218,104,284,92,336"/>
-<area shape="rect" id="Node000005" href="$class_feature_collection___test.html" title=" " alt="" coords="235,104,390,130"/>
-<area shape="poly" id="edge70_Node000004_Node000005" title=" " alt="" coords="90,335,105,291,129,238,163,184,184,160,208,139,234,125,236,130,211,143,188,164,167,187,134,241,110,293,95,337"/>
-<area shape="rect" id="Node000006" href="$class_feature___test.html" title=" " alt="" coords="264,153,362,179"/>
-<area shape="poly" id="edge71_Node000004_Node000006" title=" " alt="" coords="94,335,112,301,137,261,169,221,208,188,235,175,262,168,264,173,236,180,211,192,173,225,141,264,117,304,99,338"/>
-<area shape="rect" id="Node000007" href="$class_h_y___catchment_realization___test.html" title=" " alt="" coords="210,203,416,228"/>
-<area shape="poly" id="edge72_Node000004_Node000007" title=" " alt="" coords="101,336,146,286,176,259,208,237,233,226,235,231,211,242,179,264,150,289,105,340"/>
-<area shape="rect" id="Node000008" href="$class_h_y___features___attributes___test.html" title="Reading the hydrofabric attributes a catchment is realized from." alt="" coords="216,252,410,278"/>
-<area shape="poly" id="edge73_Node000004_Node000008" title=" " alt="" coords="114,339,158,312,209,286,241,276,242,281,211,291,160,317,117,344"/>
-<area shape="rect" id="Node000009" href="$class_j_s_o_n_geometry___test.html" title=" " alt="" coords="240,301,386,327"/>
-<area shape="poly" id="edge74_Node000004_Node000009" title=" " alt="" coords="144,348,249,325,250,330,145,353"/>
-<area shape="rect" id="Node000010" href="$class_j_s_o_n_property___test.html" title=" " alt="" coords="244,351,382,376"/>
-<area shape="poly" id="edge75_Node000004_Node000010" title=" " alt="" coords="145,361,243,361,243,366,145,366"/>
-<area shape="rect" id="Node000011" href="$class_multi_layer_parser_test.html" title=" " alt="" coords="240,400,386,426"/>
-<area shape="poly" id="edge76_Node000004_Node000011" title=" " alt="" coords="145,374,250,397,249,402,144,379"/>
-<area shape="rect" id="Node000012" href="$class_nexus___remote___test.html" title=" " alt="" coords="241,449,384,475"/>
-<area shape="poly" id="edge78_Node000004_Node000012" title=" " alt="" coords="117,383,160,410,211,436,242,446,241,451,209,441,158,415,114,388"/>
-<area shape="rect" id="Node000013" href="$class_nexus___test.html" title=" " alt="" coords="267,499,358,524"/>
-<area shape="poly" id="edge79_Node000004_Node000013" title=" " alt="" coords="105,387,150,438,179,463,211,485,239,497,268,504,266,509,237,502,208,490,176,468,146,441,101,391"/>
-<area shape="rect" id="Node000014" href="$class_reservoir_kernel_test.html" title=" " alt="" coords="243,548,382,574"/>
-<area shape="poly" id="edge80_Node000004_Node000014" title=" " alt="" coords="99,389,117,423,141,463,173,502,211,535,244,549,242,554,208,539,169,506,137,466,112,426,94,392"/>
-<area shape="rect" id="Node000015" href="$class_reservoir_timeless_kernel_test.html" title=" " alt="" coords="217,597,409,623"/>
-<area shape="poly" id="edge81_Node000004_Node000015" title=" " alt="" coords="95,390,110,434,134,486,167,540,188,563,211,584,230,595,227,599,208,588,184,567,163,543,129,489,105,436,90,392"/>
-<area shape="rect" id="Node000016" href="$class_units_helper___test.html" title=" " alt="" coords="251,647,374,672"/>
-<area shape="poly" id="edge82_Node000004_Node000016" title=" " alt="" coords="92,391,104,443,127,509,162,577,184,607,211,633,230,645,252,652,250,657,228,650,208,638,180,611,157,580,122,511,99,445,87,392"/>
+<area shape="rect" id="Node000003" href="$class_network___test2.html" title=" " alt="" coords="258,104,368,130"/>
+<area shape="poly" id="edge69_Node000000_Node000003" title=" " alt="" coords="151,79,258,102,257,108,150,84"/>
+<area shape="rect" id="Node000012" href="$class_network___test3.html" title=" " alt="" coords="258,55,368,80"/>
+<area shape="poly" id="edge70_Node000000_Node000012" title=" " alt="" coords="151,65,257,65,257,70,151,70"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="37,375,130,400"/>
+<area shape="poly" id="edge78_Node000004_Node000003" title=" " alt="" coords="88,359,102,311,125,251,160,190,182,163,208,139,231,126,257,118,258,123,233,130,211,143,186,166,165,193,130,253,107,312,93,360"/>
+<area shape="poly" id="edge79_Node000004_Node000012" title=" " alt="" coords="86,359,96,302,118,229,134,191,154,154,179,119,208,89,231,76,257,68,258,73,233,81,211,94,183,123,159,156,139,193,123,231,102,303,91,360"/>
+<area shape="rect" id="Node000005" href="$class_feature_collection___test.html" title=" " alt="" coords="235,597,390,623"/>
+<area shape="poly" id="edge71_Node000004_Node000005" title=" " alt="" coords="97,414,113,452,137,499,170,545,211,584,236,597,233,601,208,588,166,549,133,502,108,455,92,416"/>
+<area shape="rect" id="Node000006" href="$class_feature___test.html" title=" " alt="" coords="264,647,362,672"/>
+<area shape="poly" id="edge72_Node000004_Node000006" title=" " alt="" coords="93,415,107,463,130,522,164,583,186,610,211,633,236,647,264,654,262,659,234,652,208,638,182,614,160,586,125,525,102,465,88,416"/>
+<area shape="rect" id="Node000007" href="$class_h_y___catchment_realization___test.html" title=" " alt="" coords="210,696,416,722"/>
+<area shape="poly" id="edge73_Node000004_Node000007" title=" " alt="" coords="91,415,102,472,123,545,139,583,159,620,183,653,211,683,228,693,225,698,208,687,179,657,154,622,134,585,118,547,96,473,86,416"/>
+<area shape="rect" id="Node000008" href="$class_h_y___features___attributes___test.html" title="Reading the hydrofabric attributes a catchment is realized from." alt="" coords="216,153,410,179"/>
+<area shape="poly" id="edge74_Node000004_Node000008" title=" " alt="" coords="92,359,108,320,133,274,166,227,208,188,228,177,230,182,211,192,170,231,138,277,113,323,97,361"/>
+<area shape="rect" id="Node000009" href="$class_j_s_o_n_geometry___test.html" title=" " alt="" coords="240,203,386,228"/>
+<area shape="poly" id="edge75_Node000004_Node000009" title=" " alt="" coords="97,360,142,298,172,265,208,237,238,224,240,229,211,242,176,269,146,301,102,363"/>
+<area shape="rect" id="Node000010" href="$class_j_s_o_n_property___test.html" title=" " alt="" coords="244,252,382,278"/>
+<area shape="poly" id="edge76_Node000004_Node000010" title=" " alt="" coords="107,361,152,323,208,286,242,274,244,279,211,291,155,327,110,365"/>
+<area shape="rect" id="Node000011" href="$class_multi_layer_parser_test.html" title=" " alt="" coords="240,301,386,327"/>
+<area shape="poly" id="edge77_Node000004_Node000011" title=" " alt="" coords="128,366,209,336,247,325,249,330,210,341,130,371"/>
+<area shape="rect" id="Node000013" href="$class_nexus___remote___test.html" title=" " alt="" coords="241,351,384,376"/>
+<area shape="poly" id="edge80_Node000004_Node000013" title=" " alt="" coords="145,378,241,368,241,374,146,384"/>
+<area shape="rect" id="Node000014" href="$class_nexus___test.html" title=" " alt="" coords="267,400,358,426"/>
+<area shape="poly" id="edge81_Node000004_Node000014" title=" " alt="" coords="146,392,267,405,266,410,145,397"/>
+<area shape="rect" id="Node000015" href="$class_reservoir_kernel_test.html" title=" " alt="" coords="243,449,382,475"/>
+<area shape="poly" id="edge82_Node000004_Node000015" title=" " alt="" coords="129,404,211,436,248,446,247,451,209,441,127,409"/>
+<area shape="rect" id="Node000016" href="$class_reservoir_timeless_kernel_test.html" title=" " alt="" coords="217,499,409,524"/>
+<area shape="poly" id="edge83_Node000004_Node000016" title=" " alt="" coords="109,409,154,448,211,485,238,496,236,501,208,490,151,453,106,413"/>
+<area shape="rect" id="Node000017" href="$class_units_helper___test.html" title=" " alt="" coords="251,548,374,574"/>
+<area shape="poly" id="edge84_Node000004_Node000017" title=" " alt="" coords="101,412,145,475,176,507,211,535,252,551,250,556,208,539,172,511,141,478,97,415"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,162,31"/>
-<area shape="poly" id="edge83_Node000002_Node000001" title=" " alt="" coords="178,16,257,16,257,21,178,21"/>
+<area shape="poly" id="edge85_Node000002_Node000001" title=" " alt="" coords="178,16,257,16,257,21,178,21"/>
 </map>

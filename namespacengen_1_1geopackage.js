@@ -1,5 +1,6 @@
 var namespacengen_1_1geopackage =
 [
+    [ "GeoPackageReader", "classngen_1_1geopackage_1_1_geo_package_reader.html", "classngen_1_1geopackage_1_1_geo_package_reader" ],
     [ "wkb", "structngen_1_1geopackage_1_1wkb.html", "structngen_1_1geopackage_1_1wkb" ],
     [ "wkb_geom_t", "namespacengen_1_1geopackage.html#afd11eef2894e7e6e837c5f7ff4d3286a", [
       [ "geometry", "namespacengen_1_1geopackage.html#afd11eef2894e7e6e837c5f7ff4d3286aa3b07d5a41cf74d44250e1f0e5be0194d", null ],
@@ -11,9 +12,10 @@ var namespacengen_1_1geopackage =
       [ "multipolygon", "namespacengen_1_1geopackage.html#afd11eef2894e7e6e837c5f7ff4d3286aadc5f0396245168de908f0055c88b5524", null ],
       [ "geometry_collection", "namespacengen_1_1geopackage.html#afd11eef2894e7e6e837c5f7ff4d3286aa989ab867af63c1a5b6e3595867bea9e6", null ]
     ] ],
-    [ "build_feature", "namespacengen_1_1geopackage.html#aed98a1830188ba7fa7725311ec4bb8a2", null ],
+    [ "build_feature", "namespacengen_1_1geopackage.html#a230d729bb95c95e75dadffd2144d4b18", null ],
     [ "build_geometry", "namespacengen_1_1geopackage.html#a8d202ec339efee024c4ebe82cd46c1bd", null ],
     [ "build_properties", "namespacengen_1_1geopackage.html#a67b01588a1bf9eb4b1d44b839f487dc8", null ],
-    [ "read", "namespacengen_1_1geopackage.html#a14730a731d79d792b5b4e6ddafca9f6e", null ],
+    [ "check_table_name", "namespacengen_1_1geopackage.html#aad20f17d8c54ffc01c90ce597b8b3a1c", null ],
+    [ "make_reader", "namespacengen_1_1geopackage.html#a4339bccfe0e13ecc82b29365989fcf78", null ],
     [ "throw_if_not_type", "namespacengen_1_1geopackage.html#ac6ff506ab9f5211854c9bc68bfaa2135", null ]
 ];

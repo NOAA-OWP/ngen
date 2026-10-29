@@ -1,0 +1,17 @@
+<map id="ngen::hydrofabric::V2_2GeoPackageHydrofabricReader" name="ngen::hydrofabric::V2_2GeoPackageHydrofabricReader">
+<area shape="rect" id="Node000001" title="Reads a hydrofabric v2.2 GeoPackage." alt="" coords="26,1321,248,1458"/>
+<area shape="rect" id="Node000002" href="$classngen_1_1hydrofabric_1_1_geo_package_hydrofabric_reader.html" title="Reads a hydrofabric stored as one or two GeoPackages." alt="" coords="30,1028,244,1272"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,1287,140,1321,134,1321,134,1287"/>
+<area shape="rect" id="Node000003" href="$classngen_1_1hydrofabric_1_1_hydrofabric_reader.html" title="Reads the catchment and nexus features of a hydrofabric, whatever format it is stored in." alt="" coords="5,802,151,924"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,938,115,1027,110,1029,91,939"/>
+<area shape="rect" id="Node000004" href="$classngen_1_1geopackage_1_1_geo_package_reader.html" title="Reads feature collections out of the layers of a single GeoPackage." alt="" coords="175,761,371,965"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="227,966,205,1013,200,1011,223,963"/>
+<area shape="rect" id="Node000005" href="$classngen_1_1sqlite_1_1database.html" title=" " alt="" coords="206,408,340,698"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="276,698,276,744,270,744,270,698"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="199,264,347,345"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="276,345,276,391,270,391,270,345"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="211,135,335,201"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="276,216,276,264,270,264,270,216"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="264,5,282,72"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="276,71,276,118,270,118,270,71"/>
+</map>

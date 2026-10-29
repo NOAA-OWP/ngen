@@ -21,5 +21,6 @@ var searchData=
   ['hy_5fhydronexus_18',['HY_HydroNexus',['../class_h_y___hydro_nexus.html',1,'']]],
   ['hy_5findirectposition_19',['HY_IndirectPosition',['../classhy__features_1_1hydrolocation_1_1_h_y___indirect_position.html',1,'hy_features::hydrolocation']]],
   ['hy_5finteriorcatchment_20',['HY_InteriorCatchment',['../class_h_y___interior_catchment.html',1,'']]],
-  ['hy_5fpointhydronexus_21',['HY_PointHydroNexus',['../class_h_y___point_hydro_nexus.html',1,'']]]
+  ['hy_5fpointhydronexus_21',['HY_PointHydroNexus',['../class_h_y___point_hydro_nexus.html',1,'']]],
+  ['hydrofabricreader_22',['HydrofabricReader',['../classngen_1_1hydrofabric_1_1_hydrofabric_reader.html',1,'ngen::hydrofabric']]]
 ];

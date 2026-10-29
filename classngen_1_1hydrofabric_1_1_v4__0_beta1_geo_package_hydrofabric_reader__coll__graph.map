@@ -1,0 +1,30 @@
+<map id="ngen::hydrofabric::V4_0Beta1GeoPackageHydrofabricReader" name="ngen::hydrofabric::V4_0Beta1GeoPackageHydrofabricReader">
+<area shape="rect" id="Node000001" title="Reads a hydrofabric v4.0beta1 GeoPackage." alt="" coords="218,1623,447,1810"/>
+<area shape="rect" id="Node000002" href="$classngen_1_1hydrofabric_1_1_abstract_v4_geo_package_hydrofabric_reader.html" title="Common behavior of the hydrofabric v4 readers." alt="" coords="142,1381,371,1574"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="294,1587,305,1622,300,1624,289,1589"/>
+<area shape="rect" id="Node000003" href="$classngen_1_1hydrofabric_1_1_geo_package_hydrofabric_reader.html" title="Reads a hydrofabric stored as one or two GeoPackages." alt="" coords="150,1088,364,1332"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="259,1347,259,1381,254,1381,254,1347"/>
+<area shape="rect" id="Node000004" href="$classngen_1_1hydrofabric_1_1_hydrofabric_reader.html" title="Reads the catchment and nexus features of a hydrofabric, whatever format it is stored in." alt="" coords="225,862,371,984"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="290,999,277,1088,271,1088,284,999"/>
+<area shape="rect" id="Node000005" href="$classngen_1_1geopackage_1_1_geo_package_reader.html" title="Reads feature collections out of the layers of a single GeoPackage." alt="" coords="5,821,201,1025"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="156,1023,177,1062,182,1071,177,1074,172,1065,151,1026"/>
+<area shape="rect" id="Node000006" href="$classngen_1_1sqlite_1_1database.html" title=" " alt="" coords="50,468,185,758"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="114,758,111,804,106,804,108,758"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="55,316,202,398"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="130,398,127,452,122,452,124,397"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="69,157,194,224"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="133,238,132,317,126,317,128,238"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="151,13,170,79"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="154,65,136,111,132,141,127,140,131,110,149,63"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="221,150,345,231"/>
+<area shape="poly" id="edge14_Node000013_Node000009" title=" " alt="" coords="172,62,216,124,227,136,223,140,212,127,168,65"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="347,309,470,405"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="411,405,411,612,411,1479,404,1545,385,1608,380,1606,398,1544,406,1479,406,612,406,405"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="375,157,442,224"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="411,223,411,292,406,292,406,223"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="352,5,465,87"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="411,102,411,157,406,157,406,102"/>
+<area shape="poly" id="edge12_Node000010_Node000013" title=" " alt="" coords="293,244,300,265,310,283,328,303,349,320,345,324,324,307,306,287,295,267,288,246"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="273,13,293,79"/>
+<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="286,79,286,133,280,133,280,79"/>
+</map>

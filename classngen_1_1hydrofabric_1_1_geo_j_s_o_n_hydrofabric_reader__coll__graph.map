@@ -1,0 +1,9 @@
+<map id="ngen::hydrofabric::GeoJSONHydrofabricReader" name="ngen::hydrofabric::GeoJSONHydrofabricReader">
+<area shape="rect" id="Node000001" title="Reads a hydrofabric stored as a pair of GeoJSON files." alt="" coords="5,336,204,458"/>
+<area shape="rect" id="Node000002" href="$classngen_1_1hydrofabric_1_1_hydrofabric_reader.html" title="Reads the catchment and nexus features of a hydrofabric, whatever format it is stored in." alt="" coords="10,136,156,258"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,272,101,336,96,336,89,273"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="181,164,248,230"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="199,231,149,322,144,320,194,229"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="158,5,270,87"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="217,101,217,164,212,164,212,101"/>
+</map>

@@ -9,6 +9,7 @@ var namespacehy__features =
       [ "catchment", "namespacehy__features_1_1identifiers.html#aedf8312d74d10d30cfed65868e59d6d3", null ],
       [ "coastal", "namespacehy__features_1_1identifiers.html#aa41df7d5d5d4baffe215700861885dc9", null ],
       [ "flowpath", "namespacehy__features_1_1identifiers.html#ab42cf9ae9ac9c6b671487119969250a4", null ],
+      [ "flowpath_v4", "namespacehy__features_1_1identifiers.html#a06a5c61355c0078dcd644acc1b5d5834", null ],
       [ "inland", "namespacehy__features_1_1identifiers.html#a0bf768e8b20b543cb14aa174eceb9844", null ],
       [ "nexus", "namespacehy__features_1_1identifiers.html#ab5df6247e598cd1aca30116b3aa9dbd3", null ],
       [ "separator", "namespacehy__features_1_1identifiers.html#a702251e489d818962d14ae99b9ab4d55", null ],

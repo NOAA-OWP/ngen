@@ -156,6 +156,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aa65dee12e1de6f9b22afade4c9eb15a6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aa65dee12e1de6f9b22afade4c9eb15a6">df_preorder_sort</a> (VertexListGraph &amp;g, OutputIterator result)</td></tr>
 <tr class="memdesc:aa65dee12e1de6f9b22afade4c9eb15a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default named params wrapper (passes no named params) for <a class="el" href="#ac985173c755f102cf1fb27d98c0144cd" title="Pre-order depth first sort function.">df_preorder_sort(VertexListGraph &amp;g, OutputIterator result, const boost::bgl_named_params&lt; P, T, R &gt; &amp;params)</a>  <br /></td></tr>
 <tr class="separator:aa65dee12e1de6f9b22afade4c9eb15a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbff256257d29a2d1664c56032c0d494" id="r_acbff256257d29a2d1664c56032c0d494"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acbff256257d29a2d1664c56032c0d494">attach_sentinels</a> (const <a class="el" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">geojson::GeoJSON</a> &amp;collection, const std::string &amp;label, const bool(*matches_type)(const std::string &amp;))</td></tr>
+<tr class="memdesc:acbff256257d29a2d1664c56032c0d494"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a SentinelFeature downstream of every terminal feature of a given type.  <br /></td></tr>
+<tr class="separator:acbff256257d29a2d1664c56032c0d494"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -279,6 +282,45 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="acbff256257d29a2d1664c56032c0d494" name="acbff256257d29a2d1664c56032c0d494"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbff256257d29a2d1664c56032c0d494">&#9670;&#160;</a></span>attach_sentinels()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void network::attach_sentinels </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">geojson::GeoJSON</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>collection</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>label</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool(*</td>          <td class="paramname"><span class="paramname"><em>matches_type&#160;</em></span>)(const std::string &amp;)&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Attach a SentinelFeature downstream of every terminal feature of a given type. </p>
+<p>Every non-sentinel feature in <code>collection</code> whose id type prefix satisfies <code>matches_type</code> and that has no destination feature yet gains a destination SentinelFeature named "wb-&lt;label&gt;-&lt;feature id&gt;", and the new sentinels are added to <code>collection</code>. The "wb-" prefix is what causes a sentinel to be partitioned as a catchment.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">collection</td><td>Linked feature collection to update in place </td></tr>
+    <tr><td class="paramname">label</td><td>Sentinel naming label, e.g. "TERMINAL_SENTINEL" </td></tr>
+    <tr><td class="paramname">matches_type</td><td>Predicate over an id's type prefix selecting the features to consider </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0a7b71dfec5c8dd524069eed634dc0a3a5">geojson::Sentinel</a>, and <a class="el" href="namespacehy__features_1_1identifiers.html#a702251e489d818962d14ae99b9ab4d55">hy_features::identifiers::separator</a>.</p>
+
+</div>
+</div>
 <a id="aa65dee12e1de6f9b22afade4c9eb15a6" name="aa65dee12e1de6f9b22afade4c9eb15a6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa65dee12e1de6f9b22afade4c9eb15a6">&#9670;&#160;</a></span>df_preorder_sort() <span class="overload">[1/2]</span></h2>
 
@@ -395,7 +437,7 @@ template&lt;typename VertexListGraph , typename OutputIterator , typename P , ty
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacenetwork.html">network</a></li>
-    <li class="footer">Generated on Thu Oct 29 2026 21:45:14 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 29 2026 22:03:13 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

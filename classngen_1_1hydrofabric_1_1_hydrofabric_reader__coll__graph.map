@@ -1,0 +1,3 @@
+<map id="ngen::hydrofabric::HydrofabricReader" name="ngen::hydrofabric::HydrofabricReader">
+<area shape="rect" id="Node000001" title="Reads the catchment and nexus features of a hydrofabric, whatever format it is stored in." alt="" coords="5,5,151,127"/>
+</map>

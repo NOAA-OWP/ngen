@@ -143,16 +143,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8cd10bd12661d65dedafdbe33933154f" id="r_a8cd10bd12661d65dedafdbe33933154f"><td class="memItemLeft" align="right" valign="top">sqlite3 *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cd10bd12661d65dedafdbe33933154f">connection</a> () const noexcept</td></tr>
 <tr class="memdesc:a8cd10bd12661d65dedafdbe33933154f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the originating sqlite3 database pointer.  <br /></td></tr>
 <tr class="separator:a8cd10bd12661d65dedafdbe33933154f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a283b83e398e8cdfafa210b743e3ca2f5" id="r_a283b83e398e8cdfafa210b743e3ca2f5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a283b83e398e8cdfafa210b743e3ca2f5">contains</a> (const std::string &amp;table)</td></tr>
-<tr class="memdesc:a283b83e398e8cdfafa210b743e3ca2f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if SQLite database contains a given table.  <br /></td></tr>
-<tr class="separator:a283b83e398e8cdfafa210b743e3ca2f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a212b069545f6eb8c21f86138605adbfd" id="r_a212b069545f6eb8c21f86138605adbfd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structngen_1_1sqlite_1_1database_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a212b069545f6eb8c21f86138605adbfd">query</a> (const std::string &amp;statement, const boost::span&lt; const std::string &gt; binds={})</td></tr>
-<tr class="memdesc:a212b069545f6eb8c21f86138605adbfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the SQLite Database and get the result.  <br /></td></tr>
-<tr class="separator:a212b069545f6eb8c21f86138605adbfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaef7b9511fac13e57cc0e728acb3d450" id="r_aaef7b9511fac13e57cc0e728acb3d450"><td class="memTemplParams" colspan="2">template&lt;typename... Ts, std::enable_if_t&lt; <a class="el" href="namespacengen_1_1traits.html#ae6d2ffef22133e68c13face5788c0d49">ngen::traits::all_is_convertible</a>&lt; std::string, Ts... &gt;::value, bool &gt;  = true&gt; </td></tr>
-<tr class="memitem:aaef7b9511fac13e57cc0e728acb3d450"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structngen_1_1sqlite_1_1database_1_1iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aaef7b9511fac13e57cc0e728acb3d450">query</a> (const std::string &amp;statement, const Ts &amp;... params)</td></tr>
-<tr class="memdesc:aaef7b9511fac13e57cc0e728acb3d450"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the SQLite Database with a bound statement and get the result.  <br /></td></tr>
-<tr class="separator:aaef7b9511fac13e57cc0e728acb3d450"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a976cc3428e57a24a166d7827677fa3f2" id="r_a976cc3428e57a24a166d7827677fa3f2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a976cc3428e57a24a166d7827677fa3f2">contains</a> (const std::string &amp;table) const</td></tr>
+<tr class="memdesc:a976cc3428e57a24a166d7827677fa3f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if SQLite database contains a given table.  <br /></td></tr>
+<tr class="separator:a976cc3428e57a24a166d7827677fa3f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbd93fe1ea01d3414f1685e10ccef98c" id="r_afbd93fe1ea01d3414f1685e10ccef98c"><td class="memItemLeft" align="right" valign="top">std::set&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afbd93fe1ea01d3414f1685e10ccef98c">columns</a> (const std::string &amp;table) const</td></tr>
+<tr class="memdesc:afbd93fe1ea01d3414f1685e10ccef98c"><td class="mdescLeft">&#160;</td><td class="mdescRight">List the column names of a table.  <br /></td></tr>
+<tr class="separator:afbd93fe1ea01d3414f1685e10ccef98c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac263c47df14691bdd83ac8b90d126447" id="r_ac263c47df14691bdd83ac8b90d126447"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structngen_1_1sqlite_1_1database_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac263c47df14691bdd83ac8b90d126447">query</a> (const std::string &amp;statement, const boost::span&lt; const std::string &gt; binds={}) const</td></tr>
+<tr class="memdesc:ac263c47df14691bdd83ac8b90d126447"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the SQLite Database and get the result.  <br /></td></tr>
+<tr class="separator:ac263c47df14691bdd83ac8b90d126447"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea46c6a903802c80c2857d15aae8fc56" id="r_aea46c6a903802c80c2857d15aae8fc56"><td class="memTemplParams" colspan="2">template&lt;typename... Ts, std::enable_if_t&lt; <a class="el" href="namespacengen_1_1traits.html#ae6d2ffef22133e68c13face5788c0d49">ngen::traits::all_is_convertible</a>&lt; std::string, Ts... &gt;::value, bool &gt;  = true&gt; </td></tr>
+<tr class="memitem:aea46c6a903802c80c2857d15aae8fc56"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structngen_1_1sqlite_1_1database_1_1iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aea46c6a903802c80c2857d15aae8fc56">query</a> (const std::string &amp;statement, const Ts &amp;... params) const</td></tr>
+<tr class="memdesc:aea46c6a903802c80c2857d15aae8fc56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the SQLite Database with a bound statement and get the result.  <br /></td></tr>
+<tr class="separator:aea46c6a903802c80c2857d15aae8fc56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-types" name="pri-types"></a>
 Private Types</h2></td></tr>
@@ -348,6 +351,36 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="afbd93fe1ea01d3414f1685e10ccef98c" name="afbd93fe1ea01d3414f1685e10ccef98c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbd93fe1ea01d3414f1685e10ccef98c">&#9670;&#160;</a></span>columns()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ngen::sqlite::database::columns </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>table</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>List the column names of a table. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">table</td><td>name of table </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>column names, empty if the table does not exist </dd></dl>
+
+<p class="reference">References <a class="el" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a414bfb5bcf89420ad2540faf300cf6b6">ngen::sqlite::database::iterator::done()</a>, <a class="el" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a90879e8863f92c590b3de551f5fd6b87">ngen::sqlite::database::iterator::get()</a>, <a class="el" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a6c3b0d6cb4ca0421cc85ce2f20789cb9">ngen::sqlite::database::iterator::next()</a>, and <a class="el" href="#ac263c47df14691bdd83ac8b90d126447">query()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacengen_1_1hydrofabric.html#a25511348bf36e8157548fe09fcbd5b5f">ngen::hydrofabric::detect_version()</a>, <a class="el" href="namespacengen_1_1hydrofabric.html#a60e6070178ab8dc4532c0b663392b56c">ngen::hydrofabric::get_layer_id_column()</a>, and <a class="el" href="namespacengen_1_1hydrofabric_1_1anonymous__namespace_02_geo_package_hydrofabric_reader_8cpp_03.html#a0a5d07801bd6c52d3169209fe7f6541a">ngen::hydrofabric::anonymous_namespace{GeoPackageHydrofabricReader.cpp}::require_column()</a>.</p>
+
+</div>
+</div>
 <a id="a8cd10bd12661d65dedafdbe33933154f" name="a8cd10bd12661d65dedafdbe33933154f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8cd10bd12661d65dedafdbe33933154f">&#9670;&#160;</a></span>connection()</h2>
 
@@ -376,12 +409,12 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="#ad1f15c4018ecee42964bcaf434dd8a94">conn_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="#a212b069545f6eb8c21f86138605adbfd">query()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#ac263c47df14691bdd83ac8b90d126447">query()</a>, and <a class="el" href="classngen_1_1geopackage_1_1_geo_package_reader.html#a902fd38093b5aba6437d146999453f74">ngen::geopackage::GeoPackageReader::read()</a>.</p>
 
 </div>
 </div>
-<a id="a283b83e398e8cdfafa210b743e3ca2f5" name="a283b83e398e8cdfafa210b743e3ca2f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a283b83e398e8cdfafa210b743e3ca2f5">&#9670;&#160;</a></span>contains()</h2>
+<a id="a976cc3428e57a24a166d7827677fa3f2" name="a976cc3428e57a24a166d7827677fa3f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a976cc3428e57a24a166d7827677fa3f2">&#9670;&#160;</a></span>contains()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -390,7 +423,7 @@ Private Attributes</h2></td></tr>
           <td class="memname">auto ngen::sqlite::database::contains </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>table</em></span></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -406,7 +439,9 @@ Private Attributes</h2></td></tr>
 <dd>
 false if table does not exist </dd></dl>
 
-<p class="reference">References <a class="el" href="#a212b069545f6eb8c21f86138605adbfd">query()</a>.</p>
+<p class="reference">References <a class="el" href="#ac263c47df14691bdd83ac8b90d126447">query()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacengen_1_1hydrofabric.html#aa66b683bafe61eca03e43808d460e99f">ngen::hydrofabric::build_divide_toid_lookup()</a>, <a class="el" href="namespacengen_1_1hydrofabric.html#aa6d2aadd5a907fa7bc9f777a9181cf13">ngen::hydrofabric::detect_hydrofabric()</a>, and <a class="el" href="classngen_1_1geopackage_1_1_geo_package_reader.html#a902fd38093b5aba6437d146999453f74">ngen::geopackage::GeoPackageReader::read()</a>.</p>
 
 </div>
 </div>
@@ -460,8 +495,8 @@ false if table does not exist </dd></dl>
 
 </div>
 </div>
-<a id="a212b069545f6eb8c21f86138605adbfd" name="a212b069545f6eb8c21f86138605adbfd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a212b069545f6eb8c21f86138605adbfd">&#9670;&#160;</a></span>query() <span class="overload">[1/2]</span></h2>
+<a id="ac263c47df14691bdd83ac8b90d126447" name="ac263c47df14691bdd83ac8b90d126447"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac263c47df14691bdd83ac8b90d126447">&#9670;&#160;</a></span>query() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -474,7 +509,7 @@ false if table does not exist </dd></dl>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const boost::span&lt; const std::string &gt;</td>          <td class="paramname"><span class="paramname"><em>binds</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
+          <td class="paramtype">const boost::span&lt; const std::string &gt;</td>          <td class="paramname"><span class="paramname"><em>binds</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;) const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -491,12 +526,12 @@ false if table does not exist </dd></dl>
 
 <p class="reference">References <a class="el" href="#a8cd10bd12661d65dedafdbe33933154f">connection()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="#a283b83e398e8cdfafa210b743e3ca2f5">contains()</a>, and <a class="el" href="#aaef7b9511fac13e57cc0e728acb3d450">query()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacengen_1_1hydrofabric.html#aa66b683bafe61eca03e43808d460e99f">ngen::hydrofabric::build_divide_toid_lookup()</a>, <a class="el" href="#afbd93fe1ea01d3414f1685e10ccef98c">columns()</a>, <a class="el" href="#a976cc3428e57a24a166d7827677fa3f2">contains()</a>, <a class="el" href="#aea46c6a903802c80c2857d15aae8fc56">query()</a>, and <a class="el" href="classngen_1_1geopackage_1_1_geo_package_reader.html#a902fd38093b5aba6437d146999453f74">ngen::geopackage::GeoPackageReader::read()</a>.</p>
 
 </div>
 </div>
-<a id="aaef7b9511fac13e57cc0e728acb3d450" name="aaef7b9511fac13e57cc0e728acb3d450"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaef7b9511fac13e57cc0e728acb3d450">&#9670;&#160;</a></span>query() <span class="overload">[2/2]</span></h2>
+<a id="aea46c6a903802c80c2857d15aae8fc56" name="aea46c6a903802c80c2857d15aae8fc56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea46c6a903802c80c2857d15aae8fc56">&#9670;&#160;</a></span>query() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -514,7 +549,7 @@ template&lt;typename... Ts, std::enable_if_t&lt; <a class="el" href="namespaceng
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Ts &amp;...</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+          <td class="paramtype">const Ts &amp;...</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;) const</td>
         </tr>
       </table>
   </td>
@@ -534,7 +569,7 @@ template&lt;typename... Ts, std::enable_if_t&lt; <a class="el" href="namespaceng
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>SQLite row iterator </dd></dl>
 
-<p class="reference">References <a class="el" href="#a212b069545f6eb8c21f86138605adbfd">query()</a>.</p>
+<p class="reference">References <a class="el" href="#ac263c47df14691bdd83ac8b90d126447">query()</a>.</p>
 
 </div>
 </div>
@@ -573,7 +608,7 @@ template&lt;typename... Ts, std::enable_if_t&lt; <a class="el" href="namespaceng
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacengen.html">ngen</a></li><li class="navelem"><a class="el" href="namespacengen_1_1sqlite.html">sqlite</a></li><li class="navelem"><a class="el" href="classngen_1_1sqlite_1_1database.html">database</a></li>
-    <li class="footer">Generated on Thu Oct 29 2026 21:45:14 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 29 2026 22:03:14 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

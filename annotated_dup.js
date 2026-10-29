@@ -84,7 +84,20 @@ var annotated_dup =
     ] ],
     [ "ngen", "namespacengen.html", [
       [ "geopackage", "namespacengen_1_1geopackage.html", [
+        [ "GeoPackageReader", "classngen_1_1geopackage_1_1_geo_package_reader.html", "classngen_1_1geopackage_1_1_geo_package_reader" ],
         [ "wkb", "structngen_1_1geopackage_1_1wkb.html", "structngen_1_1geopackage_1_1wkb" ]
+      ] ],
+      [ "hydrofabric", "namespacengen_1_1hydrofabric.html", [
+        [ "anonymous_namespace{HydrofabricReaderFactory.cpp}", "namespacengen_1_1hydrofabric_1_1anonymous__namespace_02_hydrofabric_reader_factory_8cpp_03.html", [
+          [ "Identified", "structngen_1_1hydrofabric_1_1anonymous__namespace_02_hydrofabric_reader_factory_8cpp_03_1_1_identified.html", "structngen_1_1hydrofabric_1_1anonymous__namespace_02_hydrofabric_reader_factory_8cpp_03_1_1_identified" ]
+        ] ],
+        [ "AbstractV4GeoPackageHydrofabricReader", "classngen_1_1hydrofabric_1_1_abstract_v4_geo_package_hydrofabric_reader.html", "classngen_1_1hydrofabric_1_1_abstract_v4_geo_package_hydrofabric_reader" ],
+        [ "GeoJSONHydrofabricReader", "classngen_1_1hydrofabric_1_1_geo_j_s_o_n_hydrofabric_reader.html", "classngen_1_1hydrofabric_1_1_geo_j_s_o_n_hydrofabric_reader" ],
+        [ "GeoPackageHydrofabricReader", "classngen_1_1hydrofabric_1_1_geo_package_hydrofabric_reader.html", "classngen_1_1hydrofabric_1_1_geo_package_hydrofabric_reader" ],
+        [ "HydrofabricReader", "classngen_1_1hydrofabric_1_1_hydrofabric_reader.html", "classngen_1_1hydrofabric_1_1_hydrofabric_reader" ],
+        [ "V2_2GeoPackageHydrofabricReader", "classngen_1_1hydrofabric_1_1_v2__2_geo_package_hydrofabric_reader.html", "classngen_1_1hydrofabric_1_1_v2__2_geo_package_hydrofabric_reader" ],
+        [ "V4_0Beta1GeoPackageHydrofabricReader", "classngen_1_1hydrofabric_1_1_v4__0_beta1_geo_package_hydrofabric_reader.html", "classngen_1_1hydrofabric_1_1_v4__0_beta1_geo_package_hydrofabric_reader" ],
+        [ "V4_0GeoPackageHydrofabricReader", "classngen_1_1hydrofabric_1_1_v4__0_geo_package_hydrofabric_reader.html", "classngen_1_1hydrofabric_1_1_v4__0_geo_package_hydrofabric_reader" ]
       ] ],
       [ "serialization", "namespacengen_1_1serialization.html", [
         [ "detail", "namespacengen_1_1serialization_1_1detail.html", [
@@ -196,6 +209,7 @@ var annotated_dup =
     [ "Network_Test", "class_network___test.html", "class_network___test" ],
     [ "Network_Test1", "class_network___test1.html", "class_network___test1" ],
     [ "Network_Test2", "class_network___test2.html", "class_network___test2" ],
+    [ "Network_Test3", "class_network___test3.html", "class_network___test3" ],
     [ "Nexus_Remote_Test", "class_nexus___remote___test.html", "class_nexus___remote___test" ],
     [ "Nexus_Test", "class_nexus___test.html", "class_nexus___test" ],
     [ "NgenSimulation", "class_ngen_simulation.html", "class_ngen_simulation" ],

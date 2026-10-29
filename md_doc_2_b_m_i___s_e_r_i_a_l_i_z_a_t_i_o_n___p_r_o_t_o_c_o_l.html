@@ -99,22 +99,22 @@ $(function(){initNavTree('md_doc_2_b_m_i___s_e_r_i_a_l_i_z_a_t_i_o_n___p_r_o_t_o
   <div class="headertitle"><div class="title">ngen BMI Serialization Protocol</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md120"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md121"></a></p>
 <blockquote class="doxtable">
 <p>&zwj;<b>Status</b>: version 0.2. </p>
 </blockquote>
 <p>The <b>Serialization Protocol</b> is an opt-in convention that lets a BMI model participate in a caller's state checkpoint/restore workflow. A conforming model exposes four reserved BMI variables; the host engine drives them through a save sequence (capture state to bytes) and a restore sequence (write bytes back into state).</p>
 <p>This document specifies what the <b>model author</b> has to provide. For how ngen specifically drives the protocol (wire format, configuration, engine integration, scaling, etc.), see <a class="el" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html"><code>NGEN_SERIALIZATION.md</code></a>.</p>
-<h1><a class="anchor" id="autotoc_md121"></a>
+<h1><a class="anchor" id="autotoc_md122"></a>
 TODO or Not TODO</h1>
-<h2><a class="anchor" id="autotoc_md122"></a>
+<h2><a class="anchor" id="autotoc_md123"></a>
 Conformance is use-case dependent</h2>
 <p>Conformance is required when <b>the user of your model needs checkpoint or restore</b>: a long-running simulation that wants to recover from a crash, a multi-phase workflow that needs to resume from a stored state, or any other use case that depends on capturing model state to bytes and writing those bytes back later. If any of those matter for your model's intended use, you should implement this protocol.</p>
 <p><b>For operational models, serialization support is a requirement.</b></p>
 <p>How a host engine reacts when a model fails to conform is engine-specific. For ngen's behavior, see the "Engine behavior with
 non-conforming models" section of <a class="el" href="md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html"><code>NGEN_SERIALIZATION.md</code></a>.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md124"></a>
+<h1><a class="anchor" id="autotoc_md125"></a>
 Reserved BMI Variables</h1>
 <p>All four reserved names share the <code>ngen::</code> prefix to signal that they belong to the ngen protocol vocabulary and are distinct from the model's own physical inputs and outputs.</p>
 <table class="markdownTable">
@@ -129,12 +129,12 @@ Reserved BMI Variables</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>ngen::serialization_state</code>   </td><td class="markdownTableBodyNone"><code>GetValue</code> / <code>SetValue</code>   </td><td class="markdownTableBodyNone"><code>char</code>   </td><td class="markdownTableBodyNone"><code>ngen::opaque</code>   </td><td class="markdownTableBodyNone">Raw state bytes: read to serialize, write to restore   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md125"></a>
+<h2><a class="anchor" id="autotoc_md126"></a>
 Item list behavior</h2>
 <p>The four reserved names <b>MUST NOT</b> be returned by <code>GetInputVarNames()</code> or <code>GetOutputVarNames()</code>. They are discovered by protocol probing (by name), not by enumeration. This keeps the model's public item list free of protocol plumbing and matches the pattern used by the Mass Balance Protocol's <code>ngen::mass_*</code> variables.</p>
 <p>They MUST however be resolvable by the standard variable-introspection calls: <code>GetVarType</code>, <code>GetVarUnits</code>, <code>GetVarItemsize</code>, and <code>GetVarNbytes</code>.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md127"></a>
+<h1><a class="anchor" id="autotoc_md128"></a>
 Unit Conventions for Non-Physical Variables</h1>
 <p>Three of the four reserved variables are not physical quantities: two are action signals and one is an opaque byte blob. Standard UDUnits strings are not meaningful for these.</p>
 <p>The protocol reserves two <code>ngen::</code>-namespaced unit strings for this purpose:</p>
@@ -145,7 +145,7 @@ Unit Conventions for Non-Physical Variables</h1>
 <p>These non-UDUnits strings exist so protocol machinery and model implementers can disambiguate "semantic signal" from "dimensioned
 quantity". The host engine's support probe validates that a model exposes the exact expected unit strings above; a mismatch is reported as an integration error and disables the protocol for that module.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md129"></a>
+<h1><a class="anchor" id="autotoc_md130"></a>
 Model Developer Implementation Guide</h1>
 <p>A BMI module wishing to support the protocol must:</p>
 <ol type="1">
@@ -163,7 +163,7 @@ Model Developer Implementation Guide</h1>
 </li>
 <li><b><code>SetValue(ngen::serialization_free, _)</code></b>: release the internal buffer. Value is a trigger signal only.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md130"></a>
+<h2><a class="anchor" id="autotoc_md131"></a>
 Width of the size variable</h2>
 <p>The <code>ngen::serialization_size</code> reserved variable carries a <b>64-bit signed integer</b> — both when the model produces it (<code>GetValue</code> after <code>create</code> populates the buffer) and when the host engine hands one back (<code>SetValue</code> setting the incoming payload at restore).</p>
 <p>All four reference models under <code>extern/test_bmi_*</code> are conforming templates. Per-language declaration:</p>
@@ -177,7 +177,7 @@ Width of the size variable</h2>
 </li>
 </ul>
 <p><b>Verifying on your host.</b> The reference implementations under <code>extern/test_bmi_*</code> each include a canary test named <code>simple_path_narrow_int_size_roundtrips</code> that exercises a narrow-int SIZE declaration end-to-end through the host engine's adapter. Model authors can port the pattern to their own test harness; if the canary fails on a target, the narrow-int simple path does not hold there — declare the model's SIZE variable as a full 64-bit integer type instead.</p>
-<h2><a class="anchor" id="autotoc_md131"></a>
+<h2><a class="anchor" id="autotoc_md132"></a>
 Recommended: defensive payload format</h2>
 <p>The protocol shuttles raw bytes without any framing, validation, or schema check of its own. Model implementers are strongly encouraged to encode their own header in the payload — a version number, magic bytes, or both — so that a model's <code>SetValue(state, src)</code> implementation can detect format drift before applying the bytes to the model's computed state. Which policy the model applies on a version mismatch is up to the model: reject the buffer (fail the <code>SetValue</code> call, per the restore sequence above), forward-migrate an older format to the current one, or some other policy. The model's BMI code should attempt to detect drift <em>before</em> applying the bytes rather than silently corrupting state.</p>
 <p>This matters whenever:</p>
@@ -187,7 +187,7 @@ Recommended: defensive payload format</h2>
 <li>Robust fail-fast behavior on a malformed buffer is preferable to best-effort interpretation.</li>
 </ul>
 <p>This is a model-level concern.</p>
-<h2><a class="anchor" id="autotoc_md132"></a>
+<h2><a class="anchor" id="autotoc_md133"></a>
 Constraints and non-goals</h2>
 <ul>
 <li><p class="startli"><code>SetValue(create)</code> and <code>SetValue(free)</code> touch only the internal snapshot buffer; they <b>must not</b> alter the model's computed state. Conceptually this is double-buffering — the model's user-facing state is unaffected by a capture.</p>
@@ -205,7 +205,7 @@ Constraints and non-goals</h2>
 <p class="startli">The support probe validates <code>GetVarUnits</code> against the exact expected strings; BMI adapters use the other introspection calls to marshal values across the language boundary, so all four must resolve correctly.</p>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md133"></a>
+<h2><a class="anchor" id="autotoc_md134"></a>
 Optional: <code>GetValuePtr</code> for zero-copy state access</h2>
 <p><code>GetValuePtr(ngen::serialization_state)</code> is an <b>optional</b> add-on to the protocol. A model that only implements the copy-based <code>GetValue(state, dst)</code> path is fully conforming. Exposing the <code>GetValuePtr</code> variant enables a driver to stream state directly from model-owned memory instead of copying — recommended for large-footprint models where the copy is expensive.</p>
 <p>Models exposing <code>GetValuePtr(ngen::serialization_state)</code> must observe three rules for the pointer to be usable by drivers:</p>
@@ -214,7 +214,7 @@ Optional: <code>GetValuePtr</code> for zero-copy state access</h2>
 <li><b>Read-only.</b> The model owns the bytes and is free to overwrite them as soon as <code>SetValue(free)</code> has completed. The buffer should NOT be updated (by the model or the driver) between the two calls (create and free).</li>
 <li><b>Byte-identical to <code>GetValue(state, dst)</code>.</b> For any given capture, the bytes at the pointer must be identical to what the copy path would have written.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md134"></a>
+<h2><a class="anchor" id="autotoc_md135"></a>
 Recommended: single field list drives save, restore, and size</h2>
 <p>The save path (<code>GetValue(state, dst)</code> fills a buffer from model fields) and the restore path (<code>SetValue(state, src)</code> writes back into the same fields) do inverse operations on the same layout. When those two paths hold their own copies of the field list, adding a field means updating both — and forgetting one is a class of bug that silently corrupts state on restore and is frustrating to diagnose. The byte count reported through <code>ngen::serialization_size</code> is a third copy of the same information: computed separately, it can drift from the fields the same way, and a wrong size corrupts the saved record.</p>
 <p>Model implementers are strongly encouraged to keep the field list in <b>exactly one place</b> and drive save, restore, and size from it. The size pass also gives restore the expected byte count to check the incoming payload against. The mechanism is language-dependent; the invariant is that the enumeration of "which fields participate
@@ -228,7 +228,7 @@ in serialization, in what order, at what size" exists once in the source.</p>
 </ul>
 <p><b>Arrays and containers.</b> Copying a field's bytes works for scalars and fixed-length arrays. For a field whose length can vary, write the length before the elements so restore knows how many to read; the C reference's <code>n_cells</code> / <code>cells</code> pair shows the order. If a length can change during a run, the model's current size can't be used to validate the record. Either check each stored length as it is read, which leaves the model partly restored if one fails, or walk the whole record first to compute its expected size before copying anything into model state.</p>
 <p>An external example the project has drawn from: TOPMODEL uses Boost.Serialization's <code>template&lt;class Archive&gt; void serialize(Archive&amp; ar) { ar &amp; field1; ar &amp; field2; ... }</code> — same pattern, different mechanism.</p>
-<h2><a class="anchor" id="autotoc_md135"></a>
+<h2><a class="anchor" id="autotoc_md136"></a>
 Reference implementations</h2>
 <p><code>extern/test_bmi_c/</code>, <code>extern/test_bmi_cpp/</code>, <code>extern/test_bmi_fortran/</code>, and <code>extern/test_bmi_py/</code> each include a minimal but complete reference implementation suitable as a template for adaptation into real models. </p>
 </div></div><!-- contents -->
@@ -237,7 +237,7 @@ Reference implementations</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Oct 29 2026 21:45:14 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 29 2026 22:03:13 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

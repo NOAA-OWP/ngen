@@ -1,0 +1,15 @@
+<map id="ngen::hydrofabric::HydrofabricReader" name="ngen::hydrofabric::HydrofabricReader">
+<area shape="rect" id="Node000001" title="Reads the catchment and nexus features of a hydrofabric, whatever format it is stored in." alt="" coords="180,5,326,127"/>
+<area shape="rect" id="Node000002" href="$classngen_1_1hydrofabric_1_1_geo_j_s_o_n_hydrofabric_reader.html" title="Reads a hydrofabric stored as a pair of GeoJSON files." alt="" coords="39,236,238,379"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,142,174,238,170,235,216,140"/>
+<area shape="rect" id="Node000003" href="$classngen_1_1hydrofabric_1_1_geo_package_hydrofabric_reader.html" title="Reads a hydrofabric stored as one or two GeoPackages." alt="" coords="262,175,476,440"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="291,140,308,174,303,177,286,142"/>
+<area shape="rect" id="Node000004" href="$classngen_1_1hydrofabric_1_1_abstract_v4_geo_package_hydrofabric_reader.html" title="Common behavior of the hydrofabric v4 readers." alt="" coords="129,488,358,680"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="306,454,290,489,285,487,301,452"/>
+<area shape="rect" id="Node000007" href="$classngen_1_1hydrofabric_1_1_v2__2_geo_package_hydrofabric_reader.html" title="Reads a hydrofabric v2.2 GeoPackage." alt="" coords="382,516,604,652"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="437,452,465,515,460,517,432,454"/>
+<area shape="rect" id="Node000005" href="$classngen_1_1hydrofabric_1_1_v4__0_beta1_geo_package_hydrofabric_reader.html" title="Reads a hydrofabric v4.0beta1 GeoPackage." alt="" coords="5,728,234,936"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="191,695,174,730,169,727,187,692"/>
+<area shape="rect" id="Node000006" href="$classngen_1_1hydrofabric_1_1_v4__0_geo_package_hydrofabric_reader.html" title="Reads a hydrofabric v4.0 GeoPackage." alt="" coords="258,764,480,901"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="301,692,337,763,333,765,297,695"/>
+</map>

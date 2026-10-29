@@ -102,56 +102,52 @@ $(function(){initNavTree('geopackage_8hpp_source.html',''); initResizable(true);
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef NGEN_GEOPACKAGE_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define NGEN_GEOPACKAGE_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;FeatureCollection.hpp&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;ngen_sqlite.hpp&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacengen.html">ngen</a> {</div>
-<div class="foldopen" id="foldopen00008" data-start="{" data-end="}">
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="namespacengen_1_1geopackage.html">    8</a></span><span class="keyword">namespace </span>geopackage {</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><a class="code hl_typedef" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">geojson::geometry</a> <a class="code hl_function" href="namespacengen_1_1geopackage.html#a8d202ec339efee024c4ebe82cd46c1bd">build_geometry</a>(</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structngen_1_1sqlite_1_1database_1_1iterator.html">ngen::sqlite::database::iterator</a>&amp; row,</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">const</span> std::string&amp; geom_col,</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    std::vector&lt;double&gt;&amp; bounding_box</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>);</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><a class="code hl_typedef" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> <a class="code hl_function" href="namespacengen_1_1geopackage.html#a67b01588a1bf9eb4b1d44b839f487dc8">build_properties</a>(</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structngen_1_1sqlite_1_1database_1_1iterator.html">ngen::sqlite::database::iterator</a>&amp; row,</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keyword">const</span> std::string&amp; geom_col</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><a class="code hl_typedef" href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">geojson::Feature</a> <a class="code hl_function" href="namespacengen_1_1geopackage.html#aed98a1830188ba7fa7725311ec4bb8a2">build_feature</a>(</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structngen_1_1sqlite_1_1database_1_1iterator.html">ngen::sqlite::database::iterator</a>&amp; row,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keyword">const</span> std::string&amp; id_col,</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">const</span> std::string&amp; geom_col</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>std::shared_ptr&lt;geojson::FeatureCollection&gt; <a class="code hl_function" href="namespacengen_1_1geopackage.html#a14730a731d79d792b5b4e6ddafca9f6e">read</a>(</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">const</span> std::string&amp; gpkg_path,</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">const</span> std::string&amp; layer,</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; ids</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>} <span class="comment">// namespace geopackage</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;FeatureCollection.hpp&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;ngen_sqlite.hpp&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacengen.html">ngen</a> {</div>
+<div class="foldopen" id="foldopen00010" data-start="{" data-end="}">
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="namespacengen_1_1geopackage.html">   10</a></span><span class="keyword">namespace </span>geopackage {</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><a class="code hl_typedef" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">geojson::geometry</a> <a class="code hl_function" href="namespacengen_1_1geopackage.html#a8d202ec339efee024c4ebe82cd46c1bd">build_geometry</a>(</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structngen_1_1sqlite_1_1database_1_1iterator.html">ngen::sqlite::database::iterator</a>&amp; row,</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">const</span> std::string&amp; geom_col,</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    std::vector&lt;double&gt;&amp; bounding_box</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><a class="code hl_typedef" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> <a class="code hl_function" href="namespacengen_1_1geopackage.html#a67b01588a1bf9eb4b1d44b839f487dc8">build_properties</a>(</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structngen_1_1sqlite_1_1database_1_1iterator.html">ngen::sqlite::database::iterator</a>&amp; row,</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">const</span> std::string&amp; geom_col</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><a class="code hl_typedef" href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">geojson::Feature</a> <a class="code hl_function" href="namespacengen_1_1geopackage.html#a230d729bb95c95e75dadffd2144d4b18">build_feature</a>(</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structngen_1_1sqlite_1_1database_1_1iterator.html">ngen::sqlite::database::iterator</a>&amp; row,</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>,</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">const</span> std::string&amp; geom_col,</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <a class="code hl_typedef" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> properties</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>} <span class="comment">// namespace geopackage</span></div>
 </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>} <span class="comment">// namespace ngen</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_GEOPACKAGE_H</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>} <span class="comment">// namespace ngen</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_GEOPACKAGE_H</span></div>
 <div class="ttc" id="anamespacegeojson_html_a68bb7aef6c1605a4c3662f936fc4164f"><div class="ttname"><a href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">geojson::geometry</a></div><div class="ttdeci">boost::variant&lt; coordinate_t, linestring_t, polygon_t, multipoint_t, multilinestring_t, multipolygon_t &gt; geometry</div><div class="ttdef"><b>Definition</b> JSONGeometry.hpp:66</div></div>
 <div class="ttc" id="anamespacegeojson_html_a6eabe3c674d580523aa920438fb82d34"><div class="ttname"><a href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a></div><div class="ttdeci">std::map&lt; std::string, JSONProperty &gt; PropertyMap</div><div class="ttdoc">Shorthand for a mapping between strings and properties.</div><div class="ttdef"><b>Definition</b> JSONProperty.hpp:21</div></div>
 <div class="ttc" id="anamespacegeojson_html_ab724970a20dff6100b94e25491292748"><div class="ttname"><a href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">geojson::Feature</a></div><div class="ttdeci">std::shared_ptr&lt; FeatureBase &gt; Feature</div><div class="ttdoc">An easy name for a smart pointer for FeatureBase and its children.</div><div class="ttdef"><b>Definition</b> FeatureBase.hpp:34</div></div>
-<div class="ttc" id="anamespacengen_1_1geopackage_html_a14730a731d79d792b5b4e6ddafca9f6e"><div class="ttname"><a href="namespacengen_1_1geopackage.html#a14730a731d79d792b5b4e6ddafca9f6e">ngen::geopackage::read</a></div><div class="ttdeci">std::shared_ptr&lt; geojson::FeatureCollection &gt; read(const std::string &amp;gpkg_path, const std::string &amp;layer, const std::vector&lt; std::string &gt; &amp;ids)</div><div class="ttdoc">Build a feature collection from a GPKG layer.</div><div class="ttdef"><b>Definition</b> read.cpp:18</div></div>
+<div class="ttc" id="anamespacengen_1_1geopackage_html_a230d729bb95c95e75dadffd2144d4b18"><div class="ttname"><a href="namespacengen_1_1geopackage.html#a230d729bb95c95e75dadffd2144d4b18">ngen::geopackage::build_feature</a></div><div class="ttdeci">geojson::Feature build_feature(const ngen::sqlite::database::iterator &amp;row, const std::string &amp;id, const std::string &amp;geom_col, geojson::PropertyMap properties)</div><div class="ttdoc">Build a feature from a GPKG table row.</div><div class="ttdef"><b>Definition</b> feature.cpp:13</div></div>
 <div class="ttc" id="anamespacengen_1_1geopackage_html_a67b01588a1bf9eb4b1d44b839f487dc8"><div class="ttname"><a href="namespacengen_1_1geopackage.html#a67b01588a1bf9eb4b1d44b839f487dc8">ngen::geopackage::build_properties</a></div><div class="ttdeci">geojson::PropertyMap build_properties(const ngen::sqlite::database::iterator &amp;row, const std::string &amp;geom_col)</div><div class="ttdoc">Build properties from GeoPackage table columns.</div><div class="ttdef"><b>Definition</b> properties.cpp:22</div></div>
 <div class="ttc" id="anamespacengen_1_1geopackage_html_a8d202ec339efee024c4ebe82cd46c1bd"><div class="ttname"><a href="namespacengen_1_1geopackage.html#a8d202ec339efee024c4ebe82cd46c1bd">ngen::geopackage::build_geometry</a></div><div class="ttdeci">geojson::geometry build_geometry(const ngen::sqlite::database::iterator &amp;row, const std::string &amp;geom_col, std::vector&lt; double &gt; &amp;bounding_box)</div><div class="ttdoc">Build a geometry object from GeoPackage WKB.</div><div class="ttdef"><b>Definition</b> geometry.cpp:6</div></div>
-<div class="ttc" id="anamespacengen_1_1geopackage_html_aed98a1830188ba7fa7725311ec4bb8a2"><div class="ttname"><a href="namespacengen_1_1geopackage.html#aed98a1830188ba7fa7725311ec4bb8a2">ngen::geopackage::build_feature</a></div><div class="ttdeci">geojson::Feature build_feature(const ngen::sqlite::database::iterator &amp;row, const std::string &amp;id_col, const std::string &amp;geom_col)</div><div class="ttdoc">Build a feature from a GPKG table row.</div><div class="ttdef"><b>Definition</b> feature.cpp:13</div></div>
 <div class="ttc" id="anamespacengen_html"><div class="ttname"><a href="namespacengen.html">ngen</a></div><div class="ttdef"><b>Definition</b> DomainLayer.hpp:13</div></div>
-<div class="ttc" id="astructngen_1_1sqlite_1_1database_1_1iterator_html"><div class="ttname"><a href="structngen_1_1sqlite_1_1database_1_1iterator.html">ngen::sqlite::database::iterator</a></div><div class="ttdef"><b>Definition</b> ngen_sqlite.hpp:43</div></div>
+<div class="ttc" id="astructngen_1_1sqlite_1_1database_1_1iterator_html"><div class="ttname"><a href="structngen_1_1sqlite_1_1database_1_1iterator.html">ngen::sqlite::database::iterator</a></div><div class="ttdef"><b>Definition</b> ngen_sqlite.hpp:44</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_06d176921b42a75382266fc4d2128276.html">geopackage</a></li><li class="navelem"><b>geopackage.hpp</b></li>
-    <li class="footer">Generated on Thu Oct 29 2026 21:45:13 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 29 2026 22:03:13 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

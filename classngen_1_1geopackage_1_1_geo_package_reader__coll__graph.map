@@ -1,0 +1,11 @@
+<map id="ngen::geopackage::GeoPackageReader" name="ngen::geopackage::GeoPackageReader">
+<area shape="rect" id="Node000001" title="Reads feature collections out of the layers of a single GeoPackage." alt="" coords="5,761,201,965"/>
+<area shape="rect" id="Node000002" href="$classngen_1_1sqlite_1_1database.html" title=" " alt="" coords="36,408,170,698"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,698,106,744,100,744,100,698"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="29,264,177,345"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,345,106,391,100,391,100,345"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="41,135,166,201"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="106,216,106,264,100,264,100,216"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="94,5,112,72"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="106,71,106,118,100,118,100,71"/>
+</map>

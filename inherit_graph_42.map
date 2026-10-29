@@ -1,3 +1,15 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structngen_1_1_layer_description.html" title="A simple structure to hold meta data related to a computational layer." alt="" coords="5,5,158,31"/>
+<area shape="rect" id="Node000000" href="$classngen_1_1hydrofabric_1_1_hydrofabric_reader.html" title="Reads the catchment and nexus features of a hydrofabric, whatever format it is stored in." alt="" coords="5,53,134,94"/>
+<area shape="rect" id="Node000001" href="$classngen_1_1hydrofabric_1_1_geo_j_s_o_n_hydrofabric_reader.html" title="Reads a hydrofabric stored as a pair of GeoJSON files." alt="" coords="189,20,378,60"/>
+<area shape="poly" id="edge86_Node000000_Node000001" title=" " alt="" coords="149,58,188,52,189,57,149,63"/>
+<area shape="rect" id="Node000002" href="$classngen_1_1hydrofabric_1_1_geo_package_hydrofabric_reader.html" title="Reads a hydrofabric stored as one or two GeoPackages." alt="" coords="182,85,385,126"/>
+<area shape="poly" id="edge87_Node000000_Node000002" title=" " alt="" coords="150,82,182,87,181,93,149,88"/>
+<area shape="rect" id="Node000003" href="$classngen_1_1hydrofabric_1_1_abstract_v4_geo_package_hydrofabric_reader.html" title="Common behavior of the hydrofabric v4 readers." alt="" coords="436,41,663,97"/>
+<area shape="poly" id="edge88_Node000002_Node000003" title=" " alt="" coords="400,87,435,82,436,87,401,92"/>
+<area shape="rect" id="Node000006" href="$classngen_1_1hydrofabric_1_1_v2__2_geo_package_hydrofabric_reader.html" title="Reads a hydrofabric v2.2 GeoPackage." alt="" coords="433,121,666,162"/>
+<area shape="poly" id="edge91_Node000002_Node000006" title=" " alt="" coords="401,118,433,123,432,128,400,124"/>
+<area shape="rect" id="Node000004" href="$classngen_1_1hydrofabric_1_1_v4__0_beta1_geo_package_hydrofabric_reader.html" title="Reads a hydrofabric v4.0beta1 GeoPackage." alt="" coords="718,5,944,61"/>
+<area shape="poly" id="edge89_Node000003_Node000004" title=" " alt="" coords="679,50,717,45,718,50,679,55"/>
+<area shape="rect" id="Node000005" href="$classngen_1_1hydrofabric_1_1_v4__0_geo_package_hydrofabric_reader.html" title="Reads a hydrofabric v4.0 GeoPackage." alt="" coords="714,85,948,126"/>
+<area shape="poly" id="edge90_Node000003_Node000005" title=" " alt="" coords="679,83,714,88,714,93,679,88"/>
 </map>

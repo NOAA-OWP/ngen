@@ -104,9 +104,22 @@ var hierarchy =
     [ "network::VertexProperty", "structnetwork_1_1_vertex_property.html", null ],
     [ "Network_Test", "class_network___test.html", [
       [ "Network_Test1", "class_network___test1.html", null ],
-      [ "Network_Test2", "class_network___test2.html", null ]
+      [ "Network_Test2", "class_network___test2.html", null ],
+      [ "Network_Test3", "class_network___test3.html", null ]
     ] ],
+    [ "ngen::geopackage::GeoPackageReader", "classngen_1_1geopackage_1_1_geo_package_reader.html", null ],
     [ "ngen::geopackage::wkb", "structngen_1_1geopackage_1_1wkb.html", null ],
+    [ "ngen::hydrofabric::anonymous_namespace{HydrofabricReaderFactory.cpp}::Identified", "structngen_1_1hydrofabric_1_1anonymous__namespace_02_hydrofabric_reader_factory_8cpp_03_1_1_identified.html", null ],
+    [ "ngen::hydrofabric::HydrofabricReader", "classngen_1_1hydrofabric_1_1_hydrofabric_reader.html", [
+      [ "ngen::hydrofabric::GeoJSONHydrofabricReader", "classngen_1_1hydrofabric_1_1_geo_j_s_o_n_hydrofabric_reader.html", null ],
+      [ "ngen::hydrofabric::GeoPackageHydrofabricReader", "classngen_1_1hydrofabric_1_1_geo_package_hydrofabric_reader.html", [
+        [ "ngen::hydrofabric::AbstractV4GeoPackageHydrofabricReader", "classngen_1_1hydrofabric_1_1_abstract_v4_geo_package_hydrofabric_reader.html", [
+          [ "ngen::hydrofabric::V4_0Beta1GeoPackageHydrofabricReader", "classngen_1_1hydrofabric_1_1_v4__0_beta1_geo_package_hydrofabric_reader.html", null ],
+          [ "ngen::hydrofabric::V4_0GeoPackageHydrofabricReader", "classngen_1_1hydrofabric_1_1_v4__0_geo_package_hydrofabric_reader.html", null ]
+        ] ],
+        [ "ngen::hydrofabric::V2_2GeoPackageHydrofabricReader", "classngen_1_1hydrofabric_1_1_v2__2_geo_package_hydrofabric_reader.html", null ]
+      ] ]
+    ] ],
     [ "ngen::Layer", "classngen_1_1_layer.html", [
       [ "ngen::DomainLayer", "classngen_1_1_domain_layer.html", null ],
       [ "ngen::SurfaceLayer", "classngen_1_1_surface_layer.html", null ]
@@ -194,6 +207,7 @@ var hierarchy =
       [ "JSONProperty_Test", "class_j_s_o_n_property___test.html", null ],
       [ "MultiLayerParserTest", "class_multi_layer_parser_test.html", null ],
       [ "Network_Test2", "class_network___test2.html", null ],
+      [ "Network_Test3", "class_network___test3.html", null ],
       [ "Nexus_Remote_Test", "class_nexus___remote___test.html", null ],
       [ "Nexus_Test", "class_nexus___test.html", null ],
       [ "ReservoirKernelTest", "class_reservoir_kernel_test.html", null ],

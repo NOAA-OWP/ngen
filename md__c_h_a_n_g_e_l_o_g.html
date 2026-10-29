@@ -108,21 +108,31 @@ Added</h3>
 <li>An <code>output</code> configuration block for realization configs: <code>root</code>, per-domain (<code>catchment</code>/<code>nexus</code>) <code>enable</code>/<code>format</code>/<code>grouping</code>/<code>rank_subdir</code>, and a global value <code>precision</code>. See <a href="doc/REALIZATION_CONFIGURATION.md#output">Realization Configuration</a>.</li>
 <li>Catchment output routed through a pluggable output manager (CSV backend), with an optional <code>grouping: per_formulation</code> that aggregates a formulation's catchments into one file with a leading <code>catchment_id</code> column (columns uniform per file by construction).</li>
 <li>Per-domain <code>rank_subdir</code> option placing each MPI rank's CSV output under a <code>rank_&lt;N&gt;/</code> subdirectory (applied automatically for <code>per_formulation</code> under MPI).</li>
+<li>Initial hydrofabric v4.0 support, alongside the existing v2.2 and v4.0beta1 schemas.</li>
+<li>A <code>HydrofabricReader</code> abstraction covering both supported hydrofabric formats, with GeoJSON and GeoPackage implementations selected by <code>make_hydrofabric_reader()</code>. Both drivers now obtain their catchment and nexus features through it instead of dispatching on the file extension themselves.</li>
 </ul>
 <h3><a class="anchor" id="autotoc_md77"></a>
+Changed</h3>
+<ul>
+<li>A GeoPackage with no <code>nexus</code> layer is no longer read as a hydrofabric. It was previously treated as v2.2 and read anyway; it is now reported as not a hydrofabric. Reading such a file as a plain GeoPackage of arbitrary layers is still supported, through <code><a class="el" href="classngen_1_1geopackage_1_1_geo_package_reader.html" title="Reads feature collections out of the layers of a single GeoPackage.">ngen::geopackage::GeoPackageReader</a></code>, which carries no hydrofabric knowledge at all.</li>
+<li>Catchment and nexus data paths must name the same format. Passing a GeoPackage for one and a GeoJSON file for the other is now an error rather than being honored per path.</li>
+<li>Hydrofabric data files are recognized by their contents rather than their file names. A GeoPackage is identified by the SQLite header it begins with, so it is read as one whatever it is called, and anything else is read as GeoJSON. The previous test required a name ending in a lowercase <code>gpkg</code>, which missed <code>.GPKG</code>, matched unrelated names ending in those letters, and — because loading a subdivided hydrofabric under MPI appends a rank suffix to both data paths — missed every GeoPackage in that mode.</li>
+<li>The <code>INFO: hydrofabric detected: ...</code> line now reports for either format and fires exactly once per run. GeoJSON hydrofabrics previously reported nothing, and a single-file GeoPackage hydrofabric reported twice, once per file opened.</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md78"></a>
 Deprecated</h3>
 <ul>
 <li>Top-level realization config keys <code>output_root</code>, <code>disable_catchment_output</code>, and <code>per_formulation_nexus_files</code>, superseded by the <code>output</code> block (still honored when no <code>output</code> block is present).</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md78"></a>
+<h3><a class="anchor" id="autotoc_md79"></a>
 Removed</h3>
 <ul>
 <li>The <code>output_precision</code> formulation parameter in realization configs. It has had no effect since catchment output moved to the output manager; text precision is the <code>output</code> block's <code>precision</code> value.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md79"></a>
+<h3><a class="anchor" id="autotoc_md80"></a>
 Fixed</h3>
 <ul>
-<li>Nothing. </li>
+<li>Hydrofabric schema detection now reads each layer's columns from the file that holds it. A v4.0 hydrofabric split across a catchment file and a nexus file was previously detected as v4.0beta1, because <code>divides.flowpath_toid</code> &ndash; the column that separates the two &ndash; is absent from the nexus file; its divides were then joined through a <code>flowpaths</code> table that need not be there, leaving them with no downstream reference. </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -130,7 +140,7 @@ Fixed</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Oct 29 2026 21:45:14 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Oct 29 2026 22:03:13 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

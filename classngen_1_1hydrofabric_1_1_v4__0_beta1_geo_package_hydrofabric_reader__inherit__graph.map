@@ -1,0 +1,9 @@
+<map id="ngen::hydrofabric::V4_0Beta1GeoPackageHydrofabricReader" name="ngen::hydrofabric::V4_0Beta1GeoPackageHydrofabricReader">
+<area shape="rect" id="Node000001" title="Reads a hydrofabric v4.0beta1 GeoPackage." alt="" coords="5,728,234,936"/>
+<area shape="rect" id="Node000002" href="$classngen_1_1hydrofabric_1_1_abstract_v4_geo_package_hydrofabric_reader.html" title="Common behavior of the hydrofabric v4 readers." alt="" coords="5,488,234,680"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,696,122,728,117,728,117,696"/>
+<area shape="rect" id="Node000003" href="$classngen_1_1hydrofabric_1_1_geo_package_hydrofabric_reader.html" title="Reads a hydrofabric stored as one or two GeoPackages." alt="" coords="13,175,227,440"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,454,122,488,117,488,117,454"/>
+<area shape="rect" id="Node000004" href="$classngen_1_1hydrofabric_1_1_hydrofabric_reader.html" title="Reads the catchment and nexus features of a hydrofabric, whatever format it is stored in." alt="" coords="47,5,193,127"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="122,142,122,176,117,176,117,142"/>
+</map>
