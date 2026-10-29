@@ -804,7 +804,7 @@ end function test_finalize
       size = sizeof(grids(2)%units(1))
       bmi_status = BMI_SUCCESS
     case("grid_1_origin")
-      size = sizeof(grids(2)%units(1))
+      size = sizeof(grids(2)%origin(1))
       bmi_status = BMI_SUCCESS
     case("grid_2_shape")
       size = sizeof(grids(3)%shape(1))
@@ -816,7 +816,7 @@ end function test_finalize
       size = sizeof(grids(3)%units(1))
       bmi_status = BMI_SUCCESS
     case("grid_2_origin")
-      size = sizeof(grids(3)%units(1))
+      size = sizeof(grids(3)%origin(1))
       bmi_status = BMI_SUCCESS
     case("INPUT_VAR_1")
        size = sizeof(this%model%input_var_1)
