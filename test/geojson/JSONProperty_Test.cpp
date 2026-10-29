@@ -85,6 +85,10 @@ TEST_F(JSONProperty_Test, string_property_test) {
     geojson::JSONProperty string_property("string", "test_string");
     ASSERT_EQ(string_property.get_type(), geojson::PropertyType::String);
     ASSERT_EQ(string_property.as_string(), "test_string");
+
+    const geojson::JSONProperty empty_string_property("property", "");
+    ASSERT_EQ(empty_string_property.get_type(), geojson::PropertyType::String);
+    ASSERT_EQ(empty_string_property.as_string(), "");
 }
 
 TEST_F(JSONProperty_Test, boolean_property_test) {
@@ -105,6 +109,14 @@ TEST_F(JSONProperty_Test, object_property_test) {
     ASSERT_EQ(object_property.get_values().size(), 4);
     ASSERT_EQ(object_property.at("natural").get_type(), geojson::PropertyType::Natural);
     ASSERT_EQ(object_property.at("natural").as_natural_number(), 4);
+
+    const geojson::PropertyMap copy_list_object = {
+        {"natural", {"natural", 9}},
+        {"real", {"real", 18.0}},
+        {"string", {"string", "other_test_string"}},
+        {"empty_string", {"empty_string", ""}},
+        {"boolean", {"boolean", false}}
+    };
 }
 
 TEST_F(JSONProperty_Test, list_property_test) {
