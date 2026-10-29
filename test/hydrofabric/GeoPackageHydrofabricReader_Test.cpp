@@ -5,7 +5,7 @@
 
 #include "GeoPackageHydrofabricReader.hpp"
 #include "HydrofabricReaderFactory.hpp"
-#include "FileChecker.h"
+#include "utilities/FileChecker.h"
 #include "fixture_builders.hpp"
 
 namespace fixtures = ngen::hydrofabric::fixtures;
