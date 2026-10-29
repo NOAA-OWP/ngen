@@ -446,6 +446,8 @@ endmacro()
 # and does not affect the virtual environment used.
 if(DEFINED ENV{VIRTUAL_ENV})
     set(NGEN_CONFIGURED_VENV "$ENV{VIRTUAL_ENV}")
+elseif(DEFINED ENV{CONDA_PREFIX})
+    set(NGEN_CONFIGURED_VENV "$ENV{CONDA_PREFIX}")
 else()
     set(NGEN_CONFIGURED_VENV "<none>")
 endif()
@@ -465,6 +467,11 @@ ngen_multiline_message(
 "  C Flags: ${CMAKE_C_FLAGS}"
 "  CXX Compiler: ${CMAKE_CXX_COMPILER}"
 "  CXX Flags: ${CMAKE_CXX_FLAGS}")
+
+if(DEFINED ENV{CMAKE_BUILD_PARALLEL_LEVEL})
+    message(STATUS "  Parallel level: $ENV{CMAKE_BUILD_PARALLEL_LEVEL}")
+endif()
+
 ngen_dependent_multiline_message(NGEN_HAS_GIT_DIR
 "  Git Commit ID: ${NGEN_GIT_COMMIT}")
 ngen_multiline_message(

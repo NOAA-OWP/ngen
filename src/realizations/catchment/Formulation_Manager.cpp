@@ -346,27 +346,209 @@ std::shared_ptr<Catchment_Formulation> Formulation_Manager::construct_missing_fo
     return missing_formulation;
 }
 
-forcing_params Formulation_Manager::get_forcing_params(const geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
-    std::string path = "";
-    if(forcing_prop_map.count("path") != 0){
+namespace {
+    /**
+     * Wrap `closedir` in a deleter to avoid GCC's ignored-attributes warning for `decltype(&closedir)`
+     */
+    struct DirectoryCloser {
+        void operator()(DIR* dir) const {
+            ::closedir(dir);
+        }
+    };
+    /**
+     * A self-closing pointer to a directory that may be operated upon
+     */
+    using DirectoryPointer = std::unique_ptr<DIR, DirectoryCloser>;
+
+    /**
+     * A mapping of placeholder tokens to the values that should serve as their replacements
+     */
+    using PlaceholderContext = std::vector<std::pair<std::string, std::string>>;
+
+    /** @brief Test to see if a directory entry at a path is either a regular file or a symlink that
+     * points at a file
+     *
+     * @param file_path The path to the entry of interest
+     * @param entry The loaded/assigned directory entry
+     * @return Whether the received entry is a regular file or a link to a regular file
+     * @throws std::invalid_argument if a null directory entry was passed
+     * @throws std::runtime_error if the file could not be called with stat
+     */
+    bool is_regular_file_or_symlink_target(const std::string& file_path, const dirent* entry) {
+        if (entry == nullptr) {
+            throw std::invalid_argument(
+                "Cannot test if '" + file_path + "' is a regular file - no directory pointer was passed"
+            );
+        }
+    #ifdef _DIRENT_HAVE_D_TYPE
+        if (entry->d_type == DT_REG) {
+            return true;
+        }
+
+        if (entry->d_type != DT_UNKNOWN && entry->d_type != DT_LNK) {
+            return false;
+        }
+    #endif
+        struct stat file_stat{};
+        if (stat((file_path + entry->d_name).c_str(), &file_stat) != 0) {
+            throw std::runtime_error(
+                "Could not stat file '" + file_path + entry->d_name + "': " + strerror(errno)
+            );
+        }
+        return S_ISREG(file_stat.st_mode);
+    }
+
+    /** @brief Get a self-closing pointer to a directory
+     *
+     * @see https://www.gnu.org/software/libc/manual/html_node/Opening-a-Directory.html#Opening-a-Directory
+     *
+     * @note: The following errors prevent any attempt to retry the opening process: ENOENT, ENXIO, EACCES, EPERM, ENOTDIR, EMFILE, ENFILE
+     *
+     * @param path Where to look for a directory to open
+     * @param wait_seconds The number of seconds to wait between attempts to open the directory. Must be 1 or greater
+     * @param maximum_attempts The maximum number of times to get an open directory. Must be 1 or greater
+     * @return A self-closing pointer to a directory handle
+     * @throws std::invalid_argument if the wait_seconds is less than 1
+     * @throws std::invalid_argument if the maximum_attempts is less than 1
+     * @throws std::runtime_error if an error occurred while attempting to read the directory
+     * @throws std::runtime_error if the maximum_attempts was reached before successfully connecting to the directory
+     */
+    DirectoryPointer open_directory(
+        const std::string& path,
+        const unsigned int wait_seconds = 2,
+        const unsigned int maximum_attempts = 5
+    ) {
+        if (wait_seconds < 1) {
+            throw std::invalid_argument(
+                "Cannot get a pointer to '" +
+                    path +
+                    "' - the seconds to wait between attempts must be at least 1"
+                );
+        }
+
+        if (maximum_attempts < 1) {
+            throw std::invalid_argument(
+                "Cannot get a pointer to '" +
+                path +
+                "' - There must be at least one attempt to search"
+            );
+        }
+
+        const char* search_path = path.c_str();
+        DirectoryPointer directory_pointer(nullptr, DirectoryCloser{});
+        int error_code = 0;
+        int attempt = 0;
+
+        for (; attempt < maximum_attempts && !directory_pointer; attempt++) {
+            directory_pointer.reset(opendir(search_path));
+            if (directory_pointer) {
+                return directory_pointer;
+            }
+
+            error_code = errno;
+
+            switch (error_code) {
+            case ENOENT:    // No such file or directory
+            case ENXIO:     // No such device or index
+            case EACCES:    // Permission Denied
+            case EPERM:     // Operation not permitted
+            case ENOTDIR:   // Not a directory
+            case EMFILE:    // Too many open files
+            case ENFILE:    // Too many open files in system
+                throw std::runtime_error(
+                    "Error encountered while opening the forcing data directory at '" +
+                    path + "': " +
+                    std::strerror(error_code)
+                );
+            default:
+                break;
+            }
+
+            if (attempt + 1 < maximum_attempts) {
+                sleep(wait_seconds);
+            }
+        }
+
+        throw std::runtime_error(
+            "Error opening forcing data dir '" +
+                path +
+                "' after " +
+                std::to_string(attempt) +
+                " attempts: " +
+                std::strerror(error_code)
+        );
+    }
+
+    /** @brief Replace all placeholders in a given file pattern with a paired identifier and return a regex ready to match on it
+     *
+     * TODO: Integrate with the path_tokens resolution functionality
+     *
+     * @param file_pattern A configured pattern to match on when searching for a file
+     * @param context A set of placeholders and values that need to be inserted into the file pattern
+     * @return A regular expression ready to search for files based on path pattern with all placeholders filled with appropriate values
+     */
+    std::pair<std::regex, std::string> create_file_pattern_matcher(
+        std::string file_pattern,
+        const PlaceholderContext& context
+    ) {
+        constexpr std::string_view REGEX_SPECIAL_CHARACTERS = R"(\.^$|()[]{}*+?)";
+
+        for (const auto& [placeholder, value] : context) {
+            std::string escaped_identifier;
+            escaped_identifier.reserve(value.size() * 2);
+
+            for (const char character : value) {
+                if (REGEX_SPECIAL_CHARACTERS.find(character) != std::string::npos) {
+                    escaped_identifier += '\\';
+                }
+                escaped_identifier += character;
+            }
+
+            std::size_t position = 0;
+
+            while ((position = file_pattern.find(placeholder, position)) != std::string::npos) {
+                file_pattern.replace(position, placeholder.length(), escaped_identifier);
+                position += escaped_identifier.size();
+            }
+        }
+
+        return {std::regex(file_pattern), file_pattern};
+    }
+} // namespace for get_forcing_params helpers
+
+forcing_params Formulation_Manager::get_forcing_params(
+    const geojson::PropertyMap &forcing_prop_map,
+    std::string identifier,
+    simulation_time_params &simulation_time_config
+) {
+    std::string path;
+    if(forcing_prop_map.count("path") > 0){
         path = forcing_prop_map.at("path").as_string();
     }
+
     std::string provider;
-    if(forcing_prop_map.count("provider") != 0){
+    if(forcing_prop_map.count("provider") > 0){
         provider = forcing_prop_map.at("provider").as_string();
     }
+
+    /**
+    * You can exit early when there isn't a file_pattern since all the following code uses the
+    * file pattern to search for an appropriate file
+    */
     if (forcing_prop_map.count("file_pattern") == 0) {
-        return forcing_params(
+        return {
             path,
             provider,
             simulation_time_config.start_time,
             simulation_time_config.end_time
-        );
+        };
     }
 
     if (path.empty()) {
-        throw std::runtime_error("Error with NGEN config - 'path' in forcing params must be set to a "
-                                 "non-empty parent directory path when 'file_pattern' is used.");
+        throw std::runtime_error(
+            "Error with NGEN config - 'path' in forcing params must be set to a "
+            "non-empty parent directory path when 'file_pattern' is used."
+        );
     }
 
     // Since we are given a pattern, we need to identify the directory and pull out anything that matches the pattern
@@ -374,116 +556,67 @@ forcing_params Formulation_Manager::get_forcing_params(const geojson::PropertyMa
         path += "/";
     }
 
-    std::string filepattern = forcing_prop_map.at("file_pattern").as_string();
+    const std::string filepattern = forcing_prop_map.at("file_pattern").as_string();
 
-    int id_index = filepattern.find("{{id}}");
-
-    // If an index for '{{id}}' was found, we can count on that being where the id for this realization can be found.
-    //     For instance, if we have a pattern of '.*{{id}}_14_15.csv' and this is named 'cat-87',
-    //     this will match on 'stuff_example_cat-87_14_15.csv'
-    if (id_index != std::string::npos) {
-        filepattern = filepattern.replace(id_index, sizeof("{{id}}") - 1, identifier);
-    }
+    const PlaceholderContext placeholder_context = {
+        {"{{id}}", identifier}
+    };
 
     // Create a regular expression used to identify proper file names
-    std::regex pattern(filepattern);
+    auto [pattern_matcher, pattern_string] = create_file_pattern_matcher(
+        filepattern,
+        placeholder_context
+    );
 
-    // A stream providing the functions necessary for evaluating a directory:
-    //    https://www.gnu.org/software/libc/manual/html_node/Opening-a-Directory.html#Opening-a-Directory
-    DIR *directory = nullptr;
+    // A stream providing the functions necessary for evaluating a directory
+    const DirectoryPointer pointer_to_directory = open_directory(path);
 
-    // structure representing the member of a directory: https://www.gnu.org/software/libc/manual/html_node/Directory-Entries.html
-    struct dirent *entry = nullptr;
+    // structure representing the member of a directory:
+    // https://www.gnu.org/software/libc/manual/html_node/Directory-Entries.html
+    dirent *entry = nullptr;
+    int invalid_matches = 0;
+    while (true) {
+        errno = 0;
 
-    // Attempt to open the directory for evaluation
-    directory = opendir(path.c_str());
-    // Allow for a few retries in certain failure situations
-    size_t attemptCount = 0;
-    std::string errMsg;
-    while (directory == nullptr && attemptCount++ < 5) {
-        // For several error codes, we should break immediately and not retry
-        if (errno == ENOENT) {
-            errMsg = "No such file or directory.";
+        // Read the next entry in the opened directory
+        entry = readdir(pointer_to_directory.get());
+
+        // If nothing was read, there was either an error or there's nothing else to read
+        if (entry == nullptr) {
+            if (errno != 0) {
+                throw std::runtime_error(
+                    "Error reading the forcing directory '" +
+                    path + "': " +
+                    std::strerror(errno)
+                );
+            }
             break;
         }
-        if (errno == ENXIO) {
-            errMsg = "No such device or address.";
-            break;
+
+        if (std::regex_match(entry->d_name, pattern_matcher)) {
+            if (is_regular_file_or_symlink_target(path, entry)) {
+                return {
+                    path + entry->d_name,
+                    provider,
+                    simulation_time_config.start_time,
+                    simulation_time_config.end_time
+                };
+            }
+            invalid_matches++;
         }
-        if (errno == EACCES) {
-            errMsg = "Permission denied.";
-            break;
-        }
-        if (errno == EPERM) {
-            errMsg = "Operation not permitted.";
-            break;
-        }
-        if (errno == ENOTDIR) {
-            errMsg = "File at provided path is not a directory.";
-            break;
-        }
-        if (errno == EMFILE) {
-            errMsg = "The current process has too many open files.";
-            break;
-        }
-        if (errno == ENFILE) {
-            errMsg = "The system has too many open files.";
-            break;
-        }
-        sleep(2);
-        directory = opendir(path.c_str());
-        errMsg = "Received system error number " + std::to_string(errno);
     }
 
-    // If the directory could be found and opened, we can go ahead and iterate
-    if (directory != nullptr) {
-        bool match;
-        while ((entry = readdir(directory))) {
-            match = std::regex_match(entry->d_name, pattern);
-            if( match ) {
-                // If the entry is a regular file or symlink AND the name matches the pattern,
-                //    we can consider this ready to be interpretted as valid forcing data (even if it isn't)
-                #ifdef _DIRENT_HAVE_D_TYPE
-                if ( entry->d_type == DT_REG or entry->d_type == DT_LNK ) {
-                    return forcing_params(
-                        path + entry->d_name,
-                        provider,
-                        simulation_time_config.start_time,
-                        simulation_time_config.end_time
-                    );
-                }
-                else if ( entry->d_type == DT_UNKNOWN )
-                #endif
-                {
-                    //dirent is not guaranteed to provide propoer file type identification in d_type
-                    //so if a system returns unknown or it isn't supported, need to use stat to determine if it is a file
-                    struct stat st;
-                    if( stat((path+entry->d_name).c_str(), &st) != 0) {
-                        throw std::runtime_error("Could not stat file "+path+entry->d_name);
-                    }
-                    if( S_ISREG(st.st_mode) ) {
-                        //Sinde we used stat and not lstat, we get the result of the target of links as well
-                        //so this covers both cases we are interested in.
-                        return forcing_params(
-                            path + entry->d_name,
-                            provider,
-                            simulation_time_config.start_time,
-                            simulation_time_config.end_time
-                        );
-                    }
-                    throw std::runtime_error("Forcing data is path "+path+entry->d_name+" is not a file");
-                }
-            } //no match found, try next entry
-        } // end while iter dir
-    } //end if directory
-    else {
-        // The directory wasn't found or otherwise couldn't be opened; forcing data cannot be retrieved
-        throw std::runtime_error("Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg);
-    }
-
-    closedir(directory);
-
-    throw std::runtime_error("Forcing data could not be found for '" + identifier + "'");
+    throw std::runtime_error(
+        "Forcing data could not be found in '" +
+        path +
+        "' for '" +
+        identifier +
+        "' with the pattern: '" +
+        pattern_string +
+        "'. There were " +
+        std::to_string(invalid_matches) +
+        " actual matches, but none of the matching items were regular files or symlinks to regular files."
+    );
 }
 
 void Formulation_Manager::parse_external_model_params(boost::property_tree::ptree& model_params, const geojson::Feature catchment_feature) {
