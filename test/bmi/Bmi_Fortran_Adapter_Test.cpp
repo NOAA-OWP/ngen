@@ -13,6 +13,7 @@
 #include "Bmi_Fortran_Adapter.hpp"
 #include "State_Exception.hpp"
 #include "bmi_utilities.hpp"
+#include "primitive_type_printing.hpp"
 
 #ifndef BMI_TEST_FORTRAN_LOCAL_LIB_NAME
 #ifdef __APPLE__

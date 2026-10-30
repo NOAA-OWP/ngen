@@ -11,6 +11,7 @@
 namespace py = pybind11;
 
 #include "Bmi_Py_Adapter.hpp"
+#include "primitive_type_printing.hpp"
 
 #include "utilities/FileChecker.h"
 #include "mediator/UnitsHelper.hpp"
