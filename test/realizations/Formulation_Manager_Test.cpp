@@ -494,7 +494,7 @@ TEST_F(FormulationManagerForcingTest, EscapedIdentifiersDoNotMatchRegexLookalike
     this->create_file("cattt27.csv");
     this->create_file("cat2.csv");
 
-    const std::vector<string> identifiers_to_test = {
+    const std::vector<std::string> identifiers_to_test = {
         "cat.27",
         "cat+27",
         "cat[27]"
