@@ -483,7 +483,7 @@ namespace realization {
                     int totalBytes = get_bmi_model()->GetVarNbytes(param.first);
 
                     //Figure out the c++ type to convert data to
-                    std::string type = models::bmi::resolve_var_type(*get_bmi_model(), param.first);
+                    const models::bmi::primitive_type type = models::bmi::resolve_var_type(*get_bmi_model(), param.first);
                     //TODO might consider refactoring as_vector and get_values_as_type
                     //(and by extension, as_c_array) into the JSONProperty class
                     //then instead of the PropertyVariant visitor filling vectors
@@ -695,7 +695,7 @@ namespace realization {
                         + std::to_string(var_details->get_num_items()) + ", provider returned "
                         + std::to_string(values.size()) + " items\n");
                 }
-                value_ptr = get_values_as_type(var_details->get_cpp_type(), values.begin(), values.end());
+                value_ptr = get_values_as_type(var_details->get_type(), values.begin(), values.end());
             }
             else {
                 try {
@@ -703,7 +703,7 @@ namespace realization {
                     double value = provider->get_value(CatchmentAggrDataSelector(
                         this->get_feature_id(), var_details->get_mapped_alias(), src_data_start, t_delta,
                         var_details->get_units()));
-                    value_ptr = get_value_as_type(var_details->get_cpp_type(), value);
+                    value_ptr = get_value_as_type(var_details->get_type(), value);
                 } catch (UnitsHelper::unit_conversion_exception &uce) {
                     bool new_error = UnitsHelper::record_unit_conversion_fault(
                         uce, "Bmi_Module_Formulation::perform_set", var_details->get_mapped_alias());
@@ -719,7 +719,7 @@ namespace realization {
                            << " message \"" << uce.what() << "\"\n";
                         logging::warning(ss.str().c_str()); ss.str("");
                     }
-                    value_ptr = get_value_as_type(var_details->get_cpp_type(), uce.unconverted_values[0]);
+                    value_ptr = get_value_as_type(var_details->get_type(), uce.unconverted_values[0]);
                 }
             }
             get_bmi_model()->SetValue(var_details->get_name(), value_ptr.get());
