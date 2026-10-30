@@ -6,6 +6,7 @@
 
 #include <array>
 #include <mutex>
+#include <vector>
 
 // Comes from libgfortran
 extern "C" void _gfortran_set_options (int num, int const *options);
@@ -132,15 +133,15 @@ void Bmi_Fortran_Adapter::GetValue(std::string name, void *dest) {
 }
 
 void Bmi_Fortran_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {
-    // TODO: implement later by manually handling index convertion on this level.
-    /*
-    if (get_value_at_indices(&bmi_model->handle, name.c_str(), dest, inds, count) != BMI_SUCCESS) {
-        throw models::external::State_Exception(
-                model_name + " failed to get variable " + name + " for " + std::to_string(count) +
-                " indices.");
-    }
-     */
-    throw std::runtime_error("Fortran BMI module integration does not currently support getting values by index");
+    // The ISO C shim has no access by index, so read the whole variable and pick the items out of it.
+    models::bmi::with_bmi_type(get_value_cxx_type(name), [&]<typename T>() {
+        const int num_items = GetVarNbytes(name) / static_cast<int>(sizeof(T));
+        std::vector<T> values(num_items);
+        GetValue(name, values.data());
+        for (int i = 0; i < count; ++i) {
+            static_cast<T *>(dest)[i] = values.at(inds[i]);
+        }
+    });
 }
 
 int Bmi_Fortran_Adapter::GetVarItemsize(std::string name) {
