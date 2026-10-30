@@ -291,6 +291,12 @@ namespace models {
              * So the name settles only whether the variable is integral or floating point, and the item size
              * settles which type of that kind.  The C spellings modules commonly report are treated the same way.
              *
+             * The exception is a ``double precision`` or ``double`` narrower than 8 bytes, which is not taken for a
+             * ``float``.  gfortran's ``-freal-8-real-4`` can make one, but it is far likelier a module misreporting
+             * its type or its size, as test_bmi_fortran once did for its grid origins.  Passed through unchanged,
+             * it is refused by the table's size check with a message describing the mismatch, rather than by an
+             * accessor the module does not serve for that name.
+             *
              * Every width with an unambiguous C++ type is mapped, whether or not the ISO C shim currently has an
              * accessor for it; which of them can actually be read or written is the business of @ref GetValue and
              * @ref SetValue.  A 16-byte real is mapped only where ``long double`` is IEEE quad precision: on x86
@@ -311,8 +317,8 @@ namespace models {
             const std::string
             get_analogous_cxx_type(const std::string &external_type_name, const size_t item_size) override {
                 const bool is_integer = external_type_name == "integer" || external_type_name == "int";
-                const bool is_floating_point = external_type_name == "real" || external_type_name == "float" ||
-                    external_type_name == "double precision" || external_type_name == "double";
+                const bool is_single = external_type_name == "real" || external_type_name == "float";
+                const bool is_double = external_type_name == "double precision" || external_type_name == "double";
 
                 if (is_integer) {
                     switch (item_size) {
@@ -322,8 +328,8 @@ namespace models {
                         case 8: return "int64_t";
                     }
                 }
-                if (is_floating_point) {
-                    if (item_size == sizeof(float)) {return "float";}
+                if (is_single || is_double) {
+                    if (is_single && item_size == sizeof(float)) {return "float";}
                     if (item_size == sizeof(double)) {return "double";}
                     // IEEE binary128 is the one format with a 113-bit significand; x87's 80-bit type has 64, and
                     // PowerPC's double-double 106.
