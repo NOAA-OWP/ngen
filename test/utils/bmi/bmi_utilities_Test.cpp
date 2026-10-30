@@ -10,6 +10,7 @@
 #include <gtest/gtest.h>
 
 #include "bmi_utilities.hpp"
+#include "primitive_type_printing.hpp"
 
 namespace {
 
