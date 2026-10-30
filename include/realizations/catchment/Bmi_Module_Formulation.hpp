@@ -31,21 +31,25 @@ namespace realization {
 
         //Bmi_Var_Details() : Bmi_Var_Details("", "", nullptr, -1, -1, "", "") { }
 
-        Bmi_Var_Details(std::string name, std::string alias, const int item_size, const int num_items, std::string cpp_type, std::string units)
-            : name(std::move(name)), mapped_alias(std::move(alias)), cpp_type(std::move(cpp_type)), units(std::move(units)), item_size(item_size), num_items(num_items)
+        Bmi_Var_Details(std::string name, std::string alias, const int item_size, const int num_items, models::bmi::primitive_type type, std::string units)
+            : name(std::move(name)), mapped_alias(std::move(alias)), type(type), units(std::move(units)), item_size(item_size), num_items(num_items)
         {
-            // The buffers built from these details are sized by item_size and addressed as cpp_type, so
+            // The buffers built from these details are sized by item_size and addressed as type, so
             // the two disagreeing is caught once here rather than on every set.
-            models::bmi::require_item_size(this->cpp_type, static_cast<size_t>(item_size),
-                                           "variable '" + this->name + "'");
+            if (models::bmi::size_of(this->type) != static_cast<size_t>(item_size)) {
+                throw std::runtime_error("Cannot use variable '" + this->name + "': its type " +
+                                         models::bmi::to_string(this->type) + " is " +
+                                         std::to_string(models::bmi::size_of(this->type)) +
+                                         " bytes, but its items are " + std::to_string(item_size) + " bytes.");
+            }
         }
 
         Bmi_Var_Details(const Bmi_Var_Details& source) = default;
 
         friend bool operator<(const Bmi_Var_Details& lhs, const Bmi_Var_Details& rhs) {
-            return std::tie(lhs.name, lhs.mapped_alias, lhs.cpp_type, lhs.units, lhs.item_size, lhs.num_items)
+            return std::tie(lhs.name, lhs.mapped_alias, lhs.type, lhs.units, lhs.item_size, lhs.num_items)
                    <
-                   std::tie(rhs.name, rhs.mapped_alias, rhs.cpp_type, rhs.units, rhs.item_size, rhs.num_items);
+                   std::tie(rhs.name, rhs.mapped_alias, rhs.type, rhs.units, rhs.item_size, rhs.num_items);
         }
 
         const std::string& get_name() const {
@@ -56,8 +60,8 @@ namespace realization {
             return mapped_alias;
         }
 
-        const std::string& get_cpp_type() const {
-            return cpp_type;
+        models::bmi::primitive_type get_type() const {
+            return type;
         }
 
         const std::string& get_units() const {
@@ -77,8 +81,8 @@ namespace realization {
         const std::string name;
         /** The framework's configured alias for the variable. */
         const std::string mapped_alias;
-        /** String for the C++ type corresponding to this variable's type. */
-        const std::string cpp_type;
+        /** The type of this variable's items. */
+        const models::bmi::primitive_type type;
         /** String for variable's units. */
         const std::string units;
         /** The size of individual items for this variable. */

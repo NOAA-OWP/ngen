@@ -94,9 +94,9 @@ double Bmi_Py_Adapter::GetTimeStep() {
 }
 
 void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
-    std::string cxx_type;
+    models::bmi::primitive_type type;
     try {
-        cxx_type = get_analogous_cxx_type(GetVarType(name), GetVarItemsize(name));
+        type = models::bmi::resolve_var_type(*this, name);
     }
     catch (std::runtime_error &e) {
         std::string msg = "Encountered error getting C++ type during call to GetValue: \n";
@@ -104,35 +104,12 @@ void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
         throw std::runtime_error(msg);
     }
 
-    if (cxx_type == "short") {
-        copy_to_array<short>(name, (short *) dest);
-    } else if (cxx_type == "int") {
-        copy_to_array<int>(name, (int *) dest);
-    } else if (cxx_type == "long") {
-        copy_to_array<long>(name, (long *) dest);
-    } else if (cxx_type == "long long") {
-        copy_to_array<long long>(name, (long long *) dest);
-    } else if (cxx_type == "uint8_t") {
-        // Opaque byte payload (e.g. the BMI serialization protocol's
-        // `ngen::serialization_state` buffer). The Python side exposes
-        // a numpy uint8 array; we copy it straight into the caller's
-        // raw byte buffer.
-        copy_to_array<uint8_t>(name, (uint8_t *) dest);
-    } else if (cxx_type == "float") {
-        copy_to_array<float>(name, (float *) dest);
-    } else if (cxx_type == "double") {
-        copy_to_array<double>(name, (double *) dest);
-    } else if (cxx_type == "long double") {
-        copy_to_array<long double>(name, (long double *) dest);
-    } else {
-        throw std::runtime_error("Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
-    }
-
+    models::bmi::with_primitive_type(type, [&]<typename T>() {
+        copy_to_array<T>(name, static_cast<T *>(dest));
+    });
 }
 
 void Bmi_Py_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {
-    std::string val_type = GetVarType(name);
-    std::vector<std::string> in_v = GetInputVarNames();
     int var_total_items = GetVarNbytes(name) / GetVarItemsize(name);
     get_value_at_indices(name, dest, inds, count, count == var_total_items);
 }
@@ -192,32 +169,9 @@ std::string Bmi_Py_Adapter::get_bmi_type_simple_name() const {
  * @see set_value_at_indices
  */
 void Bmi_Py_Adapter::SetValueAtIndices(std::string name, int *inds, int count, void *src) {
-    std::string val_type = GetVarType(name);
-    size_t val_item_size = (size_t)GetVarItemsize(name);
-
-    // The available types and how they are handled here should match what is in get_value_at_indices
-    if (val_type == "int" && val_item_size == sizeof(short)) {
-        set_value_at_indices<short>(name, inds, count, src, val_type);
-    } else if (val_type == "int" && val_item_size == sizeof(int)) {
-        set_value_at_indices<int>(name, inds, count, src, val_type);
-    } else if (val_type == "int" && val_item_size == sizeof(long)) {
-        set_value_at_indices<long>(name, inds, count, src, val_type);
-    } else if (val_type == "int" && val_item_size == sizeof(long long)) {
-        set_value_at_indices<long long>(name, inds, count, src, val_type);
-    } else if (val_type == "float" && val_item_size == sizeof(float)) {
-        set_value_at_indices<float>(name, inds, count, src, val_type);
-    } else if (val_type == "float" && val_item_size == sizeof(double)) {
-        set_value_at_indices<double>(name, inds, count, src, val_type);
-    } else if (val_type == "float64" && val_item_size == sizeof(double)) {
-        set_value_at_indices<double>(name, inds, count, src, val_type);
-    } else if (val_type == "float" && val_item_size == sizeof(long double)) {
-        set_value_at_indices<long double>(name, inds, count, src, val_type);
-    } else {
-        throw std::runtime_error(
-                "(Bmi_Py_Adapter) Failed attempt to SET values of BMI variable '" + name + "' from '" +
-                model_name + "' model:  model advertises unsupported combination of type (" + val_type +
-                ") and size (" + std::to_string(val_item_size) + ").");
-    }
+    models::bmi::with_primitive_type(models::bmi::resolve_var_type(*this, name), [&]<typename T>() {
+        set_value_at_indices<T>(name, inds, count, src);
+    });
 }
 
 void Bmi_Py_Adapter::Update() {

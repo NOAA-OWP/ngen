@@ -13,6 +13,7 @@
 #include "Bmi_Fortran_Adapter.hpp"
 #include "State_Exception.hpp"
 #include "bmi_utilities.hpp"
+#include "primitive_type_printing.hpp"
 
 #ifndef BMI_TEST_FORTRAN_LOCAL_LIB_NAME
 #ifdef __APPLE__
@@ -1394,83 +1395,78 @@ TEST_F(Bmi_Fortran_Adapter_Test, SetValue_0_c) {
  * Compiler flags such as ``-fdefault-real-8`` change the width of ``real`` and ``integer``, so the name only says
  * whether a variable is integral or floating point.
  */
-TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_a) {
-    const std::vector<std::tuple<std::string, size_t, std::string>> cases = {
-        {"integer", 1, "int8_t"},
-        {"integer", 2, "int16_t"},
-        {"integer", 4, "int32_t"},
-        {"integer", 8, "int64_t"},
-        {"int", 8, "int64_t"},
-        {"real", sizeof(float), "float"},
-        {"real", sizeof(double), "double"},
-        {"float", sizeof(double), "double"},
-        {"double precision", sizeof(double), "double"},
+TEST_F(Bmi_Fortran_Adapter_Test, get_primitive_type_0_a) {
+    using models::bmi::primitive_type;
+    const std::vector<std::tuple<std::string, size_t, primitive_type>> cases = {
+        {"integer", 1, primitive_type::i8},
+        {"integer", 2, primitive_type::i16},
+        {"integer", 4, primitive_type::i32},
+        {"integer", 8, primitive_type::i64},
+        {"int", 8, primitive_type::i64},
+        {"real", 4, primitive_type::f32},
+        {"real", 8, primitive_type::f64},
+        {"float", 8, primitive_type::f64},
+        {"double precision", 8, primitive_type::f64},
     };
     for (const auto &[name, item_size, expected] : cases) {
-        const std::string resolved = adapter->get_analogous_cxx_type(name, item_size);
+        const primitive_type resolved = adapter->get_primitive_type(name, item_size);
         EXPECT_EQ(resolved, expected) << name << " of " << item_size << " bytes";
-        EXPECT_NO_THROW(models::bmi::require_item_size(resolved, item_size, name)) << name;
+        EXPECT_EQ(models::bmi::size_of(resolved), item_size) << name;
     }
 }
 
-/** Test that names it does not reduce, and sizes with no type of the named kind, are passed through unchanged. */
-TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_b) {
-    EXPECT_EQ(adapter->get_analogous_cxx_type("long", sizeof(long)), "long");
-    EXPECT_EQ(adapter->get_analogous_cxx_type("int64_t", 8), "int64_t");
-    EXPECT_EQ(adapter->get_analogous_cxx_type("integer", 3), "integer");
-    EXPECT_EQ(adapter->get_analogous_cxx_type("real", 3), "real");
-    EXPECT_EQ(adapter->get_analogous_cxx_type("nonesuch", 4), "nonesuch");
+/** Test that names it does not reduce, and sizes with no type of the named kind, are resolved as named. */
+TEST_F(Bmi_Fortran_Adapter_Test, get_primitive_type_0_b) {
+    using models::bmi::primitive_type;
+    EXPECT_EQ(adapter->get_primitive_type("long", sizeof(long)), models::bmi::primitive_type_of<long>());
+    EXPECT_EQ(adapter->get_primitive_type("int64_t", 8), primitive_type::i64);
+    EXPECT_EQ(adapter->get_primitive_type("integer", 3), primitive_type::i32);
+    EXPECT_EQ(adapter->get_primitive_type("real", 3), primitive_type::f32);
+    EXPECT_THROW(adapter->get_primitive_type("nonesuch", 4), models::bmi::unknown_bmi_type);
 
-    // Passed through, a disagreeing pair is then refused by the table's size check.
-    EXPECT_THROW(models::bmi::require_item_size(adapter->get_analogous_cxx_type("real", 3), 3, "real"),
-                 std::runtime_error);
+    // Resolved as named, a disagreeing pair is then refused by the size check.
+    EXPECT_NE(models::bmi::size_of(adapter->get_primitive_type("real", 3)), 3u);
 }
 
 /**
- * Test that a double precision reported narrower than 8 bytes is passed through, not taken for a float.
+ * Test that a double precision reported narrower than 8 bytes is resolved as named, not taken for a float.
  *
- * That is far likelier a module misreporting its type or its size than a real 4-byte double, and passed through it is
- * refused by the size check with a message saying exactly that, rather than by an accessor the module does not serve.
+ * That is far likelier a module misreporting its type or its size than a real 4-byte double, and resolved as named it
+ * is refused by the size check, rather than by an accessor the module does not serve.
  */
-TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_e) {
-    EXPECT_EQ(adapter->get_analogous_cxx_type("double precision", 4), "double precision");
-    EXPECT_EQ(adapter->get_analogous_cxx_type("double", 4), "double");
+TEST_F(Bmi_Fortran_Adapter_Test, get_primitive_type_0_e) {
+    using models::bmi::primitive_type;
+    EXPECT_EQ(adapter->get_primitive_type("double precision", 4), primitive_type::f64);
+    EXPECT_EQ(adapter->get_primitive_type("double", 4), primitive_type::f64);
 
-    try {
-        models::bmi::require_item_size(adapter->get_analogous_cxx_type("double precision", 4), 4,
-                                       "variable 'grid_1_origin'");
-        FAIL() << "expected a 4-byte double precision to be refused";
-    } catch (const std::runtime_error& e) {
-        EXPECT_STREQ(e.what(), "Cannot use variable 'grid_1_origin': type 'double precision' is 8 bytes, "
-                               "but the model reports an item size of 4 bytes.");
-    }
+    EXPECT_NE(models::bmi::size_of(adapter->get_primitive_type("double precision", 4)), 4u);
 }
 
 /**
- * Test that a 16-byte real resolves to long double only where that is IEEE quad precision.
+ * Test that a 16-byte real resolves to f128 only where long double is IEEE binary128.
  *
  * On x86, gfortran's 80-bit real(kind=10) is also stored in 16 bytes, so there the size cannot tell it from
- * real(kind=16) and the name must be refused rather than guessed.
+ * real(kind=16), and the name is resolved as named, for the size check to refuse rather than guess.
  */
-TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_c) {
-    const bool long_double_is_quad =
-        sizeof(long double) == 16 && std::numeric_limits<long double>::digits == 113;
-    EXPECT_EQ(adapter->get_analogous_cxx_type("real", 16), long_double_is_quad ? "long double" : "real");
+TEST_F(Bmi_Fortran_Adapter_Test, get_primitive_type_0_c) {
+    using models::bmi::primitive_type;
+    EXPECT_EQ(adapter->get_primitive_type("real", 16),
+              models::bmi::long_double_is_float128 ? primitive_type::f128 : primitive_type::f32);
 }
 
 /**
  * Test that a module can name ``long double`` outright, for a variable of kind c_long_double.
  *
- * That is the spelling that resolves where a 16-byte real alone is ambiguous, so it is passed through as reported,
- * and the table's size check still refuses it if the reported size disagrees.
+ * That is the spelling that resolves where a 16-byte real alone is ambiguous, to the platform's long double, and the
+ * size check still refuses it if the reported size disagrees.
  */
-TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_d) {
-    const std::string resolved = adapter->get_analogous_cxx_type("long double", sizeof(long double));
-    EXPECT_EQ(resolved, "long double");
-    EXPECT_NO_THROW(models::bmi::require_item_size(resolved, sizeof(long double), "long double"));
+TEST_F(Bmi_Fortran_Adapter_Test, get_primitive_type_0_d) {
+    using models::bmi::primitive_type;
+    const primitive_type resolved = adapter->get_primitive_type("long double", sizeof(long double));
+    EXPECT_EQ(resolved, primitive_type::long_double);
+    EXPECT_EQ(models::bmi::size_of(resolved), sizeof(long double));
 
-    EXPECT_THROW(models::bmi::require_item_size(adapter->get_analogous_cxx_type("long double", 3), 3, "long double"),
-                 std::runtime_error);
+    EXPECT_NE(models::bmi::size_of(adapter->get_primitive_type("long double", 3)), 3u);
 }
 
 /** Test that a 'real' the module reports as 8 bytes wide is set and read back at that width. */

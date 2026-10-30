@@ -20,6 +20,7 @@
 #include "boost/algorithm/string/join.hpp"
 
 #include "Bmi_Adapter.hpp"
+#include "utilities/bmi_utilities.hpp"
 
 #include "utilities/python/InterpreterUtil.hpp"
 
@@ -221,45 +222,54 @@ namespace models {
             void *GetValuePtr(std::string name) override;
 
             /**
-             * Get the name string for the C++ type analogous to the described type in the Python backing model.
+             * Resolve a Python type name to a primitive type, by way of the item size.
              *
-             * Note that the size of an individual item is also required, as this can vary in certain situations in
-             * Python.
+             * A Python model reports "int" or "float" for any width, so the item size has to settle which type
+             * is meant; numpy spellings that do name a width are accepted only with that width. numpy's
+             * "float128" is its name for long double, whatever that is, so it means long_double rather than
+             * IEEE binary128.
              *
-             * @param py_type_name The string name of the analog type in Python.
-             * @param item_size The particular size in bytes for items of the involved analogous types.
-             * @return The name string for the C++ type analogous to the described type in the Python backing model.
+             * @param py_type_name The string name of the type in Python.
+             * @param item_size The size in bytes of one item.
+             * @return The primitive type of the variable's items.
+             * @throw std::runtime_error If the name and size together denote no supported type.
              */
-            const std::string get_analogous_cxx_type(const std::string &py_type_name, const size_t item_size) override {
-                /*
-                 * Note that an implementation using a "switch" statement would be problematic.  It could be done by
-                 * rewriting to separate the integer and non-integer type, then having cases based on size.  However,
-                 * this might cause trouble on certain systems, since (depending on the particular sizes of types) that
-                 * could produce duplicate "case" values.
-                 */
+            models::bmi::primitive_type get_primitive_type(const std::string &py_type_name, const size_t item_size) override {
+                using models::bmi::primitive_type;
+                using models::bmi::primitive_type_of;
                 //TODO: include other numpy type strings, https://numpy.org/doc/stable/user/basics.types.html
-                if ( (py_type_name == "int" || py_type_name == "int16") && item_size == sizeof(short)) {
-                    return "short";
+                if (py_type_name == "int" && item_size == 1) {
+                    return primitive_type::i8;
+                } else if ( (py_type_name == "int" || py_type_name == "int16") && item_size == sizeof(short)) {
+                    return primitive_type_of<short>();
                 } else if ( (py_type_name == "int" || py_type_name == "int32" )&& item_size == sizeof(int)) {
-                    return "int";
+                    return primitive_type_of<int>();
                 } else if (py_type_name == "int" && item_size == sizeof(long)) {
-                    return "long";
+                    return primitive_type_of<long>();
                 } else if ( (py_type_name == "int" || py_type_name == "int64") && item_size == sizeof(long long)) {
-                    return "long long";
+                    return primitive_type_of<long long>();
                 } else if (py_type_name == "longlong" && item_size == sizeof(long long)) {
-                    return "long long"; //numpy type
+                    return primitive_type_of<long long>(); //numpy type
                 } else if ((py_type_name == "uint8" || py_type_name == "ubyte") && item_size == 1) {
-                    return "uint8_t";
+                    return primitive_type::u8;
                 } else if ((py_type_name == "int8" || py_type_name == "byte") && item_size == 1) {
-                    return "int8_t";
+                    return primitive_type::i8;
+                } else if (py_type_name == "uint16" && item_size == 2) {
+                    return primitive_type::u16;
+                } else if (py_type_name == "uint32" && item_size == 4) {
+                    return primitive_type::u32;
+                } else if (py_type_name == "uint64" && item_size == 8) {
+                    return primitive_type::u64;
                 } else if ( (py_type_name == "float" || py_type_name == "float32" || py_type_name == "np.float32" ||
                            py_type_name == "numpy.float32" || py_type_name == "np.single" ||  py_type_name == "numpy.single") && item_size == sizeof(float)) {
-                    return "float";
+                    return primitive_type::f32;
                 } else if ((py_type_name == "float" || py_type_name == "float64" || py_type_name == "np.float64" ||
                             py_type_name == "numpy.float64") && item_size == sizeof(double)) {
-                    return "double";
+                    return primitive_type::f64;
                 } else if (py_type_name == "float" && item_size == sizeof(long double)) {
-                    return "long double";
+                    return primitive_type::long_double;
+                } else if (py_type_name == "float128" && item_size == 16 && sizeof(long double) == 16) {
+                    return primitive_type::long_double;
                 } else {
                     throw std::runtime_error(
                             "(Bmi_Py_Adapter) Failed determining analogous C++ type for Python model '" + py_type_name +
@@ -267,93 +277,6 @@ namespace models {
                 }
             }
 
-
-            /**
-             * Get the analogous built-in Python type for the C++ type with the provided name.
-             *
-             * @param cxx_type_name The string name of the analog type in C++.
-             * @return The name of the appropriate built-in Python type.
-             */
-            inline std::string get_analog_python_builtin(const std::string &cxx_type_name) {
-                if (cxx_type_name == "short" || cxx_type_name == "int" || cxx_type_name == "long" ||
-                    cxx_type_name == "long long") {
-                    return "int";
-                } else if (cxx_type_name == "float" || cxx_type_name == "double" || cxx_type_name == "long double") {
-                    return "double";
-                } else {
-                    throw std::runtime_error("(Bmi_Py_Adapter) Failed determining analogous built-in Python type for C++ '" +
-                                        cxx_type_name + "' type");
-                }
-            }
-
-            /**
-             * Get the analogous Python type appropriate for use in numpy arrays for the described  C++ type.
-             *
-             * @param cxx_type_name The string name of the analog type in C++.
-             * @param item_size The particular size in bytes for items of the involved analogous types.
-             * @return The name of the appropriate Python type.
-             */
-            inline std::string get_analog_python_dtype(const std::string &cxx_type_name, const size_t item_size) {
-                // TODO: figure out how to correctly get this
-                std::string numpy_module_name = "numpy";
-
-                if (cxx_type_name == "short" || cxx_type_name == "int" || cxx_type_name == "long" ||
-                    cxx_type_name == "long long")
-                {
-                    switch (item_size) {
-                        case 1: return numpy_module_name + ".int8";
-                        case 2: return numpy_module_name + ".int16";
-                        case 4: return numpy_module_name + ".int32";
-                        case 8: return numpy_module_name + ".int64";
-                        default: break;
-                    }
-                }
-
-                if (cxx_type_name == "float" || cxx_type_name == "double" || cxx_type_name == "long double") {
-                    switch (item_size) {
-                        case 2: return numpy_module_name + ".float16";
-                        case 4: return numpy_module_name + ".float32";
-                        case 8: return numpy_module_name + ".float64";
-                        default: break;
-                    }
-                }
-
-                throw std::runtime_error("(Bmi_Py_Adapter) Failed determining analogous Python dtype for C++ '" +
-                                    cxx_type_name + "' type with size " + std::to_string(item_size) + " bytes.");
-            }
-
-            /**
-             * Get the analogous Python type (or ``dtype``) for the described C++ type.
-             *
-             * Get the appropriate name of the analogous Python type for the described C++ type.  If set to do so, use
-             * numpy-specific types appropriate for an array ``dtype`` over standard, built-in Python types.
-             *
-             * @param cxx_type_name The string name of the analog type in C++.
-             * @param item_size The particular size in bytes for items of the involved analogous types.
-             * @param is_dtype Whether to prioritize numpy-specific types
-             * @return The name of the appropriate Python type.
-             */
-            inline std::string get_analog_python_type(const std::string &cxx_type_name, const size_t item_size,
-                                                      const bool is_dtype)
-            {
-                return is_dtype ? get_analog_python_dtype(cxx_type_name, item_size) : get_analog_python_builtin(
-                        cxx_type_name);
-            }
-
-            /**
-             * Get the analogous Python type for the described C++ type.
-             *
-             * Get the appropriate name of the analogous Python type for the described C++ type.  This variant assumes
-             * that a standard built-in type is sufficient, and numpy-specific types are not needed (as they might be
-             * for certain situations, like when dealing with BMI variable numpy array type).
-             *
-             * @param cxx_type_name The string name of the analog type in C++.
-             * @param item_size The particular size in bytes for items of the involved analogous types.
-             * @return The name of the appropriate Python type.
-             */
-            inline std::string get_analog_python_type(const std::string &cxx_type_name, const size_t item_size) {
-                return get_analog_python_type(cxx_type_name, item_size, false);
-            }
 
             template <typename T>
             void get_and_copy_grid_array(const char* grid_func_name, const int grid, T* dest, int dest_length,
@@ -432,32 +355,10 @@ namespace models {
              *                       which there is not support for mapping to a native type in the framework.
              */
             void get_value_at_indices(const std::string& name, void *dest, int *inds, int count, bool is_all_indices) {
-                std::string val_type = GetVarType(name);
-                size_t val_item_size = (size_t)GetVarItemsize(name);
-                std::vector<std::string> in_v = GetInputVarNames();
-
-                // The available types and how they are handled here should match what is in SetValueAtIndices
-                if (val_type == "int" && val_item_size == sizeof(short))
-                    get_via_numpy_array<short>(name, dest, inds, count, val_item_size, is_all_indices);
-                else if (val_type == "int" && val_item_size == sizeof(int))
-                    get_via_numpy_array<int>(name, dest, inds, count, val_item_size, is_all_indices);
-                else if (val_type == "int" && val_item_size == sizeof(long))
-                    get_via_numpy_array<long>(name, dest, inds, count, val_item_size, is_all_indices);
-                else if (val_type == "int" && val_item_size == sizeof(long long))
-                    get_via_numpy_array<long long>(name, dest, inds, count, val_item_size, is_all_indices);
-                else if (val_type == "float" || val_type == "float16" || val_type == "float32" || val_type == "float64") {
-                    if (val_item_size == sizeof(float))
-                        get_via_numpy_array<float>(name, dest, inds, count, val_item_size, is_all_indices);
-                    else if (val_item_size == sizeof(double))
-                        get_via_numpy_array<double>(name, dest, inds, count, val_item_size, is_all_indices);
-                    else if (val_item_size == sizeof(long double))
-                        get_via_numpy_array<long double>(name, dest, inds, count, val_item_size, is_all_indices);
-                }
-                else
-                    throw std::runtime_error(
-                            "(Bmi_Py_Adapter) Failed attempt to GET values of BMI variable '" + name + "' from '" +
-                            model_name + "' model:  model advertises unsupported combination of type (" + val_type +
-                            ") and size (" + std::to_string(val_item_size) + ").");
+                const models::bmi::primitive_type type = models::bmi::resolve_var_type(*this, name);
+                models::bmi::with_primitive_type(type, [&]<typename T>() {
+                    get_via_numpy_array<T>(name, dest, inds, count, models::bmi::size_of(type), is_all_indices);
+                });
             }
 
             /**
@@ -527,38 +428,11 @@ namespace models {
             void UpdateUntil(double time) override;
 
             void SetValue(std::string name, void *src) override {
-                int itemSize = GetVarItemsize(name);
-                std::string py_type = GetVarType(name);
-                std::string cxx_type = get_analogous_cxx_type(py_type, (size_t) itemSize);
-
-                if (cxx_type == "short") {
-                    set_value<short>(name, (short *) src);
-                } else if (cxx_type == "int") {
-                    set_value<int>(name, (int *) src);
-                } else if (cxx_type == "long") {
-                    set_value<long>(name, (long *) src);
-                } else if (cxx_type == "long long") {
-                    //FIXME this gets dicey -- if a python numpy array is of type np.int64 (long long),
-                    //but a c++ int* is passed to this function as src, it will fail in undefined ways...
-                    //the template type overload may be preferred for doing SetValue from framework components
-                    //such as forcing providers...
-                    set_value<long long>(name, (long long *) src);
-                } else if (cxx_type == "uint8_t") {
-                    // Byte-typed payload (e.g. the BMI serialization protocol's
-                    // `ngen::serialization_state` opaque buffer). `src` is
-                    // already a raw byte pointer — hand it to the
-                    // uint8_t-instantiated template.
-                    set_value<uint8_t>(name, (uint8_t *) src);
-                } else if (cxx_type == "float") {
-                    set_value<float>(name, (float *) src);
-                } else if (cxx_type == "double") {
-                    set_value<double>(name, (double *) src);
-                } else if (cxx_type == "long double") {
-                    set_value<long double>(name, (long double *) src);
-                } else {
-                    throw std::runtime_error("Bmi_Py_Adapter cannot set values for variable '" + name +
-                                             "' that has unrecognized C++ type '" + cxx_type + "'");
-                }
+                // src has to hold items of the variable's own type: an int* passed for an np.int64 variable is read
+                // past its end. Framework components holding another type may prefer the std::vector<T> overload.
+                models::bmi::with_primitive_type(models::bmi::resolve_var_type(*this, name), [&]<typename T>() {
+                    set_value<T>(name, static_cast<T *>(src));
+                });
             }
 
             /**
@@ -615,20 +489,16 @@ namespace models {
              * wrapped Numpy arrays analogous to ``inds`` and ``cxx_array``, copying into each analog the values of the
              * C++ arrays.
              *
-             * The parameters serve very much the same purpose as the standard BMI ``SetValueAtIndices``.  The
-             * additional ``np_type`` parameter allows the required wrapped Numpy array to be created using the correct
-             * dtype for the variable in question.
+             * The parameters serve very much the same purpose as the standard BMI ``SetValueAtIndices``.
              *
              * @tparam T The C++ type to use for the wrapper template holding the Numpy array of values to be set.
              * @param name The name of the involved BMI variable.
              * @param inds A C++ integer array of indices to update, corresponding to each value in ``cxx_array``.
              * @param count Number of elements in the ``inds`` and ``cxx_array`` arrays.
              * @param cxx_array A C++ array of unknown type containing the new values to be set in the BMI variable.
-             * @param np_type The name of the Python dtype to use for the wrapped Numpy array of update values.
              */
             template <typename T>
-            void set_value_at_indices(const std::string &name, const int *inds, int count, void* cxx_array,
-                                      const std::string &np_type)
+            void set_value_at_indices(const std::string &name, const int *inds, int count, void* cxx_array)
             {
                 py::array_t<int> index_array(py::buffer_info(inds, count));
                 py::array_t<T> src_array(py::buffer_info((T*)cxx_array, count));

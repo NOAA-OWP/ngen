@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "bmi.hpp"
+#include "utilities/bmi_primitive_type.hpp"
 
 namespace models {
     namespace bmi {
@@ -63,24 +64,25 @@ namespace models {
             double convert_seconds_to_model_time(const double& seconds_val);
 
             /**
-             * Reduce a type name the backing model reports to one @ref models::bmi::with_bmi_type resolves.
+             * Resolve a type name the backing model reports to a @ref models::bmi::primitive_type.
              *
-             * Most languages need no reduction: the table carries the C and C++ keyword spellings and the
-             * Fortran ones alike, so the name a model reports is already a name the table knows, and the
-             * default returns it unchanged.
+             * Most languages need nothing more than the table of spellings: it carries the C and C++
+             * keyword spellings and the Fortran ones alike, so the default parses the name as reported.
              *
              * The exception is a language whose type names do not determine a type. A Python model reports
              * "int" for any width, so the name alone cannot be resolved and the item size has to settle it.
              * That is what an override is for, and why the size is a parameter here.
              *
+             * Callers should check the result against the item size, as models::bmi::resolve_var_type does.
+             *
              * @param external_type_name The string name of some type in the backing model's language.
              * @param item_size The size in bytes of one item, where the name alone does not imply it.
-             * @return A type name that with_bmi_type() can resolve.
-             * @throw std::runtime_error If an override cannot reduce the name to one the table carries.
+             * @return The primitive type the name denotes.
+             * @throw unknown_bmi_type If the name is not one the table knows.
+             * @throw std::runtime_error If an override cannot resolve the name and size it is given.
              */
-            virtual const std::string get_analogous_cxx_type(const std::string &external_type_name,
-                                                             const size_t item_size) {
-                return external_type_name;
+            virtual primitive_type get_primitive_type(const std::string &external_type_name, const size_t item_size) {
+                return parse_bmi_type(external_type_name);
             }
 
             /**
