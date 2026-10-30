@@ -478,15 +478,10 @@ namespace realization {
                 std::shared_ptr<void> value_ptr;
                 for (auto& param : params) {
                     //Get some basic BMI info for this param
-                    int varItemSize = get_bmi_model()->GetVarItemsize(param.first);
                     int totalBytes = get_bmi_model()->GetVarNbytes(param.first);
 
                     //Figure out the c++ type to convert data to
-                    std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(param.first),
-                                                                           varItemSize);
-                    models::bmi::require_item_size(type, static_cast<size_t>(varItemSize),
-                                                   "parameter '" + param.first + "' of model '" +
-                                                   get_bmi_model()->get_model_name() + "'");
+                    std::string type = models::bmi::resolve_var_type(*get_bmi_model(), param.first);
                     //TODO might consider refactoring as_vector and get_values_as_type
                     //(and by extension, as_c_array) into the JSONProperty class
                     //then instead of the PropertyVariant visitor filling vectors
@@ -622,7 +617,7 @@ namespace realization {
                     mapped_alias,
                     item_size,
                     get_bmi_model()->GetVarNbytes(var_name) / item_size,
-                    get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name), item_size),
+                    models::bmi::resolve_var_type(*get_bmi_model(), var_name),
                     get_bmi_model()->GetVarUnits(var_name)
                 );
 
@@ -662,7 +657,7 @@ namespace realization {
                                           mapped_alias,
                                           item_size,
                                           get_bmi_model()->GetVarNbytes(var_name) / item_size,
-                                          get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name), item_size),
+                                          models::bmi::resolve_var_type(*get_bmi_model(), var_name),
                                           get_bmi_model()->GetVarUnits(var_name)));
 
                 bmi_input_var_details->push_back(const_cast<Bmi_Var_Details*>(&(*(iter_and_result.first))));

@@ -107,18 +107,13 @@ std::string Bmi_Fortran_Adapter::GetTimeUnits() {
 }
 
 std::string Bmi_Fortran_Adapter::get_value_cxx_type(const std::string &name) {
-    const int item_size = GetVarItemsize(name);
-    const std::string var_type = inner_get_var_type(name);
-    const std::string cxx_type = get_analogous_cxx_type(var_type, static_cast<size_t>(item_size));
     try {
-        models::bmi::require_item_size(cxx_type, static_cast<size_t>(item_size),
-                                       "variable '" + name + "' of model '" + model_name + "'");
+        return models::bmi::resolve_var_type(*this, name);
     }
-    catch (const models::bmi::unknown_bmi_type &) {
+    catch (const models::bmi::unknown_bmi_type &e) {
         throw ::external::ExternalIntegrationException(
-                "Can't use model " + model_name + " variable " + name + " of type '" + var_type + "'.");
+                "Can't use model " + model_name + " variable " + name + " of type '" + e.type_name + "'.");
     }
-    return cxx_type;
 }
 
 void Bmi_Fortran_Adapter::GetValue(std::string name, void *dest) {

@@ -27,6 +27,7 @@
  *   get_value_as_type()   build a value in the variable's declared type
  *   get_values_as_type()  build a buffer in the variable's declared type
  *   require_item_size()   confirm a type name and a reported item size describe the same width
+ *   resolve_var_type()    the type name to address a model's variable as, checked against its item size
  *
  * The raw adapter calls stay public -- the adapters implement them, and a caller may genuinely want
  * bytes -- but they are not the ordinary way to read or write a variable.
@@ -171,6 +172,26 @@ namespace models {
             }
         }
 
+        /**
+         * @brief Resolve the type name to address a model's variable as, checked against its item size.
+         *
+         * The model's own type name is reduced by its adapter's get_analogous_cxx_type(), which may need
+         * the item size to settle it, and the result must then describe that item size exactly.
+         *
+         * @param model The adapter holding the variable.
+         * @param name The name of the variable.
+         * @return A type name that with_bmi_type() resolves to a type of the variable's item size.
+         * @throw unknown_bmi_type If no C++ type corresponds to the resolved name.
+         * @throw std::runtime_error If that type is not as wide as the model says the items are.
+         */
+        inline std::string resolve_var_type(Bmi_Adapter &model, const std::string &name)
+        {
+            const size_t item_size = static_cast<size_t>(model.GetVarItemsize(name));
+            std::string type = model.get_analogous_cxx_type(model.GetVarType(name), item_size);
+            require_item_size(type, item_size, "variable '" + name + "' of model '" + model.get_model_name() + "'");
+            return type;
+        }
+
         namespace helper {
 
             /**
@@ -307,9 +328,18 @@ namespace models {
                                          ", Itemsize = "+std::to_string(item_size)+".");
             }
             int num_items = total_mem/item_size;
-            //Determine what type we need to cast from
-            std::string type = model.get_analogous_cxx_type(model.GetVarType(name), item_size);
-            
+            //Determine what type we need to cast from, before the model writes into a buffer sized by it
+            std::string type;
+            try {
+                type = resolve_var_type(model, name);
+            } catch (const unknown_bmi_type& e) {
+                // The shared table knows the type name, but not what was being read or as what.
+                throw std::runtime_error("Unable to get value of variable " + name + " of model " +
+                                         model.get_model_name() + " as " +
+                                         boost::typeindex::type_id<T>().pretty_name() +
+                                         ": no logic for converting variable type " + e.type_name);
+            }
+
             //C++ form of malloc
             void* data = ::operator new(total_mem); //Possible to allocate 0 bytes...
             // Use smart pointer to ensure cleanup on throw/out of scope...
@@ -320,17 +350,9 @@ namespace models {
             //which would avoid copying in the BMI model and copying again here
             model.GetValue(name, data);
 
-            try {
-                require_item_size(type, static_cast<size_t>(item_size),
-                                  "variable '" + name + "' of model '" + model.get_model_name() + "'");
-                return with_bmi_type(type, [&]<typename S>() -> std::vector<T> {
-                    return helper::make_vector<T>(static_cast<const S*>(data), num_items);
-                });
-            } catch (const unknown_bmi_type&) {
-                // The shared table knows the type name, but not what was being read or as what.
-                throw std::runtime_error("Unable to get value of variable " + name +
-                                " as " + boost::typeindex::type_id<T>().pretty_name() + ": no logic for converting variable type " + type);
-            }
+            return with_bmi_type(type, [&]<typename S>() -> std::vector<T> {
+                return helper::make_vector<T>(static_cast<const S*>(data), num_items);
+            });
         }
     }
 }
