@@ -225,7 +225,9 @@ namespace models {
              * Resolve a Python type name to a primitive type, by way of the item size.
              *
              * A Python model reports "int" or "float" for any width, so the item size has to settle which type
-             * is meant; numpy spellings that do name a width are accepted only with that width.
+             * is meant; numpy spellings that do name a width are accepted only with that width. numpy's
+             * "float128" is its name for long double, whatever that is, so it means long_double rather than
+             * IEEE binary128.
              *
              * @param py_type_name The string name of the type in Python.
              * @param item_size The size in bytes of one item.
@@ -236,7 +238,9 @@ namespace models {
                 using models::bmi::primitive_type;
                 using models::bmi::primitive_type_of;
                 //TODO: include other numpy type strings, https://numpy.org/doc/stable/user/basics.types.html
-                if ( (py_type_name == "int" || py_type_name == "int16") && item_size == sizeof(short)) {
+                if (py_type_name == "int" && item_size == 1) {
+                    return primitive_type::i8;
+                } else if ( (py_type_name == "int" || py_type_name == "int16") && item_size == sizeof(short)) {
                     return primitive_type_of<short>();
                 } else if ( (py_type_name == "int" || py_type_name == "int32" )&& item_size == sizeof(int)) {
                     return primitive_type_of<int>();
@@ -250,6 +254,12 @@ namespace models {
                     return primitive_type::u8;
                 } else if ((py_type_name == "int8" || py_type_name == "byte") && item_size == 1) {
                     return primitive_type::i8;
+                } else if (py_type_name == "uint16" && item_size == 2) {
+                    return primitive_type::u16;
+                } else if (py_type_name == "uint32" && item_size == 4) {
+                    return primitive_type::u32;
+                } else if (py_type_name == "uint64" && item_size == 8) {
+                    return primitive_type::u64;
                 } else if ( (py_type_name == "float" || py_type_name == "float32" || py_type_name == "np.float32" ||
                            py_type_name == "numpy.float32" || py_type_name == "np.single" ||  py_type_name == "numpy.single") && item_size == sizeof(float)) {
                     return primitive_type::f32;
@@ -257,6 +267,8 @@ namespace models {
                             py_type_name == "numpy.float64") && item_size == sizeof(double)) {
                     return primitive_type::f64;
                 } else if (py_type_name == "float" && item_size == sizeof(long double)) {
+                    return primitive_type::long_double;
+                } else if (py_type_name == "float128" && item_size == 16 && sizeof(long double) == 16) {
                     return primitive_type::long_double;
                 } else {
                     throw std::runtime_error(
