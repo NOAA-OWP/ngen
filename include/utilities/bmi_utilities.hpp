@@ -100,8 +100,8 @@ namespace models {
         /**
          * @brief Resolve the type to address a model's variable as, checked against its item size.
          *
-         * The model's own type name is reduced by its adapter's get_analogous_cxx_type(), which may need
-         * the item size to settle it, and the result must then describe that item size exactly.
+         * The model's own type name is resolved by its adapter's get_primitive_type(), which may need the
+         * item size to settle it, and the result must then describe that item size exactly.
          *
          * @param model The adapter holding the variable.
          * @param name The name of the variable.
@@ -113,7 +113,7 @@ namespace models {
         {
             const size_t item_size = static_cast<size_t>(model.GetVarItemsize(name));
             const std::string reported = model.GetVarType(name);
-            const primitive_type type = parse_bmi_type(model.get_analogous_cxx_type(reported, item_size));
+            const primitive_type type = model.get_primitive_type(reported, item_size);
             require_item_size(type, item_size, "variable '" + name + "' of model '" + model.get_model_name() + "'",
                               reported);
             return type;
