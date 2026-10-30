@@ -201,7 +201,7 @@ namespace models {
          * This is the one table of type spellings. Several may denote one type -- "real" and "float",
          * "integer" and "int" -- and C spellings resolve to the width they have on this platform. A name
          * whose width depends on more than the name, as Fortran's "real" under -fdefault-real-8 does, is
-         * for an adapter's Bmi_Adapter::get_analogous_cxx_type() to settle first.
+         * for an adapter's Bmi_Adapter::get_primitive_type() to settle first.
          *
          * @param type The BMI type name.
          * @return The primitive_type it denotes.

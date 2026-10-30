@@ -222,45 +222,42 @@ namespace models {
             void *GetValuePtr(std::string name) override;
 
             /**
-             * Get the name string for the C++ type analogous to the described type in the Python backing model.
+             * Resolve a Python type name to a primitive type, by way of the item size.
              *
-             * Note that the size of an individual item is also required, as this can vary in certain situations in
-             * Python.
+             * A Python model reports "int" or "float" for any width, so the item size has to settle which type
+             * is meant; numpy spellings that do name a width are accepted only with that width.
              *
-             * @param py_type_name The string name of the analog type in Python.
-             * @param item_size The particular size in bytes for items of the involved analogous types.
-             * @return The name string for the C++ type analogous to the described type in the Python backing model.
+             * @param py_type_name The string name of the type in Python.
+             * @param item_size The size in bytes of one item.
+             * @return The primitive type of the variable's items.
+             * @throw std::runtime_error If the name and size together denote no supported type.
              */
-            const std::string get_analogous_cxx_type(const std::string &py_type_name, const size_t item_size) override {
-                /*
-                 * Note that an implementation using a "switch" statement would be problematic.  It could be done by
-                 * rewriting to separate the integer and non-integer type, then having cases based on size.  However,
-                 * this might cause trouble on certain systems, since (depending on the particular sizes of types) that
-                 * could produce duplicate "case" values.
-                 */
+            models::bmi::primitive_type get_primitive_type(const std::string &py_type_name, const size_t item_size) override {
+                using models::bmi::primitive_type;
+                using models::bmi::primitive_type_of;
                 //TODO: include other numpy type strings, https://numpy.org/doc/stable/user/basics.types.html
                 if ( (py_type_name == "int" || py_type_name == "int16") && item_size == sizeof(short)) {
-                    return "short";
+                    return primitive_type_of<short>();
                 } else if ( (py_type_name == "int" || py_type_name == "int32" )&& item_size == sizeof(int)) {
-                    return "int";
+                    return primitive_type_of<int>();
                 } else if (py_type_name == "int" && item_size == sizeof(long)) {
-                    return "long";
+                    return primitive_type_of<long>();
                 } else if ( (py_type_name == "int" || py_type_name == "int64") && item_size == sizeof(long long)) {
-                    return "long long";
+                    return primitive_type_of<long long>();
                 } else if (py_type_name == "longlong" && item_size == sizeof(long long)) {
-                    return "long long"; //numpy type
+                    return primitive_type_of<long long>(); //numpy type
                 } else if ((py_type_name == "uint8" || py_type_name == "ubyte") && item_size == 1) {
-                    return "uint8_t";
+                    return primitive_type::u8;
                 } else if ((py_type_name == "int8" || py_type_name == "byte") && item_size == 1) {
-                    return "int8_t";
+                    return primitive_type::i8;
                 } else if ( (py_type_name == "float" || py_type_name == "float32" || py_type_name == "np.float32" ||
                            py_type_name == "numpy.float32" || py_type_name == "np.single" ||  py_type_name == "numpy.single") && item_size == sizeof(float)) {
-                    return "float";
+                    return primitive_type::f32;
                 } else if ((py_type_name == "float" || py_type_name == "float64" || py_type_name == "np.float64" ||
                             py_type_name == "numpy.float64") && item_size == sizeof(double)) {
-                    return "double";
+                    return primitive_type::f64;
                 } else if (py_type_name == "float" && item_size == sizeof(long double)) {
-                    return "long double";
+                    return primitive_type::long_double;
                 } else {
                     throw std::runtime_error(
                             "(Bmi_Py_Adapter) Failed determining analogous C++ type for Python model '" + py_type_name +
