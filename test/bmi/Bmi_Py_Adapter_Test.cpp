@@ -317,7 +317,8 @@ TEST_F(Bmi_Py_Adapter_Test, GetVarType_0_b) {
 TEST_F(Bmi_Py_Adapter_Test, get_primitive_type_0_a) {
     using models::bmi::primitive_type;
     using models::bmi::primitive_type_of;
-    const std::vector<std::tuple<std::string, size_t, primitive_type>> cases = {
+    std::vector<std::tuple<std::string, size_t, primitive_type>> cases = {
+        {"int", 1, primitive_type::i8},
         {"int", sizeof(short), primitive_type_of<short>()},
         {"int", sizeof(int), primitive_type_of<int>()},
         {"int", sizeof(long), primitive_type_of<long>()},
@@ -330,6 +331,9 @@ TEST_F(Bmi_Py_Adapter_Test, get_primitive_type_0_a) {
         {"ubyte", 1, primitive_type::u8},
         {"int8", 1, primitive_type::i8},
         {"byte", 1, primitive_type::i8},
+        {"uint16", 2, primitive_type::u16},
+        {"uint32", 4, primitive_type::u32},
+        {"uint64", 8, primitive_type::u64},
         {"float", sizeof(float), primitive_type::f32},
         {"float32", sizeof(float), primitive_type::f32},
         {"np.float32", sizeof(float), primitive_type::f32},
@@ -342,6 +346,10 @@ TEST_F(Bmi_Py_Adapter_Test, get_primitive_type_0_a) {
         {"numpy.float64", sizeof(double), primitive_type::f64},
         {"float", sizeof(long double), primitive_type::long_double},
     };
+    // numpy's name for long double, which it has only where long double is 16 bytes.
+    if (sizeof(long double) == 16) {
+        cases.emplace_back("float128", 16, primitive_type::long_double);
+    }
     auto &adapter = *examples[0].adapter;
     for (const auto &[name, item_size, expected] : cases) {
         EXPECT_EQ(adapter.get_primitive_type(name, item_size), expected) << name << " of " << item_size << " bytes";
@@ -353,6 +361,7 @@ TEST_F(Bmi_Py_Adapter_Test, get_primitive_type_0_b) {
     const std::vector<std::pair<std::string, size_t>> cases = {
         {"int", 3}, {"int16", 4}, {"int32", 8}, {"int64", 4}, {"longlong", 4},
         {"uint8", 2}, {"ubyte", 2}, {"int8", 2}, {"byte", 2},
+        {"uint16", 4}, {"uint32", 8}, {"uint64", 4}, {"float128", 8},
         {"float32", sizeof(double)}, {"float64", sizeof(float)}, {"float16", 2}, {"float", 3},
         {"nonesuch", 4},
     };
