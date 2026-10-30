@@ -258,10 +258,21 @@ class NetCDFCacheLayoutTest : public ::testing::Test {
         return 100.0 * cat + t;
     }
 
+    struct ForcingVar {
+        std::string name;
+        std::string units;
+        double offset;
+    };
+
+    // Creates a forcing file with one variable "temp" (units K); see below
+    std::string makeForcing(const std::string& name, std::size_t n_cats, std::size_t n_times, std::size_t time_chunk, double offset = 0) {
+        return makeForcing(name, n_cats, n_times, time_chunk, {{"temp", "K", offset}});
+    }
+
     // Creates a forcing file with n_cats catchments ("cat-0".."cat-N"), n_times
-    // hourly timesteps starting at kStartEpoch, and one variable "temp" (units K)
-    // holding cellValue(cat, t). time_chunk == 0 leaves the variable contiguous.
-    std::string makeForcing(const std::string& name, std::size_t n_cats, std::size_t n_times, std::size_t time_chunk) {
+    // hourly timesteps starting at kStartEpoch, and each of vars holding
+    // cellValue(cat, t) + its offset. time_chunk == 0 leaves the variables contiguous.
+    std::string makeForcing(const std::string& name, std::size_t n_cats, std::size_t n_times, std::size_t time_chunk, const std::vector<ForcingVar>& vars) {
         std::string path = "./" + name;
         temp_files.push_back(path);
 
@@ -291,26 +302,29 @@ class NetCDFCacheLayoutTest : public ::testing::Test {
         }
         time_var.putVar(times.data());
 
-        auto temp_var = out.addVar("temp", netCDF::ncDouble, dims);
-        temp_var.putAtt("units", "K");
-        if (time_chunk > 0) {
-            std::vector<std::size_t> chunk_sizes = {n_cats, time_chunk};
-            temp_var.setChunking(netCDF::NcVar::nc_CHUNKED, chunk_sizes);
-        }
-        std::vector<double> vals(n_cats * n_times);
-        for (std::size_t i = 0; i < n_cats; ++i) {
-            for (std::size_t t = 0; t < n_times; ++t) {
-                vals[i * n_times + t] = cellValue(i, t);
+        for (const auto& v : vars) {
+            auto var = out.addVar(v.name, netCDF::ncDouble, dims);
+            var.putAtt("units", v.units);
+            if (time_chunk > 0) {
+                std::vector<std::size_t> chunk_sizes = {n_cats, time_chunk};
+                var.setChunking(netCDF::NcVar::nc_CHUNKED, chunk_sizes);
             }
+            std::vector<double> vals(n_cats * n_times);
+            for (std::size_t i = 0; i < n_cats; ++i) {
+                for (std::size_t t = 0; t < n_times; ++t) {
+                    vals[i * n_times + t] = cellValue(i, t) + v.offset;
+                }
+            }
+            var.putVar(vals.data());
         }
-        temp_var.putVar(vals.data());
 
         return path;
     }
 
-    static double readStep(NetCDFPerFeatureDataProvider& p, std::size_t cat, std::size_t t) {
-        CatchmentAggrDataSelector sel("cat-" + std::to_string(cat), "temp",
-                                      kStartEpoch + t * kStride, kStride, "K");
+    static double readStep(NetCDFPerFeatureDataProvider& p, std::size_t cat, std::size_t t,
+                           const std::string& var = "temp", const std::string& units = "K") {
+        CatchmentAggrDataSelector sel("cat-" + std::to_string(cat), var,
+                                      kStartEpoch + t * kStride, kStride, units);
         return p.get_value(sel, data_access::MEAN);
     }
 
@@ -357,6 +371,40 @@ TEST_F(NetCDFCacheLayoutTest, PartialLastPageRead)
                 << "cat=" << cat << " t=" << t;
         }
     }
+}
+
+// Each read must come from the variable it names, whether by its name in
+// the file or by the CSDMS name of a well-known field, with every
+// variable's pages cached alongside the others'
+TEST_F(NetCDFCacheLayoutTest, ReadsComeFromTheNamedVariable)
+{
+    const std::size_t n_cats = 3, n_times = 50, chunk = 24; // pages: 24, 24, 2
+    // Not in name order, and T2D and PSFC are well-known fields
+    const std::vector<ForcingVar> vars = {
+        {"temp",   "K",       0},
+        {"T2D",    "K",       1000},
+        {"precip", "mm s^-1", 2000},
+        {"PSFC",   "Pa",      3000},
+    };
+    auto path = makeForcing("nc_cache_variables.nc", n_cats, n_times, chunk, vars);
+    NetCDFPerFeatureDataProvider provider(path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+
+    // The first reads of the well-known fields are by their CSDMS names
+    EXPECT_DOUBLE_EQ(readStep(provider, 1, 0, CSDMS_STD_NAME_SURFACE_TEMP, "K"), cellValue(1, 0) + 1000);
+    EXPECT_DOUBLE_EQ(readStep(provider, 1, 0, CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa"), cellValue(1, 0) + 3000);
+
+    for (std::size_t t = 0; t < n_times; ++t) {
+        for (std::size_t cat = 0; cat < n_cats; ++cat) {
+            for (const auto& v : vars) {
+                EXPECT_DOUBLE_EQ(readStep(provider, cat, t, v.name, v.units), cellValue(cat, t) + v.offset)
+                    << "var=" << v.name << " cat=" << cat << " t=" << t;
+            }
+        }
+    }
+
+    // and the CSDMS names read from pages cached by reads using the names in the file
+    EXPECT_DOUBLE_EQ(readStep(provider, 2, n_times - 1, CSDMS_STD_NAME_SURFACE_TEMP, "K"), cellValue(2, n_times - 1) + 1000);
+    EXPECT_DOUBLE_EQ(readStep(provider, 2, n_times - 1, CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa"), cellValue(2, n_times - 1) + 3000);
 }
 
 // A multi-timestep read whose range starts mid-page and crosses a page
