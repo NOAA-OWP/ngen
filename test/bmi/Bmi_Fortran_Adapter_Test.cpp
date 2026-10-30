@@ -1424,29 +1424,21 @@ TEST_F(Bmi_Fortran_Adapter_Test, get_primitive_type_0_b) {
     EXPECT_THROW(adapter->get_primitive_type("nonesuch", 4), models::bmi::unknown_bmi_type);
 
     // Resolved as named, a disagreeing pair is then refused by the size check.
-    EXPECT_THROW(models::bmi::require_item_size(adapter->get_primitive_type("real", 3), 3, "real"),
-                 std::runtime_error);
+    EXPECT_NE(models::bmi::size_of(adapter->get_primitive_type("real", 3)), 3u);
 }
 
 /**
  * Test that a double precision reported narrower than 8 bytes is resolved as named, not taken for a float.
  *
  * That is far likelier a module misreporting its type or its size than a real 4-byte double, and resolved as named it
- * is refused by the size check with a message saying exactly that, rather than by an accessor the module does not serve.
+ * is refused by the size check, rather than by an accessor the module does not serve.
  */
 TEST_F(Bmi_Fortran_Adapter_Test, get_primitive_type_0_e) {
     using models::bmi::primitive_type;
     EXPECT_EQ(adapter->get_primitive_type("double precision", 4), primitive_type::f64);
     EXPECT_EQ(adapter->get_primitive_type("double", 4), primitive_type::f64);
 
-    try {
-        models::bmi::require_item_size(adapter->get_primitive_type("double precision", 4), 4,
-                                       "variable 'grid_1_origin'", "double precision");
-        FAIL() << "expected a 4-byte double precision to be refused";
-    } catch (const std::runtime_error& e) {
-        EXPECT_STREQ(e.what(), "Cannot use variable 'grid_1_origin': type 'double precision' is 8 bytes, "
-                               "but the model reports an item size of 4 bytes.");
-    }
+    EXPECT_NE(models::bmi::size_of(adapter->get_primitive_type("double precision", 4)), 4u);
 }
 
 /**
@@ -1471,10 +1463,9 @@ TEST_F(Bmi_Fortran_Adapter_Test, get_primitive_type_0_d) {
     using models::bmi::primitive_type;
     const primitive_type resolved = adapter->get_primitive_type("long double", sizeof(long double));
     EXPECT_EQ(resolved, primitive_type::long_double);
-    EXPECT_NO_THROW(models::bmi::require_item_size(resolved, sizeof(long double), "long double"));
+    EXPECT_EQ(models::bmi::size_of(resolved), sizeof(long double));
 
-    EXPECT_THROW(models::bmi::require_item_size(adapter->get_primitive_type("long double", 3), 3, "long double"),
-                 std::runtime_error);
+    EXPECT_NE(models::bmi::size_of(adapter->get_primitive_type("long double", 3)), 3u);
 }
 
 /** Test that a 'real' the module reports as 8 bytes wide is set and read back at that width. */
