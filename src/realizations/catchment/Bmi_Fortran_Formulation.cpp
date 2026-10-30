@@ -46,12 +46,9 @@ std::string Bmi_Fortran_Formulation::get_formulation_type() const {
 }
 
 double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const std::string &var_name) {
-    auto model = std::dynamic_pointer_cast<models::bmi::Bmi_Fortran_Adapter>(get_bmi_model());
-
     // TODO: consider different way of handling (and how to document) cases like long double or unsigned long long that
     //  don't fit or might convert inappropriately
-    // GetValue() throws rather than handing back an empty vector, so indexing its result is safe here.
-    return models::bmi::GetValue<double>(*model, var_name)[index];
+    return models::bmi::GetValue<double>(*get_bmi_model(), var_name, index);
 }
 
 #endif // NGEN_WITH_BMI_FORTRAN
