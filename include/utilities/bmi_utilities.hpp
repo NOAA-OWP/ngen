@@ -57,46 +57,65 @@ namespace models {
         }
 
         /**
-         * @brief Throw unless @p type names a C++ type of exactly @p item_size bytes.
+         * @brief Throw unless @p type is exactly @p item_size bytes.
          *
          * A model reports a variable's type name and the size of one item separately, and nothing in
          * BMI makes the two agree. Every buffer here is sized from one and addressed as the other, so a
          * disagreement reads or writes past the end -- on a read, out of the buffer; on a write, out of
          * it by whatever the model takes. Neither is detectable afterwards, so refuse up front.
          *
-         * @param type A BMI type name.
+         * @param type The type the items are to be addressed as.
          * @param item_size The size in bytes of one item, as the model reports it.
          * @param described What is being resolved, for the message; e.g. "variable 'X' of model 'Y'".
-         * @throw unknown_bmi_type If @p type has no C++ type behind it.
-         * @throw std::runtime_error If that type is not @p item_size bytes.
+         * @param spelled How to name @p type in the message; e.g. the name the model reported for it.
+         * @throw std::runtime_error If @p type is not @p item_size bytes.
          */
-        inline void require_item_size(const std::string &type, size_t item_size, const std::string &described)
+        inline void require_item_size(primitive_type type, size_t item_size, const std::string &described,
+                                      const std::string &spelled)
         {
-            const size_t declared = with_bmi_type(type, []<typename T>() -> size_t { return sizeof(T); });
+            const size_t declared = size_of(type);
             if (declared != item_size) {
-                throw std::runtime_error("Cannot use " + described + ": type '" + type + "' is " +
+                throw std::runtime_error("Cannot use " + described + ": type '" + spelled + "' is " +
                                          std::to_string(declared) + " bytes, but the model reports an item size of " +
                                          std::to_string(item_size) + " bytes.");
             }
         }
 
+        /** @brief As above, naming @p type by its enumerator in the message. */
+        inline void require_item_size(primitive_type type, size_t item_size, const std::string &described)
+        {
+            require_item_size(type, item_size, described, to_string(type));
+        }
+
         /**
-         * @brief Resolve the type name to address a model's variable as, checked against its item size.
+         * @brief As above, for a type given by name.
+         *
+         * @throw unknown_bmi_type If @p type has no C++ type behind it.
+         */
+        inline void require_item_size(const std::string &type, size_t item_size, const std::string &described)
+        {
+            require_item_size(parse_bmi_type(type), item_size, described, type);
+        }
+
+        /**
+         * @brief Resolve the type to address a model's variable as, checked against its item size.
          *
          * The model's own type name is reduced by its adapter's get_analogous_cxx_type(), which may need
          * the item size to settle it, and the result must then describe that item size exactly.
          *
          * @param model The adapter holding the variable.
          * @param name The name of the variable.
-         * @return A type name that with_bmi_type() resolves to a type of the variable's item size.
+         * @return The variable's primitive_type, which is as wide as its items.
          * @throw unknown_bmi_type If no C++ type corresponds to the resolved name.
          * @throw std::runtime_error If that type is not as wide as the model says the items are.
          */
-        inline std::string resolve_var_type(Bmi_Adapter &model, const std::string &name)
+        inline primitive_type resolve_var_type(Bmi_Adapter &model, const std::string &name)
         {
             const size_t item_size = static_cast<size_t>(model.GetVarItemsize(name));
-            std::string type = model.get_analogous_cxx_type(model.GetVarType(name), item_size);
-            require_item_size(type, item_size, "variable '" + name + "' of model '" + model.get_model_name() + "'");
+            const std::string reported = model.GetVarType(name);
+            const primitive_type type = parse_bmi_type(model.get_analogous_cxx_type(reported, item_size));
+            require_item_size(type, item_size, "variable '" + name + "' of model '" + model.get_model_name() + "'",
+                              reported);
             return type;
         }
 
@@ -154,11 +173,18 @@ namespace models {
          * @return std::shared_ptr<void>
          */
         template <typename Iterator>
-        std::shared_ptr<void> get_values_as_type(std::string type, Iterator begin, Iterator end)
+        std::shared_ptr<void> get_values_as_type(primitive_type type, Iterator begin, Iterator end)
         {
-            return with_bmi_type(type, [&]<typename T>() -> std::shared_ptr<void> {
+            return with_primitive_type(type, [&]<typename T>() -> std::shared_ptr<void> {
                 return as_c_array<T>(begin, end);
             });
+        }
+
+        /** @brief As above, for a type given by name. */
+        template <typename Iterator>
+        std::shared_ptr<void> get_values_as_type(const std::string &type, Iterator begin, Iterator end)
+        {
+            return get_values_as_type(parse_bmi_type(type), begin, end);
         }
 
         /**
@@ -170,11 +196,18 @@ namespace models {
          * @return std::shared_ptr<void>
          */
         template<typename T>
-        std::shared_ptr<void> get_value_as_type(std::string type, T value)
+        std::shared_ptr<void> get_value_as_type(primitive_type type, T value)
         {
-            return with_bmi_type(type, [&]<typename U>() -> std::shared_ptr<void> {
+            return with_primitive_type(type, [&]<typename U>() -> std::shared_ptr<void> {
                 return std::make_shared<U>(static_cast<U>(value));
             });
+        }
+
+        /** @brief As above, for a type given by name. */
+        template<typename T>
+        std::shared_ptr<void> get_value_as_type(const std::string &type, T value)
+        {
+            return get_value_as_type(parse_bmi_type(type), value);
         }
 
         /**
@@ -237,7 +270,7 @@ namespace models {
             }
             int num_items = total_mem/item_size;
             //Determine what type we need to cast from, before the model writes into a buffer sized by it
-            std::string type;
+            primitive_type type;
             try {
                 type = resolve_var_type(model, name);
             } catch (const unknown_bmi_type& e) {
@@ -258,7 +291,7 @@ namespace models {
             //which would avoid copying in the BMI model and copying again here
             model.GetValue(name, data);
 
-            return with_bmi_type(type, [&]<typename S>() -> std::vector<T> {
+            return with_primitive_type(type, [&]<typename S>() -> std::vector<T> {
                 return helper::make_vector<T>(static_cast<const S*>(data), num_items);
             });
         }
@@ -287,7 +320,7 @@ namespace models {
                                         std::to_string(num_items) + " items.");
             }
 
-            std::string type;
+            primitive_type type;
             try {
                 type = resolve_var_type(model, name);
             } catch (const unknown_bmi_type& e) {
@@ -297,7 +330,7 @@ namespace models {
                                          ": no logic for converting variable type " + e.type_name);
             }
 
-            return with_bmi_type(type, [&]<typename S>() -> T {
+            return with_primitive_type(type, [&]<typename S>() -> T {
                 S item;
                 model.GetValueAtIndices(name, &item, &index, 1);
                 return static_cast<T>(item);
