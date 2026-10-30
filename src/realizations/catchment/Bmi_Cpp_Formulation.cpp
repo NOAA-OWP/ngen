@@ -46,17 +46,7 @@ std::shared_ptr<Bmi_Adapter> Bmi_Cpp_Formulation::construct_model(const geojson:
 double Bmi_Cpp_Formulation::get_var_value_as_double(const int& index, const std::string& var_name) {
     // TODO: consider different way of handling (and how to document) cases like long double or unsigned long long that
     //  don't fit or might convert inappropriately
-    auto model = std::dynamic_pointer_cast<Bmi_Cpp_Adapter>(get_bmi_model());
-
-    const std::string type = model->GetVarType(var_name);
-    try {
-        return models::bmi::with_bmi_type(type, [&]<typename T>() -> double {
-            return static_cast<double>(models::bmi::GetValuePtr<T>(*model, var_name)[index]);
-        });
-    } catch (const models::bmi::unknown_bmi_type&) {
-        throw std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
-                                 " as double: no logic for converting variable type " + type);
-    }
+    return models::bmi::GetValue<double>(*get_bmi_model(), var_name, index);
 }
 
 bool Bmi_Cpp_Formulation::is_bmi_input_variable(const std::string &var_name) const {
