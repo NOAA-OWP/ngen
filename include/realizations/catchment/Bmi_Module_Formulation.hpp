@@ -36,8 +36,12 @@ namespace realization {
         {
             // The buffers built from these details are sized by item_size and addressed as type, so
             // the two disagreeing is caught once here rather than on every set.
-            models::bmi::require_item_size(this->type, static_cast<size_t>(item_size),
-                                           "variable '" + this->name + "'");
+            if (models::bmi::size_of(this->type) != static_cast<size_t>(item_size)) {
+                throw std::runtime_error("Cannot use variable '" + this->name + "': its type " +
+                                         models::bmi::to_string(this->type) + " is " +
+                                         std::to_string(models::bmi::size_of(this->type)) +
+                                         " bytes, but its items are " + std::to_string(item_size) + " bytes.");
+            }
         }
 
         Bmi_Var_Details(const Bmi_Var_Details& source) = default;

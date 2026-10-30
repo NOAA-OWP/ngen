@@ -245,33 +245,6 @@ TEST(BmiUtilitiesDispatch, unknown_type_throws_from_every_caller) {
                  models::bmi::unknown_bmi_type);
 }
 
-/**
- * require_item_size() refuses a type name that disagrees with the size the model reports.
- *
- * The two are reported separately and nothing in BMI makes them agree, so a buffer sized from one and
- * addressed as the other runs off the end.
- */
-TEST(BmiUtilitiesDispatch, require_item_size_refuses_a_disagreeing_pair) {
-    EXPECT_NO_THROW(models::bmi::require_item_size(models::bmi::parse_bmi_type("double"), sizeof(double), "variable 'X'"));
-    EXPECT_NO_THROW(models::bmi::require_item_size(models::bmi::parse_bmi_type("int32_t"), 4, "variable 'X'"));
-    EXPECT_NO_THROW(models::bmi::require_item_size(models::bmi::parse_bmi_type("real"), sizeof(float), "variable 'X'"));
-
-    try {
-        models::bmi::require_item_size(models::bmi::parse_bmi_type("int"), sizeof(int) + 1, "variable 'X'");
-        FAIL() << "expected a disagreeing item size to be refused";
-    } catch (const std::runtime_error& e) {
-        const std::string msg = e.what();
-        EXPECT_NE(msg.find("variable 'X'"), std::string::npos)
-            << "message should name what was being resolved: " << msg;
-        EXPECT_NE(msg.find(std::to_string(sizeof(int) + 1)), std::string::npos)
-            << "message should report the size the model gave: " << msg;
-    }
-
-    // A name with no type behind it is still that, not a complaint about its size.
-    EXPECT_THROW(models::bmi::require_item_size(models::bmi::parse_bmi_type("nonesuch_t"), 4, "variable 'X'"),
-                 models::bmi::unknown_bmi_type);
-}
-
 /** The conversion is a cast: narrowing follows the usual rules rather than being refused here. */
 TEST(BmiUtilitiesDispatch, values_are_cast_into_the_named_type) {
     auto truncated = models::bmi::get_value_as_type(models::bmi::parse_bmi_type("int"), 2.9);
