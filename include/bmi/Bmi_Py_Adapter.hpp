@@ -20,6 +20,7 @@
 #include "boost/algorithm/string/join.hpp"
 
 #include "Bmi_Adapter.hpp"
+#include "utilities/bmi_utilities.hpp"
 
 #include "utilities/python/InterpreterUtil.hpp"
 
@@ -345,32 +346,10 @@ namespace models {
              *                       which there is not support for mapping to a native type in the framework.
              */
             void get_value_at_indices(const std::string& name, void *dest, int *inds, int count, bool is_all_indices) {
-                std::string val_type = GetVarType(name);
-                size_t val_item_size = (size_t)GetVarItemsize(name);
-                std::vector<std::string> in_v = GetInputVarNames();
-
-                // The available types and how they are handled here should match what is in SetValueAtIndices
-                if (val_type == "int" && val_item_size == sizeof(short))
-                    get_via_numpy_array<short>(name, dest, inds, count, val_item_size, is_all_indices);
-                else if (val_type == "int" && val_item_size == sizeof(int))
-                    get_via_numpy_array<int>(name, dest, inds, count, val_item_size, is_all_indices);
-                else if (val_type == "int" && val_item_size == sizeof(long))
-                    get_via_numpy_array<long>(name, dest, inds, count, val_item_size, is_all_indices);
-                else if (val_type == "int" && val_item_size == sizeof(long long))
-                    get_via_numpy_array<long long>(name, dest, inds, count, val_item_size, is_all_indices);
-                else if (val_type == "float" || val_type == "float16" || val_type == "float32" || val_type == "float64") {
-                    if (val_item_size == sizeof(float))
-                        get_via_numpy_array<float>(name, dest, inds, count, val_item_size, is_all_indices);
-                    else if (val_item_size == sizeof(double))
-                        get_via_numpy_array<double>(name, dest, inds, count, val_item_size, is_all_indices);
-                    else if (val_item_size == sizeof(long double))
-                        get_via_numpy_array<long double>(name, dest, inds, count, val_item_size, is_all_indices);
-                }
-                else
-                    throw std::runtime_error(
-                            "(Bmi_Py_Adapter) Failed attempt to GET values of BMI variable '" + name + "' from '" +
-                            model_name + "' model:  model advertises unsupported combination of type (" + val_type +
-                            ") and size (" + std::to_string(val_item_size) + ").");
+                const models::bmi::primitive_type type = models::bmi::resolve_var_type(*this, name);
+                models::bmi::with_primitive_type(type, [&]<typename T>() {
+                    get_via_numpy_array<T>(name, dest, inds, count, models::bmi::size_of(type), is_all_indices);
+                });
             }
 
             /**
@@ -440,38 +419,11 @@ namespace models {
             void UpdateUntil(double time) override;
 
             void SetValue(std::string name, void *src) override {
-                int itemSize = GetVarItemsize(name);
-                std::string py_type = GetVarType(name);
-                std::string cxx_type = get_analogous_cxx_type(py_type, (size_t) itemSize);
-
-                if (cxx_type == "short") {
-                    set_value<short>(name, (short *) src);
-                } else if (cxx_type == "int") {
-                    set_value<int>(name, (int *) src);
-                } else if (cxx_type == "long") {
-                    set_value<long>(name, (long *) src);
-                } else if (cxx_type == "long long") {
-                    //FIXME this gets dicey -- if a python numpy array is of type np.int64 (long long),
-                    //but a c++ int* is passed to this function as src, it will fail in undefined ways...
-                    //the template type overload may be preferred for doing SetValue from framework components
-                    //such as forcing providers...
-                    set_value<long long>(name, (long long *) src);
-                } else if (cxx_type == "uint8_t") {
-                    // Byte-typed payload (e.g. the BMI serialization protocol's
-                    // `ngen::serialization_state` opaque buffer). `src` is
-                    // already a raw byte pointer — hand it to the
-                    // uint8_t-instantiated template.
-                    set_value<uint8_t>(name, (uint8_t *) src);
-                } else if (cxx_type == "float") {
-                    set_value<float>(name, (float *) src);
-                } else if (cxx_type == "double") {
-                    set_value<double>(name, (double *) src);
-                } else if (cxx_type == "long double") {
-                    set_value<long double>(name, (long double *) src);
-                } else {
-                    throw std::runtime_error("Bmi_Py_Adapter cannot set values for variable '" + name +
-                                             "' that has unrecognized C++ type '" + cxx_type + "'");
-                }
+                // src has to hold items of the variable's own type: an int* passed for an np.int64 variable is read
+                // past its end. Framework components holding another type may prefer the std::vector<T> overload.
+                models::bmi::with_primitive_type(models::bmi::resolve_var_type(*this, name), [&]<typename T>() {
+                    set_value<T>(name, static_cast<T *>(src));
+                });
             }
 
             /**
@@ -528,20 +480,16 @@ namespace models {
              * wrapped Numpy arrays analogous to ``inds`` and ``cxx_array``, copying into each analog the values of the
              * C++ arrays.
              *
-             * The parameters serve very much the same purpose as the standard BMI ``SetValueAtIndices``.  The
-             * additional ``np_type`` parameter allows the required wrapped Numpy array to be created using the correct
-             * dtype for the variable in question.
+             * The parameters serve very much the same purpose as the standard BMI ``SetValueAtIndices``.
              *
              * @tparam T The C++ type to use for the wrapper template holding the Numpy array of values to be set.
              * @param name The name of the involved BMI variable.
              * @param inds A C++ integer array of indices to update, corresponding to each value in ``cxx_array``.
              * @param count Number of elements in the ``inds`` and ``cxx_array`` arrays.
              * @param cxx_array A C++ array of unknown type containing the new values to be set in the BMI variable.
-             * @param np_type The name of the Python dtype to use for the wrapped Numpy array of update values.
              */
             template <typename T>
-            void set_value_at_indices(const std::string &name, const int *inds, int count, void* cxx_array,
-                                      const std::string &np_type)
+            void set_value_at_indices(const std::string &name, const int *inds, int count, void* cxx_array)
             {
                 py::array_t<int> index_array(py::buffer_info(inds, count));
                 py::array_t<T> src_array(py::buffer_info((T*)cxx_array, count));
