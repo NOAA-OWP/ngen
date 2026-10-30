@@ -107,7 +107,7 @@ std::string Bmi_Fortran_Adapter::GetTimeUnits() {
     return {time_units_cstr};
 }
 
-std::string Bmi_Fortran_Adapter::get_value_cxx_type(const std::string &name) {
+models::bmi::primitive_type Bmi_Fortran_Adapter::get_value_primitive_type(const std::string &name) {
     try {
         return models::bmi::resolve_var_type(*this, name);
     }
@@ -118,15 +118,15 @@ std::string Bmi_Fortran_Adapter::get_value_cxx_type(const std::string &name) {
 }
 
 void Bmi_Fortran_Adapter::GetValue(std::string name, void *dest) {
-    const std::string cxx_type = get_value_cxx_type(name);
-    models::bmi::with_bmi_type(cxx_type, [&]<typename T>() {
+    const models::bmi::primitive_type type = get_value_primitive_type(name);
+    models::bmi::with_primitive_type(type, [&]<typename T>() {
         // There is a getter for T exactly when the ISO C shim has one that wide; see the inner_get_value() overloads.
         if constexpr (requires(const std::string &n, T *values) { this->inner_get_value(n, values); }) {
             inner_get_value(name, static_cast<T *>(dest));
         }
         else {
             throw ::external::ExternalIntegrationException(
-                    "Can't get model " + model_name + " variable " + name + " as '" + cxx_type +
+                    "Can't get model " + model_name + " variable " + name + " as '" + models::bmi::to_string(type) +
                     "': the Fortran BMI interface has no getter for that type.");
         }
     });
@@ -134,7 +134,7 @@ void Bmi_Fortran_Adapter::GetValue(std::string name, void *dest) {
 
 void Bmi_Fortran_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {
     // The ISO C shim has no access by index, so read the whole variable and pick the items out of it.
-    models::bmi::with_bmi_type(get_value_cxx_type(name), [&]<typename T>() {
+    models::bmi::with_primitive_type(get_value_primitive_type(name), [&]<typename T>() {
         const int num_items = GetVarNbytes(name) / static_cast<int>(sizeof(T));
         std::vector<T> values(num_items);
         GetValue(name, values.data());
@@ -213,15 +213,15 @@ int Bmi_Fortran_Adapter::GetGridSize(int grid_id) {
 }
 
 void Bmi_Fortran_Adapter::SetValue(std::string name, void *src) {
-    const std::string cxx_type = get_value_cxx_type(name);
-    models::bmi::with_bmi_type(cxx_type, [&]<typename T>() {
+    const models::bmi::primitive_type type = get_value_primitive_type(name);
+    models::bmi::with_primitive_type(type, [&]<typename T>() {
         // There is a setter for T exactly when the ISO C shim has one that wide; see the inner_set_value() overloads.
         if constexpr (requires(const std::string &n, T *values) { this->inner_set_value(n, values); }) {
             inner_set_value(name, static_cast<T *>(src));
         }
         else {
             throw ::external::ExternalIntegrationException(
-                    "Can't set model " + model_name + " variable " + name + " as '" + cxx_type +
+                    "Can't set model " + model_name + " variable " + name + " as '" + models::bmi::to_string(type) +
                     "': the Fortran BMI interface has no setter for that type.");
         }
     });

@@ -736,15 +736,15 @@ namespace models {
             }
 
             /**
-             * Get the C++ type name for a variable's values, checked against the item size the module reports.
+             * Get the primitive type of a variable's values, checked against the item size the module reports.
              *
              * @param name The name of the variable.
-             * @return A type name, which @ref models::bmi::with_bmi_type resolves to a type of the variable's width.
+             * @return The variable's primitive type, which is as wide as its items.
              * @throw ::external::ExternalIntegrationException If no C++ type corresponds to the variable's type name.
              * @throw std::runtime_error If the resolved type is not as wide as the module says the items are.
              * @see models::bmi::resolve_var_type
              */
-            std::string get_value_cxx_type(const std::string &name);
+            models::bmi::primitive_type get_value_primitive_type(const std::string &name);
 
             friend class ::Bmi_Fortran_Adapter_Test;
 
