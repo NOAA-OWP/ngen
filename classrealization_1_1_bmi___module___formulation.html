@@ -199,9 +199,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9e5990e1c4616de029d7ad7691c2b7c7" id="r_a9e5990e1c4616de029d7ad7691c2b7c7"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e5990e1c4616de029d7ad7691c2b7c7">get_value</a> (const <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a> &amp;selector, <a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9">data_access::ReSampleMethod</a> m) override</td></tr>
 <tr class="memdesc:a9e5990e1c4616de029d7ad7691c2b7c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of a forcing property for an arbitrary time period, converting units if needed.  <br /></td></tr>
 <tr class="separator:a9e5990e1c4616de029d7ad7691c2b7c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9676d2895d8aa5d8676dd7ca238ecb13" id="r_a9676d2895d8aa5d8676dd7ca238ecb13"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9676d2895d8aa5d8676dd7ca238ecb13">get_var_value_as_double</a> (const int &amp;index, const std::string &amp;var_name)=0</td></tr>
-<tr class="memdesc:a9676d2895d8aa5d8676dd7ca238ecb13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get value for some BMI model variable at a specific index.  <br /></td></tr>
-<tr class="separator:a9676d2895d8aa5d8676dd7ca238ecb13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accb03e85ebfc6d5e88c945b4d30e71f6" id="r_accb03e85ebfc6d5e88c945b4d30e71f6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#accb03e85ebfc6d5e88c945b4d30e71f6">is_bmi_input_variable</a> (const std::string &amp;var_name) const override</td></tr>
 <tr class="separator:accb03e85ebfc6d5e88c945b4d30e71f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdc662b1912d37e3bf6bff8e2a7a9bab" id="r_afdc662b1912d37e3bf6bff8e2a7a9bab"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afdc662b1912d37e3bf6bff8e2a7a9bab">is_bmi_output_variable</a> (const std::string &amp;var_name) const override</td></tr>
@@ -990,7 +987,7 @@ Uniqueness</h2>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="#a9bf1db96b3ecb9b4ae5bc7b0c2e6c76b">get_config_mapped_variable_name()</a>, <a class="el" href="#a560df251f7c45e3003698a9ce589f0da">get_provider_for_input_var()</a>, <a class="el" href="classbmi_1_1_bmi.html#aaac07008cbea8bc96082a4e7ad2173b6">bmi::Bmi::GetVarItemsize()</a>, and <a class="el" href="#addd74974bd828fac5bc15790787fc119">perform_set()</a>.</p>
+<p class="reference">References <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="#a9bf1db96b3ecb9b4ae5bc7b0c2e6c76b">get_config_mapped_variable_name()</a>, <a class="el" href="#a560df251f7c45e3003698a9ce589f0da">get_provider_for_input_var()</a>, <a class="el" href="classbmi_1_1_bmi.html#aaac07008cbea8bc96082a4e7ad2173b6">bmi::Bmi::GetVarItemsize()</a>, <a class="el" href="#addd74974bd828fac5bc15790787fc119">perform_set()</a>, and <a class="el" href="namespacemodels_1_1bmi.html#a2f8e38da8cd007e71545a40db7292779">models::bmi::resolve_var_type()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#afc50e50f23df9c0178bd3ccba22c24e4">set_model_inputs_prior_to_update()</a>.</p>
 
@@ -1247,7 +1244,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 <p class="reference">References <a class="el" href="#a1e2d487c21e9540b0cbf36b6e3858cd0">bmi_model</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a029185f64f954471018b5b5c63cae3b8">realization::Bmi_C_Formulation::convert_model_time()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a6b136f45d5a43bbb0ed672203bf56bcb">realization::Bmi_Cpp_Formulation::convert_model_time()</a>, <a class="el" href="#aaeaf8ef8b36e7c5690ca8134a5cd8065">determine_model_time_offset()</a>, <a class="el" href="#aff171a21897a83efdde7c523e3388adb">do_bmi_sets_with_full_refetch()</a>, <a class="el" href="#ae0d3530cb9ec114a5a9798959cee1fa9">get_bmi_input_variables()</a>, <a class="el" href="#acd691f6d9630526e041f72176a7539b8">get_bmi_output_var_name()</a>, <a class="el" href="#a5736279b7c5266934563a31afc3f6780">get_bmi_output_variables()</a>, <a class="el" href="#a61f695665f81fc947e6e982753ad9263">get_data_start_time()</a>, <a class="el" href="#a58f9b6b9e3da79f2081eec6c2ef02d39">get_model_current_time()</a>, <a class="el" href="#a161392de1e35cafa631fb00a1bd02b49">get_model_end_time()</a>, <a class="el" href="#abda7768d404be3fd48054ecb8a29cf2b">get_output_fields()</a>, <a class="el" href="#a9e5990e1c4616de029d7ad7691c2b7c7">get_value()</a>, <a class="el" href="#a9265b07222e97669c28fc24454ad7350">get_values()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a95c328f3f7ebee638e0a36dc0874a898">realization::Bmi_C_Formulation::get_var_value_as()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a65eb8e2d86900ba37349334ebfeaf9cd">realization::Bmi_Cpp_Formulation::get_var_value_as()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">realization::Bmi_C_Formulation::get_var_value_as_double()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab01f9dad8c3c543595848fd9bc8b887b">realization::Bmi_Cpp_Formulation::get_var_value_as_double()</a>, <a class="el" href="#a6b1178914ad6e8ae4d69d86284fce924">initialize_bmi_input_var_metadata()</a>, <a class="el" href="#a7c62e8f7f7db1d06cfef28ee66554def">inner_create_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ac37bea953596faf0c3d03fb7db630f3c">realization::Bmi_C_Formulation::is_bmi_input_variable()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a7022029d1ac8654e3a95767a8d17aaed">realization::Bmi_Cpp_Formulation::is_bmi_input_variable()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a6f9751df6e3fd59bea4faa207b411787">realization::Bmi_C_Formulation::is_bmi_output_variable()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#add9969362e57d9dcc3a9a9ecf0f30b76">realization::Bmi_Cpp_Formulation::is_bmi_output_variable()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ac0f36d507216f74a61470bf17b5a5faa">realization::Bmi_C_Formulation::is_model_initialized()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#af96fa8d2f889e075d98e5884e91b6f98">realization::Bmi_Cpp_Formulation::is_model_initialized()</a>, <a class="el" href="#addd74974bd828fac5bc15790787fc119">perform_set()</a>, <a class="el" href="#ab4acbd230e09c1dc4b0151c301bbe966">set_initial_bmi_parameters()</a>, and <a class="el" href="#abb46469f850c323987b1feef0217504f">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a029185f64f954471018b5b5c63cae3b8">realization::Bmi_C_Formulation::convert_model_time()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a6b136f45d5a43bbb0ed672203bf56bcb">realization::Bmi_Cpp_Formulation::convert_model_time()</a>, <a class="el" href="#aaeaf8ef8b36e7c5690ca8134a5cd8065">determine_model_time_offset()</a>, <a class="el" href="#aff171a21897a83efdde7c523e3388adb">do_bmi_sets_with_full_refetch()</a>, <a class="el" href="#ae0d3530cb9ec114a5a9798959cee1fa9">get_bmi_input_variables()</a>, <a class="el" href="#acd691f6d9630526e041f72176a7539b8">get_bmi_output_var_name()</a>, <a class="el" href="#a5736279b7c5266934563a31afc3f6780">get_bmi_output_variables()</a>, <a class="el" href="#a61f695665f81fc947e6e982753ad9263">get_data_start_time()</a>, <a class="el" href="#a58f9b6b9e3da79f2081eec6c2ef02d39">get_model_current_time()</a>, <a class="el" href="#a161392de1e35cafa631fb00a1bd02b49">get_model_end_time()</a>, <a class="el" href="#abda7768d404be3fd48054ecb8a29cf2b">get_output_fields()</a>, <a class="el" href="#a9e5990e1c4616de029d7ad7691c2b7c7">get_value()</a>, <a class="el" href="#a9265b07222e97669c28fc24454ad7350">get_values()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a95c328f3f7ebee638e0a36dc0874a898">realization::Bmi_C_Formulation::get_var_value_as()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a65eb8e2d86900ba37349334ebfeaf9cd">realization::Bmi_Cpp_Formulation::get_var_value_as()</a>, <a class="el" href="#a6b1178914ad6e8ae4d69d86284fce924">initialize_bmi_input_var_metadata()</a>, <a class="el" href="#a7c62e8f7f7db1d06cfef28ee66554def">inner_create_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ac37bea953596faf0c3d03fb7db630f3c">realization::Bmi_C_Formulation::is_bmi_input_variable()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a7022029d1ac8654e3a95767a8d17aaed">realization::Bmi_Cpp_Formulation::is_bmi_input_variable()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a6f9751df6e3fd59bea4faa207b411787">realization::Bmi_C_Formulation::is_bmi_output_variable()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#add9969362e57d9dcc3a9a9ecf0f30b76">realization::Bmi_Cpp_Formulation::is_bmi_output_variable()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ac0f36d507216f74a61470bf17b5a5faa">realization::Bmi_C_Formulation::is_model_initialized()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#af96fa8d2f889e075d98e5884e91b6f98">realization::Bmi_Cpp_Formulation::is_model_initialized()</a>, <a class="el" href="#addd74974bd828fac5bc15790787fc119">perform_set()</a>, <a class="el" href="#ab4acbd230e09c1dc4b0151c301bbe966">set_initial_bmi_parameters()</a>, and <a class="el" href="#abb46469f850c323987b1feef0217504f">update()</a>.</p>
 
 </div>
 </div>
@@ -1642,7 +1639,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_bmi___formulation.html#a3e6136d3fde105fd835c8be24db7d1b7">realization::Bmi_Formulation::model_type_name</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a916aba6fc1f5e4d95c9fcd3f234a5bf0">realization::Bmi_C_Formulation::construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a6b4dbeb33e8d3c85ad89d7555dfeb9b3">realization::Bmi_Cpp_Formulation::construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">realization::Bmi_C_Formulation::get_var_value_as_double()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab01f9dad8c3c543595848fd9bc8b887b">realization::Bmi_Cpp_Formulation::get_var_value_as_double()</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a093bf43259686df1abbe02087619583e">realization::Bmi_Multi_Formulation::init_nested_module()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a916aba6fc1f5e4d95c9fcd3f234a5bf0">realization::Bmi_C_Formulation::construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a6b4dbeb33e8d3c85ad89d7555dfeb9b3">realization::Bmi_Cpp_Formulation::construct_model()</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a093bf43259686df1abbe02087619583e">realization::Bmi_Multi_Formulation::init_nested_module()</a>.</p>
 
 </div>
 </div>
@@ -2048,7 +2045,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 </dl>
 <dl class="section see"><dt>See also</dt><dd>ForcingProvider::get_value </dd></dl>
 
-<p class="reference">References <a class="el" href="#a3ea2f6ea46e2b71188aec7c6c2da4cc9">get_available_variable_names()</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="#acd691f6d9630526e041f72176a7539b8">get_bmi_output_var_name()</a>, <a class="el" href="class_units_helper.html#a114679453987a2e5e41a123a490c5811">UnitsHelper::get_converted_value()</a>, <a class="el" href="classrealization_1_1_formulation.html#a224466bc8464766b40109ce929143d86">realization::Formulation::get_formulation_type()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027">models::bmi::Bmi_Adapter::get_model_name()</a>, <a class="el" href="class_catchment_aggr_data_selector.html#a92a56297b4fe7ad8c374f8808a5579f9">CatchmentAggrDataSelector::get_output_units()</a>, <a class="el" href="#a9676d2895d8aa5d8676dd7ca238ecb13">get_var_value_as_double()</a>, <a class="el" href="class_catchment_aggr_data_selector.html#a1dd6a5bb4ab1e701463359d34d4d6738">CatchmentAggrDataSelector::get_variable_name()</a>, <a class="el" href="classbmi_1_1_bmi.html#a75725d44cf7432a7f09f1ac403727d64">bmi::Bmi::GetVarUnits()</a>, <a class="el" href="struct_units_helper_1_1unit__conversion__exception.html#a77185d5c68305fc039ef414e86bedcf7">UnitsHelper::unit_conversion_exception::provider_model_name</a>, and <a class="el" href="struct_units_helper_1_1unit__conversion__exception.html#ab804c77114920e37638aa6bf236c9511">UnitsHelper::unit_conversion_exception::provider_var_name</a>.</p>
+<p class="reference">References <a class="el" href="#a3ea2f6ea46e2b71188aec7c6c2da4cc9">get_available_variable_names()</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="#acd691f6d9630526e041f72176a7539b8">get_bmi_output_var_name()</a>, <a class="el" href="class_units_helper.html#a114679453987a2e5e41a123a490c5811">UnitsHelper::get_converted_value()</a>, <a class="el" href="classrealization_1_1_formulation.html#a224466bc8464766b40109ce929143d86">realization::Formulation::get_formulation_type()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027">models::bmi::Bmi_Adapter::get_model_name()</a>, <a class="el" href="class_catchment_aggr_data_selector.html#a92a56297b4fe7ad8c374f8808a5579f9">CatchmentAggrDataSelector::get_output_units()</a>, <a class="el" href="class_catchment_aggr_data_selector.html#a1dd6a5bb4ab1e701463359d34d4d6738">CatchmentAggrDataSelector::get_variable_name()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee">models::bmi::GetValue()</a>, <a class="el" href="classbmi_1_1_bmi.html#a75725d44cf7432a7f09f1ac403727d64">bmi::Bmi::GetVarUnits()</a>, <a class="el" href="struct_units_helper_1_1unit__conversion__exception.html#a77185d5c68305fc039ef414e86bedcf7">UnitsHelper::unit_conversion_exception::provider_model_name</a>, and <a class="el" href="struct_units_helper_1_1unit__conversion__exception.html#ab804c77114920e37638aa6bf236c9511">UnitsHelper::unit_conversion_exception::provider_var_name</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#a813cd9420088cc7023a41c6429cf0ccb">get_output_values_for_timestep()</a>, and <a class="el" href="#a0108d3ee83f95ad2eb0733a237078e89">get_response()</a>.</p>
 
@@ -2157,54 +2154,6 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
-<a id="a9676d2895d8aa5d8676dd7ca238ecb13" name="a9676d2895d8aa5d8676dd7ca238ecb13"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9676d2895d8aa5d8676dd7ca238ecb13">&#9670;&#160;</a></span>get_var_value_as_double()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual double realization::Bmi_Module_Formulation::get_var_value_as_double </td>
-          <td>(</td>
-          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>index</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>var_name</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get value for some BMI model variable at a specific index. </p>
-<p>Function gets the value for a provided variable, returned from the backing model as an array, and returns the specific value at the desired index cast as a double type.</p>
-<p>The function makes several assumptions: </p><pre class="fragment">1. `index` is within array bounds
-2. `var_name` is in the set of valid variable names for the model
-3. the type for output variable allows the value to be cast to a `double` appropriately
-</pre><p>It falls to user (functions) of this function to ensure these assumptions hold before invoking.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">index</td><td></td></tr>
-    <tr><td class="paramname">var_name</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
-
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">realization::Bmi_C_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab01f9dad8c3c543595848fd9bc8b887b">realization::Bmi_Cpp_Formulation</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="#a9e5990e1c4616de029d7ad7691c2b7c7">get_value()</a>.</p>
-
-</div>
-</div>
 <a id="a0f20616c646a363ca555a16c68dad71a" name="a0f20616c646a363ca555a16c68dad71a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0f20616c646a363ca555a16c68dad71a">&#9670;&#160;</a></span>get_variable_time_begin()</h2>
 
@@ -2252,7 +2201,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 <p>Initialize the metadata as needed for <a class="el" href="#a138d48599bb6721054e1b9c8352b06e9">do_bmi_sets_from_stored_metadata</a>. </p>
 <p>This will populate the <a class="el" href="#a7dd68d66039258314ae59bd237ba5d5d">bmi_input_var_details</a> member. As metadata is gathered into <a class="el" href="classrealization_1_1_bmi___var___details.html">Bmi_Var_Details</a> objects, these will be inserted into to the <a class="el" href="#a2d63db036aa5ecba7f045f43349c698f">known_bmi_input_vars</a> static member. Pointers to the values in that set are then added to <a class="el" href="#a7dd68d66039258314ae59bd237ba5d5d">bmi_input_var_details</a>. </p>
 
-<p class="reference">References <a class="el" href="#ad20a0abc6e06c670c587d7292494d96b">bmi_input_providers</a>, <a class="el" href="#a7dd68d66039258314ae59bd237ba5d5d">bmi_input_var_details</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="#a9bf1db96b3ecb9b4ae5bc7b0c2e6c76b">get_config_mapped_variable_name()</a>, <a class="el" href="#a560df251f7c45e3003698a9ce589f0da">get_provider_for_input_var()</a>, <a class="el" href="classbmi_1_1_bmi.html#aaac07008cbea8bc96082a4e7ad2173b6">bmi::Bmi::GetVarItemsize()</a>, and <a class="el" href="#a2d63db036aa5ecba7f045f43349c698f">known_bmi_input_vars</a>.</p>
+<p class="reference">References <a class="el" href="#ad20a0abc6e06c670c587d7292494d96b">bmi_input_providers</a>, <a class="el" href="#a7dd68d66039258314ae59bd237ba5d5d">bmi_input_var_details</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="#a9bf1db96b3ecb9b4ae5bc7b0c2e6c76b">get_config_mapped_variable_name()</a>, <a class="el" href="#a560df251f7c45e3003698a9ce589f0da">get_provider_for_input_var()</a>, <a class="el" href="classbmi_1_1_bmi.html#aaac07008cbea8bc96082a4e7ad2173b6">bmi::Bmi::GetVarItemsize()</a>, <a class="el" href="#a2d63db036aa5ecba7f045f43349c698f">known_bmi_input_vars</a>, and <a class="el" href="namespacemodels_1_1bmi.html#a2f8e38da8cd007e71545a40db7292779">models::bmi::resolve_var_type()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#a138d48599bb6721054e1b9c8352b06e9">do_bmi_sets_from_stored_metadata()</a>.</p>
 
@@ -2911,7 +2860,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 <p>This checks for a key named <code>model_params</code> in the parsed properties, and for each property it will attempt to call <code>SetValue</code> using the property's key as the BMI variable and the property's value as the value to set.</p>
 <p>This function should only be called once <code>bmi_model</code> is properly constructed. If <code>bmi_model</code> is a nullptr, this function becomes a no-op. </p>
 
-<p class="reference">References <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#add7916e3cbe2b42e8084182afd4ee412">models::bmi::Bmi_Adapter::get_analogous_cxx_type()</a>, <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="namespacegeojson.html#a51a3ed6d91b88684d46710614638d53b">geojson::get_propertytype_name()</a>, <a class="el" href="classbmi_1_1_bmi.html#aaac07008cbea8bc96082a4e7ad2173b6">bmi::Bmi::GetVarItemsize()</a>, <a class="el" href="classbmi_1_1_bmi.html#ab200d1746bee8806139062040dd06d8f">bmi::Bmi::GetVarNbytes()</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a4ee29ca12c7d126654bd0e5275de6135">geojson::List</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a2bd8ab451a35759c5737128e35c8011a">geojson::Natural</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a7f80fcc452c2f1ed2bb51b39d0864df1">geojson::Real</a>, <a class="el" href="namespacemodels_1_1bmi.html#a054dd7ec3fbb6fdd9079e3caa48d665a">models::bmi::require_item_size()</a>, <a class="el" href="classbmi_1_1_bmi.html#ae0e047f16b967e6b6cab77d3285add30">bmi::Bmi::SetValue()</a>, and <a class="el" href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8">logging::warning()</a>.</p>
+<p class="reference">References <a class="el" href="#a9470b269a7eee42198e56d93f50dd7ea">get_bmi_model()</a>, <a class="el" href="namespacegeojson.html#a51a3ed6d91b88684d46710614638d53b">geojson::get_propertytype_name()</a>, <a class="el" href="classbmi_1_1_bmi.html#ab200d1746bee8806139062040dd06d8f">bmi::Bmi::GetVarNbytes()</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a4ee29ca12c7d126654bd0e5275de6135">geojson::List</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a2bd8ab451a35759c5737128e35c8011a">geojson::Natural</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a7f80fcc452c2f1ed2bb51b39d0864df1">geojson::Real</a>, <a class="el" href="namespacemodels_1_1bmi.html#a2f8e38da8cd007e71545a40db7292779">models::bmi::resolve_var_type()</a>, <a class="el" href="classbmi_1_1_bmi.html#ae0e047f16b967e6b6cab77d3285add30">bmi::Bmi::SetValue()</a>, and <a class="el" href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8">logging::warning()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="#a7c62e8f7f7db1d06cfef28ee66554def">inner_create_formulation()</a>.</p>
 
@@ -4014,7 +3963,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___module___formulation.html">Bmi_Module_Formulation</a></li>
-    <li class="footer">Generated on Fri Oct 30 2026 02:18:58 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Oct 30 2026 20:42:30 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

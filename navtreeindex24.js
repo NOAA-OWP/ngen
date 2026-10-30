@@ -1,9 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structgeojson_1_1_list.html#a28e0531d1eb1f1b8cbedbe4c759fefb7":[27,0,4,6,3],
-"structgeojson_1_1_list.html#a42c12fa9ad6bb881589e5acb3319fe4e":[26,0,5,6,0],
-"structgeojson_1_1_list.html#a42c12fa9ad6bb881589e5acb3319fe4e":[27,0,4,6,0],
-"structgeojson_1_1_list.html#af53a8a24c290efe2a19958f898175c69":[26,0,5,6,5],
 "structgeojson_1_1_list.html#af53a8a24c290efe2a19958f898175c69":[27,0,4,6,5],
 "structgeojson_1_1_list.html#aff28ac43c013d316714e52f7dd35765e":[26,0,5,6,4],
 "structgeojson_1_1_list.html#aff28ac43c013d316714e52f7dd35765e":[27,0,4,6,4],
@@ -249,5 +245,9 @@ var NAVTREEINDEX24 =
 "structngen_1_1sqlite_1_1database_1_1iterator.html#a651bce7eb2e56732fb3c33dcfc57c70e":[27,0,9,3,0,1,0],
 "structngen_1_1sqlite_1_1database_1_1iterator.html#a675a7559d402dc2579e006fdbf8a410a":[26,0,11,3,0,1,3],
 "structngen_1_1sqlite_1_1database_1_1iterator.html#a675a7559d402dc2579e006fdbf8a410a":[27,0,9,3,0,1,3],
-"structngen_1_1sqlite_1_1database_1_1iterator.html#a6c3b0d6cb4ca0421cc85ce2f20789cb9":[26,0,11,3,0,1,10]
+"structngen_1_1sqlite_1_1database_1_1iterator.html#a6c3b0d6cb4ca0421cc85ce2f20789cb9":[26,0,11,3,0,1,10],
+"structngen_1_1sqlite_1_1database_1_1iterator.html#a6c3b0d6cb4ca0421cc85ce2f20789cb9":[27,0,9,3,0,1,10],
+"structngen_1_1sqlite_1_1database_1_1iterator.html#a70d526cc218c9ddd25504b50f3f138cf":[26,0,11,3,0,1,20],
+"structngen_1_1sqlite_1_1database_1_1iterator.html#a70d526cc218c9ddd25504b50f3f138cf":[27,0,9,3,0,1,20],
+"structngen_1_1sqlite_1_1database_1_1iterator.html#a90879e8863f92c590b3de551f5fd6b87":[26,0,11,3,0,1,7]
 };

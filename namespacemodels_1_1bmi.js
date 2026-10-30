@@ -13,7 +13,9 @@ var namespacemodels_1_1bmi =
     [ "get_value_as_type", "namespacemodels_1_1bmi.html#a190d426fc97ea51b5f754f078048d1c0", null ],
     [ "get_values_as_type", "namespacemodels_1_1bmi.html#aa56083ccb0ce55d60a4c3c3391b65928", null ],
     [ "GetValue", "namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee", null ],
+    [ "GetValue", "namespacemodels_1_1bmi.html#a17fb60281a541b87da0c46ef7f2252cf", null ],
     [ "GetValuePtr", "namespacemodels_1_1bmi.html#a0c2366c15ed4de750faf988535516581", null ],
     [ "require_item_size", "namespacemodels_1_1bmi.html#a054dd7ec3fbb6fdd9079e3caa48d665a", null ],
+    [ "resolve_var_type", "namespacemodels_1_1bmi.html#a2f8e38da8cd007e71545a40db7292779", null ],
     [ "with_bmi_type", "namespacemodels_1_1bmi.html#ad08b04570775a5bfade8aa39deb0d751", null ]
 ];

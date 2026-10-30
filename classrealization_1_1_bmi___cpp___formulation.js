@@ -47,7 +47,6 @@ var classrealization_1_1_bmi___cpp___formulation =
     [ "get_values", "classrealization_1_1_bmi___cpp___formulation.html#a4ced90182c881aa0c597083ab619724d", null ],
     [ "get_values", "classrealization_1_1_bmi___cpp___formulation.html#a9265b07222e97669c28fc24454ad7350", null ],
     [ "get_var_value_as", "classrealization_1_1_bmi___cpp___formulation.html#a65eb8e2d86900ba37349334ebfeaf9cd", null ],
-    [ "get_var_value_as_double", "classrealization_1_1_bmi___cpp___formulation.html#ab01f9dad8c3c543595848fd9bc8b887b", null ],
     [ "get_variable_time_begin", "classrealization_1_1_bmi___cpp___formulation.html#a0f20616c646a363ca555a16c68dad71a", null ],
     [ "initialize_bmi_input_var_metadata", "classrealization_1_1_bmi___cpp___formulation.html#a6b1178914ad6e8ae4d69d86284fce924", null ],
     [ "inner_create_formulation", "classrealization_1_1_bmi___cpp___formulation.html#a7c62e8f7f7db1d06cfef28ee66554def", null ],
