@@ -172,6 +172,18 @@ namespace models {
              */
             void GetValue(std::string name, void *dest) override;
 
+            /**
+             * Get the values of a variable at the given indices.
+             *
+             * The ISO C shim has no access by index, so this fetches the whole variable through @ref GetValue
+             * and copies the requested items out of it.
+             *
+             * @param name The name of the variable.
+             * @param dest Where to write the @p count items, each of the variable's item size.
+             * @param inds The indices of the items to get.
+             * @param count The number of indices in @p inds.
+             * @throw std::out_of_range If an index is outside the variable.
+             */
             void GetValueAtIndices(std::string name, void *dest, int *inds, int count) override;
 
             void GetGridShape(const int grid, int *shape) override;

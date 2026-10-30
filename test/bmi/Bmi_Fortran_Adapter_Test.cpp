@@ -1120,6 +1120,25 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetValue_1_a) {
     ASSERT_EQ(data, retrieved);
 }
 
+/** Test that items of a gridded variable can be got by index, in the order requested. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetValueAtIndices_0_a) {
+    adapter->Initialize();
+    std::vector<int> shape = {2,3};
+    adapter->SetValue("grid_1_shape", shape.data());
+    std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+    adapter->SetValue("GRID_VAR_1", data.data());
+
+    std::vector<int> inds = {4, 0, 5};
+    std::vector<double> retrieved(inds.size());
+    adapter->GetValueAtIndices("GRID_VAR_1", retrieved.data(), inds.data(), inds.size());
+
+    std::vector<int> outside = {6};
+    double unused;
+    EXPECT_THROW(adapter->GetValueAtIndices("GRID_VAR_1", &unused, outside.data(), 1), std::out_of_range);
+    adapter->Finalize();
+    EXPECT_EQ(retrieved, (std::vector<double>{5.0, 1.0, 6.0}));
+}
+
 /** Test that gridded data can be set and retrieved for grid var 3 in (x,y,z) order*/
 TEST_F(Bmi_Fortran_Adapter_Test, GetValue_1_b) {
     adapter->Initialize();
