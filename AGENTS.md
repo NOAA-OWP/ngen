@@ -130,26 +130,15 @@ state how notes will persist; local files alone do not survive a fresh checkout.
 
 ### Implement
 
-1. Follow `STYLE.md`. Document every new function and class, including private
-   helpers, templates, test helpers, and test cases, and identify LLM-authored work
-   using its required per-symbol provenance record.
-2. Keep functions short and cohesive. Use descriptive names, explicit contracts,
-   straightforward conditions, and typed interfaces. Keep configuration parsing,
-   domain calculations, transport, storage, and process lifecycle separate.
-3. Use RAII in C++ and explicit ownership/cleanup in C. Check error paths as
-   carefully as success paths. Preserve C/BMI/Fortran boundaries and prevent C++
-   exceptions from escaping across a C ABI.
-4. Define synchronization and lifetime rules before introducing shared state.
-   Check third-party library thread-safety and MPI thread support rather than
-   assuming separate objects or processes imply safe concurrent access.
-5. Use existing interfaces where suitable. Keep transport details in adapters so
-   MPI can coexist with future thread, process, or message-broker implementations.
-   Do not implement hypothetical RabbitMQ support or a general framework unless
-   requested; leave a small, explicit substitution boundary.
-6. Preserve legitimate dependency build options. Avoid new behavioral feature-flag
-   matrices and scattered preprocessor branches; select behavior at composition
-   boundaries and use ordinary conditional statements in domain logic.
-7. Update relevant documentation and durable notes as material facts change.
+1. Follow `STYLE.md` for all coding, documentation, architectural, and
+provenance requirements.
+2. Implement the approved plan using existing interfaces, utilities, and established
+patterns where appropriate. Avoid speculative abstractions, implementations, or
+unrelated refactoring.
+3. Preserve existing behavior, public interfaces, compatibility, and build 
+configurations unless changes are explicitly required by the task.
+4. Keep changes focused and incremental. Update affected tests, documentation, and 
+durable notes as the implementation evolves.
 
 ### Verify
 

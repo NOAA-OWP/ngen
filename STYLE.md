@@ -24,48 +24,26 @@ points visible. A reader should not need to infer them from call-site accidents.
 
 ## Formatting and static analysis
 
-`.clang-format` defines mechanical formatting. Its current settings specify:
+This repository's `.clang-format` and `.clang-tidy` 
+files are the authoratative sources for C and C++ formatting and static analysis 
+rules. Do not duplicate, reinterpret, override, or modify their settings unless 
+explicitly instructed to.
 
-- LLVM base, four spaces, no tabs, and a 100-column limit.
-- Attached opening braces; no namespace indentation; separated definition blocks.
-- No single-line function definitions and no nonempty single-line blocks.
-- Arguments and parameters are not bin-packed; template declarations break.
-- Consecutive assignments, macros, and bit fields align; declarations do not.
-- Pointer alignment is derived from the file; do not impose a conflicting rule.
-- Trailing comments are not aligned. Keep comments focused on the symbol or rule.
-
-The formatter permits short loops and lambdas on one line. For new control flow,
-prefer braced, multiline bodies, including single-statement branches and loops.
-Use early returns to reduce nesting, with explicit error checks. Let a compatible
-`clang-format` determine exact wrapping, alignment, include layout, and spacing;
-do not change its settings merely to accommodate generated code. Some settings
-require newer Clang versions; report unsupported keys instead of silently dropping
-them or reformatting with a different style.
-
-`.clang-tidy` enables diagnostics, analyzer, C++ Core Guidelines, modernization,
-MPI, bug-prone, Boost, performance, HIC++, Google, readability, selected miscellaneous,
-and const-correctness checks. It disables `modernize-use-trailing-return-type` and
-`cppcoreguidelines-special-member-functions`; those exclusions neither require
-trailing returns nor waive correct ownership semantics. `FormatStyle: file` uses
-the repository formatter. The configuration does not reset all tool-default checks;
-the effective set also depends on the tool version. Inspect actual diagnostics.
-
-For example, after configuring a suitable compilation database:
-
-```sh
-clang-format --dry-run --Werror path/to/changed_file.cpp
-clang-tidy -p path/to/build path/to/changed_file.cpp
-```
-
-These paths are placeholders, not executable repository targets. Run on actual
-changed files. Use the configured compiler arguments and required generated headers.
-The example formatter command is read-only and may report pre-existing issues;
-those findings do not authorize unrelated edits. For formatting edits, use changed
-line ranges or a diff-based workflow and inspect the resulting diff. Do not run
-whole-file `clang-format -i` on an existing file when it would change unrelated code.
-Do not run mass fixes or weaken lint configuration. A narrowly scoped `NOLINT`
-requires the check name and a concrete reason; unresolved diagnostics must be
-reported. This guide supplies semantic rules the Clang tools cannot enforce.
+- Formatting Analysis: Run a compatible `clang-format` on all new or modified C++ 
+  code. Follow its output rather than applying formatting rules manually.
+- Static Analysis: Run `clang-tidy` on modified C++ files using the project's 
+  compilation database and required build configuration. Address applicable 
+  diagnostics rather than merely reporting them.
+- Scope: Restrict formatting and automated fixes to changed code. Do not reformat 
+  unrelated code, apply mass fixes, or weaken tool configurations to eliminate 
+  diagnostics.
+- Exceptions: Do not silently suppress diagnostics. Any necessary `NOLINT` must 
+  identify the specific check and include a concrete justification.
+- Tool Compatibility: Report missing tools, unsupported configuration options, or 
+  unavailable build dependencies. Never silently substitute different formatting 
+  rules or skip checks.
+- Verification: Inspect the final diff and report any unresolved diagnostics or 
+  checks that could not be performed.
 
 ## Names, types, and explicit behavior
 
@@ -188,6 +166,8 @@ can fail. Use `noexcept` only when the complete operation can uphold it; explain
 what happens if a callback violates a nonthrowing contract. Preconditions and
 assertions do not replace runtime validation of external inputs.
 
+Keep documentation up to date as changes are made.
+
 ## Ownership, RAII, and failure handling
 
 - In C++, give each resource a scoped owner: standard containers, `std::unique_ptr`
@@ -269,6 +249,10 @@ Use ordinary conditional statements for actual runtime decisions. Preserve exist
 necessary preprocessor guards to integration boundaries. Do not scatter MPI or
 backend feature checks throughout domain algorithms or introduce combinations of
 boolean flags to represent mutually exclusive execution strategies.
+
+Implement only the concrete adapters and strategies required by current, demonstrated
+use cases. Do not create placeholder, hypothetical, or speculative implementations to
+demonstrate extensibility or anticipate future requirements.
 
 ## Portability and numerical correctness
 
@@ -394,3 +378,33 @@ so they do not introduce hidden reads, writes, or logging in hot paths.
 - Make failures explain the violated contract. Never weaken assertions to hide
   nondeterminism, skip a required check without disclosure, or treat an unavailable
   integration test as proof of correctness.
+
+## Build settings and dependency complexity
+
+The current build has more settings and integration paths than the project intends
+to maintain. Treat reduction of feature flags, submodules, and `extern/` coupling
+as the direction for build changes. A working setting is not, by itself, a reason
+to retain it indefinitely or to add another setting beside it. Existing violations
+of this policy are migration work, not precedents for new build behavior.
+
+- Change build settings only to satisfy a demonstrated build, dependency, platform,
+  test, or deployment requirement, or to simplify the existing configuration.
+  State the affected supported configurations and the user-visible effect. Keep
+  routine source changes within the existing build contract.
+- Prefer one clear build path with provisioned dependencies and target-scoped
+  requirements. Do not add a feature flag for an implementation choice, a temporary
+  migration path, or every combination of optional components. A new flag requires a
+  capability that cannot reasonably be detected or selected at an existing 
+  integration boundary, a documented owner, and default. The current complexity is 
+  already above the acceptable level; a net increase is not permitted.
+- Do not add new submodules, vendored copies, configure-time downloads, or direct
+  edits under `extern/` as a routine response to a missing dependency.
+- Configure must report missing required dependencies and incompatible settings
+  clearly. It must not silently change requested behavior, fetch code, or update
+  submodules as a side effect of a normal offline build. Keep build-time 
+  provisioning separate from runtime requirements.
+- For any build-setting change, review the net number of settings and configuration
+  branches, remove obsolete paths within the authorized scope, and document any
+  remaining complexity. Verify the affected default and supported optional builds,
+  failure diagnostics, and installation or runtime behavior where relevant. Do
+  not claim a simpler build solely because one option was renamed or hidden.
