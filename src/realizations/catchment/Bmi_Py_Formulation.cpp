@@ -49,37 +49,7 @@ std::string Bmi_Py_Formulation::get_formulation_type() const {
 }
 
 double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const std::string &var_name) {
-    auto model = std::dynamic_pointer_cast<models::bmi::Bmi_Py_Adapter>(get_bmi_model());
-
-    const std::string val_type = model->GetVarType(var_name);
-    const size_t val_item_size = (size_t)model->GetVarItemsize(var_name);
-
-    int indices[1];
-    indices[0] = index;
-
-    const auto unsupported = [&]() {
-        return std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
-                                  " as double: no logic for converting variable type " + val_type);
-    };
-
-    // A Python type name does not name a width -- "int" is any of them -- so the pair has to be
-    // reduced to a C++ spelling before the shared table can pick a type from it.
-    std::string cxx_type;
-    try {
-        cxx_type = model->get_analogous_cxx_type(val_type, val_item_size);
-    } catch (const std::runtime_error&) {
-        throw unsupported();
-    }
-
-    try {
-        return models::bmi::with_bmi_type(cxx_type, [&]<typename T>() -> double {
-            T dest;
-            model->get_value_at_indices(var_name, &dest, indices, 1, false);
-            return static_cast<double>(dest);
-        });
-    } catch (const models::bmi::unknown_bmi_type&) {
-        throw unsupported();
-    }
+    return models::bmi::GetValue<double>(*get_bmi_model(), var_name, index);
 }
 
 bool Bmi_Py_Formulation::is_bmi_input_variable(const std::string &var_name) const {
