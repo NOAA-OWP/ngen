@@ -86,12 +86,6 @@ implementation rules.
 - MPI, OpenMP, Python, Fortran, NetCDF, routing, and other integrations are optional.
   Inspect current CMake options and generated `NGenConfig.h`; prose documentation
   can lag option names. Do not enable or disable integrations just to hide failures.
-- Useful architectural references include
-  `include/utilities/serialization/record_backend.hpp` and its directory README
-  for interchangeable storage contracts; BMI adapters and formulations for model
-  boundaries; nexus interfaces and MPI implementations for communication;
-  `include/utilities/multithreading.hpp` for process-wide library locking.
-  These illustrate existing design, not blanket style or thread-safety guarantees.
 - Target Unix-like environments and supported GCC/Clang configurations. Windows
   is unsupported. Do not add Windows compatibility branches speculatively.
 
