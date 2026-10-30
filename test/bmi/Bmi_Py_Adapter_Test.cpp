@@ -345,8 +345,11 @@ TEST_F(Bmi_Py_Adapter_Test, get_primitive_type_0_a) {
         {"float64", sizeof(double), primitive_type::f64},
         {"np.float64", sizeof(double), primitive_type::f64},
         {"numpy.float64", sizeof(double), primitive_type::f64},
-        {"float", sizeof(long double), primitive_type::long_double},
     };
+    // Where long double is no wider than double, as on macOS arm64, an item that size is a double.
+    if (sizeof(long double) != sizeof(double)) {
+        cases.emplace_back("float", sizeof(long double), primitive_type::long_double);
+    }
     // numpy's name for long double, which it has only where long double is 16 bytes.
     if (sizeof(long double) == 16) {
         cases.emplace_back("float128", 16, primitive_type::long_double);
