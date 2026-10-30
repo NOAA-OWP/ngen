@@ -205,9 +205,9 @@ TEST(BmiUtilitiesDispatch, one_table_serves_every_shape) {
 /**
  * Both type-name vocabularies resolve.
  *
- * The C and C++ adapters report the model's own type name; the Fortran adapter's
- * get_analogous_cxx_type normalizes to the C++ spelling, but a raw Fortran name can still reach
- * here from GetVarType.
+ * The C and C++ adapters report the model's own type name, and the Fortran adapter's
+ * get_primitive_type falls back to the table for names it does not resolve by width, so the
+ * table takes the Fortran spellings as well as the C and C++ ones.
  */
 TEST(BmiUtilitiesDispatch, both_type_name_vocabularies_resolve) {
     auto cxx_type_of = [](const std::string& type) {

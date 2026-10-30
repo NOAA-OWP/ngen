@@ -164,7 +164,7 @@ namespace models {
              * Implementation of virtual function in BMI interface.
              *
              * The Fortran module's getter is chosen by the variable's width as well as its type name, since the
-             * latter alone does not determine the former in Fortran (@see get_analogous_cxx_type).
+             * latter alone does not determine the former in Fortran (@see get_primitive_type).
              *
              * @param name
              * @param dest
@@ -293,7 +293,7 @@ namespace models {
             int GetGridSize(int grid_id) override;
 
             /**
-             * Reduce a Fortran type name to one @ref models::bmi::with_bmi_type resolves, by way of the item size.
+             * Resolve a Fortran type name to a primitive type, by way of the item size.
              *
              * A Fortran type name does not fix a width.  Compiler flags such as gfortran's ``-fdefault-real-8`` and
              * ``-fdefault-integer-8`` change what ``real`` and ``integer`` are, and a ``kind`` parameter changes it
@@ -304,50 +304,49 @@ namespace models {
              * settles which type of that kind.  The C spellings modules commonly report are treated the same way.
              *
              * The exception is a ``double precision`` or ``double`` narrower than 8 bytes, which is not taken for a
-             * ``float``.  gfortran's ``-freal-8-real-4`` can make one, but it is far likelier a module misreporting
-             * its type or its size, as test_bmi_fortran once did for its grid origins.  Passed through unchanged,
-             * it is refused by the table's size check with a message describing the mismatch, rather than by an
-             * accessor the module does not serve for that name.
+             * ``f32``.  gfortran's ``-freal-8-real-4`` can make one, but it is far likelier a module misreporting
+             * its type or its size, as test_bmi_fortran once did for its grid origins.  Resolved as named, to
+             * ``f64``, it is refused by the item size check with a message describing the mismatch, rather than by
+             * an accessor the module does not serve for that name.
              *
-             * Every width with an unambiguous C++ type is mapped, whether or not the ISO C shim currently has an
-             * accessor for it; which of them can actually be read or written is the business of @ref GetValue and
-             * @ref SetValue.  A 16-byte real is mapped only where ``long double`` is IEEE quad precision: on x86
-             * that size is also gfortran's 80-bit ``real(kind=10)`` with padding, so the size cannot tell the two
-             * apart.
+             * Every width with a primitive type is mapped, whether or not the ISO C shim currently has an accessor
+             * for it; which of them can actually be read or written is the business of @ref GetValue and
+             * @ref SetValue.  A 16-byte real is ``f128`` only where ``long double`` is IEEE binary128: on x86 that
+             * size is also gfortran's 80-bit ``real(kind=10)`` with padding, so the size cannot tell the two apart.
              *
              * A module can resolve that ambiguity itself by reporting ``long double`` for a variable of kind
-             * ``c_long_double``.  That name is not reduced, so it reaches the table as reported, and denotes the
-             * C++ ``long double`` on every platform, whatever else shares its size.
+             * ``c_long_double``.  That name is resolved as named, to ``long_double``, the platform's C++ ``long
+             * double``, whatever else shares its size.
              *
-             * Any other name, or a size with no type of the named kind, is returned unchanged, for the table's
-             * item size check to refuse.
+             * Any other name, or a size with no type of the named kind, is resolved as named, for the item size
+             * check to refuse.
              *
              * @param external_type_name The string name of some type, as reported by the Fortran module.
              * @param item_size The size in bytes of one item, as reported by the Fortran module.
-             * @return A type name that with_bmi_type() can resolve to a type of @p item_size bytes, where one exists.
+             * @return The primitive type, which is @p item_size bytes wide where the name has one that wide.
+             * @throw models::bmi::unknown_bmi_type If the name is not one models::bmi::parse_bmi_type knows.
              */
-            const std::string
-            get_analogous_cxx_type(const std::string &external_type_name, const size_t item_size) override {
+            models::bmi::primitive_type
+            get_primitive_type(const std::string &external_type_name, const size_t item_size) override {
+                using models::bmi::primitive_type;
                 const bool is_integer = external_type_name == "integer" || external_type_name == "int";
                 const bool is_single = external_type_name == "real" || external_type_name == "float";
                 const bool is_double = external_type_name == "double precision" || external_type_name == "double";
 
                 if (is_integer) {
                     switch (item_size) {
-                        case 1: return "int8_t";
-                        case 2: return "int16_t";
-                        case 4: return "int32_t";
-                        case 8: return "int64_t";
+                        case 1: return primitive_type::i8;
+                        case 2: return primitive_type::i16;
+                        case 4: return primitive_type::i32;
+                        case 8: return primitive_type::i64;
                     }
                 }
                 if (is_single || is_double) {
-                    if (is_single && item_size == sizeof(float)) {return "float";}
-                    if (item_size == sizeof(double)) {return "double";}
-                    if (item_size == sizeof(long double) && models::bmi::long_double_is_float128) {
-                        return "long double";
-                    }
+                    if (is_single && item_size == 4) {return primitive_type::f32;}
+                    if (item_size == 8) {return primitive_type::f64;}
+                    if (item_size == 16 && models::bmi::long_double_is_float128) {return primitive_type::f128;}
                 }
-                return external_type_name;
+                return models::bmi::parse_bmi_type(external_type_name);
             }
 
             /**
