@@ -7,7 +7,6 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
-#include <utility>
 #include <vector>
 #include <boost/type_index.hpp>
 #include "bmi/Bmi_Adapter.hpp"
@@ -26,7 +25,6 @@
  * Prefer the helpers below to calling Bmi_Adapter::GetValue() or GetValuePtr() and casting the
  * result:
  *
- *   with_bmi_type()       resolve a type name to a C++ type, by parse_bmi_type() and with_primitive_type()
  *   GetValue<T>()         read a variable, or one item of it, converted to T
  *   GetValuePtr<T>()      borrow the model's own storage, typed
  *   get_value_as_type()   build a value in the variable's declared type
@@ -40,22 +38,6 @@
 
 namespace models {
     namespace bmi {
-        /**
-         * @brief Call @p f with the C++ type that a BMI type name denotes.
-         *
-         * Shorthand for with_primitive_type(parse_bmi_type(type), f), for callers holding a name.
-         *
-         * @param type The BMI type name to resolve.
-         * @param f A callable templated on the type to use, as for with_primitive_type().
-         * @return Whatever @p f returns.
-         * @throw unknown_bmi_type If no C++ type corresponds to @p type.
-         */
-        template <typename F>
-        auto with_bmi_type(const std::string &type, F &&f)
-        {
-            return with_primitive_type(parse_bmi_type(type), std::forward<F>(f));
-        }
-
         /**
          * @brief Throw unless @p type is exactly @p item_size bytes.
          *
@@ -87,15 +69,6 @@ namespace models {
             require_item_size(type, item_size, described, to_string(type));
         }
 
-        /**
-         * @brief As above, for a type given by name.
-         *
-         * @throw unknown_bmi_type If @p type has no C++ type behind it.
-         */
-        inline void require_item_size(const std::string &type, size_t item_size, const std::string &described)
-        {
-            require_item_size(parse_bmi_type(type), item_size, described, type);
-        }
 
         /**
          * @brief Resolve the type to address a model's variable as, checked against its item size.
@@ -180,13 +153,6 @@ namespace models {
             });
         }
 
-        /** @brief As above, for a type given by name. */
-        template <typename Iterator>
-        std::shared_ptr<void> get_values_as_type(const std::string &type, Iterator begin, Iterator end)
-        {
-            return get_values_as_type(parse_bmi_type(type), begin, end);
-        }
-
         /**
          * @brief Gets a single value, casted based on @p type then returned as a typeless (void) pointer.
          *
@@ -201,13 +167,6 @@ namespace models {
             return with_primitive_type(type, [&]<typename U>() -> std::shared_ptr<void> {
                 return std::make_shared<U>(static_cast<U>(value));
             });
-        }
-
-        /** @brief As above, for a type given by name. */
-        template<typename T>
-        std::shared_ptr<void> get_value_as_type(const std::string &type, T value)
-        {
-            return get_value_as_type(parse_bmi_type(type), value);
         }
 
         /**

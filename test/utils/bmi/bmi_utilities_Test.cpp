@@ -18,7 +18,7 @@ namespace {
 // mapping can be exercised on its own.
 template <typename T>
 std::vector<T> read_as(const std::string& type, const void* data, size_t num_items) {
-    return models::bmi::with_bmi_type(type, [&]<typename S>() -> std::vector<T> {
+    return models::bmi::with_primitive_type(models::bmi::parse_bmi_type(type), [&]<typename S>() -> std::vector<T> {
         return models::bmi::helper::make_vector<T>(static_cast<const S*>(data), num_items);
     });
 }
@@ -187,12 +187,12 @@ TEST(BmiUtilitiesDispatch, as_c_array_gathers_a_range_into_a_contiguous_array) {
 
 TEST(BmiUtilitiesDispatch, one_table_serves_every_shape) {
     // A single value, cast into the named type.
-    auto one = models::bmi::get_value_as_type("float", 2.5);
+    auto one = models::bmi::get_value_as_type(models::bmi::parse_bmi_type("float"), 2.5);
     ASSERT_FLOAT_EQ(*static_cast<float*>(one.get()), 2.5f);
 
     // An iterator range, cast into a contiguous array of the named type.
     std::vector<double> source{1.5, 2.5, 3.5};
-    auto many = models::bmi::get_values_as_type("int32_t", source.begin(), source.end());
+    auto many = models::bmi::get_values_as_type(models::bmi::parse_bmi_type("int32_t"), source.begin(), source.end());
     ASSERT_EQ(static_cast<std::int32_t*>(many.get())[0], 1);
     ASSERT_EQ(static_cast<std::int32_t*>(many.get())[2], 3);
 
@@ -211,7 +211,7 @@ TEST(BmiUtilitiesDispatch, one_table_serves_every_shape) {
  */
 TEST(BmiUtilitiesDispatch, both_type_name_vocabularies_resolve) {
     auto cxx_type_of = [](const std::string& type) {
-        return models::bmi::with_bmi_type(type, []<typename T>() { return boost::typeindex::type_id<T>(); });
+        return models::bmi::with_primitive_type(models::bmi::parse_bmi_type(type), []<typename T>() { return boost::typeindex::type_id<T>(); });
     };
 
     EXPECT_EQ(cxx_type_of("real"), cxx_type_of("float"));
@@ -229,19 +229,19 @@ TEST(BmiUtilitiesDispatch, every_name_is_reachable_through_the_callers) {
                                    "int8", "int8_t", "uint8", "uint8_t", "int16", "int16_t",
                                    "uint16", "uint16_t", "int32", "int32_t", "uint32", "uint32_t",
                                    "int64", "int64_t", "uint64", "uint64_t"}) {
-        EXPECT_NO_THROW(models::bmi::get_value_as_type(type, 1.0)) << type;
+        EXPECT_NO_THROW(models::bmi::get_value_as_type(models::bmi::parse_bmi_type(type), 1.0)) << type;
 
         std::vector<double> one{1.0};
-        EXPECT_NO_THROW(models::bmi::get_values_as_type(type, one.begin(), one.end())) << type;
+        EXPECT_NO_THROW(models::bmi::get_values_as_type(models::bmi::parse_bmi_type(type), one.begin(), one.end())) << type;
     }
 }
 
 /** An unrecognized spelling is refused by those callers too, not only by read_as. */
 TEST(BmiUtilitiesDispatch, unknown_type_throws_from_every_caller) {
-    EXPECT_THROW(models::bmi::get_value_as_type("nonesuch_t", 1.0), models::bmi::unknown_bmi_type);
+    EXPECT_THROW(models::bmi::get_value_as_type(models::bmi::parse_bmi_type("nonesuch_t"), 1.0), models::bmi::unknown_bmi_type);
 
     std::vector<double> one{1.0};
-    EXPECT_THROW(models::bmi::get_values_as_type("nonesuch_t", one.begin(), one.end()),
+    EXPECT_THROW(models::bmi::get_values_as_type(models::bmi::parse_bmi_type("nonesuch_t"), one.begin(), one.end()),
                  models::bmi::unknown_bmi_type);
 }
 
@@ -252,12 +252,12 @@ TEST(BmiUtilitiesDispatch, unknown_type_throws_from_every_caller) {
  * addressed as the other runs off the end.
  */
 TEST(BmiUtilitiesDispatch, require_item_size_refuses_a_disagreeing_pair) {
-    EXPECT_NO_THROW(models::bmi::require_item_size("double", sizeof(double), "variable 'X'"));
-    EXPECT_NO_THROW(models::bmi::require_item_size("int32_t", 4, "variable 'X'"));
-    EXPECT_NO_THROW(models::bmi::require_item_size("real", sizeof(float), "variable 'X'"));
+    EXPECT_NO_THROW(models::bmi::require_item_size(models::bmi::parse_bmi_type("double"), sizeof(double), "variable 'X'"));
+    EXPECT_NO_THROW(models::bmi::require_item_size(models::bmi::parse_bmi_type("int32_t"), 4, "variable 'X'"));
+    EXPECT_NO_THROW(models::bmi::require_item_size(models::bmi::parse_bmi_type("real"), sizeof(float), "variable 'X'"));
 
     try {
-        models::bmi::require_item_size("int", sizeof(int) + 1, "variable 'X'");
+        models::bmi::require_item_size(models::bmi::parse_bmi_type("int"), sizeof(int) + 1, "variable 'X'");
         FAIL() << "expected a disagreeing item size to be refused";
     } catch (const std::runtime_error& e) {
         const std::string msg = e.what();
@@ -268,16 +268,16 @@ TEST(BmiUtilitiesDispatch, require_item_size_refuses_a_disagreeing_pair) {
     }
 
     // A name with no type behind it is still that, not a complaint about its size.
-    EXPECT_THROW(models::bmi::require_item_size("nonesuch_t", 4, "variable 'X'"),
+    EXPECT_THROW(models::bmi::require_item_size(models::bmi::parse_bmi_type("nonesuch_t"), 4, "variable 'X'"),
                  models::bmi::unknown_bmi_type);
 }
 
 /** The conversion is a cast: narrowing follows the usual rules rather than being refused here. */
 TEST(BmiUtilitiesDispatch, values_are_cast_into_the_named_type) {
-    auto truncated = models::bmi::get_value_as_type("int", 2.9);
+    auto truncated = models::bmi::get_value_as_type(models::bmi::parse_bmi_type("int"), 2.9);
     EXPECT_EQ(*static_cast<int*>(truncated.get()), 2);
 
-    auto widened = models::bmi::get_value_as_type("double", 2.5f);
+    auto widened = models::bmi::get_value_as_type(models::bmi::parse_bmi_type("double"), 2.5f);
     EXPECT_DOUBLE_EQ(*static_cast<double*>(widened.get()), 2.5);
 }
 
