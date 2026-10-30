@@ -727,7 +727,7 @@ namespace models {
              * @return A type name, which @ref models::bmi::with_bmi_type resolves to a type of the variable's width.
              * @throw ::external::ExternalIntegrationException If no C++ type corresponds to the variable's type name.
              * @throw std::runtime_error If the resolved type is not as wide as the module says the items are.
-             * @see get_analogous_cxx_type
+             * @see models::bmi::resolve_var_type
              */
             std::string get_value_cxx_type(const std::string &name);
 
