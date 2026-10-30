@@ -73,7 +73,7 @@ protected:
     }
 
     static double get_friend_var_value_as_double(Bmi_Py_Formulation& formulation, const std::string& var_name) {
-        return formulation.get_var_value_as_double(0, var_name);
+        return models::bmi::GetValue<double>(*formulation.get_bmi_model(), var_name, 0);
     }
 
     static time_t parse_forcing_time(const std::string& date_time_str) {
@@ -431,7 +431,7 @@ TEST_F(Bmi_Py_Formulation_Test, determine_model_time_offset_0_a) {
 }
 
 /**
- * Test of get_var_value_as_double.
+ * Test of reading a variable's value as a double.
  */
 TEST_F(Bmi_Py_Formulation_Test, get_var_value_as_double_0_a) {
     int ex_index = 0;

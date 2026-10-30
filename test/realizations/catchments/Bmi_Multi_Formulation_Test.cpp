@@ -68,7 +68,7 @@ protected:
     static double get_friend_nested_var_value(const Bmi_Multi_Formulation& formulation, const int mod_index,
                                          const std::string& var_name) {
         std::shared_ptr<N> nested = std::static_pointer_cast<N>(formulation.modules[mod_index]);
-        return nested->get_var_value_as_double(0, var_name);
+        return models::bmi::GetValue<double>(*nested->get_bmi_model(), var_name, 0);
     }
 
     static std::string get_friend_catchment_id(Bmi_Multi_Formulation& formulation){
@@ -115,7 +115,7 @@ protected:
 
     /*
     static double get_friend_var_value_as_double(Bmi_Multi_Formulation& formulation, const string& var_name) {
-        return formulation.get_var_value_as_double(0, var_name);
+        return models::bmi::GetValue<double>(*formulation.get_bmi_model(), var_name, 0);
     }
 
     static time_t parse_forcing_time(const std::string& date_time_str) {
