@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <list>
 #include <string>
+#include <tuple>
+#include <type_traits>
 #include <vector>
 
 #include <boost/type_index.hpp>
@@ -277,4 +279,68 @@ TEST(BmiUtilitiesDispatch, values_are_cast_into_the_named_type) {
 
     auto widened = models::bmi::get_value_as_type("double", 2.5f);
     EXPECT_DOUBLE_EQ(*static_cast<double*>(widened.get()), 2.5);
+}
+
+// ---------------------------------------------------------------------
+// primitive_type: the resolved form a type name is passed around in.
+// ---------------------------------------------------------------------
+
+namespace {
+const std::vector<models::bmi::primitive_type> all_primitive_types = {
+    models::bmi::primitive_type::i8, models::bmi::primitive_type::u8,
+    models::bmi::primitive_type::i16, models::bmi::primitive_type::u16,
+    models::bmi::primitive_type::i32, models::bmi::primitive_type::u32,
+    models::bmi::primitive_type::i64, models::bmi::primitive_type::u64,
+    models::bmi::primitive_type::f32, models::bmi::primitive_type::f64,
+    models::bmi::primitive_type::long_double, models::bmi::primitive_type::f128,
+};
+}
+
+/** Every primitive type with a C++ type here dispatches to one of its size and kind; f128 may have none. */
+TEST(BmiUtilitiesPrimitiveType, dispatches_to_a_type_of_its_size) {
+    using models::bmi::primitive_type;
+    for (const primitive_type type : all_primitive_types) {
+        if (type == primitive_type::f128 && !models::bmi::long_double_is_float128) {
+            EXPECT_THROW(models::bmi::with_primitive_type(type, []<typename T>() { return sizeof(T); }),
+                         models::bmi::unsupported_primitive_type);
+            continue;
+        }
+        const auto [size, is_float, is_signed] = models::bmi::with_primitive_type(type, []<typename T>() {
+            return std::tuple<size_t, bool, bool>{sizeof(T), std::is_floating_point_v<T>, std::is_signed_v<T>};
+        });
+        EXPECT_EQ(size, models::bmi::size_of(type)) << models::bmi::to_string(type);
+        const bool expect_float = type == primitive_type::f32 || type == primitive_type::f64 ||
+                                  type == primitive_type::long_double || type == primitive_type::f128;
+        EXPECT_EQ(is_float, expect_float) << models::bmi::to_string(type);
+        const std::string name = models::bmi::to_string(type);
+        EXPECT_EQ(is_signed, name[0] != 'u') << name;
+    }
+}
+
+/** C spellings resolve to the width they have on this platform; fixed-width spellings to exactly that. */
+TEST(BmiUtilitiesPrimitiveType, parses_spellings_to_their_width) {
+    using models::bmi::parse_bmi_type;
+    using models::bmi::primitive_type;
+    EXPECT_EQ(models::bmi::size_of(parse_bmi_type("long")), sizeof(long));
+    EXPECT_EQ(models::bmi::size_of(parse_bmi_type("unsigned short int")), sizeof(unsigned short));
+    EXPECT_EQ(parse_bmi_type("integer"), models::bmi::primitive_type_of<int>());
+    EXPECT_EQ(parse_bmi_type("int64_t"), primitive_type::i64);
+    EXPECT_EQ(parse_bmi_type("uint8"), primitive_type::u8);
+    EXPECT_EQ(parse_bmi_type("double precision"), primitive_type::f64);
+    EXPECT_EQ(parse_bmi_type("real"), primitive_type::f32);
+    EXPECT_EQ(parse_bmi_type("long double"), primitive_type::long_double);
+    EXPECT_THROW(parse_bmi_type("nonesuch_t"), models::bmi::unknown_bmi_type);
+}
+
+/** primitive_type_of agrees with the fixed-width typedefs, whichever C++ type each is here. */
+TEST(BmiUtilitiesPrimitiveType, primitive_type_of_fixed_width_types) {
+    using models::bmi::primitive_type;
+    using models::bmi::primitive_type_of;
+    EXPECT_EQ(primitive_type_of<std::int8_t>(), primitive_type::i8);
+    EXPECT_EQ(primitive_type_of<std::uint16_t>(), primitive_type::u16);
+    EXPECT_EQ(primitive_type_of<std::int32_t>(), primitive_type::i32);
+    EXPECT_EQ(primitive_type_of<std::uint64_t>(), primitive_type::u64);
+    EXPECT_EQ(primitive_type_of<long long>(), primitive_type::i64);
+    EXPECT_EQ(primitive_type_of<float>(), primitive_type::f32);
+    EXPECT_EQ(primitive_type_of<long double>(), primitive_type::long_double);
 }

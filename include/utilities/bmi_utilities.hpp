@@ -7,9 +7,11 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 #include <boost/type_index.hpp>
 #include "bmi/Bmi_Adapter.hpp"
+#include "utilities/bmi_primitive_type.hpp"
 
 /*
  * Typed access to BMI model variables.
@@ -18,10 +20,13 @@
  * string; a size, as a count of bytes; and a buffer or pointer carrying no type at all. Reading or
  * writing one therefore means choosing a C++ type, sizing a buffer, and trusting the two agree.
  *
+ * A type name is resolved once, to a primitive_type (see bmi_primitive_type.hpp), and that is what
+ * is passed around after.
+ *
  * Prefer the helpers below to calling Bmi_Adapter::GetValue() or GetValuePtr() and casting the
  * result:
  *
- *   with_bmi_type()       resolve a type name to a C++ type; the one table the others are built on
+ *   with_bmi_type()       resolve a type name to a C++ type, by parse_bmi_type() and with_primitive_type()
  *   GetValue<T>()         read a variable, or one item of it, converted to T
  *   GetValuePtr<T>()      borrow the model's own storage, typed
  *   get_value_as_type()   build a value in the variable's declared type
@@ -35,117 +40,20 @@
 
 namespace models {
     namespace bmi {
-        /** @brief Thrown when a BMI type name has no C++ type behind it. */
-        struct unknown_bmi_type : std::runtime_error {
-            explicit unknown_bmi_type(const std::string &type_name)
-                : std::runtime_error("No C++ type corresponds to the BMI type name '" + type_name + "'")
-                , type_name(type_name) {}
-
-            std::string type_name;
-        };
-
         /**
          * @brief Call @p f with the C++ type that a BMI type name denotes.
          *
-         * BMI reports a variable's type as a string, and every operation on that variable has to pick the
-         * matching C++ type before it can do anything. This is the one place that mapping lives: @p f is a
-         * callable with a template parameter, invoked as `f.template operator()<T>()`, and this picks the T.
-         *
-         * Several spellings may denote one type -- "real" and "float", "integer" and "int" -- and the
-         * table resolves them alike. Which spelling a given model reports is not this function's concern.
-         *
-         * @code
-         * // "Give me this value as whatever the variable declares." The target type is a string, so the
-         * // cast cannot be written directly: capture the value, and let the table supply the type.
-         * std::shared_ptr<void> as_declared_type(const std::string &type, double value)
-         * {
-         *     return with_bmi_type(type, [&]<typename T>() -> std::shared_ptr<void> {
-         *         return std::make_shared<T>(static_cast<T>(value));
-         *     });
-         * }
-         * @endcode
-         *
-         * Two things there are easy to get wrong.
-         *
-         * The lambda takes no arguments. `value` arrives by capture, which leaves the parameter list free
-         * for the one thing this function supplies -- `f.template operator()<T>()` passes a type and
-         * nothing else. That is what lets one table serve callers whose data is a scalar, an iterator
-         * pair, or a pointer and a count: each seals its own data into the closure.
-         *
-         * The `-> std::shared_ptr<void>` is load-bearing. `make_shared<T>` yields a `shared_ptr<T>`, a
-         * different type in every branch, and the branches have to agree on one return type. Converting
-         * there is the only place T is still known. Omitting it is a compile error rather than a silent
-         * conversion -- as is a body that does not compile for every type below, even one no caller ever
-         * asks for, since all of them are instantiated.
+         * Shorthand for with_primitive_type(parse_bmi_type(type), f), for callers holding a name.
          *
          * @param type The BMI type name to resolve.
-         * @param f A callable templated on the type to use.
+         * @param f A callable templated on the type to use, as for with_primitive_type().
          * @return Whatever @p f returns.
          * @throw unknown_bmi_type If no C++ type corresponds to @p type.
          */
         template <typename F>
         auto with_bmi_type(const std::string &type, F &&f)
         {
-            if (type == "double" || type == "double precision")
-                return f.template operator()<double>();
-
-            if (type == "long double")
-                return f.template operator()<long double>();
-
-            if (type == "float" || type == "real")
-                return f.template operator()<float>();
-
-            // The stdint spellings, by typedef rather than by hand: int64_t is long on some platforms
-            // and long long on others, and the typedef is right on both.
-            if (type == "int8" || type == "int8_t")
-                return f.template operator()<std::int8_t>();
-
-            if (type == "uint8" || type == "uint8_t")
-                return f.template operator()<std::uint8_t>();
-
-            if (type == "int16" || type == "int16_t")
-                return f.template operator()<std::int16_t>();
-
-            if (type == "uint16" || type == "uint16_t")
-                return f.template operator()<std::uint16_t>();
-
-            if (type == "int32" || type == "int32_t")
-                return f.template operator()<std::int32_t>();
-
-            if (type == "uint32" || type == "uint32_t")
-                return f.template operator()<std::uint32_t>();
-
-            if (type == "int64" || type == "int64_t")
-                return f.template operator()<std::int64_t>();
-
-            if (type == "uint64" || type == "uint64_t")
-                return f.template operator()<std::uint64_t>();
-
-            if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int")
-                return f.template operator()<short>();
-
-            if (type == "unsigned short" || type == "unsigned short int")
-                return f.template operator()<unsigned short>();
-
-            if (type == "int" || type == "signed" || type == "signed int" || type == "integer")
-                return f.template operator()<int>();
-
-            if (type == "unsigned" || type == "unsigned int")
-                return f.template operator()<unsigned int>();
-
-            if (type == "long" || type == "long int" || type == "signed long" || type == "signed long int")
-                return f.template operator()<long>();
-
-            if (type == "unsigned long" || type == "unsigned long int")
-                return f.template operator()<unsigned long>();
-
-            if (type == "long long" || type == "long long int" || type == "signed long long" || type == "signed long long int")
-                return f.template operator()<long long>();
-
-            if (type == "unsigned long long" || type == "unsigned long long int")
-                return f.template operator()<unsigned long long>();
-
-            throw unknown_bmi_type(type);
+            return with_primitive_type(parse_bmi_type(type), std::forward<F>(f));
         }
 
         /**
