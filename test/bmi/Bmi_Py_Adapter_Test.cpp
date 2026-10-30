@@ -1,6 +1,8 @@
 #ifdef NGEN_BMI_PY_TESTS_ACTIVE
 
 #include "gtest/gtest.h"
+#include <tuple>
+#include <utility>
 #include <vector>
 #include <exception>
 #include <cmath>
@@ -303,6 +305,61 @@ TEST_F(Bmi_Py_Adapter_Test, GetVarType_0_b) {
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
         throw e;
+    }
+}
+
+/**
+ * Test that every Python type spelling and item size the adapter resolves is resolved to the expected type.
+ *
+ * Python reports "int" or "float" for any width, and numpy spellings beside them, so the adapter settles each by its
+ * item size. The test model reports only a few of these, so the table is checked directly here.
+ */
+TEST_F(Bmi_Py_Adapter_Test, get_primitive_type_0_a) {
+    using models::bmi::primitive_type;
+    using models::bmi::primitive_type_of;
+    const std::vector<std::tuple<std::string, size_t, primitive_type>> cases = {
+        {"int", sizeof(short), primitive_type_of<short>()},
+        {"int", sizeof(int), primitive_type_of<int>()},
+        {"int", sizeof(long), primitive_type_of<long>()},
+        {"int", sizeof(long long), primitive_type_of<long long>()},
+        {"int16", sizeof(short), primitive_type_of<short>()},
+        {"int32", sizeof(int), primitive_type_of<int>()},
+        {"int64", sizeof(long long), primitive_type_of<long long>()},
+        {"longlong", sizeof(long long), primitive_type_of<long long>()},
+        {"uint8", 1, primitive_type::u8},
+        {"ubyte", 1, primitive_type::u8},
+        {"int8", 1, primitive_type::i8},
+        {"byte", 1, primitive_type::i8},
+        {"float", sizeof(float), primitive_type::f32},
+        {"float32", sizeof(float), primitive_type::f32},
+        {"np.float32", sizeof(float), primitive_type::f32},
+        {"numpy.float32", sizeof(float), primitive_type::f32},
+        {"np.single", sizeof(float), primitive_type::f32},
+        {"numpy.single", sizeof(float), primitive_type::f32},
+        {"float", sizeof(double), primitive_type::f64},
+        {"float64", sizeof(double), primitive_type::f64},
+        {"np.float64", sizeof(double), primitive_type::f64},
+        {"numpy.float64", sizeof(double), primitive_type::f64},
+        {"float", sizeof(long double), primitive_type::long_double},
+    };
+    auto &adapter = *examples[0].adapter;
+    for (const auto &[name, item_size, expected] : cases) {
+        EXPECT_EQ(adapter.get_primitive_type(name, item_size), expected) << name << " of " << item_size << " bytes";
+    }
+}
+
+/** Test that a Python type spelling with an item size it cannot have, or an unknown spelling, is refused. */
+TEST_F(Bmi_Py_Adapter_Test, get_primitive_type_0_b) {
+    const std::vector<std::pair<std::string, size_t>> cases = {
+        {"int", 3}, {"int16", 4}, {"int32", 8}, {"int64", 4}, {"longlong", 4},
+        {"uint8", 2}, {"ubyte", 2}, {"int8", 2}, {"byte", 2},
+        {"float32", sizeof(double)}, {"float64", sizeof(float)}, {"float16", 2}, {"float", 3},
+        {"nonesuch", 4},
+    };
+    auto &adapter = *examples[0].adapter;
+    for (const auto &[name, item_size] : cases) {
+        EXPECT_THROW(adapter.get_primitive_type(name, item_size), std::runtime_error)
+            << name << " of " << item_size << " bytes";
     }
 }
 
