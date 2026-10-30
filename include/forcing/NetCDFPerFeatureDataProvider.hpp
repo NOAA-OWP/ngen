@@ -10,6 +10,7 @@
 #include "AorcForcing.hpp"
 
 #include <StreamHandler.hpp>
+#include "utilities/multithreading.hpp"
 
 #include <assert.h>
 
@@ -24,8 +25,6 @@
 #include <set>
 #include <string>
 #include <vector>
-
-#include <boost/compute/detail/lru_cache.hpp>
 
 namespace netCDF {
     class NcVar;
@@ -147,7 +146,11 @@ namespace data_access
 
         virtual std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
+        // Key is the index of a page's first time step (c_idx)
+        using cache_key_type = std::size_t;
         using page_buffer_type = std::shared_ptr<std::vector<double>>;
+
+        using shared_cache = multithreading::shared_cache<cache_key_type, std::vector<double>>;
 
         private:
         page_buffer_type load_page(netCDF::NcVar const& ncvar, std::size_t page_c_idx);
@@ -180,12 +183,28 @@ namespace data_access
         std::shared_ptr<netCDF::NcFile> nc_file;
 
         // By the name requested, which may be the CSDMS name: the
-        // variable's name in the file, which keys the value cache, and
-        // its NcVar. Storing the name saves calling NcVar::getName(),
-        // which would need the NetCDF library lock
+        // variable's name in the file, which keys value_caches and the
+        // thread caches, and its NcVar. Storing the name saves calling
+        // NcVar::getName(), which would need the NetCDF library lock
         std::map<std::string, std::pair<std::string, netCDF::NcVar>> ncvar_cache;
         std::map<std::string,std::string> units_cache;
-        boost::compute::detail::lru_cache<std::string, std::shared_ptr<std::vector<double>>> value_cache;
+
+        // One cache per variable, keyed by the variable's name in the
+        // file. Populated by the constructor and not modified after, so
+        // threads can look up a variable's cache without locking.
+        // Separate caches keep lookups and evicting inserts for one
+        // variable from contending with readers of the others.
+        std::map<std::string, shared_cache> value_caches;
+
+        // The buffers of pages a thread has already looked up, so its
+        // repeated reads of a page skip the shared cache's lock and a
+        // shared_ptr copy: by variable name, then by the same page key
+        // as that variable's shared cache.
+        using thread_cache_type = std::map<std::string, std::map<cache_key_type, page_buffer_type>>;
+
+        // Each thread's cache for this provider
+        multithreading::per_thread<thread_cache_type> thread_caches;
+
         // number of time slices per cache entry
         // this is a tunable parameter; your mileage may vary
         // NOTE: it would be nice if this were divisible by 2 and 4

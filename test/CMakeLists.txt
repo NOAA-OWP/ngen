@@ -356,6 +356,30 @@ ngen_add_test(
 
 )
 
+########################## Multithreading Utility Tests
+ngen_add_test(
+    test_multithreading
+    OBJECTS
+        utils/multithreading_Test.cpp
+    LIBRARIES
+        NGen::multithreading
+)
+
+# With GCC or Clang, run these tests under ThreadSanitizer. TSan cannot
+# be combined with the other sanitizers, so skip it if one of them is
+# already in use.
+if(TARGET test_multithreading
+   AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang"
+   AND NOT CMAKE_CXX_FLAGS MATCHES "-fsanitize=(address|leak|memory)")
+    target_compile_options(test_multithreading PRIVATE -fsanitize=thread -g)
+    target_link_options(test_multithreading PRIVATE -fsanitize=thread)
+endif()
+
+########################## Multithreading Utility Benchmarks
+add_executable(bench_multithreading utils/multithreading_Bench.cpp)
+target_link_libraries(bench_multithreading PRIVATE NGen::multithreading)
+set_target_properties(bench_multithreading PROPERTIES FOLDER test)
+
 ########################## Nexus Tests
 ngen_add_test(
     test_nexus
@@ -689,6 +713,32 @@ ngen_add_test(
     REQUIRES
         NGEN_WITH_NETCDF
 )
+
+########################### Netcdf Forcing Cache Concurrency Tests
+ngen_add_test(
+    test_netcdf_forcing_cache
+    OBJECTS
+        forcing/NetCDFPerFeatureDataProvider_Cache_Test.cpp
+    LIBRARIES
+        NGen::forcing
+    REQUIRES
+        NGEN_WITH_NETCDF
+)
+
+# With GCC or Clang, run these tests under ThreadSanitizer. The provider
+# is compiled into the test itself so that both sides of each shared
+# access are instrumented; its object file then takes the place of the
+# uninstrumented one in the static forcing library. TSan
+# cannot be combined with the other sanitizers, so skip it if one of
+# them is already in use.
+if(TARGET test_netcdf_forcing_cache
+   AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang"
+   AND NOT BUILD_SHARED_LIBS
+   AND NOT CMAKE_CXX_FLAGS MATCHES "-fsanitize=(address|leak|memory)")
+    target_sources(test_netcdf_forcing_cache PRIVATE ${NGEN_ROOT_DIR}/src/forcing/NetCDFPerFeatureDataProvider.cpp)
+    target_compile_options(test_netcdf_forcing_cache PRIVATE -fsanitize=thread -g)
+    target_link_options(test_netcdf_forcing_cache PRIVATE -fsanitize=thread)
+endif()
 
 ########################## Primary Combined Unit Test Target
 ngen_add_test(

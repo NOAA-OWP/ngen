@@ -35,10 +35,23 @@ target_sources(ngen_parallel
 add_library(ngen_multithreading)
 add_library(NGen::multithreading ALIAS ngen_multithreading)
 
+find_package(Threads REQUIRED)
+
 target_include_directories(ngen_multithreading
   PUBLIC
     ${NGEN_INC_DIR}
 )
+
+target_link_libraries(ngen_multithreading
+  PUBLIC
+    Threads::Threads
+)
+
+if(NGEN_WITH_OPENMP)
+  target_link_libraries(ngen_multithreading PUBLIC OpenMP::OpenMP_CXX)
+  # Workaround for CMake bug #21818 that it will not automatically add the linking flags
+  target_link_options(ngen_multithreading PUBLIC "-fopenmp")
+endif()
 
 target_sources(ngen_multithreading
   PRIVATE
