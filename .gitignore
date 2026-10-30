@@ -107,6 +107,7 @@ compile_commands.json
 include/bmi.hpp
 
 temp/
+scratch/
 
 # Certain items under extern/ #
 ######################
@@ -135,3 +136,8 @@ boost_*
 data/forcing/huc01_demo/
 # HUC01 Demo Testing Hydrofabric
 data/hydrofabric/huc01_demo/
+
+# LLM Resources
+.llm/*
+!.llm/Skills/
+!.llm/scripts/
