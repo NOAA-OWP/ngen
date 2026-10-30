@@ -745,6 +745,19 @@ namespace models {
              */
             models::bmi::primitive_type get_value_primitive_type(const std::string &name);
 
+            /**
+             * Get a variable's values into @p dest, as items of @tparam T, through the ISO C shim's getter for T.
+             *
+             * The variable's type has to be resolved already, to @p type, of which T is the C++ type.
+             *
+             * @param name The name of the variable.
+             * @param dest Where to write the variable's values.
+             * @param type The variable's primitive type, for the message if the shim has no getter for it.
+             * @throw ::external::ExternalIntegrationException If the ISO C shim has no getter for T.
+             */
+            template <typename T>
+            void get_value_as(const std::string &name, T *dest, models::bmi::primitive_type type);
+
             friend class ::Bmi_Fortran_Adapter_Test;
 
         private:

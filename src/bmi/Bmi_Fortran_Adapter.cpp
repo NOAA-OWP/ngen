@@ -117,27 +117,33 @@ models::bmi::primitive_type Bmi_Fortran_Adapter::get_value_primitive_type(const 
     }
 }
 
+template <typename T>
+void Bmi_Fortran_Adapter::get_value_as(const std::string &name, T *dest, models::bmi::primitive_type type) {
+    // There is a getter for T exactly when the ISO C shim has one that wide; see the inner_get_value() overloads.
+    if constexpr (requires(const std::string &n, T *values) { this->inner_get_value(n, values); }) {
+        inner_get_value(name, dest);
+    }
+    else {
+        throw ::external::ExternalIntegrationException(
+                "Can't get model " + model_name + " variable " + name + " as '" + models::bmi::to_string(type) +
+                "': the Fortran BMI interface has no getter for that type.");
+    }
+}
+
 void Bmi_Fortran_Adapter::GetValue(std::string name, void *dest) {
     const models::bmi::primitive_type type = get_value_primitive_type(name);
     models::bmi::with_primitive_type(type, [&]<typename T>() {
-        // There is a getter for T exactly when the ISO C shim has one that wide; see the inner_get_value() overloads.
-        if constexpr (requires(const std::string &n, T *values) { this->inner_get_value(n, values); }) {
-            inner_get_value(name, static_cast<T *>(dest));
-        }
-        else {
-            throw ::external::ExternalIntegrationException(
-                    "Can't get model " + model_name + " variable " + name + " as '" + models::bmi::to_string(type) +
-                    "': the Fortran BMI interface has no getter for that type.");
-        }
+        get_value_as(name, static_cast<T *>(dest), type);
     });
 }
 
 void Bmi_Fortran_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {
     // The ISO C shim has no access by index, so read the whole variable and pick the items out of it.
-    models::bmi::with_primitive_type(get_value_primitive_type(name), [&]<typename T>() {
+    const models::bmi::primitive_type type = get_value_primitive_type(name);
+    models::bmi::with_primitive_type(type, [&]<typename T>() {
         const int num_items = GetVarNbytes(name) / static_cast<int>(sizeof(T));
         std::vector<T> values(num_items);
-        GetValue(name, values.data());
+        get_value_as(name, values.data(), type);
         for (int i = 0; i < count; ++i) {
             static_cast<T *>(dest)[i] = values.at(inds[i]);
         }
