@@ -1367,8 +1367,6 @@ TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_a) {
         {"real", sizeof(double), "double"},
         {"float", sizeof(double), "double"},
         {"double precision", sizeof(double), "double"},
-        {"double precision", sizeof(float), "float"},
-        {"double", sizeof(float), "float"},
     };
     for (const auto &[name, item_size, expected] : cases) {
         const std::string resolved = adapter->get_analogous_cxx_type(name, item_size);
@@ -1388,6 +1386,26 @@ TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_b) {
     // Passed through, a disagreeing pair is then refused by the table's size check.
     EXPECT_THROW(models::bmi::require_item_size(adapter->get_analogous_cxx_type("real", 3), 3, "real"),
                  std::runtime_error);
+}
+
+/**
+ * Test that a double precision reported narrower than 8 bytes is passed through, not taken for a float.
+ *
+ * That is far likelier a module misreporting its type or its size than a real 4-byte double, and passed through it is
+ * refused by the size check with a message saying exactly that, rather than by an accessor the module does not serve.
+ */
+TEST_F(Bmi_Fortran_Adapter_Test, get_analogous_cxx_type_0_e) {
+    EXPECT_EQ(adapter->get_analogous_cxx_type("double precision", 4), "double precision");
+    EXPECT_EQ(adapter->get_analogous_cxx_type("double", 4), "double");
+
+    try {
+        models::bmi::require_item_size(adapter->get_analogous_cxx_type("double precision", 4), 4,
+                                       "variable 'grid_1_origin'");
+        FAIL() << "expected a 4-byte double precision to be refused";
+    } catch (const std::runtime_error& e) {
+        EXPECT_STREQ(e.what(), "Cannot use variable 'grid_1_origin': type 'double precision' is 8 bytes, "
+                               "but the model reports an item size of 4 bytes.");
+    }
 }
 
 /**
