@@ -110,8 +110,6 @@ void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
 }
 
 void Bmi_Py_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {
-    std::string val_type = GetVarType(name);
-    std::vector<std::string> in_v = GetInputVarNames();
     int var_total_items = GetVarNbytes(name) / GetVarItemsize(name);
     get_value_at_indices(name, dest, inds, count, count == var_total_items);
 }
