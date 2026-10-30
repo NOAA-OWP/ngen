@@ -1139,6 +1139,25 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetValueAtIndices_0_a) {
     EXPECT_EQ(retrieved, (std::vector<double>{5.0, 1.0, 6.0}));
 }
 
+/** Test that one item of a variable can be read by index through the shared helper, at the variable's width. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetValue_at_index_0_a) {
+    adapter->Initialize();
+    std::vector<int> shape = {2,3};
+    adapter->SetValue("grid_1_shape", shape.data());
+    std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+    adapter->SetValue("GRID_VAR_1", data.data());
+    double wide = 1.000000000001;
+    adapter->SetValue("test::real_kind8", &wide);
+
+    const double fifth = GetValue<double>(*adapter, "GRID_VAR_1", 4);
+    const double widened = GetValue<double>(*adapter, "test::real_kind8", 0);
+    EXPECT_THROW(GetValue<double>(*adapter, "GRID_VAR_1", 6), std::out_of_range);
+    adapter->Finalize();
+
+    EXPECT_EQ(fifth, 5.0);
+    EXPECT_EQ(widened, wide);
+}
+
 /** Test that gridded data can be set and retrieved for grid var 3 in (x,y,z) order*/
 TEST_F(Bmi_Fortran_Adapter_Test, GetValue_1_b) {
     adapter->Initialize();

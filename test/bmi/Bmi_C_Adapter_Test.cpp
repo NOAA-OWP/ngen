@@ -147,6 +147,17 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a) {
     ASSERT_EQ(value, retrieved);
 }
 
+/** Test that one item of a variable can be read by index through the shared helper. */
+TEST_F(Bmi_C_Adapter_Test, GetValue_at_index_0_a) {
+    adapter->Initialize();
+    double value = 5.0;
+    adapter->SetValue("INPUT_VAR_1", &value);
+    const double retrieved = GetValue<double>(*adapter, "INPUT_VAR_1", 0);
+    EXPECT_THROW(GetValue<double>(*adapter, "INPUT_VAR_1", 1), std::out_of_range);
+    adapter->Finalize();
+    EXPECT_EQ(value, retrieved);
+}
+
 /** Test that both the get value function works for input 2. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_b) {
     adapter->Initialize();
