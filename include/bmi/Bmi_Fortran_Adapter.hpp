@@ -10,8 +10,8 @@
 #include "bmi.h"
 #include "State_Exception.hpp"
 #include "utilities/ExternalIntegrationException.hpp"
+#include "utilities/bmi_utilities.hpp"
 
-#include <limits>
 #include <stdexcept>
 
 // Forward declaration to provide access to protected items in testing
@@ -343,10 +343,7 @@ namespace models {
                 if (is_single || is_double) {
                     if (is_single && item_size == sizeof(float)) {return "float";}
                     if (item_size == sizeof(double)) {return "double";}
-                    // IEEE binary128 is the one format with a 113-bit significand; x87's 80-bit type has 64, and
-                    // PowerPC's double-double 106.
-                    constexpr bool long_double_is_float128 = std::numeric_limits<long double>::digits == 113;
-                    if (item_size == sizeof(long double) && long_double_is_float128) {
+                    if (item_size == sizeof(long double) && models::bmi::long_double_is_float128) {
                         return "long double";
                     }
                 }
