@@ -3,8 +3,8 @@
 using namespace realization;
 using namespace models::bmi;
 
-Bmi_C_Formulation::Bmi_C_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
-    : Bmi_Module_Formulation(id, forcing_provider, output_stream) { }
+Bmi_C_Formulation::Bmi_C_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider)
+    : Bmi_Module_Formulation(id, forcing_provider) { }
 
 std::string Bmi_C_Formulation::get_formulation_type() const {
     return "bmi_c";

@@ -28,18 +28,19 @@ namespace hy_features {
      * @code {.cpp}
      * geojson::GeoJSON catchment_collection = geojson::read("catchment_data.geojson", std::vector<std::string>());
      * std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>("realization_config.json");
-     * manager->read(catchment_collection, utils::getStdOut());
+     * simulation_time_params simulation_time_config("2015-12-01 00:00:00", "2015-12-30 23:00:00", 3600);
+     * manager->read(simulation_time_config, catchment_collection);
      * 
      * hy_features::HY_Features features = hy_features::HY_Features(catchment_collection, manager);
      * int time_index = 0;
      * for(const auto& id : features.catchments()) {
      *     auto r = features.catchment_at(id);
-     *     auto r_c = dynamic_pointer_cast<realization::Catchment_Formulation>(r);
-     *     double response = r_c->get_response(time_index, 3600.0);
+     *     // this perspective's response for the step, as each quantity it expresses
+     *     auto response = r->get_response(time_index, 3600.0);
      *     // outputs for the timestep as a vector<double> of values,
      *     // in the order the output fields are defined.
-     *     auto fields = r_c->get_output_fields();
-     *     auto values = r_c->get_output_values_for_timestep(time_index);
+     *     auto fields = r->get_formulation()->get_output_fields();
+     *     auto values = r->get_formulation()->get_output_values_for_timestep(time_index);
      * }
      * @endcode
      */

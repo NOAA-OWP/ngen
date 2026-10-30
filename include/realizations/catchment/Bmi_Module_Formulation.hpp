@@ -9,6 +9,8 @@
 #include "bmi_utilities.hpp"
 #include "bmi/protocols.hpp"
 
+#include <set>
+
 using data_access::MEAN;
 using data_access::SUM;
 
@@ -98,10 +100,9 @@ namespace realization {
          *
          * @param id
          * @param forcing_provider
-         * @param output_stream
          */
-        Bmi_Module_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
-                : Bmi_Formulation(std::move(id), forcing_provider, output_stream) { }
+        Bmi_Module_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider)
+                : Bmi_Formulation(std::move(id), forcing_provider) { }
 
         ~Bmi_Module_Formulation() override = default;
 
@@ -620,7 +621,6 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS,
-                BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION,
                 BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END,
                 BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP,
                 BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE

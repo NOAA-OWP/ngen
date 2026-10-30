@@ -1,6 +1,8 @@
 #ifndef NGEN_GEOPACKAGE_H
 #define NGEN_GEOPACKAGE_H
 
+#include <string>
+
 #include "FeatureCollection.hpp"
 #include "ngen_sqlite.hpp"
 
@@ -34,30 +36,26 @@ geojson::PropertyMap build_properties(
 );
 
 /**
- * Build a feature from a GPKG table row
- * 
+ * Build a feature from a GPKG table row.
+ *
+ * Schema-agnostic: reads only the geometry from `row` and wraps the
+ * given `id` and `properties` in the appropriate geojson::*Feature
+ * subclass. The id is taken from `id` alone -- nothing here reads it
+ * back out of `properties` -- so resolving which column an id came
+ * from, and publishing any derived property, is the caller's business,
+ * before or after. `properties` must not contain the geometry column.
+ *
  * @param[in] row SQLite iterator at the row to build a feature from
+ * @param[in] id Resolved feature id; stored on the returned Feature
  * @param[in] geom_col Name of geometry column containing GPKG WKB
+ * @param[in] properties Pre-built property map for the feature
  * @return geojson::Feature Feature containing geometry and properties from the given row
  */
 geojson::Feature build_feature(
     const ngen::sqlite::database::iterator& row,
-    const std::string& id_col,
-    const std::string& geom_col
-);
-
-/**
- * Build a feature collection from a GPKG layer
- *
- * @param[in] gpkg_path Path to GPKG file
- * @param[in] layer Layer name within GPKG file to create a collection from
- * @param[in] ids optional subset of feature IDs to capture (if empty, the entire layer is converted)
- * @return std::shared_ptr<geojson::FeatureCollection> 
- */
-std::shared_ptr<geojson::FeatureCollection> read(
-    const std::string& gpkg_path,
-    const std::string& layer,
-    const std::vector<std::string>& ids
+    const std::string& id,
+    const std::string& geom_col,
+    geojson::PropertyMap properties
 );
 
 } // namespace geopackage

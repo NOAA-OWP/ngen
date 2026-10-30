@@ -16,7 +16,7 @@ namespace geojson {
             MultiLineStringFeature(const FeatureBase& feature) : FeatureBase(feature) {}
 
             MultiLineStringFeature(const MultiLineStringFeature& feature) : FeatureBase(feature) {
-                this->geom = feature.geometry();
+                set_geom(feature.geometry());
                 this->type = feature.get_type();
             }
 
@@ -29,12 +29,12 @@ namespace geojson {
                 std::vector<FeatureBase*> downstream_features = std::vector<FeatureBase*>(),
                 std::map<std::string, JSONProperty> members = std::map<std::string, JSONProperty>()
             ) : FeatureBase(new_id, new_properties, new_bounding_box, upstream_features, downstream_features, members) {
-                this->geom = multilinestring;
+                set_geom(multilinestring);
                 this->type = geojson::FeatureType::MultiLineString;
             }
 
             multilinestring_t geometry() const {
-                return boost::get<multilinestring_t>(this->geom);
+                return boost::get<multilinestring_t>(*this->geom);
             }
 
             void visit(FeatureVisitor& visitor) override {

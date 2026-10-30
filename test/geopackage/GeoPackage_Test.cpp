@@ -1,7 +1,7 @@
 #include <boost/geometry/io/wkt/write.hpp>
 #include <gtest/gtest.h>
 
-#include "geopackage.hpp"
+#include "GeoPackageReader.hpp"
 #include "FileChecker.h"
 
 class GeoPackage_Test : public ::testing::Test
@@ -38,7 +38,7 @@ class GeoPackage_Test : public ::testing::Test
 
 TEST_F(GeoPackage_Test, geopackage_read_test)
 {
-    const auto gpkg = ngen::geopackage::read(this->path, "test", {});
+    const auto gpkg = ngen::geopackage::make_reader(this->path).read("test", {});
     EXPECT_NE(gpkg->find("First"), -1);
     EXPECT_NE(gpkg->find("Second"), -1);
     const auto bbox = gpkg->get_bounding_box();
@@ -53,7 +53,7 @@ TEST_F(GeoPackage_Test, geopackage_read_test)
     const auto& third = gpkg->get_feature(2);
     EXPECT_EQ(first->get_id(), "First");
 
-    const auto point = boost::get<geojson::coordinate_t>(first->geometry());
+    const auto point = boost::get<geojson::coordinate_t>(*first->geometry());
     EXPECT_EQ(point.get<0>(), 102.0);
     EXPECT_EQ(point.get<1>(), 0.5);
 
@@ -62,13 +62,13 @@ TEST_F(GeoPackage_Test, geopackage_read_test)
 
 TEST_F(GeoPackage_Test, geopackage_idsubset_test)
 {
-    const auto gpkg = ngen::geopackage::read(this->path, "test", { "First" });
+    const auto gpkg = ngen::geopackage::make_reader(this->path).read("test", { "First" });
     EXPECT_NE(gpkg->find("First"), -1);
     EXPECT_EQ(gpkg->find("Second"), -1);
 
     const auto& first = gpkg->get_feature(0);
     EXPECT_EQ(first->get_id(), "First");
-    const auto point = boost::get<geojson::coordinate_t>(first->geometry());
+    const auto point = boost::get<geojson::coordinate_t>(*first->geometry());
     EXPECT_EQ(point.get<0>(), 102.0);
     EXPECT_EQ(point.get<1>(), 0.5);
 
@@ -79,7 +79,7 @@ TEST_F(GeoPackage_Test, geopackage_idsubset_test)
 // are stored in EPSG:3857. When read in, they should convert to EPSG:4326.
 TEST_F(GeoPackage_Test, geopackage_projection_test)
 {
-    const auto gpkg = ngen::geopackage::read(this->path2, "example_3857", {});
+    const auto gpkg = ngen::geopackage::make_reader(this->path2).read("example_3857", {});
     EXPECT_NE(gpkg->find("First"), -1);
     EXPECT_NE(gpkg->find("Second"), -1);
     const auto bbox = gpkg->get_bounding_box();
@@ -94,7 +94,7 @@ TEST_F(GeoPackage_Test, geopackage_projection_test)
     const auto& third = gpkg->get_feature(2);
     EXPECT_EQ(first->get_id(), "First");
 
-    const auto point = boost::get<geojson::coordinate_t>(first->geometry());
+    const auto point = boost::get<geojson::coordinate_t>(*first->geometry());
     EXPECT_NEAR(point.get<0>(), 102.0, 0.0001);
     EXPECT_NEAR(point.get<1>(), 0.5, 0.0001);
 

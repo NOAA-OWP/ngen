@@ -1,7 +1,7 @@
 #ifndef NGEN_DOMAIN_LAYER
 #define NGEN_DOMAIN_LAYER
 
-#include "Catchment_Formulation.hpp"
+#include "Formulation.hpp"
 #include "Layer.hpp"
 #include "State_Exception.hpp"
 #include "CatchmentOutputsMgr.hpp"
@@ -48,7 +48,7 @@ namespace ngen
                 const Simulation_Time& s_t,
                 feature_type& features,
                 long idx,
-                std::shared_ptr<realization::Catchment_Formulation> formulation,
+                std::shared_ptr<realization::Formulation> formulation,
                 std::shared_ptr<utils::CatchmentOutputsMgr> output_mgr):
                     Layer(desc, s_t, features, idx, std::move(output_mgr)), formulation(formulation),
                     output_formulation_id("layer_" + std::to_string(desc.id)),
@@ -73,7 +73,10 @@ namespace ngen
                            int current_step) override {
             std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
             try{
-                formulation->get_response(output_time_index, simulation_time.get_output_interval_seconds());
+                // Advance the model, get outputs as needed through the output variables.
+                // This doesn't use `get_response` since as of now, the semantics of
+                // "distill a domain layer to a single value" aren't well established.
+                formulation->update(output_time_index, simulation_time.get_output_interval_seconds());
             }
             catch(models::external::State_Exception& e){
                 std::string msg = e.what();
@@ -98,7 +101,7 @@ namespace ngen
         }
 
         private:
-        std::shared_ptr<realization::Catchment_Formulation> formulation;
+        std::shared_ptr<realization::Formulation> formulation;
         //! This layer's identity in the shared manager, split into its (formulation, catchment) key.
         std::string output_formulation_id;
         std::string output_catchment_id;

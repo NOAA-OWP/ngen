@@ -53,7 +53,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     for (size_t i = 0; i < nested_module_configs.size(); ++i) {
         geojson::JSONProperty formulation_config = nested_module_configs[i];
         std::string type_name = formulation_config.at("name").as_string();
-        std::string identifier = get_catchment_id() + "." + std::to_string(i);
+        std::string identifier = get_id() + "." + std::to_string(i);
         nested_module_ptr module = nullptr;
         bool inactive_type_requested = false;
         module_types[i] = type_name;
@@ -151,12 +151,6 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     }
     else {
         set_output_header_fields(get_output_variable_names());
-    }
-
-    // Output precision, if present
-    auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
-    if (out_precision_it != properties.end()) {
-        set_output_precision(properties.at(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION).as_natural_number());
     }
 
     // check if a requested output variable name is valid, if not, stop the execution
@@ -368,7 +362,7 @@ std::vector<double> Bmi_Multi_Formulation::get_output_values_for_timestep(int ti
         time_t model_time = convert_model_time(get_model_current_time()) + get_bmi_model_start_time_forcing_offset_s();
         for (const std::string &name : output_var_names) {
             std::string output_units = "";
-            values.push_back(get_value(CatchmentAggrDataSelector(this->get_catchment_id(), name, model_time, 3600, output_units), MEAN));
+            values.push_back(get_value(CatchmentAggrDataSelector(this->get_feature_id(), name, model_time, 3600, output_units), MEAN));
         }
         return values;
     }
@@ -447,7 +441,7 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
     }
     double var_value;
     try{
-        var_value = modules[index]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(), get_bmi_main_output_var(), 0, 0, "m"), MEAN);
+        var_value = modules[index]->get_value(CatchmentAggrDataSelector(this->get_feature_id(), get_bmi_main_output_var(), 0, 0, "m"), MEAN);
     }
     catch(UnitsHelper::unit_conversion_exception &uce){
         bool new_error = UnitsHelper::record_unit_conversion_fault(uce, "Bmi_Multi_Formulation::get_response", get_bmi_main_output_var());
@@ -455,7 +449,7 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
             std::stringstream ss;
             ss << "Unit conversion failure:"
                 << " requester {'Get Response (Multi Formulation)"
-                << "' catchment '" << get_catchment_id()
+                << "' catchment '" << get_feature_id()
                 << "' variable '" << get_bmi_main_output_var()
                 << "' units 'm'}"
                 << " provider {'" << uce.provider_model_name

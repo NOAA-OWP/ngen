@@ -117,7 +117,7 @@ namespace geojson {
                     }
                 }
                 else {
-                    this->geom = feature.geom;
+                    this->geom = feature.geom;   // shared, not copied: the pointee is const
                 }
 
                 for (FeatureBase *origination_feature : feature.origination_features()) {
@@ -530,17 +530,25 @@ namespace geojson {
             template<class T>
             T geometry() const {
                 try {
-                    return boost::get<T>(this->geom);
+                    return boost::get<T>(*this->geom);
                 }
                 catch (boost::bad_get &exception) {
                     std::string template_name = boost::typeindex::type_id<T>().pretty_name();
-                    std::string expected_name = get_geometry_type(this->geom);
+                    std::string expected_name = get_geometry_type(*this->geom);
                     std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
                     throw;
                 }
             }
 
-            ::geojson::geometry geometry() const {
+            /**
+             * The feature's geometry, as a shared handle.
+             *
+             * A handle rather than the geometry itself: a geometry may hold many thousands of
+             * coordinates, and nothing reading one should be made to copy it. Holding it keeps
+             * the geometry alive, so the feature and the collection it was parsed from may be
+             * released while the geometry stays readable.
+             */
+            const std::shared_ptr<const ::geojson::geometry>& geometry() const {
                 return this->geom;
             }
 
@@ -583,7 +591,7 @@ namespace geojson {
                         }
                     }
                 }
-                else if (not bg::equals(this->geom, rhs.geom)) {
+                else if (not bg::equals(*this->geom, *rhs.geom)) {
                     return false;
                 }
 
@@ -712,7 +720,25 @@ namespace geojson {
             }
 
             FeatureType type;
-            ::geojson::geometry geom;
+
+            /**
+             * The feature's geometry, shared rather than owned outright.
+             *
+             * A geometry may hold many thousands of coordinates, and a caller that only reads
+             * one should not be made to hold a copy.
+             *
+             * Const because it is replaced, never modified: a feature given a new geometry points
+             * at a new one through @ref set_geom, leaving whoever still holds the previous one
+             * unaffected. Copies of a feature therefore share until one of them is given a
+             * different geometry, which keeps them as independent as the rest of this type's
+             * value semantics already are.
+             */
+            std::shared_ptr<const ::geojson::geometry> geom;
+
+            //! Give this feature a geometry, replacing rather than modifying any it already has.
+            void set_geom(::geojson::geometry new_geom) {
+                this->geom = std::make_shared<const ::geojson::geometry>(std::move(new_geom));
+            }
             std::vector<::geojson::geometry> geometry_collection;
 
             PropertyMap properties;

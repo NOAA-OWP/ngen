@@ -9,8 +9,8 @@
 using namespace realization;
 using namespace models::bmi;
 
-Bmi_Fortran_Formulation::Bmi_Fortran_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream)
-: Bmi_Module_Formulation(id, forcing, output_stream) { }
+Bmi_Fortran_Formulation::Bmi_Fortran_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing)
+: Bmi_Module_Formulation(id, forcing) { }
 
 /**
  * Construct model and its shared pointer.

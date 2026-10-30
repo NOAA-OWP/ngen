@@ -16,7 +16,7 @@ namespace geojson {
             MultiPolygonFeature(const FeatureBase& feature) : FeatureBase(feature) {}
 
             MultiPolygonFeature(const MultiPolygonFeature& feature) : FeatureBase(feature) {
-                this->geom = feature.geometry();
+                set_geom(feature.geometry());
                 this->type = geojson::FeatureType::MultiPolygon;
             }
 
@@ -29,12 +29,12 @@ namespace geojson {
                 std::vector<FeatureBase*> downstream_features = std::vector<FeatureBase*>(),
                 std::map<std::string, JSONProperty> members = std::map<std::string, JSONProperty>()
             ) : FeatureBase(std::move(new_id), std::move(new_properties), std::move(new_bounding_box), std::move(upstream_features), std::move(downstream_features), std::move(members)) {
-                this->geom = std::move(multipolygon);
+                set_geom(std::move(multipolygon));
                 this->type = geojson::FeatureType::MultiPolygon;
             }
 
             multipolygon_t geometry() const {
-                return boost::get<multipolygon_t>(this->geom);
+                return boost::get<multipolygon_t>(*this->geom);
             }
 
             void visit(FeatureVisitor& visitor) override {

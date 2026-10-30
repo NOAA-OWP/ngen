@@ -173,6 +173,32 @@ ngen_add_test(
         NGEN_WITH_SQLITE
 )
 
+########################## Hydrofabric Unit Tests
+# The GeoJSON implementation needs no SQLite, so it is testable in a build without it -- which is
+# also the build where the factory's refusal of GeoPackage paths is the only path available.
+ngen_add_test(
+    test_hydrofabric
+    OBJECTS
+        hydrofabric/GeoJSONHydrofabricReader_Test.cpp
+    LIBRARIES
+        NGen::hydrofabric
+)
+
+########################## GeoPackage Hydrofabric Unit Tests
+ngen_add_test(
+    test_hydrofabric_geopackage
+    OBJECTS
+        hydrofabric/GeoPackageHydrofabricSchema_Test.cpp
+        hydrofabric/GeoPackageHydrofabricReader_Test.cpp
+        hydrofabric/HydrofabricReaderFactory_Test.cpp
+        hydrofabric/fixture_builders.cpp
+    LIBRARIES
+        NGen::hydrofabric
+        NGen::geopackage
+    REQUIRES
+        NGEN_WITH_SQLITE
+)
+
 ########################## Realization Config Unit Tests
 ngen_add_test(
     test_realization_config
@@ -370,7 +396,7 @@ ngen_add_test(
 
 ########################## Specialized MPI Tests
 if (NGEN_WITH_MPI)
-    find_package(MPI REQUIRED)
+    find_package(MPI REQUIRED COMPONENTS CXX)
     add_executable(test_mpi_unit
             gtest_mpi_main.cpp                          # Special test main() for use with MPI
             utils/PerFormulationNexusOutputMgr_Test.cpp # Involved test files
@@ -679,6 +705,8 @@ ngen_add_test(
         core/mediator/UnitsHelper_Tests.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/NetworkTests.cpp
+        core/catchment/HY_CatchmentRealization_Test.cpp
+        core/HY_Features_Attributes_Test.cpp
         utils/include/StreamOutputTest.cpp
         realizations/Formulation_Manager_Test.cpp
         utils/PerFormulationNexusOutputMgr_Test.cpp

@@ -4,6 +4,7 @@
 #include <NGenConfig.h>
 
 #include "Formulation.hpp"
+#include <AorcForcing.hpp>
 #include <JSONProperty.hpp>
 #include <exception>
 
@@ -12,10 +13,11 @@
 
 // Formulations
 #include "Bmi_Formulation.hpp"
+#include <AorcForcing.hpp>
 #include <GenericDataProvider.hpp>
 
 namespace realization {
-    using constructor = std::shared_ptr<Catchment_Formulation> (*)(std::string, std::shared_ptr<data_access::GenericDataProvider>, utils::StreamHandler);
+    using constructor = std::shared_ptr<Formulation> (*)(std::string, std::shared_ptr<data_access::GenericDataProvider>);
 
     extern std::map<std::string, constructor> formulation_constructors;
 
@@ -31,11 +33,10 @@ namespace realization {
         return formulation_constructors.count(formulation_type) > 0;
     }
 
-    std::shared_ptr<Catchment_Formulation> construct_formulation(
+    std::shared_ptr<Formulation> construct_formulation(
         std::string formulation_type,
         std::string identifier,
-        forcing_params &forcing_config,
-        utils::StreamHandler output_stream);
+        forcing_params &forcing_config);
 }
 
 #endif // NGEN_FORMULATION_CONSTRUCTORS_H

@@ -302,7 +302,11 @@ namespace geojson {
              * @param value: The text that will be stored
              */
             JSONProperty(std::string value_key, std::string value):key(std::move(value_key)) {
-                if (value == "true" || value == "false") {
+                if (value.empty()) {
+                    this->type = PropertyType::String;
+                    this->data = "";
+                }
+                else if (value == "true" || value == "false") {
                     type = PropertyType::Boolean;
                     //boolean = value == "true";
                     data = value == "true";
