@@ -232,7 +232,9 @@ namespace realization {
             if( !bmi_var_name.empty() )
             {
                 //Get forcing value from BMI variable
-                double value = get_var_value_as_double(0, bmi_var_name);
+                // TODO: consider different way of handling (and how to document) cases like long double or unsigned
+                //  long long that don't fit or might convert inappropriately
+                double value = models::bmi::GetValue<double>(*get_bmi_model(), bmi_var_name, 0);
 
                 // Convert units
                 std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);

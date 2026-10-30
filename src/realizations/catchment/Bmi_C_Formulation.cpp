@@ -33,12 +33,6 @@ std::shared_ptr<Bmi_Adapter> Bmi_C_Formulation::construct_model(const geojson::P
                     reg_func);
 }
 
-double Bmi_C_Formulation::get_var_value_as_double(const int& index, const std::string& var_name) {
-    // TODO: consider different way of handling (and how to document) cases like long double or unsigned long long that
-    //  don't fit or might convert inappropriately
-    return models::bmi::GetValue<double>(*get_bmi_model(), var_name, index);
-}
-
 bool Bmi_C_Formulation::is_bmi_input_variable(const std::string &var_name) const {
     const std::vector<std::string> names = get_bmi_model()->GetInputVarNames();
     return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });

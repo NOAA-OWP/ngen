@@ -49,7 +49,7 @@ protected:
     }
 
     static double get_friend_var_value_as_double(Bmi_C_Formulation& formulation, const string& var_name) {
-        return formulation.get_var_value_as_double(0, var_name);
+        return models::bmi::GetValue<double>(*formulation.get_bmi_model(), var_name, 0);
     }
 
     void SetUp() override;

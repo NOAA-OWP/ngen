@@ -68,7 +68,7 @@ protected:
     }
 
     static double get_friend_var_value_as_double(Bmi_Fortran_Formulation& formulation, const std::string& var_name) {
-        return formulation.get_var_value_as_double(0, var_name);
+        return models::bmi::GetValue<double>(*formulation.get_bmi_model(), var_name, 0);
     }
 
     static time_t parse_forcing_time(const std::string& date_time_str) {

@@ -45,10 +45,4 @@ std::string Bmi_Fortran_Formulation::get_formulation_type() const {
     return "bmi_fortran";
 }
 
-double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const std::string &var_name) {
-    // TODO: consider different way of handling (and how to document) cases like long double or unsigned long long that
-    //  don't fit or might convert inappropriately
-    return models::bmi::GetValue<double>(*get_bmi_model(), var_name, index);
-}
-
 #endif // NGEN_WITH_BMI_FORTRAN

@@ -36,8 +36,6 @@ namespace realization {
             return (T) outputs[t_index];
         }
 
-        double get_var_value_as_double(const int& index, const std::string& var_name) override;
-
         bool is_model_initialized() const override;
 
         // Unit test access
