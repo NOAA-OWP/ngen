@@ -22,7 +22,7 @@
  * result:
  *
  *   with_bmi_type()       resolve a type name to a C++ type; the one table the others are built on
- *   GetValue<T>()         read a variable, converted to T
+ *   GetValue<T>()         read a variable, or one item of it, converted to T
  *   GetValuePtr<T>()      borrow the model's own storage, typed
  *   get_value_as_type()   build a value in the variable's declared type
  *   get_values_as_type()  build a buffer in the variable's declared type
@@ -352,6 +352,47 @@ namespace models {
 
             return with_bmi_type(type, [&]<typename S>() -> std::vector<T> {
                 return helper::make_vector<T>(static_cast<const S*>(data), num_items);
+            });
+        }
+
+        /**
+         * @brief Read one item of a variable from a BMI model adapter, converted to @tparam T.
+         *
+         * The single-item counterpart of the GetValue() above, for callers wanting one value of a
+         * variable that may hold many: the model is asked for that item alone, through its adapter's
+         * GetValueAtIndices(), rather than for a copy of the whole variable.
+         *
+         * @tparam T Type to convert the item to
+         * @param model Bmi model adapter holding the variable
+         * @param name Bmi variable name to query the model for
+         * @param index Index of the item within the variable
+         * @return T The item of variable @p name at @p index
+         * @throw std::out_of_range If @p index is outside the variable.
+         */
+        template <typename T>
+        T GetValue(Bmi_Adapter& model, const std::string& name, int index) {
+            const int item_size = model.GetVarItemsize(name);
+            const int num_items = item_size > 0 ? model.GetVarNbytes(name) / item_size : 0;
+            if (index < 0 || index >= num_items) {
+                throw std::out_of_range("Cannot get item " + std::to_string(index) + " of variable " + name +
+                                        " of model " + model.get_model_name() + ", which has " +
+                                        std::to_string(num_items) + " items.");
+            }
+
+            std::string type;
+            try {
+                type = resolve_var_type(model, name);
+            } catch (const unknown_bmi_type& e) {
+                throw std::runtime_error("Unable to get value of variable " + name + " of model " +
+                                         model.get_model_name() + " as " +
+                                         boost::typeindex::type_id<T>().pretty_name() +
+                                         ": no logic for converting variable type " + e.type_name);
+            }
+
+            return with_bmi_type(type, [&]<typename S>() -> T {
+                S item;
+                model.GetValueAtIndices(name, &item, &index, 1);
+                return static_cast<T>(item);
             });
         }
     }
