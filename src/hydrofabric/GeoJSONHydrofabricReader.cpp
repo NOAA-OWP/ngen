@@ -10,6 +10,11 @@ GeoJSONHydrofabricReader::GeoJSONHydrofabricReader(std::string divides_path, std
   , nexus_path_(std::move(nexus_path))
 {}
 
+HydrofabricVersion GeoJSONHydrofabricReader::version() const noexcept
+{
+    return HydrofabricVersion::V1_GEOJSON;
+}
+
 geojson::GeoJSON GeoJSONHydrofabricReader::read_divides(const std::vector<std::string>& ids)
 {
     return geojson::read(divides_path_, ids);
