@@ -113,9 +113,9 @@ void Bmi_Cpp_Test_Adapter_For_Deserialization::SetUp() {
     config_file_name_0 = file_search(cfg_paths, "test_bmi_c_config_0.txt");
 
     std::vector<std::string> lib_dirs = {
-        "./extern/test_bmi_cpp/cmake_build/",
-        "../extern/test_bmi_cpp/cmake_build/",
-        "../../extern/test_bmi_cpp/cmake_build/"
+        "./test-libs/test_bmi_cpp/",
+        "../test-libs/test_bmi_cpp/",
+        "../../test-libs/test_bmi_cpp/"
     };
     lib_file_name_0        = file_search(lib_dirs, BMI_TEST_CPP_LOCAL_LIB_NAME);
     bmi_module_type_name_0 = "test_bmi_cpp";
