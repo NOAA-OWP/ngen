@@ -2106,6 +2106,44 @@
           </topic>
           <topic label="named_library_mutex" href="namespacemultithreading_1_1details.html#a1b42fd8d7ca25ca95c1e4f35e9f4bbc3"/>
         </topic>
+        <topic label="cache_slot" href="structmultithreading_1_1cache__slot.html">
+          <topic label="STATE" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bff">
+            <topic label="EMPTY" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab31da6921c8f52e47de4d15d684e1c8f"/>
+            <topic label="FILLED" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffa8c8457ff6ac3ce679662f821ccdeb501"/>
+            <topic label="HOT" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab2e810c851c2ab656bdff5d9e712e70e"/>
+            <topic label="ERROR" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffae392199c56c24d756a3190639154e820"/>
+          </topic>
+          <topic label="cache_slot" href="structmultithreading_1_1cache__slot.html#a799d2ba1a39778213a7d6a996b86f9b0"/>
+          <topic label="cache_slot" href="structmultithreading_1_1cache__slot.html#ace55f2da2fcd5c3fc1f9e0a12829355e"/>
+          <topic label="cache_slot" href="structmultithreading_1_1cache__slot.html#a7f076877cbaebd348b36a792b8c0703d"/>
+          <topic label="fill" href="structmultithreading_1_1cache__slot.html#a8135e55994d4946859d1a4d4abb383c4"/>
+          <topic label="get" href="structmultithreading_1_1cache__slot.html#a9cd176b0b810dc44e2d3a57657da5868"/>
+          <topic label="ptr_" href="structmultithreading_1_1cache__slot.html#af773617fc1caa64e11a8e00170369111"/>
+          <topic label="state_" href="structmultithreading_1_1cache__slot.html#ae061e31ac4ff11643a7b5c43afbc9ac2"/>
+        </topic>
+        <topic label="per_thread" href="classmultithreading_1_1per__thread.html">
+          <topic label="per_thread" href="classmultithreading_1_1per__thread.html#a6c8f33d8d9bfd3f5d06e81eee8ecef36"/>
+          <topic label="per_thread" href="classmultithreading_1_1per__thread.html#a604b6f53e6b0cfe912a9e59d2e9160ba"/>
+          <topic label="get" href="classmultithreading_1_1per__thread.html#ab8a029c6f6531f41d7519690b0aa7fff"/>
+          <topic label="operator=" href="classmultithreading_1_1per__thread.html#ae922b2a6965b55860613eb2514f3d3dc"/>
+          <topic label="instances_" href="classmultithreading_1_1per__thread.html#a66561c91b1e9252f529b51f9bdcbf22e"/>
+          <topic label="instances_mutex_" href="classmultithreading_1_1per__thread.html#ac2d1cf9d191233b61966f274ab50bdc8"/>
+          <topic label="key_" href="classmultithreading_1_1per__thread.html#aa29df6bac534f692f58818fb527c4225"/>
+        </topic>
+        <topic label="shared_cache" href="structmultithreading_1_1shared__cache.html">
+          <topic label="find_or_insert" href="structmultithreading_1_1shared__cache.html#a07a760ef51f45e2584e691caec943d4f"/>
+          <topic label="keys" href="structmultithreading_1_1shared__cache.html#a8c7eeaa940dc81a1aedaabd249b0cbea"/>
+          <topic label="cache" href="structmultithreading_1_1shared__cache.html#ab41437b24df182335f81c370a0d4238e"/>
+          <topic label="mutex" href="structmultithreading_1_1shared__cache.html#ac7c9563f535435ffcbe075dccfae348b"/>
+        </topic>
+        <topic label="thread_key" href="structmultithreading_1_1thread__key.html">
+          <topic label="thread_key" href="structmultithreading_1_1thread__key.html#a435c24ac9494766b2bce354aff2c5edc"/>
+          <topic label="~thread_key" href="structmultithreading_1_1thread__key.html#ad0113a67d59550589f717377e0e9601e"/>
+          <topic label="thread_key" href="structmultithreading_1_1thread__key.html#ab6980635fe34e4a0b46568ec2d422762"/>
+          <topic label="operator=" href="structmultithreading_1_1thread__key.html#a9e40a973c3e94756b3b36618de3cf4a7"/>
+          <topic label="key" href="structmultithreading_1_1thread__key.html#af16c7d0f424c4ffa251a7bea6ac2a653"/>
+        </topic>
+        <topic label="evict_stale_values" href="namespacemultithreading.html#a01c486d0017360b0ca20a924487b4b1c"/>
         <topic label="library_mutex" href="namespacemultithreading.html#a0ce5bd7cb44e7a8a763a919c8e8140f3"/>
       </topic>
       <topic label="network" href="namespacenetwork.html">
@@ -4867,6 +4905,43 @@
             <topic label="value" href="structmultithreading_1_1details_1_1string__literal.html#ad686e0b694f4300c5afaa0dd7da2b112"/>
           </topic>
         </topic>
+        <topic label="cache_slot" href="structmultithreading_1_1cache__slot.html">
+          <topic label="STATE" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bff">
+            <topic label="EMPTY" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab31da6921c8f52e47de4d15d684e1c8f"/>
+            <topic label="FILLED" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffa8c8457ff6ac3ce679662f821ccdeb501"/>
+            <topic label="HOT" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab2e810c851c2ab656bdff5d9e712e70e"/>
+            <topic label="ERROR" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffae392199c56c24d756a3190639154e820"/>
+          </topic>
+          <topic label="cache_slot" href="structmultithreading_1_1cache__slot.html#a799d2ba1a39778213a7d6a996b86f9b0"/>
+          <topic label="cache_slot" href="structmultithreading_1_1cache__slot.html#ace55f2da2fcd5c3fc1f9e0a12829355e"/>
+          <topic label="cache_slot" href="structmultithreading_1_1cache__slot.html#a7f076877cbaebd348b36a792b8c0703d"/>
+          <topic label="fill" href="structmultithreading_1_1cache__slot.html#a8135e55994d4946859d1a4d4abb383c4"/>
+          <topic label="get" href="structmultithreading_1_1cache__slot.html#a9cd176b0b810dc44e2d3a57657da5868"/>
+          <topic label="ptr_" href="structmultithreading_1_1cache__slot.html#af773617fc1caa64e11a8e00170369111"/>
+          <topic label="state_" href="structmultithreading_1_1cache__slot.html#ae061e31ac4ff11643a7b5c43afbc9ac2"/>
+        </topic>
+        <topic label="per_thread" href="classmultithreading_1_1per__thread.html">
+          <topic label="per_thread" href="classmultithreading_1_1per__thread.html#a6c8f33d8d9bfd3f5d06e81eee8ecef36"/>
+          <topic label="per_thread" href="classmultithreading_1_1per__thread.html#a604b6f53e6b0cfe912a9e59d2e9160ba"/>
+          <topic label="get" href="classmultithreading_1_1per__thread.html#ab8a029c6f6531f41d7519690b0aa7fff"/>
+          <topic label="operator=" href="classmultithreading_1_1per__thread.html#ae922b2a6965b55860613eb2514f3d3dc"/>
+          <topic label="instances_" href="classmultithreading_1_1per__thread.html#a66561c91b1e9252f529b51f9bdcbf22e"/>
+          <topic label="instances_mutex_" href="classmultithreading_1_1per__thread.html#ac2d1cf9d191233b61966f274ab50bdc8"/>
+          <topic label="key_" href="classmultithreading_1_1per__thread.html#aa29df6bac534f692f58818fb527c4225"/>
+        </topic>
+        <topic label="shared_cache" href="structmultithreading_1_1shared__cache.html">
+          <topic label="find_or_insert" href="structmultithreading_1_1shared__cache.html#a07a760ef51f45e2584e691caec943d4f"/>
+          <topic label="keys" href="structmultithreading_1_1shared__cache.html#a8c7eeaa940dc81a1aedaabd249b0cbea"/>
+          <topic label="cache" href="structmultithreading_1_1shared__cache.html#ab41437b24df182335f81c370a0d4238e"/>
+          <topic label="mutex" href="structmultithreading_1_1shared__cache.html#ac7c9563f535435ffcbe075dccfae348b"/>
+        </topic>
+        <topic label="thread_key" href="structmultithreading_1_1thread__key.html">
+          <topic label="thread_key" href="structmultithreading_1_1thread__key.html#a435c24ac9494766b2bce354aff2c5edc"/>
+          <topic label="~thread_key" href="structmultithreading_1_1thread__key.html#ad0113a67d59550589f717377e0e9601e"/>
+          <topic label="thread_key" href="structmultithreading_1_1thread__key.html#ab6980635fe34e4a0b46568ec2d422762"/>
+          <topic label="operator=" href="structmultithreading_1_1thread__key.html#a9e40a973c3e94756b3b36618de3cf4a7"/>
+          <topic label="key" href="structmultithreading_1_1thread__key.html#af16c7d0f424c4ffa251a7bea6ac2a653"/>
+        </topic>
       </topic>
       <topic label="network" href="namespacenetwork.html">
         <topic label="Network" href="classnetwork_1_1_network.html">
@@ -7045,7 +7120,11 @@
       <topic label="models::bmi::protocols::NgenBmiProtocols" href="classmodels_1_1bmi_1_1protocols_1_1_ngen_bmi_protocols.html"/>
       <topic label="models::bmi::protocols::ReservedVar" href="structmodels_1_1bmi_1_1protocols_1_1_reserved_var.html"/>
       <topic label="models::bmi::protocols::serialization::wire_format::RecordPrefix" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html"/>
+      <topic label="multithreading::cache_slot&lt; T &gt;" href="structmultithreading_1_1cache__slot.html"/>
       <topic label="multithreading::details::string_literal&lt; N &gt;" href="structmultithreading_1_1details_1_1string__literal.html"/>
+      <topic label="multithreading::per_thread&lt; T &gt;" href="classmultithreading_1_1per__thread.html"/>
+      <topic label="multithreading::shared_cache&lt; Key, T &gt;" href="structmultithreading_1_1shared__cache.html"/>
+      <topic label="multithreading::thread_key" href="structmultithreading_1_1thread__key.html"/>
       <topic label="network::Network" href="classnetwork_1_1_network.html"/>
       <topic label="network::VertexProperty" href="structnetwork_1_1_vertex_property.html"/>
       <topic label="Network_Test" href="class_network___test.html">

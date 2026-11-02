@@ -26,5 +26,6 @@ var searchData=
   ['provider_5fname_23',['provider_name',['../struct_units_helper_1_1unit__error__log__key.html#a32e7e69aa10c4295d7460212be4ad157',1,'UnitsHelper::unit_error_log_key']]],
   ['provider_5funits_24',['provider_units',['../struct_units_helper_1_1unit__conversion__exception.html#a17181d48e4272a664e13257f80ae0b32',1,'UnitsHelper::unit_conversion_exception']]],
   ['provider_5fvar_5fname_25',['provider_var_name',['../struct_units_helper_1_1unit__conversion__exception.html#ab804c77114920e37638aa6bf236c9511',1,'UnitsHelper::unit_conversion_exception']]],
-  ['provider_5fvariable_26',['provider_variable',['../struct_units_helper_1_1unit__error__log__key.html#ae5f56cfbb9cd7c79346f69ef5e06958c',1,'UnitsHelper::unit_error_log_key']]]
+  ['provider_5fvariable_26',['provider_variable',['../struct_units_helper_1_1unit__error__log__key.html#ae5f56cfbb9cd7c79346f69ef5e06958c',1,'UnitsHelper::unit_error_log_key']]],
+  ['ptr_5f_27',['ptr_',['../structmultithreading_1_1cache__slot.html#af773617fc1caa64e11a8e00170369111',1,'multithreading::cache_slot']]]
 ];

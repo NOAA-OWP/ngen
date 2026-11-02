@@ -1,0 +1,14 @@
+<map id="multithreading::shared_cache&lt; Key, T &gt;" name="multithreading::shared_cache&lt; Key, T &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="113,423,249,525"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,279,186,360"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,359,147,407,143,410,115,361"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="88,5,106,72"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,72,89,135,89,201,92,262,87,262,83,201,84,135,90,71"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="163,135,268,201"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="108,54,126,81,148,109,161,122,158,125,144,112,121,84,104,57"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="183,214,129,281,125,278,179,211"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="206,5,226,72"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="218,71,218,118,213,118,213,71"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="210,286,326,353"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="252,354,220,410,215,408,247,352"/>
+</map>

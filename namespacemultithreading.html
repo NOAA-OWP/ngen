@@ -98,6 +98,7 @@ $(function(){initNavTree('namespacemultithreading.html',''); initResizable(true)
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">multithreading Namespace Reference</div></div>
 </div><!--header-->
@@ -108,13 +109,52 @@ Namespaces</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemultithreading_1_1details.html">details</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmultithreading_1_1cache__slot.html">cache_slot</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmultithreading_1_1per__thread.html">per_thread</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmultithreading_1_1shared__cache.html">shared_cache</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmultithreading_1_1thread__key.html">thread_key</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a0ce5bd7cb44e7a8a763a919c8e8140f3" id="r_a0ce5bd7cb44e7a8a763a919c8e8140f3"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structmultithreading_1_1details_1_1string__literal.html">details::string_literal</a> Name&gt; </td></tr>
 <tr class="memitem:a0ce5bd7cb44e7a8a763a919c8e8140f3"><td class="memTemplItemLeft" align="right" valign="top">std::mutex &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a0ce5bd7cb44e7a8a763a919c8e8140f3">library_mutex</a> ()</td></tr>
 <tr class="separator:a0ce5bd7cb44e7a8a763a919c8e8140f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01c486d0017360b0ca20a924487b4b1c" id="r_a01c486d0017360b0ca20a924487b4b1c"><td class="memTemplParams" colspan="2">template&lt;typename MapType &gt; </td></tr>
+<tr class="memitem:a01c486d0017360b0ca20a924487b4b1c"><td class="memTemplItemLeft" align="right" valign="top">MapType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a01c486d0017360b0ca20a924487b4b1c">evict_stale_values</a> (MapType &amp;cache, typename MapType::key_type const &amp;floor_index)</td></tr>
+<tr class="separator:a01c486d0017360b0ca20a924487b4b1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a01c486d0017360b0ca20a924487b4b1c" name="a01c486d0017360b0ca20a924487b4b1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01c486d0017360b0ca20a924487b4b1c">&#9670;&#160;</a></span>evict_stale_values()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename MapType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">MapType multithreading::evict_stale_values </td>
+          <td>(</td>
+          <td class="paramtype">MapType &amp;</td>          <td class="paramname"><span class="paramname"><em>cache</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">typename MapType::key_type const &amp;</td>          <td class="paramname"><span class="paramname"><em>floor_index</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structmultithreading_1_1shared__cache.html#a07a760ef51f45e2584e691caec943d4f">multithreading::shared_cache&lt; Key, T &gt;::find_or_insert()</a>.</p>
+
+</div>
+</div>
 <a id="a0ce5bd7cb44e7a8a763a919c8e8140f3" name="a0ce5bd7cb44e7a8a763a919c8e8140f3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0ce5bd7cb44e7a8a763a919c8e8140f3">&#9670;&#160;</a></span>library_mutex()</h2>
 
@@ -142,7 +182,7 @@ template&lt;<a class="el" href="structmultithreading_1_1details_1_1string__liter
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacemultithreading.html">multithreading</a></li>
-    <li class="footer">Generated on Fri Oct 30 2026 20:42:30 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Nov 2 2026 14:11:44 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

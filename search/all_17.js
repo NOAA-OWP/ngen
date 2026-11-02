@@ -109,5 +109,6 @@ var searchData=
   ['multithreading_106',['multithreading',['../namespacemultithreading.html',1,'']]],
   ['multithreading_3a_3adetails_107',['details',['../namespacemultithreading_1_1details.html',1,'multithreading']]],
   ['must_20satisfy_108',['3. Rules every backend must satisfy',['../md_include_2utilities_2serialization_2_r_e_a_d_m_e.html#autotoc_md13',1,'']]],
-  ['must_20support_20variable_20metadata_20functions_109',['Must support variable metadata functions',['../md_doc_2_b_m_iconventions.html#autotoc_md157',1,'']]]
+  ['must_20support_20variable_20metadata_20functions_109',['Must support variable metadata functions',['../md_doc_2_b_m_iconventions.html#autotoc_md157',1,'']]],
+  ['mutex_110',['mutex',['../structmultithreading_1_1shared__cache.html#ac7c9563f535435ffcbe075dccfae348b',1,'multithreading::shared_cache']]]
 ];

@@ -63,6 +63,7 @@ var searchData=
   ['_7erecordbackend_60',['~RecordBackend',['../classngen_1_1serialization_1_1_record_backend.html#af795e1608a2322f0f599b1fe7398d922',1,'ngen::serialization::RecordBackend']]],
   ['_7escopedcapture_61',['~ScopedCapture',['../classmodels_1_1bmi_1_1protocols_1_1anonymous__namespace_02serialization_8cpp_03_1_1_scoped_capture.html#a3fb87a4b4a46fa265d374aa904603809',1,'models::bmi::protocols::anonymous_namespace{serialization.cpp}::ScopedCapture']]],
   ['_7estreamhandler_62',['~StreamHandler',['../classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354',1,'utils::StreamHandler']]],
-  ['_7eunitshelper_5ftest_63',['~UnitsHelper_Test',['../class_units_helper___test.html#ac342c365275e4173691ab84e9b76b5a5',1,'UnitsHelper_Test']]],
-  ['_7ewriter_64',['~Writer',['../classngen_1_1serialization_1_1_record_backend_1_1_writer.html#aff892aae6ce5fb9bf34baff960edcaa4',1,'ngen::serialization::RecordBackend::Writer::~Writer()'],['../classngen_1_1serialization_1_1_file_backend_1_1_writer.html#a935696f853002373f8cb2dd1916ea65d',1,'ngen::serialization::FileBackend::Writer::~Writer()']]]
+  ['_7ethread_5fkey_63',['~thread_key',['../structmultithreading_1_1thread__key.html#ad0113a67d59550589f717377e0e9601e',1,'multithreading::thread_key']]],
+  ['_7eunitshelper_5ftest_64',['~UnitsHelper_Test',['../class_units_helper___test.html#ac342c365275e4173691ab84e9b76b5a5',1,'UnitsHelper_Test']]],
+  ['_7ewriter_65',['~Writer',['../classngen_1_1serialization_1_1_record_backend_1_1_writer.html#aff892aae6ce5fb9bf34baff960edcaa4',1,'ngen::serialization::RecordBackend::Writer::~Writer()'],['../classngen_1_1serialization_1_1_file_backend_1_1_writer.html#a935696f853002373f8cb2dd1916ea65d',1,'ngen::serialization::FileBackend::Writer::~Writer()']]]
 ];

@@ -1,0 +1,14 @@
+<map id="multithreading::per_thread&lt; T &gt;" name="multithreading::per_thread&lt; T &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="166,469,282,612"/>
+<area shape="rect" id="Node000002" href="$structmultithreading_1_1thread__key.html" title=" " alt="" coords="5,279,166,406"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,405,167,454,163,457,128,408"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="190,310,259,376"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,376,227,453,222,453,222,376"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="295,302,439,383"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="364,384,355,415,340,447,320,472,297,493,293,490,316,468,335,444,350,414,359,382"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="334,5,352,72"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="342,72,336,135,335,168,336,201,353,285,348,286,331,201,329,168,331,134,336,71"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="410,135,511,201"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="354,48,421,120,417,124,350,52"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="438,215,391,303,386,301,434,213"/>
+</map>
