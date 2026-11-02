@@ -327,7 +327,7 @@ namespace models {
              * @throw models::bmi::unknown_bmi_type If the name is not one models::bmi::parse_bmi_type knows.
              */
             models::bmi::primitive_type
-            get_primitive_type(const std::string &external_type_name, const size_t item_size) override {
+            get_primitive_type(std::string_view external_type_name, const size_t item_size) override {
                 using models::bmi::primitive_type;
                 const bool is_integer = external_type_name == "integer" || external_type_name == "int";
                 const bool is_single = external_type_name == "real" || external_type_name == "float";
@@ -743,7 +743,7 @@ namespace models {
              * @throw std::runtime_error If the resolved type is not as wide as the module says the items are.
              * @see models::bmi::resolve_var_type
              */
-            models::bmi::primitive_type get_value_primitive_type(const std::string &name);
+            models::bmi::primitive_type get_value_primitive_type(std::string_view name);
 
             /**
              * Get a variable's values into @p dest, as items of @tparam T, through the ISO C shim's getter for T.

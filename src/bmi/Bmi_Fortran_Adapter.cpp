@@ -107,13 +107,13 @@ std::string Bmi_Fortran_Adapter::GetTimeUnits() {
     return {time_units_cstr};
 }
 
-models::bmi::primitive_type Bmi_Fortran_Adapter::get_value_primitive_type(const std::string &name) {
+models::bmi::primitive_type Bmi_Fortran_Adapter::get_value_primitive_type(std::string_view name) {
     try {
         return models::bmi::resolve_var_type(*this, name);
     }
     catch (const models::bmi::unknown_bmi_type &e) {
         throw ::external::ExternalIntegrationException(
-                "Can't use model " + model_name + " variable " + name + " of type '" + e.type_name + "'.");
+                "Can't use model " + model_name + " variable " + std::string(name) + " of type '" + e.type_name + "'.");
     }
 }
 

@@ -7,6 +7,8 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <string_view>
+#include <utility>
 #include <vector>
 #include <boost/type_index.hpp>
 #include "bmi/Bmi_Adapter.hpp"
@@ -50,16 +52,19 @@ namespace models {
          * @throw unknown_bmi_type If no C++ type corresponds to the resolved name.
          * @throw std::runtime_error If that type is not as wide as the model says the items are.
          */
-        inline primitive_type resolve_var_type(Bmi_Adapter &model, const std::string &name)
+        inline primitive_type resolve_var_type(Bmi_Adapter &model, std::string_view name)
         {
-            const size_t item_size = static_cast<size_t>(model.GetVarItemsize(name));
-            const std::string reported = model.GetVarType(name);
+            // The adapter calls take the name as a std::string, by value, so make one and hand it on.
+            std::string var_name(name);
+            const size_t item_size = static_cast<size_t>(model.GetVarItemsize(var_name));
+            const std::string reported = model.GetVarType(std::move(var_name));
             const primitive_type type = model.get_primitive_type(reported, item_size);
             // Every buffer is sized from the item size and addressed as the type, so a disagreement reads or
             // writes past the end -- undetectable afterwards, so refuse up front.
             if (size_of(type) != item_size) {
-                throw std::runtime_error("Cannot use variable '" + name + "' of model '" + model.get_model_name() +
-                                         "': its type '" + reported + "' is " + std::to_string(size_of(type)) +
+                throw std::runtime_error("Cannot use variable '" + std::string(name) + "' of model '" +
+                                         model.get_model_name() + "': its type '" + reported + "' is " +
+                                         std::to_string(size_of(type)) +
                                          " bytes, but the model reports an item size of " +
                                          std::to_string(item_size) + " bytes.");
             }

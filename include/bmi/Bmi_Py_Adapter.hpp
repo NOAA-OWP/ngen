@@ -234,7 +234,7 @@ namespace models {
              * @return The primitive type of the variable's items.
              * @throw std::runtime_error If the name and size together denote no supported type.
              */
-            models::bmi::primitive_type get_primitive_type(const std::string &py_type_name, const size_t item_size) override {
+            models::bmi::primitive_type get_primitive_type(std::string_view py_type_name, const size_t item_size) override {
                 using models::bmi::primitive_type;
                 using models::bmi::primitive_type_of;
                 //TODO: include other numpy type strings, https://numpy.org/doc/stable/user/basics.types.html
@@ -272,8 +272,8 @@ namespace models {
                     return primitive_type::long_double;
                 } else {
                     throw std::runtime_error(
-                            "(Bmi_Py_Adapter) Failed determining analogous C++ type for Python model '" + py_type_name +
-                            "' type with size " + std::to_string(item_size) + " bytes.");
+                            "(Bmi_Py_Adapter) Failed determining analogous C++ type for Python model '" +
+                            std::string(py_type_name) + "' type with size " + std::to_string(item_size) + " bytes.");
                 }
             }
 
