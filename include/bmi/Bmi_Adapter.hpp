@@ -81,7 +81,7 @@ namespace models {
              * @throw unknown_bmi_type If the name is not one the table knows.
              * @throw std::runtime_error If an override cannot resolve the name and size it is given.
              */
-            virtual primitive_type get_primitive_type(const std::string &external_type_name, const size_t item_size) {
+            virtual primitive_type get_primitive_type(std::string_view external_type_name, const size_t item_size) {
                 return parse_bmi_type(external_type_name);
             }
 

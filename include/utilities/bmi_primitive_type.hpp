@@ -6,6 +6,7 @@
 #include <limits>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <type_traits>
 
 /*
@@ -23,8 +24,8 @@ namespace models {
     namespace bmi {
         /** @brief Thrown when a BMI type name has no C++ type behind it. */
         struct unknown_bmi_type : std::runtime_error {
-            explicit unknown_bmi_type(const std::string &type_name)
-                : std::runtime_error("No C++ type corresponds to the BMI type name '" + type_name + "'")
+            explicit unknown_bmi_type(std::string_view type_name)
+                : std::runtime_error("No C++ type corresponds to the BMI type name '" + std::string(type_name) + "'")
                 , type_name(type_name) {}
 
             std::string type_name;
@@ -207,7 +208,7 @@ namespace models {
          * @return The primitive_type it denotes.
          * @throw unknown_bmi_type If @p type is not a name this knows.
          */
-        inline primitive_type parse_bmi_type(const std::string &type)
+        inline primitive_type parse_bmi_type(std::string_view type)
         {
             if (type == "double" || type == "double precision")
                 return primitive_type::f64;
