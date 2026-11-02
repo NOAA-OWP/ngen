@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "FeatureBuilder.hpp"
+#include "HydrofabricVersion.hpp"
 
 namespace ngen {
 namespace hydrofabric {
@@ -26,6 +27,16 @@ class HydrofabricReader
 {
   public:
     virtual ~HydrofabricReader() = default;
+
+    /**
+     * The release this hydrofabric was identified as.
+     *
+     * A caller that needs to know what kind of file it was handed asks here rather than inspecting
+     * the paths again, since identifying them is what produced this reader in the first place.
+     *
+     * @return HydrofabricVersion this reader was opened for
+     */
+    virtual HydrofabricVersion version() const noexcept = 0;
 
     /**
      * Read the hydrofabric's divides.

@@ -56,6 +56,10 @@
 #include "utilities/output/PerNexusCsvOutputMgr.hpp"
 #include "utilities/output/CatchmentOutputsMgr.hpp"
 #include "realizations/config/catchment_output.hpp"
+#include "realizations/config/auxiliary_attributes.hpp"
+#if NGEN_WITH_SQLITE
+#include <attribute_join.hpp>
+#endif
 #if NGEN_WITH_NETCDF
 #include "utilities/output/PerFormulationNexusOutputMgr.hpp"
 #endif
@@ -414,6 +418,25 @@ int main(int argc, char* argv[]) {
     auto simulation_time_config = realization::config::Time(*possible_simulation_time).make_params();
 
     sim_time = std::make_shared<Simulation_Time>(simulation_time_config);
+
+    // Join declared auxiliary attribute tables onto the catchments before the formulations read their
+    // parameters, so a joined column resolves like any other divides-layer property.
+    #if NGEN_WITH_SQLITE
+    ngen::geopackage::join_all(
+        *catchment_collection,
+        realization::config::parse_auxiliary_attributes(realization_config),
+        catchmentDataFile,
+        hydrofabric->version() != ngen::hydrofabric::HydrofabricVersion::V1_GEOJSON,
+        realization::config::AUX_ATTRIBUTES_CONFIG_KEY
+    );
+    #else
+    if (realization_config.get_child_optional(realization::config::AUX_ATTRIBUTES_CONFIG_KEY)) {
+        throw std::runtime_error(
+            "SQLite support required to read the tables declared in '" +
+            realization::config::AUX_ATTRIBUTES_CONFIG_KEY + "'."
+        );
+    }
+    #endif
 
     init_unit_system();
     std::cout<<"Initializing formulations" << std::endl;
