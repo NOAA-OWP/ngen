@@ -196,6 +196,7 @@ var hierarchy =
       [ "std::runtime_error", null, [
         [ "UnitsHelper::unit_conversion_exception", "struct_units_helper_1_1unit__conversion__exception.html", null ],
         [ "models::bmi::unknown_bmi_type", "structmodels_1_1bmi_1_1unknown__bmi__type.html", null ],
+        [ "models::bmi::unsupported_primitive_type", "structmodels_1_1bmi_1_1unsupported__primitive__type.html", null ],
         [ "ngen::sqlite::sqlite_error", "structngen_1_1sqlite_1_1sqlite__error.html", null ]
       ] ]
     ] ],

@@ -304,7 +304,7 @@ var sectionId = 'dynsection-0';
 <text text-anchor="start" x="89.25" y="-968" font-family="Helvetica,sans-Serif" font-size="10.00">convert_seconds_to</text>
 <text text-anchor="start" x="89.25" y="-956.75" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
 <text text-anchor="start" x="79.25" y="-941.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="89.25" y="-941.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_analogous_cxx_type()</text>
+<text text-anchor="start" x="89.25" y="-941.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_primitive_type()</text>
 <text text-anchor="start" x="79.25" y="-926.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="89.25" y="-926.25" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
 <text text-anchor="start" x="79.25" y="-911" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>

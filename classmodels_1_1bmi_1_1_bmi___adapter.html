@@ -146,9 +146,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a73ca855d0db45838b87309038fae1fed" id="r_a73ca855d0db45838b87309038fae1fed"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73ca855d0db45838b87309038fae1fed">convert_seconds_to_model_time</a> (const double &amp;seconds_val)</td></tr>
 <tr class="memdesc:a73ca855d0db45838b87309038fae1fed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a given number of seconds to equivalent in model time units.  <br /></td></tr>
 <tr class="separator:a73ca855d0db45838b87309038fae1fed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add7916e3cbe2b42e8084182afd4ee412" id="r_add7916e3cbe2b42e8084182afd4ee412"><td class="memItemLeft" align="right" valign="top">virtual const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add7916e3cbe2b42e8084182afd4ee412">get_analogous_cxx_type</a> (const std::string &amp;external_type_name, const size_t item_size)</td></tr>
-<tr class="memdesc:add7916e3cbe2b42e8084182afd4ee412"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduce a type name the backing model reports to one <a class="el" href="namespacemodels_1_1bmi.html#ad08b04570775a5bfade8aa39deb0d751">models::bmi::with_bmi_type</a> resolves.  <br /></td></tr>
-<tr class="separator:add7916e3cbe2b42e8084182afd4ee412"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a49723d6c00fe4f9f8ffaa270136b17" id="r_a3a49723d6c00fe4f9f8ffaa270136b17"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacemodels_1_1bmi.html#a6814c4afc114281ab943e1b6c7843832">primitive_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a49723d6c00fe4f9f8ffaa270136b17">get_primitive_type</a> (std::string_view external_type_name, const size_t item_size)</td></tr>
+<tr class="memdesc:a3a49723d6c00fe4f9f8ffaa270136b17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve a type name the backing model reports to a <a class="el" href="namespacemodels_1_1bmi.html#a6814c4afc114281ab943e1b6c7843832">models::bmi::primitive_type</a>.  <br /></td></tr>
+<tr class="separator:a3a49723d6c00fe4f9f8ffaa270136b17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeace85bbd89962f2945bec0ca3c76091" id="r_aeace85bbd89962f2945bec0ca3c76091"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeace85bbd89962f2945bec0ca3c76091">Initialize</a> ()</td></tr>
 <tr class="memdesc:aeace85bbd89962f2945bec0ca3c76091"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the wrapped BMI model functionality using the value from the <code>bmi_init_config</code> member variable and the API's <code>Initialize</code> function.  <br /></td></tr>
 <tr class="separator:aeace85bbd89962f2945bec0ca3c76091"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -505,55 +505,6 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="add7916e3cbe2b42e8084182afd4ee412" name="add7916e3cbe2b42e8084182afd4ee412"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add7916e3cbe2b42e8084182afd4ee412">&#9670;&#160;</a></span>get_analogous_cxx_type()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual const std::string models::bmi::Bmi_Adapter::get_analogous_cxx_type </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>external_type_name</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const size_t</td>          <td class="paramname"><span class="paramname"><em>item_size</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Reduce a type name the backing model reports to one <a class="el" href="namespacemodels_1_1bmi.html#ad08b04570775a5bfade8aa39deb0d751">models::bmi::with_bmi_type</a> resolves. </p>
-<p>Most languages need no reduction: the table carries the C and C++ keyword spellings and the Fortran ones alike, so the name a model reports is already a name the table knows, and the default returns it unchanged.</p>
-<p>The exception is a language whose type names do not determine a type. A Python model reports "int" for any width, so the name alone cannot be resolved and the item size has to settle it. That is what an override is for, and why the size is a parameter here.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">external_type_name</td><td>The string name of some type in the backing model's language. </td></tr>
-    <tr><td class="paramname">item_size</td><td>The size in bytes of one item, where the name alone does not imply it. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A type name that <a class="el" href="namespacemodels_1_1bmi.html#ad08b04570775a5bfade8aa39deb0d751" title="Call f with the C++ type that a BMI type name denotes.">with_bmi_type()</a> can resolve. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">std::runtime_error</td><td>If an override cannot reduce the name to one the table carries. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="reference">Referenced by <a class="el" href="namespacemodels_1_1bmi.html#a2f8e38da8cd007e71545a40db7292779">models::bmi::resolve_var_type()</a>.</p>
-
-</div>
-</div>
 <a id="a145a63b96ced2bebb1f0fbe37ba5c027" name="a145a63b96ced2bebb1f0fbe37ba5c027"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a145a63b96ced2bebb1f0fbe37ba5c027">&#9670;&#160;</a></span>get_model_name()</h2>
 
@@ -574,7 +525,60 @@ Protected Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="#ac2c1d1c1e279212c200ad6a4be4864d6">model_name</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e5990e1c4616de029d7ad7691c2b7c7">realization::Bmi_Module_Formulation::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9265b07222e97669c28fc24454ad7350">realization::Bmi_Module_Formulation::get_values()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee">models::bmi::GetValue()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a17fb60281a541b87da0c46ef7f2252cf">models::bmi::GetValue()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a0c2366c15ed4de750faf988535516581">models::bmi::GetValuePtr()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#addd74974bd828fac5bc15790787fc119">realization::Bmi_Module_Formulation::perform_set()</a>, and <a class="el" href="namespacemodels_1_1bmi.html#a2f8e38da8cd007e71545a40db7292779">models::bmi::resolve_var_type()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e5990e1c4616de029d7ad7691c2b7c7">realization::Bmi_Module_Formulation::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9265b07222e97669c28fc24454ad7350">realization::Bmi_Module_Formulation::get_values()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee">models::bmi::GetValue()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a17fb60281a541b87da0c46ef7f2252cf">models::bmi::GetValue()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a0c2366c15ed4de750faf988535516581">models::bmi::GetValuePtr()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#addd74974bd828fac5bc15790787fc119">realization::Bmi_Module_Formulation::perform_set()</a>, and <a class="el" href="namespacemodels_1_1bmi.html#a93559d36005fa67a7474daa909711e69">models::bmi::resolve_var_type()</a>.</p>
+
+</div>
+</div>
+<a id="a3a49723d6c00fe4f9f8ffaa270136b17" name="a3a49723d6c00fe4f9f8ffaa270136b17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a49723d6c00fe4f9f8ffaa270136b17">&#9670;&#160;</a></span>get_primitive_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacemodels_1_1bmi.html#a6814c4afc114281ab943e1b6c7843832">primitive_type</a> models::bmi::Bmi_Adapter::get_primitive_type </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>external_type_name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const size_t</td>          <td class="paramname"><span class="paramname"><em>item_size</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Resolve a type name the backing model reports to a <a class="el" href="namespacemodels_1_1bmi.html#a6814c4afc114281ab943e1b6c7843832">models::bmi::primitive_type</a>. </p>
+<p>Most languages need nothing more than the table of spellings: it carries the C and C++ keyword spellings and the Fortran ones alike, so the default parses the name as reported.</p>
+<p>The exception is a language whose type names do not determine a type. A Python model reports "int" for any width, so the name alone cannot be resolved and the item size has to settle it. That is what an override is for, and why the size is a parameter here.</p>
+<p>Callers should check the result against the item size, as <a class="el" href="namespacemodels_1_1bmi.html#a93559d36005fa67a7474daa909711e69" title="Resolve the type to address a model&#39;s variable as, checked against its item size.">models::bmi::resolve_var_type</a> does.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">external_type_name</td><td>The string name of some type in the backing model's language. </td></tr>
+    <tr><td class="paramname">item_size</td><td>The size in bytes of one item, where the name alone does not imply it. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The primitive type the name denotes. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="structmodels_1_1bmi_1_1unknown__bmi__type.html" title="Thrown when a BMI type name has no C++ type behind it.">unknown_bmi_type</a></td><td>If the name is not one the table knows. </td></tr>
+    <tr><td class="paramname">std::runtime_error</td><td>If an override cannot resolve the name and size it is given. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="namespacemodels_1_1bmi.html#ace2f2f40017983aeea42ce086b2e74d4">models::bmi::parse_bmi_type()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacemodels_1_1bmi.html#a93559d36005fa67a7474daa909711e69">models::bmi::resolve_var_type()</a>.</p>
 
 </div>
 </div>
@@ -1519,7 +1523,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a4077c403a272bec5a0ea64f30272ee89">models::bmi::Bmi_C_Adapter</a>, and <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2b089a47b5dd9bba06938059873638c3">models::bmi::Bmi_Cpp_Adapter</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aff171a21897a83efdde7c523e3388adb">realization::Bmi_Module_Formulation::do_bmi_sets_with_full_refetch()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee">models::bmi::GetValue()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a17fb60281a541b87da0c46ef7f2252cf">models::bmi::GetValue()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a0c2366c15ed4de750faf988535516581">models::bmi::GetValuePtr()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a6b1178914ad6e8ae4d69d86284fce924">realization::Bmi_Module_Formulation::initialize_bmi_input_var_metadata()</a>, and <a class="el" href="namespacemodels_1_1bmi.html#a2f8e38da8cd007e71545a40db7292779">models::bmi::resolve_var_type()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aff171a21897a83efdde7c523e3388adb">realization::Bmi_Module_Formulation::do_bmi_sets_with_full_refetch()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee">models::bmi::GetValue()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a17fb60281a541b87da0c46ef7f2252cf">models::bmi::GetValue()</a>, <a class="el" href="namespacemodels_1_1bmi.html#a0c2366c15ed4de750faf988535516581">models::bmi::GetValuePtr()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a6b1178914ad6e8ae4d69d86284fce924">realization::Bmi_Module_Formulation::initialize_bmi_input_var_metadata()</a>, and <a class="el" href="namespacemodels_1_1bmi.html#a93559d36005fa67a7474daa909711e69">models::bmi::resolve_var_type()</a>.</p>
 
 </div>
 </div>
@@ -1604,7 +1608,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3c386edbfd2f2efaf0a988d4dfe2f8e3">models::bmi::Bmi_C_Adapter</a>, and <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6a9f11b324fa7d84303f98636ba8fecf">models::bmi::Bmi_Cpp_Adapter</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacemodels_1_1bmi.html#a2f8e38da8cd007e71545a40db7292779">models::bmi::resolve_var_type()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacemodels_1_1bmi.html#a93559d36005fa67a7474daa909711e69">models::bmi::resolve_var_type()</a>.</p>
 
 </div>
 </div>
@@ -2147,7 +2151,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacemodels.html">models</a></li><li class="navelem"><a class="el" href="namespacemodels_1_1bmi.html">bmi</a></li><li class="navelem"><a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html">Bmi_Adapter</a></li>
-    <li class="footer">Generated on Mon Nov 2 2026 14:11:44 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Nov 5 2026 17:24:35 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

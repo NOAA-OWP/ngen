@@ -8,7 +8,7 @@ var searchData=
   ['time_5',['Time',['../structrealization_1_1config_1_1_time.html#a93a2e197f8841d39081be3caeedba65c',1,'realization::config::Time']]],
   ['time_5fmarker_6',['time_marker',['../structutils_1_1time__marker.html#a666fdf1adf0df69ef868f579f7c4d5f8',1,'utils::time_marker']]],
   ['to_5fkey_5fstring_7',['to_key_string',['../namespacerealization_1_1config.html#af59178b2a7d2cc3ee2f2bbbac7b2c07a',1,'realization::config']]],
-  ['to_5fstring_8',['to_string',['../classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aefff4e7722bc069b1a8448dbbc3df53f',1,'models::bmi::protocols::ProtocolError']]],
+  ['to_5fstring_8',['to_string',['../classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html#aefff4e7722bc069b1a8448dbbc3df53f',1,'models::bmi::protocols::ProtocolError::to_string()'],['../namespacemodels_1_1bmi.html#a3e81a2863983ba91876cb6f42b13c4f7',1,'models::bmi::to_string()']]],
   ['try_5fmatch_9',['try_match',['../namespaceutilities_1_1anonymous__namespace_02path__tokens_8cpp_03.html#ac1fc79ca506d4067dad0b04b8db1fc2b',1,'utilities::anonymous_namespace{path_tokens.cpp}']]],
   ['types_10',['types',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a0346a3c803f1288c2eb75374d5d8299d',1,'ngen::sqlite::database::iterator']]]
 ];

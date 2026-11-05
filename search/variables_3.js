@@ -31,7 +31,6 @@ var searchData=
   ['containing_5fcatchment_28',['containing_catchment',['../class_h_y___catchment.html#ab468ea39a19ade8d47b2eb7ca42f3a1e',1,'HY_Catchment']]],
   ['contributing_5fcatchments_29',['contributing_catchments',['../class_h_y___hydro_nexus.html#ac9f670d94708c8987cff99e8bae94728',1,'HY_HydroNexus']]],
   ['contribution_5fmutex_30',['contribution_mutex',['../class_h_y___point_hydro_nexus.html#a28a770a186b6a3f1c027a7493d198b6c',1,'HY_PointHydroNexus']]],
-  ['cpp_5ftype_31',['cpp_type',['../classrealization_1_1_bmi___var___details.html#a8f4612805ec9f49ad6ba79b7caba41bb',1,'realization::Bmi_Var_Details']]],
-  ['current_5fdate_5ftime_5fepoch_32',['current_date_time_epoch',['../class_csv_per_feature_forcing_provider.html#a5fee10512c1561e3b7c60f01572e9674',1,'CsvPerFeatureForcingProvider::current_date_time_epoch'],['../class_simulation___time.html#a05ca6222ff0dc9174a2bbfa5e7908541',1,'Simulation_Time::current_date_time_epoch']]],
-  ['current_5ftime_5fstep_33',['current_time_step',['../structmodels_1_1bmi_1_1protocols_1_1_context.html#aace653cfd38c514210cdd61b218378d8',1,'models::bmi::protocols::Context']]]
+  ['current_5fdate_5ftime_5fepoch_31',['current_date_time_epoch',['../class_csv_per_feature_forcing_provider.html#a5fee10512c1561e3b7c60f01572e9674',1,'CsvPerFeatureForcingProvider::current_date_time_epoch'],['../class_simulation___time.html#a05ca6222ff0dc9174a2bbfa5e7908541',1,'Simulation_Time::current_date_time_epoch']]],
+  ['current_5ftime_5fstep_32',['current_time_step',['../structmodels_1_1bmi_1_1protocols_1_1_context.html#aace653cfd38c514210cdd61b218378d8',1,'models::bmi::protocols::Context']]]
 ];

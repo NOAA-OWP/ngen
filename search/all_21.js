@@ -40,7 +40,7 @@ var searchData=
   ['with_20the_20bmi_20v2_200_20standard_37',['Compliance with the BMI v2.0 Standard',['../md_doc_2_b_m_iconventions.html#autotoc_md138',1,'']]],
   ['with_20the_20same_20name_20not_20permitted_38',['Input and output with the same name not permitted',['../md_doc_2_b_m_iconventions.html#autotoc_md154',1,'']]],
   ['with_20topmodel_39',['Run Computation with Topmodel',['../md_doc_2_next_gen___o_n___c_o_n_u_s.html#autotoc_md268',1,'']]],
-  ['with_5fbmi_5ftype_40',['with_bmi_type',['../namespacemodels_1_1bmi.html#ad08b04570775a5bfade8aa39deb0d751',1,'models::bmi']]],
+  ['with_5fprimitive_5ftype_40',['with_primitive_type',['../namespacemodels_1_1bmi.html#a44a2f2db2c936b5db1b55a77b702c70a',1,'models::bmi']]],
   ['with_5freader_41',['with_reader',['../classngen_1_1serialization_1_1_record_backend.html#a3b415bbcf9ca0680d4c406813b135a83',1,'ngen::serialization::RecordBackend']]],
   ['with_5fwriter_42',['with_writer',['../classngen_1_1serialization_1_1_record_backend.html#a5f919628ca11ae762e0b0aeac94b7f0d',1,'ngen::serialization::RecordBackend']]],
   ['witharea_43',['withArea',['../class_h_y___features___attributes___test.html#ad1920a8754252e8bb596f8858c99dc73',1,'HY_Features_Attributes_Test']]],

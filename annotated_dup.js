@@ -66,7 +66,8 @@ var annotated_dup =
         [ "Bmi_Adapter", "classmodels_1_1bmi_1_1_bmi___adapter.html", "classmodels_1_1bmi_1_1_bmi___adapter" ],
         [ "Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html", "classmodels_1_1bmi_1_1_bmi___c___adapter" ],
         [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html", "classmodels_1_1bmi_1_1_bmi___cpp___adapter" ],
-        [ "unknown_bmi_type", "structmodels_1_1bmi_1_1unknown__bmi__type.html", "structmodels_1_1bmi_1_1unknown__bmi__type" ]
+        [ "unknown_bmi_type", "structmodels_1_1bmi_1_1unknown__bmi__type.html", "structmodels_1_1bmi_1_1unknown__bmi__type" ],
+        [ "unsupported_primitive_type", "structmodels_1_1bmi_1_1unsupported__primitive__type.html", "structmodels_1_1bmi_1_1unsupported__primitive__type" ]
       ] ],
       [ "external", "namespacemodels_1_1external.html", [
         [ "State_Exception", "classmodels_1_1external_1_1_state___exception.html", "classmodels_1_1external_1_1_state___exception" ]

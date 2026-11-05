@@ -65,51 +65,51 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="classmodels_1_1bmi_1_1_bmi___adapter.html" target="_top" xlink:title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ...">
-<polygon fill="white" stroke="none" points="241.94,-623.5 112.19,-623.5 112.19,-288.75 241.94,-288.75 241.94,-623.5"/>
+<polygon fill="white" stroke="none" points="241.56,-623.5 112.56,-623.5 112.56,-288.75 241.56,-288.75 241.56,-623.5"/>
 <text text-anchor="start" x="120.81" y="-610" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::Bmi_Adapter</text>
-<text text-anchor="start" x="116.56" y="-594.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="126.19" y="-594.75" font-family="Helvetica,sans-Serif" font-size="10.00">bmi_model_has_fixed</text>
-<text text-anchor="start" x="126.19" y="-583.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step</text>
-<text text-anchor="start" x="116.56" y="-568.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="126.19" y="-568.25" font-family="Helvetica,sans-Serif" font-size="10.00">bmi_model_time_convert</text>
-<text text-anchor="start" x="126.19" y="-557" font-family="Helvetica,sans-Serif" font-size="10.00">_factor</text>
-<text text-anchor="start" x="116.56" y="-541.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="126.19" y="-541.75" font-family="Helvetica,sans-Serif" font-size="10.00">model_initialized</text>
-<text text-anchor="start" x="116.19" y="-526.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="126.19" y="-526.5" font-family="Helvetica,sans-Serif" font-size="10.00">Bmi_Adapter()</text>
-<text text-anchor="start" x="116.19" y="-511.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="126.19" y="-511.25" font-family="Helvetica,sans-Serif" font-size="10.00">Bmi_Adapter()</text>
-<text text-anchor="start" x="116.19" y="-496" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="126.19" y="-496" font-family="Helvetica,sans-Serif" font-size="10.00">Bmi_Adapter()</text>
-<text text-anchor="start" x="116.19" y="-480.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="126.19" y="-480.75" font-family="Helvetica,sans-Serif" font-size="10.00">~Bmi_Adapter()</text>
-<text text-anchor="start" x="116.19" y="-465.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="126.19" y="-465.5" font-family="Helvetica,sans-Serif" font-size="10.00">is_model_initialized()</text>
-<text text-anchor="start" x="116.19" y="-450.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="126.19" y="-450.25" font-family="Helvetica,sans-Serif" font-size="10.00">get_time_convert_factor()</text>
-<text text-anchor="start" x="116.19" y="-435" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="126.19" y="-435" font-family="Helvetica,sans-Serif" font-size="10.00">convert_model_time</text>
-<text text-anchor="start" x="126.19" y="-423.75" font-family="Helvetica,sans-Serif" font-size="10.00">_to_seconds()</text>
-<text text-anchor="start" x="116.19" y="-408.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="126.19" y="-408.5" font-family="Helvetica,sans-Serif" font-size="10.00">convert_seconds_to</text>
-<text text-anchor="start" x="126.19" y="-397.25" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
-<text text-anchor="start" x="116.19" y="-382" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="126.19" y="-382" font-family="Helvetica,sans-Serif" font-size="10.00">get_analogous_cxx_type()</text>
-<text text-anchor="start" x="116.19" y="-366.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="126.19" y="-366.75" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
-<text text-anchor="start" x="116.19" y="-351.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="126.19" y="-351.5" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
-<text text-anchor="start" x="116.19" y="-336.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="126.19" y="-336.25" font-family="Helvetica,sans-Serif" font-size="10.00">isInitialized()</text>
-<text text-anchor="start" x="116.19" y="-321" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="126.19" y="-321" font-family="Helvetica,sans-Serif" font-size="10.00">get_model_name()</text>
-<text text-anchor="start" x="116.56" y="-305.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="126.19" y="-305.75" font-family="Helvetica,sans-Serif" font-size="10.00">construct_and_init</text>
-<text text-anchor="start" x="126.19" y="-294.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
-<polygon fill="#666666" stroke="#666666" points="112.19,-606.25 112.19,-606.25 241.94,-606.25 241.94,-606.25 112.19,-606.25"/>
-<polygon fill="#666666" stroke="#666666" points="112.19,-538 112.19,-538 124.19,-538 124.19,-538 112.19,-538"/>
-<polygon fill="#666666" stroke="#666666" points="124.19,-538 124.19,-538 241.94,-538 241.94,-538 124.19,-538"/>
-<polygon fill="none" stroke="#666666" points="112.19,-288.75 112.19,-623.5 241.94,-623.5 241.94,-288.75 112.19,-288.75"/>
+<text text-anchor="start" x="116.94" y="-594.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="126.56" y="-594.75" font-family="Helvetica,sans-Serif" font-size="10.00">bmi_model_has_fixed</text>
+<text text-anchor="start" x="126.56" y="-583.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step</text>
+<text text-anchor="start" x="116.94" y="-568.25" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="126.56" y="-568.25" font-family="Helvetica,sans-Serif" font-size="10.00">bmi_model_time_convert</text>
+<text text-anchor="start" x="126.56" y="-557" font-family="Helvetica,sans-Serif" font-size="10.00">_factor</text>
+<text text-anchor="start" x="116.94" y="-541.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="126.56" y="-541.75" font-family="Helvetica,sans-Serif" font-size="10.00">model_initialized</text>
+<text text-anchor="start" x="116.56" y="-526.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="126.56" y="-526.5" font-family="Helvetica,sans-Serif" font-size="10.00">Bmi_Adapter()</text>
+<text text-anchor="start" x="116.56" y="-511.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="126.56" y="-511.25" font-family="Helvetica,sans-Serif" font-size="10.00">Bmi_Adapter()</text>
+<text text-anchor="start" x="116.56" y="-496" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="126.56" y="-496" font-family="Helvetica,sans-Serif" font-size="10.00">Bmi_Adapter()</text>
+<text text-anchor="start" x="116.56" y="-480.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="126.56" y="-480.75" font-family="Helvetica,sans-Serif" font-size="10.00">~Bmi_Adapter()</text>
+<text text-anchor="start" x="116.56" y="-465.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="126.56" y="-465.5" font-family="Helvetica,sans-Serif" font-size="10.00">is_model_initialized()</text>
+<text text-anchor="start" x="116.56" y="-450.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="126.56" y="-450.25" font-family="Helvetica,sans-Serif" font-size="10.00">get_time_convert_factor()</text>
+<text text-anchor="start" x="116.56" y="-435" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="126.56" y="-435" font-family="Helvetica,sans-Serif" font-size="10.00">convert_model_time</text>
+<text text-anchor="start" x="126.56" y="-423.75" font-family="Helvetica,sans-Serif" font-size="10.00">_to_seconds()</text>
+<text text-anchor="start" x="116.56" y="-408.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="126.56" y="-408.5" font-family="Helvetica,sans-Serif" font-size="10.00">convert_seconds_to</text>
+<text text-anchor="start" x="126.56" y="-397.25" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
+<text text-anchor="start" x="116.56" y="-382" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="126.56" y="-382" font-family="Helvetica,sans-Serif" font-size="10.00">get_primitive_type()</text>
+<text text-anchor="start" x="116.56" y="-366.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="126.56" y="-366.75" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
+<text text-anchor="start" x="116.56" y="-351.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="126.56" y="-351.5" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
+<text text-anchor="start" x="116.56" y="-336.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="126.56" y="-336.25" font-family="Helvetica,sans-Serif" font-size="10.00">isInitialized()</text>
+<text text-anchor="start" x="116.56" y="-321" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="126.56" y="-321" font-family="Helvetica,sans-Serif" font-size="10.00">get_model_name()</text>
+<text text-anchor="start" x="116.94" y="-305.75" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="126.56" y="-305.75" font-family="Helvetica,sans-Serif" font-size="10.00">construct_and_init</text>
+<text text-anchor="start" x="126.56" y="-294.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
+<polygon fill="#666666" stroke="#666666" points="112.56,-606.25 112.56,-606.25 241.56,-606.25 241.56,-606.25 112.56,-606.25"/>
+<polygon fill="#666666" stroke="#666666" points="112.56,-538 112.56,-538 124.56,-538 124.56,-538 112.56,-538"/>
+<polygon fill="#666666" stroke="#666666" points="124.56,-538 124.56,-538 241.56,-538 241.56,-538 124.56,-538"/>
+<polygon fill="none" stroke="#666666" points="112.56,-288.75 112.56,-623.5 241.56,-623.5 241.56,-288.75 112.56,-288.75"/>
 </a>
 </g>
 </g>
@@ -117,8 +117,8 @@
 <g id="edge2_Node000002_Node000003" class="edge">
 <title>Node3&#45;&gt;Node2</title>
 <g id="a_edge2_Node000002_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M241.81,-332.14C256.95,-303.39 272.03,-274.74 283.67,-252.63"/>
-<polygon fill="none" stroke="#63b8ff" points="283.58,-252.8 282.84,-245.63 289.17,-242.18 289.91,-249.36 283.58,-252.8"/>
+<path fill="none" stroke="#63b8ff" d="M241.44,-332.85C256.74,-303.78 272.02,-274.77 283.76,-252.46"/>
+<polygon fill="none" stroke="#63b8ff" points="283.72,-252.53 282.98,-245.36 289.31,-241.91 290.06,-249.09 283.72,-252.53"/>
 </a>
 </g>
 <text text-anchor="middle" x="287.16" y="-261.25" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> +ptr</text>
@@ -194,8 +194,8 @@
 <g id="edge4_Node000003_Node000005" class="edge">
 <title>Node5&#45;&gt;Node3</title>
 <g id="a_edge4_Node000003_Node000005"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M76.96,-1127.43C61.06,-1092.04 32.55,-1022.84 22.06,-960.5 1.53,-838.44 -14.72,-800.19 22.06,-682 38.56,-628.99 72.39,-577.44 104.24,-537.09"/>
-<polygon fill="none" stroke="#63b8ff" points="104.21,-537.14 104.85,-529.95 111.72,-527.78 111.08,-534.97 104.21,-537.14"/>
+<path fill="none" stroke="#63b8ff" d="M76.96,-1127.43C61.06,-1092.04 32.55,-1022.84 22.06,-960.5 1.53,-838.44 -14.72,-800.19 22.06,-682 38.63,-628.79 72.65,-577.03 104.62,-536.61"/>
+<polygon fill="none" stroke="#63b8ff" points="104.6,-536.64 105.25,-529.46 112.12,-527.29 111.48,-534.47 104.6,-536.64"/>
 </a>
 </g>
 <text text-anchor="middle" x="78.29" y="-1002.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #bmi_init_config</text>
@@ -271,8 +271,8 @@
 <g id="edge6_Node000003_Node000007" class="edge">
 <title>Node7&#45;&gt;Node3</title>
 <g id="a_edge6_Node000003_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M336.93,-796.53C320.86,-762.3 290.21,-697.03 264.06,-641.5 258.63,-629.97 253.01,-618.04 247.36,-606.05"/>
-<polygon fill="none" stroke="#63b8ff" points="247.44,-606.21 241.26,-602.49 242.32,-595.36 248.5,-599.08 247.44,-606.21"/>
+<path fill="none" stroke="#63b8ff" d="M336.93,-796.53C320.86,-762.3 290.21,-697.03 264.06,-641.5 258.52,-629.73 252.78,-617.54 247,-605.29"/>
+<polygon fill="none" stroke="#63b8ff" points="246.97,-605.21 240.79,-601.49 241.85,-594.36 248.02,-598.08 246.97,-605.21"/>
 </a>
 </g>
 <text text-anchor="middle" x="335.81" y="-648.88" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #bmi_model_time_step_size</text>
