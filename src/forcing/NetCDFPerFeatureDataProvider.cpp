@@ -7,7 +7,9 @@
 
 #include <netcdf>
 
+#include <cmath>
 #include <iomanip>
+#include <limits>
 #include <span>
 #include <sstream>
 
@@ -58,6 +60,33 @@ namespace {
         }
         return values.front();
     }
+
+    // The stored values marking missing data: the _FillValue (the type's
+    // default if no _FillValue attribute is set but fill mode is on,
+    // except for byte types) and any missing_value attribute values. This
+    // follows the masking of the netCDF4 Python module, apart from
+    // valid_min, valid_max and valid_range, which aren't applied
+    std::vector<double> get_missing_markers(const netCDF::NcVar& var)
+    {
+        std::vector<double> markers = get_numeric_att(var, "missing_value");
+
+        std::optional<double> fill = get_scalar_att(var, "_FillValue");
+        if (!fill) {
+            bool fill_mode = false;
+            var.getFillModeParameters(fill_mode);
+            const nc_type type = var.getType().getId();
+            auto default_fill = DEFAULT_FILL_VALUES.find(type);
+            if (fill_mode && type != NC_BYTE && type != NC_UBYTE && default_fill != DEFAULT_FILL_VALUES.end()) {
+                fill = default_fill->second;
+            }
+        }
+        if (fill) {
+            markers.push_back(*fill);
+        }
+
+        std::erase_if(markers, [](double marker) { return std::isnan(marker); });
+        return markers;
+    }
 }
 
 struct NetCDFPerFeatureDataProvider::VariableInfo
@@ -76,6 +105,9 @@ struct NetCDFPerFeatureDataProvider::VariableInfo
     double scale_factor_ = 1.0;
     double add_offset_ = 0.0;
 
+    // Stored values marking missing data, which decode to NaN
+    std::vector<double> missing_markers_;
+
     // Reads how to decode the variable's values from its attributes;
     // the caller must hold the NetCDF library lock
     VariableInfo(std::string name, netCDF::NcVar var, std::string units = "")
@@ -84,10 +116,25 @@ struct NetCDFPerFeatureDataProvider::VariableInfo
         , units_(std::move(units))
         , scale_factor_(get_scalar_att(var, "scale_factor").value_or(1.0))
         , add_offset_(get_scalar_att(var, "add_offset").value_or(0.0))
+        , missing_markers_(get_missing_markers(var))
     {}
 
-    // Turns stored values into the values they represent
+    // Turns stored values into the values they represent, with NaN for
+    // missing data
     void decode(std::span<double> values) const
+    {
+        if (!missing_markers_.empty()) {
+            for (double& v : values) {
+                if (std::ranges::find(missing_markers_, v) != missing_markers_.end()) {
+                    v = std::numeric_limits<double>::quiet_NaN();
+                }
+            }
+        }
+        unpack(values);
+    }
+
+    // Applies scale_factor and add_offset, leaving missing markers alone
+    void unpack(std::span<double> values) const
     {
         if (scale_factor_ != 1.0 || add_offset_ != 0.0) {
             for (double& v : values) {
@@ -408,7 +455,7 @@ void NetCDFPerFeatureDataProvider::read_times()
     count.push_back(1);
     count.push_back(num_times);
     time_var.getVar(start, count, &raw_time[0]);
-    ncvar_cache.at(TIME_VAR_NAME).decode(raw_time);
+    ncvar_cache.at(TIME_VAR_NAME).unpack(raw_time);
 
     // read the time metadata (unit, scale factor and reference epoch)
     TimeInfo time_info = get_time_metadata(time_var);
