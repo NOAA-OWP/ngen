@@ -65,7 +65,7 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         std::optional<double> add_offset;
         // missing data markers, as stored (packed) values
         std::optional<double> fill_value;    // _FillValue attribute
-        std::optional<double> missing_value; // missing_value attribute
+        std::vector<double> missing_values;  // missing_value attribute, if any (double storage only)
         std::optional<double> missing_raw;   // stored at missing cells; default: the first marker above, else NaN
         std::set<std::pair<std::size_t, std::size_t>> missing; // (catchment, timestep) cells stored as missing
 
@@ -166,12 +166,12 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         if (v.fill_value) {
             putTypedAtt(var, "_FillValue", *v.fill_value);
         }
-        if (v.missing_value) {
-            putTypedAtt(var, "missing_value", *v.missing_value);
+        if (!v.missing_values.empty()) {
+            var.putAtt("missing_value", netCDF::ncDouble, v.missing_values.size(), v.missing_values.data());
         }
         const double missing_raw = v.missing_raw ? *v.missing_raw
             : v.fill_value ? *v.fill_value
-            : v.missing_value ? *v.missing_value
+            : !v.missing_values.empty() ? v.missing_values.front()
             : std::numeric_limits<double>::quiet_NaN();
 
         std::vector<double> values(v.n_cats * v.n_times);
@@ -420,6 +420,72 @@ TEST_F(NetCDFStorageVariantTest, PackedDoubleWithOffsetOnly)
 {
     Variant v;
     v.add_offset = 250.0;
+    expectEquivalent(v);
+}
+
+// Stored values marking missing data read as NaN, as values stored as NaN do
+TEST_F(NetCDFStorageVariantTest, FillValueMarksMissing)
+{
+    Variant v;
+    v.fill_value = -9999.0;
+    v.missing = {{0, 0}, {2, 7}, {4, 19}};
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, PackedFillValueMarksMissing)
+{
+    Variant v;
+    v.type = Type::Short;
+    v.scale_factor = 0.01;
+    v.add_offset = 250.0;
+    v.fill_value = -32767;
+    v.missing = {{0, 0}, {2, 7}, {4, 19}};
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, MissingValueAttributeMarksMissing)
+{
+    Variant v;
+    v.missing_values = {1e20};
+    v.missing = {{1, 3}, {3, 12}};
+    expectEquivalent(v);
+}
+
+// Every value of a missing_value attribute marks missing data
+TEST_F(NetCDFStorageVariantTest, MultipleMissingValuesMarkMissing)
+{
+    Variant v;
+    v.missing_values = {1e20, -1e20};
+    v.missing_raw = -1e20;
+    v.missing = {{1, 3}, {3, 12}};
+    expectEquivalent(v);
+}
+
+// Without a _FillValue attribute, the type's default fill value marks missing data
+TEST_F(NetCDFStorageVariantTest, DefaultFillValueMarksMissing)
+{
+    Variant v;
+    v.missing_raw = NC_FILL_DOUBLE;
+    v.missing = {{1, 3}, {3, 12}};
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, FloatDefaultFillValueMarksMissing)
+{
+    Variant v;
+    v.type = Type::Float;
+    v.missing_raw = NC_FILL_FLOAT;
+    v.missing = {{1, 3}, {3, 12}};
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, PackedDefaultFillValueMarksMissing)
+{
+    Variant v;
+    v.type = Type::Int;
+    v.scale_factor = 0.001;
+    v.missing_raw = NC_FILL_INT;
+    v.missing = {{1, 3}, {3, 12}};
     expectEquivalent(v);
 }
 
