@@ -56,6 +56,7 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         std::vector<std::size_t> order;
         // store variables as (time, catchment-id) rather than (catchment-id, time)
         bool time_major = false;
+        std::optional<bool> time_var_time_major; // for Time; default: as time_major
         bool unlimited_time = false;
 
         Type type = Type::Double;
@@ -112,16 +113,19 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         netCDF::NcFile out(path, netCDF::NcFile::replace, netCDF::NcFile::nc4);
         auto cat_dim = out.addDim("catchment-id", v.n_cats);
         auto time_dim = v.unlimited_time ? out.addDim("time") : out.addDim("time", v.n_times);
-        std::vector<netCDF::NcDim> dims = v.time_major
-            ? std::vector<netCDF::NcDim>{time_dim, cat_dim}
-            : std::vector<netCDF::NcDim>{cat_dim, time_dim};
-        // index of (file position, timestep) in a variable stored with dims
-        auto at = [&](std::size_t pos, std::size_t t) {
-            return v.time_major ? t * v.n_cats + pos : pos * v.n_times + t;
+        auto dims_for = [&](bool time_major) {
+            return time_major ? std::vector<netCDF::NcDim>{time_dim, cat_dim}
+                              : std::vector<netCDF::NcDim>{cat_dim, time_dim};
         };
-        std::vector<std::size_t> counts = v.time_major
-            ? std::vector<std::size_t>{v.n_times, v.n_cats}
-            : std::vector<std::size_t>{v.n_cats, v.n_times};
+        auto counts_for = [&](bool time_major) {
+            return time_major ? std::vector<std::size_t>{v.n_times, v.n_cats}
+                              : std::vector<std::size_t>{v.n_cats, v.n_times};
+        };
+        // index of (file position, timestep) in a variable stored in either order
+        auto at = [&](bool time_major, std::size_t pos, std::size_t t) {
+            return time_major ? t * v.n_cats + pos : pos * v.n_times + t;
+        };
+        const bool time_var_time_major = v.time_var_time_major.value_or(v.time_major);
         std::vector<std::size_t> starts = {0, 0};
 
         std::vector<std::string> id_strs;
@@ -134,7 +138,7 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         }
         out.addVar("ids", netCDF::ncString, cat_dim).putVar(id_ptrs.data());
 
-        auto time_var = out.addVar("Time", ncType(v.time_type), dims);
+        auto time_var = out.addVar("Time", ncType(v.time_type), dims_for(time_var_time_major));
         time_var.putAtt("units", v.time_units);
         if (v.epoch_start) {
             time_var.putAtt("epoch_start", *v.epoch_start);
@@ -143,12 +147,12 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         for (std::size_t pos = 0; pos < v.n_cats; ++pos) {
             for (std::size_t t = 0; t < v.n_times; ++t) {
                 time_t epoch = v.start + t * v.stride;
-                times[at(pos, t)] = v.encode_time ? v.encode_time(epoch) : double(epoch);
+                times[at(time_var_time_major, pos, t)] = v.encode_time ? v.encode_time(epoch) : double(epoch);
             }
         }
-        time_var.putVar(starts, counts, times.data());
+        time_var.putVar(starts, counts_for(time_var_time_major), times.data());
 
-        auto var = out.addVar("temp", ncType(v.type), dims);
+        auto var = out.addVar("temp", ncType(v.type), dims_for(v.time_major));
         var.putAtt("units", v.units);
         if (!v.chunks.empty()) {
             std::vector<std::size_t> chunks = v.chunks;
@@ -190,10 +194,10 @@ class NetCDFStorageVariantTest : public ::testing::Test {
                         }
                     }
                 }
-                values[at(pos, t)] = x;
+                values[at(v.time_major, pos, t)] = x;
             }
         }
-        var.putVar(starts, counts, values.data());
+        var.putVar(starts, counts_for(v.time_major), values.data());
 
         if (v.extra_variables) {
             // A coordinate, a scalar, and a variable over another dimension;
@@ -486,6 +490,46 @@ TEST_F(NetCDFStorageVariantTest, PackedDefaultFillValueMarksMissing)
     v.scale_factor = 0.001;
     v.missing_raw = NC_FILL_INT;
     v.missing = {{1, 3}, {3, 12}};
+    expectEquivalent(v);
+}
+
+// Variables can be stored with time as the leading dimension
+TEST_F(NetCDFStorageVariantTest, TimeMajorDimensions)
+{
+    Variant v;
+    v.time_major = true;
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, TimeMajorDataWithCatchmentMajorTime)
+{
+    Variant v;
+    v.time_major = true;
+    v.time_var_time_major = false;
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, CatchmentMajorDataWithTimeMajorTime)
+{
+    Variant v;
+    v.time_var_time_major = true;
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, TimeMajorCombined)
+{
+    Variant v;
+    v.time_major = true;
+    v.order = {2, 4, 0, 3, 1};
+    v.unlimited_time = true;
+    v.chunks = {4, 2};
+    v.deflate_level = 2;
+    v.type = Type::Short;
+    v.scale_factor = 0.01;
+    v.add_offset = 250.0;
+    v.fill_value = -32767;
+    v.missing = {{0, 5}, {4, 0}};
+    v.extra_variables = true;
     expectEquivalent(v);
 }
 

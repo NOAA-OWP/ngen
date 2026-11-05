@@ -14,6 +14,13 @@
 #include <sstream>
 
 static const std::string TIME_VAR_NAME = "Time";
+static const std::string TIME_DIM_NAME = "time";
+
+// Whether a variable is stored as (time, catchment-id) rather than (catchment-id, time)
+static bool is_time_major(const netCDF::NcVar& var)
+{
+    return var.getDimCount() == 2 && var.getDim(0).getName() == TIME_DIM_NAME;
+}
 
 std::mutex data_access::NetCDFPerFeatureDataProvider::shared_providers_mutex;
 std::map<std::string, std::shared_ptr<data_access::NetCDFPerFeatureDataProvider>> data_access::NetCDFPerFeatureDataProvider::shared_providers;
@@ -108,6 +115,9 @@ struct NetCDFPerFeatureDataProvider::VariableInfo
     // Stored values marking missing data, which decode to NaN
     std::vector<double> missing_markers_;
 
+    // Stored as (time, catchment-id) rather than (catchment-id, time)
+    bool time_major_ = false;
+
     // Reads how to decode the variable's values from its attributes;
     // the caller must hold the NetCDF library lock
     VariableInfo(std::string name, netCDF::NcVar var, std::string units = "")
@@ -117,6 +127,7 @@ struct NetCDFPerFeatureDataProvider::VariableInfo
         , scale_factor_(get_scalar_att(var, "scale_factor").value_or(1.0))
         , add_offset_(get_scalar_att(var, "add_offset").value_or(0.0))
         , missing_markers_(get_missing_markers(var))
+        , time_major_(is_time_major(var))
     {}
 
     // Turns stored values into the values they represent, with NaN for
@@ -439,7 +450,7 @@ void NetCDFPerFeatureDataProvider::read_ids()
 void NetCDFPerFeatureDataProvider::read_times()
 {
     // now get the size of the time dimension
-    auto num_times = nc_file->getDim("time").getSize();
+    auto num_times = nc_file->getDim(TIME_DIM_NAME).getSize();
 
     // allocate storage for the raw time array
     std::vector<double> raw_time(num_times);
@@ -447,13 +458,11 @@ void NetCDFPerFeatureDataProvider::read_times()
     // get the time variable
     auto time_var = nc_file->getVar(TIME_VAR_NAME);
 
-    // read from the first catchment row to get the recorded times
-    std::vector<size_t> start;
-    start.push_back(0);
-    start.push_back(0);
-    std::vector<size_t> count;
-    count.push_back(1);
-    count.push_back(num_times);
+    // read the first catchment's times, which are recorded for each one
+    std::vector<size_t> start = {0, 0};
+    std::vector<size_t> count = is_time_major(time_var)
+        ? std::vector<size_t>{num_times, 1}
+        : std::vector<size_t>{1, num_times};
     time_var.getVar(start, count, &raw_time[0]);
     ncvar_cache.at(TIME_VAR_NAME).unpack(raw_time);
 
@@ -684,6 +693,9 @@ auto NetCDFPerFeatureDataProvider::load_page(VariableInfo const& var, std::size_
   auto cached = std::make_shared<std::vector<double>>(get_ids().size() * page_cache_line_size);
 
   std::vector<std::size_t> start(2), count(2);
+  // A time-major variable's chunks are read here, then transposed into
+  // the page's catchment-major layout
+  std::vector<double> transposed;
 
   std::unique_lock netcdf_lock(multithreading::library_mutex<"netcdf">());
 
@@ -692,19 +704,27 @@ auto NetCDFPerFeatureDataProvider::load_page(VariableInfo const& var, std::size_
   for(auto const& chunk: chunks){
     // chunk start index = chunk.first;
     // chunk length      = chunk.second;
-    start[0] = chunk.first;
 
     // NOTE: in the first iteration, we might read more data in the Time
     // dimension than we 'need'. b.c. we read from:
     // 'c_idx1 - (c_idx1 % cache_slice_t_size)' to the end of the cache line.
     // so, if 'c_idx1 % cache_slice_t_size > 0' we will read
     // 'c_idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
-    start[1] = page_c_idx;
-
-    count[0] = chunk.second;
-    count[1] = page_cache_line_size;
-
-    var.ncvar_.getVar(start,count,&(*cached)[idx]);
+    if (var.time_major_) {
+      start = {page_c_idx, chunk.first};
+      count = {page_cache_line_size, chunk.second};
+      transposed.resize(chunk.second * page_cache_line_size);
+      var.ncvar_.getVar(start, count, transposed.data());
+      for (std::size_t t = 0; t < page_cache_line_size; ++t) {
+        for (std::size_t c = 0; c < chunk.second; ++c) {
+          (*cached)[idx + c * page_cache_line_size + t] = transposed[t * chunk.second + c];
+        }
+      }
+    } else {
+      start = {chunk.first, page_c_idx};
+      count = {chunk.second, page_cache_line_size};
+      var.ncvar_.getVar(start,count,&(*cached)[idx]);
+    }
     idx += chunk.second * page_cache_line_size;
   }
   netcdf_lock.unlock();
@@ -959,19 +979,34 @@ void NetCDFPerFeatureDataProvider::test_data_is_readable() {
 
 void NetCDFPerFeatureDataProvider::align_cache_with_chunks()
 {
-    auto num_times = nc_file->getDim("time").getSize();
+    auto num_times = nc_file->getDim(TIME_DIM_NAME).getSize();
+
+    // forcing variables have the time dimension and the ids' dimension, in either order
+    const std::string catchment_dim_name = nc_file->getVar("ids").getDim(0).getName();
 
     auto var_set = nc_file->getVars();
     for (const auto& var_pair : var_set) {
         const std::string& var_name = var_pair.first;
         auto var = var_pair.second;
-        // Skip the Time variable itself and ids, look for data variables with at least 2 dimensions
-        if (var_name == "Time" || var_name == "ids" || var_name == "catchment-id" || var.getDimCount() < 2) continue;
+        // Skip the Time variable itself, look for data variables over catchments and time
+        if (var_name == TIME_VAR_NAME || var.getDimCount() != 2) {
+            continue;
+        }
+        const std::string dim0 = var.getDim(0).getName();
+        const std::string dim1 = var.getDim(1).getName();
+        std::size_t time_index;
+        if (dim0 == catchment_dim_name && dim1 == TIME_DIM_NAME) {
+            time_index = 1;
+        } else if (dim0 == TIME_DIM_NAME && dim1 == catchment_dim_name) {
+            time_index = 0;
+        } else {
+            continue;
+        }
         netCDF::NcVar::ChunkMode mode;
         std::vector<size_t> chunk_sizes;
         var.getChunkingParameters(mode, chunk_sizes);
-        if (mode == netCDF::NcVar::ChunkMode::nc_CHUNKED && chunk_sizes.size() >= 2) {
-            cache_slice_t_size = chunk_sizes[1];  // Assume second dimension is time
+        if (mode == netCDF::NcVar::ChunkMode::nc_CHUNKED && chunk_sizes.size() == 2) {
+            cache_slice_t_size = chunk_sizes[time_index];
             break;  // Use the first suitable chunk size found
         }
     }
