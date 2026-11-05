@@ -708,6 +708,7 @@ ngen_add_test(
     test_netcdf_forcing
     OBJECTS
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
+        forcing/NetCDFPerFeatureDataProvider_Variants_Test.cpp
     LIBRARIES
         NGen::forcing
     REQUIRES
@@ -751,6 +752,7 @@ ngen_add_test(
         forcing/CsvPerFeatureForcingProvider_Test.cpp
         forcing/OptionalWrappedDataProvider_Test.cpp
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
+        forcing/NetCDFPerFeatureDataProvider_Variants_Test.cpp
         forcing/GridDataSelector_Test.cpp
         core/mediator/UnitsHelper_Tests.cpp
         simulation_time/Simulation_Time_Test.cpp
