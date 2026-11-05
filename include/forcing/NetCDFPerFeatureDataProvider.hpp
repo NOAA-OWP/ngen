@@ -153,7 +153,11 @@ namespace data_access
         using shared_cache = multithreading::shared_cache<cache_key_type, std::vector<double>>;
 
         private:
-        page_buffer_type load_page(netCDF::NcVar const& ncvar, std::size_t page_c_idx);
+        // What the provider knows about a variable in the file; defined in
+        // the .cpp file, so that client code doesn't need NcVar's definition
+        struct VariableInfo;
+
+        page_buffer_type load_page(VariableInfo const& var, std::size_t page_c_idx);
 
         time_t sim_start_date_time_epoch;
         time_t sim_end_date_time_epoch;
@@ -182,12 +186,9 @@ namespace data_access
         // an NcFile closes it if it is still open
         std::shared_ptr<netCDF::NcFile> nc_file;
 
-        // By the name requested, which may be the CSDMS name: the
-        // variable's name in the file, which keys value_caches and the
-        // thread caches, and its NcVar. Storing the name saves calling
-        // NcVar::getName(), which would need the NetCDF library lock
-        std::map<std::string, std::pair<std::string, netCDF::NcVar>> ncvar_cache;
-        std::map<std::string,std::string> units_cache;
+        // By the name requested, which may be the CSDMS name: what's
+        // needed to serve reads of the variable from the file
+        std::map<std::string, VariableInfo> ncvar_cache;
 
         // One cache per variable, keyed by the variable's name in the
         // file. Populated by the constructor and not modified after, so
@@ -211,9 +212,7 @@ namespace data_access
         size_t cache_slice_t_size = 24;
         size_t cache_slice_c_size = 1;
 
-        std::pair<std::string, netCDF::NcVar> const& get_ncvar(const std::string& name) const;
-
-        const std::string& get_ncvar_units(const std::string& name);
+        VariableInfo const& get_ncvar(const std::string& name) const;
 
         void test_data_is_readable();
 
