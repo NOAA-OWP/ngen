@@ -59,7 +59,8 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         bool unlimited_time = false;
 
         Type type = Type::Double;
-        // packing attributes; values are stored as round((value - add_offset) / scale_factor)
+        // packing attributes; values are stored as (value - add_offset) / scale_factor,
+        // rounded for integer types
         std::optional<double> scale_factor;
         std::optional<double> add_offset;
         // missing data markers, as stored (packed) values
@@ -183,7 +184,10 @@ class NetCDFStorageVariantTest : public ::testing::Test {
                 } else {
                     x = v.from_kelvin ? v.from_kelvin(kelvin(c, t)) : kelvin(c, t);
                     if (v.scale_factor || v.add_offset) {
-                        x = std::round((x - v.add_offset.value_or(0.0)) / v.scale_factor.value_or(1.0));
+                        x = (x - v.add_offset.value_or(0.0)) / v.scale_factor.value_or(1.0);
+                        if (v.type == Type::Int || v.type == Type::Short) {
+                            x = std::round(x);
+                        }
                     }
                 }
                 values[at(pos, t)] = x;
@@ -394,6 +398,31 @@ TEST_F(NetCDFStorageVariantTest, ExtraVariablesAndDimensions)
     expectEquivalent(v);
 }
 
+// Packed values are unpacked as stored * scale_factor + add_offset
+TEST_F(NetCDFStorageVariantTest, PackedShortWithScaleAndOffset)
+{
+    Variant v;
+    v.type = Type::Short;
+    v.scale_factor = 0.01;
+    v.add_offset = 250.0;
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, PackedIntWithScaleOnly)
+{
+    Variant v;
+    v.type = Type::Int;
+    v.scale_factor = 0.001;
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, PackedDoubleWithOffsetOnly)
+{
+    Variant v;
+    v.add_offset = 250.0;
+    expectEquivalent(v);
+}
+
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
 {
     Variant v;
@@ -405,6 +434,20 @@ TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
     v.units = "degC";
     v.from_kelvin = [](double k) { return k - 273.15; };
     v.extra_variables = true;
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, CombinedWithPacking)
+{
+    Variant v;
+    v.order = {2, 4, 0, 3, 1};
+    v.unlimited_time = true;
+    v.type = Type::Short;
+    v.scale_factor = 0.01;
+    v.chunks = {2, 5};
+    v.deflate_level = 2;
+    v.units = "degC";
+    v.from_kelvin = [](double k) { return k - 273.15; };
     expectEquivalent(v);
 }
 #endif

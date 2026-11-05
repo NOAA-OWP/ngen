@@ -8,12 +8,57 @@
 #include <netcdf>
 
 #include <iomanip>
+#include <span>
 #include <sstream>
+
+static const std::string TIME_VAR_NAME = "Time";
 
 std::mutex data_access::NetCDFPerFeatureDataProvider::shared_providers_mutex;
 std::map<std::string, std::shared_ptr<data_access::NetCDFPerFeatureDataProvider>> data_access::NetCDFPerFeatureDataProvider::shared_providers;
 
 namespace data_access {
+
+namespace {
+    // The NetCDF library's default fill value for each numeric type, by
+    // type id. Values and attributes of these types read as doubles
+    const std::map<nc_type, double> DEFAULT_FILL_VALUES = {
+        {NC_BYTE, NC_FILL_BYTE},
+        {NC_UBYTE, NC_FILL_UBYTE},
+        {NC_SHORT, NC_FILL_SHORT},
+        {NC_USHORT, NC_FILL_USHORT},
+        {NC_INT, NC_FILL_INT},
+        {NC_UINT, NC_FILL_UINT},
+        {NC_INT64, NC_FILL_INT64},
+        {NC_UINT64, NC_FILL_UINT64},
+        {NC_FLOAT, NC_FILL_FLOAT},
+        {NC_DOUBLE, NC_FILL_DOUBLE},
+    };
+
+    // The values of a numeric attribute, none if the variable has no
+    // numeric attribute by that name
+    std::vector<double> get_numeric_att(const netCDF::NcVar& var, const std::string& name)
+    {
+        auto atts = var.getAtts();
+        auto found = atts.find(name);
+        if (found == atts.end() || !DEFAULT_FILL_VALUES.contains(found->second.getType().getId())) {
+            return {};
+        }
+        std::vector<double> values(found->second.getAttLength());
+        found->second.getValues(values.data());
+        return values;
+    }
+
+    // The value of a numeric attribute holding a single value, if the
+    // variable has one by that name
+    std::optional<double> get_scalar_att(const netCDF::NcVar& var, const std::string& name)
+    {
+        auto values = get_numeric_att(var, name);
+        if (values.size() != 1) {
+            return std::nullopt;
+        }
+        return values.front();
+    }
+}
 
 struct NetCDFPerFeatureDataProvider::VariableInfo
 {
@@ -26,6 +71,30 @@ struct NetCDFPerFeatureDataProvider::VariableInfo
     // The variable's units: its units attribute, or for a well-known
     // field without one, the field's usual units
     std::string units_;
+
+    // Packed values are unpacked as stored * scale_factor + add_offset
+    double scale_factor_ = 1.0;
+    double add_offset_ = 0.0;
+
+    // Reads how to decode the variable's values from its attributes;
+    // the caller must hold the NetCDF library lock
+    VariableInfo(std::string name, netCDF::NcVar var, std::string units = "")
+        : name_(std::move(name))
+        , ncvar_(var)
+        , units_(std::move(units))
+        , scale_factor_(get_scalar_att(var, "scale_factor").value_or(1.0))
+        , add_offset_(get_scalar_att(var, "add_offset").value_or(0.0))
+    {}
+
+    // Turns stored values into the values they represent
+    void decode(std::span<double> values) const
+    {
+        if (scale_factor_ != 1.0 || add_offset_ != 0.0) {
+            for (double& v : values) {
+                v = v * scale_factor_ + add_offset_;
+            }
+        }
+    }
 };
 
 std::shared_ptr<NetCDFPerFeatureDataProvider> NetCDFPerFeatureDataProvider::get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s)
@@ -258,7 +327,7 @@ void NetCDFPerFeatureDataProvider::read_variable_metadata()
             native_units = std::get<1>(wkf->second); // the field's usual units
         }
 
-        VariableInfo info{var_name, ncvar, native_units};
+        VariableInfo info(var_name, ncvar, native_units);
         ncvar_cache.emplace(var_name, info);
 
         if(wkf != data_access::WellKnownFields.end()){
@@ -329,7 +398,7 @@ void NetCDFPerFeatureDataProvider::read_times()
     std::vector<double> raw_time(num_times);
 
     // get the time variable
-    auto time_var = nc_file->getVar("Time");
+    auto time_var = nc_file->getVar(TIME_VAR_NAME);
 
     // read from the first catchment row to get the recorded times
     std::vector<size_t> start;
@@ -339,6 +408,7 @@ void NetCDFPerFeatureDataProvider::read_times()
     count.push_back(1);
     count.push_back(num_times);
     time_var.getVar(start, count, &raw_time[0]);
+    ncvar_cache.at(TIME_VAR_NAME).decode(raw_time);
 
     // read the time metadata (unit, scale factor and reference epoch)
     TimeInfo time_info = get_time_metadata(time_var);
@@ -590,7 +660,9 @@ auto NetCDFPerFeatureDataProvider::load_page(VariableInfo const& var, std::size_
     var.ncvar_.getVar(start,count,&(*cached)[idx]);
     idx += chunk.second * page_cache_line_size;
   }
+  netcdf_lock.unlock();
 
+  var.decode(*cached);
   return cached;
 }
 
