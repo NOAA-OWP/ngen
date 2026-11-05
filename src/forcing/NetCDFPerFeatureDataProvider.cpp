@@ -15,6 +15,19 @@ std::map<std::string, std::shared_ptr<data_access::NetCDFPerFeatureDataProvider>
 
 namespace data_access {
 
+struct NetCDFPerFeatureDataProvider::VariableInfo
+{
+    // The variable's name in the file, which keys value_caches and the
+    // thread caches. Storing it saves calling NcVar::getName(), which
+    // would need the NetCDF library lock
+    std::string name_;
+    netCDF::NcVar ncvar_;
+
+    // The variable's units: its units attribute, or for a well-known
+    // field without one, the field's usual units
+    std::string units_;
+};
+
 std::shared_ptr<NetCDFPerFeatureDataProvider> NetCDFPerFeatureDataProvider::get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s)
 {
     const std::lock_guard<std::mutex> lock(shared_providers_mutex);
@@ -220,7 +233,6 @@ void NetCDFPerFeatureDataProvider::read_variable_metadata()
         std::string var_name = element.first;
         auto ncvar = nc_file->getVar(var_name);
         variable_names.push_back(var_name);
-        ncvar_cache.emplace(var_name,std::pair{var_name, ncvar});
         value_caches.try_emplace(var_name);
 
         std::string native_units;
@@ -242,15 +254,18 @@ void NetCDFPerFeatureDataProvider::read_variable_metadata()
         }
 
         auto wkf = data_access::WellKnownFields.find(var_name);
-        if(wkf != data_access::WellKnownFields.end()){
-            native_units = native_units.empty() ? std::get<1>(wkf->second) : native_units;
-            std::string can_name = std::get<0>(wkf->second); // the CSDMS name
-            variable_names.push_back(can_name);
-            ncvar_cache.emplace(can_name,std::pair{var_name, ncvar});
-            units_cache[can_name] = native_units;
+        if (wkf != data_access::WellKnownFields.end() && native_units.empty()) {
+            native_units = std::get<1>(wkf->second); // the field's usual units
         }
 
-        units_cache[var_name] = native_units;
+        VariableInfo info{var_name, ncvar, native_units};
+        ncvar_cache.emplace(var_name, info);
+
+        if(wkf != data_access::WellKnownFields.end()){
+            std::string can_name = std::get<0>(wkf->second); // the CSDMS name
+            variable_names.push_back(can_name);
+            ncvar_cache.emplace(can_name, info);
+        }
     });
 }
 
@@ -543,7 +558,7 @@ namespace cache {
 }
 }
 
-auto NetCDFPerFeatureDataProvider::load_page(netCDF::NcVar const& ncvar, std::size_t page_c_idx) -> page_buffer_type
+auto NetCDFPerFeatureDataProvider::load_page(VariableInfo const& var, std::size_t page_c_idx) -> page_buffer_type
 {
   std::size_t cache_line_size = cache_slice_t_size;
   std::size_t page_cache_line_size = cache::page_cache_line_size(page_c_idx, time_vals.size(), cache_line_size);
@@ -572,7 +587,7 @@ auto NetCDFPerFeatureDataProvider::load_page(netCDF::NcVar const& ncvar, std::si
     count[0] = chunk.second;
     count[1] = page_cache_line_size;
 
-    ncvar.getVar(start,count,&(*cached)[idx]);
+    var.ncvar_.getVar(start,count,&(*cached)[idx]);
     idx += chunk.second * page_cache_line_size;
   }
 
@@ -612,7 +627,8 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     // assumes all id's will have been hinted before 'get_value' is called.
     maybe_update_chunks_with_hints();
 
-    auto const& [variable_name, ncvar] = get_ncvar(selector.get_variable_name());
+    auto const& var = get_ncvar(selector.get_variable_name());
+    auto const& variable_name = var.name_;
     auto& variable_cache = value_caches.at(variable_name);
 
     auto const i_idx = id_pos.at(selector.get_id());
@@ -664,7 +680,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
         page_buffer_type cached;
         if (just_inserted) {
-            cached = load_page(ncvar, page_c_idx);
+            cached = load_page(var, page_c_idx);
             slot_for_page_key.fill(cached, true);
         } else {
             cached = slot_for_page_key.get();
@@ -739,7 +755,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
             ;
     }
 
-    std::string native_units = get_ncvar_units(variable_name);
+    const std::string& native_units = var.units_;
 
     try 
     {
@@ -762,22 +778,13 @@ std::vector<double> NetCDFPerFeatureDataProvider::get_values(const CatchmentAggr
 
 // private:
 
-std::pair<std::string, netCDF::NcVar> const& NetCDFPerFeatureDataProvider::get_ncvar(const std::string& name) const {
+auto NetCDFPerFeatureDataProvider::get_ncvar(const std::string& name) const -> VariableInfo const& {
     auto cache_hit = ncvar_cache.find(name);
     if(cache_hit != ncvar_cache.end()){
         return cache_hit->second;
     }
 
     throw std::runtime_error("Got request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
-}
-
-const std::string& NetCDFPerFeatureDataProvider::get_ncvar_units(const std::string& name){
-    auto cache_hit = units_cache.find(name);
-    if(cache_hit != units_cache.end()){
-        return cache_hit->second;
-    }
-
-    throw std::runtime_error("Got units request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
 }
 
 void NetCDFPerFeatureDataProvider::test_data_is_readable() {
