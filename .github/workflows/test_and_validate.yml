@@ -41,15 +41,17 @@ jobs:
         build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
     - name: Run Tests
-      run: ./cmake_build/test/test_unit
+      working-directory: ./cmake_build
+      run: ./test/test_unit
       timeout-minutes: 15
 
     - name: Run GeoPackage Tests
+      working-directory: ./cmake_build
       run: |
         # Container underflow report is a false positive, from a build with instrumentation
         # disabled in one file where it hangs the compiler (ngen#567)
         export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_container_overflow=0
-        ./cmake_build/test/test_geopackage
+        ./test/test_geopackage
       timeout-minutes: 15
     
     - name: Clean Up
@@ -77,9 +79,10 @@ jobs:
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
       - name: Run Tests
+        working-directory: ./cmake_build
         run: |
           export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
-          ./cmake_build/test/compare_pet
+          ./test/compare_pet
         timeout-minutes: 15
 
       - name: Clean Up
@@ -107,7 +110,8 @@ jobs:
           use_mpi: 'ON'
 
       - name: run_tests
-        run: mpirun --allow-run-as-root --oversubscribe -np 4 ./cmake_build/test/test_remote_nexus
+        working-directory: ./cmake_build
+        run: mpirun --allow-run-as-root --oversubscribe -np 4 ./test/test_remote_nexus
         timeout-minutes: 15
 
       - name: Clean Up
@@ -168,11 +172,10 @@ jobs:
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
       - name: Run Tests
+        working-directory: ./cmake_build
         run: |
-          cd ./cmake_build/test/
           export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
-          ./test_bmi_cpp
-          cd ../../
+          ./test/test_bmi_cpp
         timeout-minutes: 15
 
       - name: Clean Up Unit Test Build
@@ -200,11 +203,10 @@ jobs:
           bmi_c: 'ON'
 
       - name: run_bmi_c_tests
+        working-directory: ./cmake_build
         run: |
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0,suppressions=$(pwd)/test/asan_suppressions.txt
-          cd ./cmake_build/test/
-          ./test_bmi_c
-          cd ../../
+          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0,suppressions=${GITHUB_WORKSPACE}/test/asan_suppressions.txt
+          ./test/test_bmi_c
         timeout-minutes: 15
 
       - name: Clean Up Unit Test Build
@@ -234,10 +236,9 @@ jobs:
           bmi_fortran: 'ON'
 
       - name: Run Unit Tests
+        working-directory: ./cmake_build
         run: |
-          cd ./cmake_build/test/
-          ./test_bmi_fortran
-          cd ../../
+          ./test/test_bmi_fortran
         timeout-minutes: 15
 
       - name: Clean Up Unit Test Build
@@ -268,11 +269,10 @@ jobs:
           additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
 
       - name: run_bmi_python_tests
+        working-directory: ./cmake_build
         run: |
-          . .venv/bin/activate
-          cd ./cmake_build/
+          . ../.venv/bin/activate
           ./test/test_bmi_python
-          cd ../../
         timeout-minutes: 15
 
       - name: Clean Up Unit Test Build
@@ -303,10 +303,11 @@ jobs:
           additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
 
       - name: Run Unit Tests
+        working-directory: ./cmake_build
         run: |
-          . .venv/bin/activate
+          . ../.venv/bin/activate
           export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
-          ./cmake_build/test/test_bmi_multi
+          ./test/test_bmi_multi
         timeout-minutes: 15
 
       - name: Clean Up Unit Test Build
@@ -333,11 +334,10 @@ jobs:
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
       - name: run_bmi_protocol_tests
+        working-directory: ./cmake_build
         run: |
-          cd ./cmake_build/test/
           export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
-          ./test_bmi_protocols
-          cd ../../
+          ./test/test_bmi_protocols
         timeout-minutes: 15
 
       - name: Clean Up BMI Protocol Unit Test Build

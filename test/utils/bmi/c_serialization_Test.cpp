@@ -95,9 +95,9 @@ class Bmi_C_Serialization_Test : public ::testing::Test {
         config_file_name = file_search(cfg_paths, "test_bmi_c_config_0.txt");
 
         std::vector<std::string> lib_dirs = {
-            "./extern/test_bmi_c/cmake_build/",
-            "../extern/test_bmi_c/cmake_build/",
-            "../../extern/test_bmi_c/cmake_build/"
+            "./test-libs/test_bmi_c/",
+            "../test-libs/test_bmi_c/",
+            "../../test-libs/test_bmi_c/"
         };
         lib_file_name    = file_search(lib_dirs, BMI_TEST_C_LOCAL_LIB_NAME);
         module_type_name = "test_bmi_c";
