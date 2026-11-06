@@ -533,6 +533,55 @@ TEST_F(NetCDFStorageVariantTest, TimeMajorCombined)
     expectEquivalent(v);
 }
 
+// Time units, and forms of CF reference dates, that UDUNITS and ISO 8601 allow
+TEST_F(NetCDFStorageVariantTest, TimeInDaysSinceReferenceDate)
+{
+    Variant v;
+    v.stride = 21600; // a quarter day, so stored times are exact
+    v.time_units = "days since 2017-07-14 00:00:00";
+    v.encode_time = [](time_t e) { return (e - 1499990400) / 86400.0; };
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, SingularAbbreviatedTimeUnit)
+{
+    Variant v;
+    v.time_units = "hr since 2017-07-14 00:00:00";
+    v.encode_time = [](time_t e) { return (e - 1499990400) / 3600.0; };
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, ReferenceDateWithoutTimeOfDay)
+{
+    Variant v;
+    v.time_units = "hours since 2017-07-14";
+    v.encode_time = [](time_t e) { return (e - 1499990400) / 3600.0; };
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, ReferenceDateWithoutSeconds)
+{
+    Variant v;
+    v.time_units = "minutes since 2017-07-14 00:00";
+    v.encode_time = [](time_t e) { return (e - 1499990400) / 60.0; };
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, ReferenceDateInIsoFormWithZ)
+{
+    Variant v;
+    v.time_units = "hours since 2017-07-14T00:00:00Z";
+    v.encode_time = [](time_t e) { return (e - 1499990400) / 3600.0; };
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, ReferenceDateWithFractionalSecondsAndUTC)
+{
+    Variant v;
+    v.time_units = "seconds since 1970-01-01 00:00:00.0 UTC";
+    expectEquivalent(v);
+}
+
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
 {
     Variant v;
