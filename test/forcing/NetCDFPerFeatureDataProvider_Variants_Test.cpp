@@ -942,6 +942,27 @@ TEST_F(NetCDFStorageVariantTest, NaNTimeIsRejected)
     }
 }
 
+// Reads of catchments or times the file doesn't have throw out_of_range,
+// naming what was asked for and the file
+TEST_F(NetCDFStorageVariantTest, OutOfRangeReadsNameWhatWasAskedFor)
+{
+    Variant v;
+    auto path = write(v);
+    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+    auto expect_out_of_range = [&](const std::string& id, time_t when, const std::string& expected_text) {
+        try {
+            provider.get_value(CatchmentAggrDataSelector(id, "temp", when, v.stride, "K"), data_access::MEAN);
+            ADD_FAILURE() << "reading " << id << " at " << when << " didn't throw";
+        } catch (const std::out_of_range& e) {
+            EXPECT_NE(std::string(e.what()).find(expected_text), std::string::npos) << e.what();
+            EXPECT_NE(std::string(e.what()).find(path), std::string::npos) << e.what();
+        }
+    };
+    expect_out_of_range("cat-99", v.start, "cat-99");
+    // after 2038, beyond the range of a 32-bit time
+    expect_out_of_range("cat-1", 4102444800, "4102444800");
+}
+
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
 {
     Variant v;
