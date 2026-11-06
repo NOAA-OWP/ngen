@@ -94,6 +94,13 @@ class NetCDFStorageVariantTest : public ::testing::Test {
 
         // variables and a dimension that forcing reads don't use
         bool extra_variables = false;
+
+        // malformed files: ids replacing "cat-<c>" at each file position,
+        // ids stored as integers, and the ids or Time variable left out
+        std::optional<std::vector<std::string>> id_strings;
+        bool integer_ids = false;
+        bool omit_ids = false;
+        bool omit_time = false;
     };
 
     static double kelvin(std::size_t cat, std::size_t t) {
@@ -145,10 +152,18 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         for (std::size_t c : order) {
             id_strs.push_back("cat-" + std::to_string(c));
         }
+        if (v.id_strings) {
+            id_strs = *v.id_strings;
+        }
         for (const auto& s : id_strs) {
             id_ptrs.push_back(s.c_str());
         }
-        out.addVar("ids", netCDF::ncString, cat_dim).putVar(id_ptrs.data());
+        if (v.integer_ids) {
+            std::vector<int> int_ids(order.begin(), order.end());
+            out.addVar("ids", netCDF::ncInt, cat_dim).putVar(int_ids.data());
+        } else if (!v.omit_ids) {
+            out.addVar("ids", netCDF::ncString, cat_dim).putVar(id_ptrs.data());
+        }
 
         auto encoded_time = [&](std::size_t t) {
             time_t epoch = v.start + time_t(t) * v.stride;
@@ -185,12 +200,14 @@ class NetCDFStorageVariantTest : public ::testing::Test {
                 }
             }
         }
-        auto time_var = out.addVar("Time", ncType(v.time_type), time_dims);
-        time_var.putAtt("units", v.time_units);
-        if (v.epoch_start) {
-            time_var.putAtt("epoch_start", *v.epoch_start);
+        if (!v.omit_time) {
+            auto time_var = out.addVar("Time", ncType(v.time_type), time_dims);
+            time_var.putAtt("units", v.time_units);
+            if (v.epoch_start) {
+                time_var.putAtt("epoch_start", *v.epoch_start);
+            }
+            time_var.putVar(time_starts, time_counts, times.data());
         }
-        time_var.putVar(time_starts, time_counts, times.data());
 
         auto var = out.addVar(v.var_name, ncType(v.type), dims_for(v.time_major));
         var.putAtt("units", v.units);
@@ -834,6 +851,62 @@ TEST_F(NetCDFStorageVariantTest, ReadsOfNoDurationAreAnError)
     }
     CatchmentAggrDataSelector sel("cat-1", "temp", v.start + v.stride, v.stride, "K");
     EXPECT_NEAR(provider.get_value(sel, data_access::MEAN), kelvin(1, 1), 1e-9);
+}
+
+// Files without the variables and dimension forcing files have, or with
+// unusable catchment ids, are rejected with an error naming the file
+TEST_F(NetCDFStorageVariantTest, MissingIdsVariableIsRejected)
+{
+    Variant v;
+    v.omit_ids = true;
+    expectRejected(v, "no \"ids\" variable");
+}
+
+TEST_F(NetCDFStorageVariantTest, NonStringIdsAreRejected)
+{
+    Variant v;
+    v.integer_ids = true;
+    expectRejected(v, "rather than string");
+}
+
+TEST_F(NetCDFStorageVariantTest, MissingTimeVariableIsRejected)
+{
+    Variant v;
+    v.omit_time = true;
+    expectRejected(v, "no \"Time\" variable");
+}
+
+TEST_F(NetCDFStorageVariantTest, MissingTimeDimensionIsRejected)
+{
+    std::string path = "./nc_variant_MissingTimeDimensionIsRejected.nc";
+    temp_files.push_back(path);
+    {
+        netCDF::NcFile out(path, netCDF::NcFile::replace, netCDF::NcFile::nc4);
+        auto cat_dim = out.addDim("catchment-id", 2);
+        std::vector<const char*> ids = {"cat-0", "cat-1"};
+        out.addVar("ids", netCDF::ncString, cat_dim).putVar(ids.data());
+    }
+    try {
+        NetCDFPerFeatureDataProvider provider(path, 0, 3600, utils::getStdErr());
+        ADD_FAILURE() << "expected the provider to reject " << path;
+    } catch (const std::exception& e) {
+        EXPECT_NE(std::string(e.what()).find("no \"time\" dimension"), std::string::npos) << e.what();
+        EXPECT_NE(std::string(e.what()).find(path), std::string::npos) << e.what();
+    }
+}
+
+TEST_F(NetCDFStorageVariantTest, EmptyCatchmentIdIsRejected)
+{
+    Variant v;
+    v.id_strings = std::vector<std::string>{"cat-0", "cat-1", "", "cat-3", "cat-4"};
+    expectRejected(v, "empty catchment id at position 2");
+}
+
+TEST_F(NetCDFStorageVariantTest, DuplicateCatchmentIdIsRejected)
+{
+    Variant v;
+    v.id_strings = std::vector<std::string>{"cat-0", "cat-1", "cat-2", "cat-1", "cat-4"};
+    expectRejected(v, "'cat-1' more than once");
 }
 
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)

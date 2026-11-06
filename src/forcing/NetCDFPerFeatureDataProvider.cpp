@@ -404,6 +404,24 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         std::cerr<<e.what()<<std::endl;
         throw;
     }
+    // check for the variables and dimension every forcing file has,
+    // before anything uses them
+    {
+        auto require = [&](bool ok, const std::string& problem) {
+            if (!ok) {
+                throw std::runtime_error("NetCDF forcing file '" + input_path + "' " + problem);
+            }
+        };
+        auto ids_var = nc_file->getVar("ids");
+        require(!ids_var.isNull(), "has no \"ids\" variable");
+        require(ids_var.getDimCount() == 1, "has an \"ids\" variable with "
+                + std::to_string(ids_var.getDimCount()) + " dimensions, rather than 1");
+        require(ids_var.getType().getTypeClass() == NC_STRING, "has an \"ids\" variable of type "
+                + ids_var.getType().getName() + ", rather than string");
+        require(!nc_file->getDim(TIME_DIM_NAME).isNull(), "has no \"" + TIME_DIM_NAME + "\" dimension");
+        require(!nc_file->getVar(TIME_VAR_NAME).isNull(), "has no \"" + TIME_VAR_NAME + "\" variable");
+    }
+
     // do a quick test of the netcdf variables to ensure
     // they are readable, especially if compressed with HDF5 filters
     // This also has the added benefit of warming up the chunk cache
@@ -466,26 +484,13 @@ void NetCDFPerFeatureDataProvider::read_variable_metadata()
 
 void NetCDFPerFeatureDataProvider::read_ids()
 {
-    // read the variable ids
-    auto ids = nc_file->getVar("ids"); 
-    auto id_dim_count = ids.getDimCount();
-
-    // some sanity checks
-    if ( id_dim_count > 1)
-    {
-        throw std::runtime_error("Provided NetCDF file has an \"ids\" variable with more than 1 dimension");       
-    }
-
+    // read the variable ids, a 1-D string variable, as checked above
+    auto ids = nc_file->getVar("ids");
     auto id_dim = ids.getDim(0);
-
-    if (id_dim.isNull() )
-    {
-        throw std::runtime_error("Provided NetCDF file has a NULL dimension for variable  \"ids\"");
-    }
 
     auto num_ids = id_dim.getSize();
     if (num_ids <= 0){
-        throw std::runtime_error("Provided NetCDF file has no features");
+        throw std::runtime_error("NetCDF forcing file '" + file_path + "' has no features");
     }
 
     // include all catchments in the "default" chunk
@@ -501,18 +506,27 @@ void NetCDFPerFeatureDataProvider::read_ids()
     // read the id strings
     ids.getVar(string_buffers.data());
 
-    // initialize the map of catchment-name to offset location and free the strings allocated by the C library
-    size_t loc = 0;
-    for_each( string_buffers.begin(), string_buffers.end(), [&](char* str)
-    {
-        loc_ids.push_back(str);
-        id_pos[str] = loc++;
-    });
-    // Make sure we were able to read an actual string type
-    // each id should start with "cat-"
-    assert(loc_ids[0].size() > 4);;
-    // correct string release
-    nc_free_string(num_ids,&string_buffers[0]);
+    // copy the strings allocated by the C library, which may be NULL for
+    // values never written, and free them
+    std::vector<std::string> file_ids;
+    for (const char* str : string_buffers) {
+        file_ids.emplace_back(str ? str : "");
+    }
+    nc_free_string(num_ids, string_buffers.data());
+
+    // initialize the map of catchment-name to offset location
+    for (std::size_t loc = 0; loc < file_ids.size(); ++loc) {
+        const std::string& id = file_ids[loc];
+        if (id.empty()) {
+            throw std::runtime_error("NetCDF forcing file '" + file_path + "' has an empty catchment id at position "
+                                     + std::to_string(loc) + " of \"ids\"");
+        }
+        if (!id_pos.emplace(id, loc).second) {
+            throw std::runtime_error("NetCDF forcing file '" + file_path + "' has catchment id '" + id
+                                     + "' more than once in \"ids\"");
+        }
+        loc_ids.push_back(id);
+    }
     catchment_dim_name = id_dim.getName();
 }
 
