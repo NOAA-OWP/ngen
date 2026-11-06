@@ -264,10 +264,11 @@ namespace data_access
          * Reads the `units` and `epoch_start` attributes and resolves them via
          * @ref interpret_time_units and @ref parse_epoch, warning and falling back to
          * sensible defaults (seconds, Unix epoch) when an attribute is absent or
-         * unrecognized.
+         * empty.
          *
          * @param time_var the file's `Time` variable
          * @return the resolved time metadata
+         * @throws std::runtime_error if `units` isn't a recognized time unit
          */
         TimeInfo get_time_metadata(const netCDF::NcVar& time_var);
 
