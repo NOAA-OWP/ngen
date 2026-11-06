@@ -25,7 +25,7 @@
 using data_access::NetCDFPerFeatureDataProvider;
 
 // Files that store the same forcing data in different ways must read the
-// same. Each test writes one storage variant of a single variable "temp"
+// same. Each test writes one storage variant of a single variable, "temp"
 // whose value at catchment c and timestep t is kelvin(c, t), and checks every
 // value the provider returns against it, reading every catchment and also a
 // hinted subset of them.
@@ -81,6 +81,9 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         std::vector<std::size_t> chunks; // chunk sizes in file dimension order; empty for the library default
         int deflate_level = 0;
 
+        std::string var_name = "temp";
+        std::vector<std::string> aliases;            // other names to read it by, such as its CSDMS name
+        std::vector<std::string> read_units = {"K"}; // output units to read it in; "" for the stored units
         std::string units = "K";
         std::function<double(double)> from_kelvin; // to the stored units; identity if empty
 
@@ -189,7 +192,7 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         }
         time_var.putVar(time_starts, time_counts, times.data());
 
-        auto var = out.addVar("temp", ncType(v.type), dims_for(v.time_major));
+        auto var = out.addVar(v.var_name, ncType(v.type), dims_for(v.time_major));
         var.putAtt("units", v.units);
         if (!v.chunks.empty()) {
             std::vector<std::size_t> chunks = v.chunks;
@@ -284,21 +287,30 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         std::size_t mismatches = 0;
         std::ostringstream first;
         first.precision(17);
+        std::vector<std::string> names = {v.var_name};
+        names.insert(names.end(), v.aliases.begin(), v.aliases.end());
+        // reads the value by every name and in every output units
         auto check = [&](std::size_t c, std::size_t t0, std::size_t n, double expected) {
-            CatchmentAggrDataSelector sel("cat-" + std::to_string(c), "temp",
-                                          v.start + time_t(t0) * v.stride, time_t(n) * v.stride, "K");
-            double got;
-            try {
-                got = provider->get_value(sel, data_access::MEAN);
-            } catch (const std::exception& e) {
-                if (mismatches++ < 3) {
-                    first << "\n  cat-" << c << " t=" << t0 << " n=" << n << ": threw " << e.what();
+            for (const auto& name : names) {
+                for (const auto& units : v.read_units) {
+                    CatchmentAggrDataSelector sel("cat-" + std::to_string(c), name,
+                                                  v.start + time_t(t0) * v.stride, time_t(n) * v.stride, units);
+                    std::ostringstream where;
+                    where << "\n  " << name << " in '" << units << "' cat-" << c << " t=" << t0 << " n=" << n;
+                    double got;
+                    try {
+                        got = provider->get_value(sel, data_access::MEAN);
+                    } catch (const std::exception& e) {
+                        if (mismatches++ < 3) {
+                            first << where.str() << ": threw " << e.what();
+                        }
+                        continue;
+                    }
+                    bool ok = std::isnan(expected) ? std::isnan(got) : std::abs(got - expected) <= tolerance;
+                    if (!ok && mismatches++ < 3) {
+                        first << where.str() << ": got " << got << ", expected " << expected;
+                    }
                 }
-                return;
-            }
-            bool ok = std::isnan(expected) ? std::isnan(got) : std::abs(got - expected) <= tolerance;
-            if (!ok && mismatches++ < 3) {
-                first << "\n  cat-" << c << " t=" << t0 << " n=" << n << ": got " << got << ", expected " << expected;
             }
         };
 
@@ -653,6 +665,36 @@ TEST_F(NetCDFStorageVariantTest, TimeVariableOverOtherDimensionsIsRejected)
     Variant v;
     v.time_layout = TimeLayout::CatchmentOnly;
     expectRejected(v, "Time variable");
+}
+
+// The layout of the NextGen forcings engine's output, as in its sample
+// output NextGen_Forcings_Engine_HYDROFABRIC_output_202410180600.nc: 6
+// catchments by 15 hourly timesteps from 2024-10-18 07:00, Time over just
+// the time dimension in minutes since the Unix epoch, and variables stored
+// time-major as packed integers with a fill value, chunked one timestep at
+// a time. Reads T2D by its name in the file and its CSDMS name, in K and in
+// the stored units.
+TEST_F(NetCDFStorageVariantTest, ForcingsEngineOutputLayout)
+{
+    Variant v;
+    v.n_cats = 6;
+    v.n_times = 15;
+    v.start = 1729234800; // 2024-10-18 07:00:00 UTC
+    v.unlimited_time = true;
+    v.time_major = true;
+    v.time_layout = TimeLayout::TimeOnly;
+    v.time_units = "minutes since 1970-01-01 00:00:00 UTC";
+    v.encode_time = [](time_t e) { return e / 60.0; };
+    v.var_name = "T2D";
+    v.aliases = {CSDMS_STD_NAME_SURFACE_TEMP};
+    v.read_units = {"K", ""};
+    v.type = Type::Int;
+    v.scale_factor = 0.01;
+    v.add_offset = 100.0;
+    v.fill_value = -9999;
+    v.chunks = {1, 6};
+    v.extra_variables = true;
+    expectEquivalent(v);
 }
 
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
