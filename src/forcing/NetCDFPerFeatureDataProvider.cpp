@@ -567,8 +567,9 @@ void NetCDFPerFeatureDataProvider::read_times()
         [&](const auto& n){return n * time_info.scale_factor + time_info.epoch_start_time.value_or(0); });
         
 
-    // determine the stride of the time array
-    time_stride = time_vals[1] - time_vals[0];
+    // determine the stride of the time array; a single timestep has no
+    // interval to take it from, so take it to be an hour
+    time_stride = time_vals.size() > 1 ? time_vals[1] - time_vals[0] : 3600;
 
     #ifndef NCEP_OPERATIONS
     // verify the time stride

@@ -758,6 +758,25 @@ TEST_F(NetCDFStorageVariantTest, EmptyTimeUnitsAreSecondsSinceEpoch)
     expectEquivalent(v);
 }
 
+// A file with a single timestep has no interval to take the time step
+// from; it's taken to be an hour
+TEST_F(NetCDFStorageVariantTest, SingleTimestep)
+{
+    Variant v;
+    v.n_times = 1;
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, SingleTimestepForcingsEngineLayout)
+{
+    Variant v;
+    v.n_times = 1;
+    v.time_major = true;
+    v.time_layout = TimeLayout::TimeOnly;
+    v.unlimited_time = true;
+    expectEquivalent(v);
+}
+
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
 {
     Variant v;
