@@ -955,7 +955,15 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
 
         page_buffer_type cached;
         if (just_inserted) {
-            cached = load_page(var, page_c_idx);
+            try {
+                cached = load_page(var, page_c_idx);
+            } catch (...) {
+                // Mark the slot failed, so that readers waiting for this
+                // page, and later ones, throw rather than wait forever,
+                // and pass on this read's error
+                slot_for_page_key.fail();
+                throw;
+            }
             slot_for_page_key.fill(cached, true);
         } else {
             auto got = slot_for_page_key.get();
