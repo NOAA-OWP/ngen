@@ -767,6 +767,19 @@ TEST_F(NetCDFStorageVariantTest, SingleTimestep)
     expectEquivalent(v);
 }
 
+// A file with no timesteps is an error, not a read past the end of the
+// times. With float variables, which the provider's readability check
+// doesn't read, this is where it's caught
+TEST_F(NetCDFStorageVariantTest, NoTimestepsIsRejected)
+{
+    Variant v;
+    v.n_times = 0;
+    v.unlimited_time = true;
+    v.type = Type::Float;
+    v.time_type = Type::Float;
+    expectRejected(v, "");
+}
+
 TEST_F(NetCDFStorageVariantTest, SingleTimestepForcingsEngineLayout)
 {
     Variant v;
