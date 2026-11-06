@@ -60,20 +60,22 @@ namespace data_access
         };
 
         /**
-         * @brief Interpret a NetCDF time `units` string as a time unit and scale factor.
+         * @brief Interpret the name of a time unit as a time unit and scale factor.
          *
-         * Handles both bare units and the CF form "<unit> since <date>", in which case
-         * the parsed reference epoch is returned in the result.
+         * Takes a bare unit, such as the part of CF "<unit> since <date>" time
+         * units before " since ", and returns no reference epoch.
          *
-         * @param units_str the raw `units` attribute value (e.g. "ns", "hours")
+         * @param units_str the unit's name (e.g. "ns", "hours")
          * @return the parsed @ref TimeInfo, or std::nullopt if @p units_str is unrecognized
          */
         static std::optional<TimeInfo> interpret_time_units(const std::string& units_str);
 
         /**
-         * @brief Parse the reference date of CF "<unit> since <date>" time units.
+         * @brief Parse a reference date: that of CF "<unit> since <date>" time
+         * units, or an `epoch_start` attribute.
          *
-         * Accepts "YYYY-MM-DD", optionally followed by a space or 'T' and
+         * Accepts "YYYY-MM-DD", or "MM/DD/YYYY" or "MM/DD/YY" (with years 69 to 99
+         * in the 1900s and 00 to 68 in the 2000s), optionally followed by a space or 'T' and
          * "hh:mm", "hh:mm:ss" or "hh:mm:ss.000" (any fraction must be zero), and
          * then optionally "Z", "UTC" or an offset from UTC ("+hh:mm", "-hhmm", "+hh")
          * of less than 24 hours, which is applied. Month, day and hour may have a
@@ -83,16 +85,7 @@ namespace data_access
          * @return seconds since the Unix epoch
          * @throws std::runtime_error if @p date_str isn't such a date
          */
-        static std::time_t parse_reference_date(const std::string& date_str);
-
-        /**
-         * @brief Parse a reference-epoch timestamp into seconds since the Unix epoch.
-         *
-         * @param epoch_str the timestamp text (e.g. "01/01/1970 00:00:00")
-         * @param format a std::get_time / strptime style format string
-         * @return seconds since the Unix epoch
-         */
-        static std::time_t parse_epoch(const std::string& epoch_str, const std::string& format);
+        static std::time_t parse_epoch(const std::string& date_str);
 
         /**
          * @brief Factory method that creates or returns an existing provider for the provided path.
@@ -265,14 +258,16 @@ namespace data_access
         /**
          * @brief Read the time unit, scale factor and reference epoch from a `Time` variable.
          *
-         * Reads the `units` and `epoch_start` attributes and resolves them via
-         * @ref interpret_time_units and @ref parse_epoch, warning and falling back to
-         * sensible defaults (seconds, Unix epoch) when an attribute is absent or
-         * empty.
+         * Reads the `units` attribute, splitting CF "<unit> since <date>" units,
+         * and resolves the unit via @ref interpret_time_units, and the reference
+         * date, from the units or else the `epoch_start` attribute, via
+         * @ref parse_epoch. Warns and falls back to sensible defaults
+         * (seconds, Unix epoch) when an attribute is absent or empty.
          *
          * @param time_var the file's `Time` variable
          * @return the resolved time metadata
-         * @throws std::runtime_error if `units` isn't a recognized time unit
+         * @throws std::runtime_error if `units` isn't a recognized time unit, or the
+         * reference date can't be parsed
          */
         TimeInfo get_time_metadata(const netCDF::NcVar& time_var);
 

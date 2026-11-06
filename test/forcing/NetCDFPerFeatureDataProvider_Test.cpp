@@ -498,25 +498,6 @@ TEST(NetCDFTimeMetadata, InterpretTimeUnitsRecognized)
     }
 }
 
-// CF "<unit> since <date>" units yield the base unit plus the embedded reference epoch.
-TEST(NetCDFTimeMetadata, InterpretTimeUnitsCFSinceEpoch)
-{
-    using P = NetCDFPerFeatureDataProvider;
-    auto secs = P::interpret_time_units("seconds since 1970-01-01 00:00:00");
-    ASSERT_TRUE(secs.has_value());
-    EXPECT_EQ(secs->unit, P::TimeUnit::Seconds);
-    EXPECT_DOUBLE_EQ(secs->scale_factor, 1);
-    ASSERT_TRUE(secs->epoch_start_time.has_value());
-    EXPECT_EQ(*secs->epoch_start_time, 0);
-
-    auto hrs = P::interpret_time_units("hours since 2000-01-01 00:00:00");
-    ASSERT_TRUE(hrs.has_value());
-    EXPECT_EQ(hrs->unit, P::TimeUnit::Hours);
-    EXPECT_DOUBLE_EQ(hrs->scale_factor, 3600);
-    ASSERT_TRUE(hrs->epoch_start_time.has_value());
-    EXPECT_EQ(*hrs->epoch_start_time, 946684800);
-}
-
 // Unrecognized or empty unit strings yield no value, so callers keep their defaults.
 TEST(NetCDFTimeMetadata, InterpretTimeUnitsUnrecognized)
 {
@@ -529,7 +510,7 @@ TEST(NetCDFTimeMetadata, InterpretTimeUnitsUnrecognized)
 // CF reference dates may omit the time of day or the seconds, use ISO 8601's
 // 'T' separator, carry zero fractional seconds, and end in Z, UTC or an offset
 // from UTC
-TEST(NetCDFTimeMetadata, ParseReferenceDate)
+TEST(NetCDFTimeMetadata, ParseEpoch)
 {
     using P = NetCDFPerFeatureDataProvider;
     const std::time_t y2k = 946684800;
@@ -537,42 +518,32 @@ TEST(NetCDFTimeMetadata, ParseReferenceDate)
             "2000-01-01 00:00:00", "2000-01-01", "2000-01-01 00:00", "2000-01-01T00:00:00",
             "2000-01-01T00:00:00Z", "2000-01-01 00:00:00 UTC", "2000-01-01 00:00:00.0",
             "2000-01-01T00:00:00.000Z", " 2000-01-01 00:00:00 "}) {
-        EXPECT_EQ(P::parse_reference_date(text), y2k) << "'" << text << "'";
+        EXPECT_EQ(P::parse_epoch(text), y2k) << "'" << text << "'";
     }
-    EXPECT_EQ(P::parse_reference_date("2000-01-01 06:30"), y2k + 6 * 3600 + 30 * 60);
-    EXPECT_EQ(P::parse_reference_date("2000-01-01T06:30:15Z"), y2k + 6 * 3600 + 30 * 60 + 15);
-    EXPECT_EQ(P::parse_reference_date("2000-01-01 05:00:00+05:00"), y2k);
-    EXPECT_EQ(P::parse_reference_date("2000-01-01T00:00:00-0130"), y2k + 5400);
-    EXPECT_EQ(P::parse_reference_date("2000-01-01 00:00-23:59"), y2k + 23 * 3600 + 59 * 60);
-    EXPECT_EQ(P::parse_reference_date("2000-1-1 0:00"), y2k);
+    EXPECT_EQ(P::parse_epoch("2000-01-01 06:30"), y2k + 6 * 3600 + 30 * 60);
+    EXPECT_EQ(P::parse_epoch("2000-01-01T06:30:15Z"), y2k + 6 * 3600 + 30 * 60 + 15);
+    EXPECT_EQ(P::parse_epoch("2000-01-01 05:00:00+05:00"), y2k);
+    EXPECT_EQ(P::parse_epoch("2000-01-01T00:00:00-0130"), y2k + 5400);
+    EXPECT_EQ(P::parse_epoch("2000-01-01 00:00-23:59"), y2k + 23 * 3600 + 59 * 60);
+    EXPECT_EQ(P::parse_epoch("2000-1-1 0:00"), y2k);
+
+    // epoch_start attributes' dates, with two- or four-digit years
+    EXPECT_EQ(P::parse_epoch("01/01/1970 00:00:00"), 0);
+    EXPECT_EQ(P::parse_epoch("01/01/70 00:00:00"), 0);
+    EXPECT_EQ(P::parse_epoch("1/1/2000"), y2k);
+    EXPECT_EQ(P::parse_epoch("01/02/00 06:30"), y2k + 86400 + 6 * 3600 + 30 * 60);
+    EXPECT_EQ(P::parse_epoch("10/06/2026 00:00:00"), 1791244800);
 
     // leap days are dates in leap years only
-    EXPECT_EQ(P::parse_reference_date("2000-02-29"), y2k + 59 * 86400);
+    EXPECT_EQ(P::parse_epoch("2000-02-29"), y2k + 59 * 86400);
 
     // trailing text, nonzero fractions, out-of-range fields and dates that
     // don't exist are not accepted
     for (const char* text : {"not a date", "2000-01-01 00:00:00 garbage", "2000-01-01 00:00:00.5",
                              "2000-13-01", "2000-01-01 25:00", "", "2001-02-29", "2000-02-30", "2000-04-31",
-                             "2000-01-01 00:00+24:00", "2000-01-01 00:00-05:60"}) {
-        EXPECT_THROW(P::parse_reference_date(text), std::runtime_error) << "'" << text << "'";
+                             "2000-01-01 00:00+24:00", "2000-01-01 00:00-05:60", "02/30/2000 00:00:00",
+                             "01/01/1970 garbage"}) {
+        EXPECT_THROW(P::parse_epoch(text), std::runtime_error) << "'" << text << "'";
     }
-
-    auto info = P::interpret_time_units("hours since 2000-01-01");
-    ASSERT_TRUE(info.has_value());
-    EXPECT_EQ(info->epoch_start_time, y2k);
-}
-
-// parse_epoch converts a timestamp to UTC epoch seconds and honors the supplied format.
-TEST(NetCDFTimeMetadata, ParseEpoch)
-{
-    using P = NetCDFPerFeatureDataProvider;
-    // unambiguous 4-digit-year format
-    EXPECT_EQ(P::parse_epoch("1970-01-01 00:00:00", "%Y-%m-%d %H:%M:%S"), 0);
-    EXPECT_EQ(P::parse_epoch("1970-01-02 00:00:00", "%Y-%m-%d %H:%M:%S"), 86400);
-    EXPECT_EQ(P::parse_epoch("2000-01-01 00:00:00", "%Y-%m-%d %H:%M:%S"), 946684800);
-    // the provider's default epoch string and format
-    EXPECT_EQ(P::parse_epoch("01/01/1970 00:00:00", "%D %T"), 0);
-    // a timestamp that doesn't match the format is an error, not a silent zero
-    EXPECT_THROW(P::parse_epoch("not a date", "%Y-%m-%d %H:%M:%S"), std::runtime_error);
 }
 #endif
