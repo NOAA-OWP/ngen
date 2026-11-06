@@ -505,11 +505,33 @@ void NetCDFPerFeatureDataProvider::read_times()
     // get the time variable
     auto time_var = nc_file->getVar(TIME_VAR_NAME);
 
-    // read the first catchment's times, which are recorded for each one
-    std::vector<size_t> start = {0, 0};
-    std::vector<size_t> count = is_time_major(time_var)
-        ? std::vector<size_t>{num_times, 1}
-        : std::vector<size_t>{1, num_times};
+    // Time is stored over just the time dimension, as the forcings engine
+    // writes it, or over both dimensions with every catchment's times the
+    // same; read the first catchment's
+    std::vector<size_t> start, count;
+    std::vector<std::string> time_dims;
+    for (const auto& dim : time_var.getDims()) {
+        time_dims.push_back(dim.getName());
+    }
+    const std::string catchment_dim_name = nc_file->getVar("ids").getDim(0).getName();
+    if (time_dims.size() == 1 && time_dims[0] == TIME_DIM_NAME) {
+        start = {0};
+        count = {num_times};
+    } else if (time_dims == std::vector<std::string>{catchment_dim_name, TIME_DIM_NAME}) {
+        start = {0, 0};
+        count = {1, num_times};
+    } else if (time_dims == std::vector<std::string>{TIME_DIM_NAME, catchment_dim_name}) {
+        start = {0, 0};
+        count = {num_times, 1};
+    } else {
+        std::string dims_str;
+        for (const auto& d : time_dims) {
+            dims_str += (dims_str.empty() ? "" : ", ") + d;
+        }
+        throw std::runtime_error("In NetCDF file '" + file_path + "', the " + TIME_VAR_NAME
+                                 + " variable has dimensions (" + dims_str + "), rather than ("
+                                 + TIME_DIM_NAME + ") or (" + TIME_DIM_NAME + " and " + catchment_dim_name + ")");
+    }
     time_var.getVar(start, count, &raw_time[0]);
     ncvar_cache.at(TIME_VAR_NAME).unpack(raw_time);
 
