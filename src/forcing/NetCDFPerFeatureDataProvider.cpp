@@ -18,10 +18,23 @@
 static const std::string TIME_VAR_NAME = "Time";
 static const std::string TIME_DIM_NAME = "time";
 
-// Whether a variable is stored as (time, catchment-id) rather than (catchment-id, time)
-static bool is_time_major(const netCDF::NcVar& var)
+// Where the time dimension is among the dimensions of a variable stored
+// over the catchment and time dimensions, in either order, as forcing
+// variables are; nothing for any other variable
+static std::optional<std::size_t> forcing_time_axis(const netCDF::NcVar& var, const std::string& catchment_dim)
 {
-    return var.getDimCount() == 2 && var.getDim(0).getName() == TIME_DIM_NAME;
+    if (var.getDimCount() != 2) {
+        return std::nullopt;
+    }
+    const std::string dim0 = var.getDim(0).getName();
+    const std::string dim1 = var.getDim(1).getName();
+    if (dim0 == catchment_dim && dim1 == TIME_DIM_NAME) {
+        return 1;
+    }
+    if (dim0 == TIME_DIM_NAME && dim1 == catchment_dim) {
+        return 0;
+    }
+    return std::nullopt;
 }
 
 std::mutex data_access::NetCDFPerFeatureDataProvider::shared_providers_mutex;
@@ -117,35 +130,34 @@ struct NetCDFPerFeatureDataProvider::VariableInfo
     // Stored values marking missing data, which decode to NaN
     std::vector<double> missing_markers_;
 
-    // The names of the dimensions the variable is stored over
-    std::vector<std::string> dimensions_;
-
-    // Stored as (time, catchment-id) rather than (catchment-id, time)
-    bool time_major_ = false;
+    // Where the time dimension is among the variable's dimensions, if it
+    // holds forcing values; see forcing_time_axis()
+    std::optional<std::size_t> time_axis_;
 
     // Reads how to decode the variable's values from its attributes;
     // the caller must hold the NetCDF library lock
-    VariableInfo(std::string name, netCDF::NcVar var, std::string units = "")
+    VariableInfo(std::string name, netCDF::NcVar var, const std::string& catchment_dim, std::string units = "")
         : name_(std::move(name))
         , ncvar_(var)
         , units_(std::move(units))
         , scale_factor_(get_scalar_att(var, "scale_factor").value_or(1.0))
         , add_offset_(get_scalar_att(var, "add_offset").value_or(0.0))
         , missing_markers_(get_missing_markers(var))
-        , time_major_(is_time_major(var))
-    {
-        for (const auto& dim : var.getDims()) {
-            dimensions_.push_back(dim.getName());
-        }
-    }
+        , time_axis_(forcing_time_axis(var, catchment_dim))
+    {}
 
     // Whether the variable holds forcing values: whether it's stored
     // over the catchment and time dimensions, in either order
-    bool holds_forcings(const std::string& catchment_dim) const
+    bool holds_forcings() const
     {
-        return dimensions_.size() == 2
-            && (   (dimensions_[0] == catchment_dim && dimensions_[1] == TIME_DIM_NAME)
-                || (dimensions_[0] == TIME_DIM_NAME && dimensions_[1] == catchment_dim));
+        return time_axis_.has_value();
+    }
+
+    // Whether it's stored as (time, catchment-id) rather than
+    // (catchment-id, time)
+    bool time_major() const
+    {
+        return time_axis_ == 0;
     }
 
     // Turns stored values into the values they represent, with NaN for
@@ -419,6 +431,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
                 + std::to_string(ids_var.getDimCount()) + " dimensions, rather than 1");
         require(ids_var.getType().getTypeClass() == NC_STRING, "has an \"ids\" variable of type "
                 + ids_var.getType().getName() + ", rather than string");
+        catchment_dim_name = ids_var.getDim(0).getName();
         require(!nc_file->getDim(TIME_DIM_NAME).isNull(), "has no \"" + TIME_DIM_NAME + "\" dimension");
         require(nc_file->getDim(TIME_DIM_NAME).getSize() > 0, "has no timesteps");
         require(!nc_file->getVar(TIME_VAR_NAME).isNull(), "has no \"" + TIME_VAR_NAME + "\" variable");
@@ -431,8 +444,9 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
 
     //nc_get_chunk_cache(&sizep, &nelemsp, &preemptionp);
     //std::cout << "Chunk cache parameters: "<<sizep<<", "<<nelemsp<<", "<<preemptionp<<std::endl;
-    align_cache_with_chunks();
     read_variable_metadata();
+    // uses the variables' VariableInfo
+    align_cache_with_chunks();
     read_ids();
     read_times();
 }
@@ -473,7 +487,7 @@ void NetCDFPerFeatureDataProvider::read_variable_metadata()
             native_units = std::get<1>(wkf->second); // the field's usual units
         }
 
-        VariableInfo info(var_name, ncvar, native_units);
+        VariableInfo info(var_name, ncvar, catchment_dim_name, native_units);
         ncvar_cache.emplace(var_name, info);
 
         if(wkf != data_access::WellKnownFields.end()){
@@ -538,7 +552,6 @@ void NetCDFPerFeatureDataProvider::read_ids()
         }
         loc_ids.push_back(id);
     }
-    catchment_dim_name = id_dim.getName();
 }
 
 void NetCDFPerFeatureDataProvider::read_times()
@@ -549,8 +562,10 @@ void NetCDFPerFeatureDataProvider::read_times()
     // allocate storage for the raw time array
     std::vector<double> raw_time(num_times);
 
-    // get the time variable
-    auto time_var = nc_file->getVar(TIME_VAR_NAME);
+    // get the time variable, whose VariableInfo the loop over the
+    // variables above made
+    const VariableInfo& time_variable = ncvar_cache.at(TIME_VAR_NAME);
+    const netCDF::NcVar& time_var = time_variable.ncvar_;
 
     // Time is stored over just the time dimension, as the forcings engine
     // writes it, or over both dimensions with every catchment's times the
@@ -563,12 +578,10 @@ void NetCDFPerFeatureDataProvider::read_times()
     if (time_dims.size() == 1 && time_dims[0] == TIME_DIM_NAME) {
         start = {0};
         count = {num_times};
-    } else if (time_dims == std::vector<std::string>{catchment_dim_name, TIME_DIM_NAME}) {
+    } else if (time_variable.time_axis_) {
         start = {0, 0};
-        count = {1, num_times};
-    } else if (time_dims == std::vector<std::string>{TIME_DIM_NAME, catchment_dim_name}) {
-        start = {0, 0};
-        count = {num_times, 1};
+        count = {1, 1};
+        count[*time_variable.time_axis_] = num_times;
     } else {
         std::string dims_str;
         for (const auto& d : time_dims) {
@@ -579,7 +592,7 @@ void NetCDFPerFeatureDataProvider::read_times()
                                  + TIME_DIM_NAME + ") or (" + TIME_DIM_NAME + " and " + catchment_dim_name + ")");
     }
     time_var.getVar(start, count, &raw_time[0]);
-    ncvar_cache.at(TIME_VAR_NAME).unpack(raw_time);
+    time_variable.unpack(raw_time);
 
     // read the time metadata (unit, scale factor and reference epoch)
     TimeInfo time_info = get_time_metadata(time_var);
@@ -829,7 +842,7 @@ auto NetCDFPerFeatureDataProvider::load_page(VariableInfo const& var, std::size_
     // 'c_idx1 - (c_idx1 % cache_slice_t_size)' to the end of the cache line.
     // so, if 'c_idx1 % cache_slice_t_size > 0' we will read
     // 'c_idx1 % cache_slice_t_size * next_chunk_idx' more values than we 'need' to.
-    if (var.time_major_) {
+    if (var.time_major()) {
       start = {page_c_idx, chunk.first};
       count = {page_cache_line_size, chunk.second};
       transposed.resize(chunk.second * page_cache_line_size);
@@ -893,7 +906,7 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     maybe_update_chunks_with_hints();
 
     auto const& var = get_ncvar(selector.get_variable_name());
-    if (!var.holds_forcings(catchment_dim_name)) {
+    if (!var.holds_forcings()) {
         throw std::runtime_error("Variable '" + selector.get_variable_name() + "' in NetCDF file '" + file_path
                                  + "' isn't stored over the " + TIME_DIM_NAME + " and " + catchment_dim_name
                                  + " dimensions, so holds no forcing values");
@@ -1143,32 +1156,20 @@ void NetCDFPerFeatureDataProvider::align_cache_with_chunks()
 {
     auto num_times = nc_file->getDim(TIME_DIM_NAME).getSize();
 
-    // forcing variables have the time dimension and the ids' dimension, in either order
-    const std::string catchment_dim_name = nc_file->getVar("ids").getDim(0).getName();
-
+    // in the file's order of variables
     auto var_set = nc_file->getVars();
     for (const auto& var_pair : var_set) {
         const std::string& var_name = var_pair.first;
-        auto var = var_pair.second;
+        const VariableInfo& info = ncvar_cache.at(var_name);
         // Skip the Time variable itself, look for data variables over catchments and time
-        if (var_name == TIME_VAR_NAME || var.getDimCount() != 2) {
-            continue;
-        }
-        const std::string dim0 = var.getDim(0).getName();
-        const std::string dim1 = var.getDim(1).getName();
-        std::size_t time_index;
-        if (dim0 == catchment_dim_name && dim1 == TIME_DIM_NAME) {
-            time_index = 1;
-        } else if (dim0 == TIME_DIM_NAME && dim1 == catchment_dim_name) {
-            time_index = 0;
-        } else {
+        if (var_name == TIME_VAR_NAME || !info.holds_forcings()) {
             continue;
         }
         netCDF::NcVar::ChunkMode mode;
         std::vector<size_t> chunk_sizes;
-        var.getChunkingParameters(mode, chunk_sizes);
+        info.ncvar_.getChunkingParameters(mode, chunk_sizes);
         if (mode == netCDF::NcVar::ChunkMode::nc_CHUNKED && chunk_sizes.size() == 2) {
-            cache_slice_t_size = chunk_sizes[time_index];
+            cache_slice_t_size = chunk_sizes[*info.time_axis_];
             break;  // Use the first suitable chunk size found
         }
     }
