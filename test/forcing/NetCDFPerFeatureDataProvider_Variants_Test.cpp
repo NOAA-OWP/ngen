@@ -785,8 +785,7 @@ TEST_F(NetCDFStorageVariantTest, SingleTimestep)
 }
 
 // A file with no timesteps is an error, not a read past the end of the
-// times: the provider's readability check fails to read the first value
-// of its variables, whatever their numeric type
+// times, whatever the numeric type of its variables
 TEST_F(NetCDFStorageVariantTest, NoTimestepsIsRejected)
 {
     for (Type type : {Type::Double, Type::Float, Type::Int, Type::Short}) {
@@ -795,7 +794,7 @@ TEST_F(NetCDFStorageVariantTest, NoTimestepsIsRejected)
         v.unlimited_time = true;
         v.type = type;
         v.time_type = type;
-        expectRejected(v, "Error reading");
+        expectRejected(v, "has no timesteps");
     }
 }
 
