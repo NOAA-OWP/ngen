@@ -38,14 +38,14 @@ namespace data_access
         
         public:
 
-        enum TimeUnit
+        enum class TimeUnit
         {
-            TIME_HOURS,
-            TIME_MINUTES,
-            TIME_SECONDS,
-            TIME_MILLISECONDS,
-            TIME_MICROSECONDS,
-            TIME_NANOSECONDS
+            Hours,
+            Minutes,
+            Seconds,
+            Milliseconds,
+            Microseconds,
+            Nanoseconds
         };
 
         /**
