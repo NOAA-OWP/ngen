@@ -585,14 +585,21 @@ void NetCDFPerFeatureDataProvider::read_times()
     // determine the stride of the time array; a single timestep has no
     // interval to take it from, so take it to be an hour
     time_stride = time_vals.size() > 1 ? time_vals[1] - time_vals[0] : 3600;
+    if (!std::isfinite(time_stride) || time_stride <= 0) {
+        throw std::runtime_error("In NetCDF file '" + file_path + "', " + TIME_VAR_NAME
+                                 + " values must increase, but the first time step is "
+                                 + std::to_string(time_stride) + " seconds");
+    }
 
     #ifndef NCEP_OPERATIONS
     // verify the time stride
     for (size_t i = 1; i < time_vals.size(); ++i) {
         double interval = time_vals[i] - time_vals[i-1];
-        if (std::abs(interval - time_stride) > 1e-6) {
+        if (!std::isfinite(interval) || std::abs(interval - time_stride) > 1e-6) {
             log_stream << "Error: Time intervals are not constant in forcing file\n";
-            throw std::runtime_error("Time intervals in forcing file are not constant");
+            throw std::runtime_error("Time intervals in forcing file '" + file_path + "' are not constant: "
+                                     + std::to_string(interval) + " seconds at step " + std::to_string(i)
+                                     + ", rather than " + std::to_string(time_stride));
         }
     }
     #endif
