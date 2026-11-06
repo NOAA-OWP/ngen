@@ -909,6 +909,39 @@ TEST_F(NetCDFStorageVariantTest, DuplicateCatchmentIdIsRejected)
     expectRejected(v, "'cat-1' more than once");
 }
 
+// Time values must increase by the same positive, finite step
+TEST_F(NetCDFStorageVariantTest, DescendingTimesAreRejected)
+{
+    Variant v;
+    const time_t start = v.start;
+    const time_t stride = v.stride;
+    const std::size_t n = v.n_times;
+    v.encode_time = [=](time_t e) {
+        std::size_t t = (e - start) / stride;
+        return double(start + time_t(n - 1 - t) * stride);
+    };
+    expectRejected(v, "increase");
+}
+
+TEST_F(NetCDFStorageVariantTest, RepeatedTimesAreRejected)
+{
+    Variant v;
+    const time_t start = v.start;
+    v.encode_time = [=](time_t) { return double(start); };
+    expectRejected(v, "increase");
+}
+
+TEST_F(NetCDFStorageVariantTest, NaNTimeIsRejected)
+{
+    for (std::size_t bad_step : {0, 1, 5}) {
+        Variant v;
+        const time_t bad = v.start + time_t(bad_step) * v.stride;
+        v.encode_time = [=](time_t e) { return e == bad ? std::numeric_limits<double>::quiet_NaN() : double(e); };
+        SCOPED_TRACE("NaN at step " + std::to_string(bad_step));
+        expectRejected(v, "Time");
+    }
+}
+
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
 {
     Variant v;
