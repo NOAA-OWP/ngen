@@ -1033,12 +1033,8 @@ void NetCDFPerFeatureDataProvider::test_data_is_readable() {
                 std::vector<char*> buffer(1);
                 var.getVar(start, count, buffer.data());
                 nc_free_string(1, buffer.data());
-            } else if (var.getType().getTypeClass() == NC_INT) {
-                // Handle int variable
-                int val;
-                var.getVar(start, count, &val);
-            } else if (var.getType().getTypeClass() == NC_DOUBLE) {
-                // Handle double variable
+            } else if (DEFAULT_FILL_VALUES.contains(var.getType().getId())) {
+                // Handle a variable of any numeric type, which reads as double
                 double val;
                 var.getVar(start, count, &val);
             } else {

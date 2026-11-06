@@ -768,16 +768,18 @@ TEST_F(NetCDFStorageVariantTest, SingleTimestep)
 }
 
 // A file with no timesteps is an error, not a read past the end of the
-// times. With float variables, which the provider's readability check
-// doesn't read, this is where it's caught
+// times: the provider's readability check fails to read the first value
+// of its variables, whatever their numeric type
 TEST_F(NetCDFStorageVariantTest, NoTimestepsIsRejected)
 {
-    Variant v;
-    v.n_times = 0;
-    v.unlimited_time = true;
-    v.type = Type::Float;
-    v.time_type = Type::Float;
-    expectRejected(v, "");
+    for (Type type : {Type::Double, Type::Float, Type::Int, Type::Short}) {
+        Variant v;
+        v.n_times = 0;
+        v.unlimited_time = true;
+        v.type = type;
+        v.time_type = type;
+        expectRejected(v, "Error reading");
+    }
 }
 
 TEST_F(NetCDFStorageVariantTest, SingleTimestepForcingsEngineLayout)
