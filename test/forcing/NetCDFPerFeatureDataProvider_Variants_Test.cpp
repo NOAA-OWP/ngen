@@ -792,6 +792,36 @@ TEST_F(NetCDFStorageVariantTest, SingleTimestepForcingsEngineLayout)
     expectEquivalent(v);
 }
 
+// A read whose window starts or ends partway through a timestep weights
+// that timestep's value by the part of it inside the window
+TEST_F(NetCDFStorageVariantTest, ReadsWeightPartlyCoveredTimesteps)
+{
+    Variant v;
+    auto path = write(v);
+    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+    auto read = [&](time_t offset, time_t duration, data_access::ReSampleMethod m) {
+        CatchmentAggrDataSelector sel("cat-1", "temp", v.start + offset, duration, "K");
+        return provider.get_value(sel, m);
+    };
+    const double k0 = kelvin(1, 0);
+    const double k1 = kelvin(1, 1);
+    const double k2 = kelvin(1, 2);
+    const double h = 1800; // half a timestep
+    // the second half of one timestep and the first half of the next
+    EXPECT_NEAR(read(h, 2 * h, data_access::MEAN), (k0 + k1) / 2, 1e-9);
+    EXPECT_NEAR(read(h, 2 * h, data_access::SUM), 0.5 * k0 + 0.5 * k1, 1e-9);
+    // half of one timestep, all of the next, and half of the one after
+    EXPECT_NEAR(read(h, 4 * h, data_access::MEAN), (0.5 * k0 + k1 + 0.5 * k2) / 2, 1e-9);
+    EXPECT_NEAR(read(h, 4 * h, data_access::SUM), 0.5 * k0 + k1 + 0.5 * k2, 1e-9);
+    // within a single timestep
+    EXPECT_NEAR(read(h / 2, h, data_access::MEAN), k0, 1e-9);
+    EXPECT_NEAR(read(h / 2, h, data_access::SUM), 0.5 * k0, 1e-9);
+    EXPECT_NEAR(read(0, h, data_access::SUM), 0.5 * k0, 1e-9);
+    // whole timesteps
+    EXPECT_NEAR(read(0, 4 * h, data_access::MEAN), (k0 + k1) / 2, 1e-9);
+    EXPECT_NEAR(read(0, 4 * h, data_access::SUM), k0 + k1, 1e-9);
+}
+
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
 {
     Variant v;
