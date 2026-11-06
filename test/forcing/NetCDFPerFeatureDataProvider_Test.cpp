@@ -467,18 +467,18 @@ TEST(NetCDFTimeMetadata, InterpretTimeUnitsRecognized)
     using P = NetCDFPerFeatureDataProvider;
     struct Case { const char* str; P::TimeUnit unit; double scale; };
     const std::vector<Case> cases = {
-        {"h",            P::TIME_HOURS,        3600},
-        {"hours",        P::TIME_HOURS,        3600},
-        {"m",            P::TIME_MINUTES,      60},
-        {"minutes",      P::TIME_MINUTES,      60},
-        {"s",            P::TIME_SECONDS,      1},
-        {"seconds",      P::TIME_SECONDS,      1},
-        {"ms",           P::TIME_MILLISECONDS, .001},
-        {"milliseconds", P::TIME_MILLISECONDS, .001},
-        {"us",           P::TIME_MICROSECONDS, .000001},
-        {"microseconds", P::TIME_MICROSECONDS, .000001},
-        {"ns",           P::TIME_NANOSECONDS,  .000000001},
-        {"nanoseconds",  P::TIME_NANOSECONDS,  .000000001},
+        {"h",            P::TimeUnit::Hours,        3600},
+        {"hours",        P::TimeUnit::Hours,        3600},
+        {"m",            P::TimeUnit::Minutes,      60},
+        {"minutes",      P::TimeUnit::Minutes,      60},
+        {"s",            P::TimeUnit::Seconds,      1},
+        {"seconds",      P::TimeUnit::Seconds,      1},
+        {"ms",           P::TimeUnit::Milliseconds, .001},
+        {"milliseconds", P::TimeUnit::Milliseconds, .001},
+        {"us",           P::TimeUnit::Microseconds, .000001},
+        {"microseconds", P::TimeUnit::Microseconds, .000001},
+        {"ns",           P::TimeUnit::Nanoseconds,  .000000001},
+        {"nanoseconds",  P::TimeUnit::Nanoseconds,  .000000001},
     };
     for (const auto& c : cases) {
         auto info = P::interpret_time_units(c.str);
@@ -495,14 +495,14 @@ TEST(NetCDFTimeMetadata, InterpretTimeUnitsCFSinceEpoch)
     using P = NetCDFPerFeatureDataProvider;
     auto secs = P::interpret_time_units("seconds since 1970-01-01 00:00:00");
     ASSERT_TRUE(secs.has_value());
-    EXPECT_EQ(secs->unit, P::TIME_SECONDS);
+    EXPECT_EQ(secs->unit, P::TimeUnit::Seconds);
     EXPECT_DOUBLE_EQ(secs->scale_factor, 1);
     ASSERT_TRUE(secs->epoch_start_time.has_value());
     EXPECT_EQ(*secs->epoch_start_time, 0);
 
     auto hrs = P::interpret_time_units("hours since 2000-01-01 00:00:00");
     ASSERT_TRUE(hrs.has_value());
-    EXPECT_EQ(hrs->unit, P::TIME_HOURS);
+    EXPECT_EQ(hrs->unit, P::TimeUnit::Hours);
     EXPECT_DOUBLE_EQ(hrs->scale_factor, 3600);
     ASSERT_TRUE(hrs->epoch_start_time.has_value());
     EXPECT_EQ(*hrs->epoch_start_time, 946684800);

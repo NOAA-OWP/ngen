@@ -202,32 +202,32 @@ NetCDFPerFeatureDataProvider::interpret_time_units(const std::string& units_str)
     // set time unit and scale factor
     if ( time_unit_str == "h" || time_unit_str == "hours")
     {
-        info.unit = TIME_HOURS;
+        info.unit = TimeUnit::Hours;
         info.scale_factor = 3600;
     }
     else if ( time_unit_str == "m" || time_unit_str == "minutes" )
     {
-        info.unit = TIME_MINUTES;
+        info.unit = TimeUnit::Minutes;
         info.scale_factor = 60;
     }
     else if ( time_unit_str ==  "s" || time_unit_str == "seconds" )
     {
-        info.unit = TIME_SECONDS;
+        info.unit = TimeUnit::Seconds;
         info.scale_factor = 1;
     }
     else if ( time_unit_str ==  "ms" || time_unit_str == "milliseconds" )
     {
-        info.unit = TIME_MILLISECONDS;
+        info.unit = TimeUnit::Milliseconds;
         info.scale_factor = 1.0e-3;
     }
     else if ( time_unit_str ==  "us" || time_unit_str == "microseconds" )
     {
-        info.unit = TIME_MICROSECONDS;
+        info.unit = TimeUnit::Microseconds;
         info.scale_factor = 1.0e-6;
     }
     else if ( time_unit_str ==  "ns" || time_unit_str == "nanoseconds" )
     {
-        info.unit = TIME_NANOSECONDS;
+        info.unit = TimeUnit::Nanoseconds;
         info.scale_factor = 1.0e-9;
     }
     else
@@ -254,7 +254,7 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
 {
     // read the meta data to get the time_unit
     // if absent, assume seconds
-    TimeInfo info{TIME_SECONDS, 1, std::nullopt};
+    TimeInfo info{TimeUnit::Seconds, 1, std::nullopt};
     try {
         auto time_unit_att = time_var.getAtt("units");
 
