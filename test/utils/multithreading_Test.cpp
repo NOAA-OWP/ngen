@@ -12,6 +12,7 @@
 #include <set>
 #include <thread>
 #include <type_traits>
+#include <variant>
 #include <vector>
 
 // Concurrency tests for multithreading::cache_slot,
@@ -77,6 +78,14 @@ void jitter(std::minstd_rand& rng)
         std::this_thread::yield();
 }
 
+// The buffer slot.get() returns, or nullptr if it returns failed_fill
+buffer_type got_buffer(cache_slot& slot)
+{
+    auto got = slot.get();
+    auto* buffer = std::get_if<buffer_type>(&got);
+    return buffer ? *buffer : nullptr;
+}
+
 } // namespace
 
 // ---------------------------------------------------------------- cache_slot
@@ -94,8 +103,8 @@ TEST(CacheSlotTest, GetAfterFillReturnsFilledBuffer)
         slot.fill(buffer, immediate_use);
 
         // Repeated get() is idempotent, whichever state fill() left
-        EXPECT_EQ(slot.get(), buffer) << "immediate_use = " << immediate_use;
-        EXPECT_EQ(slot.get(), buffer) << "immediate_use = " << immediate_use;
+        EXPECT_EQ(got_buffer(slot), buffer) << "immediate_use = " << immediate_use;
+        EXPECT_EQ(got_buffer(slot), buffer) << "immediate_use = " << immediate_use;
     }
 }
 
@@ -112,7 +121,7 @@ TEST(CacheSlotTest, SlotSharesOwnershipOfBuffer)
         // The filler's reference is gone; the slot keeps the buffer alive
         ASSERT_FALSE(weak.expired());
 
-        auto got = slot.get();
+        auto got = got_buffer(slot);
         EXPECT_EQ(got.use_count(), 2); // slot + got
         EXPECT_TRUE(buffer_holds(got, 2.0));
     }
@@ -145,7 +154,7 @@ TEST(CacheSlotTest, GetWaitsForFill)
         }
 
         arrived.fetch_add(1, std::memory_order_relaxed);
-        got[t] = slot.get();
+        got[t] = got_buffer(slot);
         // fill_begun was stored before fill(), so a get() that really
         // waited for fill() must observe it
         saw_fill_begun[t] = fill_begun.load(std::memory_order_relaxed);
@@ -156,6 +165,46 @@ TEST(CacheSlotTest, GetWaitsForFill)
         EXPECT_EQ(got[t], filled) << "waiter " << t;
         EXPECT_TRUE(buffer_holds(got[t], 3.0)) << "waiter " << t;
     }
+}
+
+TEST(CacheSlotTest, GetAfterFailReturnsFailedFillUntilRefilled)
+{
+    cache_slot slot;
+    slot.fail();
+    // Every get() returns failed_fill, rather than a null buffer, or waiting
+    EXPECT_TRUE(std::holds_alternative<multithreading::failed_fill>(slot.get()));
+    EXPECT_TRUE(std::holds_alternative<multithreading::failed_fill>(slot.get()));
+
+    // fill() may retry a failed fill
+    auto buffer = make_buffer(4.0);
+    slot.fill(buffer, false);
+    EXPECT_EQ(got_buffer(slot), buffer);
+}
+
+TEST(CacheSlotTest, FailWakesWaiters)
+{
+    const unsigned n_waiters = test_thread_count() - 1;
+    cache_slot slot;
+
+    std::atomic<unsigned> arrived{0};
+    std::vector<char> saw_failure(n_waiters, false);
+
+    run_threads(n_waiters + 1, [&](unsigned t) {
+        if (t == n_waiters) {
+            // Failing filler: let the waiters get well into get() first
+            while (arrived.load(std::memory_order_relaxed) < n_waiters)
+                std::this_thread::yield();
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+            slot.fail();
+            return;
+        }
+
+        arrived.fetch_add(1, std::memory_order_relaxed);
+        saw_failure[t] = std::holds_alternative<multithreading::failed_fill>(slot.get());
+    });
+
+    for (unsigned t = 0; t < n_waiters; ++t)
+        EXPECT_TRUE(saw_failure[t]) << "waiter " << t << " didn't get failed_fill";
 }
 
 TEST(CacheSlotTest, ConcurrentFillAndGetPublishBufferContents)
@@ -183,7 +232,7 @@ TEST(CacheSlotTest, ConcurrentFillAndGetPublishBufferContents)
                 got = make_buffer(seed);
                 slots[r].fill(got, r % 2 == 0);
             } else {
-                got = slots[r].get();
+                got = got_buffer(slots[r]);
             }
             ok[r * n_threads + t] = buffer_holds(got, seed);
         }
@@ -223,7 +272,7 @@ TEST(CacheSlotTest, ReaderAfterFirstReaderOfColdFillSeesContents)
             case 2:
                 while (!first_done.load(std::memory_order_relaxed))
                     std::this_thread::yield();
-                second_got = slot.get();
+                second_got = got_buffer(slot);
                 break;
             }
         });
@@ -459,7 +508,7 @@ TEST(SharedCacheTest, ElectedInserterPublishesToAllFinders)
                     // Exactly one thread writes each cell
                     ++n_inserted[cell];
                 } else {
-                    got = slot.get();
+                    got = got_buffer(slot);
                 }
                 ok[cell * n_threads + t] = buffer_holds(got, seed);
             }
@@ -513,7 +562,7 @@ TEST(SharedCacheTest, ReadsSpanningTwoPagesKeepFirstPageAlive)
                     got = make_buffer(page);
                     slot.fill(got, true);
                 } else {
-                    got = slot.get();
+                    got = got_buffer(slot);
                 }
                 ok[(r * 2 + page - r) * n_threads + t] = buffer_holds(got, page);
             }
@@ -561,7 +610,7 @@ TEST(SharedCacheTest, DISABLED_EvictionWhileAnotherThreadHoldsSlot)
             holding.store(true, std::memory_order_relaxed);
             while (!evicted.load(std::memory_order_relaxed))
                 std::this_thread::yield();
-            EXPECT_TRUE(buffer_holds(slot.get(), 0.0)); // use after free
+            EXPECT_TRUE(buffer_holds(got_buffer(slot), 0.0)); // use after free
         } else {
             while (!holding.load(std::memory_order_relaxed))
                 std::this_thread::yield();
