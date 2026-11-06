@@ -8,6 +8,7 @@
 
 #include <netcdf>
 
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <ctime>
@@ -83,6 +84,7 @@ class NetCDFStorageVariantTest : public ::testing::Test {
 
         std::string var_name = "temp";
         std::vector<std::string> aliases;            // other names to read it by, such as its CSDMS name
+        std::vector<std::string> also_as;            // names of copies of it also written to the file
         std::vector<std::string> read_units = {"K"}; // output units to read it in; "" for the stored units
         std::string units = "K";
         std::function<double(double)> from_kelvin; // to the stored units; identity if empty
@@ -209,52 +211,56 @@ class NetCDFStorageVariantTest : public ::testing::Test {
             time_var.putVar(time_starts, time_counts, times.data());
         }
 
-        auto var = out.addVar(v.var_name, ncType(v.type), dims_for(v.time_major));
-        var.putAtt("units", v.units);
-        if (!v.chunks.empty()) {
-            std::vector<std::size_t> chunks = v.chunks;
-            var.setChunking(netCDF::NcVar::nc_CHUNKED, chunks);
-        }
-        if (v.deflate_level > 0) {
-            var.setCompression(true, true, v.deflate_level);
-        }
-        if (v.scale_factor) {
-            var.putAtt("scale_factor", netCDF::ncDouble, *v.scale_factor);
-        }
-        if (v.add_offset) {
-            var.putAtt("add_offset", netCDF::ncDouble, *v.add_offset);
-        }
-        if (v.fill_value) {
-            putTypedAtt(var, "_FillValue", *v.fill_value);
-        }
-        if (!v.missing_values.empty()) {
-            var.putAtt("missing_value", netCDF::ncDouble, v.missing_values.size(), v.missing_values.data());
-        }
-        const double missing_raw = v.missing_raw ? *v.missing_raw
-            : v.fill_value ? *v.fill_value
-            : !v.missing_values.empty() ? v.missing_values.front()
-            : std::numeric_limits<double>::quiet_NaN();
+        std::vector<std::string> data_names = {v.var_name};
+        data_names.insert(data_names.end(), v.also_as.begin(), v.also_as.end());
+        for (const auto& name : data_names) {
+            auto var = out.addVar(name, ncType(v.type), dims_for(v.time_major));
+            var.putAtt("units", v.units);
+            if (!v.chunks.empty()) {
+                std::vector<std::size_t> chunks = v.chunks;
+                var.setChunking(netCDF::NcVar::nc_CHUNKED, chunks);
+            }
+            if (v.deflate_level > 0) {
+                var.setCompression(true, true, v.deflate_level);
+            }
+            if (v.scale_factor) {
+                var.putAtt("scale_factor", netCDF::ncDouble, *v.scale_factor);
+            }
+            if (v.add_offset) {
+                var.putAtt("add_offset", netCDF::ncDouble, *v.add_offset);
+            }
+            if (v.fill_value) {
+                putTypedAtt(var, "_FillValue", *v.fill_value);
+            }
+            if (!v.missing_values.empty()) {
+                var.putAtt("missing_value", netCDF::ncDouble, v.missing_values.size(), v.missing_values.data());
+            }
+            const double missing_raw = v.missing_raw ? *v.missing_raw
+                : v.fill_value ? *v.fill_value
+                : !v.missing_values.empty() ? v.missing_values.front()
+                : std::numeric_limits<double>::quiet_NaN();
 
-        std::vector<double> values(v.n_cats * v.n_times);
-        for (std::size_t pos = 0; pos < v.n_cats; ++pos) {
-            for (std::size_t t = 0; t < v.n_times; ++t) {
-                const std::size_t c = order[pos];
-                double x;
-                if (v.missing.count({c, t})) {
-                    x = missing_raw;
-                } else {
-                    x = v.from_kelvin ? v.from_kelvin(kelvin(c, t)) : kelvin(c, t);
-                    if (v.scale_factor || v.add_offset) {
-                        x = (x - v.add_offset.value_or(0.0)) / v.scale_factor.value_or(1.0);
-                        if (v.type == Type::Int || v.type == Type::Short) {
-                            x = std::round(x);
+            std::vector<double> values(v.n_cats * v.n_times);
+            for (std::size_t pos = 0; pos < v.n_cats; ++pos) {
+                for (std::size_t t = 0; t < v.n_times; ++t) {
+                    const std::size_t c = order[pos];
+                    double x;
+                    if (v.missing.count({c, t})) {
+                        x = missing_raw;
+                    } else {
+                        x = v.from_kelvin ? v.from_kelvin(kelvin(c, t)) : kelvin(c, t);
+                        if (v.scale_factor || v.add_offset) {
+                            x = (x - v.add_offset.value_or(0.0)) / v.scale_factor.value_or(1.0);
+                            if (v.type == Type::Int || v.type == Type::Short) {
+                                x = std::round(x);
+                            }
                         }
                     }
+                    values[at(v.time_major, pos, t)] = x;
                 }
-                values[at(v.time_major, pos, t)] = x;
             }
+            var.putVar(starts, counts_for(v.time_major), values.data());
         }
-        var.putVar(starts, counts_for(v.time_major), values.data());
 
         if (v.extra_variables) {
             // A coordinate, a scalar, and a variable over another dimension;
@@ -989,6 +995,36 @@ TEST_F(NetCDFStorageVariantTest, WholeTimestepReadUsesOnlyThatTimestep)
             }
         }
     }
+}
+
+// A CSDMS name that more than one variable in the file has can't be read
+// by, though each of those variables can be read by its own name
+TEST_F(NetCDFStorageVariantTest, AmbiguousCsdmsNameIsAnError)
+{
+    Variant v;
+    v.var_name = "T2D";
+    v.also_as = {"TMP_2maboveground"};
+    auto path = write(v);
+    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+
+    CatchmentAggrDataSelector by_csdms_name("cat-1", CSDMS_STD_NAME_SURFACE_TEMP, v.start, v.stride, "K");
+    for (int attempt = 0; attempt < 2; ++attempt) {
+        try {
+            provider.get_value(by_csdms_name, data_access::MEAN);
+            ADD_FAILURE() << "reading by the ambiguous CSDMS name didn't throw";
+        } catch (const std::runtime_error& e) {
+            for (const std::string& expected : {std::string(CSDMS_STD_NAME_SURFACE_TEMP), std::string("T2D"),
+                                                std::string("TMP_2maboveground"), path}) {
+                EXPECT_NE(std::string(e.what()).find(expected), std::string::npos) << e.what();
+            }
+        }
+    }
+    for (const char* name : {"T2D", "TMP_2maboveground"}) {
+        CatchmentAggrDataSelector sel("cat-1", name, v.start, v.stride, "K");
+        EXPECT_NEAR(provider.get_value(sel, data_access::MEAN), kelvin(1, 0), 1e-9) << name;
+    }
+    auto names = provider.get_available_variable_names();
+    EXPECT_EQ(std::count(names.begin(), names.end(), std::string(CSDMS_STD_NAME_SURFACE_TEMP)), 1);
 }
 
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)

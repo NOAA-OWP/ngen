@@ -477,8 +477,17 @@ void NetCDFPerFeatureDataProvider::read_variable_metadata()
 
         if(wkf != data_access::WellKnownFields.end()){
             std::string can_name = std::get<0>(wkf->second); // the CSDMS name
-            variable_names.push_back(can_name);
-            ncvar_cache.emplace(can_name, info);
+            auto [existing, inserted] = ncvar_cache.emplace(can_name, info);
+            if (inserted) {
+                variable_names.push_back(can_name);
+            } else {
+                // another variable already has this CSDMS name
+                auto& candidates = ambiguous_names[can_name];
+                if (candidates.empty()) {
+                    candidates.push_back(existing->second.name_);
+                }
+                candidates.push_back(var_name);
+            }
         }
     });
 }
@@ -1049,6 +1058,17 @@ std::vector<double> NetCDFPerFeatureDataProvider::get_values(const CatchmentAggr
 // private:
 
 auto NetCDFPerFeatureDataProvider::get_ncvar(const std::string& name) const -> VariableInfo const& {
+    auto ambiguous = ambiguous_names.find(name);
+    if (ambiguous != ambiguous_names.end()) {
+        std::string candidates;
+        for (const auto& candidate : ambiguous->second) {
+            candidates += (candidates.empty() ? "'" : ", '") + candidate + "'";
+        }
+        throw std::runtime_error("Variable '" + name + "' is ambiguous in NetCDF forcing file '" + file_path
+                                 + "': it is the CSDMS name of each of " + candidates
+                                 + "; read one of them by its name in the file");
+    }
+
     auto cache_hit = ncvar_cache.find(name);
     if(cache_hit != ncvar_cache.end()){
         return cache_hit->second;
