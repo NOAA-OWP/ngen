@@ -1027,6 +1027,21 @@ TEST_F(NetCDFStorageVariantTest, AmbiguousCsdmsNameIsAnError)
     EXPECT_EQ(std::count(names.begin(), names.end(), std::string(CSDMS_STD_NAME_SURFACE_TEMP)), 1);
 }
 
+// A read that fails in the NetCDF library marks its page's cache slot
+// failed, so a later read of the page throws rather than waiting forever
+// for it to be filled
+TEST_F(NetCDFStorageVariantTest, FailedPageReadDoesNotHangLaterReads)
+{
+    Variant v;
+    auto path = write(v);
+    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+    // closing the file makes the next page read fail in the NetCDF library
+    provider.finalize();
+    CatchmentAggrDataSelector sel("cat-1", "temp", v.start, v.stride, "K");
+    EXPECT_ANY_THROW(provider.get_value(sel, data_access::MEAN));
+    EXPECT_THROW(provider.get_value(sel, data_access::MEAN), std::runtime_error);
+}
+
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
 {
     Variant v;
