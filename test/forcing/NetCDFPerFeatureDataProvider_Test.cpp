@@ -467,11 +467,20 @@ TEST(NetCDFTimeMetadata, InterpretTimeUnitsRecognized)
     using P = NetCDFPerFeatureDataProvider;
     struct Case { const char* str; P::TimeUnit unit; double scale; };
     const std::vector<Case> cases = {
+        {"d",            P::TimeUnit::Days,         86400},
+        {"day",          P::TimeUnit::Days,         86400},
+        {"days",         P::TimeUnit::Days,         86400},
         {"h",            P::TimeUnit::Hours,        3600},
+        {"hr",           P::TimeUnit::Hours,        3600},
+        {"hour",         P::TimeUnit::Hours,        3600},
         {"hours",        P::TimeUnit::Hours,        3600},
         {"m",            P::TimeUnit::Minutes,      60},
+        {"min",          P::TimeUnit::Minutes,      60},
+        {"minute",       P::TimeUnit::Minutes,      60},
         {"minutes",      P::TimeUnit::Minutes,      60},
         {"s",            P::TimeUnit::Seconds,      1},
+        {"sec",          P::TimeUnit::Seconds,      1},
+        {"second",       P::TimeUnit::Seconds,      1},
         {"seconds",      P::TimeUnit::Seconds,      1},
         {"ms",           P::TimeUnit::Milliseconds, .001},
         {"milliseconds", P::TimeUnit::Milliseconds, .001},
@@ -513,8 +522,44 @@ TEST(NetCDFTimeMetadata, InterpretTimeUnitsUnrecognized)
 {
     using P = NetCDFPerFeatureDataProvider;
     EXPECT_FALSE(P::interpret_time_units("").has_value());
-    EXPECT_FALSE(P::interpret_time_units("days").has_value());
+    EXPECT_FALSE(P::interpret_time_units("weeks").has_value());
     EXPECT_FALSE(P::interpret_time_units("fortnights").has_value());
+}
+
+// CF reference dates may omit the time of day or the seconds, use ISO 8601's
+// 'T' separator, carry zero fractional seconds, and end in Z, UTC or an offset
+// from UTC
+TEST(NetCDFTimeMetadata, ParseReferenceDate)
+{
+    using P = NetCDFPerFeatureDataProvider;
+    const std::time_t y2k = 946684800;
+    for (const char* text : {
+            "2000-01-01 00:00:00", "2000-01-01", "2000-01-01 00:00", "2000-01-01T00:00:00",
+            "2000-01-01T00:00:00Z", "2000-01-01 00:00:00 UTC", "2000-01-01 00:00:00.0",
+            "2000-01-01T00:00:00.000Z", " 2000-01-01 00:00:00 "}) {
+        EXPECT_EQ(P::parse_reference_date(text), y2k) << "'" << text << "'";
+    }
+    EXPECT_EQ(P::parse_reference_date("2000-01-01 06:30"), y2k + 6 * 3600 + 30 * 60);
+    EXPECT_EQ(P::parse_reference_date("2000-01-01T06:30:15Z"), y2k + 6 * 3600 + 30 * 60 + 15);
+    EXPECT_EQ(P::parse_reference_date("2000-01-01 05:00:00+05:00"), y2k);
+    EXPECT_EQ(P::parse_reference_date("2000-01-01T00:00:00-0130"), y2k + 5400);
+    EXPECT_EQ(P::parse_reference_date("2000-01-01 00:00-23:59"), y2k + 23 * 3600 + 59 * 60);
+    EXPECT_EQ(P::parse_reference_date("2000-1-1 0:00"), y2k);
+
+    // leap days are dates in leap years only
+    EXPECT_EQ(P::parse_reference_date("2000-02-29"), y2k + 59 * 86400);
+
+    // trailing text, nonzero fractions, out-of-range fields and dates that
+    // don't exist are not accepted
+    for (const char* text : {"not a date", "2000-01-01 00:00:00 garbage", "2000-01-01 00:00:00.5",
+                             "2000-13-01", "2000-01-01 25:00", "", "2001-02-29", "2000-02-30", "2000-04-31",
+                             "2000-01-01 00:00+24:00", "2000-01-01 00:00-05:60"}) {
+        EXPECT_THROW(P::parse_reference_date(text), std::runtime_error) << "'" << text << "'";
+    }
+
+    auto info = P::interpret_time_units("hours since 2000-01-01");
+    ASSERT_TRUE(info.has_value());
+    EXPECT_EQ(info->epoch_start_time, y2k);
 }
 
 // parse_epoch converts a timestamp to UTC epoch seconds and honors the supplied format.

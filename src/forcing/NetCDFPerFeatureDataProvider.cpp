@@ -7,9 +7,11 @@
 
 #include <netcdf>
 
+#include <chrono>
 #include <cmath>
 #include <iomanip>
 #include <limits>
+#include <regex>
 #include <span>
 #include <sstream>
 
@@ -195,47 +197,92 @@ NetCDFPerFeatureDataProvider::interpret_time_units(const std::string& units_str)
 
     if(!unit_epoch_str.empty())
     {
-        //CF convention in time units formats as "YYYY-MM-DD HH:MM:SS"
-        info.epoch_start_time = parse_epoch(unit_epoch_str, "%Y-%m-%d %H:%M:%S");
+        info.epoch_start_time = parse_reference_date(unit_epoch_str);
     }
 
-    // set time unit and scale factor
-    if ( time_unit_str == "h" || time_unit_str == "hours")
-    {
-        info.unit = TimeUnit::Hours;
-        info.scale_factor = 3600;
-    }
-    else if ( time_unit_str == "m" || time_unit_str == "minutes" )
-    {
-        info.unit = TimeUnit::Minutes;
-        info.scale_factor = 60;
-    }
-    else if ( time_unit_str ==  "s" || time_unit_str == "seconds" )
-    {
-        info.unit = TimeUnit::Seconds;
-        info.scale_factor = 1;
-    }
-    else if ( time_unit_str ==  "ms" || time_unit_str == "milliseconds" )
-    {
-        info.unit = TimeUnit::Milliseconds;
-        info.scale_factor = 1.0e-3;
-    }
-    else if ( time_unit_str ==  "us" || time_unit_str == "microseconds" )
-    {
-        info.unit = TimeUnit::Microseconds;
-        info.scale_factor = 1.0e-6;
-    }
-    else if ( time_unit_str ==  "ns" || time_unit_str == "nanoseconds" )
-    {
-        info.unit = TimeUnit::Nanoseconds;
-        info.scale_factor = 1.0e-9;
-    }
-    else
+    // set time unit and scale factor; the UDUNITS names and symbols of
+    // each unit, except that "m" means minutes
+    static const std::map<std::string, std::pair<TimeUnit, double>> units = {
+        {"d",            {TimeUnit::Days,         86400}},
+        {"day",          {TimeUnit::Days,         86400}},
+        {"days",         {TimeUnit::Days,         86400}},
+
+        {"h",            {TimeUnit::Hours,        3600}},
+        {"hr",           {TimeUnit::Hours,        3600}},
+        {"hour",         {TimeUnit::Hours,        3600}},
+        {"hours",        {TimeUnit::Hours,        3600}},
+
+        {"m",            {TimeUnit::Minutes,      60}},
+        {"min",          {TimeUnit::Minutes,      60}},
+        {"minute",       {TimeUnit::Minutes,      60}},
+        {"minutes",      {TimeUnit::Minutes,      60}},
+
+        {"s",            {TimeUnit::Seconds,      1}},
+        {"sec",          {TimeUnit::Seconds,      1}},
+        {"second",       {TimeUnit::Seconds,      1}},
+        {"seconds",      {TimeUnit::Seconds,      1}},
+
+        {"ms",           {TimeUnit::Milliseconds, 1.0e-3}},
+        {"millisecond",  {TimeUnit::Milliseconds, 1.0e-3}},
+        {"milliseconds", {TimeUnit::Milliseconds, 1.0e-3}},
+
+        {"us",           {TimeUnit::Microseconds, 1.0e-6}},
+        {"microsecond",  {TimeUnit::Microseconds, 1.0e-6}},
+        {"microseconds", {TimeUnit::Microseconds, 1.0e-6}},
+
+        {"ns",           {TimeUnit::Nanoseconds,  1.0e-9}},
+        {"nanosecond",   {TimeUnit::Nanoseconds,  1.0e-9}},
+        {"nanoseconds",  {TimeUnit::Nanoseconds,  1.0e-9}},
+    };
+    auto found = units.find(time_unit_str);
+    if (found == units.end())
     {
         return std::nullopt;
     }
+    info.unit = found->second.first;
+    info.scale_factor = found->second.second;
 
     return info;
+}
+
+std::time_t NetCDFPerFeatureDataProvider::parse_reference_date(const std::string& date_str)
+{
+    static const std::regex pattern(
+        R"(^\s*(\d{4})-(\d{1,2})-(\d{1,2}))"                      // date
+        R"((?:(?:T|\s+)(\d{1,2}):(\d{2})(?::(\d{2})(?:\.(\d+))?)?)?)" // time of day
+        R"(\s*(Z|UTC|([+-])(\d{2})(?::?(\d{2}))?)?\s*$)");            // UTC or an offset from it
+    std::smatch m;
+    if (!std::regex_match(date_str, m, pattern)) {
+        throw std::runtime_error("Could not parse reference date '" + date_str + "'");
+    }
+    auto field = [&](std::size_t i) { return m[i].matched ? std::stoi(m[i].str()) : 0; };
+
+    using namespace std::chrono;
+    const year_month_day date = year{field(1)} / field(2) / field(3);
+    const hours hour{field(4)};
+    const minutes minute{field(5)};
+    const seconds second{field(6)};
+    // ok() rejects dates that don't exist, such as February 30
+    if (!date.ok() || hour.count() > 23 || minute.count() > 59 || second.count() > 60) {
+        throw std::runtime_error("Reference date '" + date_str + "' has a field out of range");
+    }
+    auto& fraction_digits = m[7];
+    if (fraction_digits.matched && fraction_digits.str().find_first_not_of('0') != std::string::npos) {
+        throw std::runtime_error("Reference date '" + date_str + "' has fractional seconds");
+    }
+    const seconds time_of_day = hour + minute + second;
+    sys_seconds t = sys_days{date} + time_of_day;
+    auto& offset_sign = m[9];
+    if (offset_sign.matched) {
+        const hours offset_hours{field(10)};
+        const minutes offset_minutes{field(11)};
+        if (offset_hours.count() > 23 || offset_minutes.count() > 59) {
+            throw std::runtime_error("Reference date '" + date_str + "' has an offset from UTC out of range");
+        }
+        const minutes utc_offset = offset_hours + offset_minutes;
+        t -= offset_sign.str() == "-" ? -utc_offset : utc_offset;
+    }
+    return t.time_since_epoch().count();
 }
 
 std::time_t NetCDFPerFeatureDataProvider::parse_epoch(const std::string& epoch_str, const std::string& format)

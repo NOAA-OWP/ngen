@@ -40,6 +40,7 @@ namespace data_access
 
         enum class TimeUnit
         {
+            Days,
             Hours,
             Minutes,
             Seconds,
@@ -68,6 +69,21 @@ namespace data_access
          * @return the parsed @ref TimeInfo, or std::nullopt if @p units_str is unrecognized
          */
         static std::optional<TimeInfo> interpret_time_units(const std::string& units_str);
+
+        /**
+         * @brief Parse the reference date of CF "<unit> since <date>" time units.
+         *
+         * Accepts "YYYY-MM-DD", optionally followed by a space or 'T' and
+         * "hh:mm", "hh:mm:ss" or "hh:mm:ss.000" (any fraction must be zero), and
+         * then optionally "Z", "UTC" or an offset from UTC ("+hh:mm", "-hhmm", "+hh")
+         * of less than 24 hours, which is applied. Month, day and hour may have a
+         * single digit.
+         *
+         * @param date_str the reference date text
+         * @return seconds since the Unix epoch
+         * @throws std::runtime_error if @p date_str isn't such a date
+         */
+        static std::time_t parse_reference_date(const std::string& date_str);
 
         /**
          * @brief Parse a reference-epoch timestamp into seconds since the Unix epoch.
