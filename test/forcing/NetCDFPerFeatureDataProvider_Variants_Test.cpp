@@ -33,6 +33,14 @@ class NetCDFStorageVariantTest : public ::testing::Test {
   protected:
     enum class Type { Double, Float, Int, Short };
 
+    // The dimensions Time is stored over
+    enum class TimeLayout {
+        CatchmentMajor, // (catchment-id, time)
+        TimeMajor,      // (time, catchment-id)
+        TimeOnly,       // (time), as the forcings engine writes it
+        CatchmentOnly,  // (catchment-id), which doesn't describe the time dimension
+    };
+
     static const netCDF::NcType& ncType(Type t) {
         switch (t) {
             case Type::Float:
@@ -56,7 +64,7 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         std::vector<std::size_t> order;
         // store variables as (time, catchment-id) rather than (catchment-id, time)
         bool time_major = false;
-        std::optional<bool> time_var_time_major; // for Time; default: as time_major
+        std::optional<TimeLayout> time_layout; // default: the data variables' dimensions
         bool unlimited_time = false;
 
         Type type = Type::Double;
@@ -125,7 +133,8 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         auto at = [&](bool time_major, std::size_t pos, std::size_t t) {
             return time_major ? t * v.n_cats + pos : pos * v.n_times + t;
         };
-        const bool time_var_time_major = v.time_var_time_major.value_or(v.time_major);
+        const TimeLayout time_layout = v.time_layout.value_or(
+            v.time_major ? TimeLayout::TimeMajor : TimeLayout::CatchmentMajor);
         std::vector<std::size_t> starts = {0, 0};
 
         std::vector<std::string> id_strs;
@@ -138,19 +147,47 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         }
         out.addVar("ids", netCDF::ncString, cat_dim).putVar(id_ptrs.data());
 
-        auto time_var = out.addVar("Time", ncType(v.time_type), dims_for(time_var_time_major));
+        auto encoded_time = [&](std::size_t t) {
+            time_t epoch = v.start + time_t(t) * v.stride;
+            return v.encode_time ? v.encode_time(epoch) : double(epoch);
+        };
+        std::vector<netCDF::NcDim> time_dims;
+        std::vector<std::size_t> time_starts, time_counts;
+        std::vector<double> times;
+        switch (time_layout) {
+            case TimeLayout::TimeOnly:
+                time_dims = {time_dim};
+                time_starts = {0};
+                time_counts = {v.n_times};
+                for (std::size_t t = 0; t < v.n_times; ++t) {
+                    times.push_back(encoded_time(t));
+                }
+                break;
+            case TimeLayout::CatchmentOnly:
+                time_dims = {cat_dim};
+                time_starts = {0};
+                time_counts = {v.n_cats};
+                times.assign(v.n_cats, encoded_time(0));
+                break;
+            default: {
+                const bool time_major = time_layout == TimeLayout::TimeMajor;
+                time_dims = dims_for(time_major);
+                time_starts = starts;
+                time_counts = counts_for(time_major);
+                times.resize(v.n_cats * v.n_times);
+                for (std::size_t pos = 0; pos < v.n_cats; ++pos) {
+                    for (std::size_t t = 0; t < v.n_times; ++t) {
+                        times[at(time_major, pos, t)] = encoded_time(t);
+                    }
+                }
+            }
+        }
+        auto time_var = out.addVar("Time", ncType(v.time_type), time_dims);
         time_var.putAtt("units", v.time_units);
         if (v.epoch_start) {
             time_var.putAtt("epoch_start", *v.epoch_start);
         }
-        std::vector<double> times(v.n_cats * v.n_times);
-        for (std::size_t pos = 0; pos < v.n_cats; ++pos) {
-            for (std::size_t t = 0; t < v.n_times; ++t) {
-                time_t epoch = v.start + t * v.stride;
-                times[at(time_var_time_major, pos, t)] = v.encode_time ? v.encode_time(epoch) : double(epoch);
-            }
-        }
-        time_var.putVar(starts, counts_for(time_var_time_major), times.data());
+        time_var.putVar(time_starts, time_counts, times.data());
 
         auto var = out.addVar("temp", ncType(v.type), dims_for(v.time_major));
         var.putAtt("units", v.units);
@@ -293,6 +330,19 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         auto path = write(v);
         expectReads(path, v);
         expectReads(path, v, {3, 0, 4});
+    }
+
+    // Writes the variant and checks that constructing a provider for it
+    // throws, with an error message containing message_part
+    void expectRejected(const Variant& v, const std::string& message_part) {
+        auto path = write(v);
+        try {
+            NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+            ADD_FAILURE() << "expected the provider to reject " << path;
+        } catch (const std::exception& e) {
+            EXPECT_NE(std::string(e.what()).find(message_part), std::string::npos)
+                << "error message: " << e.what();
+        }
     }
 
     std::vector<std::string> temp_files;
@@ -505,14 +555,14 @@ TEST_F(NetCDFStorageVariantTest, TimeMajorDataWithCatchmentMajorTime)
 {
     Variant v;
     v.time_major = true;
-    v.time_var_time_major = false;
+    v.time_layout = TimeLayout::CatchmentMajor;
     expectEquivalent(v);
 }
 
 TEST_F(NetCDFStorageVariantTest, CatchmentMajorDataWithTimeMajorTime)
 {
     Variant v;
-    v.time_var_time_major = true;
+    v.time_layout = TimeLayout::TimeMajor;
     expectEquivalent(v);
 }
 
@@ -580,6 +630,29 @@ TEST_F(NetCDFStorageVariantTest, ReferenceDateWithFractionalSecondsAndUTC)
     Variant v;
     v.time_units = "seconds since 1970-01-01 00:00:00.0 UTC";
     expectEquivalent(v);
+}
+
+// Time can be stored over just the time dimension, as the forcings engine does
+TEST_F(NetCDFStorageVariantTest, TimeVariableOverTimeOnly)
+{
+    Variant v;
+    v.time_layout = TimeLayout::TimeOnly;
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, TimeOnlyTimeWithTimeMajorData)
+{
+    Variant v;
+    v.time_major = true;
+    v.time_layout = TimeLayout::TimeOnly;
+    expectEquivalent(v);
+}
+
+TEST_F(NetCDFStorageVariantTest, TimeVariableOverOtherDimensionsIsRejected)
+{
+    Variant v;
+    v.time_layout = TimeLayout::CatchmentOnly;
+    expectRejected(v, "Time variable");
 }
 
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
