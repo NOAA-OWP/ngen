@@ -310,7 +310,7 @@ std::time_t NetCDFPerFeatureDataProvider::parse_epoch(const std::string& date_st
     return t.time_since_epoch().count();
 }
 
-NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_metadata(const netCDF::NcVar& time_var)
+NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_metadata(const VariableInfo& time_var)
 {
     // read the meta data to get the time_unit
     // if absent, assume seconds
@@ -318,45 +318,33 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
     // the reference date, from CF units of the form "<unit> since <date>"
     // or else the epoch_start attribute
     std::string epoch_str;
-    try {
-        auto time_unit_att = time_var.getAtt("units");
 
-        // if time att is not encoded
-        // TODO determine how this should be handled
-        std::string units_str;
+    // the units attribute, as read for the variable's VariableInfo; empty
+    // if it's absent or couldn't be read
+    const std::string& units_str = time_var.units_;
 
-        if ( !time_unit_att.isNull() )
-        {
-            time_unit_att.getValues(units_str);
-        }
-
-        // CF conventions may have units of the form "<unit> since <date>"
-        std::string time_unit_str = units_str;
-        const std::string since = " since ";
-        const size_t since_pos = units_str.find(since);
-        if ( since_pos != std::string::npos )
-        {
-            time_unit_str = units_str.substr(0, since_pos);
-            epoch_str = units_str.substr(since_pos + since.length());
-        }
-
-        // set time unit and scale factor
-        if ( auto parsed = interpret_time_units(time_unit_str) )
-        {
-            info = *parsed;
-        }
-        else if ( !time_unit_str.empty() )
-        {
-            throw std::runtime_error("In NetCDF file '" + file_path + "', the " + TIME_VAR_NAME
-                                     + " variable's units '" + units_str + "' aren't a recognized time unit");
-        }
-        else {
-            log_stream << "Warning using default time units\n";
-        }
+    // CF conventions may have units of the form "<unit> since <date>"
+    std::string time_unit_str = units_str;
+    const std::string since = " since ";
+    const size_t since_pos = units_str.find(since);
+    if ( since_pos != std::string::npos )
+    {
+        time_unit_str = units_str.substr(0, since_pos);
+        epoch_str = units_str.substr(since_pos + since.length());
     }
-    catch(const netCDF::exceptions::NcException& e){
-        std::cerr<<e.what()<<std::endl;
-        log_stream << "Warning: Couldn't read time unit attribute, using default time unit of Seconds\n";
+
+    // set time unit and scale factor
+    if ( auto parsed = interpret_time_units(time_unit_str) )
+    {
+        info = *parsed;
+    }
+    else if ( !time_unit_str.empty() )
+    {
+        throw std::runtime_error("In NetCDF file '" + file_path + "', the " + TIME_VAR_NAME
+                                 + " variable's units '" + units_str + "' aren't a recognized time unit");
+    }
+    else {
+        log_stream << "Warning using default time units\n";
     }
     assert(info.scale_factor != 0); // This should not happen.
 
@@ -364,7 +352,7 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
     if ( epoch_str.empty() )
     {
         try {
-            auto epoch_att = time_var.getAtt("epoch_start");
+            auto epoch_att = time_var.ncvar_.getAtt("epoch_start");
 
             if ( epoch_att.isNull() )
             {
@@ -595,7 +583,7 @@ void NetCDFPerFeatureDataProvider::read_times()
     time_variable.unpack(raw_time);
 
     // read the time metadata (unit, scale factor and reference epoch)
-    TimeInfo time_info = get_time_metadata(time_var);
+    TimeInfo time_info = get_time_metadata(time_variable);
     time_unit = time_info.unit;
 
     // scale the time to account for time units and epoch_start
