@@ -565,7 +565,8 @@ void NetCDFPerFeatureDataProvider::read_times()
     time_vals.resize(raw_time.size());
     std::transform(raw_time.begin(), raw_time.end(), time_vals.begin(),
         [&](const auto& n){return n * time_info.scale_factor + time_info.epoch_start_time.value_or(0); });
-        
+
+    start_time = time_vals.at(0);
 
     // determine the stride of the time array; a single timestep has no
     // interval to take it from, so take it to be an hour
@@ -582,8 +583,6 @@ void NetCDFPerFeatureDataProvider::read_times()
     }
     #endif
 
-    // determine start_time and stop_time;
-    start_time = time_vals[0];
     stop_time = time_vals.back() + time_stride;
 
     sim_to_data_time_offset = sim_start_date_time_epoch - start_time;
