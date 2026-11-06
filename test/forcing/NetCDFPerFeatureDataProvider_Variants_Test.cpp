@@ -822,6 +822,20 @@ TEST_F(NetCDFStorageVariantTest, ReadsWeightPartlyCoveredTimesteps)
     EXPECT_NEAR(read(0, 4 * h, data_access::SUM), k0 + k1, 1e-9);
 }
 
+// A read must cover some time
+TEST_F(NetCDFStorageVariantTest, ReadsOfNoDurationAreAnError)
+{
+    Variant v;
+    auto path = write(v);
+    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+    for (long duration : {0L, -3600L}) {
+        CatchmentAggrDataSelector sel("cat-1", "temp", v.start + v.stride, duration, "K");
+        EXPECT_THROW(provider.get_value(sel, data_access::MEAN), std::invalid_argument) << "duration " << duration;
+    }
+    CatchmentAggrDataSelector sel("cat-1", "temp", v.start + v.stride, v.stride, "K");
+    EXPECT_NEAR(provider.get_value(sel, data_access::MEAN), kelvin(1, 1), 1e-9);
+}
+
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
 {
     Variant v;

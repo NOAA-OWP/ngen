@@ -847,6 +847,13 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
      * p dim: page index
      */
 
+    if (selector.get_duration_secs() <= 0) {
+        throw std::invalid_argument("Read of '" + selector.get_variable_name() + "' for '" + selector.get_id()
+                                    + "' from NetCDF file '" + file_path + "' has a duration of "
+                                    + std::to_string(selector.get_duration_secs())
+                                    + " seconds; a read must cover some time");
+    }
+
     // update chunks during the first timestep, and no-op thereafter;
     // 'maybe_update_chunks_with_hints' clears 'hinted_ids'
     // assumes all id's will have been hinted before 'get_value' is called.
