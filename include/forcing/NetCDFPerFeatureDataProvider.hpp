@@ -258,18 +258,19 @@ namespace data_access
         /**
          * @brief Read the time unit, scale factor and reference epoch from a `Time` variable.
          *
-         * Reads the `units` attribute, splitting CF "<unit> since <date>" units,
-         * and resolves the unit via @ref interpret_time_units, and the reference
+         * Takes the `units` attribute from the variable's VariableInfo, splitting
+         * CF "<unit> since <date>" units, and resolves the unit via
+         * @ref interpret_time_units, and the reference
          * date, from the units or else the `epoch_start` attribute, via
          * @ref parse_epoch. Warns and falls back to sensible defaults
          * (seconds, Unix epoch) when an attribute is absent or empty.
          *
-         * @param time_var the file's `Time` variable
+         * @param time_var the VariableInfo of the file's `Time` variable
          * @return the resolved time metadata
          * @throws std::runtime_error if `units` isn't a recognized time unit, or the
          * reference date can't be parsed
          */
-        TimeInfo get_time_metadata(const netCDF::NcVar& time_var);
+        TimeInfo get_time_metadata(const VariableInfo& time_var);
 
         /**
          * @brief Attempts to align the internal cache size with the chunking parameters of
