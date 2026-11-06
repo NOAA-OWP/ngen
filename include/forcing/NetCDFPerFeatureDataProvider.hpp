@@ -207,16 +207,21 @@ namespace data_access
         std::map<std::string, VariableInfo> ncvar_cache;
 
         // One cache per variable, keyed by the variable's name in the
-        // file. Populated by the constructor and not modified after, so
+        // file. Reads by any name that ncvar_cache resolves to the
+        // variable, such as its CSDMS name, share its pages.
+        //
+        // Populated by the constructor and not modified after, so
         // threads can look up a variable's cache without locking.
+        //
         // Separate caches keep lookups and evicting inserts for one
         // variable from contending with readers of the others.
         std::map<std::string, shared_cache> value_caches;
 
         // The buffers of pages a thread has already looked up, so its
         // repeated reads of a page skip the shared cache's lock and a
-        // shared_ptr copy: by variable name, then by the same page key
-        // as that variable's shared cache.
+        // shared_ptr copy: by the variable's name in the file, as for
+        // value_caches, then by the same page key as that variable's
+        // shared cache.
         using thread_cache_type = std::map<std::string, std::map<cache_key_type, page_buffer_type>>;
 
         // Each thread's cache for this provider
