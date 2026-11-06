@@ -14,6 +14,7 @@
 #include <regex>
 #include <span>
 #include <sstream>
+#include <variant>
 
 static const std::string TIME_VAR_NAME = "Time";
 static const std::string TIME_DIM_NAME = "time";
@@ -957,7 +958,13 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
             cached = load_page(var, page_c_idx);
             slot_for_page_key.fill(cached, true);
         } else {
-            cached = slot_for_page_key.get();
+            auto got = slot_for_page_key.get();
+            if (std::holds_alternative<multithreading::failed_fill>(got)) {
+                throw std::runtime_error("An earlier read of variable '" + variable_name + "' from NetCDF file '"
+                                         + file_path + "', for the timesteps from index "
+                                         + std::to_string(page_c_idx) + ", failed");
+            }
+            cached = std::get<page_buffer_type>(std::move(got));
         }
         variable_thread_cache.emplace(page_key, cached);
     }

@@ -12,6 +12,7 @@
 #include <shared_mutex>
 #include <system_error>
 #include <utility>
+#include <variant>
 #include <vector>
 #include <pthread.h>
 
@@ -63,6 +64,9 @@ namespace multithreading
         return mutex;
     }
 
+    // What cache_slot::get() returns for a slot whose filler failed
+    struct failed_fill {};
+
     // Thread-safe holder for one page of cached data. Exactly one
     // thread fill()s it in; until then the slot is EMPTY, and
     // other threads calling get() wait for it
@@ -81,14 +85,21 @@ namespace multithreading
         // Get back a non-nullptr buffer pointer that can safely
         // be read from. If it's not already set, this may block
         // on another thread that will call fill() to set said
-        // pointer
-        std::shared_ptr<T> get();
+        // pointer. Returns failed_fill if that thread called
+        // fail() instead
+        std::variant<std::shared_ptr<T>, failed_fill> get();
 
         // Fill in this slot with the provided buffer pointer and
         // safely unblock any threads waiting for it. Must be
         // called by one thread with a non-null pointer, on a slot
         // that is EMPTY, or in ERROR to retry a failed fill
         void fill(std::shared_ptr<T> buffer_ptr, bool immediate_use);
+
+        // Mark this slot's fill as failed, for the thread that would
+        // have filled it to call instead of fill(). Threads waiting in
+        // get(), and later callers, get failed_fill rather than wait
+        // forever
+        void fail();
 
     private:
         std::shared_ptr<T> ptr_ = nullptr;
@@ -200,13 +211,23 @@ namespace multithreading
     }
 
     template <typename T>
-    std::shared_ptr<T> cache_slot<T>::get()
+    void cache_slot<T>::fail()
+    {
+        assert(state_.load(std::memory_order_relaxed) == STATE::EMPTY);
+        state_.store(STATE::ERROR, std::memory_order_release);
+    }
+
+    template <typename T>
+    auto cache_slot<T>::get() -> std::variant<std::shared_ptr<T>, failed_fill>
     {
         int state = STATE::EMPTY;
         while ((state = state_.load(std::memory_order_acquire)) == STATE::EMPTY) {
             // Just spin on whatever thread is doing the filling
             #pragma omp taskyield
         }
+
+        if (state == STATE::ERROR)
+            return failed_fill{};
 
         // Release, so that readers who see HOT from this store rather
         // than from fill() synchronize with this thread, and so
