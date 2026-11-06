@@ -947,9 +947,14 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     double t1 = time_vals[c_idx1];
     double t2 = time_vals[c_idx2];
 
+    // The first and last timesteps may be only partly inside the window
+    // [init_time, end_time); weight their values by the fraction that is
     double a , b = 0.0;
-    
-    a = 1.0 - ( (t1 - init_time) / time_stride );
+    if (raw_values.size() == 1) {
+        a = (end_time - init_time) / time_stride;
+    } else {
+        a = (t1 + time_stride - init_time) / time_stride;
+    }
     rvalue += (a * raw_values[0]);
 
     for( size_t i = 1; i < raw_values.size() -1; ++i )
