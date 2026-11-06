@@ -204,6 +204,13 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     //nc_get_chunk_cache(&sizep, &nelemsp, &preemptionp);
     //std::cout << "Chunk cache parameters: "<<sizep<<", "<<nelemsp<<", "<<preemptionp<<std::endl;
     align_cache_with_chunks();
+    read_variable_metadata();
+    read_ids();
+    read_times();
+}
+
+void NetCDFPerFeatureDataProvider::read_variable_metadata()
+{
     //get the listing of all variables
     auto var_set = nc_file->getVars();
 
@@ -245,7 +252,10 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
 
         units_cache[var_name] = native_units;
     });
+}
 
+void NetCDFPerFeatureDataProvider::read_ids()
+{
     // read the variable ids
     auto ids = nc_file->getVar("ids"); 
     auto id_dim_count = ids.getDimCount();
@@ -293,7 +303,10 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     assert(loc_ids[0].size() > 4);;
     // correct string release
     nc_free_string(num_ids,&string_buffers[0]);
+}
 
+void NetCDFPerFeatureDataProvider::read_times()
+{
     // now get the size of the time dimension
     auto num_times = nc_file->getDim("time").getSize();
 
