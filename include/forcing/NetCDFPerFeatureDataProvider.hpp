@@ -218,6 +218,26 @@ namespace data_access
         void test_data_is_readable();
 
         /**
+         * @brief Record each of the file's variables in ncvar_cache, by its
+         * name and, for a well-known field, its CSDMS name, with its units.
+         * Called by the constructor, holding the NetCDF library lock.
+         */
+        void read_variable_metadata();
+
+        /**
+         * @brief Read the catchment ids, and the position of each in the file.
+         * Called by the constructor, holding the NetCDF library lock.
+         */
+        void read_ids();
+
+        /**
+         * @brief Read the times of the file's values, and work out the time
+         * range and step they cover.
+         * Called by the constructor, holding the NetCDF library lock.
+         */
+        void read_times();
+
+        /**
          * @brief Read the time unit, scale factor and reference epoch from a `Time` variable.
          *
          * Reads the `units` and `epoch_start` attributes and resolves them via
