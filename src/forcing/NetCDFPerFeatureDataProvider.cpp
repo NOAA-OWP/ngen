@@ -743,8 +743,9 @@ size_t NetCDFPerFeatureDataProvider::get_ts_index_for_time(const time_t &epoch_t
     else
     {
         std::stringstream ss;
-        ss << "The value " << (int)epoch_time << " was not in the range [" << (int)start_time << "," << (int)stop_time << ")\n" << SOURCE_LOC;
-        throw std::out_of_range(ss.str().c_str());
+        ss << "The time " << (long long)epoch_time << " is outside the range [" << (long long)start_time << ", "
+           << (long long)stop_time << ") of NetCDF forcing file '" << file_path << "'\n" << SOURCE_LOC;
+        throw std::out_of_range(ss.str());
     }
 }
 
@@ -889,7 +890,12 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     auto const& variable_name = var.name_;
     auto& variable_cache = value_caches.at(variable_name);
 
-    auto const i_idx = id_pos.at(selector.get_id());
+    auto const found_id = id_pos.find(selector.get_id());
+    if (found_id == id_pos.end()) {
+        throw std::out_of_range("Catchment '" + selector.get_id() + "' isn't among those read from NetCDF forcing file '"
+                                + file_path + "'");
+    }
+    auto const i_idx = found_id->second;
 
     auto const init_time = selector.get_init_time();
     auto const end_time = init_time + selector.get_duration_secs();
