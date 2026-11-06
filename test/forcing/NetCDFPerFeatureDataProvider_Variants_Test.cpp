@@ -740,6 +740,24 @@ TEST_F(NetCDFStorageVariantTest, ReadingOtherVariablesIsAnError)
     EXPECT_NEAR(provider.get_value(sel, data_access::MEAN), kelvin(1, 0), 1e-9);
 }
 
+// Time units that aren't recognized are an error, not taken as seconds
+TEST_F(NetCDFStorageVariantTest, UnrecognizedTimeUnitsAreRejected)
+{
+    for (const char* units : {"fortnights since 2017-07-14 00:00:00", "weeks"}) {
+        Variant v;
+        v.time_units = units;
+        expectRejected(v, units);
+    }
+}
+
+// Empty time units are still taken as seconds since the Unix epoch
+TEST_F(NetCDFStorageVariantTest, EmptyTimeUnitsAreSecondsSinceEpoch)
+{
+    Variant v;
+    v.time_units = "";
+    expectEquivalent(v);
+}
+
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
 {
     Variant v;

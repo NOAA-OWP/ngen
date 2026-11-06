@@ -335,6 +335,11 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
         {
             info = *parsed;
         }
+        else if ( !time_unit_str.empty() )
+        {
+            throw std::runtime_error("In NetCDF file '" + file_path + "', the " + TIME_VAR_NAME
+                                     + " variable's units '" + time_unit_str + "' aren't a recognized time unit");
+        }
         else {
             log_stream << "Warning using default time units\n";
         }
