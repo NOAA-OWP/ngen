@@ -963,6 +963,35 @@ TEST_F(NetCDFStorageVariantTest, OutOfRangeReadsNameWhatWasAskedFor)
     expect_out_of_range("cat-1", 4102444800, "4102444800");
 }
 
+// A read of exactly one whole timestep, starting at one of the file's
+// times, uses that timestep's value alone. With every other timestep
+// missing (NaN), any use of a neighbouring value, even with no weight,
+// would make the result NaN. Covers the file's first and last
+// timesteps and those either side of a page boundary
+TEST_F(NetCDFStorageVariantTest, WholeTimestepReadUsesOnlyThatTimestep)
+{
+    for (std::size_t parity : {0, 1}) {
+        SCOPED_TRACE("reading timesteps with parity " + std::to_string(parity));
+        Variant v;
+        v.chunks = {v.n_cats, 4}; // pages of 4 timesteps
+        for (std::size_t c = 0; c < v.n_cats; ++c) {
+            for (std::size_t t = 1 - parity; t < v.n_times; t += 2) {
+                v.missing.insert({c, t});
+            }
+        }
+        auto path = write(v);
+        NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+        for (std::size_t c = 0; c < v.n_cats; ++c) {
+            for (std::size_t t = parity; t < v.n_times; t += 2) {
+                CatchmentAggrDataSelector sel("cat-" + std::to_string(c), "temp",
+                                              v.start + time_t(t) * v.stride, v.stride, "K");
+                EXPECT_NEAR(provider.get_value(sel, data_access::MEAN), kelvin(c, t), 1e-9) << "cat-" << c << " t=" << t;
+                EXPECT_NEAR(provider.get_value(sel, data_access::SUM), kelvin(c, t), 1e-9) << "cat-" << c << " t=" << t;
+            }
+        }
+    }
+}
+
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
 {
     Variant v;
