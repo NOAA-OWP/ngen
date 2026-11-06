@@ -9,7 +9,6 @@
 
 #include <chrono>
 #include <cmath>
-#include <iomanip>
 #include <limits>
 #include <regex>
 #include <span>
@@ -200,23 +199,6 @@ NetCDFPerFeatureDataProvider::interpret_time_units(const std::string& units_str)
     TimeInfo info;
     info.epoch_start_time = std::nullopt;
 
-    std::string time_unit_str = units_str;
-    std::string unit_epoch_str = "";
-
-    // CF conventions may have units of the form "<unit> since <date>"
-    std::string since = " since ";
-    size_t since_pos = units_str.find(since);
-    if(since_pos != std::string::npos)
-    {
-        time_unit_str = units_str.substr(0, since_pos);
-        unit_epoch_str = units_str.substr(since_pos + since.length());
-    }
-
-    if(!unit_epoch_str.empty())
-    {
-        info.epoch_start_time = parse_reference_date(unit_epoch_str);
-    }
-
     // set time unit and scale factor; the UDUNITS names and symbols of
     // each unit, except that "m" means minutes
     static const std::map<std::string, std::pair<TimeUnit, double>> units = {
@@ -251,7 +233,7 @@ NetCDFPerFeatureDataProvider::interpret_time_units(const std::string& units_str)
         {"nanosecond",   {TimeUnit::Nanoseconds,  1.0e-9}},
         {"nanoseconds",  {TimeUnit::Nanoseconds,  1.0e-9}},
     };
-    auto found = units.find(time_unit_str);
+    auto found = units.find(units_str);
     if (found == units.end())
     {
         return std::nullopt;
@@ -262,14 +244,28 @@ NetCDFPerFeatureDataProvider::interpret_time_units(const std::string& units_str)
     return info;
 }
 
-std::time_t NetCDFPerFeatureDataProvider::parse_reference_date(const std::string& date_str)
+std::time_t NetCDFPerFeatureDataProvider::parse_epoch(const std::string& date_str)
 {
+    // epoch_start attributes write dates as MM/DD/YYYY or MM/DD/YY;
+    // rewrite those as YYYY-MM-DD, reading two-digit years as strptime does
+    static const std::regex slashed_date(R"(^\s*(\d{1,2})/(\d{1,2})/(\d{4}|\d{2})(.*)$)");
+    std::string text = date_str;
+    std::smatch slashed;
+    if (std::regex_match(date_str, slashed, slashed_date)) {
+        std::string year = slashed[3].str();
+        if (year.size() == 2) {
+            const int two_digit_year = std::stoi(year);
+            year = std::to_string(two_digit_year + (two_digit_year < 69 ? 2000 : 1900));
+        }
+        text = year + "-" + slashed[1].str() + "-" + slashed[2].str() + slashed[4].str();
+    }
+
     static const std::regex pattern(
         R"(^\s*(\d{4})-(\d{1,2})-(\d{1,2}))"                      // date
         R"((?:(?:T|\s+)(\d{1,2}):(\d{2})(?::(\d{2})(?:\.(\d+))?)?)?)" // time of day
         R"(\s*(Z|UTC|([+-])(\d{2})(?::?(\d{2}))?)?\s*$)");            // UTC or an offset from it
     std::smatch m;
-    if (!std::regex_match(date_str, m, pattern)) {
+    if (!std::regex_match(text, m, pattern)) {
         throw std::runtime_error("Could not parse reference date '" + date_str + "'");
     }
     auto field = [&](std::size_t i) { return m[i].matched ? std::stoi(m[i].str()) : 0; };
@@ -302,36 +298,37 @@ std::time_t NetCDFPerFeatureDataProvider::parse_reference_date(const std::string
     return t.time_since_epoch().count();
 }
 
-std::time_t NetCDFPerFeatureDataProvider::parse_epoch(const std::string& epoch_str, const std::string& format)
-{
-    std::tm tm{};
-    std::stringstream s(epoch_str);
-    s >> std::get_time(&tm, format.c_str());
-    if (s.fail()) {
-        throw std::runtime_error("Could not parse epoch '" + epoch_str + "' with format '" + format + "'");
-    }
-    // timegm is not available on Windows; see Simulation_Time.h
-    return timegm(&tm);
-}
-
 NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_metadata(const netCDF::NcVar& time_var)
 {
     // read the meta data to get the time_unit
     // if absent, assume seconds
     TimeInfo info{TimeUnit::Seconds, 1, std::nullopt};
+    // the reference date, from CF units of the form "<unit> since <date>"
+    // or else the epoch_start attribute
+    std::string epoch_str;
     try {
         auto time_unit_att = time_var.getAtt("units");
 
         // if time att is not encoded
         // TODO determine how this should be handled
-        std::string time_unit_str;
+        std::string units_att_str;
 
         if ( !time_unit_att.isNull() )
         {
-            time_unit_att.getValues(time_unit_str);
+            time_unit_att.getValues(units_att_str);
         }
 
-        // set time unit, scale factor, and (for CF units) the reference epoch
+        // CF conventions may have units of the form "<unit> since <date>"
+        std::string time_unit_str = units_att_str;
+        const std::string since = " since ";
+        const size_t since_pos = units_att_str.find(since);
+        if ( since_pos != std::string::npos )
+        {
+            time_unit_str = units_att_str.substr(0, since_pos);
+            epoch_str = units_att_str.substr(since_pos + since.length());
+        }
+
+        // set time unit and scale factor
         if ( auto parsed = interpret_time_units(time_unit_str) )
         {
             info = *parsed;
@@ -339,7 +336,7 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
         else if ( !time_unit_str.empty() )
         {
             throw std::runtime_error("In NetCDF file '" + file_path + "', the " + TIME_VAR_NAME
-                                     + " variable's units '" + time_unit_str + "' aren't a recognized time unit");
+                                     + " variable's units '" + units_att_str + "' aren't a recognized time unit");
         }
         else {
             log_stream << "Warning using default time units\n";
@@ -352,7 +349,7 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
     assert(info.scale_factor != 0); // This should not happen.
 
     // fall back to the epoch_start attribute only when the units string didn't supply an epoch
-    if ( !info.epoch_start_time.has_value() )
+    if ( epoch_str.empty() )
     {
         try {
             auto epoch_att = time_var.getAtt("epoch_start");
@@ -363,15 +360,18 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
             }
             else
             {
-                std::string epoch_start_str;
-                epoch_att.getValues(epoch_start_str);
-                info.epoch_start_time = parse_epoch(epoch_start_str, "%D %T");
+                epoch_att.getValues(epoch_str);
             }
         }
         catch(const netCDF::exceptions::NcException& e) {
             std::cerr<<e.what()<<std::endl;
             log_stream << "Warning using default epoch string\n";
         }
+    }
+
+    if ( !epoch_str.empty() )
+    {
+        info.epoch_start_time = parse_epoch(epoch_str);
     }
 
     return info;
