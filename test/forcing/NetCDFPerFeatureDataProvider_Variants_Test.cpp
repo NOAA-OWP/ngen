@@ -715,6 +715,31 @@ TEST_F(NetCDFStorageVariantTest, LongerTimeStepIsRejected)
     expectRejected(v, "not constant");
 }
 
+// Only variables stored over the time and catchment dimensions hold
+// forcing values; reading any other is an error, every time
+TEST_F(NetCDFStorageVariantTest, ReadingOtherVariablesIsAnError)
+{
+    Variant v;
+    v.extra_variables = true;
+    auto path = write(v);
+    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+    for (const char* name : {"x", "bounds"}) {
+        for (int attempt = 0; attempt < 2; ++attempt) {
+            CatchmentAggrDataSelector sel("cat-1", name, v.start, v.stride, "");
+            try {
+                provider.get_value(sel, data_access::MEAN);
+                ADD_FAILURE() << "reading " << name << " didn't throw";
+            } catch (const std::runtime_error& e) {
+                EXPECT_NE(std::string(e.what()).find(name), std::string::npos) << e.what();
+                EXPECT_NE(std::string(e.what()).find(path), std::string::npos) << e.what();
+            }
+        }
+    }
+    // and forcing variables still read
+    CatchmentAggrDataSelector sel("cat-1", "temp", v.start, v.stride, "K");
+    EXPECT_NEAR(provider.get_value(sel, data_access::MEAN), kelvin(1, 0), 1e-9);
+}
+
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
 {
     Variant v;

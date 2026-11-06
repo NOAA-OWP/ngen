@@ -187,6 +187,7 @@ namespace data_access
         std::set<std::string> hinted_ids;
 
         std::vector<std::string> variable_names;
+        std::string catchment_dim_name;                 // the dimension of "ids"
         std::vector<std::string> loc_ids;
         std::vector<double> time_vals;
         std::map<std::string, std::size_t> id_pos;      // map from cat-id to position in vec of nc var values; accounts for chunking
