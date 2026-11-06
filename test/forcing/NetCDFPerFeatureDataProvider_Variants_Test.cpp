@@ -9,6 +9,7 @@
 #include <netcdf>
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <ctime>
@@ -55,10 +56,16 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         }
     }
 
+    // Seconds since the Unix epoch of a time on a UTC date
+    static time_t utc(int y, int m, int d, int h = 0) {
+        using namespace std::chrono;
+        return sys_seconds{sys_days{year{y} / m / d} + hours{h}}.time_since_epoch().count();
+    }
+
     struct Variant {
         std::size_t n_cats = 5;
         std::size_t n_times = 20;
-        time_t start = 1499997600; // 2017-07-14 02:00:00 UTC
+        time_t start = utc(2017, 7, 14, 2);
         time_t stride = 3600;
 
         // order[pos] is the catchment stored at position pos; empty keeps 0..n_cats-1
@@ -462,7 +469,7 @@ TEST_F(NetCDFStorageVariantTest, TimeInHoursSinceReferenceDate)
 {
     Variant v;
     v.time_units = "hours since 2017-07-14 00:00:00";
-    v.encode_time = [](time_t e) { return (e - 1499990400) / 3600.0; };
+    v.encode_time = [](time_t e) { return (e - utc(2017, 7, 14)) / 3600.0; };
     expectEquivalent(v);
 }
 
@@ -624,7 +631,7 @@ TEST_F(NetCDFStorageVariantTest, TimeInDaysSinceReferenceDate)
     Variant v;
     v.stride = 21600; // a quarter day, so stored times are exact
     v.time_units = "days since 2017-07-14 00:00:00";
-    v.encode_time = [](time_t e) { return (e - 1499990400) / 86400.0; };
+    v.encode_time = [](time_t e) { return (e - utc(2017, 7, 14)) / 86400.0; };
     expectEquivalent(v);
 }
 
@@ -632,7 +639,7 @@ TEST_F(NetCDFStorageVariantTest, SingularAbbreviatedTimeUnit)
 {
     Variant v;
     v.time_units = "hr since 2017-07-14 00:00:00";
-    v.encode_time = [](time_t e) { return (e - 1499990400) / 3600.0; };
+    v.encode_time = [](time_t e) { return (e - utc(2017, 7, 14)) / 3600.0; };
     expectEquivalent(v);
 }
 
@@ -640,7 +647,7 @@ TEST_F(NetCDFStorageVariantTest, ReferenceDateWithoutTimeOfDay)
 {
     Variant v;
     v.time_units = "hours since 2017-07-14";
-    v.encode_time = [](time_t e) { return (e - 1499990400) / 3600.0; };
+    v.encode_time = [](time_t e) { return (e - utc(2017, 7, 14)) / 3600.0; };
     expectEquivalent(v);
 }
 
@@ -648,7 +655,7 @@ TEST_F(NetCDFStorageVariantTest, ReferenceDateWithoutSeconds)
 {
     Variant v;
     v.time_units = "minutes since 2017-07-14 00:00";
-    v.encode_time = [](time_t e) { return (e - 1499990400) / 60.0; };
+    v.encode_time = [](time_t e) { return (e - utc(2017, 7, 14)) / 60.0; };
     expectEquivalent(v);
 }
 
@@ -656,7 +663,7 @@ TEST_F(NetCDFStorageVariantTest, ReferenceDateInIsoFormWithZ)
 {
     Variant v;
     v.time_units = "hours since 2017-07-14T00:00:00Z";
-    v.encode_time = [](time_t e) { return (e - 1499990400) / 3600.0; };
+    v.encode_time = [](time_t e) { return (e - utc(2017, 7, 14)) / 3600.0; };
     expectEquivalent(v);
 }
 
@@ -702,7 +709,7 @@ TEST_F(NetCDFStorageVariantTest, ForcingsEngineOutputLayout)
     Variant v;
     v.n_cats = 6;
     v.n_times = 15;
-    v.start = 1729234800; // 2024-10-18 07:00:00 UTC
+    v.start = utc(2024, 10, 18, 7);
     v.unlimited_time = true;
     v.time_major = true;
     v.time_layout = TimeLayout::TimeOnly;
@@ -965,7 +972,8 @@ TEST_F(NetCDFStorageVariantTest, OutOfRangeReadsNameWhatWasAskedFor)
     };
     expect_out_of_range("cat-99", v.start, "cat-99");
     // after 2038, beyond the range of a 32-bit time
-    expect_out_of_range("cat-1", 4102444800, "4102444800");
+    const time_t in_2100 = utc(2100, 1, 1);
+    expect_out_of_range("cat-1", in_2100, std::to_string(in_2100));
 }
 
 // A read of exactly one whole timestep, starting at one of the file's
