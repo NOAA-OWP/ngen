@@ -419,6 +419,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
         require(ids_var.getType().getTypeClass() == NC_STRING, "has an \"ids\" variable of type "
                 + ids_var.getType().getName() + ", rather than string");
         require(!nc_file->getDim(TIME_DIM_NAME).isNull(), "has no \"" + TIME_DIM_NAME + "\" dimension");
+        require(nc_file->getDim(TIME_DIM_NAME).getSize() > 0, "has no timesteps");
         require(!nc_file->getVar(TIME_VAR_NAME).isNull(), "has no \"" + TIME_VAR_NAME + "\" variable");
     }
 
