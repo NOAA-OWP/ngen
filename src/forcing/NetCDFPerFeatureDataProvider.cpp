@@ -551,14 +551,10 @@ void NetCDFPerFeatureDataProvider::read_times()
 
     #ifndef NCEP_OPERATIONS
     // verify the time stride
-    for( size_t i = 1; i < time_vals.size() -1; ++i)
-    {
-        double tinterval = time_vals[i+1] - time_vals[i];
-
-        if ( tinterval - time_stride > 0.000001)
-        {
+    for (size_t i = 1; i < time_vals.size(); ++i) {
+        double interval = time_vals[i] - time_vals[i-1];
+        if (std::abs(interval - time_stride) > 1e-6) {
             log_stream << "Error: Time intervals are not constant in forcing file\n";
-
             throw std::runtime_error("Time intervals in forcing file are not constant");
         }
     }

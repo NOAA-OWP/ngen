@@ -697,6 +697,24 @@ TEST_F(NetCDFStorageVariantTest, ForcingsEngineOutputLayout)
     expectEquivalent(v);
 }
 
+// Time steps must all be as long as the first; one shorter is an error,
+// as one longer is
+TEST_F(NetCDFStorageVariantTest, ShorterTimeStepIsRejected)
+{
+    Variant v;
+    const time_t last = v.start + time_t(v.n_times - 1) * v.stride;
+    v.encode_time = [last](time_t e) { return double(e == last ? e - 1800 : e); };
+    expectRejected(v, "not constant");
+}
+
+TEST_F(NetCDFStorageVariantTest, LongerTimeStepIsRejected)
+{
+    Variant v;
+    const time_t last = v.start + time_t(v.n_times - 1) * v.stride;
+    v.encode_time = [last](time_t e) { return double(e == last ? e + 1800 : e); };
+    expectRejected(v, "not constant");
+}
+
 TEST_F(NetCDFStorageVariantTest, CombinedStorageVariations)
 {
     Variant v;
