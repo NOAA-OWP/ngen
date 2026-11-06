@@ -117,6 +117,9 @@ struct NetCDFPerFeatureDataProvider::VariableInfo
     // Stored values marking missing data, which decode to NaN
     std::vector<double> missing_markers_;
 
+    // The names of the dimensions the variable is stored over
+    std::vector<std::string> dimensions_;
+
     // Stored as (time, catchment-id) rather than (catchment-id, time)
     bool time_major_ = false;
 
@@ -130,7 +133,20 @@ struct NetCDFPerFeatureDataProvider::VariableInfo
         , add_offset_(get_scalar_att(var, "add_offset").value_or(0.0))
         , missing_markers_(get_missing_markers(var))
         , time_major_(is_time_major(var))
-    {}
+    {
+        for (const auto& dim : var.getDims()) {
+            dimensions_.push_back(dim.getName());
+        }
+    }
+
+    // Whether the variable holds forcing values: whether it's stored
+    // over the catchment and time dimensions, in either order
+    bool holds_forcings(const std::string& catchment_dim) const
+    {
+        return dimensions_.size() == 2
+            && (   (dimensions_[0] == catchment_dim && dimensions_[1] == TIME_DIM_NAME)
+                || (dimensions_[0] == TIME_DIM_NAME && dimensions_[1] == catchment_dim));
+    }
 
     // Turns stored values into the values they represent, with NaN for
     // missing data
@@ -492,6 +508,7 @@ void NetCDFPerFeatureDataProvider::read_ids()
     assert(loc_ids[0].size() > 4);;
     // correct string release
     nc_free_string(num_ids,&string_buffers[0]);
+    catchment_dim_name = id_dim.getName();
 }
 
 void NetCDFPerFeatureDataProvider::read_times()
@@ -513,7 +530,6 @@ void NetCDFPerFeatureDataProvider::read_times()
     for (const auto& dim : time_var.getDims()) {
         time_dims.push_back(dim.getName());
     }
-    const std::string catchment_dim_name = nc_file->getVar("ids").getDim(0).getName();
     if (time_dims.size() == 1 && time_dims[0] == TIME_DIM_NAME) {
         start = {0};
         count = {num_times};
@@ -832,6 +848,11 @@ double NetCDFPerFeatureDataProvider::get_value(const CatchmentAggrDataSelector& 
     maybe_update_chunks_with_hints();
 
     auto const& var = get_ncvar(selector.get_variable_name());
+    if (!var.holds_forcings(catchment_dim_name)) {
+        throw std::runtime_error("Variable '" + selector.get_variable_name() + "' in NetCDF file '" + file_path
+                                 + "' isn't stored over the " + TIME_DIM_NAME + " and " + catchment_dim_name
+                                 + " dimensions, so holds no forcing values");
+    }
     auto const& variable_name = var.name_;
     auto& variable_cache = value_caches.at(variable_name);
 
