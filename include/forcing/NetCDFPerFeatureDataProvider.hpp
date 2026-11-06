@@ -207,6 +207,10 @@ namespace data_access
         // needed to serve reads of the variable from the file
         std::map<std::string, VariableInfo> ncvar_cache;
 
+        // CSDMS names that more than one variable in the file has, with
+        // those variables' names; reads by these names are errors
+        std::map<std::string, std::vector<std::string>> ambiguous_names;
+
         // One cache per variable, keyed by the variable's name in the
         // file. Reads by any name that ncvar_cache resolves to the
         // variable, such as its CSDMS name, share its pages.
