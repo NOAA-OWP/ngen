@@ -38,14 +38,15 @@ namespace data_access
         
         public:
 
-        enum TimeUnit
+        enum class TimeUnit
         {
-            TIME_HOURS,
-            TIME_MINUTES,
-            TIME_SECONDS,
-            TIME_MILLISECONDS,
-            TIME_MICROSECONDS,
-            TIME_NANOSECONDS
+            Days,
+            Hours,
+            Minutes,
+            Seconds,
+            Milliseconds,
+            Microseconds,
+            Nanoseconds
         };
 
         /**
@@ -59,24 +60,32 @@ namespace data_access
         };
 
         /**
-         * @brief Interpret a NetCDF time `units` string as a time unit and scale factor.
+         * @brief Interpret the name of a time unit as a time unit and scale factor.
          *
-         * Handles both bare units and the CF form "<unit> since <date>", in which case
-         * the parsed reference epoch is returned in the result.
+         * Takes a bare unit, such as the part of CF "<unit> since <date>" time
+         * units before " since ", and returns no reference epoch.
          *
-         * @param units_str the raw `units` attribute value (e.g. "ns", "hours")
+         * @param units_str the unit's name (e.g. "ns", "hours")
          * @return the parsed @ref TimeInfo, or std::nullopt if @p units_str is unrecognized
          */
         static std::optional<TimeInfo> interpret_time_units(const std::string& units_str);
 
         /**
-         * @brief Parse a reference-epoch timestamp into seconds since the Unix epoch.
+         * @brief Parse a reference date: that of CF "<unit> since <date>" time
+         * units, or an `epoch_start` attribute.
          *
-         * @param epoch_str the timestamp text (e.g. "01/01/1970 00:00:00")
-         * @param format a std::get_time / strptime style format string
+         * Accepts "YYYY-MM-DD", or "MM/DD/YYYY" or "MM/DD/YY" (with years 69 to 99
+         * in the 1900s and 00 to 68 in the 2000s), optionally followed by a space or 'T' and
+         * "hh:mm", "hh:mm:ss" or "hh:mm:ss.000" (any fraction must be zero), and
+         * then optionally "Z", "UTC" or an offset from UTC ("+hh:mm", "-hhmm", "+hh")
+         * of less than 24 hours, which is applied. Month, day and hour may have a
+         * single digit.
+         *
+         * @param date_str the reference date text
          * @return seconds since the Unix epoch
+         * @throws std::runtime_error if @p date_str isn't such a date
          */
-        static std::time_t parse_epoch(const std::string& epoch_str, const std::string& format);
+        static std::time_t parse_epoch(const std::string& date_str);
 
         /**
          * @brief Factory method that creates or returns an existing provider for the provided path.
@@ -153,7 +162,11 @@ namespace data_access
         using shared_cache = multithreading::shared_cache<cache_key_type, std::vector<double>>;
 
         private:
-        page_buffer_type load_page(netCDF::NcVar const& ncvar, std::size_t page_c_idx);
+        // What the provider knows about a variable in the file; defined in
+        // the .cpp file, so that client code doesn't need NcVar's definition
+        struct VariableInfo;
+
+        page_buffer_type load_page(VariableInfo const& var, std::size_t page_c_idx);
 
         time_t sim_start_date_time_epoch;
         time_t sim_end_date_time_epoch;
@@ -167,6 +180,7 @@ namespace data_access
         std::set<std::string> hinted_ids;
 
         std::vector<std::string> variable_names;
+        std::string catchment_dim_name;                 // the dimension of "ids"
         std::vector<std::string> loc_ids;
         std::vector<double> time_vals;
         std::map<std::string, std::size_t> id_pos;      // map from cat-id to position in vec of nc var values; accounts for chunking
@@ -182,24 +196,30 @@ namespace data_access
         // an NcFile closes it if it is still open
         std::shared_ptr<netCDF::NcFile> nc_file;
 
-        // By the name requested, which may be the CSDMS name: the
-        // variable's name in the file, which keys value_caches and the
-        // thread caches, and its NcVar. Storing the name saves calling
-        // NcVar::getName(), which would need the NetCDF library lock
-        std::map<std::string, std::pair<std::string, netCDF::NcVar>> ncvar_cache;
-        std::map<std::string,std::string> units_cache;
+        // By the name requested, which may be the CSDMS name: what's
+        // needed to serve reads of the variable from the file
+        std::map<std::string, VariableInfo> ncvar_cache;
+
+        // CSDMS names that more than one variable in the file has, with
+        // those variables' names; reads by these names are errors
+        std::map<std::string, std::vector<std::string>> ambiguous_names;
 
         // One cache per variable, keyed by the variable's name in the
-        // file. Populated by the constructor and not modified after, so
+        // file. Reads by any name that ncvar_cache resolves to the
+        // variable, such as its CSDMS name, share its pages.
+        //
+        // Populated by the constructor and not modified after, so
         // threads can look up a variable's cache without locking.
+        //
         // Separate caches keep lookups and evicting inserts for one
         // variable from contending with readers of the others.
         std::map<std::string, shared_cache> value_caches;
 
         // The buffers of pages a thread has already looked up, so its
         // repeated reads of a page skip the shared cache's lock and a
-        // shared_ptr copy: by variable name, then by the same page key
-        // as that variable's shared cache.
+        // shared_ptr copy: by the variable's name in the file, as for
+        // value_caches, then by the same page key as that variable's
+        // shared cache.
         using thread_cache_type = std::map<std::string, std::map<cache_key_type, page_buffer_type>>;
 
         // Each thread's cache for this provider
@@ -211,24 +231,46 @@ namespace data_access
         size_t cache_slice_t_size = 24;
         size_t cache_slice_c_size = 1;
 
-        std::pair<std::string, netCDF::NcVar> const& get_ncvar(const std::string& name) const;
-
-        const std::string& get_ncvar_units(const std::string& name);
+        VariableInfo const& get_ncvar(const std::string& name) const;
 
         void test_data_is_readable();
 
         /**
+         * @brief Record each of the file's variables in ncvar_cache, by its
+         * name and, for a well-known field, its CSDMS name, with its units.
+         * Called by the constructor, holding the NetCDF library lock.
+         */
+        void read_variable_metadata();
+
+        /**
+         * @brief Read the catchment ids, and the position of each in the file.
+         * Called by the constructor, holding the NetCDF library lock.
+         */
+        void read_ids();
+
+        /**
+         * @brief Read the times of the file's values, and work out the time
+         * range and step they cover.
+         * Called by the constructor, holding the NetCDF library lock.
+         */
+        void read_times();
+
+        /**
          * @brief Read the time unit, scale factor and reference epoch from a `Time` variable.
          *
-         * Reads the `units` and `epoch_start` attributes and resolves them via
-         * @ref interpret_time_units and @ref parse_epoch, warning and falling back to
-         * sensible defaults (seconds, Unix epoch) when an attribute is absent or
-         * unrecognized.
+         * Takes the `units` attribute from the variable's VariableInfo, splitting
+         * CF "<unit> since <date>" units, and resolves the unit via
+         * @ref interpret_time_units, and the reference
+         * date, from the units or else the `epoch_start` attribute, via
+         * @ref parse_epoch. Warns and falls back to sensible defaults
+         * (seconds, Unix epoch) when an attribute is absent or empty.
          *
-         * @param time_var the file's `Time` variable
+         * @param time_var the VariableInfo of the file's `Time` variable
          * @return the resolved time metadata
+         * @throws std::runtime_error if `units` isn't a recognized time unit, or the
+         * reference date can't be parsed
          */
-        TimeInfo get_time_metadata(const netCDF::NcVar& time_var);
+        TimeInfo get_time_metadata(const VariableInfo& time_var);
 
         /**
          * @brief Attempts to align the internal cache size with the chunking parameters of
