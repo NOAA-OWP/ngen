@@ -3,12 +3,12 @@
 
 #include <string>
 #include <map>
+#include <variant>
 #include <vector>
 #include <iostream>
 #include <iomanip>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/variant.hpp>
 
 namespace geojson {
     class JSONProperty;
@@ -20,14 +20,14 @@ namespace geojson {
      */
     typedef std::map<std::string, JSONProperty> PropertyMap;
 
-    using PropertyVariant = boost::variant<boost::blank, 
-                                           long, 
-                                           double, 
-                                           bool, 
-                                           std::string, 
-                                           boost::recursive_wrapper<List>, 
-                                           boost::recursive_wrapper<Object>
-                                          >;
+    using PropertyVariant = std::variant<std::monostate,
+                                         long,
+                                         double,
+                                         bool,
+                                         std::string,
+                                         List,
+                                         Object
+                                        >;
     
     /**
      * @brief Struct wrapping a vector of \ref JSONProperty representing a JSON list.
@@ -169,9 +169,9 @@ namespace geojson {
                     //so we can trap that case with `property_tree.data().empty()`, and the best we can do is make it an
                     //empty string
                     type = PropertyType::String;
-                    //Also note that a boost::variant assigned to the static empty string "" like this
+                    //Also note that a variant assigned to the static empty string "" like this
                     //`data = "";`
-                    //will cause `data` to actually become a bool type, not the std::string. 
+                    //may cause `data` to actually become a bool type, not the std::string.
                     //So use a default string to intialize the empty data
                     data = std::string();
                 }
@@ -304,7 +304,7 @@ namespace geojson {
             JSONProperty(std::string value_key, std::string value):key(std::move(value_key)) {
                 if (value.empty()) {
                     this->type = PropertyType::String;
-                    this->data = "";
+                    this->data = std::string();
                 }
                 else if (value == "true" || value == "false") {
                     type = PropertyType::Boolean;
@@ -538,7 +538,7 @@ namespace geojson {
             template <typename T>
             void as_vector(std::vector<T>& vector) const{
                 AsVectorVisitor<T> visitor(vector);
-                boost::apply_visitor(visitor, data);
+                std::visit(visitor, data);
             }
 
             std::vector<JSONProperty> as_list() const;
@@ -592,16 +592,16 @@ namespace geojson {
             PropertyType type;
             PropertyMap values;
             std::vector<JSONProperty> value_list;
-            //boost::variant to hold the parsed data
-            //can be one of boost::blank, long, double, bool, string, List, Object
-            //Defaults to boost::blank
+            //std::variant to hold the parsed data
+            //can be one of std::monostate, long, double, bool, string, List, Object
+            //Defaults to std::monostate
             //Note that for recurssive types, the JSONProperty holds the storage for the additional JSONProperties
             //in values (for Object) and value_list (for List).  The variant types simply point to the properties values as needed.
             //TODO make sure all construction paths for `data` are unit tested
             PropertyVariant data;
         
             /**
-             * @brief Visitor to filter boost variants by type T into a vector of type T
+             * @brief Visitor to filter variants by type T into a vector of type T
              * 
              * A specialization is defined in JSONProperty.cpp which allows
              * a vistitor to coerce long type variants into double types.
@@ -611,7 +611,7 @@ namespace geojson {
              * @tparam T 
              */
             template<typename T>
-            struct AsVectorVisitor : public boost::static_visitor<>
+            struct AsVectorVisitor
             {
                 //AsVectorVisitor takes a templated vector and stores the vector
                 //reference in the struct
@@ -635,15 +635,14 @@ namespace geojson {
                 }
 
                 /* Can overload these with custom implementation and/or errors
-                void operator () (const boost::blank&){}
+                void operator () (const std::monostate&){}
                 void operator () (const Object&) {}
                 */
                 void operator () (const List& values) {
                     //Recurse through the list to filter for types T
                     for(auto property : *values.get_values()){
-                        boost::apply_visitor(*this, property.data);
+                        std::visit(*this, property.data);
                     }
-                    //std::for_each(values.values->begin(), values.values->end(), boost::apply_visitor(*this));
                 }
 
                 private:

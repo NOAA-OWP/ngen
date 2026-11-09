@@ -20,7 +20,7 @@ bool List::operator==(const List& other) const {
 long JSONProperty::as_natural_number() const {
     // Return a natural number if this IS a natural number
     if (type == PropertyType::Natural) {
-        return boost::get<long>(data);
+        return std::get<long>(data);
     }
 
     // Throw an exception since this can't be considered a natural number
@@ -40,10 +40,10 @@ PropertyType JSONProperty::get_type() const {
 
 double JSONProperty::as_real_number() const {
     if (type == PropertyType::Real) {
-        return boost::get<double>(data);
+        return std::get<double>(data);
     }
     else if (type == PropertyType::Natural) {
-        return double(boost::get<long>(data)); //TODO consider a visitor?
+        return double(std::get<long>(data)); //TODO consider a visitor?
     }
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a real number.";
@@ -52,7 +52,7 @@ double JSONProperty::as_real_number() const {
 
 bool JSONProperty::as_boolean() const {
     if (type == PropertyType::Boolean) {
-        return boost::get<bool>(data);
+        return std::get<bool>(data);
     }
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a boolean.";
@@ -107,10 +107,10 @@ std::vector<bool> JSONProperty::as_boolean_vector() const {
 
 std::string JSONProperty::as_string() const {
     if (type == PropertyType::String) {
-        return boost::get<std::string>(data);
+        return std::get<std::string>(data);
     }
     else if (type == PropertyType::Boolean) {
-        if (boost::get<bool>(data)) {
+        if (std::get<bool>(data)) {
             return "true";
         }
         else {
@@ -118,10 +118,10 @@ std::string JSONProperty::as_string() const {
         }
     }
     else if (type == PropertyType::Natural) {
-        return std::to_string(boost::get<long>(data));
+        return std::to_string(std::get<long>(data));
     }
     else if(type == PropertyType::Real) {
-        return std::to_string(boost::get<double>(data));
+        return std::to_string(std::get<double>(data));
     }
     else if (type == PropertyType::List) {
         std::string list_description = "[";

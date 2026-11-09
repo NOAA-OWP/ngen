@@ -412,3 +412,10 @@ TEST_F(JSONProperty_Test, test_as_vector_mixed_list_0a){
     ASSERT_EQ(vec2, test_list_str);
 
 }
+
+/** An empty std::string makes an empty String property, not a Boolean. */
+TEST_F(JSONProperty_Test, empty_std_string_test) {
+    const geojson::JSONProperty property("empty", std::string());
+    ASSERT_EQ(property.get_type(), geojson::PropertyType::String);
+    ASSERT_EQ(property.as_string(), "");
+}
