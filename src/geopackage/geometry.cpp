@@ -76,7 +76,7 @@ geojson::geometry ngen::geopackage::build_geometry(
     }
 
     if (!is_empty) {
-        const boost::span<const uint8_t> geometry_data(geometry_blob.data() + index,
+        const std::span<const uint8_t> geometry_data(geometry_blob.data() + index,
                                                        geometry_blob.data() + geometry_blob.size());
         auto wkb_geometry = wkb::read(geometry_data);
         geojson::geometry geometry = boost::apply_visitor(pvisitor, wkb_geometry);

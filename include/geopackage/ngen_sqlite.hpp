@@ -7,7 +7,7 @@
 
 #include <sqlite3.h>
 
-#include <boost/core/span.hpp>
+#include <span>
 #include "traits.hpp"
 
 namespace ngen {
@@ -81,14 +81,14 @@ class database
 
         //! Get a span of column names
         //! @return column names as a span of strings
-        const boost::span<const std::string> columns() const noexcept;
+        const std::span<const std::string> columns() const noexcept;
 
         //! Get a span of column types
         //!
         //! See https://www.sqlite.org/datatype3.html for type affinities.
         //! The integers are the affinity for data types.
         //! @return column types as a span of ints
-        const boost::span<const int> types() const noexcept;
+        const std::span<const int> types() const noexcept;
 
 
         //! Get a column value from a row iterator by index
@@ -158,7 +158,7 @@ class database
     //! @param statement String query with parameters
     //! @param binds text parameters to bind to statement
     //! @return SQLite row iterator
-    iterator query(const std::string& statement, const boost::span<const std::string> binds = {}) const;
+    iterator query(const std::string& statement, const std::span<const std::string> binds = {}) const;
 
     //! Query the SQLite Database with a bound statement and get the result
     //! @param statement String query with parameters

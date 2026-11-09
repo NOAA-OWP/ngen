@@ -112,13 +112,13 @@ auto database::iterator::find(const std::string& name) const noexcept -> int
 }
 
 auto database::iterator::columns() const noexcept
-  -> const boost::span<const std::string>
+  -> const std::span<const std::string>
 {
     return names_;
 }
 
 auto database::iterator::types() const noexcept
-  -> const boost::span<const int>
+  -> const std::span<const int>
 {
     return types_;
 }
@@ -219,7 +219,7 @@ auto database::columns(const std::string& table) const -> std::set<std::string>
 
 auto database::query(
     const std::string& statement,
-    const boost::span<const std::string> binds
+    const std::span<const std::string> binds
 ) const -> iterator
 {
     sqlite3_stmt* stmt = nullptr;
