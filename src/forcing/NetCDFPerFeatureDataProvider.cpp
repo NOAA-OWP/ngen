@@ -2,6 +2,7 @@
 
 #if NGEN_WITH_NETCDF
 #include "NetCDFPerFeatureDataProvider.hpp"
+#include "utilities/logging_utils.h"
 #include "utilities/multithreading.hpp"
 #include <mediator/UnitsHelper.hpp>
 
@@ -344,7 +345,7 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
                                  + " variable's units '" + units_att_str + "' aren't a recognized time unit");
     }
     else {
-        log_stream << "Warning using default time units\n";
+        logging::warning("Using default time units\n");
     }
     assert(info.scale_factor != 0); // This should not happen.
 
@@ -356,7 +357,7 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
 
             if ( epoch_att.isNull() )
             {
-                log_stream << "Warning using default epoch string\n";
+                logging::warning("Using default epoch string\n");
             }
             else
             {
@@ -365,7 +366,7 @@ NetCDFPerFeatureDataProvider::TimeInfo NetCDFPerFeatureDataProvider::get_time_me
         }
         catch(const netCDF::exceptions::NcException& e) {
             std::cerr<<e.what()<<std::endl;
-            log_stream << "Warning using default epoch string\n";
+            logging::warning("Using default epoch string\n");
         }
     }
 
@@ -608,7 +609,7 @@ void NetCDFPerFeatureDataProvider::read_times()
     for (size_t i = 1; i < time_vals.size(); ++i) {
         double interval = time_vals[i] - time_vals[i-1];
         if (!std::isfinite(interval) || std::abs(interval - time_stride) > 1e-6) {
-            log_stream << "Error: Time intervals are not constant in forcing file\n";
+            logging::error("Time intervals are not constant in forcing file\n");
             throw std::runtime_error("Time intervals in forcing file '" + file_path + "' are not constant: "
                                      + std::to_string(interval) + " seconds at step " + std::to_string(i)
                                      + ", rather than " + std::to_string(time_stride));
