@@ -54,7 +54,7 @@ formulation_1_name =  "bmi_c"
 #Set params
 global_params = {
   "model_type_name": "bmi_c_cfe",
-  "library_file": "../ngen_test_setup/ngen/extern/cfe/cmake_build/libcfebmi.so",
+  "library_file": "../ngen_test_setup/ngen/cmake_build/extern-libs/cfe/libcfebmi.so",
   "init_config": "",
   "main_output_variable": "Q_OUT",
   "registration_function": "register_bmi_cfe",
@@ -75,7 +75,7 @@ global_params = {
 
 formulation_1_params = {
   "model_type_name": "bmi_topmodel",
-  "library_file": "../ngen_test_setup/ngen/extern/topmodelbmi/cmake_build/libtopmodelbmi.so",
+  "library_file": "../ngen_test_setup/ngen/cmake_build/extern-libs/topmodel/libtopmodelbmi.so",
   "init_config": "",
   "main_output_variable": "Qout",
   "registration_function": "register_bmi_topmodel",
