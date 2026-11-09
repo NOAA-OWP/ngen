@@ -1,25 +1,23 @@
 #include "HY_PointHydroNexus.hpp"
 
-#include <boost/exception/all.hpp>
+#include <exception>
 
-typedef boost::error_info<struct tag_errmsg, std::string> errmsg_info;
-
-struct invalid_downstream_request : public boost::exception, public std::exception
+struct invalid_downstream_request : public std::exception
 {
   const char *what() const noexcept override { return "All downstream catchments can not request more than 100% of flux in total"; }
 };
 
-struct add_to_summed_nexus : public boost::exception, public std::exception
+struct add_to_summed_nexus : public std::exception
 {
   const char *what() const noexcept override { return "Can not add water to a summed point nexus"; }
 };
 
-struct request_from_empty_nexus : public boost::exception, public std::exception
+struct request_from_empty_nexus : public std::exception
 {
   const char *what() const noexcept override { return "Can not release water from an empty nexus"; }
 };
 
-struct completed_time_step : public boost::exception, public std::exception
+struct completed_time_step : public std::exception
 {
   const char *what() const noexcept override { return "Can not operate on a completed time step"; }
 };
@@ -42,7 +40,7 @@ HY_PointHydroNexus::~HY_PointHydroNexus()
 double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
 {
 
-    if ( completed.find(t) != completed.end() ) BOOST_THROW_EXCEPTION(completed_time_step());
+    if ( completed.find(t) != completed.end() ) throw completed_time_step();
 
     auto s1 = upstream_flows.find(t);
 
@@ -50,7 +48,7 @@ double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_st
     {
         // no downstream may ever receive more than 100% of flows
 
-        BOOST_THROW_EXCEPTION(invalid_downstream_request());
+        throw invalid_downstream_request();
     }
 
     if ( get_contributing_catchments().size() == 0 ) {
@@ -67,7 +65,7 @@ double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_st
         std::cerr << "catchment id requesting flow: " << catchment_id << "\n";
         std::cerr << "Nex id: " << id << std::endl;
 
-        BOOST_THROW_EXCEPTION(request_from_empty_nexus() );
+        throw request_from_empty_nexus();
     }
     else
     {
@@ -106,7 +104,7 @@ double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_st
             {
                     // if the amount of flow allready released plus the amount
                     // of this release is greater than 100 throw an error
-                    BOOST_THROW_EXCEPTION(invalid_downstream_request());
+                    throw invalid_downstream_request();
             }
             else
             {
@@ -140,7 +138,7 @@ void HY_PointHydroNexus::add_upstream_flow(double val, std::string catchment_id,
 {
     std::lock_guard<std::mutex> lock(contribution_mutex);
 
-    if ( completed.find(t) != completed.end() ) BOOST_THROW_EXCEPTION(completed_time_step());
+    if ( completed.find(t) != completed.end() ) throw completed_time_step();
 
     auto s1 = upstream_flows.find(t);
     if (  s1 == upstream_flows.end() )
@@ -169,7 +167,7 @@ void HY_PointHydroNexus::add_upstream_flow(double val, std::string catchment_id,
             // case 3 summed flows exist we can not add water for a time step when
             // one or more catchments have made downstream requests
 
-             BOOST_THROW_EXCEPTION(add_to_summed_nexus());
+             throw add_to_summed_nexus();
          }
     }
 }
