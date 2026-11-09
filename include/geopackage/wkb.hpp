@@ -52,44 +52,44 @@ struct wkb {
      * @param[in] buffer byte vector buffer
      * @return geometry wkb::geometry struct containing the geometry data from the buffer
      */
-    static geometry read(const boost::span<const uint8_t> buffer);
+    static geometry read(const std::span<const uint8_t> buffer);
 
   private:
     /**
      * Read a WKB point into a cartesian model.
      * @return point_t 
      */
-    static point_t read_point(const boost::span<const uint8_t>, int&, uint8_t);
+    static point_t read_point(const std::span<const uint8_t>, int&, uint8_t);
 
     /**
      * Read a WKB linestring into a cartesian model.
      * @return linestring_t 
      */
-    static linestring_t read_linestring(const boost::span<const uint8_t>, int&, uint8_t);
+    static linestring_t read_linestring(const std::span<const uint8_t>, int&, uint8_t);
 
     /**
      * Read a WKB polygon into a cartesian model.
      * @return polygon_t 
      */
-    static polygon_t read_polygon(const boost::span<const uint8_t>, int&, uint8_t);
+    static polygon_t read_polygon(const std::span<const uint8_t>, int&, uint8_t);
 
     /**
      * Read a WKB multipoint into a cartesian model.
      * @return multipoint_t 
      */
-    static multipoint_t read_multipoint(const boost::span<const uint8_t>, int&, uint8_t);
+    static multipoint_t read_multipoint(const std::span<const uint8_t>, int&, uint8_t);
 
     /**
      * Read a WKB multilinestring into a cartesian model.
      * @return multilinestring_t 
      */
-    static multilinestring_t read_multilinestring(const boost::span<const uint8_t>, int&, uint8_t);
+    static multilinestring_t read_multilinestring(const std::span<const uint8_t>, int&, uint8_t);
 
     /**
      * Read a WKB multipolygon into a cartesian model.
      * @return multipolygon_t 
      */
-    static multipolygon_t read_multipolygon(const boost::span<const uint8_t>, int&, uint8_t);
+    static multipolygon_t read_multipolygon(const std::span<const uint8_t>, int&, uint8_t);
 };
 
 struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
