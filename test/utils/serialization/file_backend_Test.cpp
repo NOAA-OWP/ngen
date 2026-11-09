@@ -61,7 +61,7 @@ auto write_record(
         id,
         step,
         ts,
-        boost::span<const char>{payload.data(), payload.size()},
+        std::span<const char>{payload.data(), payload.size()},
         checkpoint_epoch
     });
 }

@@ -30,7 +30,7 @@ the fields however suits their storage.
 */
 #pragma once
 
-#include <boost/core/span.hpp>
+#include <span>
 
 #include <cctype>
 #include <cstdint>
@@ -184,11 +184,11 @@ using Record     = detail::RecordT<std::vector<char>>;
 /** @brief A checkpoint record that views its payload (non-owning).
  *
  *  Same metadata field set as `Record`, but `payload` is a
- *  `boost::span<const char>` rather than an owning vector. The
+ *  `std::span<const char>` rather than an owning vector. The
  *  caller keeps the payload bytes alive elsewhere for the
  *  lifetime of the view.
  *
  */
-using RecordView = detail::RecordT<boost::span<const char>>;
+using RecordView = detail::RecordT<std::span<const char>>;
 
 }}  // namespace ngen::serialization
