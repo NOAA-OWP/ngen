@@ -30,7 +30,7 @@ class NullForcingProvider : public data_access::GenericDataProvider
 
     inline bool is_property_sum_over_time_step(const std::string& name) const override;
 
-    boost::span<const std::string> get_available_variable_names() const override;
+    std::span<const std::string> get_available_variable_names() const override;
 };
 
 #endif // NGEN_NULLFORCING_H

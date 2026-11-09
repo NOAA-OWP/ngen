@@ -20,7 +20,7 @@ namespace realization {
             inner_create_formulation(properties, true);
         }
 
-        boost::span<const std::string> Bmi_Module_Formulation::get_available_variable_names() const {
+        std::span<const std::string> Bmi_Module_Formulation::get_available_variable_names() const {
             return available_forcings;
         }
 

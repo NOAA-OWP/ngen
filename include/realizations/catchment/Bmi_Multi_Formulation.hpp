@@ -141,7 +141,7 @@ namespace realization {
          * @return The collection of forcing output property names this instance can provide.
          * @see ForcingProvider
          */
-        boost::span <const std::string> get_available_variable_names() const override;
+        std::span <const std::string> get_available_variable_names() const override;
 
         /**
         * Get the input variables of 

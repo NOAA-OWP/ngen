@@ -228,7 +228,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         return is_param_sum_over_time_step(name);
     }
 
-    boost::span<const std::string> get_available_variable_names() const override {
+    std::span<const std::string> get_available_variable_names() const override {
         return available_forcings;
     }
 

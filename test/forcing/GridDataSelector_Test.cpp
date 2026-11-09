@@ -21,7 +21,7 @@ struct TestGridDataProvider
       : TestGridDataProvider(GridSpecification{10, 10, box_t{{0, 0},{10, 10}}})
     {}
 
-    boost::span<const std::string> get_available_variable_names() const override
+    std::span<const std::string> get_available_variable_names() const override
     { return { &variable_, 1 }; }
 
     long get_data_start_time() const override

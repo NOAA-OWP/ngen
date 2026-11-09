@@ -440,7 +440,7 @@ void NetCDFPerFeatureDataProvider::finalize()
     nc_file = nullptr;
 }
 
-boost::span<const std::string> NetCDFPerFeatureDataProvider::get_available_variable_names() const
+std::span<const std::string> NetCDFPerFeatureDataProvider::get_available_variable_names() const
 {
     return variable_names;
 }
