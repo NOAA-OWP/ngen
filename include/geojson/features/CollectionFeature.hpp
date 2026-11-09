@@ -35,9 +35,9 @@ namespace geojson {
 
             coordinate_t point(int index) {
                 try {
-                    return boost::get<coordinate_t>(this->geometry_collection[index]);
+                    return std::get<coordinate_t>(this->geometry_collection[index]);
                 }
-                catch (boost::bad_get &exception) {
+                catch (std::bad_variant_access &exception) {
                     std::string template_name = "Point";
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
                     std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
@@ -49,11 +49,11 @@ namespace geojson {
                 std::vector<coordinate_t*> point_geometries;
 
                 for (geojson::geometry& geometry : this->geometry_collection) {
-                    if (geometry.which() == 0) {
+                    if (geometry.index() == 0) {
                         try {
-                            point_geometries.push_back(&boost::get<coordinate_t>(geometry));
+                            point_geometries.push_back(&std::get<coordinate_t>(geometry));
                         }
-                        catch (boost::bad_get &exception) {
+                        catch (std::bad_variant_access &exception) {
                             std::string template_name = "Point";
                             std::string expected_name = get_geometry_type(geometry);
                             std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
@@ -67,9 +67,9 @@ namespace geojson {
 
             linestring_t linestring(int index) {
                 try {
-                    return boost::get<linestring_t>(this->geometry_collection[index]);
+                    return std::get<linestring_t>(this->geometry_collection[index]);
                 }
-                catch (boost::bad_get &exception) {
+                catch (std::bad_variant_access &exception) {
                     std::string template_name = "LineString";
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
                     std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
@@ -81,11 +81,11 @@ namespace geojson {
                 std::vector<linestring_t*> linestring_geometries;
 
                 for (geojson::geometry& geometry : this->geometry_collection) {
-                    if (geometry.which() == 1) {
+                    if (geometry.index() == 1) {
                         try {
-                            linestring_geometries.push_back(&boost::get<linestring_t>(geometry));
+                            linestring_geometries.push_back(&std::get<linestring_t>(geometry));
                         }
-                        catch (boost::bad_get &exception) {
+                        catch (std::bad_variant_access &exception) {
                             std::string template_name = "LineString";
                             std::string expected_name = get_geometry_type(geometry);
                             std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
@@ -99,9 +99,9 @@ namespace geojson {
 
             polygon_t polygon(int index) {
                 try {
-                    return boost::get<polygon_t>(this->geometry_collection[index]);
+                    return std::get<polygon_t>(this->geometry_collection[index]);
                 }
-                catch (boost::bad_get &exception) {
+                catch (std::bad_variant_access &exception) {
                     std::string template_name = "Polygon";
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
                     std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
@@ -113,11 +113,11 @@ namespace geojson {
                 std::vector<polygon_t*> polygon_geometries;
 
                 for (geojson::geometry& geometry : this->geometry_collection) {
-                    if (geometry.which() == 2) {
+                    if (geometry.index() == 2) {
                         try {
-                            polygon_geometries.push_back(&boost::get<polygon_t>(geometry));
+                            polygon_geometries.push_back(&std::get<polygon_t>(geometry));
                         }
-                        catch (boost::bad_get &exception) {
+                        catch (std::bad_variant_access &exception) {
                             std::string template_name = "Polygon";
                             std::string expected_name = get_geometry_type(geometry);
                             std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
@@ -131,9 +131,9 @@ namespace geojson {
 
             multipoint_t multipoint(int index) {
                 try {
-                    return boost::get<multipoint_t>(this->geometry_collection[index]);
+                    return std::get<multipoint_t>(this->geometry_collection[index]);
                 }
-                catch (boost::bad_get &exception) {
+                catch (std::bad_variant_access &exception) {
                     std::string template_name = "MultiPoint";
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
                     std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
@@ -145,8 +145,8 @@ namespace geojson {
                 std::vector<multipoint_t*> multipoint_geometries;
 
                 for (geojson::geometry& geometry : this->geometry_collection) {
-                    if (geometry.which() == 2) {
-                        multipoint_geometries.push_back(&boost::get<multipoint_t>(geometry));
+                    if (geometry.index() == 2) {
+                        multipoint_geometries.push_back(&std::get<multipoint_t>(geometry));
                     }
                 }
 
@@ -155,9 +155,9 @@ namespace geojson {
 
             multilinestring_t multilinestring(int index) {
                 try {
-                    return boost::get<multilinestring_t>(this->geometry_collection[index]);
+                    return std::get<multilinestring_t>(this->geometry_collection[index]);
                 }
-                catch (boost::bad_get &exception) {
+                catch (std::bad_variant_access &exception) {
                     std::string template_name = "MultiLineString";
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
                     std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
@@ -169,8 +169,8 @@ namespace geojson {
                 std::vector<multilinestring_t*> multilinestring_geometries;
 
                 for(geojson::geometry& geometry : this->geometry_collection) {
-                    if (geometry.which() == 4) {
-                        multilinestring_geometries.push_back(&boost::get<multilinestring_t>(geometry));
+                    if (geometry.index() == 4) {
+                        multilinestring_geometries.push_back(&std::get<multilinestring_t>(geometry));
                     }
                 }
 
@@ -179,9 +179,9 @@ namespace geojson {
 
             multipolygon_t multipolygon(int index) {
                 try {
-                    return boost::get<multipolygon_t>(this->geometry_collection[index]);
+                    return std::get<multipolygon_t>(this->geometry_collection[index]);
                 }
-                catch (boost::bad_get &exception) {
+                catch (std::bad_variant_access &exception) {
                     std::string template_name = "MultiPolygon";
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
                     std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
@@ -193,8 +193,8 @@ namespace geojson {
                 std::vector<multipolygon_t*> multipolygon_geometries;
 
                 for(geojson::geometry& geometry : this->geometry_collection) {
-                    if (geometry.which() == 5) {
-                        multipolygon_geometries.push_back(&boost::get<multipolygon_t>(geometry));
+                    if (geometry.index() == 5) {
+                        multipolygon_geometries.push_back(&std::get<multipolygon_t>(geometry));
                     }
                 }
                 

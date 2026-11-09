@@ -145,8 +145,8 @@ class WKB_Test : public ::testing::Test
 
 TEST_F(WKB_Test, wkb_point_test) // also tests endianness
 {  
-    const auto geom_big    = boost::get<wkb::point_t>(wkb::read(this->wkb_bytes["point_big_endian"]));
-    const auto geom_little = boost::get<wkb::point_t>(wkb::read(this->wkb_bytes["point_little_endian"]));
+    const auto geom_big    = std::get<wkb::point_t>(wkb::read(this->wkb_bytes["point_big_endian"]));
+    const auto geom_little = std::get<wkb::point_t>(wkb::read(this->wkb_bytes["point_little_endian"]));
     EXPECT_NEAR(geom_big.get<0>(), geom_little.get<0>(), 1e-6);
     EXPECT_NEAR(geom_big.get<1>(), geom_little.get<1>(), 1e-6);
     EXPECT_NEAR(geom_big.get<0>(), 2.0, 1e-6);
@@ -158,9 +158,9 @@ TEST_F(WKB_Test, wkb_point_test) // also tests endianness
 TEST_F(WKB_Test, wkb_linestring_test)
 {
     const wkb::geometry geom = wkb::read(this->wkb_bytes["linestring"]);
-    EXPECT_EQ(geom.which() + 1, 2);
+    EXPECT_EQ(geom.index() + 1, 2);
 
-    const wkb::linestring_t& line = boost::get<wkb::linestring_t>(geom);
+    const wkb::linestring_t& line = std::get<wkb::linestring_t>(geom);
     const std::vector<std::pair<double, double>> expected_coordinates = {
         {30, 10}, {10, 30}, {40, 40}
     };
@@ -174,9 +174,9 @@ TEST_F(WKB_Test, wkb_linestring_test)
 TEST_F(WKB_Test, wkb_polygon_test)
 {    
     const wkb::geometry geom = wkb::read(this->wkb_bytes["polygon"]);
-    EXPECT_EQ(geom.which() + 1, 3); // +1 since variant.which() is 0-based
+    EXPECT_EQ(geom.index() + 1, 3); // +1 since variant.index() is 0-based
 
-    const wkb::polygon_t& poly = boost::get<wkb::polygon_t>(geom);
+    const wkb::polygon_t& poly = std::get<wkb::polygon_t>(geom);
     const std::vector<std::pair<double, double>> expected_coordinates = {
         {10.689, -25.092},
         {34.595, -20.170},
@@ -194,9 +194,9 @@ TEST_F(WKB_Test, wkb_polygon_test)
 TEST_F(WKB_Test, wkb_polygon_with_holes_test)
 {
     const wkb::geometry geom = wkb::read(this->wkb_bytes["polygon_with_holes"]);
-    EXPECT_EQ(geom.which() + 1, 3);
+    EXPECT_EQ(geom.index() + 1, 3);
 
-    const wkb::polygon_t& poly = boost::get<wkb::polygon_t>(geom);
+    const wkb::polygon_t& poly = std::get<wkb::polygon_t>(geom);
     ASSERT_EQ(poly.inners().size(), 1);
 
     const std::vector<std::pair<double, double>> expected_outer = {
@@ -229,9 +229,9 @@ TEST_F(WKB_Test, wkb_polygon_with_holes_test)
 TEST_F(WKB_Test, wkb_multipoint_test)
 {
     const wkb::geometry geom = wkb::read(this->wkb_bytes["multipoint"]);
-    EXPECT_EQ(geom.which() + 1, 4);
+    EXPECT_EQ(geom.index() + 1, 4);
 
-    const wkb::multipoint_t& mp = boost::get<wkb::multipoint_t>(geom);
+    const wkb::multipoint_t& mp = std::get<wkb::multipoint_t>(geom);
     const std::vector<std::pair<double, double>> expected_coordinates = {
         {10, 40}, {40, 30}, {20, 20}, {30, 10}
     };
@@ -245,9 +245,9 @@ TEST_F(WKB_Test, wkb_multipoint_test)
 TEST_F(WKB_Test, wkb_multilinestring_test)
 {
     const wkb::geometry geom = wkb::read(this->wkb_bytes["multilinestring"]);
-    EXPECT_EQ(geom.which() + 1, 5);
+    EXPECT_EQ(geom.index() + 1, 5);
 
-    const wkb::multilinestring_t& mp = boost::get<wkb::multilinestring_t>(geom);
+    const wkb::multilinestring_t& mp = std::get<wkb::multilinestring_t>(geom);
     const std::vector<std::vector<std::pair<double, double>>> expected_coordinates = {
         { {10, 10}, {20, 20}, {10, 40} },
         { {40, 40}, {30, 30}, {40, 20}, {30, 10} }

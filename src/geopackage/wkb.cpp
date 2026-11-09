@@ -295,7 +295,7 @@ geojson::geometry wkb::wgs84::operator()(multilinestring_t& g)
         auto&& line_h = h.begin();
         for(; line_g != g.end(); line_g++, line_h++) {
             *line_h = std::move(
-                boost::get<geojson::linestring_t>(this->operator()(*line_g))
+                std::get<geojson::linestring_t>(this->operator()(*line_g))
             );
         }
     } else {
@@ -317,7 +317,7 @@ geojson::geometry wkb::wgs84::operator()(multipolygon_t& g)
         auto&& polygon_h = h.begin();
         for (; polygon_g != g.end(); polygon_g++, polygon_h++) {
             *polygon_h = std::move(
-                boost::get<geojson::polygon_t>(this->operator()(*polygon_g))
+                std::get<geojson::polygon_t>(this->operator()(*polygon_g))
             );
         }
     } else {

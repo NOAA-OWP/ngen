@@ -34,7 +34,7 @@ namespace geojson {
             }
 
             multilinestring_t geometry() const {
-                return boost::get<multilinestring_t>(*this->geom);
+                return std::get<multilinestring_t>(*this->geom);
             }
 
             void visit(FeatureVisitor& visitor) override {

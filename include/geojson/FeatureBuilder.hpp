@@ -296,7 +296,7 @@ namespace geojson {
         switch (type) {
             case FeatureType::Point:
                 return std::make_shared<PointFeature>(PointFeature(
-                    boost::get<coordinate_t>(geometry_object),
+                    std::get<coordinate_t>(geometry_object),
                     id,
                     properties,
                     bounding_box,
@@ -306,7 +306,7 @@ namespace geojson {
                 ));
             case FeatureType::LineString:
                 return std::make_shared<LineStringFeature>(LineStringFeature(
-                    boost::get<linestring_t>(geometry_object),
+                    std::get<linestring_t>(geometry_object),
                     id,
                     properties,
                     bounding_box,
@@ -316,7 +316,7 @@ namespace geojson {
                 ));
             case FeatureType::Polygon:
                 return std::make_shared<PolygonFeature>(PolygonFeature(
-                    boost::get<polygon_t>(geometry_object),
+                    std::get<polygon_t>(geometry_object),
                     id,
                     properties,
                     bounding_box,
@@ -326,7 +326,7 @@ namespace geojson {
                 ));
             case FeatureType::MultiPoint:
                 return std::make_shared<MultiPointFeature>(MultiPointFeature(
-                    boost::get<multipoint_t>(geometry_object),
+                    std::get<multipoint_t>(geometry_object),
                     id,
                     properties,
                     bounding_box,
@@ -336,7 +336,7 @@ namespace geojson {
                 ));
             case FeatureType::MultiLineString:
                 return std::make_shared<MultiLineStringFeature>(MultiLineStringFeature(
-                    boost::get<multilinestring_t>(geometry_object),
+                    std::get<multilinestring_t>(geometry_object),
                     id,
                     properties,
                     bounding_box,
@@ -346,7 +346,7 @@ namespace geojson {
                 ));
             case FeatureType::MultiPolygon:
                 return std::make_shared<MultiPolygonFeature>(MultiPolygonFeature(
-                    boost::get<multipolygon_t>(geometry_object),
+                    std::get<multipolygon_t>(geometry_object),
                     id,
                     properties,
                     bounding_box,

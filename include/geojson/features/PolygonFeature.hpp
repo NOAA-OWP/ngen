@@ -52,7 +52,7 @@ namespace geojson {
              * @return The underlying polygon for this feature
              */
             polygon_t geometry() const {
-                return boost::get<polygon_t>(*this->geom);
+                return std::get<polygon_t>(*this->geom);
             }
 
             /**

@@ -239,7 +239,7 @@ TEST_F(HY_CatchmentRealization_Test, TheFeatureOverloadReadsTheExtentAndTheFace)
     geojson::PropertyMap properties;
     properties.emplace("areasqkm", geojson::JSONProperty("areasqkm", 15.625));
     geojson::Feature feature = std::make_shared<geojson::PolygonFeature>(
-            geojson::PolygonFeature(boost::get<geojson::polygon_t>(*square()), "cat-27", properties));
+            geojson::PolygonFeature(std::get<geojson::polygon_t>(*square()), "cat-27", properties));
 
     auto from_feature = std::make_shared<HY_CatchmentArea>("cat-27", nullptr, feature);
 
@@ -257,12 +257,12 @@ TEST_F(HY_CatchmentRealization_Test, TheFeatureOverloadReadsTheExtentAndTheFace)
 TEST_F(HY_CatchmentRealization_Test, TheDivideOutlivesTheFeatureItCameFrom)
 {
     geojson::Feature feature = std::make_shared<geojson::PolygonFeature>(
-            geojson::PolygonFeature(boost::get<geojson::polygon_t>(*square()), "cat-27"));
+            geojson::PolygonFeature(std::get<geojson::polygon_t>(*square()), "cat-27"));
 
     auto realized = std::make_shared<HY_CatchmentArea>("cat-27", nullptr, 15.625,
                                                        feature->geometry());
     feature.reset();
 
     ASSERT_TRUE(realized->get_bounds() != nullptr);
-    EXPECT_GT(boost::geometry::area(boost::get<geojson::polygon_t>(*realized->get_bounds())), 0.0);
+    EXPECT_GT(boost::geometry::area(std::get<geojson::polygon_t>(*realized->get_bounds())), 0.0);
 }
