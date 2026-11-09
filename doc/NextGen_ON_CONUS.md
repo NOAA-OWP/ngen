@@ -102,10 +102,10 @@ As the file is fairly large, it is worth some consideration to store it in a pro
 For parallel computation using MPI on hydrofabric, a [partition generate tool](DISTRIBUTED_PROCESSING.md#partitioning-config-generator) is used to partition the hydrofabric features ids into a number of partitions equal to the number of MPI processing CPU cores. To generate the partition file, run the following command from inside `cmake_build_mpi`:
 
 ```
-./partitionGenerator ./hydrofabric/conus.gpkg ./hydrofabric/conus.gpkg ./partition_config_32.json 32 '' ''
+./partitionGenerator ./hydrofabric/conus.gpkg ./hydrofabric/conus.gpkg ./conus_partition_32.json 32 '' ''
 ```
 
-In the command above, `conus.gpkg` is the NextGen hydrofabric version 2.01 for CONUS, `partition_config_32.json` is the partition file that contains all features ids and their interconnected network information. The number `32` is intended number of processing cores for running parallel build `ngen` using MPI. The last two empty strings, as indicated by `''`, indicate there is no subsetting, i.e., we intend to run the whole CONUS hydrofabric.
+In the command above, `conus.gpkg` is the NextGen hydrofabric version 2.01 for CONUS, `conus_partition_32.json` is the partition file that contains all features ids and their interconnected network information. The number `32` is intended number of processing cores for running parallel build `ngen` using MPI. The last two empty strings, as indicated by `''`, indicate there is no subsetting, i.e., we intend to run the whole CONUS hydrofabric.
 
 # Prepare the Input Data
 Input data includes the forcing data and initial parameter data for various submodules. These depend on what best suits the user's need. For our case, as of this documentation, beside forcing data, which can be accessed at `./forcing/NextGen_forcing_2016010100.nc` using the symbolic link scheme, we also generated initial input data for various submodules `noah-owp-modular`, `PET`, `CFE`, `SoilMoistureProfiles (SMP)`, `SoilFreezeThaw (SFT)`. The first three are located in `./conus_config/`, the SMP initial configs are located in `./conus_smp_configs/` and the SFT initial configs are located in `./conus_sft_configs/`. As with the hydrofabric, these paths are relative to the `cmake_build_mpi` directory from which `ngen` is run.
