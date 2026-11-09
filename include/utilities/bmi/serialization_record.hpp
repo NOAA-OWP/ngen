@@ -95,7 +95,7 @@ using serialization::wire_format::Status;
 // from ngen::serialization so existing call sites continue to use
 // `models::bmi::protocols::SerializationRecord` / `parse_timestamp`
 // unchanged. `SerializationRecordView` is the non-owning sibling
-// (payload is `boost::span<const char>` rather than
+// (payload is `std::span<const char>` rather than
 // `std::vector<char>`); use it on the write path when the caller
 // already holds the payload bytes in a buffer it owns for the
 // duration of the call.
@@ -216,7 +216,7 @@ nsel_NODISCARD inline auto write_record(std::ostream& out, const SerializationRe
  *  payload type is the only field where the two records diverge,
  *  and `out.write(payload.data(), payload.size())` is the same
  *  call shape for `std::vector<char>` and
- *  `boost::span<const char>`.
+ *  `std::span<const char>`.
  */
 nsel_NODISCARD inline auto write_record(std::ostream& out, const SerializationRecord& rec)
     -> expected<void, std::string> {

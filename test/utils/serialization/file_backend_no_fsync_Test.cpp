@@ -75,7 +75,7 @@ TEST(FileBackendNoFsync, relaxed_durability_still_works) {
         const std::vector<char> payload{'X'};
         ASSERT_TRUE(w.value()->write(ngen::serialization::RecordView{
             "cat-1", 0, 0,
-            boost::span<const char>{payload.data(), payload.size()},
+            std::span<const char>{payload.data(), payload.size()},
             0
         }).has_value());
         ASSERT_TRUE(w.value()->commit().has_value());

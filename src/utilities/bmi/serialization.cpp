@@ -196,7 +196,7 @@ auto NgenSerializationProtocol::run(const ModelPtr& model, const Context& ctx) c
             ctx.id,
             static_cast<int64_t>(ctx.current_time_step),
             simulation_timestamp,
-            boost::span<const char>{buf.data(), buf.size()},
+            std::span<const char>{buf.data(), buf.size()},
             static_cast<int64_t>(std::time(nullptr))
         });
 
