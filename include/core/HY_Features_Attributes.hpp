@@ -50,7 +50,7 @@ namespace hy_features {
        * input formats satisfy the requirement: GeoJSON is WGS84 by definition, and the GeoPackage
        * reader reprojects to EPSG:4326 as it builds the geometry.
       */
-      struct area_from_geometry_visitor : public boost::static_visitor<std::optional<double>> {
+      struct area_from_geometry_visitor {
         std::optional<double> operator()(const geojson::polygon_t& polygon) const {
           return boost::geometry::area(polygon);
         }
@@ -72,7 +72,7 @@ namespace hy_features {
        * more an extent than no polygon at all.
       */
       inline std::optional<double> area_from_geometry(const geojson::geometry& geometry){
-        const std::optional<double> sqm = boost::apply_visitor(area_from_geometry_visitor(), geometry);
+        const std::optional<double> sqm = std::visit(area_from_geometry_visitor(), geometry);
         if (!sqm || !(*sqm > 0.0)) return std::nullopt;
         return *sqm / 1'000'000.0;
       }

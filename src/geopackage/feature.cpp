@@ -3,7 +3,7 @@
 // Points don't have a bounding box, so we can say its bbox is itself
 inline void build_point_bbox(const geojson::geometry& geom, std::vector<double>& bbox)
 {
-    const auto& pt = boost::get<geojson::coordinate_t>(geom);
+    const auto& pt = std::get<geojson::coordinate_t>(geom);
     bbox[0] = pt.get<0>();
     bbox[1] = pt.get<1>();
     bbox[2] = pt.get<0>();
@@ -21,48 +21,48 @@ geojson::Feature ngen::geopackage::build_feature(
     geojson::geometry geometry = build_geometry(row, geom_col, bounding_box);
 
     // Convert variant type (0-based) to FeatureType
-    const auto wkb_type = static_cast<geojson::FeatureType>(geometry.which() + 1);
+    const auto wkb_type = static_cast<geojson::FeatureType>(geometry.index() + 1);
 
     switch(wkb_type) {
         case geojson::FeatureType::Point:
             build_point_bbox(geometry, bounding_box);
             return std::make_shared<geojson::PointFeature>(
-                boost::get<geojson::coordinate_t>(geometry),
+                std::get<geojson::coordinate_t>(geometry),
                 id,
                 properties,
                 bounding_box
             );
         case geojson::FeatureType::LineString:
             return std::make_shared<geojson::LineStringFeature>(
-                boost::get<geojson::linestring_t>(geometry),
+                std::get<geojson::linestring_t>(geometry),
                 id,
                 properties,
                 bounding_box
             );
         case geojson::FeatureType::Polygon:
             return std::make_shared<geojson::PolygonFeature>(
-                boost::get<geojson::polygon_t>(geometry),
+                std::get<geojson::polygon_t>(geometry),
                 id,
                 properties,
                 bounding_box
             );
         case geojson::FeatureType::MultiPoint:
             return std::make_shared<geojson::MultiPointFeature>(
-                boost::get<geojson::multipoint_t>(geometry),
+                std::get<geojson::multipoint_t>(geometry),
                 id,
                 properties,
                 bounding_box
             );
         case geojson::FeatureType::MultiLineString:
             return std::make_shared<geojson::MultiLineStringFeature>(
-                boost::get<geojson::multilinestring_t>(geometry),
+                std::get<geojson::multilinestring_t>(geometry),
                 id,
                 properties,
                 bounding_box
             );
         case geojson::FeatureType::MultiPolygon:
             return std::make_shared<geojson::MultiPolygonFeature>(
-                boost::get<geojson::multipolygon_t>(geometry),
+                std::get<geojson::multipolygon_t>(geometry),
                 id,
                 properties,
                 bounding_box
@@ -75,6 +75,6 @@ geojson::Feature ngen::geopackage::build_feature(
                 bounding_box
             );
         default:
-            throw std::runtime_error("invalid WKB feature type. Received: " + std::to_string(geometry.which() + 1));
+            throw std::runtime_error("invalid WKB feature type. Received: " + std::to_string(geometry.index() + 1));
     }
 }

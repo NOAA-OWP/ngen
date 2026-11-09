@@ -530,9 +530,9 @@ namespace geojson {
             template<class T>
             T geometry() const {
                 try {
-                    return boost::get<T>(*this->geom);
+                    return std::get<T>(*this->geom);
                 }
-                catch (boost::bad_get &exception) {
+                catch (std::bad_variant_access &exception) {
                     std::string template_name = boost::typeindex::type_id<T>().pretty_name();
                     std::string expected_name = get_geometry_type(*this->geom);
                     std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;
@@ -555,9 +555,9 @@ namespace geojson {
             template<class T>
             T geometry(int index) const {
                 try {
-                    return boost::get<T>(this->geometry_collection[index]);
+                    return std::get<T>(this->geometry_collection[index]);
                 }
-                catch (boost::bad_get &exception) {
+                catch (std::bad_variant_access &exception) {
                     std::string template_name = boost::typeindex::type_id<T>().pretty_name();
                     std::string expected_name = get_geometry_type(this->geometry_collection[index]);
                     std::cerr << "Asked for " << template_name << ", but only " << expected_name << " is valid" << std::endl;

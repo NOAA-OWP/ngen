@@ -34,7 +34,7 @@ namespace geojson {
             }
 
             multipolygon_t geometry() const {
-                return boost::get<multipolygon_t>(*this->geom);
+                return std::get<multipolygon_t>(*this->geom);
             }
 
             void visit(FeatureVisitor& visitor) override {

@@ -5,9 +5,11 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#include <variant>
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>
+#include <boost/geometry/geometries/adapted/std_variant.hpp> // lets boost::geometry algorithms take a geojson::geometry
 #include <boost/property_tree/ptree.hpp>
 
 namespace bg = boost::geometry;
@@ -63,15 +65,15 @@ namespace geojson {
         MultiPolygon /*<! Represents a series of shapes formed by several points */
     };
 
-    typedef boost::variant<coordinate_t, linestring_t, polygon_t, multipoint_t, multilinestring_t, multipolygon_t> geometry;
+    typedef std::variant<coordinate_t, linestring_t, polygon_t, multipoint_t, multilinestring_t, multipolygon_t> geometry;
 
     template<typename T>
     T get_shape(geometry geom) {
-        return boost::get<T>(geom);
+        return std::get<T>(geom);
     }
 
     inline std::string get_geometry_type(const geometry& geom) {
-        switch (geom.which()) {
+        switch (geom.index()) {
             case 0:
                 return "Point";
             case 1:

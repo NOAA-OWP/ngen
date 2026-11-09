@@ -26,7 +26,7 @@ struct wkb {
     using multipoint_t = bg::model::multi_point<point_t>;
     using multilinestring_t = bg::model::multi_linestring<linestring_t>;
     using multipolygon_t = bg::model::multi_polygon<polygon_t>;
-    using geometry = boost::variant<
+    using geometry = std::variant<
         point_t,
         linestring_t,
         polygon_t,
@@ -92,7 +92,7 @@ struct wkb {
     static multipolygon_t read_multipolygon(const std::span<const uint8_t>, int&, uint8_t);
 };
 
-struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
+struct wkb::wgs84
 {
     wgs84(uint32_t srs, const bg::srs::transformation<>& tr)
         : srs(srs)
