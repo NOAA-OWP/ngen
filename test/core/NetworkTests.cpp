@@ -145,6 +145,52 @@ public:
   }
 };
 
+class Network_Test_Cycle : public Network_Test, public ::testing::Test{
+public:
+  Network_Test_Cycle(){}
+  void SetUp(){
+    /**
+     * The following create a topology that looks like
+     *    ------------------------
+     *  /                          \
+     * |                            \
+     * cat-0            cat-3 -      |
+     *      \                   \    | 
+     *        nex 0 -> cat-2 ->  nex-1
+     *      /                   /
+     * cat-1            cat-4 -
+     * 
+     * This contains a cycle from nex-1 back to cat-0
+     * 
+     */
+    this->add_catchment("cat-0", "nex-0");
+    this->add_catchment("cat-1", "nex-0");
+    this->add_nexus("nex-0", "cat-2");
+    this->add_catchment("cat-2", "nex-1");
+    this->add_catchment("cat-3", "nex-1");
+    this->add_catchment("cat-4", "nex-1");
+    this->add_nexus("nex-1", "cat-0");
+    //Constructing this network SHOULD fail due to the cycle
+  }
+};
+
+//! Test that a network with cycles throws an error
+TEST_F(Network_Test_Cycle, TestCycleError){
+
+  EXPECT_THROW( {
+    try{
+      n =  Network(this->get_fabric());
+    }catch(std::domain_error &e){
+      std::cout<<e.what();
+      EXPECT_STREQ(e.what(), "Cycle(s) detected in hydrofabric\n"
+                             "The following features form a cycle:\n"
+                             "\tnex-1 --> cat-0\n");
+      throw;
+    }
+  }, std::domain_error);
+  
+}
+
 //! Test that a network can be created.
 TEST_P(Network_Test1, TestNetworkConstructionNumberOfNodes)
 {
