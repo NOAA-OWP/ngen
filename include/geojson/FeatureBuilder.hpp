@@ -390,7 +390,7 @@ namespace geojson {
                 }
             }
             else if (child.first == "features") {
-                boost::optional<const boost::property_tree::ptree&> e = tree.get_child_optional("features");
+                auto e = tree.get_child_optional("features");
 
                 if (e) {
                     for(auto feature_tree : *e) {

@@ -5,7 +5,6 @@
 #include <stdexcept>
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/optional.hpp>
 
 namespace realization {
   namespace config {
