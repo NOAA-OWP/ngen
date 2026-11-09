@@ -196,7 +196,7 @@ class Formulation_Manager_Test : public ::testing::Test {
     {
         boost::property_tree::json_parser::read_json(stream, realization_config);
 
-        boost::optional<boost::property_tree::ptree&> possible_simulation_time =
+        auto possible_simulation_time =
             realization_config.get_child_optional("time");
         if (!possible_simulation_time) {
             throw std::runtime_error("ERROR: No simulation time period defined.");

@@ -5,7 +5,6 @@
 #include <exception>
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/optional.hpp>
 
 // Formulations
 #include "Formulation_Constructors.hpp"
@@ -35,7 +34,7 @@ namespace realization {
                 return node.first;
             }
         }*/
-        boost::optional<std::string> key = tree.get_optional<std::string>("name");
+        auto key = tree.get_optional<std::string>("name");
         if(key && formulation_exists(*key)){
           return *key;
         }

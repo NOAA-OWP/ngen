@@ -9,7 +9,6 @@
 #include <exception>
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/optional.hpp>
 
 // Formulations
 #include "Bmi_Formulation.hpp"
