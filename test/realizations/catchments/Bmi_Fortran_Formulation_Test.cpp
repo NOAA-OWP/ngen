@@ -26,7 +26,10 @@
 #include <boost/property_tree/json_parser.hpp>
 #include "FileChecker.h"
 #include "Formulation_Manager.hpp"
-#include <boost/date_time.hpp>
+#include <chrono>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 
 using namespace realization;
 
@@ -72,17 +75,14 @@ protected:
     }
 
     static time_t parse_forcing_time(const std::string& date_time_str) {
-
-        std::locale format = std::locale(std::locale::classic(), new boost::posix_time::time_input_facet("%Y-%m-%d %H:%M:%S"));
-
-        boost::posix_time::ptime pt;
+        std::tm tm{};
         std::istringstream is(date_time_str);
-        is.imbue(format);
-        is >> pt;
+        is >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S");
 
-        boost::posix_time::ptime timet_start(boost::gregorian::date(1970,1,1));
-        boost::posix_time::time_duration diff = pt - timet_start;
-        return diff.ticks() / boost::posix_time::time_duration::rep_type::ticks_per_second;
+        using namespace std::chrono;
+        const sys_days date = year{tm.tm_year + 1900} / (tm.tm_mon + 1) / tm.tm_mday;
+        const sys_seconds t = date + hours{tm.tm_hour} + minutes{tm.tm_min} + seconds{tm.tm_sec};
+        return t.time_since_epoch().count();
     }
 
     void SetUp() override;
