@@ -117,7 +117,7 @@ namespace data_access
         void finalize() override;
 
         /** Return the variables that are accessable by this data provider */
-        boost::span<const std::string> get_available_variable_names() const override;
+        std::span<const std::string> get_available_variable_names() const override;
 
         /** return a list of ids in the current file */
         const std::vector<std::string>& get_ids() const;

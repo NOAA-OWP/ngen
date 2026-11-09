@@ -126,7 +126,7 @@ namespace realization {
          * @return The collection of forcing output property names this instance can provide.
          * @see ForcingProvider
          */
-        boost::span<const std::string> get_available_variable_names() const override;
+        std::span<const std::string> get_available_variable_names() const override;
 
         /**
          * Get the output variable values for the given time step, one per output column and positionally aligned
@@ -155,7 +155,7 @@ namespace realization {
             // variable: units come from the model for that variable; the output name is its header
             // (which defaults to the variable name, or is a configured alias).
             const std::vector<std::string> &variables = get_output_variable_names();
-            boost::span<const std::string> headers = get_output_header_field_names();
+            std::span<const std::string> headers = get_output_header_field_names();
             std::vector<utils::OutputField> fields;
             fields.reserve(variables.size());
             for (std::size_t i = 0; i < variables.size(); ++i) {

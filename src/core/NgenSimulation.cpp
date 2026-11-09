@@ -89,13 +89,13 @@ void NgenSimulation::advance_models_one_output_step()
                 }
 
 #if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
-                boost::span<double> catchment_span(catchment_outflows_.data() + (simulation_step_ * catchment_indexes_.size()),
+                std::span<double> catchment_span(catchment_outflows_.data() + (simulation_step_ * catchment_indexes_.size()),
                                                    catchment_indexes_.size());
-                boost::span<double> nexus_span(nexus_downstream_flows_.data() + (simulation_step_ * nexus_indexes_.size()),
+                std::span<double> nexus_span(nexus_downstream_flows_.data() + (simulation_step_ * nexus_indexes_.size()),
                                                nexus_indexes_.size());
 #else
-                boost::span<double> catchment_span;
-                boost::span<double> nexus_span;
+                std::span<double> catchment_span;
+                std::span<double> nexus_span;
 #endif
                layer->update_models(
                                      catchment_span,

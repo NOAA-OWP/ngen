@@ -6,9 +6,9 @@
 #include "HY_Features.hpp"
 #endif
 
-void ngen::SurfaceLayer::update_models(boost::span<double> catchment_outflows, 
+void ngen::SurfaceLayer::update_models(std::span<double> catchment_outflows,
                                        std::unordered_map<std::string, int> const& catchment_indexes,
-                                       boost::span<double> nexus_downstream_flows,
+                                       std::span<double> nexus_downstream_flows,
                                        std::unordered_map<std::string, int> const& nexus_indexes,
                                        int current_step)
 {

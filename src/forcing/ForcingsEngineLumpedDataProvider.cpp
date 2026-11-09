@@ -46,7 +46,7 @@ Provider::ForcingsEngineLumpedDataProvider(
     );
 
     // Copy CAT-ID values into instance vector
-    const auto cat_id_span = boost::span<const int>(
+    const auto cat_id_span = std::span<const int>(
         models::bmi::GetValuePtr<int>(*bmi_, "CAT-ID"),
         size_id_dimension
     );

@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 #include <memory>
-#include <boost/core/span.hpp>
+#include <span>
 #include "Formulation.hpp"
 #include "GenericDataProvider.hpp"
 
@@ -243,7 +243,7 @@ namespace realization {
          * @ref get_output_variable_names -- header i is the output name for variable i. A concrete
          * subclass uses these as each column's output_name when building @ref get_output_fields.
          */
-        boost::span<const std::string> get_output_header_field_names() const {
+        std::span<const std::string> get_output_header_field_names() const {
             return output_header_fields;
         }
 

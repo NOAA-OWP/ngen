@@ -201,7 +201,7 @@ const bool &Bmi_Multi_Formulation::get_allow_model_exceed_end_time() const {
  * @return The collection of forcing output property names this instance can provide.
  * @see ForcingProvider
  */
-boost::span<const std::string> Bmi_Multi_Formulation::get_available_variable_names() const {
+std::span<const std::string> Bmi_Multi_Formulation::get_available_variable_names() const {
     return available_forcings;
 }
 
@@ -312,7 +312,7 @@ std::vector<utils::OutputField> Bmi_Multi_Formulation::get_output_fields() const
     // this formulation's header, which may alias differently than the submodule's. A selected
     // variable that no submodule produces yields a bare field with no units.
     const std::vector<std::string> &variables = get_output_variable_names();
-    boost::span<const std::string> headers = get_output_header_field_names();
+    std::span<const std::string> headers = get_output_header_field_names();
     std::vector<utils::OutputField> fields;
     fields.reserve(variables.size());
     for (std::size_t i = 0; i < variables.size(); ++i) {

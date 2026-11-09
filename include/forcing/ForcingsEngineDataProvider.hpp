@@ -104,7 +104,7 @@ struct ForcingsEngineDataProvider
 
     ~ForcingsEngineDataProvider() override = default;
 
-    boost::span<const std::string> get_available_variable_names() const override
+    std::span<const std::string> get_available_variable_names() const override
     {
         return var_output_names_;
     }
@@ -197,7 +197,7 @@ struct ForcingsEngineDataProvider
     std::string ensure_variable(std::string name, const std::string& suffix = "_ELEMENT") const
     {
         // TODO: use get_available_var_names() once const
-        auto vars = boost::span<const std::string>{var_output_names_};
+        auto vars = std::span<const std::string>{var_output_names_};
 
         if (std::find(vars.begin(), vars.end(), name) != vars.end()) {
           return name;

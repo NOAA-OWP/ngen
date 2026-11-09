@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include <boost/core/span.hpp>
+#include <span>
 #include <boost/geometry.hpp>
 
 #include <geojson/JSONGeometry.hpp>
@@ -90,7 +90,7 @@ struct SelectorConfig {
 struct GridDataSelector {
 
     //! Cell-based constructor
-    GridDataSelector(SelectorConfig config, boost::span<const Cell> cells)
+    GridDataSelector(SelectorConfig config, std::span<const Cell> cells)
         : config_(std::move(config))
         , cells_(cells.begin(), cells.end()) {
     }
@@ -110,7 +110,7 @@ struct GridDataSelector {
     GridDataSelector(
         SelectorConfig config,
         const GridSpecification& grid,
-        boost::span<const geojson::coordinate_t> points
+        std::span<const geojson::coordinate_t> points
     )
       : config_(std::move(config))
     {
@@ -234,11 +234,11 @@ struct GridDataSelector {
         return config_.variable_units;
     }
 
-    boost::span<Cell> cells() noexcept {
+    std::span<Cell> cells() noexcept {
         return cells_;
     }
 
-    boost::span<const Cell> cells() const noexcept {
+    std::span<const Cell> cells() const noexcept {
         return cells_;
     }
 

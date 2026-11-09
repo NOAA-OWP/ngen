@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <boost/core/span.hpp>
+#include <span>
 
 namespace data_access
 {
@@ -43,7 +43,7 @@ namespace data_access
 
         /** Return the variables that are accessable by this data provider */
 
-        virtual boost::span<const std::string> get_available_variable_names() const = 0;
+        virtual std::span<const std::string> get_available_variable_names() const = 0;
 
         /** Return the first valid time for which data from the request variable  can be requested */
 

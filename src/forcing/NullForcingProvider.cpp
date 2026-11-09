@@ -38,6 +38,6 @@ inline bool NullForcingProvider::is_property_sum_over_time_step(const std::strin
     throw std::runtime_error("Got request for variable " + name + " but no such variable is provided by NullForcingProvider." + SOURCE_LOC);
 }
 
-boost::span<const std::string> NullForcingProvider::get_available_variable_names() const {
+std::span<const std::string> NullForcingProvider::get_available_variable_names() const {
     return {};
 }
