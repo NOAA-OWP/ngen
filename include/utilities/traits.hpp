@@ -2,7 +2,7 @@
 #define NGEN_UTILITIES_TRAITS_HPP
 
 #include <type_traits>
-#include <boost/variant.hpp>
+#include <variant>
 
 namespace ngen {
 namespace traits {
@@ -61,27 +61,27 @@ using is_same_to_any = disjunction<std::is_same<T, Ts>::value...>;
 template<typename... Ts>
 struct type_list{
     /**
-     * Provides a type alias for a boost::variant
+     * Provides a type alias for a std::variant
      * containing the types of this type list.
      *
      * For example, for a type_list<int, std::string>:
      *
-     *   boost::variant<int, std::string>
+     *   std::variant<int, std::string>
      */
-    using variant_scalar = boost::variant<Ts...>;
+    using variant_scalar = std::variant<Ts...>;
 
     /**
      * Like variant_scalars, but for container types.
      *
      * For example, for a type_list<int, std::string> with @c{Container} -> std::vector:
      *
-     *   boost::variant<std::vector<int>, std::vector<std::string>>
+     *   std::variant<std::vector<int>, std::vector<std::string>>
      * 
      * @tparam Container Type of container to hold
      *                   each type in within the variant.
      */
     template<template<typename> class Container>
-    using variant_container = boost::variant<Container<Ts>...>;
+    using variant_container = std::variant<Container<Ts>...>;
 
     /**
      * Semantically, we define that a type is supported if it's
