@@ -3,7 +3,6 @@
 #if NGEN_WITH_NETCDF
 #include "gtest/gtest.h"
 #include "NetCDFPerFeatureDataProvider.hpp"
-#include "StreamHandler.hpp"
 #include "UnitsHelper.hpp"
 
 #include <netcdf>
@@ -304,7 +303,7 @@ class NetCDFStorageVariantTest : public ::testing::Test {
 
         std::optional<NetCDFPerFeatureDataProvider> provider;
         try {
-            provider.emplace(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+            provider.emplace(path, v.start, v.start + time_t(v.n_times) * v.stride);
         } catch (const std::exception& e) {
             FAIL() << "constructing the provider threw: " << e.what();
         }
@@ -379,7 +378,7 @@ class NetCDFStorageVariantTest : public ::testing::Test {
     void expectRejected(const Variant& v, const std::string& message_part) {
         auto path = write(v);
         try {
-            NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+            NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride);
             ADD_FAILURE() << "expected the provider to reject " << path;
         } catch (const std::exception& e) {
             EXPECT_NE(std::string(e.what()).find(message_part), std::string::npos)
@@ -752,7 +751,7 @@ TEST_F(NetCDFStorageVariantTest, ReadingOtherVariablesIsAnError)
     Variant v;
     v.extra_variables = true;
     auto path = write(v);
-    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride);
     for (const char* name : {"x", "bounds"}) {
         for (int attempt = 0; attempt < 2; ++attempt) {
             CatchmentAggrDataSelector sel("cat-1", name, v.start, v.stride, "");
@@ -827,7 +826,7 @@ TEST_F(NetCDFStorageVariantTest, ReadsWeightPartlyCoveredTimesteps)
 {
     Variant v;
     auto path = write(v);
-    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride);
     auto read = [&](time_t offset, time_t duration, data_access::ReSampleMethod m) {
         CatchmentAggrDataSelector sel("cat-1", "temp", v.start + offset, duration, "K");
         return provider.get_value(sel, m);
@@ -856,7 +855,7 @@ TEST_F(NetCDFStorageVariantTest, ReadsOfNoDurationAreAnError)
 {
     Variant v;
     auto path = write(v);
-    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride);
     for (long duration : {0L, -3600L}) {
         CatchmentAggrDataSelector sel("cat-1", "temp", v.start + v.stride, duration, "K");
         EXPECT_THROW(provider.get_value(sel, data_access::MEAN), std::invalid_argument) << "duration " << duration;
@@ -899,7 +898,7 @@ TEST_F(NetCDFStorageVariantTest, MissingTimeDimensionIsRejected)
         out.addVar("ids", netCDF::ncString, cat_dim).putVar(ids.data());
     }
     try {
-        NetCDFPerFeatureDataProvider provider(path, 0, 3600, utils::getStdErr());
+        NetCDFPerFeatureDataProvider provider(path, 0, 3600);
         ADD_FAILURE() << "expected the provider to reject " << path;
     } catch (const std::exception& e) {
         EXPECT_NE(std::string(e.what()).find("no \"time\" dimension"), std::string::npos) << e.what();
@@ -960,7 +959,7 @@ TEST_F(NetCDFStorageVariantTest, OutOfRangeReadsNameWhatWasAskedFor)
 {
     Variant v;
     auto path = write(v);
-    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride);
     auto expect_out_of_range = [&](const std::string& id, time_t when, const std::string& expected_text) {
         try {
             provider.get_value(CatchmentAggrDataSelector(id, "temp", when, v.stride, "K"), data_access::MEAN);
@@ -993,7 +992,7 @@ TEST_F(NetCDFStorageVariantTest, WholeTimestepReadUsesOnlyThatTimestep)
             }
         }
         auto path = write(v);
-        NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+        NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride);
         for (std::size_t c = 0; c < v.n_cats; ++c) {
             for (std::size_t t = parity; t < v.n_times; t += 2) {
                 CatchmentAggrDataSelector sel("cat-" + std::to_string(c), "temp",
@@ -1013,7 +1012,7 @@ TEST_F(NetCDFStorageVariantTest, AmbiguousCsdmsNameIsAnError)
     v.var_name = "T2D";
     v.also_as = {"TMP_2maboveground"};
     auto path = write(v);
-    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride);
 
     CatchmentAggrDataSelector by_csdms_name("cat-1", CSDMS_STD_NAME_SURFACE_TEMP, v.start, v.stride, "K");
     for (int attempt = 0; attempt < 2; ++attempt) {
@@ -1042,7 +1041,7 @@ TEST_F(NetCDFStorageVariantTest, FailedPageReadDoesNotHangLaterReads)
 {
     Variant v;
     auto path = write(v);
-    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride, utils::getStdErr());
+    NetCDFPerFeatureDataProvider provider(path, v.start, v.start + time_t(v.n_times) * v.stride);
     // closing the file makes the next page read fail in the NetCDF library
     provider.finalize();
     CatchmentAggrDataSelector sel("cat-1", "temp", v.start, v.stride, "K");

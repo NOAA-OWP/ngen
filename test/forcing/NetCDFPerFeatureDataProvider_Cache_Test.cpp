@@ -4,7 +4,6 @@
 
 #include "gtest/gtest.h"
 #include "NetCDFPerFeatureDataProvider.hpp"
-#include "StreamHandler.hpp"
 
 #include <netcdf>
 
@@ -92,7 +91,7 @@ TEST(ProviderConcurrencyTest, ConcurrentGetValueReadsCorrectValues)
     const unsigned n_threads = test_thread_count();
     std::vector<char> ok((n_times - 1) * n_threads, false);
     {
-        Provider provider(path, start, start + n_times * stride, utils::getStdErr());
+        Provider provider(path, start, start + n_times * stride);
         std::barrier step_end(n_threads);
 
         run_threads(n_threads, [&](unsigned t) {

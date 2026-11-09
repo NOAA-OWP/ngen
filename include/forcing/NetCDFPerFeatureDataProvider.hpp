@@ -9,7 +9,6 @@
 #include "DataProviderSelectors.hpp"
 #include "AorcForcing.hpp"
 
-#include <StreamHandler.hpp>
 #include "utilities/multithreading.hpp"
 
 #include <assert.h>
@@ -90,10 +89,8 @@ namespace data_access
         /**
          * @brief Factory method that creates or returns an existing provider for the provided path.
          * @param input_path The path to a NetCDF file with lumped catchment forcing values.
-         * @param log_s An output log stream for messages from the underlying library. If a provider object for
-         * the given path already exists, this argument will be ignored.
          */
-        static std::shared_ptr<NetCDFPerFeatureDataProvider> get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s);
+        static std::shared_ptr<NetCDFPerFeatureDataProvider> get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end);
 
         /**
          * @brief Tell provider an id it is expected to provide.
@@ -105,7 +102,7 @@ namespace data_access
          */
         static void cleanup_shared_providers();
 
-        NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s);
+        NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end);
         NetCDFPerFeatureDataProvider() = delete;
         // Default implementation defined in the .cpp file so that
         // client code doesn't need to have the full definition of
@@ -189,7 +186,6 @@ namespace data_access
         double stop_time;                               // the end of the last time for which data is stored
         TimeUnit time_unit;                             // the unit that time was stored as in the file
         double time_stride;                             // the amount of time between stored time values
-        utils::StreamHandler log_stream;
         std::string file_path;
 
         // Its deleter takes the NetCDF library lock, since destroying

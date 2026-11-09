@@ -55,16 +55,8 @@ namespace realization {
         }
 #if NGEN_WITH_NETCDF
         else if (forcing_config.provider == "NetCDF"){
-            // Note: The stream mechanics of the formulations and formulation manager are
-            // are strictly speaking indepdent of the log output stream here.  The "default" output
-            // stream likely coming into this function is the null stream, but we don't want to force the forcing provider
-            // to also use the null stream for any logging it may do,
-            // so we use the standard output stream for the forcing provider by default.
-            // TODO: this likely needs to be rethought and refactored, but for now,
-            // this allows the NetCDF provider to log to standard output while still allowing
-            // formulations to log to their own output streams as needed.
             std::shared_ptr<data_access::NetCDFPerFeatureDataProvider> f;
-            f = data_access::NetCDFPerFeatureDataProvider::get_shared_provider(forcing_config.path, forcing_config.simulation_start_t, forcing_config.simulation_end_t, utils::getStdOut());
+            f = data_access::NetCDFPerFeatureDataProvider::get_shared_provider(forcing_config.path, forcing_config.simulation_start_t, forcing_config.simulation_end_t);
             // TODO: this is not _ideal_ but implements the idea.
             // refactor in the future.
             f->hint_shared_provider_id(identifier);

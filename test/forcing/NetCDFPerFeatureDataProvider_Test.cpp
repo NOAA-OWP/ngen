@@ -6,7 +6,6 @@
 #include <netcdf>
 #include "gtest/gtest.h"
 #include "NetCDFPerFeatureDataProvider.hpp"
-#include "StreamHandler.hpp"
 #include "FileChecker.h"
 #include <memory>
 #include <optional>
@@ -64,7 +63,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadUsingIds)
 {
     std::vector<std::string> ids = {"cat-27", "cat-52", "cat-67"};
 
-    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t, utils::getStdErr() );
+    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t);
     for(const std::string& id: ids){
         nc_provider.hint_shared_provider_id(id);
     }
@@ -91,7 +90,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadUsingIdsIsNotReverse
     auto rev = ids;
     std::reverse(rev.begin(), rev.end());
 
-    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t, utils::getStdErr() );
+    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t);
     for(const std::string& id: ids){
         nc_provider.hint_shared_provider_id(id);
     }
@@ -116,7 +115,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadUsingIdsIsNotReverse
 TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadUsingIdsSingle)
 {
     std::vector<std::string> ids = {"cat-52"};
-    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t, utils::getStdErr() );
+    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t);
     nc_provider.hint_shared_provider_id(ids[0]);
 
     auto start_time = nc_provider.get_data_start_time();
@@ -131,7 +130,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadUsingIdsSingle)
 TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadSpan)
 {
     std::vector<std::string> ids = {"cat-52", "cat-67"};
-    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t, utils::getStdErr() );
+    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t);
     for (const std::string& id: ids){
         nc_provider.hint_shared_provider_id(id);
     }
@@ -154,7 +153,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadSpan)
 TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadMultiSpan)
 {
     std::vector<std::string> ids = {"cat-27", "cat-67"};
-    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t, utils::getStdErr() );
+    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t);
     for (const std::string& id: ids){
         nc_provider.hint_shared_provider_id(id);
     }
@@ -178,7 +177,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadMultiSpan)
 // provider able to apply hints that do match once they are added
 TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadUnmatchedHints)
 {
-    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t, utils::getStdErr() );
+    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t);
     nc_provider.hint_shared_provider_id("cat-999");
 
     auto start_time = nc_provider.get_data_start_time();
@@ -198,7 +197,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataReadUnmatchedHints)
 ///Test AORC Forcing Object
 TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
 {
-    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t, utils::getStdErr() );
+    NetCDFPerFeatureDataProvider nc_provider(forcing_file_name, forcing_p->simulation_start_t, forcing_p->simulation_end_t);
 
     // check to see that the variable "T2D" exists
     auto var_names = nc_provider.get_available_variable_names();
@@ -340,7 +339,7 @@ TEST_F(NetCDFCacheLayoutTest, SinglePageShorterThanCacheLine)
 {
     const std::size_t n_cats = 3, n_times = 10;
     auto path = makeForcing("nc_cache_single_page.nc", n_cats, n_times, 0);
-    NetCDFPerFeatureDataProvider provider(path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+    NetCDFPerFeatureDataProvider provider(path, kStartEpoch, kStartEpoch + n_times * kStride);
 
     for (std::size_t cat = 0; cat < n_cats; ++cat) {
         for (std::size_t t = 0; t < n_times; ++t) {
@@ -364,7 +363,7 @@ TEST_F(NetCDFCacheLayoutTest, PartialLastPageRead)
 {
     const std::size_t n_cats = 3, n_times = 50, chunk = 24; // pages: 24, 24, 2
     auto path = makeForcing("nc_cache_partial_page.nc", n_cats, n_times, chunk);
-    NetCDFPerFeatureDataProvider provider(path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+    NetCDFPerFeatureDataProvider provider(path, kStartEpoch, kStartEpoch + n_times * kStride);
 
     for (std::size_t cat = 0; cat < n_cats; ++cat) {
         for (std::size_t t = 0; t < n_times; ++t) {
@@ -388,7 +387,7 @@ TEST_F(NetCDFCacheLayoutTest, ReadsComeFromTheNamedVariable)
         {"PSFC",   "Pa",      3000},
     };
     auto path = makeForcing("nc_cache_variables.nc", n_cats, n_times, chunk, vars);
-    NetCDFPerFeatureDataProvider provider(path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+    NetCDFPerFeatureDataProvider provider(path, kStartEpoch, kStartEpoch + n_times * kStride);
 
     // The first reads of the well-known fields are by their CSDMS names
     EXPECT_DOUBLE_EQ(readStep(provider, 1, 0, CSDMS_STD_NAME_SURFACE_TEMP, "K"), cellValue(1, 0) + 1000);
@@ -417,12 +416,12 @@ TEST_F(NetCDFCacheLayoutTest, ProviderAtReusedAddressReadsItsOwnData)
     auto second_path = makeForcing("nc_cache_reuse_second.nc", n_cats, n_times, chunk, 1000.0);
 
     std::optional<NetCDFPerFeatureDataProvider> provider;
-    provider.emplace(first_path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+    provider.emplace(first_path, kStartEpoch, kStartEpoch + n_times * kStride);
     const auto* first_address = &*provider;
     EXPECT_DOUBLE_EQ(readStep(*provider, 1, 3), cellValue(1, 3));
     provider.reset();
 
-    provider.emplace(second_path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+    provider.emplace(second_path, kStartEpoch, kStartEpoch + n_times * kStride);
     ASSERT_EQ(&*provider, first_address);
     EXPECT_DOUBLE_EQ(readStep(*provider, 1, 3), cellValue(1, 3) + 1000.0);
 }
@@ -433,7 +432,7 @@ TEST_F(NetCDFCacheLayoutTest, ReadStraddlesPageBoundary)
 {
     const std::size_t n_cats = 3, n_times = 50, chunk = 24; // pages: 24, 24, 2
     auto path = makeForcing("nc_cache_straddle.nc", n_cats, n_times, chunk);
-    NetCDFPerFeatureDataProvider provider(path, kStartEpoch, kStartEpoch + n_times * kStride, utils::getStdErr());
+    NetCDFPerFeatureDataProvider provider(path, kStartEpoch, kStartEpoch + n_times * kStride);
 
     double tol = 1e-9;
 
