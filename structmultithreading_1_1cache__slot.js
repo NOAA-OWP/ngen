@@ -9,8 +9,9 @@ var structmultithreading_1_1cache__slot =
     [ "cache_slot", "structmultithreading_1_1cache__slot.html#a799d2ba1a39778213a7d6a996b86f9b0", null ],
     [ "cache_slot", "structmultithreading_1_1cache__slot.html#ace55f2da2fcd5c3fc1f9e0a12829355e", null ],
     [ "cache_slot", "structmultithreading_1_1cache__slot.html#a7f076877cbaebd348b36a792b8c0703d", null ],
+    [ "fail", "structmultithreading_1_1cache__slot.html#aef2a5ecd3fe07ca0b33d6c5563a4ca81", null ],
     [ "fill", "structmultithreading_1_1cache__slot.html#a8135e55994d4946859d1a4d4abb383c4", null ],
-    [ "get", "structmultithreading_1_1cache__slot.html#a9cd176b0b810dc44e2d3a57657da5868", null ],
+    [ "get", "structmultithreading_1_1cache__slot.html#a08f35494edf07822494106c16f326bb5", null ],
     [ "ptr_", "structmultithreading_1_1cache__slot.html#af773617fc1caa64e11a8e00170369111", null ],
     [ "state_", "structmultithreading_1_1cache__slot.html#ae061e31ac4ff11643a7b5c43afbc9ac2", null ]
 ];

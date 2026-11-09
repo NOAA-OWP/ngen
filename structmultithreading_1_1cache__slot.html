@@ -111,7 +111,7 @@ $(function(){initNavTree('structmultithreading_1_1cache__slot.html',''); initRes
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structmultithreading_1_1cache__slot__coll__graph.svg" width="144" height="562"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="structmultithreading_1_1cache__slot__coll__graph.svg" width="144" height="582"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -122,10 +122,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ace55f2da2fcd5c3fc1f9e0a12829355e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f076877cbaebd348b36a792b8c0703d" id="r_a7f076877cbaebd348b36a792b8c0703d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7f076877cbaebd348b36a792b8c0703d">cache_slot</a> (<a class="el" href="structmultithreading_1_1cache__slot.html">cache_slot</a> &amp;&amp;)=delete</td></tr>
 <tr class="separator:a7f076877cbaebd348b36a792b8c0703d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9cd176b0b810dc44e2d3a57657da5868" id="r_a9cd176b0b810dc44e2d3a57657da5868"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9cd176b0b810dc44e2d3a57657da5868">get</a> ()</td></tr>
-<tr class="separator:a9cd176b0b810dc44e2d3a57657da5868"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08f35494edf07822494106c16f326bb5" id="r_a08f35494edf07822494106c16f326bb5"><td class="memItemLeft" align="right" valign="top">std::variant&lt; std::shared_ptr&lt; T &gt;, <a class="el" href="structmultithreading_1_1failed__fill.html">failed_fill</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a08f35494edf07822494106c16f326bb5">get</a> ()</td></tr>
+<tr class="separator:a08f35494edf07822494106c16f326bb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8135e55994d4946859d1a4d4abb383c4" id="r_a8135e55994d4946859d1a4d4abb383c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8135e55994d4946859d1a4d4abb383c4">fill</a> (std::shared_ptr&lt; T &gt; buffer_ptr, bool immediate_use)</td></tr>
 <tr class="separator:a8135e55994d4946859d1a4d4abb383c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef2a5ecd3fe07ca0b33d6c5563a4ca81" id="r_aef2a5ecd3fe07ca0b33d6c5563a4ca81"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef2a5ecd3fe07ca0b33d6c5563a4ca81">fail</a> ()</td></tr>
+<tr class="separator:aef2a5ecd3fe07ca0b33d6c5563a4ca81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-types" name="pri-types"></a>
 Private Types</h2></td></tr>
@@ -262,6 +264,25 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="aef2a5ecd3fe07ca0b33d6c5563a4ca81" name="aef2a5ecd3fe07ca0b33d6c5563a4ca81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef2a5ecd3fe07ca0b33d6c5563a4ca81">&#9670;&#160;</a></span>fail()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structmultithreading_1_1cache__slot.html">multithreading::cache_slot</a>&lt; T &gt;::fail </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a8135e55994d4946859d1a4d4abb383c4" name="a8135e55994d4946859d1a4d4abb383c4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8135e55994d4946859d1a4d4abb383c4">&#9670;&#160;</a></span>fill()</h2>
 
@@ -285,8 +306,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a9cd176b0b810dc44e2d3a57657da5868" name="a9cd176b0b810dc44e2d3a57657da5868"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9cd176b0b810dc44e2d3a57657da5868">&#9670;&#160;</a></span>get()</h2>
+<a id="a08f35494edf07822494106c16f326bb5" name="a08f35494edf07822494106c16f326bb5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08f35494edf07822494106c16f326bb5">&#9670;&#160;</a></span>get()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -294,7 +315,7 @@ template&lt;typename T &gt; </div>
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt; T &gt; <a class="el" href="structmultithreading_1_1cache__slot.html">multithreading::cache_slot</a>&lt; T &gt;::get </td>
+          <td class="memname">auto <a class="el" href="structmultithreading_1_1cache__slot.html">multithreading::cache_slot</a>&lt; T &gt;::get </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -362,7 +383,7 @@ template&lt;typename T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacemultithreading.html">multithreading</a></li><li class="navelem"><a class="el" href="structmultithreading_1_1cache__slot.html">cache_slot</a></li>
-    <li class="footer">Generated on Thu Nov 5 2026 17:24:35 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Nov 9 2026 22:18:55 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

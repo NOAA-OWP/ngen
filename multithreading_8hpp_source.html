@@ -113,356 +113,381 @@ $(function(){initNavTree('multithreading_8hpp_source.html',''); initResizable(tr
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;shared_mutex&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;system_error&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;pthread.h&gt;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="foldopen" id="foldopen00018" data-start="{" data-end="}">
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="namespacemultithreading.html">   18</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemultithreading.html">multithreading</a></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>{</div>
-<div class="foldopen" id="foldopen00020" data-start="{" data-end="}">
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="namespacemultithreading_1_1details.html">   20</a></span>    <span class="keyword">namespace </span>details</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    {</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="comment">// A string usable as a template argument, so that</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="comment">// library_mutex() can be keyed by a library&#39;s name</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> N&gt;</div>
-<div class="foldopen" id="foldopen00025" data-start="{" data-end="};">
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structmultithreading_1_1details_1_1string__literal.html">   25</a></span>        <span class="keyword">struct </span><a class="code hl_struct" href="structmultithreading_1_1details_1_1string__literal.html">string_literal</a> {</div>
-<div class="foldopen" id="foldopen00026" data-start="{" data-end="}">
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="structmultithreading_1_1details_1_1string__literal.html#ae2f8138c97cc11dc468ea8f4d0939df6">   26</a></span>            <span class="keyword">constexpr</span> <a class="code hl_function" href="structmultithreading_1_1details_1_1string__literal.html#ae2f8138c97cc11dc468ea8f4d0939df6">string_literal</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> (&amp;str)[N]) {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>                <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; N; ++i)</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>                    <a class="code hl_variable" href="structmultithreading_1_1details_1_1string__literal.html#ad686e0b694f4300c5afaa0dd7da2b112">value</a>[i] = str[i];</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            }</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;variant&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;pthread.h&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="}">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="namespacemultithreading.html">   19</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemultithreading.html">multithreading</a></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
+<div class="foldopen" id="foldopen00021" data-start="{" data-end="}">
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="namespacemultithreading_1_1details.html">   21</a></span>    <span class="keyword">namespace </span>details</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="comment">// A string usable as a template argument, so that</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="comment">// library_mutex() can be keyed by a library&#39;s name</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> N&gt;</div>
+<div class="foldopen" id="foldopen00026" data-start="{" data-end="};">
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="structmultithreading_1_1details_1_1string__literal.html">   26</a></span>        <span class="keyword">struct </span><a class="code hl_struct" href="structmultithreading_1_1details_1_1string__literal.html">string_literal</a> {</div>
+<div class="foldopen" id="foldopen00027" data-start="{" data-end="}">
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="structmultithreading_1_1details_1_1string__literal.html#ae2f8138c97cc11dc468ea8f4d0939df6">   27</a></span>            <span class="keyword">constexpr</span> <a class="code hl_function" href="structmultithreading_1_1details_1_1string__literal.html#ae2f8138c97cc11dc468ea8f4d0939df6">string_literal</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> (&amp;str)[N]) {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>                <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; N; ++i)</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>                    <a class="code hl_variable" href="structmultithreading_1_1details_1_1string__literal.html#ad686e0b694f4300c5afaa0dd7da2b112">value</a>[i] = str[i];</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            }</div>
 </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structmultithreading_1_1details_1_1string__literal.html#ad686e0b694f4300c5afaa0dd7da2b112">   31</a></span>            <span class="keywordtype">char</span> <a class="code hl_variable" href="structmultithreading_1_1details_1_1string__literal.html#ad686e0b694f4300c5afaa0dd7da2b112">value</a>[N];</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        };</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="structmultithreading_1_1details_1_1string__literal.html#ad686e0b694f4300c5afaa0dd7da2b112">   32</a></span>            <span class="keywordtype">char</span> <a class="code hl_variable" href="structmultithreading_1_1details_1_1string__literal.html#ad686e0b694f4300c5afaa0dd7da2b112">value</a>[N];</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        };</div>
 </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="comment">// The one mutex in the process for the library named @arg</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="comment">// name, created on first use. Exported, so that it stays one per</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="comment">// process even if ngen is built as shared libraries with hidden</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="comment">// visibility. Call library_mutex() rather than this.</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        [[gnu::visibility(<span class="stringliteral">&quot;default&quot;</span>)]] std::mutex&amp; <a class="code hl_function" href="namespacemultithreading_1_1details.html#a1b42fd8d7ca25ca95c1e4f35e9f4bbc3">named_library_mutex</a>(<span class="keywordtype">char</span> <span class="keyword">const</span>* name);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    }</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="comment">// The one mutex in the process for the library named @arg</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="comment">// name, created on first use. Exported, so that it stays one per</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="comment">// process even if ngen is built as shared libraries with hidden</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="comment">// visibility. Call library_mutex() rather than this.</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        [[gnu::visibility(<span class="stringliteral">&quot;default&quot;</span>)]] std::mutex&amp; <a class="code hl_function" href="namespacemultithreading_1_1details.html#a1b42fd8d7ca25ca95c1e4f35e9f4bbc3">named_library_mutex</a>(<span class="keywordtype">char</span> <span class="keyword">const</span>* name);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    }</div>
 </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// The mutex serializing calls into the library named @arg Name,</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="comment">// which can&#39;t be called from more than one thread at a time. Every</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="comment">// call into that library, anywhere in the process, must hold it:</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="comment">//</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">//     std::unique_lock netcdf_lock(multithreading::library_mutex&lt;&quot;netcdf&quot;&gt;());</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">//</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="comment">// &quot;netcdf&quot; is the NetCDF library, and the HDF5 library beneath it</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// unless that was built thread-safe, which can&#39;t be called from more</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// than one thread at a time even for different files.</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">//</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// It&#39;s a plain std::mutex, so regions holding it must not nest.</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">//</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// Each executable or shared library that calls this gets its own</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="comment">// copy of the reference below, but they all refer to the one mutex</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">// that details::named_library_mutex() keeps for Name. A static</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// mutex here instead would be one per shared library unless</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// exported, which GCC won&#39;t do for a template specialized on a</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">// string_literal.</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">template</span> &lt;details::<span class="keywordtype">string</span>_literal Name&gt;</div>
-<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="namespacemultithreading.html#a0ce5bd7cb44e7a8a763a919c8e8140f3">   60</a></span>    std::mutex&amp; <a class="code hl_function" href="namespacemultithreading.html#a0ce5bd7cb44e7a8a763a919c8e8140f3">library_mutex</a>()</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keyword">static</span> std::mutex&amp; mutex = <a class="code hl_function" href="namespacemultithreading_1_1details.html#a1b42fd8d7ca25ca95c1e4f35e9f4bbc3">details::named_library_mutex</a>(Name.value);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keywordflow">return</span> mutex;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    }</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="comment">// The mutex serializing calls into the library named @arg Name,</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="comment">// which can&#39;t be called from more than one thread at a time. Every</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="comment">// call into that library, anywhere in the process, must hold it:</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">//</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">//     std::unique_lock netcdf_lock(multithreading::library_mutex&lt;&quot;netcdf&quot;&gt;());</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="comment">//</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// &quot;netcdf&quot; is the NetCDF library, and the HDF5 library beneath it</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// unless that was built thread-safe, which can&#39;t be called from more</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// than one thread at a time even for different files.</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">//</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">// It&#39;s a plain std::mutex, so regions holding it must not nest.</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">//</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="comment">// Each executable or shared library that calls this gets its own</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">// copy of the reference below, but they all refer to the one mutex</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// that details::named_library_mutex() keeps for Name. A static</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// mutex here instead would be one per shared library unless</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">// exported, which GCC won&#39;t do for a template specialized on a</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="comment">// string_literal.</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keyword">template</span> &lt;details::<span class="keywordtype">string</span>_literal Name&gt;</div>
+<div class="foldopen" id="foldopen00061" data-start="{" data-end="}">
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="namespacemultithreading.html#a0ce5bd7cb44e7a8a763a919c8e8140f3">   61</a></span>    std::mutex&amp; <a class="code hl_function" href="namespacemultithreading.html#a0ce5bd7cb44e7a8a763a919c8e8140f3">library_mutex</a>()</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keyword">static</span> std::mutex&amp; mutex = <a class="code hl_function" href="namespacemultithreading_1_1details.html#a1b42fd8d7ca25ca95c1e4f35e9f4bbc3">details::named_library_mutex</a>(Name.value);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordflow">return</span> mutex;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    }</div>
 </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="comment">// Thread-safe holder for one page of cached data. Exactly one</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="comment">// thread fill()s it in; until then the slot is EMPTY, and</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="comment">// other threads calling get() wait for it</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="comment">//</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// The buffer is a plain shared_ptr published through state_,</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">// rather than a std::atomic&lt;std::shared_ptr&gt;, so that readers</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// only load state_ and don&#39;t contend on the lock that common</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="comment">// implementations of the latter take on every load</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00075" data-start="{" data-end="};">
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html">   75</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structmultithreading_1_1cache__slot.html">cache_slot</a> {</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#a799d2ba1a39778213a7d6a996b86f9b0">   76</a></span>        <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#a799d2ba1a39778213a7d6a996b86f9b0">cache_slot</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#ace55f2da2fcd5c3fc1f9e0a12829355e">   78</a></span>        <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#ace55f2da2fcd5c3fc1f9e0a12829355e">cache_slot</a>(<a class="code hl_struct" href="structmultithreading_1_1cache__slot.html">cache_slot</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#a7f076877cbaebd348b36a792b8c0703d">   79</a></span>        <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#a7f076877cbaebd348b36a792b8c0703d">cache_slot</a>(<a class="code hl_struct" href="structmultithreading_1_1cache__slot.html">cache_slot</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="comment">// Get back a non-nullptr buffer pointer that can safely</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <span class="comment">// be read from. If it&#39;s not already set, this may block</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="comment">// on another thread that will call fill() to set said</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <span class="comment">// pointer</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        std::shared_ptr&lt;T&gt; <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#a9cd176b0b810dc44e2d3a57657da5868">get</a>();</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="comment">// Fill in this slot with the provided buffer pointer and</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="comment">// safely unblock any threads waiting for it. Must be</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="comment">// called by one thread with a non-null pointer, on a slot</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="comment">// that is EMPTY, or in ERROR to retry a failed fill</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#a8135e55994d4946859d1a4d4abb383c4">fill</a>(std::shared_ptr&lt;T&gt; buffer_ptr, <span class="keywordtype">bool</span> immediate_use);</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#af773617fc1caa64e11a8e00170369111">   94</a></span>        std::shared_ptr&lt;T&gt; <a class="code hl_variable" href="structmultithreading_1_1cache__slot.html#af773617fc1caa64e11a8e00170369111">ptr_</a> = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="comment">// ERROR marks a failed fill, which fill() may retry</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab31da6921c8f52e47de4d15d684e1c8f">   96</a></span>        <span class="keyword">enum</span> <a class="code hl_enumeration" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bff">STATE</a> : <span class="keywordtype">char</span> { <a class="code hl_enumvalue" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab31da6921c8f52e47de4d15d684e1c8f">EMPTY</a>=0, <a class="code hl_enumvalue" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffa8c8457ff6ac3ce679662f821ccdeb501">FILLED</a>=1, <a class="code hl_enumvalue" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab2e810c851c2ab656bdff5d9e712e70e">HOT</a>=2, <a class="code hl_enumvalue" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffae392199c56c24d756a3190639154e820">ERROR</a>=3 };</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#ae061e31ac4ff11643a7b5c43afbc9ac2">   97</a></span>        std::atomic&lt;int&gt; <a class="code hl_variable" href="structmultithreading_1_1cache__slot.html#ae061e31ac4ff11643a7b5c43afbc9ac2">state_</a> = <a class="code hl_enumvalue" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab31da6921c8f52e47de4d15d684e1c8f">STATE::EMPTY</a>;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    };</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="comment">// What cache_slot::get() returns for a slot whose filler failed</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="structmultithreading_1_1failed__fill.html">   68</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structmultithreading_1_1failed__fill.html">failed_fill</a> {};</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// Thread-safe holder for one page of cached data. Exactly one</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">// thread fill()s it in; until then the slot is EMPTY, and</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// other threads calling get() wait for it</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="comment">//</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="comment">// The buffer is a plain shared_ptr published through state_,</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="comment">// rather than a std::atomic&lt;std::shared_ptr&gt;, so that readers</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="comment">// only load state_ and don&#39;t contend on the lock that common</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="comment">// implementations of the latter take on every load</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00079" data-start="{" data-end="};">
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html">   79</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structmultithreading_1_1cache__slot.html">cache_slot</a> {</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#a799d2ba1a39778213a7d6a996b86f9b0">   80</a></span>        <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#a799d2ba1a39778213a7d6a996b86f9b0">cache_slot</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#ace55f2da2fcd5c3fc1f9e0a12829355e">   82</a></span>        <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#ace55f2da2fcd5c3fc1f9e0a12829355e">cache_slot</a>(<a class="code hl_struct" href="structmultithreading_1_1cache__slot.html">cache_slot</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#a7f076877cbaebd348b36a792b8c0703d">   83</a></span>        <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#a7f076877cbaebd348b36a792b8c0703d">cache_slot</a>(<a class="code hl_struct" href="structmultithreading_1_1cache__slot.html">cache_slot</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="comment">// Get back a non-nullptr buffer pointer that can safely</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="comment">// be read from. If it&#39;s not already set, this may block</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="comment">// on another thread that will call fill() to set said</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="comment">// pointer. Returns failed_fill if that thread called</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="comment">// fail() instead</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        std::variant&lt;std::shared_ptr&lt;T&gt;, <a class="code hl_struct" href="structmultithreading_1_1failed__fill.html">failed_fill</a>&gt; <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#a08f35494edf07822494106c16f326bb5">get</a>();</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="comment">// Fill in this slot with the provided buffer pointer and</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="comment">// safely unblock any threads waiting for it. Must be</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="comment">// called by one thread with a non-null pointer, on a slot</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="comment">// that is EMPTY, or in ERROR to retry a failed fill</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#a8135e55994d4946859d1a4d4abb383c4">fill</a>(std::shared_ptr&lt;T&gt; buffer_ptr, <span class="keywordtype">bool</span> immediate_use);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="comment">// Mark this slot&#39;s fill as failed, for the thread that would</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="comment">// have filled it to call instead of fill(). Threads waiting in</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <span class="comment">// get(), and later callers, get failed_fill rather than wait</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="comment">// forever</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#aef2a5ecd3fe07ca0b33d6c5563a4ca81">fail</a>();</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#af773617fc1caa64e11a8e00170369111">  105</a></span>        std::shared_ptr&lt;T&gt; <a class="code hl_variable" href="structmultithreading_1_1cache__slot.html#af773617fc1caa64e11a8e00170369111">ptr_</a> = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="comment">// ERROR marks a failed fill, which fill() may retry</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab31da6921c8f52e47de4d15d684e1c8f">  107</a></span>        <span class="keyword">enum</span> <a class="code hl_enumeration" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bff">STATE</a> : <span class="keywordtype">char</span> { <a class="code hl_enumvalue" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab31da6921c8f52e47de4d15d684e1c8f">EMPTY</a>=0, <a class="code hl_enumvalue" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffa8c8457ff6ac3ce679662f821ccdeb501">FILLED</a>=1, <a class="code hl_enumvalue" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab2e810c851c2ab656bdff5d9e712e70e">HOT</a>=2, <a class="code hl_enumvalue" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffae392199c56c24d756a3190639154e820">ERROR</a>=3 };</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#ae061e31ac4ff11643a7b5c43afbc9ac2">  108</a></span>        std::atomic&lt;int&gt; <a class="code hl_variable" href="structmultithreading_1_1cache__slot.html#ae061e31ac4ff11643a7b5c43afbc9ac2">state_</a> = <a class="code hl_enumvalue" href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab31da6921c8f52e47de4d15d684e1c8f">STATE::EMPTY</a>;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    };</div>
 </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Key, <span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00101" data-start="{" data-end="};">
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="structmultithreading_1_1shared__cache.html">  101</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structmultithreading_1_1shared__cache.html">shared_cache</a> {</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="comment">// Get back a cache slot matching the @arg key. Exactly</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="comment">// one thread will return &#39;true&#39; the first time `key` is</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="comment">// passed</span></div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="comment">//</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="comment">// Keys are expected to increase monotonically as the</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <span class="comment">// simulation advances, so a key is not looked up again</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="comment">// after it is evicted. If it is, it is inserted again,</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="comment">// and this returns &#39;true&#39; again</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="comment">//</span></div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="comment">// If this call inserts a slot and @arg eviction_floor is</span></div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="comment">// set, first evict all slots whose key is below it.</span></div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="comment">// Callers must not pass a floor above the key of any slot</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="comment">// another thread may still be using, which includes the</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="comment">// key being looked up. Eviction is handled here to take</span></div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="comment">// advantage of the locking on the internal structure</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="comment">// necessary for insertion.</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        std::pair&lt;cache_slot&lt;T&gt;&amp;, <span class="keywordtype">bool</span>&gt; <a class="code hl_function" href="structmultithreading_1_1shared__cache.html#a07a760ef51f45e2584e691caec943d4f">find_or_insert</a>(Key <span class="keyword">const</span>&amp; key, std::optional&lt;Key&gt; <span class="keyword">const</span>&amp; eviction_floor);</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="comment">// The keys of all slots currently in the cache</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        std::set&lt;Key&gt; <a class="code hl_function" href="structmultithreading_1_1shared__cache.html#a8c7eeaa940dc81a1aedaabd249b0cbea">keys</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="structmultithreading_1_1shared__cache.html#ab41437b24df182335f81c370a0d4238e">  124</a></span>        std::map&lt;Key, cache_slot&lt;T&gt;&gt; <a class="code hl_variable" href="structmultithreading_1_1shared__cache.html#ab41437b24df182335f81c370a0d4238e">cache</a>;</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno"><a class="line" href="structmultithreading_1_1shared__cache.html#ac7c9563f535435ffcbe075dccfae348b">  125</a></span>        <span class="keyword">mutable</span> std::shared_mutex <a class="code hl_variable" href="structmultithreading_1_1shared__cache.html#ac7c9563f535435ffcbe075dccfae348b">mutex</a>;</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    };</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Key, <span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00112" data-start="{" data-end="};">
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="structmultithreading_1_1shared__cache.html">  112</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structmultithreading_1_1shared__cache.html">shared_cache</a> {</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="comment">// Get back a cache slot matching the @arg key. Exactly</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="comment">// one thread will return &#39;true&#39; the first time `key` is</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="comment">// passed</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="comment">//</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="comment">// Keys are expected to increase monotonically as the</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="comment">// simulation advances, so a key is not looked up again</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <span class="comment">// after it is evicted. If it is, it is inserted again,</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="comment">// and this returns &#39;true&#39; again</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="comment">//</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        <span class="comment">// If this call inserts a slot and @arg eviction_floor is</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="comment">// set, first evict all slots whose key is below it.</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="comment">// Callers must not pass a floor above the key of any slot</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        <span class="comment">// another thread may still be using, which includes the</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        <span class="comment">// key being looked up. Eviction is handled here to take</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="comment">// advantage of the locking on the internal structure</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="comment">// necessary for insertion.</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        std::pair&lt;cache_slot&lt;T&gt;&amp;, <span class="keywordtype">bool</span>&gt; <a class="code hl_function" href="structmultithreading_1_1shared__cache.html#a07a760ef51f45e2584e691caec943d4f">find_or_insert</a>(Key <span class="keyword">const</span>&amp; key, std::optional&lt;Key&gt; <span class="keyword">const</span>&amp; eviction_floor);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="comment">// The keys of all slots currently in the cache</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        std::set&lt;Key&gt; <a class="code hl_function" href="structmultithreading_1_1shared__cache.html#a8c7eeaa940dc81a1aedaabd249b0cbea">keys</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="structmultithreading_1_1shared__cache.html#ab41437b24df182335f81c370a0d4238e">  135</a></span>        std::map&lt;Key, cache_slot&lt;T&gt;&gt; <a class="code hl_variable" href="structmultithreading_1_1shared__cache.html#ab41437b24df182335f81c370a0d4238e">cache</a>;</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="structmultithreading_1_1shared__cache.html#ac7c9563f535435ffcbe075dccfae348b">  136</a></span>        <span class="keyword">mutable</span> std::shared_mutex <a class="code hl_variable" href="structmultithreading_1_1shared__cache.html#ac7c9563f535435ffcbe075dccfae348b">mutex</a>;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    };</div>
 </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="comment">// Owns a pthread key, so it is deleted even if its owner&#39;s</span></div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="comment">// constructor throws after creating it</span></div>
-<div class="foldopen" id="foldopen00130" data-start="{" data-end="};">
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno"><a class="line" href="structmultithreading_1_1thread__key.html">  130</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structmultithreading_1_1thread__key.html">thread_key</a> {</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <a class="code hl_function" href="structmultithreading_1_1thread__key.html#a435c24ac9494766b2bce354aff2c5edc">thread_key</a>();</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <a class="code hl_function" href="structmultithreading_1_1thread__key.html#ad0113a67d59550589f717377e0e9601e">~thread_key</a>();</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="structmultithreading_1_1thread__key.html#ab6980635fe34e4a0b46568ec2d422762">  133</a></span>        <a class="code hl_function" href="structmultithreading_1_1thread__key.html#ab6980635fe34e4a0b46568ec2d422762">thread_key</a>(<a class="code hl_struct" href="structmultithreading_1_1thread__key.html">thread_key</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno"><a class="line" href="structmultithreading_1_1thread__key.html#a9e40a973c3e94756b3b36618de3cf4a7">  134</a></span>        <a class="code hl_struct" href="structmultithreading_1_1thread__key.html">thread_key</a>&amp; <a class="code hl_function" href="structmultithreading_1_1thread__key.html#a9e40a973c3e94756b3b36618de3cf4a7">operator=</a>(<a class="code hl_struct" href="structmultithreading_1_1thread__key.html">thread_key</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="structmultithreading_1_1thread__key.html#af16c7d0f424c4ffa251a7bea6ac2a653">  135</a></span>        pthread_key_t <a class="code hl_variable" href="structmultithreading_1_1thread__key.html#af16c7d0f424c4ffa251a7bea6ac2a653">key</a>;</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    };</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="comment">// Owns a pthread key, so it is deleted even if its owner&#39;s</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="comment">// constructor throws after creating it</span></div>
+<div class="foldopen" id="foldopen00141" data-start="{" data-end="};">
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno"><a class="line" href="structmultithreading_1_1thread__key.html">  141</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structmultithreading_1_1thread__key.html">thread_key</a> {</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        <a class="code hl_function" href="structmultithreading_1_1thread__key.html#a435c24ac9494766b2bce354aff2c5edc">thread_key</a>();</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        <a class="code hl_function" href="structmultithreading_1_1thread__key.html#ad0113a67d59550589f717377e0e9601e">~thread_key</a>();</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno"><a class="line" href="structmultithreading_1_1thread__key.html#ab6980635fe34e4a0b46568ec2d422762">  144</a></span>        <a class="code hl_function" href="structmultithreading_1_1thread__key.html#ab6980635fe34e4a0b46568ec2d422762">thread_key</a>(<a class="code hl_struct" href="structmultithreading_1_1thread__key.html">thread_key</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno"><a class="line" href="structmultithreading_1_1thread__key.html#a9e40a973c3e94756b3b36618de3cf4a7">  145</a></span>        <a class="code hl_struct" href="structmultithreading_1_1thread__key.html">thread_key</a>&amp; <a class="code hl_function" href="structmultithreading_1_1thread__key.html#a9e40a973c3e94756b3b36618de3cf4a7">operator=</a>(<a class="code hl_struct" href="structmultithreading_1_1thread__key.html">thread_key</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="structmultithreading_1_1thread__key.html#af16c7d0f424c4ffa251a7bea6ac2a653">  146</a></span>        pthread_key_t <a class="code hl_variable" href="structmultithreading_1_1thread__key.html#af16c7d0f424c4ffa251a7bea6ac2a653">key</a>;</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    };</div>
 </div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="comment">// One instance of T for each thread that calls get() on this</span></div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="comment">// object, default-constructed on that thread&#39;s first call.</span></div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="comment">//</span></div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="comment">// Each thread finds its instance through a pthread key. POSIX gives</span></div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="comment">// a newly created key a null value in every thread, so an object</span></div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <span class="comment">// never sees instances belonging to an earlier one, even if it</span></div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="comment">// reuses that object&#39;s address or key. pthread_key_delete() doesn&#39;t</span></div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="comment">// destroy the values, so this object owns every instance it</span></div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="comment">// creates, and destroys them when it is destroyed. An instance</span></div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="comment">// whose thread exits stays until then.</span></div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="comment">//</span></div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="comment">// Each object uses one pthread key, so constructing one throws</span></div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="comment">// std::system_error once the process has PTHREAD_KEYS_MAX keys. The</span></div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="comment">// object must not be destroyed while any thread may still call</span></div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="comment">// get() on it or use an instance it returned.</span></div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00154" data-start="{" data-end="};">
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html">  154</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classmultithreading_1_1per__thread.html">per_thread</a> {</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#a6c8f33d8d9bfd3f5d06e81eee8ecef36">  156</a></span>        <a class="code hl_function" href="classmultithreading_1_1per__thread.html#a6c8f33d8d9bfd3f5d06e81eee8ecef36">per_thread</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#a604b6f53e6b0cfe912a9e59d2e9160ba">  157</a></span>        <a class="code hl_function" href="classmultithreading_1_1per__thread.html#a604b6f53e6b0cfe912a9e59d2e9160ba">per_thread</a>(<a class="code hl_class" href="classmultithreading_1_1per__thread.html">per_thread</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#ae922b2a6965b55860613eb2514f3d3dc">  158</a></span>        <a class="code hl_class" href="classmultithreading_1_1per__thread.html">per_thread</a>&amp; <a class="code hl_function" href="classmultithreading_1_1per__thread.html#ae922b2a6965b55860613eb2514f3d3dc">operator=</a>(<a class="code hl_class" href="classmultithreading_1_1per__thread.html">per_thread</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        <span class="comment">// The calling thread&#39;s instance, created on first use</span></div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        T&amp; <a class="code hl_function" href="classmultithreading_1_1per__thread.html#ab8a029c6f6531f41d7519690b0aa7fff">get</a>();</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <span class="comment">// Declared before instances, so the key outlives them</span></div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#aa29df6bac534f692f58818fb527c4225">  165</a></span>        <a class="code hl_struct" href="structmultithreading_1_1thread__key.html">thread_key</a> <a class="code hl_variable" href="classmultithreading_1_1per__thread.html#aa29df6bac534f692f58818fb527c4225">key_</a>;</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#ac2d1cf9d191233b61966f274ab50bdc8">  166</a></span>        std::mutex <a class="code hl_variable" href="classmultithreading_1_1per__thread.html#ac2d1cf9d191233b61966f274ab50bdc8">instances_mutex_</a>;</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#a66561c91b1e9252f529b51f9bdcbf22e">  167</a></span>        std::vector&lt;std::unique_ptr&lt;T&gt;&gt; <a class="code hl_variable" href="classmultithreading_1_1per__thread.html#a66561c91b1e9252f529b51f9bdcbf22e">instances_</a>;</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    };</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="comment">// One instance of T for each thread that calls get() on this</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="comment">// object, default-constructed on that thread&#39;s first call.</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="comment">//</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="comment">// Each thread finds its instance through a pthread key. POSIX gives</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="comment">// a newly created key a null value in every thread, so an object</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="comment">// never sees instances belonging to an earlier one, even if it</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="comment">// reuses that object&#39;s address or key. pthread_key_delete() doesn&#39;t</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="comment">// destroy the values, so this object owns every instance it</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="comment">// creates, and destroys them when it is destroyed. An instance</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="comment">// whose thread exits stays until then.</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="comment">//</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <span class="comment">// Each object uses one pthread key, so constructing one throws</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="comment">// std::system_error once the process has PTHREAD_KEYS_MAX keys. The</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="comment">// object must not be destroyed while any thread may still call</span></div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="comment">// get() on it or use an instance it returned.</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00165" data-start="{" data-end="};">
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html">  165</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classmultithreading_1_1per__thread.html">per_thread</a> {</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#a6c8f33d8d9bfd3f5d06e81eee8ecef36">  167</a></span>        <a class="code hl_function" href="classmultithreading_1_1per__thread.html#a6c8f33d8d9bfd3f5d06e81eee8ecef36">per_thread</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#a604b6f53e6b0cfe912a9e59d2e9160ba">  168</a></span>        <a class="code hl_function" href="classmultithreading_1_1per__thread.html#a604b6f53e6b0cfe912a9e59d2e9160ba">per_thread</a>(<a class="code hl_class" href="classmultithreading_1_1per__thread.html">per_thread</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#ae922b2a6965b55860613eb2514f3d3dc">  169</a></span>        <a class="code hl_class" href="classmultithreading_1_1per__thread.html">per_thread</a>&amp; <a class="code hl_function" href="classmultithreading_1_1per__thread.html#ae922b2a6965b55860613eb2514f3d3dc">operator=</a>(<a class="code hl_class" href="classmultithreading_1_1per__thread.html">per_thread</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        <span class="comment">// The calling thread&#39;s instance, created on first use</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        T&amp; <a class="code hl_function" href="classmultithreading_1_1per__thread.html#ab8a029c6f6531f41d7519690b0aa7fff">get</a>();</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        <span class="comment">// Declared before instances, so the key outlives them</span></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#aa29df6bac534f692f58818fb527c4225">  176</a></span>        <a class="code hl_struct" href="structmultithreading_1_1thread__key.html">thread_key</a> <a class="code hl_variable" href="classmultithreading_1_1per__thread.html#aa29df6bac534f692f58818fb527c4225">key_</a>;</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#ac2d1cf9d191233b61966f274ab50bdc8">  177</a></span>        std::mutex <a class="code hl_variable" href="classmultithreading_1_1per__thread.html#ac2d1cf9d191233b61966f274ab50bdc8">instances_mutex_</a>;</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#a66561c91b1e9252f529b51f9bdcbf22e">  178</a></span>        std::vector&lt;std::unique_ptr&lt;T&gt;&gt; <a class="code hl_variable" href="classmultithreading_1_1per__thread.html#a66561c91b1e9252f529b51f9bdcbf22e">instances_</a>;</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    };</div>
 </div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="comment">// Remove entries in the passed cache with keys less than</span></div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <span class="comment">// floor_index, and return them, so the caller</span></div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="comment">// controls when they are destroyed. Nodes are spliced, so this</span></div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="comment">// allocates and frees nothing. Returning the named local relies on</span></div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="comment">// NRVO copy elision; where that isn&#39;t applied, the map is moved,</span></div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="comment">// which is also constant time.</span></div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> MapType&gt;</div>
-<div class="foldopen" id="foldopen00177" data-start="{" data-end="}">
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno"><a class="line" href="namespacemultithreading.html#a01c486d0017360b0ca20a924487b4b1c">  177</a></span>    MapType <a class="code hl_function" href="namespacemultithreading.html#a01c486d0017360b0ca20a924487b4b1c">evict_stale_values</a>(MapType&amp; cache, <span class="keyword">typename</span> MapType::key_type <span class="keyword">const</span>&amp; floor_index)</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    {</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        MapType evicted;</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        <span class="keyword">auto</span> eviction_iterator = cache.begin();</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        <span class="keyword">auto</span> end = cache.end();</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        <span class="keywordflow">while</span> (eviction_iterator != end &amp;&amp; eviction_iterator-&gt;first &lt; floor_index) {</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>            evicted.insert(evicted.end(), cache.extract(eviction_iterator++));</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        }</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        <span class="keywordflow">return</span> evicted;</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    }</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="comment">// Remove entries in the passed cache with keys less than</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="comment">// floor_index, and return them, so the caller</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="comment">// controls when they are destroyed. Nodes are spliced, so this</span></div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="comment">// allocates and frees nothing. Returning the named local relies on</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="comment">// NRVO copy elision; where that isn&#39;t applied, the map is moved,</span></div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <span class="comment">// which is also constant time.</span></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> MapType&gt;</div>
+<div class="foldopen" id="foldopen00188" data-start="{" data-end="}">
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno"><a class="line" href="namespacemultithreading.html#a01c486d0017360b0ca20a924487b4b1c">  188</a></span>    MapType <a class="code hl_function" href="namespacemultithreading.html#a01c486d0017360b0ca20a924487b4b1c">evict_stale_values</a>(MapType&amp; cache, <span class="keyword">typename</span> MapType::key_type <span class="keyword">const</span>&amp; floor_index)</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    {</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        MapType evicted;</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        <span class="keyword">auto</span> eviction_iterator = cache.begin();</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        <span class="keyword">auto</span> end = cache.end();</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        <span class="keywordflow">while</span> (eviction_iterator != end &amp;&amp; eviction_iterator-&gt;first &lt; floor_index) {</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            evicted.insert(evicted.end(), cache.extract(eviction_iterator++));</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        }</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        <span class="keywordflow">return</span> evicted;</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    }</div>
 </div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00189" data-start="{" data-end="}">
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#a8135e55994d4946859d1a4d4abb383c4">  189</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#a8135e55994d4946859d1a4d4abb383c4">cache_slot&lt;T&gt;::fill</a>(std::shared_ptr&lt;T&gt; buffer_ptr, <span class="keywordtype">bool</span> immediate_use)</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    {</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        assert(buffer_ptr != <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        assert(state_.load(std::memory_order_relaxed) == STATE::EMPTY ||</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>               state_.load(std::memory_order_relaxed) == STATE::ERROR);</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        ptr_ = std::move(buffer_ptr);</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        <span class="comment">// Publish with a release store on state_ itself, rather than a</span></div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        <span class="comment">// separate fence, since ThreadSanitizer doesn&#39;t model</span></div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="comment">// atomic_thread_fence and would report readers of the buffer</span></div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        <span class="comment">// as racing with this thread</span></div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        state_.store(immediate_use ? STATE::HOT : STATE::FILLED, std::memory_order_release);</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    }</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00200" data-start="{" data-end="}">
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#a8135e55994d4946859d1a4d4abb383c4">  200</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#a8135e55994d4946859d1a4d4abb383c4">cache_slot&lt;T&gt;::fill</a>(std::shared_ptr&lt;T&gt; buffer_ptr, <span class="keywordtype">bool</span> immediate_use)</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    {</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        assert(buffer_ptr != <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        assert(state_.load(std::memory_order_relaxed) == STATE::EMPTY ||</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>               state_.load(std::memory_order_relaxed) == STATE::ERROR);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        ptr_ = std::move(buffer_ptr);</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        <span class="comment">// Publish with a release store on state_ itself, rather than a</span></div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        <span class="comment">// separate fence, since ThreadSanitizer doesn&#39;t model</span></div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        <span class="comment">// atomic_thread_fence and would report readers of the buffer</span></div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        <span class="comment">// as racing with this thread</span></div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        state_.store(immediate_use ? STATE::HOT : STATE::FILLED, std::memory_order_release);</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    }</div>
 </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00203" data-start="{" data-end="}">
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#a9cd176b0b810dc44e2d3a57657da5868">  203</a></span>    std::shared_ptr&lt;T&gt; <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#a9cd176b0b810dc44e2d3a57657da5868">cache_slot&lt;T&gt;::get</a>()</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    {</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <span class="keywordtype">int</span> state = STATE::EMPTY;</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        <span class="keywordflow">while</span> ((state = state_.load(std::memory_order_acquire)) == STATE::EMPTY) {</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>            <span class="comment">// Just spin on whatever thread is doing the filling</span></div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span><span class="preprocessor">            #pragma omp taskyield</span></div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        }</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        <span class="comment">// Release, so that readers who see HOT from this store rather</span></div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        <span class="comment">// than from fill() synchronize with this thread, and so</span></div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        <span class="comment">// transitively happen-after the filling thread&#39;s writes</span></div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        <span class="keywordflow">if</span> (state == STATE::FILLED)</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>            state_.store(STATE::HOT, std::memory_order_release);</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        <span class="keywordflow">return</span> ptr_;</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00214" data-start="{" data-end="}">
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#aef2a5ecd3fe07ca0b33d6c5563a4ca81">  214</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#aef2a5ecd3fe07ca0b33d6c5563a4ca81">cache_slot&lt;T&gt;::fail</a>()</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    {</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        assert(state_.load(std::memory_order_relaxed) == STATE::EMPTY);</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        state_.store(STATE::ERROR, std::memory_order_release);</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    }</div>
 </div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Key, <span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="foldopen" id="foldopen00221" data-start="{" data-end="}">
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="structmultithreading_1_1shared__cache.html#a07a760ef51f45e2584e691caec943d4f">  221</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="structmultithreading_1_1shared__cache.html#a07a760ef51f45e2584e691caec943d4f">shared_cache&lt;Key, T&gt;::find_or_insert</a>(Key <span class="keyword">const</span>&amp; key, std::optional&lt;Key&gt; <span class="keyword">const</span>&amp; eviction_floor) -&gt; std::pair&lt;cache_slot&lt;T&gt;&amp;, <span class="keywordtype">bool</span>&gt;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="structmultithreading_1_1cache__slot.html#a08f35494edf07822494106c16f326bb5">  221</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="structmultithreading_1_1cache__slot.html#a08f35494edf07822494106c16f326bb5">cache_slot&lt;T&gt;::get</a>() -&gt; std::variant&lt;std::shared_ptr&lt;T&gt;, <a class="code hl_struct" href="structmultithreading_1_1failed__fill.html">failed_fill</a>&gt;</div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    {</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        <span class="comment">// Look up the cache slot for key - either cache_iter =</span></div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        <span class="comment">// find() gets an extant slot, or this thread commits to</span></div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        <span class="comment">// creating and filling a new slot</span></div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        std::shared_lock l(mutex);</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        <span class="keyword">auto</span> cache_iter = cache.find(key);</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        <span class="keywordtype">int</span> state = STATE::EMPTY;</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        <span class="keywordflow">while</span> ((state = state_.load(std::memory_order_acquire)) == STATE::EMPTY) {</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>            <span class="comment">// Just spin on whatever thread is doing the filling</span></div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span><span class="preprocessor">            #pragma omp taskyield</span></div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        }</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        <span class="keywordflow">if</span> (cache_iter != cache.end())</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            <span class="keywordflow">return</span> {cache_iter-&gt;second, <span class="keyword">false</span>};</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        <span class="keywordflow">if</span> (state == STATE::ERROR)</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            <span class="keywordflow">return</span> <a class="code hl_struct" href="structmultithreading_1_1failed__fill.html">failed_fill</a>{};</div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        <span class="comment">// Upgrade the lock and try to take responsibility for filling this entry in</span></div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        l.unlock();</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        <span class="comment">// Declared before the lock, so that evicted entries are destroyed</span></div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        <span class="comment">// after it is released, keeping frees of their buffers outside it</span></div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        <span class="keyword">decltype</span>(cache) evicted;</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        std::unique_lock ul(mutex);</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        <span class="comment">// Re-check that some other thread didn&#39;t get here first</span></div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        cache_iter = cache.find(key);</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        <span class="keywordflow">if</span> (cache_iter != cache.end())</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            <span class="keywordflow">return</span> {cache_iter-&gt;second, <span class="keyword">false</span>};</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="keywordflow">if</span> (eviction_floor) {</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>            assert(*eviction_floor &lt;= key);</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>            <span class="comment">// Evict while we hold the writer lock, and are</span></div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>            <span class="comment">// responsible for modifying the cache anyway. Do it</span></div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>            <span class="comment">// before the caller fills the new slot, to drop references</span></div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            <span class="comment">// to old data before loading new data to limit memory</span></div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            <span class="comment">// footprint.</span></div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            evicted = <a class="code hl_function" href="namespacemultithreading.html#a01c486d0017360b0ca20a924487b4b1c">evict_stale_values</a>(cache, *eviction_floor);</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        }</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        <span class="comment">// This thread really is reponsible for creating it</span></div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        <span class="keywordflow">return</span> {cache.try_emplace(key).first-&gt;second, <span class="keyword">true</span>};</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    }</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        <span class="comment">// Release, so that readers who see HOT from this store rather</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        <span class="comment">// than from fill() synchronize with this thread, and so</span></div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        <span class="comment">// transitively happen-after the filling thread&#39;s writes</span></div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        <span class="keywordflow">if</span> (state == STATE::FILLED)</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            state_.store(STATE::HOT, std::memory_order_release);</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        <span class="keywordflow">return</span> ptr_;</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    }</div>
 </div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00260" data-start="{" data-end="}">
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#ab8a029c6f6531f41d7519690b0aa7fff">  260</a></span>    T&amp; <a class="code hl_function" href="classmultithreading_1_1per__thread.html#ab8a029c6f6531f41d7519690b0aa7fff">per_thread&lt;T&gt;::get</a>()</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    {</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        <span class="keywordflow">if</span> (<span class="keywordtype">void</span>* existing = pthread_getspecific(key_.key))</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            <span class="keywordflow">return</span> *<span class="keyword">static_cast&lt;</span>T*<span class="keyword">&gt;</span>(existing);</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        T* created;</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        {</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>            std::lock_guard l{instances_mutex_};</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>            created = instances_.emplace_back(std::make_unique&lt;T&gt;()).get();</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        }</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>        <span class="keywordtype">int</span> err = pthread_setspecific(key_.key, created);</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        <span class="keywordflow">if</span> (err != 0)</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>            <span class="keywordflow">throw</span> std::system_error(err, std::generic_category(), <span class="stringliteral">&quot;pthread_setspecific&quot;</span>);</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>        <span class="keywordflow">return</span> *created;</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    }</div>
-</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Key, <span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00242" data-start="{" data-end="}">
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno"><a class="line" href="structmultithreading_1_1shared__cache.html#a07a760ef51f45e2584e691caec943d4f">  242</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="structmultithreading_1_1shared__cache.html#a07a760ef51f45e2584e691caec943d4f">shared_cache&lt;Key, T&gt;::find_or_insert</a>(Key <span class="keyword">const</span>&amp; key, std::optional&lt;Key&gt; <span class="keyword">const</span>&amp; eviction_floor) -&gt; std::pair&lt;cache_slot&lt;T&gt;&amp;, <span class="keywordtype">bool</span>&gt;</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    {</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        <span class="comment">// Look up the cache slot for key - either cache_iter =</span></div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="comment">// find() gets an extant slot, or this thread commits to</span></div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="comment">// creating and filling a new slot</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        std::shared_lock l(mutex);</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="keyword">auto</span> cache_iter = cache.find(key);</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span> </div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="keywordflow">if</span> (cache_iter != cache.end())</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            <span class="keywordflow">return</span> {cache_iter-&gt;second, <span class="keyword">false</span>};</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        <span class="comment">// Upgrade the lock and try to take responsibility for filling this entry in</span></div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        l.unlock();</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        <span class="comment">// Declared before the lock, so that evicted entries are destroyed</span></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        <span class="comment">// after it is released, keeping frees of their buffers outside it</span></div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        <span class="keyword">decltype</span>(cache) evicted;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>        std::unique_lock ul(mutex);</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        <span class="comment">// Re-check that some other thread didn&#39;t get here first</span></div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        cache_iter = cache.find(key);</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        <span class="keywordflow">if</span> (cache_iter != cache.end())</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            <span class="keywordflow">return</span> {cache_iter-&gt;second, <span class="keyword">false</span>};</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        <span class="keywordflow">if</span> (eviction_floor) {</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>            assert(*eviction_floor &lt;= key);</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>            <span class="comment">// Evict while we hold the writer lock, and are</span></div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>            <span class="comment">// responsible for modifying the cache anyway. Do it</span></div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>            <span class="comment">// before the caller fills the new slot, to drop references</span></div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>            <span class="comment">// to old data before loading new data to limit memory</span></div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>            <span class="comment">// footprint.</span></div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>            evicted = <a class="code hl_function" href="namespacemultithreading.html#a01c486d0017360b0ca20a924487b4b1c">evict_stale_values</a>(cache, *eviction_floor);</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        }</div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span> </div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Key, <span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00277" data-start="{" data-end="}">
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno"><a class="line" href="structmultithreading_1_1shared__cache.html#a8c7eeaa940dc81a1aedaabd249b0cbea">  277</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="structmultithreading_1_1shared__cache.html#a8c7eeaa940dc81a1aedaabd249b0cbea">shared_cache&lt;Key, T&gt;::keys</a>() const -&gt; <a class="code hl_namespace" href="namespacestd.html">std</a>::set&lt;Key&gt;</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    {</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        std::shared_lock l(mutex);</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>        std::set&lt;Key&gt; result;</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; entry : cache)</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>            result.insert(entry.first);</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        <span class="keywordflow">return</span> result;</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    }</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        <span class="comment">// This thread really is reponsible for creating it</span></div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        <span class="keywordflow">return</span> {cache.try_emplace(key).first-&gt;second, <span class="keyword">true</span>};</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    }</div>
 </div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>}</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00281" data-start="{" data-end="}">
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno"><a class="line" href="classmultithreading_1_1per__thread.html#ab8a029c6f6531f41d7519690b0aa7fff">  281</a></span>    T&amp; <a class="code hl_function" href="classmultithreading_1_1per__thread.html#ab8a029c6f6531f41d7519690b0aa7fff">per_thread&lt;T&gt;::get</a>()</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    {</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        <span class="keywordflow">if</span> (<span class="keywordtype">void</span>* existing = pthread_getspecific(key_.key))</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>            <span class="keywordflow">return</span> *<span class="keyword">static_cast&lt;</span>T*<span class="keyword">&gt;</span>(existing);</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span> </div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>        T* created;</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        {</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>            std::lock_guard l{instances_mutex_};</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>            created = instances_.emplace_back(std::make_unique&lt;T&gt;()).get();</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>        }</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>        <span class="keywordtype">int</span> err = pthread_setspecific(key_.key, created);</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>        <span class="keywordflow">if</span> (err != 0)</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>            <span class="keywordflow">throw</span> std::system_error(err, std::generic_category(), <span class="stringliteral">&quot;pthread_setspecific&quot;</span>);</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        <span class="keywordflow">return</span> *created;</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>    }</div>
 </div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_MULTITHREADING_HPP</span></div>
-<div class="ttc" id="aclassmultithreading_1_1per__thread_html"><div class="ttname"><a href="classmultithreading_1_1per__thread.html">multithreading::per_thread</a></div><div class="ttdef"><b>Definition</b> multithreading.hpp:154</div></div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span> </div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Key, <span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00298" data-start="{" data-end="}">
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno"><a class="line" href="structmultithreading_1_1shared__cache.html#a8c7eeaa940dc81a1aedaabd249b0cbea">  298</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="structmultithreading_1_1shared__cache.html#a8c7eeaa940dc81a1aedaabd249b0cbea">shared_cache&lt;Key, T&gt;::keys</a>() const -&gt; <a class="code hl_namespace" href="namespacestd.html">std</a>::set&lt;Key&gt;</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    {</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>        std::shared_lock l(mutex);</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        std::set&lt;Key&gt; result;</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; entry : cache)</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>            result.insert(entry.first);</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        <span class="keywordflow">return</span> result;</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    }</div>
+</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>}</div>
+</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span> </div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_MULTITHREADING_HPP</span></div>
+<div class="ttc" id="aclassmultithreading_1_1per__thread_html"><div class="ttname"><a href="classmultithreading_1_1per__thread.html">multithreading::per_thread</a></div><div class="ttdef"><b>Definition</b> multithreading.hpp:165</div></div>
 <div class="ttc" id="aclassmultithreading_1_1per__thread_html_a604b6f53e6b0cfe912a9e59d2e9160ba"><div class="ttname"><a href="classmultithreading_1_1per__thread.html#a604b6f53e6b0cfe912a9e59d2e9160ba">multithreading::per_thread::per_thread</a></div><div class="ttdeci">per_thread(per_thread const &amp;)=delete</div></div>
-<div class="ttc" id="aclassmultithreading_1_1per__thread_html_a66561c91b1e9252f529b51f9bdcbf22e"><div class="ttname"><a href="classmultithreading_1_1per__thread.html#a66561c91b1e9252f529b51f9bdcbf22e">multithreading::per_thread::instances_</a></div><div class="ttdeci">std::vector&lt; std::unique_ptr&lt; T &gt; &gt; instances_</div><div class="ttdef"><b>Definition</b> multithreading.hpp:167</div></div>
+<div class="ttc" id="aclassmultithreading_1_1per__thread_html_a66561c91b1e9252f529b51f9bdcbf22e"><div class="ttname"><a href="classmultithreading_1_1per__thread.html#a66561c91b1e9252f529b51f9bdcbf22e">multithreading::per_thread::instances_</a></div><div class="ttdeci">std::vector&lt; std::unique_ptr&lt; T &gt; &gt; instances_</div><div class="ttdef"><b>Definition</b> multithreading.hpp:178</div></div>
 <div class="ttc" id="aclassmultithreading_1_1per__thread_html_a6c8f33d8d9bfd3f5d06e81eee8ecef36"><div class="ttname"><a href="classmultithreading_1_1per__thread.html#a6c8f33d8d9bfd3f5d06e81eee8ecef36">multithreading::per_thread::per_thread</a></div><div class="ttdeci">per_thread()=default</div></div>
-<div class="ttc" id="aclassmultithreading_1_1per__thread_html_aa29df6bac534f692f58818fb527c4225"><div class="ttname"><a href="classmultithreading_1_1per__thread.html#aa29df6bac534f692f58818fb527c4225">multithreading::per_thread::key_</a></div><div class="ttdeci">thread_key key_</div><div class="ttdef"><b>Definition</b> multithreading.hpp:165</div></div>
-<div class="ttc" id="aclassmultithreading_1_1per__thread_html_ab8a029c6f6531f41d7519690b0aa7fff"><div class="ttname"><a href="classmultithreading_1_1per__thread.html#ab8a029c6f6531f41d7519690b0aa7fff">multithreading::per_thread::get</a></div><div class="ttdeci">T &amp; get()</div><div class="ttdef"><b>Definition</b> multithreading.hpp:260</div></div>
-<div class="ttc" id="aclassmultithreading_1_1per__thread_html_ac2d1cf9d191233b61966f274ab50bdc8"><div class="ttname"><a href="classmultithreading_1_1per__thread.html#ac2d1cf9d191233b61966f274ab50bdc8">multithreading::per_thread::instances_mutex_</a></div><div class="ttdeci">std::mutex instances_mutex_</div><div class="ttdef"><b>Definition</b> multithreading.hpp:166</div></div>
+<div class="ttc" id="aclassmultithreading_1_1per__thread_html_aa29df6bac534f692f58818fb527c4225"><div class="ttname"><a href="classmultithreading_1_1per__thread.html#aa29df6bac534f692f58818fb527c4225">multithreading::per_thread::key_</a></div><div class="ttdeci">thread_key key_</div><div class="ttdef"><b>Definition</b> multithreading.hpp:176</div></div>
+<div class="ttc" id="aclassmultithreading_1_1per__thread_html_ab8a029c6f6531f41d7519690b0aa7fff"><div class="ttname"><a href="classmultithreading_1_1per__thread.html#ab8a029c6f6531f41d7519690b0aa7fff">multithreading::per_thread::get</a></div><div class="ttdeci">T &amp; get()</div><div class="ttdef"><b>Definition</b> multithreading.hpp:281</div></div>
+<div class="ttc" id="aclassmultithreading_1_1per__thread_html_ac2d1cf9d191233b61966f274ab50bdc8"><div class="ttname"><a href="classmultithreading_1_1per__thread.html#ac2d1cf9d191233b61966f274ab50bdc8">multithreading::per_thread::instances_mutex_</a></div><div class="ttdeci">std::mutex instances_mutex_</div><div class="ttdef"><b>Definition</b> multithreading.hpp:177</div></div>
 <div class="ttc" id="aclassmultithreading_1_1per__thread_html_ae922b2a6965b55860613eb2514f3d3dc"><div class="ttname"><a href="classmultithreading_1_1per__thread.html#ae922b2a6965b55860613eb2514f3d3dc">multithreading::per_thread::operator=</a></div><div class="ttdeci">per_thread &amp; operator=(per_thread const &amp;)=delete</div></div>
 <div class="ttc" id="anamespacemultithreading_1_1details_html_a1b42fd8d7ca25ca95c1e4f35e9f4bbc3"><div class="ttname"><a href="namespacemultithreading_1_1details.html#a1b42fd8d7ca25ca95c1e4f35e9f4bbc3">multithreading::details::named_library_mutex</a></div><div class="ttdeci">std::mutex &amp; named_library_mutex(char const *name)</div><div class="ttdef"><b>Definition</b> multithreading.cpp:10</div></div>
-<div class="ttc" id="anamespacemultithreading_html"><div class="ttname"><a href="namespacemultithreading.html">multithreading</a></div><div class="ttdef"><b>Definition</b> multithreading.hpp:19</div></div>
-<div class="ttc" id="anamespacemultithreading_html_a01c486d0017360b0ca20a924487b4b1c"><div class="ttname"><a href="namespacemultithreading.html#a01c486d0017360b0ca20a924487b4b1c">multithreading::evict_stale_values</a></div><div class="ttdeci">MapType evict_stale_values(MapType &amp;cache, typename MapType::key_type const &amp;floor_index)</div><div class="ttdef"><b>Definition</b> multithreading.hpp:177</div></div>
-<div class="ttc" id="anamespacemultithreading_html_a0ce5bd7cb44e7a8a763a919c8e8140f3"><div class="ttname"><a href="namespacemultithreading.html#a0ce5bd7cb44e7a8a763a919c8e8140f3">multithreading::library_mutex</a></div><div class="ttdeci">std::mutex &amp; library_mutex()</div><div class="ttdef"><b>Definition</b> multithreading.hpp:60</div></div>
+<div class="ttc" id="anamespacemultithreading_html"><div class="ttname"><a href="namespacemultithreading.html">multithreading</a></div><div class="ttdef"><b>Definition</b> multithreading.hpp:20</div></div>
+<div class="ttc" id="anamespacemultithreading_html_a01c486d0017360b0ca20a924487b4b1c"><div class="ttname"><a href="namespacemultithreading.html#a01c486d0017360b0ca20a924487b4b1c">multithreading::evict_stale_values</a></div><div class="ttdeci">MapType evict_stale_values(MapType &amp;cache, typename MapType::key_type const &amp;floor_index)</div><div class="ttdef"><b>Definition</b> multithreading.hpp:188</div></div>
+<div class="ttc" id="anamespacemultithreading_html_a0ce5bd7cb44e7a8a763a919c8e8140f3"><div class="ttname"><a href="namespacemultithreading.html#a0ce5bd7cb44e7a8a763a919c8e8140f3">multithreading::library_mutex</a></div><div class="ttdeci">std::mutex &amp; library_mutex()</div><div class="ttdef"><b>Definition</b> multithreading.hpp:61</div></div>
 <div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
-<div class="ttc" id="astructmultithreading_1_1cache__slot_html"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html">multithreading::cache_slot</a></div><div class="ttdef"><b>Definition</b> multithreading.hpp:75</div></div>
-<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a776063f246ee2df0ba0888796bec5bff"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bff">multithreading::cache_slot::STATE</a></div><div class="ttdeci">STATE</div><div class="ttdef"><b>Definition</b> multithreading.hpp:96</div></div>
-<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a776063f246ee2df0ba0888796bec5bffa8c8457ff6ac3ce679662f821ccdeb501"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffa8c8457ff6ac3ce679662f821ccdeb501">multithreading::cache_slot::FILLED</a></div><div class="ttdeci">@ FILLED</div><div class="ttdef"><b>Definition</b> multithreading.hpp:96</div></div>
-<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a776063f246ee2df0ba0888796bec5bffab2e810c851c2ab656bdff5d9e712e70e"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab2e810c851c2ab656bdff5d9e712e70e">multithreading::cache_slot::HOT</a></div><div class="ttdeci">@ HOT</div><div class="ttdef"><b>Definition</b> multithreading.hpp:96</div></div>
-<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a776063f246ee2df0ba0888796bec5bffab31da6921c8f52e47de4d15d684e1c8f"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab31da6921c8f52e47de4d15d684e1c8f">multithreading::cache_slot::EMPTY</a></div><div class="ttdeci">@ EMPTY</div><div class="ttdef"><b>Definition</b> multithreading.hpp:96</div></div>
-<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a776063f246ee2df0ba0888796bec5bffae392199c56c24d756a3190639154e820"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffae392199c56c24d756a3190639154e820">multithreading::cache_slot::ERROR</a></div><div class="ttdeci">@ ERROR</div><div class="ttdef"><b>Definition</b> multithreading.hpp:96</div></div>
+<div class="ttc" id="astructmultithreading_1_1cache__slot_html"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html">multithreading::cache_slot</a></div><div class="ttdef"><b>Definition</b> multithreading.hpp:79</div></div>
+<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a08f35494edf07822494106c16f326bb5"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a08f35494edf07822494106c16f326bb5">multithreading::cache_slot::get</a></div><div class="ttdeci">std::variant&lt; std::shared_ptr&lt; T &gt;, failed_fill &gt; get()</div><div class="ttdef"><b>Definition</b> multithreading.hpp:221</div></div>
+<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a776063f246ee2df0ba0888796bec5bff"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bff">multithreading::cache_slot::STATE</a></div><div class="ttdeci">STATE</div><div class="ttdef"><b>Definition</b> multithreading.hpp:107</div></div>
+<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a776063f246ee2df0ba0888796bec5bffa8c8457ff6ac3ce679662f821ccdeb501"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffa8c8457ff6ac3ce679662f821ccdeb501">multithreading::cache_slot::FILLED</a></div><div class="ttdeci">@ FILLED</div><div class="ttdef"><b>Definition</b> multithreading.hpp:107</div></div>
+<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a776063f246ee2df0ba0888796bec5bffab2e810c851c2ab656bdff5d9e712e70e"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab2e810c851c2ab656bdff5d9e712e70e">multithreading::cache_slot::HOT</a></div><div class="ttdeci">@ HOT</div><div class="ttdef"><b>Definition</b> multithreading.hpp:107</div></div>
+<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a776063f246ee2df0ba0888796bec5bffab31da6921c8f52e47de4d15d684e1c8f"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab31da6921c8f52e47de4d15d684e1c8f">multithreading::cache_slot::EMPTY</a></div><div class="ttdeci">@ EMPTY</div><div class="ttdef"><b>Definition</b> multithreading.hpp:107</div></div>
+<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a776063f246ee2df0ba0888796bec5bffae392199c56c24d756a3190639154e820"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffae392199c56c24d756a3190639154e820">multithreading::cache_slot::ERROR</a></div><div class="ttdeci">@ ERROR</div><div class="ttdef"><b>Definition</b> multithreading.hpp:107</div></div>
 <div class="ttc" id="astructmultithreading_1_1cache__slot_html_a799d2ba1a39778213a7d6a996b86f9b0"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a799d2ba1a39778213a7d6a996b86f9b0">multithreading::cache_slot::cache_slot</a></div><div class="ttdeci">cache_slot()=default</div></div>
 <div class="ttc" id="astructmultithreading_1_1cache__slot_html_a7f076877cbaebd348b36a792b8c0703d"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a7f076877cbaebd348b36a792b8c0703d">multithreading::cache_slot::cache_slot</a></div><div class="ttdeci">cache_slot(cache_slot &amp;&amp;)=delete</div></div>
-<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a8135e55994d4946859d1a4d4abb383c4"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a8135e55994d4946859d1a4d4abb383c4">multithreading::cache_slot::fill</a></div><div class="ttdeci">void fill(std::shared_ptr&lt; T &gt; buffer_ptr, bool immediate_use)</div><div class="ttdef"><b>Definition</b> multithreading.hpp:189</div></div>
-<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a9cd176b0b810dc44e2d3a57657da5868"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a9cd176b0b810dc44e2d3a57657da5868">multithreading::cache_slot::get</a></div><div class="ttdeci">std::shared_ptr&lt; T &gt; get()</div><div class="ttdef"><b>Definition</b> multithreading.hpp:203</div></div>
+<div class="ttc" id="astructmultithreading_1_1cache__slot_html_a8135e55994d4946859d1a4d4abb383c4"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#a8135e55994d4946859d1a4d4abb383c4">multithreading::cache_slot::fill</a></div><div class="ttdeci">void fill(std::shared_ptr&lt; T &gt; buffer_ptr, bool immediate_use)</div><div class="ttdef"><b>Definition</b> multithreading.hpp:200</div></div>
 <div class="ttc" id="astructmultithreading_1_1cache__slot_html_ace55f2da2fcd5c3fc1f9e0a12829355e"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#ace55f2da2fcd5c3fc1f9e0a12829355e">multithreading::cache_slot::cache_slot</a></div><div class="ttdeci">cache_slot(cache_slot const &amp;)=delete</div></div>
-<div class="ttc" id="astructmultithreading_1_1cache__slot_html_ae061e31ac4ff11643a7b5c43afbc9ac2"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#ae061e31ac4ff11643a7b5c43afbc9ac2">multithreading::cache_slot::state_</a></div><div class="ttdeci">std::atomic&lt; int &gt; state_</div><div class="ttdef"><b>Definition</b> multithreading.hpp:97</div></div>
-<div class="ttc" id="astructmultithreading_1_1cache__slot_html_af773617fc1caa64e11a8e00170369111"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#af773617fc1caa64e11a8e00170369111">multithreading::cache_slot::ptr_</a></div><div class="ttdeci">std::shared_ptr&lt; T &gt; ptr_</div><div class="ttdef"><b>Definition</b> multithreading.hpp:94</div></div>
-<div class="ttc" id="astructmultithreading_1_1details_1_1string__literal_html"><div class="ttname"><a href="structmultithreading_1_1details_1_1string__literal.html">multithreading::details::string_literal</a></div><div class="ttdef"><b>Definition</b> multithreading.hpp:25</div></div>
-<div class="ttc" id="astructmultithreading_1_1details_1_1string__literal_html_ad686e0b694f4300c5afaa0dd7da2b112"><div class="ttname"><a href="structmultithreading_1_1details_1_1string__literal.html#ad686e0b694f4300c5afaa0dd7da2b112">multithreading::details::string_literal::value</a></div><div class="ttdeci">char value[N]</div><div class="ttdef"><b>Definition</b> multithreading.hpp:31</div></div>
-<div class="ttc" id="astructmultithreading_1_1details_1_1string__literal_html_ae2f8138c97cc11dc468ea8f4d0939df6"><div class="ttname"><a href="structmultithreading_1_1details_1_1string__literal.html#ae2f8138c97cc11dc468ea8f4d0939df6">multithreading::details::string_literal::string_literal</a></div><div class="ttdeci">constexpr string_literal(const char(&amp;str)[N])</div><div class="ttdef"><b>Definition</b> multithreading.hpp:26</div></div>
-<div class="ttc" id="astructmultithreading_1_1shared__cache_html"><div class="ttname"><a href="structmultithreading_1_1shared__cache.html">multithreading::shared_cache</a></div><div class="ttdef"><b>Definition</b> multithreading.hpp:101</div></div>
-<div class="ttc" id="astructmultithreading_1_1shared__cache_html_a07a760ef51f45e2584e691caec943d4f"><div class="ttname"><a href="structmultithreading_1_1shared__cache.html#a07a760ef51f45e2584e691caec943d4f">multithreading::shared_cache::find_or_insert</a></div><div class="ttdeci">std::pair&lt; cache_slot&lt; T &gt; &amp;, bool &gt; find_or_insert(Key const &amp;key, std::optional&lt; Key &gt; const &amp;eviction_floor)</div><div class="ttdef"><b>Definition</b> multithreading.hpp:221</div></div>
-<div class="ttc" id="astructmultithreading_1_1shared__cache_html_a8c7eeaa940dc81a1aedaabd249b0cbea"><div class="ttname"><a href="structmultithreading_1_1shared__cache.html#a8c7eeaa940dc81a1aedaabd249b0cbea">multithreading::shared_cache::keys</a></div><div class="ttdeci">std::set&lt; Key &gt; keys() const</div><div class="ttdef"><b>Definition</b> multithreading.hpp:277</div></div>
-<div class="ttc" id="astructmultithreading_1_1shared__cache_html_ab41437b24df182335f81c370a0d4238e"><div class="ttname"><a href="structmultithreading_1_1shared__cache.html#ab41437b24df182335f81c370a0d4238e">multithreading::shared_cache::cache</a></div><div class="ttdeci">std::map&lt; Key, cache_slot&lt; T &gt; &gt; cache</div><div class="ttdef"><b>Definition</b> multithreading.hpp:124</div></div>
-<div class="ttc" id="astructmultithreading_1_1shared__cache_html_ac7c9563f535435ffcbe075dccfae348b"><div class="ttname"><a href="structmultithreading_1_1shared__cache.html#ac7c9563f535435ffcbe075dccfae348b">multithreading::shared_cache::mutex</a></div><div class="ttdeci">std::shared_mutex mutex</div><div class="ttdef"><b>Definition</b> multithreading.hpp:125</div></div>
-<div class="ttc" id="astructmultithreading_1_1thread__key_html"><div class="ttname"><a href="structmultithreading_1_1thread__key.html">multithreading::thread_key</a></div><div class="ttdef"><b>Definition</b> multithreading.hpp:130</div></div>
+<div class="ttc" id="astructmultithreading_1_1cache__slot_html_ae061e31ac4ff11643a7b5c43afbc9ac2"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#ae061e31ac4ff11643a7b5c43afbc9ac2">multithreading::cache_slot::state_</a></div><div class="ttdeci">std::atomic&lt; int &gt; state_</div><div class="ttdef"><b>Definition</b> multithreading.hpp:108</div></div>
+<div class="ttc" id="astructmultithreading_1_1cache__slot_html_aef2a5ecd3fe07ca0b33d6c5563a4ca81"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#aef2a5ecd3fe07ca0b33d6c5563a4ca81">multithreading::cache_slot::fail</a></div><div class="ttdeci">void fail()</div><div class="ttdef"><b>Definition</b> multithreading.hpp:214</div></div>
+<div class="ttc" id="astructmultithreading_1_1cache__slot_html_af773617fc1caa64e11a8e00170369111"><div class="ttname"><a href="structmultithreading_1_1cache__slot.html#af773617fc1caa64e11a8e00170369111">multithreading::cache_slot::ptr_</a></div><div class="ttdeci">std::shared_ptr&lt; T &gt; ptr_</div><div class="ttdef"><b>Definition</b> multithreading.hpp:105</div></div>
+<div class="ttc" id="astructmultithreading_1_1details_1_1string__literal_html"><div class="ttname"><a href="structmultithreading_1_1details_1_1string__literal.html">multithreading::details::string_literal</a></div><div class="ttdef"><b>Definition</b> multithreading.hpp:26</div></div>
+<div class="ttc" id="astructmultithreading_1_1details_1_1string__literal_html_ad686e0b694f4300c5afaa0dd7da2b112"><div class="ttname"><a href="structmultithreading_1_1details_1_1string__literal.html#ad686e0b694f4300c5afaa0dd7da2b112">multithreading::details::string_literal::value</a></div><div class="ttdeci">char value[N]</div><div class="ttdef"><b>Definition</b> multithreading.hpp:32</div></div>
+<div class="ttc" id="astructmultithreading_1_1details_1_1string__literal_html_ae2f8138c97cc11dc468ea8f4d0939df6"><div class="ttname"><a href="structmultithreading_1_1details_1_1string__literal.html#ae2f8138c97cc11dc468ea8f4d0939df6">multithreading::details::string_literal::string_literal</a></div><div class="ttdeci">constexpr string_literal(const char(&amp;str)[N])</div><div class="ttdef"><b>Definition</b> multithreading.hpp:27</div></div>
+<div class="ttc" id="astructmultithreading_1_1failed__fill_html"><div class="ttname"><a href="structmultithreading_1_1failed__fill.html">multithreading::failed_fill</a></div><div class="ttdef"><b>Definition</b> multithreading.hpp:68</div></div>
+<div class="ttc" id="astructmultithreading_1_1shared__cache_html"><div class="ttname"><a href="structmultithreading_1_1shared__cache.html">multithreading::shared_cache</a></div><div class="ttdef"><b>Definition</b> multithreading.hpp:112</div></div>
+<div class="ttc" id="astructmultithreading_1_1shared__cache_html_a07a760ef51f45e2584e691caec943d4f"><div class="ttname"><a href="structmultithreading_1_1shared__cache.html#a07a760ef51f45e2584e691caec943d4f">multithreading::shared_cache::find_or_insert</a></div><div class="ttdeci">std::pair&lt; cache_slot&lt; T &gt; &amp;, bool &gt; find_or_insert(Key const &amp;key, std::optional&lt; Key &gt; const &amp;eviction_floor)</div><div class="ttdef"><b>Definition</b> multithreading.hpp:242</div></div>
+<div class="ttc" id="astructmultithreading_1_1shared__cache_html_a8c7eeaa940dc81a1aedaabd249b0cbea"><div class="ttname"><a href="structmultithreading_1_1shared__cache.html#a8c7eeaa940dc81a1aedaabd249b0cbea">multithreading::shared_cache::keys</a></div><div class="ttdeci">std::set&lt; Key &gt; keys() const</div><div class="ttdef"><b>Definition</b> multithreading.hpp:298</div></div>
+<div class="ttc" id="astructmultithreading_1_1shared__cache_html_ab41437b24df182335f81c370a0d4238e"><div class="ttname"><a href="structmultithreading_1_1shared__cache.html#ab41437b24df182335f81c370a0d4238e">multithreading::shared_cache::cache</a></div><div class="ttdeci">std::map&lt; Key, cache_slot&lt; T &gt; &gt; cache</div><div class="ttdef"><b>Definition</b> multithreading.hpp:135</div></div>
+<div class="ttc" id="astructmultithreading_1_1shared__cache_html_ac7c9563f535435ffcbe075dccfae348b"><div class="ttname"><a href="structmultithreading_1_1shared__cache.html#ac7c9563f535435ffcbe075dccfae348b">multithreading::shared_cache::mutex</a></div><div class="ttdeci">std::shared_mutex mutex</div><div class="ttdef"><b>Definition</b> multithreading.hpp:136</div></div>
+<div class="ttc" id="astructmultithreading_1_1thread__key_html"><div class="ttname"><a href="structmultithreading_1_1thread__key.html">multithreading::thread_key</a></div><div class="ttdef"><b>Definition</b> multithreading.hpp:141</div></div>
 <div class="ttc" id="astructmultithreading_1_1thread__key_html_a435c24ac9494766b2bce354aff2c5edc"><div class="ttname"><a href="structmultithreading_1_1thread__key.html#a435c24ac9494766b2bce354aff2c5edc">multithreading::thread_key::thread_key</a></div><div class="ttdeci">thread_key()</div><div class="ttdef"><b>Definition</b> multithreading.cpp:24</div></div>
 <div class="ttc" id="astructmultithreading_1_1thread__key_html_a9e40a973c3e94756b3b36618de3cf4a7"><div class="ttname"><a href="structmultithreading_1_1thread__key.html#a9e40a973c3e94756b3b36618de3cf4a7">multithreading::thread_key::operator=</a></div><div class="ttdeci">thread_key &amp; operator=(thread_key const &amp;)=delete</div></div>
 <div class="ttc" id="astructmultithreading_1_1thread__key_html_ab6980635fe34e4a0b46568ec2d422762"><div class="ttname"><a href="structmultithreading_1_1thread__key.html#ab6980635fe34e4a0b46568ec2d422762">multithreading::thread_key::thread_key</a></div><div class="ttdeci">thread_key(thread_key const &amp;)=delete</div></div>
 <div class="ttc" id="astructmultithreading_1_1thread__key_html_ad0113a67d59550589f717377e0e9601e"><div class="ttname"><a href="structmultithreading_1_1thread__key.html#ad0113a67d59550589f717377e0e9601e">multithreading::thread_key::~thread_key</a></div><div class="ttdeci">~thread_key()</div><div class="ttdef"><b>Definition</b> multithreading.cpp:31</div></div>
-<div class="ttc" id="astructmultithreading_1_1thread__key_html_af16c7d0f424c4ffa251a7bea6ac2a653"><div class="ttname"><a href="structmultithreading_1_1thread__key.html#af16c7d0f424c4ffa251a7bea6ac2a653">multithreading::thread_key::key</a></div><div class="ttdeci">pthread_key_t key</div><div class="ttdef"><b>Definition</b> multithreading.hpp:135</div></div>
+<div class="ttc" id="astructmultithreading_1_1thread__key_html_af16c7d0f424c4ffa251a7bea6ac2a653"><div class="ttname"><a href="structmultithreading_1_1thread__key.html#af16c7d0f424c4ffa251a7bea6ac2a653">multithreading::thread_key::key</a></div><div class="ttdeci">pthread_key_t key</div><div class="ttdef"><b>Definition</b> multithreading.hpp:146</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_52b4106b6168f13dcdf82e33b1d195ee.html">utilities</a></li><li class="navelem"><b>multithreading.hpp</b></li>
-    <li class="footer">Generated on Thu Nov 5 2026 17:24:35 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Nov 9 2026 22:18:54 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

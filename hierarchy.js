@@ -101,6 +101,7 @@ var hierarchy =
     [ "models::bmi::protocols::serialization::wire_format::RecordPrefix", "structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html", null ],
     [ "multithreading::cache_slot< T >", "structmultithreading_1_1cache__slot.html", null ],
     [ "multithreading::details::string_literal< N >", "structmultithreading_1_1details_1_1string__literal.html", null ],
+    [ "multithreading::failed_fill", "structmultithreading_1_1failed__fill.html", null ],
     [ "multithreading::per_thread< T >", "classmultithreading_1_1per__thread.html", null ],
     [ "multithreading::shared_cache< Key, T >", "structmultithreading_1_1shared__cache.html", null ],
     [ "multithreading::thread_key", "structmultithreading_1_1thread__key.html", null ],

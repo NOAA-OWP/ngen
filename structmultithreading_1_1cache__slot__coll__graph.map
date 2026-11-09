@@ -1,7 +1,7 @@
 <map id="multithreading::cache_slot&lt; T &gt;" name="multithreading::cache_slot&lt; T &gt;">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,393,138,556"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,393,138,576"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="17,264,126,330"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,330,74,376,69,376,69,330"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,330,74,377,69,377,69,330"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="20,135,124,201"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,215,74,264,69,264,69,215"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="62,5,81,72"/>

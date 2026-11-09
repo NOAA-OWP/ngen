@@ -2,6 +2,7 @@ var namespacemultithreading =
 [
     [ "details", "namespacemultithreading_1_1details.html", "namespacemultithreading_1_1details" ],
     [ "cache_slot", "structmultithreading_1_1cache__slot.html", "structmultithreading_1_1cache__slot" ],
+    [ "failed_fill", "structmultithreading_1_1failed__fill.html", null ],
     [ "per_thread", "classmultithreading_1_1per__thread.html", "classmultithreading_1_1per__thread" ],
     [ "shared_cache", "structmultithreading_1_1shared__cache.html", "structmultithreading_1_1shared__cache" ],
     [ "thread_key", "structmultithreading_1_1thread__key.html", "structmultithreading_1_1thread__key" ],

@@ -534,8 +534,8 @@ var NAVTREEINDEX =
 "namespacehy__features_1_1hydrolocation.html#a6332f21e5c195e289dd1b6c59a029b1aabc3b0556316b0ba241ae6bb86b76e8a2",
 "namespacengen_1_1hydrofabric_1_1anonymous__namespace_02_geo_package_hydrofabric_reader_8cpp_03.html",
 "structforcing__params.html",
-"structngen_1_1geopackage_1_1wkb_1_1wgs84.html#af133fb9bad851878eac898aa4132dd95",
-"structrouting__params.html#af966a73055663bca37095a4e4feb754d"
+"structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a3f2d6d7f99b671b94ebf4119311f7603",
+"structrequest__from__empty__nexus.html#a5e3bb421f6d94856d4ee53a390a1ba6c"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
