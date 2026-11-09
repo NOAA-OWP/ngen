@@ -26,6 +26,7 @@
 #define AORC_FIELD_NAME_WIND_V_10M_AG "VGRD_10maboveground"
 #define AORC_FIELD_NAME_SPEC_HUMID_2M_AG "SPFH_2maboveground"
 
+#include <ctime> // std::tm; POSIX strptime, timegm
 #include <map>
 
 /**
