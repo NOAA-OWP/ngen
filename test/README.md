@@ -58,9 +58,10 @@ When built with CMake, these and other similar targets each produce a target-spe
 
     cmake --build cmake-build-dir --target test_unit -- -j 4
     
-This produces an executable test file `cmake-build-dir/test/test_unit`, which can then be used to run the configured collection of tests:
+This produces an executable test file `cmake-build-dir/test/test_unit`, which can then be used to run the configured collection of tests.  Run test executables from inside the build directory, since the tests find the testing BMI modules (built under `cmake-build-dir/test-libs/`) and the `data/` directory (symlinked into the build directory) relative to it:
 
-    ./cmake-build-dir/test/test_unit
+    cd cmake-build-dir
+    ./test/test_unit
     
 It is also possible to add the `--gtest_filter=` flag followed by a colon-delimited series of tests' *full names*.  **Google Test** defines the *full name* of a test as:
 
@@ -68,7 +69,7 @@ It is also possible to add the `--gtest_filter=` flag followed by a colon-delimi
     
 For example:
 
-    ./cmake-build-dir/test/test_unit --gtest_filter=HymodKernelTest.TestCalcET0:HymodKernelTest.TestRun0
+    ./test/test_unit --gtest_filter=HymodKernelTest.TestCalcET0:HymodKernelTest.TestRun0
             
 # Creating New Automated Tests
 

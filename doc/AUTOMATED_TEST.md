@@ -20,12 +20,13 @@ We strongly recommend you run all the tests on your local computer before you pu
 
     -DNGEN_WITH_TESTS:BOOL=ON
 
-After `build` completes, assuming your build directory is `cmake_build`, you can check that the `ngen` executable is in `cmake_build` directory, and all `unit test` executables are in `cmake_build/test` directory. To run a unit test, for example, run the following command while in the top project directory:
+After `build` completes, assuming your build directory is `cmake_build`, you can check that the `ngen` executable is in `cmake_build` directory, and all `unit test` executables are in `cmake_build/test` directory. The testing BMI modules are built under `cmake_build/test-libs/`, and the `data` directory is symlinked into `cmake_build`, so tests should be run from inside the build directory. To run a unit test, for example, run the following commands from the top project directory:
 
-    ./cmake_build/test/test_unit
+    cd cmake_build
+    ./test/test_unit
 
 There are many other unit test executables you need to run for a complete test.
-For example, to run an **ngen** test job using the data set in the `data` directory, use the following command:
+For example, to run an **ngen** test job using the data set in the `data` directory, use the following command from the top project directory (this example realization config refers to the BMI module libraries under `cmake_build/extern-libs/`):
 
     ./cmake_build/ngen data/catchment_data.geojson '' data/nexus_data.geojson '' data/example_bmi_multi_realization_config.json
 
