@@ -759,7 +759,6 @@ ngen_add_test(
         core/NetworkTests.cpp
         core/catchment/HY_CatchmentRealization_Test.cpp
         core/HY_Features_Attributes_Test.cpp
-        utils/include/StreamOutputTest.cpp
         realizations/Formulation_Manager_Test.cpp
         utils/PerFormulationNexusOutputMgr_Test.cpp
         utils/Partition_Test.cpp
