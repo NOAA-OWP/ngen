@@ -55,8 +55,8 @@ To run the *ngen* engine, the following command line positional arguments are su
 - _partition_config_path_ -- path to the partition json config file, when using the driver with [distributed processing](doc/DISTRIBUTED_PROCESSING.md).
 - `--subdivided-hydrofabric` -- an explicit, optional flag, when using the driver with [distributed processing](doc/DISTRIBUTED_PROCESSING.md), to indicate to the driver processes that they should operate on process-specific subdivided hydrofabric files.
 
-An example of a complete invocation to run a subset of a hydrofabric.  If the realization configuration doesn't contain catchment definitions for the subset keys provided, the default `global` configuration is used.  Alternatively, if the realization configuration contains definitions that are not in the subset (or hydrofabric) keys, then a warning is produced and the formulation isn't created.
-`./cmake-build-debug/ngen ./data/catchment_data.geojson "cat-27,cat-52" ./data/nexus_data.geojson "nex-26,nex-34" ./data/example_realization_config.json`
+An example of a complete invocation to run a subset of a hydrofabric.  If the realization configuration doesn't contain catchment definitions for the subset keys provided, the default `global` configuration is used.  Alternatively, if the realization configuration contains definitions that are not in the subset (or hydrofabric) keys, then a warning is produced and the formulation isn't created.  The example realization configurations under `data/` refer to BMI module libraries built under the build directory (in `extern-libs/` and `test-libs/`), and the `data` directory is symlinked into the build directory, so run these examples from inside the build directory:
+`cd cmake-build-debug && ./ngen ./data/catchment_data.geojson "cat-27,cat-52" ./data/nexus_data.geojson "nex-26,nex-34" ./data/example_realization_config.json`
 
 To simulate every catchment in the input hydrofabric, leave the subset lists empty, or use "all" i.e.:
 `ngen ./data/catchment_data.geojson "" ./data/nexus_data.geojson "" ./data/refactored_example_realization_config.json`
@@ -68,18 +68,18 @@ Examples specific to running with with distributed processing can be found [here
 
 The project uses the **Google Test** framework for creating automated tests for C++ code.
 
-To execute the full collection of automated C++ tests, run the `test_all` target in **CMake**, then execute the generated executable.  Alternatively, replace `test_all` with `test_unit` or `test_integration` to run only those tests.
+To execute the full collection of automated C++ tests, run the `test_all` target in **CMake**, then execute the generated executable from inside the build directory, where the tests find the testing BMI modules and data.  Alternatively, replace `test_all` with `test_unit` or `test_integration` to run only those tests.
 For example:
   
     cmake --build cmake-build-debug --target test_all -- -j 4
-    ./cmake-build-debug/test/test_all
+    cd cmake-build-debug && ./test/test_all
     
 Or, if the build system has not yet been properly generated:
 
     git submodule update --init --recursive -- test/googletest
     cmake -DCMAKE_BUILD_TYPE=Debug -DNGEN_WITH_TESTS:BOOL=ON -B cmake-build-debug -S .
     cmake --build cmake-build-debug --target test_all -- -j 4
-    ./cmake-build-debug/test/test_all
+    cd cmake-build-debug && ./test/test_all
 
 See the [Testing ReadMe](test/README.md) file and [wiki/Quickstart](https://github.com/NOAA-OWP/ngen/wiki/NGen-Tutorial) for a more thorough discussion of testing.
 
