@@ -5,6 +5,8 @@
 
 #if NGEN_WITH_MPI
 
+#include <optional>
+#include <string>
 #include <vector>
 
 #include <mpi.h>
@@ -28,6 +30,30 @@ namespace partitioning {
      *         have one part per rank, or if any part has remote connections
      */
     PartitionData scatter_partitions(const std::vector<PartitionData>& partitions, int root, MPI_Comm comm);
+
+    /**
+     * Partition a hydrofabric's catchments automatically across the ranks of @p comm.
+     *
+     * @p root reads only the divides' connectivity, per hydrofabric::Content::Connectivity, and
+     * assigns each nexus, with every catchment that drains to it, to one rank per
+     * partition_by_nexus(). Each rank receives its part, which has no remote connections.
+     * Failures are reported on standard error.
+     *
+     * Collective over @p comm.
+     *
+     * @param catchment_data_path Path to the hydrofabric's divides. Used only on @p root.
+     * @param nexus_data_path Path to the hydrofabric's nexuses. Used only on @p root.
+     * @param catchment_subset_ids Divides to partition, or all of them if empty. Used only on @p root.
+     * @param root The rank that reads the divides and computes the partitioning
+     * @param comm The communicator to partition across, one part per rank
+     * @return This rank's part; or, on every rank, no value if @p root could not read the divides
+     *         or if any rank's part has no catchments
+     */
+    std::optional<PartitionData> partition_automatically(const std::string& catchment_data_path,
+                                                         const std::string& nexus_data_path,
+                                                         const std::vector<std::string>& catchment_subset_ids,
+                                                         int root,
+                                                         MPI_Comm comm);
 
 } // namespace partitioning
 } // namespace ngen
