@@ -14,15 +14,14 @@ Distributed multi-process execution of the Nextgen driver (_ngen_) is possible t
     * [Example 1 - Full Hydrofabric](#example-1---full-hydrofabric)
     * [Example 2 - Subdivided Hydrofabric](#example-2---subdivided-hydrofabric)
     * [Example 3 - Automatic Partitioning](#example-3---automatic-partitioning)
-* [Partition Config Generator](#partitioning-config-generator)
 
 # Overview
 
 The basic design starts with partitioning: grouping the catchments and nexuses of the entire hydrofabric into separate collections, one per MPI rank.  Every nexus must be in the same partition as all of the catchments that drain to it, so that no rank needs to communicate with another during the simulation.  The driver can [partition automatically](#automatic-partitioning), or read the partitions from a partitioning configuration file.  In a file, partitions have an `id` property, and it is expected for partitions and MPI ranks to map 1-to-1 and have the same identifier.  A file whose partitions list remote connections between them is rejected.
 
-Partition configurations are expected to be represented in JSON.  There is a [partition generator tool](#partitioning-config-generator) available separately from the main driver for creating these files.
+Partition configurations are expected to be represented in JSON.
 
-When executed, the driver is provided a valid partitioning configuration file path [as a command line arg](../README.md#usage).  Each rank loads [all or part](#subdivided-hydrofabric) of the supplied hydrofabric, and then constructs the specific model formulations appropriate for the features within its partition.
+When executed, the driver is provided a partitioning configuration file path [as a command line arg](../README.md#usage), or partitions automatically without one.  Each rank loads [all or part](#subdivided-hydrofabric) of the supplied hydrofabric, and then constructs the specific model formulations appropriate for the features within its partition.
 
 # Building the MPI-Enabled Nextgen Driver
 
@@ -91,15 +90,3 @@ mpirun -n 8 cmake-build/ngen catchment_data.geojson "all" nexus_data.geojson "al
 ```
 mpirun -n 16 cmake-build/ngen hydrofabric.gpkg "all" hydrofabric.gpkg "all" realization_config.json
 ```
-
-# Partitioning Config Generator
-
-A separate artifact can be built for generating partition configs.  This is the _partitionGenerator_ executable, built in the CMake build directory either when the entire project or specifically the `partitionGenerator` CMake target is built.  The syntax for using is:
-
-`<cmake-build-dir>/partitionGenerator <catchment_data_file> <nexus_data_file> <output_partition_config> <num_partitions> '' ''`
-
-E.g.:
-
-`./cmake-build-debug/partitionGenerator ./data/huc01_hydrofabric/catchment_data.geojson ./data/huc01_hydrofabric/nexus_data.geojson ./partition_config.json 4 '' ''`
-
-The last two arguments are intended to allow for partitioning only a subset of the entire hydrofabric.  Note also that single-quotes must be used.  At this time, these are required, but it is recommended they be left as empty strings.  
