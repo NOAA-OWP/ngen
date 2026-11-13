@@ -468,6 +468,16 @@ ngen_add_test(
     #   NGEN_WITH_MPI
 )
 
+########################## Partition By Nexus Tests
+ngen_add_test(
+    test_partition_by_nexus
+    OBJECTS
+        partitioning/Partition_By_Nexus_Test.cpp
+    LIBRARIES
+        NGen::partitioning
+        NGen::geojson
+)
+
 ########################## Partition_One Tests
 ngen_add_test(
     test_partition_one
