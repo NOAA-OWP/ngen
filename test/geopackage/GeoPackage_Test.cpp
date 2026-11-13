@@ -75,6 +75,40 @@ TEST_F(GeoPackage_Test, geopackage_idsubset_test)
     ASSERT_TRUE(gpkg->get_feature(1) == nullptr);
 }
 
+TEST_F(GeoPackage_Test, geopackage_column_selection_test)
+{
+    const auto with = ngen::geopackage::make_reader(this->path).read("test", {});
+
+    // The id column alone: no other properties, and no geometry
+    const auto ids = ngen::geopackage::make_reader(this->path).read("test", {}, "id", std::vector<std::string>{});
+    ASSERT_EQ(ids->get_size(), 2);
+    EXPECT_TRUE(ids->get_bounding_box().empty());
+    for (int i = 0; i < ids->get_size(); ++i) {
+        const auto& feature = ids->get_feature(i);
+        EXPECT_EQ(feature->get_id(), with->get_feature(i)->get_id());
+        EXPECT_EQ(feature->property_keys(), std::vector<std::string>{"id"});
+        EXPECT_EQ(feature->get_type(), geojson::FeatureType::GeometryCollection);
+        EXPECT_TRUE(feature->get_geometry_collection().empty());
+        EXPECT_TRUE(feature->get_bounding_box().empty());
+    }
+
+    // Another column besides
+    const auto fids = ngen::geopackage::make_reader(this->path).read("test", {}, "id", std::vector<std::string>{"fid"});
+    EXPECT_EQ(fids->get_feature(0)->property_keys(), (std::vector<std::string>{"fid", "id"}));
+    EXPECT_TRUE(fids->get_feature(0)->get_geometry_collection().empty());
+
+    // The geometry column, which is decoded as in a full read
+    const auto geometry = ngen::geopackage::make_reader(this->path).read("test", {}, "id", std::vector<std::string>{"geom"});
+    EXPECT_EQ(geometry->get_bounding_box(), with->get_bounding_box());
+    EXPECT_EQ(geometry->get_feature(0)->property_keys(), std::vector<std::string>{"id"});
+    const auto point = std::get<geojson::coordinate_t>(*geometry->get_feature(0)->geometry());
+    EXPECT_EQ(point.get<0>(), 102.0);
+    EXPECT_EQ(point.get<1>(), 0.5);
+
+    EXPECT_THROW(ngen::geopackage::make_reader(this->path).read("test", {}, "id", std::vector<std::string>{"no_such_column"}),
+                 std::runtime_error);
+}
+
 // this test is essentially the same as the above, however, the coordinates
 // are stored in EPSG:3857. When read in, they should convert to EPSG:4326.
 TEST_F(GeoPackage_Test, geopackage_projection_test)

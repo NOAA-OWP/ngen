@@ -134,13 +134,15 @@ Identified identify(const std::string& catchment_path, const std::string& nexus_
  * @param[in] divides_reader Reader for the GeoPackage holding the `divides` layer
  * @param[in] nexus_reader Reader for the `nexus` layer's GeoPackage, if a separate file
  * @param[in] version Release identified for the pair
+ * @param[in] content What the reader reads of each feature
  * @return std::unique_ptr<HydrofabricReader> Reader for that release
  * @throws std::runtime_error if @p version names no readable GeoPackage release
  */
 std::unique_ptr<HydrofabricReader> make_geopackage_reader(
     geopackage::GeoPackageReader divides_reader,
     std::optional<geopackage::GeoPackageReader> nexus_reader,
-    const HydrofabricVersion version
+    const HydrofabricVersion version,
+    const Content content
 )
 {
     // Deliberately without a default case, so that adding a release without adding its reader here
@@ -148,15 +150,15 @@ std::unique_ptr<HydrofabricReader> make_geopackage_reader(
     switch (version) {
         case HydrofabricVersion::V4_0:
             return std::make_unique<V4_0GeoPackageHydrofabricReader>(
-                std::move(divides_reader), std::move(nexus_reader)
+                std::move(divides_reader), std::move(nexus_reader), content
             );
         case HydrofabricVersion::V4_0_BETA1:
             return std::make_unique<V4_0Beta1GeoPackageHydrofabricReader>(
-                std::move(divides_reader), std::move(nexus_reader)
+                std::move(divides_reader), std::move(nexus_reader), content
             );
         case HydrofabricVersion::V2_2:
             return std::make_unique<V2_2GeoPackageHydrofabricReader>(
-                std::move(divides_reader), std::move(nexus_reader)
+                std::move(divides_reader), std::move(nexus_reader), content
             );
         case HydrofabricVersion::V1_GEOJSON:
         case HydrofabricVersion::UNRECOGNIZED:
@@ -181,7 +183,8 @@ HydrofabricVersion detect_hydrofabric(const std::string& catchment_path, const s
 
 std::unique_ptr<HydrofabricReader> make_hydrofabric_reader(
     const std::string& catchment_path,
-    const std::string& nexus_path
+    const std::string& nexus_path,
+    const Content content
 )
 {
     Identified identified = identify(catchment_path, nexus_path);
@@ -194,6 +197,7 @@ std::unique_ptr<HydrofabricReader> make_hydrofabric_reader(
 
     switch (identified.version) {
         case HydrofabricVersion::V1_GEOJSON:
+            // GeoJSON must be parsed whole, so its reader reads everything whatever the content.
             return std::make_unique<GeoJSONHydrofabricReader>(catchment_path, nexus_path);
         case HydrofabricVersion::V2_2:
         case HydrofabricVersion::V4_0_BETA1:
@@ -202,7 +206,8 @@ std::unique_ptr<HydrofabricReader> make_hydrofabric_reader(
             return make_geopackage_reader(
                 std::move(identified.divides_reader.value()),
                 std::move(identified.nexus_reader),
-                identified.version
+                identified.version,
+                content
             );
             #else
             // Unreachable: detect_hydrofabric() refuses GeoPackage paths in this build.
@@ -217,9 +222,9 @@ std::unique_ptr<HydrofabricReader> make_hydrofabric_reader(
     );
 }
 
-std::unique_ptr<HydrofabricReader> make_hydrofabric_reader(const std::string& path)
+std::unique_ptr<HydrofabricReader> make_hydrofabric_reader(const std::string& path, const Content content)
 {
-    return make_hydrofabric_reader(path, path);
+    return make_hydrofabric_reader(path, path, content);
 }
 
 } // namespace hydrofabric
