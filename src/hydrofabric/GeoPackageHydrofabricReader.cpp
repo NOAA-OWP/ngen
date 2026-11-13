@@ -57,11 +57,13 @@ void alias_property(geojson::PropertyMap& properties, const std::string& from, c
 GeoPackageHydrofabricReader::GeoPackageHydrofabricReader(
     geopackage::GeoPackageReader divides_reader,
     std::optional<geopackage::GeoPackageReader> nexus_reader,
-    const HydrofabricVersion version
+    const HydrofabricVersion version,
+    const Content content
 )
   : divides_reader_(std::move(divides_reader))
   , nexus_reader_(std::move(nexus_reader))
   , version_(version)
+  , content_(content)
 {}
 
 const geopackage::GeoPackageReader& GeoPackageHydrofabricReader::reader_for(const std::string& layer) const
@@ -83,13 +85,21 @@ HydrofabricVersion GeoPackageHydrofabricReader::version() const noexcept
 void GeoPackageHydrofabricReader::check_required_columns(const std::string& /* layer */) const
 {}
 
+std::optional<std::vector<std::string>> GeoPackageHydrofabricReader::columns_to_read(const std::string& layer) const
+{
+    if (content_ == Content::Connectivity) {
+        return connectivity_columns(layer);
+    }
+    return std::nullopt;
+}
+
 geojson::GeoJSON GeoPackageHydrofabricReader::read_divides(const std::vector<std::string>& ids)
 {
     check_required_columns(DIVIDES_LAYER);
 
     const geopackage::GeoPackageReader& reader = reader_for(DIVIDES_LAYER);
     const std::string id_column = get_layer_id_column(version_, DIVIDES_LAYER, reader.db());
-    geojson::GeoJSON divides = reader.read(DIVIDES_LAYER, ids, id_column);
+    geojson::GeoJSON divides = reader.read(DIVIDES_LAYER, ids, id_column, columns_to_read(DIVIDES_LAYER));
 
     normalize_divides(*divides);
     return divides;
@@ -101,7 +111,7 @@ geojson::GeoJSON GeoPackageHydrofabricReader::read_nexus(const std::vector<std::
 
     const geopackage::GeoPackageReader& reader = reader_for(NEXUS_LAYER);
     const std::string id_column = get_layer_id_column(version_, NEXUS_LAYER, reader.db());
-    geojson::GeoJSON nexus = reader.read(NEXUS_LAYER, ids, id_column);
+    geojson::GeoJSON nexus = reader.read(NEXUS_LAYER, ids, id_column, columns_to_read(NEXUS_LAYER));
 
     normalize_nexus(*nexus);
     return nexus;
@@ -111,12 +121,19 @@ geojson::GeoJSON GeoPackageHydrofabricReader::read_nexus(const std::vector<std::
 
 V2_2GeoPackageHydrofabricReader::V2_2GeoPackageHydrofabricReader(
     geopackage::GeoPackageReader divides_reader,
-    std::optional<geopackage::GeoPackageReader> nexus_reader
+    std::optional<geopackage::GeoPackageReader> nexus_reader,
+    const Content content
 )
   : GeoPackageHydrofabricReader(
-        std::move(divides_reader), std::move(nexus_reader), HydrofabricVersion::V2_2
+        std::move(divides_reader), std::move(nexus_reader), HydrofabricVersion::V2_2, content
     )
 {}
+
+std::vector<std::string> V2_2GeoPackageHydrofabricReader::connectivity_columns(const std::string& /* layer */) const
+{
+    // Both layers carry a native "toid".
+    return {TOID_KEY};
+}
 
 void V2_2GeoPackageHydrofabricReader::normalize_divides(geojson::FeatureCollection& /* divides */) const
 {
@@ -135,10 +152,19 @@ void V2_2GeoPackageHydrofabricReader::normalize_nexus(geojson::FeatureCollection
 AbstractV4GeoPackageHydrofabricReader::AbstractV4GeoPackageHydrofabricReader(
     geopackage::GeoPackageReader divides_reader,
     std::optional<geopackage::GeoPackageReader> nexus_reader,
-    const HydrofabricVersion version
+    const HydrofabricVersion version,
+    const Content content
 )
-  : GeoPackageHydrofabricReader(std::move(divides_reader), std::move(nexus_reader), version)
+  : GeoPackageHydrofabricReader(std::move(divides_reader), std::move(nexus_reader), version, content)
 {}
+
+std::vector<std::string> AbstractV4GeoPackageHydrofabricReader::connectivity_columns(const std::string& layer) const
+{
+    if (layer == NEXUS_LAYER) {
+        return {NEXUS_TOID_COLUMN};
+    }
+    return {};
+}
 
 void AbstractV4GeoPackageHydrofabricReader::check_required_columns(const std::string& layer) const
 {
@@ -201,12 +227,21 @@ void AbstractV4GeoPackageHydrofabricReader::normalize_divides(geojson::FeatureCo
 
 V4_0GeoPackageHydrofabricReader::V4_0GeoPackageHydrofabricReader(
     geopackage::GeoPackageReader divides_reader,
-    std::optional<geopackage::GeoPackageReader> nexus_reader
+    std::optional<geopackage::GeoPackageReader> nexus_reader,
+    const Content content
 )
   : AbstractV4GeoPackageHydrofabricReader(
-        std::move(divides_reader), std::move(nexus_reader), HydrofabricVersion::V4_0
+        std::move(divides_reader), std::move(nexus_reader), HydrofabricVersion::V4_0, content
     )
 {}
+
+std::vector<std::string> V4_0GeoPackageHydrofabricReader::connectivity_columns(const std::string& layer) const
+{
+    if (layer == DIVIDES_LAYER) {
+        return {FLOWPATH_TOID_COLUMN};
+    }
+    return AbstractV4GeoPackageHydrofabricReader::connectivity_columns(layer);
+}
 
 void V4_0GeoPackageHydrofabricReader::check_required_columns(const std::string& layer) const
 {
@@ -233,10 +268,11 @@ void V4_0GeoPackageHydrofabricReader::attribute_divide_toid(
 
 V4_0Beta1GeoPackageHydrofabricReader::V4_0Beta1GeoPackageHydrofabricReader(
     geopackage::GeoPackageReader divides_reader,
-    std::optional<geopackage::GeoPackageReader> nexus_reader
+    std::optional<geopackage::GeoPackageReader> nexus_reader,
+    const Content content
 )
   : AbstractV4GeoPackageHydrofabricReader(
-        std::move(divides_reader), std::move(nexus_reader), HydrofabricVersion::V4_0_BETA1
+        std::move(divides_reader), std::move(nexus_reader), HydrofabricVersion::V4_0_BETA1, content
     )
 {}
 
