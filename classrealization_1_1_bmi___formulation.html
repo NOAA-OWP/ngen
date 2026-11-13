@@ -197,9 +197,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af783d34fb272298f8c8f9673b1ea891e" id="r_af783d34fb272298f8c8f9673b1ea891e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#af783d34fb272298f8c8f9673b1ea891e">finalize</a> ()</td></tr>
 <tr class="memdesc:af783d34fb272298f8c8f9673b1ea891e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources that should not be held as the run is shutting down.  <br /></td></tr>
 <tr class="separator:af783d34fb272298f8c8f9673b1ea891e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa466b968fd8003f2c7ea1feaa6ae39fd" id="r_aa466b968fd8003f2c7ea1feaa6ae39fd"><td class="memItemLeft" align="right" valign="top">virtual boost::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#aa466b968fd8003f2c7ea1feaa6ae39fd">get_available_variable_names</a> () const =0</td></tr>
-<tr class="memdesc:aa466b968fd8003f2c7ea1feaa6ae39fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the variables that are accessable by this data provider.  <br /></td></tr>
-<tr class="separator:aa466b968fd8003f2c7ea1feaa6ae39fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d642a3eaed637fcd4149aef099f2975" id="r_a6d642a3eaed637fcd4149aef099f2975"><td class="memItemLeft" align="right" valign="top">virtual std::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a6d642a3eaed637fcd4149aef099f2975">get_available_variable_names</a> () const =0</td></tr>
+<tr class="memdesc:a6d642a3eaed637fcd4149aef099f2975"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the variables that are accessable by this data provider.  <br /></td></tr>
+<tr class="separator:a6d642a3eaed637fcd4149aef099f2975"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d676573f75add7dcc500158cdada40d" id="r_a1d676573f75add7dcc500158cdada40d"><td class="memItemLeft" align="right" valign="top">virtual long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a1d676573f75add7dcc500158cdada40d">get_data_start_time</a> () const =0</td></tr>
 <tr class="memdesc:a1d676573f75add7dcc500158cdada40d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the first valid time for which data from the request variable can be requested.  <br /></td></tr>
 <tr class="separator:a1d676573f75add7dcc500158cdada40d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -288,9 +288,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a379329fb5d36b0c5dce4e3701c464e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae520479adedf30609de4068bc389bd41" id="r_ae520479adedf30609de4068bc389bd41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae520479adedf30609de4068bc389bd41">set_output_header_fields</a> (const std::vector&lt; std::string &gt; &amp;output_headers)</td></tr>
 <tr class="separator:ae520479adedf30609de4068bc389bd41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a466f273912db9fdee8f11d4cd670c3ea" id="r_a466f273912db9fdee8f11d4cd670c3ea"><td class="memItemLeft" align="right" valign="top">boost::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a466f273912db9fdee8f11d4cd670c3ea">get_output_header_field_names</a> () const</td></tr>
-<tr class="memdesc:a466f273912db9fdee8f11d4cd670c3ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">The configured/derived output header (display) field names, positionally parallel to <a class="el" href="#ac58942d917922a1bad80b1cd70e7196c">get_output_variable_names</a> &ndash; header i is the output name for variable i.  <br /></td></tr>
-<tr class="separator:a466f273912db9fdee8f11d4cd670c3ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa38bb9370cb0e249b6f21451caa66d77" id="r_aa38bb9370cb0e249b6f21451caa66d77"><td class="memItemLeft" align="right" valign="top">std::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa38bb9370cb0e249b6f21451caa66d77">get_output_header_field_names</a> () const</td></tr>
+<tr class="memdesc:aa38bb9370cb0e249b6f21451caa66d77"><td class="mdescLeft">&#160;</td><td class="mdescRight">The configured/derived output header (display) field names, positionally parallel to <a class="el" href="#ac58942d917922a1bad80b1cd70e7196c">get_output_variable_names</a> &ndash; header i is the output name for variable i.  <br /></td></tr>
+<tr class="separator:aa38bb9370cb0e249b6f21451caa66d77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac85ef69c4b2de5a261230469cd0f3985" id="r_ac85ef69c4b2de5a261230469cd0f3985"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac85ef69c4b2de5a261230469cd0f3985">set_output_variable_names</a> (const std::vector&lt; std::string &gt; &amp;out_var_names)</td></tr>
 <tr class="memdesc:ac85ef69c4b2de5a261230469cd0f3985"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the names of variables in formulation output.  <br /></td></tr>
 <tr class="separator:ac85ef69c4b2de5a261230469cd0f3985"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -789,8 +789,8 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
-<a id="aa466b968fd8003f2c7ea1feaa6ae39fd" name="aa466b968fd8003f2c7ea1feaa6ae39fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa466b968fd8003f2c7ea1feaa6ae39fd">&#9670;&#160;</a></span>get_available_variable_names()</h2>
+<a id="a6d642a3eaed637fcd4149aef099f2975" name="a6d642a3eaed637fcd4149aef099f2975"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d642a3eaed637fcd4149aef099f2975">&#9670;&#160;</a></span>get_available_variable_names()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -801,7 +801,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual boost::span&lt; const std::string &gt; <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; DataType, SelectionType &gt;::get_available_variable_names </td>
+          <td class="memname">virtual std::span&lt; const std::string &gt; <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; DataType, SelectionType &gt;::get_available_variable_names </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -816,9 +816,9 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 <p>Return the variables that are accessable by this data provider. </p>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a316b1339766f9c2e125b38b2e78f1d91">CsvPerFeatureForcingProvider</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a68e1e0acaf5b411acebabc5f9d74dda8">data_access::DeferredWrappedProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a0bb75ab402babe5c9b9bf490a1c327f6">data_access::WrappedDataProvider</a>, <a class="el" href="class_null_forcing_provider.html#a445340d3a782ccf23030baf09e731032">NullForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a3ea2f6ea46e2b71188aec7c6c2da4cc9">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a3fb18c76fede4a9ed3f0e2e0a88e87c8">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#aaad5f3af9ed7c4120fdaf72c45ae4e9c">CsvPerFeatureForcingProvider</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a69bbe047d6e57b70b33341820b507632">data_access::DeferredWrappedProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a20f745c3566eb3bb5075c43662f18a39">data_access::WrappedDataProvider</a>, <a class="el" href="class_null_forcing_provider.html#a79b80e647d30380e194dd407288f984f">NullForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab4e2c546422a9e173c990f7fbe3f68d8">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a7f677ffbc3e98137185d1d4d830ee011">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a0bb75ab402babe5c9b9bf490a1c327f6">data_access::WrappedDataProvider::get_available_variable_names()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a6cf15bf9b7178b41092a726e262ee194">data_access::OptionalWrappedDataProvider::isSuppliedByProvider()</a>, and <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">data_access::DeferredWrappedProvider::setWrappedProvider()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a20f745c3566eb3bb5075c43662f18a39">data_access::WrappedDataProvider::get_available_variable_names()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a6cf15bf9b7178b41092a726e262ee194">data_access::OptionalWrappedDataProvider::isSuppliedByProvider()</a>, and <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">data_access::DeferredWrappedProvider::setWrappedProvider()</a>.</p>
 
 </div>
 </div>
@@ -1248,8 +1248,8 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
-<a id="a466f273912db9fdee8f11d4cd670c3ea" name="a466f273912db9fdee8f11d4cd670c3ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a466f273912db9fdee8f11d4cd670c3ea">&#9670;&#160;</a></span>get_output_header_field_names()</h2>
+<a id="aa38bb9370cb0e249b6f21451caa66d77" name="aa38bb9370cb0e249b6f21451caa66d77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa38bb9370cb0e249b6f21451caa66d77">&#9670;&#160;</a></span>get_output_header_field_names()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1258,7 +1258,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">boost::span&lt; const std::string &gt; realization::Bmi_Formulation::get_output_header_field_names </td>
+          <td class="memname">std::span&lt; const std::string &gt; realization::Bmi_Formulation::get_output_header_field_names </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -1315,7 +1315,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 <p>Implemented in <a class="el" href="class_depth___formulation.html#ad5e72ebbcccdb2f24fce57acd3a213fe">Depth_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a813cd9420088cc7023a41c6429cf0ccb">realization::Bmi_Module_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#aa54afafbd34ff0abade282bb48168886">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classngen_1_1_domain_layer.html#a3d4a8a547fdc915f4b9a49ed7026dc7a">ngen::DomainLayer::update_models()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_domain_layer.html#a02deb21dddf96dbe105b9a1f3a3d453c">ngen::DomainLayer::update_models()</a>.</p>
 
 </div>
 </div>
@@ -2306,7 +2306,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 <p>Output header field strings corresponding to the variables output by the realization, as defined in <code>output_variable_names</code>. </p>
 
-<p class="reference">Referenced by <a class="el" href="#a466f273912db9fdee8f11d4cd670c3ea">get_output_header_field_names()</a>, and <a class="el" href="#ae520479adedf30609de4068bc389bd41">set_output_header_fields()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#aa38bb9370cb0e249b6f21451caa66d77">get_output_header_field_names()</a>, and <a class="el" href="#ae520479adedf30609de4068bc389bd41">set_output_header_fields()</a>.</p>
 
 </div>
 </div>
@@ -2375,7 +2375,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___formulation.html">Bmi_Formulation</a></li>
-    <li class="footer">Generated on Fri Nov 13 2026 19:54:29 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Nov 13 2026 20:06:55 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

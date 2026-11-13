@@ -11,7 +11,7 @@ var namespacengen_1_1serialization =
     [ "RecordBackend", "classngen_1_1serialization_1_1_record_backend.html", "classngen_1_1serialization_1_1_record_backend" ],
     [ "IdPredicate", "namespacengen_1_1serialization.html#a3fc67cb4eb1ffead4aea87e0921d270a", null ],
     [ "Record", "namespacengen_1_1serialization.html#a5a0bd9036418f81c45a38babef202a6b", null ],
-    [ "RecordView", "namespacengen_1_1serialization.html#ae1d780a4d4af75621e64cbced94b5676", null ],
+    [ "RecordView", "namespacengen_1_1serialization.html#ab71c641a18f80b1f7546c835b0384294", null ],
     [ "Durability", "namespacengen_1_1serialization.html#ae84cb2bca59109b764caad44a79633e5", [
       [ "relaxed", "namespacengen_1_1serialization.html#ae84cb2bca59109b764caad44a79633e5a81f32be24a2a62fc472cc43edc97e65b", null ],
       [ "strict", "namespacengen_1_1serialization.html#ae84cb2bca59109b764caad44a79633e5a2133fd717402a7966ee88d06f9e0b792", null ]

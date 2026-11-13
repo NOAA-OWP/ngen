@@ -4,7 +4,7 @@ var class_null_forcing_provider =
     [ "selection_type", "class_null_forcing_provider.html#ab0b1614239c57ead01efc4f45bf7d719", null ],
     [ "NullForcingProvider", "class_null_forcing_provider.html#a586f4876aa823dee3c07963f49b2423b", null ],
     [ "finalize", "class_null_forcing_provider.html#af783d34fb272298f8c8f9673b1ea891e", null ],
-    [ "get_available_variable_names", "class_null_forcing_provider.html#a445340d3a782ccf23030baf09e731032", null ],
+    [ "get_available_variable_names", "class_null_forcing_provider.html#a79b80e647d30380e194dd407288f984f", null ],
     [ "get_data_start_time", "class_null_forcing_provider.html#af1886f5b162417aa407ef9c8598d5eb8", null ],
     [ "get_data_stop_time", "class_null_forcing_provider.html#a34913b61df772cef0f229c3d4c48258f", null ],
     [ "get_ts_index_for_time", "class_null_forcing_provider.html#a3342a83fa27295d9fb6b99d6c2337c44", null ],

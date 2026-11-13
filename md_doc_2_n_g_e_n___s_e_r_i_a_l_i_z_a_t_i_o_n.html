@@ -393,7 +393,7 @@ total_steps, timestamp)</code> alongside <code>check_mass_balance</code>, overri
 <li><code>Bmi_Module_Formulation</code> — builds a <code>Context</code> with <code>ctx.id = compound_id()</code> and runs <code>Protocol::SERIALIZATION</code>.</li>
 <li><code>Bmi_Multi_Formulation</code> — <code>final</code> override that iterates its submodules and forwards the call. The enclosing multi has no state of its own to checkpoint.</li>
 </ul>
-<p>The simulation driver — <code><a class="el" href="classngen_1_1_layer.html#a0faf7ccfd5d8cd8a5c39564293db15fc" title="Run one simulation timestep for each model in this layer.">ngen::Layer::update_models</a></code> defined in <code>src/core/Layer.cpp</code> (the declaration lives in <code><a class="el" href="core_2layer_8hpp_source.html">include/core/Layer.hpp</a></code>) — invokes it once per timestep, immediately after <code>check_mass_balance</code>:</p>
+<p>The simulation driver — <code><a class="el" href="classngen_1_1_layer.html#aaa48cb8dd58bcbf47acec0ba0698c807" title="Run one simulation timestep for each model in this layer.">ngen::Layer::update_models</a></code> defined in <code>src/core/Layer.cpp</code> (the declaration lives in <code><a class="el" href="core_2layer_8hpp_source.html">include/core/Layer.hpp</a></code>) — invokes it once per timestep, immediately after <code>check_mass_balance</code>:</p>
 <div class="fragment"><div class="line">response = r_c-&gt;get_response(output_time_index,</div>
 <div class="line">                             simulation_time.get_output_interval_seconds());</div>
 <div class="line">r_c-&gt;check_mass_balance(output_time_index,</div>
@@ -638,7 +638,7 @@ When the protocol is <em>not</em> the right tool</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Nov 13 2026 19:54:28 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Nov 13 2026 20:06:54 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

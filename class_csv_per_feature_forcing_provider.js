@@ -6,7 +6,7 @@ var class_csv_per_feature_forcing_provider =
     [ "CsvPerFeatureForcingProvider", "class_csv_per_feature_forcing_provider.html#a7034f120d89f39c83b61903669c2e435", null ],
     [ "check_forcing_vector_index_bounds", "class_csv_per_feature_forcing_provider.html#a64d117949c5c1b9cfed33017ed388119", null ],
     [ "finalize", "class_csv_per_feature_forcing_provider.html#af783d34fb272298f8c8f9673b1ea891e", null ],
-    [ "get_available_variable_names", "class_csv_per_feature_forcing_provider.html#a316b1339766f9c2e125b38b2e78f1d91", null ],
+    [ "get_available_variable_names", "class_csv_per_feature_forcing_provider.html#aaad5f3af9ed7c4120fdaf72c45ae4e9c", null ],
     [ "get_data_start_time", "class_csv_per_feature_forcing_provider.html#a7f651a0e0cc0d0513729bd6f697c1e58", null ],
     [ "get_data_stop_time", "class_csv_per_feature_forcing_provider.html#ac10b84b90a27969bef8e216b3e1f2af6", null ],
     [ "get_ts_index_for_time", "class_csv_per_feature_forcing_provider.html#a65d67ebf68866b04d37262a0b065a265", null ],

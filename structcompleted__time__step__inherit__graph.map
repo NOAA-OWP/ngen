@@ -1,7 +1,5 @@
 <map id="completed_time_step" name="completed_time_step">
-<area shape="rect" id="Node000001" title=" " alt="" coords="50,120,184,186"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,109,72"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,84,102,118,98,121,79,86"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="134,5,223,72"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,86,137,121,132,118,151,84"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,120,140,186"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="28,5,118,72"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,87,75,120,70,120,70,87"/>
 </map>

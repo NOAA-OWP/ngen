@@ -134,9 +134,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a5a0bd9036418f81c45a38babef202a6b" id="r_a5a0bd9036418f81c45a38babef202a6b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5a0bd9036418f81c45a38babef202a6b">Record</a> = <a class="el" href="structngen_1_1serialization_1_1detail_1_1_record_t.html">detail::RecordT</a>&lt;std::vector&lt;char&gt;&gt;</td></tr>
 <tr class="memdesc:a5a0bd9036418f81c45a38babef202a6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A checkpoint record that owns its payload.  <br /></td></tr>
 <tr class="separator:a5a0bd9036418f81c45a38babef202a6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1d780a4d4af75621e64cbced94b5676" id="r_ae1d780a4d4af75621e64cbced94b5676"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1d780a4d4af75621e64cbced94b5676">RecordView</a> = <a class="el" href="structngen_1_1serialization_1_1detail_1_1_record_t.html">detail::RecordT</a>&lt;boost::span&lt;const char&gt;&gt;</td></tr>
-<tr class="memdesc:ae1d780a4d4af75621e64cbced94b5676"><td class="mdescLeft">&#160;</td><td class="mdescRight">A checkpoint record that views its payload (non-owning).  <br /></td></tr>
-<tr class="separator:ae1d780a4d4af75621e64cbced94b5676"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab71c641a18f80b1f7546c835b0384294" id="r_ab71c641a18f80b1f7546c835b0384294"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab71c641a18f80b1f7546c835b0384294">RecordView</a> = <a class="el" href="structngen_1_1serialization_1_1detail_1_1_record_t.html">detail::RecordT</a>&lt;std::span&lt;const char&gt;&gt;</td></tr>
+<tr class="memdesc:ab71c641a18f80b1f7546c835b0384294"><td class="mdescLeft">&#160;</td><td class="mdescRight">A checkpoint record that views its payload (non-owning).  <br /></td></tr>
+<tr class="separator:ab71c641a18f80b1f7546c835b0384294"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -239,20 +239,20 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae1d780a4d4af75621e64cbced94b5676" name="ae1d780a4d4af75621e64cbced94b5676"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1d780a4d4af75621e64cbced94b5676">&#9670;&#160;</a></span>RecordView</h2>
+<a id="ab71c641a18f80b1f7546c835b0384294" name="ab71c641a18f80b1f7546c835b0384294"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab71c641a18f80b1f7546c835b0384294">&#9670;&#160;</a></span>RecordView</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="#ae1d780a4d4af75621e64cbced94b5676">ngen::serialization::RecordView</a> = <a class="el" href="structngen_1_1serialization_1_1detail_1_1_record_t.html">detail::RecordT</a>&lt;boost::span&lt;const char&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="#ab71c641a18f80b1f7546c835b0384294">ngen::serialization::RecordView</a> = <a class="el" href="structngen_1_1serialization_1_1detail_1_1_record_t.html">detail::RecordT</a>&lt;std::span&lt;const char&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>A checkpoint record that views its payload (non-owning). </p>
-<p>Same metadata field set as <code>Record</code>, but <code>payload</code> is a <code>boost::span&lt;const char&gt;</code> rather than an owning vector. The caller keeps the payload bytes alive elsewhere for the lifetime of the view. </p>
+<p>Same metadata field set as <code>Record</code>, but <code>payload</code> is a <code>std::span&lt;const char&gt;</code> rather than an owning vector. The caller keeps the payload bytes alive elsewhere for the lifetime of the view. </p>
 
 </div>
 </div>
@@ -766,7 +766,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacengen.html">ngen</a></li><li class="navelem"><a class="el" href="namespacengen_1_1serialization.html">serialization</a></li>
-    <li class="footer">Generated on Fri Nov 13 2026 19:54:29 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Nov 13 2026 20:06:55 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

@@ -162,9 +162,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aabc331ce607e4c657ba373838f42306c" id="r_aabc331ce607e4c657ba373838f42306c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aabc331ce607e4c657ba373838f42306c">is_property_sum_over_time_step</a> (const std::string &amp;name) const override</td></tr>
 <tr class="memdesc:aabc331ce607e4c657ba373838f42306c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get whether a property's per-time-step values are each an aggregate sum over the entire time step.  <br /></td></tr>
 <tr class="separator:aabc331ce607e4c657ba373838f42306c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a316b1339766f9c2e125b38b2e78f1d91" id="r_a316b1339766f9c2e125b38b2e78f1d91"><td class="memItemLeft" align="right" valign="top">boost::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a316b1339766f9c2e125b38b2e78f1d91">get_available_variable_names</a> () const override</td></tr>
-<tr class="memdesc:a316b1339766f9c2e125b38b2e78f1d91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the variables that are accessable by this data provider.  <br /></td></tr>
-<tr class="separator:a316b1339766f9c2e125b38b2e78f1d91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaad5f3af9ed7c4120fdaf72c45ae4e9c" id="r_aaad5f3af9ed7c4120fdaf72c45ae4e9c"><td class="memItemLeft" align="right" valign="top">std::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaad5f3af9ed7c4120fdaf72c45ae4e9c">get_available_variable_names</a> () const override</td></tr>
+<tr class="memdesc:aaad5f3af9ed7c4120fdaf72c45ae4e9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the variables that are accessable by this data provider.  <br /></td></tr>
+<tr class="separator:aaad5f3af9ed7c4120fdaf72c45ae4e9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af783d34fb272298f8c8f9673b1ea891e" id="r_af783d34fb272298f8c8f9673b1ea891e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#af783d34fb272298f8c8f9673b1ea891e">finalize</a> ()</td></tr>
 <tr class="memdesc:af783d34fb272298f8c8f9673b1ea891e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources that should not be held as the run is shutting down.  <br /></td></tr>
 <tr class="separator:af783d34fb272298f8c8f9673b1ea891e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -380,8 +380,8 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
-<a id="a316b1339766f9c2e125b38b2e78f1d91" name="a316b1339766f9c2e125b38b2e78f1d91"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a316b1339766f9c2e125b38b2e78f1d91">&#9670;&#160;</a></span>get_available_variable_names()</h2>
+<a id="aaad5f3af9ed7c4120fdaf72c45ae4e9c" name="aaad5f3af9ed7c4120fdaf72c45ae4e9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaad5f3af9ed7c4120fdaf72c45ae4e9c">&#9670;&#160;</a></span>get_available_variable_names()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -390,7 +390,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">boost::span&lt; const std::string &gt; CsvPerFeatureForcingProvider::get_available_variable_names </td>
+          <td class="memname">std::span&lt; const std::string &gt; CsvPerFeatureForcingProvider::get_available_variable_names </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -405,7 +405,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 <p>Return the variables that are accessable by this data provider. </p>
 
-<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#aa466b968fd8003f2c7ea1feaa6ae39fd">data_access::DataProvider&lt; DataType, SelectionType &gt;</a>.</p>
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a6d642a3eaed637fcd4149aef099f2975">data_access::DataProvider&lt; DataType, SelectionType &gt;</a>.</p>
 
 <p class="reference">References <a class="el" href="#a483bd1b029bb9dd378aea3b81af2fd6d">available_forcings</a>.</p>
 
@@ -940,7 +940,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a316b1339766f9c2e125b38b2e78f1d91">get_available_variable_names()</a>, and <a class="el" href="#a854b49063ed38ff21fdb2d3cb78b1265">read_csv()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#aaad5f3af9ed7c4120fdaf72c45ae4e9c">get_available_variable_names()</a>, and <a class="el" href="#a854b49063ed38ff21fdb2d3cb78b1265">read_csv()</a>.</p>
 
 </div>
 </div>
@@ -1254,7 +1254,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_csv_per_feature_forcing_provider.html">CsvPerFeatureForcingProvider</a></li>
-    <li class="footer">Generated on Fri Nov 13 2026 19:54:28 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Nov 13 2026 20:06:54 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

@@ -141,21 +141,21 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ab26f60f96ec3cf8e061256397c1f501c" id="r_ab26f60f96ec3cf8e061256397c1f501c"><td class="memTemplParams" colspan="2">template&lt;typename S &gt; </td></tr>
-<tr class="memitem:ab26f60f96ec3cf8e061256397c1f501c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ab26f60f96ec3cf8e061256397c1f501c">copy_from</a> (const boost::span&lt; const uint8_t &gt; src, int &amp;index, S &amp;dst, uint8_t order)</td></tr>
-<tr class="memdesc:ab26f60f96ec3cf8e061256397c1f501c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies bytes from.  <br /></td></tr>
-<tr class="separator:ab26f60f96ec3cf8e061256397c1f501c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33d3d5f81f77152b00078923483b601c" id="r_a33d3d5f81f77152b00078923483b601c"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:a33d3d5f81f77152b00078923483b601c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a33d3d5f81f77152b00078923483b601c">copy_from&lt; double &gt;</a> (const boost::span&lt; const uint8_t &gt; src, int &amp;index, double &amp;dst, uint8_t order)</td></tr>
-<tr class="separator:a33d3d5f81f77152b00078923483b601c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75743b555193878ce127762c9cbf5fb3" id="r_a75743b555193878ce127762c9cbf5fb3"><td class="memTemplParams" colspan="2">template&lt;typename S &gt; </td></tr>
+<tr class="memitem:a75743b555193878ce127762c9cbf5fb3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a75743b555193878ce127762c9cbf5fb3">copy_from</a> (const std::span&lt; const uint8_t &gt; src, int &amp;index, S &amp;dst, uint8_t order)</td></tr>
+<tr class="memdesc:a75743b555193878ce127762c9cbf5fb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies bytes from.  <br /></td></tr>
+<tr class="separator:a75743b555193878ce127762c9cbf5fb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4af896a23b92e438a3f22254fe0c315f" id="r_a4af896a23b92e438a3f22254fe0c315f"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a4af896a23b92e438a3f22254fe0c315f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a4af896a23b92e438a3f22254fe0c315f">copy_from&lt; double &gt;</a> (const std::span&lt; const uint8_t &gt; src, int &amp;index, double &amp;dst, uint8_t order)</td></tr>
+<tr class="separator:a4af896a23b92e438a3f22254fe0c315f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36dea491674f3e0b6b11591f976a88cb" id="r_a36dea491674f3e0b6b11591f976a88cb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classutils_1_1_stream_handler.html">StreamHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36dea491674f3e0b6b11591f976a88cb">getStdOut</a> ()</td></tr>
 <tr class="separator:a36dea491674f3e0b6b11591f976a88cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d4e21fbb83912793512c7e9a37403ac" id="r_a0d4e21fbb83912793512c7e9a37403ac"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classutils_1_1_stream_handler.html">StreamHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0d4e21fbb83912793512c7e9a37403ac">getStdErr</a> ()</td></tr>
 <tr class="separator:a0d4e21fbb83912793512c7e9a37403ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ab26f60f96ec3cf8e061256397c1f501c" name="ab26f60f96ec3cf8e061256397c1f501c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab26f60f96ec3cf8e061256397c1f501c">&#9670;&#160;</a></span>copy_from()</h2>
+<a id="a75743b555193878ce127762c9cbf5fb3" name="a75743b555193878ce127762c9cbf5fb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75743b555193878ce127762c9cbf5fb3">&#9670;&#160;</a></span>copy_from()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -165,7 +165,7 @@ template&lt;typename S &gt; </div>
         <tr>
           <td class="memname">void utils::copy_from </td>
           <td>(</td>
-          <td class="paramtype">const boost::span&lt; const uint8_t &gt;</td>          <td class="paramname"><span class="paramname"><em>src</em></span>, </td>
+          <td class="paramtype">const std::span&lt; const uint8_t &gt;</td>          <td class="paramname"><span class="paramname"><em>src</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -222,12 +222,12 @@ template&lt;typename S &gt; </div>
   </dd>
 </dl>
 
-<p class="reference">Referenced by <a class="el" href="namespacengen_1_1geopackage.html#a8d202ec339efee024c4ebe82cd46c1bd">ngen::geopackage::build_geometry()</a>, <a class="el" href="#a33d3d5f81f77152b00078923483b601c">copy_from&lt; double &gt;()</a>, <a class="el" href="structngen_1_1geopackage_1_1wkb.html#af7c8a17f82860eb0ff37ba22ddc00b10">ngen::geopackage::wkb::read()</a>, <a class="el" href="structngen_1_1geopackage_1_1wkb.html#aae12173b62f1bd1b5b76a806fda586c5">ngen::geopackage::wkb::read_linestring()</a>, <a class="el" href="structngen_1_1geopackage_1_1wkb.html#a39728f5ab1a36f8ccd648c2bca43bcc3">ngen::geopackage::wkb::read_multilinestring()</a>, <a class="el" href="structngen_1_1geopackage_1_1wkb.html#a75cc6298cd2a0901e493194d762c12e5">ngen::geopackage::wkb::read_multipoint()</a>, <a class="el" href="structngen_1_1geopackage_1_1wkb.html#a5fb7fef9ca285ba5cd3aec63e91deeb6">ngen::geopackage::wkb::read_multipolygon()</a>, <a class="el" href="structngen_1_1geopackage_1_1wkb.html#a1b922431945c519ab6ca371a1fa4e341">ngen::geopackage::wkb::read_point()</a>, and <a class="el" href="structngen_1_1geopackage_1_1wkb.html#a06573240ede5aecaff0a90e7c0418004">ngen::geopackage::wkb::read_polygon()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacengen_1_1geopackage.html#a8d202ec339efee024c4ebe82cd46c1bd">ngen::geopackage::build_geometry()</a>, <a class="el" href="#a4af896a23b92e438a3f22254fe0c315f">copy_from&lt; double &gt;()</a>, <a class="el" href="structngen_1_1geopackage_1_1wkb.html#ac8b2a164ed7ca3137b8fbec1c7d0ec13">ngen::geopackage::wkb::read()</a>, <a class="el" href="structngen_1_1geopackage_1_1wkb.html#a293fd328f6b74128d30121e097fa6df1">ngen::geopackage::wkb::read_linestring()</a>, <a class="el" href="structngen_1_1geopackage_1_1wkb.html#a24ab88f1008ec03d85cd2c410b6f4601">ngen::geopackage::wkb::read_multilinestring()</a>, <a class="el" href="structngen_1_1geopackage_1_1wkb.html#a2e46b1395eaea5366136dd288d95b312">ngen::geopackage::wkb::read_multipoint()</a>, <a class="el" href="structngen_1_1geopackage_1_1wkb.html#a7ac1d295eb764fedcad76c25809ee73b">ngen::geopackage::wkb::read_multipolygon()</a>, <a class="el" href="structngen_1_1geopackage_1_1wkb.html#a229f2456fe4a227960965ac204812a46">ngen::geopackage::wkb::read_point()</a>, and <a class="el" href="structngen_1_1geopackage_1_1wkb.html#a9209af6358505c1dc342fc8bd148888f">ngen::geopackage::wkb::read_polygon()</a>.</p>
 
 </div>
 </div>
-<a id="a33d3d5f81f77152b00078923483b601c" name="a33d3d5f81f77152b00078923483b601c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a33d3d5f81f77152b00078923483b601c">&#9670;&#160;</a></span>copy_from&lt; double &gt;()</h2>
+<a id="a4af896a23b92e438a3f22254fe0c315f" name="a4af896a23b92e438a3f22254fe0c315f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4af896a23b92e438a3f22254fe0c315f">&#9670;&#160;</a></span>copy_from&lt; double &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -238,9 +238,9 @@ template&lt;&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="#ab26f60f96ec3cf8e061256397c1f501c">utils::copy_from</a>&lt; double &gt; </td>
+          <td class="memname">void <a class="el" href="#a75743b555193878ce127762c9cbf5fb3">utils::copy_from</a>&lt; double &gt; </td>
           <td>(</td>
-          <td class="paramtype">const boost::span&lt; const uint8_t &gt;</td>          <td class="paramname"><span class="paramname"><em>src</em></span>, </td>
+          <td class="paramtype">const std::span&lt; const uint8_t &gt;</td>          <td class="paramname"><span class="paramname"><em>src</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -265,7 +265,7 @@ template&lt;&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="#ab26f60f96ec3cf8e061256397c1f501c">copy_from()</a>.</p>
+<p class="reference">References <a class="el" href="#a75743b555193878ce127762c9cbf5fb3">copy_from()</a>.</p>
 
 </div>
 </div>
@@ -327,7 +327,7 @@ template&lt;&gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceutils.html">utils</a></li>
-    <li class="footer">Generated on Fri Nov 13 2026 19:54:29 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Nov 13 2026 20:06:55 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

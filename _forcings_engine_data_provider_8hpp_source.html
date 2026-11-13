@@ -178,7 +178,7 @@ $(function(){initNavTree('_forcings_engine_data_provider_8hpp_source.html',''); 
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    ~ForcingsEngineDataProvider() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    boost::span&lt;const std::string&gt; get_available_variable_names()<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    std::span&lt;const std::string&gt; get_available_variable_names()<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="keywordflow">return</span> var_output_names_;</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    }</div>
@@ -267,7 +267,7 @@ $(function(){initNavTree('_forcings_engine_data_provider_8hpp_source.html',''); 
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    std::string ensure_variable(std::string name, <span class="keyword">const</span> std::string&amp; suffix = <span class="stringliteral">&quot;_ELEMENT&quot;</span>)<span class="keyword"> const</span></div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        <span class="comment">// TODO: use get_available_var_names() once const</span></div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        <span class="keyword">auto</span> vars = boost::span&lt;const std::string&gt;{var_output_names_};</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        <span class="keyword">auto</span> vars = std::span&lt;const std::string&gt;{var_output_names_};</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="keywordflow">if</span> (std::find(vars.begin(), vars.end(), name) != vars.end()) {</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>          <span class="keywordflow">return</span> name;</div>
@@ -303,7 +303,7 @@ $(function(){initNavTree('_forcings_engine_data_provider_8hpp_source.html',''); 
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_WITH_PYTHON</span></div>
 <div class="ttc" id="anamespacedata__access_1_1detail_html_ae2b8636371aa00b1dfbe53a2595f7ae1"><div class="ttname"><a href="namespacedata__access_1_1detail.html#ae2b8636371aa00b1dfbe53a2595f7ae1">data_access::detail::parse_time</a></div><div class="ttdeci">time_t parse_time(const std::string &amp;time, const std::string &amp;fmt)</div><div class="ttdef"><b>Definition</b> ForcingsEngineDataProvider.cpp:13</div></div>
 <div class="ttc" id="anamespacedata__access_1_1detail_html_ae4988004a3bd3d26e707317b4f898939"><div class="ttname"><a href="namespacedata__access_1_1detail.html#ae4988004a3bd3d26e707317b4f898939">data_access::detail::assert_forcings_engine_requirements</a></div><div class="ttdeci">void assert_forcings_engine_requirements()</div><div class="ttdef"><b>Definition</b> ForcingsEngineDataProvider.cpp:23</div></div>
-<div class="ttc" id="anamespacedata__access_html"><div class="ttname"><a href="namespacedata__access.html">data_access</a></div><div class="ttdef"><b>Definition</b> AorcForcing.hpp:75</div></div>
+<div class="ttc" id="anamespacedata__access_html"><div class="ttname"><a href="namespacedata__access.html">data_access</a></div><div class="ttdef"><b>Definition</b> AorcForcing.hpp:76</div></div>
 <div class="ttc" id="anamespacedata__access_html_a46435cb3579215dfdfffedc7833e43f9"><div class="ttname"><a href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9">data_access::ReSampleMethod</a></div><div class="ttdeci">ReSampleMethod</div><div class="ttdoc">An abstraction for classes that provides access to data.</div><div class="ttdef"><b>Definition</b> DataProvider.hpp:17</div></div>
 <div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -312,7 +312,7 @@ $(function(){initNavTree('_forcings_engine_data_provider_8hpp_source.html',''); 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1a34ade7a8ced74dfa5d1494ffac178f.html">forcing</a></li><li class="navelem"><b>ForcingsEngineDataProvider.hpp</b></li>
-    <li class="footer">Generated on Fri Nov 13 2026 19:54:28 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Nov 13 2026 20:06:53 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

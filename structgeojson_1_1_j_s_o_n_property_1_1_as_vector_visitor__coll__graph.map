@@ -1,5 +1,3 @@
 <map id="geojson::JSONProperty::AsVectorVisitor&lt; T &gt;" name="geojson::JSONProperty::AsVectorVisitor&lt; T &gt;">
-<area shape="rect" id="Node000001" title="Visitor to filter boost variants by type T into a vector of type T." alt="" coords="5,120,151,282"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="9,5,148,72"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,86,81,120,76,120,76,86"/>
+<area shape="rect" id="Node000001" title="Visitor to filter variants by type T into a vector of type T." alt="" coords="5,5,151,168"/>
 </map>

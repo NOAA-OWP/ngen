@@ -4,7 +4,7 @@ var classdata__access_1_1_data_provider =
     [ "selection_type", "classdata__access_1_1_data_provider.html#ab0b1614239c57ead01efc4f45bf7d719", null ],
     [ "~DataProvider", "classdata__access_1_1_data_provider.html#a05eb2e57a95517673fe2161aa45c906a", null ],
     [ "finalize", "classdata__access_1_1_data_provider.html#af783d34fb272298f8c8f9673b1ea891e", null ],
-    [ "get_available_variable_names", "classdata__access_1_1_data_provider.html#aa466b968fd8003f2c7ea1feaa6ae39fd", null ],
+    [ "get_available_variable_names", "classdata__access_1_1_data_provider.html#a6d642a3eaed637fcd4149aef099f2975", null ],
     [ "get_data_start_time", "classdata__access_1_1_data_provider.html#a1d676573f75add7dcc500158cdada40d", null ],
     [ "get_data_stop_time", "classdata__access_1_1_data_provider.html#abd0d3178a89234d538ab2a04bf3af3ef", null ],
     [ "get_ts_index_for_time", "classdata__access_1_1_data_provider.html#ac149b78c521ce281847f40c9f0279d8c", null ],

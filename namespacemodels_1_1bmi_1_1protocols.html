@@ -144,7 +144,7 @@ Typedefs</h2></td></tr>
 <tr class="separator:a5405ec54d1c5f12a71a36ddd4639fdb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13d9ff2eda0de0fce834855d597ca7b5" id="r_a13d9ff2eda0de0fce834855d597ca7b5"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13d9ff2eda0de0fce834855d597ca7b5">SerializationRecord</a> = <a class="el" href="namespacengen_1_1serialization.html#a5a0bd9036418f81c45a38babef202a6b">::ngen::serialization::Record</a></td></tr>
 <tr class="separator:a13d9ff2eda0de0fce834855d597ca7b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63905d160cd709df3b1a9f7dc7efcdd8" id="r_a63905d160cd709df3b1a9f7dc7efcdd8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63905d160cd709df3b1a9f7dc7efcdd8">SerializationRecordView</a> = <a class="el" href="namespacengen_1_1serialization.html#ae1d780a4d4af75621e64cbced94b5676">::ngen::serialization::RecordView</a></td></tr>
+<tr class="memitem:a63905d160cd709df3b1a9f7dc7efcdd8" id="r_a63905d160cd709df3b1a9f7dc7efcdd8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63905d160cd709df3b1a9f7dc7efcdd8">SerializationRecordView</a> = <a class="el" href="namespacengen_1_1serialization.html#ab71c641a18f80b1f7546c835b0384294">::ngen::serialization::RecordView</a></td></tr>
 <tr class="separator:a63905d160cd709df3b1a9f7dc7efcdd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
@@ -325,7 +325,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="#a63905d160cd709df3b1a9f7dc7efcdd8">models::bmi::protocols::SerializationRecordView</a> = <a class="el" href="namespacengen_1_1serialization.html#ae1d780a4d4af75621e64cbced94b5676">::ngen::serialization::RecordView</a></td>
+          <td class="memname">using <a class="el" href="#a63905d160cd709df3b1a9f7dc7efcdd8">models::bmi::protocols::SerializationRecordView</a> = <a class="el" href="namespacengen_1_1serialization.html#ab71c641a18f80b1f7546c835b0384294">::ngen::serialization::RecordView</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -593,7 +593,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Overload accepting an owning <code>SerializationRecord</code>. </p>
-<p>Identical wire output to the <code>SerializationRecordView</code> overload above. The body mirrors the View path because RecordView's <code>id</code> field is itself an owning <code>std::string</code> — constructing a view to delegate would force an unnecessary id-string copy. The payload type is the only field where the two records diverge, and <code>out.write(payload.data(), payload.size())</code> is the same call shape for <code>std::vector&lt;char&gt;</code> and <code>boost::span&lt;const char&gt;</code>. </p>
+<p>Identical wire output to the <code>SerializationRecordView</code> overload above. The body mirrors the View path because RecordView's <code>id</code> field is itself an owning <code>std::string</code> — constructing a view to delegate would force an unnecessary id-string copy. The payload type is the only field where the two records diverge, and <code>out.write(payload.data(), payload.size())</code> is the same call shape for <code>std::vector&lt;char&gt;</code> and <code>std::span&lt;const char&gt;</code>. </p>
 
 <p class="reference">References <a class="el" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#ac8ad4e6ecce4804296ac8ab027b43e18">models::bmi::protocols::serialization::wire_format::RecordPrefix::checkpoint_epoch</a>, <a class="el" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a13aa08b5734ae6b5acb534537a547991">models::bmi::protocols::serialization::wire_format::RecordPrefix::id_length</a>, <a class="el" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#aa86fd88a0327f7c65f1de253dfaed51a">models::bmi::protocols::serialization::wire_format::RecordPrefix::payload_length</a>, <a class="el" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#aa2a65eca2b8f472c61282ef75d6c6090">models::bmi::protocols::serialization::wire_format::RecordPrefix::simulation_timestamp</a>, <a class="el" href="structmodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format_1_1_record_prefix.html#a6a0b53394b5fa9eefe8d5f64c6d6b4f5">models::bmi::protocols::serialization::wire_format::RecordPrefix::time_step</a>, and <a class="el" href="namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html#a7a010be39ace45fbc2846d747e9ab121">models::bmi::protocols::serialization::wire_format::write_record_prefix()</a>.</p>
 
@@ -1403,7 +1403,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacemodels.html">models</a></li><li class="navelem"><a class="el" href="namespacemodels_1_1bmi.html">bmi</a></li><li class="navelem"><a class="el" href="namespacemodels_1_1bmi_1_1protocols.html">protocols</a></li>
-    <li class="footer">Generated on Fri Nov 13 2026 19:54:29 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Nov 13 2026 20:06:55 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

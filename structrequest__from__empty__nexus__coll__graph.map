@@ -1,7 +1,5 @@
 <map id="request_from_empty_nexus" name="request_from_empty_nexus">
-<area shape="rect" id="Node000001" title=" " alt="" coords="53,120,182,201"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,109,72"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,84,100,119,95,121,77,86"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="134,5,223,72"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,86,140,121,135,119,153,83"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,120,134,201"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="25,5,114,72"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,86,72,120,67,120,67,86"/>
 </map>

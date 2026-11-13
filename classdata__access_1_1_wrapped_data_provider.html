@@ -146,9 +146,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aad2d7cdeac16334c1477a65b46c77b4a" id="r_aad2d7cdeac16334c1477a65b46c77b4a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad2d7cdeac16334c1477a65b46c77b4a">finalize</a> () override</td></tr>
 <tr class="memdesc:aad2d7cdeac16334c1477a65b46c77b4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release any resources that should not be held as the run is shutting down.  <br /></td></tr>
 <tr class="separator:aad2d7cdeac16334c1477a65b46c77b4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0bb75ab402babe5c9b9bf490a1c327f6" id="r_a0bb75ab402babe5c9b9bf490a1c327f6"><td class="memItemLeft" align="right" valign="top">boost::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0bb75ab402babe5c9b9bf490a1c327f6">get_available_variable_names</a> () const override</td></tr>
-<tr class="memdesc:a0bb75ab402babe5c9b9bf490a1c327f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the available variable names object.  <br /></td></tr>
-<tr class="separator:a0bb75ab402babe5c9b9bf490a1c327f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20f745c3566eb3bb5075c43662f18a39" id="r_a20f745c3566eb3bb5075c43662f18a39"><td class="memItemLeft" align="right" valign="top">std::span&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20f745c3566eb3bb5075c43662f18a39">get_available_variable_names</a> () const override</td></tr>
+<tr class="memdesc:a20f745c3566eb3bb5075c43662f18a39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the available variable names object.  <br /></td></tr>
+<tr class="separator:a20f745c3566eb3bb5075c43662f18a39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a0da21044edf6e3d2afc046382f9a56" id="r_a6a0da21044edf6e3d2afc046382f9a56"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a0da21044edf6e3d2afc046382f9a56">get_data_start_time</a> () const override</td></tr>
 <tr class="memdesc:a6a0da21044edf6e3d2afc046382f9a56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.  <br /></td></tr>
 <tr class="separator:a6a0da21044edf6e3d2afc046382f9a56"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -367,8 +367,8 @@ template&lt;class DataType , class SelectionType &gt; </div>
 
 </div>
 </div>
-<a id="a0bb75ab402babe5c9b9bf490a1c327f6" name="a0bb75ab402babe5c9b9bf490a1c327f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0bb75ab402babe5c9b9bf490a1c327f6">&#9670;&#160;</a></span>get_available_variable_names()</h2>
+<a id="a20f745c3566eb3bb5075c43662f18a39" name="a20f745c3566eb3bb5075c43662f18a39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20f745c3566eb3bb5075c43662f18a39">&#9670;&#160;</a></span>get_available_variable_names()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -377,7 +377,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">boost::span&lt; const std::string &gt; data_access::WrappedDataProvider::get_available_variable_names </td>
+          <td class="memname">std::span&lt; const std::string &gt; data_access::WrappedDataProvider::get_available_variable_names </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -393,9 +393,9 @@ template&lt;class DataType , class SelectionType &gt; </div>
 <p>Get the available variable names object. </p>
 <dl class="section return"><dt>Returns</dt><dd>const std::vector&lt;std::string&gt;&amp; the names of available data variables </dd></dl>
 
-<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#aa466b968fd8003f2c7ea1feaa6ae39fd">data_access::DataProvider&lt; DataType, SelectionType &gt;</a>.</p>
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a6d642a3eaed637fcd4149aef099f2975">data_access::DataProvider&lt; DataType, SelectionType &gt;</a>.</p>
 
-<p class="reference">References <a class="el" href="classdata__access_1_1_data_provider.html#aa466b968fd8003f2c7ea1feaa6ae39fd">data_access::DataProvider&lt; DataType, SelectionType &gt;::get_available_variable_names()</a>, and <a class="el" href="#a04271bd600dbe1a97b35240ad13ba044">wrapped_provider</a>.</p>
+<p class="reference">References <a class="el" href="classdata__access_1_1_data_provider.html#a6d642a3eaed637fcd4149aef099f2975">data_access::DataProvider&lt; DataType, SelectionType &gt;::get_available_variable_names()</a>, and <a class="el" href="#a04271bd600dbe1a97b35240ad13ba044">wrapped_provider</a>.</p>
 
 </div>
 </div>
@@ -784,7 +784,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a6dbd4de7f3c3b4ebb6c720192715e670">data_access::DeferredWrappedProvider::DeferredWrappedProvider()</a>, <a class="el" href="#a0bb75ab402babe5c9b9bf490a1c327f6">get_available_variable_names()</a>, <a class="el" href="#a6a0da21044edf6e3d2afc046382f9a56">get_data_start_time()</a>, <a class="el" href="#a27e648f5905e23ae0aa2c5a32d0c26b3">get_data_stop_time()</a>, <a class="el" href="#a262de984f51ed9ce1ae01aacd8e627f9">get_ts_index_for_time()</a>, <a class="el" href="#a428b42c9cdf72b63c2a0ac23b0bba4d4">get_value()</a>, <a class="el" href="#a37c23079f7163f992ea90fd156a6b4d7">get_values()</a>, <a class="el" href="#adf879825a0767a5c54602063857b716a">is_property_sum_over_time_step()</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a1d914d387e7ae2d933a372d0976ed959">data_access::DeferredWrappedProvider::isWrappedProviderSet()</a>, <a class="el" href="#abba07c3753377a18bdb0684308b602a1">record_duration()</a>, and <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">data_access::DeferredWrappedProvider::setWrappedProvider()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a6dbd4de7f3c3b4ebb6c720192715e670">data_access::DeferredWrappedProvider::DeferredWrappedProvider()</a>, <a class="el" href="#a20f745c3566eb3bb5075c43662f18a39">get_available_variable_names()</a>, <a class="el" href="#a6a0da21044edf6e3d2afc046382f9a56">get_data_start_time()</a>, <a class="el" href="#a27e648f5905e23ae0aa2c5a32d0c26b3">get_data_stop_time()</a>, <a class="el" href="#a262de984f51ed9ce1ae01aacd8e627f9">get_ts_index_for_time()</a>, <a class="el" href="#a428b42c9cdf72b63c2a0ac23b0bba4d4">get_value()</a>, <a class="el" href="#a37c23079f7163f992ea90fd156a6b4d7">get_values()</a>, <a class="el" href="#adf879825a0767a5c54602063857b716a">is_property_sum_over_time_step()</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a1d914d387e7ae2d933a372d0976ed959">data_access::DeferredWrappedProvider::isWrappedProviderSet()</a>, <a class="el" href="#abba07c3753377a18bdb0684308b602a1">record_duration()</a>, and <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">data_access::DeferredWrappedProvider::setWrappedProvider()</a>.</p>
 
 </div>
 </div>
@@ -797,7 +797,7 @@ template&lt;class DataType , class SelectionType &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacedata__access.html">data_access</a></li><li class="navelem"><a class="el" href="classdata__access_1_1_wrapped_data_provider.html">WrappedDataProvider</a></li>
-    <li class="footer">Generated on Fri Nov 13 2026 19:54:28 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Nov 13 2026 20:06:54 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
