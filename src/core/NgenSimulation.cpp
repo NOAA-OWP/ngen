@@ -1,12 +1,6 @@
 #include <NgenSimulation.hpp>
 #include <NGenConfig.h>
 
-#if NGEN_WITH_MPI
-#include "HY_Features_MPI.hpp"
-#else
-#include "HY_Features.hpp"
-#endif
-
 #if NGEN_WITH_ROUTING
 #include "bmi/Bmi_Py_Adapter.hpp"
 #include "routing/Routing_Py_Adapter.hpp"
@@ -148,7 +142,7 @@ void NgenSimulation::run_routing(std::string const& t_route_config_file_with_pat
 #endif
 }
 
-void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, std::string const& t_route_config_file_with_path)
+void NgenSimulation::run_routing_bmi(std::string const& t_route_config_file_with_path)
 {
 #if NGEN_WITH_ROUTING && NGEN_WITH_ROUTING_TROUTE_BMI
     std::vector<double> *routing_nexus_downflows = &nexus_downstream_flows_;
@@ -189,8 +183,8 @@ void NgenSimulation::run_routing_bmi(NgenSimulation::hy_features_t &features, st
         std::vector<double> receive_buffer(number_of_timesteps, 0.0);
         for (int i = 0; i < all_nexus_ids.size(); ++i) {
             std::string nexus_id = all_nexus_ids[i];
-            if (nexus_indexes_.find(nexus_id) != nexus_indexes_.end() && !features.is_remote_sender_nexus(nexus_id)) {
-                // if this process has the id and receives/records data, copy the values to the buffer
+            if (nexus_indexes_.find(nexus_id) != nexus_indexes_.end()) {
+                // if this process has the id, copy the values to the buffer
                 int nexus_index = nexus_indexes_[nexus_id];
                 for (int step = 0; step < number_of_timesteps; ++step) {
                     int offset = step * nexus_indexes_.size() + nexus_index;

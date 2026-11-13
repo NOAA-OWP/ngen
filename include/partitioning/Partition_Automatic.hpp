@@ -22,13 +22,12 @@ namespace partitioning {
      *
      * Collective over @p comm.
      *
-     * @param partitions On @p root, one part per rank, indexed by rank, each without remote
-     *        connections. Unused on other ranks.
+     * @param partitions On @p root, one part per rank, indexed by rank. Unused on other ranks.
      * @param root The rank holding @p partitions
      * @param comm The communicator whose ranks the parts are for
      * @return This rank's part, with `mpi_world_rank` set to its rank in @p comm
      * @throws std::invalid_argument on @p root, before any communication, if @p partitions does not
-     *         have one part per rank, or if any part has remote connections
+     *         have one part per rank
      */
     PartitionData scatter_partitions(const std::vector<PartitionData>& partitions, int root, MPI_Comm comm);
 
@@ -37,8 +36,8 @@ namespace partitioning {
      *
      * @p root reads the relevant hydrofabric data, and assigns each
      * nexus, with every catchment that drains to it, to one rank per
-     * partition_by_nexus(). Each rank receives its part, which has no
-     * remote connections.  Failures are reported on standard error.
+     * partition_by_nexus(). Each rank receives its part.  Failures
+     * are reported on standard error.
      *
      * Collective over @p comm.
      *

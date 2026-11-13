@@ -1,10 +1,6 @@
 #include "SurfaceLayer.hpp"
 
-#if NGEN_WITH_MPI
-#include "HY_Features_MPI.hpp"
-#else
 #include "HY_Features.hpp"
-#endif
 
 void ngen::SurfaceLayer::update_models(std::span<double> catchment_outflows,
                                        std::unordered_map<std::string, int> const& catchment_indexes,
@@ -27,12 +23,7 @@ void ngen::SurfaceLayer::update_models(std::span<double> catchment_outflows,
         auto nexuses_iterator = features.nexuses();
         nexuses.reserve(size(nexuses_iterator));
         for(const auto& id : nexuses_iterator) {
-            #if NGEN_WITH_MPI
-            // When running with MPI, only be concerned with the local nexuses
-            if (!features.is_remote_sender_nexus(id) && features.nexus_at(id)->get_contributing_catchments().size() == 0)
-            #else
             if (features.nexus_at(id)->get_contributing_catchments().size() == 0)
-            #endif
             {
                 // Likely this means a flow value of 0.0, but that's dependent on the nexus class implementation
                 std::cout << "WARNING: Nexus "<< id << " has no contributing catchments for flow values!" << std::endl;
@@ -66,7 +57,7 @@ void ngen::SurfaceLayer::update_models(std::span<double> catchment_outflows,
             cat_id = cat_ids[0];
         }
         else {
-            // This is a terminal node, SHOULDN'T be remote, so ID shouldn't matter too much
+            // This is a terminal node, so ID shouldn't matter too much
             cat_id = "terminal";
         }
 

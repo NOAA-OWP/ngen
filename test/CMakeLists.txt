@@ -410,17 +410,6 @@ ngen_add_test(
         NGen::output
 )
 
-########################## MPI Remote Nexus Tests
-ngen_add_test(
-    test_remote_nexus
-    OBJECTS
-        core/nexus/NexusRemoteTests.cpp
-    LIBRARIES
-        NGen::core_nexus
-    REQUIRES
-        NGEN_WITH_MPI
-)
-
 ########################## Specialized MPI Tests
 if (NGEN_WITH_MPI)
     find_package(MPI REQUIRED COMPONENTS CXX)
@@ -478,20 +467,6 @@ ngen_add_test(
     LIBRARIES
         NGen::partitioning
         NGen::geojson
-)
-
-########################## Partition_One Tests
-ngen_add_test(
-    test_partition_one
-    OBJECTS
-        utils/Partition_One_Test.cpp
-    LIBRARIES
-        gmock
-        NGen::core
-        NGen::geojson
-        NGen::geopackage
-    REQUIRES
-        NGEN_WITH_SQLITE
 )
 
 ########################## MultiLayer Tests
