@@ -140,7 +140,29 @@ TEST_F(PartitionsParserTest, empty_remote_test) {
     boost::property_tree::json_parser::read_json(stream, tree);
     auto parser = Partitions_Parser(tree);
     parser.parse_partition_file();
-    for(int i = 0; i < 3; i++) ASSERT_TRUE( parser.get_partition_struct(i).remote_connections.empty() ); 
+    ASSERT_EQ(parser.partition_ranks.size(), 3);
+}
+
+static const std::string remote_test_data = "{"\
+        "\"partitions\":["\
+            "{\"id\":0,"\
+            "\"cat-ids\":[\"cat-67\"],"\
+            "\"nex-ids\":[\"nex-68\"],"\
+            "\"remote-connections\":[{\"mpi-rank\":1,\"nex-id\":\"nex-68\",\"cat-id\":\"cat-52\",\"cat-direction\":\"orig_cat-to-nex\"}]},"\
+            "{\"id\":1,"\
+            "\"cat-ids\":[\"cat-52\"],"\
+            "\"nex-ids\":[],"\
+            "\"remote-connections\":[{\"mpi-rank\":0,\"nex-id\":\"nex-68\",\"cat-id\":\"cat-52\",\"cat-direction\":\"orig_cat-to-nex\"}]}"\
+        "]"\
+    "}";
+
+TEST_F(PartitionsParserTest, remote_connections_rejected) {
+    std::stringstream stream;
+    stream << remote_test_data;
+    boost::property_tree::ptree tree;
+    boost::property_tree::json_parser::read_json(stream, tree);
+    auto parser = Partitions_Parser(tree);
+    ASSERT_THROW(parser.parse_partition_file(), std::runtime_error);
 }
 
 TEST_F(PartitionsParserTest, partition_struct_test) {

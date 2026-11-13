@@ -18,13 +18,11 @@ Distributed multi-process execution of the Nextgen driver (_ngen_) is possible t
 
 # Overview
 
-The basic design starts with partitioning configuration.  It defines the groupings of catchments and nexuses of the entire hydrofabric into separate collections, while also including details on remote connections where the partitions have features that interact.  It also implicitly defines partition processing; partitions have an `id` property, and it is expected for partitions and MPI ranks to map 1-to-1 and have the same identifier.
-
-[comment]: <> (TODO: elaborate a bit on the details of the remote stuff)
+The basic design starts with partitioning: grouping the catchments and nexuses of the entire hydrofabric into separate collections, one per MPI rank.  Every nexus must be in the same partition as all of the catchments that drain to it, so that no rank needs to communicate with another during the simulation.  The driver can [partition automatically](#automatic-partitioning), or read the partitions from a partitioning configuration file.  In a file, partitions have an `id` property, and it is expected for partitions and MPI ranks to map 1-to-1 and have the same identifier.  A file whose partitions list remote connections between them is rejected.
 
 Partition configurations are expected to be represented in JSON.  There is a [partition generator tool](#partitioning-config-generator) available separately from the main driver for creating these files.
 
-When executed, the driver is provided a valid partitioning configuration file path [as a command line arg](../README.md#usage).  Each rank loads [all or part](#subdivided-hydrofabric) of the supplied hydrofabric, and then constructs the specific model formulations appropriate for the features within its partition.  Data communication across partition boundaries is handled by a [remote nexus type](MPI_REMOTE_NEXUS.md).
+When executed, the driver is provided a valid partitioning configuration file path [as a command line arg](../README.md#usage).  Each rank loads [all or part](#subdivided-hydrofabric) of the supplied hydrofabric, and then constructs the specific model formulations appropriate for the features within its partition.
 
 # Building the MPI-Enabled Nextgen Driver
 
@@ -39,7 +37,7 @@ Otherwise, if using the standard build process with CMake, the driver is built u
 * Another flag may also optionally be provided as a CLI arg to [adjust the way the driver processes load the hydrofabric](#subdivided-hydrofabric).
 
 ## Automatic Partitioning
-Given no partition config path, or `-` in its place, the driver partitions the hydrofabric itself during initialization. Every nexus is assigned to one rank, along with all of the catchments that drain to it, so no rank needs a remote connection to another. Rank 0 reads only the divides' connectivity, without their geometry or other attributes, and divides the nexuses among the ranks in contiguous blocks, in the order the hydrofabric stores them, weighting each nexus by the number of catchments that drain to it. The blocks are cut so that the heaviest is as light as possible, and the others are near even shares of the rest. Rank 0 then sends each rank its part. A divide that drains to no nexus is placed as if it were a nexus of its own.
+Given no partition config path, or `-` in its place, the driver partitions the hydrofabric itself during initialization. Every nexus is assigned to one rank, along with all of the catchments that drain to it. Rank 0 reads only the divides' connectivity, without their geometry or other attributes, and divides the nexuses among the ranks in contiguous blocks, in the order the hydrofabric stores them, weighting each nexus by the number of catchments that drain to it. The blocks are cut so that the heaviest is as light as possible, and the others are near even shares of the rest. Rank 0 then sends each rank its part. A divide that drains to no nexus is placed as if it were a nexus of its own.
 
 If the catchment subset CLI arg names catchments, only those catchments are partitioned; the nexus subset arg is ignored. Every rank must receive at least one catchment, so there can be no more ranks than nexuses. This cannot be combined with `--subdivided-hydrofabric`, which requires a partition config.
 

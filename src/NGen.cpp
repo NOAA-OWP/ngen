@@ -47,9 +47,6 @@
 #include <mpi.h>
 #include "parallel_utils.h"
 #include "core/Partition_Parser.hpp"
-#include <HY_Features_MPI.hpp>
-
-#include "core/Partition_One.hpp"
 #include "utilities/Partition_Automatic.hpp"
 
 #endif // NGEN_WITH_MPI
@@ -483,17 +480,7 @@ int main(int argc, char* argv[]) {
     std::string link_key = "toid";
     nexus_collection->link_features_from_property(nullptr, &link_key);
 
-    #if NGEN_WITH_MPI
-    //mpirun with one processor without partition file
-    if (mpi_num_procs == 1) {
-        Partition_One partition_one;
-        partition_one.generate_partition(catchment_collection);
-        local_data = std::move(partition_one.partition_data);
-    }
-    hy_features::HY_Features_MPI features = hy_features::HY_Features_MPI(local_data, nexus_collection, manager, mpi_rank, mpi_num_procs);
-    #else
     hy_features::HY_Features features = hy_features::HY_Features(nexus_collection, manager);
-    #endif
 
     //validate dendritic connections
     features.validate_dendritic();
@@ -564,17 +551,7 @@ int main(int argc, char* argv[]) {
             "Routing is enabled but nexus output is disabled (output.nexus.enable = false); "
             "the routing run has no nexus output to consume.");
     }
-    #if NGEN_WITH_MPI
-    std::vector<std::string> nexus_ids;
-    std::copy_if(features.nexuses().begin(), features.nexuses().end(), std::back_inserter(nexus_ids),
-                 [&features](std::string nid) { return !features.is_remote_sender_nexus((nid)); });
-    // TODO: (later) I'd love to be able to use local_data.nexus_ids and local_data.remote_connections for this, but
-    // TODO:        they aren't well documented and I've already misused them once.  However, this could probably be
-    // TODO:        optimized in the future based on those.
-
-    #else
     std::vector<std::string> nexus_ids(features.nexuses().begin(), features.nexuses().end());
-    #endif
 
     if (nexus_output.enable && nexus_output.format == realization::config::OutputFormat::netcdf) {
         // TODO: (later) use nullptr for now, until full support for multiple formulations per catchment is available
@@ -746,7 +723,7 @@ int main(int argc, char* argv[]) {
     if (manager->get_using_routing()) {
         std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
 #if NGEN_WITH_ROUTING_TROUTE_BMI
-        simulation->run_routing_bmi(features, t_route_config_file_with_path);
+        simulation->run_routing_bmi(t_route_config_file_with_path);
 #else
         simulation->run_routing(t_route_config_file_with_path);
 #endif // NGEN_WITH_ROUTING_TROUTE_BMI

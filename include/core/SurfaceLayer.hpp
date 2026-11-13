@@ -15,7 +15,7 @@ namespace ngen
                 const LayerDescription& desc, 
                 const std::vector<std::string>& p_u, 
                 const Simulation_Time& s_t, 
-                feature_type& f, 
+                hy_features::HY_Features& f, 
                 long idx,
                 const std::shared_ptr<utils::NexusOutputsMgr> &nexus_outputs_mgr,
                 std::shared_ptr<utils::CatchmentOutputsMgr> catchment_output_mgr) :

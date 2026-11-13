@@ -30,9 +30,6 @@ PartitionData scatter_partitions(const std::vector<PartitionData>& partitions, i
         nexus_ids.reserve(partitions.size());
         catchment_ids.reserve(partitions.size());
         for (const auto& part : partitions) {
-            if (!part.remote_connections.empty()) {
-                throw std::invalid_argument("scatter_partitions: cannot send parts with remote connections");
-            }
             nexus_ids.emplace_back(part.nexus_ids.begin(), part.nexus_ids.end());
             catchment_ids.emplace_back(part.catchment_ids.begin(), part.catchment_ids.end());
         }

@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <sstream>
-#include <tuple>
+#include <stdexcept>
 #include <functional>
 #include <string>
 #include <unordered_map>
@@ -34,12 +34,6 @@ class Partitions_Parser {
             PartitionData part_data;
 
             //The outter loop iterating through the list of partitions
-            int remote_mpi_rank;
-            std::string remote_nex_id;
-            std::string remote_cat_id;
-            std::string direction;
-            PartitionData::Tuple tmp_tuple;
-            std::vector<PartitionData::Tuple> remote_conn_vec;
             int part_counter = 0;
             for(auto &partition: tree.get_child("partitions"))  {
                 //Get partition id
@@ -69,30 +63,17 @@ class Partitions_Parser {
                 part_data.nexus_ids = nexus_ids;
                 nexus_ids.clear();
 
-                if( part.at("remote-connections").get_type() == geojson::PropertyType::List ) 
+                //Remote connections between partitions are not supported: a partition must hold every
+                //catchment that drains to each of its nexuses. The backend property tree parser can't
+                //represent an empty list, so an empty "remote-connections" arrives as an empty string.
+                if (part.has_key("remote-connections")
+                    && part.at("remote-connections").get_type() == geojson::PropertyType::List
+                    && !part.at("remote-connections").as_list().empty())
                 {
-                    //It is valid to have no remote connections, but the backend property tree parser
-                    //can't represent empty lists/objects, so it turns into an empty string (which is iterable)
-                    //so we check to ensure the remote connections are a list type (not string) before we attempt
-                    //to process the remote-connections.  If they are empty, this step gets skipped entirely.
-                    //Get remote-connections and set the corresponding part_data struct member
-                    
-                    for (auto &remote_conn : part.at("remote-connections").as_list())
-                    {
-                        if ( remote_conn.get_type() != geojson::PropertyType::String )
-                        {
-                            remote_mpi_rank = remote_conn.at("mpi-rank").as_natural_number();
-                            remote_nex_id = remote_conn.at("nex-id").as_string();
-                            remote_cat_id = remote_conn.at("cat-id").as_string();
-                            direction = remote_conn.at("cat-direction").as_string();
-                            tmp_tuple = std::make_tuple(remote_mpi_rank, remote_nex_id, remote_cat_id, direction);
-                            remote_conn_vec.push_back(tmp_tuple);
-                        }
-                    }
+                    throw std::runtime_error("Partition " + part_id + " has remote connections, which are not "
+                                             "supported: each partition must hold every catchment that drains "
+                                             "to each of its nexuses");
                 }
-                
-                part_data.remote_connections = remote_conn_vec;
-                remote_conn_vec.clear();
 
                 //Push part_data struct the vector
                 partition_ranks.push_back(part_data);
@@ -107,7 +88,7 @@ class Partitions_Parser {
         {
             //TODO The output codes are for test only. They can be removed for application code.
             /*
-             * The function takes a partition id and return the corresponding struct from the set and remote_connections.
+             * The function takes a partition id and return the corresponding struct.
              * @param part_id The input parameter identify a specific partition struct
              * @return part_data The whole struct identified by part_id
             */
@@ -125,18 +106,6 @@ class Partitions_Parser {
             for (auto i = (part_data.nexus_ids).cbegin(); i != (part_data.nexus_ids).cend(); ++i)
                 std::cout << "\nget_partition_struct, nexus_ids: " << *i << " ";
             std::cout << std::endl;
-
-            for (auto i = part_data.remote_connections.cbegin(); i != part_data.remote_connections.cend(); ++i)
-            {
-                std::tuple<int, std::string, std::string> remote_conn = *i;
-                int mpi_rank = std::get<0>(remote_conn);
-                std::string nex_id = std::get<1>(remote_conn);
-                std::string cat_id = std::get<2>(remote_conn);
-
-                std::cout << "\nget_partition_struct, remote_mpi_ranks: " << mpi_rank; 
-                std::cout << "\nget_partition_struct, remote_nexus: " << nex_id;
-                std::cout << "\nget_partition_struct, remote_catchment: " << cat_id;
-            }
             std::cout << "\n--------------------" << std::endl;
             */
 
@@ -162,8 +131,6 @@ class Partitions_Parser {
         int mpi_world_rank;
         std::unordered_set<std::string> catchment_ids;
         std::unordered_set<std::string> nexus_ids;
-        std::vector<std::tuple<int, std::string, std::string> > remote_connections;
-        std::tuple<int, std::string, std::string> remote_tuple;
 
         boost::property_tree::ptree tree;
 };
