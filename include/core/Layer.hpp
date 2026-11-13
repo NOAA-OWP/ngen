@@ -13,7 +13,6 @@
 namespace hy_features
 {
     class HY_Features;
-    class HY_Features_MPI;
 }
 
 namespace utils { class CatchmentOutputsMgr; }
@@ -25,17 +24,11 @@ namespace ngen
     {    
         public:
 
-        #if NGEN_WITH_MPI
-            using feature_type = hy_features::HY_Features_MPI;
-        #else
-            using feature_type = hy_features::HY_Features;
-        #endif
-
         Layer(
                 const LayerDescription& desc, 
                 const std::vector<std::string>& p_u, 
                 const Simulation_Time& s_t, 
-                feature_type& f,
+                hy_features::HY_Features& f,
                 long idx,
                 std::shared_ptr<utils::CatchmentOutputsMgr> cat_output_mgr) :
             description(desc),
@@ -60,7 +53,7 @@ namespace ngen
         Layer(
                 const LayerDescription& desc,
                 const Simulation_Time& s_t,
-                feature_type& f,
+                hy_features::HY_Features& f,
                 long idx,
                 std::shared_ptr<utils::CatchmentOutputsMgr> cat_output_mgr) :
             description(desc),
@@ -122,7 +115,7 @@ namespace ngen
         //See "minimum" constructor above used for DomainLayer impl...
         const std::vector<std::string> processing_units;
         Simulation_Time simulation_time;
-        feature_type& features;
+        hy_features::HY_Features& features;
         long output_time_index;
         //! Catchment output sink for this layer's per-timestep push; null when output is disabled.
         std::shared_ptr<utils::CatchmentOutputsMgr> catchment_output_mgr = nullptr;

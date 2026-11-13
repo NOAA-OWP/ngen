@@ -11,12 +11,12 @@
 #include "partitioning/Nexus_Contributors.hpp"
 
 /**
- * Partitioning of a hydrofabric by nexus, for parallel execution with no remote connections. This
- * is how automatic partitioning assigns catchments to ranks.
+ * Partitioning of a hydrofabric by nexus, which is how automatic partitioning assigns catchments to
+ * ranks.
  *
  * Every nexus is assigned to exactly one part, and every catchment is assigned to the part of the
  * nexus it drains to. A nexus thus receives all of its contributions from catchments in its own
- * part, so no part needs a remote connection to another.
+ * part, so no part needs to communicate with another.
  *
  * Nexuses are cut into contiguous blocks, in the order given, by one of several strategies. Each
  * strategy is implemented in a Strategy_*.hpp of its own.
@@ -48,9 +48,8 @@ namespace partitioning {
      * @param catchments Catchment (divide) features, with the downstream nexus under `toid`, which
      *        are also given to the strategy
      * @param strategy How the nexuses are cut into parts
-     * @return One PartitionData per part, with `mpi_world_rank` set to the part's index and no
-     *         remote connections. A catchment that drains to no nexus is assigned as a group of
-     *         its own.
+     * @return One PartitionData per part, with `mpi_world_rank` set to the part's index. A
+     *         catchment that drains to no nexus is assigned as a group of its own.
      * @throws std::invalid_argument if @p num_parts is less than 1 or @p strategy is not a Strategy
      */
     std::vector<PartitionData> partition_by_nexus(const geojson::GeoJSON& catchments,

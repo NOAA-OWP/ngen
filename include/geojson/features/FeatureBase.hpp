@@ -42,8 +42,7 @@ namespace geojson {
      *  Describes a type of features
      *
      *  These are numbered in accordance with the GeoPackage
-     *  'well-known binary' (WKB) feature types, other than the
-     *  additional 'Sentinel' value defined here
+     *  'well-known binary' (WKB) feature types
      */
     enum class FeatureType {
         None                 = 0,  /*!< Represents an empty feature with no sort of geometry */
@@ -53,8 +52,7 @@ namespace geojson {
         MultiPoint           = 4,  /*!< Represents a feature that is represented by many points */
         MultiLineString      = 5,  /*!< Represents a feature that is represented by multiple series of interconnected points */
         MultiPolygon         = 6,  /*!< Represents a feature that is represented by multiple areas */
-        GeometryCollection   = 7,  /*!< Represents a feature that contains a collection of different types of geometry */
-        Sentinel             = 100 /*!< Represents a 'dummy' feature included for computational consistency */
+        GeometryCollection   = 7   /*!< Represents a feature that contains a collection of different types of geometry */
     };
 
     /**

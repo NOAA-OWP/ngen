@@ -9,7 +9,6 @@ namespace geojson {
     class MultiLineStringFeature;
     class MultiPolygonFeature;
     class CollectionFeature;
-    class SentinelFeature;
 
     /**
      * An abstract class used to operate on the children of FeatureBase
@@ -28,7 +27,6 @@ namespace geojson {
             virtual void visit(MultiLineStringFeature *feature) = 0;
             virtual void visit(MultiPolygonFeature *feature) = 0;
             virtual void visit(CollectionFeature* feature) = 0;
-            virtual void visit(SentinelFeature *feature) = 0;
 
             virtual ~FeatureVisitor() = default;
     };
