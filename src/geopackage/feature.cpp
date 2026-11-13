@@ -78,3 +78,16 @@ geojson::Feature ngen::geopackage::build_feature(
             throw std::runtime_error("invalid WKB feature type. Received: " + std::to_string(geometry.index() + 1));
     }
 }
+
+geojson::Feature ngen::geopackage::build_feature_without_geometry(
+  const std::string& id,
+  geojson::PropertyMap properties
+)
+{
+    return std::make_shared<geojson::CollectionFeature>(
+        std::vector<geojson::geometry>{},
+        id,
+        std::move(properties),
+        std::vector<double>{}
+    );
+}
