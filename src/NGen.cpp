@@ -378,12 +378,32 @@ int main(int argc, char* argv[]) {
         catchment_subset_ids = std::vector<std::string>(local_data.catchment_ids.begin(), local_data.catchment_ids.end());
     }
     else if (mpi_num_procs > 1) {
-        Partitions_Parser partition_parser(ptree_from_json_file(PARTITION_PATH));
-        // TODO: add something here to make sure this step worked for every rank, and maybe to checksum the file
-        partition_parser.parse_partition_file();
+        // TODO: maybe checksum the file
+        bool parsed = true;
+        try {
+            Partitions_Parser partition_parser(ptree_from_json_file(PARTITION_PATH));
+            partition_parser.parse_partition_file();
 
-        std::vector<PartitionData> &partitions = partition_parser.partition_ranks;
-        local_data = std::move(partitions[mpi_rank]);
+            std::vector<PartitionData> &partitions = partition_parser.partition_ranks;
+            if (partitions.size() != static_cast<std::size_t>(mpi_num_procs)) {
+                throw std::runtime_error("it has " + std::to_string(partitions.size()) + " partitions for "
+                                         + std::to_string(mpi_num_procs) + " processes");
+            }
+            local_data = std::move(partitions[mpi_rank]);
+        }
+        catch (const std::exception& e) {
+            // Every rank reads the same file, so rank 0 speaks for all of them
+            if (mpi_rank == 0) {
+                std::cerr << "Unable to use partition config " << PARTITION_PATH << ": " << e.what() << std::endl;
+            }
+            parsed = false;
+        }
+        if (!parallel::mpiSyncStatusAnd(parsed, MPI_COMM_WORLD)) {
+            if (mpi_rank == 0 && parsed) {
+                std::cerr << "Unable to use partition config " << PARTITION_PATH << " on every process" << std::endl;
+            }
+            exit(-1);
+        }
         if (!nexus_subset_ids.empty()) {
             std::cerr << "Warning: CLI provided nexus subset will be ignored when using partition config";
         }
