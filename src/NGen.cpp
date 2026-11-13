@@ -422,14 +422,6 @@ int main(int argc, char* argv[]) {
     std::cout << "Building Catchment collection" << std::endl;
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
-    //
-    // As part of the fix for NOAA-OWP/ngen#284 / NGWPC-6553,
-    // partitioning may insert sentinel flowpaths downstream of
-    // terminal nexuses. Those sentinels will not exist in the
-    // catchmentDataFile. Their listing in catchment_subset_ids works
-    // because the hydrofabric readers return the intersection of
-    // features in the file and the specified subset, rather than
-    // erroring on missing features.
     geojson::GeoJSON catchment_collection = hydrofabric->read_divides(catchment_subset_ids);
     
     for(auto& feature: *catchment_collection)

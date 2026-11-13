@@ -465,20 +465,6 @@ ngen_add_test(
         NGen::geojson
 )
 
-########################## Partition_One Tests
-ngen_add_test(
-    test_partition_one
-    OBJECTS
-        utils/Partition_One_Test.cpp
-    LIBRARIES
-        gmock
-        NGen::core
-        NGen::geojson
-        NGen::geopackage
-    REQUIRES
-        NGEN_WITH_SQLITE
-)
-
 ########################## MultiLayer Tests
 ngen_add_test(
     test_multilayer

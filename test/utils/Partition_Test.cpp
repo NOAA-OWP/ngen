@@ -76,8 +76,8 @@ void PartitionsParserTest::setupArbitraryExampleCase() {
 }
 
 TEST_F(PartitionsParserTest, TestFileReader)
-{GTEST_SKIP() << "Skipping test"; //test broke, partition file is out of date
-  const std::string file_path = file_search(data_paths,"partition_huc01.json");
+{
+  const std::string file_path = file_search(data_paths,"partition_huc01_100.json");
   Partitions_Parser partitions_parser = Partitions_Parser(ptree_from_json_file(file_path));
 
   partitions_parser.parse_partition_file();
@@ -87,14 +87,14 @@ TEST_F(PartitionsParserTest, TestFileReader)
 }
 
 TEST_F(PartitionsParserTest, DisplayPartitionData)
-{ GTEST_SKIP() << "Skipping test"; //test broke, partition file is out of date
-  const std::string file_path = file_search(data_paths,"partition_huc01.json");
+{
+  const std::string file_path = file_search(data_paths,"partition_huc01_100.json");
   Partitions_Parser partitions_parser = Partitions_Parser(ptree_from_json_file(file_path));
 
   partitions_parser.parse_partition_file();
 
   //In real application, num_partitions may be an input parameter
-  //For unit test, num_partitions value should be consistent with that of partition_huc01.json
+  //For unit test, num_partitions value should be consistent with that of partition_huc01_100.json
   int num_partitions = 100;
 
   int i;
