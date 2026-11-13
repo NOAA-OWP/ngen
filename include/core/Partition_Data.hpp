@@ -1,6 +1,11 @@
 #ifndef PARTITION_DATA_H
 #define PARTITION_DATA_H
 
+#include <string>
+#include <tuple>
+#include <unordered_set>
+#include <vector>
+
 struct PartitionData
 {
     using Tuple = std::tuple<int, std::string, std::string, std::string>;

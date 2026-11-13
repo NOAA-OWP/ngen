@@ -2,7 +2,9 @@
 
 #if NGEN_WITH_MPI
 
+#include <climits>
 #include <cstring>
+#include <stdexcept>
 #include <mpi.h>
 #include <utilities/FileChecker.h>
 
@@ -427,6 +429,62 @@ namespace parallel {
         }
 
         return out_strings;
+    }
+
+    std::vector<std::string> scatter_strings(const std::vector<std::vector<std::string>>& per_rank, int root, MPI_Comm comm) {
+        int mpi_rank, mpi_num_procs;
+        MPI_Comm_rank(comm, &mpi_rank);
+        MPI_Comm_size(comm, &mpi_num_procs);
+
+        // At root, pack each rank's strings, NUL-terminated, into consecutive spans of one buffer
+        std::vector<int> send_sizes;
+        std::vector<int> displs;
+        std::vector<char> send_buffer;
+        if (mpi_rank == root) {
+            if (per_rank.size() != static_cast<std::size_t>(mpi_num_procs)) {
+                throw std::invalid_argument("scatter_strings: given strings for " + std::to_string(per_rank.size())
+                                            + " ranks, but the communicator has " + std::to_string(mpi_num_procs));
+            }
+            send_sizes.resize(mpi_num_procs);
+            displs.resize(mpi_num_procs);
+            std::size_t total_size = 0;
+            for (int r = 0; r < mpi_num_procs; ++r) {
+                std::size_t rank_size = 0;
+                for (const auto& s : per_rank[r]) {
+                    rank_size += s.size() + 1;
+                }
+                if (rank_size > INT_MAX || total_size > INT_MAX - rank_size) {
+                    throw std::length_error("scatter_strings: strings exceed INT_MAX bytes");
+                }
+                send_sizes[r] = static_cast<int>(rank_size);
+                displs[r] = static_cast<int>(total_size);
+                total_size += rank_size;
+            }
+            send_buffer.reserve(total_size);
+            for (const auto& strings : per_rank) {
+                for (const auto& s : strings) {
+                    send_buffer.insert(send_buffer.end(), s.begin(), s.end());
+                    send_buffer.push_back('\0');
+                }
+            }
+        }
+
+        int recv_size = 0;
+        MPI_Scatter(send_sizes.data(), 1, MPI_INT, &recv_size, 1, MPI_INT, root, comm);
+
+        std::vector<char> recv_buffer(recv_size);
+        MPI_Scatterv(send_buffer.data(), send_sizes.data(), displs.data(), MPI_CHAR,
+                     recv_buffer.data(), recv_size, MPI_CHAR, root, comm);
+
+        std::vector<std::string> strings;
+        auto string_start = recv_buffer.begin();
+        for (auto it = recv_buffer.begin(); it != recv_buffer.end(); ++it) {
+            if (*it == '\0') {
+                strings.emplace_back(string_start, it);
+                string_start = it + 1;
+            }
+        }
+        return strings;
     }
 } // namespace parallel
 
