@@ -99,16 +99,16 @@ $(function(){initNavTree('md__i_n_s_t_a_l_l.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">Installation instructions</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md379"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md380"></a></p>
 <p>At present, there is no supported standard installation process.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md381"></a>
+<h1><a class="anchor" id="autotoc_md382"></a>
 Building and running with docker:</h1>
 <p>The quickest way to build and run NGEN is to follow what we do for our <a href="./docker/CENTOS_NGEN_RUN.dockerfile">model run testing</a>:</p>
 <p>First we make a new directory: <code>mkdir ngen &amp;&amp; cd ngen</code></p>
 <p>Then clone the github repository: <code>git clone <a href="https://github.com/NOAA-OWP/ngen.git">https://github.com/NOAA-OWP/ngen.git</a></code></p>
 <p>Then we can build with docker: <code>docker build . --file ./docker/CENTOS_NGEN_RUN.dockerfile --tag localbuild/ngen:latest</code></p>
-<h1><a class="anchor" id="autotoc_md382"></a>
+<h1><a class="anchor" id="autotoc_md383"></a>
 Building manually:</h1>
 <p><b>Install the Linux required packages (package names shown for Centos 8.4.2105):</b></p>
 <div class="fragment"><div class="line">yum install tar git gcc-c++ gcc make cmake python38 python38-devel python38-numpy bzip2 udunits2-devel texinfo</div>
@@ -170,7 +170,10 @@ Building manually:</h1>
 <div class="fragment"><div class="line"># replace 2 with number of jobs</div>
 <div class="line">cmake --build build --target ngen -- -j 2</div>
 </div><!-- fragment --><p><b>Running the Model:</b></p>
-<div class="fragment"><div class="line">./build/ngen data/catchment_data.geojson all data/nexus_data.geojson all data/example_realization_config.json</div>
+<p>The example realization configuration uses the testing BMI C++ module, which is built under <code>build/test-libs/</code> when <code>NGEN_WITH_TESTS</code> is enabled. Its paths are relative to the build directory, where the <code>data</code> directory is symlinked, so run it from there:</p>
+<div class="fragment"><div class="line">cmake --build build --target testbmicppmodel</div>
+<div class="line">cd build</div>
+<div class="line">./ngen data/catchment_data.geojson all data/nexus_data.geojson all data/example_realization_config.json</div>
 </div><!-- fragment --><hr  />
 <p><b>Further information on each step:</b></p>
 <p>Make sure all necessary <a class="el" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html">dependencies</a> are installed, and then <a class="el" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html">build the main ngen target with CMake</a>. Then run the executable, as described <a href="README.md#usage">here for basic use</a> or <a href="doc/DISTRIBUTED_PROCESSING.md#examples">here for distributed execution</a>. A step by step <a href="https://github.com/NOAA-OWP/ngen/wiki/NGen-Tutorial">instruction</a> and install with more <a href="https://github.com/NOAA-OWP/ngen/wiki/Building">options</a> are also provided on our wiki page. </p>
@@ -180,7 +183,7 @@ Building manually:</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Nov 9 2026 22:18:54 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Nov 13 2026 19:54:28 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

@@ -140,18 +140,18 @@ Usage</h2>
 <li><em>partition_config_path</em> &ndash; path to the partition json config file, when using the driver with <a class="el" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html">distributed processing</a>.</li>
 <li><code>--subdivided-hydrofabric</code> &ndash; an explicit, optional flag, when using the driver with <a class="el" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html">distributed processing</a>, to indicate to the driver processes that they should operate on process-specific subdivided hydrofabric files.</li>
 </ul>
-<p>An example of a complete invocation to run a subset of a hydrofabric. If the realization configuration doesn't contain catchment definitions for the subset keys provided, the default <code>global</code> configuration is used. Alternatively, if the realization configuration contains definitions that are not in the subset (or hydrofabric) keys, then a warning is produced and the formulation isn't created. <code>./cmake-build-debug/ngen ./data/catchment_data.geojson "cat-27,cat-52" ./data/nexus_data.geojson "nex-26,nex-34" ./data/example_realization_config.json</code></p>
+<p>An example of a complete invocation to run a subset of a hydrofabric. If the realization configuration doesn't contain catchment definitions for the subset keys provided, the default <code>global</code> configuration is used. Alternatively, if the realization configuration contains definitions that are not in the subset (or hydrofabric) keys, then a warning is produced and the formulation isn't created. The example realization configurations under <code>data/</code> refer to BMI module libraries built under the build directory (in <code>extern-libs/</code> and <code>test-libs/</code>), and the <code>data</code> directory is symlinked into the build directory, so run these examples from inside the build directory: <code>cd cmake-build-debug &amp;&amp; ./ngen ./data/catchment_data.geojson "cat-27,cat-52" ./data/nexus_data.geojson "nex-26,nex-34" ./data/example_realization_config.json</code></p>
 <p>To simulate every catchment in the input hydrofabric, leave the subset lists empty, or use "all" i.e.: <code>ngen ./data/catchment_data.geojson "" ./data/nexus_data.geojson "" ./data/refactored_example_realization_config.json</code> <code>ngen ./data/catchment_data.geojson "all" ./data/nexus_data.geojson "all" ./data/refactored_example_realization_config.json</code></p>
 <p>Examples specific to running with with distributed processing can be found <a href="doc/DISTRIBUTED_PROCESSING.md#examples">here</a>.</p>
 <h2><a class="anchor" id="autotoc_md66"></a>
 How to test the software</h2>
 <p>The project uses the <b>Google Test</b> framework for creating automated tests for C++ code.</p>
-<p>To execute the full collection of automated C++ tests, run the <code>test_all</code> target in <b>CMake</b>, then execute the generated executable. Alternatively, replace <code>test_all</code> with <code>test_unit</code> or <code>test_integration</code> to run only those tests. For example: </p><pre class="fragment">cmake --build cmake-build-debug --target test_all -- -j 4
-./cmake-build-debug/test/test_all
+<p>To execute the full collection of automated C++ tests, run the <code>test_all</code> target in <b>CMake</b>, then execute the generated executable from inside the build directory, where the tests find the testing BMI modules and data. Alternatively, replace <code>test_all</code> with <code>test_unit</code> or <code>test_integration</code> to run only those tests. For example: </p><pre class="fragment">cmake --build cmake-build-debug --target test_all -- -j 4
+cd cmake-build-debug &amp;&amp; ./test/test_all
 </pre><p>Or, if the build system has not yet been properly generated: </p><pre class="fragment">git submodule update --init --recursive -- test/googletest
 cmake -DCMAKE_BUILD_TYPE=Debug -DNGEN_WITH_TESTS:BOOL=ON -B cmake-build-debug -S .
 cmake --build cmake-build-debug --target test_all -- -j 4
-./cmake-build-debug/test/test_all
+cd cmake-build-debug &amp;&amp; ./test/test_all
 </pre><p>See the <a class="el" href="md_test_2_r_e_a_d_m_e.html">Testing ReadMe</a> file and <a href="https://github.com/NOAA-OWP/ngen/wiki/NGen-Tutorial">wiki/Quickstart</a> for a more thorough discussion of testing.</p>
 <h2><a class="anchor" id="autotoc_md67"></a>
 How to debug the software</h2>
@@ -213,7 +213,7 @@ Credits and references</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Nov 9 2026 22:18:55 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Nov 13 2026 19:54:29 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

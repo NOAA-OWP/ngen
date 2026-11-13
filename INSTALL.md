@@ -100,8 +100,12 @@ cmake --build build --target ngen -- -j 2
 
 **Running the Model:**
 
+The example realization configuration uses the testing BMI C++ module, which is built under `build/test-libs/` when `NGEN_WITH_TESTS` is enabled. Its paths are relative to the build directory, where the `data` directory is symlinked, so run it from there:
+
 ```shell
-./build/ngen data/catchment_data.geojson all data/nexus_data.geojson all data/example_realization_config.json
+cmake --build build --target testbmicppmodel
+cd build
+./ngen data/catchment_data.geojson all data/nexus_data.geojson all data/example_realization_config.json
 ```
 
 ---

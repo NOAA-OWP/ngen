@@ -120,16 +120,21 @@ Changed</h3>
 <li>The <code>INFO: hydrofabric detected: ...</code> line now reports for either format and fires exactly once per run. GeoJSON hydrofabrics previously reported nothing, and a single-file GeoPackage hydrofabric reported twice, once per file opened.</li>
 </ul>
 <h3><a class="anchor" id="autotoc_md78"></a>
+Changed</h3>
+<ul>
+<li>Models referenced as git submodules under extern/ are now built in the CMake binary tree under extern-libs/, not in the source tree as cmake_build/ directories under their respective source roots</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md79"></a>
 Deprecated</h3>
 <ul>
 <li>Top-level realization config keys <code>output_root</code>, <code>disable_catchment_output</code>, and <code>per_formulation_nexus_files</code>, superseded by the <code>output</code> block (still honored when no <code>output</code> block is present).</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md79"></a>
+<h3><a class="anchor" id="autotoc_md80"></a>
 Removed</h3>
 <ul>
 <li>The <code>output_precision</code> formulation parameter in realization configs. It has had no effect since catchment output moved to the output manager; text precision is the <code>output</code> block's <code>precision</code> value.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md80"></a>
+<h3><a class="anchor" id="autotoc_md81"></a>
 Fixed</h3>
 <ul>
 <li>Hydrofabric schema detection now reads each layer's columns from the file that holds it. A v4.0 hydrofabric split across a catchment file and a nexus file was previously detected as v4.0beta1, because <code>divides.flowpath_toid</code> &ndash; the column that separates the two &ndash; is absent from the nexus file; its divides were then joined through a <code>flowpaths</code> table that need not be there, leaving them with no downstream reference. </li>
@@ -140,7 +145,7 @@ Fixed</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Nov 9 2026 22:18:54 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Nov 13 2026 19:54:28 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

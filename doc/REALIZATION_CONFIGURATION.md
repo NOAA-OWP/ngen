@@ -157,7 +157,7 @@ Each catchment is a key-value object and must have the following two object keys
                 "name": "bmi_c",
                 "params": {
                     "model_type_name": "bmi_c_cfe",
-                    "library_file": "./extern/cfe/cmake_cfe_lib/libcfemodel.so",
+                    "library_file": "./extern-libs/cfe/libcfebmi.so",
                     "forcing_file": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
                     "init_config": "./data/bmi/c/cfe/cat_27_bmi_config.txt",
                     "main_output_variable": "Q_OUT",
