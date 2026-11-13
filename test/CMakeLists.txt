@@ -474,6 +474,7 @@ ngen_add_test(
     test_partition_by_nexus
     OBJECTS
         partitioning/Partition_By_Nexus_Test.cpp
+        partitioning/Strategy_Contributing_Catchments_Test.cpp
     LIBRARIES
         NGen::partitioning
         NGen::geojson

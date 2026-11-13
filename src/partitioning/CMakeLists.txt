@@ -15,6 +15,7 @@ target_sources(ngen_partitioning
   PRIVATE
     "${CMAKE_CURRENT_LIST_DIR}/Partition_By_Nexus.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/Strategy_Nexus_Count.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Strategy_Contributing_Catchments.cpp"
 )
 
 # Distributing parts across MPI ranks is part of NGen::parallel

@@ -31,10 +31,12 @@ namespace partitioning {
     {
         /// Nearly equal numbers of nexuses in each part; see cut_by_nexus_count()
         nexus_count,
+        /// Nearly equal numbers of catchments in each part; see cut_by_contributing_catchments()
+        contributing_catchments,
     };
 
     /// The strategy used when none is given
-    inline constexpr Strategy default_strategy = Strategy::nexus_count;
+    inline constexpr Strategy default_strategy = Strategy::contributing_catchments;
 
     /**
      * Assign each nexus that @p catchments drain to, and the catchments draining to it, to one of
