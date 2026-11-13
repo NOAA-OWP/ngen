@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <utility>
 
+#include <partitioning/Strategy_Contributing_Catchments.hpp>
 #include <partitioning/Strategy_Nexus_Count.hpp>
 
 namespace ngen {
@@ -87,6 +88,8 @@ namespace {
         switch (strategy) {
             case Strategy::nexus_count:
                 return cut_by_nexus_count(nexuses, num_parts);
+            case Strategy::contributing_catchments:
+                return cut_by_contributing_catchments(nexuses, num_parts);
         }
         throw std::invalid_argument("Unknown partitioning strategy " + std::to_string(static_cast<int>(strategy)));
     }
