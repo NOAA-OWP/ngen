@@ -3447,17 +3447,6 @@
           <topic label="find_first_accessible" href="classutils_1_1_file_checker.html#a6adc1d1d9c9c23dc7677d21d45c506e9"/>
           <topic label="find_first_readable" href="classutils_1_1_file_checker.html#a2efbb141154cbd238630553706a75b8d"/>
         </topic>
-        <topic label="FileStreamHandler" href="classutils_1_1_file_stream_handler.html">
-          <topic label="FileStreamHandler" href="classutils_1_1_file_stream_handler.html#aa98d206c0e15ef246227e41e13e4bbc9"/>
-          <topic label="~FileStreamHandler" href="classutils_1_1_file_stream_handler.html#a2b4519ebca32efe528ad72f6dbeb33f1"/>
-          <topic label="getNullStream" href="classutils_1_1_file_stream_handler.html#a2dfca7edeb224cc942b6ef7302c6a08d"/>
-          <topic label="operator&lt;&lt;" href="classutils_1_1_file_stream_handler.html#af36b00975146c10b0e8714daae7c7239"/>
-          <topic label="put" href="classutils_1_1_file_stream_handler.html#a37b9e817a29d162b43066c3f60debe3f"/>
-          <topic label="put_indexed" href="classutils_1_1_file_stream_handler.html#a3c6d48fc5333e2f7d13df9156eac13b9"/>
-          <topic label="put_var" href="classutils_1_1_file_stream_handler.html#a3fac69540f581d628858ececa95a314d"/>
-          <topic label="output_stream" href="classutils_1_1_file_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798"/>
-          <topic label="sep" href="classutils_1_1_file_stream_handler.html#a94fc95b39ccee186539087dcad20f43b"/>
-        </topic>
         <topic label="FormulationStepOutput" href="structutils_1_1_formulation_step_output.html">
           <topic label="FormulationStepOutput" href="structutils_1_1_formulation_step_output.html#a7c66ca085440f73607a6efdf72a57481"/>
           <topic label="~FormulationStepOutput" href="structutils_1_1_formulation_step_output.html#a93a7c8c438b9a935ac30adfc7d763bd0"/>
@@ -3473,9 +3462,6 @@
           <topic label="prepare_for_step" href="classutils_1_1_nexus_outputs_mgr.html#ac8d2906b4a74dd1329ab933d7982b090"/>
           <topic label="receive_data_entry" href="classutils_1_1_nexus_outputs_mgr.html#af7bcb3b55ef20da262c64c5d670ddf59"/>
           <topic label="receive_data_entry" href="classutils_1_1_nexus_outputs_mgr.html#a5dd85baadb99e8fcb7c573f051e48bbb"/>
-        </topic>
-        <topic label="NullStream" href="classutils_1_1_null_stream.html">
-          <topic label="NullStream" href="classutils_1_1_null_stream.html#ac83443ec2d37a1763d5518655c58e164"/>
         </topic>
         <topic label="OutputField" href="structutils_1_1_output_field.html">
           <topic label="OutputField" href="structutils_1_1_output_field.html#a62a334a36f4a21cc0f802b5cc64c95ff"/>
@@ -3497,21 +3483,6 @@
           <topic label="closed" href="classutils_1_1_per_nexus_csv_output_mgr.html#afb9465481c75410d618216b0b8c7576d"/>
           <topic label="nexus_outfiles" href="classutils_1_1_per_nexus_csv_output_mgr.html#af76ee3e66e12b4fcc66a5f6557d8f937"/>
         </topic>
-        <topic label="StreamHandler" href="classutils_1_1_stream_handler.html">
-          <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#a5f450a99693319a0ed096e0cb3b70a52"/>
-          <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#ad7c8ad75f2c18c680d4cbfad2a1416ab"/>
-          <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#a15176069893e57510787897d9c8dea34"/>
-          <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#af7f3b5a4929b997eb4c1618dbdbaec2f"/>
-          <topic label="~StreamHandler" href="classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354"/>
-          <topic label="getNullStream" href="classutils_1_1_stream_handler.html#a2dfca7edeb224cc942b6ef7302c6a08d"/>
-          <topic label="operator&lt;&lt;" href="classutils_1_1_stream_handler.html#af36b00975146c10b0e8714daae7c7239"/>
-          <topic label="operator=" href="classutils_1_1_stream_handler.html#a0a807b146c1cfde1fc7a62c170f29444"/>
-          <topic label="put" href="classutils_1_1_stream_handler.html#a37b9e817a29d162b43066c3f60debe3f"/>
-          <topic label="put_indexed" href="classutils_1_1_stream_handler.html#a3c6d48fc5333e2f7d13df9156eac13b9"/>
-          <topic label="put_var" href="classutils_1_1_stream_handler.html#a3fac69540f581d628858ececa95a314d"/>
-          <topic label="output_stream" href="classutils_1_1_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798"/>
-          <topic label="sep" href="classutils_1_1_stream_handler.html#a94fc95b39ccee186539087dcad20f43b"/>
-        </topic>
         <topic label="time_marker" href="structutils_1_1time__marker.html">
           <topic label="time_marker" href="structutils_1_1time__marker.html#a666fdf1adf0df69ef868f579f7c4d5f8"/>
           <topic label="epoch_time" href="structutils_1_1time__marker.html#a611b9f3a3a5fe8ffbed664868bb380ee"/>
@@ -3520,8 +3491,6 @@
         </topic>
         <topic label="copy_from" href="namespaceutils.html#a75743b555193878ce127762c9cbf5fb3"/>
         <topic label="copy_from&lt; double &gt;" href="namespaceutils.html#a4af896a23b92e438a3f22254fe0c315f"/>
-        <topic label="getStdErr" href="namespaceutils.html#a0d4e21fbb83912793512c7e9a37403ac"/>
-        <topic label="getStdOut" href="namespaceutils.html#a36dea491674f3e0b6b11591f976a88cb"/>
       </topic>
     </topic>
     <topic label="Namespace Members" href="namespacemembers.html">
@@ -6093,17 +6062,6 @@
           <topic label="find_first_accessible" href="classutils_1_1_file_checker.html#a6adc1d1d9c9c23dc7677d21d45c506e9"/>
           <topic label="find_first_readable" href="classutils_1_1_file_checker.html#a2efbb141154cbd238630553706a75b8d"/>
         </topic>
-        <topic label="FileStreamHandler" href="classutils_1_1_file_stream_handler.html">
-          <topic label="FileStreamHandler" href="classutils_1_1_file_stream_handler.html#aa98d206c0e15ef246227e41e13e4bbc9"/>
-          <topic label="~FileStreamHandler" href="classutils_1_1_file_stream_handler.html#a2b4519ebca32efe528ad72f6dbeb33f1"/>
-          <topic label="getNullStream" href="classutils_1_1_file_stream_handler.html#a2dfca7edeb224cc942b6ef7302c6a08d"/>
-          <topic label="operator&lt;&lt;" href="classutils_1_1_file_stream_handler.html#af36b00975146c10b0e8714daae7c7239"/>
-          <topic label="put" href="classutils_1_1_file_stream_handler.html#a37b9e817a29d162b43066c3f60debe3f"/>
-          <topic label="put_indexed" href="classutils_1_1_file_stream_handler.html#a3c6d48fc5333e2f7d13df9156eac13b9"/>
-          <topic label="put_var" href="classutils_1_1_file_stream_handler.html#a3fac69540f581d628858ececa95a314d"/>
-          <topic label="output_stream" href="classutils_1_1_file_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798"/>
-          <topic label="sep" href="classutils_1_1_file_stream_handler.html#a94fc95b39ccee186539087dcad20f43b"/>
-        </topic>
         <topic label="FormulationStepOutput" href="structutils_1_1_formulation_step_output.html">
           <topic label="FormulationStepOutput" href="structutils_1_1_formulation_step_output.html#a7c66ca085440f73607a6efdf72a57481"/>
           <topic label="~FormulationStepOutput" href="structutils_1_1_formulation_step_output.html#a93a7c8c438b9a935ac30adfc7d763bd0"/>
@@ -6119,9 +6077,6 @@
           <topic label="prepare_for_step" href="classutils_1_1_nexus_outputs_mgr.html#ac8d2906b4a74dd1329ab933d7982b090"/>
           <topic label="receive_data_entry" href="classutils_1_1_nexus_outputs_mgr.html#af7bcb3b55ef20da262c64c5d670ddf59"/>
           <topic label="receive_data_entry" href="classutils_1_1_nexus_outputs_mgr.html#a5dd85baadb99e8fcb7c573f051e48bbb"/>
-        </topic>
-        <topic label="NullStream" href="classutils_1_1_null_stream.html">
-          <topic label="NullStream" href="classutils_1_1_null_stream.html#ac83443ec2d37a1763d5518655c58e164"/>
         </topic>
         <topic label="OutputField" href="structutils_1_1_output_field.html">
           <topic label="OutputField" href="structutils_1_1_output_field.html#a62a334a36f4a21cc0f802b5cc64c95ff"/>
@@ -6142,21 +6097,6 @@
           <topic label="receive_data_entry" href="classutils_1_1_per_nexus_csv_output_mgr.html#acbdd5705bcd76f76d819250451301131"/>
           <topic label="closed" href="classutils_1_1_per_nexus_csv_output_mgr.html#afb9465481c75410d618216b0b8c7576d"/>
           <topic label="nexus_outfiles" href="classutils_1_1_per_nexus_csv_output_mgr.html#af76ee3e66e12b4fcc66a5f6557d8f937"/>
-        </topic>
-        <topic label="StreamHandler" href="classutils_1_1_stream_handler.html">
-          <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#a5f450a99693319a0ed096e0cb3b70a52"/>
-          <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#ad7c8ad75f2c18c680d4cbfad2a1416ab"/>
-          <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#a15176069893e57510787897d9c8dea34"/>
-          <topic label="StreamHandler" href="classutils_1_1_stream_handler.html#af7f3b5a4929b997eb4c1618dbdbaec2f"/>
-          <topic label="~StreamHandler" href="classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354"/>
-          <topic label="getNullStream" href="classutils_1_1_stream_handler.html#a2dfca7edeb224cc942b6ef7302c6a08d"/>
-          <topic label="operator&lt;&lt;" href="classutils_1_1_stream_handler.html#af36b00975146c10b0e8714daae7c7239"/>
-          <topic label="operator=" href="classutils_1_1_stream_handler.html#a0a807b146c1cfde1fc7a62c170f29444"/>
-          <topic label="put" href="classutils_1_1_stream_handler.html#a37b9e817a29d162b43066c3f60debe3f"/>
-          <topic label="put_indexed" href="classutils_1_1_stream_handler.html#a3c6d48fc5333e2f7d13df9156eac13b9"/>
-          <topic label="put_var" href="classutils_1_1_stream_handler.html#a3fac69540f581d628858ececa95a314d"/>
-          <topic label="output_stream" href="classutils_1_1_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798"/>
-          <topic label="sep" href="classutils_1_1_stream_handler.html#a94fc95b39ccee186539087dcad20f43b"/>
         </topic>
         <topic label="time_marker" href="structutils_1_1time__marker.html">
           <topic label="time_marker" href="structutils_1_1time__marker.html#a666fdf1adf0df69ef868f579f7c4d5f8"/>
@@ -7066,9 +7006,6 @@
       <topic label="boost::dfs_visitor">
         <topic label="network::preorder_visitor&lt; OutputIterator &gt;" href="structnetwork_1_1preorder__visitor.html"/>
       </topic>
-      <topic label="boost::iostreams::stream">
-        <topic label="utils::NullStream" href="classutils_1_1_null_stream.html"/>
-      </topic>
       <topic label="BoundingBox" href="struct_bounding_box.html"/>
       <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html"/>
       <topic label="Cell" href="struct_cell.html"/>
@@ -7283,9 +7220,6 @@
         <topic label="utils::PerNexusCsvOutputMgr" href="classutils_1_1_per_nexus_csv_output_mgr.html"/>
       </topic>
       <topic label="utils::OutputField" href="structutils_1_1_output_field.html"/>
-      <topic label="utils::StreamHandler" href="classutils_1_1_stream_handler.html">
-        <topic label="utils::FileStreamHandler" href="classutils_1_1_file_stream_handler.html"/>
-      </topic>
       <topic label="utils::time_marker" href="structutils_1_1time__marker.html"/>
     </topic>
     <topic label="Class Members" href="functions.html">

@@ -17,9 +17,8 @@ var searchData=
   ['output_5fmgr_5f_14',['output_mgr_',['../struct_per_formulation_step_output.html#a8683e39207ed4fe6cb458b11cf29c778',1,'PerFormulationStepOutput::output_mgr_'],['../struct_per_nexus_step_output.html#a50a37ccb5831b5da6e58d26adb8ba30b',1,'PerNexusStepOutput::output_mgr_']]],
   ['output_5fname_15',['output_name',['../structutils_1_1_output_field.html#aa59a3090889eff3defe657a4a76a9d02',1,'utils::OutputField']]],
   ['output_5froot_5f_16',['output_root_',['../classutils_1_1_catchment_csv_output_mgr.html#a3e93142e905bed4773103be2b4db3f4d',1,'utils::CatchmentCsvOutputMgr']]],
-  ['output_5fstream_17',['output_stream',['../classutils_1_1_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798',1,'utils::StreamHandler']]],
-  ['output_5ftime_5findex_18',['output_time_index',['../classngen_1_1_layer.html#a1d1dbf9050ac23f56ac06e9e3dffc176',1,'ngen::Layer']]],
-  ['output_5funits_19',['output_units',['../class_catchment_aggr_data_selector.html#a78bb6eabd1d62510e6d8e8c02f4dd0e1',1,'CatchmentAggrDataSelector']]],
-  ['output_5fvar_5fnames_20',['output_var_names',['../classmodels_1_1bmi_1_1_bmi___adapter.html#af9384bd6c9dfa04e5ec29181f6a66ed4',1,'models::bmi::Bmi_Adapter']]],
-  ['output_5fvariable_5fnames_21',['output_variable_names',['../classrealization_1_1_bmi___formulation.html#a566505f80702c117ef23688ce6892a51',1,'realization::Bmi_Formulation']]]
+  ['output_5ftime_5findex_17',['output_time_index',['../classngen_1_1_layer.html#a1d1dbf9050ac23f56ac06e9e3dffc176',1,'ngen::Layer']]],
+  ['output_5funits_18',['output_units',['../class_catchment_aggr_data_selector.html#a78bb6eabd1d62510e6d8e8c02f4dd0e1',1,'CatchmentAggrDataSelector']]],
+  ['output_5fvar_5fnames_19',['output_var_names',['../classmodels_1_1bmi_1_1_bmi___adapter.html#af9384bd6c9dfa04e5ec29181f6a66ed4',1,'models::bmi::Bmi_Adapter']]],
+  ['output_5fvariable_5fnames_20',['output_variable_names',['../classrealization_1_1_bmi___formulation.html#a566505f80702c117ef23688ce6892a51',1,'realization::Bmi_Formulation']]]
 ];

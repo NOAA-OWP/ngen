@@ -8,7 +8,6 @@ var searchData=
   ['simulation_5ftime_5fparams_5',['simulation_time_params',['../structsimulation__time__params.html',1,'']]],
   ['sqlite_5ferror_6',['sqlite_error',['../structngen_1_1sqlite_1_1sqlite__error.html',1,'ngen::sqlite']]],
   ['state_5fexception_7',['State_Exception',['../classmodels_1_1external_1_1_state___exception.html',1,'models::external']]],
-  ['streamhandler_8',['StreamHandler',['../classutils_1_1_stream_handler.html',1,'utils']]],
-  ['string_5fliteral_9',['string_literal',['../structmultithreading_1_1details_1_1string__literal.html',1,'multithreading::details']]],
-  ['surfacelayer_10',['SurfaceLayer',['../classngen_1_1_surface_layer.html',1,'ngen']]]
+  ['string_5fliteral_8',['string_literal',['../structmultithreading_1_1details_1_1string__literal.html',1,'multithreading::details']]],
+  ['surfacelayer_9',['SurfaceLayer',['../classngen_1_1_surface_layer.html',1,'ngen']]]
 ];

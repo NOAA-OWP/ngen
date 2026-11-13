@@ -117,8 +117,7 @@ var searchData=
   ['note_20on_20bmi_20models_114',['A Note on BMI Models',['../md_doc_2_r_e_a_l_i_z_a_t_i_o_n___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md368',1,'']]],
   ['notfound_115',['NotFound',['../structngen_1_1serialization_1_1_backend_error.html#ae518db22480912fe8a6a7b7fca61dde4a38c300f4fc9ce8a77aad4a30de05cad8',1,'ngen::serialization::BackendError']]],
   ['nullforcingprovider_116',['NullForcingProvider',['../class_null_forcing_provider.html',1,'NullForcingProvider'],['../class_null_forcing_provider.html#a586f4876aa823dee3c07963f49b2423b',1,'NullForcingProvider::NullForcingProvider()']]],
-  ['nullstream_117',['NullStream',['../classutils_1_1_null_stream.html',1,'utils::NullStream'],['../classutils_1_1_null_stream.html#ac83443ec2d37a1763d5518655c58e164',1,'utils::NullStream::NullStream()']]],
-  ['num_5fcolumns_118',['num_columns',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b',1,'ngen::sqlite::database::iterator']]],
-  ['num_5fitems_119',['num_items',['../classrealization_1_1_bmi___var___details.html#aee65f76a3b02cb0c9958f841b7bbf86a',1,'realization::Bmi_Var_Details']]],
-  ['number_5fof_5fdownstream_5fcatchments_120',['number_of_downstream_catchments',['../class_h_y___hydro_nexus.html#a849ee7fd94b2fd0d32a7fc7734bc3234',1,'HY_HydroNexus']]]
+  ['num_5fcolumns_117',['num_columns',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b',1,'ngen::sqlite::database::iterator']]],
+  ['num_5fitems_118',['num_items',['../classrealization_1_1_bmi___var___details.html#aee65f76a3b02cb0c9958f841b7bbf86a',1,'realization::Bmi_Var_Details']]],
+  ['number_5fof_5fdownstream_5fcatchments_119',['number_of_downstream_catchments',['../class_h_y___hydro_nexus.html#a849ee7fd94b2fd0d32a7fc7734bc3234',1,'HY_HydroNexus']]]
 ];

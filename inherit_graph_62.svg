@@ -11,10 +11,10 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="structngen_1_1traits_1_1bool__pack.html" target="_top" xlink:title=" ">
+<g id="a_Node000000"><a xlink:href="structngen_1_1traits_1_1type__list.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="85.75,-30.5 0,-30.5 0,0 85.75,0 85.75,-30.5"/>
-<text text-anchor="start" x="8" y="-17" font-family="Helvetica,sans-Serif" font-size="10.00">ngen::traits::bool</text>
-<text text-anchor="middle" x="42.88" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">_pack&lt;... &gt;</text>
+<text text-anchor="start" x="8" y="-17" font-family="Helvetica,sans-Serif" font-size="10.00">ngen::traits::type</text>
+<text text-anchor="middle" x="42.88" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">_list&lt; Ts &gt;</text>
 </a>
 </g>
 </g>

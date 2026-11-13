@@ -14,9 +14,6 @@ var hierarchy =
     [ "boost::dfs_visitor", null, [
       [ "network::preorder_visitor< OutputIterator >", "structnetwork_1_1preorder__visitor.html", null ]
     ] ],
-    [ "boost::iostreams::stream", null, [
-      [ "utils::NullStream", "classutils_1_1_null_stream.html", null ]
-    ] ],
     [ "BoundingBox", "struct_bounding_box.html", null ],
     [ "CatchmentAggrDataSelector", "class_catchment_aggr_data_selector.html", null ],
     [ "Cell", "struct_cell.html", null ],
@@ -231,8 +228,5 @@ var hierarchy =
       [ "utils::PerNexusCsvOutputMgr", "classutils_1_1_per_nexus_csv_output_mgr.html", null ]
     ] ],
     [ "utils::OutputField", "structutils_1_1_output_field.html", null ],
-    [ "utils::StreamHandler", "classutils_1_1_stream_handler.html", [
-      [ "utils::FileStreamHandler", "classutils_1_1_file_stream_handler.html", null ]
-    ] ],
     [ "utils::time_marker", "structutils_1_1time__marker.html", null ]
 ];

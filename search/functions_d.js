@@ -26,6 +26,5 @@ var searchData=
   ['not_5ffn_23',['not_fn',['../namespacengen_1_1serialization.html#aa554ebc1a5bb19eaee1dada4977ebd4b',1,'ngen::serialization']]],
   ['not_5ffound_5ferror_24',['not_found_error',['../namespacengen_1_1serialization_1_1anonymous__namespace_02file__backend_8cpp_03.html#a7ad2492958c0a5d0394f2c52e25774a2',1,'ngen::serialization::anonymous_namespace{file_backend.cpp}']]],
   ['nullforcingprovider_25',['NullForcingProvider',['../class_null_forcing_provider.html#a586f4876aa823dee3c07963f49b2423b',1,'NullForcingProvider']]],
-  ['nullstream_26',['NullStream',['../classutils_1_1_null_stream.html#ac83443ec2d37a1763d5518655c58e164',1,'utils::NullStream']]],
-  ['num_5fcolumns_27',['num_columns',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b',1,'ngen::sqlite::database::iterator']]]
+  ['num_5fcolumns_26',['num_columns',['../structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b',1,'ngen::sqlite::database::iterator']]]
 ];

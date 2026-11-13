@@ -15,6 +15,5 @@ var searchData=
   ['ngenserializationprotocol_12',['NgenSerializationProtocol',['../classmodels_1_1bmi_1_1protocols_1_1_ngen_serialization_protocol.html',1,'models::bmi::protocols']]],
   ['ngensimulation_13',['NgenSimulation',['../class_ngen_simulation.html',1,'']]],
   ['normalized_5funits_14',['normalized_units',['../struct_units_helper_1_1normalized__units.html',1,'UnitsHelper']]],
-  ['nullforcingprovider_15',['NullForcingProvider',['../class_null_forcing_provider.html',1,'']]],
-  ['nullstream_16',['NullStream',['../classutils_1_1_null_stream.html',1,'utils']]]
+  ['nullforcingprovider_15',['NullForcingProvider',['../class_null_forcing_provider.html',1,'']]]
 ];

@@ -1,3 +1,29 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structsimulation__time__params.html" title="simulation_time_params providing configuration information for simulation time period." alt="" coords="5,5,168,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,243,106,268"/>
+<area shape="rect" id="Node000001" href="$structadd__to__summed__nexus.html" title=" " alt="" coords="164,5,322,31"/>
+<area shape="poly" id="edge76_Node000000_Node000001" title=" " alt="" coords="59,227,69,185,87,135,114,84,132,61,152,40,169,29,172,34,155,44,136,64,119,87,92,137,74,187,64,228"/>
+<area shape="rect" id="Node000002" href="$structcompleted__time__step.html" title=" " alt="" coords="171,55,316,80"/>
+<area shape="poly" id="edge77_Node000000_Node000002" title=" " alt="" coords="63,227,76,195,95,159,120,122,152,91,173,79,176,83,155,95,125,125,100,161,81,198,68,229"/>
+<area shape="rect" id="Node000003" href="$classexternal_1_1_external_integration_exception.html" title="Custom exception indicating a problem when integrating with some external component." alt="" coords="154,104,333,145"/>
+<area shape="poly" id="edge78_Node000000_Node000003" title=" " alt="" coords="74,229,108,192,152,156,175,143,178,148,155,160,112,196,78,232"/>
+<area shape="rect" id="Node000004" href="$structinvalid__downstream__request.html" title=" " alt="" coords="175,170,312,210"/>
+<area shape="poly" id="edge79_Node000000_Node000004" title=" " alt="" coords="108,235,182,209,184,214,110,240"/>
+<area shape="rect" id="Node000005" href="$classmodels_1_1bmi_1_1protocols_1_1_protocol_error.html" title=" " alt="" coords="169,235,318,276"/>
+<area shape="poly" id="edge80_Node000000_Node000005" title=" " alt="" coords="121,253,168,253,168,258,121,258"/>
+<area shape="rect" id="Node000006" href="$classmodels_1_1external_1_1_state___exception.html" title="Custom exception indicating bad external model state." alt="" coords="168,300,319,341"/>
+<area shape="poly" id="edge81_Node000000_Node000006" title=" " alt="" coords="110,271,184,297,182,302,108,276"/>
+<area shape="rect" id="Node000007" href="$classrealization_1_1_configuration_exception.html" title="Custom exception indicating a problem when integrating with the provided realization configuration." alt="" coords="163,366,324,406"/>
+<area shape="poly" id="edge82_Node000000_Node000007" title=" " alt="" coords="78,279,112,315,155,351,178,363,175,368,152,355,108,319,74,282"/>
+<area shape="rect" id="Node000008" href="$structrequest__from__empty__nexus.html" title=" " alt="" coords="174,431,313,472"/>
+<area shape="poly" id="edge83_Node000000_Node000008" title=" " alt="" coords="69,282,101,349,125,385,155,416,175,429,172,433,152,420,121,388,96,351,64,284"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="183,496,304,522"/>
+<area shape="poly" id="edge84_Node000000_Node000009" title=" " alt="" coords="63,283,73,327,90,380,117,435,135,460,155,481,184,497,181,502,152,486,131,463,112,438,85,382,68,328,58,284"/>
+<area shape="rect" id="Node000010" href="$struct_units_helper_1_1unit__conversion__exception.html" title=" " alt="" coords="381,390,568,430"/>
+<area shape="poly" id="edge85_Node000009_Node000010" title=" " alt="" coords="317,488,332,481,346,472,355,462,380,441,405,429,408,434,382,446,359,466,349,476,334,486,320,493"/>
+<area shape="rect" id="Node000011" href="$structmodels_1_1bmi_1_1unknown__bmi__type.html" title="Thrown when a BMI type name has no C++ type behind it." alt="" coords="400,455,549,496"/>
+<area shape="poly" id="edge86_Node000009_Node000011" title=" " alt="" coords="319,495,399,484,400,489,319,501"/>
+<area shape="rect" id="Node000012" href="$structmodels_1_1bmi_1_1unsupported__primitive__type.html" title="Thrown when a primitive_type has no C++ type on this platform." alt="" coords="391,520,558,561"/>
+<area shape="poly" id="edge87_Node000009_Node000012" title=" " alt="" coords="319,517,391,527,390,532,318,522"/>
+<area shape="rect" id="Node000013" href="$structngen_1_1sqlite_1_1sqlite__error.html" title=" " alt="" coords="413,586,536,626"/>
+<area shape="poly" id="edge88_Node000009_Node000013" title=" " alt="" coords="286,527,382,570,414,583,412,588,380,575,284,531"/>
 </map>
