@@ -11,12 +11,12 @@
 #include "core/Partition_Data.hpp"
 
 /**
- * Partitioning of a hydrofabric by nexus, for parallel execution with no remote connections. This
- * is how automatic partitioning assigns catchments to ranks.
+ * Partitioning of a hydrofabric by nexus, which is how automatic partitioning assigns catchments to
+ * ranks.
  *
  * Every nexus is assigned to exactly one part, and every catchment is assigned to the part of the
  * nexus it drains to. A nexus thus receives all of its contributions from catchments in its own
- * part, so no part needs a remote connection to another.
+ * part, so no part needs to communicate with another.
  *
  * Nothing here uses MPI; Partition_Automatic.hpp distributes the result across ranks.
  */
@@ -112,8 +112,8 @@ namespace partitioning {
      * Nexuses are cut evenly by @p weights, in the order given; see cut_evenly_by_weight().
      *
      * @param weights Weight of each group of @p nexuses, each finite and nonnegative
-     * @return One PartitionData per part, with `mpi_world_rank` set to the part's index and no
-     *         remote connections. A group with no nexus ID contributes its catchment only.
+     * @return One PartitionData per part, with `mpi_world_rank` set to the part's index. A group
+     *         with no nexus ID contributes its catchment only.
      * @throws std::invalid_argument if @p num_parts is less than 1, if @p weights does not have
      *         one weight per group, or if any weight is negative or not finite
      */

@@ -93,20 +93,12 @@ TEST(AutomaticPartitionTest, ScatterPartitions)
     EXPECT_EQ(local.mpi_world_rank, rank);
     EXPECT_EQ(local.nexus_ids, expected.nexus_ids);
     EXPECT_EQ(local.catchment_ids, expected.catchment_ids);
-    EXPECT_TRUE(local.remote_connections.empty());
     EXPECT_FALSE(local.nexus_ids.empty());
 }
 
 TEST(AutomaticPartitionTest, ScatterPartitionsRejectsWrongPartCount)
 {
     std::vector<PartitionData> const partitions(2);
-    EXPECT_THROW(scatter_partitions(partitions, 0, MPI_COMM_SELF), std::invalid_argument);
-}
-
-TEST(AutomaticPartitionTest, ScatterPartitionsRejectsRemoteConnections)
-{
-    std::vector<PartitionData> partitions(1);
-    partitions[0].remote_connections.emplace_back(1, "nex-1", "cat-1", "orig_cat-to-nex");
     EXPECT_THROW(scatter_partitions(partitions, 0, MPI_COMM_SELF), std::invalid_argument);
 }
 
@@ -150,7 +142,6 @@ TEST(AutomaticPartitionTest, PartitionAutomaticallyFromGeoPackage)
     }
     ASSERT_TRUE(local.has_value());
     EXPECT_FALSE(local->catchment_ids.empty());
-    EXPECT_TRUE(local->remote_connections.empty());
 
     std::set<std::string> const together = {"cat-11223", "cat-11371", "cat-11509"};
     auto const held = std::count_if(together.begin(), together.end(),

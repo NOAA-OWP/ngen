@@ -97,7 +97,7 @@ namespace {
 
     /**
      * Check that @p parts assigns each nexus of @p links, and each catchment along with the nexus
-     * it drains to, to exactly one part, with no remote connections.
+     * it drains to, to exactly one part.
      */
     void expect_consistent(const std::vector<CatchmentNexusLink>& links, const std::vector<PartitionData>& parts)
     {
@@ -105,7 +105,6 @@ namespace {
         std::unordered_map<std::string, int> part_of_catchment;
         for (std::size_t p = 0; p < parts.size(); ++p) {
             EXPECT_EQ(parts[p].mpi_world_rank, static_cast<int>(p));
-            EXPECT_TRUE(parts[p].remote_connections.empty());
             for (const auto& id : parts[p].nexus_ids) {
                 EXPECT_TRUE(part_of_nexus.emplace(id, p).second) << "nexus " << id << " in more than one part";
             }
