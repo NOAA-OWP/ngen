@@ -10,6 +10,7 @@ target_link_libraries(ngen_parallel
   PUBLIC
     NGen::config_header
     NGen::logging
+    NGen::partitioning
 )
 
 if(NGEN_WITH_MPI)
@@ -17,6 +18,7 @@ if(NGEN_WITH_MPI)
     PUBLIC
       MPI::MPI_CXX
       Boost::boost
+      NGen::hydrofabric
   )
   if(NGEN_WITH_PYTHON)
     target_link_libraries(ngen_parallel
