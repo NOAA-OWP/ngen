@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <optional>
+#include <set>
 #include <stdexcept>
 
 #include "GeoPackageHydrofabricReader.hpp"
@@ -385,4 +386,104 @@ TEST(GeoPackage_ReaderFor_Test, geopackage_reader_for_unknown_layer_throws)
     Probe probe{fixtures::write_v2_2()};
     EXPECT_EQ(&probe.reader_for("divides"), &probe.reader_for("nexus"));
     EXPECT_THROW(probe.reader_for("flowpaths"), std::logic_error);
+}
+
+// Reading only connectivity must yield the same features, in the same order and with
+// the same "toid", as reading everything -- and nothing more than the identifiers.
+class GeoPackage_Connectivity_Test : public ::testing::Test
+{
+  protected:
+    static void SetUpTestSuite()
+    {
+        paths = {
+            fixtures::write_v2_2(),
+            fixtures::write_v4_0beta1(),
+            fixtures::write_v4_0(),
+            fixtures::write_v4_0beta1_dangling(),
+            utils::FileChecker::find_first_readable({
+                "test/data/geopackage/example_v4_0_real.gpkg",
+                "../test/data/geopackage/example_v4_0_real.gpkg",
+                "../../test/data/geopackage/example_v4_0_real.gpkg"
+            })
+        };
+    }
+
+    static void expect_connectivity_of(const geojson::GeoJSON& full, const geojson::GeoJSON& connectivity)
+    {
+        // The identifier columns of each release, under their own names and their canonical aliases
+        static const std::set<std::string> identifiers = {
+            "id", "toid", "divide_id", "nexus_id", "nexus_toid", "flowpath_toid"
+        };
+
+        ASSERT_EQ(connectivity->get_size(), full->get_size());
+        EXPECT_TRUE(connectivity->get_bounding_box().empty());
+        for (int i = 0; i < full->get_size(); ++i) {
+            const auto& expected = full->get_feature(i);
+            const auto& actual = connectivity->get_feature(i);
+            ASSERT_EQ(actual->get_id(), expected->get_id());
+            EXPECT_EQ(actual->get_type(), geojson::FeatureType::GeometryCollection) << actual->get_id();
+            EXPECT_TRUE(actual->get_geometry_collection().empty()) << actual->get_id();
+            EXPECT_TRUE(actual->get_bounding_box().empty()) << actual->get_id();
+
+            ASSERT_EQ(actual->has_property("toid"), expected->has_property("toid")) << actual->get_id();
+            if (expected->has_property("toid")) {
+                EXPECT_EQ(actual->get_property("toid").as_string(), expected->get_property("toid").as_string())
+                    << actual->get_id();
+            }
+            for (const std::string& key : actual->property_keys()) {
+                EXPECT_TRUE(identifiers.count(key) > 0) << actual->get_id() << " has extra property " << key;
+            }
+        }
+    }
+
+    static std::vector<std::string> paths;
+};
+
+std::vector<std::string> GeoPackage_Connectivity_Test::paths;
+
+TEST_F(GeoPackage_Connectivity_Test, divides_connectivity)
+{
+    for (const std::string& path : paths) {
+        ASSERT_FALSE(path.empty());
+        SCOPED_TRACE(path);
+        const auto full = ngen::hydrofabric::make_hydrofabric_reader(path)->read_divides({});
+        const auto connectivity =
+            ngen::hydrofabric::make_hydrofabric_reader(path, ngen::hydrofabric::Content::Connectivity)->read_divides({});
+        expect_connectivity_of(full, connectivity);
+    }
+}
+
+TEST_F(GeoPackage_Connectivity_Test, nexus_connectivity)
+{
+    for (const std::string& path : paths) {
+        ASSERT_FALSE(path.empty());
+        SCOPED_TRACE(path);
+        const auto full = ngen::hydrofabric::make_hydrofabric_reader(path)->read_nexus({});
+        const auto connectivity =
+            ngen::hydrofabric::make_hydrofabric_reader(path, ngen::hydrofabric::Content::Connectivity)->read_nexus({});
+        expect_connectivity_of(full, connectivity);
+    }
+}
+
+TEST_F(GeoPackage_Connectivity_Test, subset_connectivity)
+{
+    const auto divides = ngen::hydrofabric::make_hydrofabric_reader(paths[0], ngen::hydrofabric::Content::Connectivity)
+        ->read_divides({"cat-1", "cat-NOT-PRESENT"});
+    ASSERT_EQ(divides->get_size(), 1);
+    EXPECT_EQ(divides->get_feature(0)->get_id(), "cat-1");
+    EXPECT_EQ(divides->get_feature(0)->get_property("toid").as_string(), "nex-1");
+}
+
+TEST_F(GeoPackage_Connectivity_Test, split_hydrofabric_connectivity)
+{
+    const std::string nexus_path = fixtures::write_v4_0_nexus_only();
+    const std::string divides_path = fixtures::write_v4_0_divides_only();
+    const auto reader = ngen::hydrofabric::make_hydrofabric_reader(divides_path, nexus_path,
+                                                                   ngen::hydrofabric::Content::Connectivity);
+    const auto divides = reader->read_divides({});
+    const auto nexus = reader->read_nexus({});
+    ASSERT_EQ(divides->get_size(), 3);
+    ASSERT_EQ(nexus->get_size(), 2);
+    EXPECT_EQ(divides->get_feature(divides->find("cat-2"))->get_property("toid").as_string(), "nex-2");
+    EXPECT_EQ(nexus->get_feature(nexus->find("nex-1"))->get_property("toid").as_string(), "fp-2");
 }

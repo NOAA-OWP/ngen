@@ -76,8 +76,8 @@ void PartitionsParserTest::setupArbitraryExampleCase() {
 }
 
 TEST_F(PartitionsParserTest, TestFileReader)
-{GTEST_SKIP() << "Skipping test"; //test broke, partition file is out of date
-  const std::string file_path = file_search(data_paths,"partition_huc01.json");
+{
+  const std::string file_path = file_search(data_paths,"partition_huc01_100.json");
   Partitions_Parser partitions_parser = Partitions_Parser(ptree_from_json_file(file_path));
 
   partitions_parser.parse_partition_file();
@@ -87,14 +87,14 @@ TEST_F(PartitionsParserTest, TestFileReader)
 }
 
 TEST_F(PartitionsParserTest, DisplayPartitionData)
-{ GTEST_SKIP() << "Skipping test"; //test broke, partition file is out of date
-  const std::string file_path = file_search(data_paths,"partition_huc01.json");
+{
+  const std::string file_path = file_search(data_paths,"partition_huc01_100.json");
   Partitions_Parser partitions_parser = Partitions_Parser(ptree_from_json_file(file_path));
 
   partitions_parser.parse_partition_file();
 
   //In real application, num_partitions may be an input parameter
-  //For unit test, num_partitions value should be consistent with that of partition_huc01.json
+  //For unit test, num_partitions value should be consistent with that of partition_huc01_100.json
   int num_partitions = 100;
 
   int i;
@@ -140,7 +140,29 @@ TEST_F(PartitionsParserTest, empty_remote_test) {
     boost::property_tree::json_parser::read_json(stream, tree);
     auto parser = Partitions_Parser(tree);
     parser.parse_partition_file();
-    for(int i = 0; i < 3; i++) ASSERT_TRUE( parser.get_partition_struct(i).remote_connections.empty() ); 
+    ASSERT_EQ(parser.partition_ranks.size(), 3);
+}
+
+static const std::string remote_test_data = "{"\
+        "\"partitions\":["\
+            "{\"id\":0,"\
+            "\"cat-ids\":[\"cat-67\"],"\
+            "\"nex-ids\":[\"nex-68\"],"\
+            "\"remote-connections\":[{\"mpi-rank\":1,\"nex-id\":\"nex-68\",\"cat-id\":\"cat-52\",\"cat-direction\":\"orig_cat-to-nex\"}]},"\
+            "{\"id\":1,"\
+            "\"cat-ids\":[\"cat-52\"],"\
+            "\"nex-ids\":[],"\
+            "\"remote-connections\":[{\"mpi-rank\":0,\"nex-id\":\"nex-68\",\"cat-id\":\"cat-52\",\"cat-direction\":\"orig_cat-to-nex\"}]}"\
+        "]"\
+    "}";
+
+TEST_F(PartitionsParserTest, remote_connections_rejected) {
+    std::stringstream stream;
+    stream << remote_test_data;
+    boost::property_tree::ptree tree;
+    boost::property_tree::json_parser::read_json(stream, tree);
+    auto parser = Partitions_Parser(tree);
+    ASSERT_THROW(parser.parse_partition_file(), std::runtime_error);
 }
 
 TEST_F(PartitionsParserTest, partition_struct_test) {

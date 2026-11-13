@@ -9,6 +9,7 @@ target_include_directories(ngen_parallel
 target_link_libraries(ngen_parallel
   PUBLIC
     NGen::config_header
+    NGen::geojson
     NGen::logging
 )
 
@@ -17,6 +18,7 @@ if(NGEN_WITH_MPI)
     PUBLIC
       MPI::MPI_CXX
       Boost::boost
+      NGen::hydrofabric
   )
   if(NGEN_WITH_PYTHON)
     target_link_libraries(ngen_parallel
@@ -30,6 +32,8 @@ endif()
 target_sources(ngen_parallel
   PRIVATE
     "${CMAKE_CURRENT_LIST_DIR}/parallel_utils.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Partition_By_Nexus.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Partition_Automatic.cpp"
 )
 
 add_library(ngen_multithreading)

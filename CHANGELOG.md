@@ -11,6 +11,7 @@ We follow the [Semantic Versioning 2.0.0](http://semver.org/) format.
 - Per-domain `rank_subdir` option placing each MPI rank's CSV output under a `rank_<N>/` subdirectory (applied automatically for `per_formulation` under MPI).
 - Initial hydrofabric v4.0 support, alongside the existing v2.2 and v4.0beta1 schemas.
 - A `HydrofabricReader` abstraction covering both supported hydrofabric formats, with GeoJSON and GeoPackage implementations selected by `make_hydrofabric_reader()`. Both drivers now obtain their catchment and nexus features through it instead of dispatching on the file extension themselves.
+- Automatic partitioning under MPI. Given no partition config path, or `-` in its place, `ngen` partitions the hydrofabric itself during initialization: rank 0 reads only the divides' connectivity, assigns each nexus and every catchment that drains to it to one rank, balancing the ranks' loads, and sends each rank its part. No partition file or separate partitioning step is needed. See [Distributed Processing](doc/DISTRIBUTED_PROCESSING.md#automatic-partitioning).
 
 ### Changed
 
@@ -30,6 +31,8 @@ We follow the [Semantic Versioning 2.0.0](http://semver.org/) format.
 ### Removed
 
 - The `output_precision` formulation parameter in realization configs. It has had no effect since catchment output moved to the output manager; text precision is the `output` block's `precision` value.
+- Support for remote nexus connections between MPI ranks. Each partition must now hold every catchment that drains to each of its nexuses, as automatic partitioning ensures, so ranks no longer exchange flows during a simulation. A partition config whose partitions list remote connections is rejected.
+- The `partitionGenerator` tool, whose partitions require remote nexus connections. Use automatic partitioning instead. The build puts a script in its place that says so and fails.
 
 ### Fixed
 

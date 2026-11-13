@@ -6,11 +6,7 @@
 #include <Formulation.hpp>
 #include <CatchmentOutputsMgr.hpp>
 
-#if NGEN_WITH_MPI
-#include "HY_Features_MPI.hpp"
-#else
 #include "HY_Features.hpp"
-#endif
 
 // Out-of-line so the shared_ptr members are destroyed where their (possibly forward-declared) types
 // are complete.

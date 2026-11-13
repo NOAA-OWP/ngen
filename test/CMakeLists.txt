@@ -407,28 +407,18 @@ ngen_add_test(
         NGen::output
 )
 
-########################## MPI Remote Nexus Tests
-ngen_add_test(
-    test_remote_nexus
-    OBJECTS
-        core/nexus/NexusRemoteTests.cpp
-    LIBRARIES
-        NGen::core_nexus
-    REQUIRES
-        NGEN_WITH_MPI
-)
-
 ########################## Specialized MPI Tests
 if (NGEN_WITH_MPI)
     find_package(MPI REQUIRED COMPONENTS CXX)
     add_executable(test_mpi_unit
             gtest_mpi_main.cpp                          # Special test main() for use with MPI
             utils/PerFormulationNexusOutputMgr_Test.cpp # Involved test files
+            utils/Partition_Automatic_Test.cpp
     )
     # TODO: this might need more
 
     target_include_directories(test_mpi_unit PUBLIC include/utils)
-    target_link_libraries(test_mpi_unit PUBLIC gtest NGen::core NGen::core_nexus NGen::output NetCDF MPI::MPI_CXX)
+    target_link_libraries(test_mpi_unit PUBLIC gtest NGen::core NGen::core_nexus NGen::geojson NGen::output NGen::parallel NGen::hydrofabric NetCDF MPI::MPI_CXX)
     target_compile_definitions(test_mpi_unit PUBLIC NGEN_WITH_MPI NGEN_MPI_UNIT_TESTS)
 
     #set_target_properties(test_mpi_unit PROPERTIES CROSSCOMPILING_EMULATOR '${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2')
@@ -465,18 +455,14 @@ ngen_add_test(
     #   NGEN_WITH_MPI
 )
 
-########################## Partition_One Tests
+########################## Partition By Nexus Tests
 ngen_add_test(
-    test_partition_one
+    test_partition_by_nexus
     OBJECTS
-        utils/Partition_One_Test.cpp
+        utils/Partition_By_Nexus_Test.cpp
     LIBRARIES
-        gmock
-        NGen::core
+        NGen::parallel
         NGen::geojson
-        NGen::geopackage
-    REQUIRES
-        NGEN_WITH_SQLITE
 )
 
 ########################## MultiLayer Tests

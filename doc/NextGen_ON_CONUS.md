@@ -7,7 +7,6 @@ This documentation provides instructions on all neccessary steps and components 
 * [Setting Up the Environment](#setting-up-the-environment)
 * [Build the Executable](#build-the-executable)
 * [CONUS Hydrofabric](#conus-hydrofabric)
-* [Generate Partition For Parallel Computation](#generate-partition-for-parallel-computation)
 * [Prepare the Input Data](#prepare-the-input-data)
 * [Build the Realization Configurations](#build-the-realization-configurations)
 * [Run Computations with submodules](#run-computations-with-submodules)
@@ -70,7 +69,7 @@ Suppose the above script is named `build_mpi`, execute the following command to 
 
 `source build_mpi`
 
-This will build an executable in the `cmake_build_mpi` directory named `ngen` and another named `partitionGenerator` as well as all the unit tests in the `cmake_build_mpi/test`. The `NGEN_WITH_EXTERN_*` options build the SLoTH, TOPMODEL, CFE, PET, and Noah-OWP-Modular libraries, along with the `iso_c_fortran_bmi` middleware, under `cmake_build_mpi/extern-libs/`, using the same compilers and configuration as `ngen` itself.
+This will build an executable in the `cmake_build_mpi` directory named `ngen` as well as all the unit tests in the `cmake_build_mpi/test`. The `NGEN_WITH_EXTERN_*` options build the SLoTH, TOPMODEL, CFE, PET, and Noah-OWP-Modular libraries, along with the `iso_c_fortran_bmi` middleware, under `cmake_build_mpi/extern-libs/`, using the same compilers and configuration as `ngen` itself.
 
 The `SoilFreezeThaw` and `SoilMoistureProfiles` submodules are not built by the `ngen` build system, so build them explicitly into the same location. For simplicity, we display the content of a script which we name `build_libs`:
 
@@ -97,16 +96,6 @@ The CONUS hydrofabric is downloaded from [here](https://www.lynker-spatial.com/#
 
 As the file is fairly large, it is worth some consideration to store it in a proper place, then simply build a symbolic link in the `cmake_build_mpi` build directory, thus named `./hydrofabric/conus.gpkg`. Note the easiest way to create the symbolic link is to create a `hydrofabric` directory and then create a link to that directory.
 
-# Generate Partition For Parallel Computation
-
-For parallel computation using MPI on hydrofabric, a [partition generate tool](DISTRIBUTED_PROCESSING.md#partitioning-config-generator) is used to partition the hydrofabric features ids into a number of partitions equal to the number of MPI processing CPU cores. To generate the partition file, run the following command from inside `cmake_build_mpi`:
-
-```
-./partitionGenerator ./hydrofabric/conus.gpkg ./hydrofabric/conus.gpkg ./conus_partition_32.json 32 '' ''
-```
-
-In the command above, `conus.gpkg` is the NextGen hydrofabric version 2.01 for CONUS, `conus_partition_32.json` is the partition file that contains all features ids and their interconnected network information. The number `32` is intended number of processing cores for running parallel build `ngen` using MPI. The last two empty strings, as indicated by `''`, indicate there is no subsetting, i.e., we intend to run the whole CONUS hydrofabric.
-
 # Prepare the Input Data
 Input data includes the forcing data and initial parameter data for various submodules. These depend on what best suits the user's need. For our case, as of this documentation, beside forcing data, which can be accessed at `./forcing/NextGen_forcing_2016010100.nc` using the symbolic link scheme, we also generated initial input data for various submodules `noah-owp-modular`, `PET`, `CFE`, `SoilMoistureProfiles (SMP)`, `SoilFreezeThaw (SFT)`. The first three are located in `./conus_config/`, the SMP initial configs are located in `./conus_smp_configs/` and the SFT initial configs are located in `./conus_sft_configs/`. As with the hydrofabric, these paths are relative to the `cmake_build_mpi` directory from which `ngen` is run.
 For code used to generate the initial config files for the various modules, the interested users are directed to this [web location](https://github.com/NOAA-OWP/ngen-cal/tree/master/python/ngen_config_gen). 
@@ -129,24 +118,24 @@ sloth+noah-owp-modular+pet+smp+sft+cfe (conus_bmi_multi_realization_config_w_slo
 
 # Run Computations with Submodules
 
-With all preparation steps completed, we are now ready to run computations. We use MPI as our parallel processing application with 32 cores as an example. Users are free to choose whatever number cores they want, just make sure you will need to have the appropriate corresponding partition JSON file for the number of cores used. The command line for running a MPI job is as follows, starting from the top project directory:
+With all preparation steps completed, we are now ready to run computations. We use MPI as our parallel processing application with 32 cores as an example. Users are free to choose whatever number of cores they want; `ngen` [partitions the hydrofabric automatically](DISTRIBUTED_PROCESSING.md#automatic-partitioning) among them. The command line for running a MPI job is as follows, starting from the top project directory:
 
 For a simple example run and quick turn around, you can run:
 
 ```
 cd cmake_build_mpi
-mpirun -n 32 ./ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth.json conus_partition_32.json
+mpirun -n 32 ./ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth.json
 ```
 
 For a more substantial example simulation, you can run:
 
 ```
-mpirun -n 32 ./ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah.json conus_partition_32.json
+mpirun -n 32 ./ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah.json
 ```
 
 For an example taking into account more realistic contributions, you can try:
 ```
-mpirun -n 32 ./ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json conus_partition_32.json
+mpirun -n 32 ./ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_smp_sft_cfe.json
 ```
 
 where `ngen` is the executable we build in the [Building the Executable](#build-the-executable) section. All other terms have been discussed above in details. With the current existing realization config files, the above jobs run 10 days simulation time on CONUS scale.
@@ -216,7 +205,7 @@ FC=mpif90 ./compiler.sh
 After successfully building `t-route`, you can run `ngen` with routing. Note that we have several realization configuration files and the `routing_config_CONUS.yaml` file for running `ngen` with routing. The realization configuration file and `routing_config_CONUS.yaml` specify where the input and output files are. For routing, we assume the existence of a `stream_output_dir` directory for writing output files. You need to do `mkdir stream_output_dir` in `cmake_build_mpi` before running `ngen`. With that, we can run an example from inside `cmake_build_mpi` with the command:
 
 ```
-mpirun -n 32 ./ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_trt.json conus_partition_32.json
+mpirun -n 32 ./ngen ./hydrofabric/conus.gpkg '' ./hydrofabric/conus.gpkg '' data/baseline/conus_bmi_multi_realization_config_w_sloth_noah_pet_cfe_trt.json
 ```
 
 If your run is successful, you should see the directory `stream_output_dir` populated with output files in NetCDF format with each file corresponding to each hour between 2016-01-01 to 2016-01-10.

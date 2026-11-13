@@ -55,10 +55,6 @@ class Visitor : public geojson::FeatureVisitor {
             this->types.push_back("CollectionFeature");
         }
 
-        void visit(geojson::SentinelFeature *feature) override {
-            this->types.push_back("SentinelFeature");
-        }
-
         std::string get(int index) {
             if( index >= 0 && index < types.size() )
               return this->types[index];

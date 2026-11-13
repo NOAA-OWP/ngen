@@ -42,11 +42,13 @@ class GeoPackageHydrofabricReader : public HydrofabricReader
      * @param[in] nexus_reader Reader for the GeoPackage holding the `nexus` layer, or no value when
      *            that layer lives in the same file as the divides
      * @param[in] version Hydrofabric schema version detected for this hydrofabric
+     * @param[in] content What to read of each feature
      */
     GeoPackageHydrofabricReader(
         geopackage::GeoPackageReader divides_reader,
         std::optional<geopackage::GeoPackageReader> nexus_reader,
-        HydrofabricVersion version
+        HydrofabricVersion version,
+        Content content
     );
 
     /**
@@ -83,6 +85,20 @@ class GeoPackageHydrofabricReader : public HydrofabricReader
     virtual void check_required_columns(const std::string& layer) const;
 
     /**
+     * The columns of @p layer, besides its id column, that a Content::Connectivity read needs:
+     * those normalize_divides() or normalize_nexus() translate into "toid".
+     *
+     * @param[in] layer Hydrofabric layer about to be read
+     * @return Names of the columns to read
+     */
+    virtual std::vector<std::string> connectivity_columns(const std::string& layer) const = 0;
+
+    /**
+     * The columns of @p layer to read for this reader's Content, or no value for every column.
+     */
+    std::optional<std::vector<std::string>> columns_to_read(const std::string& layer) const;
+
+    /**
      * Bring a freshly read divides collection into ngen's canonical vocabulary, in place.
      *
      * The generic read stores each column under the file's own name for it, but for simplicity,
@@ -114,6 +130,7 @@ class GeoPackageHydrofabricReader : public HydrofabricReader
     geopackage::GeoPackageReader divides_reader_;
     std::optional<geopackage::GeoPackageReader> nexus_reader_;
     const HydrofabricVersion version_;
+    const Content content_;
 };
 
 /**
@@ -129,13 +146,17 @@ class V2_2GeoPackageHydrofabricReader : public GeoPackageHydrofabricReader
     /**
      * @param[in] divides_reader Reader for the GeoPackage holding the `divides` layer
      * @param[in] nexus_reader Reader for the `nexus` layer's GeoPackage, if a separate file
+     * @param[in] content What to read of each feature
      */
     V2_2GeoPackageHydrofabricReader(
         geopackage::GeoPackageReader divides_reader,
-        std::optional<geopackage::GeoPackageReader> nexus_reader
+        std::optional<geopackage::GeoPackageReader> nexus_reader,
+        Content content = Content::Full
     );
 
   protected:
+    std::vector<std::string> connectivity_columns(const std::string& layer) const override;
+
     void normalize_divides(geojson::FeatureCollection& divides) const override;
 
     void normalize_nexus(geojson::FeatureCollection& nexus) const override;
@@ -156,14 +177,22 @@ class AbstractV4GeoPackageHydrofabricReader : public GeoPackageHydrofabricReader
      * @param[in] divides_reader Reader for the GeoPackage holding the `divides` layer
      * @param[in] nexus_reader Reader for the `nexus` layer's GeoPackage, if a separate file
      * @param[in] version Which v4 variant was detected
+     * @param[in] content What to read of each feature
      */
     AbstractV4GeoPackageHydrofabricReader(
         geopackage::GeoPackageReader divides_reader,
         std::optional<geopackage::GeoPackageReader> nexus_reader,
-        HydrofabricVersion version
+        HydrofabricVersion version,
+        Content content
     );
 
     void check_required_columns(const std::string& layer) const override;
+
+    /**
+     * `nexus_toid` for nexuses. Nothing for divides, as a variant that reads a divide's toid from
+     * the divides layer itself names the column.
+     */
+    std::vector<std::string> connectivity_columns(const std::string& layer) const override;
 
     void normalize_nexus(geojson::FeatureCollection& nexus) const override;
 
@@ -201,14 +230,18 @@ class V4_0GeoPackageHydrofabricReader : public AbstractV4GeoPackageHydrofabricRe
     /**
      * @param[in] divides_reader Reader for the GeoPackage holding the `divides` layer
      * @param[in] nexus_reader Reader for the `nexus` layer's GeoPackage, if a separate file
+     * @param[in] content What to read of each feature
      */
     V4_0GeoPackageHydrofabricReader(
         geopackage::GeoPackageReader divides_reader,
-        std::optional<geopackage::GeoPackageReader> nexus_reader
+        std::optional<geopackage::GeoPackageReader> nexus_reader,
+        Content content = Content::Full
     );
 
   protected:
     void check_required_columns(const std::string& layer) const override;
+
+    std::vector<std::string> connectivity_columns(const std::string& layer) const override;
 
     void attribute_divide_toid(geojson::PropertyMap& properties, const std::string& id) const override;
 };
@@ -226,10 +259,12 @@ class V4_0Beta1GeoPackageHydrofabricReader : public AbstractV4GeoPackageHydrofab
     /**
      * @param[in] divides_reader Reader for the GeoPackage holding the `divides` layer
      * @param[in] nexus_reader Reader for the `nexus` layer's GeoPackage, if a separate file
+     * @param[in] content What to read of each feature
      */
     V4_0Beta1GeoPackageHydrofabricReader(
         geopackage::GeoPackageReader divides_reader,
-        std::optional<geopackage::GeoPackageReader> nexus_reader
+        std::optional<geopackage::GeoPackageReader> nexus_reader,
+        Content content = Content::Full
     );
 
     geojson::GeoJSON read_divides(const std::vector<std::string>& ids = {}) override;
