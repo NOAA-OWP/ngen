@@ -11,6 +11,7 @@ We follow the [Semantic Versioning 2.0.0](http://semver.org/) format.
 - Per-domain `rank_subdir` option placing each MPI rank's CSV output under a `rank_<N>/` subdirectory (applied automatically for `per_formulation` under MPI).
 - Initial hydrofabric v4.0 support, alongside the existing v2.2 and v4.0beta1 schemas.
 - A `HydrofabricReader` abstraction covering both supported hydrofabric formats, with GeoJSON and GeoPackage implementations selected by `make_hydrofabric_reader()`. Both drivers now obtain their catchment and nexus features through it instead of dispatching on the file extension themselves.
+- Automatic partitioning under MPI. Given no partition config path, or `-` in its place, `ngen` partitions the hydrofabric itself during initialization: rank 0 reads only the divides' connectivity, assigns each nexus and every catchment that drains to it to one rank, balancing the ranks' loads, and sends each rank its part. No partition file or separate partitioning step is needed. See [Distributed Processing](doc/DISTRIBUTED_PROCESSING.md#automatic-partitioning).
 
 ### Changed
 

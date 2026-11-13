@@ -39,12 +39,18 @@
 #define MPI_HF_SUB_CLI_FLAG "--subdivided-hydrofabric"
 #endif
 
+// Given in place of a partition file path, partition automatically during initialization
+#ifndef AUTOMATIC_PARTITION_ARG
+#define AUTOMATIC_PARTITION_ARG "-"
+#endif
+
 #include <mpi.h>
 #include "parallel_utils.h"
 #include "core/Partition_Parser.hpp"
 #include <HY_Features_MPI.hpp>
 
 #include "core/Partition_One.hpp"
+#include "utilities/Partition_Automatic.hpp"
 
 #endif // NGEN_WITH_MPI
 
@@ -192,7 +198,7 @@ int main(int argc, char* argv[]) {
     //arg 3 is nexus_data file path
     //arg 4 is nexus subset ids, comma seperated string of ids (no spaces!), "all" for all
     //arg 5 is realization config path
-    //arg 7 is the partition file path
+    //arg 7 is the partition file path, or "-" or nothing to partition automatically during initialization
     //arg 8 is an optional flag that driver should, if not already preprocessed this way, subdivided the hydrofabric
 
     std::vector<std::string> catchment_subset_ids;
@@ -270,9 +276,9 @@ int main(int argc, char* argv[]) {
         if (argc >= 7) {
             PARTITION_PATH = argv[6];
         }
-        else if (mpi_num_procs > 1) {
-            std::cout << "Missing required argument for partition file path." << std::endl;
-            exit(-1);
+        else {
+            // Without a partition config, partition automatically
+            PARTITION_PATH = AUTOMATIC_PARTITION_ARG;
         }
 
         if (argc >= 8) {
@@ -307,8 +313,13 @@ int main(int argc, char* argv[]) {
                 !utils::FileChecker::file_is_readable(REALIZATION_CONFIG_PATH, "Realization config");
 
         #if NGEN_WITH_MPI
-        if (!PARTITION_PATH.empty()) {
+        if (!PARTITION_PATH.empty() && PARTITION_PATH != AUTOMATIC_PARTITION_ARG) {
             error = error || !utils::FileChecker::file_is_readable(PARTITION_PATH, "Partition config");
+        }
+
+        if (is_subdivided_hydrofabric_wanted && PARTITION_PATH == AUTOMATIC_PARTITION_ARG) {
+            std::cout << MPI_HF_SUB_CLI_FLAG << " requires a partition file, not '" << AUTOMATIC_PARTITION_ARG << "'" << std::endl;
+            exit(-1);
         }
 
         // Do some extra steps if we expect to load a subdivided hydrofabric
@@ -353,7 +364,20 @@ int main(int argc, char* argv[]) {
     
     #if NGEN_WITH_MPI
     PartitionData local_data;
-    if (mpi_num_procs > 1) {
+    if (mpi_num_procs > 1 && PARTITION_PATH == AUTOMATIC_PARTITION_ARG) {
+        if (!nexus_subset_ids.empty()) {
+            std::cerr << "Warning: CLI provided nexus subset will be ignored when partitioning automatically";
+        }
+        std::optional<PartitionData> automatic = ngen::partitioning::partition_automatically(
+            catchmentDataFile, nexusDataFile, catchment_subset_ids, 0, MPI_COMM_WORLD);
+        if (!automatic) {
+            exit(-1);
+        }
+        local_data = std::move(*automatic);
+        nexus_subset_ids = std::vector<std::string>(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
+        catchment_subset_ids = std::vector<std::string>(local_data.catchment_ids.begin(), local_data.catchment_ids.end());
+    }
+    else if (mpi_num_procs > 1) {
         Partitions_Parser partition_parser(ptree_from_json_file(PARTITION_PATH));
         // TODO: add something here to make sure this step worked for every rank, and maybe to checksum the file
         partition_parser.parse_partition_file();

@@ -5,6 +5,7 @@ Distributed multi-process execution of the Nextgen driver (_ngen_) is possible t
 * [Overview](#overview)
 * [Building the MPI-Enabled Nextgen Driver](#building-the-mpi-enabled-nextgen-driver)
 * [Running the MPI-Enabled Nextgen Driver](#running-the-mpi-enabled-nextgen-driver)
+  * [Automatic Partitioning](#automatic-partitioning)
   * [Subdivided Hydrofabric](#subdivided-hydrofabric)
       * [Driver Runtime Differences](#driver-runtime-differences)
       * [File Names](#file-names)
@@ -12,6 +13,7 @@ Distributed multi-process execution of the Nextgen driver (_ngen_) is possible t
   * [Examples](#examples)
     * [Example 1 - Full Hydrofabric](#example-1---full-hydrofabric)
     * [Example 2 - Subdivided Hydrofabric](#example-2---subdivided-hydrofabric)
+    * [Example 3 - Automatic Partitioning](#example-3---automatic-partitioning)
 * [Partition Config Generator](#partitioning-config-generator)
 
 # Overview
@@ -33,8 +35,13 @@ Otherwise, if using the standard build process with CMake, the driver is built u
 # Running the MPI-Enabled Nextgen Driver
 
 * The MPI-enabled driver is run by wrapping within the `mpirun` command, supplying also the number of processes to start.  
-* An additional driver [CLI arg](../README.md#usage) is also required, to supply the path to the partitioner config.
+* An additional driver [CLI arg](../README.md#usage) may supply the path to the partitioner config. Without it, or given `-` in its place, the driver [partitions automatically](#automatic-partitioning).
 * Another flag may also optionally be provided as a CLI arg to [adjust the way the driver processes load the hydrofabric](#subdivided-hydrofabric).
+
+## Automatic Partitioning
+Given no partition config path, or `-` in its place, the driver partitions the hydrofabric itself during initialization. Every nexus is assigned to one rank, along with all of the catchments that drain to it, so no rank needs a remote connection to another. Rank 0 reads only the divides' connectivity, without their geometry or other attributes, divides the nexuses among the ranks in contiguous blocks by count in the order the hydrofabric stores them, and sends each rank its part. A divide that drains to no nexus is placed as if it were a nexus of its own.
+
+If the catchment subset CLI arg names catchments, only those catchments are partitioned; the nexus subset arg is ignored. Every rank must receive at least one catchment, so there can be no more ranks than nexuses. This cannot be combined with `--subdivided-hydrofabric`, which requires a partition config.
 
 ## Subdivided Hydrofabric
 Certain hydrofabrics may currently require too much memory to be fully loaded by each individual MPI rank/process, which is the default behavior prior to initializing individual catchment formulations.  To work around this, it is possible to include the following flag as the final command line argument:
@@ -76,6 +83,15 @@ mpirun -n 4 cmake-build/ngen catchment_data.geojson "all" nexus_data.geojson "al
 * each process only load files for a subdivided portion of the hydrofabric that corresponds to a given process's partition
 ```
 mpirun -n 8 cmake-build/ngen catchment_data.geojson "all" nexus_data.geojson "all" realization_config.json partition_config.json --subdivided-hydrofabric
+```
+
+### Example 3 - Automatic Partitioning
+* the CMake build directory is named `cmake-build/`
+* sixteen MPI processes are started
+* the hydrofabric GeoPackage and realization config are located in the current working directory
+* the driver partitions the hydrofabric automatically, with no partition config
+```
+mpirun -n 16 cmake-build/ngen hydrofabric.gpkg "all" hydrofabric.gpkg "all" realization_config.json
 ```
 
 # Partitioning Config Generator
