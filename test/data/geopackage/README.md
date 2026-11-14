@@ -2,7 +2,7 @@
 
 Most of the GeoPackages the geopackage tests read are **not** in this
 directory. They are built in C++ at test time by
-`test/geopackage/fixture_builders.cpp`, written into the test temp directory,
+`test/hydrofabric/fixture_builders.cpp`, written into the test temp directory,
 and thrown away with it. Only three fixtures are committed here, each because
 it cannot be built from scratch.
 
@@ -30,7 +30,7 @@ as a value.
 
 ## Generated at test time
 
-`test/geopackage/fixture_builders.hpp` declares one builder per fixture.
+`test/hydrofabric/fixture_builders.hpp` declares one builder per fixture.
 Each writes its GeoPackage into `testing::TempDir()`, replacing whatever was
 there, and returns the path; a test suite calls the builders it needs from
 `SetUpTestSuite`. The writes are deterministic — including a constant
@@ -55,6 +55,10 @@ The last two exist as a pair. Neither can be identified alone — `nexus` marks 
 family, and only `divides.flowpath_toid` separates v4.0 from beta1 — so together they
 cover detecting a hydrofabric whose layers live in two files, which the drivers have
 always accepted.
+
+`test/geopackage/aux_fixture_builders.hpp` declares one more, `write_example_aux()`.
+Rather than building from scratch, it copies the committed `example.gpkg` and adds
+two attribute tables to the copy, for the auxiliary attribute join tests.
 
 The first three describe the **same topology**, so a test can load two of them
 and compare the results directly even though the loader reaches `toid`
