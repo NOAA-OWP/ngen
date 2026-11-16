@@ -15,7 +15,6 @@ We follow the [Semantic Versioning 2.0.0](http://semver.org/) format.
 
 ### Changed
 
-- `partitionGenerator` partitions as automatic partitioning does, by nexus, writing partitions with no remote connections. Its nexus subset argument is ignored.
 - A GeoPackage with no `nexus` layer is no longer read as a hydrofabric. It was previously treated as v2.2 and read anyway; it is now reported as not a hydrofabric. Reading such a file as a plain GeoPackage of arbitrary layers is still supported, through `ngen::geopackage::GeoPackageReader`, which carries no hydrofabric knowledge at all.
 - Catchment and nexus data paths must name the same format. Passing a GeoPackage for one and a GeoJSON file for the other is now an error rather than being honored per path.
 - Hydrofabric data files are recognized by their contents rather than their file names. A GeoPackage is identified by the SQLite header it begins with, so it is read as one whatever it is called, and anything else is read as GeoJSON. The previous test required a name ending in a lowercase `gpkg`, which missed `.GPKG`, matched unrelated names ending in those letters, and — because loading a subdivided hydrofabric under MPI appends a rank suffix to both data paths — missed every GeoPackage in that mode.
@@ -33,6 +32,7 @@ We follow the [Semantic Versioning 2.0.0](http://semver.org/) format.
 
 - The `output_precision` formulation parameter in realization configs. It has had no effect since catchment output moved to the output manager; text precision is the `output` block's `precision` value.
 - Support for remote nexus connections between MPI ranks. Each partition must now hold every catchment that drains to each of its nexuses, as automatic partitioning ensures, so ranks no longer exchange flows during a simulation. A partition config whose partitions list remote connections is rejected.
+- The `partitionGenerator` tool, whose partitions require remote nexus connections. Use automatic partitioning instead. The build puts a script in its place that says so and fails.
 - Support for subdivided hydrofabrics: the generation and distribution of per-rank hydrofabric files, and the optional `dmod.subsetservice` dependency it used. Each rank reads only its partition's features from a GeoPackage hydrofabric. The `--subdivided-hydrofabric` flag is still accepted, but ignored with a warning.
 
 ### Fixed
