@@ -35,6 +35,7 @@
 
 #if NGEN_WITH_MPI
 
+// No longer supported, but still recognized so that it can be ignored with a warning
 #ifndef MPI_HF_SUB_CLI_FLAG
 #define MPI_HF_SUB_CLI_FLAG "--subdivided-hydrofabric"
 #endif
@@ -135,7 +136,6 @@ int main(int argc, char* argv[]) {
     std::string catchmentDataFile         = "";
     std::string nexusDataFile             = "";
     std::string REALIZATION_CONFIG_PATH   = "";
-    bool is_subdivided_hydrofabric_wanted = false;
     std::string PARTITION_PATH = "";
 
     // This default value should lead to behavior matching the single-process case in the standalone or non-MPI case
@@ -196,7 +196,7 @@ int main(int argc, char* argv[]) {
     //arg 4 is nexus subset ids, comma seperated string of ids (no spaces!), "all" for all
     //arg 5 is realization config path
     //arg 7 is the partition file path, or "--auto-partition" or nothing to partition automatically during initialization
-    //arg 8 is an optional flag that driver should, if not already preprocessed this way, subdivided the hydrofabric
+    //arg 8 may be the no longer supported --subdivided-hydrofabric flag, which is ignored
 
     std::vector<std::string> catchment_subset_ids;
     std::vector<std::string> nexus_subset_ids;
@@ -280,10 +280,12 @@ int main(int argc, char* argv[]) {
 
         if (argc >= 8) {
             if (strcmp(argv[7], MPI_HF_SUB_CLI_FLAG) == 0) {
-                is_subdivided_hydrofabric_wanted = true;
+                if (mpi_rank == 0) {
+                    std::cerr << "Warning: " << MPI_HF_SUB_CLI_FLAG << " is no longer supported, and is ignored" << std::endl;
+                }
             }
             else if (mpi_num_procs > 1) {
-                std::cout << "Unexpected arg '" << argv[7] << "'; try " << MPI_HF_SUB_CLI_FLAG << std::endl;
+                std::cout << "Unexpected arg '" << argv[7] << "'" << std::endl;
                 exit(-1);
             }
         }
@@ -312,32 +314,6 @@ int main(int argc, char* argv[]) {
         #if NGEN_WITH_MPI
         if (!PARTITION_PATH.empty() && PARTITION_PATH != AUTOMATIC_PARTITION_ARG) {
             error = error || !utils::FileChecker::file_is_readable(PARTITION_PATH, "Partition config");
-        }
-
-        if (is_subdivided_hydrofabric_wanted && PARTITION_PATH == AUTOMATIC_PARTITION_ARG) {
-            std::cout << MPI_HF_SUB_CLI_FLAG << " requires a partition file, not '" << AUTOMATIC_PARTITION_ARG << "'" << std::endl;
-            exit(-1);
-        }
-
-        // Do some extra steps if we expect to load a subdivided hydrofabric
-        if (is_subdivided_hydrofabric_wanted) {
-            // Ensure the hydrofabric is subdivided (either already or by doing it now), and then
-            // adjust these paths
-            if (parallel::is_hydrofabric_subdivided(catchmentDataFile, MPI_COMM_WORLD, true) ||
-                parallel::subdivide_hydrofabric(
-                    MPI_COMM_WORLD,
-                    catchmentDataFile,
-                    nexusDataFile,
-                    PARTITION_PATH
-                )) {
-                catchmentDataFile += "." + std::to_string(mpi_rank);
-                nexusDataFile += "." + std::to_string(mpi_rank);
-            }
-            // If subdivided was needed, subdividing was not already done, and we could not subdivide just now ...
-            else {
-                std::cout << "Unable to successfully preprocess hydrofabric files into subdivided files per partition.";
-                error = true;
-            }
         }
         #endif // NGEN_WITH_MPI
 

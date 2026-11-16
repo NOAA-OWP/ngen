@@ -33,6 +33,7 @@ We follow the [Semantic Versioning 2.0.0](http://semver.org/) format.
 
 - The `output_precision` formulation parameter in realization configs. It has had no effect since catchment output moved to the output manager; text precision is the `output` block's `precision` value.
 - Support for remote nexus connections between MPI ranks. Each partition must now hold every catchment that drains to each of its nexuses, as automatic partitioning ensures, so ranks no longer exchange flows during a simulation. A partition config whose partitions list remote connections is rejected.
+- Support for subdivided hydrofabrics: the generation and distribution of per-rank hydrofabric files, and the optional `dmod.subsetservice` dependency it used. Each rank reads only its partition's features from a GeoPackage hydrofabric. The `--subdivided-hydrofabric` flag is still accepted, but ignored with a warning.
 
 ### Fixed
 

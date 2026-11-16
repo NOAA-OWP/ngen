@@ -209,8 +209,7 @@ TEST_F(HydrofabricReaderFactory_Test, detect_rejects_mixed_formats)
 
 // Format comes from the file's own header, so these cover the names an extension test got wrong.
 
-// The case that matters most, because ngen produces it: loading a subdivided hydrofabric under MPI
-// appends a rank suffix to both data paths, leaving a GeoPackage named `....gpkg.0`.
+// A GeoPackage with a suffix after its extension, such as a per-rank `....gpkg.0`, is still one.
 TEST_F(HydrofabricReaderFactory_Test, detect_geopackage_with_rank_suffix)
 {
     const std::string suffixed = copy_as(v4_0_path, "example_v4_0.gpkg.0");
