@@ -24,7 +24,7 @@ The basic design starts with partitioning configuration.  It defines the groupin
 
 Partition configurations are expected to be represented in JSON.  There is a [partition generator tool](#partitioning-config-generator) available separately from the main driver for creating these files.
 
-When executed, the driver is provided a valid partitioning configuration file path [as a command line arg](../README.md#usage).  Each rank loads [all or part](#subdivided-hydrofabric) of the supplied hydrofabric, and then constructs the specific model formulations appropriate for the features within its partition.  Data communication across partition boundaries is handled by a [remote nexus type](MPI_REMOTE_NEXUS.md).
+When executed, the driver is provided a partitioning configuration file path [as a command line arg](../README.md#usage), or partitions automatically without one.  Each rank loads [all or part](#subdivided-hydrofabric) of the supplied hydrofabric, and then constructs the specific model formulations appropriate for the features within its partition.  Data communication across partition boundaries is handled by a [remote nexus type](MPI_REMOTE_NEXUS.md).
 
 # Building the MPI-Enabled Nextgen Driver
 
@@ -96,7 +96,7 @@ mpirun -n 16 cmake-build/ngen hydrofabric.gpkg "all" hydrofabric.gpkg "all" real
 
 # Partitioning Config Generator
 
-A separate artifact can be built for generating partition configs.  This is the _partitionGenerator_ executable, built in the CMake build directory either when the entire project or specifically the `partitionGenerator` CMake target is built.  The syntax for using is:
+A separate artifact can be built for generating partition configs.  This is the _partitionGenerator_ executable, built in the CMake build directory either when the entire project or specifically the `partitionGenerator` CMake target is built.  It partitions a hydrofabric as the driver does when it [partitions automatically](#automatic-partitioning), and writes the partitions to a file, which can then be inspected, reused, or given to the driver with [`--subdivided-hydrofabric`](#subdivided-hydrofabric).  The syntax for using is:
 
 `<cmake-build-dir>/partitionGenerator <catchment_data_file> <nexus_data_file> <output_partition_config> <num_partitions> '' ''`
 
@@ -104,4 +104,4 @@ E.g.:
 
 `./cmake-build-debug/partitionGenerator ./data/huc01_hydrofabric/catchment_data.geojson ./data/huc01_hydrofabric/nexus_data.geojson ./partition_config.json 4 '' ''`
 
-The last two arguments are intended to allow for partitioning only a subset of the entire hydrofabric.  Note also that single-quotes must be used.  At this time, these are required, but it is recommended they be left as empty strings.  
+The last two arguments are intended to allow for partitioning only a subset of the entire hydrofabric: the first lists catchment IDs to partition, while the second, for nexus IDs, is ignored, since each nexus is partitioned with the catchments that drain to it.  Note also that single-quotes must be used.  At this time, these are required, but it is recommended they be left as empty strings.

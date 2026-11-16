@@ -409,7 +409,7 @@ if(NGEN_WITH_SQLITE)
     target_include_directories(partitionGenerator PUBLIC AFTER "${NGEN_INC_DIR}/geopackage")
 endif()
 
-target_link_libraries(partitionGenerator PUBLIC NGen::core NGen::geojson NGen::hydrofabric)
+target_link_libraries(partitionGenerator PUBLIC NGen::partitioning NGen::geojson NGen::hydrofabric)
 if(NGEN_WITH_SQLITE)
     target_link_libraries(partitionGenerator PUBLIC NGen::geopackage)
 endif()
