@@ -11,36 +11,6 @@
 namespace parallel {
 
     /**
-     * Perform an "AND" type sync across all ranks to synchronize whether all are in a 'success' or 'ready' state.
-     *
-     * Function should be called at the same time by all ranks to sync on some 'success' or 'ready' state for all the ranks.
-     * It handles the required MPI communication and the processing of received message content.
-     *
-     * Function accepts a value for some boolean status property.  This initial value is applicable only to the local MPI
-     * rank, with all MPI ranks having the status property and each having its own independent value.  The function has all
-     * ranks (except ``0``) send their local status to rank ``0``.  Rank ``0`` then applies a Boolean AND to the statuses
-     * (including its own) to produce a global status value.  The global status is then broadcast back to the other ranks.
-     * Finally, the value indicated by this global status is returned.
-     *
-     * @param status The initial individual state for the current MPI rank.
-     * @param comm The MPI communicator across whose ranks to synchronize the status.
-     * @param taskDesc A description of the related task, used by rank 0 to print a message when included for any rank that
-     *                 is not in the success/ready state.
-     * @return Whether all ranks coordinating status had a success/ready status value.
-     */
-    bool mpiSyncStatusAnd(bool status, MPI_Comm comm, const std::string &taskDesc);
-
-    /**
-     * Convenience method for overloaded function when no message is needed, and thus no description param provided.
-     *
-     * @param status The initial individual state for the current MPI rank.
-     * @param comm The MPI communicator across whose ranks to synchronize the status.
-     * @return Whether all ranks coordinating status had a success/ready status value.
-     * @see mpiSyncStatusAnd(bool, const std::string&)
-     */
-    bool mpiSyncStatusAnd(bool status, MPI_Comm comm);
-
-    /**
      * MPI_Gather vector<string> values from all processes. The result may include duplicate values.
      * 
      * @param local_strings Vector of strings from the current process

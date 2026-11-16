@@ -9,51 +9,6 @@
 #include <mpi.h>
 
 namespace parallel {
-    namespace {
-        //! Codes each rank sends to say whether it is in a good state, for mpiSyncStatusAnd()
-        constexpr unsigned short STATUS_GOOD = 0;
-        constexpr unsigned short STATUS_BAD = 1;
-    }
-
-    bool mpiSyncStatusAnd(bool status, MPI_Comm comm, const std::string &taskDesc) {
-        int mpi_rank, mpi_num_procs;
-        MPI_Comm_rank(comm, &mpi_rank);
-        MPI_Comm_size(comm, &mpi_num_procs);
-
-        // Expect 0 is good and 1 is no good for goodCode
-        // TODO: assert this in constructor or somewhere, or maybe just in a unit test
-        unsigned short codeBuffer;
-        bool printMessage = !taskDesc.empty();
-        // For the other ranks, start by properly setting the status code value in the buffer and send to rank 0
-        if (mpi_rank != 0) {
-            codeBuffer = status ? STATUS_GOOD : STATUS_BAD;
-            MPI_Send(&codeBuffer, 1, MPI_UNSIGNED_SHORT, 0, 0, comm);
-        }
-        // In rank 0, the first step is to receive and process codes from the other ranks into unified global status
-        else {
-            for (int i = 1; i < mpi_num_procs; ++i) {
-                MPI_Recv(&codeBuffer, 1, MPI_UNSIGNED_SHORT, i, 0, comm, MPI_STATUS_IGNORE);
-                // If any is ever "not good", overwrite status to be "false"
-                if (codeBuffer != STATUS_GOOD) {
-                    if (printMessage) {
-                        std::cerr << "Rank " << i << " not successful/ready after " << taskDesc << std::endl;
-                    }
-                    status = false;
-                }
-            }
-            // Rank 0 must also now prepare the codeBuffer value for broadcasting the global status
-            codeBuffer = status ? STATUS_GOOD : STATUS_BAD;
-        }
-
-        // Execute broadcast of global status rooted at rank 0
-        MPI_Bcast(&codeBuffer, 1, MPI_UNSIGNED_SHORT, 0, comm);
-        return codeBuffer == STATUS_GOOD;
-    }
-
-    bool mpiSyncStatusAnd(bool status, MPI_Comm comm) {
-        return mpiSyncStatusAnd(status, comm, "");
-    }
-
     std::vector<std::string> gather_strings(const std::vector<std::string>& local_strings, MPI_Comm comm) {
         int mpi_rank, mpi_num_procs;
         MPI_Comm_rank(comm, &mpi_rank);

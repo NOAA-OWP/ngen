@@ -47,7 +47,6 @@
 
 #include <mpi.h>
 #include "parallel_utils.h"
-#include "core/Partition_Parser.hpp"
 #include "utilities/Partition_Automatic.hpp"
 
 #endif // NGEN_WITH_MPI
@@ -136,7 +135,6 @@ int main(int argc, char* argv[]) {
     std::string catchmentDataFile         = "";
     std::string nexusDataFile             = "";
     std::string REALIZATION_CONFIG_PATH   = "";
-    std::string PARTITION_PATH = "";
 
     // This default value should lead to behavior matching the single-process case in the standalone or non-MPI case
     int mpi_num_procs = 1;
@@ -195,7 +193,7 @@ int main(int argc, char* argv[]) {
     //arg 3 is nexus_data file path
     //arg 4 is nexus subset ids, comma seperated string of ids (no spaces!), "all" for all
     //arg 5 is realization config path
-    //arg 7 is the partition file path, or "--auto-partition" or nothing to partition automatically during initialization
+    //arg 7 may be "--auto-partition", as partitioning is automatic regardless
     //arg 8 may be the no longer supported --subdivided-hydrofabric flag, which is ignored
 
     std::vector<std::string> catchment_subset_ids;
@@ -270,12 +268,9 @@ int main(int argc, char* argv[]) {
         MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
         MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
 
-        if (argc >= 7) {
-            PARTITION_PATH = argv[6];
-        }
-        else {
-            // Without a partition config, partition automatically
-            PARTITION_PATH = AUTOMATIC_PARTITION_ARG;
+        if (argc >= 7 && strcmp(argv[6], AUTOMATIC_PARTITION_ARG) != 0) {
+            std::cout << "Partition config files are no longer supported; ngen partitions automatically" << std::endl;
+            exit(-1);
         }
 
         if (argc >= 8) {
@@ -311,12 +306,6 @@ int main(int argc, char* argv[]) {
                 !utils::FileChecker::file_is_readable(nexusDataFile, "Nexus data") ||
                 !utils::FileChecker::file_is_readable(REALIZATION_CONFIG_PATH, "Realization config");
 
-        #if NGEN_WITH_MPI
-        if (!PARTITION_PATH.empty() && PARTITION_PATH != AUTOMATIC_PARTITION_ARG) {
-            error = error || !utils::FileChecker::file_is_readable(PARTITION_PATH, "Partition config");
-        }
-        #endif // NGEN_WITH_MPI
-
         if(error) exit(-1);
 
         //split the subset strings into vectors
@@ -337,7 +326,7 @@ int main(int argc, char* argv[]) {
     
     #if NGEN_WITH_MPI
     PartitionData local_data;
-    if (mpi_num_procs > 1 && PARTITION_PATH == AUTOMATIC_PARTITION_ARG) {
+    if (mpi_num_procs > 1) {
         if (!nexus_subset_ids.empty()) {
             std::cerr << "Warning: CLI provided nexus subset will be ignored when partitioning automatically";
         }
@@ -347,42 +336,6 @@ int main(int argc, char* argv[]) {
             exit(-1);
         }
         local_data = std::move(*automatic);
-        nexus_subset_ids = std::vector<std::string>(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
-        catchment_subset_ids = std::vector<std::string>(local_data.catchment_ids.begin(), local_data.catchment_ids.end());
-    }
-    else if (mpi_num_procs > 1) {
-        // TODO: maybe checksum the file
-        bool parsed = true;
-        try {
-            Partitions_Parser partition_parser(ptree_from_json_file(PARTITION_PATH));
-            partition_parser.parse_partition_file();
-
-            std::vector<PartitionData> &partitions = partition_parser.partition_ranks;
-            if (partitions.size() != static_cast<std::size_t>(mpi_num_procs)) {
-                throw std::runtime_error("it has " + std::to_string(partitions.size()) + " partitions for "
-                                         + std::to_string(mpi_num_procs) + " processes");
-            }
-            local_data = std::move(partitions[mpi_rank]);
-        }
-        catch (const std::exception& e) {
-            // Every rank reads the same file, so rank 0 speaks for all of them
-            if (mpi_rank == 0) {
-                std::cerr << "Unable to use partition config " << PARTITION_PATH << ": " << e.what() << std::endl;
-            }
-            parsed = false;
-        }
-        if (!parallel::mpiSyncStatusAnd(parsed, MPI_COMM_WORLD)) {
-            if (mpi_rank == 0 && parsed) {
-                std::cerr << "Unable to use partition config " << PARTITION_PATH << " on every process" << std::endl;
-            }
-            exit(-1);
-        }
-        if (!nexus_subset_ids.empty()) {
-            std::cerr << "Warning: CLI provided nexus subset will be ignored when using partition config";
-        }
-        if (!catchment_subset_ids.empty()) {
-            std::cerr << "Warning: CLI provided catchment subset will be ignored when using partition config";
-        }
         nexus_subset_ids = std::vector<std::string>(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
         catchment_subset_ids = std::vector<std::string>(local_data.catchment_ids.begin(), local_data.catchment_ids.end());
     }

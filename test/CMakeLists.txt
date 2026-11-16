@@ -442,19 +442,6 @@ if (NGEN_WITH_MPI)
 endif ()
 
 
-########################## Partitioning Tests
-ngen_add_test(
-    test_partition
-    OBJECTS
-        utils/Partition_Test.cpp
-    LIBRARIES
-        gmock
-        NGen::core
-        NGen::geojson
-    # REQUIRES
-    #   NGEN_WITH_MPI
-)
-
 ########################## Partition By Nexus Tests
 ngen_add_test(
     test_partition_by_nexus
@@ -747,7 +734,6 @@ ngen_add_test(
         core/HY_Features_Attributes_Test.cpp
         realizations/Formulation_Manager_Test.cpp
         utils/PerFormulationNexusOutputMgr_Test.cpp
-        utils/Partition_Test.cpp
         utils/logging_Test.cpp
         utils/path_tokens_Test.cpp
     LIBRARIES
