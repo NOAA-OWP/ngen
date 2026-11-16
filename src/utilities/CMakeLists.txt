@@ -20,13 +20,6 @@ if(NGEN_WITH_MPI)
       Boost::boost
       NGen::hydrofabric
   )
-  if(NGEN_WITH_PYTHON)
-    target_link_libraries(ngen_parallel
-      PUBLIC
-        pybind11::embed
-        NGen::python
-    )
-  endif()
 endif()
 
 target_sources(ngen_parallel
