@@ -53,11 +53,10 @@ Provider::ForcingsEngineLumpedDataProvider(
 
     auto divide_id_pos = std::find(cat_id_span.begin(), cat_id_span.end(), divide_id_);
     if (divide_id_pos == cat_id_span.end()) {
-        // throw std::runtime_error{"Unable to find divide ID `" + divide_id + "` in given Forcings Engine domain"};
-        divide_idx_ = static_cast<std::size_t>(-1);
-    } else {
-        divide_idx_ = std::distance(cat_id_span.begin(), divide_id_pos);
+        // get_value[s] index the engine's outputs by divide_idx_, so there is no usable fallback
+        throw std::runtime_error{"Unable to find divide ID `" + divide_id + "` in given Forcings Engine domain"};
     }
+    divide_idx_ = std::distance(cat_id_span.begin(), divide_id_pos);
 }
 
 std::size_t Provider::divide() const noexcept

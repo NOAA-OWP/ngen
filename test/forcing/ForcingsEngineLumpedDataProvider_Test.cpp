@@ -95,6 +95,19 @@ TEST_F(ForcingsEngineLumpedDataProviderTest, Storage)
     ASSERT_EQ(new_inst->model(), provider_->model());
 }
 
+TEST_F(ForcingsEngineLumpedDataProviderTest, UnknownDivideThrows)
+{
+    ASSERT_THROW(
+        data_access::ForcingsEngineLumpedDataProvider(
+            /*init=*/TestFixture::config_file,
+            /*time_begin_seconds=*/TestFixture::time_start,
+            /*time_end_seconds=*/TestFixture::time_end,
+            /*divide_id=*/"cat-1"
+        ),
+        std::runtime_error
+    );
+}
+
 TEST_F(ForcingsEngineLumpedDataProviderTest, VariableAccess)
 {
     ASSERT_EQ(provider_->divide(), 11223UL);
