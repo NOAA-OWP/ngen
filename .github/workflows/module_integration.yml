@@ -126,7 +126,8 @@ jobs:
             export LIBRARY_PATH=/usr/local/lib/gcc/11/
             export LD_LIBRARY_PATH=/usr/local/lib/gcc/11/
           fi
-          export NETCDFALTERNATIVE=${NETCDF}/include
+          # compiler.sh uses $NETCDF as the include path for the Fortran netcdf module
+          export NETCDF=$(nf-config --includedir)
           export FC=gfortran
           export F90=gfortran 
           ./compiler.sh no-e
