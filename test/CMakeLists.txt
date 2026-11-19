@@ -370,7 +370,7 @@ ngen_add_test(
 # already in use.
 if(TARGET test_multithreading
    AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang"
-   AND NOT CMAKE_CXX_FLAGS MATCHES "-fsanitize=(address|leak|memory)")
+   AND NOT CMAKE_CXX_FLAGS MATCHES "-fsanitize=(address|leak|memory)|-fno-sanitize")
     target_compile_options(test_multithreading PRIVATE -fsanitize=thread -g)
     target_link_options(test_multithreading PRIVATE -fsanitize=thread)
 endif()
@@ -735,7 +735,7 @@ ngen_add_test(
 if(TARGET test_netcdf_forcing_cache
    AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang"
    AND NOT BUILD_SHARED_LIBS
-   AND NOT CMAKE_CXX_FLAGS MATCHES "-fsanitize=(address|leak|memory)")
+   AND NOT CMAKE_CXX_FLAGS MATCHES "-fsanitize=(address|leak|memory)|-fno-sanitize")
     target_sources(test_netcdf_forcing_cache PRIVATE ${NGEN_ROOT_DIR}/src/forcing/NetCDFPerFeatureDataProvider.cpp)
     target_compile_options(test_netcdf_forcing_cache PRIVATE -fsanitize=thread -g)
     target_link_options(test_netcdf_forcing_cache PRIVATE -fsanitize=thread)
