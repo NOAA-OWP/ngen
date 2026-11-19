@@ -29,7 +29,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
     
       - name: Build NGen
         uses: ./.github/actions/ngen-build
@@ -64,7 +64,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Build Ngen
         uses: ./.github/actions/ngen-build
@@ -85,13 +85,13 @@ jobs:
       #    wouldn't be good for that...
       #- name: Cache troute dependency
       #  id: cache-linux-troute-dep
-      #  uses: actions/cache@v1
+      #  uses: actions/cache@v6
       #  with:
       #    path: .venv
       #    key: linux-troute-dep-fixed
 
       - name: Checkout t-route (latest master)
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           repository: NOAA-OWP/t-route
           path: t-route
