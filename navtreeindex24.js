@@ -1,5 +1,7 @@
 var NAVTREEINDEX24 =
 {
+"structhy__features_1_1attributes_1_1area__from__geometry__visitor.html#a31cac0cc2b2e2ada56a9024d8be2bfd0":[27,0,5,0,0,1],
+"structhy__features_1_1attributes_1_1area__from__geometry__visitor.html#ae8ffe9ba9dc13c3b5dc869bd8a4cb4d8":[26,0,6,0,0,0],
 "structhy__features_1_1attributes_1_1area__from__geometry__visitor.html#ae8ffe9ba9dc13c3b5dc869bd8a4cb4d8":[27,0,5,0,0,0],
 "structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html":[26,0,6,1,0],
 "structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html":[27,0,5,1,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX24 =
 "structngen_1_1serialization_1_1detail_1_1_record_t.html#a80abcd75d0bab471f2e01bb196669329":[27,0,9,2,0,0,0],
 "structngen_1_1serialization_1_1detail_1_1_record_t.html#a996f07990373334b6f4400c079e92362":[26,0,11,2,1,0,4],
 "structngen_1_1serialization_1_1detail_1_1_record_t.html#a996f07990373334b6f4400c079e92362":[27,0,9,2,0,0,4],
-"structngen_1_1serialization_1_1detail_1_1_record_t.html#ac80d5c1510b5eb36b22ea123c4095c77":[26,0,11,2,1,0,1],
-"structngen_1_1serialization_1_1detail_1_1_record_t.html#ac80d5c1510b5eb36b22ea123c4095c77":[27,0,9,2,0,0,1],
-"structngen_1_1serialization_1_1detail_1_1_record_t.html#ad1539d8050906bf18c139e014ac55c3c":[26,0,11,2,1,0,5]
+"structngen_1_1serialization_1_1detail_1_1_record_t.html#ac80d5c1510b5eb36b22ea123c4095c77":[26,0,11,2,1,0,1]
 };

@@ -87,14 +87,14 @@
 <text text-anchor="start" x="116.25" y="-205.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="130.5" y="-205.5" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
 <text text-anchor="start" x="116.25" y="-190.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="130.5" y="-190.25" font-family="Helvetica,sans-Serif" font-size="10.00">~JSONProperty()</text>
+<text text-anchor="start" x="130.5" y="-190.25" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
 <text text-anchor="start" x="116.25" y="-175" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="130.5" y="-175" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
+<text text-anchor="start" x="130.5" y="-175" font-family="Helvetica,sans-Serif" font-size="10.00">~JSONProperty()</text>
 <text text-anchor="start" x="116.25" y="-159.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="130.5" y="-159.75" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
 <text text-anchor="start" x="116.25" y="-144.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="130.5" y="-144.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_type()</text>
-<text text-anchor="start" x="130.5" y="-129.25" font-family="Helvetica,sans-Serif" font-size="10.00">and 17 more...</text>
+<text text-anchor="start" x="130.5" y="-144.5" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
+<text text-anchor="start" x="130.5" y="-129.25" font-family="Helvetica,sans-Serif" font-size="10.00">and 18 more...</text>
 <text text-anchor="start" x="116.25" y="-114" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="130.5" y="-114" font-family="Helvetica,sans-Serif" font-size="10.00">print_property()</text>
 <polygon fill="#666666" stroke="#666666" points="108,-400 108,-400 217.25,-400 217.25,-400 108,-400"/>

@@ -157,6 +157,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4bff10305e1883674e6d098d22953af5" id="r_a4bff10305e1883674e6d098d22953af5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4bff10305e1883674e6d098d22953af5">JSONProperty</a> (const std::string &amp;value_key, const <a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> &amp;original)</td></tr>
 <tr class="memdesc:a4bff10305e1883674e6d098d22953af5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy construct a <a class="el" href="classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types">JSONProperty</a>, but use a new key value for the property.  <br /></td></tr>
 <tr class="separator:a4bff10305e1883674e6d098d22953af5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf93954e36c15db2a2599caff3250bb2" id="r_aaf93954e36c15db2a2599caff3250bb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf93954e36c15db2a2599caff3250bb2">operator=</a> (const <a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> &amp;other)</td></tr>
+<tr class="memdesc:aaf93954e36c15db2a2599caff3250bb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy assign a <a class="el" href="classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types">JSONProperty</a>.  <br /></td></tr>
+<tr class="separator:aaf93954e36c15db2a2599caff3250bb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9db9c33cbddf921ac9b9475ff82ef09c" id="r_a9db9c33cbddf921ac9b9475ff82ef09c"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9db9c33cbddf921ac9b9475ff82ef09c">~JSONProperty</a> ()</td></tr>
 <tr class="memdesc:a9db9c33cbddf921ac9b9475ff82ef09c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A basic destructor.  <br /></td></tr>
 <tr class="separator:a9db9c33cbddf921ac9b9475ff82ef09c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1126,6 +1129,36 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="aaf93954e36c15db2a2599caff3250bb2" name="aaf93954e36c15db2a2599caff3250bb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf93954e36c15db2a2599caff3250bb2">&#9670;&#160;</a></span>operator=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> &amp; geojson::JSONProperty::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy assign a <a class="el" href="classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types">JSONProperty</a>. </p>
+<p>As with the copy constructor, <code>data</code> must refer to this object's own <code>value_list</code> or <code>values</code> rather than to <code>other</code>'s, so the implicit member-wise assignment is not usable. </p>
+
+<p class="reference">References <a class="el" href="#af405297de7dae29f9bf8ee584ba08858">data</a>, <a class="el" href="#a3fe2ade16ff994a3e9e3fbf106ba690a">key</a>, <a class="el" href="#a1d92b4f0ec6df2fef86a7b4ef183973b">type</a>, <a class="el" href="#a1bd38dc99c8773465bbd8989b9f563ca">value_list</a>, and <a class="el" href="#ae1d7def48bf2d357a5a1b086930a74b2">values</a>.</p>
+
+</div>
+</div>
 <a id="a06efd343c58f799d6636b04be36f8d5a" name="a06efd343c58f799d6636b04be36f8d5a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a06efd343c58f799d6636b04be36f8d5a">&#9670;&#160;</a></span>operator==()</h2>
 
@@ -1221,7 +1254,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a1985756ca4fe4ece17abb8d2eec325e9">JSONProperty()</a>, <a class="el" href="#a6c9b6e556b9c2e2000bd9283ce8d1dbe">as_boolean()</a>, <a class="el" href="#a99b488b0681f98286fe65be25f5cba06">as_natural_number()</a>, <a class="el" href="#abd96e16e7da59f6d4e98fd3abf375224">as_real_number()</a>, <a class="el" href="#a512af06cb32ed665a57a80129c84ec9b">as_string()</a>, and <a class="el" href="#a06efd343c58f799d6636b04be36f8d5a">operator==()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a1985756ca4fe4ece17abb8d2eec325e9">JSONProperty()</a>, <a class="el" href="#a6c9b6e556b9c2e2000bd9283ce8d1dbe">as_boolean()</a>, <a class="el" href="#a99b488b0681f98286fe65be25f5cba06">as_natural_number()</a>, <a class="el" href="#abd96e16e7da59f6d4e98fd3abf375224">as_real_number()</a>, <a class="el" href="#a512af06cb32ed665a57a80129c84ec9b">as_string()</a>, <a class="el" href="#aaf93954e36c15db2a2599caff3250bb2">operator=()</a>, and <a class="el" href="#a06efd343c58f799d6636b04be36f8d5a">operator==()</a>.</p>
 
 </div>
 </div>
@@ -1245,7 +1278,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a1985756ca4fe4ece17abb8d2eec325e9">JSONProperty()</a>, <a class="el" href="#a6c9b6e556b9c2e2000bd9283ce8d1dbe">as_boolean()</a>, <a class="el" href="#a4e95480bc0ecde8028f0a68a11245617">as_list()</a>, <a class="el" href="#a99b488b0681f98286fe65be25f5cba06">as_natural_number()</a>, <a class="el" href="#abd96e16e7da59f6d4e98fd3abf375224">as_real_number()</a>, <a class="el" href="#a512af06cb32ed665a57a80129c84ec9b">as_string()</a>, <a class="el" href="#a4a62d9dc46a292bff3c4fd134f5469a7">at()</a>, <a class="el" href="#aaa771ed1e1b210264bf8dad29ffcddc5">get_key()</a>, <a class="el" href="#a44444e9dfa0d9e54cc11a66b8ba75998">get_values()</a>, <a class="el" href="#afe12f98e6dafc1abb943d3865e601ec1">has_key()</a>, and <a class="el" href="#a11b0d4cecda0a3f85cd9034d8638ac73">keys()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a1985756ca4fe4ece17abb8d2eec325e9">JSONProperty()</a>, <a class="el" href="#a6c9b6e556b9c2e2000bd9283ce8d1dbe">as_boolean()</a>, <a class="el" href="#a4e95480bc0ecde8028f0a68a11245617">as_list()</a>, <a class="el" href="#a99b488b0681f98286fe65be25f5cba06">as_natural_number()</a>, <a class="el" href="#abd96e16e7da59f6d4e98fd3abf375224">as_real_number()</a>, <a class="el" href="#a512af06cb32ed665a57a80129c84ec9b">as_string()</a>, <a class="el" href="#a4a62d9dc46a292bff3c4fd134f5469a7">at()</a>, <a class="el" href="#aaa771ed1e1b210264bf8dad29ffcddc5">get_key()</a>, <a class="el" href="#a44444e9dfa0d9e54cc11a66b8ba75998">get_values()</a>, <a class="el" href="#afe12f98e6dafc1abb943d3865e601ec1">has_key()</a>, <a class="el" href="#a11b0d4cecda0a3f85cd9034d8638ac73">keys()</a>, and <a class="el" href="#aaf93954e36c15db2a2599caff3250bb2">operator=()</a>.</p>
 
 </div>
 </div>
@@ -1269,7 +1302,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a1985756ca4fe4ece17abb8d2eec325e9">JSONProperty()</a>, <a class="el" href="#a6c9b6e556b9c2e2000bd9283ce8d1dbe">as_boolean()</a>, <a class="el" href="#a4e95480bc0ecde8028f0a68a11245617">as_list()</a>, <a class="el" href="#a99b488b0681f98286fe65be25f5cba06">as_natural_number()</a>, <a class="el" href="#abd96e16e7da59f6d4e98fd3abf375224">as_real_number()</a>, <a class="el" href="#a512af06cb32ed665a57a80129c84ec9b">as_string()</a>, <a class="el" href="#a4a62d9dc46a292bff3c4fd134f5469a7">at()</a>, <a class="el" href="#a73f3dfb8a78bb6740d68aa67ebca8c1b">get_type()</a>, <a class="el" href="#a44444e9dfa0d9e54cc11a66b8ba75998">get_values()</a>, <a class="el" href="#a11b0d4cecda0a3f85cd9034d8638ac73">keys()</a>, and <a class="el" href="#a06efd343c58f799d6636b04be36f8d5a">operator==()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a1985756ca4fe4ece17abb8d2eec325e9">JSONProperty()</a>, <a class="el" href="#a6c9b6e556b9c2e2000bd9283ce8d1dbe">as_boolean()</a>, <a class="el" href="#a4e95480bc0ecde8028f0a68a11245617">as_list()</a>, <a class="el" href="#a99b488b0681f98286fe65be25f5cba06">as_natural_number()</a>, <a class="el" href="#abd96e16e7da59f6d4e98fd3abf375224">as_real_number()</a>, <a class="el" href="#a512af06cb32ed665a57a80129c84ec9b">as_string()</a>, <a class="el" href="#a4a62d9dc46a292bff3c4fd134f5469a7">at()</a>, <a class="el" href="#a73f3dfb8a78bb6740d68aa67ebca8c1b">get_type()</a>, <a class="el" href="#a44444e9dfa0d9e54cc11a66b8ba75998">get_values()</a>, <a class="el" href="#a11b0d4cecda0a3f85cd9034d8638ac73">keys()</a>, <a class="el" href="#aaf93954e36c15db2a2599caff3250bb2">operator=()</a>, and <a class="el" href="#a06efd343c58f799d6636b04be36f8d5a">operator==()</a>.</p>
 
 </div>
 </div>
@@ -1293,7 +1326,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a1985756ca4fe4ece17abb8d2eec325e9">JSONProperty()</a>, <a class="el" href="#a4e95480bc0ecde8028f0a68a11245617">as_list()</a>, and <a class="el" href="#a512af06cb32ed665a57a80129c84ec9b">as_string()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a1985756ca4fe4ece17abb8d2eec325e9">JSONProperty()</a>, <a class="el" href="#a4e95480bc0ecde8028f0a68a11245617">as_list()</a>, <a class="el" href="#a512af06cb32ed665a57a80129c84ec9b">as_string()</a>, and <a class="el" href="#aaf93954e36c15db2a2599caff3250bb2">operator=()</a>.</p>
 
 </div>
 </div>
@@ -1317,7 +1350,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a1985756ca4fe4ece17abb8d2eec325e9">JSONProperty()</a>, <a class="el" href="#a90c308f94b964f678592ba0c0c76afc4">as_boolean_vector()</a>, <a class="el" href="#a6793486f38f4330e6f780b956e7122be">as_natural_vector()</a>, <a class="el" href="#acf89f58eb4a1cdc915c2851f809d8156">as_real_vector()</a>, <a class="el" href="#abc3fb5015f523acf462755a444896534">as_string_vector()</a>, <a class="el" href="#a4a62d9dc46a292bff3c4fd134f5469a7">at()</a>, <a class="el" href="#a44444e9dfa0d9e54cc11a66b8ba75998">get_values()</a>, <a class="el" href="#a11b0d4cecda0a3f85cd9034d8638ac73">keys()</a>, and <a class="el" href="#a06efd343c58f799d6636b04be36f8d5a">operator==()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a1985756ca4fe4ece17abb8d2eec325e9">JSONProperty()</a>, <a class="el" href="#a90c308f94b964f678592ba0c0c76afc4">as_boolean_vector()</a>, <a class="el" href="#a6793486f38f4330e6f780b956e7122be">as_natural_vector()</a>, <a class="el" href="#acf89f58eb4a1cdc915c2851f809d8156">as_real_vector()</a>, <a class="el" href="#abc3fb5015f523acf462755a444896534">as_string_vector()</a>, <a class="el" href="#a4a62d9dc46a292bff3c4fd134f5469a7">at()</a>, <a class="el" href="#a44444e9dfa0d9e54cc11a66b8ba75998">get_values()</a>, <a class="el" href="#a11b0d4cecda0a3f85cd9034d8638ac73">keys()</a>, <a class="el" href="#aaf93954e36c15db2a2599caff3250bb2">operator=()</a>, and <a class="el" href="#a06efd343c58f799d6636b04be36f8d5a">operator==()</a>.</p>
 
 </div>
 </div>
@@ -1331,7 +1364,7 @@ template&lt;typename T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacegeojson.html">geojson</a></li><li class="navelem"><a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a></li>
-    <li class="footer">Generated on Thu Nov 19 2026 16:41:05 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Nov 19 2026 19:05:42 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

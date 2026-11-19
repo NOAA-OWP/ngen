@@ -211,14 +211,14 @@
 <text text-anchor="start" x="250.41" y="-721.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="264.66" y="-721.25" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
 <text text-anchor="start" x="250.41" y="-706" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="264.66" y="-706" font-family="Helvetica,sans-Serif" font-size="10.00">~JSONProperty()</text>
+<text text-anchor="start" x="264.66" y="-706" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
 <text text-anchor="start" x="250.41" y="-690.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="264.66" y="-690.75" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
+<text text-anchor="start" x="264.66" y="-690.75" font-family="Helvetica,sans-Serif" font-size="10.00">~JSONProperty()</text>
 <text text-anchor="start" x="250.41" y="-675.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="264.66" y="-675.5" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
 <text text-anchor="start" x="250.41" y="-660.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="264.66" y="-660.25" font-family="Helvetica,sans-Serif" font-size="10.00">get_type()</text>
-<text text-anchor="start" x="264.66" y="-645" font-family="Helvetica,sans-Serif" font-size="10.00">and 17 more...</text>
+<text text-anchor="start" x="264.66" y="-660.25" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
+<text text-anchor="start" x="264.66" y="-645" font-family="Helvetica,sans-Serif" font-size="10.00">and 18 more...</text>
 <text text-anchor="start" x="250.41" y="-629.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="264.66" y="-629.75" font-family="Helvetica,sans-Serif" font-size="10.00">print_property()</text>
 <polygon fill="#666666" stroke="#666666" points="242.16,-915.75 242.16,-915.75 351.41,-915.75 351.41,-915.75 242.16,-915.75"/>

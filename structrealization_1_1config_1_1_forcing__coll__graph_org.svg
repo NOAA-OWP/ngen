@@ -86,14 +86,14 @@
 <text text-anchor="start" x="258.38" y="-205.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="272.62" y="-205.5" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
 <text text-anchor="start" x="258.38" y="-190.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="272.62" y="-190.25" font-family="Helvetica,sans-Serif" font-size="10.00">~JSONProperty()</text>
+<text text-anchor="start" x="272.62" y="-190.25" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
 <text text-anchor="start" x="258.38" y="-175" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="272.62" y="-175" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
+<text text-anchor="start" x="272.62" y="-175" font-family="Helvetica,sans-Serif" font-size="10.00">~JSONProperty()</text>
 <text text-anchor="start" x="258.38" y="-159.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="272.62" y="-159.75" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
 <text text-anchor="start" x="258.38" y="-144.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="272.62" y="-144.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_type()</text>
-<text text-anchor="start" x="272.62" y="-129.25" font-family="Helvetica,sans-Serif" font-size="10.00">and 17 more...</text>
+<text text-anchor="start" x="272.62" y="-144.5" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
+<text text-anchor="start" x="272.62" y="-129.25" font-family="Helvetica,sans-Serif" font-size="10.00">and 18 more...</text>
 <text text-anchor="start" x="258.38" y="-114" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="272.62" y="-114" font-family="Helvetica,sans-Serif" font-size="10.00">print_property()</text>
 <polygon fill="#666666" stroke="#666666" points="250.12,-400 250.12,-400 359.38,-400 359.38,-400 250.12,-400"/>

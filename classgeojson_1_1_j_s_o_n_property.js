@@ -32,6 +32,7 @@ var classgeojson_1_1_j_s_o_n_property =
     [ "has_key", "classgeojson_1_1_j_s_o_n_property.html#afe12f98e6dafc1abb943d3865e601ec1", null ],
     [ "keys", "classgeojson_1_1_j_s_o_n_property.html#a11b0d4cecda0a3f85cd9034d8638ac73", null ],
     [ "operator!=", "classgeojson_1_1_j_s_o_n_property.html#ae1815462ba6862ac036d8ce098b7d941", null ],
+    [ "operator=", "classgeojson_1_1_j_s_o_n_property.html#aaf93954e36c15db2a2599caff3250bb2", null ],
     [ "operator==", "classgeojson_1_1_j_s_o_n_property.html#a06efd343c58f799d6636b04be36f8d5a", null ],
     [ "print_property", "classgeojson_1_1_j_s_o_n_property.html#a6d3173d4b100035a3a8dafbaa25a84a2", null ],
     [ "data", "classgeojson_1_1_j_s_o_n_property.html#af405297de7dae29f9bf8ee584ba08858", null ],

@@ -1,5 +1,7 @@
 var NAVTREEINDEX23 =
 {
+"namespacengen_1_1traits.html#ae6d2ffef22133e68c13face5788c0d49":[26,0,11,5,2],
+"namespacengen_1_1traits.html#afcb485741b1389948eaa0e3c3c18bbed":[26,0,11,5,5],
 "namespacenonstd.html":[26,0,12],
 "namespacenonstd.html#a2a59d6fa28e70ecc47a3bc1fa3fc567a":[26,0,12,5],
 "namespacenonstd.html#a38c05903bf80bd5ecd208257f29cb2d2":[26,0,12,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX23 =
 "structhy__features_1_1attributes_1_1area__from__geometry__visitor.html":[27,0,5,0,0],
 "structhy__features_1_1attributes_1_1area__from__geometry__visitor.html#a1acbe4952e82de31d4f70fa50313128c":[26,0,6,0,0,2],
 "structhy__features_1_1attributes_1_1area__from__geometry__visitor.html#a1acbe4952e82de31d4f70fa50313128c":[27,0,5,0,0,2],
-"structhy__features_1_1attributes_1_1area__from__geometry__visitor.html#a31cac0cc2b2e2ada56a9024d8be2bfd0":[26,0,6,0,0,1],
-"structhy__features_1_1attributes_1_1area__from__geometry__visitor.html#a31cac0cc2b2e2ada56a9024d8be2bfd0":[27,0,5,0,0,1],
-"structhy__features_1_1attributes_1_1area__from__geometry__visitor.html#ae8ffe9ba9dc13c3b5dc869bd8a4cb4d8":[26,0,6,0,0,0]
+"structhy__features_1_1attributes_1_1area__from__geometry__visitor.html#a31cac0cc2b2e2ada56a9024d8be2bfd0":[26,0,6,0,0,1]
 };

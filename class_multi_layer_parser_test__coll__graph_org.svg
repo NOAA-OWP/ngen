@@ -204,14 +204,14 @@
 <text text-anchor="start" x="846.25" y="-1040.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="860.5" y="-1040.75" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
 <text text-anchor="start" x="846.25" y="-1025.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="860.5" y="-1025.5" font-family="Helvetica,sans-Serif" font-size="10.00">~JSONProperty()</text>
+<text text-anchor="start" x="860.5" y="-1025.5" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
 <text text-anchor="start" x="846.25" y="-1010.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="860.5" y="-1010.25" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
+<text text-anchor="start" x="860.5" y="-1010.25" font-family="Helvetica,sans-Serif" font-size="10.00">~JSONProperty()</text>
 <text text-anchor="start" x="846.25" y="-995" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="860.5" y="-995" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
 <text text-anchor="start" x="846.25" y="-979.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="860.5" y="-979.75" font-family="Helvetica,sans-Serif" font-size="10.00">get_type()</text>
-<text text-anchor="start" x="860.5" y="-964.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 17 more...</text>
+<text text-anchor="start" x="860.5" y="-979.75" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
+<text text-anchor="start" x="860.5" y="-964.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 18 more...</text>
 <text text-anchor="start" x="846.25" y="-949.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="860.5" y="-949.25" font-family="Helvetica,sans-Serif" font-size="10.00">print_property()</text>
 <polygon fill="#666666" stroke="#666666" points="838,-1235.25 838,-1235.25 947.25,-1235.25 947.25,-1235.25 838,-1235.25"/>

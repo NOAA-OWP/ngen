@@ -540,14 +540,14 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="1137.24" y="-880.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="1151.49" y="-880.25" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
 <text text-anchor="start" x="1137.24" y="-865" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1151.49" y="-865" font-family="Helvetica,sans-Serif" font-size="10.00">~JSONProperty()</text>
+<text text-anchor="start" x="1151.49" y="-865" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
 <text text-anchor="start" x="1137.24" y="-849.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1151.49" y="-849.75" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
+<text text-anchor="start" x="1151.49" y="-849.75" font-family="Helvetica,sans-Serif" font-size="10.00">~JSONProperty()</text>
 <text text-anchor="start" x="1137.24" y="-834.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="1151.49" y="-834.5" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
 <text text-anchor="start" x="1137.24" y="-819.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="1151.49" y="-819.25" font-family="Helvetica,sans-Serif" font-size="10.00">get_type()</text>
-<text text-anchor="start" x="1151.49" y="-804" font-family="Helvetica,sans-Serif" font-size="10.00">and 17 more...</text>
+<text text-anchor="start" x="1151.49" y="-819.25" font-family="Helvetica,sans-Serif" font-size="10.00">JSONProperty()</text>
+<text text-anchor="start" x="1151.49" y="-804" font-family="Helvetica,sans-Serif" font-size="10.00">and 18 more...</text>
 <text text-anchor="start" x="1137.24" y="-788.75" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="1151.49" y="-788.75" font-family="Helvetica,sans-Serif" font-size="10.00">print_property()</text>
 <polygon fill="#666666" stroke="#666666" points="1128.99,-1074.75 1128.99,-1074.75 1238.24,-1074.75 1238.24,-1074.75 1128.99,-1074.75"/>
