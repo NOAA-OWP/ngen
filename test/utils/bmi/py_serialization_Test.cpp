@@ -40,6 +40,7 @@ deserialization_Test.cpp; this file is the Python analog.
 namespace py = pybind11;
 
 #include "Bmi_Py_Adapter.hpp"
+#include "mediator/UnitsHelper.hpp"
 #include "protocols.hpp"
 #include "serialization_record.hpp"
 #include "utilities/python/InterpreterUtil.hpp"
@@ -88,6 +89,8 @@ class Bmi_Py_Serialization_Test : public ::testing::Test {
     static void SetUpTestSuite() {
         // Point Python at the bundled test_bmi_py package.
         InterpreterUtil::addToPyPath("./extern/");
+        // Bmi_Py_Adapter parses the model's units at construction, as ngen's main() prepares for
+        init_unit_system();
     }
 
     void SetUp() override {
