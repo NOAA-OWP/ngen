@@ -69,6 +69,22 @@ TEST_F(JSONProperty_Test, copy_new_key_test) {
     ASSERT_EQ(new_key_property.get_key(), "new_string");
 }
 
+TEST_F(JSONProperty_Test, copy_assignment_owns_list_test) {
+    const std::vector<geojson::JSONProperty> one_two{geojson::JSONProperty("", 1), geojson::JSONProperty("", 2)};
+    const geojson::JSONProperty expected("list", one_two);
+
+    geojson::JSONProperty source("list", one_two);
+    geojson::JSONProperty assigned("other", 0);
+    assigned = source;
+    // Replacing the source's contents must not change what was assigned from it
+    source = geojson::JSONProperty("list", std::vector<geojson::JSONProperty>{geojson::JSONProperty("", 3)});
+
+    ASSERT_EQ(assigned.get_type(), geojson::PropertyType::List);
+    ASSERT_EQ(assigned.get_key(), "list");
+    ASSERT_TRUE(assigned == expected);
+    ASSERT_FALSE(source == expected);
+}
+
 TEST_F(JSONProperty_Test, natural_property_test) {
     geojson::JSONProperty natural_property("natural", 4);
     ASSERT_EQ(natural_property.get_type(), geojson::PropertyType::Natural);
