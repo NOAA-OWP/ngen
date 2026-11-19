@@ -8,6 +8,7 @@
 #include "HydrofabricReaderFactory.hpp"
 #include "utilities/FileChecker.h"
 #include "fixture_builders.hpp"
+#include "test_temp_paths.hpp"
 
 namespace fixtures = ngen::hydrofabric::fixtures;
 
@@ -16,7 +17,7 @@ namespace {
 //! Copy a file byte for byte, so a fixture can be given a name that says nothing about its format.
 std::string copy_as(const std::string& source, const std::string& name)
 {
-    const std::filesystem::path destination = std::filesystem::path(testing::TempDir()) / name;
+    const std::filesystem::path destination = ngen::test::test_temp_path(name);
     std::filesystem::copy_file(source, destination, std::filesystem::copy_options::overwrite_existing);
     return destination.string();
 }
@@ -107,9 +108,8 @@ TEST_F(HydrofabricReaderFactory_Test, factory_rejects_geopackage_without_nexus)
 // A `nexus` layer matching no known schema is an error, not a version to guess at.
 TEST_F(HydrofabricReaderFactory_Test, factory_rejects_unrecognized_nexus_schema)
 {
-    const std::string path = std::string(testing::TempDir()) + "/factory_malformed_nexus.gpkg";
+    const std::string path = ngen::test::test_temp_path("factory_malformed_nexus.gpkg").string();
     {
-        std::remove(path.c_str());
         sqlite3* raw = nullptr;
         ASSERT_EQ(sqlite3_open(path.c_str(), &raw), SQLITE_OK);
         ASSERT_EQ(sqlite3_exec(raw, "CREATE TABLE nexus (junk TEXT)",
@@ -257,8 +257,7 @@ TEST_F(HydrofabricReaderFactory_Test, detect_geojson_misnamed_as_geopackage)
 // surfacing later as whichever parser it was guessed into.
 TEST_F(HydrofabricReaderFactory_Test, detect_rejects_unreadable_path)
 {
-    const std::string missing = std::string(testing::TempDir()) + "/no_such_hydrofabric.gpkg";
-    std::remove(missing.c_str());
+    const std::string missing = ngen::test::test_temp_path("no_such_hydrofabric.gpkg").string();
 
     try {
         ngen::hydrofabric::detect_hydrofabric(missing, missing);
