@@ -31,6 +31,7 @@ same path to cover the full feedback loop.
 #include "serialization_record.hpp"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "test_temp_paths.hpp"
 
 #include <cstdio>
 #include <fstream>
@@ -148,15 +149,7 @@ class Bmi_Deserialization_Test : public Bmi_Cpp_Test_Adapter_For_Deserialization
         model      = std::shared_ptr<models::bmi::Bmi_Adapter>(adapter.release());
         model_name = model->GetComponentName();
 
-        const auto* info = ::testing::UnitTest::GetInstance()->current_test_info();
-        std::string dir  = ::testing::TempDir();
-        if (!dir.empty() && dir.back() != '/') dir.push_back('/');
-        path = dir + "ngen_deserialization_Test_" + info->name() + ".ckpt";
-        std::remove(path.c_str());
-    }
-
-    void TearDown() override {
-        std::remove(path.c_str());
+        path = ngen::test::test_temp_path("checkpoint.ckpt").string();
     }
 
     // Read the model's five serialized scalars via BMI so tests can assert
@@ -261,8 +254,6 @@ TEST_F(Bmi_Deserialization_Test, missing_path) {
 TEST_F(Bmi_Deserialization_Test, restore_sub_block_path_overrides_top_level) {
     const std::string top_path = path + ".top";
     const std::string sub_path = path + ".sub";
-    std::remove(top_path.c_str());
-    std::remove(sub_path.c_str());
 
     // Prime each file with a *different* payload so we can tell which
     // file the restore actually read from.
@@ -286,9 +277,6 @@ TEST_F(Bmi_Deserialization_Test, restore_sub_block_path_overrides_top_level) {
     snapshot(t, i1, i2, o1, o2);
     EXPECT_EQ(t, 222.0);
     EXPECT_EQ(i1, 2.0);
-
-    std::remove(top_path.c_str());
-    std::remove(sub_path.c_str());
 }
 
 // A `path` under `restore` alone (no top-level `path`) is sufficient to
@@ -728,8 +716,6 @@ TEST_F(Bmi_Deserialization_Test, save_restore_roundtrip_by_timestamp) {
 TEST_F(Bmi_Deserialization_Test, save_restore_roundtrip_split_paths) {
     const std::string restore_path = path + ".restore_from";
     const std::string save_path    = path + ".save_to";
-    std::remove(restore_path.c_str());
-    std::remove(save_path.c_str());
 
     // Pre-populate the restore file only; the save file starts empty.
     append_record(
@@ -779,9 +765,6 @@ TEST_F(Bmi_Deserialization_Test, save_restore_roundtrip_split_paths) {
     ASSERT_TRUE(r.has_value());
     EXPECT_EQ(r.value(), models::bmi::protocols::Status::Eof);
     (void)restore_size;
-
-    std::remove(restore_path.c_str());
-    std::remove(save_path.c_str());
 }
 
 #endif // NGEN_BMI_CPP_LIB_TESTS_ACTIVE

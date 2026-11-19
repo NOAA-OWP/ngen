@@ -35,6 +35,7 @@ deserialization_Test.cpp; this file is the Python analog.
 #include "FileChecker.h"
 #include "MockConfig.hpp"
 #include "gtest/gtest.h"
+#include "test_temp_paths.hpp"
 
 #include <pybind11/embed.h>
 namespace py = pybind11;
@@ -100,15 +101,7 @@ class Bmi_Py_Serialization_Test : public ::testing::Test {
             /*allow_exceed_end_time*/ true
         );
 
-        const auto* info = ::testing::UnitTest::GetInstance()->current_test_info();
-        std::string dir  = ::testing::TempDir();
-        if (!dir.empty() && dir.back() != '/') dir.push_back('/');
-        path = dir + "ngen_py_serialization_Test_" + info->name() + ".ckpt";
-        std::remove(path.c_str());
-    }
-
-    void TearDown() override {
-        std::remove(path.c_str());
+        path = ngen::test::test_temp_path("checkpoint.ckpt").string();
     }
 
     std::string model_name;

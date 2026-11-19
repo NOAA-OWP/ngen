@@ -17,6 +17,7 @@
 #include "Bmi_C_Formulation.hpp"
 #include "utilities/bmi/mass_balance.hpp"
 #include "gtest/gtest.h"
+#include "test_temp_paths.hpp"
 #include "gmock/gmock.h"
 #include <cstdio>
 #include <ctime>
@@ -947,14 +948,7 @@ protected:
 
     void SetUp() override {
         Bmi_C_Formulation_Test::SetUp();
-        checkpoint = ::testing::TempDir() + "bmi_c_restore_clock_" +
-                     ::testing::UnitTest::GetInstance()->current_test_info()->name() + ".ckpt";
-        std::remove(checkpoint.c_str());
-    }
-
-    void TearDown() override {
-        std::remove(checkpoint.c_str());
-        Bmi_C_Formulation_Test::TearDown();
+        checkpoint = ngen::test::test_temp_path("restore_clock.ckpt").string();
     }
 
     static std::string format_time(time_t t) {

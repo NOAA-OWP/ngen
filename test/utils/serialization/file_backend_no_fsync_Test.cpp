@@ -19,6 +19,7 @@ no-fsync build is therefore a standalone executable that compiles
 library.
 */
 #include "gtest/gtest.h"
+#include "test_temp_paths.hpp"
 
 #include "utilities/bmi/file_backend.hpp"
 #include "utilities/serialization/record.hpp"
@@ -33,18 +34,10 @@ using ngen::serialization::Durability;
 using ngen::serialization::FileBackend;
 
 namespace {
-std::string temp_path() {
-    const auto* info = ::testing::UnitTest::GetInstance()->current_test_info();
-    std::string dir  = ::testing::TempDir();
-    if (!dir.empty() && dir.back() != '/') dir.push_back('/');
-    return dir + "ngen_filebackend_nofsync_" + info->name() + ".bin";
-}
-
 } // namespace
 
 TEST(FileBackendNoFsync, strict_durability_errors_with_actionable_message) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
     auto w  = be->writer(std::chrono::system_clock::now(), Durability::strict);
@@ -57,16 +50,13 @@ TEST(FileBackendNoFsync, strict_durability_errors_with_actionable_message) {
         << "actual: " << w.error().message;
     EXPECT_NE(w.error().message.find("Durability::relaxed"), std::string::npos)
         << "actual: " << w.error().message;
-
-    std::remove(path.c_str());
 }
 
 TEST(FileBackendNoFsync, relaxed_durability_still_works) {
     // The non-POSIX build is only restrictive about strict; relaxed
     // must remain fully functional (it's the only available mode on
     // that platform).
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
     {
@@ -85,6 +75,4 @@ TEST(FileBackendNoFsync, relaxed_durability_still_works) {
     auto rec = r.value()->find_latest("cat-1");
     ASSERT_TRUE(rec.has_value()) << rec.error().message;
     EXPECT_EQ(rec.value().payload, std::vector<char>{'X'});
-
-    std::remove(path.c_str());
 }
