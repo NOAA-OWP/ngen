@@ -20,6 +20,7 @@ framing in isolation from any BMI model or protocol so that format
 regressions are caught without pulling in the adapter stack.
 */
 #include "gtest/gtest.h"
+#include "test_temp_paths.hpp"
 
 #include "serialization_record.hpp"
 
@@ -117,11 +118,7 @@ TEST(SerializationRecordTest, file_backed_append_mode) {
     // The production protocol opens the output stream in append mode on each
     // run(). Reproduce that exact sequence in a file to catch any interaction
     // between fresh archives and ios::app.
-    const auto* info = ::testing::UnitTest::GetInstance()->current_test_info();
-    std::string dir  = ::testing::TempDir();
-    if (!dir.empty() && dir.back() != '/') dir.push_back('/');
-    std::string path = dir + "ngen_serialization_record_" + info->name() + ".bin";
-    std::remove(path.c_str());
+    std::string path = ngen::test::test_temp_path("record.bin").string();
 
     std::vector<SerializationRecord> written = {
         {"cat-A", 0, int64_t{0},   {'A', 'A'}          },
@@ -147,7 +144,6 @@ TEST(SerializationRecordTest, file_backed_append_mode) {
         EXPECT_EQ(read[i].simulation_timestamp, written[i].simulation_timestamp);
         EXPECT_EQ(read[i].payload, written[i].payload);
     }
-    std::remove(path.c_str());
 }
 
 // Truncation tolerance: a crashed writer may leave the file ending mid-

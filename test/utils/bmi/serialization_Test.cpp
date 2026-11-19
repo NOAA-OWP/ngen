@@ -24,6 +24,7 @@ limitations under the License.
 #include "serialization_record.hpp"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "test_temp_paths.hpp"
 
 #include <cstdio>
 #include <fstream>
@@ -139,15 +140,7 @@ class Bmi_Serialization_Test : public Bmi_Cpp_Test_Adapter_For_Serialization {
         model      = std::shared_ptr<models::bmi::Bmi_Adapter>(adapter.release());
         model_name = model->GetComponentName();
 
-        const auto* info = ::testing::UnitTest::GetInstance()->current_test_info();
-        std::string dir  = ::testing::TempDir();
-        if (!dir.empty() && dir.back() != '/') dir.push_back('/');
-        path = dir + "ngen_serialization_Test_" + info->name() + ".ckpt";
-        std::remove(path.c_str());
-    }
-
-    void TearDown() override {
-        std::remove(path.c_str());
+        path = ngen::test::test_temp_path("checkpoint.ckpt").string();
     }
 
     std::string time = "0";
@@ -229,8 +222,6 @@ TEST_F(Bmi_Serialization_Test, missing_path) {
 TEST_F(Bmi_Serialization_Test, save_sub_block_path_overrides_top_level) {
     const std::string top_path = path + ".top";
     const std::string sub_path = path + ".sub";
-    std::remove(top_path.c_str());
-    std::remove(sub_path.c_str());
 
     auto properties = SerializationMock(top_path).with_save_path(sub_path).as_json_property();
     auto protocols  = NgenBmiProtocols(model, properties);
@@ -243,9 +234,6 @@ TEST_F(Bmi_Serialization_Test, save_sub_block_path_overrides_top_level) {
     auto records = read_all_records(sub_path);
     ASSERT_EQ(records.size(), 1u);
     EXPECT_EQ(records[0].id, model_name);
-
-    std::remove(top_path.c_str());
-    std::remove(sub_path.c_str());
 }
 
 // A `path` under `save` alone (no top-level `path`) is sufficient to

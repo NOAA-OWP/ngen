@@ -13,6 +13,7 @@ those tests use mocks; this file exercises the real backend on
 disk).
 */
 #include "gtest/gtest.h"
+#include "test_temp_paths.hpp"
 
 #include "utilities/bmi/file_backend.hpp"
 #include "utilities/serialization/id_predicates.hpp"
@@ -29,16 +30,6 @@ using Reader = RecordBackend::Reader;
 using Writer = RecordBackend::Writer;
 
 namespace {
-
-// Build a unique temp file path for each test. ::testing::TempDir()
-// is a per-process directory; we suffix with the test name to keep
-// runs isolated.
-std::string temp_path() {
-    const auto* info = ::testing::UnitTest::GetInstance()->current_test_info();
-    std::string dir  = ::testing::TempDir();
-    if (!dir.empty() && dir.back() != '/') dir.push_back('/');
-    return dir + "ngen_filebackend_" + info->name() + ".bin";
-}
 
 auto now() {
     return std::chrono::system_clock::now();
@@ -73,8 +64,7 @@ auto write_record(
 // ---------------------------------------------------------------------
 
 TEST(FileBackend, round_trip_single_record_via_factory_methods) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
     {
@@ -93,13 +83,10 @@ TEST(FileBackend, round_trip_single_record_via_factory_methods) {
     EXPECT_EQ(rec.value().time_step, 0);
     EXPECT_EQ(rec.value().simulation_timestamp, 60);
     EXPECT_EQ(rec.value().payload, std::vector<char>({'A', 'B', 'C'}));
-
-    std::remove(path.c_str());
 }
 
 TEST(FileBackend, round_trip_via_scoped_wrappers) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
 
@@ -121,13 +108,10 @@ TEST(FileBackend, round_trip_via_scoped_wrappers) {
     EXPECT_EQ(found.id, "cat-1");
     EXPECT_EQ(found.time_step, 1); // latest
     EXPECT_EQ(found.payload, std::vector<char>{'Y'});
-
-    std::remove(path.c_str());
 }
 
 TEST(FileBackend, multiple_entities_share_one_file) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
 
@@ -147,8 +131,6 @@ TEST(FileBackend, multiple_entities_share_one_file) {
     EXPECT_EQ(a.value().time_step, 2);
     EXPECT_EQ(a.value().payload, std::vector<char>{'3'});
     EXPECT_EQ(b.value().time_step, 0);
-
-    std::remove(path.c_str());
 }
 
 // ---------------------------------------------------------------------
@@ -156,8 +138,7 @@ TEST(FileBackend, multiple_entities_share_one_file) {
 // ---------------------------------------------------------------------
 
 TEST(FileBackend, find_at_step_picks_exact_step) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
@@ -174,13 +155,10 @@ TEST(FileBackend, find_at_step_picks_exact_step) {
     auto missing = r.value()->find_at_step("cat-1", 99);
     ASSERT_FALSE(missing.has_value());
     EXPECT_EQ(missing.error().kind, BackendError::Kind::NotFound);
-
-    std::remove(path.c_str());
 }
 
 TEST(FileBackend, find_at_simulation_timestamp_picks_exact_match) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
@@ -197,8 +175,6 @@ TEST(FileBackend, find_at_simulation_timestamp_picks_exact_match) {
     auto missing = r.value()->find_at_simulation_timestamp("cat-1", 9999);
     ASSERT_FALSE(missing.has_value());
     EXPECT_EQ(missing.error().kind, BackendError::Kind::NotFound);
-
-    std::remove(path.c_str());
 }
 
 // ---------------------------------------------------------------------
@@ -209,8 +185,7 @@ TEST(FileBackend, find_at_simulation_timestamp_picks_exact_match) {
 // ---------------------------------------------------------------------
 
 TEST(FileBackend, large_record_payload_round_trips) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     // Payload larger than the streambuf's 8192-byte buffer.
     constexpr std::size_t payload_bytes = 64 * 1024;
@@ -229,8 +204,6 @@ TEST(FileBackend, large_record_payload_round_trips) {
     ASSERT_TRUE(rec.has_value()) << rec.error().message;
     ASSERT_EQ(rec.value().payload.size(), payload_bytes);
     EXPECT_EQ(rec.value().payload, big_payload);
-
-    std::remove(path.c_str());
 }
 
 // ---------------------------------------------------------------------
@@ -248,8 +221,7 @@ TEST(FileBackend, strict_durability_commit_fsyncs_and_succeeds) {
     // *broke* the fsync (e.g. returning the wrong error from a
     // bad fd) would be caught: this test would fail with that
     // error on the commit's error arm.
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
     {
@@ -264,8 +236,6 @@ TEST(FileBackend, strict_durability_commit_fsyncs_and_succeeds) {
     auto rec = r.value()->find_latest("cat-1");
     ASSERT_TRUE(rec.has_value());
     EXPECT_EQ(rec.value().payload, std::vector<char>{'D'});
-
-    std::remove(path.c_str());
 }
 
 // ---------------------------------------------------------------------
@@ -277,8 +247,7 @@ TEST(FileBackend, create_returns_same_backend_for_same_path) {
     // N-protocols-on-one-realization. Verify that two `create()`
     // calls with the same path return the same shared_ptr — same
     // file descriptor, same in-memory index, same write mutex.
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be1 = FileBackend::create(path);
     auto be2 = FileBackend::create(path);
@@ -287,20 +256,16 @@ TEST(FileBackend, create_returns_same_backend_for_same_path) {
     // Different paths should NOT share.
     auto be3 = FileBackend::create(path + ".other");
     EXPECT_NE(be1.get(), be3.get());
-
-    std::remove(path.c_str());
-    std::remove((path + ".other").c_str());
 }
 
 TEST(FileBackend, create_scope_registration_is_order_independent) {
     // Registry keys by path, so each subtest uses its own path to
     // force a fresh backend and check the ordering independently.
-    const std::string base = temp_path();
+    const std::string base = ngen::test::test_temp_path("backend.bin").string();
     const std::string p1   = base + ".empty_first";
     const std::string p2   = base + ".scoped_first";
 
     auto seed = [](const std::string& p) {
-        std::remove(p.c_str());
         auto be = FileBackend::create(p);
         ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
                           (void)write_record(w,"cat-1:cfe", 0, 0, {'1'});
@@ -324,14 +289,10 @@ TEST(FileBackend, create_scope_registration_is_order_independent) {
         ASSERT_TRUE(r.has_value());
         EXPECT_FALSE(r.value()->find_latest("cat-2:cfe").has_value());
     }
-
-    std::remove(p1.c_str());
-    std::remove(p2.c_str());
 }
 
 TEST(FileBackend, create_unions_two_non_empty_scopes) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
     {
         auto be = FileBackend::create(path);
         ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
@@ -349,13 +310,10 @@ TEST(FileBackend, create_unions_two_non_empty_scopes) {
     EXPECT_TRUE(r.value()->find_latest("cat-1:cfe").has_value());
     EXPECT_TRUE(r.value()->find_latest("cat-2:cfe").has_value());
     EXPECT_FALSE(r.value()->find_latest("cat-3:cfe").has_value());
-
-    std::remove(path.c_str());
 }
 
 TEST(FileBackend, create_falls_back_to_index_all_when_no_scope_registered) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
     {
         auto be = FileBackend::create(path);
         ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
@@ -370,15 +328,12 @@ TEST(FileBackend, create_falls_back_to_index_all_when_no_scope_registered) {
     ASSERT_TRUE(r.has_value());
     EXPECT_TRUE(r.value()->find_latest("cat-1:cfe").has_value());
     EXPECT_TRUE(r.value()->find_latest("cat-2:cfe").has_value());
-
-    std::remove(path.c_str());
 }
 
 TEST(FileBackend, registry_evicts_after_last_handle_drops) {
     // weak_ptr in the registry means a backend that's no longer
     // referenced should be reconstructible (not handed back stale).
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     FileBackend* first_addr = nullptr;
     {
@@ -395,8 +350,6 @@ TEST(FileBackend, registry_evicts_after_last_handle_drops) {
     auto w = be2->writer(now(), Durability::relaxed);
     ASSERT_TRUE(w.has_value()) << w.error().message;
     ASSERT_TRUE(write_record(*w.value(),"post-reuse", 0, 0, {'X'}).has_value());
-
-    std::remove(path.c_str());
 }
 
 TEST(FileBackend, concurrent_writers_serialize_records_via_backend_mutex) {
@@ -406,8 +359,7 @@ TEST(FileBackend, concurrent_writers_serialize_records_via_backend_mutex) {
     // interleave at sub-record granularity. Verify by reading every
     // record back and confirming all are intact (correct id length,
     // correct payload, no truncation).
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     constexpr int per_thread   = 50;
     constexpr int payload_size = 256;
@@ -453,8 +405,6 @@ TEST(FileBackend, concurrent_writers_serialize_records_via_backend_mutex) {
             }
         }
     }
-
-    std::remove(path.c_str());
 }
 
 TEST(FileBackend, writer_supports_multiple_write_commit_cycles) {
@@ -464,8 +414,7 @@ TEST(FileBackend, writer_supports_multiple_write_commit_cycles) {
     // longer keeps a long-lived Writer — each `run()` acquires a
     // fresh handle — but the underlying multi-cycle support
     // exercised here is still part of the Writer contract.)
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
     {
@@ -488,16 +437,13 @@ TEST(FileBackend, writer_supports_multiple_write_commit_cycles) {
     auto latest = r.value()->find_latest("cat-1");
     ASSERT_TRUE(latest.has_value());
     EXPECT_EQ(latest.value().time_step, 4);
-
-    std::remove(path.c_str());
 }
 
 TEST(FileBackend, trailing_write_after_commit_is_flushed_on_destruction) {
     // Specific guard: a `write → commit → write → ~Writer()` sequence
     // must NOT lose the trailing record. The committed_ flag is reset
     // by write() so the destructor's best-effort flush still runs.
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
     {
@@ -515,13 +461,10 @@ TEST(FileBackend, trailing_write_after_commit_is_flushed_on_destruction) {
     ASSERT_TRUE(rec.has_value()) << rec.error().message;
     EXPECT_EQ(rec.value().time_step, 1);
     EXPECT_EQ(rec.value().payload, std::vector<char>{'B'});
-
-    std::remove(path.c_str());
 }
 
 TEST(FileBackend, sequential_with_writer_calls_dont_trip_single_in_flight) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
     for (int i = 0; i < 4; ++i) {
@@ -533,8 +476,6 @@ TEST(FileBackend, sequential_with_writer_calls_dont_trip_single_in_flight) {
 
     auto r = be->reader();
     EXPECT_TRUE(r.value()->find_latest("cat-3").has_value());
-
-    std::remove(path.c_str());
 }
 
 // ---------------------------------------------------------------------
@@ -542,8 +483,7 @@ TEST(FileBackend, sequential_with_writer_calls_dont_trip_single_in_flight) {
 // ---------------------------------------------------------------------
 
 TEST(FileBackend, reader_with_scope_excludes_out_of_scope_ids) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
     ASSERT_TRUE(be->with_writer(now(), Durability::relaxed, [](Writer& w) {
@@ -562,8 +502,6 @@ TEST(FileBackend, reader_with_scope_excludes_out_of_scope_ids) {
     auto outside = r.value()->find_latest("cat-2:cfe");
     ASSERT_FALSE(outside.has_value());
     EXPECT_EQ(outside.error().kind, BackendError::Kind::NotFound);
-
-    std::remove(path.c_str());
 }
 
 // ---------------------------------------------------------------------
@@ -571,8 +509,7 @@ TEST(FileBackend, reader_with_scope_excludes_out_of_scope_ids) {
 // ---------------------------------------------------------------------
 
 TEST(FileBackend, reader_remains_valid_after_backend_destruction) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     {
         auto be = FileBackend::create(path);
@@ -591,8 +528,6 @@ TEST(FileBackend, reader_remains_valid_after_backend_destruction) {
     auto rec = reader->find_latest("cat-1");
     ASSERT_TRUE(rec.has_value()) << rec.error().message;
     EXPECT_EQ(rec.value().payload, std::vector<char>{'A'});
-
-    std::remove(path.c_str());
 }
 
 // ---------------------------------------------------------------------
@@ -600,8 +535,7 @@ TEST(FileBackend, reader_remains_valid_after_backend_destruction) {
 // ---------------------------------------------------------------------
 
 TEST(FileBackend, reader_on_missing_file_returns_NotFound_on_lookups) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
     auto r  = be->reader();
@@ -617,8 +551,7 @@ TEST(FileBackend, reader_on_missing_file_returns_NotFound_on_lookups) {
 // ---------------------------------------------------------------------
 
 TEST(FileBackend, duplicate_key_warning_fires_at_index_build) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
     // Two records with the same (id, time_step, checkpoint_epoch).
@@ -644,8 +577,6 @@ TEST(FileBackend, duplicate_key_warning_fires_at_index_build) {
     EXPECT_EQ(rec.value().payload, std::vector<char>{'B'})
         << "expected latest-offset to win (B); got: "
         << std::string(rec.value().payload.begin(), rec.value().payload.end());
-
-    std::remove(path.c_str());
 }
 
 // ---------------------------------------------------------------------
@@ -653,11 +584,8 @@ TEST(FileBackend, duplicate_key_warning_fires_at_index_build) {
 // ---------------------------------------------------------------------
 
 TEST(FileBackend, finalize_returns_success_with_no_deferred_errors) {
-    const std::string path = temp_path();
-    std::remove(path.c_str());
+    const std::string path = ngen::test::test_temp_path("backend.bin").string();
 
     auto be = FileBackend::create(path);
     EXPECT_TRUE(be->finalize().has_value());
-
-    std::remove(path.c_str());
 }
