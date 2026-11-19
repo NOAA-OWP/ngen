@@ -65,6 +65,18 @@ runs:
     using: 'composite'
     steps:
 
+        - name: Update Apt
+          if: runner.os == 'Linux'
+          run: |
+            sudo apt-get update
+          shell: bash
+
+        - name: Install CMake
+          if: runner.os == 'Linux'
+          run: |
+            sudo apt-get install -y --fix-missing cmake build-essential
+          shell: bash
+
         - name: Install MPI
           #Only use this step if Linux/ubuntu is being used
           if: |
@@ -72,7 +84,6 @@ runs:
             runner.os == 'Linux'
           id: install-mpi
           run: |
-            sudo apt-get update
             sudo apt-get install -y --fix-missing libopenmpi-dev openmpi-bin openmpi-common
           shell: bash
 
@@ -80,7 +91,6 @@ runs:
           run: |
             if [ ${{ runner.os }} == 'Linux' ]
             then
-              sudo apt-get update
               sudo apt-get install -y --fix-missing libnetcdf-dev libnetcdff-dev libnetcdf-c++4-1 libnetcdf-c++4-dev
               echo "NETCDF=/usr" >> $GITHUB_ENV
             elif [ ${{ runner.os }} == 'macOS' ]
@@ -102,7 +112,6 @@ runs:
           run: |
             if [ ${{ runner.os }} == 'Linux' ]
             then
-              sudo apt-get update
               sudo apt-get install -y --fix-missing libudunits2-dev
             elif [ ${{ runner.os }} == 'macOS' ]
             then
