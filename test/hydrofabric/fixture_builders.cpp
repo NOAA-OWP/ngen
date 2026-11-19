@@ -8,6 +8,7 @@
 
 #include <gtest/gtest.h>
 #include <sqlite3.h>
+#include "test_temp_paths.hpp"
 
 namespace ngen {
 namespace hydrofabric {
@@ -354,17 +355,6 @@ class writer
     sqlite3*    db_ = nullptr;
 };
 
-/**
- * Absolute path to write a fixture of the given name to.
- *
- * @param[in] name File name of the fixture
- * @return Path under the test temp directory
- */
-std::string fixture_path(const std::string& name)
-{
-    return std::string(::testing::TempDir()) + "/" + name;
-}
-
 // The shared base topology. cat-1 and cat-3 meet at nex-1, which drains
 // through cat-2 to the terminal nex-2; the v2.2, v4.0beta1 and v4.0 fixtures
 // all describe it, so their loaded toids can be compared to each other.
@@ -483,7 +473,7 @@ void write_v4_0_divides(writer& db)
 
 std::string write_v2_2()
 {
-    writer db{fixture_path("example_v2_2.gpkg")};
+    writer db{ngen::test::temp_path("example_v2_2.gpkg").string()};
 
     // The v2.2 nexus is keyed by plain 'id', which is what tells the loader
     // this is not a v4 file.
@@ -576,7 +566,7 @@ std::string write_v2_2()
 
 std::string write_v4_0beta1()
 {
-    writer db{fixture_path("example_v4_0beta1.gpkg")};
+    writer db{ngen::test::temp_path("example_v4_0beta1.gpkg").string()};
 
     write_v4_nexus(db);
     write_v4_0beta1_divides(db);
@@ -622,7 +612,7 @@ std::string write_v4_0beta1()
 
 std::string write_v4_0()
 {
-    writer db{fixture_path("example_v4_0.gpkg")};
+    writer db{ngen::test::temp_path("example_v4_0.gpkg").string()};
 
     write_v4_nexus(db);
 
@@ -680,7 +670,7 @@ std::string write_v4_0()
 
 std::string write_v4_0_nexus_only()
 {
-    writer db{fixture_path("example_v4_0_nexus_only.gpkg")};
+    writer db{ngen::test::temp_path("example_v4_0_nexus_only.gpkg").string()};
 
     write_v4_nexus(db);
 
@@ -689,7 +679,7 @@ std::string write_v4_0_nexus_only()
 
 std::string write_v4_0_divides_only()
 {
-    writer db{fixture_path("example_v4_0_divides_only.gpkg")};
+    writer db{ngen::test::temp_path("example_v4_0_divides_only.gpkg").string()};
 
     write_v4_0_divides(db);
 
@@ -698,7 +688,7 @@ std::string write_v4_0_divides_only()
 
 std::string write_v4_0beta1_minimal()
 {
-    writer db{fixture_path("example_v4_0beta1_minimal.gpkg")};
+    writer db{ngen::test::temp_path("example_v4_0beta1_minimal.gpkg").string()};
 
     write_v4_nexus(db);
     write_v4_0beta1_divides(db);
@@ -728,7 +718,7 @@ std::string write_v4_0beta1_minimal()
 
 std::string write_v4_0beta1_dangling()
 {
-    writer db{fixture_path("example_v4_0beta1_dangling.gpkg")};
+    writer db{ngen::test::temp_path("example_v4_0beta1_dangling.gpkg").string()};
 
     // One nexus, terminal, present mainly so the file is detected as v4.
     db.exec(
@@ -786,7 +776,7 @@ std::string write_v4_0beta1_dangling()
 
 std::string write_v4_0beta1_extra_col()
 {
-    writer db{fixture_path("example_v4_0beta1_extra_col.gpkg")};
+    writer db{ngen::test::temp_path("example_v4_0beta1_extra_col.gpkg").string()};
 
     db.exec(
         "CREATE TABLE nexus ("
