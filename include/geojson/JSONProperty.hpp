@@ -399,6 +399,34 @@ namespace geojson {
             }
 
             /**
+             * @brief Copy assign a JSONProperty
+             *
+             * As with the copy constructor, `data` must refer to this object's own `value_list` or `values`
+             * rather than to `other`'s, so the implicit member-wise assignment is not usable.
+             */
+            JSONProperty& operator=(const JSONProperty& other) {
+                if (this != &other) {
+                    // Copy first: `other` may be nested inside this property's own storage
+                    JSONProperty copy(other);
+                    type = copy.type;
+                    key = std::move(copy.key);
+                    values = std::move(copy.values);
+                    value_list = std::move(copy.value_list);
+                    switch (type) {
+                        case PropertyType::List:
+                            data = List( &value_list );
+                            break;
+                        case PropertyType::Object:
+                            data = Object( &values );
+                            break;
+                        default:
+                            data = copy.data;
+                    }
+                }
+                return *this;
+            }
+
+            /**
              * A basic destructor
              */
             virtual ~JSONProperty(){};
