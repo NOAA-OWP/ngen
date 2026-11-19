@@ -38,7 +38,7 @@ if (NGEN_WITH_ROUTING)
 endif ()
 
 if(NGEN_WITH_MPI)
-    target_link_libraries(core PUBLIC MPI::MPI_CXX)
+    target_link_libraries(core PUBLIC MPI::MPI_CXX NGen::parallel)
 endif()
 
 add_subdirectory("catchment")
