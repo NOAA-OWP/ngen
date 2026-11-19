@@ -139,7 +139,10 @@ runs:
 
         - name: Set Pip Constraints
           run: |
-            echo "numpy<2.0" > $GITHUB_WORKSPACE/constraints.txt
+            # t-route fails with pandas 3 (copy-on-write makes arrays read-only).
+            # Apply on all platforms so they test the same versions; macOS
+            # builds pandas 2.x from source on Python versions without wheels.
+            echo "pandas<3" > $GITHUB_WORKSPACE/constraints.txt
             echo "PIP_CONSTRAINT=$GITHUB_WORKSPACE/constraints.txt" >> $GITHUB_ENV
             echo "UV_CONSTRAINT=$GITHUB_WORKSPACE/constraints.txt" >> $GITHUB_ENV
           shell: bash
@@ -166,7 +169,7 @@ runs:
             $ACTIVATE_VENV_IF_USE_PYTHON
             echo $(which python3)
             $PIP_INSTALL pip
-            $PIP_INSTALL numpy
+            $PIP_INSTALL 'numpy~=2.0'
             deactivate
           shell: bash
 

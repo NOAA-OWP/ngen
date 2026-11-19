@@ -115,8 +115,12 @@ jobs:
           cd t-route
           pip install 'pip>=23.0,<23.1'
           pip install -U setuptools
-          pip install -r requirements.txt
-          pip install deprecated 'pyarrow==11.0.0' tables geopandas numpy
+          # t-route pins numpy~=1.0, pandas<=2.2.0 and pyarrow<12.0; numpy 2
+          # needs pandas >= 2.2.2 and pyarrow built against numpy 2.
+          # t-route fails with pandas 3 (copy-on-write makes arrays read-only).
+          sed -i -E '/^(numpy|pandas|pyarrow)\b/d' requirements.txt
+          pip install -r requirements.txt 'numpy~=2.0' 'pandas>=2.2.2,<3'
+          pip install deprecated pyarrow tables geopandas 'numpy~=2.0' 'pandas>=2.2.2,<3'
           if [ ${{ runner.os }} == 'macOS' ] 
           then
             export LIBRARY_PATH=/usr/local/lib/gcc/11/
