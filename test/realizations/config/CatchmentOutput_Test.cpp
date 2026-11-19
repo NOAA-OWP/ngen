@@ -7,7 +7,6 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <unistd.h>   // getpid
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -15,6 +14,7 @@
 #include "realizations/config/output.hpp"
 #include "realizations/config/catchment_output.hpp"
 #include <CatchmentOutputsMgr.hpp>
+#include "test_temp_paths.hpp"
 
 // Unit tests for the catchment output factory (realization::config::make_catchment_output_mgr):
 // that it selects the manager's mode from the configuration. The CSV layout details themselves
@@ -47,28 +47,6 @@ namespace {
         while (std::getline(in, line)) lines.push_back(line);
         return lines;
     }
-
-    // The parent for this binary's temp output roots. PID-scoped so concurrent test binaries don't
-    // collide over fixed names.
-    std::filesystem::path pid_test_root() {
-        return std::filesystem::temp_directory_path() / ("ngen_cat_factory_test_" + std::to_string(getpid()));
-    }
-
-    // A unique output root (trailing slash) under pid_test_root(). Not created here -- the manager
-    // creates it, which is part of what we exercise; TempDirCleanup owns wiping the tree.
-    std::string fresh_root() {
-        static int counter = 0;
-        return (pid_test_root() / std::to_string(counter++) / "").string();
-    }
-
-    // Own the PID-scoped temp tree's lifecycle: clear any residue from a prior same-PID run up front,
-    // and remove this run's tree at exit (which also covers a root left behind by a test that failed
-    // an assertion before its own cleanup). This is the only thing that touches the tree wholesale.
-    struct TempDirCleanup : ::testing::Environment {
-        void SetUp() override    { std::filesystem::remove_all(pid_test_root()); }
-        void TearDown() override { std::filesystem::remove_all(pid_test_root()); }
-    };
-    const auto* temp_dir_cleanup = ::testing::AddGlobalTestEnvironment(new TempDirCleanup);
 }
 
 // per_formulation grouping -> aggregated manager: one shared file with a leading catchment_id
@@ -77,7 +55,7 @@ namespace {
 TEST(CatchmentOutput_Factory_Test, PerFormulationConfigSelectsAggregatedFile)
 {
     namespace fs = std::filesystem;
-    const std::string root = fresh_root();
+    const std::string root = (ngen::test::test_temp_path("output") / "").string(); // created by the manager
 
     {
         auto mgr = make_catchment_output_mgr(config_with(root, "per_formulation"),
@@ -100,7 +78,7 @@ TEST(CatchmentOutput_Factory_Test, PerFormulationConfigSelectsAggregatedFile)
 TEST(CatchmentOutput_Factory_Test, PerFeatureConfigSelectsFilePerCatchment)
 {
     namespace fs = std::filesystem;
-    const std::string root = fresh_root();
+    const std::string root = (ngen::test::test_temp_path("output") / "").string(); // created by the manager
 
     {
         auto mgr = make_catchment_output_mgr(config_with(root, "per_feature"),
@@ -123,7 +101,7 @@ TEST(CatchmentOutput_Factory_Test, PerFeatureConfigSelectsFilePerCatchment)
 TEST(CatchmentOutput_Factory_Test, FileNameDoesNotOverridePerFeatureGrouping)
 {
     namespace fs = std::filesystem;
-    const std::string root = fresh_root();
+    const std::string root = (ngen::test::test_temp_path("output") / "").string(); // created by the manager
 
     {
         auto mgr = make_catchment_output_mgr(config_with(root, "per_feature"),
@@ -140,7 +118,7 @@ TEST(CatchmentOutput_Factory_Test, FileNameDoesNotOverridePerFeatureGrouping)
 // configured significant digits (config JSON -> factory -> CSV backend).
 TEST(CatchmentOutput_Factory_Test, PrecisionFromConfigReachesWriter)
 {
-    const std::string root = fresh_root();
+    const std::string root = (ngen::test::test_temp_path("output") / "").string(); // created by the manager
 
     std::stringstream ss(std::string("{\"output\":{\"root\":\"") + root
         + "\",\"precision\":4,\"catchment\":{\"grouping\":\"per_feature\"}}}");
