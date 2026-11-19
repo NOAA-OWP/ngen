@@ -15,6 +15,9 @@
 // Again non-Windows specific here
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
+
+#include "test_temp_paths.hpp"
 
 #include <cstring>
 #include <algorithm>
@@ -87,7 +90,7 @@ protected:
 
     int rank, size;
 
-    std::string output_root = "/tmp/PerFormulationNexusOutputMgrTest";
+    std::string output_root;
 
     std::vector<std::string> ex_0_form_0_nexus_ids = {"nex-1", "nex-2", "nex-3", "nex-4"};
     std::shared_ptr<std::vector<std::string>> ex_0_form_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>{"form-0"});
@@ -162,8 +165,6 @@ protected:
     std::vector<std::time_t> ex_6_timestamps_seconds = {1735707600, 1735711200};
     size_t ex_6_num_time_steps = 2;
 
-    std::vector<std::string> files_to_cleanup;
-
 };
 
 void PerFormulationNexusOutputMgr_Test::SetUp()
@@ -178,6 +179,16 @@ void PerFormulationNexusOutputMgr_Test::SetUp()
     rank = 0;
     size = 1;
     #endif
+
+    // This test run's directory in rank 0's process directory, which every rank names by rank 0's process ID
+    int pid = static_cast<int>(::getpid());
+    #if NGEN_MPI_UNIT_TESTS
+    MPI_Bcast(&pid, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    #endif
+    if (rank == 0) {
+        ngen::test::process_temp_dir(); // creates it, and removes it when rank 0 exits
+    }
+    output_root = ngen::test::test_temp_dir(pid).string();
 
     // Create test output root dir, if it does not exist
     // Recall that if not using MPI, rank will always be 0, limiting to rank 0 correct in either serial or parallel
@@ -259,13 +270,6 @@ void PerFormulationNexusOutputMgr_Test::TearDown()
 {
     Test::TearDown();
 
-    // Have tearDown clean up produced file(s) and directory
-    for (const auto& f : files_to_cleanup) {
-        // Recall that if not using MPI, rank will always be 0, so works in either serial or parallel
-        if (rank == 0 && std::remove(f.c_str()) != 0) {
-            throw std::runtime_error("Failed to cleanup file '" + f + "'");
-        }
-    }
     #if NGEN_MPI_UNIT_TESTS
     MPI_Barrier(MPI_COMM_WORLD);
     #endif
@@ -298,14 +302,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_2_a)
     };
     std::vector<int> local_offsets = {0, nexus_per_rank[0]};
     utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, test_form_names, output_root, ex_2_num_time_steps, rank, local_offsets[rank], 2, ex_2_form_0_all_nexus_id.size());
-
-    if (rank == 0) {
-        // Make sure we know what files to clean up
-        std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-        for (const std::string& f : *filenames) {
-            files_to_cleanup.push_back(f);
-        }
-    }
 
     mgr.close();
     MPI_Barrier(MPI_COMM_WORLD);
@@ -348,15 +344,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_a)
     std::vector<int> local_offsets = {0, nexus_per_rank[0]};
     utils::PerFormulationNexusOutputMgr mgr_impl(*nexus_ids, ex_2_form_names, output_root, ex_2_num_time_steps, rank, local_offsets[rank], 2, ex_2_form_0_all_nexus_id.size());
     utils::NexusOutputsMgr& mgr = mgr_impl;
-
-    // Add to files_to_clean_up, but only for rank 0 to deal with (they should be the same sets of files)
-    if (rank == 0) {
-        // Make sure we know what files to clean up
-        std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
-        for (const std::string& f : *filenames) {
-            files_to_cleanup.push_back(f);
-        }
-    }
 
     // Write for this rank's nexuses
     for (size_t t = 0; t < ex_2_timestamps.size(); ++t) {
@@ -423,15 +410,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_b)
     };
     std::vector<int> local_offsets = {0, nexus_per_rank[0]};
     utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, ex_2_form_names, output_root, ex_2_num_time_steps, rank, local_offsets[rank], 2, ex_2_form_0_all_nexus_id.size());
-
-    // Add to files_to_clean_up, but only for rank 0 to deal with (they should be the same sets of files)
-    if (rank == 0) {
-        // Make sure we know what files to clean up
-        std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-        for (const std::string& f : *filenames) {
-            files_to_cleanup.push_back(f);
-        }
-    }
 
     // Write for this rank's nexuses, but only for the first timestep (i.e., 0) to test the feature ID writes
     size_t t = 0;
@@ -500,14 +478,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_6_a)
     std::vector<int> local_offsets = {0, nexus_per_rank[0]};
     utils::PerFormulationNexusOutputMgr mgr(*nexus_ids, ex_6_form_names, output_root, ex_6_num_time_steps, rank, local_offsets[rank], 2, ex_6_form_0_all_nexus_id.size());
 
-    // Add to files_to_clean_up, but only for rank 0 to deal with (they should be the same sets of files)
-    if (rank == 0) {
-        std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-        for (const std::string& f : *filenames) {
-            files_to_cleanup.push_back(f);
-        }
-    }
-
     // Write for this rank's nexuses over both time steps
     for (size_t t = 0; t < ex_6_timestamps.size(); ++t) {
         auto step_output = mgr.prepare_for_step(ex_6_form_names->at(0),
@@ -572,11 +542,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_a)
 
     utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     ASSERT_EQ(filenames->size(), 1);
 }
@@ -588,11 +554,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_b)
 
     utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     ASSERT_TRUE(utils::FileChecker::file_can_be_written(filenames->at(0)));
 }
@@ -604,11 +566,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_c) {
 
     utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     // TODO: address this better one this is no longer a static, hard-coded setting
     ASSERT_TRUE(friend_is_chunking(&mgr));
@@ -634,12 +592,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_0_d)
 
     utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
 
-    // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
-
     ASSERT_FALSE(mgr.is_closed());
 }
 
@@ -650,11 +602,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_3_c) {
 
     utils::PerFormulationNexusOutputMgr mgr(ex_3_form_0_all_nexus_id, ex_3_form_names, output_root, 2);
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     // TODO: address this better one this is no longer a static, hard-coded setting
     ASSERT_TRUE(friend_is_chunking(&mgr));
@@ -687,11 +635,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, construct_3_d) {
     utils::PerFormulationNexusOutputMgr mgr_a(ex_3_form_0_group_a_nexus_ids, ex_3_form_names, output_root, 2, 0, 0, 2, ex_3_form_0_all_nexus_id.size());
     utils::PerFormulationNexusOutputMgr mgr_b(ex_3_form_0_group_b_nexus_ids, ex_3_form_names, output_root, 2, 1, ex_3_form_0_all_nexus_id.size(), 2, ex_3_form_0_all_nexus_id.size());
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     // TODO: address this better one this is no longer a static, hard-coded setting
     //if (friend_is_chunking(&mgr)) {
@@ -718,12 +662,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, nexus_out_file_0_a)
 
     utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
 
-    // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
-
     std::string nexus_outfile = friend_get_nexus_outfile(&mgr);
     std::string expected = output_root + "/formulation_" + ex_0_form_names->at(0) + "_nexuses.nc";
     ASSERT_EQ(nexus_outfile, expected);
@@ -737,12 +675,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_a) {
     int time_index = 0;
 
     utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
-
-    // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     utils::time_marker current_time = utils::time_marker(time_index, ex_0_timestamps_seconds[time_index], ex_0_timestamps[time_index]);
 
@@ -760,12 +692,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_b)
     int time_index = 0;
 
     utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
-
-    // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     utils::time_marker current_time = utils::time_marker(time_index, ex_0_timestamps_seconds[time_index], ex_0_timestamps[time_index]);
     auto step_output = mgr.prepare_for_step(form_name, current_time);
@@ -787,11 +713,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, receive_data_entry_0_c) {
     utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
     utils::NexusOutputsMgr& mgr = mgr_impl;
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     auto current_time = utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]);
     auto step_output = mgr.prepare_for_step(current_time);
@@ -826,11 +748,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_a) {
     utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
     utils::NexusOutputsMgr& mgr = mgr_impl;
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     auto current_time = utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]);
     auto step_output = mgr.prepare_for_step(current_time);
@@ -859,11 +777,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_b) {
     utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
     utils::NexusOutputsMgr& mgr = mgr_impl;
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     for (size_t t = 0; t < ex_0_timestamps.size(); ++t) {
         auto current_time = utils::time_marker(t, ex_0_timestamps_seconds[t], ex_0_timestamps[t]);
@@ -899,12 +813,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, DISABLED_commit_writes_0_c) {
     utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
     utils::NexusOutputsMgr& mgr = mgr_impl;
 
-    // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
-
     auto current_time = utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]);
     auto step_output = mgr.prepare_for_step(current_time);
 
@@ -923,11 +831,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_0_d)
     utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
     utils::NexusOutputsMgr& mgr = mgr_impl;
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     auto current_time = utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]);
     auto step_output = mgr.prepare_for_step(current_time);
@@ -965,11 +869,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_a) {
     utils::PerFormulationNexusOutputMgr mgr_b_impl(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
     utils::NexusOutputsMgr& mgr_b = mgr_b_impl;
 
-    // Make sure we know what files to clean up (and these should be the same for each)
     std::shared_ptr<std::vector<std::string>> filenames = mgr_a_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     // Alternate writing, first all for group_a in a time step, then all for group b in a time step, then the next time step
     for (size_t t = 0; t < ex_1_timestamps.size(); ++t) {
@@ -1020,11 +920,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_b) {
     utils::PerFormulationNexusOutputMgr mgr_b_impl(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
     utils::NexusOutputsMgr& mgr_b = mgr_b_impl;
 
-    // Make sure we know what files to clean up (and these should be the same for each)
     std::shared_ptr<std::vector<std::string>> filenames = mgr_a_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     // Write all the b group stuff first
     for (size_t t = 0; t < ex_1_timestamps.size(); ++t) {
@@ -1076,11 +972,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_1_c)
     utils::PerFormulationNexusOutputMgr mgr_b_impl(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
     utils::NexusOutputsMgr& mgr_b = mgr_b_impl;
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr_a_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     // Alternate writing, first all for group_a in a time step, then all for group b in a time step, then the next time step
     for (size_t t = 0; t < ex_1_timestamps.size(); ++t) {
@@ -1128,11 +1020,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_5_a)
     utils::PerFormulationNexusOutputMgr mgr_impl(ex_5_form_0_all_nexus_id, ex_5_form_names, output_root, ex_5_timestamps.size());
     utils::NexusOutputsMgr& mgr = mgr_impl;
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     for (size_t t = 0; t < ex_5_timestamps.size(); ++t) {
         auto current_time = utils::time_marker(t, ex_5_timestamps_seconds[t], ex_5_timestamps[t]);
@@ -1193,11 +1081,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_2_c) {
     utils::PerFormulationNexusOutputMgr mgr_impl(*nexus_ids, ex_2_form_names, output_root, 720);
     utils::NexusOutputsMgr& mgr = mgr_impl;
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     for (size_t t = 0; t < ex_2_timestamps.size(); ++t) {
         auto current_time = utils::time_marker(t, ex_2_timestamps_seconds[t], ex_2_timestamps[t]);
@@ -1234,11 +1118,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_3_b) {
     utils::PerFormulationNexusOutputMgr mgr_impl(ex_3_form_0_all_nexus_id, ex_3_form_names, output_root, 2);
     utils::NexusOutputsMgr& mgr = mgr_impl;
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
 
 
@@ -1265,7 +1145,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, commit_writes_3_b) {
             ASSERT_EQ(values[n][t], ex_3_all_data[t][n]);
         }
     }
-
 }
 
 /** Test that close works automatically after all time steps for example 0. */
@@ -1275,12 +1154,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, is_closed_0_a) {
 
     utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
     utils::NexusOutputsMgr& mgr = mgr_impl;
-
-    // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     for (size_t t = 0; t < ex_0_timestamps.size(); ++t) {
         auto current_time = utils::time_marker(t, ex_0_timestamps_seconds[t], ex_0_timestamps[t]);
@@ -1303,12 +1176,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, is_closed_0_b) {
     utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
     utils::NexusOutputsMgr& mgr = mgr_impl;
 
-    // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
-
     auto current_time = utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]);
     auto step_output = mgr.prepare_for_step(current_time);
 
@@ -1328,12 +1195,6 @@ TEST_F(PerFormulationNexusOutputMgr_Test, is_closed_0_c) {
     utils::PerFormulationNexusOutputMgr mgr_impl(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
     utils::NexusOutputsMgr& mgr = mgr_impl;
 
-    // Make sure we know what files to clean up
-    std::shared_ptr<std::vector<std::string>> filenames = mgr_impl.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
-
     auto current_time = utils::time_marker(0, ex_0_timestamps_seconds[0], ex_0_timestamps[0]);
     auto step_output = mgr.prepare_for_step(current_time);
 
@@ -1352,11 +1213,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_0_a)
 
     utils::PerFormulationNexusOutputMgr mgr(ex_0_form_0_nexus_ids, ex_0_form_names, output_root, 2);
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     {
         friend_write_nexus_ids_once(&mgr);
@@ -1390,11 +1247,7 @@ TEST_F(PerFormulationNexusOutputMgr_Test, write_nexus_ids_once_1_a)
     utils::PerFormulationNexusOutputMgr mgr_a(ex_1_form_0_group_a_nexus_ids, ex_1_form_names, output_root, 2, 0, 0, 2, ex_1_form_0_all_nexus_id.size());
     utils::PerFormulationNexusOutputMgr mgr_b(ex_1_form_0_group_b_nexus_ids, ex_1_form_names, output_root, 2, 1, ex_1_form_0_group_a_nexus_ids.size(), 2, ex_1_form_0_all_nexus_id.size());
 
-    // Make sure we know what files to clean up
     std::shared_ptr<std::vector<std::string>> filenames = mgr_a.get_filenames();
-    for (const std::string& f : *filenames) {
-        files_to_cleanup.push_back(f);
-    }
 
     {
         friend_write_nexus_ids_once(&mgr_a);
