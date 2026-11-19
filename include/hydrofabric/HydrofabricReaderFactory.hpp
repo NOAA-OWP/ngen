@@ -41,23 +41,26 @@ HydrofabricVersion detect_hydrofabric(const std::string& catchment_path, const s
  * @param[in] catchment_path Path to the file holding the divides
  * @param[in] nexus_path Path to the file holding the nexuses; may be the same file, in which case
  *            it is opened once
+ * @param[in] content What the reader reads of each feature
  * @return std::unique_ptr<HydrofabricReader> Reader for the hydrofabric
  * @throws std::runtime_error under the same conditions as detect_hydrofabric(), or if the paths
  *         name GeoPackages that are not a hydrofabric
  */
 std::unique_ptr<HydrofabricReader> make_hydrofabric_reader(
     const std::string& catchment_path,
-    const std::string& nexus_path
+    const std::string& nexus_path,
+    Content content = Content::Full
 );
 
 /**
  * Open a hydrofabric held entirely in one file.
  *
  * @param[in] path Path to the file holding both the divides and the nexuses
+ * @param[in] content What the reader reads of each feature
  * @return std::unique_ptr<HydrofabricReader> Reader for the hydrofabric
  * @throws std::runtime_error under the same conditions as the two-path form
  */
-std::unique_ptr<HydrofabricReader> make_hydrofabric_reader(const std::string& path);
+std::unique_ptr<HydrofabricReader> make_hydrofabric_reader(const std::string& path, Content content = Content::Full);
 
 } // namespace hydrofabric
 } // namespace ngen

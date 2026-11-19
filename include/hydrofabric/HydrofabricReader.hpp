@@ -10,6 +10,19 @@ namespace ngen {
 namespace hydrofabric {
 
 /**
+ * What a hydrofabric reader reads of each feature.
+ */
+enum class Content
+{
+    //! Every attribute the hydrofabric holds, and the geometry
+    Full,
+    //! Only what connects the features: each feature's ID, and the ID of the feature it drains to
+    //! as the "toid" property where it has one. No geometry is read, so each feature is an empty
+    //! geometry collection with an empty bounding box.
+    Connectivity
+};
+
+/**
  * Reads the catchment and nexus features of a hydrofabric, whatever format it is stored in.
  *
  * A hydrofabric is a pair of roles -- the divides (catchments) and the nexuses they drain to -- and
@@ -21,6 +34,9 @@ namespace hydrofabric {
  * roles in named tables, but a GeoJSON hydrofabric has no layers at all -- its roles are two whole
  * files -- so a layer-keyed interface could only be honored by one of the two. Reading some other
  * table of a GeoPackage is a different job, served directly by ngen::geopackage::GeoPackageReader.
+ *
+ * Each reader reads the Content it was made for, by make_hydrofabric_reader(). A reader may read
+ * more than that Content needs where its format offers no way to read less, as GeoJSON does not.
  */
 class HydrofabricReader
 {
