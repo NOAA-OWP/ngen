@@ -77,6 +77,20 @@ runs:
             sudo apt-get install -y --fix-missing cmake build-essential
           shell: bash
 
+        - name: Install GCC 14
+          if: runner.os == 'Linux'
+          run: |
+            sudo apt-get install -y --fix-missing gcc-14 g++-14 gfortran-14
+            # clang matrix entries override CC/CXX in the CMake step
+            echo "CC=gcc-14" >> $GITHUB_ENV
+            echo "CXX=g++-14" >> $GITHUB_ENV
+            echo "FC=gfortran-14" >> $GITHUB_ENV
+            # Have the Open MPI compiler wrappers use the same compilers
+            echo "OMPI_CC=gcc-14" >> $GITHUB_ENV
+            echo "OMPI_CXX=g++-14" >> $GITHUB_ENV
+            echo "OMPI_FC=gfortran-14" >> $GITHUB_ENV
+          shell: bash
+
         - name: Install MPI
           #Only use this step if Linux/ubuntu is being used
           if: |
@@ -185,7 +199,7 @@ runs:
 
         - name: Setup Fortran Compiler
           if: ${{ inputs.bmi_fortran == 'ON' && runner.os == 'macOS' }}
-          run: echo "FC=gfortran-13" >> $GITHUB_ENV
+          run: echo "FC=gfortran-14" >> $GITHUB_ENV
           shell: bash
 
         - name: Setup macOS Default Compiler Includes
@@ -213,8 +227,8 @@ runs:
               # Don't bother wth ASan stuff for macOS-gcc - it's covered well enough by macOS-clang, and linux-gcc
               if [ ${{ matrix.compiler }} == 'gcc' ]
               then
-                export CC=gcc-13
-                export CXX=g++-13
+                export CC=gcc-14
+                export CXX=g++-14
                 export CFLAGS=" -g -fno-omit-frame-pointer -Werror"
                 export CXXFLAGS="-g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override"
               fi
