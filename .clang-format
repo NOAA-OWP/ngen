@@ -26,19 +26,27 @@ AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortBlocksOnASingleLine: Empty
 AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: true
 AlwaysBreakTemplateDeclarations: Yes
 BinPackArguments: false
 BinPackParameters: false
 BitFieldColonSpacing: Both
+BreakAfterAttributes: Always
+BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Attach # One True Brace Style
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: BeforeComma
 Cpp11BracedListStyle: true
-DerivePointerAlignment: true
+DerivePointerAlignment: false
+EmptyLineBeforeAccessModifier: LogicalBlock
 FixNamespaceComments: true
+InsertNewlineAtEOF: true
 NamespaceIndentation: None
+PointerAlignment: Left
+QualifierAlignment: Left
+ReferenceAlignment: Pointer
 SeparateDefinitionBlocks: Always
 ---
