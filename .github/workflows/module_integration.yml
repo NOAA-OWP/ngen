@@ -101,9 +101,9 @@ jobs:
         run: |
           if [ ${{ runner.os }} == 'macOS' ] 
           then
-            sudo ln -s $(which gfortran-11) $(dirname $(which gfortran-11))/gfortran
-            export FC=gfortran-11
-            export F90=gfortran-11
+            sudo ln -s $(which gfortran-14) $(dirname $(which gfortran-14))/gfortran
+            export FC=gfortran-14
+            export F90=gfortran-14
           fi
 
       - name: Build T-route Dependency
@@ -123,13 +123,19 @@ jobs:
           pip install deprecated pyarrow tables geopandas 'numpy~=2.0' 'pandas>=2.2.2,<3'
           if [ ${{ runner.os }} == 'macOS' ] 
           then
-            export LIBRARY_PATH=/usr/local/lib/gcc/11/
-            export LD_LIBRARY_PATH=/usr/local/lib/gcc/11/
+            export LIBRARY_PATH=$(brew --prefix)/lib/gcc/14/
+            export LD_LIBRARY_PATH=$(brew --prefix)/lib/gcc/14/
           fi
           # compiler.sh uses $NETCDF as the include path for the Fortran netcdf module
           export NETCDF=$(nf-config --includedir)
-          export FC=gfortran
-          export F90=gfortran 
+          if command -v gfortran-14 >/dev/null
+          then
+            export FC=gfortran-14
+            export F90=gfortran-14
+          else
+            export FC=gfortran
+            export F90=gfortran
+          fi
           ./compiler.sh no-e
           
           deactivate
