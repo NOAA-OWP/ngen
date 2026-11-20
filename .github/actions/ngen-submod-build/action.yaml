@@ -44,7 +44,16 @@ runs:
           run: |
             # see macOS image readmes for supported versions
             # https://github.com/actions/runner-images/tree/main/images/macos
-            echo FC="gfortran-12" >> $GITHUB_ENV
+            echo FC="gfortran-14" >> $GITHUB_ENV
+          shell: bash
+
+        - name: Configure GCC 14
+          if: |
+            runner.os == 'Linux'
+          run: |
+            sudo apt-get install -y --fix-missing gcc-14 g++-14
+            echo "CC=gcc-14" >> $GITHUB_ENV
+            echo "CXX=g++-14" >> $GITHUB_ENV
           shell: bash
 
         - name: Cmake Initialization

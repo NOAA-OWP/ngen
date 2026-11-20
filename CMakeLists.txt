@@ -191,6 +191,11 @@ add_compile_definitions(NGEN_SHARED_LIB_EXTENSION)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
+# Keep the FindBoost module: CI and some users point BOOST_ROOT at an
+# unbuilt source tree, which has no BoostConfig.cmake
+if(POLICY CMP0167)
+    cmake_policy(SET CMP0167 OLD)
+endif()
 find_package(Boost 1.86.0 REQUIRED)
 
 # -----------------------------------------------------------------------------
