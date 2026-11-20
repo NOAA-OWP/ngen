@@ -6,11 +6,6 @@
 #include <Simulation_Time.hpp>
 #include <Layer.hpp>
 
-namespace hy_features
-{
-    class HY_Features;
-    class HY_Features_MPI;
-}
 namespace routing_py_adapter {
     class Routing_Py_Adapter;
 }
@@ -36,12 +31,6 @@ public:
 
     ~NgenSimulation();
 
-#if NGEN_WITH_MPI
-    using hy_features_t = hy_features::HY_Features_MPI;
-#else
-    using hy_features_t = hy_features::HY_Features;
-#endif
-
     /**
      * Run the catchment formulations for the full configured duration of the simulation
      *
@@ -61,7 +50,7 @@ public:
     /**
      * Run t-route via BMI on the stored nexus outflow values for the full configured duration of the simulation
      */
-    void run_routing_bmi(hy_features_t &features, std::string const& t_route_config_file_with_path);
+    void run_routing_bmi(std::string const& t_route_config_file_with_path);
 
     int get_nexus_index(std::string const& nexus_id) const;
     double get_nexus_outflow(int nexus_index, int timestep_index) const;

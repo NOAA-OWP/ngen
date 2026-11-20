@@ -58,6 +58,21 @@ geojson::Feature build_feature(
     geojson::PropertyMap properties
 );
 
+/**
+ * Build a feature with no geometry from a GPKG table row's id and properties.
+ *
+ * The feature is an empty geometry collection with an empty bounding box, as a GeoJSON feature
+ * with no geometry is read.
+ *
+ * @param[in] id Resolved feature id; stored on the returned Feature
+ * @param[in] properties Pre-built property map for the feature
+ * @return geojson::Feature Feature containing only @p id and @p properties
+ */
+geojson::Feature build_feature_without_geometry(
+    const std::string& id,
+    geojson::PropertyMap properties
+);
+
 } // namespace geopackage
 } // namespace ngen
 #endif // NGEN_GEOPACKAGE_H

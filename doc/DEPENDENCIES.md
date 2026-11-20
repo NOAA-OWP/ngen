@@ -12,7 +12,6 @@
 | [MPI](https://www.mpi-forum.org)                                                           | external   | No current implementation or version requirements |                                             Required for [multi-process distributed execution](DISTRIBUTED_PROCESSING.md)                                             |
 | [Python 3 Libraries](#python-3-libraries)                                                  | external   |                    \>= `3.8.0`                    |                                                           Can be [excluded](#overriding-python-dependency).                                                           |
 | [pybind11](#pybind11)                                                                      | submodule  |                     `v2.6.0`                      |                                                          Can be [excluded](#overriding-pybind11-dependency).                                                          |
-| [dmod.subsetservice](#the-dmodsubsetservice-package)                                       | external   |                    `>= 0.3.0`                     |           Only required to perform integrated [hydrofabric file subdividing](DISTRIBUTED_PROCESSING.md#subdivided-hydrofabric) for distributed processing .           |
 | [t-route](#t-route)                                                                        | submodule  |                     see below                     |                                                Module required to enable channel-routing.  Requires pybind11 to enable                                                |
 | [NetCDF Libraries](#netcdf-libraries)                                                      | external   |                    \>= `4.7.4`                    |                                                                      Enables NetCDF I/O support                                                                       |
 | [NetCDF-4 parallel support](https://docs.unidata.ucar.edu/netcdf-c/4.9.3/parallel_io.html) | external   |                                                   |   Optional; opt in via `-DNGEN_WITH_PARALLEL_NETCDF=ON` so MPI ranks write [per-formulation NetCDF nexus output files](REALIZATION_CONFIGURATION.md#per_formulation_nexus_files) directly in parallel. Otherwise rank 0 gathers and writes serially.   |
@@ -195,22 +194,6 @@ If the above `update` command does not check out the expected version, this can 
 The version used is automatically handled by submodule config.  This can be synced by re-running the initialization command above.
 
 As of project version `0.1.0`, the required version is tag `v2.6.0`.
-
-## The `dmod.subsetservice` Package
-
-This is an optional package available via the [OWP DMOD tool](https://github.com/NOAA-OWP/DMOD).  It only is required to enable the driver to generate partition-specific subdivided hydrofabric files from the complete hydrofabric file, as is conditionally required for [distributed processing](DISTRIBUTED_PROCESSING.md).  Further, its use is only attempted when such files are needed for distributed processing _and_ are not already created.
-
-As such, this dependency is ignored unless both Python support and MPI support are enabled and built into the _ngen_ driver.
-
-### Setup
-
-This must be installed in the active Python environment at the time the `ngen` executable is called.  This is usually best done via a virtual environment, especially if one is already set up as described for the [Numpy](#numpy) dependency.  However, all that matters is that the Python environment available to the ngen driver has this package installed.
-
-If installing to a virtual env as suggested above, the installation steps are similar to what is described in the [DMOD project document for the subsetting CLI tool]( https://github.com/NOAA-OWP/DMOD/tree/master/doc/SUBSETTING_CLI_TOOL.md).  The difference is just to create and/or source a virtual environment locate here first, and then change to the DMOD project directory.  All the example commands after the step of sourcing the virtual environment can then be followed as described on that page.
-
-### Version Requirements
-
-Version `0.3.0` or greater must be installed.
 
 ## t-route
 

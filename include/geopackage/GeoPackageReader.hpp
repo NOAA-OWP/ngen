@@ -1,6 +1,7 @@
 #ifndef NGEN_GEOPACKAGE_READER_H
 #define NGEN_GEOPACKAGE_READER_H
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -48,15 +49,21 @@ class GeoPackageReader
      * @param[in] id_column Column to read each feature's id from, which is also the column @p ids
      *            is matched against. Defaults to the conventional "id"; a caller that knows the
      *            layer names it otherwise passes that name here.
+     * @param[in] columns Columns to read besides @p id_column, each of which becomes a property,
+     *            or no value to read every column. Geometry is decoded only when the layer's
+     *            geometry column is read; otherwise each feature is an empty geometry collection
+     *            with an empty bounding box, as a GeoJSON feature with no geometry is read, and the
+     *            collection's bounding box is empty too.
      * @return std::shared_ptr<geojson::FeatureCollection> Collection of the layer's features, with
      *         a bounding box covering all of them
      * @throws std::runtime_error if @p layer is not a queryable table name or does not exist in
-     *         this GeoPackage
+     *         this GeoPackage, or if it lacks any of @p columns
      */
     std::shared_ptr<geojson::FeatureCollection> read(
         const std::string& layer,
         const std::vector<std::string>& ids = {},
-        const std::string& id_column = "id"
+        const std::string& id_column = "id",
+        const std::optional<std::vector<std::string>>& columns = std::nullopt
     ) const;
 
     /**

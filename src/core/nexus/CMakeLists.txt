@@ -18,7 +18,3 @@ target_link_libraries(core_nexus PUBLIC
         Boost::boost                # Headers-only Boost
         NGen::config_header
         )
-
-if(NGEN_WITH_MPI)
-    target_link_libraries(core_nexus PUBLIC MPI::MPI_CXX)
-endif()

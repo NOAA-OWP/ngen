@@ -405,16 +405,9 @@ if(NGEN_WITH_OPENMP)
     target_link_libraries(ngen PUBLIC OpenMP::OpenMP_CXX)
 endif()
 
-add_executable(partitionGenerator src/partitionGenerator.cpp)
-target_include_directories(partitionGenerator PUBLIC "${PROJECT_BINARY_DIR}/include")
-if(NGEN_WITH_SQLITE)
-    target_include_directories(partitionGenerator PUBLIC AFTER "${NGEN_INC_DIR}/geopackage")
-endif()
-
-target_link_libraries(partitionGenerator PUBLIC NGen::core NGen::geojson NGen::hydrofabric)
-if(NGEN_WITH_SQLITE)
-    target_link_libraries(partitionGenerator PUBLIC NGen::geopackage)
-endif()
+# partitionGenerator has been removed. In its place, put a script that says what to use instead.
+configure_file("${PROJECT_SOURCE_DIR}/src/partitionGenerator.sh"
+               "${PROJECT_BINARY_DIR}/partitionGenerator" COPYONLY)
 
 # For automated testing with Google Test
 if(NGEN_WITH_TESTS)
@@ -558,4 +551,4 @@ configure_file("${NGEN_INC_DIR}/NGenConfig.h.in" "${CMAKE_CURRENT_BINARY_DIR}/in
 
 include(GNUInstallDirs)
 install(TARGETS ngen OPTIONAL)
-install(TARGETS partitionGenerator OPTIONAL)
+install(PROGRAMS "${PROJECT_SOURCE_DIR}/src/partitionGenerator.sh" TYPE BIN RENAME partitionGenerator)

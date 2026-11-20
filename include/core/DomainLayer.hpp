@@ -46,7 +46,7 @@ namespace ngen
         DomainLayer(
                 const LayerDescription& desc,
                 const Simulation_Time& s_t,
-                feature_type& features,
+                hy_features::HY_Features& features,
                 long idx,
                 std::shared_ptr<realization::Formulation> formulation,
                 std::shared_ptr<utils::CatchmentOutputsMgr> output_mgr):

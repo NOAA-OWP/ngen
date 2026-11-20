@@ -35,16 +35,19 @@
 
 #if NGEN_WITH_MPI
 
+// No longer supported, but still recognized so that it can be ignored with a warning
 #ifndef MPI_HF_SUB_CLI_FLAG
 #define MPI_HF_SUB_CLI_FLAG "--subdivided-hydrofabric"
 #endif
 
+// Given in place of a partition file path, partition automatically during initialization
+#ifndef AUTOMATIC_PARTITION_ARG
+#define AUTOMATIC_PARTITION_ARG "--auto-partition"
+#endif
+
 #include <mpi.h>
 #include "parallel_utils.h"
-#include "core/Partition_Parser.hpp"
-#include <HY_Features_MPI.hpp>
-
-#include "core/Partition_One.hpp"
+#include "utilities/Partition_Automatic.hpp"
 
 #endif // NGEN_WITH_MPI
 
@@ -132,8 +135,6 @@ int main(int argc, char* argv[]) {
     std::string catchmentDataFile         = "";
     std::string nexusDataFile             = "";
     std::string REALIZATION_CONFIG_PATH   = "";
-    bool is_subdivided_hydrofabric_wanted = false;
-    std::string PARTITION_PATH = "";
 
     // This default value should lead to behavior matching the single-process case in the standalone or non-MPI case
     int mpi_num_procs = 1;
@@ -192,8 +193,8 @@ int main(int argc, char* argv[]) {
     //arg 3 is nexus_data file path
     //arg 4 is nexus subset ids, comma seperated string of ids (no spaces!), "all" for all
     //arg 5 is realization config path
-    //arg 7 is the partition file path
-    //arg 8 is an optional flag that driver should, if not already preprocessed this way, subdivided the hydrofabric
+    //arg 7 may be "--auto-partition", as partitioning is automatic regardless
+    //arg 8 may be the no longer supported --subdivided-hydrofabric flag, which is ignored
 
     std::vector<std::string> catchment_subset_ids;
     std::vector<std::string> nexus_subset_ids;
@@ -267,20 +268,19 @@ int main(int argc, char* argv[]) {
         MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
         MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
 
-        if (argc >= 7) {
-            PARTITION_PATH = argv[6];
-        }
-        else if (mpi_num_procs > 1) {
-            std::cout << "Missing required argument for partition file path." << std::endl;
+        if (argc >= 7 && strcmp(argv[6], AUTOMATIC_PARTITION_ARG) != 0) {
+            std::cout << "Partition config files are no longer supported; ngen partitions automatically" << std::endl;
             exit(-1);
         }
 
         if (argc >= 8) {
             if (strcmp(argv[7], MPI_HF_SUB_CLI_FLAG) == 0) {
-                is_subdivided_hydrofabric_wanted = true;
+                if (mpi_rank == 0) {
+                    std::cerr << "Warning: " << MPI_HF_SUB_CLI_FLAG << " is no longer supported, and is ignored" << std::endl;
+                }
             }
             else if (mpi_num_procs > 1) {
-                std::cout << "Unexpected arg '" << argv[7] << "'; try " << MPI_HF_SUB_CLI_FLAG << std::endl;
+                std::cout << "Unexpected arg '" << argv[7] << "'" << std::endl;
                 exit(-1);
             }
         }
@@ -306,33 +306,6 @@ int main(int argc, char* argv[]) {
                 !utils::FileChecker::file_is_readable(nexusDataFile, "Nexus data") ||
                 !utils::FileChecker::file_is_readable(REALIZATION_CONFIG_PATH, "Realization config");
 
-        #if NGEN_WITH_MPI
-        if (!PARTITION_PATH.empty()) {
-            error = error || !utils::FileChecker::file_is_readable(PARTITION_PATH, "Partition config");
-        }
-
-        // Do some extra steps if we expect to load a subdivided hydrofabric
-        if (is_subdivided_hydrofabric_wanted) {
-            // Ensure the hydrofabric is subdivided (either already or by doing it now), and then
-            // adjust these paths
-            if (parallel::is_hydrofabric_subdivided(catchmentDataFile, MPI_COMM_WORLD, true) ||
-                parallel::subdivide_hydrofabric(
-                    MPI_COMM_WORLD,
-                    catchmentDataFile,
-                    nexusDataFile,
-                    PARTITION_PATH
-                )) {
-                catchmentDataFile += "." + std::to_string(mpi_rank);
-                nexusDataFile += "." + std::to_string(mpi_rank);
-            }
-            // If subdivided was needed, subdividing was not already done, and we could not subdivide just now ...
-            else {
-                std::cout << "Unable to successfully preprocess hydrofabric files into subdivided files per partition.";
-                error = true;
-            }
-        }
-        #endif // NGEN_WITH_MPI
-
         if(error) exit(-1);
 
         //split the subset strings into vectors
@@ -354,18 +327,15 @@ int main(int argc, char* argv[]) {
     #if NGEN_WITH_MPI
     PartitionData local_data;
     if (mpi_num_procs > 1) {
-        Partitions_Parser partition_parser(ptree_from_json_file(PARTITION_PATH));
-        // TODO: add something here to make sure this step worked for every rank, and maybe to checksum the file
-        partition_parser.parse_partition_file();
-
-        std::vector<PartitionData> &partitions = partition_parser.partition_ranks;
-        local_data = std::move(partitions[mpi_rank]);
         if (!nexus_subset_ids.empty()) {
-            std::cerr << "Warning: CLI provided nexus subset will be ignored when using partition config";
+            std::cerr << "Warning: CLI provided nexus subset will be ignored when partitioning automatically";
         }
-        if (!catchment_subset_ids.empty()) {
-            std::cerr << "Warning: CLI provided catchment subset will be ignored when using partition config";
+        std::optional<PartitionData> automatic = ngen::partitioning::partition_automatically(
+            catchmentDataFile, nexusDataFile, catchment_subset_ids, 0, MPI_COMM_WORLD);
+        if (!automatic) {
+            exit(-1);
         }
+        local_data = std::move(*automatic);
         nexus_subset_ids = std::vector<std::string>(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
         catchment_subset_ids = std::vector<std::string>(local_data.catchment_ids.begin(), local_data.catchment_ids.end());
     }
@@ -381,14 +351,6 @@ int main(int argc, char* argv[]) {
     std::cout << "Building Catchment collection" << std::endl;
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
-    //
-    // As part of the fix for NOAA-OWP/ngen#284 / NGWPC-6553,
-    // partitioning may insert sentinel flowpaths downstream of
-    // terminal nexuses. Those sentinels will not exist in the
-    // catchmentDataFile. Their listing in catchment_subset_ids works
-    // because the hydrofabric readers return the intersection of
-    // features in the file and the specified subset, rather than
-    // erroring on missing features.
     geojson::GeoJSON catchment_collection = hydrofabric->read_divides(catchment_subset_ids);
     
     for(auto& feature: *catchment_collection)
@@ -439,17 +401,7 @@ int main(int argc, char* argv[]) {
     std::string link_key = "toid";
     nexus_collection->link_features_from_property(nullptr, &link_key);
 
-    #if NGEN_WITH_MPI
-    //mpirun with one processor without partition file
-    if (mpi_num_procs == 1) {
-        Partition_One partition_one;
-        partition_one.generate_partition(catchment_collection);
-        local_data = std::move(partition_one.partition_data);
-    }
-    hy_features::HY_Features_MPI features = hy_features::HY_Features_MPI(local_data, nexus_collection, manager, mpi_rank, mpi_num_procs);
-    #else
     hy_features::HY_Features features = hy_features::HY_Features(nexus_collection, manager);
-    #endif
 
     //validate dendritic connections
     features.validate_dendritic();
@@ -520,17 +472,7 @@ int main(int argc, char* argv[]) {
             "Routing is enabled but nexus output is disabled (output.nexus.enable = false); "
             "the routing run has no nexus output to consume.");
     }
-    #if NGEN_WITH_MPI
-    std::vector<std::string> nexus_ids;
-    std::copy_if(features.nexuses().begin(), features.nexuses().end(), std::back_inserter(nexus_ids),
-                 [&features](std::string nid) { return !features.is_remote_sender_nexus((nid)); });
-    // TODO: (later) I'd love to be able to use local_data.nexus_ids and local_data.remote_connections for this, but
-    // TODO:        they aren't well documented and I've already misused them once.  However, this could probably be
-    // TODO:        optimized in the future based on those.
-
-    #else
     std::vector<std::string> nexus_ids(features.nexuses().begin(), features.nexuses().end());
-    #endif
 
     if (nexus_output.enable && nexus_output.format == realization::config::OutputFormat::netcdf) {
         // TODO: (later) use nullptr for now, until full support for multiple formulations per catchment is available
@@ -702,7 +644,7 @@ int main(int argc, char* argv[]) {
     if (manager->get_using_routing()) {
         std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
 #if NGEN_WITH_ROUTING_TROUTE_BMI
-        simulation->run_routing_bmi(features, t_route_config_file_with_path);
+        simulation->run_routing_bmi(t_route_config_file_with_path);
 #else
         simulation->run_routing(t_route_config_file_with_path);
 #endif // NGEN_WITH_ROUTING_TROUTE_BMI
