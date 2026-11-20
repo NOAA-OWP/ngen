@@ -349,6 +349,26 @@ jobs:
         with:
           mod-dir: "extern/bmi-cxx/"
 
+      # Python versions on the macOS runner can lack wheels for some packages
+      # (e.g. pandas<3), which pip then builds from source. Cache pip's
+      # locally built wheels so later runs reuse them. Cache entries can't be
+      # updated, so each run that builds new wheels saves a new entry (keyed
+      # by run ID) and runs restore the most recent one. The wheel filenames
+      # record package version and Python tags, so pip picks matching ones.
+      - name: Restore Built Python Wheels
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/Library/Caches/pip/wheels
+          key: pip-wheels-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}
+          restore-keys: |
+            pip-wheels-${{ runner.os }}-${{ runner.arch }}-
+
+      - name: List Restored Python Wheels
+        run: |
+          mkdir -p ~/Library/Caches/pip/wheels
+          find ~/Library/Caches/pip/wheels -name '*.whl' | sort > $RUNNER_TEMP/wheels-before.txt
+          cat $RUNNER_TEMP/wheels-before.txt
+
       - name: Build Tests
         id: build
         uses: ./.github/actions/ngen-build
@@ -359,6 +379,29 @@ jobs:
           bmi_fortran: 'ON'
           use_python: 'ON'
           additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
+
+      # Save right after the build, so the wheels are kept even if a test fails,
+      # and only when pip built wheels that weren't in the restored cache
+      - name: Check for New Python Wheels
+        id: new-wheels
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          find ~/Library/Caches/pip/wheels -name '*.whl' | sort > $RUNNER_TEMP/wheels-after.txt
+          if cmp -s $RUNNER_TEMP/wheels-before.txt $RUNNER_TEMP/wheels-after.txt
+          then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "New wheels:"
+            comm -13 $RUNNER_TEMP/wheels-before.txt $RUNNER_TEMP/wheels-after.txt
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Save Built Python Wheels
+        if: ${{ !cancelled() && steps.new-wheels.outputs.changed == 'true' }}
+        uses: actions/cache/save@v6
+        with:
+          path: ~/Library/Caches/pip/wheels
+          key: pip-wheels-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}
 
       - name: Run Unit Tests
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
