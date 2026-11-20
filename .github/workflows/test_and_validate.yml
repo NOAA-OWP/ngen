@@ -350,24 +350,26 @@ jobs:
           mod-dir: "extern/bmi-cxx/"
 
       # Python versions on the macOS runner can lack wheels for some packages
-      # (e.g. pandas<3), which pip then builds from source. Cache pip's
-      # locally built wheels so later runs reuse them. Cache entries can't be
-      # updated, so each run that builds new wheels saves a new entry (keyed
-      # by run ID) and runs restore the most recent one. The wheel filenames
-      # record package version and Python tags, so pip picks matching ones.
-      - name: Restore Built Python Wheels
+      # (e.g. pandas<3), which pip then builds from source. Cache pip's whole
+      # cache directory: wheels it built (wheels/) and files it downloaded
+      # (http-v2/), so later runs reuse both. Cache entries can't be updated,
+      # so each run that adds to pip's cache saves a new entry (keyed by run
+      # ID) and runs restore the most recent one. pip only uses cached files
+      # that match the package versions and Python it needs.
+      - name: Restore pip Cache
         uses: actions/cache/restore@v6
         with:
-          path: ~/Library/Caches/pip/wheels
-          key: pip-wheels-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}
+          path: ~/Library/Caches/pip
+          key: pip-cache-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}
           restore-keys: |
-            pip-wheels-${{ runner.os }}-${{ runner.arch }}-
+            pip-cache-${{ runner.os }}-${{ runner.arch }}-
 
-      - name: List Restored Python Wheels
+      - name: List Restored pip Cache
         run: |
-          mkdir -p ~/Library/Caches/pip/wheels
-          find ~/Library/Caches/pip/wheels -name '*.whl' | sort > $RUNNER_TEMP/wheels-before.txt
-          cat $RUNNER_TEMP/wheels-before.txt
+          mkdir -p ~/Library/Caches/pip
+          find ~/Library/Caches/pip -type f | sort > $RUNNER_TEMP/pip-cache-before.txt
+          find ~/Library/Caches/pip/wheels -name '*.whl' 2>/dev/null | sort
+          echo "$(wc -l < $RUNNER_TEMP/pip-cache-before.txt) files in pip cache"
 
       - name: Build Tests
         id: build
@@ -380,28 +382,28 @@ jobs:
           use_python: 'ON'
           additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
 
-      # Save right after the build, so the wheels are kept even if a test fails,
-      # and only when pip built wheels that weren't in the restored cache
-      - name: Check for New Python Wheels
-        id: new-wheels
+      # Save right after the build, so the cache is kept even if a test fails,
+      # and only when pip added files that weren't in the restored cache
+      - name: Check for New pip Cache Files
+        id: new-pip-files
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: |
-          find ~/Library/Caches/pip/wheels -name '*.whl' | sort > $RUNNER_TEMP/wheels-after.txt
-          if cmp -s $RUNNER_TEMP/wheels-before.txt $RUNNER_TEMP/wheels-after.txt
+          find ~/Library/Caches/pip -type f | sort > $RUNNER_TEMP/pip-cache-after.txt
+          if cmp -s $RUNNER_TEMP/pip-cache-before.txt $RUNNER_TEMP/pip-cache-after.txt
           then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
-            echo "New wheels:"
-            comm -13 $RUNNER_TEMP/wheels-before.txt $RUNNER_TEMP/wheels-after.txt
+            echo "$(comm -13 $RUNNER_TEMP/pip-cache-before.txt $RUNNER_TEMP/pip-cache-after.txt | wc -l) new files; new wheels built:"
+            comm -13 $RUNNER_TEMP/pip-cache-before.txt $RUNNER_TEMP/pip-cache-after.txt | grep '\.whl$' || true
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Save Built Python Wheels
-        if: ${{ !cancelled() && steps.new-wheels.outputs.changed == 'true' }}
+      - name: Save pip Cache
+        if: ${{ !cancelled() && steps.new-pip-files.outputs.changed == 'true' }}
         uses: actions/cache/save@v6
         with:
-          path: ~/Library/Caches/pip/wheels
-          key: pip-wheels-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}
+          path: ~/Library/Caches/pip
+          key: pip-cache-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}
 
       - name: Run Unit Tests
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
