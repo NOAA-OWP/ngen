@@ -24,7 +24,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
         compiler: [gcc, clang]
       fail-fast: false
     runs-on: ${{ matrix.os }}
@@ -58,7 +58,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -146,7 +146,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -180,7 +180,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -210,7 +210,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -242,7 +242,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -276,7 +276,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -310,7 +310,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -332,6 +332,108 @@ jobs:
         timeout-minutes: 15
 
       - name: Clean Up BMI Protocol Unit Test Build
+        uses: ./.github/actions/clean-build
+
+  # All macOS testing in one job: a single build with the union of the features
+  # the Linux test jobs enable (except MPI), then each test binary in its own step.
+  # Every test step runs as long as the build succeeded, so one failure doesn't
+  # hide the results of the others.
+  test_macos:
+    runs-on: macos-15
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # make sure cxx bmi is initialized/ready
+      - uses: ./.github/actions/ngen-submod-build
+        with:
+          mod-dir: "extern/bmi-cxx/"
+
+      - name: Build Tests
+        id: build
+        uses: ./.github/actions/ngen-build
+        with:
+          targets: "test_unit test_geopackage compare_pet test_bmi_cpp test_bmi_c test_bmi_fortran test_bmi_python test_bmi_multi test_bmi_protocols"
+          build-cores: ${{ env.MACOS_NUM_PROC_CORES }}
+          bmi_c: 'ON'
+          bmi_fortran: 'ON'
+          use_python: 'ON'
+          additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
+
+      - name: Run Unit Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_unit
+        timeout-minutes: 15
+
+      - name: Run GeoPackage Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_geopackage
+        timeout-minutes: 15
+
+      - name: Run PET Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/compare_pet
+        timeout-minutes: 15
+
+      - name: Run BMI C++ Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_bmi_cpp
+        timeout-minutes: 15
+
+      - name: Run BMI C Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_bmi_c
+        timeout-minutes: 15
+
+      - name: Run BMI Fortran Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_bmi_fortran
+        timeout-minutes: 15
+
+      - name: Run BMI Python Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_bmi_python
+        timeout-minutes: 15
+
+      - name: Run BMI Multi Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_bmi_multi
+        timeout-minutes: 15
+
+      - name: Run BMI Protocol Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_bmi_protocols
+        timeout-minutes: 15
+
+      - name: Clean Up
+        if: ${{ !cancelled() }}
         uses: ./.github/actions/clean-build
 
   # TODO: fails due to compilation error, at least in large part due to use of POSIX functions not supported on Windows.
