@@ -1,5 +1,7 @@
 add_subdirectory(googletest)
 add_compile_definitions(NGEN_BMI_CPP_LIB_TESTS_ACTIVE)
+# Headers shared by all test sources (e.g. test_temp_paths.hpp)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
 
 # =============================================================================
 

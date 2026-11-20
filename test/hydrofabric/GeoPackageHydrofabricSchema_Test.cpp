@@ -8,6 +8,7 @@
 #include "GeoPackageHydrofabricSchema.hpp"
 #include "ngen_sqlite.hpp"
 #include "fixture_builders.hpp"
+#include "test_temp_paths.hpp"
 
 namespace fixtures = ngen::hydrofabric::fixtures;
 
@@ -98,9 +99,8 @@ TEST_F(GeoPackageHydrofabricSchema_Test, geopackage_detect_version_column_lists)
 // containing "nexus".
 TEST_F(GeoPackageHydrofabricSchema_Test, geopackage_detect_version_throws_on_bad_schema)
 {
-    const std::string path = std::string(testing::TempDir()) + "/malformed_nexus.gpkg";
+    const std::string path = ngen::test::test_temp_path("malformed_nexus.gpkg").string();
     {
-        std::remove(path.c_str());
         sqlite3* raw = nullptr;
         ASSERT_EQ(sqlite3_open(path.c_str(), &raw), SQLITE_OK);
         // Nexus table present but with neither 'id' nor 'nexus_id' columns.
@@ -165,9 +165,8 @@ TEST_F(GeoPackageHydrofabricSchema_Test, geopackage_detect_hydrofabric_identifie
 // error reaches every caller without any of them having to check for it.
 TEST_F(GeoPackageHydrofabricSchema_Test, geopackage_detect_hydrofabric_throws_on_bad_schema)
 {
-    const std::string path = std::string(testing::TempDir()) + "/detect_malformed_nexus.gpkg";
+    const std::string path = ngen::test::test_temp_path("detect_malformed_nexus.gpkg").string();
     {
-        std::remove(path.c_str());
         sqlite3* raw = nullptr;
         ASSERT_EQ(sqlite3_open(path.c_str(), &raw), SQLITE_OK);
         ASSERT_EQ(sqlite3_exec(raw, "CREATE TABLE nexus (junk TEXT)",
@@ -204,9 +203,8 @@ TEST_F(GeoPackageHydrofabricSchema_Test, geopackage_layer_id_column_resolves)
 // legacy id fallback exists.
 TEST_F(GeoPackageHydrofabricSchema_Test, geopackage_layer_id_column_missing_throws)
 {
-    const std::string path = std::string(testing::TempDir()) + "/no_id_divides.gpkg";
+    const std::string path = ngen::test::test_temp_path("no_id_divides.gpkg").string();
     {
-        std::remove(path.c_str());
         sqlite3* raw = nullptr;
         ASSERT_EQ(sqlite3_open(path.c_str(), &raw), SQLITE_OK);
         ASSERT_EQ(sqlite3_exec(raw, "CREATE TABLE divides (fid INTEGER, flowpath_toid TEXT)",
@@ -233,9 +231,8 @@ TEST_F(GeoPackageHydrofabricSchema_Test, geopackage_layer_id_column_missing_thro
 // sentinel rather than any real-looking column name, since there is no id column to name.
 TEST_F(GeoPackageHydrofabricSchema_Test, geopackage_layer_id_column_legacy_fallback)
 {
-    const std::string path = std::string(testing::TempDir()) + "/legacy_id_divides.gpkg";
+    const std::string path = ngen::test::test_temp_path("legacy_id_divides.gpkg").string();
     {
-        std::remove(path.c_str());
         sqlite3* raw = nullptr;
         ASSERT_EQ(sqlite3_open(path.c_str(), &raw), SQLITE_OK);
         ASSERT_EQ(sqlite3_exec(raw, "CREATE TABLE divides (id TEXT, toid TEXT)",

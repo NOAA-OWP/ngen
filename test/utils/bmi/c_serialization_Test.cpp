@@ -29,6 +29,7 @@ cover the Fortran and Python analogs. This file is the C analog.
 #include "serialization.hpp"
 #include "serialization_record.hpp"
 #include "gtest/gtest.h"
+#include "test_temp_paths.hpp"
 
 #include <cstdint>
 #include <cstdio>
@@ -112,15 +113,7 @@ class Bmi_C_Serialization_Test : public ::testing::Test {
         model_name = adapter->GetComponentName();
         model      = std::static_pointer_cast<models::bmi::Bmi_Adapter>(adapter);
 
-        const auto* info = ::testing::UnitTest::GetInstance()->current_test_info();
-        std::string dir  = ::testing::TempDir();
-        if (!dir.empty() && dir.back() != '/') dir.push_back('/');
-        path = dir + "ngen_c_serialization_Test_" + info->name() + ".ckpt";
-        std::remove(path.c_str());
-    }
-
-    void TearDown() override {
-        std::remove(path.c_str());
+        path = ngen::test::test_temp_path("checkpoint.ckpt").string();
     }
 
     std::string config_file_name;

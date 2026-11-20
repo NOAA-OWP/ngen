@@ -95,6 +95,7 @@ non-mock backend (e.g. an HDF5 backend) arrives and there's a
 clearer cost/benefit picture.
 */
 #include "gtest/gtest.h"
+#include "test_temp_paths.hpp"
 
 #include "mocks.hpp"
 #include "utilities/bmi/file_backend.hpp"
@@ -119,40 +120,6 @@ using Writer = RecordBackend::Writer;
 // ---------------------------------------------------------------------
 namespace {
 
-// Construct a unique-per-test temp file path, namespaced by @p
-// prefix and the current test's identity. Disk-backed backend
-// traits (FileBackend today, future HDF5 / SQLite / ... backends)
-// can use this to avoid colliding on shared paths between tests
-// and to play nicely with the path-keyed registries some backends
-// keep.
-//
-// Implementation notes:
-//   - Sanitizes the suite/test names because Google Test embeds
-//     '/' in typed-test suite names (e.g. "Pattern/1" for the
-//     second type-list entry), which would create a missing
-//     subdirectory inside the temp dir.
-//   - Removes any pre-existing file at the resolved path so the
-//     caller gets a clean slate without having to remember to.
-inline std::string unique_temp_path(const std::string& prefix) {
-    auto sanitize = [](const std::string& s) {
-        std::string out = s;
-        for (auto& c : out)
-            if (c == '/') c = '_';
-        return out;
-    };
-    const auto* info = ::testing::UnitTest::GetInstance()->current_test_info();
-    std::string path = ::testing::TempDir();
-    if (!path.empty() && path.back() != '/') path.push_back('/');
-    path += prefix;
-    path += "_";
-    path += sanitize(info->test_suite_name());
-    path += "_";
-    path += sanitize(info->name());
-    path += ".bin";
-    std::remove(path.c_str());
-    return path;
-}
-
 struct SnapshotBackendTraits {
     using Backend = SnapshotBackend;
     static std::shared_ptr<Backend> create() {
@@ -170,7 +137,7 @@ struct SharedStateBackendTraits {
 struct FileBackendTraits {
     using Backend = FileBackend;
     static std::shared_ptr<Backend> create() {
-        return FileBackend::create(unique_temp_path("ngen_filebackend_lifetime"));
+        return FileBackend::create(ngen::test::test_temp_path("backend.bin").string());
     }
 };
 

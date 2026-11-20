@@ -4,6 +4,7 @@
 #include "DataProviderSelectors.hpp"
 #include "FileChecker.h"
 #include "gtest/gtest.h"
+#include "test_temp_paths.hpp"
 #include <Formulation_Manager.hpp>
 #include <Formulation.hpp>
 
@@ -242,29 +243,8 @@ protected:
      * Put all resources into place for testing
      */
     void SetUp() override {
-        // This will be used to create the temporary directory name. It MUST end in 'XXXXXX'
-        const std::string basename = "ngen-get_forcing_params-XXXXXX";
-        std::string pattern = (
-            std::filesystem::temp_directory_path() / basename
-        ).string();
-        std::vector<char> buffer(pattern.begin(), pattern.end());
-        buffer.push_back('\0');
-
         // Create a temporary directory to hold data used for these tests
-        const char* directory = ::mkdtemp(buffer.data());
-        ASSERT_NE(directory, nullptr);
-        this->root_ = directory;
-    }
-
-    /**
-     * Remove resources that were created for testing
-     */
-    void TearDown() override {
-        if (!this->root_.empty()) {
-            std::error_code error;
-            std::filesystem::remove_all(this->root_, error);
-            EXPECT_FALSE(error) << error.message();
-        }
+        this->root_ = ngen::test::test_temp_dir();
     }
 
     /**
@@ -1755,8 +1735,7 @@ namespace {
 TEST_F(Formulation_Manager_Test, aggregated_catchment_output_writes_single_file)
 {
     namespace fs = std::filesystem;
-    const std::string out_dir = "./test_agg_output_agg";
-    fs::remove_all(out_dir);
+    const std::string out_dir = ngen::test::test_temp_path("agg_output").string();
 
     std::stringstream stream;
     stream << fix_paths(bmi_cpp_output_config(out_dir, "per_formulation"));
@@ -1785,7 +1764,6 @@ TEST_F(Formulation_Manager_Test, aggregated_catchment_output_writes_single_file)
     EXPECT_FALSE(fs::exists(out_dir + "/cat-52.csv"));        // not per-feature
     EXPECT_FALSE(fs::exists(out_dir + "/cat-67.csv"));
 
-    fs::remove_all(out_dir);
 }
 
 TEST_F(Formulation_Manager_Test, basic_run_1) {
