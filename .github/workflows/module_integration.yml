@@ -22,7 +22,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-24.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -57,7 +57,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04] # [ubuntu-latest, macos-12] #TODO: Fix #505
+        os: [ubuntu-24.04] # [ubuntu-latest, macos-12] #TODO: Fix #505
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -113,7 +113,7 @@ jobs:
           python3 -m venv .venv
           . .venv/bin/activate
           cd t-route
-          pip install 'pip>=23.0,<23.1'
+          pip install -U pip
           pip install -U setuptools
           # t-route pins numpy~=1.0, pandas<=2.2.0 and pyarrow<12.0; numpy 2
           # needs pandas >= 2.2.2 and pyarrow built against numpy 2.
@@ -126,7 +126,8 @@ jobs:
             export LIBRARY_PATH=/usr/local/lib/gcc/11/
             export LD_LIBRARY_PATH=/usr/local/lib/gcc/11/
           fi
-          export NETCDFALTERNATIVE=${NETCDF}/include
+          # compiler.sh uses $NETCDF as the include path for the Fortran netcdf module
+          export NETCDF=$(nf-config --includedir)
           export FC=gfortran
           export F90=gfortran 
           ./compiler.sh no-e
