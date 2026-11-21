@@ -80,18 +80,20 @@ runs:
         - name: Install GCC 14
           if: runner.os == 'Linux'
           run: |
+            # Fortran uses the system gfortran: the netcdf-fortran package's .mod
+            # files can only be read by the gfortran version that built them
+            echo "FC=gfortran" >> $GITHUB_ENV
+            echo "OMPI_FC=gfortran" >> $GITHUB_ENV
             # Not packaged for every image (e.g. Ubuntu 22.04); those keep their default GCC
-            sudo apt-get install -y --fix-missing gcc-14 g++-14 gfortran-14 || true
-            if command -v g++-14 >/dev/null && command -v gfortran-14 >/dev/null
+            sudo apt-get install -y --fix-missing gcc-14 g++-14 || true
+            if command -v g++-14 >/dev/null
             then
               # clang matrix entries override CC/CXX in the CMake step
               echo "CC=gcc-14" >> $GITHUB_ENV
               echo "CXX=g++-14" >> $GITHUB_ENV
-              echo "FC=gfortran-14" >> $GITHUB_ENV
               # Have the Open MPI compiler wrappers use the same compilers
               echo "OMPI_CC=gcc-14" >> $GITHUB_ENV
               echo "OMPI_CXX=g++-14" >> $GITHUB_ENV
-              echo "OMPI_FC=gfortran-14" >> $GITHUB_ENV
             else
               echo "GCC 14 is not available on this image; using its default GCC"
             fi
