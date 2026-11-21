@@ -6,20 +6,22 @@
 
 #include <dlfcn.h>
 
-// Suppress false positive from ASan's own global registration
-// when dlopen()-ing instrumented shared libraries on macOS.
-// See: ASan runtime's AsanApplyToGlobals() calls getsectiondata()
-// in libmacho.dylib, which uses strcmp on Mach-O section names.
-// ASan's intercepted strcmp then reads shadow memory that has
-// already been poisoned (0xf9 = global redzone) by the same
-// initialization sequence, triggering a spurious report.
-#if defined(__APPLE__) && defined(__has_feature)
+// Under AddressSanitizer, keep libraries loaded after dlclose() (RTLD_NODELETE).
+// ASan registers an instrumented library's globals when it is loaded, but does
+// not reliably forget them when it is unloaded. Reloading a library, as the
+// unit tests do once per test, then produces spurious reports: odr-violation
+// for the library's own globals, and global-buffer-overflow when the new
+// mapping overlaps the previous one's stale redzones. Model state lives in
+// per-instance data, so a library that stays loaded behaves the same.
+#if defined(__SANITIZE_ADDRESS__)
+#  define NGEN_DLOPEN_SANITIZER_FLAGS RTLD_NODELETE
+#elif defined(__has_feature)
 #  if __has_feature(address_sanitizer)
-extern "C" const char *__asan_default_suppressions() {
-    return "interceptor_via_lib:libmacho.dylib\n"
-           "interceptor_via_fun:getsectiondata\n";
-}
+#    define NGEN_DLOPEN_SANITIZER_FLAGS RTLD_NODELETE
 #  endif
+#endif
+#ifndef NGEN_DLOPEN_SANITIZER_FLAGS
+#  define NGEN_DLOPEN_SANITIZER_FLAGS 0
 #endif
 
 namespace models {
@@ -99,7 +101,7 @@ void AbstractCLibBmiAdapter::dynamic_library_load() {
     // Call first to ensure any previous error is cleared before trying to load the symbol
     dlerror();
     // Load up the necessary library dynamically
-    dyn_lib_handle = dlopen(bmi_lib_file.c_str(), RTLD_NOW | RTLD_LOCAL);
+    dyn_lib_handle = dlopen(bmi_lib_file.c_str(), RTLD_NOW | RTLD_LOCAL | NGEN_DLOPEN_SANITIZER_FLAGS);
     // Now call again to see if there was an error (if there was, this will not be null)
     char* err_message = dlerror();
     if (dyn_lib_handle == nullptr && err_message != nullptr) {

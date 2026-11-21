@@ -47,11 +47,7 @@ jobs:
 
     - name: Run GeoPackage Tests
       working-directory: ./cmake_build
-      run: |
-        # Container underflow report is a false positive, from a build with instrumentation
-        # disabled in one file where it hangs the compiler (ngen#567)
-        export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_container_overflow=0
-        ./test/test_geopackage
+      run: ./test/test_geopackage
       timeout-minutes: 15
     
     - name: Clean Up
@@ -81,7 +77,6 @@ jobs:
       - name: Run Tests
         working-directory: ./cmake_build
         run: |
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test/compare_pet
         timeout-minutes: 15
 
@@ -174,7 +169,6 @@ jobs:
       - name: Run Tests
         working-directory: ./cmake_build
         run: |
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test/test_bmi_cpp
         timeout-minutes: 15
 
@@ -205,7 +199,6 @@ jobs:
       - name: run_bmi_c_tests
         working-directory: ./cmake_build
         run: |
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0,suppressions=${GITHUB_WORKSPACE}/test/asan_suppressions.txt
           ./test/test_bmi_c
         timeout-minutes: 15
 
@@ -306,7 +299,6 @@ jobs:
         working-directory: ./cmake_build
         run: |
           . ../.venv/bin/activate
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test/test_bmi_multi
         timeout-minutes: 15
 
@@ -336,7 +328,6 @@ jobs:
       - name: run_bmi_protocol_tests
         working-directory: ./cmake_build
         run: |
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test/test_bmi_protocols
         timeout-minutes: 15
 
