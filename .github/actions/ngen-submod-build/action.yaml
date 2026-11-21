@@ -44,20 +44,32 @@ runs:
           run: |
             # see macOS image readmes for supported versions
             # https://github.com/actions/runner-images/tree/main/images/macos
-            echo FC="gfortran-12" >> $GITHUB_ENV
+            echo FC="gfortran-14" >> $GITHUB_ENV
+          shell: bash
+
+        - name: Configure GCC 14
+          if: |
+            runner.os == 'Linux'
+          run: |
+            # Not packaged for every image (e.g. Ubuntu 22.04); those keep their default GCC
+            sudo apt-get install -y --fix-missing gcc-14 g++-14 || true
+            if command -v g++-14 >/dev/null
+            then
+              echo "CC=gcc-14" >> $GITHUB_ENV
+              echo "CXX=g++-14" >> $GITHUB_ENV
+            else
+              echo "GCC 14 is not available on this image; using its default GCC"
+            fi
           shell: bash
 
         - name: Cmake Initialization
           id: cmake_init
           run: |
-            if [ ${{ runner.os }} == 'macOS' ]
-            then
-                export OPT_LEVEL_FLAG="-O0"
-            else
-                export OPT_LEVEL_FLAG="-O1"
-            fi
-            echo CFLAGS="-fsanitize=address ${OPT_LEVEL_FLAG:?Optimization flag var not set} -g -fno-omit-frame-pointer -Werror" >> $GITHUB_ENV
-            echo CXXFLAGS="-fsanitize=address ${OPT_LEVEL_FLAG:?Optimization flag var not set} -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override" >> $GITHUB_ENV
+            # Only for this configure (CMake caches them); exporting them to
+            # $GITHUB_ENV would also apply -Werror to later steps in the job,
+            # such as pip building packages from source
+            export CFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -Werror"
+            export CXXFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override"
             cmake -B ${{ inputs.mod-dir}}/${{ inputs.build-dir }} -S ${{ inputs.mod-dir }} ${{ inputs.cmake-flags }}
             echo "build-dir=$(echo ${{ inputs.mod-dir}}/${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
           shell: bash

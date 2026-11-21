@@ -77,6 +77,28 @@ runs:
             sudo apt-get install -y --fix-missing cmake build-essential
           shell: bash
 
+        - name: Install GCC 14
+          if: runner.os == 'Linux'
+          run: |
+            # Fortran uses the system gfortran: the netcdf-fortran package's .mod
+            # files can only be read by the gfortran version that built them
+            echo "FC=gfortran" >> $GITHUB_ENV
+            echo "OMPI_FC=gfortran" >> $GITHUB_ENV
+            # Not packaged for every image (e.g. Ubuntu 22.04); those keep their default GCC
+            sudo apt-get install -y --fix-missing gcc-14 g++-14 || true
+            if command -v g++-14 >/dev/null
+            then
+              # clang matrix entries override CC/CXX in the CMake step
+              echo "CC=gcc-14" >> $GITHUB_ENV
+              echo "CXX=g++-14" >> $GITHUB_ENV
+              # Have the Open MPI compiler wrappers use the same compilers
+              echo "OMPI_CC=gcc-14" >> $GITHUB_ENV
+              echo "OMPI_CXX=g++-14" >> $GITHUB_ENV
+            else
+              echo "GCC 14 is not available on this image; using its default GCC"
+            fi
+          shell: bash
+
         - name: Install MPI
           #Only use this step if Linux/ubuntu is being used
           if: |
@@ -185,7 +207,7 @@ runs:
 
         - name: Setup Fortran Compiler
           if: ${{ inputs.bmi_fortran == 'ON' && runner.os == 'macOS' }}
-          run: echo "FC=gfortran-13" >> $GITHUB_ENV
+          run: echo "FC=gfortran-14" >> $GITHUB_ENV
           shell: bash
 
         - name: Setup macOS Default Compiler Includes
@@ -202,21 +224,14 @@ runs:
           # which causes cmake configuration to fail.
           run: |
             export BOOST_ROOT="$(pwd)/boost_1_86_0"
-            export CFLAGS="-fsanitize=address -g -fno-omit-frame-pointer -Werror"
-            export CXXFLAGS="-fsanitize=address -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override"
+            export CFLAGS="-fsanitize=address -g -fno-omit-frame-pointer -Werror -O1"
+            export CXXFLAGS="-fsanitize=address -g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override -O1"
             if [ ${{ runner.os }} == 'macOS' ]
             then
-              echo "fun:PyType_FromMetaclass" > /tmp/asan_ignore.txt
-              export CFLAGS="$CFLAGS -O0 -fsanitize-ignorelist=/tmp/asan_ignore.txt -fno-common"
-              export CXXFLAGS="$CXXFLAGS -O0 -fsanitize-ignorelist=/tmp/asan_ignore.txt -fno-common"
-
-              # Don't bother wth ASan stuff for macOS-gcc - it's covered well enough by macOS-clang, and linux-gcc
               if [ ${{ matrix.compiler }} == 'gcc' ]
               then
-                export CC=gcc-13
-                export CXX=g++-13
-                export CFLAGS=" -g -fno-omit-frame-pointer -Werror"
-                export CXXFLAGS="-g -fno-omit-frame-pointer -pedantic-errors -Werror -Wpessimizing-move -Wparentheses -Wrange-loop-construct -Wsuggest-override"
+                export CC=gcc-14
+                export CXX=g++-14
               fi
             else
               if [ ${{ matrix.compiler }} == 'clang' ]
@@ -224,8 +239,6 @@ runs:
                 export CC=clang
                 export CXX=clang++
               fi
-              export CFLAGS="$CFLAGS -O1"
-              export CXXFLAGS="$CXXFLAGS -O1"
             fi
             # NOTE: this is not defined if inputs.use_python != 'ON'
             $ACTIVATE_VENV_IF_USE_PYTHON

@@ -22,7 +22,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04, ubuntu-24.04, ubuntu-26.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -57,7 +57,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04] # [ubuntu-latest, macos-12] #TODO: Fix #505
+        os: [ubuntu-22.04, ubuntu-24.04, ubuntu-26.04] # [ubuntu-latest, macos-12] #TODO: Fix #505
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -101,19 +101,25 @@ jobs:
         run: |
           if [ ${{ runner.os }} == 'macOS' ] 
           then
-            sudo ln -s $(which gfortran-11) $(dirname $(which gfortran-11))/gfortran
-            export FC=gfortran-11
-            export F90=gfortran-11
+            sudo ln -s $(which gfortran-14) $(dirname $(which gfortran-14))/gfortran
+            export FC=gfortran-14
+            export F90=gfortran-14
           fi
 
       - name: Build T-route Dependency
         #if: steps.cache-linux-troute-dep.outputs.cache-hit != 'true'
         #MacOS pybind has issues with egg links, so install all packages without egg links on that os
         run: |
+          if [ ${{ runner.os }} == 'Linux' ]
+          then
+            # fiona has no wheels for the system Python on some images (3.14 on
+            # Ubuntu 26.04), so it is built against GDAL
+            sudo apt-get install -y --fix-missing libgdal-dev
+          fi
           python3 -m venv .venv
           . .venv/bin/activate
           cd t-route
-          pip install 'pip>=23.0,<23.1'
+          pip install -U pip
           pip install -U setuptools
           # t-route pins numpy~=1.0, pandas<=2.2.0 and pyarrow<12.0; numpy 2
           # needs pandas >= 2.2.2 and pyarrow built against numpy 2.
@@ -123,12 +129,20 @@ jobs:
           pip install deprecated pyarrow tables geopandas 'numpy~=2.0' 'pandas>=2.2.2,<3'
           if [ ${{ runner.os }} == 'macOS' ] 
           then
-            export LIBRARY_PATH=/usr/local/lib/gcc/11/
-            export LD_LIBRARY_PATH=/usr/local/lib/gcc/11/
+            export LIBRARY_PATH=$(brew --prefix)/lib/gcc/14/
+            export LD_LIBRARY_PATH=$(brew --prefix)/lib/gcc/14/
           fi
-          export NETCDFALTERNATIVE=${NETCDF}/include
-          export FC=gfortran
-          export F90=gfortran 
+          # compiler.sh uses $NETCDF as the include path for the Fortran netcdf module
+          export NETCDF=$(nf-config --includedir)
+          if [ ${{ runner.os }} == 'Linux' ]
+          then
+            # Must match the gfortran that built the system netcdf-fortran .mod files
+            export FC=gfortran
+            export F90=gfortran
+          else
+            export FC=gfortran-14
+            export F90=gfortran-14
+          fi
           ./compiler.sh no-e
           
           deactivate
