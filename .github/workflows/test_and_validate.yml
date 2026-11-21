@@ -24,7 +24,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
         compiler: [gcc, clang]
       fail-fast: false
     runs-on: ${{ matrix.os }}
@@ -47,11 +47,7 @@ jobs:
 
     - name: Run GeoPackage Tests
       working-directory: ./cmake_build
-      run: |
-        # Container underflow report is a false positive, from a build with instrumentation
-        # disabled in one file where it hangs the compiler (ngen#567)
-        export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_container_overflow=0
-        ./test/test_geopackage
+      run: ./test/test_geopackage
       timeout-minutes: 15
     
     - name: Clean Up
@@ -62,7 +58,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -81,7 +77,6 @@ jobs:
       - name: Run Tests
         working-directory: ./cmake_build
         run: |
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test/compare_pet
         timeout-minutes: 15
 
@@ -151,7 +146,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -174,7 +169,6 @@ jobs:
       - name: Run Tests
         working-directory: ./cmake_build
         run: |
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test/test_bmi_cpp
         timeout-minutes: 15
 
@@ -186,7 +180,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -205,7 +199,6 @@ jobs:
       - name: run_bmi_c_tests
         working-directory: ./cmake_build
         run: |
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0,suppressions=${GITHUB_WORKSPACE}/test/asan_suppressions.txt
           ./test/test_bmi_c
         timeout-minutes: 15
 
@@ -217,7 +210,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -249,7 +242,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -283,7 +276,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -306,7 +299,6 @@ jobs:
         working-directory: ./cmake_build
         run: |
           . ../.venv/bin/activate
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test/test_bmi_multi
         timeout-minutes: 15
 
@@ -318,7 +310,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -336,11 +328,157 @@ jobs:
       - name: run_bmi_protocol_tests
         working-directory: ./cmake_build
         run: |
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test/test_bmi_protocols
         timeout-minutes: 15
 
       - name: Clean Up BMI Protocol Unit Test Build
+        uses: ./.github/actions/clean-build
+
+  # All macOS testing in one job: a single build with the union of the features
+  # the Linux test jobs enable (except MPI), then each test binary in its own step.
+  # Every test step runs as long as the build succeeded, so one failure doesn't
+  # hide the results of the others.
+  test_macos:
+    runs-on: macos-15
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # make sure cxx bmi is initialized/ready
+      - uses: ./.github/actions/ngen-submod-build
+        with:
+          mod-dir: "extern/bmi-cxx/"
+
+      # Python versions on the macOS runner can lack wheels for some packages
+      # (e.g. pandas<3), which pip then builds from source. Cache pip's whole
+      # cache directory: wheels it built (wheels/) and files it downloaded
+      # (http-v2/), so later runs reuse both. Cache entries can't be updated,
+      # so each run that adds to pip's cache saves a new entry (keyed by run
+      # ID) and runs restore the most recent one. pip only uses cached files
+      # that match the package versions and Python it needs.
+      - name: Restore pip Cache
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/Library/Caches/pip
+          key: pip-cache-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}
+          restore-keys: |
+            pip-cache-${{ runner.os }}-${{ runner.arch }}-
+
+      - name: List Restored pip Cache
+        run: |
+          mkdir -p ~/Library/Caches/pip
+          find ~/Library/Caches/pip -type f | sort > $RUNNER_TEMP/pip-cache-before.txt
+          find ~/Library/Caches/pip/wheels -name '*.whl' 2>/dev/null | sort
+          echo "$(wc -l < $RUNNER_TEMP/pip-cache-before.txt) files in pip cache"
+
+      - name: Build Tests
+        id: build
+        uses: ./.github/actions/ngen-build
+        with:
+          targets: "test_unit test_geopackage compare_pet test_bmi_cpp test_bmi_c test_bmi_fortran test_bmi_python test_bmi_multi test_bmi_protocols"
+          build-cores: ${{ env.MACOS_NUM_PROC_CORES }}
+          bmi_c: 'ON'
+          bmi_fortran: 'ON'
+          use_python: 'ON'
+          additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
+
+      # Save right after the build, so the cache is kept even if a test fails,
+      # and only when pip added files that weren't in the restored cache
+      - name: Check for New pip Cache Files
+        id: new-pip-files
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          find ~/Library/Caches/pip -type f | sort > $RUNNER_TEMP/pip-cache-after.txt
+          if cmp -s $RUNNER_TEMP/pip-cache-before.txt $RUNNER_TEMP/pip-cache-after.txt
+          then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "$(comm -13 $RUNNER_TEMP/pip-cache-before.txt $RUNNER_TEMP/pip-cache-after.txt | wc -l) new files; new wheels built:"
+            comm -13 $RUNNER_TEMP/pip-cache-before.txt $RUNNER_TEMP/pip-cache-after.txt | grep '\.whl$' || true
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Save pip Cache
+        if: ${{ !cancelled() && steps.new-pip-files.outputs.changed == 'true' }}
+        uses: actions/cache/save@v6
+        with:
+          path: ~/Library/Caches/pip
+          key: pip-cache-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}
+
+      - name: Run Unit Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_unit
+        timeout-minutes: 15
+
+      - name: Run GeoPackage Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_geopackage
+        timeout-minutes: 15
+
+      - name: Run PET Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/compare_pet
+        timeout-minutes: 15
+
+      - name: Run BMI C++ Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_bmi_cpp
+        timeout-minutes: 15
+
+      - name: Run BMI C Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_bmi_c
+        timeout-minutes: 15
+
+      - name: Run BMI Fortran Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_bmi_fortran
+        timeout-minutes: 15
+
+      - name: Run BMI Python Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_bmi_python
+        timeout-minutes: 15
+
+      - name: Run BMI Multi Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_bmi_multi
+        timeout-minutes: 15
+
+      - name: Run BMI Protocol Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_bmi_protocols
+        timeout-minutes: 15
+
+      - name: Clean Up
+        if: ${{ !cancelled() }}
         uses: ./.github/actions/clean-build
 
   # TODO: fails due to compilation error, at least in large part due to use of POSIX functions not supported on Windows.
