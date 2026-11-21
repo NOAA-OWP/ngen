@@ -134,13 +134,14 @@ jobs:
           fi
           # compiler.sh uses $NETCDF as the include path for the Fortran netcdf module
           export NETCDF=$(nf-config --includedir)
-          if command -v gfortran-14 >/dev/null
+          if [ ${{ runner.os }} == 'Linux' ]
           then
-            export FC=gfortran-14
-            export F90=gfortran-14
-          else
+            # Must match the gfortran that built the system netcdf-fortran .mod files
             export FC=gfortran
             export F90=gfortran
+          else
+            export FC=gfortran-14
+            export F90=gfortran-14
           fi
           ./compiler.sh no-e
           
