@@ -81,7 +81,6 @@ jobs:
       - name: Run Tests
         working-directory: ./cmake_build
         run: |
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test/compare_pet
         timeout-minutes: 15
 
@@ -174,7 +173,6 @@ jobs:
       - name: Run Tests
         working-directory: ./cmake_build
         run: |
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test/test_bmi_cpp
         timeout-minutes: 15
 
@@ -305,7 +303,6 @@ jobs:
         working-directory: ./cmake_build
         run: |
           . ../.venv/bin/activate
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test/test_bmi_multi
         timeout-minutes: 15
 
@@ -335,7 +332,6 @@ jobs:
       - name: run_bmi_protocol_tests
         working-directory: ./cmake_build
         run: |
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0
           ./test/test_bmi_protocols
         timeout-minutes: 15
 
