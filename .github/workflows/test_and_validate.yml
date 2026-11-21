@@ -205,7 +205,6 @@ jobs:
       - name: run_bmi_c_tests
         working-directory: ./cmake_build
         run: |
-          export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_odr_violation=0,suppressions=${GITHUB_WORKSPACE}/test/asan_suppressions.txt
           ./test/test_bmi_c
         timeout-minutes: 15
 
