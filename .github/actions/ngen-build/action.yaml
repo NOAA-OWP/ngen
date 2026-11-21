@@ -210,6 +210,9 @@ runs:
               then
                 export CC=gcc-13
                 export CXX=g++-13
+                # Temporary: keep ASan off for macOS gcc builds, as before
+                export CFLAGS="${CFLAGS} -fno-sanitize=address"
+                export CXXFLAGS="${CXXFLAGS} -fno-sanitize=address"
               fi
             else
               if [ ${{ matrix.compiler }} == 'clang' ]
