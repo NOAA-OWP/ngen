@@ -22,7 +22,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04, macos-15]
+        os: [ubuntu-22.04, ubuntu-24.04, ubuntu-26.04, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -57,7 +57,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04] # [ubuntu-latest, macos-12] #TODO: Fix #505
+        os: [ubuntu-22.04, ubuntu-24.04, ubuntu-26.04] # [ubuntu-latest, macos-12] #TODO: Fix #505
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -110,6 +110,12 @@ jobs:
         #if: steps.cache-linux-troute-dep.outputs.cache-hit != 'true'
         #MacOS pybind has issues with egg links, so install all packages without egg links on that os
         run: |
+          if [ ${{ runner.os }} == 'Linux' ]
+          then
+            # fiona has no wheels for the system Python on some images (3.14 on
+            # Ubuntu 26.04), so it is built against GDAL
+            sudo apt-get install -y --fix-missing libgdal-dev
+          fi
           python3 -m venv .venv
           . .venv/bin/activate
           cd t-route
