@@ -34,3 +34,5 @@ We follow the [Semantic Versioning 2.0.0](http://semver.org/) format.
 ### Fixed
 
 - Hydrofabric schema detection now reads each layer's columns from the file that holds it. A v4.0 hydrofabric split across a catchment file and a nexus file was previously detected as v4.0beta1, because `divides.flowpath_toid` -- the column that separates the two -- is absent from the nexus file; its divides were then joined through a `flowpaths` table that need not be there, leaving them with no downstream reference.
+
+- `TestBmiCpp::read_init_config` (test_bmi_cpp) now reads its config with `std::getline` instead of `fgets`/`strsep`, so a config line with no `=` no longer passes a null pointer to `strtol`, and a final line without a trailing newline is no longer cut short.
