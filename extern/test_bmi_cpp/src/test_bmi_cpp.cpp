@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstring>
+#include <fstream>
 #include <math.h>
 #include <numeric>
 #include <stdexcept>
@@ -502,65 +503,59 @@ int TestBmiCpp::GetVarGrid(std::string name){
 
 void TestBmiCpp::read_init_config(std::string config_file)
 {
-  int config_line_count, max_config_line_length;
-  // Note that this determines max line length including the ending return character, if present
-  read_file_line_counts(config_file, &config_line_count, &max_config_line_length);
-
-  FILE* fp = fopen(config_file.c_str(), "r");
-  if (fp == NULL)
+  std::ifstream config_stream(config_file);
+  if (!config_stream.is_open())
     throw std::runtime_error("Invalid config file \""+config_file+"\"" SOURCE_LOC);
-
-  std::vector<char> config_line(max_config_line_length + 1);
 
   // TODO: may need to add other variables to track that everything that was required was properly set
 
   // Keep track of whether required values were set in config
-  int is_epoch_start_time_set = FALSE;
+  bool is_epoch_start_time_set = false;
 
-  for (size_t i = 0; i < config_line_count; i++) {
-    char *param_key, *param_value;
-    char* ret = fgets(config_line.data(), max_config_line_length + 1, fp);
-    if (ret == nullptr)
-        throw std::runtime_error("Error or EOF when reading '" + config_file + "'");
+  std::string config_line;
+  while (std::getline(config_stream, config_line)) {
+    // Files written on Windows end lines with "\r\n"; getline only strips the "\n"
+    if (!config_line.empty() && config_line.back() == '\r')
+      config_line.pop_back();
 
-    char* config_line_ptr = config_line.data();
-    config_line_ptr = strsep(&config_line_ptr, "\n");
-    param_key = strsep(&config_line_ptr, "=");
-    param_value = strsep(&config_line_ptr, "=");
+    // Split "key=value" at the first '='. A line with no '=' has a key and an empty value.
+    const size_t separator_pos = config_line.find('=');
+    const std::string param_key = config_line.substr(0, separator_pos);
+    const std::string param_value = (separator_pos == std::string::npos) ? "" : config_line.substr(separator_pos + 1);
 
 #if DEGUG >= 1
     std::cout<<"Config Value - Param: '"<<param_key<<"' | Value: '"<<param_value<<"'"<<std::endl;
 #endif
 
-    if (strcmp(param_key, "epoch_start_time") == 0) {
-      this->epoch_start_time = strtol(param_value, NULL, 10);
-      is_epoch_start_time_set = TRUE;
+    if (param_key == "epoch_start_time") {
+      this->epoch_start_time = strtol(param_value.c_str(), NULL, 10);
+      is_epoch_start_time_set = true;
       continue;
     }
-    if (strcmp(param_key, "num_time_steps") == 0) {
-      this->num_time_steps = (int)strtol(param_value, NULL, 10);
+    if (param_key == "num_time_steps") {
+      this->num_time_steps = (int)strtol(param_value.c_str(), NULL, 10);
       continue;
     }
-    if (strcmp(param_key, "time_step_size") == 0) {
-      this->time_step_size = (int)strtol(param_value, NULL, 10);
+    if (param_key == "time_step_size") {
+      this->time_step_size = (int)strtol(param_value.c_str(), NULL, 10);
       continue;
     }
-    if (strcmp(param_key, "model_end_time") == 0) {
-      this->time_step_size = (int)strtol(param_value, NULL, 10);
+    if (param_key == "model_end_time") {
+      this->time_step_size = (int)strtol(param_value.c_str(), NULL, 10);
       continue;
     }
-    if( strcmp(param_key, "use_input_array") == 0) {
+    if (param_key == "use_input_array") {
       this->use_input_array = true;
     }
-    if( strcmp(param_key, "use_output_array") == 0) {
+    if (param_key == "use_output_array") {
       this->use_output_array = true;
     }
-    if( strcmp(param_key, "use_model_params") == 0) {
+    if (param_key == "use_model_params") {
       this->use_model_params = true;
     }
   }
 
-  if (is_epoch_start_time_set == FALSE) {
+  if (!is_epoch_start_time_set) {
     throw std::runtime_error("Config param 'epoch_start_time' not found in config file" SOURCE_LOC);
   }
 
