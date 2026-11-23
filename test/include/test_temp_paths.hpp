@@ -1,11 +1,12 @@
 #ifndef NGEN_TEST_TEMP_PATHS_HPP
 #define NGEN_TEST_TEMP_PATHS_HPP
 
+#include <cerrno>
 #include <filesystem>
 #include <string>
 #include <system_error>
 
-#include <unistd.h>
+#include <stdlib.h> // mkdtemp
 
 #include <gtest/gtest.h>
 
@@ -16,8 +17,8 @@
  * `-j` those runs overlap. `::testing::TempDir()` is shared by every process (it
  * is `/tmp/` unless `TEST_TMPDIR` is set), so a name derived only from the test
  * would let one process overwrite or delete another's file mid-test. Everything
- * here is therefore placed in a directory belonging to the current process,
- * which is removed with its contents when the process exits.
+ * here is therefore placed in a directory that mkdtemp() made for the current
+ * process, which is removed with its contents when the process exits.
  *
  * Within a process, each run of a test (including repeats under
  * `--gtest_repeat`) gets a directory of its own that starts out empty, so tests
@@ -27,28 +28,24 @@ namespace ngen {
 namespace test {
 
 /**
- * Directory for test files of the process with the given ID, under `::testing::TempDir()`.
- *
- * Not created here. Under MPI, every rank can name rank 0's directory by passing
- * rank 0's process ID (broadcast by the caller).
- */
-inline std::filesystem::path process_temp_dir(long pid)
-{
-    return std::filesystem::path(::testing::TempDir()) / ("ngen_test_" + std::to_string(pid));
-}
-
-/**
  * This process's directory for test files.
  *
- * Created on first use and removed, with its contents, when the process exits.
+ * Made by mkdtemp() under `::testing::TempDir()` on first use, so it is new, empty,
+ * and accessible only to this user, and removed, with its contents, when the
+ * process exits. Under MPI, other ranks can use rank 0's directory if rank 0
+ * broadcasts its path.
  */
 inline const std::filesystem::path& process_temp_dir()
 {
     struct owned_dir {
         std::filesystem::path path;
-        owned_dir() : path(process_temp_dir(static_cast<long>(::getpid())))
+        owned_dir()
         {
-            std::filesystem::create_directories(path);
+            std::string name = (std::filesystem::path(::testing::TempDir()) / "ngen_test_XXXXXX").string();
+            if (::mkdtemp(name.data()) == nullptr) {
+                throw std::system_error(errno, std::generic_category(), "mkdtemp(" + name + ")");
+            }
+            path = name;
         }
         ~owned_dir()
         {
@@ -111,13 +108,13 @@ inline std::string test_run_name()
 }
 
 /**
- * Directory of the running test within the directory of the process with the given ID.
+ * Directory of the running test within the given process directory.
  *
- * Not created here; for MPI ranks sharing rank 0's directory (see process_temp_dir(long)).
+ * Not created here; for MPI ranks sharing rank 0's process_temp_dir().
  */
-inline std::filesystem::path test_temp_dir(long pid)
+inline std::filesystem::path test_temp_dir(const std::filesystem::path& process_dir)
 {
-    return process_temp_dir(pid) / test_run_name();
+    return process_dir / test_run_name();
 }
 
 /**
@@ -125,7 +122,7 @@ inline std::filesystem::path test_temp_dir(long pid)
  */
 inline std::filesystem::path test_temp_dir()
 {
-    auto dir = process_temp_dir() / test_run_name();
+    auto dir = test_temp_dir(process_temp_dir());
     std::filesystem::create_directories(dir);
     return dir;
 }
