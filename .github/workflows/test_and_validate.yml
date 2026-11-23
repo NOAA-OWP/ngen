@@ -344,11 +344,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      # make sure cxx bmi is initialized/ready
-      - uses: ./.github/actions/ngen-submod-build
-        with:
-          mod-dir: "extern/bmi-cxx/"
-
       - name: Build Tests
         id: build
         uses: ./.github/actions/ngen-build
