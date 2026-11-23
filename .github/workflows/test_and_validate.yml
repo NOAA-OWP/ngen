@@ -175,6 +175,40 @@ jobs:
       - name: Clean Up Unit Test Build
         uses: ./.github/actions/clean-build
 
+  # Run realization config tests in linux environment
+  test_realization_config:
+    # The type of runner that the job will run on
+    strategy:
+      matrix:
+        os: [ubuntu-22.04]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v7
+
+      #make sure cxx bmi is initialized/ready
+      - uses: ./.github/actions/ngen-submod-build
+        with:
+          mod-dir: "extern/bmi-cxx/"
+
+      - name: Build Unit Tests
+        uses: ./.github/actions/ngen-build
+        with:
+          targets: "test_realization_config"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+
+      - name: Run Tests
+        working-directory: ./cmake_build
+        run: |
+          ./test/test_realization_config
+        timeout-minutes: 15
+
+      - name: Clean Up Unit Test Build
+        uses: ./.github/actions/clean-build
+
   # Run BMI C tests in linux environment, and separating to isolate
   test_bmi_c:
     # The type of runner that the job will run on
@@ -374,7 +408,7 @@ jobs:
         id: build
         uses: ./.github/actions/ngen-build
         with:
-          targets: "test_unit test_geopackage compare_pet test_bmi_cpp test_bmi_c test_bmi_fortran test_bmi_python test_bmi_multi test_bmi_protocols"
+          targets: "test_unit test_geopackage compare_pet test_realization_config test_bmi_cpp test_bmi_c test_bmi_fortran test_bmi_python test_bmi_multi test_bmi_protocols"
           build-cores: ${{ env.MACOS_NUM_PROC_CORES }}
           bmi_c: 'ON'
           bmi_fortran: 'ON'
@@ -426,6 +460,14 @@ jobs:
         run: |
           . ../.venv/bin/activate
           ./test/compare_pet
+        timeout-minutes: 15
+
+      - name: Run Realization Config Tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: ./cmake_build
+        run: |
+          . ../.venv/bin/activate
+          ./test/test_realization_config
         timeout-minutes: 15
 
       - name: Run BMI C++ Tests
