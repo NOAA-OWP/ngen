@@ -3,6 +3,7 @@
 
 #include <cerrno>
 #include <filesystem>
+#include <stdexcept>
 #include <string>
 #include <system_error>
 
@@ -14,39 +15,41 @@
  * Locations for files that tests write.
  *
  * ctest runs each test both from its suite binary and from `test_all`, and with
- * `-j` those runs overlap. `::testing::TempDir()` is shared by every process (it
- * is `/tmp/` unless `TEST_TMPDIR` is set), so a name derived only from the test
- * would let one process overwrite or delete another's file mid-test. Everything
+ * `-j` those runs overlap, so tests must not write to fixed paths in shared
+ * directories such as `::testing::TempDir()` or the working directory. Everything
  * here is therefore placed in a directory that mkdtemp() made for the current
  * process, which is removed with its contents when the process exits.
  *
- * Within a process, each run of a test (including repeats under
- * `--gtest_repeat`) gets a directory of its own that starts out empty, so tests
- * need neither clear nor clean up the files they write there.
+ * Each run of a test (including repeats under `--gtest_repeat`) gets a directory
+ * of its own within that, which also starts out empty, so tests need neither
+ * clear nor clean up the files they write there.
  */
 namespace ngen {
 namespace test {
 
+namespace detail {
+
+/// Make a new directory, accessible only to this user, in @p parent, named @p prefix followed by random characters.
+inline std::filesystem::path make_temp_dir(const std::filesystem::path& parent, const std::string& prefix)
+{
+    std::string name = (parent / (prefix + "XXXXXX")).string();
+    if (::mkdtemp(name.data()) == nullptr) {
+        throw std::system_error(errno, std::generic_category(), "mkdtemp(" + name + ")");
+    }
+    return name;
+}
+
+} // namespace detail
+
 /**
- * This process's directory for test files.
+ * This process's directory for test files, under `::testing::TempDir()`.
  *
- * Made by mkdtemp() under `::testing::TempDir()` on first use, so it is new, empty,
- * and accessible only to this user, and removed, with its contents, when the
- * process exits. Under MPI, other ranks can use rank 0's directory if rank 0
- * broadcasts its path.
+ * Made on first use, and removed, with its contents, when the process exits.
  */
 inline const std::filesystem::path& process_temp_dir()
 {
     struct owned_dir {
-        std::filesystem::path path;
-        owned_dir()
-        {
-            std::string name = (std::filesystem::path(::testing::TempDir()) / "ngen_test_XXXXXX").string();
-            if (::mkdtemp(name.data()) == nullptr) {
-                throw std::system_error(errno, std::generic_category(), "mkdtemp(" + name + ")");
-            }
-            path = name;
-        }
+        const std::filesystem::path path = detail::make_temp_dir(::testing::TempDir(), "ngen_test_");
         ~owned_dir()
         {
             std::error_code ignored;
@@ -67,64 +70,34 @@ inline std::filesystem::path temp_path(const std::string& name)
     return process_temp_dir() / name;
 }
 
-namespace detail {
-
-/// Counts test starts, so that each run of a test in a process can be told apart.
-struct test_run_counter : ::testing::EmptyTestEventListener {
-    long count = 0;
-    void OnTestStart(const ::testing::TestInfo&) override { ++count; }
-};
-
-/// Number of the running test among those this process has started, counting from 1.
-inline long current_test_run()
-{
-    // Registered on first use, during a test whose start it therefore did not see
-    static test_run_counter* const counter = [] {
-        auto* c = new test_run_counter;
-        c->count = 1;
-        ::testing::UnitTest::GetInstance()->listeners().Append(c); // takes ownership
-        return c;
-    }();
-    return counter->count;
-}
-
-} // namespace detail
-
 /**
- * Name, unique within the process, for the running test: `<run>.<suite>.<test>`.
+ * The running test's own directory, in this process's directory.
  *
- * Every MPI rank runs the same sequence of tests, so all ranks get the same name.
- * Must be called while a test is running.
- */
-inline std::string test_run_name()
-{
-    const auto* info = ::testing::UnitTest::GetInstance()->current_test_info();
-    std::string name = std::to_string(detail::current_test_run()) + "." + info->test_suite_name()
-                     + "." + info->name();
-    for (auto& c : name) {
-        if (c == '/') c = '_';   // parameterized test names contain '/'
-    }
-    return name;
-}
-
-/**
- * Directory of the running test within the given process directory.
+ * Made on first use in each run of a test, and the same for the rest of that run.
+ * Under MPI, other ranks can use rank 0's if rank 0 broadcasts its path.
  *
- * Not created here; for MPI ranks sharing rank 0's process_temp_dir().
- */
-inline std::filesystem::path test_temp_dir(const std::filesystem::path& process_dir)
-{
-    return process_dir / test_run_name();
-}
-
-/**
- * The running test's own directory, created empty on first use in each run of the test.
+ * @throws std::logic_error if no test is running
  */
 inline std::filesystem::path test_temp_dir()
 {
-    auto dir = test_temp_dir(process_temp_dir());
-    std::filesystem::create_directories(dir);
-    return dir;
+    // Forgets the directory when the test that made it ends
+    struct test_dir : ::testing::EmptyTestEventListener {
+        std::filesystem::path path;
+        void OnTestEnd(const ::testing::TestInfo&) override { path.clear(); }
+    };
+    static test_dir* const current = [] {
+        auto* d = new test_dir;
+        ::testing::UnitTest::GetInstance()->listeners().Append(d); // takes ownership
+        return d;
+    }();
+
+    if (current->path.empty()) {
+        if (::testing::UnitTest::GetInstance()->current_test_info() == nullptr) {
+            throw std::logic_error("test_temp_dir() called outside a test; use temp_path()");
+        }
+        current->path = detail::make_temp_dir(process_temp_dir(), "test_");
+    }
+    return current->path;
 }
 
 /**
