@@ -25,7 +25,7 @@
 var NAVTREE =
 [
   [ "NGen", "index.html", [
-    [ "Next Gen Water Modeling Framework Prototype", "index.html#autotoc_md60", [
+    [ "NextGen Water Modeling Engine (ngen)", "index.html#autotoc_md60", [
       [ "Structural Diagrams", "index.html#autotoc_md61", null ],
       [ "Dependencies", "index.html#autotoc_md62", null ],
       [ "Installation", "index.html#autotoc_md63", null ],
