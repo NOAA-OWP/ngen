@@ -15,7 +15,6 @@
 // Again non-Windows specific here
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <unistd.h>
 
 #include "test_temp_paths.hpp"
 
@@ -180,15 +179,18 @@ void PerFormulationNexusOutputMgr_Test::SetUp()
     size = 1;
     #endif
 
-    // This test run's directory in rank 0's process directory, which every rank names by rank 0's process ID
-    int pid = static_cast<int>(::getpid());
-    #if NGEN_MPI_UNIT_TESTS
-    MPI_Bcast(&pid, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    #endif
+    // This test run's directory in rank 0's process directory, whose path rank 0 broadcasts
+    std::string process_dir;
     if (rank == 0) {
-        ngen::test::process_temp_dir(); // creates it, and removes it when rank 0 exits
+        process_dir = ngen::test::process_temp_dir().string(); // removed when rank 0 exits
     }
-    output_root = ngen::test::test_temp_dir(pid).string();
+    #if NGEN_MPI_UNIT_TESTS
+    int len = static_cast<int>(process_dir.size());
+    MPI_Bcast(&len, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    process_dir.resize(len);
+    MPI_Bcast(process_dir.data(), len, MPI_CHAR, 0, MPI_COMM_WORLD);
+    #endif
+    output_root = ngen::test::test_temp_dir(process_dir).string();
 
     // Create test output root dir, if it does not exist
     // Recall that if not using MPI, rank will always be 0, limiting to rank 0 correct in either serial or parallel
