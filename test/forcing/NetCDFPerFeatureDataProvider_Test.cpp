@@ -2,9 +2,9 @@
 
 #if NGEN_WITH_NETCDF
 #include <vector>
-#include <cstdio>
 #include <netcdf>
 #include "gtest/gtest.h"
+#include "test_temp_paths.hpp"
 #include "NetCDFPerFeatureDataProvider.hpp"
 #include "FileChecker.h"
 #include <memory>
@@ -248,12 +248,6 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
 // chunking (which determines the cache line size) can be controlled exactly.
 class NetCDFCacheLayoutTest : public ::testing::Test {
   protected:
-    void TearDown() override {
-        for (const auto& p : temp_files) {
-            std::remove(p.c_str());
-        }
-    }
-
     static double cellValue(std::size_t cat, std::size_t t) {
         return 100.0 * cat + t;
     }
@@ -273,8 +267,7 @@ class NetCDFCacheLayoutTest : public ::testing::Test {
     // hourly timesteps starting at kStartEpoch, and each of vars holding
     // cellValue(cat, t) + its offset. time_chunk == 0 leaves the variables contiguous.
     std::string makeForcing(const std::string& name, std::size_t n_cats, std::size_t n_times, std::size_t time_chunk, const std::vector<ForcingVar>& vars) {
-        std::string path = "./" + name;
-        temp_files.push_back(path);
+        std::string path = ngen::test::test_temp_path(name).string();
 
         netCDF::NcFile out(path, netCDF::NcFile::replace, netCDF::NcFile::nc4);
         auto cat_dim = out.addDim("catchment-id", n_cats);
@@ -330,7 +323,6 @@ class NetCDFCacheLayoutTest : public ::testing::Test {
 
     static constexpr time_t kStartEpoch = 1500000000;
     static constexpr time_t kStride = 3600;
-    std::vector<std::string> temp_files;
 };
 
 // A file with fewer timesteps than the default cache line size (24) produces a
