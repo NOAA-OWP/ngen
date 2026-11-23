@@ -21,7 +21,7 @@ var searchData=
   ['help_18',['Getting help',['../index.html#autotoc_md69',1,'']]],
   ['hf_5flayers_19',['hf_layers',['../classhy__features_1_1_h_y___features.html#a069d7cad645e78c4f36d0b9e0956b866',1,'hy_features::HY_Features']]],
   ['hook_20scripts_20',['Optional: Setting Up Hook Scripts',['../md_doc_2_g_i_t___u_s_a_g_e.html#autotoc_md253',1,'']]],
-  ['hooks_21',['Optional: Git Hooks',['../md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md390',1,'']]],
+  ['hooks_21',['Optional: Git Hooks',['../md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md396',1,'']]],
   ['host_5fstring_22',['host_string',['../namespaceutilities_1_1anonymous__namespace_02path__tokens_8cpp_03.html#af708062d7aa85eb7417387faf0a2be9a',1,'utilities::anonymous_namespace{path_tokens.cpp}']]],
   ['hot_23',['HOT',['../structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bffab2e810c851c2ab656bdff5d9e712e70e',1,'multithreading::cache_slot']]],
   ['hot_20start_24',['Hot start',['../md_doc_2_n_g_e_n___s_e_r_i_a_l_i_z_a_t_i_o_n.html#autotoc_md295',1,'']]],
