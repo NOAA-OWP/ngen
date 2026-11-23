@@ -209,6 +209,7 @@ ngen_add_test(
         realizations/config/Output_Test.cpp
         realizations/config/CatchmentOutput_Test.cpp
         realizations/config/Serialization_Helper_Test.cpp
+        realizations/config/Properties_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
