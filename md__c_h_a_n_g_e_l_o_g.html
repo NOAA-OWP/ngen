@@ -137,7 +137,8 @@ Removed</h3>
 <h3><a class="anchor" id="autotoc_md81"></a>
 Fixed</h3>
 <ul>
-<li>Hydrofabric schema detection now reads each layer's columns from the file that holds it. A v4.0 hydrofabric split across a catchment file and a nexus file was previously detected as v4.0beta1, because <code>divides.flowpath_toid</code> &ndash; the column that separates the two &ndash; is absent from the nexus file; its divides were then joined through a <code>flowpaths</code> table that need not be there, leaving them with no downstream reference. </li>
+<li>Hydrofabric schema detection now reads each layer's columns from the file that holds it. A v4.0 hydrofabric split across a catchment file and a nexus file was previously detected as v4.0beta1, because <code>divides.flowpath_toid</code> &ndash; the column that separates the two &ndash; is absent from the nexus file; its divides were then joined through a <code>flowpaths</code> table that need not be there, leaving them with no downstream reference.</li>
+<li><code>TestBmiCpp::read_init_config</code> (test_bmi_cpp) now reads its config with <code>std::getline</code> instead of <code>fgets</code>/<code>strsep</code>, so a config line with no <code>=</code> no longer passes a null pointer to <code>strtol</code>, and a final line without a trailing newline is no longer cut short. </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -145,7 +146,7 @@ Fixed</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Nov 23 2026 15:22:33 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Nov 23 2026 17:15:38 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
