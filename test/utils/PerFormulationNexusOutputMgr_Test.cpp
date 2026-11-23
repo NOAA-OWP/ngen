@@ -11,11 +11,6 @@
 #include "gtest/gtest.h"
 #include "output/PerFormulationNexusOutputMgr.hpp"
 #include "FileChecker.h"
-
-// Again non-Windows specific here
-#include <sys/stat.h>
-#include <sys/types.h>
-
 #include "test_temp_paths.hpp"
 
 #include <cstring>
@@ -179,24 +174,16 @@ void PerFormulationNexusOutputMgr_Test::SetUp()
     size = 1;
     #endif
 
-    // This test run's directory in rank 0's process directory, whose path rank 0 broadcasts
-    std::string process_dir;
+    // Rank 0's directory for this test run, whose path it broadcasts
     if (rank == 0) {
-        process_dir = ngen::test::process_temp_dir().string(); // removed when rank 0 exits
+        output_root = ngen::test::test_temp_dir().string();
     }
     #if NGEN_MPI_UNIT_TESTS
-    int len = static_cast<int>(process_dir.size());
+    int len = static_cast<int>(output_root.size());
     MPI_Bcast(&len, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    process_dir.resize(len);
-    MPI_Bcast(process_dir.data(), len, MPI_CHAR, 0, MPI_COMM_WORLD);
+    output_root.resize(len);
+    MPI_Bcast(output_root.data(), len, MPI_CHAR, 0, MPI_COMM_WORLD);
     #endif
-    output_root = ngen::test::test_temp_dir(process_dir).string();
-
-    // Create test output root dir, if it does not exist
-    // Recall that if not using MPI, rank will always be 0, limiting to rank 0 correct in either serial or parallel
-    if (rank == 0 && !utils::FileChecker::directory_exists(output_root) && mkdir(output_root.c_str(), 0777) != 0) {
-        throw std::runtime_error("Failed to create output root directory '" + output_root + "' (rank " + std::to_string(rank) + ")");
-    }
 
     // Generate the data used for example 2
     std::string dummy_time_stamp = "0000-00-00T00:00:00Z";
