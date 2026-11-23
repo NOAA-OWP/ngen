@@ -4,13 +4,13 @@
 #include "gtest/gtest.h"
 #include "NetCDFPerFeatureDataProvider.hpp"
 #include "UnitsHelper.hpp"
+#include "test_temp_paths.hpp"
 
 #include <netcdf>
 
 #include <algorithm>
 #include <chrono>
 #include <cmath>
-#include <cstdio>
 #include <ctime>
 #include <exception>
 #include <functional>
@@ -119,16 +119,8 @@ class NetCDFStorageVariantTest : public ::testing::Test {
         init_unit_system(); // as ngen's main() does, for unit conversions
     }
 
-    void TearDown() override {
-        for (const auto& p : temp_files) {
-            std::remove(p.c_str());
-        }
-    }
-
     std::string write(const Variant& v) {
-        std::string path = std::string("./nc_variant_") +
-            ::testing::UnitTest::GetInstance()->current_test_info()->name() + ".nc";
-        temp_files.push_back(path);
+        std::string path = ngen::test::test_temp_path("nc_variant.nc").string();
 
         std::vector<std::size_t> order = v.order;
         if (order.empty()) {
@@ -385,8 +377,6 @@ class NetCDFStorageVariantTest : public ::testing::Test {
                 << "error message: " << e.what();
         }
     }
-
-    std::vector<std::string> temp_files;
 
   private:
     // Attributes describing stored values must have the variable's type
@@ -889,8 +879,7 @@ TEST_F(NetCDFStorageVariantTest, MissingTimeVariableIsRejected)
 
 TEST_F(NetCDFStorageVariantTest, MissingTimeDimensionIsRejected)
 {
-    std::string path = "./nc_variant_MissingTimeDimensionIsRejected.nc";
-    temp_files.push_back(path);
+    std::string path = ngen::test::test_temp_path("nc_variant.nc").string();
     {
         netCDF::NcFile out(path, netCDF::NcFile::replace, netCDF::NcFile::nc4);
         auto cat_dim = out.addDim("catchment-id", 2);

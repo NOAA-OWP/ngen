@@ -4,13 +4,13 @@
 
 #include "gtest/gtest.h"
 #include "NetCDFPerFeatureDataProvider.hpp"
+#include "test_temp_paths.hpp"
 
 #include <netcdf>
 
 #include <algorithm>
 #include <barrier>
 #include <cmath>
-#include <cstdio>
 #include <functional>
 #include <string>
 #include <thread>
@@ -55,7 +55,7 @@ TEST(ProviderConcurrencyTest, ConcurrentGetValueReadsCorrectValues)
     // the end of each parallel loop, which eviction relies on.
     const std::size_t n_cats = 8, n_times = 100, chunk = 24;
     const time_t start = 1500000000, stride = 3600;
-    const std::string path = "./nc_concurrent_get_value.nc";
+    const std::string path = ngen::test::test_temp_path("nc_concurrent_get_value.nc").string();
     auto value = [](std::size_t cat, std::size_t t) { return 100.0 * cat + t; };
     {
         netCDF::NcFile out(path, netCDF::NcFile::replace, netCDF::NcFile::nc4);
@@ -105,7 +105,6 @@ TEST(ProviderConcurrencyTest, ConcurrentGetValueReadsCorrectValues)
             }
         });
     }
-    std::remove(path.c_str());
 
     for (std::size_t step = 0; step + 1 < n_times; ++step)
         for (unsigned t = 0; t < n_threads; ++t)
