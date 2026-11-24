@@ -339,7 +339,11 @@ jobs:
   # Every test step runs as long as the build succeeded, so one failure doesn't
   # hide the results of the others.
   test_macos:
-    runs-on: macos-15
+    strategy:
+      matrix:
+        os: [macos-15, macos-26]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v7
