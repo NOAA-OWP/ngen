@@ -8,20 +8,27 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 
+namespace {
+
+//! Wrap an identifier in double quotes, doubling any quote character it carries.
+std::string quote_identifier(const std::string& identifier)
+{
+    std::string quoted = "\"";
+    for (const char character : identifier) {
+        if (character == '"') {
+            quoted += '"';
+        }
+        quoted += character;
+    }
+    return quoted + "\"";
+}
+
+} // anonymous namespace
+
 namespace ngen {
 namespace geopackage {
 
-/**
- * Reject table names that are unsafe to interpolate into a query.
- *
- * Layer names reach the query text directly (SQLite cannot bind an
- * identifier), so anything but a plain table name is refused up front.
- *
- * @param[in] table Table name to validate
- * @throws std::runtime_error if the name is a SQLite internal table or
- *         contains characters outside the allowed set
- */
-static void check_table_name(const std::string& table)
+std::string quote_table_name(const std::string& table)
 {
     if (boost::algorithm::starts_with(table, "sqlite_")) {
         throw std::runtime_error("table `" + table + "` is not queryable");
@@ -31,6 +38,8 @@ static void check_table_name(const std::string& table)
     if (std::regex_match(table, allowed)) {
         throw std::runtime_error("table `" + table + "` contains invalid characters");
     }
+
+    return quote_identifier(table);
 }
 
 GeoPackageReader::GeoPackageReader(sqlite::database db)
@@ -48,8 +57,8 @@ std::shared_ptr<geojson::FeatureCollection> GeoPackageReader::read(
     const std::string& id_column
 ) const
 {
-    // Check for malicious/invalid layer input
-    check_table_name(layer);
+    // Check for malicious/invalid layer input; the quoted form is what the statements below use.
+    const std::string layer_identifier = quote_table_name(layer);
 
     // Check if layer exists
     if (!db_.contains(layer)) {
@@ -89,7 +98,7 @@ std::shared_ptr<geojson::FeatureCollection> GeoPackageReader::read(
 
     // Get number of features
     sqlite::database::iterator query_get_layer_count =
-        db_.query("SELECT COUNT(*) FROM " + layer + joined_ids, ids);
+        db_.query("SELECT COUNT(*) FROM " + layer_identifier + joined_ids, ids);
     query_get_layer_count.next();
     const int layer_feature_count = query_get_layer_count.get<int>(0);
 
@@ -115,7 +124,7 @@ std::shared_ptr<geojson::FeatureCollection> GeoPackageReader::read(
     const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
 
     // Get layer
-    sqlite::database::iterator query_get_layer = db_.query("SELECT * FROM " + layer + joined_ids, ids);
+    sqlite::database::iterator query_get_layer = db_.query("SELECT * FROM " + layer_identifier + joined_ids, ids);
     query_get_layer.next();
 
     // build features out of layer query
