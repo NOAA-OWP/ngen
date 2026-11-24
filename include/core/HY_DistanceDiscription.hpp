@@ -11,6 +11,6 @@ enum HY_DistanceDescription
     nearby,
     right,
     upstream
-}
+};
 
 #endif // HY_DISTANCEDISCRIPTION_H

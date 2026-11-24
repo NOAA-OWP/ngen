@@ -1,6 +1,7 @@
 #ifndef NGEN_OPTIONALWRAPPEDPROVIDER_HPP
 #define NGEN_OPTIONALWRAPPEDPROVIDER_HPP
 
+#include <map>
 #include <utility>
 
 #include "DeferredWrappedProvider.hpp"

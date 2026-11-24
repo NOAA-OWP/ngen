@@ -1,6 +1,8 @@
 #ifndef NGEN_AORCFORCING_H
 #define NGEN_AORCFORCING_H
 
+#include <string>
+
 // CSDMS Standard Names for several forcings
 #define CSDMS_STD_NAME_RAIN_VOLUME_FLUX "atmosphere_water__rainfall_volume_flux"
 #define CSDMS_STD_NAME_PRECIP_MASS_FLUX "atmosphere_water__precipitation_mass_flux"

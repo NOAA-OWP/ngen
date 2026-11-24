@@ -2,6 +2,7 @@
 #define NGEN_EXTERNALINTEGRATIONEXCEPTION_HPP
 
 #include <exception>
+#include <string>
 #include <utility>
 
 namespace external {
