@@ -125,7 +125,7 @@ $(function(){initNavTree('properties_8hpp_source.html',''); initResizable(true);
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keywordflow">if</span> (id_index != std::string::npos) {</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keywordflow">do</span> {</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                value = value.replace(id_index, <span class="keyword">sizeof</span>(pattern.c_str()) - 2, replacement);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                value.replace(id_index, pattern.size(), replacement);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                id_index = value.find(pattern);</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            } <span class="keywordflow">while</span> (id_index != std::string::npos);</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
@@ -150,7 +150,7 @@ $(function(){initNavTree('properties_8hpp_source.html',''); initResizable(true);
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_9058ef7c383dff996c678c5ba80ec03e.html">realizations</a></li><li class="navelem"><a class="el" href="dir_733dcb5e19919fff8431e51daebf2dc1.html">config</a></li><li class="navelem"><b>properties.hpp</b></li>
-    <li class="footer">Generated on Tue Nov 24 2026 16:38:59 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Tue Nov 24 2026 16:42:03 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
