@@ -31,7 +31,7 @@ Otherwise, if using the standard build process with CMake, the driver is built u
 * An additional driver [CLI arg](../README.md#usage) may supply the path to the partitioner config. Without it, or given `--auto-partition` in its place, the driver [partitions automatically](#automatic-partitioning).
 
 ## Automatic Partitioning
-Given no partition config path, or `--auto-partition` in its place, the driver partitions the hydrofabric itself during initialization. Every nexus is assigned to one rank, along with all of the catchments that drain to it. Rank 0 reads which nexus each divide drains to, and divides the nexuses among the ranks in contiguous blocks, in the order the hydrofabric stores them, weighting each nexus by the number of catchments that drain to it. The blocks are cut so that the heaviest is as light as possible, and the others are near even shares of the rest. Rank 0 then sends each rank its part. A divide that drains to no nexus is placed as if it were a nexus of its own.
+Given no partition config path, or `--auto-partition` in its place, the driver partitions the hydrofabric itself during initialization. Every nexus is assigned to one rank, along with all of the catchments that drain to it. Rank 0 reads which nexus each divide drains to, without the divides' geometry or other attributes, and divides the nexuses among the ranks in contiguous blocks, in the order the hydrofabric stores them, weighting each nexus by the number of catchments that drain to it. The blocks are cut so that the heaviest is as light as possible, and the others are near even shares of the rest. Rank 0 then sends each rank its part. A divide that drains to no nexus is placed as if it were a nexus of its own.
 
 If the catchment subset CLI arg names catchments, only those catchments are partitioned; the nexus subset arg is ignored. Every rank must receive at least one catchment, so there can be no more ranks than nexuses.
 
@@ -57,7 +57,7 @@ mpirun -n 16 cmake-build/ngen hydrofabric.gpkg "all" hydrofabric.gpkg "all" real
 
 # Partitioning Config Generator
 
-A separate artifact can be built for generating partition configs.  This is the _partitionGenerator_ executable, built in the CMake build directory either when the entire project or specifically the `partitionGenerator` CMake target is built.  It partitions a hydrofabric as the driver does when it [partitions automatically](#automatic-partitioning), and writes the partitions to a file, which can then be inspected or reused.  The syntax for using is:
+A separate artifact can be built for generating partition configs.  This is the _partitionGenerator_ executable, built in the CMake build directory either when the entire project or specifically the `partitionGenerator` CMake target is built.  It partitions a hydrofabric as the driver does when it [partitions automatically](#automatic-partitioning), reading only which nexus each divide drains to, and writes the partitions to a file, which can then be inspected or reused.  The syntax for using is:
 
 `<cmake-build-dir>/partitionGenerator <catchment_data_file> <nexus_data_file> <output_partition_config> <num_partitions> '' ''`
 

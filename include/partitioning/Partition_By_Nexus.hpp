@@ -46,7 +46,9 @@ namespace partitioning {
      * details::group_by_nexus().
      *
      * @param catchments Catchment (divide) features, with the downstream nexus under `toid`, which
-     *        are also given to the strategy
+     *        are also given to the strategy. The strategies so far use only each feature's ID
+     *        and `toid`, so features read with hydrofabric::Content::Connectivity suffice; a
+     *        strategy that needs more must have its callers read more.
      * @param strategy How the nexuses are cut into parts
      * @return One PartitionData per part, with `mpi_world_rank` set to the part's index. A
      *         catchment that drains to no nexus is assigned as a group of its own.
