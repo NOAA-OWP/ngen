@@ -4,6 +4,7 @@
 #include <iostream>
 #include <limits>
 #include <regex>
+#include <set>
 #include <stdexcept>
 
 #include <boost/algorithm/string/predicate.hpp>
@@ -33,6 +34,25 @@ static void check_table_name(const std::string& table)
     }
 }
 
+/**
+ * Quote a column name for use in a query.
+ *
+ * @param[in] column Column name, as the database reports it
+ * @return @p column in double quotes, with any double quote within it doubled
+ */
+static std::string quote_identifier(const std::string& column)
+{
+    std::string quoted = "\"";
+    for (const char c : column) {
+        quoted += c;
+        if (c == '"') {
+            quoted += '"';
+        }
+    }
+    quoted += '"';
+    return quoted;
+}
+
 GeoPackageReader::GeoPackageReader(sqlite::database db)
   : db_(std::move(db))
 {}
@@ -45,7 +65,8 @@ const sqlite::database& GeoPackageReader::db() const noexcept
 std::shared_ptr<geojson::FeatureCollection> GeoPackageReader::read(
     const std::string& layer,
     const std::vector<std::string>& ids,
-    const std::string& id_column
+    const std::string& id_column,
+    const std::optional<std::vector<std::string>>& columns
 ) const
 {
     // Check for malicious/invalid layer input
@@ -114,8 +135,28 @@ std::shared_ptr<geojson::FeatureCollection> GeoPackageReader::read(
     query_get_layer_geom_meta.next();
     const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
 
-    // Get layer
-    sqlite::database::iterator query_get_layer = db_.query("SELECT * FROM " + layer + joined_ids, ids);
+    // Get layer, selecting only the requested columns when some are named, so that the rest --
+    // the geometry above all -- are never read from the database at all
+    std::string selected_columns = "*";
+    bool read_geometry = true;
+    if (columns.has_value()) {
+        const std::set<std::string> available = db_.columns(layer);
+        std::set<std::string> selected{id_column};
+        selected.insert(columns->begin(), columns->end());
+        selected_columns.clear();
+        for (const std::string& column : selected) {
+            if (!available.contains(column)) {
+                throw std::runtime_error("layer `" + layer + "` has no column `" + column + "`");
+            }
+            if (!selected_columns.empty()) {
+                selected_columns += ", ";
+            }
+            selected_columns += quote_identifier(column);
+        }
+        read_geometry = selected.contains(layer_geometry_column);
+    }
+    sqlite::database::iterator query_get_layer =
+        db_.query("SELECT " + selected_columns + " FROM " + layer + joined_ids, ids);
     query_get_layer.next();
 
     // build features out of layer query
@@ -125,13 +166,27 @@ std::shared_ptr<geojson::FeatureCollection> GeoPackageReader::read(
         std::string id = query_get_layer.get<std::string>(id_column);
         geojson::PropertyMap properties = build_properties(query_get_layer, layer_geometry_column);
 
-        features.push_back(build_feature(
-            query_get_layer,
-            id,
-            layer_geometry_column,
-            std::move(properties)
-        ));
+        if (!read_geometry) {
+            features.push_back(build_feature_without_geometry(id, std::move(properties)));
+        }
+        else {
+            features.push_back(build_feature(
+                query_get_layer,
+                id,
+                layer_geometry_column,
+                std::move(properties)
+            ));
+        }
         query_get_layer.next();
+    }
+
+    if (!read_geometry) {
+        std::shared_ptr<geojson::FeatureCollection> fc = std::make_shared<geojson::FeatureCollection>(
+            std::move(features),
+            std::vector<double>{}
+        );
+        fc->update_ids();
+        return fc;
     }
 
     // get layer bounding box from features

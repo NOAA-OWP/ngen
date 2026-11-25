@@ -203,9 +203,10 @@ int main(int argc, char* argv[])
     std::ofstream outFile;
     outFile.open(partitionOutFile, std::ios::trunc);
 
-    //Get the feature collection for the given hydrofabric
+    //Get the connectivity of the catchments in the given hydrofabric
     std::unique_ptr<ngen::hydrofabric::HydrofabricReader> hydrofabric =
-        ngen::hydrofabric::make_hydrofabric_reader(catchmentDataFile, nexusDataFile);
+        ngen::hydrofabric::make_hydrofabric_reader(catchmentDataFile, nexusDataFile,
+                                                   ngen::hydrofabric::Content::Connectivity);
     geojson::GeoJSON catchment_collection = hydrofabric->read_divides(catchment_subset_ids);
     int num_catchments = catchment_collection->get_size();
     std::cout<<"Partitioning "<<num_catchments<<" catchments into "<<num_partitions<<" partitions."<<std::endl;

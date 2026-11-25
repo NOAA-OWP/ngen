@@ -34,10 +34,9 @@ namespace partitioning {
     /**
      * Partition a hydrofabric's catchments automatically across the ranks of @p comm.
      *
-     * @p root reads the relevant hydrofabric data, and assigns each
-     * nexus, with every catchment that drains to it, to one rank per
-     * partition_by_nexus(). Each rank receives its part.  Failures
-     * are reported on standard error.
+     * @p root reads only the divides' connectivity, per hydrofabric::Content::Connectivity, and
+     * assigns each nexus, with every catchment that drains to it, to one rank per
+     * partition_by_nexus(). Each rank receives its part. Failures are reported on standard error.
      *
      * Collective over @p comm.
      *

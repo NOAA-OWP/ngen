@@ -60,7 +60,8 @@ std::optional<PartitionData> partition_automatically(const std::string& catchmen
     if (mpi_rank == root) {
         try {
             std::cout << "Partitioning catchments automatically" << std::endl;
-            auto hydrofabric_reader = hydrofabric::make_hydrofabric_reader(catchment_data_path, nexus_data_path);
+            auto hydrofabric_reader = hydrofabric::make_hydrofabric_reader(catchment_data_path, nexus_data_path,
+                                                                           hydrofabric::Content::Connectivity);
             auto hydrofabric = hydrofabric_reader->read_divides(catchment_subset_ids);
             partitions = partition_by_nexus(hydrofabric, mpi_num_procs, strategy);
         }
