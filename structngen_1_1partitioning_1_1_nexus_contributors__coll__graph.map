@@ -1,0 +1,19 @@
+<map id="ngen::partitioning::NexusContributors" name="ngen::partitioning::NexusContributors">
+<area shape="rect" id="Node000001" title="Nexuses, each with the catchments that drain to it, in the order that a partitioning strategy cuts th..." alt="" coords="40,634,164,715"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,384,156,466"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,465,96,571,100,617,94,618,90,571,81,466"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="162,150,263,216"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="149,198,113,215,97,227,84,241,69,276,64,314,66,351,72,384,67,385,61,352,59,313,64,274,80,239,93,223,110,210,147,194"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="174,490,316,571"/>
+<area shape="poly" id="edge9_Node000005_Node000003" title=" " alt="" coords="218,230,227,360,242,490,237,490,222,361,212,231"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="340,294,488,360"/>
+<area shape="poly" id="edge8_Node000006_Node000003" title=" " alt="" coords="267,223,329,268,365,292,362,296,326,272,264,227"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="203,13,222,79"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="215,79,215,133,210,133,210,79"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="207,573,155,624,151,620,203,569"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="389,362,291,478,287,475,385,359"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="381,150,447,216"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="417,216,417,277,411,277,411,216"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="358,5,470,87"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="417,102,417,150,411,150,411,102"/>
+</map>

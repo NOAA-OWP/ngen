@@ -97,7 +97,6 @@ $(function(){initNavTree('class_ngen_simulation.html',''); initResizable(true); 
 
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
@@ -115,11 +114,6 @@ $(function(){initNavTree('class_ngen_simulation.html',''); initResizable(true); 
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_ngen_simulation__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a463e451d1ae4f392518aea22055f03b9" id="r_a463e451d1ae4f392518aea22055f03b9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a463e451d1ae4f392518aea22055f03b9">hy_features_t</a> = <a class="el" href="classhy__features_1_1_h_y___features.html">hy_features::HY_Features</a></td></tr>
-<tr class="separator:a463e451d1ae4f392518aea22055f03b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a8cf729ebc31f210e9889a16f1e600f29" id="r_a8cf729ebc31f210e9889a16f1e600f29"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cf729ebc31f210e9889a16f1e600f29">NgenSimulation</a> (<a class="el" href="class_simulation___time.html">Simulation_Time</a> const &amp;sim_time, std::vector&lt; std::shared_ptr&lt; <a class="el" href="classngen_1_1_layer.html">ngen::Layer</a> &gt; &gt; layers, std::unordered_map&lt; std::string, int &gt; catchment_indexes, std::unordered_map&lt; std::string, int &gt; nexus_indexes, int mpi_rank, int mpi_num_procs)</td></tr>
@@ -134,9 +128,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5e0c495e05c77e5104118d1802b51968" id="r_a5e0c495e05c77e5104118d1802b51968"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e0c495e05c77e5104118d1802b51968">run_routing</a> (std::string const &amp;t_route_config_file_with_path)</td></tr>
 <tr class="memdesc:a5e0c495e05c77e5104118d1802b51968"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run t-route on nexus outflow values written to files during <a class="el" href="#abe49f6911a9117ae53f5b5e51d286502" title="Run the catchment formulations for the full configured duration of the simulation.">run_catchments()</a> for the full configured duration of the simulation.  <br /></td></tr>
 <tr class="separator:a5e0c495e05c77e5104118d1802b51968"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0347748947b0c4fc60891892a63340d" id="r_ad0347748947b0c4fc60891892a63340d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0347748947b0c4fc60891892a63340d">run_routing_bmi</a> (<a class="el" href="#a463e451d1ae4f392518aea22055f03b9">hy_features_t</a> &amp;features, std::string const &amp;t_route_config_file_with_path)</td></tr>
-<tr class="memdesc:ad0347748947b0c4fc60891892a63340d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run t-route via BMI on the stored nexus outflow values for the full configured duration of the simulation.  <br /></td></tr>
-<tr class="separator:ad0347748947b0c4fc60891892a63340d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d84f01a7b6d026115dc9123088d8440" id="r_a5d84f01a7b6d026115dc9123088d8440"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d84f01a7b6d026115dc9123088d8440">run_routing_bmi</a> (std::string const &amp;t_route_config_file_with_path)</td></tr>
+<tr class="memdesc:a5d84f01a7b6d026115dc9123088d8440"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run t-route via BMI on the stored nexus outflow values for the full configured duration of the simulation.  <br /></td></tr>
+<tr class="separator:a5d84f01a7b6d026115dc9123088d8440"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab065277e2398cb66e8a8c878a65d8641" id="r_ab065277e2398cb66e8a8c878a65d8641"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab065277e2398cb66e8a8c878a65d8641">get_nexus_index</a> (std::string const &amp;nexus_id) const</td></tr>
 <tr class="separator:ab065277e2398cb66e8a8c878a65d8641"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c6d9e9f88537c1650077a40be8134e6" id="r_a0c6d9e9f88537c1650077a40be8134e6"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c6d9e9f88537c1650077a40be8134e6">get_nexus_outflow</a> (int nexus_index, int timestep_index) const</td></tr>
@@ -173,21 +167,6 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a4a59792fc65d70a7f18c8083621c318a" id="r_a4a59792fc65d70a7f18c8083621c318a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a59792fc65d70a7f18c8083621c318a">mpi_num_procs_</a></td></tr>
 <tr class="separator:a4a59792fc65d70a7f18c8083621c318a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="a463e451d1ae4f392518aea22055f03b9" name="a463e451d1ae4f392518aea22055f03b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a463e451d1ae4f392518aea22055f03b9">&#9670;&#160;</a></span>hy_features_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="#a463e451d1ae4f392518aea22055f03b9">NgenSimulation::hy_features_t</a> = <a class="el" href="classhy__features_1_1_h_y___features.html">hy_features::HY_Features</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8cf729ebc31f210e9889a16f1e600f29" name="a8cf729ebc31f210e9889a16f1e600f29"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8cf729ebc31f210e9889a16f1e600f29">&#9670;&#160;</a></span>NgenSimulation() <span class="overload">[1/2]</span></h2>
@@ -391,7 +370,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Run the catchment formulations for the full configured duration of the simulation. </p>
-<p>Can be configured to capture calculated runoff values in <code>catchment_outflows_</code> and <code>nexus_downstream_flows_</code> for subsequent output and consumption by <code><a class="el" href="#ad0347748947b0c4fc60891892a63340d" title="Run t-route via BMI on the stored nexus outflow values for the full configured duration of the simula...">run_routing_bmi()</a></code> </p>
+<p>Can be configured to capture calculated runoff values in <code>catchment_outflows_</code> and <code>nexus_downstream_flows_</code> for subsequent output and consumption by <code><a class="el" href="#a5d84f01a7b6d026115dc9123088d8440" title="Run t-route via BMI on the stored nexus outflow values for the full configured duration of the simula...">run_routing_bmi()</a></code> </p>
 
 <p class="reference">References <a class="el" href="#a92cd36ea9aeb2b475ad7a94d791123f8">advance_models_one_output_step()</a>, <a class="el" href="class_simulation___time.html#a642130d5225e58078097a954aae2a236">Simulation_Time::advance_timestep()</a>, <a class="el" href="#af5487d3fff667f4b7245c22066f48eb0">catchment_indexes_</a>, <a class="el" href="#a2061efbe8bbc24c0f3224c07c5df058b">catchment_outflows_</a>, <a class="el" href="#ac4aa716aea81477f20d264293daf80eb">get_num_output_times()</a>, <a class="el" href="#a92db5bb0d32bf8ca3e65fb50c1203283">nexus_downstream_flows_</a>, <a class="el" href="#a6a81cfc85c71834ae9fe3986fa68e057">nexus_indexes_</a>, <a class="el" href="#a7865c97843e4b81cb812edf8156b21ab">sim_time_</a>, and <a class="el" href="#ad4b135efbc9d2350f361da71ffbb00ea">simulation_step_</a>.</p>
 
@@ -418,8 +397,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ad0347748947b0c4fc60891892a63340d" name="ad0347748947b0c4fc60891892a63340d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0347748947b0c4fc60891892a63340d">&#9670;&#160;</a></span>run_routing_bmi()</h2>
+<a id="a5d84f01a7b6d026115dc9123088d8440" name="a5d84f01a7b6d026115dc9123088d8440"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d84f01a7b6d026115dc9123088d8440">&#9670;&#160;</a></span>run_routing_bmi()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -427,12 +406,8 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">void NgenSimulation::run_routing_bmi </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a463e451d1ae4f392518aea22055f03b9">NgenSimulation::hy_features_t</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>features</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">std::string const &amp;</td>          <td class="paramname"><span class="paramname"><em>t_route_config_file_with_path</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">std::string const &amp;</td>          <td class="paramname"><span class="paramname"><em>t_route_config_file_with_path</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -565,7 +540,7 @@ template&lt;class Archive &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#ad0347748947b0c4fc60891892a63340d">run_routing_bmi()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a5d84f01a7b6d026115dc9123088d8440">run_routing_bmi()</a>.</p>
 
 </div>
 </div>
@@ -589,7 +564,7 @@ template&lt;class Archive &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a5e0c495e05c77e5104118d1802b51968">run_routing()</a>, and <a class="el" href="#ad0347748947b0c4fc60891892a63340d">run_routing_bmi()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a5e0c495e05c77e5104118d1802b51968">run_routing()</a>, and <a class="el" href="#a5d84f01a7b6d026115dc9123088d8440">run_routing_bmi()</a>.</p>
 
 </div>
 </div>
@@ -613,7 +588,7 @@ template&lt;class Archive &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a8cf729ebc31f210e9889a16f1e600f29">NgenSimulation()</a>, <a class="el" href="#a92cd36ea9aeb2b475ad7a94d791123f8">advance_models_one_output_step()</a>, <a class="el" href="#a0c6d9e9f88537c1650077a40be8134e6">get_nexus_outflow()</a>, <a class="el" href="#abe49f6911a9117ae53f5b5e51d286502">run_catchments()</a>, <a class="el" href="#ad0347748947b0c4fc60891892a63340d">run_routing_bmi()</a>, and <a class="el" href="#a68d63adc9f74c69cbcf7c8314639c346">serialize()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a8cf729ebc31f210e9889a16f1e600f29">NgenSimulation()</a>, <a class="el" href="#a92cd36ea9aeb2b475ad7a94d791123f8">advance_models_one_output_step()</a>, <a class="el" href="#a0c6d9e9f88537c1650077a40be8134e6">get_nexus_outflow()</a>, <a class="el" href="#abe49f6911a9117ae53f5b5e51d286502">run_catchments()</a>, <a class="el" href="#a5d84f01a7b6d026115dc9123088d8440">run_routing_bmi()</a>, and <a class="el" href="#a68d63adc9f74c69cbcf7c8314639c346">serialize()</a>.</p>
 
 </div>
 </div>
@@ -637,7 +612,7 @@ template&lt;class Archive &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a8cf729ebc31f210e9889a16f1e600f29">NgenSimulation()</a>, <a class="el" href="#a92cd36ea9aeb2b475ad7a94d791123f8">advance_models_one_output_step()</a>, <a class="el" href="#ab065277e2398cb66e8a8c878a65d8641">get_nexus_index()</a>, <a class="el" href="#a0c6d9e9f88537c1650077a40be8134e6">get_nexus_outflow()</a>, <a class="el" href="#abe49f6911a9117ae53f5b5e51d286502">run_catchments()</a>, <a class="el" href="#ad0347748947b0c4fc60891892a63340d">run_routing_bmi()</a>, and <a class="el" href="#a68d63adc9f74c69cbcf7c8314639c346">serialize()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a8cf729ebc31f210e9889a16f1e600f29">NgenSimulation()</a>, <a class="el" href="#a92cd36ea9aeb2b475ad7a94d791123f8">advance_models_one_output_step()</a>, <a class="el" href="#ab065277e2398cb66e8a8c878a65d8641">get_nexus_index()</a>, <a class="el" href="#a0c6d9e9f88537c1650077a40be8134e6">get_nexus_outflow()</a>, <a class="el" href="#abe49f6911a9117ae53f5b5e51d286502">run_catchments()</a>, <a class="el" href="#a5d84f01a7b6d026115dc9123088d8440">run_routing_bmi()</a>, and <a class="el" href="#a68d63adc9f74c69cbcf7c8314639c346">serialize()</a>.</p>
 
 </div>
 </div>
@@ -661,7 +636,7 @@ template&lt;class Archive &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="#a92cd36ea9aeb2b475ad7a94d791123f8">advance_models_one_output_step()</a>, <a class="el" href="#ac4aa716aea81477f20d264293daf80eb">get_num_output_times()</a>, <a class="el" href="#abe49f6911a9117ae53f5b5e51d286502">run_catchments()</a>, <a class="el" href="#a5e0c495e05c77e5104118d1802b51968">run_routing()</a>, <a class="el" href="#ad0347748947b0c4fc60891892a63340d">run_routing_bmi()</a>, and <a class="el" href="#a68d63adc9f74c69cbcf7c8314639c346">serialize()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a92cd36ea9aeb2b475ad7a94d791123f8">advance_models_one_output_step()</a>, <a class="el" href="#ac4aa716aea81477f20d264293daf80eb">get_num_output_times()</a>, <a class="el" href="#abe49f6911a9117ae53f5b5e51d286502">run_catchments()</a>, <a class="el" href="#a5e0c495e05c77e5104118d1802b51968">run_routing()</a>, <a class="el" href="#a5d84f01a7b6d026115dc9123088d8440">run_routing_bmi()</a>, and <a class="el" href="#a68d63adc9f74c69cbcf7c8314639c346">serialize()</a>.</p>
 
 </div>
 </div>
@@ -699,7 +674,7 @@ template&lt;class Archive &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_ngen_simulation.html">NgenSimulation</a></li>
-    <li class="footer">Generated on Tue Nov 24 2026 16:42:04 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Nov 25 2026 20:31:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

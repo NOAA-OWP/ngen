@@ -100,9 +100,9 @@ $(function(){initNavTree('md__c_h_a_n_g_e_l_o_g.html',''); initResizable(true); 
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>All notable changes to this project will be documented in this file. We follow the <a href="http://semver.org/">Semantic Versioning 2.0.0</a> format.</p>
-<h2><a class="anchor" id="autotoc_md75"></a>
+<h2><a class="anchor" id="autotoc_md48"></a>
 x.y.z - YYYY-MM-DD</h2>
-<h3><a class="anchor" id="autotoc_md76"></a>
+<h3><a class="anchor" id="autotoc_md49"></a>
 Added</h3>
 <ul>
 <li>An <code>output</code> configuration block for realization configs: <code>root</code>, per-domain (<code>catchment</code>/<code>nexus</code>) <code>enable</code>/<code>format</code>/<code>grouping</code>/<code>rank_subdir</code>, and a global value <code>precision</code>. See <a href="doc/REALIZATION_CONFIGURATION.md#output">Realization Configuration</a>.</li>
@@ -110,31 +110,35 @@ Added</h3>
 <li>Per-domain <code>rank_subdir</code> option placing each MPI rank's CSV output under a <code>rank_&lt;N&gt;/</code> subdirectory (applied automatically for <code>per_formulation</code> under MPI).</li>
 <li>Initial hydrofabric v4.0 support, alongside the existing v2.2 and v4.0beta1 schemas.</li>
 <li>A <code>HydrofabricReader</code> abstraction covering both supported hydrofabric formats, with GeoJSON and GeoPackage implementations selected by <code>make_hydrofabric_reader()</code>. Both drivers now obtain their catchment and nexus features through it instead of dispatching on the file extension themselves.</li>
+<li>Automatic partitioning under MPI. Given no partition config path, or <code>--auto-partition</code> in its place, <code>ngen</code> partitions the hydrofabric itself during initialization: rank 0 reads which nexus each divide drains to, assigns each nexus and every catchment that drains to it to one rank, balancing the ranks' loads, and sends each rank its part. No partition file or separate partitioning step is needed. See <a href="doc/DISTRIBUTED_PROCESSING.md#automatic-partitioning">Distributed Processing</a>.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md77"></a>
+<h3><a class="anchor" id="autotoc_md50"></a>
 Changed</h3>
 <ul>
+<li><code>partitionGenerator</code> partitions as automatic partitioning does, by nexus, writing partitions with no remote connections. Its nexus subset argument is ignored.</li>
 <li>A GeoPackage with no <code>nexus</code> layer is no longer read as a hydrofabric. It was previously treated as v2.2 and read anyway; it is now reported as not a hydrofabric. Reading such a file as a plain GeoPackage of arbitrary layers is still supported, through <code><a class="el" href="classngen_1_1geopackage_1_1_geo_package_reader.html" title="Reads feature collections out of the layers of a single GeoPackage.">ngen::geopackage::GeoPackageReader</a></code>, which carries no hydrofabric knowledge at all.</li>
 <li>Catchment and nexus data paths must name the same format. Passing a GeoPackage for one and a GeoJSON file for the other is now an error rather than being honored per path.</li>
 <li>Hydrofabric data files are recognized by their contents rather than their file names. A GeoPackage is identified by the SQLite header it begins with, so it is read as one whatever it is called, and anything else is read as GeoJSON. The previous test required a name ending in a lowercase <code>gpkg</code>, which missed <code>.GPKG</code>, matched unrelated names ending in those letters, and — because loading a subdivided hydrofabric under MPI appends a rank suffix to both data paths — missed every GeoPackage in that mode.</li>
 <li>The <code>INFO: hydrofabric detected: ...</code> line now reports for either format and fires exactly once per run. GeoJSON hydrofabrics previously reported nothing, and a single-file GeoPackage hydrofabric reported twice, once per file opened.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md78"></a>
+<h3><a class="anchor" id="autotoc_md51"></a>
 Changed</h3>
 <ul>
 <li>Models referenced as git submodules under extern/ are now built in the CMake binary tree under extern-libs/, not in the source tree as cmake_build/ directories under their respective source roots</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md79"></a>
+<h3><a class="anchor" id="autotoc_md52"></a>
 Deprecated</h3>
 <ul>
 <li>Top-level realization config keys <code>output_root</code>, <code>disable_catchment_output</code>, and <code>per_formulation_nexus_files</code>, superseded by the <code>output</code> block (still honored when no <code>output</code> block is present).</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md80"></a>
+<h3><a class="anchor" id="autotoc_md53"></a>
 Removed</h3>
 <ul>
 <li>The <code>output_precision</code> formulation parameter in realization configs. It has had no effect since catchment output moved to the output manager; text precision is the <code>output</code> block's <code>precision</code> value.</li>
+<li>Support for remote nexus connections between MPI ranks. Each partition must now hold every catchment that drains to each of its nexuses, as automatic partitioning ensures, so ranks no longer exchange flows during a simulation. A partition config whose partitions list remote connections is rejected.</li>
+<li>Support for subdivided hydrofabrics: the generation and distribution of per-rank hydrofabric files, and the optional <code>dmod.subsetservice</code> dependency it used. Each rank reads only its partition's features from a GeoPackage hydrofabric. The <code>--subdivided-hydrofabric</code> flag is still accepted, but ignored with a warning.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md81"></a>
+<h3><a class="anchor" id="autotoc_md54"></a>
 Fixed</h3>
 <ul>
 <li>Hydrofabric schema detection now reads each layer's columns from the file that holds it. A v4.0 hydrofabric split across a catchment file and a nexus file was previously detected as v4.0beta1, because <code>divides.flowpath_toid</code> &ndash; the column that separates the two &ndash; is absent from the nexus file; its divides were then joined through a <code>flowpaths</code> table that need not be there, leaving them with no downstream reference.</li>
@@ -146,7 +150,7 @@ Fixed</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Nov 24 2026 16:42:04 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Nov 25 2026 20:31:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

@@ -28,8 +28,7 @@ var annotated_dup =
       [ "MultiPolygonFeature", "classgeojson_1_1_multi_polygon_feature.html", "classgeojson_1_1_multi_polygon_feature" ],
       [ "Object", "structgeojson_1_1_object.html", "structgeojson_1_1_object" ],
       [ "PointFeature", "classgeojson_1_1_point_feature.html", "classgeojson_1_1_point_feature" ],
-      [ "PolygonFeature", "classgeojson_1_1_polygon_feature.html", "classgeojson_1_1_polygon_feature" ],
-      [ "SentinelFeature", "classgeojson_1_1_sentinel_feature.html", "classgeojson_1_1_sentinel_feature" ]
+      [ "PolygonFeature", "classgeojson_1_1_polygon_feature.html", "classgeojson_1_1_polygon_feature" ]
     ] ],
     [ "hy_features", "namespacehy__features.html", [
       [ "attributes", "namespacehy__features_1_1attributes.html", [
@@ -104,6 +103,12 @@ var annotated_dup =
         [ "V2_2GeoPackageHydrofabricReader", "classngen_1_1hydrofabric_1_1_v2__2_geo_package_hydrofabric_reader.html", "classngen_1_1hydrofabric_1_1_v2__2_geo_package_hydrofabric_reader" ],
         [ "V4_0Beta1GeoPackageHydrofabricReader", "classngen_1_1hydrofabric_1_1_v4__0_beta1_geo_package_hydrofabric_reader.html", "classngen_1_1hydrofabric_1_1_v4__0_beta1_geo_package_hydrofabric_reader" ],
         [ "V4_0GeoPackageHydrofabricReader", "classngen_1_1hydrofabric_1_1_v4__0_geo_package_hydrofabric_reader.html", "classngen_1_1hydrofabric_1_1_v4__0_geo_package_hydrofabric_reader" ]
+      ] ],
+      [ "partitioning", "namespacengen_1_1partitioning.html", [
+        [ "details", "namespacengen_1_1partitioning_1_1details.html", [
+          [ "CatchmentNexusLink", "structngen_1_1partitioning_1_1details_1_1_catchment_nexus_link.html", "structngen_1_1partitioning_1_1details_1_1_catchment_nexus_link" ]
+        ] ],
+        [ "NexusContributors", "structngen_1_1partitioning_1_1_nexus_contributors.html", "structngen_1_1partitioning_1_1_nexus_contributors" ]
       ] ],
       [ "serialization", "namespacengen_1_1serialization.html", [
         [ "detail", "namespacengen_1_1serialization_1_1detail.html", [
@@ -212,12 +217,9 @@ var annotated_dup =
     [ "Network_Test", "class_network___test.html", "class_network___test" ],
     [ "Network_Test1", "class_network___test1.html", "class_network___test1" ],
     [ "Network_Test2", "class_network___test2.html", "class_network___test2" ],
-    [ "Network_Test3", "class_network___test3.html", "class_network___test3" ],
-    [ "Nexus_Remote_Test", "class_nexus___remote___test.html", "class_nexus___remote___test" ],
     [ "Nexus_Test", "class_nexus___test.html", "class_nexus___test" ],
     [ "NgenSimulation", "class_ngen_simulation.html", "class_ngen_simulation" ],
     [ "NullForcingProvider", "class_null_forcing_provider.html", "class_null_forcing_provider" ],
-    [ "Partition_One", "class_partition___one.html", "class_partition___one" ],
     [ "PartitionData", "struct_partition_data.html", "struct_partition_data" ],
     [ "Partitions_Parser", "class_partitions___parser.html", "class_partitions___parser" ],
     [ "PerFormulationStepOutput", "struct_per_formulation_step_output.html", "struct_per_formulation_step_output" ],

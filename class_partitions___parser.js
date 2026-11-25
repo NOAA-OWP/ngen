@@ -9,7 +9,5 @@ var class_partitions___parser =
     [ "mpi_world_rank", "class_partitions___parser.html#a08d58c929fc40cc52b9a8337a6f9a9d2", null ],
     [ "nexus_ids", "class_partitions___parser.html#a6a46163b60b747bae3140e7a0725012b", null ],
     [ "partition_ranks", "class_partitions___parser.html#a77192e7019935a3740a6d275b3912ad7", null ],
-    [ "remote_connections", "class_partitions___parser.html#af72e01eb6a3d712e2d8e5ccd9e94de87", null ],
-    [ "remote_tuple", "class_partitions___parser.html#aa37cfde3d5f16a122f81a9f44cf7e491", null ],
     [ "tree", "class_partitions___parser.html#aa8a46b738112a567324898164372cce9", null ]
 ];

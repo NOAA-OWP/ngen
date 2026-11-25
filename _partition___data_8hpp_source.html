@@ -103,35 +103,29 @@ $(function(){initNavTree('_partition___data_8hpp_source.html',''); initResizable
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define PARTITION_DATA_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;tuple&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;unordered_set&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="foldopen" id="foldopen00009" data-start="{" data-end="};">
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="struct_partition_data.html">    9</a></span><span class="keyword">struct </span><a class="code hl_struct" href="struct_partition_data.html">PartitionData</a></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>{</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="struct_partition_data.html#aba7bce4b0d2c21869d566e6192048f43">   11</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="struct_partition_data.html#aba7bce4b0d2c21869d566e6192048f43">Tuple</a> = std::tuple&lt;int, std::string, std::string, std::string&gt;;</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="struct_partition_data.html#a9183691f0b869d2b170a5f932c77f87b">   12</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_partition_data.html#a9183691f0b869d2b170a5f932c77f87b">mpi_world_rank</a>;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="struct_partition_data.html#aa3afc6bc9ece49dd9c25c502b5720a94">   13</a></span>    std::unordered_set&lt;std::string&gt; <a class="code hl_variable" href="struct_partition_data.html#aa3afc6bc9ece49dd9c25c502b5720a94">catchment_ids</a>;</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="struct_partition_data.html#ace7481bdd629019f1f88b883932e69c9">   14</a></span>    std::unordered_set&lt;std::string&gt; <a class="code hl_variable" href="struct_partition_data.html#ace7481bdd629019f1f88b883932e69c9">nexus_ids</a>;</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="struct_partition_data.html#ab6b6b1f8ce6428004510e2ed6512ec9a">   15</a></span>    std::vector&lt;Tuple&gt; <a class="code hl_variable" href="struct_partition_data.html#ab6b6b1f8ce6428004510e2ed6512ec9a">remote_connections</a>;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>};</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;unordered_set&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="foldopen" id="foldopen00007" data-start="{" data-end="};">
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="struct_partition_data.html">    7</a></span><span class="keyword">struct </span><a class="code hl_struct" href="struct_partition_data.html">PartitionData</a></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>{</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="struct_partition_data.html#a9183691f0b869d2b170a5f932c77f87b">    9</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_partition_data.html#a9183691f0b869d2b170a5f932c77f87b">mpi_world_rank</a>;</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="struct_partition_data.html#aa3afc6bc9ece49dd9c25c502b5720a94">   10</a></span>    std::unordered_set&lt;std::string&gt; <a class="code hl_variable" href="struct_partition_data.html#aa3afc6bc9ece49dd9c25c502b5720a94">catchment_ids</a>;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="struct_partition_data.html#ace7481bdd629019f1f88b883932e69c9">   11</a></span>    std::unordered_set&lt;std::string&gt; <a class="code hl_variable" href="struct_partition_data.html#ace7481bdd629019f1f88b883932e69c9">nexus_ids</a>;</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>};</div>
 </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#endif  </span><span class="comment">//PARTITION_DATA_H</span></div>
-<div class="ttc" id="astruct_partition_data_html"><div class="ttname"><a href="struct_partition_data.html">PartitionData</a></div><div class="ttdef"><b>Definition</b> Partition_Data.hpp:10</div></div>
-<div class="ttc" id="astruct_partition_data_html_a9183691f0b869d2b170a5f932c77f87b"><div class="ttname"><a href="struct_partition_data.html#a9183691f0b869d2b170a5f932c77f87b">PartitionData::mpi_world_rank</a></div><div class="ttdeci">int mpi_world_rank</div><div class="ttdef"><b>Definition</b> Partition_Data.hpp:12</div></div>
-<div class="ttc" id="astruct_partition_data_html_aa3afc6bc9ece49dd9c25c502b5720a94"><div class="ttname"><a href="struct_partition_data.html#aa3afc6bc9ece49dd9c25c502b5720a94">PartitionData::catchment_ids</a></div><div class="ttdeci">std::unordered_set&lt; std::string &gt; catchment_ids</div><div class="ttdef"><b>Definition</b> Partition_Data.hpp:13</div></div>
-<div class="ttc" id="astruct_partition_data_html_ab6b6b1f8ce6428004510e2ed6512ec9a"><div class="ttname"><a href="struct_partition_data.html#ab6b6b1f8ce6428004510e2ed6512ec9a">PartitionData::remote_connections</a></div><div class="ttdeci">std::vector&lt; Tuple &gt; remote_connections</div><div class="ttdef"><b>Definition</b> Partition_Data.hpp:15</div></div>
-<div class="ttc" id="astruct_partition_data_html_aba7bce4b0d2c21869d566e6192048f43"><div class="ttname"><a href="struct_partition_data.html#aba7bce4b0d2c21869d566e6192048f43">PartitionData::Tuple</a></div><div class="ttdeci">std::tuple&lt; int, std::string, std::string, std::string &gt; Tuple</div><div class="ttdef"><b>Definition</b> Partition_Data.hpp:11</div></div>
-<div class="ttc" id="astruct_partition_data_html_ace7481bdd629019f1f88b883932e69c9"><div class="ttname"><a href="struct_partition_data.html#ace7481bdd629019f1f88b883932e69c9">PartitionData::nexus_ids</a></div><div class="ttdeci">std::unordered_set&lt; std::string &gt; nexus_ids</div><div class="ttdef"><b>Definition</b> Partition_Data.hpp:14</div></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#endif  </span><span class="comment">//PARTITION_DATA_H</span></div>
+<div class="ttc" id="astruct_partition_data_html"><div class="ttname"><a href="struct_partition_data.html">PartitionData</a></div><div class="ttdef"><b>Definition</b> Partition_Data.hpp:8</div></div>
+<div class="ttc" id="astruct_partition_data_html_a9183691f0b869d2b170a5f932c77f87b"><div class="ttname"><a href="struct_partition_data.html#a9183691f0b869d2b170a5f932c77f87b">PartitionData::mpi_world_rank</a></div><div class="ttdeci">int mpi_world_rank</div><div class="ttdef"><b>Definition</b> Partition_Data.hpp:9</div></div>
+<div class="ttc" id="astruct_partition_data_html_aa3afc6bc9ece49dd9c25c502b5720a94"><div class="ttname"><a href="struct_partition_data.html#aa3afc6bc9ece49dd9c25c502b5720a94">PartitionData::catchment_ids</a></div><div class="ttdeci">std::unordered_set&lt; std::string &gt; catchment_ids</div><div class="ttdef"><b>Definition</b> Partition_Data.hpp:10</div></div>
+<div class="ttc" id="astruct_partition_data_html_ace7481bdd629019f1f88b883932e69c9"><div class="ttname"><a href="struct_partition_data.html#ace7481bdd629019f1f88b883932e69c9">PartitionData::nexus_ids</a></div><div class="ttdeci">std::unordered_set&lt; std::string &gt; nexus_ids</div><div class="ttdef"><b>Definition</b> Partition_Data.hpp:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_3d69f64eaf81436fe2b22361382717e5.html">core</a></li><li class="navelem"><b>Partition_Data.hpp</b></li>
-    <li class="footer">Generated on Tue Nov 24 2026 16:42:03 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Nov 25 2026 20:31:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

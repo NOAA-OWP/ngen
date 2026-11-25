@@ -1,8 +1,7 @@
 var classngen_1_1_domain_layer =
 [
-    [ "feature_type", "classngen_1_1_domain_layer.html#ad1ec52c5a456f72aa02e7a0c5d711449", null ],
     [ "DomainLayer", "classngen_1_1_domain_layer.html#aea02b036ecd9721e90456feb60edf1b9", null ],
-    [ "DomainLayer", "classngen_1_1_domain_layer.html#a08bef67cabfdb92d7c4b43cd13073def", null ],
+    [ "DomainLayer", "classngen_1_1_domain_layer.html#a1a78f8bd3de3e71c329fb97f124b654e", null ],
     [ "current_timestep_epoch_time", "classngen_1_1_domain_layer.html#a178444ad250c0c8faaefa6c5263c618c", null ],
     [ "get_id", "classngen_1_1_domain_layer.html#acd4f99d80cbcac7f64c4b5211ba58f8c", null ],
     [ "get_name", "classngen_1_1_domain_layer.html#acda7ee56e91a6c395b9c25c74bf0494b", null ],
@@ -12,7 +11,7 @@ var classngen_1_1_domain_layer =
     [ "update_models", "classngen_1_1_domain_layer.html#a02deb21dddf96dbe105b9a1f3a3d453c", null ],
     [ "catchment_output_mgr", "classngen_1_1_domain_layer.html#a4a55d14541dd7d8f17f72e9872f42faf", null ],
     [ "description", "classngen_1_1_domain_layer.html#a681d5a55c86a8d1f6d6f9f5fc57b6c63", null ],
-    [ "features", "classngen_1_1_domain_layer.html#a2529e511bb8f0091ff321652988a3290", null ],
+    [ "features", "classngen_1_1_domain_layer.html#ae507d0815189d7f56254857fcb30fcde", null ],
     [ "formulation", "classngen_1_1_domain_layer.html#a5cce542b3ec311d34e701e03f7326fa6", null ],
     [ "output_catchment_id", "classngen_1_1_domain_layer.html#a71cd9b868001a11d8c84abad84ede380", null ],
     [ "output_formulation_id", "classngen_1_1_domain_layer.html#a9bd90671c97dd96b63f1af0a49444e32", null ],

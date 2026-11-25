@@ -1,6 +1,5 @@
 var class_ngen_simulation =
 [
-    [ "hy_features_t", "class_ngen_simulation.html#a463e451d1ae4f392518aea22055f03b9", null ],
     [ "NgenSimulation", "class_ngen_simulation.html#a8cf729ebc31f210e9889a16f1e600f29", null ],
     [ "NgenSimulation", "class_ngen_simulation.html#a4071b542efdd11b2fa258d6346bed743", null ],
     [ "~NgenSimulation", "class_ngen_simulation.html#a016457898cba0537366d2153d18183e6", null ],
@@ -10,7 +9,7 @@ var class_ngen_simulation =
     [ "get_num_output_times", "class_ngen_simulation.html#ac4aa716aea81477f20d264293daf80eb", null ],
     [ "run_catchments", "class_ngen_simulation.html#abe49f6911a9117ae53f5b5e51d286502", null ],
     [ "run_routing", "class_ngen_simulation.html#a5e0c495e05c77e5104118d1802b51968", null ],
-    [ "run_routing_bmi", "class_ngen_simulation.html#ad0347748947b0c4fc60891892a63340d", null ],
+    [ "run_routing_bmi", "class_ngen_simulation.html#a5d84f01a7b6d026115dc9123088d8440", null ],
     [ "serialize", "class_ngen_simulation.html#a68d63adc9f74c69cbcf7c8314639c346", null ],
     [ "catchment_indexes_", "class_ngen_simulation.html#af5487d3fff667f4b7245c22066f48eb0", null ],
     [ "catchment_outflows_", "class_ngen_simulation.html#a2061efbe8bbc24c0f3224c07c5df058b", null ],

@@ -2,5 +2,6 @@ var searchData=
 [
   ['sortorder_0',['SortOrder',['../namespacenetwork.html#adc2fe9c9362585aa39e89e4b76468f5a',1,'network']]],
   ['state_1',['STATE',['../structmultithreading_1_1cache__slot.html#a776063f246ee2df0ba0888796bec5bff',1,'multithreading::cache_slot']]],
-  ['status_2',['Status',['../namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html#a2ff1bcffc97c071abba0f0bc90c3d3e0',1,'models::bmi::protocols::serialization::wire_format']]]
+  ['status_2',['Status',['../namespacemodels_1_1bmi_1_1protocols_1_1serialization_1_1wire__format.html#a2ff1bcffc97c071abba0f0bc90c3d3e0',1,'models::bmi::protocols::serialization::wire_format']]],
+  ['strategy_3',['Strategy',['../namespacengen_1_1partitioning.html#a2aa6306a6dd433125e98a372f7b2e1ca',1,'ngen::partitioning']]]
 ];

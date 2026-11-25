@@ -1,19 +1,13 @@
 <map id="PartitionData" name="PartitionData">
-<area shape="rect" id="Node000001" title=" " alt="" coords="207,438,322,505"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="134,279,251,360"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,360,200,387,209,413,216,424,212,427,205,415,195,388,190,360"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="70,438,184,505"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="69,279,185,360"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,360,130,421,124,421,124,360"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="28,150,95,216"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,214,144,265,140,269,91,218"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="80,215,103,263,98,265,75,217"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="5,5,118,87"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="64,102,64,150,59,150,59,102"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="118,150,266,216"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="195,231,195,279,190,279,190,231"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="173,231,149,280,144,278,168,228"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="182,13,202,79"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="195,79,195,133,190,133,190,79"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="275,286,400,353"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="331,354,305,415,300,425,295,423,301,413,326,352"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="290,150,391,216"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="342,231,341,287,336,287,337,231"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="331,13,350,79"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="343,79,343,133,338,133,338,79"/>
 </map>

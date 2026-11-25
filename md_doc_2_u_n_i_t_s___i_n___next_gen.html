@@ -99,7 +99,7 @@ $(function(){initNavTree('md_doc_2_u_n_i_t_s___i_n___next_gen.html',''); initRes
   <div class="headertitle"><div class="title">Output Variable Units from Running Model Engine</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md380"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md344"></a></p>
 <ul>
 <li>Summary</li>
 <li>CFE Model</li>
@@ -107,12 +107,12 @@ $(function(){initNavTree('md_doc_2_u_n_i_t_s___i_n___next_gen.html',''); initRes
 <li>Noah OWP Modular</li>
 <li>Topmodel</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md381"></a>
+<h1><a class="anchor" id="autotoc_md345"></a>
 Summary</h1>
 <p>When running model engine with hydrofabric, the outputs are typically stored in two types of files, cat-###.csv, and nex-###_output.csv, where "###" represents a series of digits (not necessarily 3, but at least 1). The model engine at present does not write the output data with units, the values in the cat-###.csv files come from the model formulation running for that catchment. There are additional output variables that are not witten out to the files. The units of these variables are dictated by the formulation, and the model engine doesn't (currently) do any inspection of the units for output. One option currently is to look at the formulation documentation and see what each BMI variable it advertises as an output variable has for units. We may, in the future, use some BMI functionality to try to attach those units to output automatically, but that is difficult to do with the CSV output we currently produce, <a href="https://github.com/NOAA-OWP/ngen/pull/744">#744</a> may help to start addressing that.</p>
 <p>As for the nex-###.csv outputs, these are the accumulated overland flow contributions at the point from all directly connected catchments assoicated with the nexus. These values should be in units of m^3/s given that a formulation's main_output_variable returns a rate, e.g. m/s, the main_output_variable is currently automatically multiplied by the catchment's area to produce the volumetric flow rate.</p>
 <p>That said, for users who are interested in using the CSV format, we tabulate below output as well as input variables with their units for a few commonly used hydrologic models for users' reference.</p>
-<h1><a class="anchor" id="autotoc_md382"></a>
+<h1><a class="anchor" id="autotoc_md346"></a>
 CFE Model</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -161,7 +161,7 @@ CFE Model</h1>
 <ul>
 <li>CFE: Conceptual Functional Equivalent</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md383"></a>
+<h1><a class="anchor" id="autotoc_md347"></a>
 PET Model</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -190,7 +190,7 @@ PET Model</h1>
 <ul>
 <li>PET: Potential Evapotranspiration</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md384"></a>
+<h1><a class="anchor" id="autotoc_md348"></a>
 Noah OWP Modular</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -230,7 +230,7 @@ Noah OWP Modular</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">PRCPNONC   </td><td class="markdownTableBodyCenter">precipitation rate   </td><td class="markdownTableBodyCenter">mm/s   </td></tr>
 </table>
-<h1><a class="anchor" id="autotoc_md385"></a>
+<h1><a class="anchor" id="autotoc_md349"></a>
 Topmodel</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -281,7 +281,7 @@ Topmodel</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Nov 24 2026 16:42:04 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Nov 25 2026 20:31:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

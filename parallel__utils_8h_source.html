@@ -105,62 +105,33 @@ $(function(){initNavTree('parallel__utils_8h_source.html',''); initResizable(tru
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;NGenConfig.h&gt;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#if NGEN_WITH_MPI</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#ifndef MPI_HF_SUB_CODE_GOOD</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#define MPI_HF_SUB_CODE_GOOD 0</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;mpi.h&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#ifndef MPI_HF_SUB_CODE_BAD</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#define MPI_HF_SUB_CODE_BAD 1</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#ifndef NGEN_MPI_DATA_TAG</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#define NGEN_MPI_DATA_TAG 100</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifndef NGEN_MPI_PROTOCOL_TAG</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define NGEN_MPI_PROTOCOL_TAG 101</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;mpi.h&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span>parallel {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">bool</span> mpiSyncStatusAnd(<span class="keywordtype">bool</span> status, MPI_Comm comm, <span class="keyword">const</span> std::string &amp;taskDesc);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">bool</span> mpiSyncStatusAnd(<span class="keywordtype">bool</span> status, MPI_Comm comm);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordtype">bool</span> is_hydrofabric_subdivided(<span class="keyword">const</span> std::string &amp;catchmentDataFile, MPI_Comm comm, <span class="keywordtype">bool</span> printMsg);</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span>parallel {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordtype">bool</span> mpiSyncStatusAnd(<span class="keywordtype">bool</span> status, MPI_Comm comm, <span class="keyword">const</span> std::string &amp;taskDesc);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">bool</span> mpiSyncStatusAnd(<span class="keywordtype">bool</span> status, MPI_Comm comm);</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::vector&lt;std::string&gt; gather_strings(<span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; local_strings, MPI_Comm comm);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    std::vector&lt;std::string&gt; broadcast_strings(<span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; strings, MPI_Comm comm);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    std::vector&lt;std::string&gt; scatter_strings(<span class="keyword">const</span> std::vector&lt;std::vector&lt;std::string&gt;&gt;&amp; per_rank, <span class="keywordtype">int</span> root, MPI_Comm comm);</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>}</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordtype">void</span> get_hosts_array(MPI_Comm comm, <span class="keywordtype">int</span> *host_array);</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keywordtype">bool</span> mpi_send_text_file(<span class="keyword">const</span> <span class="keywordtype">char</span> *fileName, MPI_Comm comm, <span class="keyword">const</span> <span class="keywordtype">int</span> destRank);</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keywordtype">bool</span> mpi_recv_text_file(<span class="keyword">const</span> <span class="keywordtype">char</span> *fileName, MPI_Comm comm, <span class="keyword">const</span> <span class="keywordtype">int</span> srcRank);</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="keywordtype">bool</span> distribute_subdivided_hydrofabric_files(<span class="keyword">const</span> std::string &amp;baseCatchmentFile, <span class="keyword">const</span> std::string &amp;baseNexusFile,</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                                                 <span class="keyword">const</span> <span class="keywordtype">int</span> sendingRank, MPI_Comm comm,</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                                                 <span class="keyword">const</span> <span class="keywordtype">int</span> *hostIdForRank, <span class="keywordtype">bool</span> syncReturnStatus, <span class="keywordtype">bool</span> blockAll);</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="keywordtype">bool</span> subdivide_hydrofabric(MPI_Comm comm, <span class="keyword">const</span> std::string &amp;catchmentDataFile,</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                               <span class="keyword">const</span> std::string &amp;nexusDataFile, <span class="keyword">const</span> std::string &amp;partitionConfigFile);</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    std::vector&lt;std::string&gt; gather_strings(<span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; local_strings, MPI_Comm comm);</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    std::vector&lt;std::string&gt; broadcast_strings(<span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; strings, MPI_Comm comm);</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>}</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_WITH_MPI</span></div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span><span class="preprocessor">#endif </span><span class="comment">//NGEN_PARALLEL_UTILS_H</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_WITH_MPI</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="preprocessor">#endif </span><span class="comment">//NGEN_PARALLEL_UTILS_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_52b4106b6168f13dcdf82e33b1d195ee.html">utilities</a></li><li class="navelem"><b>parallel_utils.h</b></li>
-    <li class="footer">Generated on Tue Nov 24 2026 16:42:03 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Nov 25 2026 20:31:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

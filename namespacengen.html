@@ -102,12 +102,17 @@ $(function(){initNavTree('namespacengen.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">ngen Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Partitioning of a hydrofabric by nexus, which is how automatic partitioning assigns catchments to ranks.  
+<a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacengen_1_1geopackage.html">geopackage</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacengen_1_1hydrofabric.html">hydrofabric</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacengen_1_1partitioning.html">partitioning</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacengen_1_1serialization.html">serialization</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -133,13 +138,18 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classngen_1_1_surface_layer.html">SurfaceLayer</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Partitioning of a hydrofabric by nexus, which is how automatic partitioning assigns catchments to ranks. </p>
+<p>Every nexus is assigned to exactly one part, and every catchment is assigned to the part of the nexus it drains to. A nexus thus receives all of its contributions from catchments in its own part, so no part needs to communicate with another.</p>
+<p>Nexuses are cut into contiguous blocks, in the order given, by one of several strategies. Each strategy is implemented in a Strategy_*.hpp of its own.</p>
+<p>Nothing here uses MPI; <a class="el" href="_partition___automatic_8hpp_source.html">Partition_Automatic.hpp</a> distributes the result across ranks. </p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacengen.html">ngen</a></li>
-    <li class="footer">Generated on Tue Nov 24 2026 16:42:04 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Nov 25 2026 20:31:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

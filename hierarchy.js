@@ -42,8 +42,7 @@ var hierarchy =
       [ "geojson::MultiPointFeature", "classgeojson_1_1_multi_point_feature.html", null ],
       [ "geojson::MultiPolygonFeature", "classgeojson_1_1_multi_polygon_feature.html", null ],
       [ "geojson::PointFeature", "classgeojson_1_1_point_feature.html", null ],
-      [ "geojson::PolygonFeature", "classgeojson_1_1_polygon_feature.html", null ],
-      [ "geojson::SentinelFeature", "classgeojson_1_1_sentinel_feature.html", null ]
+      [ "geojson::PolygonFeature", "classgeojson_1_1_polygon_feature.html", null ]
     ] ],
     [ "geojson::FeatureCollection", "classgeojson_1_1_feature_collection.html", null ],
     [ "geojson::FeatureVisitor", "classgeojson_1_1_feature_visitor.html", [
@@ -97,8 +96,7 @@ var hierarchy =
     [ "network::VertexProperty", "structnetwork_1_1_vertex_property.html", null ],
     [ "Network_Test", "class_network___test.html", [
       [ "Network_Test1", "class_network___test1.html", null ],
-      [ "Network_Test2", "class_network___test2.html", null ],
-      [ "Network_Test3", "class_network___test3.html", null ]
+      [ "Network_Test2", "class_network___test2.html", null ]
     ] ],
     [ "ngen::geopackage::GeoPackageReader", "classngen_1_1geopackage_1_1_geo_package_reader.html", null ],
     [ "ngen::geopackage::wkb", "structngen_1_1geopackage_1_1wkb.html", null ],
@@ -120,6 +118,8 @@ var hierarchy =
     ] ],
     [ "ngen::LayerDataStorage", "classngen_1_1_layer_data_storage.html", null ],
     [ "ngen::LayerDescription", "structngen_1_1_layer_description.html", null ],
+    [ "ngen::partitioning::details::CatchmentNexusLink", "structngen_1_1partitioning_1_1details_1_1_catchment_nexus_link.html", null ],
+    [ "ngen::partitioning::NexusContributors", "structngen_1_1partitioning_1_1_nexus_contributors.html", null ],
     [ "ngen::serialization::BackendError", "structngen_1_1serialization_1_1_backend_error.html", null ],
     [ "ngen::serialization::detail::RecordT< PayloadT >", "structngen_1_1serialization_1_1detail_1_1_record_t.html", null ],
     [ "ngen::serialization::FileBackend::Index", "classngen_1_1serialization_1_1_file_backend_1_1_index.html", null ],
@@ -143,7 +143,6 @@ var hierarchy =
     [ "nonstd::detail::in_place_index_tag< K >", "structnonstd_1_1detail_1_1in__place__index__tag.html", null ],
     [ "nonstd::detail::in_place_type_tag< T >", "structnonstd_1_1detail_1_1in__place__type__tag.html", null ],
     [ "nonstd::in_place_t", "structnonstd_1_1in__place__t.html", null ],
-    [ "Partition_One", "class_partition___one.html", null ],
     [ "PartitionData", "struct_partition_data.html", null ],
     [ "Partitions_Parser", "class_partitions___parser.html", null ],
     [ "realization::Bmi_Var_Details", "classrealization_1_1_bmi___var___details.html", null ],
@@ -202,8 +201,6 @@ var hierarchy =
       [ "JSONProperty_Test", "class_j_s_o_n_property___test.html", null ],
       [ "MultiLayerParserTest", "class_multi_layer_parser_test.html", null ],
       [ "Network_Test2", "class_network___test2.html", null ],
-      [ "Network_Test3", "class_network___test3.html", null ],
-      [ "Nexus_Remote_Test", "class_nexus___remote___test.html", null ],
       [ "Nexus_Test", "class_nexus___test.html", null ],
       [ "ReservoirKernelTest", "class_reservoir_kernel_test.html", null ],
       [ "ReservoirTimelessKernelTest", "class_reservoir_timeless_kernel_test.html", null ],
